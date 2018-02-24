@@ -1,0 +1,96 @@
+desc:ADPCM Simulator
+//tags: processing lo-fi
+//author: Cockos 
+
+// encodes/decodes to IMA ADPCM to give it that "crunchy" sound
+
+slider1:4<1,4,1>Bits
+slider2:4096<2,65538,128>Block Size
+slider3:0<0,7,1>Bit Bias (mostly for 1-bit)
+slider4:0<-60,60,1>Gain (dB)
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+a=1000000;
+
+// build tables
+index_table = a;
+a[] = -1; a+=1; a[] = -1; a+=1; a[] = -1; a+=1; a[] = -1; a+=1; a[] = 2; 
+a+=1; a[] = 4; a+=1; a[] = 6; a+=1; a[] = 8; a+=1;
+
+step_table=a;
+a[]=7; a+=1; a[]=8; a+=1; a[]=9; a+=1; a[]=10; a+=1; a[]=11; a+=1;
+a[]=12; a+=1; a[]=13; a+=1; a[]=14; a+=1; a[]=16; a+=1; a[]=17; a+=1;
+a[]=19; a+=1; a[]=21; a+=1; a[]=23; a+=1; a[]=25; a+=1; a[]=28; a+=1;
+a[]=31; a+=1; a[]=34; a+=1; a[]=37; a+=1; a[]=41; a+=1; a[]=45; a+=1;
+a[]=50; a+=1; a[]=55; a+=1; a[]=60; a+=1; a[]=66; a+=1; a[]=73; a+=1;
+a[]=80; a+=1; a[]=88; a+=1; a[]=97; a+=1; a[]=107; a+=1; a[]=118; a+=1;
+a[]=130; a+=1; a[]=143; a+=1; a[]=157; a+=1; a[]=173; a+=1; a[]=190; a+=1;
+a[]=209; a+=1; a[]=230; a+=1; a[]=253; a+=1; a[]=279; a+=1; a[]=307; a+=1;
+a[]=337; a+=1; a[]=371; a+=1; a[]=408; a+=1; a[]=449; a+=1; a[]=494; a+=1;
+a[]=544; a+=1; a[]=598; a+=1; a[]=658; a+=1; a[]=724; a+=1; a[]=796; a+=1;
+a[]=876; a+=1; a[]=963; a+=1; a[]=1060; a+=1; a[]=1166; a+=1; a[]=1282; a+=1;
+a[]=1411; a+=1; a[]=1552; a+=1; a[]=1707; a+=1; a[]=1878; a+=1; a[]=2066; a+=1;
+a[]=2272; a+=1; a[]=2499; a+=1; a[]=2749; a+=1; a[]=3024; a+=1; a[]=3327; a+=1;
+a[]=3660; a+=1; a[]=4026; a+=1; a[]=4428; a+=1; a[]=4871; a+=1; a[]=5358; a+=1;
+a[]=5894; a+=1; a[]=6484; a+=1; a[]=7132; a+=1; a[]=7845; a+=1; a[]=8630; a+=1;
+a[]=9493; a+=1; a[]=10442; a+=1; a[]=11487; a+=1; a[]=12635; a+=1;
+a[]=13899; a+=1; a[]=15289; a+=1; a[]=16818; a+=1; a[]=18500; a+=1;
+a[]=20350; a+=1; a[]=22385; a+=1; a[]=24623; a+=1; a[]=27086; a+=1;
+a[]=29794; a+=1; a[]=32767; a+=1;
+
+blockpos=0;
+
+state0 = state1 = 0;
+last0 = last1 = 0;
+
+@slider
+bitbias=slider3|0;
+iscale = (10^(slider4/20))/32768;
+bits = min(max(slider1|0,1),4);
+mask = 7;
+bits==3?mask=6;
+bits==2?mask=4;
+bits==1?mask=0;
+
+resetevery = slider2|0;
+resetevery > 65537 ? resetevery = 10^10;
+
+@sample
+
+inspl0 = min(max((spl0*32768)|0,-32768),32767);
+inspl1 = min(max((spl1*32768)|0,-32768),32767);
+
+
+blockpos ? (
+  sign0=0;
+  step0 = step_table[state0];
+  adiff0 = (inspl0 - last0)|0;
+  adiff0<0 ? ( adiff0=-adiff0; sign0=8; );
+  nib0 = (min(max((step0 ? ((4 * adiff0 - ((step0*0.5)|0)) / step0) : 0)|0,0 ),7)&mask) + bitbias;
+  diff0 = ((nib0+0.5)*step0*0.25)|0;
+  outspl0 = (last0 += (sign0?-diff0:diff0));
+  state0 = min(max(state0+index_table[nib0],0),88);
+
+  sign1=0;
+  step1 = step_table[state1];
+  adiff1 = (inspl1 - last1)|0;
+  adiff1<0 ? ( adiff1=-adiff1; sign1=8; );
+  nib1 = (min(max((step1 ? ((4 * adiff1 - ((step1*0.5)|0)) / step1) : 0)|0,0 ),7)&mask) + bitbias;
+  diff1 = ((nib1+0.5)*step1*0.25)|0;
+  outspl1 = (last1 += (sign1?-diff1:diff1));
+  state1 = min(max(state1+index_table[nib1],0),88);
+) : (
+  last0 = outspl0 = inspl0;
+  last1 = outspl1 = inspl1;
+);
+
+spl0 = min(max(outspl0*iscale,-1),1);
+spl1 = min(max(outspl1*iscale,-1),1);
+
+(blockpos+=1) >= resetevery ? blockpos=0;

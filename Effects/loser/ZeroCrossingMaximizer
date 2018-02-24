@@ -1,0 +1,98 @@
+// (C) 2006-2007, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:Zero Crossing Maximizer
+desc:Zero Crossing Maximizer [LOSER]
+//tags: processing dynamics
+//author: LOSER
+
+slider1:0<-12,0,.1>Threshold (dB)
+slider2:0<-12,0,.1>Ceiling (dB)
+slider3:500<250,1000,1>Buffer Size (ms)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+thresh = 2^(slider1/6);
+buffer = 0;
+pdc_delay = bufSize = floor(min(slider3/1000 * srate,500000));
+bufOffs = bufSize + 1;
+pdc_bot_ch=0; pdc_top_ch=2;
+ceiling = 2^(slider2/6);
+volume = ceiling/thresh;
+
+@sample
+
+buffer[bufPos] = spl0;
+
+// track zero crossings
+spl0 > 0 ? s0=1 : s0=0;
+
+maxSpl0 = max ( maxSpl0, abs(spl0));
+
+s0 != lastS0 ? 
+(
+maxSpl0 > thresh ? gain=thresh/maxSpl0 : gain=1;
+adjPos = length0;
+
+    loop(length0+1,
+    buffer[bufPos - adjPos + ((bufPos-adjPos)<0 ? bufSize+1:0;) ] *= gain;
+    (adjPos -= 1);
+    );
+
+length0 = -1;
+maxSpl0 = 0;
+);
+(length0+=1) > bufSize ? length0 = maxSpl1 = 0;
+lastS0 = s0;
+
+bufOffs[bufPos] = spl1;
+
+
+
+// track zero crossings
+spl1 > 0 ? s1=1 : s1=0;
+
+maxSpl1 = max ( maxSpl1, abs(spl1));
+
+
+s1 != lastS1 ? 
+(
+maxSpl1 > thresh ? gain=thresh/maxSpl1 : gain=1;
+adjPos = length1;
+
+    loop(length1+1,
+    bufOffs[bufPos - adjPos + ((bufPos-adjPos)<0 ? bufSize+1:0;) ] *= gain;
+    (adjPos -= 1);
+    );
+
+length1 = -1;
+maxSpl1 = 0;
+);
+(length1+=1) > bufSize ? length1 = maxSpl1 = 0;
+lastS1 = s1;
+
+
+(bufPos += 1) > bufSize ? bufPos = 0 ;
+
+spl0 = buffer[bufPos]*volume;
+spl1 = bufOffs[bufPos]*volume;
+
+// Can comment this out for more speed ;)
+spl0 = min(max(spl0,-1),1);
+spl1 = min(max(spl1,-1),1);
+

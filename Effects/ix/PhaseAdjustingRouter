@@ -1,0 +1,37 @@
+/*******************************************************************************
+*  Copyright 2007 - 2011, Philip S. Considine                                  *
+*  This program is free software: you can redistribute it and/or modify        *
+*  it under the terms of the GNU General Public License as published by        *
+*  the Free Software Foundation, either version 3 of the License, or           *
+*  (at your option) any later version.                                         *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+*  GNU General Public License (http://www.gnu.org/licenses/)for more details.  *
+*******************************************************************************/
+
+desc:Channel Router w/Polarity
+desc:Channel Router w/Polarity [IXix]
+//tags: processing routing polarity phase
+//author: IXix
+
+slider1:0<0,31,1{1+2,3+4,5+6,7+8,9+10,11+12,13+14,15+16,17+18,19+20,21+22,23+24,25+26,27+28,29+30,31+32,33+34,35+36,37+38,39+40,41+42,43+44,45+46,47+48,49+50,51+52,53+54,55+56,57+58,59+60,61+62,63+64}>Input Channels
+slider2:0<0,3,1{Normal,Invert Left,Invert Right,Invert Both}>Polarity Mode
+slider3:0<0,31,1{1+2,3+4,5+6,7+8,9+10,11+12,13+14,15+16,17+18,19+20,21+22,23+24,25+26,27+28,29+30,31+32,33+34,35+36,37+38,39+40,41+42,43+44,45+46,47+48,49+50,51+52,53+54,55+56,57+58,59+60,61+62,63+64}>Output Channels
+slider4:0<0,1,1{Replace,Merge}>Output Mode
+
+////////////////////////////////////////////////////////////////////////////////
+@slider
+inL = slider1 * 2;
+inR = inL + 1;
+phaseL = slider2 & 1 ? -1 : 1;
+phaseR = slider2 & 2 ? -1 : 1;
+outL = slider3 * 2;
+outR = outL + 1;
+merge = slider4;
+
+////////////////////////////////////////////////////////////////////////////////
+@sample
+spl(outL) = spl(outL) * merge + spl(inL) * phaseL;
+spl(outR) = spl(outR) * merge + spl(inR) * phaseR;

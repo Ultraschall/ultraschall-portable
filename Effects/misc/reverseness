@@ -1,0 +1,49 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+// fade fix/improvements thanks to dan mcmullen
+
+desc: Delay w/Reverseness
+//tags: processing sampler mangler delay
+//author: Cockos
+
+slider1:500<0,4000,10>Length (ms)
+slider2:-6<-120,6,1>Wet Mix (dB)
+slider3:-6<-120,6,1>Dry Mix (dB)
+slider4:0.1<0,1>Edge Overlap
+slider5:0<0,1,1{Off,On}>Old Compatible And Clicky Mode
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  pos=0;
+
+@slider
+  len=srate*slider1/1000; 
+  wet=2 ^ (slider2/6); 
+  dry=2 ^ (slider3/6); 
+  nonclickymode = slider5 != 1;
+  fadelen=len*min(slider4,nonclickymode?0.5:1.0)*0.5;
+  freembuf(len*2);
+  
+@sample
+
+s0=((len-pos)*2)[0];
+s1=((len-pos)*2)[1];
+(pos*2)[0]=spl0;
+(pos*2)[1]=spl1;
+
+pp=len-pos;
+w2=pp<fadelen ? pp/fadelen : (pp > len-fadelen?(len-pp)/fadelen:1);
+
+nonclickymode && w2 == 1 ?(
+  pp= abs(len*0.5-pos);
+  w2= pp<fadelen ? pp/fadelen : 1;
+);
+
+spl0=s0*wet*w2 + spl0*(dry + 1-w2);
+spl1=s1*wet*w2 + spl1*(dry + 1-w2);
+
+(pos+=1)>=len ? pos=0;

@@ -1,0 +1,297 @@
+desc:Graphical Dynamic Waveshaper
+//tags: processing distortion waveshaper
+//author: Unknown
+
+slider1:1<0,1,1{Off, On}>Mirror
+slider2:0<-144,24,1>Wet Mix (dB)
+slider3:-144<-144,24,1>Dry Mix (dB)
+slider4:1<1,32,1>Oversampling (times)
+slider5:5<0.1,100,0.1>Integration Time (ms)
+slider6:-50<-100,6,1>Dynamic Floor
+slider7:-6<-60,60,1>Dynamic Positioning
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+tabsize=40; // actually twice this, but x per side, and 0 is always 0
+tab=0; // first x are 0..1, next x are 0..-1
+i=0;
+ext_noinit=1;
+!hasinit ? loop(tabsize,
+  tab[i]=(i+1)/tabsize;
+  tab[tabsize+i]=-(i+1)/tabsize;
+  i+=1;
+);
+hasinit=1;
+last_a=-1;
+histbuf=1000000;
+histpos=0;
+histsize=1000;
+
+@slider
+
+  aasize=(slider4+0.5)|0;
+  aasize<1?aasize=1:aasize>256?aasize=256;
+
+denv = exp(-1/slider5*0.001*srate*aasize);
+dfloor=10^(slider6/20);
+dpos=10^(slider7/20);
+
+
+wet = 10^(slider2/20);
+dry = 10^(slider3/20);
+
+
+  aasize != last_aa ? (
+  
+    aasize>1 ? (
+      Q=0.707;
+      pos=0.85/aasize * $pi;
+
+      cpos=cos(pos);
+      spos=sin(pos);
+    
+      alpha=spos/(2.0*Q);
+    
+      sc=1.0/( 1 + alpha);
+      b1 = (1-cpos) * sc;
+      b2 = b0 = b1*0.5;
+      a1 =  -2 * cpos * sc;
+      a2 = (1-alpha)*sc;
+    );
+    last_aa=aasize;
+
+    hist4=hist5=hist6=hist7=0;
+    hist8=hist9=hist10=hist11=0;
+    hist12=hist13=hist14=hist15=0;
+    hist16=hist17=hist18=hist19=0;
+  );
+
+
+@serialize
+file_var(0,tabsize);
+file_mem(0,tab,tabsize*2) ? hasinit=1;
+
+@block
+itabsz=1/tabsize;
+
+@sample
+histbuf[histpos]=spl0;
+histbuf[histpos+histsize]=spl1;
+
+old_l=spl0;
+old_r=spl1;
+
+  sspos=0;
+  src0=spl0;
+  src1=spl1;
+  loop(aasize,
+
+    // run input filter
+    aasize > 1 ? (
+       sspl0 = src0*b0 + hist4*b1 + hist5*b2 - hist6*a1 - hist7*a2;
+       hist5=hist4; hist4=src0; hist7=hist6; hist6=sspl0;
+
+       sspl1 = src1*b0 + hist8*b1 + hist9*b2 - hist10*a1 - hist11*a2;
+       hist9=hist8; hist8=src1; hist11=hist10; hist10=sspl1;      
+    ) : (
+      sspl0=src0; 
+      sspl1=src1;
+    );
+
+
+
+
+env=env*(denv)+max(abs(sspl0),abs(sspl1))*(1-denv);
+env < dfloor ? env=dfloor;
+
+gainsc = env*dpos;
+igainsc=1/gainsc;
+
+v=sspl0*gainsc;
+
+sn=1;
+tp=tab; v<0? ( v=-v; slider1<=0.5 ? tp+=tabsize : sn=-1; );
+v<=itabsz ? (v=tp[0]*v*tabsize) : v>=1.0 ? 
+(
+  v=tp[tabsize-1]+(vp[tabsize-1]-vp[tabsize-2])*(v-1.0)*tabsize;
+)
+: (
+  sc=v*tabsize - 1;
+  wh=sc|0;
+  sc-=wh;
+  v=tp[wh]*(1.0-sc)+tp[wh+1]*sc;
+);
+sspl0=v*sn*igainsc;
+
+
+
+v=sspl1*gainsc;
+sn=1;
+tp=tab; v<0? ( v=-v; slider1<=0.5 ? tp+=tabsize : sn=-1; );
+v<=itabsz ? (v=tp[0]*v*tabsize) : v>=1.0 ? (
+  v=tp[tabsize-1]+(vp[tabsize-1]-vp[tabsize-2])*(v-1.0)*tabsize;
+) : (
+  sc=v*tabsize - 1;
+  wh=sc|0;
+  sc-=wh;
+  v=tp[wh]*(1.0-sc)+tp[wh+1]*sc;
+);
+sspl1=v*sn*igainsc;
+
+
+    // run output filters
+
+    aasize > 1 ? (
+
+      (sspos+=1)==1 ? (
+        spl0 = sspl0*b0 + hist12*b1 + hist13*b2 - hist14*a1 - hist15*a2;
+        spl1 = sspl1*b0 + hist16*b1 + hist17*b2 - hist18*a1 - hist19*a2;
+
+        hist13=hist12; hist12=sspl0; hist15=hist14; hist14=spl0;
+        hist17=hist16; hist16=sspl1; hist19=hist18; hist18=spl1;
+
+      ) : (
+        tmp0 = sspl0*b0 + hist12*b1 + hist13*b2 - hist14*a1 - hist15*a2;
+        tmp1 = sspl1*b0 + hist16*b1 + hist17*b2 - hist18*a1 - hist19*a2;
+
+        hist13=hist12; hist12=sspl0; hist15=hist14; hist14=tmp0;
+        hist17=hist16; hist16=sspl1; hist19=hist18; hist18=tmp1;
+      );
+    ) : (
+      spl0=sspl0; 
+      spl1=sspl1;
+    );
+
+  );
+
+
+
+
+
+histbuf[histpos+histsize*2]=spl0;
+histbuf[histpos+histsize*3]=spl1;
+spl0=old_l*dry + spl0*wet;
+spl1=old_r*dry + spl1*wet;
+
+histpos+=1;
+histpos >= histsize ? histpos=0;
+
+@gfx 400 400
+
+sz=min(gfx_w,gfx_h);
+top = (gfx_h-sz)*0.5;
+left = (gfx_w-sz)*0.5;
+right=gfx_w-left;
+bottom=gfx_h-top;
+
+mouse_cap ? (
+    gv=(gfx_h*0.5-mouse_y)*2.0/sz;
+    gv<-1?gv=-1:gv>1?gv=1;
+    mouse_x > gfx_w*0.5 ? (
+      a=((mouse_x - gfx_w*0.5)*tabsize/(sz*0.5))|0;
+      a >= tabsize ? a=tabsize-1 : a<0?a=0;
+    ) : (
+      a=((gfx_w*0.5-mouse_x)*tabsize/(sz*0.5))|0;
+      a >= tabsize ? a=tabsize-1 : a<0?a=0;
+      slider1>0.5 ? gv=-gv : a+=tabsize; 
+    );
+    last_a >= 0 && abs(last_a-a)>1 ? (
+      (a<tabsize) == (last_a < tabsize) ? (
+        da=a>last_a ? 1 : -1;
+        dv=(gv-last_v)/abs(a-last_a);
+        loop(abs(a-last_a)-1,
+           last_v+=dv;
+           last_a+=da;
+           tab[last_a]=(mouse_cap&2) ? ((last_a%tabsize)+1)/tabsize * (last_a>=tabsize?-1:1) : last_v;
+        );
+      ) : ( // user crossed zero, so let's transition the mofo
+        l=abs(last_a>=tabsize?last_a-tabsize:last_a);
+        loop(l,
+           last_a-=1;
+           tab[last_a]=(mouse_cap&2) ? ((last_a%tabsize)+1)/tabsize * (last_a>=tabsize?-1:1) : last_v;
+        );
+        l=abs(a>=tabsize?a-tabsize:a);
+        last_a = a>=tabsize ? tabsize-1 : -1;
+        loop(l,
+           last_a+=1;
+           tab[last_a]=(mouse_cap&2) ? ((last_a%tabsize)+1)/tabsize * (last_a>=tabsize?-1:1) : gv;
+        );
+      );
+    );
+    tab[a]=(mouse_cap&2) ? ((a%tabsize)+1)/tabsize * (a>=tabsize?-1:1) : gv; 
+
+    last_a=a;
+    last_v=gv;
+) : (
+  last_a >= 0 ? (
+    last_a = -1;
+    sliderchange(-1);
+  );
+);
+
+offs=histpos;
+gscale=sz/histsize;
+gbuf=histbuf;
+gscale2=sz*0.5;
+gp=0;
+loop(4,
+  gp > 1 ? (
+    gfx_r=0.5; gfx_g=0.8; gfx_b=0.5;
+    gfx_a=0.8;
+  ) : (
+    gfx_r=0.8; gfx_g=0.4; gfx_b=0.5;
+    gfx_a=0.2;
+  );
+  ga=0;
+  loop(histsize,
+    gv=gbuf[offs];
+    offs+=1;
+    offs>=histsize?offs=0;
+    gx=left + ga*gscale;
+    gy=gfx_h*0.5 - gv*gscale2; 
+    ga ? gfx_lineto(gx,gy,false) : ( gfx_x=gx; gfx_y=gy; );
+    ga+=1;
+  );
+  gp+=1;
+  gbuf+=histsize;
+);
+
+gfx_a=0.3;
+gfx_r=gfx_g=gfx_b=1;
+
+gfx_x=left; gfx_y=gfx_h*0.5;
+gfx_lineto(right,gfx_y,0);
+gfx_x=gfx_w*0.5; gfx_y=top;
+gfx_lineto(gfx_x, bottom,0);
+
+gfx_x=left; gfx_y=bottom;
+gfx_lineto(right,top,0);
+
+gfx_a=0.8;
+gfx_g=0;
+gfx_x=gfx_w*0.5; gfx_y=gfx_h*0.5;
+ga=0;
+loop(tabsize,
+
+  gfx_lineto(gfx_w*0.5 + (ga+1)*sz/tabsize*0.5,
+             gfx_h*0.5 - tab[ga]*sz*0.5, 1);
+
+  ga+=1;
+);
+ga=0;
+gfx_x=gfx_w*0.5; gfx_y=gfx_h*0.5;
+loop(tabsize,
+  slider1>0.5 ? gv=-tab[ga] : gv=tab[tabsize+ga];
+  
+  gfx_lineto(gfx_w*0.5 - (ga+1)*sz/tabsize*0.5,
+             gfx_h*0.5 - gv*sz*0.5, 1);
+
+  ga+=1;
+);
+gfx_x=gfX_y=0;
+gfx_r=gfx_g=gfx_b=gfx_a=1;
+gfx_drawnumber(env*dpos,20);

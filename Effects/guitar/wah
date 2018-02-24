@@ -1,0 +1,54 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Wah-Wah
+//tags: guitar modulation filter gain
+//author: Cockos
+
+slider1:0<0,1>Position
+slider2:0.7<0,1>Resonance (Top) (0..1)
+slider3:0.1<0,1>Resonance (Bottom) (0..1)
+slider4:0.05<0,0.1>Filter Distortion
+
+in_pin:input
+out_pin:output
+
+@slider
+
+maxfreq=2000;
+minfreq=200;
+pos=slider1/.819;
+pos=1-pos;
+fh=minfreq+(pos)*(maxfreq-minfreq);
+fh<minfreq?fh=minfreq;
+fh>maxfreq?fh=maxfreq;
+
+res = slider2*pos + slider3*(1-pos);
+
+res=min(max(res,0.0),1);
+res*=res;
+drive=min(max(slider4,0),0.1); // 0 to 0.1
+freq = 2 * sin($pi*min(0.25,fh/(srate*2)));
+damp = min(2*(1-pow(res,0.25)), min(2,2/freq - freq*0.5));
+/*band*=0.3;
+notch*=0.3;
+low*=0.3;
+high*=0.3;
+*/
+
+@sample
+  in    = spl0;
+  notch = in - damp*band;
+  low   = low + freq*band;
+  high  = notch - low;
+  band  = freq*high + band - drive*band*band*band;
+  out   = 0.5*band;
+  notch = in - damp*band;
+  low   = low + freq*band;
+  high  = notch - low;
+  band  = freq*high + band - drive*band*band*band;
+  out  += 0.5*band;
+
+spl0=band;
+
+

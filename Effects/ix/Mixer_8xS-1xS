@@ -1,0 +1,91 @@
+/*******************************************************************************
+*  Copyright 2007 - 2011, Philip S. Considine                                  *
+*  This program is free software: you can redistribute it and/or modify        *
+*  it under the terms of the GNU General Public License as published by        *
+*  the Free Software Foundation, either version 3 of the License, or           *
+*  (at your option) any later version.                                         *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+*  GNU General Public License (http://www.gnu.org/licenses/)for more details.  *
+*******************************************************************************/
+
+desc:8x Stereo to 1x Stereo Mixer
+desc:8x Stereo to 1x Stereo Mixer [IXix]
+//tags: mixer gain
+//author: IXix
+
+slider1:0<-60,30,0.1>Level 1+2 (dB)
+slider2:0<-60,30,0.1>Level 3+4 (dB)
+slider3:0<-60,30,0.1>Level 5+6 (dB)
+slider4:0<-60,30,0.1>Level 7+8 (dB)
+slider5:0<-60,30,0.1>Level 9+10 (dB)
+slider6:0<-60,30,0.1>Level 11+12 (dB)
+slider7:0<-60,30,0.1>Level 13+14 (dB)
+slider8:0<-60,30,0.1>Level 15+16 (dB)
+
+in_pin:input 1 L
+in_pin:input 1 R
+in_pin:input 2 L
+in_pin:input 2 R
+in_pin:input 3 L
+in_pin:input 3 R
+in_pin:input 4 L
+in_pin:input 4 R
+in_pin:input 5 L
+in_pin:input 5 R
+in_pin:input 6 L
+in_pin:input 6 R
+in_pin:input 7 L
+in_pin:input 7 R
+in_pin:input 8 L
+in_pin:input 8 R
+out_pin:output L
+out_pin:output R
+///////////////////////////////////////////////////////////////////////////////
+@init
+gainMin = -60;
+gainMax = 30;
+
+///////////////////////////////////////////////////////////////////////////////
+@slider
+slider1 = min(max(slider1, gainMin), gainMax);
+slider2 = min(max(slider2, gainMin), gainMax);
+slider3 = min(max(slider3, gainMin), gainMax);
+slider4 = min(max(slider4, gainMin), gainMax);
+slider5 = min(max(slider5, gainMin), gainMax);
+slider6 = min(max(slider6, gainMin), gainMax);
+slider7 = min(max(slider7, gainMin), gainMax);
+slider8 = min(max(slider8, gainMin), gainMax);
+
+levelA = 2 ^ (slider1 / 6);
+levelB = 2 ^ (slider2 / 6);
+levelC = 2 ^ (slider3 / 6);
+levelD = 2 ^ (slider4 / 6);
+levelE = 2 ^ (slider5 / 6);
+levelF = 2 ^ (slider6 / 6);
+levelG = 2 ^ (slider7 / 6);
+levelH = 2 ^ (slider8 / 6);
+
+///////////////////////////////////////////////////////////////////////////////
+@sample
+// Do the left mix
+spl0 =  (spl0 * levelA)  + 
+    (spl2 * levelB) + 
+    (spl4 * levelC) + 
+    (spl6 * levelD) + 
+    (spl8 * levelE) + 
+    (spl10 * levelF)+ 
+    (spl12 * levelG)+ 
+    (spl14 * levelH);
+
+// Do the right mix
+spl1 =   (spl1 * levelA)  + 
+    (spl3 * levelB) + 
+    (spl5 * levelC) + 
+    (spl7 * levelD) + 
+    (spl9 * levelE) + 
+    (spl11 * levelF)+ 
+    (spl13 * levelG)+ 
+    (spl15 * levelH);

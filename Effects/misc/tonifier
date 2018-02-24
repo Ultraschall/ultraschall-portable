@@ -1,0 +1,103 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Tonifier
+//tags: processing generator mangler
+//author: Cockos
+
+slider1:0<-100,6,1>Wet Mix (dB)
+slider2:-100<-100,6,1>Dry Mix (dB)
+slider3:10<1,1000,10>Block Size (ms)
+slider4:0<-48,48,1>Frequency Shift (st)
+
+slider5:0<0,6,1>max auto shift (octaves)
+slider6:100<0,20000>auto shift min frequency (Hz)
+slider7:1000<0,20000>auto shift max frequency (Hz)
+slider8:0,Output frequency (Hz)
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+  lbsize=bsize;
+  bsize=(slider3*srate*0.001)|0; 
+  ibsize=1/bsize;
+  sscal=2 ^ (slider4/12)*ibsize*2;
+  wet=2 ^ (slider1/6)*ibsize*1.7;  // 1.7 seems about right for volume scaling
+  dry=2 ^ (slider2/6);
+
+  lbsize != bsize ? (
+  bpos= 
+  zccnt0=zccnt1=
+  lzccnt0=lzccnt1=
+  ampcnt0=ampcnt1=
+  lampcnt0=lampcnt1=
+  ls0=ls1=0;
+  );
+
+  maxf=slider7/srate*2; minf=slider6/srate*2;
+
+@block
+  updcnt=updcnt+samplesblock; 
+  updcnt > srate*0.2 ? ( updcnt=0; slider8=(freq0+freq1)*0.25*srate; sliderchange(128); );
+
+@sample
+
+// count zero crossings
+ts0=spl0>0;
+
+ts0 && ls0 ? zccnt0+=1;
+ls0=!ts0;
+
+ts1=spl1>0;
+ts1 && ls1 ? zccnt1+=1;
+ls1=!ts1;
+
+// count amplitude (square maybe?)
+ampcnt0+=abs(spl0);
+ampcnt1+=abs(spl1);
+
+// find local amplitude and update buffer
+fbpos=bsize+bsize+bpos+bpos;
+acnt0=lampcnt0+ampcnt0-fbpos[0];
+fbpos[0]=ampcnt0;
+fbpos+=1;
+acnt1=lampcnt1+ampcnt1-fbpos[0];
+fbpos[0]=ampcnt1;
+
+// find local zero crossing count and update buffer
+fbpos=bpos+bpos;
+lcnt0=lzccnt0+zccnt0-fbpos[0];
+fbpos[0]=zccnt0;
+fbpos+=1;
+lcnt1=lzccnt1+zccnt1-fbpos[0];
+fbpos[0]=zccnt1;
+
+// advance buffer
+bpos+=1;
+bpos >= bsize ? (
+    bpos=0;
+    // keep ampcnt* and zccnt* in a reasonable range
+    lampcnt0=ampcnt0;
+    lampcnt1=ampcnt1;
+    lzccnt0=zccnt0;
+    lzccnt1=zccnt1;
+    ampcnt0=ampcnt1=zccnt0=zccnt1=0;
+);
+
+freq0=lcnt0*sscal;
+freq1=lcnt1*sscal;
+
+loop(slider5,
+  freq0 > maxf ? freq0*=0.5 : (freq0 < minf ? freq0 *= 2);
+  freq1 > maxf ? freq1*=0.5 : (freq1 < minf ? freq1 *= 2);
+);
+
+tpos0=tpos0+$pi*freq0;
+tpos1=tpos1+$pi*freq1;
+
+spl0=sin(tpos0)*acnt0*wet + spl0*dry;
+spl1=sin(tpos1)*acnt1*wet + spl1*dry;

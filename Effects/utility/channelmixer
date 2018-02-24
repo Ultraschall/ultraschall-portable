@@ -1,0 +1,29 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc:Channel Mixer
+//tags: utility processing stereo
+//author: Cockos
+
+slider1:-6<-120,6,1>L->L Mix (dB)
+slider2:-6<-120,6,1>R->R Mix (dB)
+slider3:-6<-120,6,1>L->R Mix (dB)
+slider4:-6<-120,6,1>R->L Mix (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+@slider
+ll=2^(slider1/6);
+rr=2^(slider2/6);
+lr=2^(slider3/6);
+rl=2^(slider4/6);
+
+@sample
+l=spl0;
+r=spl1;
+spl0=l*ll+r*rl;
+spl1=l*lr+r*rr;

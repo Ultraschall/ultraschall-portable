@@ -1,0 +1,60 @@
+// (C) 2006, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:3-Band Splitter
+desc:3-Band Splitter (Splits In Low:1+2,Mid:3+4,High:5+6) [LOSER]
+//tags: processing routing
+//author: LOSER
+
+slider1:200<0,22000,1>Crossover 1 (Hz)
+slider2:2000<0,22000,1>Crossover 2 (Hz)
+
+in_pin:left input
+in_pin:right input
+out_pin:low output left
+out_pin:low output right
+out_pin:mid output left
+out_pin:mid output right
+out_pin:high output left
+out_pin:high output right
+
+@init
+cDenorm=10^-30;
+
+@slider
+freqHP = max(min(slider2,srate),slider4);
+xHP = exp(-2.0*$pi*freqHP/srate);
+a0HP = 1.0-xHP;
+b1HP = -xHP;
+
+freqLP = min(min(slider1,srate),slider2);
+xLP = exp(-2.0*$pi*freqLP/srate);
+a0LP = 1.0-xLP;
+b1LP = -xLP;
+
+@sample
+
+s0 = spl0;
+s1 = spl1;
+
+spl0 = (tmplLP = a0LP*s0 - b1LP*tmplLP + cDenorm);
+spl1 = (tmprLP = a0LP*s1 - b1LP*tmprLP + cDenorm);
+
+spl4 = s0 - (tmplHP = a0HP*s0 - b1HP*tmplHP + cDenorm);
+spl5 = s1 - (tmprHP = a0HP*s1 - b1HP*tmprHP + cDenorm);
+
+spl2 = s0 - spl0 - spl4;
+spl3 = s1 - spl1 - spl5;
+
+

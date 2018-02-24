@@ -1,0 +1,110 @@
+// (C) 2006, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+// Also Useable For None Digital Drums ;)
+
+desc:Digital Drum Compressor
+desc:Digital Drum Compressor (DDC) [LOSER]
+//tags: dynamics compressor
+//author: LOSER
+
+slider1:-20<-60,0,.1>Threshold (dB)
+slider2:20<0,50,.1>Ratio
+slider3:20<0,500,1>Attack (ms)
+slider4:.5<0,500,.1>Hold (ms)
+slider5:200<0,1000,1>Release (ms)
+slider6:0<0,1000,1>RMS Size (ms) 
+slider7:0<0,2,1{Feedforward,Feedback,Sidechain}>Feed
+slider8:1<0,1,1{No,Yes}>Auto Make-Up
+slider9:0<-120,60,1>Output (dB)
+slider10:0,Reduction (dB)
+
+in_pin:left input
+in_pin:right input
+in_pin:sidechain left input
+in_pin:sidechain right input
+out_pin:left output
+out_pin:right output
+
+@init
+gain = seekgain = 1;
+c_ampdB = 8.65617025;
+
+@slider
+treshdB = min(slider1,-.1);
+tresh = exp(treshdB/c_ampdB);
+ratio_1 = ratio;
+ratio = max(slider2,0.0001);
+
+treshdB == -.1 || ratio_1 < .1  ? (gain = seekgain = 1; );
+
+attack = exp( -treshdB/max( slider3*srate/1000 , 0) / c_ampdB  ) ;
+hold = slider4/1000*srate;
+under_tresh = 0;
+release = exp( -treshdB/max( slider5*srate/1000 , 0) / c_ampdB ) ;
+
+rms_size_1 = rms_size;
+rms_size = min( max(slider6/1000*srate,1) , 1000000);
+rms_size_1 != rms_size ? (
+    rms_sqr_sum = rms_bpos = 0;
+    memset(0,0,rms_size);
+);
+
+feed = slider7;
+
+mode_make_up = ratio < .5 ? 1:slider8;
+
+rms_size == 1 ? (
+    volume = exp(slider9/c_ampdB) / (mode_make_up ? tresh+(1-tresh)/ratio : 1);
+):(
+    volume = exp(slider9/c_ampdB) / (mode_make_up ? tresh+(1-tresh)/ratio * 2.828427125 : 1);
+);
+
+seekgain = 1;
+
+@sample
+feed == 0 ? (maxsamples = max(abs(spl0),abs(spl1)); );
+feed == 1 ? (maxsamples = max(abs(spl0_out),abs(spl1_out)); );
+feed == 2 ? (maxsamples = max(abs(spl2),abs(spl3)); );
+
+rms_sqr_sum = max(rms_sqr_sum - rms_bpos[0],0) + (rms_bpos[0] = sqr(maxsamples));
+(rms_bpos+=1) >= rms_size ? rms_bpos=0;
+rms = sqrt(rms_sqr_sum/rms_size);
+
+rms > tresh ? (
+    hold ?
+    (
+        ratio > 1 ? (
+            seekgain = min( (tresh+(rms-tresh)/ratio)/rms ,seekgain );
+        ):(
+            seekgain = max( (tresh+(rms-tresh)/ratio)/rms ,seekgain );
+        );
+    ):(
+        seekgain = (tresh+(rms-tresh)/ratio)/rms;
+    );
+    under_tresh = 0;
+):(
+    (under_tresh+=1)>hold ? (seekgain = 1; );
+);
+
+
+gain > seekgain ? gain=max(gain/attack,seekgain):gain=min(gain*release,seekgain);
+
+
+spl0_out = (spl0 *= gain * volume) ;
+spl1_out = (spl1 *= gain * volume) ;
+
+slider10 = log(gain)*c_ampdB;
+sliderchange(512);
+

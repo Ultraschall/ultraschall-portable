@@ -1,0 +1,54 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc:Flanger
+//tags: guitar flanger modulation
+//author: Cockos
+
+slider1:6<0,200,1>Length (ms)
+slider2:-120<-120,6,1>Feedback (dB)
+slider3:-6<-120,6,1>Wet Mix (dB)
+slider4:-6<-120,6,1>Dry Mix (dB)
+slider5:0.6<0.001,100,0.1>Rate (Hz)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+delaypos=0;
+
+@slider
+odelay=delaylen;
+delaylen=min(slider1 * srate / 1000,500000);
+odelay != delaylen ? freembuf(delaylen*2);
+
+wetmix = 2 ^ (slider2/6);
+wetmix2 = 2 ^ (slider3/6);
+drymix2 = 2 ^ (slider4/6);
+dppossc = 2*$pi*slider5 / srate;
+dpbacksc = delaylen*0.5 - 1;
+
+
+@sample
+
+dppos = dppos+dppossc;
+dpback = (sin(dppos)+1)*dpbacksc;
+dpint = delaypos-dpback-1;
+dpint < 0 ? dpint += delaylen;
+
+dpint *= 2;
+
+os1=dpint[0];
+os2=dpint[1];
+
+dpint = delaypos*2;
+
+dpint[0]=spl0 + os1*wetmix;
+dpint[1]=spl1 + os2*wetmix;
+
+(delaypos+=1) >= delaylen ? delaypos=0;
+
+spl0=spl0*drymix2 + os1*wetmix2;
+spl1=spl1*drymix2 + os2*wetmix2;

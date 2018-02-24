@@ -1,0 +1,94 @@
+// (C) 2006, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:5-Band Splitter
+desc:5-Band Splitter (Splits In Low:1+2,Mid:3+4,High:5+6,UberHigh:7+8,SomeMore:9+10) [LOSER]
+//tags: processing routing
+//author: LOSER
+
+slider1:200<0,22000,1>Crossover 1 (Hz)
+slider2:2000<0,22000,1>Crossover 2 (Hz)
+slider3:5000<0,22000,1>Crossover 3 (Hz)
+slider4:8000<0,22000,1>Crossover 4 (Hz)
+
+in_pin:left input
+in_pin:right input
+out_pin:low output left
+out_pin:low output right
+out_pin:mid output left
+out_pin:mid output right
+out_pin:high output left
+out_pin:high output right
+out_pin:uberhigh output left
+out_pin:uberhigh output right
+out_pin:somemore output left
+out_pin:somemore output right
+
+@init
+cDenorm=10^-30;
+
+@slider
+
+freqHII = max(min(slider4,srate),slider3);
+xHII = exp(-2.0*$pi*freqHII/srate);
+a0HII = 1.0-xHII;
+b1HII = -xHII;
+
+freqHI = max(min(min(slider3,srate),slider4),slider2);
+xHI = exp(-2.0*$pi*freqHI/srate);
+a0HI = 1.0-xHI;
+b1HI = -xHI;
+
+freqMID = max(min(min(slider2,srate),slider3),slider1);
+xMID = exp(-2.0*$pi*freqMID/srate);
+a0MID = 1.0-xMID;
+b1MID = -xMID;
+
+freqLOW = min(min(slider1,srate),slider3);
+xLOW = exp(-2.0*$pi*freqLOW/srate);
+a0LOW = 1.0-xLOW;
+b1LOW = -xLOW;
+
+@sample
+
+s0 = spl0;
+s1 = spl1;
+s0 = (tmplHII = a0HII*s0 - b1HII*tmplHII + cDenorm);
+s1 = (tmprHII = a0HII*s1 - b1HII*tmprHII + cDenorm);
+spl8 = spl0 - s0;
+spl9 = spl1 - s1;
+
+spl0 = s0;
+spl1 = s1;
+s0 = (tmplHI = a0HI*s0 - b1HI*tmplHI + cDenorm);
+s1 = (tmprHI = a0HI*s1 - b1HI*tmprHI + cDenorm);
+spl6 = spl0 - s0;
+spl7 = spl1 - s1;
+
+spl0 = s0;
+spl1 = s1;
+s0 = (tmplMID = a0MID*s0 - b1MID*tmplMID + cDenorm);
+s1 = (tmprMID = a0MID*s1 - b1MID*tmprMID + cDenorm);
+spl4 = spl0 - s0;
+spl5 = spl1 - s1;
+
+spl0 = s0;
+spl1 = s1;
+s0 = (tmplLOW = a0LOW*s0 - b1LOW*tmplLOW + cDenorm);
+s1 = (tmprLOW = a0LOW*s1 - b1LOW*tmprLOW + cDenorm);
+spl2 = spl0 - s0;
+spl3 = spl1 - s1;
+
+spl0 = s0;
+spl1 = s1;

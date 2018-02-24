@@ -1,0 +1,32 @@
+desc:Mid/Side Decoder
+//tags: utility mid-side processing
+//author: Cockos
+
+slider1:0<-120,24,1>Center Level (dB)
+slider2:0<0,1,1>Output Swap
+slider3:0<-1,1,0.01>Center Position
+
+in_pin:mid input
+in_pin:side input
+out_pin:left output
+out_pin:right output
+
+@slider
+// so we'll set our multiplier to be used later
+// so realistically this happens once or when the user changes shit.
+// we store our volume multiplier in 'vol', for use per-sample. 
+// in theory the sample code below could have this directly...
+vol = 2^(slider1/6); // convert from dB to a multiplier
+
+@sample
+// decoder section
+tmp=spl0*vol;
+spl0 = tmp + spl1;
+spl1 = tmp - spl1;
+slider2>0.5 ? (tmp=spl1; spl1=spl0; spl0=tmp; );
+
+// pan section here
+slider3 > 0  ? spl0 *= 1.0-slider3;
+slider3 < 0 ? spl1 *= 1.0+slider3;
+spl0 = spl0 * min(1.0-slider3,1);
+spl1 = spl1 * min(1.0+slider3,1);

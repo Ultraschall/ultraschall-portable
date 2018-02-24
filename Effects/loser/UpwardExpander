@@ -1,0 +1,85 @@
+// (C) 2007, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:Upward Expander
+desc:Upward Expander [LOSER]
+//tags: dynamics expander
+//author: LOSER
+
+slider1:0<-30,0,.1>Threshold (dB)
+slider2:1<0.25,1,.01>Ratio
+slider3:20<0,250,1>Attack (ms)
+slider4:200<0,500,1>Release (ms)
+slider5:0<0,250,1>RMS Size (ms)
+slider6:0<-6,50,.1>Output (dB)
+slider7:0<0,1,1{Feedforward (1+2),Sidechain (3+4)}>Feed
+slider8:0,Expansion (dB)
+slider9:-120<-120,0,.1>Dry Mix (dB)
+
+in_pin:main left
+in_pin:main right
+in_pin:sidechain left
+in_pin:sidechain right
+out_pin:left output
+out_pin:right output
+
+@init
+gain = seekgain = 1;
+c = 8.65617025;
+dc = 10^-30;
+
+t = 0;
+b = -exp(-120 / srate );
+a = 1.0 + b;
+
+@block
+slider8=slid8;
+sliderchange(64);
+slid8=0;
+
+@slider
+threshDB = slider1;
+thresh = exp(threshDB/c);
+ratio = 1/slider2;
+
+attack = exp( -60 / (slider3*srate/1000) / c);
+release = exp( -30 / (slider4*srate/1000) / c );
+
+rmsSize = floor(slider5/1000*srate);
+rmsSqrSum = rmsPos = 0;
+memset(0,0,rmsSize);
+
+volume = exp(slider6/c) / exp(( threshDB -threshDB*ratio )/c) ;
+
+dry = exp(slider9/c);
+
+seekgain = 1;
+
+@sample
+slider7 == 0 ? rms = max( abs(spl0) , abs(spl1) ):rms = max( abs(spl2) , abs(spl3) );
+
+rms = max( sqrt( (t = a*rms-b*t) ) , rms);    
+
+rmsSize > 1 ? (
+  rmsSqrSum = max(rmsSqrSum - rmsPos[0],0) + (rmsPos[0] = sqr(rms));
+  (rmsPos+=1) >= rmsSize ? rmsPos=0;
+  rms = sqrt(rmsSqrSum/rmsSize);
+);
+
+seekGain =  (rms > thresh) ? exp((threshDB + (log(rms)*c-threshDB)*ratio) /c) / rms : 1;
+gain = ((gain > seekGain) ? max( gain*release , seekGain ) : min( gain/attack , seekGain ));
+spl0 = spl0 * gain * volume + spl0 * dry;
+spl1 = spl1 * gain * volume + spl1 * dry;
+slid8 = max(log(gain)*c,slid8);
+

@@ -1,0 +1,151 @@
+desc: FFT Splitter
+//tags: processing FFT routing
+//author: Schwa
+
+slider1:2<0,4,1{1024,2048,4096,8192}>FFT Size
+slider2:5000<0,20000,1>Split Frequency (Hz)
+slider3:0<0,4,1{1/2,3/4,5/6,7/8}>Low Band Destination
+slider4:1<0,4,1{1/2,3/4,5/6,7/8}>High Band Destination
+// slider5:0<0,1,0.1>Debug
+
+in_pin:left input
+in_pin:right input
+out_pin:output 1
+out_pin:output 2
+out_pin:output 3
+out_pin:output 4
+out_pin:output 5
+out_pin:output 6
+out_pin:output 7
+out_pin:output 8
+
+@init 
+
+  fftsize = -1;
+  pdc_bot_ch = 0;
+  pdc_top_ch = 8;
+
+  // array pointers
+  window=0;
+  buf1 = 16384;
+  buf2 = 32768;
+  splitLo1 = 49152;
+  splitLo2 = 65536;
+  splitHi1 = 81920;
+  splitHi2 = 98304;
+
+@slider
+
+  pos = 0;
+  memset(buf1, 0, 2*fftsize);
+  memset(buf2, 0, 2*fftsize);
+  memset(splitLo1, 0, 2*fftsize);
+  memset(splitLo2, 0, 2*fftsize);
+  memset(splitHi1, 0, 2*fftsize);
+  memset(splitHi2, 0, 2*fftsize);
+
+  sliderfft = (2^(slider1+10))|0;
+  fftsize != sliderfft ? (
+    memset(window, 0, fftsize); 
+    fftsize = sliderfft;
+    w = 2.0*3.14159/fftsize;
+    i = 0;
+    loop(fftsize/2,
+      window[i] = 0.42-0.50*cos(i*w)+0.08*cos(2.0*i*w);
+      i += 1;
+    ); 
+    pdc_delay = fftsize;
+  );  
+
+  splitfreq = 2*((fftsize * slider2 / srate)|0);
+  wLo_01 = (slider3 == 0 ? 1.0 : 0.0);
+  wLo_23 = (slider3 == 1 ? 1.0 : 0.0);
+  wLo_45 = (slider3 == 2 ? 1.0 : 0.0);
+  wLo_67 = (slider3 == 3 ? 1.0 : 0.0);
+  wHi_01 = (slider4 == 0 ? 1.0 : 0.0);
+  wHi_23 = (slider4 == 1 ? 1.0 : 0.0);
+  wHi_45 = (slider4 == 2 ? 1.0 : 0.0);
+  wHi_67 = (slider4 == 3 ? 1.0 : 0.0);
+
+@sample
+
+  pos >= fftsize ? (
+    //memcpy(buf1, buf2+fftsize, fftsize);
+    tmp = buf1;
+    buf1 = buf2;
+    buf2 = tmp;
+ 
+    tmp = splitLo1;
+    splitLo1 = splitLo2;
+    splitLo2 = tmp;
+
+    tmp = splitHi1;
+    splitHi1 = splitHi2;
+    splitHi2 = tmp;    
+    
+    fft(buf1, fftsize);
+    fft_permute(buf1, fftsize);
+ 
+    memcpy(splitLo1+2, buf1+2, splitfreq);
+    memset(splitLo1+splitfreq+2, 0, 2*(fftsize-splitfreq-1));
+    memcpy(splitLo1+2*fftsize-splitfreq, buf1+2*fftsize-splitfreq, splitfreq);
+
+    i = 0;
+    sumRe = sumIm = 0.0;
+    loop(splitfreq/2,
+      sumRe += splitLo1[i+2] + splitLo1[2*fftsize-i-2];
+      sumIm += splitLo1[i+3] + splitLo1[2*fftsize-i-1];
+      i += 2;
+    );
+    splitLo1[0] = -sumRe;
+    splitLo1[1] = -sumIm;
+
+    memset(splitHi1, 0, splitfreq+2);
+    memcpy(splitHi1+splitfreq+2, buf1+splitfreq+2, 2*(fftsize-splitfreq-1));
+    memset(splitHi1+2*fftsize-splitfreq, 0, splitfreq);  
+
+    i = splitfreq+2;
+    sumRe = sumIm = 0.0;
+    loop(fftsize-splitfreq-1,
+      sumRe += splitHi1[i];
+      sumIm += splitHi1[i+1];
+      i += 2;
+    );
+    splitHi1[0] = -sumRe;
+    splitHi1[1] = -sumIm;
+
+    fft_ipermute(splitLo1, fftsize);
+    fft_ipermute(splitHi1, fftsize);
+    ifft(splitLo1, fftsize);
+    ifft(splitHi1, fftsize);
+
+    pos=0;
+  );
+
+  w1 = window[pos/2];
+  w2 = window[(fftsize-pos)/2-1];
+  sw = (w1+w2)*fftsize;
+
+  buf1[pos] = w1*spl0;
+  buf1[pos+1] = w1*spl1;
+  buf2[fftsize+pos] = w2*spl0;
+  buf2[fftsize+pos+1] = w2*spl1;
+
+  spl0Lo = (splitLo1[pos]+splitLo2[fftsize+pos])/sw;
+  spl1Lo = (splitLo1[pos+1]+splitLo2[fftsize+pos+1])/sw;
+  
+  spl0Hi = (splitHi1[pos]+splitHi2[fftsize+pos])/sw;
+  spl1Hi = (splitHi1[pos+1]+splitHi2[fftsize+pos+1])/sw;
+  
+  spl0 = wLo_01*spl0Lo + wHi_01*spl0Hi;
+  spl1 = wLo_01*spl1Lo + wHi_01*spl1Hi;
+  spl2 = wLo_23*spl0Lo + wHi_23*spl0Hi;
+  spl3 = wLo_23*spl1Lo + wHi_23*spl1Hi;
+  spl4 = wLo_45*spl0Lo + wHi_45*spl0Hi;
+  spl5 = wLo_45*spl1Lo + wHi_45*spl1Hi;
+  spl6 = wLo_67*spl0Lo + wHi_67*spl0Hi;
+  spl7 = wLo_67*spl1Lo + wHi_67*spl1Hi;
+
+  pos += 2;
+
+

@@ -1,0 +1,85 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+desc: Delay w/Tone Control
+//tags: delay
+//author: Cockos
+
+slider1:300<0,4000,20>Length (ms)
+slider2:-4<-120,6,0.1>Feedback (dB)
+slider3:0<-60,60,0.1>Bass Gain (dB)
+slider4:200<20,24000,10>Bass Frequency (Hz)
+slider5:0<-60,60,0.1>Treble Gain (dB)
+slider6:4000<20,24000,10>Treble Frequency (Hz)
+slider7:0.5<0,1,0.01>Output Mix
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+delaypos=0;
+Bc0=Bc1=Bc2=0;
+Bli1=Bli2=Bri1=Bri2=0;
+Tc0=Tc1=Tc2=0;
+Tli1=Tli2=Tri1=Tri2=0;
+ldelay1=ldelay2=rdelay1=rdelay2=0;
+
+@slider
+odelay=delaylen;
+delaylen=min(slider1 * srate / 1000,500000);
+freembuf(delaylen*2);
+delaypos >= delaylen || delaypos < 0 ? delaypos=0;
+
+wetmix = 2^ (slider2/6);
+wetmix2 = slider7;
+drymix2 = 1-slider7;
+
+width=1.5;
+// bass control
+arc=slider4*$pi/(srate*0.5);
+gain=(2 ^ (slider3/6));
+a=(sin(arc)*width) * (gain < 1 ? 1 : 0.25);
+tmp=1/(1+a);  
+Bc0=tmp*a*(gain-1);
+Bc1=tmp*2*cos(arc);
+Bc2=tmp*(a-1);
+
+// treble control
+arc=slider6*$pi/(srate*0.5);
+gain=(2 ^ (slider5/6));
+a=(sin(arc)*width) * (gain < 1 ? 1 : 0.25);
+tmp=1/(1+a);  
+Tc0=tmp*a*(gain-1);
+Tc1=tmp*2*cos(arc);
+Tc2=tmp*(a-1);
+
+
+
+@sample
+dpint = delaypos*2;
+os1=dpint[0];
+os2=dpint[1];
+
+// apply EQ to os1/os2
+
+Btmp=Bc0*(os1-ldelay2) + Bc1*Bli1 + Bc2*Bli2;
+Ttmp=Tc0*(os1-ldelay2) + Tc1*Tli1 + Tc2*Tli2;
+ldelay2=ldelay1; ldelay1=os1; 
+Tli2=Tli1; os1 += (Tli1=Ttmp);
+Bli2=Bli1; os1 += (Bli1=Btmp);
+
+Btmp=Bc0*(os2-rdelay2) + Bc1*Bri1 + Bc2*Bri2;
+Ttmp=Tc0*(os2-rdelay2) + Tc1*Tri1 + Tc2*Tri2;
+rdelay2=rdelay1; rdelay1=os2; 
+Tri2=Tri1; os2 += (Tri1=Ttmp);
+Bri2=Bri1; os2 += (Bri1=Btmp);
+
+
+dpint[0]=min(max(spl0 + os1*wetmix,-4),4);
+dpint[1]=min(max(spl1 + os2*wetmix,-4),4);
+
+(delaypos+=1) >= delaylen ? delaypos=0;
+
+spl0=spl0*drymix2 + os1*wetmix2;
+spl1=spl1*drymix2 + os2*wetmix2;

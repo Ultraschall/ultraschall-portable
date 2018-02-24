@@ -1,0 +1,51 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Pitch an Octave Down
+//tags: processing pitch
+//author: Cockos
+
+slider1:150<4,500,10>Chunk (ms)
+slider2:0.5<0,1>Overlap
+slider3:0<-120,6,1>Wet Mix (dB)
+slider4:-120<-120,6,1>Dry Mix (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+bufsize=-1;
+
+@slider 
+nbufsize=srate*0.001*slider1; nbufsize=nbufsize&65534; 
+nbufsize != bufsize ? (bufsize=nbufsize; bufpos=0);
+slider2=min(1,max(0,slider2)); rspos=bufsize*slider2; invbs=1/rspos;
+drymix=2 ^ (slider4/6); wetmix=2 ^ (slider3/6);
+
+
+@sample
+ss0=spl0;
+ss1=spl1;
+
+hbp=bufpos&65534;
+s0r=bufsize[hbp]; // read these early
+s1r=bufsize[hbp+1];
+
+(bufpos*2)[0]=spl0;
+(bufpos*2)[1]=spl1;
+
+bufpos < rspos ? (
+  sc=bufpos*invbs;
+  spl0=hbp[0]*sc + s0r*(1-sc);
+  spl1=hbp[1]*sc + s1r*(1-sc);
+) : (
+  spl0=hbp[0];
+  spl1=hbp[1];
+);
+
+(bufpos+=1) >= bufsize ? bufpos=0;
+
+spl0=spl0*wetmix + ss0*drymix;
+spl1=spl1*wetmix + ss1*drymix;

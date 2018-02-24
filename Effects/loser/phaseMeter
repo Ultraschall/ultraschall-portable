@@ -1,0 +1,42 @@
+// (C) 2006, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:Channel Phase Meter
+//tags: analysis utility
+//author: LOSER
+
+slider1:0,Sample Rate
+slider2:0<0,1,1{Mono,Stereo}>Output
+slider3:0<0,2,1{Out Of Phase,In Phase,-}>Stereo Channels
+slider4:200<0,1000,1>Check Interval (ms)
+
+in_pin:left input
+in_pin:right input
+out_pin:none
+
+@slider
+a = srate/1000 * slider4;
+@block
+(t+=samplesblock) > a ?
+(
+phase > 0 ? slider3=1:slider3=0;
+spl0==spl1 ? (slider2=0;slider3=2;):slider2=1;
+slider1=srate;
+sliderchange(1+2+4);
+phase=0;
+t=0;
+);
+@sample
+sign(spl0)!= sign(spl1) ? phase-=1 : phase+=1;
+

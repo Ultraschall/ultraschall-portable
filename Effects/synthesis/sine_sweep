@@ -1,0 +1,32 @@
+desc:Sine Sweep Generator
+//tags: analysis generator synthesis
+//author: Cockos
+
+/*
+Copyright (C) 2007 Cockos Incorporated
+License: LGPL - http://www.gnu.org/licenses/lgpl.html
+*/
+
+
+slider1:8<1,100,1>Approx Sweep Length (sec)
+in_pin:none
+out_pin:output (mono)
+out_pin:output (mono)
+
+@init
+@slider
+cpos=0;
+dcpos=0;
+dir=0;
+// after srate*slider1 samples, dcpos should be pi/2
+len=srate*slider1;
+idcpos=dcpos=$pi*16.0/srate;
+ddcpos=exp($pi*2/len);
+iddcpos=1/ddcpos;
+
+@sample
+spl0=spl1=sin(cpos);
+cpos+=dcpos;
+dir ? dcpos *= iddcpos : dcpos*=ddcpos;
+
+dcpos >= $pi && !dir ? dir=1 : dcpos<idcpos && dir ? dir=0;

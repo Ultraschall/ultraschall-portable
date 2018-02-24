@@ -1,0 +1,64 @@
+desc:MIDI Note Repeater
+//tags: MIDI processing
+
+slider1:1<0.1,4>Size (beats)
+
+in_pin:none
+out_pin:none
+
+@init 
+status=0;
+status2=128;
+memset(status,-1,128);
+memset(status2,0,128);
+
+@slider 
+div=slider1;
+
+@block
+
+while (
+midirecv(ts,msg1,msg23) ? 
+(
+  m=msg1&240;
+  note=msg23&127;
+  (m == 9*16 && msg23>=256) ? (
+    status[note]=0;
+    vel=(msg23/256);
+    vel<1?vel=1:vel>=127?vel=127:vel|=0;
+    status2[note]=vel;
+    midisend(ts,9*16,note+vel*256); // send note on
+  ) : (m == 8*16 || m == 9*16) ? (
+    status[note]=-1;
+    status2[note]>0.0 ? (
+      midisend(ts,8*16,note); // send note off
+      status2[note]=0;
+    );
+  ) : (
+    midisend(ts,msg1,msg23); 
+  );
+  bla=1;
+);
+);
+
+inc = samplesblock/srate*(tempo/60)*2/div;
+x=0;
+loop(128,
+  status[x]>=0.0 ? 
+  (
+    status[x] += inc;
+    status[x] >= 1.0 ? 
+    (
+      status[x] -= 1.0;
+      status2[x]>0.0 ? midisend(0,8*16,x) : midisend(0,9*16,x - status2[x]*256); 
+      status2[x]*=-1;
+    );
+  );
+  x+=1;
+);
+
+
+@sample
+
+
+

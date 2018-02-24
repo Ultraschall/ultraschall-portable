@@ -1,0 +1,128 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+// this algorithm is based on the one used by gtkguituner, the schmitt-triggering.
+
+desc: Tonifier v2
+//tags: processing generator mangler
+//author: Cockos
+
+slider1:0<-100,6,1>Wet Mix (dB)
+slider2:-100<-100,6,1>Dry Mix (dB)
+slider3:0.995<0.96,1>Amplitude Falloff (factor)
+slider4:0<-48,48,1>Frequency Shift (st)
+
+slider5:4<0,6,1>max auto shift (octaves)
+slider6:100<0,20000>auto shift min frequency (Hz)
+slider7:300<0,20000>auto shift max frequency (Hz)
+slider8:0,Output frequency (Hz)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+  sscal=2 ^ (slider4/12) / srate;
+  wet=2 ^ (slider1/6);
+  dry=2 ^ (slider2/6);
+
+  maxf=slider7/srate*2; minf=slider6/srate*2;
+
+  state=0;
+  splpos=0;
+  trigfact=0.5;
+  numsamples=1024;
+  lastrate=0;
+
+
+@block
+  updcnt=updcnt+samplesblock; 
+  updcnt > srate*0.5 ? ( updcnt=0; slider8=(freq0+freq1)*0.25*srate; sliderchange(128); );
+
+@sample
+
+@sample
+
+state ? 
+(
+  // track minimum and maximum values for sample
+  a1=max(a1,spl0);
+  a2=min(a2,spl0);
+
+  splpos[0]=spl0;
+  splpos += 1;
+  splpos >= 1024 ? 
+  (
+    splpos=0;
+    state=0;
+    a2 *= trigfact;
+    a1 *= trigfact;
+
+    lst=0;
+    startpoint=1;
+    loop(numsamples-1, 
+        lst == 0 && startpoint[0] > a1 ? lst=1;
+        lst == 1 && startpoint[0] >= a2 && startpoint[1] < a2 ? lst=2;
+        lst != 2 ? startpoint+=1;       
+    );
+    smtrig=0;
+    endpoint=startpoint+1;
+    tc=0;
+    i=startpoint;
+    loop(numsamples-startpoint,
+       smtrig ? 
+       ( 
+          i[0] >= a2 && i[1] < a2 ? (
+            endpoint=i;
+            tc+=1;
+            smtrig=0;
+          )
+       )
+       :
+       (
+          smtrig = i[0] >= a1;
+       );
+       i+=1;
+
+    );
+    endpoint == startpoint ? endpoint += 1;
+
+    lastrate = tc / (endpoint-startpoint);
+
+  );
+)
+:
+(
+  0[0] <= 0 && spl0 > 0 ?
+  (
+    state=1;
+    1[0]=spl0;
+    splpos=2;
+    a1=spl0;
+    a2=0[0];
+  );
+);
+
+
+// count amplitude (square maybe?)
+ampcnt0=max(ampcnt0,abs(spl0));
+ampcnt1=max(ampcnt1,abs(spl1));
+
+acnt0=ampcnt0 * (1-slider3) + acnt0*slider3;
+acnt1=ampcnt1 * (1-slider3) + acnt0*slider3;
+ampcnt0 *= slider3;
+ampcnt1 *= slider3;
+
+freq0=lastrate*2;
+freq1=lastrate*2;
+
+loop(slider5,
+  freq0 > maxf ? freq0*=0.5 : (freq0 < minf ? freq0 *= 2);
+  freq1 > maxf ? freq1*=0.5 : (freq1 < minf ? freq1 *= 2);
+);
+
+tpos0=tpos0+$pi*freq0;
+tpos1=tpos1+$pi*freq1;
+
+spl0=sin(tpos0)*acnt0*wet + spl0*dry;
+spl1=sin(tpos1)*acnt1*wet + spl1*dry;

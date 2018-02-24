@@ -1,0 +1,683 @@
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//
+//This modified version of the most excellent SS:rbj7eq is presented by TJ Higley.
+//Last modified: 2:36 PM, 2/18/07
+//
+//The frequency of the low shelf filter is customizable by modifying 'lowshelffreq' in line 52.
+//The frequency of each slider is customizable by modifying 'sliderXfreq' in lines 53 - 64. If you change these,
+//be sure to change the label in lines 36 - 51!  :)
+//The Q value of each slider is customizable by modifying 'sliderQ' in lines 65 - 76.
+
+desc:RBJ 12-Band EQ w/HPF
+//tags: equalizer filter
+//author: teej
+
+// based on RBJ Filter Cookbook
+
+slider1:0<0,400,5>HPF (dB)
+slider2:0<-12,12,0.1>Low Shelf (dB)
+slider3:0<-12,12,0.5>80 Hz (dB)
+slider4:0<-12,12,0.5>150 Hz (dB)
+slider5:0<-12,12,0.5>250 Hz (dB)
+slider6:0<-12,12,0.5>400 Hz (dB)
+slider7:0<-12,12,0.5>630 Hz (dB)
+slider8:0<-12,12,0.5>800 Hz (dB)
+slider9:0<-12,12,0.5>1.6 kHz (dB)
+slider10:0<-12,12,0.5>3 kHz (dB)
+slider11:0<-12,12,0.5>5 kHz (dB)
+slider12:0<-12,12,0.5>7 kHz (dB)
+slider13:0<-12,12,0.5>10 kHz (dB)
+slider14:0<-12,12,0.5>12 kHz (dB)
+slider15:22000<400,22000,5>LPF (dB)
+slider16:0<-12,12,0.5>Output Gain (dB)
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+
+  lowshelffreq = 110;
+  slider3freq = 80;
+  slider4freq = 150;
+  slider5freq = 250;
+  slider6freq = 400;
+  slider7freq = 630;
+  slider8freq = 800;
+  slider9freq = 1600;
+  slider10freq = 3000;
+  slider11freq = 5000;
+  slider12freq = 7000;
+  slider13freq = 10000;
+  slider14freq = 12000;
+  slider3Q = 1;
+  slider4Q = 1;
+  slider5Q = 1;
+  slider6Q = 1;
+  slider7Q = 1;
+  slider8Q = 1;
+  slider9Q = 1;
+  slider10Q = 1;
+  slider11Q = 1;
+  slider12Q = 1;
+  slider13Q = 1;
+  slider14Q = 1;
+
+cDcAdd = 10^-30;
+cDenorm = 10^-30;
+
+
+@slider
+
+  gain = 10^(slider16/20);
+
+
+  aHPF = 1;
+  sHPF = 1;
+  qHPF = 1 / (sqrt((aHPF + 1/aHPF)*(1/sHPF - 1) + 2));
+  w0HPF = 2 * $pi * slider1/srate;
+  cosw0HPF = cos(w0HPF);
+  sinw0HPF = sin(w0HPF);
+  alphaHPF = sinw0HPF / (2 * qHPF);
+
+  b0HPF = (1 + cosw0HPF)/2;
+  b1HPF = -(1 + cosw0HPF);
+  b2HPF = (1 + cosw0HPF)/2;
+  a0HPF = 1 + alphaHPF;
+  a1HPF = -2 * cosw0HPF;
+  a2HPF = 1 - alphaHPF;
+  b0HPF /= a0HPF;
+  b1HPF /= a0HPF;
+  b2HPF /= a0HPF;
+  a1HPF /= a0HPF;
+  a2HPF /= a0HPF;
+
+
+  aLS = 10^(slider2/40);
+  sLS = 2;
+  qLS = 1 / (sqrt((aLS + 1/aLS)*(1/sLS - 1) + 2));
+  w0LS = 2 * $pi * lowshelffreq/srate;
+  cosw0LS = cos(w0LS);
+  sinw0LS = sin(w0LS);
+  alphaLS = sinw0LS / (2 * qLS);
+
+  b0LS = aLS * ((aLS+1) - (aLS-1)*cosw0LS + 2*sqrt(aLS)*alphaLS);
+  b1LS = 2 * aLS * ((aLS-1) - (aLS+1)*cosw0LS);
+  b2LS = aLS * ((aLS+1) - (aLS-1)*cosw0LS - 2*sqrt(aLS)*alphaLS);
+  a0LS = (aLS+1) + (aLS-1)*cosw0LS + 2*sqrt(aLS)*alphaLS;
+  a1LS = -2 * ((aLS-1) + (aLS+1)*cosw0LS);
+  a2LS = (aLS+1)+(aLS-1)*cosw0LS-2*sqrt(aLS)*alphaLS;
+  b0LS /= a0LS;
+  b1LS /= a0LS;
+  b2LS /= a0LS;
+  a1LS /= a0LS;
+  a2LS /= a0LS;
+
+
+  qC = slider3Q;
+  aC = 10^(slider3/40);
+  w0C = 2 * $pi * slider3freq/srate;
+  cosw0C = cos(w0C);
+  sinw0C = sin(w0C);
+  alphaC = sinw0C / (2 * qC);
+
+  b0C = 1 + alphaC * aC;
+  b1C = -2 * cosw0C;
+  b2C = 1 - alphaC * aC;
+  a0C = 1 + alphaC / aC;
+  a1C = -2 * cosw0C;
+  a2C = 1 - alphaC / aC;
+  b0C /= a0C;
+  b1C /= a0C;
+  b2C /= a0C;
+  a1C /= a0C;
+  a2C /= a0C;
+
+
+  qD = slider4Q;
+  aD = 10^(slider4/40);
+  w0D = 2 * $pi * slider4freq/srate;
+  cosw0D = cos(w0D);
+  sinw0D = sin(w0D);
+  alphaD = sinw0D / (2 * qD);
+
+  b0D = 1 + alphaD * aD;
+  b1D = -2 * cosw0D;
+  b2D = 1 - alphaD * aD;
+  a0D = 1 + alphaD / aD;
+  a1D = -2 * cosw0D;
+  a2D = 1 - alphaD / aD;
+  b0D /= a0D;
+  b1D /= a0D;
+  b2D /= a0D;
+  a1D /= a0D;
+  a2D /= a0D;
+
+
+  qE = slider5Q;
+  aE = 10^(slider5/40);
+  w0E = 2 * $pi * slider5freq/srate;
+  cosw0E = cos(w0E);
+  sinw0E = sin(w0E);
+  alphaE = sinw0E / (2 * qE);
+
+  b0E = 1 + alphaE * aE;
+  b1E = -2 * cosw0E;
+  b2E = 1 - alphaE * aE;
+  a0E = 1 + alphaE / aE;
+  a1E = -2 * cosw0E;
+  a2E = 1 - alphaE / aE;
+  b0E /= a0E;
+  b1E /= a0E;
+  b2E /= a0E;
+  a1E /= a0E;
+  a2E /= a0E;
+
+
+  qF = slider6Q;
+  aF = 10^(slider6/40);
+  w0F = 2 * $pi * slider6freq/srate;
+  cosw0F = cos(w0F);
+  sinw0F = sin(w0F);
+  alphaF = sinw0F / (2 * qF);
+
+  b0F = 1 + alphaF * aF;
+  b1F = -2 * cosw0F;
+  b2F = 1 - alphaF * aF;
+  a0F = 1 + alphaF / aF;
+  a1F = -2 * cosw0F;
+  a2F = 1 - alphaF / aF;
+  b0F /= a0F;
+  b1F /= a0F;
+  b2F /= a0F;
+  a1F /= a0F;
+  a2F /= a0F;
+
+
+  qG = slider7Q;
+  aG = 10^(slider7/40);
+  w0G = 2 * $pi * slider7freq/srate;
+  cosw0G = cos(w0G);
+  sinw0G = sin(w0G);
+  alphaG = sinw0G / (2 * qG);
+
+  b0G = 1 + alphaG * aG;
+  b1G = -2 * cosw0G;
+  b2G = 1 - alphaG * aG;
+  a0G = 1 + alphaG / aG;
+  a1G = -2 * cosw0G;
+  a2G = 1 - alphaG / aG;
+  b0G /= a0G;
+  b1G /= a0G;
+  b2G /= a0G;
+  a1G /= a0G;
+  a2G /= a0G;
+
+
+  qH = slider8Q;
+  aH = 10^(slider8/40);
+  w0H = 2 * $pi * slider8freq/srate;
+  cosw0H = cos(w0H);
+  sinw0H = sin(w0H);
+  alphaH = sinw0H / (2 * qH);
+
+  b0H = 1 + alphaH * aH;
+  b1H = -2 * cosw0H;
+  b2H = 1 - alphaH * aH;
+  a0H = 1 + alphaH / aH;
+  a1H = -2 * cosw0H;
+  a2H = 1 - alphaH / aH;
+  b0H /= a0H;
+  b1H /= a0H;
+  b2H /= a0H;
+  a1H /= a0H;
+  a2H /= a0H;
+
+
+  qI = slider9Q;
+  aI = 10^(slider9/40);
+  w0I = 2 * $pi * slider9freq/srate;
+  cosw0I = cos(w0I);
+  sinw0I = sin(w0I);
+  alphaI = sinw0I / (2 * qI);
+
+  b0I = 1 + alphaI * aI;
+  b1I = -2 * cosw0I;
+  b2I = 1 - alphaI * aI;
+  a0I = 1 + alphaI / aI;
+  a1I = -2 * cosw0I;
+  a2I = 1 - alphaI / aI;
+  b0I /= a0I;
+  b1I /= a0I;
+  b2I /= a0I;
+  a1I /= a0I;
+  a2I /= a0I;
+
+
+  qJ = slider10Q;
+  aJ = 10^(slider10/40);
+  w0J = 2 * $pi * slider10freq/srate;
+  cosw0J = cos(w0J);
+  sinw0J = sin(w0J);
+  alphaJ = sinw0J / (2 * qJ);
+
+  b0J = 1 + alphaJ * aJ;
+  b1J = -2 * cosw0J;
+  b2J = 1 - alphaJ * aJ;
+  a0J = 1 + alphaJ / aJ;
+  a1J = -2 * cosw0J;
+  a2J = 1 - alphaJ / aJ;
+  b0J /= a0J;
+  b1J /= a0J;
+  b2J /= a0J;
+  a1J /= a0J;
+  a2J /= a0J;
+
+
+  qK = slider11Q;
+  aK = 10^(slider11/40);
+  w0K = 2 * $pi * slider11freq/srate;
+  cosw0K = cos(w0K);
+  sinw0K = sin(w0K);
+  alphaK = sinw0K / (2 * qK);
+
+  b0K = 1 + alphaK * aK;
+  b1K = -2 * cosw0K;
+  b2K = 1 - alphaK * aK;
+  a0K = 1 + alphaK / aK;
+  a1K = -2 * cosw0K;
+  a2K = 1 - alphaK / aK;
+  b0K /= a0K;
+  b1K /= a0K;
+  b2K /= a0K;
+  a1K /= a0K;
+  a2K /= a0K;
+
+
+  qL = slider12Q;
+  aL = 10^(slider12/40);
+  w0L = 2 * $pi * slider12freq/srate;
+  cosw0L = cos(w0L);
+  sinw0L = sin(w0L);
+  alphaL = sinw0L / (2 * qL);
+
+  b0L = 1 + alphaL * aL;
+  b1L = -2 * cosw0L;
+  b2L = 1 - alphaL * aL;
+  a0L = 1 + alphaL / aL;
+  a1L = -2 * cosw0L;
+  a2L = 1 - alphaL / aL;
+  b0L /= a0L;
+  b1L /= a0L;
+  b2L /= a0L;
+  a1L /= a0L;
+  a2L /= a0L;
+
+
+  qM = slider13Q;
+  aM = 10^(slider13/40);
+  w0M = 2 * $pi * slider13freq/srate;
+  cosw0M = cos(w0M);
+  sinw0M = sin(w0M);
+  alphaM = sinw0M / (2 * qM);
+
+  b0M = 1 + alphaM * aM;
+  b1M = -2 * cosw0M;
+  b2M = 1 - alphaM * aM;
+  a0M = 1 + alphaM / aM;
+  a1M = -2 * cosw0M;
+  a2M = 1 - alphaM / aM;
+  b0M /= a0M;
+  b1M /= a0M;
+  b2M /= a0M;
+  a1M /= a0M;
+  a2M /= a0M;
+
+
+  qN = slider14Q;
+  aN = 10^(slider14/40);
+  w0N = 2 * $pi * slider14freq/srate;
+  cosw0N = cos(w0N);
+  sinw0N = sin(w0N);
+  alphaN = sinw0N / (2 * qN);
+
+  b0N = 1 + alphaN * aN;
+  b1N = -2 * cosw0N;
+  b2N = 1 - alphaN * aN;
+  a0N = 1 + alphaN / aN;
+  a1N = -2 * cosw0N;
+  a2N = 1 - alphaN / aN;
+  b0N /= a0N;
+  b1N /= a0N;
+  b2N /= a0N;
+  a1N /= a0N;
+  a2N /= a0N;
+
+
+  aP = 1;
+  sP = 2;
+  qP = 1 / (sqrt((aP + 1/aP)*(1/sP - 1) + 2));
+  w0P = 2 * $pi * slider15/srate;
+  cosw0P = cos(w0P);
+  sinw0P = sin(w0P);
+  alphaP = sinw0P / (2 * qP);
+
+  b0P = (1 - cosw0P)/2;
+  b1P = (1 - cosw0P);
+  b2P = (1 - cosw0P)/2;
+  a0P = 1 + alphaP;
+  a1P = -2 * cosw0P;
+  a2P = 1 - alphaP;
+  b0P /= a0P;
+  b1P /= a0P;
+  b2P /= a0P;
+  a1P /= a0P;
+  a2P /= a0P;
+
+
+@sample
+
+  freq0 > 10 ? (
+  ospl0 = spl0;
+  spl0 = b00 * spl0 + b10 * xl10 + b20 * xl20 - a10 * yl10 - a20 * yl20;
+  xl20 = xl10;
+  xl10 = ospl0;
+  yl20 = yl10;
+  yl10 = abs(spl0) < cDenorm ? 0 : spl0 ;
+
+  ospl1 = spl1;
+  spl1 = b00 * spl1 + b10 * xr10 + b20 * xr20 - a10 * yr10 - a20 * yr20;
+  xr20 = xr10;
+  xr10 = ospl1;
+  yr20 = yr10;
+  yr10 = abs(spl1) < cDenorm ? 0 : spl1 ;
+  );
+
+
+
+  slider1 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0HPF * spl0 + b1HPF * xl1HPF + b2HPF * xl2HPF - a1HPF * yl1HPF - a2HPF * yl2HPF;
+  xl2HPF = xl1HPF;
+  xl1HPF = ospl0;
+  yl2HPF = yl1HPF;
+  yl1HPF = abs(spl0) < cDenorm ? 0 : spl0 ;
+
+  ospl1 = spl1;
+  spl1 = b0HPF * spl1 + b1HPF * xr1HPF + b2HPF * xr2HPF - a1HPF * yr1HPF - a2HPF * yr2HPF;
+  xr2HPF = xr1HPF;
+  xr1HPF = ospl1;
+  yr2HPF = yr1HPF;
+  yr1HPF = abs(spl1) < cDenorm ? 0 : spl1 ;
+  );
+
+
+spl0 += cDcAdd;
+spl1 += cDcAdd;
+
+  slider2 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0LS * spl0 + b1LS * xl1LS + b2LS * xl2LS - a1LS * yl1LS - a2LS * yl2LS;
+  xl2LS = xl1LS;
+  xl1LS = ospl0;
+  yl2LS = yl1LS;
+  yl1LS = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0LS * spl1 + b1LS * xr1LS + b2LS * xr2LS - a1LS * yr1LS - a2LS * yr2LS;
+  xr2LS = xr1LS;
+  xr1LS = ospl1;
+  yr2LS = yr1LS;
+  yr1LS = spl1;
+  );
+
+
+  slider3 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0C * spl0 + b1C * xl1C + b2C * xl2C - a1C * yl1C - a2C * yl2C;
+  xl2C = xl1C;
+  xl1C = ospl0;
+  yl2C = yl1C;
+  yl1C = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0C * spl1 + b1C * xr1C + b2C * xr2C - a1C * yr1C - a2C * yr2C;
+  xr2C = xr1C;
+  xr1C = ospl1;
+  yr2C = yr1C;
+  yr1C = spl1;
+  );
+
+
+  slider4 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0D * spl0 + b1D * xl1D + b2D * xl2D - a1D * yl1D - a2D * yl2D;
+  xl2D = xl1D;
+  xl1D = ospl0;
+  yl2D = yl1D;
+  yl1D = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0D * spl1 + b1D * xr1D + b2D * xr2D - a1D * yr1D - a2D * yr2D;
+  xr2D = xr1D;
+  xr1D = ospl1;
+  yr2D = yr1D;
+  yr1D = spl1;
+  );
+
+
+  slider5 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0E * spl0 + b1E * xl1E + b2E * xl2E - a1E * yl1E - a2E * yl2E;
+  xl2E = xl1E;
+  xl1E = ospl0;
+  yl2E = yl1E;
+  yl1E = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0E * spl1 + b1E * xr1E + b2E * xr2E - a1E * yr1E - a2E * yr2E;
+  xr2E = xr1E;
+  xr1E = ospl1;
+  yr2E = yr1E;
+  yr1E = spl1;
+  );
+
+
+  slider6 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0F * spl0 + b1F * xl1F + b2F * xl2F - a1F * yl1F - a2F * yl2F;
+  xl2F = xl1F;
+  xl1F = ospl0;
+  yl2F = yl1F;
+  yl1F = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0F * spl1 + b1F * xr1F + b2F * xr2F - a1F * yr1F - a2F * yr2F;
+  xr2F = xr1F;
+  xr1F = ospl1;
+  yr2F = yr1F;
+  yr1F = spl1;
+  );
+
+
+  slider7 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0G * spl0 + b1G * xl1G + b2G * xl2G - a1G * yl1G - a2G * yl2G;
+  xl2G = xl1G;
+  xl1G = ospl0;
+  yl2G = yl1G;
+  yl1G = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0G * spl1 + b1G * xr1G + b2G * xr2G - a1G * yr1G - a2G * yr2G;
+  xr2G = xr1G;
+  xr1G = ospl1;
+  yr2G = yr1G;
+  yr1G = spl1;
+  );
+
+
+  slider8 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0H * spl0 + b1H * xl1H + b2H * xl2H - a1H * yl1H - a2H * yl2H;
+  xl2H = xl1H;
+  xl1H = ospl0;
+  yl2H = yl1H;
+  yl1H = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0H * spl1 + b1H * xr1H + b2H * xr2H - a1H * yr1H - a2H * yr2H;
+  xr2H = xr1H;
+  xr1H = ospl1;
+  yr2H = yr1H;
+  yr1H = spl1;
+  );
+
+
+  slider9 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0I * spl0 + b1I * xl1I + b2I * xl2I - a1I * yl1I - a2I * yl2I;
+  xl2I = xl1I;
+  xl1I = ospl0;
+  yl2I = yl1I;
+  yl1I = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0I * spl1 + b1I * xr1I + b2I * xr2I - a1I * yr1I - a2I * yr2I;
+  xr2I = xr1I;
+  xr1I = ospl1;
+  yr2I = yr1I;
+  yr1I = spl1;
+  );
+
+
+  slider10 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0J * spl0 + b1J * xl1J + b2J * xl2J - a1J * yl1J - a2J * yl2J;
+  xl2J = xl1J;
+  xl1J = ospl0;
+  yl2J = yl1J;
+  yl1J = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0J * spl1 + b1J * xr1J + b2J * xr2J - a1J * yr1J - a2J * yr2J;
+  xr2J = xr1J;
+  xr1J = ospl1;
+  yr2J = yr1J;
+  yr1J = spl1;
+  );
+
+
+  slider11 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0K * spl0 + b1K * xl1K + b2K * xl2K - a1K * yl1K - a2K * yl2K;
+  xl2K = xl1K;
+  xl1K = ospl0;
+  yl2K = yl1K;
+  yl1K = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0K * spl1 + b1K * xr1K + b2K * xr2K - a1K * yr1K - a2K * yr2K;
+  xr2K = xr1K;
+  xr1K = ospl1;
+  yr2K = yr1K;
+  yr1K = spl1;
+  );
+
+
+  slider12 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0L * spl0 + b1L * xl1L + b2L * xl2L - a1L * yl1L - a2L * yl2L;
+  xl2L = xl1L;
+  xl1L = ospl0;
+  yl2L = yl1L;
+  yl1L = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0L * spl1 + b1L * xr1L + b2L * xr2L - a1L * yr1L - a2L * yr2L;
+  xr2L = xr1L;
+  xr1L = ospl1;
+  yr2L = yr1L;
+  yr1L = spl1;
+  );
+
+
+  slider13 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0M * spl0 + b1M * xl1M + b2M * xl2M - a1M * yl1M - a2M * yl2M;
+  xl2M = xl1M;
+  xl1M = ospl0;
+  yl2M = yl1M;
+  yl1M = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0M * spl1 + b1M * xr1M + b2M * xr2M - a1M * yr1M - a2M * yr2M;
+  xr2M = xr1M;
+  xr1M = ospl1;
+  yr2M = yr1M;
+  yr1M = spl1;
+  );
+
+
+  slider14 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0N * spl0 + b1N * xl1N + b2N * xl2N - a1N * yl1N - a2N * yl2N;
+  xl2N = xl1N;
+  xl1N = ospl0;
+  yl2N = yl1N;
+  yl1N = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0N * spl1 + b1N * xr1N + b2N * xr2N - a1N * yr1N - a2N * yr2N;
+  xr2N = xr1N;
+  xr1N = ospl1;
+  yr2N = yr1N;
+  yr1N = spl1;
+  );
+
+
+  slider15 != 22000 ? (
+  ospl0 = spl0;
+  spl0 = b0P * spl0 + b1P * xl1P + b2P * xl2P - a1P * yl1P - a2P * yl2P;
+  xl2P = xl1P;
+  xl1P = ospl0;
+  yl2P = yl1P;
+  yl1P = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0P * spl1 + b1P * xr1P + b2P * xr2P - a1P * yr1P - a2P * yr2P;
+  xr2P = xr1P;
+  xr1P = ospl1;
+  yr2P = yr1P;
+  yr1P = spl1;
+  );
+
+
+
+  spl0 *= gain;
+  spl1 *= gain;

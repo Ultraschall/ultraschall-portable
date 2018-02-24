@@ -1,0 +1,99 @@
+desc:MIDI Chord In Key
+//tags: MIDI processing
+
+slider1:2<-24,24,1>Notes In Key Advance For Note 1
+slider2:4<-24,24,1>Notes In Key Advance For Note 2
+slider3:0<0,11,1{C,C#,D,D#,E,F,F#,G,G#,A,A#,B}>Key
+slider4:1<0,1>Velocity Scale For Additional Notes
+slider5:0<0,127,1>Lowest Key (MIDI Note #)
+slider6:127<0,127,1>Highest Key (MIDI Note #)
+
+in_pin:none
+out_pin:none
+
+@init 
+
+// maps a in-key note to a semitone note
+tab=0;
+tab[0]=0;
+tab[1]=2;
+tab[2]=4;
+tab[3]=5;
+tab[4]=7;
+tab[5]=9;
+tab[6]=11;
+
+// maps a note to its nearest in-Cmaj note
+tab2=16;
+tab2[0]=0;
+tab2[1]=0;
+tab2[2]=2;
+tab2[3]=2;
+tab2[4]=4;
+tab2[5]=5;
+tab2[6]=5;
+tab2[7]=7;
+tab2[8]=7;
+tab2[9]=9;
+tab2[10]=9;
+tab2[11]=11;
+
+@slider
+slider1|=0;
+slider2|=0;
+key = slider3|0;
+
+@block
+
+while (
+midirecv(ts,msg1,msg23) ? 
+(
+  m=msg1&240;
+  note=msg23&127;
+
+  (m == 8*16 || m==9*16) && note >= slider5 && note <= slider6 ? 
+  (
+    note += 12-key;
+    noteidx=note%12;
+    octavebase=note-noteidx;
+
+    n2=noteidx+tab[slider1%7];
+    note2 = octavebase + tab2[n2%12] + ((n2/12)|0)*12;
+
+    n2=noteidx+tab[slider2%7];
+    note3 = octavebase + tab2[n2%12] + ((n2/12)|0)*12;
+
+    note-=12-key;
+    note2-=12-key;
+    note3-=12-key;
+
+
+    (m == 9*16 && msg23>=256) ? 
+    (
+      vel=(msg23/256)|0;
+      vel<0?vel=0:vel>=127?vel=127:vel|=0;
+      vel2=vel*slider4;
+      vel2<0?vel2=0:vel2>=127?vel2=127:vel2|=0;
+      vel2 *= 256.0;
+      vel *= 256.0;
+      note >= 0 && note < 128 ? midisend(ts,9*16,note+vel); // send note on
+      note2 >= 0 && note2 < 128 ? midisend(ts,9*16,note2+vel2); // send note on
+      note3 >= 0 && note3 < 128 ? midisend(ts,9*16,note3+vel2); // send note on
+    ) : (m == 8*16 || m == 9*16) ? (
+      note >= 0 && note < 128 ? midisend(ts,8*16,note); // send note off
+      note2 >= 0 && note2 < 128 ?  midisend(ts,8*16,note2); // send note off
+      note3 >= 0 && note3 < 128 ? midisend(ts,8*16,note3); // send note off
+    );
+  ) : 
+  (
+    midisend(ts,msg1,msg23);
+  );
+  bla=1;
+);
+);
+
+
+@sample
+
+
+

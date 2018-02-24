@@ -1,0 +1,26 @@
+desc:MIDI Note-On Delay
+//tags: MIDI processing delay
+
+slider1:0<0,4096>Max Delay Samples (limited to blocksize)
+slider2:0,--Poo
+
+in_pin:none
+out_pin:none
+
+@init 
+slider2=1;
+
+@block
+
+while(
+  midirecv(msgt,msg1,msg23)?
+  (
+    ((msg1&240)==144)?(
+      msgt+=rand(slider1);
+      slider2+=1;
+      sliderchange(slider2);      
+    );
+    midisend(msgt,msg1,msg23);
+    1;
+  ):0;
+);

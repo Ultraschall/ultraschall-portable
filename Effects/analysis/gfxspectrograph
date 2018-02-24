@@ -1,0 +1,358 @@
+desc:Spectrograph Spectrogram Meter (Cockos)
+//tags:analysis FFT meter spectrum
+//author: Cockos
+
+/*
+Copyright (C) 2007 Cockos Incorporated
+License: LGPL - http://www.gnu.org/licenses/lgpl.html
+*/
+
+slider1:6<0,11,1{16,32,64,128,256,512,1024,2048,4096,8192,16384,32768}>-FFT size
+slider2:2<0,3,1{rectangular,hamming,blackman-harris,blackman}>-window
+slider3:-180<-180,6,1>-gate (dB)
+slider4:0<0,10,0.1}>-frequency curve
+slider5:0<0,1,1>-scroll
+
+in_pin:left input
+in_pin:right input
+
+options:no_meter
+
+/* color ramp:
+1111222233334444555566667777
+------------rrRRRRRRRRRRRRRR
+----ggGGGGGGGGGGGGgg----ggGG
+bbBBBBBBBBbb--------bbBBBBBB
+
+
+7 sections, we'll say each will be 24dB
+
+
+*/
+
+@init
+gfx_ext_retina=1;
+fftsize=32768;
+recpos=0;
+gfx_clear=-1;
+windowtype=-1;
+over24=1/24;
+histsize=fftsize + fftsize*0.5 - 1;
+window=histsize;
+fftworkspace=window+fftsize*0.5 + 1;
+
+lrecpos=0;
+need_button_refs=1;
+
+@slider
+lfft=fftsize;
+a=(slider1|0);
+a<0?a=0:a>11?a=11;
+fftsize=2^(a+4);
+minvol=10^(slider3/20*2); // squared
+islogmode = slider4>0.0;
+g_logscale=pow(10.0,(slider4<1 ? slider4: slider4*10.0-11.0));
+
+@block
+
+ifftsize=1/fftsize;
+
+@sample
+recpos[]=(spl0+spl1);
+recpos+=1;
+recpos >= histsize ? recpos=0;
+
+
+@gfx 640 400
+gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
+
+
+old_w != gfx_w || old_h!=gfx_h? (
+cur_xpos=0;
+old_w=gfx_w; old_h=gfx_h;
+
+gfx_r=gfx_g=gfx_b=0; gfx_a=1;
+gfx_x=gfx_y=0;
+gfx_rectto(gfx_w,gfx_h);
+need_button_refs=1;
+);
+
+use_h = gfx_h-gfx_texth - 4;
+
+function calc_color(mv, col*) globals(over24)
+(
+  col.r=col.g=col.b=0;
+  
+  mv <= -96  ? 
+  (
+    mv>-168 ? (
+      mv <= -144 ? ( col.b = (mv+168)*over24*0.25) :
+      mv <= -120 ? ( col.g = (mv+144)*over24*0.25; col.b = 0.25; ) :
+                   ( col.g=0.25+(mv+120)*over24*0.5; col.b = 0.25-(mv+120)*over24*0.25) 
+    );
+  ) : (
+    mv <= -72 ? ( col.r = (mv+96)*over24; col.g = 0.75; ) :
+    mv <= -48 ? ( col.r = 1; col.g = 0.75-(mv+72)*over24*0.75; ) :
+    mv <= -24 ? ( col.r = 1; col.b = (mv+48)*over24; ) :
+    mv <= 0 ? ( col.r=col.b=1; col.g=(mv+24)*over24; ) :
+      col.r=col.g=col.b=1;
+  );    
+);
+
+function draw_button(xp, yp, str) instance(w,h,x,y) 
+   globals(g_button_right_extent,gfx_r,gfx_g,gfx_b,gfx_x,gfx_y,gfx_w) 
+(
+  gfx_measurestr(str, w, h);
+  xp + w + 2 >= gfx_w - 140 ? (
+    w = 0;
+  ) : (
+    x=xp;
+    y=yp;
+    gfx_r=gfx_g=0;
+    gfx_b=0.75;
+    w+=3;
+    h+=3;
+    gfx_rect(x,y,w,h);
+    gfx_b=1.0;
+    gfx_g=0.5;
+    gfx_line(x,y,x+w,y);
+    gfx_line(x+w,y,x+w,y+h);
+    gfx_line(x,y+h,x+w,y+h);
+    gfx_line(x,y,x,y+h);
+    h+=1;
+    w+=1;
+    gfx_x=xp+2; gfx_y=yp+2;
+    gfx_drawstr(str);
+    g_button_right_extent = gfx_x + 2;
+  )
+);
+function hit_button(xp,yp,cv) 
+instance(w,h,x,y) 
+globals(cap_mode, cap_last_x, cap_last_y) 
+( 
+  xp>=x&&yp>=y&&xp<x+w&&yp<y+h  ? (
+    cap_last_x = xp;
+    cap_last_y = yp;
+    cap_mode = cv;    
+  );
+);
+
+
+(mouse_cap & 1) ? (
+   !(last_mouse_cap & 1) ? (
+       cap_mode=0;
+       scroll_button.hit_button(mouse_x,mouse_y,-1) ? (
+         slider5=!slider5;
+         sliderchange(slider5);
+         need_button_refs=1;
+       ) : (
+         gate_button.hit_button(mouse_x,mouse_y,1)||
+         curve_button.hit_button(mouse_x,mouse_y,2) ||
+         fft_button.hit_button(mouse_x,mouse_y,3) ||
+         window_button.hit_button(mouse_x,mouse_y,4);
+       );
+    );
+    cap_mode == 1  && cap_last_y != mouse_y ? (
+      slider3 = min(max(slider3 + 0.1 * (cap_last_y-mouse_y),-180),6.0);
+      minvol=10^(slider3/20*2);
+      cap_last_y=mouse_y;
+      need_button_refs=1;
+      slider_automate(slider3);
+    );
+    cap_mode == 2  && cap_last_y != mouse_y ? (
+      slider4 = min(max(slider4 + 0.005 * (cap_last_y-mouse_y),0.0),10.0);
+      cap_last_y=mouse_y;
+      islogmode = slider4>0.0;
+      g_logscale=pow(10.0,(slider4<1 ? slider4: slider4*10.0-11.0));
+      need_button_refs=1;
+      slider_automate(slider4);
+    );
+    cap_mode == 3 && cap_last_y != mouse_y ? (
+      slider1 = min(max(slider1 + (cap_last_y-mouse_y)*.1,0.0),11.0);
+      fftsize=2^((slider1|0)+4);
+      
+      cap_last_y=mouse_y;
+      need_button_refs=1;
+      slider_automate(slider1);
+    );
+    cap_mode == 4 && cap_last_y != mouse_y ? (
+      slider2 = min(max(slider2 + (cap_last_y-mouse_y)*.01,0.0),3.0);
+      
+      cap_last_y=mouse_y;
+      need_button_refs=1;
+      slider_automate(slider2);
+    );
+  );
+
+last_mouse_cap = mouse_cap;
+
+need_button_refs ? (
+  need_button_refs=0;
+  gfx_a=1;
+  gfx_r=gfx_g=gfx_b=0;
+  gfx_rect(0,use_h,gfx_w,gfx_h-use_h);
+  gfx_x=0;
+  g_button_right_extent = 0;
+  scroll_button.draw_button(gfx_x, use_h, slider5 ? "[x] scroll"  : "[ ] scroll");  
+  fft_button.draw_button(gfx_x+8,use_h, sprintf(#,"FFT: %d",16<<slider1));
+  window_button.draw_button(gfx_x+8,use_h,
+     (slider2|0)==1?"hamming":
+     (slider2|0)==2?"blackman-harris":
+     (slider2|0)==3?"blackman":"rectangular");
+
+  curve_button.draw_button(gfx_x+8,use_h, sprintf(#,"curve: %.1f",slider4));
+  
+  gate_button.draw_button(gfx_x+8,use_h, sprintf(#,"gate: %.1fdB",slider3));
+);
+
+recpos != lrecpos ? (
+  windowsize != fftsize || windowtype != (slider2|0) ? (
+    windowtype=slider2|0; 
+    windowsize=fftsize;
+    i=0;
+    dwindowpos = $pi*2/fftsize;
+    windowpos=0;
+    pwr=0;
+    loop(fftsize*.5+1,
+       pwr += (window[i] =  (
+         windowtype==1 ? 0.53836 - cos(windowpos)*0.46164 :
+         windowtype==2 ? 0.35875 - 0.48829 * cos(windowpos) + 0.14128 * cos(2*windowpos) - 0.01168 * cos(3*windowpos) :
+         windowtype==3 ? 0.42 - 0.50 * cos(windowpos) + 0.08 * cos(2.0*windowpos) :
+          1.0));
+       windowpos+=dwindowpos;
+       i+=1;
+    );
+    pwr=1.0/(pwr*2-window[i-1]);
+    loop(fftsize,window[i-=1]*=pwr; );
+  );
+
+  lrecpos=recpos;
+
+  buf1=lrecpos-fftsize;
+  buf1<0 ? buf1+=histsize;
+  buf2=window;
+  buf3=fftworkspace;
+  loop(fftsize*.5+1,
+    buf3[] = buf1[]*buf2[];
+    buf3[1]=0;
+    buf3+=2;
+
+    buf2+=1;
+    (buf1+=1) >= histsize ? buf1 -= histsize;
+  );
+  buf2-=1;
+  loop(fftsize*.5-1,
+    buf3[] = buf1[]*(buf2-=1)[];
+    buf3[1]=0;
+    buf3+=2;
+
+    (buf1+=1) >= histsize ? buf1 -= histsize;
+  );
+  fft(fftworkspace,fftsize);
+  fft_permute(fftworkspace,fftsize);
+
+  lfftpos=0;
+  i=0;
+  lscale=10/log(10);
+  !(mouse_cap&1) || cap_mode>0 ? (
+   slider5 ? (
+     gfx_a=1;
+     cur_xpos = gfx_w-1;
+     gfx_blit(-1,1,0, 1,0,gfx_w-1,use_h, 0,0,gfx_w-1,use_h);
+   ) : (
+     gfx_a=0.1;
+     gfx_x=cur_xpos+1;
+     gfx_y=0; 
+     gfx_r=gfx_g=gfx_b=0;
+     gfx_rectto(cur_xpos+20,use_h);
+     cur_xpos+20 > gfx_w ? (
+       gfx_x=0;
+       gfx_y=0;
+       gfx_rectto(cur_xpos+20-gfx_w,use_h);
+     );
+   );
+   uselm = islogmode;
+   sc = (uselm ? (1.0/log(1+g_logscale)) : (1.0/use_h)) * 0.5*fftsize;
+   sc2=g_logscale/use_h;
+   loop(use_h,
+    tpos = (uselm ? ((fftsize*0.5 - 1 - log(1+(use_h-1-i)*sc2)*sc)) : i*sc)|0;
+    tpos >= fftsize*0.5 ? tpos=fftsize*0.5;
+    lfftpos >= tpos ? ( lfftpos=tpos-1; );
+    mv=0;
+    loop(tpos-lfftpos,
+      usei = max(lfftpos,0)*2;
+      aa=fftworkspace[usei]; 
+      bb=fftworkspace[usei+1];
+      dv=aa*aa+bb*bb;
+      dv<0.00000000000000000000001 ? dv=0.0000000000000000000000001;
+      dv>mv?mv=dv;
+
+      lfftpos+=1;
+    );
+    mv=mv <= minvol ? -200 : log(mv)*lscale;
+     
+    gfx_x=cur_xpos;    
+    gfx_y=use_h-i-1; 
+    gfx_a=1;
+
+    calc_color(mv,drawc);
+    gfx_setpixel(drawc.r,drawc.g,drawc.b);
+
+    i+=1;
+  );
+
+  cur_xpos+=1;
+  cur_xpos >= gfx_w ? cur_xpos=0;
+  );
+);
+
+
+gfx_x=g_button_right_extent;
+gfx_y=use_h;
+gfx_r=gfx_g=gfx_b=0;
+gfx_a=1;
+gfx_rectto(gfx_w,gfx_h);
+
+mouse_x >=0 && mouse_x < gfx_w  &&
+mouse_y >= 0 && mouse_y < use_h ? (
+  !(mouse_cap&1) ? mb=-169;
+  bla=0;
+  loop(9,
+    gfx_x=mouse_x - 1 + (bla%3); 
+    gfx_y=mouse_y - 1 + (bla/3);
+    gfx_getpixel(r,g,b); 
+
+    r||g||b ? 
+    ( 
+      val = i = -169;
+      bestdist = 10000000000;
+      while (i<=0)
+      (        
+        calc_color(i,tmp);
+        dist = sqr(tmp.r-r)+sqr(tmp.g-g)+sqr(tmp.b-b);
+        dist < bestdist ? ( val=i; bestdist=dist; );
+        i+=1;
+      );
+      mb = max(mb,val);
+    );
+    bla+=1;
+  );
+  (
+    mb > -168 ? (
+     sprintf(#infostr, "%.1f",mb);
+    ) : (
+     #infostr = "-oo";
+    );
+    disp_hz=mouse_y/use_h;
+    islogmode ? ( 
+      disp_hz = log(1+disp_hz*g_logscale)/log(1+g_logscale);
+    );
+
+    #infostr += sprintf(#,"dB %.0fHz",(1-disp_hz)*srate*0.5);
+    gfx_measurestr(#infostr,wid,0);
+    gfx_x=gfx_w-wid;
+    gfx_y=use_h + 2;
+    gfx_r=gfx_g=gfx_b=1;    
+    gfx_drawstr(#infostr);
+  );
+);

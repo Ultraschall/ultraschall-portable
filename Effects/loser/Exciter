@@ -1,0 +1,64 @@
+// (C) 2007, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:Exciter
+desc:Exciter [LOSER]
+//tags: processing exciter distortion
+//author: LOSER
+
+slider1:2000<100,18000,1>Frequency (Hz)
+slider2:0<0,6,.1>Clip Boost (dB)
+slider3:0<0,100,1>Harmonics (%)
+slider4:-6<-120,0,.1>Mix Back (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+c_ampDB = 8.65617025;
+cDenorm=10^-30;
+
+@slider
+clipBoost = exp(slider2/c_ampDB);
+mixBack = exp(slider4/c_ampDB);
+
+hdistr = min(slider3/100,.9);
+foo = 2*hdistr/(1-hdistr);
+
+freq = min(slider1,srate);
+x = exp(-2.0*$pi*freq/srate);
+a0 = 1.0-x;
+b1 = -x;
+
+@sample
+s0 = spl0;
+s1 = spl1;
+
+s0 -= (tmplONE = a0*s0 - b1*tmplONE + cDenorm);
+s1 -= (tmprONE = a0*s1 - b1*tmprONE + cDenorm);
+
+s0 = min(max(s0*clipBoost,-1),1);
+s1 = min(max(s1*clipBoost,-1),1);
+
+s0 = (1+foo)*s0/(1+foo*abs(spl0));
+s1 = (1+foo)*s1/(1+foo*abs(spl1));
+
+s0 -= (tmplTWO = a0*s0 - b1*tmplTWO + cDenorm);
+s1 -= (tmprTWO = a0*s1 - b1*tmprTWO + cDenorm);
+
+spl0 += s0 * mixBack;
+spl1 += s1 * mixBack;
+

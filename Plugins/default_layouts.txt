@@ -1,0 +1,588 @@
+
+GlobalLayout "Width control"
+
+
+Layout ""
+  clear tcp.*
+  set tcp.size [258 72]
+  set tcp.trackidx [1 3 20 16 0 0 0 0]
+  set tcp.foldercomp [2 3 20 20 0 0 0 0]
+
+  ; meter, recmon, recmode row
+  set tcp.meter h>=66 [66 46 188 20 0 0 1 0] [0]
+  set tcp.recmon h>=66 [24 47 20 20 0 0 0 0] [0]
+  set tcp.recmode h>=66 [44 47 20 20 0 0 0 0] [0] 
+
+  ; vol/pan labels (these could be condensed into no rect lines, but its harder to follow)
+  rect vollabel_row1 w>650 [23 7 36 13 1 0 1 0] [0] 
+  rect panlabel_row1 w>650 [62 7 30 13 1 0 1 0] [0]
+  set tcp.volume.label h<49 vollabel_row1 w<230 [0] [185 28 36 13 1 0 1 0]
+  set tcp.pan.label h<49 panlabel_row1 w<230 [0] [225 28 30 13 1 0 1 0]
+  
+  ; pan fader
+  rect pan_row1 w>500 w>650 [90 3 -67 20 .65 0 1 0] [90 3 2 20 .75 0 1 0] [0]
+  set tcp.pan w<230 [0] h<49 pan_row1 [131 24 51 20 0.75 0 1 0]
+
+  ; vol fader
+  rect vol_row1 w>330 w>500 [85 3 5 20 0.25 0 .75 0] [85 3 7 20 0.25 0 1 0] [0]
+  rect vol_row1 w>650 [85 3 5 20 0.25 0 .65 0] vol_row1
+
+  set tcp.volume h<49 vol_row1 w<230 [22 24 233 20 0 0 1 0] [22 24 109 20 0 0 0.75 0]
+
+  ; track name label
+  rect label_small w<100 [26 3 226 15 0 0 1 0] [26 3 182 15 0 0 1 0]
+  rect label_2row w<230 label_small [26 3 68 15 0 0 1 0]
+
+  set tcp.label h>=49 label_2row w<=330 label_2row [26 3 38 15 0 0 .25 0]
+
+  ; recarm button
+  set tcp.recarm h<49 w<=330 [0] [64 3 20 20 .25 0 .25 0] [2 24 20 20 0 0 0 0] 
+
+  ; other buttons
+  set tcp.folder w<230 [0] [98 3 20 20 1 0 1 0]
+  set tcp.io w<230 [0] [118 3 20 20 1 0 1 0]
+  set tcp.env w<230 [0] [138 3 20 20 1 0 1 0]
+  set tcp.fx w<230 [0] [158 3 20 20 1 0 1 0]
+  set tcp.fxbyp w<230 [0] [178 3 14 20 1 0 1 0]
+  set tcp.phase w<230 [0] [192 3 20 20 1 0 1 0]
+  set tcp.mute w<100 [0] [212 3 20 20 1 0 1 0]
+  set tcp.solo w<100 [0] [232 3 20 20 1 0 1 0]
+
+  set tcp.fxparm [4 76 250 -6 0 0 1 1]
+
+  Layout "No record input fx (classic)"
+    set tcp.meter tcp.meter ; force layout to exist for tcp
+  EndLayout
+
+
+  set tcp.fxin !!recarm tcp.meter{w}>0  + [0 2] [tcp.meter{x} tcp.meter{y} 20 20 tcp.meter{4} tcp.meter{5} tcp.meter{4} tcp.meter{5}]
+  set tcp.meter !!recarm + [22 0 -22 0]
+
+  ; derive from our defaults here
+  Layout "Vertical Meters"
+    set tcp.margin !recarm + tcp.margin [0 0 20 0]
+    set tcp.meter !recarm [260 2 16 66 1 0 1 1]
+    set tcp.recmode !recarm [0]
+    set tcp.recmon !recarm [0]
+    set tcp.fxparm [4 46 250 24 0 0 1 1]
+  EndLayout
+
+  Layout "Vertical Meters (thinner)"
+    set tcp.margin !recarm + tcp.margin [0 0 10 0]
+    set tcp.meter !recarm [260 2 8 66 1 0 1 1]
+    set tcp.recmode !recarm [0]
+    set tcp.recmon !recarm [0]
+    set tcp.fxparm [4 46 250 24 0 0 1 1]
+  EndLayout
+
+  Layout "No meters"
+    set tcp.meter [0]
+    set tcp.recmode !recarm [0]
+    set tcp.recmon !recarm [0]
+  EndLayout
+  Layout "No meter when not record armed"
+    set tcp.meter !recarm [0]
+    set tcp.recmode !recarm [0]
+    set tcp.recmon !recarm [0]
+  EndLayout
+
+
+  Layout "No folder indent"
+    set tcp.margin + tcp.margin * [-22 0 0 0] folderdepth
+  EndLayout
+
+  Layout "All folder indent"
+    set tcp.margin + tcp.margin * [-22 0 0 0] folderdepth
+    set tcp.margin + tcp.margin * [22 0 0 0] maxfolderdepth
+  EndLayout
+
+  Layout "Width control"
+    ; calculate alternate positions for vol/pan/width
+    ; if w>400, shrink pan and volume controls, add width
+    set wantwid w>400 tcp.pan{h}>0 1 0
+
+    set w_pan tcp.pan
+    set w_vol tcp.volume
+
+    set wantwidlbl w>520 tcp.volume.label{h}>0 1
+    set w_pan wantwidlbl{0}>0 + +:-1:1 [0 0 tcp.volume.label{w} 0 0 0 0 0] [0 0 -4]
+    set vadj -0.15
+    ; shrink volume by wvolsc
+    set w_vol + vadj@rs
+    ; move pan left by wvolsc
+    set w_pan + vadj@ls
+
+    set halfwid * 0.5 w_pan{w}
+    set avgscale +:0.5:0.5 w_pan{ls} w_pan{rs}
+
+    set w_width + w_pan [halfwid 0]
+    set w_width [. . halfwid . avgscale . w_pan{rs} .]
+    set w_pan  [. . halfwid .    . . avgscale . ]
+
+    set lblsize +:1:-1 tcp.volume.label{x} tmp
+
+    
+    set w_wlbl + tcp.pan.label [-6 0 6]
+    set w_plbl + tcp.volume.label  [-2 0 0]
+    set w_vlbl + +:1:-1 tcp.volume.label [tcp.volume.label{w}] [0 0 -2]
+
+    set tcp.width.label.margin [0 0 0 0 0]
+
+    set tcp.volume.label !!wantwidlbl{0} w_vlbl
+    set tcp.pan.label !!wantwidlbl{0} w_plbl
+    set tcp.width.label !!wantwidlbl{0} w_wlbl
+    set tcp.pan.label.margin !!wantwidlbl{0} [0 0 0 0 0.5]
+
+    set tcp.width !!wantwid{0} w_width
+    set tcp.pan !!wantwid{0} w_pan
+    set tcp.volume !!wantwid{0} w_vol
+
+  EndLayout
+
+EndLayout
+
+
+
+Layout ""
+  clear master.tcp.*
+  set master.tcp.size [258 70]
+  set master.tcp.meter [66 3 188 20 0 0 1 0]
+  set master.tcp.volume w>=230 [0 26 131 20 0 0 0.75 0] [0 26 255 20 0 0 1 0]
+  set master.tcp.pan w<230 [0] [131 26 51 20 0.75 0 1 0]
+  set master.tcp.label [3 3 63 20 0 0 0 0]
+  set master.tcp.io w<138 [0] [118 47 20 20 1 0 1 0]
+  set master.tcp.env w<118 [0] [138 47 20 20 1 0 1 0]
+  set master.tcp.fx [158 47 20 20 1 0 1 0]
+  set master.tcp.fxbyp [178 47 14 20 1 0 1 0]
+  set master.tcp.mono [192 47 20 20 1 0 1 0]
+  set master.tcp.mute [212 47 20 20 1 0 1 0]
+  set master.tcp.solo [232 47 20 20 1 0 1 0]
+  set master.tcp.volume.label w<230 [0] [185 31 36 13 1 0 1 0]
+  set master.tcp.pan.label w<230 [0] [225 31 30 13 1 0 1 0]
+  set master.tcp.fxparm [4 78 250 -10 0 0 1 1]
+EndLayout  ; default master tcp w/ walter
+
+Layout "Width control"
+  clear master.tcp.*
+  set master.tcp.size [258 70]
+  set master.tcp.meter [66 3 188 20 0 0 1 0]
+  set master.tcp.label [3 3 63 20 0 0 0 0]
+  set master.tcp.io w<138 [0] [118 47 20 20 1 0 1 0]
+  set master.tcp.env w<118 [0] [138 47 20 20 1 0 1 0]
+  set master.tcp.fx [158 47 20 20 1 0 1 0]
+  set master.tcp.fxbyp [178 47 14 20 1 0 1 0]
+  set master.tcp.mono [192 47 20 20 1 0 1 0]
+  set master.tcp.mute [212 47 20 20 1 0 1 0]
+  set master.tcp.solo [232 47 20 20 1 0 1 0]
+  set master.tcp.fxparm [4 78 250 -10 0 0 1 1]
+
+
+  set master.tcp.volume w>=230 [0 26 131 20 0 0 0.75 0] [0 26 255 20 0 0 1 0]
+  set master.tcp.pan w>=230 [131 26 51 20 0.75 0 1 0]
+  set master.tcp.volume.label w>=230 [185 31 36 13 1 0 1 0]
+  set master.tcp.pan.label w>=230 [225 31 30 13 1 0 1 0]
+
+  set redge + -190 w<320 w 320
+  set master.tcp.width w>=230 + redge@w [0 48 0 20 0 0 0 0]
+  set master.tcp.width.label w>230 + redge@x [4 52 38 13 0 0 0 0]
+EndLayout
+
+
+
+Layout ""
+  clear mcp.*
+  set mcp.size [71 214]
+  set mcp.trackidx [3 2 24 18 0 0 0 0]
+  set mcp.mute [30 2 20 20 0 0 0 0]
+  set mcp.solo [50 2 20 20 0 0 0 0]
+
+  set mcp.meter [25 42 22 132 0 0 0 1]
+  set mcp.volume [3 42 20 132 0 0 0 1]
+  set mcp.pan [3 176 65 20 0 1 0 1]
+  set mcp.volume.label [0 197 38 13 0 1 0 1]
+  set mcp.pan.label [39 197 29 13 0 1 0 1]
+  set mcp.label [3 23 63 15 0 0 0 0]
+  set mcp.folder [3 2 20 20 0 0 0 0]
+  set mcp.phase [50 42 20 20 0 0 0 0]
+  set mcp.io [50 62 20 20 0 0 0 0]
+  set mcp.env [50 82 20 20 0 0 0 0]
+  set mcp.fx [50 102 20 20 0 0 0 0]
+  set mcp.fxbyp [50 122 20 12 0 0 0 0]
+  set mcp.recarm [50 116 20 20 0 1 0 1]
+  set mcp.recmon [50 136 20 20 0 1 0 1]
+  set mcp.recmode [50 156 20 20 0 1 0 1]
+
+  Layout "Pan on top"
+    set mcp.meter [25 60 22 132 0 0 0 1]
+    set mcp.volume [3 60 20 132 0 0 0 1]
+    set mcp.pan [3 24 65 20 0 0 0 0]
+    set mcp.volume.label [0 44 38 13 0 0 0 0]
+    set mcp.pan.label [39 44 29 13 0 0 0 0]
+    set mcp.label [3 196 65 15 0 1 0 1]
+    set mcp.folder [3 2 20 20 0 0 0 0]
+    set mcp.phase [50 60 20 20 0 0 0 0]
+    set mcp.io [50 80 20 20 0 0 0 0]
+    set mcp.env [50 100 20 20 0 0 0 0]
+    set mcp.fx [50 120 20 20 0 0 0 0]
+    set mcp.fxbyp [50 140 20 12 0 0 0 0]
+    set mcp.recarm [50 134 20 20 0 1 0 1]
+    set mcp.recmon [50 154 20 20 0 1 0 1]
+    set mcp.recmode [50 174 20 20 0 1 0 1]
+  EndLayout
+
+  Layout "No record input fx (classic)"
+    set mcp.meter mcp.meter ; force layout to exist for tcp
+  EndLayout
+
+
+  set mcp.meter !!recarm + [0 0 0 -18]
+  set mcp.fxin !!recarm mcp.meter{w}>0 + + [1 1] [0 mcp.meter{h}] [mcp.meter{x} mcp.meter{y} 20 20 mcp.meter{6} mcp.meter{7} mcp.meter{6} mcp.meter{7}]
+
+EndLayout ; Default MCP w/ WALTER
+
+Layout "Width control"
+  clear mcp.*
+  set mcp.size [71 240]
+  set mcp.trackidx [3 2 24 18 0 0 0 0]
+  set mcp.mute [30 2 20 20 0 0 0 0]
+  set mcp.solo [50 2 20 20 0 0 0 0]
+  set mcp.folder [3 2 20 20 0 0 0 0]
+  set mcp.width.label.margin [0 0 0 0 0.5]
+
+  set mcp.pan [3 176 65 20 0 1 0 1]
+  set mcp.pan.label [39 197 29 13 0 1 0 1]
+  set mcp.volume.label [0 197 38 13 0 1 0 1]
+  set mcp.width [3 210 65 20 0 1 1 1]
+  set mcp.width.label [3 228 65 13 0 1 1 1]
+
+  set mcp.label [3 23 63 15 0 0 0 0] 
+
+  set mcp.meter [25 42 22 132 0 0 0 1]
+  set mcp.volume [3 42 20 132 0 0 0 1]
+  set mcp.phase [50 42 20 20 0 0 0 0]
+  set mcp.io [50 62 20 20 0 0 0 0]
+  set mcp.env [50 82 20 20 0 0 0 0]
+  set mcp.fx [50 102 20 20 0 0 0 0]
+  set mcp.fxbyp [50 122 20 12 0 0 0 0]
+  set mcp.recarm [50 116 20 20 0 1 0 1]
+  set mcp.recmon [50 136 20 20 0 1 0 1] 
+  set mcp.recmode [50 156 20 20 0 1 0 1]
+
+  set mcp.env h<260 [0]
+  set mcp.fx h<260 + [0 -20]
+  set mcp.fxbyp h<260 + [0 -20]
+
+  Layout "Width control, pan on top"
+    set pfadj [0 -152 0 0 0 -1 0 -1]
+    set mcp.pan + pfadj
+    set mcp.pan.label + pfadj
+    set mcp.volume.label + pfadj
+    set mcp.width + pfadj
+    set mcp.width.label + pfadj
+
+    set pfadj [0 198 0 0 0 1 0 1]
+    set mcp.label + pfadj 
+
+    set pfadj [0 47]
+    set mcp.meter + pfadj
+    set mcp.volume + pfadj
+    set mcp.phase + pfadj
+    set mcp.io + pfadj
+    set mcp.env + pfadj
+    set mcp.fx + pfadj
+    set mcp.fxbyp + pfadj
+    set mcp.recarm + pfadj
+    set mcp.recmon + pfadj
+    set mcp.recmode + pfadj
+
+    set mcp.env h<260 [0]
+    set mcp.fx h<260 + [0 -20]
+    set mcp.fxbyp h<260 + [0 -20]
+  EndLayout
+
+EndLayout
+
+
+
+
+
+Layout ""
+  clear master.mcp.*
+  set master.mcp.size [122 231]
+  set master.mcp.mute [79 2 20 20 0 0 0 0]
+  set master.mcp.solo [99 2 20 20 0 0 0 0]
+  set master.mcp.label [25 2 51 20 0 0 0 0]
+  set master.mcp.menubutton !0 [3 2 20 20 0 0 0 0]
+
+  set master.mcp.meter [26 25 68 166 0 0 0 1] 
+  set master.mcp.volume [3 25 20 166 0 0 0 1] 
+  set master.mcp.pan [2 193 116 20 0 1 0 1] 
+  set master.mcp.volume.label [0 214 58 13 0 1 0 1] 
+  set master.mcp.pan.label [62 214 47 13 0 1 0 1] 
+  set master.mcp.mono [99 25 20 20 0 0 0 0] 
+  set master.mcp.io [99 45 20 20 0 0 0 0] 
+  set master.mcp.env [99 65 20 20 0 0 0 0] 
+  set master.mcp.fx [99 85 20 20 0 0 0 0] 
+  set master.mcp.fxbyp [99 105 20 12 0 0 0 0] 
+
+
+  Layout "Pan on top"
+    set master.mcp.meter [26 60 68 165 0 0 0 1]
+    set master.mcp.volume [3 60 20 165 0 0 0 1]
+    set master.mcp.pan [2 24 116 20 0 0 0 0]
+    set master.mcp.volume.label [0 44 58 13 0 0 0 0]
+    set master.mcp.pan.label [62 44 47 13 0 0 0 0]
+    set master.mcp.mono [99 60 20 20 0 0 0 0]
+    set master.mcp.io [99 80 20 20 0 0 0 0]
+    set master.mcp.env [99 100 20 20 0 0 0 0]
+    set master.mcp.fx [99 120 20 20 0 0 0 0]
+    set master.mcp.fxbyp [99 140 20 12 0 0 0 0]
+  EndLayout
+
+EndLayout ; master mcp w/ walter
+
+Layout "Width control"
+  clear master.mcp.*
+  set master.mcp.size [122 257]
+  set master.mcp.mute [79 2 20 20 0 0 0 0]
+  set master.mcp.solo [99 2 20 20 0 0 0 0]
+  set master.mcp.menubutton !0 [3 2 20 20 0 0 0 0]
+  set master.mcp.label [25 2 51 20 0 0 0 0]
+
+  set master.mcp.width.label.margin [0 0 0 0 0.5]
+
+  set master.mcp.meter [26 25 68 166 0 0 0 1]
+  set master.mcp.volume [3 25 20 166 0 0 0 1]
+
+  set master.mcp.mono [99 25 20 20 0 0 0 0]
+  set master.mcp.io [99 45 20 20 0 0 0 0]
+  set master.mcp.env [99 65 20 20 0 0 0 0]
+  set master.mcp.fx [99 85 20 20 0 0 0 0]
+  set master.mcp.fxbyp [99 105 20 12 0 0 0 0] 
+
+  set master.mcp.pan [2 193 116 20 0 1 0 1]
+  set master.mcp.volume.label [0 214 58 13 0 1 0 1]
+  set master.mcp.pan.label [62 214 47 13 0 1 0 1]
+
+  set master.mcp.width [2 227 116 20 0 1 0 1]
+  set master.mcp.width.label [2 245 112 13 0 1 0 1]
+
+  Layout "Width control, pan on top"
+    set pfadj [0 64]
+    set master.mcp.meter + pfadj 
+    set master.mcp.volume + pfadj
+
+    set master.mcp.mono + pfadj
+    set master.mcp.io + pfadj
+    set master.mcp.env + pfadj
+    set master.mcp.fx + pfadj
+    set master.mcp.fxbyp + pfadj
+  
+    set pfadj [0 -169 0 0 0 -1 0 -1]
+    set master.mcp.pan + pfadj 
+    set master.mcp.volume.label + pfadj
+    set master.mcp.pan.label + pfadj
+
+    set master.mcp.width + pfadj
+    set master.mcp.width.label + pfadj
+  EndLayout
+EndLayout
+
+
+
+Layout ""
+  clear envcp.*
+  set envcp.size [300 100]
+  set envcp.margin folderdepth<1 [16 0 0 0] +:folderdepth:0 [22 0 0 0]
+
+  set envcp.hide [273 1 20 20 1 0 1 0]
+  set envcp.bypass [253 1 20 20 1 0 1 0]
+
+  ; show fx buttons when wide (these are ignored if not fx) or hide when not wide
+  set envcp.learn w>222 [233 1 20 20 1 0 1 0] [0]
+  set envcp.mod w>222 [213 1 20 20 1 0 1 0] [0]
+
+  set envcp.label [4 1 245 20 0 0 1 0]
+  set altlabelpos [28 1 152 20 0 0 .93 0] ; used when singlerow
+  set envcp.label h<=47 w>262 altlabelpos envcp_type!=4 w>222 altlabelpos
+  set envcp.label envcp_type==4 w>222 + [0 0 -40 0]  ; shrink label by 40px (room for fx buttons) if wide and fx
+
+  set envcp.arm [4 25 20 20 0 0 0 0]
+  set altarmpos [4 1 20 20 0 0 0 0]
+  set envcp.arm h<=47 w>262 altarmpos envcp_type!=4 w>222 altarmpos [0] [0] 
+
+  set envcp.fader [0 45 296 20 0 0 1 0] ; third row position
+  set envcp.fader h<=47 [0] h<=70 w>222 [28 25 205 20 0 0 .93 0] [0]
+
+  set envcp.value [28 25 268 20 0 0 1 0]
+  set envcp.value h<=70 w>222 [237 25 89 20 .93 0 1 0]
+  set envcp.value envcp_type!=4 h<=47 w<=222 [0] [184 1 67 21 .93 0 1 0]
+  set envcp.value envcp_type==4 h<=47 w<=262 [0] [144 1 67 21 .93 0 1 0]
+
+EndLayout
+
+Layout "Normal (almost)"
+  clear trans.*
+  ; todo: finish implementing default transport logic here (pain)
+  set trans.size [543 84]
+  set trans.size.minmax [219 28 2048 84]
+  set trans.size.dockedheight w<300 [84] [20] ; todo rules
+
+  ; rows<50, 1 row, <75 
+  set row1pos [0 0 0 0]
+  set row2pos [0 0 0 0]
+  set row3pos [0 0 0 0]
+
+  ; row1 size is 360..494
+  ; row2 size is 348..392
+  ; row3 size is 180..320, or 0 if !trans_flags&1
+  set row2adj trans_flags&4 [0] [-44 0]
+
+  set trans.rew + row1pos [5 1 24 24]
+  set trans.play + row1pos [29 1 24 24]
+  set trans.pause + row1pos [53 1 24 24] 
+  set trans.stop + row1pos [77 1 24 24]
+  set trans.fwd + row1pos [101 1 24 24]
+  set trans.rec + row1pos [125 1 24 24]
+  set trans.repeat + row1pos [149 1 24 24]
+
+  set trans.automode + row1pos [175 1 24 24]
+
+  set trans.status + row1pos [209 3 190 21]
+  ; set trans.status width
+
+
+  set trans.bpm.tap + row2pos [8 55 33 17]
+  set trans.bpm.edit + row2pos [43 55 55 17]
+
+  set trans.curtimesig trans_flags&4 + row2pos [100 55 40 17] [0]
+
+
+  set trans.sel + row2adj + row2pos [143 55 248 17]
+
+  set trans.rate + row3pos [8 30 74 17]
+  set trans.rate.fader + row3pos [84 27 441 23]
+
+EndLayout
+
+
+; some standalone tests
+
+Layout "Compact vertmix"
+  clear mcp.*
+  set mcp.size [20 202]
+  set mcp.trackidx [0 0 20 16 0 0 0 0]
+  set mcp.label [0 20 20 80 0 0 0 0.5]
+  set mcp.solo [0 100 20 20 0 0.5 0 0.5]
+  set mcp.meter ?1 [0 120 20 60 0 0.5 0 1.0]
+  set mcp.recarm ?1 [0 177 20 20 0 1.0 0 1.0]
+
+EndLayout
+
+Layout "Compact recording mixer vertical label"
+  clear mcp.*
+  set mcp.size [40 240]
+  set mcp.label [3 57 14 156 0 0 0 1]
+  set mcp.solo [1 1 20 20]
+  set mcp.trackidx [0 21 16 16]
+  set mcp.folder [0 37 20 20]
+  set mcp.recarm ?1 [1 217 20 20 0 1 0 1]
+  set mcp.meter ?1 [20 1 18 238 0 0 0 1] 
+EndLayout
+
+Layout "Compact recording mixer"
+  clear mcp.*
+  set mcp.size [40 240]
+  set mcp.label [2 2 35 14]
+  set mcp.solo [1 18 20 20]
+  set mcp.trackidx [0 38 16 16]
+  set mcp.folder [0 54 20 20]
+  set mcp.recarm [1 217 20 20 0 1 0 1]
+  set mcp.meter [20 20 18 217 0 0 0 1] 
+EndLayout
+
+Layout "Compact recording mixer (smaller)"
+  clear mcp.*
+  set mcp.size [32 240]
+  set mcp.solo [1 1 18 18]
+  set mcp.trackidx [0 19 16 16]
+  set mcp.folder [0 36 18 18]
+  set mcp.label [1 37 17 180 0 0 0 1]
+  set mcp.recarm ?1 [1 219 18 18 0 1 0 1]
+  set mcp.meter ?1 [18 18 12 219 0 0 0 1] 
+
+EndLayout
+
+Layout "Thin mixer"
+
+  clear mcp.*
+  set mcp.size [20 240]
+  set mcp.trackidx [0 0 20 20]
+  set mcp.folder [0 20 20 20]
+  set mcp.mute [0 40 20 20]
+  set mcp.solo [0 60 20 20]
+  set mcp.fx [0 80 20 20]
+  set mcp.fxbyp [0 100 20 12]
+  set mcp.io [0 115 20 20]
+  set mcp.recarm [0 135 20 20]
+  set mcp.recmode [0 155 20 20]
+  set mcp.recmon [0 175 20 20]
+
+  rect meter_volhide [0 195 20 45 0 0 0 1]
+  rect meter_volshow [0 225 20 15 0 0.5 0 1]
+
+  set mcp.meter h>400 meter_volshow meter_volhide
+  set mcp.volume h>400 [0 195 20 30 0 0 0 0.5] [0]
+
+  set mcp.volume h>450 + [0 0 0 -18]
+  set mcp.pan h>450 [2 205 16 16 0 0.5 0 0.5]
+  set mcp.width trackpanmode==4 h>450 mcp.pan
+
+  set mcp.pan trackpanmode==4 h>450 + [0 -18]
+  set mcp.volume trackpanmode==4 h>450 + [0 0 0 -18]
+   
+   
+
+EndLayout
+
+Layout "Transport w/o pause"
+  ; slightly override the defaults --
+    ; note that the default logic for positioning will still be used as long
+    ; as no comparison/combinators are used
+  set trans.automode [156 1 24 24]
+  set trans.repeat trans.rec
+  set trans.rec trans.fwd
+  set trans.fwd trans.stop
+  set trans.stop trans.pause
+  set trans.pause [0]
+  set trans.status [185 3 215 21]
+EndLayout
+
+Layout "Transport Chunky Test"    ; a transport test
+  clear trans.*
+  set trans.size [500 60]
+  set trans.size.minmax [340 60 1024 60]
+  set trans.size.dockedheight [60]
+  
+  set trans.sel [420 3 76 53 1 0 1 0]
+  set trans.bpm.tap w<490 [0] [330 3 38 20 1 0 1 0]
+  set trans.bpm.edit w<420 [0] [370 3 46 20 1 0 1 0]
+  set trans.curtimesig w<420 [0] [370 25 46 30  1 0 1 0]
+
+  def bxfac 0.4
+  set trans.status [5 3 195 25 0 0 bxfac 0]
+  set trans.rate [203 30 48 30 bxfac 0 bxfac 0]
+  set trans.rate.fader [5 30 195 25 0 0 bxfac 0]
+
+  set trans.play [203 2 24 24 bxfac 0 bxfac 0]
+  set trans.stop [227 2 24 24 bxfac 0 bxfac 0]
+  set trans.pause [251 2 24 24 bxfac 0 bxfac 0]
+  set trans.rec [274 2 24 24 bxfac 0 bxfac 0]
+  set trans.repeat [298 2 24 24 bxfac 0 bxfac 0]
+  set trans.rew [251 30 24 24 bxfac 0 bxfac 0]
+  set trans.fwd [274 30 24 24 bxfac 0 bxfac 0]
+  set trans.automode [298 30 24 24 bxfac 0 bxfac 0]
+
+EndLayout
+
+;GlobalLayout "name"

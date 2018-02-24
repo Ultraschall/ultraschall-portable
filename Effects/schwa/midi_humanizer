@@ -1,0 +1,137 @@
+desc:MIDI Velocity and Timing Humanizer
+//tags: MIDI processing
+//author: Schwa
+
+slider1:0<0,127,1>Baseline Velocity (0=use original) (automate!)
+slider2:0<0,1,1{No (Subtle timing humanization/bias),Yes (Shift original MIDI 1 beat early)}>Add 1 Beat Delay
+slider3:0<-10,10>Bias Timing Humanization (ms)
+slider4:0<0,10>Timing Humanization Level
+slider5:0<0,10>Velocity Humanization Level
+slider6:0<0,16,1>MIDI Channel (0=omni)
+slider7:0<-30,30>Output Timing Humanization (ms) (read-only)
+slider8:0<-64,64,1>Output Velocity Humanization (read-only)
+
+in_pin:none
+out_pin:none
+
+@init
+
+  // We are "humanizing" not "crapifying"
+  MAX_VEL_SHIFT = 0.25;  // Fraction of baseline velocity.
+  MAX_MSEC_SHIFT = 15; // Only applies if orig is shifted.
+  MAX_IS_X_STDEV = 1.5;  // Max shift represents this many std dev
+  
+  DEV_N = 12;
+  buffer = 0;
+  MSG_BUF = 128;  // msg buffer start location.
+  memset(0, 0, MSG_BUF);
+  n_buf = 0;
+
+  NOTE_ON = 9;
+  NOTE_OFF = 8;
+  AFTERTCH = 10;
+
+@block
+
+  while (
+    midirecv(mpos, msg1, msg23) ? (
+
+      bias_samples = srate * slider3 / 1000;
+
+      (slider2 == 0) ? (
+        baseline_pos_shift = 0;
+        min_pos = 0;
+	max_pos = samplesblock - 1;
+      ) : (
+        samples_per_beat = srate * 60 / tempo;
+        baseline_pos_shift = samples_per_beat;
+	min_pos = baseline_pos_shift - MAX_MSEC_SHIFT / 1000 * srate;
+ 	max_pos = baseline_pos_shift + MAX_MSEC_SHIFT / 1000 * srate;
+      );     
+
+
+      msg = (msg1 / 16) | 0;
+      channel = 1 + msg1 - (msg * 16);     
+      note_num = msg23 & 127;
+      velocity = (msg23 / 256) | 0;
+
+      (slider6 == 0 || slider6 == channel) ? (
+        (msg == NOTE_ON && velocity > 0 ) ? (
+          // Generate two quick & dirty normal deviates.
+          z1 = 0;
+          z2 = 0;
+          loop (DEV_N, 
+            z1 += rand(100) / 100;
+            z2 += rand(100) / 100;
+          );
+          z1 -= DEV_N / 2;
+          z2 -= DEV_N / 2;
+	
+      	  pos_shift = z1 * slider4 / 10;
+	  pos_shift *= (max_pos - min_pos) / MAX_IS_X_STDEV;
+		
+	  new_pos = mpos + bias_samples + baseline_pos_shift + pos_shift;
+	  new_pos = max(min_pos, new_pos);
+	  new_pos = min(new_pos, max_pos);
+
+  	  pos_shift = new_pos - mpos;
+  	  buffer[note_num] = pos_shift;
+	  mpos = new_pos;
+
+          (slider1 == 0) ? (
+            velocity = (msg23 / 256) | 0;
+          ) : (
+            velocity = slider1;
+          );
+          min_vel = (1 - MAX_VEL_SHIFT) * velocity;
+          max_vel = (1 + MAX_VEL_SHIFT) * velocity;
+
+          vel_shift = z2 * slider5 / 10;
+	  vel_shift *= (max_vel - min_vel) / MAX_IS_X_STDEV;
+	  vel_shift = floor(vel_shift + 0.5);
+          velocity += vel_shift;
+          velocity = max(1, velocity);
+          velocity = min(velocity, 127);
+          velocity |= 0;
+          msg23 = note_num + velocity * 256;
+
+	  msec_shift = (pos_shift - baseline_pos_shift) * 1000 / srate;
+	  slider7 = floor(msec_shift * 10) / 10;
+	  slider8 = vel_shift;
+	  sliderchange(2^6 + 2^7);
+        );
+
+        (msg == AFTERTCH) ? (
+          mpos += buffer[note_num];
+        );
+
+        (msg == NOTE_OFF || (msg == NOTE_ON && velocity == 0)) ? (
+          mpos += buffer[note_num];
+          buffer[note_num] = 0;
+        ); 
+      );
+
+      buffer[MSG_BUF+n_buf] = mpos;
+      buffer[MSG_BUF+n_buf+1] = msg1;
+      buffer[MSG_BUF+n_buf+2] = msg23;
+      n_buf += 3;
+    );
+  );
+
+  // Find everything in the buffer that is due
+  // to be played back in this block.
+  i = 0;
+  while (
+    (i < n_buf) ? (
+      mpos = buffer[MSG_BUF + i];
+
+      (mpos < samplesblock) ? (
+        midisend(mpos, buffer[MSG_BUF+i+1], buffer[MSG_BUF+i+2]);
+        memcpy(MSG_BUF+i, MSG_BUF+i+3, n_buf-i);
+        n_buf -= 3;
+      ) : (
+        buffer[MSG_BUF+i] -= samplesblock;
+        i += 3;
+      );
+    );
+  );

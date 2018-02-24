@@ -1,0 +1,4 @@
+//Sequence File. Each step should be on a new line and there should be no more lines after the final step.
+0
+1
+0

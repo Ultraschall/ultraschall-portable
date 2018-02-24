@@ -1,41 +1,12 @@
-# Compiled Lua sources
-luac.out
+# gitignore
+# Ultraschall
+#
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
-
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
+## App
 *.app
-*.i*86
-*.x86_64
-*.hex
 
+## Licence file
+*.rk
+
+
+reaper-reginfo2.ini

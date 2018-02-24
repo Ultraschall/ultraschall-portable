@@ -1,0 +1,469 @@
+desc:General Dynamics (Cockos)
+//tags: graphical processing compressor expander gate 
+// Copyright (C) 2016 Cockos Inc
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+slider1:slider_detect=0<0,1,1{main,aux (use with caution! can result in loud signals!),feedback (caution too!)}>Detector Input
+slider2:0<-40,40,1>Detector Gain (dB)
+slider3:slider_rms=0<0,1000,1>Detector RMS size (ms)
+slider4:slider_pdc=0<0,1000,1>Input lookahead (ms)
+slider5:slider_attack=5<0,200,0.1>Input Attack (ms)
+slider6:slider_release=250<0,1000,1>Input Release (ms)
+slider10:slider_attack_out=0<0,200,0.1>Gain Attack (ms)
+slider11:slider_release_out=0<0,200,0.1>Gain Release (ms)
+slider12:0<-150,24,1>Wet Mix (dB)
+slider13:-150<-150,24,1>Dry Mix (dB)
+
+in_pin:main L
+in_pin:main R
+in_pin:aux L
+in_pin:aux R
+out_pin:main L
+out_pin:main R
+
+@init
+gfx_clear=-1;
+gfx_ext_retina = 1;
+tab=0; // gain amount in dB, evenly divided over db_bottom..db_top
+tab.size == 0 ? (
+  // first-time initialization
+  tab.size=250;
+  db_bottom = -108;
+  db_top = 0;
+  view.zoom=1;
+  view.pan_x=0;
+  view.pan_y=0;
+  strcmp(sprintf(#, "%.0f", 0.5), "1") ? ( // thx Tale
+    #ctrlkey = "cmd";
+    #altkey = "opt";
+  ) : (
+    #ctrlkey = "ctrl";
+    #altkey = "alt";
+  );
+);
+
+db_i_range = 1 / (db_top-db_bottom);
+at.env=0;
+at.gainenv=1;
+at.lspl0=at.lspl1=0;
+
+function amp_to_x(v) (
+  v > 0.0000000001 ? (
+    max(0,min(1,(log(v)*(20.0/log(10)) - db_bottom) * db_i_range));
+  );
+);
+
+function gain_db_for_x(x) local(idx,p) (
+  idx=floor(x*=(tab.size-1));  
+  
+  idx < 0 ? tab[0] : 
+  idx >= tab.size-1 ? tab[tab.size-1] : (
+    x-=idx;
+    p=tab[idx];
+    p + (tab[idx+1]-p)*x;
+  );
+);
+
+function ms_to_slope(ms) global(srate) (
+  ms = (ms*0.001*srate);
+  ms < 1 ? 0 : exp(-1.0 / ms);
+);
+
+function parmchg.db_begin(idx,sv) 
+  instance(chg_splpos, val, tgtval, dval)
+  global(samplesblock)
+(
+  chg_splpos=slider_next_chg(idx, tgtval);
+  chg_splpos > 0 ? (
+    val=sv<=-150?0:exp(sv*(0.05*log(10)));
+    tgtval = tgtval<=-150?0:exp(tgtval*(0.05*log(10)));
+  ) : (
+    tgtval = sv<=-150?0:exp(sv*(0.05*log(10)));
+    chg_splpos = samplesblock;
+  );
+  dval=(tgtval-val)/chg_splpos;    
+);
+
+function parmchg.process(idx, sv) 
+  instance(val, dval, chg_splpos, tgtval)
+  global(at.cnt)
+(
+  dval=0.0;
+  chg_splpos=slider_next_chg(idx, tgtval);
+  chg_splpos > at.cnt ? 
+  (
+    tgtval = tgtval<=-150 ? 0 : exp(tgtval*(0.05*log(10)));
+    dval=(tgtval-val)/(chg_splpos-at.cnt);
+  );
+);
+
+function get_bez_y(x2, y1,y2,y3, x) local(a,it,t)
+(
+  t = (a = 1 - (2 * x2)) == 0 ? x : ((sqrt(x2 * x2 + a * x)-x2) / a);
+  it = 1.0 - t; 
+  (it*it) * y1 + t*(2.0 * it * y2 + t * y3);
+);
+
+function sample_tab(offs, sz) local(sum,cnt,sc,rd1,rd2) (
+  rd1=offs+1; rd2=offs-1;
+  sum=cnt=0;
+  sc=1;
+  loop(sz,
+    rd1>=0 && rd1 < tab.size ? ( cnt+=sc; sum+=tab[rd1]*sc; );
+    rd2>=0 && rd2 < tab.size ? ( cnt+=sc; sum+=tab[rd2]*sc; );    
+    rd2-=1; rd1+=1; sc*=0.5;
+  );
+  cnt ? (tab[offs] * 0.5 + 0.5 * sum / cnt) : tab[offs];
+);
+
+function rms.init(buf, maxsz) global() (
+  this.buf = buf;
+  this.maxsz=maxsz|0;
+  this.size=this.suml=this.sumr=this.cnt=this.ptr=0;  
+);
+
+function rms.getmax(splsquarel, splsquarer) 
+  instance(buf suml sumr cnt ptr size maxsz) 
+  local(i) 
+  global()
+(
+  while (cnt >= size) (
+    i = (ptr<cnt ? ptr-cnt+maxsz:ptr-cnt)*2;
+    suml -= buf[i];
+    sumr -= buf[i+1];
+    cnt-=1;
+  );
+  cnt+=1;
+  buf[i=ptr*2]=splsquarel; 
+  buf[i+1]=splsquarer; 
+  (ptr+=1) >= maxsz ? ptr=0;  
+  (suml += splsquarel) < 0 ? suml=0;
+  (sumr += splsquarer) < 0 ? sumr=0;
+  sqrt(max(suml,sumr)/size);
+);
+
+function rms.set_size(sz) global() (
+  (this.size=max(0,min(sz|0,this.maxsz))) < 1 ? (
+    this.cnt=this.suml=this.sumr=0;
+  );
+);
+
+function delay.init(buf, sz) global() (
+  this.buf = buf;
+  this.maxsz = sz;
+  this.size = this.ptr = this.cnt = 0;  
+);
+
+function delay.process(s) local(a) instance(maxsz cnt ptr buf size) global() (
+  cnt >= size ? (
+    a = ptr - size;
+    a=buf[a<0?a+maxsz:a];
+  ) : (
+    a=0;
+    cnt+=1;
+  );
+  buf[ptr]=s;
+  (ptr+=1)>=maxsz ? ptr=0;
+  a;
+);
+
+rms.init(16384,srate);
+delay.init(rms.buf + rms.maxsz*2, srate*2);
+pdc_delay=0;
+
+@slider
+attack_slope = ms_to_slope(slider_attack);
+release_slope = ms_to_slope(slider_release);
+out_attack_slope = ms_to_slope(slider_attack_out);
+out_release_slope = ms_to_slope(slider_release_out);
+rms.set_size(slider_rms * srate * 0.001);
+
+(pdc_delay = min(slider_pdc*srate*0.001, delay.maxsz*.5)|0) > 0 ? (
+  pdc_bot_ch=0;
+  pdc_top_ch=2;
+  delay.size = pdc_delay*2;
+);
+
+@serialize
+file_avail()>=0?last_w=0;
+
+file_var(0,tab.size);
+file_mem(0,tab,tab.size);
+file_var(0,db_top);
+file_var(0,db_bottom);
+db_i_range = 1 / (db_top-db_bottom);
+
+// could make this config eventually
+//file_var(0,view.zoom);
+//file_var(0,view.pan_x);
+//file_var(0,view.pan_y);
+
+@block
+
+at.cnt=0;
+ingain.parmchg.db_begin(2,slider2);
+wet.parmchg.db_begin(12,slider12);
+dry.parmchg.db_begin(13,slider13);
+
+@sample
+at.cnt == ingain.parmchg.chg_splpos ? ingain.parmchg.process(2,slider2);
+at.cnt == wet.parmchg.chg_splpos ? wet.parmchg.process(12,slider12);
+at.cnt == dry.parmchg.chg_splpos ? dry.parmchg.process(13,slider13);
+
+rms.size > 1 ? (
+  at.mv = slider_detect ? 
+          slider_detect == 2 ? rms.getmax(sqr(at.lspl0*ingain.parmchg.val),sqr(at.lspl1*ingain.parmchg.val)) :
+            rms.getmax(sqr(spl2*ingain.parmchg.val),sqr(spl3*ingain.parmchg.val)) : 
+            rms.getmax(sqr(spl0*ingain.parmchg.val),sqr(spl1*ingain.parmchg.val));
+) : (
+  at.mv = slider_detect ? 
+          slider_detect == 2 ? max(abs(at.lspl0*ingain.parmchg.val),abs(at.lspl1*ingain.parmchg.val)) :
+            max(abs(spl2*ingain.parmchg.val),abs(spl3*ingain.parmchg.val)) : 
+            max(abs(spl0*ingain.parmchg.val),abs(spl1*ingain.parmchg.val));
+);
+at.env = at.mv + (at.mv > at.env ? attack_slope : release_slope)*(at.env-at.mv);
+at.mv = exp(gain_db_for_x(amp_to_x(at.env))*(log(10)/20));
+at.gainenv = at.mv + (at.mv > at.gainenv ? out_attack_slope : out_release_slope)*(at.gainenv-at.mv);
+at.mix = at.gainenv * wet.parmchg.val + dry.parmchg.val;
+
+pdc_delay > 0 ? (
+  at.lspl0 = spl0 = delay.process(spl0) * at.mix;
+  at.lspl1 = spl1 = delay.process(spl1) * at.mix;
+) : (
+  at.lspl0 = (spl0 *= at.mix);
+  at.lspl1 = (spl1 *= at.mix);
+);
+
+at.cnt+=1;
+ingain.parmchg.val += ingain.parmchg.dval;
+wet.parmchg.val += wet.parmchg.dval;
+dry.parmchg.val += dry.parmchg.dval;
+
+@gfx 400 400
+gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
+
+function view.zoom(xpos,ypos, amt) local(newsz) instance(zoom pan_x pan_y)
+(
+  xpos=min(max(xpos,0),1);
+  ypos=min(max(ypos,0),1);
+  newsz = exp(amt);
+  zoom*newsz < 0.8 ? newsz = 0.8/zoom : zoom*newsz > 32.0 ? newsz=32.0/zoom;
+  zoom *= newsz;
+  
+  newsz=1/newsz;
+  pan_x = min(1,max(-1,(pan_x-xpos)*newsz + xpos));
+  pan_y = min(1,max(-1,(pan_y-ypos)*newsz + ypos));
+);
+
+sz=min(gfx_w-60,gfx_h-gfx_texth-8)|0;
+left = ((gfx_w - 60-sz)*0.5)|0;
+top = ((gfx_h-gfx_texth-8-sz)*0.5)|0;
+
+sz = (sz*view.zoom)|0;
+left-= (view.pan_x*sz)|0;
+top -= (view.pan_y*sz)|0;
+
+right=left + sz;
+bottom = top + sz;
+
+mouse_wheel ? (
+  view.zoom((mouse_x-left)/sz,(mouse_y-top)/sz,mouse_wheel*0.002);
+  mouse_wheel=0;
+);
+
+
+env_x = left + max(0,(amp_to_x(at.env)*sz)|0);
+gaindb = at.gainenv > 0.00000001 ? log(at.gainenv)*(20/log(10)) : -160;
+gaindby = env_x < 0 ? 0 : ((gaindb*sz*db_i_range)|0);
+
+sz != last_sz || last_env_x != max(env_x,-1) || last_gaindby != gaindby ||
+gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap ? (
+  last_sz = sz;
+  last_gaindby = gaindby;
+  last_env_x = max(env_x,-1);
+  last_w=gfx_w;
+  last_h=gfx_h;
+  gfx_set(0.125);
+  gfx_rect(0,0,gfx_w,gfx_h);
+  
+  gfx_set(0.5);
+  gfx_line(left,bottom,right,bottom);
+  gfx_line(right,bottom+gfx_texth+2,right,top);
+  gfx_line(left,bottom+1,left,bottom);
+   
+  gfx_a=0.25;
+  
+  i=0;
+  dbsc=3;
+  while (sz<24*(ndiv=((db_top-db_bottom)/dbsc)|0) && ndiv>1) ( 
+    dbsc = (dbsc==12?18:dbsc*2); // the == 12?18: is a bit 108-dB-range specific
+  );
+  gridsz = sz/ndiv;
+  dbsc = (db_bottom-db_top)/ndiv;
+  lx = -1000;
+  loop(ndiv,
+    j = i*gridsz;
+    gfx_x = left + j;
+    top+j < gfx_h-gfx_texth-4 ? gfx_line(left,top+j,right,top+j);
+    gfx_x < gfx_w-50 ? gfx_line(gfx_x,top,gfx_x,bottom);
+
+    gfx_x > lx+60*gfx_ext_retina && gfx_x < right-90*gfx_ext_retina ? (
+      lx = gfx_x;
+      gfx_y = min(bottom + 2,gfx_h-gfx_texth-2);
+      gfx_line(gfx_x,min(bottom,gfx_y),gfx_x,bottom+gfx_texth+2);
+      gfx_x+=2;
+      gfx_printf("%+ddB",floor(db_bottom - i*dbsc + 0.5));
+    );
+    
+    i += 1;
+    gfx_y=top+i*gridsz-gfx_texth*0.5+1;
+    right < gfx_w - 60 ? ( 
+      gfx_x=right+2;
+    ) : (
+      gfx_x=gfx_w-60;
+      gfx_y -= gfx_texth+2;
+    );
+    gfx_y < gfx_h-gfx_texth*2-4 ? gfx_printf("%+ddB",floor(db_top + i*dbsc + 0.5));
+  );
+  
+  sprintf(#topstr,"%+ddB",db_top);
+  gfx_measurestr(#topstr,gfx_x,0);
+  gfx_x=right -4 - gfx_x; 
+  gfx_y = min(bottom + 2,gfx_h-gfx_texth-2);
+  gfx_drawstr(#topstr); 
+  
+  gfx_line(left,bottom,right,top);
+  gfx_a=1;
+  gfx_x=gfx_y=2;
+  
+  (mouse_cap&3) ? (
+    0==(last_mouse_cap&3) ? ( 
+      // ui.capmode: 0=line, 1=pencil, 2=smooth, 3=erase, 4=pan/zoom
+      ui.capmode=(mouse_cap&2) ? 4 : (mouse_cap&16) ? 3 : (mouse_cap&4)? 1 : (mouse_cap&8) ? 2 : 0;
+      ui.capmode == 0 ? memcpy(tab+tab.size,tab,tab.size);
+      last_mouse_y = mouse_y;
+      last_mouse_x = mouse_x;
+      click_pt_sc_x = (mouse_x - left)/sz;
+      click_pt_sc_y = (mouse_y - top)/sz;
+    ) : (
+      (mouse_cap&4) ? (
+        ui.capmode == 0 ? (
+          memcpy(tab+tab.size,tab,tab.size);
+          ui.last_a=ui.a;
+          ui.last_v=ui.v;
+        );
+      );
+    );
+    ui.newv = db_bottom + (bottom-mouse_y) * (db_top-db_bottom) / sz;
+    ui.newa = max(0,min(tab.size-1,((mouse_x - left)*(tab.size-1)/(sz-1) + 0.5)|0));
+    ui.a < 0 || ui.last_a < 0 || ui.capmode != 0 || 0==(mouse_cap&16) ? (
+      ui.a=ui.newa;
+      ui.v=ui.newv;      
+      ui.want_curve=0;
+    ) : (
+      ui.curve_v = ui.newv;
+      ui.curve_a = ui.newa;
+      ui.want_curve=1;
+    );
+       
+    ui.capmode == 4 ? (
+      (mouse_cap & 8) ? (
+        gfx_drawstr("zoom");
+        last_mouse_y != mouse_y ? view.zoom(click_pt_sc_x,click_pt_sc_y,(last_mouse_y-mouse_y)*0.005);
+      ) : (
+        gfx_drawstr("pan [shift to zoom]");
+        view.pan_x = min(1,max(-1,view.pan_x - (mouse_x-last_mouse_x)/sz));
+        view.pan_y = min(1,max(-1,view.pan_y - (mouse_y-last_mouse_y)/sz));
+      );
+    ) : (mouse_cap&2) ? (
+       // right mouse down during other edits still pans
+        view.pan_x = min(1,max(-1,view.pan_x - (mouse_x-last_mouse_x)/sz));
+        view.pan_y = min(1,max(-1,view.pan_y - (mouse_y-last_mouse_y)/sz));
+    ) : (
+      ui.last_a >= 0 && ui.a >= 0 ? ( 
+        ui.capmode == 0 ? memcpy(tab,tab+tab.size,tab.size);   
+        ui.wpos = min(ui.a,ui.last_a);
+        ui.amt = ui.last_a - ui.a;
+        ui.midpt = (ui.last_a-ui.curve_a)/ui.amt;
+        ui.amt > 0 ? (
+          ui.dwpos = -1;
+          ui.wpos += ui.amt;
+        ) : (  
+          ui.amt = -ui.amt;
+          ui.dwpos = 1;
+        );
+        ui.amt > 0 ? (
+          i=0;
+          di=1/ui.amt;
+          loop(ui.amt+1,
+            tab[ui.wpos]=
+                  ui.capmode == 3 ? 0 : 
+                  ui.capmode == 2 ? sample_tab(ui.wpos,8) : 
+                  (
+                    (ui.want_curve && ui.wpos != ui.a && ui.wpos != ui.last_a ? 
+                            get_bez_y(ui.midpt, ui.last_v, ui.curve_v, ui.v, i) :
+                            (ui.last_v + (ui.v-ui.last_v)*i)
+                    )-((ui.wpos/(tab.size-1)*(db_top-db_bottom)) + db_bottom)
+                  );
+            i+=di;
+            ui.wpos+=ui.dwpos;
+          );
+        );
+      );
+      
+      ui.capmode!=0 || ui.last_a < 0 ? (
+        ui.last_a=ui.a; 
+        ui.last_v=ui.v;    
+      );
+      ui.capmode == 3 ? gfx_drawstr("erase") :
+      ui.capmode == 2 ? gfx_drawstr("smooth") :
+      ui.capmode == 1 ? gfx_drawstr("pencil") :
+      ui.capmode == 0 ? (
+        ui.want_curve ? gfx_drawstr("adjust curve") :
+        gfx_printf("line [%s to adjust curve, %s to commit]",#altkey,#ctrlkey);
+      );
+    );
+  ) : (
+    divstr=gfx_w>=470 ? "   " : "\n";
+    gfx_printf("pencil: %s%s"
+               "smooth: shift%s"
+               "erase: %s%s"
+               "pan/zoom: right",
+      #ctrlkey, divstr,divstr,#altkey,divstr);
+    ui.last_a >= 0 ? (
+      ui.last_a = -1;
+      sliderchange(-1);
+    );
+    ui.a>=0 ? ui.a=-1;
+  );
+  last_mouse_cap=mouse_cap;
+  last_mouse_y=mouse_y;
+  last_mouse_x=mouse_x;
+
+  i=max(0,-left);
+  isz = 1/sz;
+  loop(sz-i,
+    gfx_x=i + left;
+    dbo = (((db_top-db_bottom) * i + gain_db_for_x(i*isz)*(sz)) * db_i_range)|0;
+    gfx_r=gfx_g=1; gfx_b=0;
+    gfx_x==env_x && env_x>left ? (
+      gfx_a=0.5;
+      gfx_rect(gfx_x,bottom-dbo,1,dbo);
+      gaindb < 0  ? (
+        gfx_r=1; gfx_g=gfx_b=.3;
+        gfx_rect(gfx_x-2,bottom-i,5,-gaindby);       
+      ) : (
+        gfx_g=1; gfx_r=gfx_b=.3;
+        gfx_rect(gfx_x-2,bottom-i-gaindby,5,gaindby);       
+      );
+      gfx_x+=4;
+      gfx_y=bottom-i-gfx_texth*.5;
+      gaindb > -150 ? gfx_printf("%+.1fdB", gaindb) : gfx_printf("-inf dB");
+    ) : (
+      gfx_a = gfx_x < env_x ? .25 : 0.125;
+      gfx_rect(gfx_x,bottom - dbo,1,dbo);      
+    );
+    i+=1;
+  );
+);
+ 

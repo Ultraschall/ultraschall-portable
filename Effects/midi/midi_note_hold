@@ -1,0 +1,33 @@
+desc:MIDI Note Hold
+//tags: MIDI processing
+
+slider1:0<0,16,1>Channel (0=omni)
+
+in_pin:none
+out_pin:none
+
+@init
+held=-1;
+
+@slider
+chan=slider1|0;
+
+@block
+
+while (
+  midirecv(ts,msg,msg23) ? (
+     (msg&$xf) == chan && (msg&$xe0)==$x80 ? (
+        vel = (msg23/256)&$xff;
+        (msg&16) && vel ? 
+        (
+          held >= 0 ? midisend(ts,$x80 + chan, held);
+          held = msg23&$xff;
+          midisend(ts,$x90+chan,held + (vel*256));
+        );
+     ) : (
+       midisend(ts,msg,msg23);
+     );
+
+     1; // always loop if received msg
+  );
+);

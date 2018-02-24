@@ -1,0 +1,96 @@
+// rockband drum input
+
+// hold select and hit one of the 4 pads to select skill level (in non-bfd mode)
+
+// TODO: xbox 360 values below
+
+
+
+// buttons (bitmask), numbuttons (valid bits in buttons)
+// systime (time in seconds)
+// axis(x), numaxis (number actually supported)
+// pov(x), numpov, pov(x) > 360 if not pointing
+
+@submode PS3
+@submode PS3 (for bfd)
+@submode XBox360
+@submode XBox360 (for bfd)
+
+// input config 
+(submode & 2) ? ( 
+ // (these are for xbox 360) 
+
+ // TODO need to correct these for xbox
+ kick_button = 16;
+ pads_hit = 1024;
+ select_button = 256;
+ pad1 = $x4;
+ pad2 = $x8;
+ pad3 = $x1;
+ pad4 = $x2;
+) : (
+ // (these are for ps3)
+ kick_button = 16;
+ pads_hit = 1024;
+ select_button = 256;
+ pad1 = $x4;
+ pad2 = $x8;
+ pad3 = $x1;
+ pad4 = $x2;
+);
+
+
+padmask = pad1|pad2|pad3|pad4;
+
+
+
+vel1=vel2=vel3=vel4=vel5=127;
+// output config
+(submode & 1) ? (
+note1 = 36;  // kick
+note2 = 38; //snare
+note3 = 42; // hh
+note4 = 45; // tom
+note5 = 49; // cymbal
+vel5 = 45;
+
+) : (
+
+(buttons & select_button) && (buttons&pads_hit) ? (
+  (buttons & pad1) ? skill_level=0;
+  (buttons & pad2) ? skill_level=1;
+  (buttons & pad3) ? skill_level=2;
+  (buttons & pad4) ? skill_level=3;
+);
+note1 = 60 + skill_level*12; // kick note 
+note2 = note1+1; // deltas to each extra
+note3 = note2+1; 
+note4 = note3+1;
+note5 = note4+1;
+);
+
+(buttons & kick_button) && !(lastbuttons&kick_button) ? (
+  event($x90,note1,vel1);
+  event($x80,note1,0);
+);
+
+(buttons & pads_hit) && !(buttons & select_button) ? (
+  (buttons & pad1) &&  !(lastbuttons & pad1) ? (
+    event($x90,note2,vel2);
+    event($x80,note2,0);
+  );
+  (buttons & pad2) &&  !(lastbuttons & pad2) ? (
+    event($x90,note3,vel3);
+    event($x80,note3,0);
+  );
+  (buttons & pad3) &&  !(lastbuttons & pad3) ? (
+    event($x90,note4,vel4);
+    event($x80,note4,0);
+  );
+  (buttons & pad4) &&  !(lastbuttons & pad4) ? (
+    event($x90,note5,vel5);
+    event($x80,note5,0);
+  );
+);
+
+lastbuttons=buttons;

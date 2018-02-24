@@ -1,0 +1,149 @@
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:Fairly Childish Compressor/Limiter
+desc:Fairly Childish Compressor/Limiter similar to F670 [Stillwell]
+//tags: dynamics compressor limiter
+//author: Stillwell
+
+slider1:0<-60,0,0.1>Threshold (dB)
+slider2:70<0.1,100,0.1>Bias
+slider3:0<-30,30,0.1>Makeup Gain
+slider4:0<0,1,1{Left/Right,Lat/Vert}>AGC
+slider5:1<1,6,1>Time Constant
+slider6:100<1,10000,1>Level Detector RMS Window
+slider7:1<1,50,0.1>Current Compression Ratio
+slider8:0<-90,0,0.1>Gain Reduction
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  log2db = 8.6858896380650365530225783783321; // 20 / ln(10)
+  db2log = 0.11512925464970228420089957273422; // ln(10) / 20 
+  i=0;
+  attime=0.0002; //200us
+  reltime=0.300; //300ms
+  rmstime=0.000050; //50us
+  maxover=0;
+  ratio=0;
+  cratio=0;
+  rundb=0;
+  overdb=0;
+  maxover=0;
+  atcoef=exp(-1/(attime * srate));
+  relcoef=exp(-1/(reltime * srate));
+  rmscoef=exp(-1/(rmstime * srate));
+  leftright = 0;
+  latvert = 1;
+
+@slider
+  thresh = slider1;
+  threshv = exp(thresh * db2log);
+  ratio = 20;
+  bias = 80 * slider2 / 100;
+  cthresh = thresh - bias;
+  cthreshv = exp(cthresh * db2log);
+  makeup = slider3;
+  makeupv = exp(makeup * db2log);
+  agc = slider4;
+  timeconstant = slider5;
+  timeconstant == 1 ? (
+    attime = 0.0002;
+    reltime = 0.300;
+  );
+  timeconstant == 2 ? (
+    attime = 0.0002;
+    reltime = 0.800;
+  );
+  timeconstant == 3 ? (
+    attime = 0.0004;
+    reltime = 2.000;
+  );
+  timeconstant == 4 ? (
+    attime = 0.0008;
+    reltime = 5.000;
+  );
+  timeconstant == 5 ? (
+    attime = 0.0002;
+    reltime = 10.000;
+  );
+  timeconstant == 6 ? (
+    attime = 0.0004;
+    reltime = 25.000;
+  );
+  atcoef = exp(-1 / (attime * srate));
+  relcoef = exp(-1 / (reltime * srate));
+  
+  rmstime = slider6 / 1000000; 
+  rmscoef=exp(-1/(rmstime * srate));
+
+@sample
+  agc == leftright ? (
+    aspl0 = abs(spl0);
+    aspl1 = abs(spl1);
+  ) : (  
+    aspl0 = abs(spl0+spl1)/2;
+    aspl1 = abs(spl0-spl1)/2;
+  );
+
+  maxspl = max(aspl0, aspl1);
+  maxspl = maxspl * maxspl;
+
+  runave = maxspl + rmscoef * (runave - maxspl);
+  det = sqrt(max(0,runave));
+
+  overdb = 2.08136898 * log(det/threshv) * log2db;
+  overdb = max(0,overdb);
+
+  overdb > rundb ? (
+    rundb = overdb + atcoef * (rundb - overdb);
+  ) : (
+    rundb = overdb + relcoef * (rundb - overdb);
+  );
+  overdb = max(rundb,0);
+
+  bias == 0 ? (
+    cratio = ratio;
+  ) : (
+    cratio = 1 + (ratio-1) * sqrt((overdb + dcoffset) / (bias + dcoffset));
+  );
+  slider7 = cratio;
+  
+  gr = -overdb * (cratio-1)/cratio;
+  slider8 = -gr;
+  grv = exp(gr * db2log);
+  
+  agc == leftright ? (
+    spl0 *= grv * makeupv;
+    spl1 *= grv * makeupv;
+  ) : (
+    sav0 = (spl0 + spl1) * grv;
+    sav1 = (spl0 - spl1) * grv;
+    spl0 = makeupv * (sav0 + sav1) * 0.5;
+    spl1 = makeupv * (sav0 - sav1) * 0.5;
+  );
+

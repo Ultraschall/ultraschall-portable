@@ -1,0 +1,159 @@
+// License: GPL - http://www.gnu.org/licenses/gpl.html
+// cobbled together from a bunch of other plugins - tonegenerator, noisegate, lowpassfilter, 
+// plus some more bits
+// by daniel arena (dan@remaincalm.org)
+// http://remaincalm.org
+// yay!
+// 2008/04/23 - added dynamic pitch
+
+desc: Tone Gate
+desc: Tone Gate [remaincalm.org]
+//tags: generator processing gate
+//author: remaincalm.org
+
+// tone gen
+slider1:-15<-120,6,1>Wet Mix (dB)
+slider2:-3<-120,6,1>Dry Mix (dB)
+slider3:80<20,400,1>Frequency (Hz)
+slider4:0<0,2,1{Sine,Square,Noise}>Waveform
+slider5:1000<50,10000>Lowpass (Hz)
+slider6:-20<-120,6,1>Threshold (dB) 
+slider7:50<1,4000,10>Silence Length For Fadeout (ms)
+slider8:10<1,100,5>Fade In Response (ms)
+slider9:100<1,1000,10>Fade Out Response (ms)
+slider10: 0<0,4,1{Normal,Div 2,Div 4,Mult 2,Mult 4}>Dynamic Pitch
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+// sin
+silentcnt=0;
+seekv=0; seekto=0;
+a = 0;
+
+
+@slider
+// gate
+thresh=2 ^ (slider6/6);
+sillen=slider7*srate/1000;
+fadeout = 1/pow(10,1/(srate*slider9/1000));
+fadein  = 1/pow(10,1/(srate*slider8/1000));
+// gen
+vol=2 ^ (slider1/6); 
+dry=2 ^ (slider2/6); 
+adj=2*$pi* slider3 / srate;
+// filter
+damp=0.01+0.2*20;
+c = 1/tan($pi*slider5/srate);
+fk = 1 / (1 + c*(c+damp));
+fa1 = 2 * (1 - c*c) * fk;
+fa0 = (1 + c*(c-damp)) * fk;
+oldamp=damp;
+
+// generator cursor and freq
+init_freq = slider3;
+decaytime = fadeout/4;
+
+// pitch mode
+slider10 == 0 ?
+(
+  final_freq = init_freq;
+);
+slider10 == 1 ?
+(
+  final_freq = 0.5*init_freq;
+);
+slider10 == 2 ?
+(
+  final_freq = 0.25*init_freq;
+);
+slider10 == 3 ?
+(
+  final_freq = 2*init_freq;
+);
+slider10 == 4 ?
+(
+  final_freq = 4*init_freq;
+);
+
+
+@sample
+// gate - detector
+a=abs(spl0) > thresh || abs(spl1) > thresh;
+// fire sample!
+a ? 
+(
+   silentcnt=0;
+   seekto=1;   
+) : (
+   (silentcnt+=1) > sillen ?  seekto=0;
+);
+
+// we should make this better, me thinks
+
+seekto > 0.5 ? 
+( // fading in
+  seekv=seekv*fadein + (1-fadein);
+)
+:
+( // fading out
+  seekv=seekv*fadeout;
+);
+
+
+//generator
+oldspl0 = spl0;
+oldspl1 = spl1;
+
+
+(silentcnt < (srate * decaytime)) ? 
+(
+  freq = final_freq * (silentcnt/(srate * decaytime)) +
+         init_freq * (1-(silentcnt/(srate * decaytime))) ;  
+) :
+(
+  freq = final_freq;  
+);
+
+adj=2*$pi* freq / srate;
+
+
+// sin  
+slider4==0 ?
+(
+  spl0=cos(pos);
+);
+
+// square
+slider4==1 ?
+(
+  cos(pos)>0 ?
+  (
+    spl0=0.7;
+  ) :
+  (
+    spl0=0;
+  );
+);
+
+// noise
+slider4==2 ?
+(
+  spl0=(rand(2)-1);
+);
+
+// filter
+fd0l = (fk*spl0) - (fa1*fd1l) - (fa0*fd2l);
+spl0 = fd0l + fd1l + fd1l + fd2l;
+fd2l = fd1l;
+fd1l = fd0l;
+
+// mix
+spl1=spl0;
+spl0 = spl0 * seekv * vol + oldspl0 * dry;
+spl1 = spl1 * seekv * vol + oldspl1 * dry;
+
+pos=pos+adj;

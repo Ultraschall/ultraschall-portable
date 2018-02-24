@@ -1,0 +1,225 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc:Loop Sampler
+//tags: processing sampler
+//author: Cockos
+
+/* trigger 1 starts recording
+    trigger 2 stops recording + looped play
+    trigger 3 one off play
+*/
+
+slider1:0<-120,12,1>Loop Volume (dB)
+slider2:1<-8,8,0.1>Play Speed (neg=reverse)
+slider3:0<0,30000,1>Play Start Position (ms)
+slider4:0<0,30000,1>Play End Position (ms)
+slider5:1<0,10,1>Trigger Base (uses x..x+3)
+slider6:10<0,1000,1>Edge Overlap (ms)
+slider7:-120<-120,0,1>Silence Removal Threshold (dB)
+slider8:0<0,6,1{Stopped,Recording,Playing Looped,Playing Once,Playing Looped+Recording,Playing Once+Recording>State
+
+/* idle mix=volume when not playing sample
+    play mix = mix when playing sample
+    record mix = mix of new and old sample
+    playlen lets you play only part of the sample
+
+  if you hit button1 and isrec is active, we switch to play, keeping isrec
+  active.
+
+  if you hit button1 and isplay is active, we mix in the source signal with 
+  the sample.
+
+
+*/
+
+
+in_pin:input
+out_pin:output (mono)
+out_pin:output (mono)
+
+@init
+// isplay=isrec=reclen=recpos=playpos=0;
+// dont set these here because sometimes init will get called after the state is loaded
+ext_noinit=1;
+
+
+@slider
+playmix=2 ^ (slider1/6);
+trigstart=(2 ^ ((slider5+0.1)|0))|0;
+playspeed=slider2;
+
+slider3 < 0 ? slider3=0;
+slider4 < 0 ? slider4=0;
+gmaxl=1000000000/srate;
+slider3=min(slider3,gmaxl);
+slider4=min(slider4,gmaxl);
+
+olsize=srate*slider6/1000;
+slider4=max(slider3,slider4);
+
+silthresh=slider7 > -119 ? (2^(slider7/6)) : 0;
+
+vstpos=slider3*srate/1000;
+vreclen=(slider4*srate/1000-vstpos)-olsize;
+slider8=lslider8;
+
+@serialize
+file_var(0,isplay);
+file_var(0,isrec);
+file_var(0,reclen);
+file_var(0,recpos);
+file_var(0,0);//playpos);
+!isrec ? file_mem(0,0,reclen);
+
+@block
+trigger&(trigstart) ? ( 
+  isplay ? // if playing, switch record and play on
+  ( 
+    !isrec ? lastioffs=-1;
+    isrec=1;
+  )
+  :
+  (
+      isrec ? ( // start playing, but keep recording
+         playpos=0; 
+         isplay=1;
+         lastioffs=-1;
+      )
+      :
+      ( // stop playing, start recording
+        recpos=isplay=0; isrec=1; 
+        slider3=0;
+        silstart=-1;
+        sliderchange(slider3);
+      )
+  )
+);
+trigger&(trigstart*6) ? 
+(
+  isrec ? (
+     isplay ? 
+     (
+       isrec=0;
+     )
+     :
+     (
+       // switch to playback
+       playpos=isrec=0; 
+       isplay=vreclen > 4 ? (trigger&(trigstart*4) ? 2 : 1) : 0;
+       freembuf(reclen); // free any unused memory
+ 
+     )
+  ) : (
+     isplay && !(trigger&(trigstart*4)) ? isplay=0 : (
+       // start over playback
+       playpos=0; 
+       isplay=vreclen > 4 ? (trigger&(trigstart*4)?2:1) : 0;
+     )
+  )
+);
+
+lslider8=slider8;
+isplay ? 
+(
+  isrec ? 
+  (
+    slider8=3+isplay;
+  )
+  : 
+  slider8=1+isplay;
+) : (
+  slider8=isrec?1:0;
+);
+
+slider8!=lslider8 ?
+(
+  lslider8=slider8;
+  sliderchange(slider8);
+)
+
+@sample
+
+// if recording, record, and if we run out of
+// buffer, switch mode to looped playback
+isrec ? (
+
+    isplay ? 
+    (      
+       offs = playspeed<0?vreclen-playpos:playpos;
+       ioffs=offs|0; // fr=offs-ioffs; 
+       lastioffs < 0 ? 
+       (    
+         vstpos[ioffs] += spl0;
+         lastioffs=ioffs;
+       ) 
+       :
+       (
+          cnt=0;  
+          mcnt=(abs(playspeed)+0.9)|0;
+           while(
+             ioffs != lastioffs ? 
+             (
+               //update current sample with our sample, but only once
+               //maybe get around this by just adding spl0*(1-fr)
+              vstpos[lastioffs] += spl0;
+              lastioffs+=sign(playspeed);
+              lastioffs < 0 ? (lastioffs=vreclen-1) : (lastioffs >= vreclen ? lastioffs=0);
+            );
+            ioffs != lastioffs && (cnt+=1) < mcnt;
+          ) // while
+       )
+    )
+    :
+    (
+      recpos >= 1000000 ? 
+      (  
+        isplay=1;
+        playpos=isrec=0; 
+      ) : (
+        recpos[0]=spl0;
+        reclen=recpos+=1;
+
+        abs(spl0) >= silthresh ?
+        (
+          silstart < 0 ? 
+          (
+            recpos=1;
+            recpos[-1]=spl0;             
+            vstpos=0;
+          );
+          silstart=recpos;
+        );
+        slider4=(silstart * 1000 / srate)|0;
+        sliderchange(slider4);
+        vreclen=(silstart-vstpos)-olsize;
+      );
+    );
+); // if isrec
+
+
+// if isplay = 1, loop playback
+// if isplay = 2, one shot playback
+isplay ? (
+   isplay==2 || olsize <= playpos ? (
+       offs = playspeed<0?vreclen-playpos:playpos;
+       ioffs=offs|0; fr=offs-ioffs;
+       spl0=spl0 + (vstpos[ioffs]*(1-fr)+vstpos[ioffs+1]*fr)*playmix; // one shot gets no overlap
+   ) : (
+       tmpmix=playpos/olsize;
+       offs=playspeed<0?vreclen-playpos:playpos;
+       ioffs=offs|0; fr=offs-ioffs;
+       spl0=spl0 + (vstpos[ioffs]*(1-fr)+vstpos[ioffs+1]*fr)*playmix*tmpmix; // overlap with self
+       offs=playspeed<0?playpos:vreclen+playpos;
+       ioffs=offs|0; fr=offs-ioffs;
+       spl0=spl0 + (vstpos[ioffs]*(1-fr)+vstpos[ioffs+1]*fr)*playmix*(1-tmpmix); // overlap with self
+    );
+      
+    spl1=spl0;
+
+    isplay == 2 ? (
+      playpos+abs(playspeed) > vreclen ? isrec=isplay=playpos=0 : playpos=playpos+abs(playspeed);
+    ) : (
+      playpos=playpos+abs(playspeed)>vreclen?0:playpos+abs(playspeed);
+    )
+);

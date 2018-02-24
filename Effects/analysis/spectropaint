@@ -1,0 +1,227 @@
+desc:Spectropaint Synthesis
+desc:Spectropaint - Graphical Periodic Spectral Synthesis
+//tags:analysis spectral generator FFT
+//author: Cockos
+
+/*
+Copyright (C) 2007 Cockos Incorporated
+License: LGPL - http://www.gnu.org/licenses/lgpl.html
+*/
+
+slider1:20<1,100,1>period (sec)
+slider2:-40<-144,0,1>amplitude (dB)
+slider3:4<0,11,1{256,512,1024,2048,4096,8192,16384,32768}>FFT size
+slider4:0<-1,100,0.1>project sync offset (-1 to disable)
+slider5:0<0,1,1{sine,fill}>mode
+
+out_pin:left output
+out_pin:right output
+in_pin:left input
+in_pin:right input
+
+@init
+
+brush_size=1;
+g_lx=g_ly=-100;
+
+img_w = 160;
+img_h = 120;
+img_buf = 256*1024;
+
+fftsize=4096; // todo compute this based on period
+
+outpos=fftsize;
+lastbuf=0; 
+nextbuf = 65536;
+
+gfx_clear=0;
+
+img_pos = img_w; // position in image (0..img_w)
+
+over24=1/24;
+minvol = 10^(-180/20);
+lscale=10/log(10);
+ext_noinit=1;
+
+@slider
+lfftsize=fftsize;
+fftsize = 2^(slider3+8);
+fftsize!=lfftsize ? (
+  fftsize = (fftsize & (fftsize-1)) ? 4096 : fftsize < 256 ? 256 : fftsize>32768 ? 32768 : fftsize;
+  memset(lastbuf,0,65536);
+  memset(nextbuf,0,65536);
+);
+ihalffftsize=2.0/fftsize;
+wet_mix = 10^(slider2/20);
+
+@block
+(trigger&1) ? (need_undo=1; memset(img_buf,0,img_w*img_h); );
+
+(trigger&(2^9)) ? brush_size=min(32,brush_size+1);
+(trigger&(2^8)) ? brush_size=max(1,brush_size-1);
+
+@serialize
+file_var(0,img_w);
+file_Var(0,img_h);
+file_mem(0,img_buf,img_w*img_h);
+
+@sample
+
+(play_state & 1) || slider4 <  0 ? (
+
+outpos >= fftsize*0.5 ? (
+  tmp=lastbuf;
+  lastbuf=nextbuf;
+  nextbuf=tmp;
+  outpos=0;
+  imgbkcnt=1;
+
+  lastimgpos = img_pos;
+
+  (play_state & 1) && slider4 >= 0 ? (
+    img_pos = ((play_position+slider4) * img_w / slider1 )% img_w;
+  ) : 
+  (
+    dimgpos = img_w * (fftsize*0.5)/ (srate*slider1);
+    (img_pos += dimgpos) >= img_w ? img_pos=0;  
+  );
+
+  imgbkcnt = img_pos - lastimgpos;
+  imgbkcnt > img_pos ? imgbkcnt=img_pos;  
+  imgbkcnt<1?imgbkcnt=1; 
+
+  isrev=!isrev;
+  tmp=1;
+  // generate nextbuf
+  dtmp = img_h/(fftsize*0.5-1);
+  memset(nextbuf,0,fftsize*2); // zero second half
+  fmode = slider5>0.5;
+  ly=-1;
+  loop(fftsize*0.5 - 1,
+    val=0;
+    ty=((img_h - 1 - tmp*dtmp)|0);
+    ty!=ly || fmode ? 
+    (
+      img_rdpos = img_buf + img_pos + img_w*ty;
+      loop(imgbkcnt,
+        val = max(val,img_rdpos[]); 
+        img_rdpos -= 1;
+      );
+      isrev &&  (tmp & 1) ? val=-val;
+      nextbuf[tmp*2]=val;
+    );
+    ly=ty;
+    tmp+=1;
+  );
+  fft_ipermute(nextbuf,fftsize);
+  ifft(nextbuf,fftsize);
+
+);
+
+fadepos = outpos*ihalffftsize;
+//fadepos=sin(fadepos*$pi*0.5);
+sig=(lastbuf[fftsize+outpos*2]*(1-fadepos) + nextbuf[outpos*2]*fadepos ) * wet_mix;
+spl0+=sig;
+spl1+=sig;
+outpos+=1;
+
+) : img_pos=img_w+1;// do not process if stopped and projectsync
+
+
+@gfx 640 400
+
+need_undo ? ( sliderchange(-1); need_undo=0; );
+
+g_dy = gfx_h / img_h;
+g_dx = gfx_w / img_w;
+g_mx = (mouse_x/g_dx)|0;
+g_my = (mouse_y/g_dy)|0;g_y = 0;
+loop(img_h,
+  g_x=0;
+  loop(img_w,
+
+    gfx_x = g_dx*g_x; gfx_y = g_dy*g_y;
+
+    g_v = img_buf[g_x + g_y*img_w];
+
+    g_v > 0 ? (
+     gfx_a=1;
+     gfx_r=g_v*9;
+     gfx_g=g_v*4;
+     gfx_b=g_v;
+     gfx_rectto(g_dx*(g_x+1)+0.9,g_dy*(g_y+1)+0.9);
+    );
+    g_x==g_mx && g_y==g_my ? 
+    (
+      gfx_a=1; gfx_r=gfx_b=0;
+      gfx_b=255; 
+      gfx_x=g_dx*g_x; gfx_y=g_dy*g_y;
+      gfx_lineto(g_dx*(g_x-1),g_dy*(g_y-1),1);
+      gfx_x=g_dx*g_x; gfx_y=g_dy*(g_y-1);
+      gfx_lineto(g_dx*(g_x-1),g_dy*(g_y),1);
+    );
+    g_x+=1;
+  );
+  g_y+=1;
+);
+
+(mouse_cap & 3)  ? (
+  g_x=g_mx; g_y=g_my;
+  g_dir = mouse_cap&1;
+  g_dir = g_dir? 0.08/brush_size : -0.3;
+
+  g_lx<-99 || g_ly<-99 ? ( g_lx=g_x; g_ly=g_y; );
+  g_nsteps=max(max(abs(g_lx-g_x),abs(g_ly-g_y)),1);
+  g_dlx=(g_x-g_lx)/g_nsteps;
+  g_dly=(g_y-g_ly)/g_nsteps;
+
+  loop(g_nsteps, // connect the dots to make it nice and easy to draw
+      g_vxs=((g_lx-brush_size*0.5)|0);
+      g_v= img_buf+g_vxs + ((g_ly-brush_size*0.5)|0)*img_w;
+      loop(brush_size,
+        g_vx=g_vxs;
+        loop(brush_size,                    
+          g_vx >= 0 && g_vx< img_w && g_v >= img_buf && g_v < img_buf+img_w*img_h ? (
+            g_tmp = g_v[] + g_dir;
+            g_v[]=g_tmp<0?0 : g_tmp>1?1:g_tmp; 
+          );
+          g_v+=1;
+          g_vx+=1;
+        );
+        g_v += img_w-brush_size;
+      );
+
+    g_lx += g_dlx;
+    g_ly += g_dly;
+
+  );
+)  : (
+  g_lx >= 0 || g_ly >= 0 ? (
+    sliderchange(-1);
+  );
+  g_lx=g_ly=-100;
+);
+
+glp=img_pos;
+gfx_x= (glp) * gfx_w/img_w ;
+gfx_y=0;
+gfX_a=0.3;
+gfx_g=gfx_r=gfx_b=1;
+g_x=max((glp+1) * gfx_w/img_w ,gfx_x+4);
+gfx_rectto(g_x,gfx_h);
+
+gfx_a=0.5;
+gfx_x=0;
+gfX_y=gfx_h-gfx_texth;
+gfx_drawchar($'b');
+gfx_drawchar($'r');
+gfx_drawchar($':');
+gfx_drawnumber(brush_size, 0);
+gfX_x+=8;
+gfx_drawchar($'(');
+gfx_drawchar($'8'); gfx_drawchar($'/'); gfx_drawchar($'9'); gfx_x+=8; gfx_drawchar($'s'); gfx_drawchar($'z');
+gfx_drawchar($','); gfx_x+=8;
+gfx_drawchar($'0');
+gfx_drawchar($'=');
+gfx_drawchar($'c');gfx_drawchar($'l');gfx_drawchar($'r');
+gfx_drawchar($')');

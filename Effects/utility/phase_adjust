@@ -1,0 +1,97 @@
+desc:Phase Rotator
+//tags: processing FFT phase
+
+slider1:0<-180,180,1.0>Phase Adjustment
+slider2:2<0,4,1{1024,2048,4096,8192}>FFT Size
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init 
+
+  fftsize = -1;
+  pdc_bot_ch = 0;
+  pdc_top_ch = 2;
+
+  // array pointers
+  window=0;
+  buf0 = 16384;
+  buf1 = 32768;
+
+@slider
+
+  sliderfft = (2^(slider2+10))|0;
+  fftsize != sliderfft ? (
+    pos = 0;
+    memset(buf0, 0, 2*fftsize);
+    memset(buf1, 0, 2*fftsize);  
+    memset(window, 0, fftsize); 
+    fftsize = sliderfft;
+    w = 2.0*$pi/fftsize;
+    i = 0;
+    loop(fftsize/2,
+      window[i] = 0.42-0.50*cos(i*w)+0.08*cos(2.0*i*w);
+      i += 1;
+    ); 
+    pdc_delay = fftsize;
+  );  
+
+  phaseadj = -$pi*slider1/180.0;
+  cadj = cos(phaseadj);
+  sadj = sin(phaseadj);
+
+@sample
+
+  pos >= fftsize ? (
+    tmp = buf0;
+    buf0 = buf1;
+    buf1 = tmp;
+    
+    fft(buf0, fftsize);
+    fft_permute(buf0, fftsize);
+
+    i = 0;
+    loop(fftsize/2, 
+      a = i;
+      b = a+1;
+      x = buf0[a];
+      y = buf0[b];
+      buf0[a] = x*cadj-y*sadj;
+      buf0[b] = x*sadj+y*cadj;
+
+      a = 2*fftsize-i-2;
+      b = a+1;
+      x = buf0[a];
+      y = buf0[b];
+      buf0[a] = x*cadj+y*sadj;
+      buf0[b] = -x*sadj+y*cadj;
+
+      i += 2);
+
+    fft_ipermute(buf0, fftsize);
+    ifft(buf0, fftsize);
+
+    pos=0;
+  );
+
+  w1 = window[pos/2];
+  w2 = window[(fftsize-pos)/2-1];
+  sw = (w1+w2)*fftsize;
+  
+  out0 = (buf0[pos]+buf1[fftsize+pos])/sw;
+  out1 = (buf0[pos+1]+buf1[fftsize+pos+1])/sw;
+  
+  buf0[pos] = w1*spl0;
+  buf0[pos+1] = w1*spl1;
+  buf1[fftsize+pos] = w2*spl0;
+  buf1[fftsize+pos+1] = w2*spl1;
+
+  spl0 = out0;
+  spl1 = out1;
+
+  pos += 2;
+
+
+

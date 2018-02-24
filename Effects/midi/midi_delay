@@ -1,0 +1,64 @@
+desc:MIDI Delay
+
+slider1:0<0,1000,1>Delay (ms)
+slider2:0<0,16,0.25>Delay (QN)
+slider3:0<0,10000,1>Delay (samples)
+slider4:0<0,16,1>Channel (0=omni)
+slider5:0<0,16,1>Bus (0=all buses)
+
+in_pin:none
+out_pin:none
+
+@init
+ext_midi_bus=ext_nodenorm=1;
+buf_l=buf_r=0;
+buf_hdr = 3; // position, length (incl header), bus
+max_ram = __memtop();
+
+@slider
+chan = slider4-1;
+bus = slider5-1;
+
+@block
+delay_samples = floor((slider1*0.001 + slider2*60.0/tempo)*srate + slider3 + 0.5);
+delay_sc = (delay_samples + samplesblock);
+delay_isc = 1.0 / delay_sc;
+
+// process incoming events
+while((l=midirecv_buf(offs,buf_r+buf_hdr,max_ram-buf_r-buf_hdr))>0)
+(
+  (bus<0 || midi_bus == bus) &&
+  (chan<0 || (l <= 3 && (fb=buf_r[buf_hdr])<0xf0 && (fb&0xf) == chan)) ? (
+    buf_r[0] = (delay_samples+offs) * delay_isc;
+    buf_r[1] = buf_hdr + l;
+    buf_r[2] = midi_bus;
+    buf_r += buf_hdr + l;
+  ) : (
+    midisend_buf(offs,buf_r+buf_hdr,l);
+  );
+);
+
+// process outgoing events
+rd = buf_l;
+while (rd<buf_r)
+(
+  rd==buf_l && (offs=floor(rd[0]*delay_sc+0.5)) < samplesblock ? (
+    midi_bus=rd[2];
+    l = rd[1];
+    midisend_buf(max(offs,0),rd+buf_hdr,l-buf_hdr);
+    buf_l = (rd += l);
+  ) : (
+    rd[0] -= samplesblock * delay_isc;
+    rd += rd[1];
+  );
+);
+
+// compact buf if needed
+buf_l >= buf_r ? (
+  buf_l=buf_r=0;
+) : (
+  buf_l > max(1024,buf_r*.5) ? (
+    (buf_r-=buf_l) > 0 ? memcpy(0,buf_l,buf_r) : buf_r=0;
+    buf_l=0; 
+  );
+);

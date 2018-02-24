@@ -1,0 +1,134 @@
+// MGA JS Limiter: Limits the maximum output volume of a audio signal
+// Copyright (C) 2008  Michael Gruhn
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+desc:MGA JS Limiter (Unlinked Stereo)
+//tags: dynamics limiter stereo
+//author: LOSER
+
+slider1:0<-30,0,0.1>Threshold (dB)
+slider2:200<0,500,1>Release (ms)
+slider3:75<0,100,1>Link Stereo (%)
+slider4:-0.1<-6,0,0.1>Ceiling
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+HOLDTIME = srate/128;
+
+r1Timer = 0;
+r2Timer = HOLDTIME/2;
+
+r1TimerO = 0;
+r2TimerO = HOLDTIME/2;
+
+gr_meter=1;
+gr_meter_decay = exp(1/(1*srate));
+
+@slider
+thresh = 10^(slider1/20);
+ceiling = 10^(slider4/20);
+volume = ceiling/thresh;
+
+release = slider2/1000;
+r = exp(-3/(srate*max(release,0.05)));
+
+link = sqrt(slider3*0.01);
+
+@sample
+maxSpls=abs(spl0);
+
+(r1Timer+=1) > HOLDTIME ? (r1Timer = 0; max1Block = 0; );
+max1Block = max(max1Block,maxSpls);
+(r2Timer+=1) > HOLDTIME ? (r2Timer = 0; max2Block = 0; );
+max2Block = max(max2Block,maxSpls);
+
+envT = max(max1Block,max2Block);
+
+
+maxSplsO=abs(spl1);
+
+(r1TimerO+=1) > HOLDTIME ? (r1TimerO = 0; max1BlockO = 0; );
+max1BlockO = max(max1BlockO,maxSplsO);
+(r2TimerO+=1) > HOLDTIME ? (r2TimerO = 0; max2BlockO = 0; );
+max2BlockO = max(max2BlockO,maxSplsO);
+
+envTO = max(max1BlockO,max2BlockO);
+
+
+
+env = max(env,envO*link);
+envO = max(env*link,envO);
+
+
+env = env < envT ? envT : envT + r*(env-envT);
+
+(env > thresh) ? gain = (g_meter=(thresh / env))*volume : (g_meter=1; gain=volume;);
+
+
+envO = envO < envTO ? envTO : envTO + r*(envO-envTO);
+
+(envO > thresh) ? gainO = (g_meterO=(thresh / envO))*volume : (g_meterO=1; gainO=volume;);
+
+
+
+spl0*=gain;
+spl1*=gainO;
+
+g_meter = min(g_meter,g_meterO);
+
+g_meter < gr_meter ? gr_meter=g_meter : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+
+@gfx 0 32 // request horizontal/vertical heights (0 means dont care)
+
+  gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
+  gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
+  
+  meter_bot=20;
+  meter_h=min(gfx_h,32);
+  xscale=gfx_w*20/meter_bot;
+
+  gfx_y=0;
+  gfx_x=gfx_w + log10(gr_meter)*xscale;
+  gfx_rectto(gfx_w,meter_h);
+
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+
+  s2=sqrt(2)/2;
+  g = s2;
+  while(
+    gfx_x=gfx_w + log10(g)*xscale;
+    gfx_x >= 0 ? 
+    (
+      gfx_y=0;
+      gfx_lineto(gfx_x,meter_h,0);
+      gfx_y=meter_h-gfx_texth;
+      gfx_x+=2;
+      gfx_drawnumber(log10(g)*20,0);
+      gfx_drawchar($'d');
+      gfx_drawchar($'B');
+    );
+    g*=s2;
+    gfx_x >=0;
+  );
+  gfx_a=1;
+
+  gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
+  gfx_drawnumber(log10(gr_meter)*20,1);
+  gfx_drawchar($'d');
+  gfx_drawchar($'B');

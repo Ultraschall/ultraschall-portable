@@ -1,0 +1,60 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Pitch Down-Shifter
+//tags: processing pitch
+//author: Cockos
+
+slider1:1<0,6,1>Octaves Down
+slider2:0<0,11,1>Semitones Down
+slider3:0<0,99,1>Cents Down
+slider4:100<4,500,10>Chunk Size (ms)
+slider5:1<0.001,1>Overlap Size
+slider6:0<-120,6,1>Wet Mix (dB)
+slider7:-120<-120,6,1>Dry Mix (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+  lbufsize=bufsize; bufsize=(srate*0.001*slider4)&65534; 
+  lbufsize!=bufsize ? bufpos=0;
+  scl=2 ^ (-(slider1 + slider2/12 + slider3/1200)); 
+  rilen=(max(scl,0.5)*bufsize)|0; 
+  rrilen=((scl*bufsize)|0)*2; 
+  slider5=min(1,max(slider5,0)); 
+  rspos=slider5*(bufsize-rilen); 
+  invbs=1/rspos;
+  drymix=2 ^ (slider7/6); 
+  wetmix=2 ^ (slider6/6);
+
+@sample
+ss0=spl0; ss1=spl1;
+
+hbp=((bufpos * scl)|0)*2;
+
+// pre read these before writing
+s0r=rrilen[hbp];
+s1r=rrilen[hbp+1];
+
+(bufpos*2)[0]=spl0;
+(bufpos*2)[1]=spl1;
+
+bufpos < rspos ? 
+(
+     // mix
+     sc=bufpos*invbs;
+     spl0=hbp[0]*sc + s0r*(1-sc);
+     spl1=hbp[1]*sc + s1r*(1-sc);
+) : (
+    // straight resample
+     spl0=hbp[0]; 
+     spl1=hbp[1];
+);
+
+(bufpos+=1) >= bufsize ? bufpos=0;
+
+spl0 = spl0*wetmix + ss0*drymix;
+spl1 = spl1*wetmix + ss1*drymix;

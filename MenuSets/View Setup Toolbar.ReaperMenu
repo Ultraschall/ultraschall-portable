@@ -1,0 +1,18 @@
+[Floating toolbar 1]
+icon_0=toolbar_misc_mixer_control_active.png
+icon_1=toolbar_misc_tape.png
+icon_2=toolbar_glue.png
+icon_5=toolbar_misc_house_home.png
+icon_8=toolbar_eighth_quaver_note.png
+icon_9=toolbar_misc_mic.png
+item_0=40454 Screenset: Load window set #01
+item_1=40455 Screenset: Load window set #02
+item_2=40456 Screenset: Load window set #03
+item_3=-1
+item_4=-1
+item_5=40295 View: Zoom out project
+item_6=-1
+item_7=-1
+item_8=_SWSSNAPSHOT_GET1 SWS: Recall snapshot 1
+item_9=_SWSSNAPSHOT_GET2 SWS: Recall snapshot 2
+

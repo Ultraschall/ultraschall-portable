@@ -1,0 +1,66 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+desc: Delay w/Sustain
+//tags: delay compressor dynamics
+//author: Cockos
+
+slider1:120<0,4000,20>Length (ms)
+slider2:-44<-120,6,1>Threshold (dB)
+slider3:10<0,1000,1>Attack (ms)
+slider4:10<0,1000,1>Release (ms)
+slider5:0<-120,0,1>Maximum Mixing (dB)
+slider6:0<-120,6,1>Output Wet (dB)
+slider7:0<-120,6,1>Output Dry (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+delaypos=0;
+env=0;
+
+@slider
+odelay=delaylen;
+delaylen=min(slider1 * srate / 1000,500000);
+odelay != delaylen ? (
+  delaypos >= delaylen ? delaypos = 0;
+  freembuf(delaylen*2);
+);
+maxmix = 10^(slider5/20);
+wetmix2 = 10^(slider6/20);
+drymix2 = 10^(slider7/20);
+
+thresh = 10^(slider2/20);
+tmp = slider3*0.001;
+tmp==0 ? tmp=0.0001;
+denv = exp(-1/(tmp*srate));
+tmp = slider4*0.001;
+tmp==0 ? tmp=0.0001;
+denvr = exp(-1/(tmp*srate));
+
+@sample
+
+a = max(abs(spl0),abs(spl1));
+
+env = a > env ? env*denv + a*(1-denv) : env*denvr + a*(1-denvr);
+
+dpint = delaypos*2;
+os1=dpint[0];
+os2=dpint[1];
+
+sc=0.0;
+env > thresh ? (
+  a = env/thresh; // ~6dB = 2, 12dB over=4
+  sc=a*0.5*maxmix;
+  sc>maxmix?sc=maxmix;
+);
+
+dpint[0]=min(max(spl0*sc + os1*(1-sc),-4),4);
+dpint[1]=min(max(spl1*sc + os2*(1-sc),-4),4);
+
+(delaypos+=1) >= delaylen ? delaypos=0;
+
+spl0=spl0*drymix2 + os1*wetmix2;
+spl1=spl1*drymix2 + os2*wetmix2;

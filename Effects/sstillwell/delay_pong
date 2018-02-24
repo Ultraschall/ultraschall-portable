@@ -1,0 +1,66 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: GPL - http://www.gnu.org/licenses/gpl.html
+
+desc: Delay w/Tempo Ping-Pong
+desc: Delay with Tempo Ping-Pong [Stillwell]
+//tags: delay stereo
+//author: Stillwell
+
+slider1:0<0,13000,1>Delay (ms) (0=tempo sync)
+slider2:-5<-120,6,1>Feedback (dB)
+slider3:0<-120,6,1>Mix In (dB)
+slider4:-6<-120,6,1>Output Wet (dB)
+slider5:0<-120,6,1>Output Dry (dB)
+slider6:0<0,100,1>Ping-Pong Width (%)
+slider7:0.25<0.0625,4,0.0625>Tempo Sync (fraction of whole note)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  delaypos=0;
+  pongloc=0;
+
+@slider
+  odelay=delaylen;
+  beat = 240 * slider7;
+  wetmix = 2 ^(slider2/6);
+  drymix = 2 ^(slider3/6);
+  wetmix2 = 2 ^(slider4/6);
+  drymix2 = 2 ^(slider5/6);
+  pongwidth = slider6/100;
+  pongpan=(1-pongwidth)/2;
+
+@block
+  slider1==0 ? (
+    delaylen=min((beat / tempo)*srate,500000);
+  ):(
+    delaylen=min(slider1 * srate / 1000,500000);
+  );
+
+@sample
+  dpint = delaypos*2;
+  os1=dpint[0];
+  os2=dpint[1];
+
+  dpint[0]=min(max(spl0*drymix + os1*wetmix,-4),4);
+  dpint[1]=min(max(spl1*drymix + os2*wetmix,-4),4);
+
+  switching=0;
+
+  abs(delaypos)<400 ? (
+    switch = pongloc ? abs(delaypos)/400 : ((400 - abs(delaypos))/400);
+  );
+
+  (delaypos+=1) >= delaylen ? (
+    delaypos=0;
+    pongloc = (pongloc * -1) + 1;
+  );
+
+  os = (os1 + os2) / 2;
+  panloc = pongpan + pongwidth * switch;
+
+  spl0=spl0*drymix2 + os*wetmix2*(panloc);
+  spl1=spl1*drymix2 + os*wetmix2*(1-panloc);

@@ -1,0 +1,31 @@
+desc:MIDI Program/Bank Switch on Load
+//tags: MIDI generator
+
+slider1:1<1,16,1>MIDI Channel
+slider2:0<0,127,1>MSB
+slider3:0<0,127,1>LSB
+slider4:0<0,127,1>Program
+slider5:0<0,1,1{No,Yes}>Has Sent
+
+in_pin:none
+out_pin:none
+
+@init
+ext_noinit=1;
+has_sent = 0;
+
+@block
+!slider5 || !has_sent ? (
+  has_sent=slider5=1;
+  sliderchange(slider5);
+  while (
+    midirecv(ts,msg1,msg23) ? midisend(ts,msg1,msg23);
+  ); 
+  chan = (slider1|0)-1;
+  msb = slider2|0;
+  lsb = slider3|0;
+  midisend(0,$xB0 + chan,0 + msb*256);
+  midisend(0,$xB0 + chan,32 + lsb*256);
+  midisend(0,$xC0 + chan, slider4|0);
+);
+

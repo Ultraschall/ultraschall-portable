@@ -1,0 +1,43 @@
+// (C) 2006, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:3-Band Joiner
+desc:3-Band-Joiner (Combines Signal From 3-Band Splitter) [LOSER]
+//tags: processing routing
+//author: LOSER
+
+slider1:0<-24,24,.1>Low (dB)
+slider2:0<-24,24,.1>Mid (dB)
+slider3:0<-24,24,.1>High (dB)
+
+in_pin:low input left
+in_pin:low input right
+in_pin:mid input left
+in_pin:mid input right
+in_pin:high input left
+in_pin:high input right
+out_pin:left output
+out_pin:right output
+
+@init
+c_ampdB = 8.65617025;
+
+@slider
+band1 = exp(slider1/c_ampdB);
+band2 = exp(slider2/c_ampdB);
+band3 = exp(slider3/c_ampdB);
+
+@sample
+spl0 = spl0 * band1 + spl2 * band2 + spl4 * band3;
+spl1 = spl1 * band1 + spl3 * band2 + spl5 * band3;

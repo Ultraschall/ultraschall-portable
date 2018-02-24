@@ -1,0 +1,73 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: GPL - http://www.gnu.org/licenses/gpl.html
+
+desc:Chorus (Improved Shaping)
+desc:Chorus with Improved Shaping [Stillwell]
+//tags: modulation chorus
+//author: Stillwell
+
+slider1:15<1,250>Chorus Length (ms)
+slider2:1<1,8,1>Number Of Voices
+slider3:0.5<0.1,16>Rate (Hz)
+slider4:0.7<0,1>Pitch Fudge Factor
+slider5:-6<-100,12,1>Wet Mix (dB)
+slider6:-6<-100,12,1>Dry Mix (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+
+bpos=0;
+
+@slider
+
+numvoices=min(16,max(slider2,1));
+choruslen=slider1*srate*0.001;
+
+i=0;
+loop(numvoices, 
+  i[0]=(i+1)/numvoices*$pi; 
+  i+=1; 
+);
+
+bufofs=16384;
+
+csize=choruslen/numvoices * slider4;
+
+rateadj=slider3*2*$pi/srate;
+wetmix = 2 ^ (slider5/6);
+drymix = 2 ^ (slider6/6);
+
+
+@sample
+
+bpos >= choruslen ? (
+  bpos=0;
+);
+os0=spl0;
+
+// calculate new sample based on numvoices
+
+spl0=spl0*drymix;
+vol=wetmix/numvoices;
+i=0;
+
+loop(numvoices,
+   tpos = bpos - (0.5+0.49*(sin( $pi*(i[0] += rateadj))/($pi*i[0]))) * (i+1) * csize;
+
+   tpos < 0 ? tpos += choruslen;
+   tpos > choruslen ? tpos -= choruslen;
+   frac=tpos-(0|tpos);
+   tpos2=tpos>=choruslen-1?0:tpos+1;
+  
+   spl0 += (bufofs[tpos]*(1-frac)+bufofs[tpos2]*frac) * vol;
+   i+=1;
+);
+
+bufofs[bpos]=os0;
+bpos+=1;
+
+spl1=spl0;

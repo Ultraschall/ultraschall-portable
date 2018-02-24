@@ -1,0 +1,165 @@
+<html>
+<head>
+<title>lyric view</title>
+<meta charset="utf-8">
+
+<style type="text/css">
+body {
+  background-color:#000;
+  color:#fff;
+}
+
+#lyrics {
+  background-color:#fff;
+  color:#000;
+}
+
+.measure {
+  float:left;
+  line-height:40px;
+  vertical-align:middle;
+  font-size:15px;
+}
+
+.text {
+  text-align:center;
+  line-height:40px;
+  font-size:30px;
+}
+
+</style>
+
+<script src="main.js"></script>
+
+<script type="text/javascript">
+
+var lyrictrack=1;
+var lyriclines=8;
+
+var playpos="";
+var lyricstr="";
+var lyrics=[];
+var maxlines=0;
+var maxbeats=0;
+
+var config_lines=100;
+
+function parse_lyrics(tok) {
+  lyrics=[];
+  maxlines=0;
+  maxbeats=0;
+  var i;
+  for (i=2; i < tok.length-1; i += 2) {
+    var re=/^(\d+)\.(\d+)\.\d+$/.exec(tok[i]);
+    if (re && re.length == 3) {
+      var m=re[1];
+      var b=re[2];
+      if (!lyrics[m]) lyrics[m]=[];
+      if (!lyrics[m][b]) lyrics[m][b]=tok[i+1];
+      else lyrics[m][b] += " "+tok[i+1];
+      maxlines=m;
+      if (b > maxbeats) maxbeats=b;
+    }
+  }
+}
+
+function update_display() {
+  var html=""
+
+  if (maxbeats == 0) {
+    html="<div class=\"text\">(no MIDI lyrics found on track "+lyrictrack+")</div>";
+  }
+  else {
+    var curm=1, curb=1;
+    var re=/^(\d+)\.(\d+)\.\d+$/.exec(playpos)
+    if (re && re.length == 3) {
+      curm=re[1];
+      curb=re[2];
+    }
+
+    var lines=0;
+    var m=Math.max(curm-lyriclines/4, 1);
+    for (lines=0; lines < lyriclines; ++lines, ++m) {
+      html += "<div class=\"measure\">"+m+"</div>";
+      html += "<div class=\"text\">";
+      var b;
+      for (b=1; b <= maxbeats; ++b) {
+        if (b > 1) html += " ";
+        if (m == curm && b == curb) html += "<b>";
+        if (lyrics[m] && lyrics[m][b]) 
+          html += simple_unescape(lyrics[m][b]).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        else html += "&#x2219;";
+        if (m == curm && b == curb) html += "</b>";
+      }
+      html += "</div>";
+    }
+   }
+
+  document.getElementById("lyrics").innerHTML=html;
+}
+
+function wwr_onreply(results) {
+  var ar=results.split("\n");
+  for (var i=0; i < ar.length; ++i) {
+    var tok=ar[i].split("\t");
+    if (tok && tok.length > 0) {
+      switch (tok[0]) {
+        case "TRANSPORT":
+          if (tok.length > 5) {
+            if (playpos !== tok[5]) {
+              playpos=tok[5];
+              update_display();
+            }
+          }
+        break;
+        case "LYRICS":
+          if (tok.length >= 2) {
+            if (lyrictrack == tok[1] && lyricstr !== ar[i]) {
+              lyricstr=ar[i];
+              parse_lyrics(tok);
+              update_display();
+            }
+          }
+        break;
+      }
+    }
+  }
+}
+
+wwr_req_recur("TRANSPORT",20);
+wwr_req_recur("LYRICS/" + lyrictrack,2000);
+wwr_start();
+
+function updateOrientation() {
+  var a=document.getElementById("viewport-meta");
+  if (a) a.setAttribute("content",
+    "width=320, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0");
+}
+
+function init()
+{
+  updateOrientation();
+}
+
+function lyrics_config() {
+  var tr=parseInt(prompt("Display MIDI lyrics from track:", lyrictrack));
+  if (tr > 0 && tr != lyrictrack)
+  {
+    wwr_req_recur_cancel("LYRICS/"+lyrictrack);
+    wwr_req_recur("LYRICS/"+tr,2000);
+    lyrictrack=tr;
+    lyricstr="";
+    lyrics=[];
+    update_display();
+  }
+}
+
+</script>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" id="viewport-meta" content="" />
+</head>
+<body onLoad="init()">
+<div id="lyrics" onclick="lyrics_config()">initializing...</div>
+</body>
+</html>

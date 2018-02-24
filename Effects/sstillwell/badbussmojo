@@ -1,0 +1,108 @@
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:Bad Buss Mojo Waveshaper
+desc:Bad Buss Mojo Waveshaper [Stillwell]
+//tags: processing distortion waveshaper
+//author: Stillwell
+
+slider1:0<-60,0,0.01>Pos Threshold (dB)
+slider2:0<-60,0,0.01>Neg Threshold (dB)
+slider3:1<1,2,0.001>Pos Nonlinearity
+slider4:1<1,2,0.001>Neg Nonlinearity
+slider5:0<0,6,0.01>Pos Knee (dB)
+slider6:0<0,6,0.01>Neg Knee (dB)
+slider7:0<0,100,0.1>Mod A
+slider8:0<0,100,0.1>Mod B
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  log2db = 8.6858896380650365530225783783321; // 20 / ln(10)
+  db2log = 0.11512925464970228420089957273422; // ln(10) / 20 
+  pi = 3.1415926535;
+  halfpi = pi / 2;  
+
+
+@slider
+  pt=slider1;
+  nt=slider2;
+  pl=slider3-1;
+  nl=slider4-1;
+  mixa=slider7/100;
+  mixb=slider8/100;
+  drivea=1;
+  mixa1 = 1 - mixa;
+  drivea1 = 1 / (1 - (drivea / 2));
+  drivea2 = drive / 2;
+  mixb1 = 1 - mixb;
+  pts=slider5;
+  nts=slider6;
+  ptt=pt - pts;
+  ntt=nt - nts;
+
+  ptsv=exp(ptt * db2log);
+  ntsv=-exp(ntt * db2log);
+
+@sample
+  mixa > 0 ? (
+    wet0 = drivea1 * spl0 * (1 - abs(spl0 * drivea2));
+    wet1 = drivea1 * spl1 * (1 - abs(spl1 * drivea2)); 
+    spl0 = mixa1 * spl0 + (mixa) * wet0;
+    spl1 = mixa1 * spl1 + (mixa) * wet1;  
+  );
+  
+  mixb > 0 ? (
+    wet0 = sin(spl0 * halfpi);
+    wet1 = sin(spl1 * halfpi); 
+    spl0 = mixb1 * spl0 + (mixb) * wet0;
+    spl1 = mixb1 * spl1 + (mixb) * wet1;  
+  );
+
+  db0 = log(abs(spl0)) * log2db;
+  db1 = log(abs(spl1)) * log2db;
+
+  spl0>ptsv ? (
+    diff=max(min((db0 - ptt),0),pts);
+    pts == 0 ? mult = 0 : mult=diff/pts;
+    spl0 = ptsv + ((spl0 - ptsv) / (1 + (pl * mult)));
+  );
+  spl0<ntsv ? (
+    diff=max(min((db0 - ntt),0),nts);
+    nts == 0 ? mult = 0 : mult=diff/nts;
+    spl0 = ntsv + ((spl0 - ntsv) / (1 + (nl * mult)));
+  );
+  spl1>ptsv ? (
+    diff=max(min((db1 - ptt),0),pts);
+    pts == 0 ? mult = 0 : mult=diff/pts;
+    spl1 = ptsv + ((spl1 - ptsv) / (1 + (pl * mult)));
+  );
+  spl1<ntsv ? (
+    diff=max(min((db1 - ntt),0),nts);
+    nts == 0 ? mult = 0 : mult=diff/nts;
+    spl1 = ntsv + ((spl1 - ntsv) / (1 + (nl * mult)));
+  );

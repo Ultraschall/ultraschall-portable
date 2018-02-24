@@ -1,0 +1,90 @@
+desc:MIDI Choke
+//tags: MIDI processing
+//author: Cockos
+
+slider1:1<1,16,1>MIDI Channel
+slider2:42<0,127,1>Choke Note Range Start
+slider3:1<1,16,1>Number Of Choke Notes
+slider4:46<0,127,1>Affected Note Range Start
+slider5:1<1,16,1>Number Of Affected Notes
+slider6:0<0,1,1{Prevent Note On During Choke,Allow Note On During Choke}>Action During Choke
+slider7:-1<-1,127,1>Additional Choke Note
+slider8:-1<-1,127,1>Additional Choke Note
+slider9:-1<-1,127,1>Additional Choke Note
+slider10:-1<-1,127,1>Additional Choke Note
+
+in_pin:none
+out_pin:none
+
+@init
+
+choke_count = 0;
+
+@slider
+
+choke_buf=500; // 128 slots of whether choke is down
+affected_buf=1000; // 128 slots
+chan = (slider1|0)-1;
+allow_noteon_choke = slider6;
+
+@block
+
+while (
+  midirecv(msgoffs,msg1,msg23) ? (
+    passthrough = 1;
+    msg1==(chan|0x90) || msg1 == (chan|0x80) ? (
+      note = msg23&0x7f;
+      vel = (msg1&0x10) ? ((msg23/256)|0) : 0;
+      
+      // update choke state
+      (note >= slider2 && note < slider2+slider3) ||
+        note==slider7 ||
+        note==slider8 ||
+        note==slider9 ||
+        note==slider10 
+      ? (
+        choke_buf[note] != !!vel ? (
+          choke_count += vel ? 1 : -1;
+          choke_buf[note] = !!vel;
+           
+          vel && choke_count == 1 ? (
+            // choke just hit, kill any active notes
+            i = slider4;
+            loop(slider5,
+              affected_buf[i] ? (
+                midisend(msgoffs,0x80|chan,i);
+                affected_buf[i]=0;
+              );
+              i+=1;
+            );
+          );  
+        );
+      );
+      
+      // decide what to do with notes
+      note >= slider4 && note < slider4+slider5 ? (
+        vel ? ( 
+          choke_count < 1 || allow_noteon_choke ? (
+            // not choking, or allow note-on during choke is on,
+            // allow noteon through (and update state)
+            affected_buf[note] = 1; // mark this as open
+          ) : (
+            // choking, filter out noteon
+            passthrough = 0;
+          );
+        ) : (
+          choke_count > 0 && allow_noteon_choke ? (
+            // if choking and allow note-on during choke is on,
+            // allow noteoff through (and update state)
+            affected_buf[note] = 0;
+          ) : (
+            passthrough = 0; // always filter out noteoff
+          );
+        );
+      );
+    );
+    
+    passthrough && midisend(msgoffs,msg1,msg23);
+    1;
+  );
+);

@@ -1,0 +1,80 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+desc: Delay
+//tags: delay guitar
+//author: Cockos
+
+slider1:300<0,4000,20>Delay (ms)
+slider2:-5<-120,6,1>Feedback (dB)
+slider3:0<-120,6,1>Mix In (dB)
+slider4:-6<-120,6,1>Output Wet (dB)
+slider5:0<-120,6,1>Output Dry (dB)
+slider6:0<0,1,1{Off,On}>Resample On Length Change
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+delaypos=0;
+
+@slider
+odelay=delaylen;
+delaylen=min(slider1 * srate / 1000,500000);
+odelay != delaylen ? (
+  slider6 && odelay > delaylen ? (
+      // resample down delay buffer, heh
+      rspos=0; rspos2=0;
+      drspos=odelay/delaylen;
+      loop(delaylen,
+         
+         tpos = ((rspos)|0)*2;
+         rspos2[0]=tpos[0];
+         rspos2[1]=tpos[1];
+
+         rspos2+=2;
+         rspos+=drspos;
+      );
+      delaypos /= drspos;
+      delaypos|=0;
+      delaypos<0?delaypos=0;
+  ) : (
+    slider6 && odelay < delaylen ? (
+        // resample up delay buffer, heh
+        drspos=odelay/delaylen;
+        rspos=odelay; 
+        rspos2=delaylen*2;
+        loop(delaylen,
+           rspos-=drspos;
+           rspos2-=2;
+         
+           tpos = ((rspos)|0)*2;
+           rspos2[0]=tpos[0];
+           rspos2[1]=tpos[1];
+
+        );
+        delaypos /= drspos;
+        delaypos|=0;
+        delaypos<0?delaypos=0;
+    ) : (!slider6 && delaypos >= delaylen ? delaypos = 0);
+  );
+  freembuf(delaylen*2);
+);
+wetmix = 2 ^(slider2/6);
+drymix = 2 ^(slider3/6);
+wetmix2 = 2 ^(slider4/6);
+drymix2 = 2 ^(slider5/6);
+
+@sample
+dpint = delaypos*2;
+os1=dpint[0];
+os2=dpint[1];
+
+dpint[0]=min(max(spl0*drymix + os1*wetmix,-4),4);
+dpint[1]=min(max(spl1*drymix + os2*wetmix,-4),4);
+
+(delaypos+=1) >= delaylen ? delaypos=0;
+
+spl0=spl0*drymix2 + os1*wetmix2;
+spl1=spl1*drymix2 + os2*wetmix2;

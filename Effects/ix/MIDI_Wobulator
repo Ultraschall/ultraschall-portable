@@ -1,0 +1,121 @@
+/*******************************************************************************
+*  Copyright 2007 - 2011, Philip S. Considine                                  *
+*  This program is free software: you can redistribute it and/or modify        *
+*  it under the terms of the GNU General Public License as published by        *
+*  the Free Software Foundation, either version 3 of the License, or           *
+*  (at your option) any later version.                                         *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+*  GNU General Public License (http://www.gnu.org/licenses/)for more details.  *
+*******************************************************************************/
+
+desc:MIDI Pitch Wheel LFO
+desc:MIDI Pitch Wheel LFO Generator [IXix]
+//tags: MIDI modulation generator LFO
+//author: IXix
+
+slider1:0<0,15,1{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}>MIDI Channel
+slider2:0<0,100,1>Max Bend (%)
+slider3:1<0,24,0.1>LFO Frequency
+slider4:0<0,1,1{Hz,Beats}>LFO Units
+slider5:6<0,9,1{1,2,4,8,16,32,64,128,256,512}>Updates Per Beat
+slider6:1<0,1,1{Off,On}>On/Off
+
+in_pin:none
+out_pin:none
+
+////////////////////////////////////////////////////////////////////////////////
+@init
+statPitch = $xE0;
+pitchCentre = 16384;
+
+////////////////////////////////////////////////////////////////////////////////
+@slider
+slider2 = min(max(slider2, 0), 100);
+slider3 = min(max(slider3, 0), 50);
+
+channel = slider1;
+valMax = pitchCentre * slider2 * 0.01;
+freq = slider3;
+units = slider4;
+updateFreq = 2 ^ slider5;
+
+// Reset if necessary
+slider6 != on ?
+(
+  on = slider6;
+  t = 0;
+  updateCounter = 0;
+);
+
+////////////////////////////////////////////////////////////////////////////////
+@block
+updateSamples = srate * 60 / tempo / updateFreq;
+
+units == 0 ? // Hz
+(
+  sinTemp = 2 * $pi * freq;
+)
+:
+units == 1 ? // Beats
+(
+  sinTemp = 2 * $pi * tempo / 60 / freq;
+);
+
+on ?
+(
+  active = 1;
+
+  updateCounter + samplesblock >= updateSamples ?
+  (  
+    updateSamples <= samplesblock ?
+    (      
+      // Possibly more than one update in the block
+      samplesLeft = samplesblock;
+      offset = 0;
+      while
+      (
+        offset += updateSamples - updateCounter;
+      
+        t += (updateSamples - updateCounter) / srate;
+        value = pitchCentre + floor(valMax * sin(sinTemp * t));
+        
+        midisend(offset, statPitch + channel, value);
+        samplesLeft -= updateSamples - updateCounter;
+        updateCounter = 0;
+        samplesLeft >= updateSamples;
+      );
+      updateCounter = samplesLeft;
+      t += updateCounter / srate;
+    )
+    :
+    (
+      // Block is smaller than updateSamples, just one update
+      offset = updateCounter + samplesblock - updateSamples;
+
+      t += offset / srate;
+      value = pitchCentre + floor(valMax * sin(sinTemp * t));
+
+      midisend(offset, statPitch + channel, value);
+      updateCounter = samplesblock - offset;
+      t += updateCounter / srate;
+    );
+  )
+  :
+  (
+    // Just update counters
+    updateCounter += samplesblock;
+    t += samplesblock / srate;
+  );
+)
+:
+(
+  // Send off value only if not already sent
+  active ?
+  (
+    midisend(offset, statController + channel, target | (offValue << 8));
+    active = 0;
+  );
+);

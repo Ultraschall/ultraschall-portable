@@ -1,0 +1,189 @@
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:Bad Buss Mojo Waveshaper w/AA
+desc:Bad Buss Mojo Waveshaper w/AA [Stillwell]
+//tags: processing distortion waveshaper
+//author: Stillwell
+
+slider1:0<-60,0,0.01>Pos Threshold (dB)
+slider2:0<-60,0,0.01>Neg Threshold (dB)
+slider3:1<1,2,0.001>Pos Nonlinearity
+slider4:1<1,2,0.001>Neg Nonlinearity
+slider5:0<0,6,0.01>Pos Knee (dB)
+slider6:0<0,6,0.01>Neg Knee (dB)
+slider7:0<0,100,0.1>Mod A
+slider8:0<0,100,0.1>Mod B
+slider9:2<1,32,1>Oversampling (times)
+slider10:0<0,1,1{Disabled,Enabled}>Limit to 0 dBFS
+
+in_pin:L Input
+in_pin:R Input
+out_pin:L Output
+out_pin:R Output
+
+@init
+  log2db = 8.6858896380650365530225783783321; // 20 / ln(10)
+  db2log = 0.11512925464970228420089957273422; // ln(10) / 20 
+  pi = 3.1415926535;
+  halfpi = pi / 2;  
+  last_aa=0;
+
+@slider
+  pt=slider1;
+  nt=slider2;
+  pl=slider3-1;
+  nl=slider4-1;
+  mixa=slider7/100;
+  mixb=slider8/100;
+  drivea=1;
+  mixa1 = 1 - mixa;
+  drivea1 = 1 / (1 - (drivea / 2));
+  drivea2 = drive / 2;
+  mixb1 = 1 - mixb;
+  pts=slider5;
+  nts=slider6;
+  ptt=pt - pts;
+  ntt=nt - nts;
+
+  ptsv=exp(ptt * db2log);
+  ntsv=-exp(ntt * db2log);
+
+  aasize=(slider9+0.5)|0;
+  aasize<1?aasize=1:aasize>256?aasize=256;
+
+  aasize != last_aa ? (
+  
+    aasize>1 ? (
+      Q=0.707;
+      pos=0.9/aasize * $pi;
+
+      cpos=cos(pos);
+      spos=sin(pos);
+    
+      alpha=spos/(2.0*Q);
+    
+      sc=1.0/( 1 + alpha);
+      b1 = (1-cpos) * sc;
+      b2 = b0 = b1*0.5;
+      a1 =  -2 * cpos * sc;
+      a2 = (1-alpha)*sc;
+    );
+    last_aa=aasize;
+
+    hist4=hist5=hist6=hist7=0;
+    hist8=hist9=hist10=hist11=0;
+    hist12=hist13=hist14=hist15=0;
+    hist16=hist17=hist18=hist19=0;
+  );
+
+
+@sample
+  sspos=0;
+  src0=spl0;
+  src1=spl1;
+  loop(aasize,
+
+    // run input filter
+    aasize > 1 ? (
+       sspl0 = src0*b0 + hist4*b1 + hist5*b2 - hist6*a1 - hist7*a2;
+       hist5=hist4; hist4=src0; hist7=hist6; hist6=sspl0;
+
+       sspl1 = src1*b0 + hist8*b1 + hist9*b2 - hist10*a1 - hist11*a2;
+       hist9=hist8; hist8=src1; hist11=hist10; hist10=sspl1;      
+    ) : (
+      sspl0=src0; 
+      sspl1=src1;
+    );
+
+
+    mixa > 0 ? (
+      wet0 = drivea1 * sspl0 * (1 - abs(sspl0 * drivea2));
+      wet1 = drivea1 * sspl1 * (1 - abs(sspl1 * drivea2)); 
+      sspl0 = mixa1 * sspl0 + (mixa) * wet0;
+      sspl1 = mixa1 * sspl1 + (mixa) * wet1;  
+    );
+  
+    mixb > 0 ? (
+      wet0 = sin(sspl0 * halfpi);
+      wet1 = sin(sspl1 * halfpi); 
+      sspl0 = mixb1 * sspl0 + (mixb) * wet0;
+      sspl1 = mixb1 * sspl1 + (mixb) * wet1;  
+    );
+
+    db0 = log(abs(sspl0)) * log2db;
+    db1 = log(abs(sspl1)) * log2db;
+
+    sspl0>ptsv ? (
+      diff=max(min((db0 - ptt),0),pts);
+      pts == 0 ? mult = 0 : mult=diff/pts;
+      sspl0 = ptsv + ((sspl0 - ptsv) / (1 + (pl * mult)));
+    );
+    sspl0<ntsv ? (
+      diff=max(min((db0 - ntt),0),nts);
+      nts == 0 ? mult = 0 : mult=diff/nts;
+      sspl0 = ntsv + ((sspl0 - ntsv) / (1 + (nl * mult)));
+    );
+    sspl1>ptsv ? (
+      diff=max(min((db1 - ptt),0),pts);
+      pts == 0 ? mult = 0 : mult=diff/pts;
+      sspl1 = ptsv + ((sspl1 - ptsv) / (1 + (pl * mult)));
+    );
+    sspl1<ntsv ? (
+      diff=max(min((db1 - ntt),0),nts);
+      nts == 0 ? mult = 0 : mult=diff/nts;
+      sspl1 = ntsv + ((sspl1 - ntsv) / (1 + (nl * mult)));
+    );
+
+
+    slider10>0.5?(
+      sspl0>1.0?sspl0=1.0:sspl0<-1.0?sspl0=-1.0;
+      sspl1>1.0?sspl1=1.0:sspl1<-1.0?sspl1=-1.0;
+    );
+
+    // run output filters
+
+    aasize > 1 ? (
+
+      (sspos+=1)==1 ? (
+        spl0 = sspl0*b0 + hist12*b1 + hist13*b2 - hist14*a1 - hist15*a2;
+        spl1 = sspl1*b0 + hist16*b1 + hist17*b2 - hist18*a1 - hist19*a2;
+
+        hist13=hist12; hist12=sspl0; hist15=hist14; hist14=spl0;
+        hist17=hist16; hist16=sspl1; hist19=hist18; hist18=spl1;
+
+      ) : (
+        tmp0 = sspl0*b0 + hist12*b1 + hist13*b2 - hist14*a1 - hist15*a2;
+        tmp1 = sspl1*b0 + hist16*b1 + hist17*b2 - hist18*a1 - hist19*a2;
+
+        hist13=hist12; hist12=sspl0; hist15=hist14; hist14=tmp0;
+        hist17=hist16; hist16=sspl1; hist19=hist18; hist18=tmp1;
+      );
+    ) : (
+      spl0=sspl0; 
+      spl1=sspl1;
+    );
+
+  );
+  

@@ -1,0 +1,109 @@
+// drumtrigger: generates MIDI note information from audio impulses
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:Audio To MIDI Drum Trigger
+desc:Audio To MIDI Drum Trigger [Stillwell]
+//tags: processing MIDI generator
+//author: Stillwell
+
+slider1:-17<-60,6,1>Open Threshold (dB)
+slider2:-18<-60,6,1>Close Threshold (dB)
+slider3:30<0,200,0.1>Retrigger Interval (ms)
+slider4:0<0,100,0.1>Original Signal Mix (%)
+slider5:10<1,16,1>MIDI Channel
+slider6:69<0,127,1>MIDI Note
+slider7:1<0.1,7.0,0.1>Peak Detection Interval
+slider8:1<-5.0,5.0,0.01>Trigger Align (ms)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  sending=0;
+  sent=0;
+  noteon=9*16;
+  noteoff=8*16;
+  measuring=0;
+  meascnt=0;
+  maxvel=0;
+  triggerpos=0;
+  threshlat = 0.001 * srate;
+
+@block
+  pos=0;
+  triggerpos=0;
+
+@slider
+  othresh=2^(slider1/6);
+  cthresh=2^(slider2/6);
+  retrigger = (slider3 / 1000) * srate;
+  mix = slider4 / 100;
+  chan=slider5-1;
+  note=slider6;
+  velperiod=(slider7 / 1000) * srate;
+  threshlat=(slider8 / 1000) * srate;
+  oncmd=noteon+chan;
+  offcmd=noteoff+chan;
+
+@sample
+  pos += 1;
+  trigwait += 1;    
+
+  linvel=min(1,max(abs(spl0),abs(spl1)));
+  velocity=max(0,min(127,floor(maxvel*127)));
+
+  linvel >= othresh && sent==0 && sending==0 && measuring==0 && trigwait >= retrigger ? (
+    measuring=1;
+    maxvel=linvel;
+    meascnt=0;
+    triggerpos=pos;
+  );
+  measuring==1 ? (
+    meascnt += 1;
+    meascnt >= velperiod ? (
+      measuring=0;
+      sending=1;
+      meascnt=0;
+    ) : (
+      maxvel=max(maxvel,linvel);
+    );
+  );
+  sent==0 && sending==1 ? (
+    sent=1;
+    sending=0;
+    trigwait=0;
+    midisend(max(0,triggerpos-threshlat), oncmd, note|velocity*256);
+  );
+  linvel <= cthresh && sent==1 && trigwait >= retrigger ? (
+    sent=0;
+    trigwait=0;
+    maxvel=0;
+    midisend(max(0,triggerpos-threshlat), offcmd, note);
+  );
+
+  spl0 = spl0 * mix;
+  spl1 = spl1 * mix;

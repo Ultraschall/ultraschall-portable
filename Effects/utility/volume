@@ -1,0 +1,33 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Volume Adjustment
+//tags: utility gain
+//author: Cockos
+
+slider1:6<-150,150,1>Adjustment (dB)
+slider2:0<-150,150,1>Max Volume (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+  adj1=2 ^ (slider1/6); 
+  adj2=2 ^ (slider2/6);
+  doseek=1;
+
+@block
+doseek ? (
+  dadj=(adj1-adj1_s)/samplesblock;
+  doseek=0;
+):(
+  dadj=0;
+  adj1_s=adj1;
+);
+
+@sample
+spl0=min(max(spl0*adj1_s,-adj2),adj2);
+spl1=min(max(spl1*adj1_s,-adj2),adj2);
+adj1_s+=dadj;

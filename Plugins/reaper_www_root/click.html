@@ -1,0 +1,111 @@
+<html>
+<head>
+<title>click</title>
+
+<style type="text/css">
+body {
+  background-color: #000;
+  color: #fff;
+  font-size:400px;
+}
+#cnt {
+width: 100%;
+height:100%;
+text-align:center;
+}
+</style>
+<script src="main.js"></script>
+
+<script type="text/javascript">
+
+
+var last_bc = -100;
+var need_clear=0;
+var g_drift = false;
+
+var tab = function() { 
+    var tab = [];
+    var tab_max=10;
+    var tab_cnt=0, tab_pos=0;
+
+    return { 
+       onpair: function(t, fbp, bim, ml) {
+                 if (tab_cnt > 0) {
+                   var t1 = tab_pos-1;
+                   if (t1 < 0) t1 += tab_max;
+                   if (tab[t1].t > t || tab[t1].t < t - 2000.0 || tab[t1].fbp > fbp || tab[t1].fbp < fbp-4.0) tab_cnt=tab_pos=0;
+                 }
+                 if (tab_cnt < tab_max) {
+                   tab_cnt++;
+                   tab[tab_pos] = {};
+                 }
+                 tab[tab_pos].t = t;
+                 tab[tab_pos].fbp = fbp;
+                 tab[tab_pos].bim = bim;
+                 tab[tab_pos].ml = ml;
+                 if (++tab_pos >= tab_max) tab_pos=0;
+               },
+
+        get: function(t) { // returns beats, measurelen
+               if (tab_cnt < tab_max) return null;
+
+               var t1 = tab_pos-1, t2=tab_pos - tab_cnt;
+               if (t1 < 0) t1 += tab_max;
+               if (t2 < 0) t2 += tab_max;
+               // t1 = most recent, t2= least recent
+               if (t > tab[t1].t + 2000) return null;
+
+               var dt = tab[t1].t - tab[t2].t, db = tab[t1].fbp - tab[t2].fbp;
+               if (dt < 0.05) return null;
+
+               var beats = (tab[t1].bim + (t-tab[t1].t) * db / dt);
+               beats -= Math.floor(beats/tab[t1].ml) * tab[t1].ml;
+               return [ beats, tab[t1].ml ];
+          },
+        clear: function() { tab_cnt=tab_pos=0; }
+    };
+}();
+
+window.setInterval( function () {
+
+          var n = Date.now();
+          var bc = tab.get(n);
+          if (bc != null && Math.floor(bc[0]) != last_bc) {
+            last_bc=Math.floor(bc[0]);
+            document.getElementById("cnt").innerHTML = (last_bc%bc[1])+1;
+            document.body.style.backgroundColor=last_bc > 0 ? "#558" : "#fff";
+            need_clear = n + 40;
+          } else if (need_clear>0 && n > need_clear) {
+            need_clear=0;
+            document.body.style.backgroundColor="#000";
+          }
+}
+
+,1);
+
+
+function wwr_onreply(results, startt) {
+  var ar = results.split("\n");
+  var x;
+  for (x=0;x<ar.length;x++) {
+    var tok = ar[x].split("\t");
+    if (tok[0] == "BEATPOS") {
+      if (tok[1]&1) {
+        var t = Date.now();
+        t -= (t-startt)*.6; // back up to request-servicing time
+        tab.onpair(t, parseFloat(tok[3]), parseFloat(tok[5]), parseFloat(tok[6]));
+      }
+      else tab.clear();
+    }
+  }
+}
+
+wwr_req_recur("BEATPOS",100);
+wwr_start();
+
+</script>
+</head>
+<body>
+<div id="cnt"></div>
+</body>
+</html>
