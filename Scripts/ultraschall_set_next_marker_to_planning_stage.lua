@@ -24,6 +24,7 @@
 ################################################################################
 ]]
  
+<<<<<<< HEAD
 local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 dofile(script_path .. "ultraschall_helper_functions.lua")
@@ -58,3 +59,10 @@ end
 
 set_next_marker_to_planning_stage()
 
+=======
+
+-- Print Message to console (debugging)
+function Msg(val)
+  reaper.ShowConsoleMsg(tostring(val).."\n")
+end
+>>>>>>> initial empty script with copyright header and debug function
