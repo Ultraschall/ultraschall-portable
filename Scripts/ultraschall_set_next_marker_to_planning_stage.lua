@@ -40,7 +40,7 @@ end
 
 function set_next_marker_to_planning_stage()
   cursor_pos=get_position()
-  -- iterate over list of all markerz
+  -- iterate over list of all markers
   retval, num_markers, num_regions = reaper.CountProjectMarkers(0) -- get number of all markers
   
   if num_markers>0 then
