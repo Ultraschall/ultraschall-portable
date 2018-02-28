@@ -49,11 +49,20 @@ reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of y
 init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)
 
 if init_end_timesel ~= init_start_timesel then		-- there is a time selection
+	reaper.Main_OnCommand(40061, 0)						-- Split all Items at time selection
+	reaper.Main_OnCommand(40717, 0)						-- Select all items in time selection
+	reaper.Main_OnCommand(41383, 0)						-- Copy all items within time selection to clipboard
 	reaper.Main_OnCommand(40201, 0)						-- Ripple cut Selection
+  reaper.Main_OnCommand(40289, 0)						-- Unselect all Items
+
 
 elseif reaper.CountSelectedMediaItems(0) == 1 then	-- exacty one item selected
-	runcommand("_SWS_SAFETIMESEL")						-- set time selection to item borders
+	runcommand("_SWS_SAFETIMESEL")						-- Set time selection to item borders
+	reaper.Main_OnCommand(40061, 0)						-- Split all Items at time selection
+	reaper.Main_OnCommand(40717, 0)						-- Select all items in time selection
+	reaper.Main_OnCommand(41383, 0)						-- Copy all items within time selection to clipboard
 	reaper.Main_OnCommand(40201, 0)						-- Ripple cut Selection
+	reaper.Main_OnCommand(40289, 0)						-- Unselect all Items
 
 else 													-- no time selection or items selected
  	result = reaper.ShowMessageBox( "No time selection active", "Ultraschall Ripple Cut", 0 )	-- Info window
