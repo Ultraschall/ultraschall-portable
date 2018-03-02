@@ -33,7 +33,7 @@ script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 dofile(script_path .. "ultraschall_helper_functions.lua")
 
 -------------------------------------
--- Set of Actions to Copy and Ripple Cut
+-- Set of Actions to Copy Items and Ripple Cut
 -------------------------------------
 
 function RippleCut()
@@ -47,10 +47,10 @@ function RippleCut()
 end
 
 -------------------------------------
-reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
+reaper.Undo_BeginBlock() -- Beginning of the undo block. Leave it at the top of your main function.
 -------------------------------------
 
-init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)
+init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)	-- get information wether or not a time selection is set
 
 if init_end_timesel ~= init_start_timesel then		-- there is a time selection
 	RippleCut()
