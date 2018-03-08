@@ -9,4 +9,8 @@
 *.rk
 
 
+## Ini files
+
 reaper-reginfo2.ini
+reaper-recentfx.ini
+
