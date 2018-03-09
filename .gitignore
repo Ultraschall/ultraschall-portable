@@ -1,12 +1,16 @@
 # gitignore
 # Ultraschall
-#
 
 ## App
+# Apple/Mac
 *.app
+# Windows
+*.exe
 
 ## Licence file
 *.rk
 
-
+## Ini files
 reaper-reginfo2.ini
+reaper-recentfx.ini
+
