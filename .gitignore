@@ -14,3 +14,6 @@
 reaper-reginfo2.ini
 reaper-recentfx.ini
 
+## macOS Junk
+.DS_Store
+
