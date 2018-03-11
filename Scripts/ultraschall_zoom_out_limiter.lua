@@ -44,7 +44,7 @@ end
       length=reaper.GetProjectLength()      
     end
     
-    if length<180 then length=180 end
+    if length<180 then length=180 end   -- zoomlimit does not apply under 3 minutes
     
  val = -2
     
