@@ -41,8 +41,10 @@ end
     elseif reaper.GetProjectLength()<reaper.GetCursorPosition() then 
       length=reaper.GetCursorPosition()
     else
-      length=reaper.GetProjectLength()
+      length=reaper.GetProjectLength()      
     end
+    
+    if length<180 then length=180 end
     
  val = -2
     
