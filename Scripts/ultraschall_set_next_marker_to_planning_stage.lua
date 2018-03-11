@@ -29,17 +29,9 @@ script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 dofile(script_path .. "ultraschall_helper_functions.lua")
 planned_color = ultraschall.ConvertColor(100,255,0)
 
-function get_position()
-    playstate=reaper.GetPlayState() --0 stop, 1 play, 2 pause, 4 rec possible to combine bits
-    if playstate & 1 == 1 or playstate & 4==4 then
-        return reaper.GetPlayPosition()
-    else
-        return reaper.GetCursorPosition()
-    end
-end
-
 function set_next_marker_to_planning_stage()
-  cursor_pos=get_position()
+  cursor_pos=reaper.GetCursorPosition()
+
   -- iterate over list of all markers
   retval, num_markers, num_regions = reaper.CountProjectMarkers(0) -- get number of all markers
   
@@ -59,9 +51,10 @@ function set_next_marker_to_planning_stage()
       reaper.Undo_BeginBlock()
         retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, last_marker_index)
         reaper.SetProjectMarker4(0, markrgnindexnumber, false, pos, 0, name, planned_color|0x1000000, 0)        
-      reaper.Undo_EndBlock("Ultraschall - Set next marker to planning stage)", -1)  
+      reaper.Undo_EndBlock("Ultraschall - Set next marker to planning stage.", -1)  
     end
   end
 end
 
 set_next_marker_to_planning_stage()
+
