@@ -24,6 +24,9 @@
 ################################################################################
 ]]
 
+-- Zoom to the region in which the Edit-Cursor is in
+
+
 in_pos, out_pos = reaper.GetSet_LoopTimeRange(0,0,0,0,0) --store time selection start and end
 
 pos = reaper.GetCursorPosition()
@@ -34,7 +37,7 @@ duration_of_region = rgnend - pos
 
 if isrgn and duration_of_region>0 then
     reaper.Undo_BeginBlock()
-    reaper.GetSet_LoopTimeRange(true,false,n_pos,n_rgnend,false) -- set time selection
+    reaper.GetSet_LoopTimeRange(true,false,pos,rgnend,false) -- set time selection
     reaper.Main_OnCommand(40031, 0) -- zoom to time selection
     reaper.GetSet_LoopTimeRange(true,false,in_pos,out_pos,false) -- restore time selection
     reaper.Undo_EndBlock("Ultraschall: Zoom out to region at cursor position", -1)
