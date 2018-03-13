@@ -26,6 +26,9 @@
 
 -- Zoom to the region in which the Edit-Cursor is in
 
+-------------------------------------
+reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
+-------------------------------------
 
 in_pos, out_pos = reaper.GetSet_LoopTimeRange(0,0,0,0,0) --store time selection start and end
 
@@ -35,11 +38,12 @@ marker,region = reaper.GetLastMarkerAndCurRegion(0, pos) -- get region at cursor
 retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(region)
 duration_of_region = rgnend - pos
 
-if isrgn and duration_of_region>0 then
-    reaper.Undo_BeginBlock()
+if isrgn and duration_of_region>0 then    
     reaper.GetSet_LoopTimeRange(true,false,pos,rgnend,false) -- set time selection
     reaper.Main_OnCommand(40031, 0) -- zoom to time selection
     reaper.GetSet_LoopTimeRange(true,false,in_pos,out_pos,false) -- restore time selection
-    reaper.Undo_EndBlock("Ultraschall: Zoom out to region at cursor position", -1)
 end
 
+-------------------------------------
+reaper.Undo_EndBlock("Ultraschall: Zoom out to Region at Cursor Position", -1) -- End of the undo block. Leave it at the bottom of your main function.
+-------------------------------------
