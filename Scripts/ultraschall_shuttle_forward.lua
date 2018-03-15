@@ -34,8 +34,6 @@
 --                3.9686 + 40x6% -> 40x
 --                3.9686 + 28x -> 20
 --                1 + 100x ->
--- TODO detect if end of project is near and stop! adapt to speed!
-
 
 function incr_pbrate(n) -- increase rate ~6% n times
     n=math.min(n,200) -- limit n to 200
@@ -67,18 +65,18 @@ function init_function()
 
     if playstate & 1 ==1 then -- reaper is playing
         playrate=reaper.Master_GetPlayRate(0) -- read playrate
-        if playrate<1 then reaper.CSurf_OnPlayRateChange(1.0) end --  if rate<1 set playrate=1
-        if math.floor(playrate+0.5)==1  then reaper.CSurf_OnPlayRateChange(2.0) end --  if rate is 1x incr to 2x
-        if math.floor(playrate+0.5)==2  then reaper.CSurf_OnPlayRateChange(3.0)  end --  if rate is 2x incr. to ~3x
-        if math.floor(playrate+0.5)==3  then reaper.CSurf_OnPlayRateChange(3.9685) reaper.defer(incr_pbrate(4)) end --  if rate is 3x incr. to ~5x
-        if math.floor(playrate+0.5)==5  then reaper.CSurf_OnPlayRateChange(4.0) reaper.defer(incr_pbrate(12)) end --  if rate is 5x incr. to ~8x
-        if math.floor(playrate+0.5)==8  then reaper.CSurf_OnPlayRateChange(3.9686) reaper.defer(incr_pbrate(28)) end --  if rate is 8x incr. to ~20x
-        if math.floor(playrate+0.5)==20 then reaper.CSurf_OnPlayRateChange(3.9686) reaper.defer(incr_pbrate(40)) end --  if rate is 20x incr. to 40x
-        --if math.floor(playrate+0.5)==40 then reaper.CSurf_OnPlayRateChange(3.9375) reaper.defer(incr_pbrate(56)) end --  if rate is 40x incr. to 100x
-
-    elseif playstate==0 or playstate==2 then -- reaper ist paused or stopped
-        reaper.CSurf_OnPlayRateChange(1.0)
-        reaper.Main_OnCommand(1007,0) -- play 1007 
+        if playrate<1 then reaper.CSurf_OnPlayRateChange(1.0) --  if rate<1 set playrate=1
+        elseif math.floor(playrate+0.5)==1  then reaper.CSurf_OnPlayRateChange(2.0) --  if rate is 1x incr to 2x
+        elseif math.floor(playrate+0.5)==2  then reaper.CSurf_OnPlayRateChange(3.0) --  if rate is 2x incr. to ~3x
+        elseif math.floor(playrate+0.5)==3  then reaper.CSurf_OnPlayRateChange(3.9685) reaper.defer(incr_pbrate(4)) --  if rate is 3x incr. to ~5x
+        elseif math.floor(playrate+0.5)==5  then reaper.CSurf_OnPlayRateChange(4.0) reaper.defer(incr_pbrate(12)) --  if rate is 5x incr. to ~8x
+        elseif math.floor(playrate+0.5)==8  then reaper.CSurf_OnPlayRateChange(3.9686) reaper.defer(incr_pbrate(28)) --  if rate is 8x incr. to ~20x
+        elseif math.floor(playrate+0.5)==20 then reaper.CSurf_OnPlayRateChange(3.9686) reaper.defer(incr_pbrate(40)) --  if rate is 20x incr. to 40x
+        elseif math.floor(playrate+0.5)==40 then reaper.CSurf_OnPlayRateChange(3.9375) reaper.defer(incr_pbrate(56)) --  if rate is 40x incr. to 100x
+        end
+    elseif playstate==0 or playstate & 2 ==2 then -- reaper ist paused or stopped
+        reaper.CSurf_OnPlayRateChange(1.0) -- set playrate to 1
+        reaper.Main_OnCommand(1007,0) -- play
     end
     reaper.Undo_EndBlock("Ultraschall Shuttle FWD", -1)
     return 1
@@ -86,17 +84,19 @@ end
 
 function runloop()
     playstate=reaper.GetPlayState()
-    
-    if playstate & 1==1 then -- if playing restart loop
+    if playstate & 1==1 then -- if playing move edit cursor and restart loop
+        reaper.Main_OnCommand(40434,0) -- move edit to play cursor
         reaper.defer(runloop)
     end
     
     if playstate ==0 or playstate & 2 ==2 then -- STOP/PAUSE -> change playrate to 1 and reset all undo points
-        if reaper.GetPlayPosition()+1 >=reaper.GetProjectLength(0) then
+        -- if the play cursor is near the end at high speed set it to end of project
+        if (reaper.GetPlayPosition()+2 >=reaper.GetProjectLength(0) and reaper.Master_GetPlayRate(0) >=20) or (reaper.GetPlayPosition()+6 >=reaper.GetProjectLength(0) and reaper.Master_GetPlayRate(0) >=100) then
             reaper.Main_OnCommand(40043,0) -- Transport: Go to end of project
         end 
         reaper.CSurf_OnPlayRateChange(1)
-        undo_done=0
+        
+        --remove all undopoints created by shuttle scripts
         while reaper.Undo_CanUndo2(0)=="Ultraschall Shuttle FWD" or reaper.Undo_CanUndo2(0)=="Playrate Change" do
             reaper.Undo_DoUndo2(0)
         end
