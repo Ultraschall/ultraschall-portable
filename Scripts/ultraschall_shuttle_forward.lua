@@ -43,7 +43,7 @@ function incr_pbrate(n) -- increase rate ~6% n times
 end
 
 function is_playing_reverse()
-    retval,value=reaper.GetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle")  --check if reverse playing
+    retval,value=reaper.GetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle")  --check if reverse playing is active
     if not tonumber(value) then value="0" end
     if value=="1" then
         return 1
@@ -60,7 +60,7 @@ end
 
 function init_function()
     reaper.Undo_BeginBlock()
-    if is_playing_reverse()>0 then stop_reverse_loop() return 5 end
+    if is_playing_reverse()>0 then stop_reverse_loop() return 0 end
     playstate=reaper.GetPlayState() --0 stop, 1 play, 2 pause, 4 rec possible to combine bits
 
     if playstate & 1 ==1 then -- reaper is playing
@@ -95,7 +95,7 @@ function runloop()
             reaper.Main_OnCommand(40043,0) -- Transport: Go to end of project
         end 
         reaper.CSurf_OnPlayRateChange(1)
-        
+
         --remove all undopoints created by shuttle scripts
         while reaper.Undo_CanUndo2(0)=="Ultraschall Shuttle FWD" or reaper.Undo_CanUndo2(0)=="Playrate Change" do
             reaper.Undo_DoUndo2(0)
@@ -103,6 +103,6 @@ function runloop()
     end
 end
 
-if init_function()==1 then --if rev=1 run loop, else just leave (ending loop)
+if init_function()==1 then --if playing run loop, else just leave (ending loop)
     reaper.defer(runloop) -- run without generating an undo point
 end
