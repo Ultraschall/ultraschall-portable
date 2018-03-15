@@ -24,6 +24,19 @@
 ################################################################################
 ]]
 
+-- notes:
+--   in der reaper-kb.ini muss in der SRC Zeile für das Script statt "SRC 4" -> "SRC 520" stehen = new instance!!!!!!!
+--   erreichbare Playbackspeeds:
+--     mit reaper.CSurf_OnPlayRateChange(4.0) max=4 höhere Werte ändern nichts
+--     mit dem mehrfachem Aufrufen von reaper.Main_OnCommand(40522, 0) kann man in ~6% erhöhen
+--     CSurf_OnPlayRateChange(4.0) +  reaper.defer(incr_pbrate(12)) -> 8x
+--                3.9375 + 56x6% -> 100x
+--                3.9686 + 40x6% -> 40x
+--                3.9686 + 28x -> 20
+--                1 + 100x ->
+-- TODO detect if end of project is near and stop! adapt to speed!
+
+
 function incr_pbrate(n) -- increase rate ~6% n times
     n=math.min(n,200) -- limit n to 200
     for i=1, n, 1 do
@@ -52,16 +65,20 @@ function init_function()
     if is_playing_reverse()>0 then stop_reverse_loop() return 5 end
     playstate=reaper.GetPlayState() --0 stop, 1 play, 2 pause, 4 rec possible to combine bits
 
-    if playstate==1 then -- reaper is playing
+    if playstate & 1 ==1 then -- reaper is playing
         playrate=reaper.Master_GetPlayRate(0) -- read playrate
         if playrate<1 then reaper.CSurf_OnPlayRateChange(1.0) end --  if rate<1 set playrate=1
-        if math.floor(playrate+0.5)==1 then reaper.CSurf_OnPlayRateChange(2.0) end --  if rate is 1x incr to 2x
-        if math.floor(playrate+0.5)==2 then reaper.CSurf_OnPlayRateChange(3.0)  end --  if rate is 2x incr. to ~3x
-        if math.floor(playrate+0.5)==3 then reaper.CSurf_OnPlayRateChange(3.9685) reaper.defer(incr_pbrate(4)) end --  if rate is 3x incr. to ~5x
-        if math.floor(playrate+0.5)==5 then reaper.CSurf_OnPlayRateChange(4.0) reaper.defer(incr_pbrate(120)) end --  if rate is 5x incr. to ~8x
+        if math.floor(playrate+0.5)==1  then reaper.CSurf_OnPlayRateChange(2.0) end --  if rate is 1x incr to 2x
+        if math.floor(playrate+0.5)==2  then reaper.CSurf_OnPlayRateChange(3.0)  end --  if rate is 2x incr. to ~3x
+        if math.floor(playrate+0.5)==3  then reaper.CSurf_OnPlayRateChange(3.9685) reaper.defer(incr_pbrate(4)) end --  if rate is 3x incr. to ~5x
+        if math.floor(playrate+0.5)==5  then reaper.CSurf_OnPlayRateChange(4.0) reaper.defer(incr_pbrate(12)) end --  if rate is 5x incr. to ~8x
+        if math.floor(playrate+0.5)==8  then reaper.CSurf_OnPlayRateChange(3.9686) reaper.defer(incr_pbrate(28)) end --  if rate is 8x incr. to ~20x
+        if math.floor(playrate+0.5)==20 then reaper.CSurf_OnPlayRateChange(3.9686) reaper.defer(incr_pbrate(40)) end --  if rate is 20x incr. to 40x
+        --if math.floor(playrate+0.5)==40 then reaper.CSurf_OnPlayRateChange(3.9375) reaper.defer(incr_pbrate(56)) end --  if rate is 40x incr. to 100x
+
     elseif playstate==0 or playstate==2 then -- reaper ist paused or stopped
         reaper.CSurf_OnPlayRateChange(1.0)
-        reaper.Main_OnCommand(1007,0) -- play
+        reaper.Main_OnCommand(1007,0) -- play 1007 
     end
     reaper.Undo_EndBlock("Ultraschall Shuttle FWD", -1)
     return 1
@@ -74,8 +91,8 @@ function runloop()
         reaper.defer(runloop)
     end
     
-    if playstate==0 or playstate & 2 ==2 then -- STOP/PAUSE -> change playrate to 1 and reset all undo points
-        if reaper.GetPlayPosition()+0.3 >=reaper.GetProjectLength(0) then
+    if playstate ==0 or playstate & 2 ==2 then -- STOP/PAUSE -> change playrate to 1 and reset all undo points
+        if reaper.GetPlayPosition()+1 >=reaper.GetProjectLength(0) then
             reaper.Main_OnCommand(40043,0) -- Transport: Go to end of project
         end 
         reaper.CSurf_OnPlayRateChange(1)
