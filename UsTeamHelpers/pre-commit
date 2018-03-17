@@ -1,0 +1,3 @@
+#!/bin/sh
+
+"$(git rev-parse --show-cdup)/.git/hooks/sort_reaper_kb_ini.sh"
