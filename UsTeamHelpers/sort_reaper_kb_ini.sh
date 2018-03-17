@@ -10,8 +10,10 @@ REAPER_KB_INI="reaper-kb.ini"
 WORKING_DIRECTORY=$PWD
 cd "$(git rev-parse --show-cdup)" #go to toplevel directory in this repository
 
+# create niceDiff folder if it does not exist
+[ ! -d "$NICE_DIFF_FOLDER" ] && mkdir -p "$NICE_DIFF_FOLDER"
 
-#remove file if staged file is marked for deletion
+# remove file if staged file is marked for deletion
 for fileToDelete in $(git diff --cached --name-status | grep ^D | cut -f2)
 do
     if [ -e $fileToDelete ] #file exists
@@ -32,6 +34,5 @@ do
 done
 
 # add nice diffed files to this commit and go back to previous working folder
-cd $NICE_DIFF_FOLDER
-git add .
+git add $NICE_DIFF_FOLDER > /dev/null 2>&1
 cd $WORKING_DIRECTORY
