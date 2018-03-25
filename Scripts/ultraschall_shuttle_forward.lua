@@ -30,10 +30,6 @@
 --     mit reaper.CSurf_OnPlayRateChange(4.0) max=4 höhere Werte ändern nichts
 --     mit dem mehrfachem Aufrufen von reaper.Main_OnCommand(40522, 0) kann man in ~6% erhöhen
 --     CSurf_OnPlayRateChange(4.0) +  reaper.defer(incr_pbrate(12)) -> 8x
---                3.9375 + 56x6% -> 100x
---                3.9686 + 40x6% -> 40x
---                3.9686 + 28x -> 20
---                1 + 100x ->
 
 function incr_pbrate(n) -- increase rate ~6% n times
     n=math.min(n,200) -- limit n to 200
