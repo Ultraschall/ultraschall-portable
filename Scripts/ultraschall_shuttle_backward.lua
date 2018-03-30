@@ -25,9 +25,8 @@
 ]]
 
 function is_playing_reverse()
-    retval,value=reaper.GetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle")  --check if reverse playing
-    if not tonumber(value) then value="0" end
-    if value=="1" then return 1 else return 0 end
+    _ ,value=reaper.GetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle")  --check if reverse playing
+    if value=="1" then return true else return false end
 end
 
 function GetPath(str)
@@ -45,10 +44,10 @@ function main()
   reverse_function = reaper.AddRemoveReaScript(true, 0, GetPath(filename).."ultraschall_shuttle_background_script.lua", true)
 
   if reverse_function ~= 0 then
-    if is_playing_reverse()>0 then
+    if is_playing_reverse() then
       reaper.SetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle", 2) --set reverse status to 2 -> button pressed again!
     else
-      reaper.Main_OnCommand(reverse_function, 0)
+      reaper.Main_OnCommand(reverse_function, 0) --start background script
     end
   else
     reaper.ShowMessageBox("the script file: "..GetPath(filename).."ultraschall_shuttle_background_script.lua".. " is missing.", "Warning: LUA Script missing.", 0)
@@ -57,4 +56,3 @@ function main()
 end
 
 main()
-

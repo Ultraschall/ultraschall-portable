@@ -26,16 +26,21 @@
 
 function get_position()
     playstate=reaper.GetPlayState() --0 stop, 1 play, 2 pause, 4 rec possible to combine bits
-    if playstate & 1 ==1 or playstate & 4==4 then
+    if (playstate & 1 ==1) or (playstate & 4==4) then
         return reaper.GetPlayPosition()
     else
         return reaper.GetCursorPosition()
     end
 end
 
-function is_playing_reverse()
-    retval,value=reaper.GetProjExtState(0, "ultraschall", "Reverse_Play_Shuttle")  --check if reverse playing
+function playing_reverse_state()
+    _ ,value=reaper.GetProjExtState(0, "ultraschall", "Reverse_Play_Shuttle")  --check if reverse playing
+    -- 1 = rev play is active
+    -- 2 = rev play pressed again -> increase speed
+    -- 3 = fwd shutle play was pressed (fwd script) -> exit rev-background script and press play
     if not tonumber(value) then value="0" end
+
+    -- only allow "1","2", and "3" else return 0
     if value=="1" then
         return 1
     elseif value=="2" then
@@ -49,33 +54,35 @@ end
 
 function check_position() --check if cursor is past the last edit, if so goto to lastedit -0.1 sec.
     start_position=get_position() --get cursor position
-    if start_position>=reaper.GetProjectLength(0) then
+    end_position=reaper.GetProjectLength(0)
+    if start_position>=end_position then
         start_position=math.max(0,end_position-0.1)
     end
     reaper.MoveEditCursor(start_position-get_position(),0)
 end
 
 function init()
-    ignoreonexit=0
+    ignoreonexit=false
     speed_list = {1,2,3,5,8,20,40,100}
     max_speed=#speed_list
     speed=1
     reaper.Main_OnCommand(40521, 0) -- set play speed to 1
     reaper.SetProjExtState(0, "ultraschall", "Reverse_Play_Shuttle", 1) -- store state in datastore
     starttime=reaper.time_precise() --get actual time
-    check_position()
+    check_position() -- move cursor if necessary
     reaper.OnPlayButton()
 end
 
 function onexit()
-    if ignoreonexit==0 then
+    if ignoreonexit==false then
         reaper.SetProjExtState(0, "ultraschall", "Reverse_Play_Shuttle", 0) -- store state in datastore
         reaper.Main_OnCommand(40521, 0) -- set play speed to 1
-        reaper.Main_OnCommand(1007,0) --play
-        reaper.Main_OnCommand(1008,0) --pause
+        -- beobachten, ob das doch wichtig war: reaper.Main_OnCommand(1007,0) --play
+        -- beobachten, ob das doch wichtig war: reaper.Main_OnCommand(1008,0) --pause
         reaper.Main_OnCommand(1016,0) --stop
     end
     
+    --remove all undopoints created by shuttle scripts
     while reaper.Undo_CanUndo2(0)=="Ultraschall Shuttle FWD" or reaper.Undo_CanUndo2(0)=="Playrate Change" or reaper.Undo_CanUndo2(0)=="Set project playspeed"do
       reaper.Undo_DoUndo2(0)
     end
@@ -83,8 +90,7 @@ function onexit()
 end
 
 function runloop() --BACKGROUND Loop
-    playstate= reaper.GetPlayState()==1 or reaper.GetPlayState()==2
-    if is_playing_reverse()==2 then --increase speed
+    if playing_reverse_state()==2 then --increase speed
         speed=math.min(speed+1, max_speed)
         starttime=reaper.time_precise() --get actual time after speedchange!
         reaper.SetProjExtState(0, "ultraschall", "Reverse_Play_Shuttle", 1) -- store state in datastore
@@ -92,26 +98,24 @@ function runloop() --BACKGROUND Loop
         reaper.Main_OnCommand(1008,0) --pause
     end
 
-    if is_playing_reverse()==1 and playstate and reaper.GetCursorPosition()>0 then --reverse playing -> move cursor
+    if playing_reverse_state()==1 and ( (reaper.GetPlayState() & 1==1) or (reaper.GetPlayState() & 2==2) ) and reaper.GetCursorPosition()>0 then --reverse playing -> move cursor
         time_passed=(reaper.time_precise()-starttime) * speed_list[speed]
         reaper.MoveEditCursor(start_position-time_passed-reaper.GetCursorPosition(), 0)
         reaper.OnPlayButton()
-        reaper.CSurf_OnPlayRateChange(1.0+speed_list[speed]/10000.0+0.00005)
+        reaper.CSurf_OnPlayRateChange(1.0+speed_list[speed]/10000.0+0.00005) -- encode speed in Playratevalue 1x -> 1.0001, 100x -> 1.0100
         reaper.defer(runloop) -- restart loop
     end
 
-    if is_playing_reverse()==3 then --play was pressed: stop reverse playing and play forward
+    if playing_reverse_state()==3 then --fwd shuttle play was pressed: stop reverse playing and play forward
         reaper.Main_OnCommand(40521, 0) -- set play speed to 1
         reaper.SetProjExtState(0, "ultraschall", "Reverse_Play_Shuttle", 0) -- store state in datastore    
-        reaper.Main_OnCommand(1008,0) --pause
+        -- beobachten, ob das vielleicht doch wichtig war: reaper.Main_OnCommand(1008,0) --pause
         reaper.Main_OnCommand(1016,0) --stop
         reaper.OnPlayButton() --play
-        ignoreonexit=1
+        ignoreonexit=true
     end
 end
 
 init()
 reaper.atexit(onexit)
 reaper.defer(runloop)
-
-

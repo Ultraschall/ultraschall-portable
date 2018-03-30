@@ -38,13 +38,20 @@ function incr_pbrate(n) -- increase rate ~6% n times
     end  
 end
 
-function is_playing_reverse()
-    retval,value=reaper.GetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle")  --check if reverse playing is active
+function playing_reverse_state()
+    _ ,value=reaper.GetProjExtState(0, "ultraschall", "Reverse_Play_Shuttle")  --check if reverse playing
+    -- 1 = rev play is active
+    -- 2 = rev play pressed again -> increase speed
+    -- 3 = fwd shutle play was pressed (fwd script) -> exit rev-background script and press play
     if not tonumber(value) then value="0" end
+
+    -- only allow "1","2", and "3" else return 0
     if value=="1" then
         return 1
     elseif value=="2" then
         return 2
+    elseif value=="3" then
+        return 3
     else
         return 0
     end
@@ -56,10 +63,10 @@ end
 
 function init_function()
     reaper.Undo_BeginBlock()
-    if is_playing_reverse()>0 then stop_reverse_loop() return 0 end
+    if playing_reverse_state()>0 then stop_reverse_loop() return 0 end
     playstate=reaper.GetPlayState() --0 stop, 1 play, 2 pause, 4 rec possible to combine bits
 
-    if playstate & 1 ==1 then -- reaper is playing
+    if (playstate & 1) ==1 then -- reaper is playing
         playrate=reaper.Master_GetPlayRate(0) -- read playrate
         if playrate<1 then reaper.CSurf_OnPlayRateChange(1.0) --  if rate<1 set playrate=1
         elseif math.floor(playrate+0.5)==1  then reaper.CSurf_OnPlayRateChange(2.0) --  if rate is 1x incr to 2x
@@ -80,12 +87,12 @@ end
 
 function runloop()
     playstate=reaper.GetPlayState()
-    if playstate & 1==1 then -- if playing move edit cursor and restart loop
+    if (playstate & 1)==1 then -- if playing move edit cursor and restart loop
         reaper.Main_OnCommand(40434,0) -- move edit to play cursor
         reaper.defer(runloop)
     end
     
-    if playstate ==0 or playstate & 2 ==2 then -- STOP/PAUSE -> change playrate to 1 and reset all undo points
+    if playstate ==0 or (playstate & 2) ==2 then -- STOP/PAUSE -> change playrate to 1 and reset all undo points
         -- if the play cursor is near the end at high speed set it to end of project
         if (reaper.GetPlayPosition()+2 >=reaper.GetProjectLength(0) and reaper.Master_GetPlayRate(0) >=20) or (reaper.GetPlayPosition()+6 >=reaper.GetProjectLength(0) and reaper.Master_GetPlayRate(0) >=100) then
             reaper.Main_OnCommand(40043,0) -- Transport: Go to end of project
