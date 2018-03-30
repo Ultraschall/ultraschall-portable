@@ -43,6 +43,8 @@ end
     else
       length=reaper.GetProjectLength()
     end
+  
+if length<180 then length=180 end   -- zoomlimit does not apply under 3 minutes
     
     _,_,_,_,mode,res,val = reaper.get_action_context()
     if mode==-1 and res==-1 and val==-1 then val=0 end
