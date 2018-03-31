@@ -39,7 +39,7 @@ function GetPath(str)
 end
 
 function main()
-  reaper.Undo_BeginBlock()
+  --reaper.Undo_BeginBlock()
   is_new_value,filename,sectionID,cmdID,mode,resolution,val = reaper.get_action_context()
   reverse_function = reaper.AddRemoveReaScript(true, 0, GetPath(filename).."ultraschall_shuttle_background_script.lua", true)
 
@@ -52,7 +52,7 @@ function main()
   else
     reaper.ShowMessageBox("the script file: "..GetPath(filename).."ultraschall_shuttle_background_script.lua".. " is missing.", "Warning: LUA Script missing.", 0)
   end
-  reaper.Undo_EndBlock("Ultraschall Shuttle REW", -1)
+  --reaper.Undo_EndBlock("Ultraschall Shuttle REW", -1)
 end
 
-main()
+reaper.defer(main)

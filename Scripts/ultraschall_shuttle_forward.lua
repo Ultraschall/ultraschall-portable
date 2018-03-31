@@ -31,6 +31,11 @@
 --     mit dem mehrfachem Aufrufen von reaper.Main_OnCommand(40522, 0) kann man in ~6% erhöhen
 --     CSurf_OnPlayRateChange(4.0) +  reaper.defer(incr_pbrate(12)) -> 8x
 
+-- little helpers
+local info = debug.getinfo(1,'S');
+script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
+dofile(script_path .. "ultraschall_helper_functions.lua")
+
 function incr_pbrate(n) -- increase rate ~6% n times
     n=math.min(n,200) -- limit n to 200
     for i=1, n, 1 do
@@ -88,7 +93,8 @@ end
 function runloop()
     playstate=reaper.GetPlayState()
     if (playstate & 1)==1 then -- if playing move edit cursor and restart loop
-        reaper.Main_OnCommand(40434,0) -- move edit to play cursor
+        --reaper.Main_OnCommand(40434,0) -- move edit to play cursor
+        ultraschall.ToggleScrollingDuringPlayback(1, true, false) -- allow scrolling
         reaper.defer(runloop)
     end
     
@@ -98,7 +104,8 @@ function runloop()
             reaper.Main_OnCommand(40043,0) -- Transport: Go to end of project
         end 
         reaper.CSurf_OnPlayRateChange(1)
-
+        ultraschall.ToggleScrollingDuringPlayback(0, false, false) -- turn off scrolling
+        
         --remove all undopoints created by shuttle scripts
         while reaper.Undo_CanUndo2(0)=="Ultraschall Shuttle FWD" or reaper.Undo_CanUndo2(0)=="Playrate Change" do
             reaper.Undo_DoUndo2(0)
@@ -109,3 +116,4 @@ end
 if init_function()==1 then --if playing run loop, else just leave (ending loop)
     reaper.defer(runloop) -- run without generating an undo point
 end
+

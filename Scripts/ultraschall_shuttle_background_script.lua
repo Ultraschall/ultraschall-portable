@@ -83,7 +83,7 @@ function onexit()
     end
     
     --remove all undopoints created by shuttle scripts
-    while reaper.Undo_CanUndo2(0)=="Ultraschall Shuttle FWD" or reaper.Undo_CanUndo2(0)=="Playrate Change" or reaper.Undo_CanUndo2(0)=="Set project playspeed"do
+    while reaper.Undo_CanUndo2(0)=="Ultraschall Shuttle FWD" or reaper.Undo_CanUndo2(0)=="Playrate change" or reaper.Undo_CanUndo2(0)=="Set project playspeed"do
       reaper.Undo_DoUndo2(0)
     end
     
