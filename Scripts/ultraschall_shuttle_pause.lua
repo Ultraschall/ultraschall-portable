@@ -24,6 +24,8 @@
 ################################################################################
 ]]
 
-reaper.OnStopButton() --stop
-reaper.SetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle", 0) -- store state in datastore
-reaper.Main_OnCommand(40521, 0) -- set play speed to 1
+if (reaper.GetPlayState() & 4)~=4 then
+  reaper.OnStopButton() --stop
+  reaper.SetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle", 0) -- store state in datastore
+  reaper.Main_OnCommand(40521, 0) -- set play speed to 1
+end

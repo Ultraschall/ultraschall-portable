@@ -53,4 +53,6 @@ function main()
   end
 end
 
-reaper.defer(main)
+if reaper.GetPlayState() & 4 ~= 4 then -- do not start if recording!!
+  reaper.defer(main) -- start without creating UNDO Points
+end

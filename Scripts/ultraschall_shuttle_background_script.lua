@@ -58,6 +58,7 @@ function check_position() --check if cursor is past the last edit, if so goto to
 end
 
 function init()
+    if (reaper.GetPlayState() & 4)==4 then return end --stop if recording!!
     ignoreonexit=false
     speed_list = {1,2,3,5,8,20,40,100}
     max_speed=#speed_list
@@ -72,12 +73,13 @@ end
 function onexit()
     if ignoreonexit==false then
         reaper.SetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle", 0) -- store state in datastore
+        if (reaper.GetPlayState() & 4)==4 then return end --exit if recording!!
         reaper.Main_OnCommand(40521, 0) -- set play speed to 1
         -- beobachten, ob das doch wichtig war: reaper.Main_OnCommand(1007,0) --play
         -- beobachten, ob das doch wichtig war: reaper.Main_OnCommand(1008,0) --pause
         reaper.Main_OnCommand(1016,0) --stop
     end
-    
+    if (reaper.GetPlayState() & 4)==4 then return end --exit if recording!!
     --remove all undopoints created by shuttle scripts
     while reaper.Undo_CanUndo2(0)=="Ultraschall Shuttle FWD" or reaper.Undo_CanUndo2(0)=="Playrate change" or reaper.Undo_CanUndo2(0)=="Set project playspeed"do
       reaper.Undo_DoUndo2(0)
@@ -86,6 +88,7 @@ function onexit()
 end
 
 function runloop() --BACKGROUND Loop
+    if (reaper.GetPlayState() & 4)==4 then return end --exit if recording!!
     if playing_reverse_state()==2 then --increase speed
         speed=math.min(speed+1, max_speed)
         starttime=reaper.time_precise() --get actual time after speedchange!

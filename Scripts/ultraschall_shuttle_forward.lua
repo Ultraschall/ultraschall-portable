@@ -98,6 +98,7 @@ end
 function runloop()
     if is_there_a_newer_script() or (playing_reverse_state()>0) then return end
     playstate=reaper.GetPlayState()
+    if (playstate & 4)==4 then return end --exit if recording!!
     if (playstate & 1)==1 then -- if playing move edit cursor and restart loop
 
         --reaper.Main_OnCommand(40434,0) -- move edit to play cursor
@@ -127,13 +128,19 @@ function the_end()
   end
 end
 
-reaper.atexit(the_end)
--- give this script an ID
-_ , actual_script_id=reaper.GetProjExtState(0, "Ultraschall", "Forward_Play_Shuttle_ScriptID")
-if actual_script_id=="" then ScriptID=1 else ScriptID=tonumber(actual_script_id)+1 end
-reaper.SetProjExtState(0, "Ultraschall", "Forward_Play_Shuttle_ScriptID", ScriptID)
+function main()
+  reaper.atexit(the_end)
+  -- give this script an ID
+  _ , actual_script_id=reaper.GetProjExtState(0, "Ultraschall", "Forward_Play_Shuttle_ScriptID")
+  if actual_script_id=="" then ScriptID=1 else ScriptID=tonumber(actual_script_id)+1 end
+  reaper.SetProjExtState(0, "Ultraschall", "Forward_Play_Shuttle_ScriptID", ScriptID)
+  
+  if init_function()==1 then --if playing run loop, else just leave (ending loop)
+      reaper.defer(runloop) -- run without generating an undo point
+  end
+end
 
-if init_function()==1 then --if playing run loop, else just leave (ending loop)
-    reaper.defer(runloop) -- run without generating an undo point
+if reaper.GetPlayState() & 4 ~= 4 then -- do not start if recording!!
+  main()
 end
 
