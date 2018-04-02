@@ -96,7 +96,7 @@ function init_function()
 end
 
 function runloop()
-    if is_there_a_newer_script() then return end
+    if is_there_a_newer_script() or (playing_reverse_state()>0) then return end
     playstate=reaper.GetPlayState()
     if (playstate & 1)==1 then -- if playing move edit cursor and restart loop
 
