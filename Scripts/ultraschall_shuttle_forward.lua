@@ -44,7 +44,7 @@ function incr_pbrate(n) -- increase rate ~6% n times
 end
 
 function playing_reverse_state()
-    _ ,value=reaper.GetProjExtState(0, "ultraschall", "Reverse_Play_Shuttle")  --check if reverse playing
+    _ ,value=reaper.GetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle")  --check if reverse playing
     -- 1 = rev play is active
     -- 2 = rev play pressed again -> increase speed
     -- 3 = fwd shutle play was pressed (fwd script) -> exit rev-background script and press play
@@ -63,7 +63,12 @@ function playing_reverse_state()
 end
 
 function stop_reverse_loop()
-    reaper.SetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle", 3) -- store state in datastore, no reverse play
+  reaper.SetProjExtState(0, "Ultraschall", "Reverse_Play_Shuttle", 3) -- store state in datastore, no reverse play
+end
+
+function is_there_a_newer_script()
+  _ ,value=reaper.GetProjExtState(0, "Ultraschall", "Forward_Play_Shuttle_ScriptID")
+  return (value ~= tostring(ScriptID))
 end
 
 function init_function()
@@ -76,11 +81,11 @@ function init_function()
         if playrate<1 then reaper.CSurf_OnPlayRateChange(1.0) --  if rate<1 set playrate=1
         elseif math.floor(playrate+0.5)==1  then reaper.CSurf_OnPlayRateChange(2.0) --  if rate is 1x incr to 2x
         elseif math.floor(playrate+0.5)==2  then reaper.CSurf_OnPlayRateChange(3.0) --  if rate is 2x incr. to ~3x
-        elseif math.floor(playrate+0.5)==3  then reaper.CSurf_OnPlayRateChange(3.9685) reaper.defer(incr_pbrate(4)) --  if rate is 3x incr. to ~5x
-        elseif math.floor(playrate+0.5)==5  then reaper.CSurf_OnPlayRateChange(4.0) reaper.defer(incr_pbrate(12)) --  if rate is 5x incr. to ~8x
-        elseif math.floor(playrate+0.5)==8  then reaper.CSurf_OnPlayRateChange(3.9686) reaper.defer(incr_pbrate(28)) --  if rate is 8x incr. to ~20x
-        elseif math.floor(playrate+0.5)==20 then reaper.CSurf_OnPlayRateChange(3.9686) reaper.defer(incr_pbrate(40)) --  if rate is 20x incr. to 40x
-        elseif math.floor(playrate+0.5)==40 then reaper.CSurf_OnPlayRateChange(3.9375) reaper.defer(incr_pbrate(56)) --  if rate is 40x incr. to 100x
+        elseif math.floor(playrate+0.5)==3  then reaper.CSurf_OnPlayRateChange(3.9685) incr_pbrate(4) --  if rate is 3x incr. to ~5x
+        elseif math.floor(playrate+0.5)==5  then reaper.CSurf_OnPlayRateChange(4.0) incr_pbrate(12) --  if rate is 5x incr. to ~8x
+        elseif math.floor(playrate+0.5)==8  then reaper.CSurf_OnPlayRateChange(3.9686) incr_pbrate(28) --  if rate is 8x incr. to ~20x
+        elseif math.floor(playrate+0.5)==20 then reaper.CSurf_OnPlayRateChange(3.9686) incr_pbrate(40) --  if rate is 20x incr. to 40x
+        elseif math.floor(playrate+0.5)==40 then reaper.CSurf_OnPlayRateChange(3.9375) incr_pbrate(56) --  if rate is 40x incr. to 100x
         end
     elseif playstate==0 or playstate & 2 ==2 then -- reaper ist paused or stopped
         reaper.CSurf_OnPlayRateChange(1.0) -- set playrate to 1
@@ -91,8 +96,10 @@ function init_function()
 end
 
 function runloop()
+    if is_there_a_newer_script() then return end
     playstate=reaper.GetPlayState()
     if (playstate & 1)==1 then -- if playing move edit cursor and restart loop
+
         --reaper.Main_OnCommand(40434,0) -- move edit to play cursor
         ultraschall.ToggleScrollingDuringPlayback(1, true, false) -- allow scrolling
         reaper.defer(runloop)
@@ -107,11 +114,24 @@ function runloop()
         ultraschall.ToggleScrollingDuringPlayback(0, false, false) -- turn off scrolling
         
         --remove all undopoints created by shuttle scripts
-        while reaper.Undo_CanUndo2(0)=="Ultraschall Shuttle FWD" or reaper.Undo_CanUndo2(0)=="Playrate Change" do
+        while reaper.Undo_CanUndo2(0)=="Ultraschall Shuttle FWD" or reaper.Undo_CanUndo2(0)=="Playrate change" do
             reaper.Undo_DoUndo2(0)
         end
     end
 end
+
+function the_end()
+  --erase ID if this is the only script running
+  if is_there_a_newer_script()==false then
+     reaper.SetProjExtState(0, "Ultraschall", "Forward_Play_Shuttle_ScriptID", "")
+  end
+end
+
+reaper.atexit(the_end)
+-- give this script an ID
+_ , actual_script_id=reaper.GetProjExtState(0, "Ultraschall", "Forward_Play_Shuttle_ScriptID")
+if actual_script_id=="" then ScriptID=1 else ScriptID=tonumber(actual_script_id)+1 end
+reaper.SetProjExtState(0, "Ultraschall", "Forward_Play_Shuttle_ScriptID", ScriptID)
 
 if init_function()==1 then --if playing run loop, else just leave (ending loop)
     reaper.defer(runloop) -- run without generating an undo point
