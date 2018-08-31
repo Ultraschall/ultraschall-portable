@@ -1,3 +1,44 @@
 desc:Ultraschall Audiolevel Logger 0.1 (Ultraschall.fm)
 //tags: meter level 
+//author: fernsehmuell
 
+slider1:1000<1,1000,10>windowsize (ms)
+//slider2:/mydata:mydef.wav:WAV File
+
+in_pin:left input
+in_pin:right input
+out_pin:none
+
+filename:0,stats.txt
+handle = file_open(0);
+
+@init
+sr=srate;
+maxl = maxr = avgl = avgr =0;
+counter=1;
+
+@slider
+winsize = srate * slider1 / 1000;
+
+@sample
+playpos=play_position;
+counter=counter+1;
+counter >= winsize ? (
+  // WRITE stats to file here?
+  counter=1;
+  maxl = maxr = avgl = avgr =0;
+);
+absspl0=abs(spl0);
+absspl1=abs(spl1);
+maxl=max(maxl, absspl0);
+maxr=max(maxr, absspl1);
+avgl=(avgl+absspl0)*.5;
+avgr=(avgr+absspl1)*.5;
+
+@gfx 400 400
+gfx_r = gfx_g = gfx_b = gfx_a = 1;
+gfx_x = 0;
+gfx_y = 0;
+gfx_printf("Playpos: %10f\n", playpos);
+gfx_printf("Max l,r %10f - %10f\n", maxl,maxr);
+gfx_printf("AVG l,r %10f - %10f\n", avgl,avgr);
