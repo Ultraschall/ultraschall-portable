@@ -37,30 +37,29 @@ dofile(script_path .. "ultraschall_helper_functions.lua")
 -------------------------------------
 
 function RippleCut()
- 	
- 	reaper.Main_OnCommand(40061, 0)						-- Split all Items at time selection
-	reaper.Main_OnCommand(40717, 0)						-- Select all items in time selection
-	reaper.Main_OnCommand(41383, 0)						-- Copy all items within time selection to clipboard
-	reaper.Main_OnCommand(40201, 0)						-- Ripple cut Selection
-  reaper.Main_OnCommand(40289, 0)						-- Unselect all Items 
-
+  reaper.Main_OnCommand(40061, 0)            -- Split all Items at time selection
+  reaper.Main_OnCommand(40717, 0)            -- Select all items in time selection
+  reaper.Main_OnCommand(41383, 0)            -- Copy all items within time selection to clipboard
+  reaper.Main_OnCommand(40201, 0)            -- Ripple cut Selection
+  reaper.Main_OnCommand(40289, 0)            -- Unselect all Items 
 end
 
 -------------------------------------
 reaper.Undo_BeginBlock() -- Beginning of the undo block. Leave it at the top of your main function.
 -------------------------------------
 
-init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)	-- get information wether or not a time selection is set
+init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)  -- get information wether or not a time selection is set
 
-if init_end_timesel ~= init_start_timesel then		-- there is a time selection
-	RippleCut()
+if init_end_timesel ~= init_start_timesel then    -- there is a time selection
+  RippleCut()
+  reaper.MoveEditCursor(init_start_timesel-reaper.GetCursorPosition(), 0) --move cursor to init_start_timesel
 
-elseif reaper.CountSelectedMediaItems(0) == 1 then	-- exacty one item selected
-	runcommand("_SWS_SAFETIMESEL")						-- Set time selection to item borders
-	RippleCut()
+elseif reaper.CountSelectedMediaItems(0) == 1 then  -- exacty one item selected
+  runcommand("_SWS_SAFETIMESEL")            -- Set time selection to item borders
+  RippleCut()
 
-else 													-- no time selection or items selected
- 	result = reaper.ShowMessageBox( "You need to make a time selection or to select a single item to ripple-cut.", "Ultraschall Ripple Cut", 0 )	-- Info window
+else                           -- no time selection or items selected
+   result = reaper.ShowMessageBox( "You need to make a time selection or to select a single item to ripple-cut.", "Ultraschall Ripple Cut", 0 )  -- Info window
 end
 
 -------------------------------------
