@@ -1,0 +1,69 @@
+TIP Right-drag the arrange view to marquee select items
+TIP Alt+right+drag the arrange view to marquee select items while setting time selection
+TIP Alt+drag a media item to slip the content left or right without moving the item itself
+TIP Right-click on empty space near the main toolbar to customize the toolbar
+TIP Shift+drag over existing data in a MIDI CC lane to create linear ramps
+TIP Hold down shift to disable grid snapping
+TIP Control+drag faders for finer control
+TIP Drag IO buttons to other tracks to create sends (shift+drag for multiple sends)
+TIP Control+shift+drag MIDI notes and envelope points to move in one direction only
+TIP Hold shift to move both sides of a crossfade together
+TIP Control+drag empty track space to copy the selected item or create a new MIDI item
+TIP Enable track free item positioning to free your mind
+TIP Items can be set to always replace or always mix with later items on the track
+TIP Unlink loop points and time selection in the Options menu
+TIP Shift+drag a time selection to move both sides together
+TIP Control+click recarm, FX bypass, mute, or solo buttons to disengage for all tracks
+TIP Shift+middle mouse button drag to hand-scroll through the project
+TIP Middle mouse button drag to scrub audio
+TIP Open the plug-in pin connector (ins/outs button) to reroute plugin inputs/outputs
+TIP Drag the plug-in wet/dry indicator to mix dry signal with plugin output
+TIP Control+drag to freehand draw automation envelopes
+TIP Right-click an envelope to interactively reduce envelope data
+TIP Enable ripple editing on the toolbar to have edits ripple through the project
+TIP Right-click everything to see what it does
+TIP View the master track and its tempo envelope to edit tempo/time signature changes
+TIP Record track output to non-destructively render synths/FX/automation
+TIP Make the mixer taller to see the extended mixer: FX, sends, and FX controls
+TIP Press "?" to open the actions window and a world of possibilities
+TIP Double-click empty track control or mixer space to create a new track
+TIP The transport slider changes master playrate (varispeed) for the entire project
+TIP Alt+drag the edge of a media item to timestretch it
+TIP Drag or alt+drag (timestretch) a split with both items selected
+TIP Item Properties dialog allows precise stretching, shifting, reverse, etc
+TIP Every item has a volume handle at the very top
+TIP FX can be applied to individual takes
+TIP Control-click FX bypass or record-disarm to apply to all tracks
+TIP Right-click mute and solo for various options
+TIP Alt+click IO button to enable/disable master/parent send
+TIP Right+click FX button for quick-add menu
+TIP Create multiple sends/receives:  select tracks, right-click IO button
+TIP Shift+drag send knobs in extended mixer to adjust pan
+TIP MIDI item volume and fade handles adjust note velocity
+TIP Item pitch shift actions also transpose MIDI
+TIP Edit tips.txt in the REAPER application directory to change what you see here
+TIP JS plugins are 100% portable between Windows and OSX
+TIP Create custom actions in the actions dialog to automate common tasks
+TIP Use the plug-in pin connector for instant downmix or channel swap
+TIP Right-click envelopes to interactively reduce automation points
+TIP Tab key moves to next transient in selected items
+TIP Save complex routing as a track template for reuse in other projects
+TIP Shift+double-click to set the time selection to the selected item
+TIP Double-clicking a track in the performance meter opens its FX chain
+TIP Assign an action to a toolbar button and right-click the button to arm it for action
+TIP Alt+drag envelope segments to adjust curvature
+TIP Hold Alt while moving a fader, release Alt to keep the new level, release mouse to revert
+TIP Right-click the track FX button to quickly add FX
+TIP Sweep mute or solo: hold the button on one track, drag to the button on another track
+TIP Hold the shift key while opening REAPER to start in safe mode (all FX offline)
+TIP Reverse mousewheel zoom or scroll direction: reassign mousewheel in the actions window
+TIP Use ReaControlMIDI to control track MIDI volume/pan
+TIP Assign any plugin knob to the track control panel via the FX Param button
+TIP Enable "trim content ... media when editing" to prevent overlapping media items
+TIP Enable "trim content ... when recording" to prevent adding takes to existing items
+TIP Right-click plugins in the Add-FX browser to mark plugins as buggy for special handling
+TIP Control+shift+drag one side of a crossfade to temporarily toggle auto-crossfade behavior
+TIP Right-click a fade-in/fade-out to change its shape, hold shift for crossfades
+TIP Alt+click a fade-in/fade-out/crossfade to delete it
+TIP Hold the control key in most cases to operate only on the current item, not all selected
+TIP Control+alt+click mute/solo button to do exclusive mute/solo
