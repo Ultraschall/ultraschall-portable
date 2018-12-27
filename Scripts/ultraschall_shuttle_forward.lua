@@ -32,9 +32,7 @@
 --     CSurf_OnPlayRateChange(4.0) +  reaper.defer(incr_pbrate(12)) -> 8x
 
 -- little helpers
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function incr_pbrate(n) -- increase rate ~6% n times
     n=math.min(n,200) -- limit n to 200

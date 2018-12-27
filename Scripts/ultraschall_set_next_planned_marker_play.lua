@@ -24,20 +24,7 @@
 ################################################################################
 ]]
  
--- little helpers
-
-
--- 2. Eine Aktion “set next planned Marker to Play/Rec”
--- Sucht sich den Marker mit grünem Farbwert und kleinstem Zeitstempel,
--- und setzt ihn auf die aktuelle Aufnahmezeit/Editposition und stellt den 
--- Farbwert auf das normale Grau.
-
--- little helpers
-
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
-
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 reaper.Undo_BeginBlock()
 

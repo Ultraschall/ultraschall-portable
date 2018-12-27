@@ -24,9 +24,7 @@
 ################################################################################
 ]]
  
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 --Ultraschall ultraclock alpha 0.9
 
@@ -80,8 +78,8 @@ function Init()
   else clockfont="Arial" clockfont_bold="Arial"
   end
   
-  len, preset = ultraschall.GetUSExternalState("ultraschall_clock", "preset")
-  len, docked = ultraschall.GetUSExternalState("ultraschall_clock", "docked")
+  preset = ultraschall.GetUSExternalState("ultraschall_clock", "preset")
+  docked = ultraschall.GetUSExternalState("ultraschall_clock", "docked")
 
   if type(preset)~="string" or preset==NIL then preset=3 else preset=tonumber(preset) end
   if docked=="false" then docked=false else docked=true end
@@ -230,7 +228,7 @@ function MainLoop()
     reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
   end
   
-  count, view = ultraschall.GetUSExternalState("ultraschall_gui", "view") -- get the actual view
+  view = ultraschall.GetUSExternalState("ultraschall_gui", "view") -- get the actual view
 
   --loop if GUI is NOT closed and VIEW is Recording
   if gfx.getchar() ~= -1 and (view=="record" or gfx.dock(-1)&1==0) then 

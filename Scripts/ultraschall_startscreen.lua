@@ -24,11 +24,7 @@
 ################################################################################
 ]]
  
-
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
-
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 ------------------------------------------------------
 -- Open a URL in a browser - OS agnostic
@@ -89,7 +85,7 @@ function check_values()
   local startscreen
   local updatecheck
 
-  A,startscreen = ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
+  startscreen = ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
   if GUI.Val("checkers")[1] == true  and (startscreen == "0" or startscreen=="-1") then      -- ckeckbox is activated
     ultraschall.SetUSExternalState("ultraschall_start", "startscreen", "1", true)
   elseif GUI.Val("checkers")[1] == false and startscreen == "1" then    -- ckeckbox is deactivated
@@ -177,7 +173,7 @@ GUI.elms.versions  = GUI.Btn:new(          276, 185, 120, 24,         " Show Det
 
 ---- Put all of your own functions and whatever here ----
 
-A,USStart=ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
+USStart=ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
 USUpdate=reaper.GetExtState("ultraschall_update", "update_check")
 
 if USStart == "1" or USStart == "-1" then

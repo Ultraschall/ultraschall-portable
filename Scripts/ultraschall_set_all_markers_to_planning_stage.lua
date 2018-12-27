@@ -30,9 +30,7 @@
 -- Die erste Marke bekommt 0:00.000, die nächste 0:00.001 und so weiter - so dass sie zwar alle “aus dem Spiel”
 -- sind, aber noch editiert werden können bei Bedarf und auch noch eine Reihenfolg haben.
 
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 answer=reaper.ShowMessageBox("All markers will be moved to the start. And all unnamed markers will be erased. (you can UNDO this step). Proceed?", "ULTRASCHALL\nSet all markers to planning stage", 4)
 if answer==6 then --yes

@@ -24,10 +24,7 @@
 ################################################################################
 ]]
  
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
-
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
 
@@ -71,7 +68,7 @@ end
 
 m = reaper.GetMasterTrack(0)                                                  --streaming is always on the master track
 os = reaper.GetOS()
-A,sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
+sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
 if sec=="-1" then sec="0" end
 sec=tonumber(sec)
 
