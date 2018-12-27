@@ -1,0 +1,3623 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<USDocML>
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>REAPER_PROJECT</slug>
+    <functioncall>REAPER_PROJECT number 0.1 string reaperversion, string timestamp </functioncall>
+    <description>
+        The used Reaperversion and a timestamp at the date of creation
+    </description>
+    <parameters>
+      number 0.1 - unknown
+      string reaperversion - the version of Reaper, with which this project had been saved
+      string timestamp - a timestamp for this project
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_CFG</slug>
+    <functioncall>RENDER_CFG string render_cfg </functioncall>
+    <description>
+        The renderstring, which holds all settings for the currently used render-format. It is a BASE64-encoded string.
+    </description>
+    <parameters>
+      string render_cfg - the renderstring, which contains all render-settings for a project/projectstatechunk
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RIPPLE</slug>
+    <functioncall>RIPPLE integer ripplestate </functioncall>
+    <description>
+        The current project-state of Ripple-edit
+    </description>
+    <parameters>
+      integer ripplestate - 0, no Ripple; 1, Ripple One Track; 2, Ripple All
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GROUPOVERRIDE</slug>
+    <functioncall>GROUPOVERRIDE integer group_override1, integer group_override2, integer group_override3 </functioncall>
+    <description>
+        The Projects-Group-override-states
+    </description>
+    <parameters>
+      integer group_override1 - the group-override state
+      integer track_group_enabled - the track_group_enabled-setting, as set in the context-menu of the Master-Track; 1, checked; 0, unchecked
+      integer group_override3 - the group-override state
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>AUTOXFADE</slug>
+    <functioncall>AUTOXFADE integer autocrossfade_state </functioncall>
+    <description>
+        The Autocrossfade-settings for the current project.
+        
+        Some settings regarding autocrossfade, as set in the Options-menu as well as in the Options -> New recording that overlaps existing media items and in Preferences -> Media Item Defaults as well as toggled by actions 40041, 40114
+        It is an integer-bitfield
+    </description>
+    <parameters>
+      integer autocrossfade_state - the autocrossfade-state
+                                  - &1=0, Auto-crossfade media items when editing(off) - unchecked
+                                  - &1=1, Auto-crossfade media items when editing(on) - checked
+
+                                  - &2=0, Trim content behind media items when editing(off) - unchecked
+                                  - &2=1, Trim content behind media items when editing(on) - checked
+
+                                  - &4 &8, The settings from Options -> New recording that overlaps existing media items)
+
+                                  -   0 0, Splits existing items and created new takes (default)
+                                  -   1 0, Trims existing items behind new recording (tape mode)
+                                  -   0 1, Creates new media items in separate lanes (layers)
+
+                                  - &16=0, Always add takes to new recorded items when looping(only available, when &4=0 and &8=1)(off) - unchecked
+                                  - &16=1, Always add takes to new recorded items when looping(only available, when &4=0 and &8=1)(off) - checked
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ENVATTACH</slug>
+    <functioncall>ENVATTACH integer env_attach </functioncall>
+    <description>
+        Move envelope points with media items-menu entry, as set in Options -> Envelope points
+    </description>
+    <parameters>
+      integer env_attach - the env-attach state
+                         -  0, don't move points with item(off) - unchecked
+                         -  1, move points with item(on) - checked
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIXERUIFLAGS</slug>
+    <functioncall>MIXERUIFLAGS integer state1, integer state2 </functioncall>
+    <description>
+        Settings for Mixer-userinterface-settings
+    </description>
+    <parameters>
+      integer state1 - folders, receives, etc 
+      -0 - Show tracks in folders, Auto arrange tracks in mixer
+      -1 - Show normal top level tracks
+      -2 - Show Folders
+      -4 - Group folders to left
+      -8 - Show tracks that have receives
+      -16 - Group tracks that have receives to left
+      -32 - don't show tracks that are in folder
+      -64 - No Autoarrange tracks in mixer
+      -128 - ?
+      -256 - ?
+      
+      integer state2 - master-track, FX, Mixer
+      -0 - Master track in mixer
+      -1 - Don't show multiple rows of tracks, when size permits
+      -2 - Show maximum rows even when tracks would fit in less rows
+      -4 - Master Show on right side of mixer
+      -8 - ?
+      -16 - Show FX inserts when size permits
+      -32 - Show sends when size permits
+      -64 - Show tracks in mixer
+      -128 - Show FX parameters, when size permits
+      -256 - Don't show Master track in mixer
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PEAKGAIN</slug>
+    <functioncall>PEAKGAIN number peakgain_state </functioncall>
+    <description>
+        The peakgain-state; the gain of the peak-volume.
+    </description>
+    <parameters>
+      number peakgain_state - peakgain-state, unknown purpose
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>FEEDBACK</slug>
+    <functioncall>FEEDBACK integer feedback_state </functioncall>
+    <description>
+        The Allow feedback in routing (can result in lower performance, loud noises)-checkbox in Project Settings -> Advanced
+    </description>
+    <parameters>
+      integer feedback_state - feedback-state
+                             - 0, checkbox is unchecked(no feedback)
+                             - 1, checkbox is checked(feedback allowed)
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PANLAW</slug>
+    <functioncall>PANLAW number panlaw_state </functioncall>
+    <description>
+        The Pan law-setting/dropdownlist in the Pan law/mode-section, as set in Project Settings -> Advanced
+        Somehow the Gain compensation (boost pans)-checkbox affects this value as well, but unknown how exactly. Maybe slider2db-conversion stuff?
+    </description>
+    <parameters>
+      number panlaw_state - state of the panlaw, as set in the project-settings->Advanced->Pan law/mode->Pan:law(db). 0.5(-6.02 db) to 1(default +0.0 db)
+                                                           - 1.0, +0.0(default)
+                                                           - 0.74989420933246, -2.5
+                                                           - 0.70794578438414, -3.0
+                                                           - 0.59566214352901, -4.5
+                                                           - 0.50118723362727, -6.0
+                                                           - 0.5, -6.02
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PROJOFFS</slug>
+    <functioncall>PROJOFFS number start_time, integer start_measure, integer base_ruler_marking_off_this_measure </functioncall>
+    <description>
+        The project-offset, as set in the ProjectSettings -> Project Time Start, Project start measure and Base Ruler Marking Off This Measure-checkbox
+    </description>
+    <parameters>
+      number start_time - the project-start-time in seconds
+      integer start_measure - starting with 0, unlike the settingswindow, where the 0 becomes 1 as measure
+      integer base_ruler_marking_off_this_measure - 0, checkbox unchecked; 1, checkbox checked
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MAXPROJLEN</slug>
+    <functioncall>MAXPROJLEN integer limit_project_length, number projectlength_limit </functioncall>
+    <description>
+        The maximum set projectlength, as set in the Project-Settings -> Advanced
+    </description>
+    <parameters>
+      integer limit_project_length - checkbox "Limit project length, stop playback/recording at:" - 0 off, 1 on
+      number projectlength_limit - projectlength-limit in seconds
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GRID</slug>
+    <functioncall>GRID integer snap_grid, integer gridstate2, number gridstate3, integer gridstate4, number gridstate5, integer gridstate6, integer gridstate7, number gridstate8 </functioncall>
+    <description>
+        The gridstate-settings of the project
+    </description>
+    <parameters>
+      integer snap_grid - Several Snap/Grid-Settings, as set in Snap/Grid Settings located in menu Options -> Snap/grid -> Snap/grid settings
+           -     &1=0, Show grid, line spacing-checkbox(off) - unchecked
+           -     &1=1, Show grid, line spacing-checkbox(on) - checked
+-
+           -    &2=0, Snap Media items to grid(off) - unchecked
+           -    &2=1, Snap Media items to grid(on) - checked
+-
+           -    &4=0, Snap Cursor to grid(off) - unchecked
+           -    &4=1, Snap Cursor to grid(on) - checked
+-
+           -    &8=0, Snap Selection to grid(off) - unchecked
+           -    &8=1, Snap Selection to grid(on) - checked
+-
+           -    &16=0, Snap Media items to selection/markers/cursor(off) - unchecked
+           -    &16=1, Snap Media items to selection/markers/cursor(on) - checked
+-
+           -    &32=0, Snap Cursor to selection/markers/cursor(off) - unchecked
+           -    &32=1, Snap Cursor to selection/markers/cursor(on) - checked
+-
+           -    &64=0, Snap Selection to selection/markers/cursor(off) - unchecked
+           -    &64=1, Snap Selection to selection/markers/cursor(on) - checked
+-
+           -    &128=0, Snap media items to nearby media items up to(off) - unchecked
+           -    &128=1, Snap media items to nearby media items up to(on) - checked
+-
+           -    &256=0, Enable snapping(on) - checked
+           -    &256=1, Enable snapping(off) - unchecked
+-
+           -    &512=0, Use the same grid division in arrange view and MIDI editor(also in MIDI Editor -> Options)(off) - unchecked
+           -    &512=1, Use the same grid division in arrange view and MIDI editor(also in MIDI Editor -> Options)(on) - checked
+-
+           -    &1024=0, Snap to grid at any distance(off) - unchecked
+           -    &1024=1, Snap to grid at any distance(on) - checked
+-
+           -    &2048 and &4096, Media items snap at-dropdownlist
+-
+           -     0 0, Mouse-position dependent
+           -     1 0, Only snap at start/snap offset
+           -     0 1, Snap both start/end
+-
+           -    &8192=0, Snap cursor to edges of media items on any track(off) - unchecked
+           -    &8192=1, Snap cursor to edges of media items on any track(on) - checked
+-
+           -    &16384=0, unknown
+           -    &16384=1, unknown
+-
+           -    &32768=0, Grid snap settings follow grid visibility(on) - checked
+           -    &32768=1, Grid snap settings follow grid visibility(off) - unchecked
+-
+           -    &65536=0, unknown
+           -    &65536=1, unknown
+-
+           -    &131072=0, Snap to project sample rate(off) - unchecked
+           -    &131072=1, Snap to project sample rate(on) - checked
+      integer gridstate2 - gridstate2
+      number gridstate3 - gridstate3
+      integer gridstate4 - gridstate4
+      number gridstate5 - gridstate5
+      integer gridstate6 - gridstate6
+      integer gridstate7 - gridstate7
+      number gridstate8 - gridstate8
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TIMEMODE</slug>
+    <functioncall>TIMEMODE integer ruler_timemode, integer timemode2, integer showntime, integer timemode4, integer timemode5 </functioncall>
+    <description>
+        The shown-time-unit in the ruler-area, as set in the ruler-context-menu as well as toggled by actions 40365, 40366, 40367, 40368, 40369, 40370, 41916, 41918, 41973
+        as well as the shown-time-unit in the transport-area, as set in the transport-context-menu as well as toggled by action 40410, 40411, 40412, 40413, 40414, 40534, 41972
+    </description>
+    <parameters>
+      integer ruler_timemode - ruler-timemode-state
+      - -1, Use ruler time unit
+      -  0, Minutes:Seconds
+      -  1, Measures.Beats / Minutes:Seconds
+      -  2, Measures.Beats
+      -  3, Seconds
+      -  4, Samples
+      -  5, Hours:Minutes:Seconds:Frames
+      -  8, Absolute Frames
+      
+      integer timemode2 - timemode-state
+      integer showntime - Transport shown time
+      -      -1 - use ruler time unit
+      -       0 - minutes:seconds
+      -       1 - measures:beats/minutes:seconds
+      -       2 - measures:beats
+      -       3 - seconds
+      -       4 - samples
+      -       5 - hours:minutes:seconds:frames
+      -       8 - absolute frames
+      integer timemode4 - timemode-state
+      integer timemode5 - timemode-state
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>VIDEO_CONFIG</slug>
+    <functioncall>VIDEO_CONFIG integer preferredVidSizeX, integer preferredVidSizeY, integer settingsflags </functioncall>
+    <description>
+        The Video-configuration-settings, as set in the Project Settings -> Video
+    </description>
+    <parameters>
+      integer preferredVidSizeX - preferred video size, x pixels
+      integer preferredVidSizeY - preferred video size, y pixels
+      integer settingsflags - settings
+      -             0 - turned on/selected: use high quality filtering, preserve aspect ratio(letterbox) when resizing,
+      -                                     Video colorspace set to Auto,
+      -                                     Items in higher numbered tracks replace lower, as well as Video colorspace set to Auto
+      -             1 - Video colorspace: I420/YV12
+      -             2 - Video colorspace: YUV2
+      -             3 - RGB
+      -             256 - Items in lower numbered tracks replace higher
+      -             512 - Always resize video sources to preferred video size
+      -             1024 - Always resize output to preferred video size
+      -             2048 - turn off "Use high quality filtering when resizing"
+      -             4096 - turn off "preserve aspect ratio (letterbox) when resizing"
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PANMODE</slug>
+    <functioncall>PANMODE integer panmode_state </functioncall>
+    <description>
+        The PanMode state of the project
+    </description>
+    <parameters>
+      integer panmode_state - panmode-state
+      -0 reaper 3.x balance (deprecated)
+      -3 Stereo balance / mono pan (default)
+      -5 Stereo pan
+      -6 Dual Pan
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>CURSOR</slug>
+    <functioncall>CURSOR number cursorpos </functioncall>
+    <description>
+        The editcursorposition in the project
+    </description>
+    <parameters>
+      number cursorpos - editcursorposition in seconds
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ZOOM</slug>
+    <functioncall>ZOOM number hzoom, integer hzoomscrollpos, integer scrollbarfactor </functioncall>
+    <description>
+        The current zoom-settings and position of the scrollbar
+    </description>
+    <parameters>
+      number hzoom - HorizontalZoomfactor, 0.007 to 1000000
+      integer hzoomscrollpos - horizontalscrollbarposition - 0 - 4294967296
+      integer scrollbarfactor - 0 to 500837, counts up, when maximum hzoomscrollpos overflows
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>VZOOMEX</slug>
+    <functioncall>VZOOMEX integer vzoom </functioncall>
+    <description>
+        The vertical-zoom-factor.
+    </description>
+    <parameters>
+      integer vzoom - vertical zoomfactor(0-40)
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>USE_REC_CFG</slug>
+    <functioncall>USE_REC_CFG integer rec_cfg </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer rec_cfg - recording-cfg-state
+      - 0 - Automatic .wav (recommended)
+      - 1 - Custom (use <a href="#APPLY_CFG">APPLY_CFG</a> to get recording_cfg_string)
+      - 2 - Recording Format
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RECMODE</slug>
+    <functioncall>RECMODE integer rec_mode </functioncall>
+    <description>
+        The Recording-mode
+    </description>
+    <parameters>
+      integer rec_mode - recording-mode-state
+      - 0 - Autopunch/Selected Items
+      - 1 - normal
+      - 2 - Time Selection/Auto Punch
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SMPTESYNC</slug>
+    <functioncall>SMPTESYNC integer smptesync_state1, number smptesync_fps, integer smptesync_resyncdrift, integer smptesync_skipdropframes, integer smptesync_syncseek, integer smptesync_freewheel, integer smptesync_userinput, number smptesync_offsettimecode, integer smptesync_stop_rec_drift, integer smptesync_state10, integer smptesync_stop_rec_lacktime  </functioncall>
+    <description>
+        SMPTE-Sync-state-settings
+    </description>
+    <parameters>
+      integer smptesync_state1 - flag 
+      -0 - external timecode synchronization disabled
+      -1 - external timecode synchronization enabled
+      -4 - Start playback on valid timecode when stopped
+      -8 - turned off: display flashing notification window when waiting for sync for recording
+      -16 - playback off
+      -32 - recording off
+      -256 - MTC - 24/30fps MTC is 23.976/29.97ND works only with smptesync_userinput set to 4159
+      -512 - MTC - 24/30fps MTC is 24/30ND
+      
+      number smptesync_fps - framerate in fps
+      integer smptesync_resyncdrift - "Re-synchronize if drift exceeds" in ms (0 = never)
+      integer smptesync_skipdropframes - "skip/drop frames if drift exceeds" in ms(0 - never)
+      integer smptesync_syncseek - "Synchronize by seeking ahead" in ms (default = 1000)
+      integer smptesync_freewheel - "Freewheel on missing time code for up to" in ms(0 = forever)
+      integer smptesync_userinput - User Input-flag
+      -0 - LTC: Input 1
+      -1 - LTC: Input 2
+      -4159 - MTC - All inputs - 24/30 fps MTC 23.976ND/29.97ND if project is ND
+      -4223 - SPP: All Inputs
+      -8192 - ASIO Positioning Protocol
+      
+      number smptesync_offsettimecode - Offset incoming timecode by in seconds
+      integer smptesync_stop_rec_drift - "Stop recording if drift exceeds" in ms(0 = never)
+      integer smptesync_state10 - smptesync-state
+      integer smptesync_stop_rec_lacktime - "stop recording on lack of timecode after" in ms(0 = never)
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>LOOP</slug>
+    <functioncall>LOOP integer loopbutton_state </functioncall>
+    <description>
+        The state of the loop-button in the project
+    </description>
+    <parameters>
+      integer loop_mode - loopbutton-state, 0 - off, 1 - on
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>LOOPGRAN</slug>
+    <functioncall>LOOPGRAN integer loopgran_state1, number loopgran_state2 </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer loopgran_state1 - loopgran_state1
+      number loopgran_state2 - loopgran_state2
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RECORD_PATH</slug>
+    <functioncall>RECORD_PATH string prim_recpath, string sec_recpath </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      string prim_recpath - the primary recording path
+      string sec_recpath - the secondary recording path
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RECORD_CFG</slug>
+    <functioncall>RECORD_CFG string recording_cfg_string </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      recording_cfg_string - the record-configuration as encoded string
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>APPLY_CFG</slug>
+    <functioncall>APPLY_CFG string applyfx_cfg_string </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      string applyfx_cfg_string - the file-format-configuration for fx-appliance as encoded string
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_FILE</slug>
+    <functioncall>RENDER_FILE string render_filename </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      string render_filename - the filename for rendering, check also <a href="#GetProject_RenderPattern">GetProject_RenderPattern</a>
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_PATTERN</slug>
+    <functioncall>RENDER_PATTERN string render_pattern </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      string render_pattern - the pattern, with which the rendering-filename will be automatically created. Check also <a href="#GetProject_RenderFilename">GetProject_RenderFilename</a>
+      -   Capitalizing the first character of the wildcard will capitalize the first letter of the substitution. 
+      -    Capitalizing the first two characters of the wildcard will capitalize all letters.
+      -
+      -    Directories will be created if necessary. For example if the render target is "$project/track", the directory "$project" will be created.
+      -
+      - $item    media item take name, if the input is a media item
+      - $itemnumber  1 for the first media item on a track, 2 for the second...
+      - $track    track name
+      - $tracknumber  1 for the first track, 2 for the second...
+      - $parenttrack  parent track name
+      - $region    region name
+      - $regionnumber  1 for the first region, 2 for the second...
+      - $namecount  1 for the first item or region of the same name, 2 for the second...
+      - $start    start time of the media item, render region, or time selection
+      - $end    end time of the media item, render region, or time selection
+      - $startbeats  start time in beats of the media item, render region, or time selection
+      - $endbeats  end time in beats of the media item, render region, or time selection
+      - $timelineorder  1 for the first item or region on the timeline, 2 for the second...
+      - $project    project name
+      - $tempo    project tempo at the start of the render region
+      - $timesignature  project time signature at the start of the render region, formatted as 4-4
+      - $filenumber  blank (optionally 1) for the first file rendered, 1 (optionally 2) for the second...
+      - $filenumber[N]  N for the first file rendered, N+1 for the second...
+      - $note    C0 for the first file rendered,C#0 for the second...
+      - $note[X]    X (example: B2) for the first file rendered, X+1 (example: C3) for the second...
+      - $natural    C0 for the first file rendered, D0 for the second...
+      - $natural[X]  X (example: F2) for the first file rendered, X+1 (example: G2) for the second...
+      - $format    render format (example: wav)
+      - $samplerate  sample rate (example: 44100)
+      - $sampleratek  sample rate (example: 44.1)
+      - $year    year
+      - $year2    last 2 digits of the year
+      - $month    month number
+      - $monthname  month name
+      - $day    day of the month
+      - $hour    hour of the day in 24-hour format
+      - $hour12    hour of the day in 12-hour format
+      - $ampm    am if before noon,pm if after noon
+      - $minute    minute of the hour
+      - $second    second of the minute
+      - $user    user name
+      - $computer  computer name
+      -
+      - (this description has been taken from the Render Wildcard Help within the Render-Dialog of Reaper)
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_FMT</slug>
+    <functioncall>RENDER_FMT integer unknown, integer rendernum_chans, integer render_frequency </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer unknown - unknown number
+      integer rendernum_chans - Number_Channels 0-seems default-project-settings(?), 1-Mono, 2-Stereo, ... up to 64 channels
+      integer render_frequency - RenderFrequency -2147483647 to 2147483647, except 0, which seems to be default-project-settings-frequency
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_1X</slug>
+    <functioncall>RENDER_1X integer render_speed </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer render_speed - render_speed 
+      -0-Fullspeed Offline
+      -1-1x Offline
+      -2-Online Render
+      -3-Offline Render (Idle)
+      -4-1x Offline Render (Idle)
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_RANGE</slug>
+    <functioncall>RENDER_RANGE integer bounds, number time_start, number time_end, integer tail, integer tail_length </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer bounds - the bounds of the project to be rendered
+      -0 Custom Time Range
+      -1 Entire Project
+      -2 Time Selection, 
+      -3 Project Regions
+      -4 Selected Media Items(in combination with RENDER_STEMS 32); to get RENDER_STEMS, refer <a href="#GetProject_RenderStems">GetProject_RenderStems</a>
+      
+      number time_start - TimeStart in milliseconds -2147483647 to 2147483647
+      number time_end - TimeEnd in milliseconds 2147483647 to 2147483647
+      integer tail - Tail on/off-flags for individual bounds
+      -0 - tail off for all bounds
+      -1 - custom time range - tail on
+      -2 - entire project - tail on
+      -4 - time selection - tail on
+      -8 - project regions - tail on
+      
+      integer tail_length - TailLength in milliseconds, valuerange 0 - 2147483647
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_RESAMPLE</slug>
+    <functioncall>RENDER_RESAMPLE integer resample_mode, integer playback_resample_mode, integer project_smplrate4mix_and_fx </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer resample_mode - Resample_Mode 
+      -0-medium (64pt Sinc), 
+      -1-Low (Linear Interpolation), 
+      -2-Lowest (Point Sampling), 
+      -3-Good(192pt Sinc), 
+      -4-Better(384pt Sinc), 
+      -5-Fast (IIR + Linear Interpolation), 
+      -6-Fast (IIRx2 + Linear Interpolation), 
+      -7-Fast (16pt sinc) - Default, 
+      -8-HQ (512pt Sinc), 
+      -9-Extreme HQ (768pt HQ Sinc)
+      
+      integer playback_resample_mode - Playback Resample Mode (as set in the Project-Settings)
+      -0-medium (64pt Sinc), 
+      -1-Low (Linear Interpolation), 
+      -2-Lowest (Point Sampling), 
+      -3-Good(192pt Sinc), 
+      -4-Better(384pt Sinc), 
+      -5-Fast (IIR + Linear Interpolation), 
+      -6-Fast (IIRx2 + Linear Interpolation), 
+      -7-Fast (16pt sinc) - Default, 
+      -8-HQ (512pt Sinc), 
+      -9-Extreme HQ (768pt HQ Sinc)
+      
+      integer project_smplrate4mix_and_fx - Use_Project_Sample_Rate_for_Mixing_and_FX/Synth_Processing 1 - yes, 0-no
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_ADDTOPROJ</slug>
+    <functioncall>RENDER_ADDTOPROJ integer addmedia_after_render_state </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer addmedia_after_render_state - 1, rendered media shall be added to the project afterwards; 0, don't add
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_STEMS</slug>
+    <functioncall>RENDER_STEMS integer render_stems </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer render_stems - the state of Render Stems
+      - 0 - Source Master Mix, 
+      - 1 - Source Master mix + stems, 
+      - 3 - Source Stems, selected tracks, 
+      - 4 - Multichannel Tracks to Multichannel Files, 
+      - 8 - Source Region Render Matrix, 
+      - 16 - Tracks with only Mono-Media to Mono Files,  
+      - 32 Selected Media Items(in combination with RENDER_RANGE->Bounds->4, refer to <a href="#GetProject_RenderRange">GetProject_RenderRange</a> to get RENDER_RANGE)
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_DITHER</slug>
+    <functioncall>RENDER_DITHER integer renderdither_state </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer renderdither_state - the state of render dithering
+      -0 - Dither Master Mix, 
+      -1 - Don't Dither Master Mix, 
+      -2 - Noise-shaping On Master Mix, 
+      -3 - Dither And Noiseshape Master Mix
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TIMELOCKMODE x</slug>
+    <functioncall>TIMELOCKMODE x integer timebase </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer timebase - the timebase for items/envelopes/markers as set in the project settings
+      -0 - Time, 
+      -1 - Beats (position, length, rate), 
+      -2 - Beats (position only)
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TEMPOENVLOCKMODE</slug>
+    <functioncall>TEMPOENVLOCKMODE integer tempotimesignature </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer tempotimesignature - the timebase for tempo/time-signature as set in the project settings
+      -0 - Time 
+      -1 - Beats
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ITEMMIX</slug>
+    <functioncall>ITEMMIX integer item_mix_behav_state </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer item_mix_behav_state - item mix behavior
+      - 0 - Enclosed items replace enclosing items 
+      - 1 - Items always mix
+      - 2 - Items always replace earlier items
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>DEFPITCHMODE</slug>
+    <functioncall>DEFPITCHMODE integer def_pitch_mode_state </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer def_pitch_mode_state - the default pitch mode
+      -      0 - Soundtouch(Default)
+      -      1 - Soundtouch(High Quality)
+      -      2 - Soundtouch(Fast)
+      -      131072 - Simple Windowed(fast) (50ms window, 25ms fade)
+      -      131073 - Simple Windowed(fast) (50ms window, 16ms fade)
+      -      131074 - Simple Windowed(fast) (50ms window, 10ms fade)
+      -      131075 - Simple Windowed(fast) (50ms window, 7ms fade)
+      -      131076 - Simple Windowed(fast) (75ms window, 37ms fade)
+      -      131077 - Simple Windowed(fast) (75ms window, 25ms fade)
+      -      131078 - Simple Windowed(fast) (75ms window, 15ms fade)
+      -      131079 - Simple Windowed(fast) (75ms window, 10ms fade)
+      -      131080 - Simple Windowed(fast) (100ms window, 50ms fade)
+      -      131081 - Simple Windowed(fast) (100ms window, 33ms fade)
+      -      131082 - Simple Windowed(fast) (100ms window, 20ms fade)
+      -      131083 - Simple Windowed(fast) (100ms window, 14ms fade)
+      -      131084 - Simple Windowed(fast) (150ms window, 75ms fade)
+      -      131085 - Simple Windowed(fast) (150ms window, 50ms fade)
+      -      131086 - Simple Windowed(fast) (150ms window, 30ms fade)
+      -      131087 - Simple Windowed(fast) (150ms window, 21ms fade)
+      -      131088 - Simple Windowed(fast) (225ms window, 112ms fade)
+      -      131089 - Simple Windowed(fast) (225ms window, 75ms fade)
+      -      131090 - Simple Windowed(fast) (225ms window, 45ms fade)
+      -      131091 - Simple Windowed(fast) (225ms window, 32ms fade)
+      -      131092 - Simple Windowed(fast) (300ms window, 150ms fade)
+      -      131093 - Simple Windowed(fast) (300ms window, 100ms fade)
+      -      131094 - Simple Windowed(fast) (300ms window, 60ms fade)
+      -      131095 - Simple Windowed(fast) (300ms window, 42ms fade)
+      -      131096 - Simple Windowed(fast) (40ms window, 20ms fade)
+      -      131097 - Simple Windowed(fast) (40ms window, 13ms fade)
+      -      131098 - Simple Windowed(fast) (40ms window, 8ms fade)
+      -      131099 - Simple Windowed(fast) (40ms window, 5ms fade)
+      -      131100 - Simple Windowed(fast) (30ms window, 15ms fade)
+      -      131101 - Simple Windowed(fast) (30ms window, 10ms fade)
+      -      131102 - Simple Windowed(fast) (30ms window, 6s fade)
+      -      131103 - Simple Windowed(fast) (30ms window, 4ms fade)
+      -      131104 - Simple Windowed(fast) (20ms window, 10ms fade)
+      -      131105 - Simple Windowed(fast) (20ms window, 6ms fade)
+      -      131106 - Simple Windowed(fast) (20ms window, 4ms fade)
+      -      131107 - Simple Windowed(fast) (20ms window, 2ms fade)
+      -      131108 - Simple Windowed(fast) (10ms window, 5ms fade)
+      -      131109 - Simple Windowed(fast) (10ms window, 3ms fade)
+      -      131110 - Simple Windowed(fast) (10ms window, 2ms fade)
+      -      131111 - Simple Windowed(fast) (10ms window, 1ms fade)
+      -      131112 - Simple Windowed(fast) (5ms window, 2ms fade)
+      -      131113 - Simple Windowed(fast) (5ms window, 1ms fade)
+      -      131114 - Simple Windowed(fast) (5ms window, 1ms fade)
+      -      131115 - Simple Windowed(fast) (5ms window, 1ms fade)
+      -      131116 - Simple Windowed(fast) (3ms window, 1ms fade)
+      -      131117 - Simple Windowed(fast) (3ms window, 1ms fade)
+      -      131118 - Simple Windowed(fast) (3ms window, 1ms fade)
+      -      131119 - Simple Windowed(fast) (3ms window, 1ms fade)
+      -      393216 - elastique 2.28 Pro Normal
+      -      393217 - elastique 2.28 Pro Preserve Formants(Lowest Pitches)
+      -      393218 - elastique 2.28 Pro Preserve Formants(Lower Pitches)
+      -      393219 - elastique 2.28 Pro Preserve Formants(Low Pitches)
+      -      393220 - elastique 2.28 Pro Preserve Formants(Most Pitches)
+      -      393221 - elastique 2.28 Pro Preserve Formants(High Pitches)
+      -      393222 - elastique 2.28 Pro Preserve Formants(Higher Pitches)
+      -      393223 - elastique 2.28 Pro Preserve Formants(Highest Pitches)
+      -      393224 - elastique 2.28 Pro Mid/Side
+      -      393225 - elastique 2.28 Pro Mid/Side, Preserve Formants(Lowest Pitches)
+      -      393226 - elastique 2.28 Pro Mid/Side, Preserve Formants(Lower Pitches)
+      -      393227 - elastique 2.28 Pro Mid/Side, Preserve Formants(Low Pitches)
+      -      393228 - elastique 2.28 Pro Mid/Side, Preserve Formants(Most Pitches)
+      -      393229 - elastique 2.28 Pro Mid/Side, Preserve Formants(High Pitches)
+      -      393230 - elastique 2.28 Pro Mid/Side, Preserve Formants(Higher Pitches)
+      -      393231 - elastique 2.28 Pro Mid/Side, Preserve Formants(Highest Pitches)
+      -      393232 - elastique 2.28 Pro Synchronized: Normal
+      -      393233 - elastique 2.28 Pro Synchronized: Preserve Formants(Lowest Pitches)
+      -      393234 - elastique 2.28 Pro Synchronized: Preserve Formants(Lower Pitches)
+      -      393235 - elastique 2.28 Pro Synchronized: Preserve Formants(Low Pitches)
+      -      393236 - elastique 2.28 Pro Synchronized: Preserve Formants(Most Pitches)
+      -      393237 - elastique 2.28 Pro Synchronized: Preserve Formants(High Pitches)
+      -      393238 - elastique 2.28 Pro Synchronized: Preserve Formants(Higher Pitches)
+      -      393239 - elastique 2.28 Pro Synchronized: Preserve Formants(Highest Pitches)
+      -      393240 - elastique 2.28 Pro Synchronized: Mid/Side 
+      -      393241 - elastique 2.28 Pro Synchronized: Mid/Side, Preserve Formants(Lowest Pitches)
+      -      393242 - elastique 2.28 Pro Synchronized: Mid/Side, Preserve Formants(Lower Pitches) 
+      -      393243 - elastique 2.28 Pro Synchronized: Mid/Side, Preserve Formants(Low Pitches)
+      -      393244 - elastique 2.28 Pro Synchronized: Mid/Side, Preserve Formants(Most Pitches)
+      -      393245 - elastique 2.28 Pro Synchronized: Mid/Side, Preserve Formants(High Pitches)
+      -      393246 - elastique 2.28 Pro Synchronized: Mid/Side, Preserve Formants(Higher Pitches)
+      -      393247 - elastique 2.28 Pro Synchronized: Mid/Side, Preserve Formants(Highest Pitches)
+      -      458752 - elastique 2.28 Efficient Normal
+      -      458753 - elastique 2.28 Efficient Mid/Side
+      -      458754 - elastique 2.28 Efficient Synchronized: Normal
+      -      458755 - elastique 2.28 Efficient Synchronized: Mid/Side
+      -      524288 - elastique 2.28 Soloist Monophonic
+      -      524289 - elastique 2.28 Soloist Monophonic [Mid/Side]
+      -      524290 - elastique 2.28 Soloist Speech
+      -      524291 - elastique 2.28 Soloist Speech [Mid/Side]
+      -      589824 - elastique 3.2.3 Pro Normal
+      -      589825 - elastique 3.2.3 Pro Preserve Formants(Lowest Pitches)
+      -      589826 - elastique 3.2.3 Pro Preserve Formants(Lower Pitches)
+      -      589827 - elastique 3.2.3 Pro Preserve Formants(Low Pitches)
+      -      589828 - elastique 3.2.3 Pro Preserve Formants(Most Pitches)
+      -      589829 - elastique 3.2.3 Pro Preserve Formants(High Pitches)
+      -      589830 - elastique 3.2.3 Pro Preserve Formants(Higher Pitches)
+      -      589831 - elastique 3.2.3 Pro Preserve Formants(Highest Pitches)
+      -      589832 - elastique 3.2.3 Pro Mid/Side
+      -      589833 - elastique 3.2.3 Pro Mid/Side, Preserve Formants(Lowest Pitches)
+      -      589834 - elastique 3.2.3 Pro Mid/Side, Preserve Formants(Lower Pitches)
+      -      589835 - elastique 3.2.3 Pro Mid/Side, Preserve Formants(Low Pitches)
+      -      589836 - elastique 3.2.3 Pro Mid/Side, Preserve Formants(Most Pitches)
+      -      589837 - elastique 3.2.3 Pro Mid/Side, Preserve Formants(High Pitches)
+      -      589838 - elastique 3.2.3 Pro Mid/Side, Preserve Formants(Higher Pitches)
+      -      589839 - elastique 3.2.3 Pro Mid/Side, Preserve Formants(Highest Pitches)
+      -      589840 - elastique 3.2.3 Pro Synchronized: Normal
+      -      589841 - elastique 3.2.3 Pro Synchronized: Preserve Formants(Lowest Pitches)
+      -      589842 - elastique 3.2.3 Pro Synchronized: Preserve Formants(Lower Pitches)
+      -      589843 - elastique 3.2.3 Pro Synchronized: Preserve Formants(Low Pitches)
+      -      589844 - elastique 3.2.3 Pro Synchronized: Preserve Formants(Most Pitches)
+      -      589845 - elastique 3.2.3 Pro Synchronized: Preserve Formants(High Pitches)
+      -      589846 - elastique 3.2.3 Pro Synchronized: Preserve Formants(Higher Pitches)
+      -      589847 - elastique 3.2.3 Pro Synchronized: Preserve Formants(Highest Pitches)
+      -      589848 - elastique 3.2.3 Pro Synchronized: Mid/Side 
+      -      589849 - elastique 3.2.3 Pro Synchronized: Mid/Side, Preserve Formants(Lowest Pitches)
+      -      589850 - elastique 3.2.3 Pro Synchronized: Mid/Side, Preserve Formants(Lower Pitches) 
+      -      589851 - elastique 3.2.3 Pro Synchronized: Mid/Side, Preserve Formants(Low Pitches)
+      -      589852 - elastique 3.2.3 Pro Synchronized: Mid/Side, Preserve Formants(Most Pitches)
+      -      589853 - elastique 3.2.3 Pro Synchronized: Mid/Side, Preserve Formants(High Pitches)
+      -      589853 - elastique 3.2.3 Pro Synchronized: Mid/Side, Preserve Formants(Higher Pitches)
+      -      589855 - elastique 3.2.3 Pro Synchronized: Mid/Side, Preserve Formants(Highest Pitches)
+      -      655360 - elastique 3.2.3 Efficient Normal
+      -      655361 - elastique 3.2.3 Efficient Mid/Side
+      -      655362 - elastique 3.2.3 Efficient Synchronized: Normal
+      -      655363 - elastique 3.2.3 Efficient Synchronized: Mid/Side
+      -      720896 - elastique 3.2.3 Soloist (Monophonic)
+      -      720897 - elastique 3.2.3 Soloist (Monophonic Mid Side)
+      -      720898 - elastique 3.2.3 Soloist (Speech)
+      -      720898 - elastique 3.2.3 Soloist (Monophonic Mid Side)
+      -
+      -      Rubber Band Library - Transients: Crisp, Detector: Compound, Pitch Mode: Fast, Window: Standard
+      -      851968 - nothing
+      -      851969 - Preserve Formants
+      -      851970 - Mid/Side
+      -      851971 - Preserve Formants (Mid Side)
+      -      851972 - Independent Phase
+      -      851973 - Preserve Formants, Independent Phase
+      -      851974 - Mid/Side, Independent Phase
+      -      851975 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Compound, Pitch Mode: Fast, Window: Standard
+      -      851984 - nothing
+      -      851985 - Preserve Formants
+      -      851986 - Mid/Side
+      -      851987 - Preserve Formants (Mid Side)
+      -      851988 - Independent Phase
+      -      851989 - Preserve Formants, Independent Phase
+      -      851990 - Mid/Side, Independent Phase
+      -      851991 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Compound, Pitch Mode: Fast, Window: Standard
+      -      852000 - nothing
+      -      852001 - Preserve Formants
+      -      852002 - Mid/Side
+      -      852003 - Preserve Formants (Mid Side)
+      -      852004 - Independent Phase
+      -      852005 - Preserve Formants, Independent Phase
+      -      852006 - Mid/Side, Independent Phase
+      -      852007 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Percussive, Pitch Mode: Fast, Window: Standard
+      -      852016 - nothing
+      -      852017 - Preserve Formants
+      -      852018 - Mid/Side
+      -      852019 - Preserve Formants (Mid Side)
+      -      852020 - Independent Phase
+      -      852021 - Preserve Formants, Independent Phase
+      -      852022 - Mid/Side, Independent Phase
+      -      852023 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Fast, Window: Standard
+      -      852032 - nothing
+      -      852033 - Preserve Formants
+      -      852034 - Mid/Side
+      -      852035 - Preserve Formants (Mid Side)
+      -      852036 - Independent Phase
+      -      852037 - Preserve Formants, Independent Phase
+      -      852038 - Mid/Side, Independent Phase
+      -      852039 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Fast, Window: Standard
+      -      852048 - nothing
+      -      852049 - Preserve Formants
+      -      852050 - Mid/Side
+      -      852051 - Preserve Formants (Mid Side)
+      -      852052 - Independent Phase
+      -      852053 - Preserve Formants, Independent Phase
+      -      852054 - Mid/Side, Independent Phase
+      -      852055 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Soft, Pitch Mode: Fast, Window: Standard
+      -      852064 - nothing
+      -      852065 - Preserve Formants
+      -      852066 - Mid/Side
+      -      852067 - Preserve Formants (Mid Side)
+      -      852068 - Independent Phase
+      -      852069 - Preserve Formants, Independent Phase
+      -      852070 - Mid/Side, Independent Phase
+      -      852071 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Fast, Window: Standard
+      -      852080 - nothing
+      -      852081 - Preserve Formants
+      -      852082 - Mid/Side
+      -      852083 - Preserve Formants (Mid Side)
+      -      852084 - Independent Phase
+      -      852085 - Preserve Formants, Independent Phase
+      -      852086 - Mid/Side, Independent Phase
+      -      852087 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Fast, Window: Standard
+      -      852096 - nothing
+      -      852097 - Preserve Formants
+      -      852098 - Mid/Side
+      -      852099 - Preserve Formants (Mid Side)
+      -      852100 - Independent Phase
+      -      852101 - Preserve Formants, Independent Phase
+      -      852102 - Mid/Side, Independent Phase
+      -      852103 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Compound, Pitch Mode: HighQ, Window: Standard
+      -      852112 - nothing
+      -      852113 - Preserve Formants
+      -      852114 - Mid/Side
+      -      852115 - Preserve Formants (Mid Side)
+      -      852116 - Independent Phase
+      -      852117 - Preserve Formants, Independent Phase
+      -      852118 - Mid/Side, Independent Phase
+      -      852119 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Compound, Pitch Mode: HighQ, Window: Standard
+      -      852128 - nothing
+      -      852129 - Preserve Formants
+      -      852130 - Mid/Side
+      -      852131 - Preserve Formants (Mid Side)
+      -      852132 - Independent Phase
+      -      852133 - Preserve Formants, Independent Phase
+      -      852134 - Mid/Side, Independent Phase
+      -      852135 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Compound, Pitch Mode: HighQ, Window: Standard
+      -      852144 - nothing
+      -      852145 - Preserve Formants
+      -      852146 - Mid/Side
+      -      852147 - Preserve Formants (Mid Side)
+      -      852148 - Independent Phase
+      -      852149 - Preserve Formants, Independent Phase
+      -      852150 - Mid/Side, Independent Phase
+      -      852151 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Percussive, Pitch Mode: HighQ, Window: Standard
+      -      852160 - nothing
+      -      852161 - Preserve Formants
+      -      852162 - Mid/Side
+      -      852163 - Preserve Formants (Mid Side)
+      -      852164 - Independent Phase
+      -      852165 - Preserve Formants, Independent Phase
+      -      852166 - Mid/Side, Independent Phase
+      -      852167 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Standard
+      -      852176 - nothing
+      -      852177 - Preserve Formants
+      -      852178 - Mid/Side
+      -      852179 - Preserve Formants (Mid Side)
+      -      852180 - Independent Phase
+      -      852181 - Preserve Formants, Independent Phase
+      -      852182 - Mid/Side, Independent Phase
+      -      852183 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Standard
+      -      852192 - nothing
+      -      852193 - Preserve Formants
+      -      852194 - Mid/Side
+      -      852195 - Preserve Formants (Mid Side)
+      -      852196 - Independent Phase
+      -      852197 - Preserve Formants, Independent Phase
+      -      852198 - Mid/Side, Independent Phase
+      -      852199 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Soft, Pitch Mode: HighQ, Window: Standard
+      -      852208 - nothing
+      -      852209 - Preserve Formants
+      -      852210 - Mid/Side
+      -      852211 - Preserve Formants (Mid Side)
+      -      852212 - Independent Phase
+      -      852213 - Preserve Formants, Independent Phase
+      -      852214 - Mid/Side, Independent Phase
+      -      852215 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Standard
+      -      852224 - nothing
+      -      852225 - Preserve Formants
+      -      852226 - Mid/Side
+      -      852227 - Preserve Formants (Mid Side)
+      -      852228 - Independent Phase
+      -      852229 - Preserve Formants, Independent Phase
+      -      852230 - Mid/Side, Independent Phase
+      -      852231 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Standard
+      -      852240 - nothing
+      -      852241 - Preserve Formants
+      -      852242 - Mid/Side
+      -      852243 - Preserve Formants (Mid Side)
+      -      852244 - Independent Phase
+      -      852245 - Preserve Formants, Independent Phase
+      -      852246 - Mid/Side, Independent Phase
+      -      852247 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Compound, Pitch Mode: Consistent, Window: Standard
+      -      852256 - nothing
+      -      852257 - Preserve Formants
+      -      852258 - Mid/Side
+      -      852259 - Preserve Formants (Mid Side)
+      -      852260 - Independent Phase
+      -      852261 - Preserve Formants, Independent Phase
+      -      852262 - Mid/Side, Independent Phase
+      -      852263 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Compound, Pitch Mode: Consistent, Window: Standard
+      -      852272 - nothing
+      -      852273 - Preserve Formants
+      -      852274 - Mid/Side
+      -      852275 - Preserve Formants (Mid Side)
+      -      852276 - Independent Phase
+      -      852277 - Preserve Formants, Independent Phase
+      -      852278 - Mid/Side, Independent Phase
+      -      852279 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Compound, Pitch Mode: Consistent, Window: Standard
+      -      852288 - nothing
+      -      852289 - Preserve Formants
+      -      852290 - Mid/Side
+      -      852291 - Preserve Formants (Mid Side)
+      -      852292 - Independent Phase
+      -      852293 - Preserve Formants, Independent Phase
+      -      852294 - Mid/Side, Independent Phase
+      -      852295 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Percussive, Pitch Mode: Consistent, Window: Standard
+      -      852304 - nothing
+      -      852305 - Preserve Formants
+      -      852306 - Mid/Side
+      -      852307 - Preserve Formants (Mid Side)
+      -      852308 - Independent Phase
+      -      852309 - Preserve Formants, Independent Phase
+      -      852310 - Mid/Side, Independent Phase
+      -      852311 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Standard
+      -      852320 - nothing
+      -      852321 - Preserve Formants
+      -      852322 - Mid/Side
+      -      852323 - Preserve Formants (Mid Side)
+      -      852324 - Independent Phase
+      -      852325 - Preserve Formants, Independent Phase
+      -      852326 - Mid/Side, Independent Phase
+      -      852327 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Standard
+      -      852336 - nothing
+      -      852337 - Preserve Formants
+      -      852338 - Mid/Side
+      -      852339 - Preserve Formants (Mid Side)
+      -      852340 - Independent Phase
+      -      852341 - Preserve Formants, Independent Phase
+      -      852342 - Mid/Side, Independent Phase
+      -      852343 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Soft, Pitch Mode: Consistent, Window: Standard
+      -      852352 - nothing
+      -      852353 - Preserve Formants
+      -      852354 - Mid/Side
+      -      852355 - Preserve Formants (Mid Side)
+      -      852356 - Independent Phase
+      -      852357 - Preserve Formants, Independent Phase
+      -      852358 - Mid/Side, Independent Phase
+      -      852359 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Standard
+      -      852368 - nothing
+      -      852369 - Preserve Formants
+      -      852370 - Mid/Side
+      -      852371 - Preserve Formants (Mid Side)
+      -      852372 - Independent Phase
+      -      852373 - Preserve Formants, Independent Phase
+      -      852374 - Mid/Side, Independent Phase
+      -      852375 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Standard
+      -      852384 - nothing
+      -      852385 - Preserve Formants
+      -      852386 - Mid/Side
+      -      852387 - Preserve Formants (Mid Side)
+      -      852388 - Independent Phase
+      -      852389 - Preserve Formants, Independent Phase
+      -      852390 - Mid/Side, Independent Phase
+      -      852391 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Compound, Pitch Mode: Fast, Window: Short
+      -      852400 - nothing
+      -      852401 - Preserve Formants
+      -      852402 - Mid/Side
+      -      852403 - Preserve Formants (Mid Side)
+      -      852404 - Independent Phase
+      -      852405 - Preserve Formants, Independent Phase
+      -      852406 - Mid/Side, Independent Phase
+      -      852407 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Compound, Pitch Mode: Fast, Window: Short
+      -      852416 - nothing
+      -      852417 - Preserve Formants
+      -      852418 - Mid/Side
+      -      852419 - Preserve Formants (Mid Side)
+      -      852420 - Independent Phase
+      -      852421 - Preserve Formants, Independent Phase
+      -      852422 - Mid/Side, Independent Phase
+      -      852423 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Compound, Pitch Mode: Fast, Window: Short
+      -      852432 - nothing
+      -      852433 - Preserve Formants
+      -      852434 - Mid/Side
+      -      852435 - Preserve Formants (Mid Side)
+      -      852436 - Independent Phase
+      -      852437 - Preserve Formants, Independent Phase
+      -      852438 - Mid/Side, Independent Phase
+      -      852439 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Percussive, Pitch Mode: Fast, Window: Short
+      -      852448 - nothing
+      -      852449 - Preserve Formants
+      -      852450 - Mid/Side
+      -      852451 - Preserve Formants (Mid Side)
+      -      852452 - Independent Phase
+      -      852453 - Preserve Formants, Independent Phase
+      -      852454 - Mid/Side, Independent Phase
+      -      852455 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Fast, Window: Short
+      -      852464 - nothing
+      -      852465 - Preserve Formants
+      -      852466 - Mid/Side
+      -      852467 - Preserve Formants (Mid Side)
+      -      852468 - Independent Phase
+      -      852469 - Preserve Formants, Independent Phase
+      -      852470 - Mid/Side, Independent Phase
+      -      852471 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Fast, Window: Short
+      -      852480 - nothing
+      -      852481 - Preserve Formants
+      -      852482 - Mid/Side
+      -      852483 - Preserve Formants (Mid Side)
+      -      852484 - Independent Phase
+      -      852485 - Preserve Formants, Independent Phase
+      -      852486 - Mid/Side, Independent Phase
+      -      852487 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Soft, Pitch Mode: Fast, Window: Short
+      -      852496 - nothing
+      -      852497 - Preserve Formants
+      -      852498 - Mid/Side
+      -      852499 - Preserve Formants (Mid Side)
+      -      852500 - Independent Phase
+      -      852501 - Preserve Formants, Independent Phase
+      -      852502 - Mid/Side, Independent Phase
+      -      852503 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Fast, Window: Short
+      -      852512 - nothing
+      -      852513 - Preserve Formants
+      -      852514 - Mid/Side
+      -      852515 - Preserve Formants (Mid Side)
+      -      852516 - Independent Phase
+      -      852517 - Preserve Formants, Independent Phase
+      -      852518 - Mid/Side, Independent Phase
+      -      852519 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Fast, Window: Short
+      -      852528 - nothing
+      -      852529 - Preserve Formants
+      -      852530 - Mid/Side
+      -      852531 - Preserve Formants (Mid Side)
+      -      852532 - Independent Phase
+      -      852533 - Preserve Formants, Independent Phase
+      -      852534 - Mid/Side, Independent Phase
+      -      852535 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Compound, Pitch Mode: HighQ, Window: Short
+      -      852544 - nothing
+      -      852545 - Preserve Formants
+      -      852546 - Mid/Side
+      -      852547 - Preserve Formants (Mid Side)
+      -      852548 - Independent Phase
+      -      852549 - Preserve Formants, Independent Phase
+      -      852550 - Mid/Side, Independent Phase
+      -      852551 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Compound, Pitch Mode: HighQ, Window: Short
+      -      852560 - nothing
+      -      852561 - Preserve Formants
+      -      852562 - Mid/Side
+      -      852563 - Preserve Formants (Mid Side)
+      -      852564 - Independent Phase
+      -      852565 - Preserve Formants, Independent Phase
+      -      852566 - Mid/Side, Independent Phase
+      -      852567 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Compound, Pitch Mode: HighQ, Window: Short
+      -      852576 - nothing
+      -      852577 - Preserve Formants
+      -      852578 - Mid/Side
+      -      852579 - Preserve Formants (Mid Side)
+      -      852580 - Independent Phase
+      -      852581 - Preserve Formants, Independent Phase
+      -      852582 - Mid/Side, Independent Phase
+      -      852583 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Percussive, Pitch Mode: HighQ, Window: Short
+      -      852592 - nothing
+      -      852593 - Preserve Formants
+      -      852594 - Mid/Side
+      -      852595 - Preserve Formants (Mid Side)
+      -      852596 - Independent Phase
+      -      852597 - Preserve Formants, Independent Phase
+      -      852598 - Mid/Side, Independent Phase
+      -      852599 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Short
+      -      852608 - nothing
+      -      852609 - Preserve Formants
+      -      852610 - Mid/Side
+      -      852611 - Preserve Formants (Mid Side)
+      -      852612 - Independent Phase
+      -      852613 - Preserve Formants, Independent Phase
+      -      852614 - Mid/Side, Independent Phase
+      -      852615 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Short
+      -      852624 - nothing
+      -      852625 - Preserve Formants
+      -      852626 - Mid/Side
+      -      852627 - Preserve Formants (Mid Side)
+      -      852628 - Independent Phase
+      -      852629 - Preserve Formants, Independent Phase
+      -      852630 - Mid/Side, Independent Phase
+      -      852631 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Soft, Pitch Mode: HighQ, Window: Short
+      -      852640 - nothing
+      -      852641 - Preserve Formants
+      -      852642 - Mid/Side
+      -      852643 - Preserve Formants (Mid Side)
+      -      852644 - Independent Phase
+      -      852645 - Preserve Formants, Independent Phase
+      -      852646 - Mid/Side, Independent Phase
+      -      852647 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Short
+      -      852656 - nothing
+      -      852657 - Preserve Formants
+      -      852658 - Mid/Side
+      -      852659 - Preserve Formants (Mid Side)
+      -      852660 - Independent Phase
+      -      852661 - Preserve Formants, Independent Phase
+      -      852662 - Mid/Side, Independent Phase
+      -      852663 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Short
+      -      852672 - nothing
+      -      852673 - Preserve Formants
+      -      852674 - Mid/Side
+      -      852675 - Preserve Formants (Mid Side)
+      -      852676 - Independent Phase
+      -      852677 - Preserve Formants, Independent Phase
+      -      852678 - Mid/Side, Independent Phase
+      -      852679 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Compound, Pitch Mode: Consistent, Window: Short
+      -      852688 - nothing
+      -      852689 - Preserve Formants
+      -      852690 - Mid/Side
+      -      852691 - Preserve Formants (Mid Side)
+      -      852692 - Independent Phase
+      -      852693 - Preserve Formants, Independent Phase
+      -      852694 - Mid/Side, Independent Phase
+      -      852695 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Compound, Pitch Mode: Consistent, Window: Short
+      -      852704 - nothing
+      -      852705 - Preserve Formants
+      -      852706 - Mid/Side
+      -      852707 - Preserve Formants (Mid Side)
+      -      852708 - Independent Phase
+      -      852709 - Preserve Formants, Independent Phase
+      -      852710 - Mid/Side, Independent Phase
+      -      852711 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Compound, Pitch Mode: Consistent, Window: Short
+      -      852720 - nothing
+      -      852721 - Preserve Formants
+      -      852722 - Mid/Side
+      -      852723 - Preserve Formants (Mid Side)
+      -      852724 - Independent Phase
+      -      852725 - Preserve Formants, Independent Phase
+      -      852726 - Mid/Side, Independent Phase
+      -      852727 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Percussive, Pitch Mode: Consistent, Window: Short
+      -      852736 - nothing
+      -      852737 - Preserve Formants
+      -      852738 - Mid/Side
+      -      852739 - Preserve Formants (Mid Side)
+      -      852740 - Independent Phase
+      -      852741 - Preserve Formants, Independent Phase
+      -      852742 - Mid/Side, Independent Phase
+      -      852743 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Short
+      -      852752 - nothing
+      -      852753 - Preserve Formants
+      -      852754 - Mid/Side
+      -      852755 - Preserve Formants (Mid Side)
+      -      852756 - Independent Phase
+      -      852757 - Preserve Formants, Independent Phase
+      -      852758 - Mid/Side, Independent Phase
+      -      852759 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Short
+      -      852768 - nothing
+      -      852769 - Preserve Formants
+      -      852770 - Mid/Side
+      -      852771 - Preserve Formants (Mid Side)
+      -      852772 - Independent Phase
+      -      852773 - Preserve Formants, Independent Phase
+      -      852774 - Mid/Side, Independent Phase
+      -      852775 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Soft, Pitch Mode: Consistent, Window: Short
+      -      852784 - nothing
+      -      852785 - Preserve Formants
+      -      852786 - Mid/Side
+      -      852787 - Preserve Formants (Mid Side)
+      -      852788 - Independent Phase
+      -      852789 - Preserve Formants, Independent Phase
+      -      852790 - Mid/Side, Independent Phase
+      -      852791 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Short
+      -      852800 - nothing
+      -      852801 - Preserve Formants
+      -      852802 - Mid/Side
+      -      852803 - Preserve Formants (Mid Side)
+      -      852804 - Independent Phase
+      -      852805 - Preserve Formants, Independent Phase
+      -      852806 - Mid/Side, Independent Phase
+      -      852807 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Short
+      -      852816 - nothing
+      -      852817 - Preserve Formants
+      -      852818 - Mid/Side
+      -      852819 - Preserve Formants (Mid Side)
+      -      852820 - Independent Phase
+      -      852821 - Preserve Formants, Independent Phase
+      -      852822 - Mid/Side, Independent Phase
+      -      852823 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Compound, Pitch Mode: Fast, Window: Long
+      -      852832 - nothing
+      -      852833 - Preserve Formants
+      -      852834 - Mid/Side
+      -      852835 - Preserve Formants (Mid Side)
+      -      852836 - Independent Phase
+      -      852837 - Preserve Formants, Independent Phase
+      -      852838 - Mid/Side, Independent Phase
+      -      852839 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Compound, Pitch Mode: Fast, Window: Long
+      -      852848 - nothing
+      -      852849 - Preserve Formants
+      -      852850 - Mid/Side
+      -      852851 - Preserve Formants (Mid Side)
+      -      852852 - Independent Phase
+      -      852853 - Preserve Formants, Independent Phase
+      -      852854 - Mid/Side, Independent Phase
+      -      852855 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Compound, Pitch Mode: Fast, Window: Long
+      -      852864 - nothing
+      -      852865 - Preserve Formants
+      -      852866 - Mid/Side
+      -      852867 - Preserve Formants (Mid Side)
+      -      852868 - Independent Phase
+      -      852869 - Preserve Formants, Independent Phase
+      -      852870 - Mid/Side, Independent Phase
+      -      852871 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Percussive, Pitch Mode: Fast, Window: Long
+      -      852880 - nothing
+      -      852881 - Preserve Formants
+      -      852882 - Mid/Side
+      -      852883 - Preserve Formants (Mid Side)
+      -      852884 - Independent Phase
+      -      852885 - Preserve Formants, Independent Phase
+      -      852886 - Mid/Side, Independent Phase
+      -      852887 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Fast, Window: Long
+      -      852896 - nothing
+      -      852897 - Preserve Formants
+      -      852898 - Mid/Side
+      -      852899 - Preserve Formants (Mid Side)
+      -      852900 - Independent Phase
+      -      852901 - Preserve Formants, Independent Phase
+      -      852902 - Mid/Side, Independent Phase
+      -      852903 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Fast, Window: Long
+      -      852912 - nothing
+      -      852913 - Preserve Formants
+      -      852914 - Mid/Side
+      -      852915 - Preserve Formants (Mid Side)
+      -      852916 - Independent Phase
+      -      852917 - Preserve Formants, Independent Phase
+      -      852918 - Mid/Side, Independent Phase
+      -      852919 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Soft, Pitch Mode: Fast, Window: Long
+      -      852928 - nothing
+      -      852929 - Preserve Formants
+      -      852930 - Mid/Side
+      -      852931 - Preserve Formants (Mid Side)
+      -      852932 - Independent Phase
+      -      852933 - Preserve Formants, Independent Phase
+      -      852934 - Mid/Side, Independent Phase
+      -      852935 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Fast, Window: Long
+      -      852944 - nothing
+      -      852945 - Preserve Formants
+      -      852946 - Mid/Side
+      -      852947 - Preserve Formants (Mid Side)
+      -      852948 - Independent Phase
+      -      852949 - Preserve Formants, Independent Phase
+      -      852950 - Mid/Side, Independent Phase
+      -      852951 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Fast, Window: Long
+      -      852960 - nothing
+      -      852961 - Preserve Formants
+      -      852962 - Mid/Side
+      -      852963 - Preserve Formants (Mid Side)
+      -      852964 - Independent Phase
+      -      852965 - Preserve Formants, Independent Phase
+      -      852966 - Mid/Side, Independent Phase
+      -      852967 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Compound, Pitch Mode: HighQ, Window: Long
+      -      852976 - nothing
+      -      852977 - Preserve Formants
+      -      852978 - Mid/Side
+      -      852979 - Preserve Formants (Mid Side)
+      -      852980 - Independent Phase
+      -      852981 - Preserve Formants, Independent Phase
+      -      852982 - Mid/Side, Independent Phase
+      -      852983 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Compound, Pitch Mode: HighQ, Window: Long
+      -      852992 - nothing
+      -      852993 - Preserve Formants
+      -      852994 - Mid/Side
+      -      852995 - Preserve Formants (Mid Side)
+      -      852996 - Independent Phase
+      -      852997 - Preserve Formants, Independent Phase
+      -      852998 - Mid/Side, Independent Phase
+      -      852999 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Compound, Pitch Mode: HighQ, Window: Long
+      -      853008 - nothing
+      -      853009 - Preserve Formants
+      -      853010 - Mid/Side
+      -      853011 - Preserve Formants (Mid Side)
+      -      853012 - Independent Phase
+      -      853013 - Preserve Formants, Independent Phase
+      -      853014 - Mid/Side, Independent Phase
+      -      853015 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Percussive, Pitch Mode: HighQ, Window: Long
+      -      853024 - nothing
+      -      853025 - Preserve Formants
+      -      853026 - Mid/Side
+      -      853027 - Preserve Formants (Mid Side)
+      -      853028 - Independent Phase
+      -      853029 - Preserve Formants, Independent Phase
+      -      853030 - Mid/Side, Independent Phase
+      -      853031 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Long
+      -      853040 - nothing
+      -      853041 - Preserve Formants
+      -      853042 - Mid/Side
+      -      853043 - Preserve Formants (Mid Side)
+      -      853044 - Independent Phase
+      -      853045 - Preserve Formants, Independent Phase
+      -      853046 - Mid/Side, Independent Phase
+      -      853047 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Long
+      -      853056 - nothing
+      -      853057 - Preserve Formants
+      -      853058 - Mid/Side
+      -      853059 - Preserve Formants (Mid Side)
+      -      853060 - Independent Phase
+      -      853061 - Preserve Formants, Independent Phase
+      -      853062 - Mid/Side, Independent Phase
+      -      853063 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Soft, Pitch Mode: HighQ, Window: Long
+      -      853072 - nothing
+      -      853073 - Preserve Formants
+      -      853074 - Mid/Side
+      -      853075 - Preserve Formants (Mid Side)
+      -      853076 - Independent Phase
+      -      853077 - Preserve Formants, Independent Phase
+      -      853078 - Mid/Side, Independent Phase
+      -      853079 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Long
+      -      853088 - nothing
+      -      853089 - Preserve Formants
+      -      853090 - Mid/Side
+      -      853091 - Preserve Formants (Mid Side)
+      -      853092 - Independent Phase
+      -      853093 - Preserve Formants, Independent Phase
+      -      853094 - Mid/Side, Independent Phase
+      -      853095 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Long
+      -      853104 - nothing
+      -      853105 - Preserve Formants
+      -      853106 - Mid/Side
+      -      853107 - Preserve Formants (Mid Side)
+      -      853108 - Independent Phase
+      -      853109 - Preserve Formants, Independent Phase
+      -      853110 - Mid/Side, Independent Phase
+      -      853111 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Compound, Pitch Mode: Consistent, Window: Long
+      -      853120 - nothing
+      -      853121 - Preserve Formants
+      -      853122 - Mid/Side
+      -      853123 - Preserve Formants (Mid Side)
+      -      853124 - Independent Phase
+      -      853125 - Preserve Formants, Independent Phase
+      -      853126 - Mid/Side, Independent Phase
+      -      853127 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Compound, Pitch Mode: Consistent, Window: Long
+      -      853136 - nothing
+      -      853137 - Preserve Formants
+      -      853138 - Mid/Side
+      -      853139 - Preserve Formants (Mid Side)
+      -      853140 - Independent Phase
+      -      853141 - Preserve Formants, Independent Phase
+      -      853142 - Mid/Side, Independent Phase
+      -      853143 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Compound, Pitch Mode: Consistent, Window: Long
+      -      853152 - nothing
+      -      853153 - Preserve Formants
+      -      853154 - Mid/Side
+      -      853155 - Preserve Formants (Mid Side)
+      -      853156 - Independent Phase
+      -      853157 - Preserve Formants, Independent Phase
+      -      853158 - Mid/Side, Independent Phase
+      -      853159 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Percussive, Pitch Mode: Consistent, Window: Long
+      -      853168 - nothing
+      -      853169 - Preserve Formants
+      -      853170 - Mid/Side
+      -      853171 - Preserve Formants (Mid Side)
+      -      853172 - Independent Phase
+      -      853173 - Preserve Formants, Independent Phase
+      -      853174 - Mid/Side, Independent Phase
+      -      853175 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Long
+      -      853184 - nothing
+      -      853185 - Preserve Formants
+      -      853186 - Mid/Side
+      -      853187 - Preserve Formants (Mid Side)
+      -      853188 - Independent Phase
+      -      853189 - Preserve Formants, Independent Phase
+      -      853190 - Mid/Side, Independent Phase
+      -      853191 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Long
+      -      853200 - nothing
+      -      853201 - Preserve Formants
+      -      853202 - Mid/Side
+      -      853203 - Preserve Formants (Mid Side)
+      -      853204 - Independent Phase
+      -      853205 - Preserve Formants, Independent Phase
+      -      853206 - Mid/Side, Independent Phase
+      -      853207 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Crisp, Detector: Soft, Pitch Mode: Consistent, Window: Long
+      -      853216 - nothing
+      -      853217 - Preserve Formants
+      -      853218 - Mid/Side
+      -      853219 - Preserve Formants (Mid Side)
+      -      853220 - Independent Phase
+      -      853221 - Preserve Formants, Independent Phase
+      -      853222 - Mid/Side, Independent Phase
+      -      853223 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Long
+      -      853232 - nothing
+      -      853233 - Preserve Formants
+      -      853234 - Mid/Side
+      -      853235 - Preserve Formants (Mid Side)
+      -      853236 - Independent Phase
+      -      853237 - Preserve Formants, Independent Phase
+      -      853238 - Mid/Side, Independent Phase
+      -      853239 - Preserve Formants, Mid/Side, Independent Phase
+      -      
+      -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Long
+      -      853248 - nothing
+      -      853249 - Preserve Formants
+      -      853250 - Mid/Side
+      -      853251 - Preserve Formants (Mid Side)
+      -      853252 - Independent Phase
+      -      853253 - Preserve Formants, Independent Phase
+      -      853254 - Mid/Side, Independent Phase
+      -      853255 - Preserve Formants, Mid/Side, Independent Phase
+      
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TAKELANE</slug>
+    <functioncall>TAKELANE integer take_lane_state </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer take_lane_state - take-lane-state
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SAMPLERATE</slug>
+    <functioncall>SAMPLERATE integer sample_rate, integer project_sample_rate, integer force_tempo_time_sig </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer sample_rate - Project Sample Rate in Hz
+      integer project_sample_rate - Checkbox: Project Sample Rate
+      integer force_tempo_time_sig - Checkbox: Force Project Tempo/Time Signature changes to occur on whole samples 
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>INTMIXMODE</slug>
+    <functioncall>INTMIXMODE integer track_mixing_depth </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer track_mixing_depth - track mixing depth
+      -nil - 64bit float (default)
+      -1 - 32 bit float
+      -2 - 39 bit integer
+      -3 - 24 bit integer
+      -4 - 16 bit integer
+      -5 - 12 bit integer
+      -6 - 8 bit integer
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SELECTION</slug>
+    <functioncall>SELECTION number start_selection, number end_selection</functioncall>
+    <description>
+        The time/loop-selection in the project. 
+        
+        Start and endselection can be reversed!
+        
+        see also [SELECTION2](#SELECTION2)
+    </description>
+    <parameters>
+      number start_selection - start of the time-selection
+      number end_selection - end of the time-selection
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SELECTION2</slug>
+    <functioncall>SELECTION2 number start_selection, number end_selection</functioncall>
+    <description>
+        The time/loop-selection in the project. 
+        Start and endselection can be reversed!
+        
+        see also [SELECTION](#SELECTION)
+    </description>
+    <parameters>
+      number start_selection - start of the time-selection
+      number end_selection - end of the time-selection
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MARKER</slug>
+    <functioncall>MARKER integer number_of_markers_and_regions, integer number_of_regions_only, integer number_of_markers_only </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer number_of_markers_and_regions - the number of all markers and regions
+      integer number_of_regions_only - the number of regions
+      integer number_of_markers_only - the number of markers only
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MARKER</slug>
+    <functioncall>MARKER boolean retval, integer shownnumber, number markerposition, string markername, integer markercolor </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      boolean retval - true, in case of success; false in case of failure
+      integer shownnumber - the number that is shown with the marker in the arrange-view
+      number markerposition - the position of the marker in seconds
+      string markername - the name of the marker. "" if no name is given.
+      integer markercolor - the colorvalue of the marker
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MARKER</slug>
+    <functioncall>MARKER boolean retval, integer shownnumber, number start_of_region, number end_of_region, string regionname, integer regioncolor </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      boolean retval - true, in case of success; false in case of failure
+      integer shownnumber - the number that is shown with the region in the arrange-view
+      number start_of_region - the startposition of the region in seconds
+      number end_of_region - the endposition of the region in seconds
+      string regionname - the name of the region. "" if no name is given.
+      integer regioncolor - the colorvalue of the region
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>POOLEDENV</slug>
+    <functioncall>POOLEDENV</functioncall>
+    <description>
+        The AutomationItemStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>METRONOME  </slug>
+    <functioncall>METRONOME</functioncall>
+    <description>
+        The MetronomeStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERPLAYSPEEDENV  </slug>
+    <functioncall>MASTERPLAYSPEEDENV</functioncall>
+    <description>
+        The MasterPlayspeedStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TEMPOENVEX  </slug>
+    <functioncall>TEMPOENVEX</functioncall>
+    <description>
+        The TempoStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>EXTENSIONS  </slug>
+    <functioncall>EXTENSIONS</functioncall>
+    <description>
+        The ExtensionsStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>LOCK </slug>
+    <functioncall>LOCK  integer lock_state </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer lock_state - the lock-state, which is a bitfield
+                        - &1     - Time selection
+                        - &2     - Items (full)
+                        - &4     - Track envelopes
+                        - &8     - Markers
+                        - &16    - Regions
+                        - &32    - Time signature markers
+                        - &64    - Items (prevent left/right movement)
+                        - &128   - Items (prevent up/down movement)
+                        - &256   - Item edges
+                        - &512   - Item fade/volume handles
+                        - &1024  - Loop points locked
+                        - &2048  - Item envelopes
+                        - &4096  - Item stretch markers
+                        - &16384 - Enable locking
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GLOBAL_AUTO</slug>
+    <functioncall>GLOBAL_AUTO integer globalauto_state </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer globalauto_state - the global automation override-state
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TEMPO</slug>
+    <functioncall>TEMPO number bpm, integer beat, integer denominator </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      number bpm - the tempo of the project in bpm
+      integer beat - the beat of the project
+      integer denominator - the denominator for the beat
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PLAYRATE</slug>
+    <functioncall>PLAYRATE number playrate, integer preserve_pitch, number min_playrate, number max_playrate </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      number playrate - the currently set playrate
+      integer preserve_pitch - 0, don't preserve pitch, when changing playrate; 1, preserve pitch, when chaning playrate
+      number min_playrate - the minimum playrate possible in the project
+      number max_playrate - the maximum playrate possible in the project
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERAUTOMODE</slug>
+    <functioncall>MASTERAUTOMODE integer automode </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer automode - the automation-mode, as set in the Envelopes for Master Track
+                       - 0, Trim/Read
+                       - 1, Read
+                       - 2, Touch
+                       - 3, Write
+                       - 4, Latch
+                       - 5, Latch Preview
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTER_SEL</slug>
+    <functioncall>MASTER_SEL integer selection </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer selection - the selection-state; 0, master-track unselected; 1, master-track selected
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTER_FX</slug>
+    <functioncall>MASTER_FX integer fx_byp_state </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer fx_byp_state - the fx-bypass-state; 0, master-track-fx bypassed; 1, master-track-fx normal
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERMUTESOLO</slug>
+    <functioncall>MASTERMUTESOLO integer mute_solo_state </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer mute_solo_state - the mute-solo-state; it is a bitfield
+                              - 0, no mute, no solo, Mono mode L+R
+                              - &1, master-track muted
+                              - &2, master-track soloed
+                              - &4, master-track mono-button
+                              - &8, Mono mode:L
+                              - &16, Mono mode:R
+                              - add 24 for Mono mode L-R
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTER_NCH</slug>
+    <functioncall>MASTER_NCH integer number_of_channels, integer peak_metering </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer number_of_channels - the number of output-channels, as set in the "Outputs for the Master Channel -> Track Channels"-dialog
+      intger peak_metering - 2, Multichannel peak metering-setting, as set in the "Master VU settings"-dialog
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERTRACKHEIGHT</slug>
+    <functioncall>MASTERTRACKHEIGHT integer height_state, integer height_lock </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer height_state - the current-height of the master-track, from 24 to 260
+      integer height_lock - 0, height-lock is off; 1, height-lock is on
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERPEAKCOL</slug>
+    <functioncall>MASTERPEAKCOL integer color </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer color - the color for the master-track
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERTRACKVIEW</slug>
+    <functioncall>MASTERTRACKVIEW integer tcp_visibility, number state2, number state3, number state4, integer state5, integer state6, integer state7 </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer tcp_visibility - 0, Master-track is invisible in MCP; 1, Master-track is visible in MCP
+      number state2 - unknown
+      number state3 - unknown
+      number state4 - unknown
+      integer state5 - unknown
+      integer state6 - unknown
+      integer state7 - unknown
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERHWOUT</slug>
+    <functioncall>MASTERHWOUT integer count_of_hwouts </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer count_of_hwouts - the number of available hwouts in an rpp-project or ProjectStateChunk
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERHWOUT</slug>
+    <functioncall>MASTERHWOUT integer state1, integer state2, number volume, number pan, integer mute, integer phase, integer output_channels, number state8 </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer state1 - unknown
+      integer state2 - unknown
+      number volume - volume of the HWOut; 
+      number pan - the panning; -1(left), 1(right), 0(center)
+      integer mute - mute-state; 0, unmuted; 1, muted
+      integer phase - phase-inversion; 0, normal phase; 1, inversed phase
+      integer output_channels -        -1 - None
+                                       0 - Stereo Source 1/2
+                                       4 - Stereo Source 5/6
+                                      12 - New Channels On Sending Track Stereo Source Channel 13/14
+                                      1024 - Mono Source 1
+                                      1029 - Mono Source 6
+                                      1030 - New Channels On Sending Track Mono Source Channel 7
+                                      1032 - New Channels On Sending Track Mono Source Channel 9
+                                      2048 - MultiChannel 4 Channels 1-4
+                                      2050 - Multichannel 4 Channels 3-6
+                                      3072 - Multichannel 6 Channels 1-6 
+      number state8 - unknown
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTER_VOLUME</slug>
+    <functioncall>MASTER_VOLUME number volume, number pan, number pan_law, number state4, number pan_knob3 </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      number volume - Volume; 0(-inf dB) to 3.981071705535(+12dB);1 for 0dB
+      number pan - Panning; -1(left), 1(right), 0(center)
+      number pan_law - Pan_Law, as set in the "Pan Law: Master Track"-dialog; 1(0dB); 0.5(-6.02dB)
+      number state4 - unknown
+      number pan_knob3 - the second pan_knob for pan-mode "Dual Pan" 
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTER_PANMODE</slug>
+    <functioncall>MASTER_PANMODE integer panmode </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer panmode - the panmode for the master-track; 
+                      -  -1, Project default (Stereo balance)
+                      -   3, Stereo balance  / mono pan(default)
+                      -   5, Stereo Pan
+                      -   6, Dual Pan
+                      -   nil, REAPER 3.x balance(deprecated)
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTER_WIDTH</slug>
+    <functioncall>MASTER_WIDTH number pan_knob_two </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      number pan_knob_two - -1(left), 1(right), 0(center)
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTER_GROUP_FLAGS</slug>
+    <functioncall>MASTER_GROUP_FLAGS integer GroupState_as_Flags, array IndividualGroupState_Flags </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer GroupState_as_Flags - returns a flagvalue with 23 bits, that tells you, which grouping-flag is set in at least one of the 32 groups available.
+      -returns -1 in case of failure
+      -
+      -the following flags are available:
+      -2^0 - Volume Master
+      -2^1 - Volume Slave
+      -2^2 - Pan Master
+      -2^3 - Pan Slave
+      -2^4 - Mute Master
+      -2^5 - Mute Slave
+      -2^6 - Solo Master
+      -2^7 - Solo Slave
+      -2^8 - Record Arm Master
+      -2^9 - Record Arm Slave
+      -2^10 - Polarity/Phase Master
+      -2^11 - Polarity/Phase Slave
+      -2^12 - Automation Mode Master
+      -2^13 - Automation Mode Slave
+      -2^14 - Reverse Volume
+      -2^15 - Reverse Pan
+      -2^16 - Do not master when slaving
+      -2^17 - Reverse Width
+      -2^18 - Width Master
+      -2^19 - Width Slave
+      -2^20 - VCA Master
+      -2^21 - VCA Slave
+      -2^22 - VCA pre-FX slave
+      
+       array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
+      -e.g. If Volume Master is set only in Group 1, entry 1 in the array will be set to 1. If Volume Master is set on Group 2 and Group 4, the first entry in the array will be set to 10.
+      -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F slave, array[16] is Do not master when slaving, etc
+      -As said before, the values in each entry is a flag, that tells you, which of the groups is set with a certain flag. The following flags determine, in which group a certain flag is set:
+      -2^0 - Group 1
+      -2^1 - Group 2
+      -2^2 - Group 3
+      -2^3 - Group 4
+      -...
+      -2^30 - Group 31
+      -2^31 - Group 32
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTER_GROUP_FLAGS_HIGH</slug>
+    <functioncall>MASTER_GROUP_FLAGS_HIGH integer GroupState_as_Flags, array IndividualGroupState_Flags </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer GroupState_as_Flags - returns a flagvalue with 23 bits, that tells you, which grouping-flag is set in at least one of the 32 groups available.
+      -returns -1 in case of failure
+      -
+      -the following flags are available:
+      -2^0 - Volume Master
+      -2^1 - Volume Slave
+      -2^2 - Pan Master
+      -2^3 - Pan Slave
+      -2^4 - Mute Master
+      -2^5 - Mute Slave
+      -2^6 - Solo Master
+      -2^7 - Solo Slave
+      -2^8 - Record Arm Master
+      -2^9 - Record Arm Slave
+      -2^10 - Polarity/Phase Master
+      -2^11 - Polarity/Phase Slave
+      -2^12 - Automation Mode Master
+      -2^13 - Automation Mode Slave
+      -2^14 - Reverse Volume
+      -2^15 - Reverse Pan
+      -2^16 - Do not master when slaving
+      -2^17 - Reverse Width
+      -2^18 - Width Master
+      -2^19 - Width Slave
+      -2^20 - VCA Master
+      -2^21 - VCA Slave
+      -2^22 - VCA pre-FX slave
+      
+       array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
+      -e.g. If Volume Master is set only in Group 1, entry 1 in the array will be set to 1. If Volume Master is set on Group 2 and Group 4, the first entry in the array will be set to 10.
+      -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F slave, array[16] is Do not master when slaving, etc
+      -As said before, the values in each entry is a flag, that tells you, which of the groups is set with a certain flag. The following flags determine, in which group a certain flag is set:
+      -2^0 - Group 1
+      -2^1 - Group 2
+      -2^2 - Group 3
+      -2^3 - Group 4
+      -...
+      -2^30 - Group 31
+      -2^31 - Group 32
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GROUPS_DISABLED</slug>
+    <functioncall>GROUPS_DISABLED integer disabled1, integer disabled2 </functioncall>
+    <description>
+    
+    </description>
+    <parameters>
+      integer disabled1 - the disabled groups; it is a bitfield, with &1 for group 1; &32 for group 32; if it's set, the accompanying group is disabled
+      integer disabled2 - the disabled groups_high; it is a bitfield, with &1 for group 33; &32 for group 64; if it's set, the accompanying group is disabled
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERHWVOLENV  </slug>
+    <functioncall>MASTERHWVOLENV</functioncall>
+    <description>
+        The MasterHWVolEnvStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERFXLIST  </slug>
+    <functioncall>MASTERFXLIST</functioncall>
+    <description>
+        The MasterFXListStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERDUALPANENV  </slug>
+    <functioncall>MASTERDUALPANENV</functioncall>
+    <description>
+        The MasterDualPanEnvStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERDUALPANENV2  </slug>
+    <functioncall>MASTERDUALPANENV2</functioncall>
+    <description>
+        The MasterDualPanEnvStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERDUALPANENVL  </slug>
+    <functioncall>MASTERDUALPANENVL</functioncall>
+    <description>
+        The MasterDualPanEnvLStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERDUALPANENVL2  </slug>
+    <functioncall>MASTERDUALPANENVL2</functioncall>
+    <description>
+        The MasterDualPanEnvL2StateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERVOLENV  </slug>
+    <functioncall>MASTERVOLENV</functioncall>
+    <description>
+        The MasterVolEnvStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERVOLENV2  </slug>
+    <functioncall>MASTERVOLENV2</functioncall>
+    <description>
+        The MasterVolEnv2StateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERVOLENV3  </slug>
+    <functioncall>MASTERVOLENV3</functioncall>
+    <description>
+        The MasterVolEnv3StateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTERHWPANENV  </slug>
+    <functioncall>MASTERHWPANENV</functioncall>
+    <description>
+        The MasterHWPanEnvStateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MASTER_PANMODE_EX  </slug>
+    <functioncall>MASTER_PANMODE_EX  </functioncall>
+    <description>
+        The MasterHWPanModeEx_StateChunk
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TEMPOENVEX  </slug>
+    <functioncall>TEMPOENVEX</functioncall>
+    <description>
+        The TempoEnv_ExStateChunk.
+    </description>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>NAME</slug>
+    <functioncall>NAME string trackname </functioncall>
+    <description>
+        The Trackname. Will be enclosed in doublequotes, when it contains spaces.
+    </description>
+    <parameters>
+      string trackname  - the name of the track
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PEAKCOL</slug>
+    <functioncall>PEAKCOL integer PeakColorState </functioncall>
+    <description>
+        The Trackcolor as native color
+    </description>
+    <parameters>
+      integer PeakColorState  - the color of the track
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>BEAT</slug>
+    <functioncall>BEAT number BeatState </functioncall>
+    <description>
+        The Track-timebase
+    </description>
+    <parameters>
+      number BeatState  - -1 - Project time base; 0 - Time; 1 - Beats position, length, rate; 2 - Beats position only
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>AUTO_RECARM</slug>
+    <functioncall>AUTO_RECARM integer AutoRecArmState </functioncall>
+    <description>
+        Auto Recarm-state.
+        
+        Does not exist, when Auto Recarm is set to off
+    </description>
+    <parameters>
+      integer AutoRecArmState  - state of autorecarm; 1 for set
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MUTESOLO</slug>
+    <functioncall>MUTESOLO integer Mute, integer Solo, integer SoloDefeat </functioncall>
+    <description>
+        The Mute, Solo and Solodefeat-state for the track
+    </description>
+    <parameters>
+      integer Mute - Mute set to 0 - Mute off, 1 - Mute On
+      integer Solo - Solo set to 0 - Solo off, 1 - Solo ignore routing, 2 - Solo on
+      integer SoloDefeat  - SoloDefeat set to 0 - off, 1 - on
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>IPHASE</slug>
+    <functioncall>IPHASE number IPhase </functioncall>
+    <description>
+        The Phase-setting of the track
+    </description>
+    <parameters>
+      number IPhase  - state of the phase-button; 0, normal phase; 1, inverted phase(180°)
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>BUSCOMP</slug>
+    <functioncall>BUSCOMP number BusCompState1, number BusCompState2 </functioncall>
+    <description>
+        The compacted state of a track
+    </description>
+    <parameters>
+      number BusCompState1 - 0 - no compacting, 1 - compacted tracks, 2 - minimized tracks
+      number BusCompState2 - 0 - unknown,1 - unknown
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SHOWINMIX</slug>
+    <functioncall>SHOWINMIX integer MCPvisible, number MCP_FX_visible, number MCPTrackSendsVisible, integer TCPvisible, number ShowInMix5, number ShowInMix6, number ShowInMix7, number ShowInMix8 </functioncall>
+    <description>
+        Several settings regarding MixerControlPanel, TrackControlPanel and more
+    </description>
+    <parameters>
+       integer MCPvisible - 0 invisible, 1 visible
+       number MCP_FX_visible - 0 visible, 1 FX-Parameters visible, 2 invisible
+       number MCPTrackSendsVisible - 0 & 1.1 and higher TrackSends in MCP visible, every other number makes them invisible
+       integer TCPvisible - 0 track is invisible in TCP, 1 track is visible in TCP
+       number ShowInMix5 - unknown
+       number ShowInMix6 - unknown
+       number ShowInMix7 - unknown
+       number ShowInMix8  - unknown
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>FREEMODE</slug>
+    <functioncall>FREEMODE integer FreeModeState </functioncall>
+    <description>
+        The Freemode if the track has track free item positioning enabled(1) or not(0).
+    </description>
+    <parameters>
+      integer FreeModeState  - 1 - enabled, 0 - not enabled
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>REC</slug>
+    <functioncall>REC integer ArmState, integer InputChannel, integer MonitorInput, integer RecInput, integer MonitorWhileRec, integer presPDCdelay, integer RecordingPath </functioncall>
+    <description>
+        Several settings regarding recording, like arm, input-channel, monitor, recinput-type, recordingpath and more
+    </description>
+    <parameters>
+      integer ArmState - returns 1(armed) or 0(unarmed)
+      
+       integer InputChannel - returns the InputChannel
+      --1 - No Input
+      -1-16(more?) - Mono Input Channel
+      -1024 - Stereo Channel 1 and 2
+      -1026 - Stereo Channel 3 and 4
+      -1028 - Stereo Channel 5 and 6
+      -...
+      -5056 - Virtual MIDI Keyboard all Channels
+      -5057 - Virtual MIDI Keyboard Channel 1
+      -...
+      -5072 - Virtual MIDI Keyboard Channel 16
+      -5088 - All MIDI Inputs - All Channels
+      -5089 - All MIDI Inputs - Channel 1
+      -...
+      -5104 - All MIDI Inputs - Channel 16
+      
+       integer MonitorInput - 0 monitor off, 1 monitor on, 2 monitor on tape audio style
+       
+       integer RecInput - returns rec-input type
+      -0 input(Audio or Midi)
+      -1 Record Output Stereo
+      -2 Disabled, Input Monitoring Only
+      -3 Record Output Stereo, Latency Compensated
+      -4 Record Output MIDI
+      -5 Record Output Mono
+      -6 Record Output Mono, Latency Compensated
+      -7 MIDI overdub
+      -8 MIDI replace
+      -9 MIDI touch replace
+      -10 Record Output Multichannel
+      -11 Record Output Multichannel, Latency Compensated 
+      -12 Record Input Force Mono
+      -13 Record Input Force Stereo
+      -14 Record Input Force Multichannel
+      -15 Record Input Force MIDI
+      -16 MIDI latch replace
+      
+       integer MonitorWhileRec - Monitor Trackmedia when recording, 0 is off, 1 is on
+      
+       integer presPDCdelay - preserve PDC delayed monitoring in media items
+      
+       integer RecordingPath  - recording path used 
+      -0 - Primary Recording-Path only
+      -1 - Secondary Recording-Path only
+      -2 - Primary Recording Path and Secondary Recording Path(for invisible backup)
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>VU</slug>
+    <functioncall>VU integer VUState </functioncall>
+    <description>
+        The Multichannel-metering-settings.
+        
+        Does not exist, when MultiChannelMetering is off
+    </description>
+    <parameters>
+      integer VUState  - 2 if MultichannelMetering is on, 3 Metering is off
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TRACKHEIGHT</slug>
+    <functioncall>TRACKHEIGHT integer height, integer heightstate2, integer unknown </functioncall>
+    <description>
+        The Trackheight of the track, including it's compacted state
+    </description>
+    <parameters>
+      integer height - 24 up to 443
+      integer heightstate2 - 0 - use height, 1 - compact the track and ignore the height
+      integer unknown - unknown    
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>INQ</slug>
+    <functioncall>INQ integer quantMIDI, integer quantPOS, integer quantNoteOffs, number quantToFractBeat, integer quantStrength, integer swingStrength, integer quantRangeMin, integer quantRangeMax </functioncall>
+    <description>
+        Many Quantization-settings for note, Midi, swing, range, etc
+    </description>
+    <parameters>
+      integer quantMIDI -  quantize MIDI; 0 or 1
+      integer quantPOS -  quantize to position; -1,prev; 0, nearest; 1, next
+      integer quantNoteOffs -  quantize note-offs; 0 or 1
+      number quantToFractBeat -  quantize to (fraction of beat)
+      integer quantStrength -  quantize strength; -128 to 127
+      integer swingStrength -  swing strength; -128 to 127
+      integer quantRangeMin -  quantize range minimum; -128 to 127
+      integer quantRangeMax -  quantize range maximum; -128 to 127
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>NCHAN</slug>
+    <functioncall>NCHAN integer channelnumber </functioncall>
+    <description>
+        The number of channels in the track
+    </description>
+    <parameters>
+      integer channelnumber  - number of channels for this track
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>FX</slug>
+    <functioncall>FX integer FXState </functioncall>
+    <description>
+        FX-bypass state
+    </description>
+    <parameters>
+      integer FXState - off/bypass(0) or nobypass(1)
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PERF</slug>
+    <functioncall>PERF integer TrackPerfState </functioncall>
+    <description>
+        Track Performance-state; how does Reaper use FX and mediabuffering
+    </description>
+    <parameters>
+      integer TrackPerfState  - TrackPerformance-state
+      -0 - allow anticipative FX + allow media buffering
+      -1 - allow anticipative FX + prevent media buffering 
+      -2 - prevent anticipative FX + allow media buffering
+      -3 - prevent anticipative FX + prevent media buffering
+      -settings seem to repeat with higher numbers (e.g. 4(like 0) - allow anticipative FX + allow media buffering)
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDIOUT</slug>
+    <functioncall>MIDIOUT integer MidiOutState </functioncall>
+    <description>
+        Midi-output-states
+    </description>
+    <parameters>
+      integer MidiOutState  - MIDI_Out-State, as set in the Routing-Settings
+      --1 no output
+      -416 - microsoft GS wavetable synth - send to original channels
+      -417-432 - microsoft GS wavetable synth - send to channel state minus 416
+      --31 - no Output, send to original channel 1
+      --16 - no Output, send to original channel 16
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MAINSEND</slug>
+    <functioncall>MAINSEND integer MainSendOn, integer ParentChannels </functioncall>
+    <description>
+        Mainsend-state and parent-channels
+    </description>
+    <parameters>
+      integer MainSendOn - Main-Send is on(1) or off(0)
+      integer ParentChannels - ParentChannels(0-63)
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GROUP_FLAGS</slug>
+    <functioncall>GROUP_FLAGS integer GroupState_as_Flags, array IndividualGroupState_Flags </functioncall>
+    <description>
+        The grouping of the track, groups(1 to 32)
+        
+        You can reach the Group-Flag-Settings in the context-menu of a track.
+        
+        The following flags are available:
+                           1 - Volume Master
+                           2 - Volume Slave
+                           3 - Pan Master
+                           4 - Pan Slave
+                           5 - Mute Master
+                           6 - Mute Slave
+                           7 - Solo Master
+                           8 - Solo Slave
+                           9 - Record Arm Master
+                           10 - Record Arm Slave
+                           11 - Polarity/Phase Master
+                           12 - Polarity/Phase Slave
+                           13 - Automation Mode Master
+                           14 - Automation Mode Slave
+                           15 - Reverse Volume
+                           16 - Reverse Pan
+                           17 - Do not master when slaving
+                           18 - Reverse Width
+                           19 - Width Master
+                           20 - Width Slave
+                           21 - VCA Master
+                           22 - VCA Slave
+                           23 - VCA pre-FX slave
+    
+    The GroupState_as_Flags-bitfield is a hint, if a certain flag is set in any of the groups. So, if you want to know, if VCA Master is set in any group, check if flag &1048576 (2^20) is set to 1048576.
+
+    </description>
+    <parameters>
+      integer GroupState_as_Flags - returns a flagvalue with 23 bits, that tells you, which grouping-flag is set in at least one of the 32 groups available.
+      -the following flags are available:
+      -2^0 - Volume Master
+      -2^1 - Volume Slave
+      -2^2 - Pan Master
+      -2^3 - Pan Slave
+      -2^4 - Mute Master
+      -2^5 - Mute Slave
+      -2^6 - Solo Master
+      -2^7 - Solo Slave
+      -2^8 - Record Arm Master
+      -2^9 - Record Arm Slave
+      -2^10 - Polarity/Phase Master
+      -2^11 - Polarity/Phase Slave
+      -2^12 - Automation Mode Master
+      -2^13 - Automation Mode Slave
+      -2^14 - Reverse Volume
+      -2^15 - Reverse Pan
+      -2^16 - Do not master when slaving
+      -2^17 - Reverse Width
+      -2^18 - Width Master
+      -2^19 - Width Slave
+      -2^20 - VCA Master
+      -2^21 - VCA Slave
+      -2^22 - VCA pre-FX slave      
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GROUP_FLAGS_HIGH</slug>
+    <functioncall>GROUP_FLAGS_HIGH integer GroupState_as_Flags, array IndividualGroupState_Flags </functioncall>
+    <description>
+        The grouping of the track, higher groups(groups 33 to 64)
+        
+        You can reach the Group-Flag-Settings in the context-menu of a track.
+        
+        Each entry is a bitfield, that represents the groups, in which this flag is set to checked or unchecked.
+    
+        The following flags(and their accompanying array-entry-index) are available:
+                           1 - Volume Master
+                           2 - Volume Slave
+                           3 - Pan Master
+                           4 - Pan Slave
+                           5 - Mute Master
+                           6 - Mute Slave
+                           7 - Solo Master
+                           8 - Solo Slave
+                           9 - Record Arm Master
+                           10 - Record Arm Slave
+                           11 - Polarity/Phase Master
+                           12 - Polarity/Phase Slave
+                           13 - Automation Mode Master
+                           14 - Automation Mode Slave
+                           15 - Reverse Volume
+                           16 - Reverse Pan
+                           17 - Do not master when slaving
+                           18 - Reverse Width
+                           19 - Width Master
+                           20 - Width Slave
+                           21 - VCA Master
+                           22 - VCA Slave
+                           23 - VCA pre-FX slave
+    
+    The GroupState_as_Flags-bitfield is a hint, if a certain flag is set in any of the groups. So, if you want to know, if VCA Master is set in any group, check if flag &1048576 (2^20) is set to 1048576.
+    
+    This function will work only for Groups 33(2^0) to 64(2^31). To get Groups 1 to 32, use <a href="#GetTrackGroupFlagsState">GetTrackGroupFlagsState</a> instead!
+    
+    </description>
+    <parameters>
+      integer GroupState_as_Flags - returns a flagvalue with 23 bits, that tells you, which grouping-flag is set in at least one of the 32 groups available.
+      -returns -1 in case of failure
+      -
+      -the following flags are available:
+      -2^0 - Volume Master
+      -2^1 - Volume Slave
+      -2^2 - Pan Master
+      -2^3 - Pan Slave
+      -2^4 - Mute Master
+      -2^5 - Mute Slave
+      -2^6 - Solo Master
+      -2^7 - Solo Slave
+      -2^8 - Record Arm Master
+      -2^9 - Record Arm Slave
+      -2^10 - Polarity/Phase Master
+      -2^11 - Polarity/Phase Slave
+      -2^12 - Automation Mode Master
+      -2^13 - Automation Mode Slave
+      -2^14 - Reverse Volume
+      -2^15 - Reverse Pan
+      -2^16 - Do not master when slaving
+      -2^17 - Reverse Width
+      -2^18 - Width Master
+      -2^19 - Width Slave
+      -2^20 - VCA Master
+      -2^21 - VCA Slave
+      -2^22 - VCA pre-FX slave
+      
+       array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
+      -e.g. If Volume Master is set only in Group 33, entry 1 in the array will be set to 1. If Volume Master is set on Group 34 and Group 36, the first entry in the array will be set to 10.
+      -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F slave, array[16] is Do not master when slaving, etc
+      -As said before, the values in each entry is a flag, that tells you, which of the groups is set with a certain flag. The following flags determine, in which group a certain flag is set:
+      -2^0 - Group 33
+      -2^1 - Group 34
+      -2^2 - Group 35
+      -2^3 - Group 36
+      -...
+      -2^30 - Group 63
+      -2^31 - Group 64
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>LOCK</slug>
+    <functioncall>LOCK integer lockedstate </functioncall>
+    <description>
+        The locked-state of the track.
+        
+        Does not exist, when track is unlocked
+    </description>
+    <parameters>
+      integer lockedstate  - locked(1)
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>LAYOUTS</slug>
+    <functioncall>LAYOUTS string TCP_Layoutname, string MCP_Layoutname </functioncall>
+    <description>
+        The name of the TCP and MCP-layout. Will be enclosed in doublequotes, when it contains spaces.
+    </description>
+    <parameters>
+      string TCP_Layoutname - name of the TCP-Layoutname
+      string MCP_Layoutname  - name of the MCP-Layoutname
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>AUTOMODE</slug>
+    <functioncall>AUTOMODE integer automodestate </functioncall>
+    <description>
+        The automation-mode of the track
+    </description>
+    <parameters>
+      integer automodestate  - is set to 0 - trim/read, 1 - read, 2 - touch, 3 - write, 4 - latch.
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TRACKIMGFN</slug>
+    <functioncall>TRACKIMGFN string filename_with_path </functioncall>
+    <description>
+        The filename of the TrackImage to be shown. Will be enclosed in doublequotes, when it contains spaces.
+    </description>
+    <parameters>
+      string filename_with_path  - filename with path for the current track-icon.
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RECCFG</slug>
+    <functioncall><RECCFG string reccfg </functioncall>
+    <description>
+        The recording-configuration as BASE64-encoded string
+    </description>
+    <parameters>
+      string reccfg - the string, that encodes the recording configuration of the track.
+      integer reccfgnr - the number of the recording-configuration of the track; 
+                       - 0, use default project rec-setting
+                       - 1, use track-customized rec-setting, as set in the "Track: View track recording settings (MIDI quantize, file format/path) for last touched track"-dialog (action 40604)
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDI_INPUT_CHANMAP</slug>
+    <functioncall>MIDI_INPUT_CHANMAP integer MidiInputChanMap_state </functioncall>
+    <description>
+        The MIDI-input channelmap.
+        
+        Does not exist, if source channel is selected
+    </description>
+    <parameters>
+      integer MidiInputChanMap_state  - 0 for channel 1, 1 for channel 2, etc
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDICTL</slug>
+    <functioncall>MIDICTL integer LinkedToMidiChannel, integer unknown </functioncall>
+    <description>
+        The Linked to midi-channel-setting
+    </description>
+    <parameters>
+      integer LinkedToMidiChannel - linked to midichannel
+      integer unknown  - unknown
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>WIDTH</slug>
+    <functioncall>WIDTH number width </functioncall>
+    <description>
+        The width of the track
+    </description>
+    <parameters>
+      number width - width of the track, from -1(-100%) to 1(+100%)
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PANMODE</slug>
+    <functioncall>PANMODE integer PanMode </functioncall>
+    <description>
+        The Panmode for the track.
+        
+        Does not exist, when set to Project Default.
+    </description>
+    <parameters>
+      integer PanMode - the Panmode of the track
+      - nil - Project Default
+      - 0 - Reaper 3.x balance (deprecated)
+      - 3 - Stereo Balance/ Mono Pan(Default)
+      - 5 - Stereo Balance
+      - 6 - Dual Pan
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDICOLORMAPFN</slug>
+    <functioncall>MIDICOLORMAPFN string MidiColorMapFn </functioncall>
+    <description>
+        The filename of the MIDIColorMap. Will be enclosed in doublequotes, when it contains spaces.
+        
+        Does not exist, when no MIDIColorMap is set.
+    </description>
+    <parameters>
+      string MidiColorMapFn - the MidiColorMap-Filename
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDIBANKPROGFN</slug>
+    <functioncall>MIDIBANKPROGFN string MidiBankProgFn </functioncall>
+    <description>
+        The filename of the MidiBankProg. Will be enclosed in doublequotes, when it contains spaces.
+        
+        Does not exist, if no MIDIBankProg is not set.
+    </description>
+    <parameters>
+      string MidiBankProgFn - the MidiBankProg-Filename
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDIEXTSTRFN</slug>
+    <functioncall>MIDIEXTSTRFN string MidiTextStrFn </functioncall>
+    <description>
+        The filename of the MIDIExtStr. Will be enclosed in doublequotes, when it contains spaces.
+        
+        Does not exist, if no file is set
+    </description>
+    <parameters>
+      string MidiTextStrFn - the MidiTextStrFn-Filename
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TRACKID</slug>
+    <functioncall>TRACKID string TrackID </functioncall>
+    <description>
+        The TrackID as GUID-string. Will be enclosed in doublequotes, when it contains spaces.
+    </description>
+    <parameters>
+      string TrackID - the TrackID
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SCORE</slug>
+    <functioncall>SCORE integer Score1, integer Score2, number Score3, number Score4  </functioncall>
+    <description>
+        The Score-setting for the track
+    </description>
+    <parameters>
+      integer Score1 - unknown 
+      integer Score2 - unknown
+      number Score3 - unknown
+      number Score4 - unknown
+    </parameters>
+    <chapter_context>
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  
+</USDocML>
