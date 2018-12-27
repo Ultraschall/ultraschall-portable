@@ -2498,7 +2498,8 @@
             Without having the background-scripts started, some functions will always produce error-codes.  
             Features that use these background-scripts are:
             
-            >**[GetLastCursorPosition](usdocml://GetLastCursorPosition)** - gets the last editcursor-position before the current one. Helpful for left-click-triggered scripts, who change the editcursorposition due the mouseclick
+            >**[GetLastCursorPosition](usdocml://GetLastCursorPosition)** - gets the last editcursor-position before the current one. Helpful for left-click-triggered scripts, who change the editcursorposition due the mouseclick  
+            >**[GetLastPlayState](usdocml://GetLastPlayState)** - gets the last playstate before the current one. Helpful for monitoring "event-based"-statechanges
         </description>
         <target_document>ReaperApiConcepts</target_document>
         <source_document></source_document>

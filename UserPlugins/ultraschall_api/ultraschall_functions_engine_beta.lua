@@ -99,4 +99,46 @@ end
 
 --A,B=ultraschall.SplitStringAtNULLBytes("splitstrin\0g\0\0\0\0")
 
+function ultraschall.GetLastPlayState()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetLastPlayState</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.95
+    Lua=5.3
+  </requires>
+  <functioncall>number last_play_state = ultraschall.GetLastPlayState()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the last playstate before the current one. Needs Ultraschall-API-background-scripts started first, see [RunBackgroundHelperFeatures()](#RunBackgroundHelperFeatures).
+    
+    returns -1, if Ultraschall-API-backgroundscripts weren't started yet.
+  </description>
+  <retvals>
+    number last_play_state - the last playstate before the current one; -1, in case of an error
+                           - Either bitwise: 
+                           -    &1=playing
+                           -    &2=pause
+                           -    &=4 is recording
+                           - or 
+                           -    0, stop 
+                           -    1, play 
+                           -    2, paused play 
+                           -    5, recording 
+                           -    6, paused recording
+  </retvals>
+  <chapter_context>
+    Navigation
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>navigation, last playstate, editcursor</tags>
+</US_DocBloc>
+]]
+  if reaper.GetExtState("Ultraschall", "defer_scripts_ultraschall_track_old_playstate.lua")~="true" then return -1 end
+  return tonumber(reaper.GetExtState("ultraschall", "last_playstate"))
+end
+--ultraschall.RunBackgroundHelperFeatures()
+--A=ultraschall.GetLastPlayState()
+
 ultraschall.ShowLastErrorMessage()

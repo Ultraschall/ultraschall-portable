@@ -14970,7 +14970,7 @@
         <title>ShowActionList</title>
         <functioncall prog_lang="cpp">void ShowActionList(KbdSectionInfo* caller, HWND callerWnd)</functioncall>
         <functioncall prog_lang="eel">ShowActionList(KbdSectionInfo caller, HWND callerWnd)</functioncall>
-        <functioncall prog_lang="lua">reaper.ShowActionList(KbdSectionInfo caller, HWND callerWnd)</functioncall>
+        <functioncall prog_lang="lua">reaper.ShowActionList(KbdSectionInfo caller, optional HWND callerWnd)</functioncall>
         <functioncall prog_lang="python">RPR_ShowActionList(KbdSectionInfo caller, HWND callerWnd)</functioncall>
         <requires>
             Reaper=5.62
@@ -14981,7 +14981,7 @@
         </description>
         <parameters>
             caller - 
-            callerWnd - 
+            optional HWND callerWnd - the HWND that shall call the ActionList; can be nil
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>

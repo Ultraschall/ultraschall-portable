@@ -3,16 +3,18 @@
 ###4.00 Beta 2.8: - "Mike Oldfield - Taurus II/Five Miles Out" - 15th of May 2019
 
 ####New features in 4.00beta2.8
-    - SplitStringAtNULLBytes - splits a string at NULL-bytes ( \0 )
-    
+  - SplitStringAtNULLBytes - splits a string at NULL-bytes ( \0 )
+  - new background-script - ultraschall_track_old_playstate.lua - stores old playstate into extstate ultraschall->last_playstate
+  - GetLastPlayState - returns the last playstate before the current one
+  
 ####Changes from 4.00beta2.7 to 4.00beta2.8
-    - GetMarkerByScreenCoordinates - returned useless newlines -> fixed now
-    - GetMarkerByTime - returned useless newlines -> fixed now
-    - GetRegionByScreenCoordinates - returned useless newlines -> fixed now
-    - GetRegionByTime - returned useless newlines -> fixed now
-    - GetApiVersion - updated versionsnumbering
-    - docs generate and include now beta-functions as well
-    - docs use now GetApiVersion for displaying version-numbering
+  - GetMarkerByScreenCoordinates - returned useless newlines -> fixed now
+  - GetMarkerByTime - returned useless newlines -> fixed now
+  - GetRegionByScreenCoordinates - returned useless newlines -> fixed now
+  - GetRegionByTime - returned useless newlines -> fixed now
+  - GetApiVersion - updated versionsnumbering
+  - docs generate and include now beta-functions as well
+  - docs use now GetApiVersion for displaying version-numbering
 
   <TODO>
     For 4.00beta2.8:

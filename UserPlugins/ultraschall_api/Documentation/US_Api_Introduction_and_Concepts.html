@@ -39,7 +39,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>Beta 2.7 - "Frank Zappa - The Return of the Son of Monster Magnet" - 15th of December 2018 - Build: 26070</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>Beta 2.7 - "Frank Zappa - The Return of the Son of Monster Magnet" - 15th of December 2018 - Build: 26092</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to use Beta functions and hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -136,7 +136,7 @@ Ultraschall API functions
 <li><a href="#Routing_001_Introduction">Routing</a> - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions. Includes mastertrack as well.</li>
 <li><a href="#Getting_Manipulating_Items_002_GetMediaItems">Get MediaItems</a> - you can get all media-items within a time-range AND within the tracks you prefer; a 2D-approach e.g. <a href="US_Api_Functions.html#GetAllMediaItemsBetween">GetAllMediaItemsBetween</a> and <a href="US_Api_Functions.html#GetMediaItemsAtPosition">GetMediaItemsAtPosition</a>, etc</li>
 <li>Gaps between items - you can get the gaps between items in a track, using <a href="US_Api_Functions.html#GetGapsBetweenItems">GetGapsBetweenItems</a></li>
-<li><a href="#Getting_Manipulating_Items_001_Introduction">Edit item(s)</a> - Split, Cut, Copy, Paste, Move, RippleCut, RippleInsert, SectionCut by tracks AND time/start to endposition e.g. <a href="US_Api_Functions.html#RippleCut">RippleCut</a>, <a href="RippleInsert" class="uri">RippleInsert</a>, <a href="US_Api_Functions.html#SectionCut">SectionCut</a>, <a href="US_Api_Functions.html#SplitMediaItems_Position">SplitMediaItems_Position</a>, <a href="US_Api_Functions.html#MoveMediaItemsBefore_By">MoveMediaItemsBefore_By</a>, <a href="US_Api_Functions.html#MoveMediaItemsSectionTo">MoveMediaItemsSectionTo</a> and many more</li>
+<li><a href="#Getting_Manipulating_Items_001_Introduction">Edit item(s)</a> - Split, Cut, Copy, Paste, Move, RippleCut, RippleInsert, SectionCut by tracks AND time/start to endposition e.g. <a href="US_Api_Functions.html#RippleCut">RippleCut</a>, <a href="RippleInsert">RippleInsert</a>, <a href="US_Api_Functions.html#SectionCut">SectionCut</a>, <a href="US_Api_Functions.html#SplitMediaItems_Position">SplitMediaItems_Position</a>, <a href="US_Api_Functions.html#MoveMediaItemsBefore_By">MoveMediaItemsBefore_By</a>, <a href="US_Api_Functions.html#MoveMediaItemsSectionTo">MoveMediaItemsSectionTo</a> and many more</li>
 <li><a href="#Getting_Manipulating_Items_009_Miscellaneous">Previewing MediaItems and files</a> - you can preview MediaItems and files without having to start playback of a project</li>
 <li>KB-Ini-Management - manipulate the reaper-kb.ini-file with custom-settings</li>
 <li><a href="#Datatypes_050_CheckingDatatypes">Checking for Datatypes</a> - check all datatypes introduced with Ultraschall-API and all Lua/Reaper-datatypes</li>
@@ -163,27 +163,28 @@ Ultraschall API functions
 <ol>
 <li>Just download the zip-file of the current version from <a href="http://api.ultraschall.fm">api.ultraschall.fm</a>.<br />
 </li>
-<li>Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu &quot;Options -&gt; Show REAPER resource path in explorer/finder...&quot;.<br />
+<li>Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -&gt; Show REAPER resource path in explorer/finder...".<br />
 The folder UserPlugins should contain the folder ultraschall<em>api and the files ultraschall</em>api<em>readme.txt and ultraschall</em>api.lua after this step.<br />
 </li>
-<li><p>Now create a new script, by opening the Actions-window (Menu: Actions -&gt; Show action list) and clicking the New-button next to &quot;ReaScript:&quot;, give it a name and hit save.<br />
+<li><p>Now create a new script, by opening the Actions-window (Menu: Actions -&gt; Show action list) and clicking the New-button next to "ReaScript:", give it a name and hit save.<br />
 Include the following line in your script at the beginning:</p>
-<pre><code>    dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)</code></pre></li>
+<pre><code>     dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)</code></pre></li>
 </ol>
 <p>Now you can program with the Ultraschall-API. Just add the functions AFTER the dofile-line.</p>
 <ol>
 <li><p>To test, if it's successfully installed, add</p>
-<pre><code>    ultraschall.ApiTest()</code></pre>
-<p>after the dofile-line and hit ctrl+s or cmd+s(on mac).</p></li>
+<pre><code>     ultraschall.ApiTest()
+
+after the dofile-line and hit ctrl+s or cmd+s(on mac).</code></pre></li>
 </ol>
 <p>The script should show a messagebox, that tells you, which of the Ultraschall-API-parts are activated. If it shows, everything works fine :)</p>
-<p>If you are already familiar with programming Reaper's own API-functions, you know, that all of Reaper's functions are placed in a table called &quot;reaper.&quot;<br />
-e.g. reaper.ShowConsoleMsg(&quot;msg&quot;)</p>
-<p>The Ultraschall-API is quite the same, but is using the table &quot;ultraschall.&quot; instead.<br />
+<p>If you are already familiar with programming Reaper's own API-functions, you know, that all of Reaper's functions are placed in a table called "reaper."<br />
+e.g. reaper.ShowConsoleMsg("msg")</p>
+<p>The Ultraschall-API is quite the same, but is using the table "ultraschall." instead.<br />
 e.g. ultraschall.ApiTest()</p>
 <p>Some functions need background-scripts be run first. Refer the <a href="#Background_Scripts_001_Introduction">Introduction to background-scripts</a> for information about that.</p>
 <p>See the functions-reference for all available functions or read on in this documentation for a collection of concepts introduced by the Ultraschall-API.</p>
-<p>Oh, before I forget: The ultraschall<em>api-folder holds a folder &quot;Scripts</em>Examples&quot; in which you can find some demos and example-scripts using this API.</p>
+<p>Oh, before I forget: The ultraschall<em>api-folder holds a folder "Scripts</em>Examples" in which you can find some demos and example-scripts using this API.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">^</a> <u>How to use Beta functions and hotfixes</u></h4></div><p><p>Before a new version of the Ultraschall-API is finished, it is in beta-stage. But sometimes, bugs need to be fixed even before a new release is done or you may want to test new functions from the next release for bugs and quirks.<br />
@@ -194,9 +195,11 @@ Hotfixes are available at <a href="http://api.ultraschall.fm">api.ultraschall.fm
 Just download the ultraschall_hotfixes.lua and put it into UserPlugins/ultraschall_api-folder.<br />
 The chance is high, that there is already an ultraschall_hotfixes.lua-file in the folder. You can safely overwrite it.<br />
 Voila, you have added the most recent bugfixes.</p>
-<p>To get the bugs back, just delete the ultraschall_hotfixes.lua.</p>
-<p>All fixes in ultraschall_hotfixes.lua will be part of the next full version of the Ultraschall-API.</p>
-<p>Check again from time to time to get the latest hotfixes.</p></li>
+<pre><code>To get the bugs back, just delete the ultraschall_hotfixes.lua.
+
+All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
+
+Check again from time to time to get the latest hotfixes.</code></pre></li>
 <li><p>Beta-functions and features Beta-functions are functions intended for a future release of the Ultraschall-API. If you want to test them, just download the latest Beta-Pack from <a href="http://api.ultraschall.fm">api.ultraschall.fm</a>.<br />
 Extract the files in the Beta-pack to UserPlugins of the Resources-folder of your Reaper-installation. Voila, the beta-functions are installed.</p>
 <p>To use them, you need to explicitly turn them on in your script, using the following lines:</p>
@@ -212,20 +215,20 @@ Extract the files in the Beta-pack to UserPlugins of the Resources-folder of you
 <li>Make notes of: what operating-system you use(Mac, Win, Linux), which Reaper-version, which SWS-Version and which Ultraschall-Framework-Version.</li>
 <li><p>Write down, what you wanted to do, what you expected to happen and what has happened instead. Make it as detailed as possible(a code-fragment that triggers a bug, a screenvideo i.e. would be perfect), as more information helps to find out, where the problem lies. It's always better to write too much, than the other way around. Please keep in mind when sending code-fragments: they need to be able to trigger the bug without any of your other code. And please don't send me hundreds of lines of your code, as I can't debug it for you. Just concentrate on the line(s), that trigger the bug successfully.</p></li>
 <li><p>Send these notes either as:<br />
-Issue at the GitHub-Repository of the Ultraschall-API(preferred): <a href="https://github.com/Ultraschall/Ultraschall-Api-for-Reaper.git" class="uri">https://github.com/Ultraschall/Ultraschall-Api-for-Reaper.git</a><br />
+Issue at the GitHub-Repository of the Ultraschall-API(preferred): <a href="https://github.com/Ultraschall/Ultraschall-Api-for-Reaper.git">https://github.com/Ultraschall/Ultraschall-Api-for-Reaper.git</a><br />
 eMail: lspmp3@yahoo.de(for framework-related stuff only!!)<br />
 Sendegate: <a href="http://www.sendegate.de">sendegate.de</a> into the Ultraschall-section.</p></li>
 </ol>
-<p>Bugreports that contain only a &quot;it doesn't work&quot; and &quot;I expected it to work&quot; will be ignored gracefully ;)</p>
+<p>Bugreports that contain only a "it doesn't work" and "I expected it to work" will be ignored gracefully ;)</p>
 <p>If you have feature-requests, we have open ears. Keep in mind, not everything you find a good idea actually is one. So we may or may not take on your idea, change and rework it into a way, that benefits all, not just your particular use-case. When in doubt, just try it! Keep also in mind: there are limitations. Some cool features we all would love to have, simply aren't implementable. Que sera, sera...</p>
 <p>For your comments just send a mail at: lspmp3@yahoo.de(for framework-related stuff only!!) or go to sendegate.de into the Ultraschall-section.</p>
 <p>PS: If you know how to implement impossible things or do things better than the current implementation, you are welcome to donate your improved codes. :)</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_005_License"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_005_License">^</a> <u>Introduction: License</u></h4></div><p><p>Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)</p>
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights o use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights o use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
-<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <p>Reaper and the Reaper-Logo are trademarks of Cockos inc and can be found at <a href="http://www.reaper.fm">reaper.fm</a></p>
 <p>The SWS-logo has been taken from the SWS-extension-project, which can be found at <a href="http://www.sws-extension.org">sws-extension.org</a></p>
 <p>Ultraschall-API written by Meo Mespotine <a href="http://www.mespotine.de">mespotine.de</a> with contributions from <a href="https://twitter.com/fernsehmuell">Udo Sauer</a> and <a href="https://twitter.com/rstockm">Ralf Stockmann</a></p>
@@ -246,7 +249,7 @@ Sendegate: <a href="http://www.sendegate.de">sendegate.de</a> into the Ultrascha
 <li>string - a string of characters</li>
 <li>table/array - a Lua-array</li>
 <li>function - a function as an object</li>
-<li>nil - the value &quot;nothing&quot;</li>
+<li>nil - the value "nothing"</li>
 </ul></li>
 <li>Reaper
 <ul>
@@ -261,7 +264,7 @@ Sendegate: <a href="http://www.sendegate.de">sendegate.de</a> into the Ultrascha
 <li>PCM_source - audio/video/image as an object; connects MediaItems to the actual media-file</li>
 </ul></li>
 </ul>
-<p>If a datatype has &quot;optional&quot; before it, this parameter/returnvalue is optional. That means, such parameters don't need to be given, such return-values can be nil.</p>
+<p>If a datatype has "optional" before it, this parameter/returnvalue is optional. That means, such parameters don't need to be given, such return-values can be nil.</p>
 <p>In addition to the already used datatypes, the Ultraschall-API introduces some more datatypes, like:</p>
 <ul>
 <li><a href="#Datatypes_002_trackstring">trackstrings</a> - some functions accept multiple tracks. Trackstrings are a string with all tracknumbers, separated by commas.</li>
@@ -434,44 +437,37 @@ Lua provides ways of checking for valid datatypes(type() and math.type()) as wel
 <ol>
 <li><p><a href="US_Api_Functions.html#type">type</a><br />
 works like Lua's own type-function, but checks for Reaper's own datatypes as well, like:</p>
-<pre><code>       Lua: nil, number: integer, number: float, boolean, string, function, table, thread, userdata,  
-       Reaper: ReaProject, MediaItem, MediaItem_Take, MediaTrack, TrackEnvelope, AudioAccessor, joystick_device, PCM_source  
-       userdata: will be shown, if object isn&#39;t of any known type  </code></pre>
-<p>to get of which type a variable is, just use</p>
-<pre><code>        datatype_of_variable = ultraschall.type(variable)</code></pre>
-<p>where the return-value datatype_of_variable will hold a string describing the type of the variable.</p>
-<p>Due some API-restrictions, SWS-specific datatypes are not (yet) supported.</p></li>
+<pre><code>        Lua: nil, number: integer, number: float, boolean, string, function, table, thread, userdata,  
+        Reaper: ReaProject, MediaItem, MediaItem_Take, MediaTrack, TrackEnvelope, AudioAccessor, joystick_device, PCM_source  
+        userdata: will be shown, if object isn&#39;t of any known type  
+
+to get of which type a variable is, just use  
+
+         datatype_of_variable = ultraschall.type(variable)
+
+where the return-value datatype\_of\_variable will hold a string describing the type of the variable.  
+
+Due some API-restrictions, SWS-specific datatypes are not (yet) supported.  </code></pre></li>
 <li><p>Ultraschall-API specific or other Reaper-datatypes<br />
 To check for Ultraschall-API specific or other Reaper-datatypes, you can use the following functions:</p>
 <p>Ultraschall-API-specific:</p>
-<ul>
-<li><a href="US_Api_Functions.html#IsValidTrackString">IsValidTrackString</a> - checks, if a string is a valid <a href="#Datatypes_002_trackstring">trackstring</a><br />
-</li>
-<li><a href="US_Api_Functions.html#IsValidMediaItemArray">IsValidMediaItemArray</a> - checks, if a table is a valid <a href="#Datatypes_003_MediaItemArray">MediaItemArray</a><br />
-</li>
-<li><a href="US_Api_Functions.html#IsValidMediaItemStateChunkArray">IsValidMediaItemStateChunkArray</a> - checks, if a table is a valid <a href="#Datatypes_004_MediaItemStateChunkArray">MediaItemStateChunkArray</a><br />
-</li>
-<li><a href="US_Api_Functions.html#IsValidEnvelopePointObject">IsValidEnvelopePointObject</a> - checks, if a table is a valid <a href="#Datatypes_005_EnvelopePointObject">EnvelopePointObject</a><br />
-</li>
-<li><a href="US_Api_Functions.html#IsValidEnvelopePointArray">IsValidEnvelopePointArray</a> - checks, if a table is a valid <a href="#Datatypes_006_EnvelopePointArray">EnvelopePointArray</a></li>
-<li><a href="US_Api_Functions.html#IsValidArrangeviewSnapshot">IsValidArrangeviewSnapshot</a> - checks, if an extstate is a valid ArrangeviewSnapshot</li>
-</ul>
+<pre><code>- [IsValidTrackString](US_Api_Functions.html#IsValidTrackString) - checks, if a string is a valid [trackstring](#Datatypes_002_trackstring)  
+- [IsValidMediaItemArray](US_Api_Functions.html#IsValidMediaItemArray) - checks, if a table is a valid [MediaItemArray](#Datatypes_003_MediaItemArray)  
+- [IsValidMediaItemStateChunkArray](US_Api_Functions.html#IsValidMediaItemStateChunkArray) - checks, if a table is a valid [MediaItemStateChunkArray](#Datatypes_004_MediaItemStateChunkArray)  
+- [IsValidEnvelopePointObject](US_Api_Functions.html#IsValidEnvelopePointObject) - checks, if a table is a valid [EnvelopePointObject](#Datatypes_005_EnvelopePointObject)  
+- [IsValidEnvelopePointArray](US_Api_Functions.html#IsValidEnvelopePointArray) - checks, if a table is a valid [EnvelopePointArray](#Datatypes_006_EnvelopePointArray)
+- [IsValidArrangeviewSnapshot](US_Api_Functions.html#IsValidArrangeviewSnapshot) - checks, if an extstate is a valid ArrangeviewSnapshot</code></pre>
 <p>Other Reaper-datatypes:</p>
-<ul>
-<li><a href="US_Api_Functions.html#IsValidReaProject">IsValidReaProject</a> - checks, if an object is a valid ReaProject</li>
-<li><a href="US_Api_Functions.html#IsValidProjectStateChunk">IsValidProjectStateChunk</a> - checks, if a string is a valid ProjectStateChunk</li>
-<li><a href="US_Api_Functions.html#IsValidTrackStateChunk">IsValidTrackStateChunk</a> - checks, if a string is a valid TrackStateChunk</li>
-<li><a href="US_Api_Functions.html#IsValidMediaItemStateChunk">IsValidMediaItemStateChunk</a> - checks, if a string is a valid MediaItemStateChunk</li>
-<li><a href="US_Api_Functions.html#IsValidEnvStateChunk">IsValidEnvStateChunk</a> - checks, if a string is a valid EnvelopeStateChunk</li>
-</ul>
+<pre><code>- [IsValidReaProject](US_Api_Functions.html#IsValidReaProject) - checks, if an object is a valid ReaProject
+- [IsValidProjectStateChunk](US_Api_Functions.html#IsValidProjectStateChunk) - checks, if a string is a valid ProjectStateChunk
+- [IsValidTrackStateChunk](US_Api_Functions.html#IsValidTrackStateChunk) - checks, if a string is a valid TrackStateChunk
+- [IsValidMediaItemStateChunk](US_Api_Functions.html#IsValidMediaItemStateChunk) - checks, if a string is a valid MediaItemStateChunk
+- [IsValidEnvStateChunk](US_Api_Functions.html#IsValidEnvStateChunk) - checks, if a string is a valid EnvelopeStateChunk</code></pre>
 <p>They will be part of ultraschall.type() someday.</p></li>
 <li><p>other types of data<br />
 These aren't datatypes, but you may want to check them for validity as well</p>
-<ul>
-<li><a href="US_Api_Functions.html#IsValidGuid">IsValidGuid</a> - checks, whether a string is a valid GUID<br />
-</li>
-<li><a href="US_Api_Functions.html#IsValidMatchingPattern">IsValidMatchingPattern</a> - checks, whether a string is a valid matching pattern for Lua's pattern-matching</li>
-</ul></li>
+<pre><code>- [IsValidGuid](US_Api_Functions.html#IsValidGuid) - checks, whether a string is a valid GUID  
+- [IsValidMatchingPattern](US_Api_Functions.html#IsValidMatchingPattern) - checks, whether a string is a valid matching pattern for Lua&#39;s pattern-matching  </code></pre></li>
 </ol>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="API_Variables_001_Introduction"></a>
@@ -530,7 +526,7 @@ Have a look into the functions-reference to get the possible values for these pa
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_003_About_Renderingfunctions"></a>
 <div style="font-size:100%"><h4><a href="#Rendering_003_About_Renderingfunctions">^</a> <u>Rendering: About Rendering-functions</u></h4></div><p><p>The rendering-functions let you render a project, either a stored rpp-project-file or the currently opened one(only when it has been saved!).<br />
-They provide you with a wide range of functionality, so the rendering process should be quite close to Reaper's &quot;official&quot;-own-process using the render-dialog.<br />
+They provide you with a wide range of functionality, so the rendering process should be quite close to Reaper's "official"-own-process using the render-dialog.<br />
 They also return the filenames of the rendered files, as well as MediaItemStateChunks of all rendered files, so you can easily import them into your project.</p>
 <p>There are currently two different render-functions available:</p>
 <ol>
@@ -574,10 +570,10 @@ That said, a lot of the parameters are the same.</p>
 <ul>
 <li><a href="US_Api_Functions.html#SetProject_RenderFilename">SetProject_RenderFilename</a> - to alter the output-filename</li>
 <li><a href="US_Api_Functions.html#SetProject_RenderPattern">SetProject_RenderPattern</a> - to set the wildcards for the output-filename</li>
-<li><a href="US_Api_Functions.html#SetProject_RenderDitherState">SetProject_RenderDitherState</a> - to set the &quot;Master mix: Dither/Noise shaping&quot;-checkboxes</li>
+<li><a href="US_Api_Functions.html#SetProject_RenderDitherState">SetProject_RenderDitherState</a> - to set the "Master mix: Dither/Noise shaping"-checkboxes</li>
 <li><a href="US_Api_Functions.html#SetProject_RenderFreqNChans">SetProject_RenderFreqNChans</a> - to set the Sample rate in Hz and Channels</li>
 <li><a href="US_Api_Functions.html#SetProject_RenderRange">SetProject_RenderRange</a> - to set Bounds-dropdownlist, Time bounds-entryboxes and Tail</li>
-<li><a href="US_Api_Functions.html#SetProject_RenderResample">SetProject_RenderResample</a> - to set &quot;Resample mode (if needed)&quot;</li>
+<li><a href="US_Api_Functions.html#SetProject_RenderResample">SetProject_RenderResample</a> - to set "Resample mode (if needed)"</li>
 <li><a href="US_Api_Functions.html#SetProject_RenderSpeed">SetProject_RenderSpeed</a> to set the render-speed, and</li>
 <li><a href="US_Api_Functions.html#SetProject_RenderStems">SetProject_RenderStems</a> to set, whether to render stems, Master mix, region-render-matrix, etc (Source-dropdownlist)</li>
 </ul></li>
@@ -587,7 +583,7 @@ That said, a lot of the parameters are the same.</p>
 <p>If you want to alter the currently opened project, you need to save it first. After that, use:</p>
 <pre><code>        retval, projectfilename_with_path = reaper.EnumProjects(-1,&quot;&quot;)</code></pre>
 <p>to get the projectfilename_with_path of the current project as returnvalue. Use projectfilename_with_path and go through steps 1 through 4.</p>
-<p>The functions in step 2) are just a small selection of the functions to alter project-files, as provided by the Ultraschall-API. Browse through the functions in the &quot;Project-Files&quot;-section of the index of the Ultraschall-API-Functions-Reference for many more of them.<br />
+<p>The functions in step 2) are just a small selection of the functions to alter project-files, as provided by the Ultraschall-API. Browse through the functions in the "Project-Files"-section of the index of the Ultraschall-API-Functions-Reference for many more of them.<br />
 However, changing some of the stuff might cause issues with the rendering-functions provided with this API.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Arrangeview_Snapshots_001_Introduction"></a>
@@ -676,7 +672,7 @@ To make use of that, I added some functions for that:</p>
         2 - Mouse Cursor, or  
         3 - Timeposition  </code></pre>
 <p>If you set it to 3, you can use the optional parameter time_position, with which you can set any position, at which you want to know the previous closest region-edge.</p>
-<p>If you run that function, it will return the markerindex, which is the index of all markers in your project, the position at which the regionedge is located, the markername and the type of the edge, which is either &quot;beg&quot; or &quot;end&quot;.</p>
+<p>If you run that function, it will return the markerindex, which is the index of all markers in your project, the position at which the regionedge is located, the markername and the type of the edge, which is either "beg" or "end".</p>
 <p>The Marker-functions (from 1) ) work the same, the Item-edge-functions (from 3) ) however have an additional parameter trackstring, with which you can set, from which tracks you want to get the next/previous closest item-edge-position.</p>
 <p>The function <a href="US_Api_Functions.html#GetClosestGoToPoints">GetClosestGoToPoints</a> is the combination of all of these functions, which let's you decide fully, which edges/positions you want to check for.<br />
 It will also check, if the next/previous closest edge is the beginning or the end of the project.</p>
@@ -695,7 +691,7 @@ Let's have a look at it:</p>
 <p>This functions only centers the given position/cursor-position to the arrangeview. It keeps the zoom-factor intact.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Navigation_005_Autoscroll_Followmode"></a>
-<div style="font-size:100%"><h4><a href="#Navigation_005_Autoscroll_Followmode">^</a> <u>Navigation: Autoscroll and Followmode</u></h4></div><p><p>Reaper allows you to set autoscrolling during playback/recording. It allows you to set it to continuous scrolling or to &quot;page-wise&quot;-scrolling.<br />
+<div style="font-size:100%"><h4><a href="#Navigation_005_Autoscroll_Followmode">^</a> <u>Navigation: Autoscroll and Followmode</u></h4></div><p><p>Reaper allows you to set autoscrolling during playback/recording. It allows you to set it to continuous scrolling or to "page-wise"-scrolling.<br />
 This is quite flexible but hidden somewhat within the actions of Reaper. So I added the function <a href="US_Api_Functions.html#ToggleScrollingDuringPlayback">ToggleScrollingDuringPlayback</a>.<br />
 It turns on autoscrolling for playback and recording AND continuous scrolling.<br />
 Let's have a look at it:</p>
@@ -736,7 +732,7 @@ Get Project-State:</p>
 To get ProjectStateChunks, you need to read the rpp-file, as currently there's no Get/SetProjectStateChunk-function in Reaper's own API.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_001_Introduction"></a>
-<div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_001_Introduction">^</a> <u>MediaItems: Introduction</u></h4></div><p><p>When working with MediaItems, it often was frustrating for me to code, how to get their MediaItem-objects. Especially when &quot;mass-working&quot; with dozens and more MediaItems.<br />
+<div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_001_Introduction">^</a> <u>MediaItems: Introduction</u></h4></div><p><p>When working with MediaItems, it often was frustrating for me to code, how to get their MediaItem-objects. Especially when "mass-working" with dozens and more MediaItems.<br />
 So I wrote a set of functions to work with MediaItems more comfortably.</p>
 <p>These functions include getting MediaItem-objects by time AND track, <a href="#GetSetStates_Project_Track_Item_Env_001_Introduction">getting MediaItem-states</a>, editing, inserting, manipulating, spectral edit, previewing, RippleCut, RippleInsert, SectionCut, working with locked, selected items, applying Reaper-actions to MediaItems, etc.</p>
 <p>When working with masses of MediaItems, I either use the datatypes <a href="#Datatypes_003_MediaItemArray">MediaItemArrays</a> or <a href="#Datatypes_004_MediaItemStateChunkArrays">MediaItemStateChunkArrays</a>.<br />
@@ -769,10 +765,10 @@ For this, I wrote the function</p>
 You can pass to the function a startposition and an endposition(which must be bigger than or equal startposition), <a href="#Datatypes_002_trackstring">trackstrings</a>, which is a string with all tracks, separated by commas as well as inside as parameters. When you set inside to true, it will return only items that are completely within startposition and endposition. When setting inside to false, it will also return items, that are partially within start- and endposition, like items beginning before startposition or ending after endposition.</p>
 </blockquote>
 <p>With these two functions, getting items is much, much easier than before.</p>
-<p>The returned MediaItems, MediaItemArrays and MediaItemStateChunkArrays can then be passed over to other functions, who accept them, for &quot;mass manipulation&quot; of the MediaItems.</p>
+<p>The returned MediaItems, MediaItemArrays and MediaItemStateChunkArrays can then be passed over to other functions, who accept them, for "mass manipulation" of the MediaItems.</p>
 <p>In addition to them, I also added some more functions for getting MediaItems, namely:</p>
 <ul>
-<li><a href="US_Api_Functions.html#GetAllMediaItems">GetAllMediaItems</a> - get all MediaItems from the project into a handy MediaItemArray, for further &quot;mass-manipulation&quot; of them.</li>
+<li><a href="US_Api_Functions.html#GetAllMediaItems">GetAllMediaItems</a> - get all MediaItems from the project into a handy MediaItemArray, for further "mass-manipulation" of them.</li>
 <li><a href="US_Api_Functions.html#GetAllLockedItemsFromMediaItemArray">GetAllLockedItemsFromMediaItemArray</a> - get all MediaItems that are locked, from a MediaItemArray</li>
 <li><a href="US_Api_Functions.html#GetAllMediaItemsFromTrack">GetAllMediaItemsFromTrack</a> - get all MediaItems from a track, returned as MediaItemArray</li>
 <li><a href="US_Api_Functions.html#GetAllMediaItemsInTimeSelection">GetAllMediaItemsInTimeSelection</a> - get all MediaItems in given tracks from the current time-selection</li>
@@ -796,7 +792,7 @@ Let's have a look at:</p>
 If you want to avoid that, set it to false and a normal split with fadein/fadeout will appear(if set in the preferences: Preferences -&gt; Media Item Defaults -&gt; Create automatic fade-in/fade-out for new items, length).</p>
 </blockquote>
 <blockquote>
-<p>This function returns, if splitting was successful and the newly &quot;created&quot;-right-hand-split-items as an MediaItemAray.</p>
+<p>This function returns, if splitting was successful and the newly "created"-right-hand-split-items as an MediaItemAray.</p>
 </blockquote>
 <p><strong><a href="US_Api_Functions.html#SplitItemsAtPositionFromArray">SplitItemsAtPositionFromArray</a>:</strong></p>
 <blockquote>
@@ -808,7 +804,7 @@ If you want to avoid that, set it to false and a normal split with fadein/fadeou
 This function will split only items, that have the position in them somewhere. That means, if you want to split at position 22 seconds, an item, that goes from 1 to 4 will not be split, an item from 18 to 25 will be split.</p>
 </blockquote>
 <blockquote>
-<p>This function returns, if splitting was successful and the newly &quot;created&quot;-right-hand-split-items as an MediaItemAray. Only the right-hand-split-MediaItem of MediaItems, that could be split, will be returned. If a MediaItem could not be split(position outside MediaItemstart and MediaItemEnd), there will be no returned MediaItem for it then.</p>
+<p>This function returns, if splitting was successful and the newly "created"-right-hand-split-items as an MediaItemAray. Only the right-hand-split-MediaItem of MediaItems, that could be split, will be returned. If a MediaItem could not be split(position outside MediaItemstart and MediaItemEnd), there will be no returned MediaItem for it then.</p>
 </blockquote>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_004_Deleting"></a>
@@ -852,7 +848,7 @@ But what if you want to RippleCut two or more tracks, but not all of them? What,
 Impossible you say!<br />
 With naked Reaper, yes. But possible with the Ultraschall-API.</p>
 <p>For that I added the following functions: <a href="US_Api_Functions.html#RippleCut">RippleCut</a>, <a href="US_Api_Functions.html#RippleCut_Reverse">RippleCut_Reverse</a>, <a href="US_Api_Functions.html#RippleInsert">RippleInsert</a>, <a href="US_Api_Functions.html#SectionCut">SectionCut</a>, <a href="US_Api_Functions.html#SectionCut_Inverse">SectionCut_Inverse</a><br />
-All these functions return a MediaItemStateChunkArray, where every StateChunk includes an additional entry &quot;ULTRASCHALL_TRACKNUMBER&quot;, which holds the tracknumber, in which the cut MediaItem/piece of a MediaItem was originally located.</p>
+All these functions return a MediaItemStateChunkArray, where every StateChunk includes an additional entry "ULTRASCHALL_TRACKNUMBER", which holds the tracknumber, in which the cut MediaItem/piece of a MediaItem was originally located.</p>
 <p><strong><a href="US_Api_Functions.html#RippleCut">RippleCut</a></strong>:</p>
 <pre><code>            integer number_items, array MediaItemArray_StateChunk 
                  = ultraschall.RippleCut(number startposition, number endposition, string trackstring, boolean moveenvelopepoints, boolean add_to_clipboard)</code></pre>
@@ -880,7 +876,7 @@ Everything else is just the same as RippleCut.</p>
 This is quite the opposite of RippleCut: it will split the items at position, move the items after the split towards the end of the project and include the MediaItems in MediaItemArray.<br />
 The length of the movement is according the overall length of all MediaItems, beginning with the earliest and ending with the latest MediaItem-length in MediaItemArray.<br />
 One additional note: MediaItems will only be included into the tracks they were originally located in, means: an item from track 1 will be included into track 1. The parameter trackstring can only be used to exclude items from certain tracks.<br />
-So a trackstring &quot;1,3,4&quot; will only insert all items from tracks 1,3 and 4, leaving out all of the MediaItems from track 2.<br />
+So a trackstring "1,3,4" will only insert all items from tracks 1,3 and 4, leaving out all of the MediaItems from track 2.<br />
 Example:</p>
 </blockquote>
 <pre><code>            number_of_items, MediaItemArray, endpos_inserted_items = ultraschall.RippleInsert(20, MediaItemArray, &quot;1,4,9,10&quot; false, false)</code></pre>
@@ -892,7 +888,7 @@ Markers and Envelopepoints will not move in this example.</p>
 <pre><code>            integer number_items, array MediaItemArray_StateChunk = 
                               ultraschall.SectionCut(number startposition, number endposition, string trackstring, boolean add_to_clipboard)</code></pre>
 <blockquote>
-<p>This function just cuts out the section between start and endposition in the tracks, given in trackstring, leaving a &quot;gap&quot; in it. Useful, when you don't want to ripple stuff.<br />
+<p>This function just cuts out the section between start and endposition in the tracks, given in trackstring, leaving a "gap" in it. Useful, when you don't want to ripple stuff.<br />
 You can also decide, whether to put the cut items into the clipboard. If you want to cut between seconds 77 and 99 in tracks 1,2,4,6 do it like in this Example:</p>
 </blockquote>
 <pre><code>            number_items, MediaItemArray_StateChunk = ultraschall.SectionCut(77, 99, &quot;1,2,4,6&quot;, false)</code></pre>
@@ -1077,7 +1073,7 @@ It will return the newly created MediaItem, it's startposition, endposition and 
             </code></pre>
 <blockquote>
 <p>This allows you to insert multiple items at once, that are stored in a MediaItemArray at position. With trackstring you can set, into which tracks to insert the MediaItems.<br />
-There's a limitation, however: MediaItems will only be inserted into the tracks from where they originated from. That means, if you have MediaItems located in tracks 1-5 and you set trackstring to &quot;1,2&quot;, only the MediaItems originating in tracks 1 and 2 will be inserted.<br />
+There's a limitation, however: MediaItems will only be inserted into the tracks from where they originated from. That means, if you have MediaItems located in tracks 1-5 and you set trackstring to "1,2", only the MediaItems originating in tracks 1 and 2 will be inserted.<br />
 I'm still looking into a better way to provide the track, in which to insert the MediaItems into other MediaTracks as well.</p>
 </blockquote>
 <blockquote>
@@ -1294,7 +1290,7 @@ Easy to do now.</p>
 </blockquote>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="1FileManagement_001_Introduction"></a>
-<div style="font-size:100%"><h4><a href="#1FileManagement_001_Introduction">^</a> <u>File Management: Introduction</u></h4></div><p><p>Even if file-management isn't that hard to program in Lua, it is quite inconvenient. Especially for &quot;normal&quot; use-cases, it is often a drag to always go through the four steps, checking if file exists, open file, read/write, close file.<br />
+<div style="font-size:100%"><h4><a href="#1FileManagement_001_Introduction">^</a> <u>File Management: Introduction</u></h4></div><p><p>Even if file-management isn't that hard to program in Lua, it is quite inconvenient. Especially for "normal" use-cases, it is often a drag to always go through the four steps, checking if file exists, open file, read/write, close file.<br />
 Wouldn't it be cool, to have functions to do it for you?</p>
 <p>Well now, there are, as the Ultraschall-API includes 28 functions to do it for you.<br />
 These functions include functions for reading and writing, copying them.<br />
@@ -1728,7 +1724,7 @@ After that, you'll have a ColorTable with number_of_steps-colors from startcolor
 <pre><code>                array ColorTable = ultraschall.CreateSonicRainboomColorTable()
                 </code></pre>
 <blockquote>
-<p>This is a simple function, that creates a ColorTable in Ultraschall's &quot;Sonic Rainboom&quot;-style.</p>
+<p>This is a simple function, that creates a ColorTable in Ultraschall's "Sonic Rainboom"-style.</p>
 </blockquote>
 <p>If you want to check, whether a certain table is a valid ColorTable, you can easily check this, using the function IsValidColorTable:</p>
 <blockquote>
@@ -1775,13 +1771,14 @@ The rest is the same, pass to the function a ColorTable and in the parameter Spr
 <p>Without having the background-scripts started, some functions will always produce error-codes.<br />
 Features that use these background-scripts are:</p>
 <blockquote>
-<p><strong><a href="US_Api_Functions.html#GetLastCursorPosition">GetLastCursorPosition</a></strong> - gets the last editcursor-position before the current one. Helpful for left-click-triggered scripts, who change the editcursorposition due the mouseclick</p>
+<p><strong><a href="US_Api_Functions.html#GetLastCursorPosition">GetLastCursorPosition</a></strong> - gets the last editcursor-position before the current one. Helpful for left-click-triggered scripts, who change the editcursorposition due the mouseclick<br />
+<strong><a href="US_Api_Functions.html#GetLastPlayState">GetLastPlayState</a></strong> - gets the last playstate before the current one. Helpful for monitoring "event-based"-statechanges</p>
 </blockquote>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Cough_Mute_Buttons_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Cough_Mute_Buttons_001_Introduction">^</a> <u>Cough and Mute Buttons/Actions: Introduction</u></h4></div><p><p>When recording over a long period of time, especially when recording interviews for podcasts, radio and such, you probably run into the issue that someone is coughing or drinking something. Though both of these things are important, a recording of it is usually not wished.<br />
 For that, Reaper provides a Mute-Envelope for each track, which allows to mute a track for a period of time and unmute it again. This muting can be recorded, so it will remain even after the recording is finished.<br />
-Problem is: You need to &quot;arm&quot; the mute-envelope first, otherwise any mute-information as send by e.g. MIDI-devices will not be added to the mute-envelope and therefor is lost after the recording.<br />
+Problem is: You need to "arm" the mute-envelope first, otherwise any mute-information as send by e.g. MIDI-devices will not be added to the mute-envelope and therefor is lost after the recording.<br />
 In some cases, this behavior is a good thing and gives you flexibility when to record the mutes and when not, but for casual users, who do not want to have this kind of freedom, this can be really hard to use.</p>
 <p>So I added some functions, that add mute-points into a mute-envelope regardless of it's arming-state. This should make using the mute-envelope for your benefits much easier.</p>
 <p>Let's go into more detail.</p>
@@ -1883,7 +1880,7 @@ For that, I added the functions: <a href="US_Api_Functions.html#DeleteMuteState"
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Error_Messaging_System_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Error_Messaging_System_001_Introduction">^</a> <u>Error Messaging System: Introduction</u></h4></div><p><p>When coding, one of the most boring things, beside documentation, is debugging.<br />
 This is especially true, when the development-system used itself creates error- and bugmessages from hell, that just tell you that something went wrong, but not what.</p>
-<p>And as I'm known to be lazy, I thought &quot;When creating many API-functions, they should be able to tell me, where I went wrong, what went wrong and when I'm holding it wrong.&quot;</p>
+<p>And as I'm known to be lazy, I thought "When creating many API-functions, they should be able to tell me, where I went wrong, what went wrong and when I'm holding it wrong."</p>
 <p>Thus, I created an error-messaging-system that tells you exactly that: Which parameter caused which issue and a hint in how to solve this, if needed.<br />
 And furthermore, I worked this error-messaging system out in a way, that it does not stop script-execution if you do not want to. In fact, if you want to reuse error-messages created by an Ultraschall-API-function you used, you can do that.<br />
 So using error checks from other Ultraschall-API-functions for your benefits is quite easy.</p>
@@ -1900,13 +1897,13 @@ So using error checks from other Ultraschall-API-functions for your benefits is 
                         </code></pre>
 <blockquote>
 <p>This creates a new error-message, that will be fed into the error-messaging-system.<br />
-The parameters are the functionname, the name of the parameter(set it to &quot;&quot; if you don't want to set this parameter), and error-message and an error-code.</p>
+The parameters are the functionname, the name of the parameter(set it to "" if you don't want to set this parameter), and error-message and an error-code.</p>
 </blockquote>
 <blockquote>
 <p>The functionname is for the programmer who uses your function, so they know, which function caused this error.<br />
 The parametername is simply the name of the parameter, so if a validity-check for a parameter didn't go well, set this to the name of the problematic parameter.<br />
 The errormessage should tell the programmer, what went wrong. It should be easy to understand. Tell, in a few words, what went wrong and what was expected instead.<br />
-So if checking for an integer-parameter went wrong because the user passed a string instead, the errormessage should be &quot;Must be an integer.&quot; The errorcode must be unique, means, every error-message in your function must get it's own errorcode, even if two error-messages are quite similar. This is to help the user to determine, which error happened, without having to check the error-message itself.<br />
+So if checking for an integer-parameter went wrong because the user passed a string instead, the errormessage should be "Must be an integer." The errorcode must be unique, means, every error-message in your function must get it's own errorcode, even if two error-messages are quite similar. This is to help the user to determine, which error happened, without having to check the error-message itself.<br />
 A unique errorcode has also other benefits for you as function-coder: if you want to change the error-message to be more descriptive, a check for the errorcode would still work. Another thing: a unique errorcode will help to determine possible bugs in your function more easily, as you immediately know, which errormessage caused it.<br />
 I usually use negative numbers for Ultraschall-API-errorcodes, but you are free to choose them anyway you like. But once you decided on one, you must keep it forever until it becomes obsolete!</p>
 </blockquote>
@@ -1956,11 +1953,11 @@ For that, I added the following functions: <a href="US_Api_Functions.html#CountE
 </li>
 <li>functionname, which contains the name of the function, in which the error occured<br />
 </li>
-<li>parmname, which contains the name of the parameter, which caused the trouble. It is &quot;&quot;, if the problem is unrelated to a parameter<br />
+<li>parmname, which contains the name of the parameter, which caused the trouble. It is "", if the problem is unrelated to a parameter<br />
 </li>
 <li>errormessage, which is the actual errormessage<br />
 </li>
-<li>lastreadtime, the time, at which the errormessage was read from the error-messaging-system the last time. Is &quot;unread&quot; if the errormessage hasn't been read yet.</li>
+<li>lastreadtime, the time, at which the errormessage was read from the error-messaging-system the last time. Is "unread" if the errormessage hasn't been read yet.</li>
 <li>err_creation_date, the date, at which the error was created<br />
 </li>
 <li>err_creation_timestamp, the time, at which the error was created<br />
@@ -2504,7 +2501,7 @@ ItemExtStates are stored as ProjectExtState within the projectfile. These functi
 </li>
 <li>planned chapter markers - like normal markers, but green. They hold the chapter-markers that aren't set yet at the right position. For podcast with a strict structure.<br />
 </li>
-<li>_time-markers - they hold a date and time of the format &quot;_time: dd.mm.yyyy hh:mm:ss&quot;<br />
+<li>_time-markers - they hold a date and time of the format "_time: dd.mm.yyyy hh:mm:ss"<br />
 </li>
 <li>Podrange-regions - intended to signal, where a podcast starts and where it ends. So if you didn't start the podcast at position 0 in the project and want to save the chapters into your mp3-audiofile, they risk to be offset by the amount of time between projectstart and the actual start of the podcast. So using a PodRangeRegion, the proper start- and endtimes for rendering as well as chaptermarker export can be set by the user.</li>
 </ul>
@@ -2522,7 +2519,7 @@ Let's take edit-markers as an example, who have the functions:</p>
                   </code></pre>
 <blockquote>
 <p>This adds a new edit-marker. Give it a position, the shown number and an edittitle, which should hint at the reason of having to edit later.<br />
-The title will be shown in the marker as &quot;<em>edit: Title&quot;. You can change it manually in Reaper, but should retain &quot;</em>edit: &quot;, as this signals the<br />
+The title will be shown in the marker as "<em>edit: Title". You can change it manually in Reaper, but should retain "</em>edit: ", as this signals the<br />
 Ultraschall-API, if this is an edit-marker. The editmarker also is red (255 0 0).<br />
 It will return the marker-number, which is the index of all markers in the project, means: markers and regions.</p>
 </blockquote>
@@ -2597,7 +2594,7 @@ Returns true, if it's an edit-marker, false if not.</p>
 <pre><code>                  integer idx, integer shown_number, number position, string markertitle = ultraschall.MarkerToEditMarker(integer markerindex)
                   </code></pre>
 <blockquote>
-<p>This converts a marker into an edit-marker, which usually means, it colors it red (255, 0, 0) and adds &quot;_edit: &quot; at the beginning of the title.<br />
+<p>This converts a marker into an edit-marker, which usually means, it colors it red (255, 0, 0) and adds "_edit: " at the beginning of the title.<br />
 The markerindex is the one for all markers. It returns the overall-marker-indexnumber, the shown number as well as it's position and the new markertitle.</p>
 </blockquote>
 <blockquote>
