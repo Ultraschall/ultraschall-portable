@@ -11,6 +11,8 @@ slider2:-120<-450,-12,6>-floor
 slider3:0<0,1,1{disabled,enabled}>-show phase
 slider4:2<0,3,1{rectangular,hamming,blackman-harris,blackman}>-window
 slider5:0<0,2500,1>-integration time (ms)
+slider6:0<0,12,0.1>-slope (dB/octave)
+slider7:1000<10,10000,1>-octave gain center (Hz)
 
 in_pin:left input
 in_pin:right input
@@ -32,7 +34,7 @@ fftworkspace=window+(max_fft_size*0.5 + 1);
 integrate_buf = fftworkspace + max_fft_size*2;
 
 @slider
-slider2 != lfloor ? old_w=0;
+old_w=0;
 
 @block
 slider2 != lfloor ? (
@@ -129,7 +131,8 @@ function cycle_slider(x, y, z, dx)
            floor_button.hit_button(mouse_x,mouse_y,1)||
            window_button.hit_button(mouse_x,mouse_y,2)||
            fft_button.hit_button(mouse_x,mouse_y,3)||
-           integrate_button.hit_button(mouse_x,mouse_y,4);
+           integrate_button.hit_button(mouse_x,mouse_y,4)||
+           slope_button.hit_button(mouse_x,mouse_y,5);
          );
        );
     );
@@ -152,6 +155,11 @@ function cycle_slider(x, y, z, dx)
       slider5 = drag_slider_precise(slider5, 0.0, 2500.0, 5);
       old_w=0;
       slider_automate(slider5);
+    );
+    cap_mode == 5 && cap_last_y != mouse_y ? (
+      slider6 = drag_slider_precise(slider6, 0.0, 12.0, .1);
+      old_w=0;
+      slider_automate(slider6);
     );
 ) :
 (last_mouse_cap & 1) && !cap_drag ? (
@@ -225,16 +233,25 @@ while(
   f < srate*0.5;
 );
 
-fft_button.draw_button(gfx_w, 0, sprintf(#,"FFT: %d",16<<slider1));
+fft_button.draw_button(gfx_w, 0, sprintf(#,"%s%d",gfx_w<400?"":"FFT: ",16<<slider1));
 window_button.draw_button(gfx_x-8, 0, 
   (slider4|0)==1 ? "hamming" :  
   (slider4|0)==2 ? "blackman-harris" :
   (slider4|0)==3 ? "blackman" :
   "rectangular"); 
-floor_button.draw_button(gfx_x-8,0, sprintf(#,"floor: %.1fdB",slider2));
-integrate_button.draw_button(gfx_x-8,0, sprintf(#,"integrate: %dms",slider5|0));
-phase_button.draw_button(gfx_x-8,0, slider3?"phase on" : "phase off");
+sprintf(#floorstr,"%s%.1fdB",gfx_w<420?"":"floor: ",slider2);
+sprintf(#intstr,"%s: %dms",gfx_w<420 ? "int" : "integrate", slider5|0);
+sprintf(#slopestr,"%s%.1fdB/oct",gfx_w<420?"":"slope: ",floor(slider6*10+0.5)/10);
+rowpos = gfx_w<700?gfx_texth+8:0;
+rowpos > 0 ? (
+  phase_button.draw_button(gfx_x-8,0, slider3?"phase on" : "phase off");
+  gfx_x=gfx_w;
+) : gfx_x-=8;
 
+floor_button.draw_button(gfx_x,rowpos,#floorstr);
+slope_button.draw_button(gfx_x-8,rowpos, #slopestr);
+integrate_button.draw_button(gfx_x-8,rowpos, #intstr);
+rowpos <= 0 ? phase_button.draw_button(gfx_x-8,rowpos, slider3?"phase on" : "phase off");
 
 update ? (
   update=0;
@@ -338,8 +355,11 @@ update ? (
   i=0;
   fill_slmin=gfx_h;
   fill_slast=0;
+  octavegain = floor(slider6*10+0.5) * ((log(10)*2.0/10.0)/(log(2)*20.0));
+  octavegainoffs = log(1 + slider7 * fftsize / srate);
   loop(fftsize*0.5,   
     ty = log(max(sqr(buf3[0])+sqr(buf3[1]),(10^(-500/20*2))));
+    octavegain > 0 ? ty += (log(i+1) - octavegainoffs)*octavegain;
     buf3+=2;    
 
     integrate_en ? (
