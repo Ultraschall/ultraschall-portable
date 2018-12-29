@@ -10,6 +10,9 @@
 
 # Default settings for how this device displays information.
 
+# (these can all be overridden by the device sending OSC messages, search for these
+# names below to see the messages)
+#
 # DEVICE_TRACK_COUNT is how many tracks this device can display at once 
 # (the track bank size).
 # DEVICE_SEND_COUNT/DEVICE_RECEIVE_COUNT is how many sends and receives this
@@ -19,6 +22,10 @@
 # (the FX parameter bank size).
 # DEVICE_FX_INST_PARAM_COUNT is how many FX instrument parameters this device can
 # display at once (the FX instrument parameter bank size).
+# DEVICE_MARKER_COUNT is how many markers for which this device would like to 
+# receive information 
+# DEVICE_REGION_COUNT is how many regions for which this device would like to 
+# receive information 
 
 DEVICE_TRACK_COUNT 8
 DEVICE_SEND_COUNT 4
@@ -248,12 +255,21 @@ TEMPO n/tempo f/tempo/raw r/tempo/rotary s/tempo/str
 
 MARKER_NAME s/marker/@/name
 MARKER_NUMBER s/marker/@/number/str
+MARKER_TIME f/marker/@/time
 REGION_NAME s/region/@/name
 REGION_NUMBER s/region/@/number/str
+REGION_TIME f/region/@/time
+REGION_LENGTH f/region/@/length
 LAST_MARKER_NAME s/lastmarker/name
 LAST_MARKER_NUMBER s/lastmarker/number/str
+LAST_MARKER_TIME f/lastmarker/time
 LAST_REGION_NAME s/lastregion/name
 LAST_REGION_NUMBER s/lastregion/number/str
+LAST_REGION_TIME f/lastregion/time
+LAST_REGION_LENGTH f/lastregion/length
+
+LOOP_START_TIME f/loop/start/time
+LOOP_END_TIME f/loop/end/time
 
 MASTER_VOLUME n/master/volume s/master/volume/str
 MASTER_PAN n/master/pan s/master/pan/str
@@ -272,13 +288,13 @@ TRACK_MUTE b/track/mute b/track/@/mute t/track/mute/toggle t/track/@/mute/toggle
 TRACK_SOLO b/track/solo b/track/@/solo t/track/solo/toggle t/track/@/solo/toggle
 TRACK_REC_ARM b/track/recarm b/track/@/recarm t/track/recarm/toggle t/track/@/recarm/toggle
 
-TRACK_MONITOR b/track/monitor b/track/@/monitor 
-TRACK_SELECT b/track/select b/track/@/select 
+TRACK_MONITOR b/track/monitor b/track/@/monitor i/track/monitor i/track/@/monitor
+TRACK_SELECT b/track/select b/track/@/select
 
 TRACK_VU n/track/vu n/track/@/vu
 TRACK_VU_L n/track/vu/L n/track/@/vu/L
 TRACK_VU_R n/track/vu/R n/track/@/vu/R
-TRACK_VOLUME n/track/volume n/track/@/volume 
+TRACK_VOLUME n/track/volume n/track/@/volume
 TRACK_VOLUME s/track/volume/str s/track/@/volume/str
 TRACK_VOLUME f/track/volume/db f/track/@/volume/db
 TRACK_PAN n/track/pan n/track/@/pan s/track/pan/str s/track/@/pan/str
@@ -335,6 +351,7 @@ FX_EQ_WETDRY n/fxeq/wetdry n/track/@/fxeq/wetdry
 FX_EQ_WETDRY s/fxeq/wetdry/str s/track/@/fxeq/wetdry/str
 
 FX_EQ_HIPASS_NAME s/fxeq/hipass/str
+FX_EQ_HIPASS_BYPASS b/fxeq/hipass/bypass
 FX_EQ_HIPASS_FREQ n/fxeq/hipass/freq n/track/@/fxeq/hipass/freq
 FX_EQ_HIPASS_FREQ f/fxeq/hipass/freq/hz f/track/@/fxeq/hipass/freq/hz
 FX_EQ_HIPASS_FREQ s/fxeq/hipass/freq/str s/track/@/fxeq/hipass/freq/str
@@ -342,7 +359,8 @@ FX_EQ_HIPASS_Q n/fxeq/hipass/q n/track/@/fxeq/hipass/q
 FX_EQ_HIPASS_Q f/fxeq/hipass/q/oct f/track/@/fxeq/hipass/q/oct
 FX_EQ_HIPASS_Q s/fxeq/hipass/q/str s/track/@/fxeq/hipass/q/str
 
-FX_EQ_LOSHELF_NAME s/fxeq/lopass/str
+FX_EQ_LOSHELF_NAME s/fxeq/loshelf/str
+FX_EQ_LOSHELF_BYPASS b/fxeq/loshelf/bypass
 FX_EQ_LOSHELF_FREQ n/fxeq/loshelf/freq n/track/@/fxeq/loshelf/freq
 FX_EQ_LOSHELF_FREQ f/fxeq/loshelf/freq/hz f/track/@/fxeq/loshelf/freq/hz
 FX_EQ_LOSHELF_FREQ s/fxeq/loshelf/freq/str s/track/@/fxeq/loshelf/freq/str
@@ -354,6 +372,7 @@ FX_EQ_LOSHELF_Q f/fxeq/loshelf/q/oct f/track/@/fxeq/loshelf/q/oct
 FX_EQ_LOSHELF_Q s/fxeq/loshelf/q/str s/track/@/fxeq/loshelf/q/str
 
 FX_EQ_BAND_NAME s/fxeq/band/str
+FX_EQ_BAND_BYPASS b/fxeq/band/@/bypass
 FX_EQ_BAND_FREQ n/fxeq/band/@/freq n/track/@/fxeq/band/@/freq
 FX_EQ_BAND_FREQ f/fxeq/band/@/freq/hz f/track/@/fxeq/band/@/freq/hz
 FX_EQ_BAND_FREQ s/fxeq/band/@/freq/str s/track/@/fxeq/band/@/freq/str
@@ -365,6 +384,7 @@ FX_EQ_BAND_Q f/fxeq/band/@/q/oct f/track/@/fxeq/band/@/q/oct
 FX_EQ_BAND_Q s/fxeq/band/@/q/str s/track/@/fxeq/band/@/q/str
 
 FX_EQ_NOTCH_NAME s/fxeq/notch/str
+FX_EQ_NOTCH_BYPASS b/fxeq/notch/bypass
 FX_EQ_NOTCH_FREQ n/fxeq/notch/freq n/track/@/fxeq/notch/freq
 FX_EQ_NOTCH_FREQ f/fxeq/notch/freq/hz f/track/@/fxeq/notch/freq/hz
 FX_EQ_NOTCH_FREQ s/fxeq/notch/freq/str s/track/@/fxeq/notch/freq/str
@@ -376,6 +396,7 @@ FX_EQ_NOTCH_Q f/fxeq/notch/q/oct f/track/@/fxeq/notch/q/oct
 FX_EQ_NOTCH_Q s/fxeq/notch/q/str s/track/@/fxeq/notch/q/str
 
 FX_EQ_HISHELF_NAME s/fxeq/hishelf/str
+FX_EQ_HISHELF_BYPASS b/fxeq/hishelf/bypass
 FX_EQ_HISHELF_FREQ n/fxeq/hishelf/freq n/track/@/fxeq/hishelf/freq
 FX_EQ_HISHELF_FREQ f/fxeq/hishelf/freq/hz f/track/@/fxeq/hishelf/freq/hz
 FX_EQ_HISHELF_FREQ s/fxeq/hishelf/freq/str s/track/@/fxeq/hishelf/freq/str
@@ -386,7 +407,8 @@ FX_EQ_HISHELF_Q n/fxeq/hishelf/q n/track/@/fxeq/hishelf/q
 FX_EQ_HISHELF_Q f/fxeq/hishelf/q/oct f/track/@/fxeq/hishelf/q/oct
 FX_EQ_HISHELF_Q s/fxeq/hishelf/q/str s/track/@/fxeq/hishelf/q/str
 
-FX_EQ_LOPASS_NAME s/fxeq/loshelf/str
+FX_EQ_LOPASS_NAME s/fxeq/lopass/str
+FX_EQ_LOPASS_BYPASS b/fxeq/lopass/bypass
 FX_EQ_LOPASS_FREQ n/fxeq/lopass/freq n/track/@/fxeq/lopass/freq
 FX_EQ_LOPASS_FREQ f/fxeq/lopass/freq/hz f/track/@/fxeq/lopass/freq/hz
 FX_EQ_LOPASS_FREQ s/fxeq/lopass/freq/str s/track/@/fxeq/lopass/freq/str
@@ -421,7 +443,7 @@ VKB_MIDI_NOTE i/vkb_midi/@/note/@ f/vkb_midi/@/note/@ i/vkb_midi/note/@ f/vkb_mi
 # similar, but for 0xA0 (poly aftertouch)
 VKB_MIDI_POLYAFTERTOUCH i/vkb_midi/@/polyaftertouch/@ f/vkb_midi/@/polyaftertouch/@ i/vkb_midi/polyaftertouch/@ f/vkb_midi/polyaftertouch/@
 # for CCs, if two, first wildcard is channel (0-15). MIDI CC number is required (as decimal integer only!)
-VKB_MIDI_CC i/vkb_midi/@/cc/@ f/vkb_midi/@/cc/@ i/vkb_midi/cc/@ f/vkb_midi/cc/@ 
+VKB_MIDI_CC i/vkb_midi/@/cc/@ f/vkb_midi/@/cc/@ i/vkb_midi/cc/@ f/vkb_midi/cc/@
 # program change (0xC0) can take channel as wildcard, or value only
 VKB_MIDI_PROGRAM i/vkb_midi/@/program f/vkb_midi/@/program i/vkb_midi/program f/vkb_midi/program
 # channel pressure (aftertouch) (0xD0) can take channel as wildcard, or value only

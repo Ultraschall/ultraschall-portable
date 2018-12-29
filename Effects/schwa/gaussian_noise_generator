@@ -4,7 +4,7 @@ desc:Gaussian Noise Generator
 
 // Generator choices are listed in rough order of fanciness and cost.
 
-slider1:0<-120,6,0.1>Noise dB (RMS)
+slider1:-18<-120,6,0.1>Noise dB (RMS)
 slider2:1<0,1,0.01>Wet Mix
 slider3:0<0,3,1{Central Limit Approximation,Box-Muller,Ziggurat (not implemented yet),Inverse Transform}>Gaussian Generator
 slider4:0<-1,1>Noise Mean (should be ~0)

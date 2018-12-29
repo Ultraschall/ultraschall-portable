@@ -130,6 +130,12 @@ def RPR_ApplyNudge(p0,p1,p2,p3,p4,p5,p6):
   r=f(t[0],t[1],t[2],t[3],t[4],t[5],t[6])
   return r
 
+def RPR_ArmCommand(p0,p1):
+  a=_ft['ArmCommand']
+  f=CFUNCTYPE(None,c_int,c_char_p)(a)
+  t=(c_int(p0),rpr_packsc(p1))
+  f(t[0],t[1])
+
 def RPR_Audio_Init():
   a=_ft['Audio_Init']
   f=CFUNCTYPE(None)(a)
@@ -990,6 +996,13 @@ def RPR_GetAppVersion():
   r=f()
   return str(r.decode())
 
+def RPR_GetArmedCommand(p0,p1):
+  a=_ft['GetArmedCommand']
+  f=CFUNCTYPE(c_int,c_char_p,c_int)(a)
+  t=(rpr_packs(p0),c_int(p1))
+  r=f(t[0],t[1])
+  return (r,rpr_unpacks(t[0]),p1)
+
 def RPR_GetAudioAccessorEndTime(p0):
   a=_ft['GetAudioAccessorEndTime']
   f=CFUNCTYPE(c_double,c_uint64)(a)
@@ -1010,6 +1023,13 @@ def RPR_GetAudioAccessorStartTime(p0):
   t=(rpr_packp('AudioAccessor*',p0),)
   r=f(t[0])
   return r
+
+def RPR_GetAudioDeviceInfo(p0,p1,p2):
+  a=_ft['GetAudioDeviceInfo']
+  f=CFUNCTYPE(c_byte,c_char_p,c_char_p,c_int)(a)
+  t=(rpr_packsc(p0),rpr_packs(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return (r,p0,rpr_unpacks(t[1]),p2)
 
 def RPR_GetConfigWantsDock(p0):
   a=_ft['GetConfigWantsDock']
@@ -1699,6 +1719,13 @@ def RPR_GetSetItemState2(p0,p1,p2,p3):
   t=(rpr_packp('MediaItem*',p0),rpr_packs(p1),c_int(p2),c_byte(p3))
   r=f(t[0],t[1],t[2],t[3])
   return (r,p0,rpr_unpacks(t[1]),p2,p3)
+
+def RPR_GetSetMediaItemInfo_String(p0,p1,p2,p3):
+  a=_ft['GetSetMediaItemInfo_String']
+  f=CFUNCTYPE(c_byte,c_uint64,c_char_p,c_char_p,c_byte)(a)
+  t=(rpr_packp('MediaItem*',p0),rpr_packsc(p1),rpr_packs(p2),c_byte(p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return (r,p0,p1,rpr_unpacks(t[2]),p3)
 
 def RPR_GetSetMediaItemTakeInfo_String(p0,p1,p2,p3):
   a=_ft['GetSetMediaItemTakeInfo_String']
@@ -2951,6 +2978,13 @@ def RPR_RenderFileSection(p0,p1,p2,p3,p4):
   r=f(t[0],t[1],t[2],t[3],t[4])
   return r
 
+def RPR_ReorderSelectedTracks(p0,p1):
+  a=_ft['ReorderSelectedTracks']
+  f=CFUNCTYPE(c_byte,c_int,c_int)(a)
+  t=(c_int(p0),c_int(p1))
+  r=f(t[0],t[1])
+  return r
+
 def RPR_Resample_EnumModes(p0):
   a=_ft['Resample_EnumModes']
   f=CFUNCTYPE(c_char_p,c_int)(a)
@@ -3336,6 +3370,12 @@ def RPR_ShowMessageBox(p0,p1,p2):
   r=f(t[0],t[1],t[2])
   return r
 
+def RPR_ShowPopupMenu(p0,p1,p2,p3,p4,p5,p6):
+  a=_ft['ShowPopupMenu']
+  f=CFUNCTYPE(None,c_char_p,c_int,c_int,c_uint64,c_uint64,c_int,c_int)(a)
+  t=(rpr_packsc(p0),c_int(p1),c_int(p2),rpr_packp('HWND',p3),rpr_packp('void*',p4),c_int(p5),c_int(p6))
+  f(t[0],t[1],t[2],t[3],t[4],t[5],t[6])
+
 def RPR_SLIDER2DB(p0):
   a=_ft['SLIDER2DB']
   f=CFUNCTYPE(c_double,c_double)(a)
@@ -3386,6 +3426,25 @@ def RPR_TakeFX_AddByName(p0,p1,p2):
   f=CFUNCTYPE(c_int,c_uint64,c_char_p,c_int)(a)
   t=(rpr_packp('MediaItem_Take*',p0),rpr_packsc(p1),c_int(p2))
   r=f(t[0],t[1],t[2])
+  return r
+
+def RPR_TakeFX_CopyToTake(p0,p1,p2,p3,p4):
+  a=_ft['TakeFX_CopyToTake']
+  f=CFUNCTYPE(None,c_uint64,c_int,c_uint64,c_int,c_byte)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),rpr_packp('MediaItem_Take*',p2),c_int(p3),c_byte(p4))
+  f(t[0],t[1],t[2],t[3],t[4])
+
+def RPR_TakeFX_CopyToTrack(p0,p1,p2,p3,p4):
+  a=_ft['TakeFX_CopyToTrack']
+  f=CFUNCTYPE(None,c_uint64,c_int,c_uint64,c_int,c_byte)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),rpr_packp('MediaTrack*',p2),c_int(p3),c_byte(p4))
+  f(t[0],t[1],t[2],t[3],t[4])
+
+def RPR_TakeFX_Delete(p0,p1):
+  a=_ft['TakeFX_Delete']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1))
+  r=f(t[0],t[1])
   return r
 
 def RPR_TakeFX_EndParamEdit(p0,p1,p2):
@@ -3486,6 +3545,13 @@ def RPR_TakeFX_GetNumParams(p0,p1):
   r=f(t[0],t[1])
   return r
 
+def RPR_TakeFX_GetOffline(p0,p1):
+  a=_ft['TakeFX_GetOffline']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1))
+  r=f(t[0],t[1])
+  return r
+
 def RPR_TakeFX_GetOpen(p0,p1):
   a=_ft['TakeFX_GetOpen']
   f=CFUNCTYPE(c_byte,c_uint64,c_int)(a)
@@ -3575,6 +3641,12 @@ def RPR_TakeFX_SetNamedConfigParm(p0,p1,p2,p3):
   t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),rpr_packsc(p2),rpr_packsc(p3))
   r=f(t[0],t[1],t[2],t[3])
   return r
+
+def RPR_TakeFX_SetOffline(p0,p1,p2):
+  a=_ft['TakeFX_SetOffline']
+  f=CFUNCTYPE(None,c_uint64,c_int,c_byte)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),c_byte(p2))
+  f(t[0],t[1],t[2])
 
 def RPR_TakeFX_SetOpen(p0,p1,p2):
   a=_ft['TakeFX_SetOpen']
@@ -3782,6 +3854,25 @@ def RPR_TrackFX_AddByName(p0,p1,p2,p3):
   r=f(t[0],t[1],t[2],t[3])
   return r
 
+def RPR_TrackFX_CopyToTake(p0,p1,p2,p3,p4):
+  a=_ft['TrackFX_CopyToTake']
+  f=CFUNCTYPE(None,c_uint64,c_int,c_uint64,c_int,c_byte)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),rpr_packp('MediaItem_Take*',p2),c_int(p3),c_byte(p4))
+  f(t[0],t[1],t[2],t[3],t[4])
+
+def RPR_TrackFX_CopyToTrack(p0,p1,p2,p3,p4):
+  a=_ft['TrackFX_CopyToTrack']
+  f=CFUNCTYPE(None,c_uint64,c_int,c_uint64,c_int,c_byte)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),rpr_packp('MediaTrack*',p2),c_int(p3),c_byte(p4))
+  f(t[0],t[1],t[2],t[3],t[4])
+
+def RPR_TrackFX_Delete(p0,p1):
+  a=_ft['TrackFX_Delete']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1))
+  r=f(t[0],t[1])
+  return r
+
 def RPR_TrackFX_EndParamEdit(p0,p1,p2):
   a=_ft['TrackFX_EndParamEdit']
   f=CFUNCTYPE(c_byte,c_uint64,c_int,c_int)(a)
@@ -3908,6 +3999,13 @@ def RPR_TrackFX_GetNumParams(p0,p1):
   r=f(t[0],t[1])
   return r
 
+def RPR_TrackFX_GetOffline(p0,p1):
+  a=_ft['TrackFX_GetOffline']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1))
+  r=f(t[0],t[1])
+  return r
+
 def RPR_TrackFX_GetOpen(p0,p1):
   a=_ft['TrackFX_GetOpen']
   f=CFUNCTYPE(c_byte,c_uint64,c_int)(a)
@@ -4025,6 +4123,12 @@ def RPR_TrackFX_SetNamedConfigParm(p0,p1,p2,p3):
   t=(rpr_packp('MediaTrack*',p0),c_int(p1),rpr_packsc(p2),rpr_packsc(p3))
   r=f(t[0],t[1],t[2],t[3])
   return r
+
+def RPR_TrackFX_SetOffline(p0,p1,p2):
+  a=_ft['TrackFX_SetOffline']
+  f=CFUNCTYPE(None,c_uint64,c_int,c_byte)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),c_byte(p2))
+  f(t[0],t[1],t[2])
 
 def RPR_TrackFX_SetOpen(p0,p1,p2):
   a=_ft['TrackFX_SetOpen']
