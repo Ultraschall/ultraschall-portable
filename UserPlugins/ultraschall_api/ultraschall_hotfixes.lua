@@ -480,3 +480,65 @@ function ultraschall.ConvertColor(r,g,b)
     if ultraschall.IsOS_Mac()==true then r,b=b,r end
     return reaper.ColorToNative(r,g,b)|0x1000000, true
 end
+
+function ultraschall.SetUSExternalState(section, key, value)
+-- stores value into ultraschall.ini
+-- returns true if successful, false if unsuccessful
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetUSExternalState</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    SWS=2.8.8
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetUSExternalState(string section, string key, string value)</functioncall>
+  <description>
+    stores values into ultraschall.ini. Returns true if successful, false if unsuccessful.
+    
+    unlike other Ultraschall-API-functions, this converts the values, that you pass as parameters, into strings, regardless of their type
+  </description>
+  <retvals>
+    boolean retval - true, if successful, false if unsuccessful.
+  </retvals>
+  <parameters>
+    string section - section within the ini-file
+    string key - key within the section
+    string value - the value itself
+  </parameters>
+  <chapter_context>
+    Configuration-Files Management
+    Ultraschall.ini
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>configurationmanagement, value, insert, store</tags>
+</US_DocBloc>
+--]]
+  -- check parameters
+  section=tostring(section)
+  key=tostring(key)
+  value=tostring(value)  
+  if section:match(".*(%=).*")=="=" then ultraschall.AddErrorMessage("SetUSExternalState","section", "no = allowed in section", -4) return false end
+
+  -- set value
+  return reaper.BR_Win32_WritePrivateProfileString(section, key, value, reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")
+end
+
+function Msg(val)
+  reaper.ShowConsoleMsg(tostring(val).."\n")
+end
+
+function runcommand(cmd)     -- run a command by its name
+
+  start_id = reaper.NamedCommandLookup(cmd)
+  reaper.Main_OnCommand(start_id,0) 
+
+end
+
+function GetPath(str,sep)
+ 
+    return str:match("(.*"..sep..")")
+
+end

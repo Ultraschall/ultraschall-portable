@@ -2111,6 +2111,8 @@ function ultraschall.SetUSExternalState(section, key, value)
   <functioncall>boolean retval = ultraschall.SetUSExternalState(string section, string key, string value)</functioncall>
   <description>
     stores values into ultraschall.ini. Returns true if successful, false if unsuccessful.
+    
+    unlike other Ultraschall-API-functions, this converts the values, that you pass as parameters, into strings, regardless of their type
   </description>
   <retvals>
     boolean retval - true, if successful, false if unsuccessful.
@@ -2130,9 +2132,9 @@ function ultraschall.SetUSExternalState(section, key, value)
 </US_DocBloc>
 --]]
   -- check parameters
-  if type(section)~="string" then ultraschall.AddErrorMessage("SetUSExternalState","section", "only string allowed", -1) return false end
-  if type(key)~="string" then ultraschall.AddErrorMessage("SetUSExternalState","key", "only string allowed", -2) return false end
-  if type(value)~="string" then ultraschall.AddErrorMessage("SetUSExternalState","value", "only string allowed", -3) return false end
+  section=tostring(section)
+  key=tostring(key)
+  value=tostring(value)  
   if section:match(".*(%=).*")=="=" then ultraschall.AddErrorMessage("SetUSExternalState","section", "no = allowed in section", -4) return false end
 
   -- set value

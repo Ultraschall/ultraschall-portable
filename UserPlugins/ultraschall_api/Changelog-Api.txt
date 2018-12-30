@@ -6,6 +6,7 @@
   - SplitStringAtNULLBytes - splits a string at NULL-bytes ( \0 )
   - new background-script - ultraschall_track_old_playstate.lua - stores old playstate into extstate ultraschall->last_playstate
   - GetLastPlayState - returns the last playstate before the current one
+  - SetUSExternalState - converts now all passed parameters to string, regardless of their type
   
 ####Changes from 4.00beta2.7 to 4.00beta2.8
   - GetMarkerByScreenCoordinates - returned useless newlines -> fixed now
