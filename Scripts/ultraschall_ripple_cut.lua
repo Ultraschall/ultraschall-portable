@@ -44,23 +44,41 @@ function RippleCut()
   reaper.Main_OnCommand(40289, 0)            -- Unselect all Items 
 end
 
+playstate=reaper.GetPlayState()
+if playstate&4==4 then return end -- quit if recording
+
+init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)  -- get information wether or not a time selection is set
+cursorpos=reaper.GetCursorPosition() --get edit cursor position
+playpos=reaper.GetPlayPosition() --get play position
+
 -------------------------------------
 reaper.Undo_BeginBlock() -- Beginning of the undo block. Leave it at the top of your main function.
 -------------------------------------
 
-init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)  -- get information wether or not a time selection is set
-
-if init_end_timesel ~= init_start_timesel then    -- there is a time selection
-  RippleCut()
-  reaper.MoveEditCursor(init_start_timesel-reaper.GetCursorPosition(), 0) --move cursor to init_start_timesel
-
-elseif reaper.CountSelectedMediaItems(0) == 1 then  -- exacty one item selected
+if init_end_timesel == init_start_timesel and reaper.CountSelectedMediaItems(0) == 1 then  -- exacty one item selected and no time selection
   runcommand("_SWS_SAFETIMESEL")            -- Set time selection to item borders
-  RippleCut()
+  init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)  -- get information wether or not a time selection is set
+end
 
+if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
+  RippleCut()
+  if (playstate==0 or playstate&2==2) then -- pause/stop -> move to start of selection
+    reaper.MoveEditCursor(init_start_timesel-reaper.GetCursorPosition(), 0)
+  else
+    if (playpos>=init_start_timesel and playpos <init_end_timesel) then -- playpos is inside the selection -> jump to start of selection (we have o use pause/setpos/play)
+      reaper.OnPauseButton() --pause
+      reaper.MoveEditCursor(init_start_timesel-reaper.GetPlayPosition(), 0)
+      reaper.OnPlayButton() --play
+    elseif (playpos>init_end_timesel) then -- if playpos is right from selection move cursor to the left to keep relative playpos
+      reaper.OnPauseButton() --pause
+      reaper.MoveEditCursor(-(init_end_timesel-init_start_timesel), 0)
+      reaper.OnPlayButton() --play
+    end
+  end
 else                           -- no time selection or items selected
    result = reaper.ShowMessageBox( "You need to make a time selection or to select a single item to ripple-cut.", "Ultraschall Ripple Cut", 0 )  -- Info window
 end
+
 
 -------------------------------------
 reaper.Undo_EndBlock("Ultraschall Ripple Cut", -1) -- End of the undo block. Leave it at the bottom of your main function.
