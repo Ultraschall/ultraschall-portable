@@ -28,9 +28,7 @@
 -- Toggles between minimum height and the default-compactible-height of Reaper.
 -- Has no effect, if there's no envelope in the project
 
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 -- now, we set the minimum height of all envelopes in the project
 -- set to nil, to use the user settings instead
@@ -44,7 +42,7 @@ dofile(script_path .. "ultraschall_helper_functions.lua")
 ToggleHeight=""
 
 --get current toggle state, set to true, if not existing yet
-A,ToggleState=ultraschall.GetUSExternalState("ultraschall_envelope", "EnvelopeToggleState")
+ToggleState=ultraschall.GetUSExternalState("ultraschall_envelope", "EnvelopeToggleState")
 if ToggleState=="-1" or ToggleState=="true" then 
   ToggleState="true" 
   ultraschall.SetUSExternalState("ultraschall_envelope", "EnvelopeToggleState", "false") 
@@ -52,10 +50,10 @@ else
   ultraschall.SetUSExternalState("ultraschall_envelope", "EnvelopeToggleState", "true")
 end
 if ToggleState=="true" then 
-  A,ToggleHeight=ultraschall.GetUSExternalState("ultraschall_envelope", "EnvelopeMinHeight")
+  ToggleHeight=ultraschall.GetUSExternalState("ultraschall_envelope", "EnvelopeMinHeight")
   if ToggleHeight=="-1" then ToggleHeight=defheight end
 else
-  A,ToggleHeight=ultraschall.GetUSExternalState("ultraschall_envelope", "EnvelopeMaxHeight")
+  ToggleHeight=ultraschall.GetUSExternalState("ultraschall_envelope", "EnvelopeMaxHeight")
   if ToggleHeight=="-1" then ToggleHeight=defmaxheight end
 end
 

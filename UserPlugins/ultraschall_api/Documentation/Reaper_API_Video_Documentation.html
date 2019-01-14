@@ -1,0 +1,303 @@
+<html><head><title>
+REAPER VideoProcessor-API functions
+</title>
+<script type="text/javascript">
+function set_class_style(c,s) { 
+  var list = document.getElementsByClassName(c);
+  for (i=0;i<list.length;i++) {
+    list[i].style.display = s; 
+  }
+}
+function set_class_innerHTML(c,s) { 
+  var list = document.getElementsByClassName(c);
+  for (i=0;i<list.length;i++) {
+    list[i].innerHTML = s; 
+  }
+}
+function setdocview(v) {
+  var list = new Array('c_doc', 'c_func', 'c_funcs',
+                       'l_doc', 'l_func', 'l_funcs',
+                       'e_doc', 'e_func', 'e_funcs',
+                       'p_doc', 'p_func', 'p_funcs');
+  var i;
+  set_class_style('all_view', v == '' ? 'inline' : 'none');
+  for (i=0;i<list.length;i++) {
+    set_class_style(list[i], (v == '' || list[i].slice(0,1) == v) ? 'block' : 'none'); 
+  }
+  set_class_innerHTML('aclick', v=='' ? 'all' : "<a href=\"#\" onClick=\"setdocview('')\">all</a>");
+  set_class_innerHTML('cclick', v=='c' ? 'C/C++' : "<a href=\"#c\" onClick=\"setdocview('c')\">C/C++</a>");
+  set_class_innerHTML('eclick', v=='e' ? 'EEL' : "<a href=\"#e\" onClick=\"setdocview('e')\">EEL</a>");
+  set_class_innerHTML('lclick', v=='l' ? 'Lua' : "<a href=\"#l\" onClick=\"setdocview('l')\">Lua</a>");
+  set_class_innerHTML('pclick', v=='p' ? 'Python' : "<a href=\"#p\" onClick=\"setdocview('p')\">Python</a>");
+}
+function onLoad() {
+  if (window.location.hash == '#c') setdocview('c');
+  else if (window.location.hash == '#e') setdocview('e');
+  else if (window.location.hash == '#l') setdocview('l');
+  else if (window.location.hash == '#p') setdocview('p');
+}
+</script>
+</head><body>
+    <div style=" position: absolute; padding-left:4%; ">
+        <div style="background-color:#282828;width:95%; font-family:tahoma; font-size:16;">
+
+
+           <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_Un.png" alt="Ultraschall Internals Documentation"></a>  
+           <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button.png" alt="Reaper Internals Documentation"></a>
+         <img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
+         <img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
+         <img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
+         <img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
+         <img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
+           <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
+           <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
+           <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
+           <div style="padding-top:2.5%">
+           <table border="0" style="color:#aaaaaa; width:100%;">
+                <tr>
+                    <td style="width:27.2%;">
+                      <a href="http://www.reaper.fm"><img style="width:118%;" src="gfx/Reaper_Internals.png" alt="Reaper internals logo"></a>
+                    </td>
+                    <td style="width:14%;"><u>Documentation</u></td>
+                    <td style="width:12.7%;"><u> </u></td>
+                    <td style="width:12.7%;"><u> </u></td>
+                    <td style="width:12%;"><u> </u></td>
+                    <td style="width:12%;"><u> </u></td>
+                    <td style="width:12%;"><u> </u></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper-Filetype-Descriptions.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Filetype Descriptions&nbsp;</a></td>
+                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Config_Variables.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Config Variables&nbsp;</a></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Api_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;ReaScript-Api-Docs&nbsp;</a></td>
+                    <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_API_Video_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;Video-Api-Docs&nbsp;</a></td>
+                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_API_Web_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;WebRC-Api-Docs&nbsp;</a></td>
+                </tr>
+                <tr><td></td><tr>
+           </table> 
+           </div>
+        </div>
+    </div>
+    <div style="position:absolute; top:17%; padding-left:5%; width:90%;"><p></p>    
+            <h2>Reaper Api - Video Processor Plugin for Reaper 5.965 </h2>
+                        
+            <h3>Index</h3>
+            <a href="#introduction">Introduction</a><br>
+            <a href="#codingintroduction">Coding Introduction</a><br>
+            <b>special variables</b><br>
+            <div style="padding-left: 3%;">
+                        <a href="#project_time">	project_time: project time in seconds	</a><br>
+                        <a href="#project_tempo">	project_tempo: current tempo in BPM	</a><br>
+                        <a href="#project_ts_num">	project_ts_num: current time signature numerator	</a><br>
+                        <a href="#project_ts_denom">	project_ts_denom: current time signature denominator	</a><br>
+                        <a href="#project_time_qn">	project_time_qn: current project position in QN	</a><br>
+                        <a href="#time">	time: item time in seconds (if in item)	</a><br>
+                        <a href="#framerate">	framerate: project FPS (30.0, 29.97, etc)	</a><br>
+                        <a href="#project_w">	project_w: project preferred video width	</a><br>
+                        <a href="#project_h">	project_h: project preferred video height	</a><br>
+                        <a href="#project_wh_valid">	project_wh_valid: set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)	</a><br>
+                        <a href="#colorspace">	colorspace: current rendering colorspace, e.g. 'RGBA', 'YV12', or 'YUY2'. you can override this with extreme caution.	</a><br>
+                        <a href="#param_wet">	param_wet: if in FX form, wet/dry mix of effect. 	</a><br>
+                        <a href="#param">	param1..param16: parameters, you can name these by adding lines: //@param [:varname] 'name' [defval minval maxval centval step]. 	</a><br>
+                        <a href="#gfx_r">	gfx_r: current drawing color (red 0..1)	</a><br>
+                        <a href="#gfx_g">	gfx_g: current drawing color (green 0..1)	</a><br>
+                        <a href="#gfx_b">	gfx_b: current drawing color (blue 0..1)	</a><br>
+                        <a href="#gfx_a">	gfx_a: current drawing alpha (0..1)	</a><br>
+                        <a href="#gfx_mode">	gfx_mode: 0=normal, 1= additive, 3=mul (works different in YUV vs RGB)	</a><br>
+                        <a href="#gfx_dest">	gfx_dest: destination image handle, or -1 for main framebuffer	</a><br>
+            </div>
+
+            <b>functions</b>
+        <div style="padding-left:3%; ">
+                <a href="#input_count">	input_count() returns number of inputs available (total), range [0..n)	</a><br>
+                <a href="#input_track_count">	input_track_count() returns the number of available inputs on discrete tracks	</a><br>
+                <a href="#input_track">	input_track(x) returns input for bottommost item or FX on discrete-track x 	</a><br>
+                <a href="#input_track_exact_count">	input_track_exact_count() returns the number of tracks above the current track that could possibly contain video items.	</a><br>
+                <a href="#input_track_exact">	input_track_exact(x) returns input for bottommost item or FX on track relative to current track.</a><br>
+                <a href="#input_next_item">	input_next_item(x) returns the next input after x which is on a different item or track	</a><br>
+                <a href="#input_next_track">	input_next_track(x) returns the next input after x which is on a different track	</a><br>
+                <a href="#input_ismaster">	input_ismaster() returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain	</a><br>
+                <a href="#input_info">	input_info(input, w, h[,srctime, wet, parm1, ...]) returns 1 if input is available, sets w/h to dimensions. </a><br>
+                <a href="#gfx_img_alloc">	gfx_img_alloc([w,h,clear]) returns an image index for drawing .</a><br>
+                <a href="#gfx_img_resize">	gfx_img_resize(handle,w,h[,clear]) sets an image size.	</a><br>
+                <a href="#gfx_img_hold">	gfx_img_hold(handle) (cheaply) retains a read-only copy of an image in handle. </a><br>
+                <a href="#gfx_img_getptr">	gfx_img_getptr(handle) gets a unique identifier for an image, valid for while the image is retained. </a><br>
+                <a href="#gfx_img_free">	gfx_img_free(handle) frees an earlier allocated image index.	</a><br>
+                <a href="#gfx_img_info">	gfx_img_info(handle,w,h) gets dimensions of image.	</a><br>
+                <a href="#gfx_set">	gfx_set(r,g,b[,a=1,mode=0,dest]) - updates r/g/b/a/mode always.</a><br>
+                <a href="#gfx_blit">	gfx_blit(input[,preserve_aspect=0,x,y,w,h,srcx,srcy,srcw,srch]) copies input to framebuffer.</a><br>
+                <a href="#gfx_fillrect">	gfx_fillrect(x,y,w,h) fills a rectangle	</a><br>
+                <a href="#gfx_procrect">	gfx_procrect(x,y,w,h,channel_tab) processes a rectangle with 768-entry channel table [256 items of 0..1 per channel]	</a><br>
+                <a href="#gfx_evalrect">	gfx_evalrect(x,y,w,h,code_string[,flags,src2]) processes a rectangle with code_string being executed for every pixel/pixel-group. </a><br>                
+                <a href="#gfx_gradrect">	gfx_gradrect(x,y,w,h, r,g,b,a	[,drdx,dgdx,dbdx,dadx,	drdy,dgdy,dbdy,dady]);	</a><br>
+                <a href="#gfx_rotoblit">	gfx_rotoblit(srcidx, angle [,x, y, w, h, srcx, srcy, w, h, cliptosrcrect = 0, centxoffs=0, centyoffs=0])	</a><br>
+                <a href="#gfx_deltablit">	gfx_deltablit(srcidx, x,y,w,h srcx,srcy, dsdx, dtdx, dsdy, dtdy, dsdxdy, dtdxdy[, dadx, dady, dadxdy])	</a><br>
+                <a href="#gfx_xformblit">	gfx_xformblit(srcidx, x,y,w,h, wdiv, hdiv, tab[, wantalpha=0]) - tab is wdiv*hdiv*2 table of src points.</a><br>
+                <a href="#gfx_keyedblit">	gfx_keyedblit(input[,x,y,w,h,srcx,srcy,kv1,kv2,kv3,kv4]) chroma-key blits, using the source color as key. </a><br>
+                <a href="#gfx_destkeyedblit">	gfx_destkeyedblit(input[,x,y,w,h,srcx,srcy,kv1,kv2,kv3,kv4]) chroma-key blits, using destination color as key. ignores gfx_a and gfx_mode.	</a><br>
+                <a href="#gfx_setfont">	gfx_setfont(pxsize[,#fontname, flags) - sets a font.	</a><br>
+                <a href="#gfx_str_measure">	gfx_str_measure(#string[,w,h]) - measures the size of #string, returns width	</a><br>
+                <a href="#gfx_str_draw">	gfx_str_draw(#string[,x,y,fxc_r,fxc_g,fxc_b]) - draw string	</a><br>
+                <a href="#rgb2yuv">	rgb2yuv(r,g,b) -- utility, converts r,g,b to YUV, does not clamp [0..1]	</a><br>
+                <a href="#yuv2rgb">	yuv2rgb(r,g,b) -- utility, converts YUV to r,g,b, not clamping [0..1]	</a><br>
+
+        </div>
+            <br>
+        <div style="width:89%;">
+            <h3><a id="introduction">Introduction</a></h3>
+            Since Reaper 5, Reaper has proper video-editing support. In addition to that, Reaper has a plugin, called "Video Processor Plugin", that is focused on video-effect handling.<p>
+                Though it is still in it's very early stages, it supports already a handful of useful effects that can be selected via the presets-selection.<br>
+                It is also programmable. It opens up a small IDE-window, as part of the "Video-Processor-Plugin"-UI, in which you can put Eel-code(no Lua or Python!), that processes the video.<p>
+                Unlike with other scripts, the scripts for the video processor plugin do not support the standard-reaper-API-commands, but have an own set of variables and functions. The list of functions can be reached by clicking into the IDE-window of the "video processor plugin" and hitting the F1-key.<p>
+                <b>Some general notes on the video-processor-plugin:</b><br>
+            It has a very limited set of programmable UI-elements, means, only a knob (refer the <a href="#param">param</a>-variable for more details) at the time.<br>
+            The plugin has also sometimes the behaviour of "added effects". That means: If you have several tracks whith video items and you put a video processor plugin on every track as track-FX, they do not only influence the video-items in this track. In fact, they also influence the video-items on the other tracks as well. If you have 10 tracks and every track has a video-effect as track-FX that turns the brightness down by 10%, the resulting image will be a black one. All effects added up each other (10 times -10% brightness).<br>
+            This effect can be circumvented by putting the video-processor-plugin as item-FX, NOT as track-FX.<p>
+            
+                
+            <h3><a id="codingintroduction">Coding Introduction</a></h3>
+                To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin.<br>
+                Next to it, on the left side of the editor-field, your parameter-knobs will appear(if you've defined some). <br>
+                Code for the Video-Processor-Plugin must be written in EEL, not in Lua or Python.<p>
+                    Example code, with a knob for turning the video on and off:<p>
+            <pre><code>
+                // A small demo-script that turns video on&off
+                //@amp;param1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
+
+                frame=input_track(0); // variable frame set with the videoframe from the first 
+                                      // videoitem in the project at a given position
+          
+                gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
+                                                       // to prevent from having the last frame(s) be shown indefinately
+
+                //Now, put the picture to the framebuffer -> outputting the video
+                gfx_blit(frame,  // the current video-frame
+                            1,   // don't preserve aspect-ratio
+                            0,0, // put upper right corner of the video at position 0,0
+                            project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
+                                                                      //   multiplied by the VideoOnOff-Parameter
+                                                                      //   1=video squeezed to 100% height & width 
+                                                                      //   0=video squeezed to 0% height & width
+                            );
+
+</code></pre>
+            <h3>Special Variables</h3>
+         <hr><i><a id="project_time">	project_time</a></i><p>
+            project time in seconds	
+ <hr><i><a id="project_tempo">	project_tempo</a></i><p>
+ current tempo in BPM
+ <hr><i><a id="project_ts_num">	project_ts_num</a></i><p>
+current time signature numerator	
+ <hr><i><a id="project_ts_denom">	project_ts_denom</a></i><p>
+current time signature denominator	
+ <hr><i><a id="project_time_qn">	project_time_qn</a></i><p>
+current project position in QN	<p> 
+ <hr><i><a id="time">	time</a></i><p>
+ item time in seconds (if in item)	
+ <hr><i><a id="framerate">	framerate </a></i><p>
+project FPS (30.0, 29.97, etc)	
+ <hr><i><a id="project_w">	project_w </a></i><p>
+project preferred video width	
+ <hr><i><a id="project_h">	project_h </a></i><p>
+project preferred video height	
+ <hr><i><a id="project_wh_valid">	project_wh_valid</a></i><p>
+ set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)	
+ <hr><i><a id="colorspace">	colorspace </a></i><p>
+current rendering colorspace, e.g. 'RGBA', 'YV12', or 'YUY2'. you can override this with extreme caution.	
+ <hr><i><a id="param_wet">	param_wet</a></i><p>
+ if in FX form, wet/dry mix of effect. 	
+ <hr><i><a id="param">	param1..param16</a></i><p>
+ parameters, you can name these by adding lines //@param [:varname] 'name' [defval minval maxval centval step]. 	
+ <hr><i><a id="gfx_r">	gfx_r </a></i><p>
+current drawing color (red 0..1)	
+ <hr><i><a id="gfx_g">	gfx_g </a></i><p>
+current drawing color (green 0..1)	
+ <hr><i><a id="gfx_b">	gfx_b </a></i><p>
+current drawing color (blue 0..1)	
+ <hr><i><a id="gfx_a">	gfx_a </a></i><p>
+current drawing alpha (0..1)	
+ <hr><i><a id="gfx_mode">	gfx_mode</a></i><p>
+        0=normal, 1= additive, 3=mul (works different in YUV vs RGB)	<br>
+        &Tab; add 0x100 for blit() to enable filtering (if possible)	<br>
+        &Tab; add 0x10000 to use source alpha (only valid when using RGBA colorspace)	<br>
+        &Tab; add 0x40000 to use extra clamping (for out of range alpha/gradient values)<br>	
+        &Tab; add 0x80000 to treat gfx_r/gfx_g/gfx_b as YUV values (in non-RGB colorspace)<br>	
+ <hr><i><a id="gfx_dest">	gfx_dest</a></i><p>
+    destination image handle, or -1 for main framebuffer	<p><br>
+		
+<h3>Functions</h3>
+ <hr><i><a id="input_count">	input_count() 	</a></i><p>
+returns number of inputs available (total), range [0..n)
+ <hr><i><a id="input_track_count">	input_track_count() </a></i><p>
+returns the number of available inputs on discrete tracks	
+ <hr><i><a id="input_track">	input_track(x) </a></i><p>
+returns input for bottommost item or FX on discrete-track x (0 is first track with video item above current, etc)	
+ <hr><i><a id="input_track_exact_count">	input_track_exact_count() </a></i><p>
+returns the number of tracks above the current track that could possibly contain video items.	
+ <hr><i><a id="input_track_exact">	input_track_exact(x) </a></i><p>
+returns input for bottommost item or FX on track relative to current track. Returns -1000 if track does not contain any video items at the current time, or -10000 if no further tracks contain video.	
+ <hr><i><a id="input_next_item">	input_next_item(x) </a></i><p>
+returns the next input after x which is on a different item or track	
+ <hr><i><a id="input_next_track">	input_next_track(x) </a></i><p>
+returns the next input after x which is on a different track	
+ <hr><i><a id="input_ismaster">	input_ismaster() </a></i><p>
+returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain	
+ <hr><i><a id="input_info">	input_info(input, w, h[,srctime, wet, parm1, ...]) </a></i><p>
+returns 1 if input is available, sets w/h to dimensions. If srctime specified, it will be set with the source-local time of the underlying media. if input is a video processor in effect form, automated parameters can be queried via wet/parm1/etc.	
+ <hr><i><a id="gfx_img_alloc">	gfx_img_alloc([w,h,clear]) </a></i><p>
+returns an image index for drawing (can create up to 32 images). contents of image undefined unless clear set.	
+ <hr><i><a id="gfx_img_resize">	gfx_img_resize(handle,w,h[,clear]) </a></i><p>
+sets an image size (handle can be -1 for main framebuffer). contents of image undefined after resize, unless clear set. clear=-1 will only clear if resize occurred.	
+ <hr><i><a id="gfx_img_hold">	gfx_img_hold(handle) </a></i><p>
+(cheaply) retains a read-only copy of an image in handle. This copy should be released using gfx_img_free() when finished. Up to 32 images can be held.	
+ <hr><i><a id="gfx_img_getptr">	gfx_img_getptr(handle) </a></i><p>
+gets a unique identifier for an image, valid for while the image is retained. can be used (along with gfx_img_hold) to detect when frames change in a low frame rate video	
+ <hr><i><a id="gfx_img_free">	gfx_img_free(handle) </a></i><p>
+frees an earlier allocated image index.	
+ <hr><i><a id="gfx_img_info">	gfx_img_info(handle,w,h) </a></i><p>
+gets dimensions of image, returns 1 if valid (resize if inexplicably invalidated)	
+ <hr><i><a id="gfx_set">	gfx_set(r,g,b[,a=1,mode=0,dest]) </a></i><p>
+updates r/g/b/a/mode always, dest only if specified	
+ <hr><i><a id="gfx_blit">	gfx_blit(input[,preserve_aspect=0,x,y,w,h,srcx,srcy,srcw,srch]) </a></i><p>
+copies input to framebuffer. preserve_aspect=-1 for no fill in pad areas	
+ <hr><i><a id="gfx_fillrect">	gfx_fillrect(x,y,w,h) </a></i><p>
+fills a rectangle	
+ <hr><i><a id="gfx_procrect">	gfx_procrect(x,y,w,h,channel_tab[,mode]) </a></i><p>
+processes a rectangle with 768-entry channel table [256 items of 0..1 per channel]. specify mode=1 to use Y value for U/V source channels (colorization mode)
+ <hr><i><a id="gfx_evalrect">	gfx_evalrect(x,y,w,h,code_string[,flags,src2]) </a></i><p>
+processes a rectangle with code_string being executed for every pixel/pixel-group. code should reference, depending on colorspace: RGBA:  r/g/b/a, YUY2: y1,y2,u,v, YV12: y1-y4, u, v. Values are 0-255, and are not clamped. set flags|=1 in order to prevent multiprocessing (if your routine needs to process pixels in-order; side-note: variables _1-_99 are thread-local variables which will always be initialized to 0, and _0 will be initialized to the thread index (0 or 1 usually)). set flags|=2 to ignore output (analysis-only). if src2 specified, sr/sg/sb/sa, sy1/su/sv etc will be available to read. In this case only the intersection of valid rectangles between src2 and the destination buffer will be valid.
+ <hr><i><a id="gfx_gradrect">	gfx_gradrect(x,y,w,h, r,g,b,a
+	&Tab; [,drdx,dgdx,dbdx,dadx,	
+	&Tab; drdy,dgdy,dbdy,dady]);		</a></i><p>
+ <hr><i><a id="gfx_rotoblit">	gfx_rotoblit(srcidx, angle [,x, y, w, h, srcx, srcy, w, h, cliptosrcrect = 0, centxoffs=0, centyoffs=0])	</a></i><p>
+ <hr><i><a id="gfx_deltablit">	gfx_deltablit(srcidx, x,y,w,h srcx,srcy, dsdx, dtdx, dsdy, dtdy, dsdxdy, dtdxdy[, dadx, dady, dadxdy])	</a></i><p>
+ <hr><i><a id="gfx_xformblit">	gfx_xformblit(srcidx, x,y,w,h, wdiv, hdiv, tab[, wantalpha=0])</a></i><p>
+tab is wdiv*hdiv*2 table of src points. if wantalpha=1, tab is wdiv*hdiv*3 table of src points including alpha.	
+ <hr><i><a id="gfx_keyedblit">	gfx_keyedblit(input[,x,y,w,h,srcx,srcy,kv1,kv2,kv3,kv4])</a></i><p>
+     chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colorspace:	<br>
+     YV12/YUY2: kv1 is U target (-0.5 default), kv2 is V target (-0.5 default), kv3 is closeness-factor (0.4 default), kv4 is the gain (2.0 default)	<br>
+     RGBA: kv1 is green-factor (1.0 default), kv2 is blue-factor (-1.0 default), kv3 is offset (-1.0 default), kv4 enables spill removal (1.0 default)<br>	
+ <hr><i><a id="gfx_destkeyedblit">	gfx_destkeyedblit(input[,x,y,w,h,srcx,srcy,kv1,kv2,kv3,kv4]) </a></i><p>
+chroma-key blits, using destination color as key. ignores gfx_a and gfx_mode.	
+ <hr><i><a id="gfx_setfont">	gfx_setfont(pxsize[,#fontname, flags) </a></i><p>
+sets a font, flags can be 'B' for bold, 'I' for italics, 'BI' for bold italics, etc	
+ <hr><i><a id="gfx_str_measure">	gfx_str_measure(#string[,w,h])</a></i><p>
+measures the size of #string, returns width	
+ <hr><i><a id="gfx_str_draw">	gfx_str_draw(#string[,x,y,fxc_r,fxc_g,fxc_b]) </a></i><p>
+draw string	
+ <hr><i><a id="rgb2yuv">	rgb2yuv(r,g,b) </a></i><p>
+utility, converts r,g,b to YUV, does not clamp [0..1]	
+ <hr><i><a id="yuv2rgb">	yuv2rgb(r,g,b) </a></i><p>
+utility, converts YUV to r,g,b, not clamping [0..1]	
+
+
+
+
+
+        </div>
+        </div>
+    </body>
+</html>

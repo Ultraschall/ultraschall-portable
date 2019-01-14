@@ -24,10 +24,7 @@
 ################################################################################
 ]]
 
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
-
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 if reaper.GetPlayState() == 0 or reaper.GetPlayState() == 2 then  -- 0 = Stop, 2 = Pause
 	current_position = reaper.GetCursorPosition() -- Position of edit-cursor

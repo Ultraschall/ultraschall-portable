@@ -29,11 +29,9 @@
 --
 -- After toggling, a messagewindow appears, showing current Safemode-Toggle-State.
 
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-A,state=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle")
+state=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle")
 
 if state=="ON" or state=="" or state=="-1" then -- If SafeMode is ON or was never set, turn it OFF
   ultraschall.SetUSExternalState("Ultraschall_Transport", "Safemode_Toggle", "OFF")
@@ -42,5 +40,5 @@ elseif state=="OFF" then -- If SafeMode is OFF, turn it ON
   ultraschall.SetUSExternalState("Ultraschall_Transport", "Safemode_Toggle", "ON")
 end
 
-A,state=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle")
+state=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle")
 reaper.MB("Safemode is turned "..state,"Safemode toggle", 0)

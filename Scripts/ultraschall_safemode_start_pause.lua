@@ -24,9 +24,7 @@
 ################################################################################
 ]]
 
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 --[[reaper.GetPlayState()
 
@@ -56,7 +54,7 @@ state = reaper.GetPlayState()
     msg = "Stop the currently running recording. No more audio will be recorded to disk."
 
 -- Safe-Mode Toggle-Logic
-A,SafeModeToggleState=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle") -- Get the Safemode-Toggle-State
+SafeModeToggleState=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle") -- Get the Safemode-Toggle-State
 
 if SafeModeToggleState=="OFF" then -- If Safe-Mode is OFF, show no message-box
     result = 6

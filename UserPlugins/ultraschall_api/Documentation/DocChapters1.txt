@@ -1,0 +1,5 @@
+- Helper functions:
+    Clipboard-Management
+    Data Manipulation:
+    Lua-helper-functions
+    UndoManagement:  

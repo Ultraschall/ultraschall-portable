@@ -40,9 +40,7 @@ version="1.3"
 
 gfx.init("Ultraschall State Inspector "..version, 900, 520)
 
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 font_height=gfx.measurechar(65)+3
 
@@ -143,7 +141,7 @@ function ShowStates()
       t, value=reaper.GetProjExtState(0, states[i][2], states[i][3])
       gfx.drawstr(value.."\n")
     elseif states[i][1]=="usextstate" then
-      t, value=ultraschall.GetUSExternalState(states[i][2], states[i][3])
+      value=ultraschall.GetUSExternalState(states[i][2], states[i][3])
       gfx.drawstr(i)
       gfx.set(0.3,0.3,0.3)
       gfx.line(gfx.x,gfx.y+font_height,row3,gfx.y+font_height)

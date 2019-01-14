@@ -24,9 +24,7 @@
 ################################################################################
 ]]
 
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 current_position = reaper.GetPlayPosition() -- Position of play-cursor
 

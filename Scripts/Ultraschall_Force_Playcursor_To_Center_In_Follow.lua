@@ -28,11 +28,9 @@
 -- when stopped, it will take the edit-cursor, when playing/recording, it will take the play-cursor instead
 
 
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-a,A=ultraschall.GetUSExternalState("ultraschall_follow", "state")
+A=ultraschall.GetUSExternalState("ultraschall_follow", "state")
 
 start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
 length=(end_time-start_time)/2

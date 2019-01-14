@@ -24,9 +24,7 @@
 ################################################################################
 ]]
  
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 
 theme_version_now = 20180114 -- version of this theme
@@ -42,13 +40,13 @@ error_msg = false
 
 theme_version = reaper.GetExtState("ultraschall_versions", "theme")
 plugin_version = reaper.GetExtState("ultraschall_versions", "plugin")
-A,views = ultraschall.GetUSExternalState("ultraschall_gui", "views")
-A,view = ultraschall.GetUSExternalState("ultraschall_gui", "view")
-A,sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
-A,mouse = ultraschall.GetUSExternalState("ultraschall_mouse", "state")
-A,first_start = ultraschall.GetUSExternalState("ultraschall_start", "firststart")
-A,startscreen = ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
-A,follow = ultraschall.GetUSExternalState("ultraschall_follow", "state")
+views = ultraschall.GetUSExternalState("ultraschall_gui", "views")
+view = ultraschall.GetUSExternalState("ultraschall_gui", "view")
+sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
+mouse = ultraschall.GetUSExternalState("ultraschall_mouse", "state")
+first_start = ultraschall.GetUSExternalState("ultraschall_start", "firststart")
+startscreen = ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
+follow = ultraschall.GetUSExternalState("ultraschall_follow", "state")
 
   follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
 

@@ -1,0 +1,158 @@
+<USDocML>
+    encapsulates all docblocs
+</USDocML>
+
+
+<US_DocBloc_Meta>
+</US_DocBloc_Meta>
+
+<US_DocBloc version="" spok_lang="" prog_lang="">
+    <timestamp type="creation|lastchecked|lastupdated">timezone="UTC" timeformat="dd-mo-yy hh:mm:ss:m[sss]">TimeStamp</timestamp>
+    <location type="creation|lastchecked|lastupdated" unit_format="">Coordinates</location>
+    <version>versionsnumber</version>
+    <transform_encoder>Wenn verschiedene Formatinterpretatoren verwendet werden(XLS-Stylesheets oder sowas) um verschiedene Formatierungen zu haben (andere Formatierung für Description-Text in Kapitel 1, vs Kapitel2) dann gib hier an, welcher Umwandlungsstyle verwendet werden soll. Mach aber mal nen besseren Tagnamen, der hier ist ugly.</transform_encoder>
+    
+    <slugID>SLUG</slugID>
+        - must be a one-liner
+        - allows all xml-allowed-characters except newline and carriage return
+        
+    <title markdown="true">Title/chapter/name</title>
+        - to signal, what kind of header/title this is, you can use # as in markdown, set markdown="true" in that case
+        - # header 1
+        - ## header 2
+        - ### header 3
+        - and so on
+        
+    <functioncall>datatype retval_varname = functionname(datatype parameter_varname, ...)</functioncall>
+
+    <description markup_type="html,markdown" markup_version="5.01,1.0.1" indent="default|as_typed|minus_starts_line" language="en,de,cpp">
+    </description>
+
+    <parameters markup_type="html,markdown" markup_version="5.01,1.0.1" indent="default|as_typed|minus_starts_line" language="en,de,cpp">
+    </parameters>
+
+    <retvals markup_type="html,markdown" markup_version="5.01,1.0.1" indent="default|as_typed|minus_starts_line" language="en,de,cpp">
+            like parameters
+    </retvals>
+
+    <methods markup_type="html,markdown" markup_version="5.01,1.0.1" indent="default|as_typed|minus_starts_line" language="en,de,cpp">
+            like parameters
+    </methods>
+
+    <attributes markup_type="html,markdown" markup_version="5.01,1.0.1" indent="default|as_typed|minus_starts_line" language="en,de,cpp">
+            like parameters
+    </attributes>
+
+    <datatypes markup_type="html,markdown" markup_version="5.01,1.0.1" indent="default|as_typed|minus_starts_line" language="en,de,cpp">
+            like parameters
+    </datatypes>
+    
+    <variables markup_type="html,markdown" markup_version="5.01,1.0.1" indent="default|as_typed|minus_starts_line" language="en,de,cpp">
+            like parameters
+    </variables>
+    
+    <example id="unique_id" markup_type="html,markdown" markup_version="5.01,1.0.1" indent="default|as_typed|minus_starts_line" language="en,de,cpp">
+            examples for this text
+    </example>
+    
+    <objects markup_type="html,markdown,css" markup_version="5.01,1.0.1,2.1" indent="default|as_typed|minus_starts_line" language="en,de,cpp">
+    </objects>
+    
+    <linked_to>
+        this element is somehow connected to one or more next elements(loosely, contextually, or any other connection)
+    </linked_to>
+        - only slugs of linked elements
+        - one slug per line
+        
+    <linked_from>
+        this element is somehow connected to one or more previous elements(loosely, contextually, or any other connection)
+    </linked_from>
+        - only slugs of linked elements
+        - one slug per line
+        
+    <this_depends_on>
+        things that come before the current element. This element does not inherit anything but rather share the communication-interfaces, which means:
+            this element needs the output from one or more previous element(s)(which shall be listed here)
+    </this_depends_on>
+        - only slugs of dependent elements
+        - one slug per line
+        
+    <things_depending_on_this_element>
+        things that come after the current element. They do not inherit anything but rather share the communication-interfaces, which means:
+            one or more next elements, that need the output from this element
+    </things_depending_on_this_element>
+        - only slugs of dependent elements
+        - one slug per line
+
+    <heritage_from>
+        uses elements from a parent instance or object/class
+    </heritage_from>
+        - only slugs of inherited elements
+        - one slug per line
+
+    <heritage_to>
+         instances or objects/classes/element, who use elements from this object/class/element
+    </heritage_to>
+        - only slugs of inherited elements
+        - one slug per line
+        
+    <contributors>
+        only slugs or URIs of the contributors
+    </contributors>
+        - one slug/URI per line
+
+    <datatypes>
+        Describes the datatypes used in this docbloc. Can be used to parse out the datatypes in retvals/parameters/functioncall/methodcall/etc
+        In whatever way I want to do that, I don't know yet.
+        Must be better somehow...
+    </datatypes>
+    
+    <chapter>
+        
+    </chapter>
+    
+    <previous_chapter>slug</previous_chapter> - must be unique, means, only this chapter can have this slug as next_chapter; use related_chapters or linked_from if you want to show that other docblocs are related to this docbloc too
+    <next_chapter>slug</next_chapter> - must be unique, means, only this chapter can have this slug as next_chapter; use related_chapters or linked_to if you want to show that other docblocs are related to this docbloc too
+        - if next_chapter and previous_chapter are empty, they will ignored
+        - if next_chapter is empty, USDocBlocs not containing next_chapter and previous_chapter will follow
+        - if previous_chapter is empty, USDocBlocs not containing next_chapter and previous_chapter came before
+        - only the first USDocBloc with a solely empty next_chapter will be seen, all others will be used as empty next_chapter
+        - only the first USDocBloc with a solely empty previous_chapter will be seen, all others will be used as empty previous_chapter
+    <related_chapters>
+        slug1
+        slug2
+        slug3
+    </related_chapters>
+        - all slugs, that are related to this US_DocBloc, can be added here
+        - one slug per line
+
+    <source_file>
+    </source_file>
+
+    <target_file>
+    </target_file>
+
+    <tags>tag1,tag2,tag3,tag4</tags>
+    
+</US_DocBloc>
+
+
+
+How Links within the system are coded in markup-allowing tags(in <description> for instance)
+    usdocml://slug - refers a slug in the docs. It will read target_file from the slug and exchange usdocml:// with the link to the target-file
+    http://blabla.com/tudelu.html#URI - normal link
+    #URI - is the slug within the target-documentation(like HTML-anchors, slugs used in the target document as anchors and such, etc)
+    
+How additional tags can be added:
+    Use XML-namespaces for that, to distinguish USDocML-tags from your additional tags.
+    Ultraschall is reserved.
+    
+Global settings/values:
+    One US_DocBloc per file can have the attribute global="true".
+    In that one, you can set default/global settings like spoken languages, standard parameters/retvals, tags, the used datatypes, etc.
+    Local attributes overwrite global attributes. Global tag-content will be added to the local tag-content.
+    
+MetaUS_DocBlocs:
+    They are to be used for metadata for elements/contributors/assets/etc. Stuff, that shall not be added to a target doc-file, 
+    but rather as additional data. Like credentials/logs/structure-definitions/whatever you need to describe your document.
+    Not yet designed.
