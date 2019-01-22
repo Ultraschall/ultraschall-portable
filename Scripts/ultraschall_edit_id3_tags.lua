@@ -27,7 +27,17 @@
 oldnotes=reaper.GetSetProjectNotes(0, false, "")
 oldnotes=string.gsub(oldnotes, "\n", "\b")
 
-retval, result = reaper.GetUserInputs("Edit ID3 Podcast Metadata", 5, "Episode Title:,Author:,Podcast:,Podcast Category:,Description:,extrawidth=300, separator=\b", oldnotes)
+if oldnotes=="" then 
+  Date = os.date("*t")
+  oldnotes="\b\b\b"..Date.year
+end
+
+
+--if olll==nil then return end 
+
+retval, result = reaper.GetUserInputs("Edit ID3 Podcast Metadata", 6, "Episode Title:,Author:,Podcast:,Year:,Podcast Category:,Description:,extrawidth=300, separator=\b", oldnotes)
+
+
 
 result=string.gsub(result, "\b", "\n")
 
