@@ -50,6 +50,9 @@ if playstate&4==4 then return end -- quit if recording
 init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)  -- get information wether or not a time selection is set
 cursorpos=reaper.GetCursorPosition() --get edit cursor position
 playpos=reaper.GetPlayPosition() --get play position
+follow_actionnumber = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+followon_actionnumber= reaper.NamedCommandLookup("_Ultraschall_Turn_On_Followmode")
+followstate=reaper.GetToggleCommandState(follow_actionnumber)
 
 -------------------------------------
 reaper.Undo_BeginBlock() -- Beginning of the undo block. Leave it at the top of your main function.
@@ -73,6 +76,10 @@ if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
       reaper.OnPauseButton() --pause
       reaper.MoveEditCursor(-(init_end_timesel-init_start_timesel), 0)
       reaper.OnPlayButton() --play
+    end
+    
+    if followstate==1 then -- reactivate followmode if it was on before
+      reaper.Main_OnCommand(followon_actionnumber,0)
     end
   end
 else                           -- no time selection or items selected
