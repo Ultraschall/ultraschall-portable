@@ -79,6 +79,7 @@ if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
     end
     
     if followstate==1 then -- reactivate followmode if it was on before
+      ultraschall.pause_follow_one_cycle()
       reaper.Main_OnCommand(followon_actionnumber,0)
     end
   end
