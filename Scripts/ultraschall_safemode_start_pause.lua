@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,20 +26,10 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
---[[reaper.GetPlayState()
 
-0=stop,
-1=playing,
-2=pause,
-5=is recording
-6=record paused
-]]
-
-
-function main()
 state = reaper.GetPlayState()
 
-  if state == 5 then -- is recording
+if state == 5 then -- is recording
 
   --[[type:
   0=OK,
@@ -49,42 +39,30 @@ state = reaper.GetPlayState()
    4=YESNO,
    5=RETRYCANCEL]]
 
-    type = 4
-    title = "Stop Recording?"
-    msg = "Stop the currently running recording. No more audio will be recorded to disk."
+  msgboxtype = 4
+  title = "Stop Recording?"
+  msg = "Stop the currently running recording. No more audio will be recorded to disk."
 
--- Safe-Mode Toggle-Logic
-SafeModeToggleState=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle") -- Get the Safemode-Toggle-State
+  -- Safe-Mode Toggle-Logic
+  SafeModeToggleState=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle") -- Get the Safemode-Toggle-State
+  
+  if SafeModeToggleState=="OFF" then -- If Safe-Mode is OFF, show no message-box
+      result = 6    
+  elseif SafeModeToggleState=="ON" or SafeModeToggleState=="" or SafeModeToggleState=="-1" then -- If Safe-Mode is ON or was never toggled, show the message-box
+      result=reaper.ShowMessageBox( msg, title, msgboxtype )
+  end
 
-if SafeModeToggleState=="OFF" then -- If Safe-Mode is OFF, show no message-box
-    result = 6
-    
-elseif SafeModeToggleState=="ON" or SafeModeToggleState=="" or SafeModeToggleState=="-1" then -- If Safe-Mode is ON or was never toggled, show the message-box
-    result=reaper.ShowMessageBox( msg, title, type )
-end
 
-  --[[result:
-  1=OK,
-   2=CANCEL,
-   3=ABORT,
-   4=RETRY,
-   5=IGNORE,
-   6=YES,
-   7=NO
-  ]]
-
-    if result == 6 then -- it's ok to stop the recording
-      ultraschall.pause_follow_one_cycle()
-      reaper.OnPauseButton()
-    end
-
-  elseif state == 1  then -- playing
+  if result == 6 then -- it's ok to stop the recording
     ultraschall.pause_follow_one_cycle()
     reaper.OnPauseButton()
-  else -- stop or pause
-    reaper.OnPlayButton()
   end
+
+elseif state == 1  then -- playing
+  ultraschall.pause_follow_one_cycle()
+  reaper.OnPauseButton()
+else -- stop or pause
+  reaper.OnPlayButton()
 end
 
-reaper.defer(main)
 
