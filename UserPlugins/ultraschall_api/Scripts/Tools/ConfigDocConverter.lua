@@ -840,7 +840,7 @@ for lolo=1, 50 do
     end  
     if index>=Ccount then break end
 end
-    if index<Ccount then reaper.defer(entries) else writefile() end
+    if index<Ccount then reaper.defer(entries) else writefile() reaper.SetExtState("ultraschall", "doc", reaper.time_precise(), false) end
 end
 
 --header()

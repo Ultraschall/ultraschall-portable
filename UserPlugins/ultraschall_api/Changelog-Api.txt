@@ -1,43 +1,336 @@
-##Ultraschall Framework - Changelog
 
-###4.00 Beta 2.8: - "Mike Oldfield - Taurus II/Five Miles Out" - 15th of May 2019
+## Ultraschall Framework - Changelog
 
-####New features in 4.00beta2.8
+### 4.00 Beta 2.71(internal release): - "Blue Oyster Cult - Don't fear the Reaper" - 14th of February 2019
+
+   760 functions with about 60 new ones.
+
+   New Concepts/Features:
+
+   - **Defer-functions**, that allow setting, how often a specific defer-loop shall be executed, every n'th cycle/second. They also
+    allow being terminated from inside and outside the current script.  
+    
+   - **ChildScripts**, that allow you to run scripts as multiple script-instances, pass parameters and returnvalues to and from them
+
+#### New features in 4.00beta2.71
   - SplitStringAtNULLBytes - splits a string at NULL-bytes ( \0 )
   - new background-script - ultraschall_track_old_playstate.lua - stores old playstate into extstate ultraschall->last_playstate
   - GetLastPlayState - returns the last playstate before the current one
-  - SetUSExternalState - converts now all passed parameters to string, regardless of their type
+  - US_Api_AUD.html - added
+  - US_Api_Concepts_AUD.html - added
+  - US_Api_Concepts_DOC.html - added
+  - US_Api_Concepts_GFX.html - added
+  - US_Api_Concepts_GUI.html - added
+  - US_Api_Concepts_VID.html - added
+  - US_Api_DOC.html - added
+  - US_Api_GFX.html - added
+  - US_Api_GUI.html - added
+  - US_Api_VID.html - added
+  - US_Api-AUD.USDocML - added
+  - US_Api-DOC.USDocML - added
+  - US_Api-GFX.USDocML - added
+  - US_Api-GUI.USDocML - added
+  - US_Api-VID.USDocML - added
+  - NewUltraschallDoc_VID_Converter.lua - added
+  - NewUltraschallDoc_GUI_Converter.lua - added
+  - NewUltraschallDoc_DOC_Converter.lua - added
+  - NewUltraschallDoc_AUD_Converter.lua - added
+  - NewUltraschallConceptsDocConverter_AUD.lua - added
+  - NewUltraschallConceptsDocConverter_DOC.lua - added
+  - NewUltraschallConceptsDocConverter_GFX.lua - added
+  - NewUltraschallConceptsDocConverter_GUI.lua - added
+  - NewUltraschallConceptsDocConverter_VID.lua - added
+  - IsValidHWND - checks, if a HWND is a valid one
+  - Main_OnCommandByFilename - runs a command by its filename instead of the ActionCommandID/command-id; 
+                                returns a unique script-identifier for the started script-instance, that you can use as
+                                extstate to communicate with that script;
+                                allows passing of parameters to the started script!
+  - MIDI_OnCommandByFilename - runs a command in the MIDI-Editor context by its filename instead of the ActionCommandID/command-id;
+                                returns a unique script-identifier for the started script-instance, that you can use as
+                                extstate to communicate with that script
+                                allows passing of parameters to the started script!
+  - BrowseForOpenFiles - utilizes JS_Dialog_BrowseForOpenFiles-function, but returns the files and paths in a more comfortable way
+  - Base64_Encoder - encodes a string into a Base64-encoded string
+  - CreateTemporaryFileOfProjectfile - creates a valid temporary-copy of an rpp-projectfile; use nil for the currently opened one(must be saved first)
+  - ultraschall.hotfixdate - holds the release-date of the currently installed hotfix, returned by GetApiVersion now
+  - Base64_Decoder - decodes a Base64-encoded string
+  - StateChunkLayouter - layouts statechunks according the layouting rules of rpp-projectfiles; makes parsing them much easier
+  - CountUltraschallEffectPlugins - counts number of instances of StudioLink, StudioLinkOnAir, Ultraschall-Soundboard and Ultraschall_Dynamics-plugins in a track. Also returns a table with all bypass/offline-states
+  - GetReaperWindowAttributes - returns several attributes of the Reaper-window, like size/position, active-state, childwindows, etc
+  - GetTopmostHWND - returns the topmost hwnd(window-handler) of a child-hwnd; returns also all the parent-hwnds
+  - print - replacement for Lua's own print-function(which is quite useless in Reaper); displays the printed parameters in the ReaScript-console
+  - print2 - like print, but displays the parameters as a messagebox instead
+  - ConvertIntegerToBits - converts an integer-value into its individual bitvalues
+  - ReverseEndianess_Byte - changes endianess of a byte-value
+  - GFX_Init - opens a new gfx-window. Like gfx.init, but this returns its HWND-windowhandler-object as well
+  - GFX_GetWindowHWND - gets the HWND of a opened gfx-window, opened with ultraschall.GFX_Init
+  - ReaPack-functions - added ReaPack-functions to Reaper-Internals docs
+  - Windows_Find - finds Reaper-windows by title and returns their HWNDs
+  - GetAllReaScriptIDEWindows - returns the HWNDs of all opened ReaperIDE-windows
+  - GetReaScriptConsoleWindow - returns the HWND of the ReaScript-console, if open at all.
+  - IsReaperRendering - returns, if Reaper is currently rendering a file
+  - GetAllRecursiveFilesAndSubdirectories - returns all subdirectories with all their files with full path of a directory
+  - RippleCut_Regions - ripple-cuts all regions between startposition and endposition and moves all regions after endposition toward projectstart by difference between startposition and endposition
+  - ShowErrorMessagesInReascriptConsole - toggles, if errormessages shall be shown in the ReaConsole immediately, when they happen
+  - GFX_DrawThickRoundRect - draws a round-rectangle with variable thickness
+  - GFX_BlitFramebuffer - blits the content of a framebuffer into the drawing-buffer; will resize, if necessary and retains aspect-ratio
+  - ConvertIntegerIntoString - converts the individual bytes of an integer into a string
+  - GetProject_RenderOutputPath - returns the output-directories for rendered files from a projectfile
+  - GetSetIntConfigVar - gets/sets a configuration-variable of the type integer-bitfield
+  - GetScriptIdentifier - returns a unique identifier-string for the current script-instance, that can be used to send command/string to this scriptinstance
+  - Defer1 to Defer20 - run a customized defer-cycle, in which you can decide, how often it should be run. You can also stop such a defer-cycle from in/outside the script using StopDeferCycle.
+                        For that, Defer1 to Defer20 will return an identifier, which can be used to stop this specific defer-cycle.
+                        You should only use each DeferXX-cycle once in a script-instance, or the timing will become corrupt!
+  - StopDeferCycle - stops a Defer1 to Defer20-defer-instance from a script-instance
+  - GetTrackSelection_TrackStateChunk - gets, if a track in a StateChunk is selected; works only with TrackStateChunks from ProjectStateChunks
+  - SetTrackSelection_TrackStateChunk - sets a track in a StateChunk selected; works only with TrackStateChunks from ProjectStateChunks
+  - GetIniFileValue - gets an ini-value from an ini-file; unlike SWS's own functions for that(2.9.7 and earlier), this has no problems with Umlauts in the path
+  - SetIniFileValue - sets an ini-value into an ini-file; unlike SWS's own functions for that(2.9.7 and earlier), this has no problems with Umlauts in the path
+  - SetLoopState - sets the current loop-state(button)
+  - GetLoopState - gets the current state of loop
+  - SetScriptParameters - sets parameters for a child-script, as started by Main_OnCommandByFilename and MIDI_OnCommandByFilename
+  - GetScriptParameters - gets parameters for a child-script, as started by Main_OnCommandByFilename and MIDI_OnCommandByFilename
+  - GetScriptReturnvalues - gets returnvalues, that a script-instance with a specific scriptidentifier sent to the current script
+  - SetScriptReturnvalues - sends returnvalues to a script-instance with a specific scriptidentifier
+  - GetLastLoopState - gets the last loop-state, needs RunBackgroundHelperFeatures to be run first
+  - GetVerticalScroll - gets the current vertical-scroll-factor of the arrangeview
+  - SetVerticalScroll - sets a new vertical-scroll-factor of the arrangeview
+  - GetUserInputs - gets the user-input. Like Reaper's own GetUserInputs but a different parameter-scheme, that should be easier to handle.
+  - GetScriptReturnvalues_Sender - gets, which child-scripts(and their corresponding ScriptIdentifier) have sent return-values to the current script
+  - GetDeferIdentifier - gets the identifier of a Defer1 to Defer20-cycle of the current script
+  - Docs: Child Scripts: Introduction - added chapter
+  - Docs: Child Scripts: The unique ScriptIdentifier - added chapter
+  - Docs: Child Scripts: Running Childscripts - added chapter
+  - Docs: Child Scripts: Passing Parameters and Returnvalues - added chapter
+  - Docs: DeferScripts: Introduction to Ultraschall's Defer-functions - added chapter
+  - Docs: DeferScripts: Special Defer-loops in the Ultraschall-API - added chapter
+  - Docs: DeferScripts: Stopping Defer-loops from in- and outside of scripts - added chapter
   
-####Changes from 4.00beta2.7 to 4.00beta2.8
+#### Changes from 4.00beta2.7 to 4.00beta2.71
+  - SetUSExternalState - converts now all passed parameters to string, regardless of their type
   - GetMarkerByScreenCoordinates - returned useless newlines -> fixed now
   - GetMarkerByTime - returned useless newlines -> fixed now
   - GetRegionByScreenCoordinates - returned useless newlines -> fixed now
   - GetRegionByTime - returned useless newlines -> fixed now
-  - GetApiVersion - updated versionsnumbering
+  - GetApiVersion - updated versionsnumbering; returns now the release-date of the currently installed hotfixes
   - docs generate and include now beta-functions as well
   - docs use now GetApiVersion for displaying version-numbering
+  - Docgenerator - reworked the docengine-creator for more fluffy working of it
+  - Changelog - fixed Markdown-formatting-issues
+  - Introduction/Concepts: Datatypes: Checking Datatypes - fixed Markdown-issues  
+  - requires now version 0.963 of Julian Sader's plugin
+  - GetPath - when sep is nil, it returns now the path until the last useful separator, either \\ or /
+  - MB - moved to User Interface -> Dialogs in the docs
+  - hotfixes are now loaded before beta-functions
+  - CloseReaConsole - updated to behavior of version 0.963 of the JS-plugin
+  - ultraschall.MB - converts now all passed data into string, no matter what type it is
+  - ultraschall_api.lua - checks now, if it is run within the beta-engine-parts of this API and prevents including it if necessary.  
+                          This prevents duplicate execution of functions, when coding within the beta-functions-engine-scripts.
+  - RenderProject_RenderCFG - if you use nil as renderfilename_with_path, it will render as renderfilename using the filename/renderpattern already set in the project
+                              didn't return correct filecount if rendering was canceled, leading to possible error-message -> fixed
+  - RenderProjectRegions_RenderCFG - if you use nil as renderfilename_with_path, it will render as renderfilename using the filename/renderpattern already set in the project
+  - GetMediafileAttributes - added info into the docs about rpp-projects, which will create a proxy file, when getting the mediafile-attributes
+  - CreateValidTempFile - added info about the path of the created tempfile/tempfilename
+  - GetProject_Length - fixed issue with projectfiles smaller than 1000 bytes, which couldn't be parsed
+  - SetProject_RenderPattern - didn't save render-patterns with spaces in them properly
+  - InsertMediaItemFromFile - added MediaTrack and the new editcursorposition as retvals; the latter used to be third retval without being documented as such -> moved to the end of the retvals
+                              sorry for that inconvenience
+  - GetProject_RenderFilename - sometimes returned one " at the end -> fixed
+  - WriteValueToFile - converts now the parameter value to a string, regardless of it's original datatype
+  - WriteValueToFile_Insert - converts now the parameter value to a string, regardless of it's original datatype
+  - WriteValueToFile_Replace - converts now the parameter value to a string, regardless of it's original datatype
+  - WriteValueToFile_InsertBinary - converts now the parameter value to a string, regardless of it's original datatype
+  - WriteValueToFile_ReplaceBinary - converts now the parameter value to a string, regardless of it's original datatype
+  - WinterlySnowflakes - preparation of the snowflakes produced wrong default-values of gfx.x, gfx.y, gfx.r, gfx.g, gfx.g -> fixed
+  - GetAllRegionsBetween - didn't return regions, that began before startposition and ended after endposition -> fixed
+  - AddErrorMessage - when set with ShowErrorMessagesInReascriptConsole, it shows now errormessages immediately in the ReaScriptConsole
+  - GetAllFilesnamesInPath renamed to GetAllFilenamesInPath - stupid typo in functionname...sorry for any inconveniences  
+  - MoveMarkersBy - did move regions as well, though I claimed the opposite..oops -> fixed
+  - SetUSExternalState - using now the SetIniFileValue-function for setting the ini-file-value
+  - SetIniFileExternalState - using now the SetIniFileValue-function for setting the ini-file-value
+  - SetReaperWindowToSize - using now the SetIniFileValue-function for setting the ini-file-value
+  - SetStartNewFileRecSizeState - using now the SetIniFileValue-function for setting the ini-file-value
+  - SetPlayCursorWidth - using now the SetIniFileValue-function for setting the ini-file-value
+  - SetReaperWorkDir - using now the SetIniFileValue-function for setting the ini-file-value
+  - GetUSExternalState - using now the SetIniFileValue-function for getting the ini-file-value
+  - GetIniFileExternalState - using now the SetIniFileValue-function for getting the ini-file-value
+  - GetMarkerByTime - using now the SetIniFileValue-function for getting the ini-file-value
+  - GetRegionByTime - using now the SetIniFileValue-function for getting the ini-file-value
+  - GetTimeSignaturesByTime - using now the SetIniFileValue-function for getting the ini-file-value
+  - GetReaperWindowPosition_Left - using now the SetIniFileValue-function for getting the ini-file-value
+  - GetReaperWindowPosition_Right - using now the SetIniFileValue-function for getting the ini-file-value
+  - GetReaperWorkDir - using now the SetIniFileValue-function for getting the ini-file-value
+  - RunBackgroundHelperFeatures - allows now switching off the background-scripts
+  - IsValidArrangeviewSnapshot - checks now vertical-scrollfactor as well
+  - RestoreArrangeviewSnapshot - restores now vertical-scrollfactor as well
+  - RetrieveArrangeviewSnapshot - retrieves now vertical-scrollfactor as well
+  - StoreArrangeviewSnapshot - stores now vertical-scrollfactor as well
+  - CreateRenderCFG_AIFF - returned the wrong render-cfg-string due a stupid typo -> fixed
+  - ReadFullFile - added check, if a file is already in use and can't be read
+  - MakeCopyOfFile_Binary - added check, if a file is already in use and can't be read
+  - ReadBinaryFileUntilPattern - added check, if a file is already in use and can't be read
+  - ReadBinaryFileFromPattern - added check, if a file is already in use and can't be read
+  - CreateRenderCFG_AudioCD - sometimes produced spaces in the render-string -> fixed
+  
+   <TODO>
+    API 4.00beta2.75
+      TODO!! get/set mode/time_counter for already running loops in my own script, with a function that sets these variables.
+      
+      TODO!! Lua-eigene Funktionen in die ultraschall-Table übernehmen, wie type, tostring, tonumber, etc. Dies könnten vom user überschrieben werden und dann
+             produziert die API Fehler.
+      TODO!! GetReaConsoleHWND-window or other HWNDS os Reaper: must be localized by using JS_Localize or it will not find
+                                    the window in its localized title-form
+             see GetArrangeWnd() from BR_Util.cpp:
+                    HWND GetArrangeWnd ()
+                    {
+                        static HWND s_hwnd = NULL; /* More efficient and Justin says it's safe: http://askjf.com/index.php?q=2653s */
 
-  <TODO>
-    For 4.00beta2.8:
-      TODO!! Functionshook in Render-functions.
-                before the render project using last render settings-action is triggered, it should be possible to run a function that "prepares" the project for rendering
-      TODO!! Rendering "pre-trail"-management, where a to be rendered project gets adds some silence in the beginning of the project, so possible "CPU needs to run up to fully calculate the rendering" will happen first.
-                sometimes issue in render-queues
-      TODO!! Multipass-rendering
-                When you want to render out a "wet"-loop, that needs reverb or something, you would need to render this loop three times:
-                        one to start up all reverbs, two for the actual loop and three for the "loop aftermath"
-                After that, you need to edit this rendered file down to the middle part by hand, which is tedious.
-                If there's a rendering-function could do that automatically, it would be cool.
-                    Load the project(if not the current one)
-                    Copy the tracks with the to be looped items/timeselection into an empty project, which must hold all rendering-settings(looped-time-selection probably)
-                    duplicate it so the items are now three times after each other
-                    Render it out and include the rendered file into the current project(maybe as stems?)
-                    edit it down to the original loop
-                    Render that out into a new file
-                    Delete the temp-rendered-files
-                    close the projects and return the filename
-                    
-                
+                        if (!s_hwnd)
+                        {
+                            #ifdef _WIN32
+                                if (IsLocalized())
+                                {
+                                    char preparedName[2048];
+                                    PrepareLocalizedString(__localizeFunc("trackview", "DLG_102", 0), preparedName, sizeof(preparedName));
+
+                                    HWND wnd = SearchChildren(preparedName, g_hwndParent);
+                                    while (wnd)
+                                    {
+                                        char buf[256];
+                                        GetClassName(wnd, buf, sizeof(buf));
+                                        if (!strcmp(buf, "REAPERTrackListWindow"))
+                                        {
+                                            s_hwnd = wnd;
+                                            break;
+                                        }
+                                        wnd = SearchChildren(preparedName, g_hwndParent, wnd);
+                                    }
+                                }
+                                else
+                                {
+                                    s_hwnd = FindWindowEx(g_hwndParent, 0, "REAPERTrackListWindow", __localizeFunc("trackview", "DLG_102", 0));
+                                }
+                            #else
+                                return GetWindow(g_hwndParent, GW_CHILD);
+                            #endif
+                        }
+                        return s_hwnd;
+                    }
+
+                 
+      TODO!! convertstringtointegers and convertintegerstostring(rework of ConvertIntegerIntoString)
+      TODO!! ultraschall.MakeDir(path) - unbelievable, that this doesn't exist in Lua already...
+                                         needs probably console for that...
+      TODO!! Docs: - Reaper-Api-docs: Markdown isn't converted in Introduction-chapters and UTF-problem.
+                   - plugin_register - markdown-format fucked up with useless italics
+      TODO!! still missing in the Reaper-docs:
+            JS_ListView_GetFocusedItem
+            JS_ListView_GetItem
+            JS_ListView_GetItemCount
+            JS_ListView_GetItemState
+            JS_ListView_GetItemText
+            JS_ListView_GetSelectedCount
+            JS_ListView_ListAllSelItems
+            JS_Localize
+            JS_Window_FindChildByID
+            JS_Window_FindEx
+            JS_Window_OnCommand
+      TODO!! Event-System, as defined on the Congress
+      TODO!! create renderstring - MP3 has new options as of Reaper 5.965(Do not allow joint stereo, Write ReplayGain tag)
+      TODO!! issues with docgeneration of the docs for toboolean, print, print2, their functionnames aren't bold
+      TODO!! GetProjectStateChunk - replace all absolute paths, that refer to the recording-path RECORD_PATH
+                                    with their relative counterparts.
+                                    Use the QUEUED_RENDER_ORIGINAL_FILENAME for that replacing of mediafilenamepaths or the projectpath for an unsaved project
+                                    That means: if I find Projectfilepath/Recordingpath in the ProjectStateChunk, exchange it with Recordingpath/
+                                    You should also check, during Reaper rendering the render-queue and I add a new render-file to the queue, if Reaper tries to render that new file as well or if it ignores it. This could be a potential troublemaker.
+                                            Answer: No, Reaper ignores added 
+
+                                  - avoid running this function during rendering; maybe with EnumProjects and the currently rendering project?
+                                        -> ehrmm...what? Because of the render-queue or what?
+                                        
+                                  - for absolute paths, check, whether a specific Source FILE "bla" is existing. If yes, it is absolute, if not, it is relative and must be exchanged with an absolute one.
+                                  - Reaper does the relative/absolute-management itself. That means, relative paths are always in relation to the rpp-file. If the rpp-file is stored somewhere else, where the FILE "" isn't a subfolder/file anymore, Reaper saves the file with absolute-paths to the MediaFiles.
+                                  -- TODO: !! Set selection of first track to selected, if not already
+                                  --          remove selection of first track, if necessary, from ProjectStateChunk and the project
+                                  --        workaround for the render-setting "Stems (selected tracks)"
+      TODO!! Docs: JS-Plugin-useable functions - should work on Mac now with JS0.963. Check them plz.
+      TODO!! RenderProject_RenderCfg - new implementation, that exploits the render-queue, rather the reopening of a project
+                                       should work with opened projects, but still unknown, how to add unopened projects properly and how to find out the rendered files afterwards...
+                                       maybe that way: RENDER_FILE contains the path, where the file is stored in, either with or without the actual filename(the latter when using RENDER_PATTERNS).
+                                       I just need to take a "file_in_path_snapshot" before and after the rendering, get rid of the files that are there before AND after and what's left if the newly rendered file(s).
+                                       Could this work? Try it.
+                                       
+                                       Other notes for that follow now:
+                                       
+            Renderpattern:
+                    der Renderpath kommt in RENDER_FILE rein, wenn dieser nicht gesetzt ist, wird das Verzeichnis genommen, in der das rpp liegt
+
+                    Wenn man RENDER_PATTERN nutzt und gleichzeitig einen "Dateinamen" bei RENDER_FILE einträgt, so wird ein Unterverzeichnis angelegt, in das reingerendert wird.
+                    Sprich: Ich muss vorher noch checken, ob der Renderpath ein gültiger ist
+
+
+                    Pfad zu relativen Dateien:
+                          RECORD_PATH "Recordingss" ""
+                          
+                          ist der Record-Path, der im Projektverzeichnis liegt.
+                          Sprich: Pfad/Projektdatei.rpp wird zu Pfad/Record_Path
+                          
+                          Zu klären ist noch, wie das mit dem secondary-record-path geht...
+                          
+                          Reaper selbst macht beim speichern aus relativen Pfaden absolute Pfade, wenn es nötig ist, außer beim
+                          erstellen von queue-renderfiles, wo sämtliche Pfade absolutiert werden.
+                          Sprich: alle Pfad/Record_Path-Angaben kann ich in relativ ändern, um das ursprüngliche ProjectStateChunk zu bekommen
+
+
+                    RenderQueue:
+                    QUEUED_RENDER_OUTFILE "C:\Users\meo\Documents\REAPER Media\untitled.flac" 0 {EB98934F-A3C1-403D-AC70-7F07975740C1}
+
+                    QUEUED_RENDER_OUTFILE renderfilename_with_path_for_queue  integer unknown string guid
+
+                    stores the output-filename with path for the render-queue. If omitted while project is in QueuedRenders, the renderfilename will be created like a regular projectfile
+
+
+                    QUEUED_RENDER_ORIGINAL_FILENAME string projectfilename
+
+                    stores the original filename of the project
+      
+                    The queue-filename MUST have the following namingpattern: qrender_123456_123456_projectname.RPP, 
+                                      where the first number is a datestamp yymmdd and the second a timestamp hhmmss.
+                                      the projectname is optional BUT the _ before it is mandatory. Otherwise, Reaper 
+                                      stops rendering with an error!
+      
+      More Notes on Queued Rendering:
+            If RENDER_PATTERN is set, RENDER_NAME will be seen as folder.
+            If neither RENDER_NAME, RENDER_PATTERN or QUEUED_RENDER_OUTFILE are set, Reaper will use the folder in
+                QUEUED_RENDER_ORIGINAL_FILENAME as export-folder.
+            If none of them is set, not even QUEUED_RENDER_ORIGINAL_FILENAME, the files will be exported to the QueuedRenders-folder as
+            -001.ext, -002.ext, etc
+            
+      Multiple exported files are always according the numbering filename-001.ext, filename-002.ext, etc, 
+      where filename-001.ext is the one for the master-track, if stem+master-rendering is set.
+      
+      Check in the exportfolder, if there are new files. Needs a new function "GetRenderExportFolderOfProject(string projectname)"
+      which checks, according to the former rules, which exportfolder is used.
+      
+      For QueuedOutput-folders:
+          1) if RENDER_PATTERN does not exist, RENDER_FILE "" or RENDER_FILE does not exist and QUEUED_RENDER_ORIGINAL_FILENAME and QUEUED_RENDER_OUTFILE do no exist:
+                outputfolder is the project-folder
+           
+          2) if RENDER_FILE is set and RENDER_PATTERN does not exist or isn't set, RENDER_FILE is the filename+path
+            2a) if RENDER_FILE has no absolute path, the QUEUED_RENDER_ORIGINAL_FILENAME\RENDER_FILE\ will be export path
+               2ab) if QUEUED_RENDER_ORIGINAL_FILENAME does not exist, QueuedRenders\RENDER_FILE\ will be the exportfolder
+          
+          3) if RENDER_PATTERN is set to anything, RENDER_FILE will be the exportfolder
+            3a) if RENDER_FILE isn't set to anything, the export-folder will be QueuedRenders\
+            3b) if QUEUED_RENDER_ORIGINAL_FILENAME exists it will be the exportfolder
+                3ba) if RENDER_FILE is set to anything, the output will be QUEUED_RENDER_ORIGINAL_FILENAME\RENDER_FILE
+      
+      
+      
+      
+      
+      TODO!! docs: exchange api.ultraschall.fm/Downloads.html with the correct URL
+                                                      
       TODO!! Code still has countless of useless tonumber-conversions included and other weird old parameter-checks:
             - DeleteErrorMessage - deletes a specific error-message from the error-messaging-system
             - Docs: Error-Messaging-System - added docchapters to Introductions/Concepts-page
@@ -120,8 +413,6 @@
             SetTrack-functions still need that kind of treatment.
 
       TODO!!  - DeleteItemExtState, DeleteTrackExtState
-      TODO!!  - SetStateChunk-functions: how to check for ProjectStateChunk/TrackStateChunk/ItemStateChunk/EnvStateChunk, when new parameters are added to the function?
-                                         something with ... ? Otherwise, new added parameters will break old scripts...
       TODO!!  - issue with parameters/retvals in USDocML-files: nil-error, when a retval/parameter entry is only 
                 <retvals>
                     -
@@ -131,15 +422,46 @@
                    -
                    
                    -
-                   
-      TODO!!  - Mix-Snapshots, who store/retrieve the current/a former mix
-      TODO!!  - totype(value, string type), converts a value to type and returns it, if impossible, returns nil; includes string, boolean, integer, float, hex, oct, base64, etc
-      TODO!!  - ArrangeViewSnapshots - use reaper.JS_Window_SetScrollPos(HWND, "SB_VERT", value) to set and JS_Window_GetScrollInfo from JS new plugin to get/store vertscrollpos
+
       TODO!!  - Get Length of all Items in a track GetLengthOfAllItems_Track()
       TODO!!  - Add options to Normalize-Items-function, as there are numerous different actions for normalizing
-      TODO!!  - Envelope-ExtStates
       TODO!!  - Planned Chapter Marker-functions! insert/set/delete/enumerate/export/import
-      TODO!!  - GetReaperPaths - returns app-path(?), exe-path, resourcepath
+      TODO!!  - Get/SetMarkersFromClipboard-functions
+      
+    For 4.00beta2.8:
+      TODO!!  - totype(value, string type), converts a value to type and returns it, if impossible, returns nil; includes string, boolean, integer, float, hex, oct, base64, etc
+      TODO!! MediaItemArrays should include possible ItemExtStates as well. Need a copy of TrackExtStates as well.
+             Importfunctions must allow importing the ItemExtStates as well.
+      TODO!!  - SetStateChunk-functions: how to check for ProjectStateChunk/TrackStateChunk/ItemStateChunk/EnvStateChunk, when new parameters are added to the function?
+                                         something with ... ? Otherwise, new added parameters will break old scripts...
+      TODO!! ultraschall.SortTableByCertainTableEntry - sorts a table by a certain entry in the table
+                                                      - like table[4][2][1]
+                                                      probably impossible, cause, how to pass [2][1] as parameter?
+      TODO!! Reaper-Apidocs: OscLocalMessageToHost doesn't show title in generated doc
+      TODO!! Reaper-Apidocs: use US-functions-docgenerator for layout
+      TODO!! Functionshook in Render-functions.
+                before the render project using last render settings-action is triggered, it should be possible to run a function that "prepares" the project for rendering
+                
+                possible, when using the renderqueue? Nope!
+                
+      TODO!! Rendering "pre-trail"-management, where a to be rendered project gets adds some silence in the beginning of the project, so possible "CPU needs to run up to fully calculate the rendering" will happen first.
+                sometimes issue in render-queues
+      TODO!! Multipass-rendering
+                When you want to render out a "wet"-loop, that needs reverb or something, you would need to render this loop three times:
+                        one to start up all reverbs, two for the actual loop and three for the "loop aftermath"
+                After that, you need to edit this rendered file down to the middle part by hand, which is tedious.
+                If there's a rendering-function could do that automatically, it would be cool.
+                    Load the project(if not the current one)
+                    Copy the tracks with the to be looped items/timeselection into an empty project, which must hold all rendering-settings(looped-time-selection probably)
+                    duplicate it so the items are now three times after each other
+                    Render it out and include the rendered file into the current project(maybe as stems?)
+                    edit it down to the original loop
+                    Render that out into a new file
+                    Delete the temp-rendered-files
+                    close the projects and return the filename
+                    
+                
+      TODO!!  - Envelope-ExtStates
       TODO!!  - import/export Bonus-script-packs-functions(for importing and registering additional bonus scripts)
       TODO!!  - GetLastEnvelopePoint (How to do that with AutomationItems ?)
       TODO!!  - RenderProjectRegions_RenderCFG2  and RenderProject_RenderCFG2 - set RenderPattern instead of RenderFilenameWithPath
@@ -157,21 +479,6 @@
               boolean add - true, add the scripts to the actionlist; false, remove them from the action-list
       TODO!!  - create HTML-docs from all files in the functions-department of Ultraschall/3rd-party-functions
       TODO!!  - Show$ContextMenu() - ShowPopupMenu is too complicated to use. Create proper useable functions to address that
-      TODO!!  - Implement the basic-concept for additional-background-script and handshake-extstate-protocol-communication, as needed for
-            network/gui-engine into a concept, useable by others.
-            It will create a script in a specific language, that includes the basic communication-functions, to communicate with the
-            sourcescript(like extstates, using a guid as extname)
-            Should support Lua, Python, Eel-Scripts(though I will only use the Lua-version for the Api)
-      TODO!!  - read/include ID3-Tags/ID3-chapters from files(only the tag itself, not individual entries yet)
-      TODO!!  - Get/SetMarkersFromClipboard-functions
-      TODO!!  - integer bufsz = ultraschall.ShowConsoleMsg(string msg, optional integer revoffset) - stores msg into a textbuffer. When revoffset isn't given, it will replace the textbuffer.
-                                                     - revoffset, 0, put msg at the end of textbuffer
-                                                            1, to bufsz, cut of revoffset-bytes from the
-                                                             end of textbuffer and add msg; clear console and display
-                                                             message from textbuffer
-                                                            -1, clear textbuffer, add msg and display message from textbuffer
-                                                     Good for displaying updating-messages to the Console.
-                                                     Hijacks reaper.ClearConsole() to flush textbuffer.(?)
       TODO!!  - GFX: virtual screenbuffers(create/remove/blit)
       TODO!!  - ultraschall.gfx_getkey(integer buffer), allows pipe-ing of UserInput directly into a textbuffer. The textbuffer acts like a invisible textbox, which can be shown using drawstr or something
                                                         must support arrow, bspc, enter, return, copynpaste as well
@@ -187,10 +494,9 @@
       TODO!!  - GetAllTakesFromMediaItem - returns an array with all takes from an item, objects as well as info_values
       TODO!!  - Get/SetProjectBay-functions
       TODO!!  - Envelope-StateChunk-functions
-      TODO!!  - ultraschall.ApplyActionToEnvelope(TrackEnvelope, actioncommandid) 
-                        - not possible, as I can't programatically change the selected envelope...maybe with SetCursorContext, as this allows focusing a trackenvelope, 
-                                but also sets focus to arrangeview, which is quite brutal
-      TODO!!  - SetProject-functions for
+      TODO!!  - Get/SetProject-functions for
+                    RENDER_QUEUE-stuff
+                    
                   - SetProject_AutomationItemStateChunk - gets an automation-item from a project/ProjectStateChunk
                   - SetProject_ProjectBay - gets the projectbay from a project/ProjectStateChunk
                   - SetProject_Metronome - gets the statechunk for all metronome-settings from a project/ProjectStateChunk
@@ -235,13 +541,41 @@
                - IsValid-check functions for
                     - AutomationItems, ProjectBay, Metronome, MasterPlayspeed, Tempo, Extensions, MasterHWVolEnv, MasterFXList, MasterDualPanEnv
                       MasterDualPanEnv2, MasterDualPanEnvL, MasterDualPanEnvL2, MasterVolEnv, MasterVolEnv2, MasterVolEnv3, MasterHWPanEnv, TempoEnv_Ex   
-   </TODO>
+    For 4.00Beta 2.9:
+        registering of running scripts into an extstate ultraschall->running_script_instance->
+            All ultraschall-API-using scripts will be registered into running_script_instance automatically.
+            We will also define an atexit-function for unregistering from the running-script-instance-register, as there can be multiple atexit-functions(up to 1024).
+            That way, we can have monitoring of running scripts.
+            Should allow monitoring of Defer1 to Defer10-running-states as well. Maybe they need to be set at the beginning as well? Or is it waste of resources?(probably the latter, we can assume, if it's not set "running", that defer-instance is not used and set to stopped.            
+        
+        TODO!!  - Mix-Snapshots, who store/retrieve the current/a former mix
+        TODO!!  - ultraschall.ApplyActionToEnvelope(TrackEnvelope, actioncommandid) 
+                          - not possible, as I can't programmatically change the selected envelope...maybe with SetCursorContext, as this allows focusing a trackenvelope, 
+                                  but also sets focus to arrangeview, which is quite brutal
+      TODO!! SaveProjectAs(ReaProject project, newfilename, relative_sourcefilenames, ProjectStateChunk)
+                 params:
+                    project - the project to save, either ReaProject or projecttab-nr;
+                              0, the currently opened project
+                              nil, use parameter ProjectStateChunk instead
+                    newfilename - the filename under which to store the Project
+                    relative_sourcefile_position - 0, keep absolute paths
+                                                 - 1, make paths relative
+                                                 - 2, make sourcefile-path+filenames relative to the project-folder(hardest option to code)
+                    ProjectStateChunk - a projectstatechunk to use for the save-operation
+                    
+                 retvals:
+                    retval - true, if saving succeeded
+                    projectfilename - the saved projectfilename+path
+                    sourcefiles - an array with all source/map-filenames[1] and their new filenames in relation of their new position[2]
+                                    can be used to copy/move all the sourcefiles into the projectfolder(needs MakeDir(path) as well!)
+</TODO>
 
-###4.00 Beta 2.7: - "Frank Zappa - The Return of the Son of Monster Magnet" - 15th of December 2018
+   
+### 4.00 Beta 2.7: - "Frank Zappa - The Return of the Son of Monster Magnet" - 15th of December 2018
 
 Has now 700 functions, with about 250 new ones!
 
-####New features in 4.00beta2.7
+#### New features in 4.00beta2.7
   - SetEnvelopeHeight - set the height and compactible state of an envelope-lane/envelopestatechunk
   - GetTrackStateChunk_Tracknumber - get a TrackStateChunk without the hassle of creating a trackobject first  
   - SetTrackStateChunk_Tracknumber - set a TrackStateChunk without the hassle of creating a trackobject first
@@ -615,10 +949,11 @@ Has now 700 functions, with about 250 new ones!
   - GetSetConfigAudioPrShift - get/sets value for configvar audioprshift
   - GetSetConfigAudioCloseStop - get/sets value for configvar audioclosestop
   - GetSetConfigAudioThreadPr - get/sets value for configvar audiothreadpr
-  - GetSetConfigAudioCloseTrackWnds - get/sets value for configvar audioclosetrackwnds
-  - WinterlySnowflakes - replaces gfx.update with a version, that displays falling snowflakes everytime gfx.update is run
+  - GetSetConfigAudioCloseTrackWnds - get/sets value for configvar audioclosetrackwnds  
+  - WinterlySnowflakes - replaces gfx.update with a version, that displays falling snowflakes everytime gfx.update is run  
 
-####Changes from 4.00beta2.6 to 4.00beta2.7
+#### Changes from 4.00beta2.6 to 4.00beta2.7
+
   - Tons of bugfixes. I mean, tons as in metric tons ;)
   - GetTrackRecCFG - added documentation, that was still missing -> fixed now; added missing return-value
   - GetLastErrorMessage2 - had wrong functionname, corrected documentation
@@ -1001,7 +1336,9 @@ Has now 700 functions, with about 250 new ones!
   - Msg - removed, was useless
   
 ### 4.00 Beta 2.6: - "Is that all there is? - Peggy Lee" - 19th of October 2017
-####New features in 4.00beta2.6 - has now 450 functions, with about 30 new ones:
+
+#### New features in 4.00beta2.6 - has now 450 functions, with about 30 new ones:
+
   - CreateAllTracksTrackString - creates a trackstring with all tracks in the current project
   - new datastructure "EnvelopePointObjects" and "EnvelopePointArrays"(for EnvelopePointObjects) for easier massworking with envelopepoints
   - CreateEnvelopePointObject - creates an EnvelopePointObject
@@ -1034,7 +1371,8 @@ Has now 700 functions, with about 250 new ones!
   - StartTime - a new api-variable that contains the starting time of the current instance of the api, which probably means, your script, that
     embeds the framework
   
-####Changes from 4.00beta2.5 to 4.00beta2.6
+#### Changes from 4.00beta2.5 to 4.00beta2.6
+
   - corrections in the documentation
   - GetClosestNextMarker - couldn't find last marker and showed a time, even if no marker was found -> fixed now; 
       markers that are at time_position are now seen as a previous marker
@@ -1111,7 +1449,9 @@ Has now 700 functions, with about 250 new ones!
    
 
 ### 4.00 Beta 2.5: - "Musique non stop - Technopop - Kraftwerk" - 10th of September 2017
-####New features in 4.00beta2.5
+
+#### New features in 4.00beta2.5
+
   - Import Markers/Regions from RPP-Projectfiles
   - Selection/Deselection of items, as well as getting functions for getting selected items
   - functions for checking MediaItemArray and MediaItemStateChunkArrays for validity
@@ -1136,7 +1476,8 @@ Has now 700 functions, with about 250 new ones!
       when errors occur during execution of functions. Currently only some functions return error messages; will change over time.
   - tons of other helper-functions in many areas
  
-####Changes from 4.00beta2.1 to 4.00beta2.5
+#### Changes from 4.00beta2.1 to 4.00beta2.5
+
   - minor corrections in documentation
   - RenderProjectToAIFF - new parameters for start and endposition of the renderrange. Nil as projectfilename renders the currently opened project.
   - RenderProjectToFLAC - new parameters for start and endposition of the renderrange. Nil as projectfilename renders the currently opened project.
@@ -1220,13 +1561,15 @@ Has now 700 functions, with about 250 new ones!
    
    
 ### 4.00 Beta2.1: - "Ich und der Rock - Renft" - 30th of August
-####New features in 4.00beta2.1
+#### New features in 4.00beta2.1
+
   - mostly bugfixes
   - ultraschall.Separator - contains the proper separator for the system it runs on. If you want to do file-operation, 
                 you should use this instead of \\ or /, to make your script Mac and Windows compliant.
   - ultraschall.Script_Path - contains the path to the scripts-folder of Reaper
   
-####Changes from 4.00beta2 to 4.00beta2.1 
+#### Changes from 4.00beta2 to 4.00beta2.1 
+
   - changed the lines, you need to include into your script. refer "3. How to use the API in your LUA-Script" in the doc-file.
   - some functions didn't work on Mac, due it's use of / instead of \ as directory-separator. Has been fixed now.
   - moved all ultraschall-related variables into the ultraschall-table.
@@ -1252,7 +1595,8 @@ Has now 700 functions, with about 250 new ones!
  
    
 ### 4.00 Beta2: - "Shock The Monkey - Peter Gabriel" - 20th August 2017
-####New Features in 4.00beta2 - about 190 new functions with:
+#### New Features in 4.00beta2 - about 190 new functions with:
+
   - Configuration: Import/Export from/to reaper-kb.ini-files
   - Configuration: New Management-functions for Configuration-files that follow standard ini-files
   - Clipboard: Clipboard Functions, get and put (thanks to fernsehmuell for the mac-side)
@@ -1270,7 +1614,8 @@ Has now 700 functions, with about 250 new ones!
       Will be extended to be a fully equipped automatic-documentation-system for Ultraschall
   - Tons of other functions in all areas.
       
-####Changes from 4.00beta1 to 4.00beta2
+#### Changes from 4.00beta1 to 4.00beta2
+
   - Marker/Regions-functions - they used to ignore regions which led to wrong markers/regions -> fixed
   - ultraschall.WriteValueToFile - default write-mode changed to binary-file behavior(doesn't add useless newlines anymore)
                     non binary-mode can be chosen by a new parameter "binarymode" set to false, if it's   
@@ -1282,7 +1627,8 @@ Has now 700 functions, with about 250 new ones!
  
  
 ### 4.00 beta1: - "Tomorrow Never Knows - The Beatles" - 10th of July 2017
-####New Features in 4.00beta1 - about 140 new functions with:
+#### New Features in 4.00beta1 - about 140 new functions with:
+
   - Markers: extensive marker-management, with markers for chapter, edit, dummy, normal and podrange-regions
   - Configuration: functions for an Ultraschall.ini. Ultraschall needs it's own config-file, at last ;)
   - CoughButtons: CoughButton-management for setting, toggling, getting envelope-points in the mute-envelope-lane

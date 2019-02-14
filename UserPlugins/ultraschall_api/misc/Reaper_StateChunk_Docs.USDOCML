@@ -2,14 +2,65 @@
 <USDocML>
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>REAPER_PROJECT</slug>
-    <functioncall>REAPER_PROJECT number 0.1 string reaperversion, string timestamp </functioncall>
+    <functioncall>REAPER_PROJECT number projectversion  string reaperversion  string timestamp </functioncall>
     <description>
         The used Reaperversion and a timestamp at the date of creation
     </description>
     <parameters>
-      number 0.1 - unknown
+      number projectversion - the version of the project-definition; 0.1 currently
       string reaperversion - the version of Reaper, with which this project had been saved
       string timestamp - a timestamp for this project
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>QUEUED_RENDER_OUTFILE</slug>
+    <functioncall>QUEUED_RENDER_OUTFILE string renderfilename_with_path_for_queue  integer auto_increment  string guid</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+        Only in Render-queued-projects!
+        
+        stores the output-filename with path for the render-queue. If omitted while project is in Resourcefolder/QueuedRenders, the renderfilename will be created like a regular projectfile using RENDER_FILE and RENDER_PATTERN
+        
+        There can be more than one (i.e. with rendering stems). According to the settings in [RENDER_STEMS](#RENDER_STEMS), the first entry may refer to the render-targetfile of the master-track.
+        
+        This is mostly for showing in the RenderQueue-window and for you to get, which files will be exported while queue-render. It has no other use.
+    </description>
+    <parameters>
+      string renderfilename_with_path_for_queue - the render-outputfilename, which will be created when the queued project is rendered
+      integer auto_increment - 0, don't auto-increment renderfilename when renderfilename already exists; 16, autoincrement renderfilename, when renderfilename already exists
+      string guid - a guid associated with this queue
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>QUEUED_RENDER_ORIGINAL_FILENAME</slug>
+    <functioncall>QUEUED_RENDER_ORIGINAL_FILENAME string projectfilename_with_path</functioncall>
+    <description>
+        Only in Render-queued-projects!
+        
+        stores the original filename of the queued-project with path.
+        Omitted for projects, that are not saved yet but already in the render-queue.
+        
+        Will be used by Reaper for the RENDER_PATTERN wildcard $project
+        
+        It's folder will also be used, when neither RENDER_FILE or QUEUED_RENDER_OUTFILE are set as output files/folders.
+        
+        Will be ignored, when rendering the project without the rendering queue.
+    </description>
+    <parameters>
+      string projectfilename_with_path - the original projectfilename including it's path
     </parameters>
     <chapter_context>
       ProjectStateChunk
@@ -55,7 +106,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>GROUPOVERRIDE</slug>
-    <functioncall>GROUPOVERRIDE integer group_override1, integer group_override2, integer group_override3 </functioncall>
+    <functioncall>GROUPOVERRIDE integer group_override1  integer group_override2  integer group_override3 </functioncall>
     <description>
         The Projects-Group-override-states
     </description>
@@ -127,7 +178,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MIXERUIFLAGS</slug>
-    <functioncall>MIXERUIFLAGS integer state1, integer state2 </functioncall>
+    <functioncall>MIXERUIFLAGS integer state1  integer state2 </functioncall>
     <description>
         Settings for Mixer-userinterface-settings
     </description>
@@ -226,7 +277,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>PROJOFFS</slug>
-    <functioncall>PROJOFFS number start_time, integer start_measure, integer base_ruler_marking_off_this_measure </functioncall>
+    <functioncall>PROJOFFS number start_time  integer start_measure  integer base_ruler_marking_off_this_measure</functioncall>
     <description>
         The project-offset, as set in the ProjectSettings -> Project Time Start, Project start measure and Base Ruler Marking Off This Measure-checkbox
     </description>
@@ -245,7 +296,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MAXPROJLEN</slug>
-    <functioncall>MAXPROJLEN integer limit_project_length, number projectlength_limit </functioncall>
+    <functioncall>MAXPROJLEN integer limit_project_length  number projectlength_limit </functioncall>
     <description>
         The maximum set projectlength, as set in the Project-Settings -> Advanced
     </description>
@@ -263,7 +314,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>GRID</slug>
-    <functioncall>GRID integer snap_grid, integer gridstate2, number gridstate3, integer gridstate4, number gridstate5, integer gridstate6, integer gridstate7, number gridstate8 </functioncall>
+    <functioncall>GRID integer snap_grid  integer gridstate2  number gridstate3  integer gridstate4  number gridstate5  integer gridstate6  integer gridstate7  number gridstate8 </functioncall>
     <description>
         The gridstate-settings of the project
     </description>
@@ -340,7 +391,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>TIMEMODE</slug>
-    <functioncall>TIMEMODE integer ruler_timemode, integer timemode2, integer showntime, integer timemode4, integer timemode5 </functioncall>
+    <functioncall>TIMEMODE integer ruler_timemode  integer timemode2  integer showntime  integer timemode4  integer timemode5 </functioncall>
     <description>
         The shown-time-unit in the ruler-area, as set in the ruler-context-menu as well as toggled by actions 40365, 40366, 40367, 40368, 40369, 40370, 41916, 41918, 41973
         as well as the shown-time-unit in the transport-area, as set in the transport-context-menu as well as toggled by action 40410, 40411, 40412, 40413, 40414, 40534, 41972
@@ -379,7 +430,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>VIDEO_CONFIG</slug>
-    <functioncall>VIDEO_CONFIG integer preferredVidSizeX, integer preferredVidSizeY, integer settingsflags </functioncall>
+    <functioncall>VIDEO_CONFIG integer preferredVidSizeX  integer preferredVidSizeY  integer settingsflags </functioncall>
     <description>
         The Video-configuration-settings, as set in the Project Settings -> Video
     </description>
@@ -447,7 +498,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>ZOOM</slug>
-    <functioncall>ZOOM number hzoom, integer hzoomscrollpos, integer scrollbarfactor </functioncall>
+    <functioncall>ZOOM number hzoom  integer hzoomscrollpos  integer scrollbarfactor </functioncall>
     <description>
         The current zoom-settings and position of the scrollbar
     </description>
@@ -484,8 +535,9 @@
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>USE_REC_CFG</slug>
     <functioncall>USE_REC_CFG integer rec_cfg </functioncall>
-    <description>
-    
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+        The recording-setting used for this project. For the format-settings themselves on a projectbasis, see [RECORD_CFG](#RECORD_CFG)  
+        For the format-settings on a track-basis, see [RECCFG](#RECCFG)  
     </description>
     <parameters>
       integer rec_cfg - recording-cfg-state
@@ -523,7 +575,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>SMPTESYNC</slug>
-    <functioncall>SMPTESYNC integer smptesync_state1, number smptesync_fps, integer smptesync_resyncdrift, integer smptesync_skipdropframes, integer smptesync_syncseek, integer smptesync_freewheel, integer smptesync_userinput, number smptesync_offsettimecode, integer smptesync_stop_rec_drift, integer smptesync_state10, integer smptesync_stop_rec_lacktime  </functioncall>
+    <functioncall>SMPTESYNC integer smptesync_state1  number smptesync_fps  integer smptesync_resyncdrift  integer smptesync_skipdropframes  integer smptesync_syncseek  integer smptesync_freewheel  integer smptesync_userinput  number smptesync_offsettimecode  integer smptesync_stop_rec_drift  integer smptesync_state10  integer smptesync_stop_rec_lacktime  </functioncall>
     <description>
         SMPTE-Sync-state-settings
     </description>
@@ -582,9 +634,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>LOOPGRAN</slug>
-    <functioncall>LOOPGRAN integer loopgran_state1, number loopgran_state2 </functioncall>
+    <functioncall>LOOPGRAN integer loopgran_state1  number loopgran_state2 </functioncall>
     <description>
-    
+        
     </description>
     <parameters>
       integer loopgran_state1 - loopgran_state1
@@ -600,9 +652,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>RECORD_PATH</slug>
-    <functioncall>RECORD_PATH string prim_recpath, string sec_recpath </functioncall>
+    <functioncall>RECORD_PATH string prim_recpath  string sec_recpath </functioncall>
     <description>
-    
+        The path, in which the recordings shall be put to.
     </description>
     <parameters>
       string prim_recpath - the primary recording path
@@ -619,8 +671,11 @@
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>RECORD_CFG</slug>
     <functioncall>RECORD_CFG string recording_cfg_string </functioncall>
-    <description>
-    
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+        The record-format-setting used for this project as a BASE64-encoded string. 
+        For the format-settings on a track-basis, see [RECCFG](#RECCFG)  
+
+        For the used recording-setting in this project, see [USE_REC_CFG](#USE_REC_CFG).
     </description>
     <parameters>
       recording_cfg_string - the record-configuration as encoded string
@@ -637,7 +692,7 @@
     <slug>APPLY_CFG</slug>
     <functioncall>APPLY_CFG string applyfx_cfg_string </functioncall>
     <description>
-    
+        The format-settings for applying FX on items as a BASE64-encoded string.
     </description>
     <parameters>
       string applyfx_cfg_string - the file-format-configuration for fx-appliance as encoded string
@@ -654,7 +709,7 @@
     <slug>RENDER_FILE</slug>
     <functioncall>RENDER_FILE string render_filename </functioncall>
     <description>
-    
+        The filename with path of the output-renderfile.
     </description>
     <parameters>
       string render_filename - the filename for rendering, check also <a href="#GetProject_RenderPattern">GetProject_RenderPattern</a>
@@ -671,7 +726,7 @@
     <slug>RENDER_PATTERN</slug>
     <functioncall>RENDER_PATTERN string render_pattern </functioncall>
     <description>
-    
+        The render-pattern for wildcards, used for the name of the output-renderfile.
     </description>
     <parameters>
       string render_pattern - the pattern, with which the rendering-filename will be automatically created. Check also <a href="#GetProject_RenderFilename">GetProject_RenderFilename</a>
@@ -730,9 +785,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>RENDER_FMT</slug>
-    <functioncall>RENDER_FMT integer unknown, integer rendernum_chans, integer render_frequency </functioncall>
+    <functioncall>RENDER_FMT integer unknown  integer rendernum_chans  integer render_frequency </functioncall>
     <description>
-    
+        The settings for number of render-channels and render-frequency.
     </description>
     <parameters>
       integer unknown - unknown number
@@ -751,7 +806,7 @@
     <slug>RENDER_1X</slug>
     <functioncall>RENDER_1X integer render_speed </functioncall>
     <description>
-    
+        The render-speed, for offline or online-rendering, 1x or full-speed.
     </description>
     <parameters>
       integer render_speed - render_speed 
@@ -771,9 +826,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>RENDER_RANGE</slug>
-    <functioncall>RENDER_RANGE integer bounds, number time_start, number time_end, integer tail, integer tail_length </functioncall>
+    <functioncall>RENDER_RANGE integer bounds  number time_start  number time_end  integer tail  integer tail_length </functioncall>
     <description>
-    
+        The renderbounds/renderrange, start and end-renderrange, taillength, etc.
     </description>
     <parameters>
       integer bounds - the bounds of the project to be rendered
@@ -804,9 +859,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>RENDER_RESAMPLE</slug>
-    <functioncall>RENDER_RESAMPLE integer resample_mode, integer playback_resample_mode, integer project_smplrate4mix_and_fx </functioncall>
+    <functioncall>RENDER_RESAMPLE integer resample_mode  integer playback_resample_mode  integer project_smplrate4mix_and_fx </functioncall>
     <description>
-    
+        The resample-mode for the rendering.
     </description>
     <parameters>
       integer resample_mode - Resample_Mode 
@@ -847,10 +902,27 @@
     <slug>RENDER_ADDTOPROJ</slug>
     <functioncall>RENDER_ADDTOPROJ integer addmedia_after_render_state </functioncall>
     <description>
-    
+        The setting for adding rendered media to the project afterwards.
     </description>
     <parameters>
       integer addmedia_after_render_state - 1, rendered media shall be added to the project afterwards; 0, don't add
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RENDER_QDELAY</slug>
+    <functioncall>RENDER_QDELAY integer delay_in_seconds </functioncall>
+    <description>
+        the amount of seconds, that delay queued-rendering to allow finishing loading of all samples
+    </description>
+    <parameters>
+      integer delay_in_seconds - the delay for queued-renders in seconds
     </parameters>
     <chapter_context>
       ProjectStateChunk
@@ -864,17 +936,17 @@
     <slug>RENDER_STEMS</slug>
     <functioncall>RENDER_STEMS integer render_stems </functioncall>
     <description>
-    
+        The state, how stems/mastermix shall be rendered.
     </description>
     <parameters>
       integer render_stems - the state of Render Stems
-      - 0 - Source Master Mix, 
-      - 1 - Source Master mix + stems, 
-      - 3 - Source Stems, selected tracks, 
-      - 4 - Multichannel Tracks to Multichannel Files, 
-      - 8 - Source Region Render Matrix, 
-      - 16 - Tracks with only Mono-Media to Mono Files,  
-      - 32 Selected Media Items(in combination with RENDER_RANGE->Bounds->4, refer to <a href="#GetProject_RenderRange">GetProject_RenderRange</a> to get RENDER_RANGE)
+      - 0, Source Master Mix, 
+      - 1, Source Master mix + stems, 
+      - 3, Source Stems, selected tracks, 
+      - 4, Multichannel Tracks to Multichannel Files, 
+      - 8, Source Region Render Matrix, 
+      - 16, Tracks with only Mono-Media to Mono Files,  
+      - 32, Selected Media Items(in combination with RENDER_RANGE->Bounds->4, refer to <a href="#GetProject_RenderRange">GetProject_RenderRange</a> to get RENDER_RANGE)
     </parameters>
     <chapter_context>
       ProjectStateChunk
@@ -888,7 +960,7 @@
     <slug>RENDER_DITHER</slug>
     <functioncall>RENDER_DITHER integer renderdither_state </functioncall>
     <description>
-    
+        The dithering-state for the rendering.
     </description>
     <parameters>
       integer renderdither_state - the state of render dithering
@@ -909,7 +981,7 @@
     <slug>TIMELOCKMODE x</slug>
     <functioncall>TIMELOCKMODE x integer timebase </functioncall>
     <description>
-    
+        The timebase for items, envelopes and markers
     </description>
     <parameters>
       integer timebase - the timebase for items/envelopes/markers as set in the project settings
@@ -929,12 +1001,12 @@
     <slug>TEMPOENVLOCKMODE</slug>
     <functioncall>TEMPOENVLOCKMODE integer tempotimesignature </functioncall>
     <description>
-    
+        The timebase for tempo/time-signature.
     </description>
     <parameters>
       integer tempotimesignature - the timebase for tempo/time-signature as set in the project settings
-      -0 - Time 
-      -1 - Beats
+      -0, Time 
+      -1, Beats
     </parameters>
     <chapter_context>
       ProjectStateChunk
@@ -948,7 +1020,7 @@
     <slug>ITEMMIX</slug>
     <functioncall>ITEMMIX integer item_mix_behav_state </functioncall>
     <description>
-    
+        The state of the item-mixbehavior.
     </description>
     <parameters>
       integer item_mix_behav_state - item mix behavior
@@ -968,7 +1040,7 @@
     <slug>DEFPITCHMODE</slug>
     <functioncall>DEFPITCHMODE integer def_pitch_mode_state </functioncall>
     <description>
-    
+        The default pitchmode for pitching of Media.
     </description>
     <parameters>
       integer def_pitch_mode_state - the default pitch mode
@@ -1942,9 +2014,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>SAMPLERATE</slug>
-    <functioncall>SAMPLERATE integer sample_rate, integer project_sample_rate, integer force_tempo_time_sig </functioncall>
+    <functioncall>SAMPLERATE integer sample_rate  integer project_sample_rate  integer force_tempo_time_sig </functioncall>
     <description>
-    
+        The project's sample-rate and the checkboxes of the dialog ProjectSettings -> ProjectSettings.
     </description>
     <parameters>
       integer sample_rate - Project Sample Rate in Hz
@@ -1963,7 +2035,7 @@
     <slug>INTMIXMODE</slug>
     <functioncall>INTMIXMODE integer track_mixing_depth </functioncall>
     <description>
-    
+        The trackmixing-depth.
     </description>
     <parameters>
       integer track_mixing_depth - track mixing depth
@@ -1986,8 +2058,8 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>SELECTION</slug>
-    <functioncall>SELECTION number start_selection, number end_selection</functioncall>
-    <description>
+    <functioncall>SELECTION number start_selection  number end_selection</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
         The time/loop-selection in the project. 
         
         Start and endselection can be reversed!
@@ -2008,8 +2080,8 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>SELECTION2</slug>
-    <functioncall>SELECTION2 number start_selection, number end_selection</functioncall>
-    <description>
+    <functioncall>SELECTION2 number start_selection  number end_selection</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
         The time/loop-selection in the project. 
         Start and endselection can be reversed!
         
@@ -2028,15 +2100,28 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MARKER</slug>
-    <functioncall>MARKER integer number_of_markers_and_regions, integer number_of_regions_only, integer number_of_markers_only </functioncall>
+    <slug>MARKER/REGION</slug>
+    <functioncall>MARKER integer shownnumber  number markerposition  string markername  integer marker_or_region_regionmatrix  integer markercolor  integer unknown  string R</functioncall>
     <description>
-    
+        MARKER signals markers or regions. The order of the markers signal the markrgnindexorder.
+        Every region has two MARKER-entries, one for the start, one for the end of the marker. This will be signaled by parameter marker_or_region_regionmatrix.
+        The second region-MARKER-entry has no markername in it.
+        
+        To add individual tracks to a region-render-matrix, see &lt;REGIONRENDER-statechunk-description.
     </description>
     <parameters>
-      integer number_of_markers_and_regions - the number of all markers and regions
-      integer number_of_regions_only - the number of regions
-      integer number_of_markers_only - the number of markers only
+      integer shownnumber - the shown index-number of the marker
+      number markerposition - the position of the marker
+      string markername - the name of the marker
+      integer marker_or_region_regionmatrix - signals if it's a marker or region and if the latter, if it's part of a regionmatrix
+                                            - If it's a region, both region-MARKER-entries must have the same setting for this parameter.
+                                            - 0, a normal marker
+                                            - &1, a region
+                                            - &2, Region-render-matrix: add all tracks to the rendering of this region
+                                            - &4, Region-render-matrix: add Mastermix to the rendering of this region
+      integer markercolor - the color of the marker
+      integer unknown - unknown
+      string R - unknown, default is a simple R
     </parameters>
     <chapter_context>
       ProjectStateChunk
@@ -2045,44 +2130,36 @@
     <source_document></source_document>
     <tags></tags>
   </US_DocBloc>
-  
+
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MARKER</slug>
-    <functioncall>MARKER boolean retval, integer shownnumber, number markerposition, string markername, integer markercolor </functioncall>
+    <slug>REGIONRENDER</slug>
+    <functioncall>&lt;REGIONRENDER integer shown_regionnumber</functioncall>
     <description>
-    
+        The region-matrix-statechunk for a specific region. Will be added between the first and the last region's-MARKER-entry.
+        It is started with   &lt;REGIONRENDER xx and ends with  &gt;, where xx stands for the shown-region-number.
+
+        It contains numerous entries of the like
+        
+             TRACK string guid
+             
+        where guid is the guid of the track, which shall be rendered.
+        
+        Example for three tracks, rendered in region 99:
+              
+                  MARKER 99 7263.7401146877728 markername 1 30438724 1 R
+                  &lt;REGIONRENDER 99
+                    TRACK {275F4C73-9885-436B-8CD1-981C32FA89F9}
+                    TRACK {0B797C52-1842-49DD-AC80-D76E94125031}
+                    TRACK {3FC698CB-8731-4F46-8A9B-FCD3C96CF1EE}
+                  &gt;
+                  MARKER 99 7309.5854827431112 "" 1 30438724 1 R
     </description>
     <parameters>
-      boolean retval - true, in case of success; false in case of failure
-      integer shownnumber - the number that is shown with the marker in the arrange-view
-      number markerposition - the position of the marker in seconds
-      string markername - the name of the marker. "" if no name is given.
-      integer markercolor - the colorvalue of the marker
+      integer shownnumber - the shown index-number of the marker
     </parameters>
     <chapter_context>
       ProjectStateChunk
-    </chapter_context>
-    <target_document>Reaper_StateChunk_Docs</target_document>
-    <source_document></source_document>
-    <tags></tags>
-  </US_DocBloc>
-  
-  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MARKER</slug>
-    <functioncall>MARKER boolean retval, integer shownnumber, number start_of_region, number end_of_region, string regionname, integer regioncolor </functioncall>
-    <description>
-    
-    </description>
-    <parameters>
-      boolean retval - true, in case of success; false in case of failure
-      integer shownnumber - the number that is shown with the region in the arrange-view
-      number start_of_region - the startposition of the region in seconds
-      number end_of_region - the endposition of the region in seconds
-      string regionname - the name of the region. "" if no name is given.
-      integer regioncolor - the colorvalue of the region
-    </parameters>
-    <chapter_context>
-      ProjectStateChunk
+      Region Render Matrix
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2097,6 +2174,7 @@
     </description>
     <chapter_context>
       ProjectStateChunk
+      Automation Items
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2104,13 +2182,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>METRONOME  </slug>
+    <slug>METRONOME</slug>
     <functioncall>METRONOME</functioncall>
     <description>
         The MetronomeStateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Metronome
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2125,6 +2204,7 @@
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master Playspeed Envelope
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2139,6 +2219,7 @@
     </description>
     <chapter_context>
       ProjectStateChunk
+      Tempo Envelope
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2146,13 +2227,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>EXTENSIONS  </slug>
+    <slug>EXTENSIONS</slug>
     <functioncall>EXTENSIONS</functioncall>
     <description>
         The ExtensionsStateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Extensions
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2160,10 +2242,11 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>LOCK </slug>
+    <slug>LOCK</slug>
     <functioncall>LOCK  integer lock_state </functioncall>
     <description>
-    
+        The lock-state for this project. It is an integer-bitfield.
+        This allows you to lock individual things in a project globally.
     </description>
     <parameters>
       integer lock_state - the lock-state, which is a bitfield
@@ -2194,7 +2277,7 @@
     <slug>GLOBAL_AUTO</slug>
     <functioncall>GLOBAL_AUTO integer globalauto_state </functioncall>
     <description>
-    
+        The global automation override-state for this project.
     </description>
     <parameters>
       integer globalauto_state - the global automation override-state
@@ -2209,9 +2292,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>TEMPO</slug>
-    <functioncall>TEMPO number bpm, integer beat, integer denominator </functioncall>
+    <functioncall>TEMPO number bpm  integer beat  integer denominator </functioncall>
     <description>
-    
+        The global tempo-settings for this project.
     </description>
     <parameters>
       number bpm - the tempo of the project in bpm
@@ -2228,9 +2311,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>PLAYRATE</slug>
-    <functioncall>PLAYRATE number playrate, integer preserve_pitch, number min_playrate, number max_playrate </functioncall>
+    <functioncall>PLAYRATE number playrate  integer preserve_pitch  number min_playrate  number max_playrate </functioncall>
     <description>
-    
+        The playrate-settings for this project.
     </description>
     <parameters>
       number playrate - the currently set playrate
@@ -2248,9 +2331,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MASTERAUTOMODE</slug>
-    <functioncall>MASTERAUTOMODE integer automode </functioncall>
+    <functioncall>MASTERAUTOMODE integer automode</functioncall>
     <description>
-    
+        The automationmode for mastertrack's envelopes.
     </description>
     <parameters>
       integer automode - the automation-mode, as set in the Envelopes for Master Track
@@ -2273,7 +2356,7 @@
     <slug>MASTER_SEL</slug>
     <functioncall>MASTER_SEL integer selection </functioncall>
     <description>
-    
+        The selection-state of the Master-track
     </description>
     <parameters>
       integer selection - the selection-state; 0, master-track unselected; 1, master-track selected
@@ -2290,7 +2373,7 @@
     <slug>MASTER_FX</slug>
     <functioncall>MASTER_FX integer fx_byp_state </functioncall>
     <description>
-    
+        The master-fx-bypass-state
     </description>
     <parameters>
       integer fx_byp_state - the fx-bypass-state; 0, master-track-fx bypassed; 1, master-track-fx normal
@@ -2307,7 +2390,7 @@
     <slug>MASTERMUTESOLO</slug>
     <functioncall>MASTERMUTESOLO integer mute_solo_state </functioncall>
     <description>
-    
+        The mute/solo-state for the Master-track
     </description>
     <parameters>
       integer mute_solo_state - the mute-solo-state; it is a bitfield
@@ -2329,9 +2412,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MASTER_NCH</slug>
-    <functioncall>MASTER_NCH integer number_of_channels, integer peak_metering </functioncall>
+    <functioncall>MASTER_NCH integer number_of_channels  integer peak_metering </functioncall>
     <description>
-    
+        The number of output-channels and peak-meter-settings for the Master-channel.
     </description>
     <parameters>
       integer number_of_channels - the number of output-channels, as set in the "Outputs for the Master Channel -> Track Channels"-dialog
@@ -2347,9 +2430,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MASTERTRACKHEIGHT</slug>
-    <functioncall>MASTERTRACKHEIGHT integer height_state, integer height_lock </functioncall>
+    <functioncall>MASTERTRACKHEIGHT integer height_state  integer height_lock </functioncall>
     <description>
-    
+        The trackheight-state of the Master-channel.
     </description>
     <parameters>
       integer height_state - the current-height of the master-track, from 24 to 260
@@ -2367,7 +2450,7 @@
     <slug>MASTERPEAKCOL</slug>
     <functioncall>MASTERPEAKCOL integer color </functioncall>
     <description>
-    
+        The trackcolor of the Master-track.
     </description>
     <parameters>
       integer color - the color for the master-track
@@ -2379,12 +2462,12 @@
     <source_document></source_document>
     <tags></tags>
   </US_DocBloc>
-  
+
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MASTERTRACKVIEW</slug>
-    <functioncall>MASTERTRACKVIEW integer tcp_visibility, number state2, number state3, number state4, integer state5, integer state6, integer state7 </functioncall>
+    <functioncall>MASTERTRACKVIEW integer tcp_visibility  number state2  number state3  number state4  integer state5  integer state6  integer state7 </functioncall>
     <description>
-    
+        The Mastertrack-visibility-settings.
     </description>
     <parameters>
       integer tcp_visibility - 0, Master-track is invisible in MCP; 1, Master-track is visible in MCP
@@ -2407,7 +2490,7 @@
     <slug>MASTERHWOUT</slug>
     <functioncall>MASTERHWOUT integer count_of_hwouts </functioncall>
     <description>
-    
+        The number of HWOuts of the Master-channel.
     </description>
     <parameters>
       integer count_of_hwouts - the number of available hwouts in an rpp-project or ProjectStateChunk
@@ -2422,9 +2505,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MASTERHWOUT</slug>
-    <functioncall>MASTERHWOUT integer state1, integer state2, number volume, number pan, integer mute, integer phase, integer output_channels, number state8 </functioncall>
+    <functioncall>MASTERHWOUT integer state1  integer state2  number volume  number pan  integer mute  integer phase  integer output_channels  number state8 </functioncall>
     <description>
-    
+        The HWOut-routing-settings of the Master-channel
     </description>
     <parameters>
       integer state1 - unknown
@@ -2456,9 +2539,9 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MASTER_VOLUME</slug>
-    <functioncall>MASTER_VOLUME number volume, number pan, number pan_law, number state4, number pan_knob3 </functioncall>
+    <functioncall>MASTER_VOLUME number volume  number pan  number pan_law  number state4  number pan_knob3 </functioncall>
     <description>
-    
+        The volume, pan and pan-law-settings of the Master-channel.
     </description>
     <parameters>
       number volume - Volume; 0(-inf dB) to 3.981071705535(+12dB);1 for 0dB
@@ -2479,7 +2562,7 @@
     <slug>MASTER_PANMODE</slug>
     <functioncall>MASTER_PANMODE integer panmode </functioncall>
     <description>
-    
+        The panmode-settings of the Master-channel.
     </description>
     <parameters>
       integer panmode - the panmode for the master-track; 
@@ -2501,7 +2584,7 @@
     <slug>MASTER_WIDTH</slug>
     <functioncall>MASTER_WIDTH number pan_knob_two </functioncall>
     <description>
-    
+        The width-settings of the Master-channel.
     </description>
     <parameters>
       number pan_knob_two - -1(left), 1(right), 0(center)
@@ -2516,50 +2599,12 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MASTER_GROUP_FLAGS</slug>
-    <functioncall>MASTER_GROUP_FLAGS integer GroupState_as_Flags, array IndividualGroupState_Flags </functioncall>
-    <description>
-    
+    <functioncall>MASTER_GROUP_FLAGS integer GroupState_as_Flags</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+        The groupstate-flags for the Master-channel. See [MASTER_GROUP_FLAGS_HIGH](#MASTER_GROUP_FLAGS_HIGH) as well.
     </description>
     <parameters>
-      integer GroupState_as_Flags - returns a flagvalue with 23 bits, that tells you, which grouping-flag is set in at least one of the 32 groups available.
-      -returns -1 in case of failure
-      -
-      -the following flags are available:
-      -2^0 - Volume Master
-      -2^1 - Volume Slave
-      -2^2 - Pan Master
-      -2^3 - Pan Slave
-      -2^4 - Mute Master
-      -2^5 - Mute Slave
-      -2^6 - Solo Master
-      -2^7 - Solo Slave
-      -2^8 - Record Arm Master
-      -2^9 - Record Arm Slave
-      -2^10 - Polarity/Phase Master
-      -2^11 - Polarity/Phase Slave
-      -2^12 - Automation Mode Master
-      -2^13 - Automation Mode Slave
-      -2^14 - Reverse Volume
-      -2^15 - Reverse Pan
-      -2^16 - Do not master when slaving
-      -2^17 - Reverse Width
-      -2^18 - Width Master
-      -2^19 - Width Slave
-      -2^20 - VCA Master
-      -2^21 - VCA Slave
-      -2^22 - VCA pre-FX slave
-      
-       array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
-      -e.g. If Volume Master is set only in Group 1, entry 1 in the array will be set to 1. If Volume Master is set on Group 2 and Group 4, the first entry in the array will be set to 10.
-      -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F slave, array[16] is Do not master when slaving, etc
-      -As said before, the values in each entry is a flag, that tells you, which of the groups is set with a certain flag. The following flags determine, in which group a certain flag is set:
-      -2^0 - Group 1
-      -2^1 - Group 2
-      -2^2 - Group 3
-      -2^3 - Group 4
-      -...
-      -2^30 - Group 31
-      -2^31 - Group 32
+      integer GroupState_as_Flags - 
     </parameters>
     <chapter_context>
       ProjectStateChunk
@@ -2571,50 +2616,32 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MASTER_GROUP_FLAGS_HIGH</slug>
-    <functioncall>MASTER_GROUP_FLAGS_HIGH integer GroupState_as_Flags, array IndividualGroupState_Flags </functioncall>
-    <description>
-    
+    <functioncall>MASTER_GROUP_FLAGS_HIGH integer GroupState_as_Flags  integer GroupState_as_Flags2  integer GroupState_as_Flags3  integer GroupState_as_Flags4  integer GroupState_as_Flags5  integer GroupState_as_Flags6  integer GroupState_as_Flags7  integer GroupState_as_Flags8  integer GroupState_as_Flags9  integer GroupState_as_Flags10  integer GroupState_as_Flags11  integer GroupState_as_Flags12  integer GroupState_as_Flags13  integer GroupState_as_Flags14  integer GroupState_as_Flags15  integer GroupState_as_Flags16  integer GroupState_as_Flags17  integer GroupState_as_Flags18  integer GroupState_as_Flags19  integer GroupState_as_Flags20</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+        The groupstate-flags for the Master-channel. See [MASTER_GROUP_FLAGS](#MASTER_GROUP_FLAGS) as well.
     </description>
     <parameters>
-      integer GroupState_as_Flags - returns a flagvalue with 23 bits, that tells you, which grouping-flag is set in at least one of the 32 groups available.
-      -returns -1 in case of failure
-      -
-      -the following flags are available:
-      -2^0 - Volume Master
-      -2^1 - Volume Slave
-      -2^2 - Pan Master
-      -2^3 - Pan Slave
-      -2^4 - Mute Master
-      -2^5 - Mute Slave
-      -2^6 - Solo Master
-      -2^7 - Solo Slave
-      -2^8 - Record Arm Master
-      -2^9 - Record Arm Slave
-      -2^10 - Polarity/Phase Master
-      -2^11 - Polarity/Phase Slave
-      -2^12 - Automation Mode Master
-      -2^13 - Automation Mode Slave
-      -2^14 - Reverse Volume
-      -2^15 - Reverse Pan
-      -2^16 - Do not master when slaving
-      -2^17 - Reverse Width
-      -2^18 - Width Master
-      -2^19 - Width Slave
-      -2^20 - VCA Master
-      -2^21 - VCA Slave
-      -2^22 - VCA pre-FX slave
-      
-       array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
-      -e.g. If Volume Master is set only in Group 1, entry 1 in the array will be set to 1. If Volume Master is set on Group 2 and Group 4, the first entry in the array will be set to 10.
-      -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F slave, array[16] is Do not master when slaving, etc
-      -As said before, the values in each entry is a flag, that tells you, which of the groups is set with a certain flag. The following flags determine, in which group a certain flag is set:
-      -2^0 - Group 1
-      -2^1 - Group 2
-      -2^2 - Group 3
-      -2^3 - Group 4
-      -...
-      -2^30 - Group 31
-      -2^31 - Group 32
+      integer GroupState_as_Flags - 
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_Docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+
+
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GROUP_NAME</slug>
+    <functioncall>GROUP_NAME integer group_number  string groupname</functioncall>
+    <description>
+        Sets a new name for a specific group. Can be set in the track-grouping-parameters-dialog.
+    </description>
+    <parameters>
+      integer group_number - the groupnumber, whose name shall be set
+      string groupname - the new groupname
     </parameters>
     <chapter_context>
       ProjectStateChunk
@@ -2626,9 +2653,12 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>GROUPS_DISABLED</slug>
-    <functioncall>GROUPS_DISABLED integer disabled1, integer disabled2 </functioncall>
+    <functioncall>GROUPS_DISABLED integer disabled1  integer disabled2 </functioncall>
     <description>
-    
+        Groups, that are disabled, will be set in here.
+        Both parameters are 32-bit-integer-bitfields, where each bit represents a group. If it's set, it is disabled, if not, it's enabled.
+        
+        disabled1 is for the groups 1 to 32, while disabled2 stands for the groups 33 to 64
     </description>
     <parameters>
       integer disabled1 - the disabled groups; it is a bitfield, with &1 for group 1; &32 for group 32; if it's set, the accompanying group is disabled
@@ -2643,13 +2673,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTERHWVOLENV  </slug>
+    <slug>MASTERHWVOLENV</slug>
     <functioncall>MASTERHWVOLENV</functioncall>
     <description>
         The MasterHWVolEnvStateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master HardwareVolume Envelope
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2657,13 +2688,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTERFXLIST  </slug>
+    <slug>MASTERFXLIST</slug>
     <functioncall>MASTERFXLIST</functioncall>
     <description>
         The MasterFXListStateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master FX List
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2671,13 +2703,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTERDUALPANENV  </slug>
+    <slug>MASTERDUALPANENV</slug>
     <functioncall>MASTERDUALPANENV</functioncall>
     <description>
         The MasterDualPanEnvStateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master DualPan Envelope
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2685,13 +2718,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTERDUALPANENV2  </slug>
+    <slug>MASTERDUALPANENV2</slug>
     <functioncall>MASTERDUALPANENV2</functioncall>
     <description>
-        The MasterDualPanEnvStateChunk
+        The MasterDualPanEnv2-StateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master DualPan Envelope 2
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2699,13 +2733,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTERDUALPANENVL  </slug>
+    <slug>MASTERDUALPANENVL</slug>
     <functioncall>MASTERDUALPANENVL</functioncall>
     <description>
-        The MasterDualPanEnvLStateChunk
+        The MasterDualPanEnvL-StateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master DualPan Envelope L
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2713,13 +2748,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTERDUALPANENVL2  </slug>
+    <slug>MASTERDUALPANENVL2</slug>
     <functioncall>MASTERDUALPANENVL2</functioncall>
     <description>
         The MasterDualPanEnvL2StateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master DualPan Envelope L2
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2727,13 +2763,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTERVOLENV  </slug>
+    <slug>MASTERVOLENV</slug>
     <functioncall>MASTERVOLENV</functioncall>
     <description>
         The MasterVolEnvStateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master Volume Envelope
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2741,13 +2778,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTERVOLENV2  </slug>
+    <slug>MASTERVOLENV2</slug>
     <functioncall>MASTERVOLENV2</functioncall>
     <description>
         The MasterVolEnv2StateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master Volume Envelope 2
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2755,13 +2793,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTERVOLENV3  </slug>
+    <slug>MASTERVOLENV3</slug>
     <functioncall>MASTERVOLENV3</functioncall>
     <description>
         The MasterVolEnv3StateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master Volume Envelope 3
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2769,13 +2808,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTERHWPANENV  </slug>
+    <slug>MASTERHWPANENV</slug>
     <functioncall>MASTERHWPANENV</functioncall>
     <description>
         The MasterHWPanEnvStateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master HardwarePan Envelope
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2783,13 +2823,14 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>MASTER_PANMODE_EX  </slug>
-    <functioncall>MASTER_PANMODE_EX  </functioncall>
+    <slug>MASTER_PANMODE_EX</slug>
+    <functioncall>MASTER_PANMODE_EX</functioncall>
     <description>
         The MasterHWPanModeEx_StateChunk
     </description>
     <chapter_context>
       ProjectStateChunk
+      Master HardwarePanMode Ex
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
@@ -2797,19 +2838,20 @@
   </US_DocBloc>
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>TEMPOENVEX  </slug>
+    <slug>TEMPOENVEX</slug>
     <functioncall>TEMPOENVEX</functioncall>
     <description>
         The TempoEnv_ExStateChunk.
     </description>
     <chapter_context>
       ProjectStateChunk
+      Tempo Envelope EX
     </chapter_context>
     <target_document>Reaper_StateChunk_Docs</target_document>
     <source_document></source_document>
     <tags></tags>
   </US_DocBloc>
-  
+
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>NAME</slug>
     <functioncall>NAME string trackname </functioncall>
@@ -2820,6 +2862,7 @@
       string trackname  - the name of the track
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -2837,6 +2880,7 @@
       integer PeakColorState  - the color of the track
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -2854,6 +2898,7 @@
       number BeatState  - -1 - Project time base; 0 - Time; 1 - Beats position, length, rate; 2 - Beats position only
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -2873,6 +2918,7 @@
       integer AutoRecArmState  - state of autorecarm; 1 for set
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -2882,7 +2928,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MUTESOLO</slug>
-    <functioncall>MUTESOLO integer Mute, integer Solo, integer SoloDefeat </functioncall>
+    <functioncall>MUTESOLO integer Mute  integer Solo  integer SoloDefeat </functioncall>
     <description>
         The Mute, Solo and Solodefeat-state for the track
     </description>
@@ -2892,6 +2938,7 @@
       integer SoloDefeat  - SoloDefeat set to 0 - off, 1 - on
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -2909,6 +2956,7 @@
       number IPhase  - state of the phase-button; 0, normal phase; 1, inverted phase(180°)
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -2918,7 +2966,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>BUSCOMP</slug>
-    <functioncall>BUSCOMP number BusCompState1, number BusCompState2 </functioncall>
+    <functioncall>BUSCOMP number BusCompState1  number BusCompState2 </functioncall>
     <description>
         The compacted state of a track
     </description>
@@ -2927,6 +2975,7 @@
       number BusCompState2 - 0 - unknown,1 - unknown
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -2936,7 +2985,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>SHOWINMIX</slug>
-    <functioncall>SHOWINMIX integer MCPvisible, number MCP_FX_visible, number MCPTrackSendsVisible, integer TCPvisible, number ShowInMix5, number ShowInMix6, number ShowInMix7, number ShowInMix8 </functioncall>
+    <functioncall>SHOWINMIX integer MCPvisible  number MCP_FX_visible  number MCPTrackSendsVisible  integer TCPvisible  number ShowInMix5  number ShowInMix6  number ShowInMix7  number ShowInMix8 </functioncall>
     <description>
         Several settings regarding MixerControlPanel, TrackControlPanel and more
     </description>
@@ -2951,6 +3000,27 @@
        number ShowInMix8  - unknown
     </parameters>
     <chapter_context>
+      ProjectStateChunk
+      TrackStateChunk
+    </chapter_context>
+    <target_document>Reaper_StateChunk_docs</target_document>
+    <source_document></source_document>
+    <tags></tags>
+  </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SEL</slug>
+    <functioncall>SEL integer selectionstate </functioncall>
+    <description>
+        The SEL is the state, if the track is selected(1) or not(0).
+        
+        Only available in ProjectStateChunks, not in TrackStateChunks retrieved by GetProjectStateChunk-function!
+    </description>
+    <parameters>
+      integer selectionstate  - 1, selected, 0, not selected
+    </parameters>
+    <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -2968,6 +3038,7 @@
       integer FreeModeState  - 1 - enabled, 0 - not enabled
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -2977,7 +3048,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>REC</slug>
-    <functioncall>REC integer ArmState, integer InputChannel, integer MonitorInput, integer RecInput, integer MonitorWhileRec, integer presPDCdelay, integer RecordingPath </functioncall>
+    <functioncall>REC integer ArmState  integer InputChannel  integer MonitorInput  integer RecInput  integer MonitorWhileRec  integer presPDCdelay  integer RecordingPath </functioncall>
     <description>
         Several settings regarding recording, like arm, input-channel, monitor, recinput-type, recordingpath and more
     </description>
@@ -3031,6 +3102,7 @@
       -2 - Primary Recording Path and Secondary Recording Path(for invisible backup)
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3050,6 +3122,7 @@
       integer VUState  - 2 if MultichannelMetering is on, 3 Metering is off
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3059,7 +3132,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>TRACKHEIGHT</slug>
-    <functioncall>TRACKHEIGHT integer height, integer heightstate2, integer unknown </functioncall>
+    <functioncall>TRACKHEIGHT integer height  integer heightstate2  integer unknown </functioncall>
     <description>
         The Trackheight of the track, including it's compacted state
     </description>
@@ -3069,6 +3142,7 @@
       integer unknown - unknown    
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3078,7 +3152,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>INQ</slug>
-    <functioncall>INQ integer quantMIDI, integer quantPOS, integer quantNoteOffs, number quantToFractBeat, integer quantStrength, integer swingStrength, integer quantRangeMin, integer quantRangeMax </functioncall>
+    <functioncall>INQ integer quantMIDI  integer quantPOS  integer quantNoteOffs  number quantToFractBeat  integer quantStrength  integer swingStrength  integer quantRangeMin  integer quantRangeMax </functioncall>
     <description>
         Many Quantization-settings for note, Midi, swing, range, etc
     </description>
@@ -3093,6 +3167,7 @@
       integer quantRangeMax -  quantize range maximum; -128 to 127
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3110,6 +3185,7 @@
       integer channelnumber  - number of channels for this track
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3127,6 +3203,7 @@
       integer FXState - off/bypass(0) or nobypass(1)
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3149,6 +3226,7 @@
       -settings seem to repeat with higher numbers (e.g. 4(like 0) - allow anticipative FX + allow media buffering)
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3171,6 +3249,7 @@
       --16 - no Output, send to original channel 16
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3180,7 +3259,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MAINSEND</slug>
-    <functioncall>MAINSEND integer MainSendOn, integer ParentChannels </functioncall>
+    <functioncall>MAINSEND integer MainSendOn  integer ParentChannels </functioncall>
     <description>
         Mainsend-state and parent-channels
     </description>
@@ -3189,6 +3268,7 @@
       integer ParentChannels - ParentChannels(0-63)
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3198,157 +3278,90 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>GROUP_FLAGS</slug>
-    <functioncall>GROUP_FLAGS integer GroupState_as_Flags, array IndividualGroupState_Flags </functioncall>
+    <functioncall>GROUP_FLAGS  integer Volume Master  integer Volume Slave  integer Pan Master  integer Pan Slave  integer Mute Master  integer Mute Slave  integer Solo Master  integer Solo Slave  integer Record Arm Master  integer Record Arm Slave  integer Polarity/Phase Master  integer Polarity/Phase Slave  integer Automation Mode Master  integer Automation Mode Slave  integer Reverse Volume  integer Reverse Pan  integer Do not master when slaving  integer Reverse Width  integer Width Master  integer Width Slave  integer VCA Master  integer VCA Slave  integer VCA pre-FX slave</functioncall>
     <description>
         The grouping of the track, groups(1 to 32)
-        
         You can reach the Group-Flag-Settings in the context-menu of a track.
         
-        The following flags are available:
-                           1 - Volume Master
-                           2 - Volume Slave
-                           3 - Pan Master
-                           4 - Pan Slave
-                           5 - Mute Master
-                           6 - Mute Slave
-                           7 - Solo Master
-                           8 - Solo Slave
-                           9 - Record Arm Master
-                           10 - Record Arm Slave
-                           11 - Polarity/Phase Master
-                           12 - Polarity/Phase Slave
-                           13 - Automation Mode Master
-                           14 - Automation Mode Slave
-                           15 - Reverse Volume
-                           16 - Reverse Pan
-                           17 - Do not master when slaving
-                           18 - Reverse Width
-                           19 - Width Master
-                           20 - Width Slave
-                           21 - VCA Master
-                           22 - VCA Slave
-                           23 - VCA pre-FX slave
-    
-    The GroupState_as_Flags-bitfield is a hint, if a certain flag is set in any of the groups. So, if you want to know, if VCA Master is set in any group, check if flag &1048576 (2^20) is set to 1048576.
+        Each parameter represents a flag-value for one of the checkboxes in the Group-Flag-Settings-dialogs.
+        Each bit of each flagvalue represents the group, in which it is set, means: &1 for group1, &32 for group 32. 
 
+        These entries are only for Groups 1(2^0) to 32(2^31). To get/set Groups 33 to 64, use <a href="#GROUP_FLAGS_HIGH">GROUP_FLAGS_HIGH</a> instead!
     </description>
     <parameters>
-      integer GroupState_as_Flags - returns a flagvalue with 23 bits, that tells you, which grouping-flag is set in at least one of the 32 groups available.
-      -the following flags are available:
-      -2^0 - Volume Master
-      -2^1 - Volume Slave
-      -2^2 - Pan Master
-      -2^3 - Pan Slave
-      -2^4 - Mute Master
-      -2^5 - Mute Slave
-      -2^6 - Solo Master
-      -2^7 - Solo Slave
-      -2^8 - Record Arm Master
-      -2^9 - Record Arm Slave
-      -2^10 - Polarity/Phase Master
-      -2^11 - Polarity/Phase Slave
-      -2^12 - Automation Mode Master
-      -2^13 - Automation Mode Slave
-      -2^14 - Reverse Volume
-      -2^15 - Reverse Pan
-      -2^16 - Do not master when slaving
-      -2^17 - Reverse Width
-      -2^18 - Width Master
-      -2^19 - Width Slave
-      -2^20 - VCA Master
-      -2^21 - VCA Slave
-      -2^22 - VCA pre-FX slave      
+      integer Volume Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Volume Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Pan Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Pan Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Mute Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Mute Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Solo Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Solo Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Record Arm Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Record Arm Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Polarity/Phase Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Polarity/Phase Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Automation Mode Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Automation Mode Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Reverse Volume - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Reverse Pan - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Do not master when slaving - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Reverse Width - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Width Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Width Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer VCA Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer VCA Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer VCA pre-FX slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
     <source_document></source_document>
     <tags></tags>
   </US_DocBloc>
+
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>GROUP_FLAGS_HIGH</slug>
-    <functioncall>GROUP_FLAGS_HIGH integer GroupState_as_Flags, array IndividualGroupState_Flags </functioncall>
+    <functioncall>GROUP_FLAGS_HIGH  integer Volume Master  integer Volume Slave  integer Pan Master  integer Pan Slave  integer Mute Master  integer Mute Slave  integer Solo Master  integer Solo Slave  integer Record Arm Master  integer Record Arm Slave  integer Polarity/Phase Master  integer Polarity/Phase Slave  integer Automation Mode Master  integer Automation Mode Slave  integer Reverse Volume  integer Reverse Pan  integer Do not master when slaving  integer Reverse Width  integer Width Master  integer Width Slave  integer VCA Master  integer VCA Slave  integer VCA pre-FX slave</functioncall>
     <description>
-        The grouping of the track, higher groups(groups 33 to 64)
-        
+        The grouping of the track, groups(33 to 64)
         You can reach the Group-Flag-Settings in the context-menu of a track.
         
-        Each entry is a bitfield, that represents the groups, in which this flag is set to checked or unchecked.
-    
-        The following flags(and their accompanying array-entry-index) are available:
-                           1 - Volume Master
-                           2 - Volume Slave
-                           3 - Pan Master
-                           4 - Pan Slave
-                           5 - Mute Master
-                           6 - Mute Slave
-                           7 - Solo Master
-                           8 - Solo Slave
-                           9 - Record Arm Master
-                           10 - Record Arm Slave
-                           11 - Polarity/Phase Master
-                           12 - Polarity/Phase Slave
-                           13 - Automation Mode Master
-                           14 - Automation Mode Slave
-                           15 - Reverse Volume
-                           16 - Reverse Pan
-                           17 - Do not master when slaving
-                           18 - Reverse Width
-                           19 - Width Master
-                           20 - Width Slave
-                           21 - VCA Master
-                           22 - VCA Slave
-                           23 - VCA pre-FX slave
-    
-    The GroupState_as_Flags-bitfield is a hint, if a certain flag is set in any of the groups. So, if you want to know, if VCA Master is set in any group, check if flag &1048576 (2^20) is set to 1048576.
-    
-    This function will work only for Groups 33(2^0) to 64(2^31). To get Groups 1 to 32, use <a href="#GetTrackGroupFlagsState">GetTrackGroupFlagsState</a> instead!
-    
+        Each parameter represents a flag-value for one of the checkboxes in the Group-Flag-Settings-dialogs.
+        Each bit of each flagvalue represents the group, in which it is set, means: &1 for group1, &32 for group 32. 
+
+        These entries are only for Groups 33(2^0) to 64(2^31). To get/set Groups 1 to 32, use <a href="#GROUP_FLAGS">GROUP_FLAGS</a> instead!
     </description>
     <parameters>
-      integer GroupState_as_Flags - returns a flagvalue with 23 bits, that tells you, which grouping-flag is set in at least one of the 32 groups available.
-      -returns -1 in case of failure
-      -
-      -the following flags are available:
-      -2^0 - Volume Master
-      -2^1 - Volume Slave
-      -2^2 - Pan Master
-      -2^3 - Pan Slave
-      -2^4 - Mute Master
-      -2^5 - Mute Slave
-      -2^6 - Solo Master
-      -2^7 - Solo Slave
-      -2^8 - Record Arm Master
-      -2^9 - Record Arm Slave
-      -2^10 - Polarity/Phase Master
-      -2^11 - Polarity/Phase Slave
-      -2^12 - Automation Mode Master
-      -2^13 - Automation Mode Slave
-      -2^14 - Reverse Volume
-      -2^15 - Reverse Pan
-      -2^16 - Do not master when slaving
-      -2^17 - Reverse Width
-      -2^18 - Width Master
-      -2^19 - Width Slave
-      -2^20 - VCA Master
-      -2^21 - VCA Slave
-      -2^22 - VCA pre-FX slave
-      
-       array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
-      -e.g. If Volume Master is set only in Group 33, entry 1 in the array will be set to 1. If Volume Master is set on Group 34 and Group 36, the first entry in the array will be set to 10.
-      -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F slave, array[16] is Do not master when slaving, etc
-      -As said before, the values in each entry is a flag, that tells you, which of the groups is set with a certain flag. The following flags determine, in which group a certain flag is set:
-      -2^0 - Group 33
-      -2^1 - Group 34
-      -2^2 - Group 35
-      -2^3 - Group 36
-      -...
-      -2^30 - Group 63
-      -2^31 - Group 64
+      integer Volume Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Volume Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Pan Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Pan Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Mute Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Mute Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Solo Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Solo Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Record Arm Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Record Arm Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Polarity/Phase Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Polarity/Phase Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Automation Mode Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Automation Mode Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Reverse Volume - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Reverse Pan - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Do not master when slaving - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Reverse Width - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Width Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer Width Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer VCA Master - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer VCA Slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
+      integer VCA pre-FX slave - set/unset individual bits to set/unset the checkbox for a specific group (&1, group 1; &32, group 32)
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3368,6 +3381,7 @@
       integer lockedstate  - locked(1)
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3377,7 +3391,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>LAYOUTS</slug>
-    <functioncall>LAYOUTS string TCP_Layoutname, string MCP_Layoutname </functioncall>
+    <functioncall>LAYOUTS string TCP_Layoutname  string MCP_Layoutname </functioncall>
     <description>
         The name of the TCP and MCP-layout. Will be enclosed in doublequotes, when it contains spaces.
     </description>
@@ -3386,6 +3400,7 @@
       string MCP_Layoutname  - name of the MCP-Layoutname
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3403,6 +3418,7 @@
       integer automodestate  - is set to 0 - trim/read, 1 - read, 2 - touch, 3 - write, 4 - latch.
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3420,6 +3436,7 @@
       string filename_with_path  - filename with path for the current track-icon.
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3429,9 +3446,12 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>RECCFG</slug>
-    <functioncall><RECCFG string reccfg </functioncall>
-    <description>
-        The recording-configuration as BASE64-encoded string
+    <functioncall>&lt;RECCFG string reccfg </functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+        The recording-configuration as BASE64-encoded string for a specific track.
+        
+        For the format-settings on a projectbasis, see [RECORD_CFG](#RECORD_CFG)  
+        For the used recording-setting in this project, see [USE_REC_CFG](#USE_REC_CFG).
     </description>
     <parameters>
       string reccfg - the string, that encodes the recording configuration of the track.
@@ -3440,6 +3460,7 @@
                        - 1, use track-customized rec-setting, as set in the "Track: View track recording settings (MIDI quantize, file format/path) for last touched track"-dialog (action 40604)
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3459,6 +3480,7 @@
       integer MidiInputChanMap_state  - 0 for channel 1, 1 for channel 2, etc
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3468,7 +3490,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>MIDICTL</slug>
-    <functioncall>MIDICTL integer LinkedToMidiChannel, integer unknown </functioncall>
+    <functioncall>MIDICTL integer LinkedToMidiChannel integer unknown </functioncall>
     <description>
         The Linked to midi-channel-setting
     </description>
@@ -3477,6 +3499,7 @@
       integer unknown  - unknown
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3494,6 +3517,7 @@
       number width - width of the track, from -1(-100%) to 1(+100%)
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3518,6 +3542,7 @@
       - 6 - Dual Pan
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3537,6 +3562,7 @@
       string MidiColorMapFn - the MidiColorMap-Filename
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3556,6 +3582,7 @@
       string MidiBankProgFn - the MidiBankProg-Filename
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3575,6 +3602,7 @@
       string MidiTextStrFn - the MidiTextStrFn-Filename
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3592,6 +3620,7 @@
       string TrackID - the TrackID
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3601,7 +3630,7 @@
   
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>SCORE</slug>
-    <functioncall>SCORE integer Score1, integer Score2, number Score3, number Score4  </functioncall>
+    <functioncall>SCORE integer Score1  integer Score2  number Score3  number Score4</functioncall>
     <description>
         The Score-setting for the track
     </description>
@@ -3612,6 +3641,7 @@
       number Score4 - unknown
     </parameters>
     <chapter_context>
+      ProjectStateChunk
       TrackStateChunk
     </chapter_context>
     <target_document>Reaper_StateChunk_docs</target_document>
@@ -3621,3 +3651,11 @@
   
   
 </USDocML>
+
+
+ProjectStateChunk
+UNDO_FTS %u
+REWIRESLAVE %d %d
+RENDER_PATLINE %s
+MISCOPTS %d
+AUTHOR %p

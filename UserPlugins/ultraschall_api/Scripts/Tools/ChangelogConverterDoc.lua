@@ -1,4 +1,9 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+--reaper.ShowConsoleMsg("huigl")
+--ultraschall.CloseReaConsole()
+
+--if l==nil then return end
+
 timer=reaper.time_precise()
 Tempfile=ultraschall.Api_Path.."temp/"
 ChangeLogFile="Changelog-Api.txt"
@@ -114,15 +119,62 @@ os.remove(Tempfile..ChangeLogFile)
 
 --]]
 reaper.SetExtState("ultraschall", "doc", "", false)
+if reaper.MB("Create Ultraschall-Docs ?", "Reaper-Docs", 4)==6 then pp=1 end
 if reaper.MB("Create Reaper-Docs as well?", "Reaper-Docs", 4)==6 then p=1 end
+if p~=1 and pp~=1 then ultraschall.CloseReaConsole() return end
  -- introduction-concepts
 A=0
-function main()
-  if A==0 then ultraschall.RunCommand("_RSdd25c8bda91067981223b0efd6a4c3c07ac26a92") A=1 end
-  if reaper.GetExtState("ultraschall", "doc") == "intro-concepts-engine" and A==1 then  ultraschall.RunCommand("_RSafb7013a8d8bbc8ef2b5f044da8d0fa327ac4a10") A=2 end -- functions-engine  
-  if reaper.GetExtState("ultraschall", "doc") == "function-engine" and A==2 then ultraschall.RunCommand("_RS9b36c573d2290919d06f83fef31989e121f46685") A=3 end
-  if reaper.GetExtState("ultraschall", "doc") == "reaper_config_var" and A==3 then if p==1 then ultraschall.RunCommand("_RS09fa5f0d2a033e344d533043b5eeb22b7be4743c") else reaper.SetExtState("ultraschall", "doc", "reaper-docs", false) end A=4 end
-                                                                                                        
+
+Docfiles={}
+Docfiles[1]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallDocConverter.lua"
+Docfiles[2]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallConceptsDocConverter.lua"
+Docfiles[3]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallConceptsDocConverter_AUD.lua"
+Docfiles[4]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallConceptsDocConverter_DOC.lua"
+Docfiles[5]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallConceptsDocConverter_GFX.lua"
+Docfiles[6]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallConceptsDocConverter_GUI.lua"
+Docfiles[7]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallConceptsDocConverter_VID.lua"
+Docfiles[8]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallDoc_AUD_Converter.lua"
+Docfiles[9]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallDoc_DOC_Converter.lua"
+Docfiles[10]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallDoc_GFX_Converter.lua"
+Docfiles[11]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallDoc_GUI_Converter.lua"
+Docfiles[12]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewUltraschallDoc_VID_Converter.lua"
+Docfiles[13]="tudelu"
+if pp~=1 then Len=#Docfiles Docfiles={} else Len=0 end
+
+if p==1 then
+  Docfiles[13-Len]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewReaperStateChunkDocConverter.lua"
+  Docfiles[14-Len]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/ConfigDocConverter.lua"
+  Docfiles[15-Len]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/NewReaScriptConverter.lua"
+end
+Docfiles[16-Len]="tudelu"
+
+Timer=reaper.time_precise()
+reaper.SetExtState("ultraschall", "doc", Timer, false)
+
+i=1
+commandid=reaper.AddRemoveReaScript(true, 0, Docfiles[i], true)
+reaper.Main_OnCommand(commandid,0)
+OL=0
+--OL3=reaper.file_exists(Docfiles[i])
+
+function main()  
+  -- ultraschall_docs
+
+    if reaper.GetExtState("ultraschall", "doc")~=tostring(Timer) then 
+      if Docfiles[i]==nil then endofitall=true else
+      reaper.AddRemoveReaScript(false, 0, Docfiles[i], true)
+      end
+      i=i+1
+      Timer=reaper.GetExtState("ultraschall", "doc")
+      if Docfiles[i]~=nil then
+        reaper.SetExtState("ultraschall", "doc", Timer, false)
+        commandid=reaper.AddRemoveReaScript(true, 0, Docfiles[i], true)
+        reaper.Main_OnCommand(commandid,0)
+      end
+    end
+
+      
+--[[
   if reaper.GetExtState("ultraschall", "doc") == "reaper-docs" then
     Time2=reaper.time_precise()    
     Time3=reaper.format_timestr(Time2-timer, "") 
@@ -135,6 +187,22 @@ function main()
     N=reaper.GetExtState("ultraschall", "doc")
     reaper.defer(main)
   end
+  -]]
+  OL=OL+1
+  OL2=reaper.GetExtState("ultraschall","doc")
+  OL3=Docfiles[i]
+
+  if Docfiles[i]~="tudelu" then reaper.defer(main) 
+  else
+    Time2=reaper.time_precise()    
+    Time3=reaper.format_timestr(Time2-timer, "") 
+    reaper.MB(Time3, "", 0) 
+    os.remove(ultraschall.Api_Path.."/temp/temporary.md")
+    os.remove(ultraschall.Api_Path.."/temp/temporary.html")
+    ultraschall.CloseReaConsole()
+  end
 end
 
 main()
+
+--    ultraschall.CloseReaConsole()

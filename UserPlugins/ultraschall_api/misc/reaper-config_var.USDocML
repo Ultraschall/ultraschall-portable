@@ -7206,11 +7206,8 @@
       <slug>projrenderqdelay</slug>  
       <title>projrenderqdelay</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Delay queued render to allow samples to load-checkbox, as set in the Render to File-dialog  
-          It is an integer  
-          
-           >-30, checkbox - unchecked  
-           >30, checkbox - checked  
+          unknown
+          It is an integer
             
       </description>  
       <chapter_context>  
@@ -8658,9 +8655,11 @@
       <slug>renderqdelay</slug>  
       <title>renderqdelay</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown  
+          Delay queued render to allow samples to load-checkbox, as set in the Render to File-dialog  
           It is an integer  
-           
+          
+           >negative-value, checkbox - unchecked  
+           >positive-value, checkbox - checked  
       </description>  
       <chapter_context>  
          Config Variables  

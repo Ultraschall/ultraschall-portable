@@ -221,7 +221,7 @@ function onLoad() {
                     The Note/Key-Values are pure ASCII and go from 0-255 and don't(!) include the Modifier, means:<br>
                     5 65 is "Shift" "A"<br>
                     After 255, the codes repeat themselves every 256 values
-                    Only useful ASCII-codes can be associated, means, ASCII-codes that are represented as modifier+key. Such a combination must not be necessarily available on an englisch keyboard!
+                    Only useful ASCII-codes can be associated, means, ASCII-codes that are represented as modifier+key. Such a combination must not be necessarily available on an english keyboard!
                 </div><p>
 
                 <u>MIDI Chan X Note Y - 144 to 159</u>
@@ -1055,6 +1055,7 @@ The entries below a header can be either item_ID, title or icon_ID(icons in tool
         Main -> 45500 -> Default Classic	[Main options]<br>
         Main -> 46001 -> (track template list)	[Main track]<br>
         Main -> 48400 -> Default	[Main track]<br>
+        Main -> 45000 -> (take list)	[Media item context]<br>
         Main -> 45100 -> (comp list)	[Media item context]<br>
         Main -> 40079 -> Close	[Mixer context]<br>
         Main -> 40561 -> Show send parameters	[Sends extended mixer context]<br>
@@ -1064,7 +1065,7 @@ The entries below a header can be either item_ID, title or icon_ID(icons in tool
         Main -> 40564 -> Go to send destination track	[Sends extended mixer context]<br>
         Main -> 46001 -> (track template list)	[Track control panel context]<br>
         Main -> 48400 -> Default	[Track control panel context]<br>
-        Main -> 40264 -> no markers	[Transport context]<br>
+        Main -> 40264 -> markerlist 	[Transport context]<br>
         Main -> 40673 -> Playrate fader range: 0.25-4.0 (default)	[Transport context]<br>
         Main -> 40674 -> Playrate fader range: 0.5-2.0	[Transport context]<br>
         Main -> 40675 -> Playrate fader range: 0.75-1.5	[Transport context]<br>
@@ -1192,14 +1193,14 @@ There are standard keys for every [section] in the <i>reaper-mouse.ini</i>. Each
 <i>mm_5=</i> - Shift+Alt<br>
 <i>mm_6=</i> - Ctrl+Alt<br>
 <i>mm_7=</i> - Shift+Ctrl+Alt<br>
-<strong><i>Note: There is no mm_8= !</i></strong><br>
+<strong><i>Note: There is no mm_8= or it is for the Apple-key! Needs more research.</i></strong><br>
 <i>mm_9=</i> - Shift+Win / Shift+Apple(?)<br>
 <i>mm_10=</i> - Ctrl+Win / Ctrl+Apple(?)<br>
 <i>mm_11=</i> - Shift+Ctrl+Win<br>
 <i>mm_12=</i> - Alt+Win<br>
 <i>mm_13=</i> - Shift+Alt+Win<br>
 <i>mm_14=</i> - Ctrl+Alt+Win<br>
-    <i>mm_15=</i> - Shift+Ctrl+Alt+Win<br>
+<i>mm_15=</i> - Shift+Ctrl+Alt+Win<br>
 </div>
 <br>
 <h3>Values for Mouse-Behavior Modifiers</h3>

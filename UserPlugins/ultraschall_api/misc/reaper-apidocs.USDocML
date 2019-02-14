@@ -4,14 +4,14 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ##ReaScript API as of Reaper 5.965
+            ## ReaScript API as of Reaper 5.965
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
             ReaScripts can be written in EEL2, a specialized language that is also used to write JSFX; Lua, a popular scripting language; or Python, another scripting language. EEL and Lua are embedded within REAPER and require no additional downloads or settings. Python must be downloaded and installed separately, and enabled in REAPER preferences.
 
-            A script named "__startup.lua|.eel" will be started automatically by Reaper at startup. You can have both; Reaper will run __startup.eel first, __startup.lua second.
-            This __startup-script doesn't need to be registered into the actionlist of Reaper; it's pure existence in the scripts-folder of the resources-folder of Reaper is sufficient for it to be run.
+            A script named "\_\_startup.lua|.eel" will be started automatically by Reaper at startup. You can have both; Reaper will run \_\_startup.eel first, \_\_startup.lua second.
+            This \_\_startup-script doesn't need to be registered into the actionlist of Reaper; it's pure existence in the scripts-folder of the resources-folder of Reaper is sufficient for it to be run.
             
             Learn more about ReaScript: [http://www.cockos.com/reaper/sdk/reascript/reascript.php](http://www.cockos.com/reaper/sdk/reascript/reascript.php).
             
@@ -35,7 +35,7 @@
         <slug>3.Datatypes_used_in_this_document</slug>
         <title>3 Datatypes used in this document</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-                ###Datatypes used in this document
+                ### Datatypes used in this document
                 
                 boolean - accepts only true or false as values
                 optional boolean - a boolean, that can be given, but is not required
@@ -47,10 +47,10 @@
                 optional string - a string, that can be given, but is not required
 
                 AudioAccessor - Audio Accessor object for a track or a media-item
-                BR_Envelope \(BR\) - an envelope-object, created from a track or take-envelope
+                BR\_Envelope \(BR\) - an envelope-object, created from a track or take-envelope
                 HWND - a window
                 IReaperControlSurface - a ControlSurface, e.g. OSC-devices
-                joystick_device - a joystick-device
+                joystick\_device - a joystick-device
                 KbdSectionInfo - Keyboard Section Info, 
                 -        0, Main
                 -        100, Main (alt recording)
@@ -58,17 +58,17 @@
                 -        32061, MIDI Event List Editor
                 -        32062, MIDI Inline Editor
                 -        32063, Media Explorer
-                PCM_source - the audiosource of a MediaItem
+                PCM\_source - the audiosource of a MediaItem
                 ReaProject - a project within Reaper; 0 for current open project\(-tab\); in [EnumProjects](#EnumProjects), it is an object, not a number!
                 RprMidiTake \(FNG\) - ReaperMidiTake as object
                 RprMidiNote \(FNG}) - RprMidiNote as object
                 MediaTrack - a Reaper-Track as object
                 MediaItem - a Reaper-MediaItem like audio,video, Midi, etc as object
-                MediaItem_Take - a take within a MediaItem as object
+                MediaItem\_Take - a take within a MediaItem as object
                 TrackEnvelope - an envelope of a track as object
-                WDL_FastString\(S&M\) - a different kind of a string, made into a Reaper-object
+                WDL\_FastString\(S&M\) - a different kind of a string, made into a Reaper-object
                 
-                deviceHDC - get it using function [JS_GDI_GetWindowDC](#JS_GDI_GetWindowDC)
+                deviceHDC - get it using function [JS\_GDI_GetWindowDC](#JS_GDI_GetWindowDC)
         </description>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document>reaper_plugin.h</source_document>
@@ -82,30 +82,30 @@
         <slug>2.1.cpp_desc</slug>
         <title>2.1 CPP Description</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ###Usage of the Reaper Api in C++
+            ### Usage of the Reaper Api in C++
             Note: the C++ pure virtual interfaces used require the MSVC-compatible C++ ABI on Win32.  Sorry, mingw users.
 
-            Reaper extensions: see [http://www.cockos.com/reaper/sdk/plugin/plugin.php](http://www.cockos.com/reaper/sdk/plugin/plugin.php) and reaper_plugin.h.
-            The API functions in this header can be retrieved using reaper_plugin_info_t.GetFunc() or by using the Action "\[developer\] Write C++ API functions header" directly in Reaper.
+            Reaper extensions: see [http://www.cockos.com/reaper/sdk/plugin/plugin.php](http://www.cockos.com/reaper/sdk/plugin/plugin.php) and reaper\_plugin.h.
+            The API functions in this header can be retrieved using reaper\_plugin\_info\_t.GetFunc() or by using the Action "\[developer\] Write C++ API functions header" directly in Reaper.
 
-            VST plugins: see [http://www.cockos.com/reaper/sdk/vst/vst_ext.php](http://www.cockos.com/reaper/sdk/vst/vst_ext.php)
+            VST plugins: see [http://www.cockos.com/reaper/sdk/vst/vst\_ext.php](http://www.cockos.com/reaper/sdk/vst/vst_ext.php)
             The API functions in this header can be retrieved using audioMasterCallback.
 
             Because the API is dynamic, callers should never assume a function exists.
             Check that a non-NULL function pointer was returned before using it (unless
-            loaded functions are verified using REAPERAPI_LoadAPI(), see note below).
+            loaded functions are verified using REAPERAPI\_LoadAPI(), see note below).
 
             New (4.76+) usage of this file:
-           -  1) most source files should just #include "reaper_plugin_functions.h" as is.
-           -  2) one file should #define REAPERAPI_IMPLEMENT before including this file.
-           -  3) the plug-in should call REAPERAPI_LoadAPI(rec->GetFunc) from REAPER_PLUGIN_ENTRYPOINT
-           -     and check the return value for errors (REAPERAPI_LoadAPI will return 0 on success).
+           -  1) most source files should just #include "reaper\_plugin\_functions.h" as is.
+           -  2) one file should #define REAPERAPI\_IMPLEMENT before including this file.
+           -  3) the plug-in should call REAPERAPI\_LoadAPI(rec->GetFunc) from REAPER\_PLUGIN\_ENTRYPOINT
+           -     and check the return value for errors (REAPERAPI\_LoadAPI will return 0 on success).
 
               By default, all functions listed in this file are loaded. This means that an older version
               of REAPER may not succeed in loading, and also it may bloat your plug-in. If you wish to only load
-              needed functions, #define REAPERAPI_MINIMAL and various #define REAPERAPI_WANT_<functionname> lines
-              before including this file. You must put these definitions where REAPERAPI_IMPLEMENT is defined
-              and you can optionally put them elsewhere (to detect needed REAPERAPI_WANT_xxx lines at compile-
+              needed functions, #define REAPERAPI\_MINIMAL and various #define REAPERAPI\_WANT_<functionname> lines
+              before including this file. You must put these definitions where REAPERAPI\_IMPLEMENT is defined
+              and you can optionally put them elsewhere (to detect needed REAPERAPI\_WANT\_xxx lines at compile-
               time rather than link-time).
 
         </description>
@@ -121,7 +121,7 @@
         <slug>2.2.eel_desc</slug>
         <title>2.2 EEL Description</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ###ReaScript/EEL API
+            ### ReaScript/EEL API
             
             For information on the EEL2 language, please see the [EEL2 User Guide](https://www.cockos.com/EEL2/)
 
@@ -157,35 +157,35 @@
         </slug>
         <title>2.3 Python Description</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ###ReaScript/Python API            
+            ### ReaScript/Python API            
 
             ReaScript/Python requires a recent version of Python installed on this machine. Python is available from multiple sources [as a free download](http://www.python.org/download). After installing Python, REAPER may detect the Python dynamic library automatically. If not, you can enter the path in the ReaScript preferences page, at Options/Preferences/Plug-Ins/ReaScript.
 
-            ReaScript/Python scripts can call API functions using RPR_functionname().
+            ReaScript/Python scripts can call API functions using RPR\_functionname().
 
             All parameters are passed by value, not reference. API functions that cannot return information in the parameter list will return a single value. API functions that can return any information in the parameter list will return a list of values; The first value in the list will be the function return value (unless the function is declared to return void).
 
             Examples:
                 # function returning a single (scalar) value:
-                sec = [RPR_parse_timestr("1:12")](#parse_timestr)
+                sec = [RPR\_parse\_timestr("1:12")](#parse_timestr)
 
                 # function returning information in the first parameter (function returns void):
-                (str) = [RPR_GetProjectPath("", 512)](#GetProjectPath)
+                (str) = [RPR\_GetProjectPath("", 512)](#GetProjectPath)
 
-                # lower volume of track 3 by half (RPR_GetTrackUIVolPan returns Bool):
-                tr = [RPR_GetTrack(0, 2)](#GetTrack)
-                (ok, tr, vol, pan) = [RPR_GetTrackUIVolPan(tr, 0, 0)](#GetTrackUIVolPan)
+                # lower volume of track 3 by half (RPR\_GetTrackUIVolPan returns Bool):
+                tr = [RPR\_GetTrack(0, 2)](#GetTrack)
+                (ok, tr, vol, pan) = [RPR\_GetTrackUIVolPan(tr, 0, 0)](#GetTrackUIVolPan)
                 # this also works, if you only care about one of the returned values:
-                vol = [RPR_GetTrackUIVolPan(tr, 0, 0)[2]](#GetTrackUIVolPan)
-                [RPR_SetMediaTrackInfo_Value(tr, "D_VOL", vol*0.5)](#SetMediaTrackInfo_Value)
+                vol = [RPR\_GetTrackUIVolPan(tr, 0, 0)[2]](#GetTrackUIVolPan)
+                [RPR\_SetMediaTrackInfo\_Value(tr, "D\_VOL", vol*0.5)](#SetMediaTrackInfo_Value)
 
-            You can create and save modules of useful functions that you can import into other ReaScripts. For example, if you create a file called reascript_utility.py that contains the function helpful_function(), you can import that file into any Python ReaScript with the line:
-            import reascript_utility
+            You can create and save modules of useful functions that you can import into other ReaScripts. For example, if you create a file called reascript\_utility.py that contains the function helpful\_function(), you can import that file into any Python ReaScript with the line:
+            import reascript\_utility
             and call the function by using:
-            reascript_utility.helpful_function()
+            reascript\_utility.helpful\_function()
 
             Note that ReaScripts must explicitly import the REAPER python module, even if the script is imported into another ReaScript:
-            from reaper_python import *
+            from reaper\_python import *
         </description>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -199,7 +199,7 @@
         <slug>2.4.lua_desc</slug>
         <title>2.4 Lua Description</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ###ReaScript/Lua API
+            ### ReaScript/Lua API
 
             ReaScript/Lua scripts can call API functions using reaper.functionname().
 
@@ -3104,7 +3104,7 @@
             Reaper=5.62
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Delete a tempo/time signature marker. 
             
             See [CountTempoTimeSigMarkers](#CountTempoTimeSigMarkers), [GetTempoTimeSigMarker](#GetTempoTimeSigMarker), [SetTempoTimeSigMarker](#SetTempoTimeSigMarker), [AddTempoTimeSigMarker](#AddTempoTimeSigMarker).
@@ -9294,7 +9294,7 @@
             The requester only returns the file, but doesn't open or write to it. That said, this function can be used for both use-cases, BUT: keep in mind, that it shows an "open"-button, even if you want to use it in code for saving a file. You also can't use it for "create new file"-usecases, as you can't choose nonexisting files.
         </description>
         <retvals>
-            retval - true, if the user selected a file; false if the user cancelled the dialog
+            retval - true, if the user selected a file; false if the user canceled the dialog
             filenameNeed4096 - the filename including the full absolute path of the file the user selected
         </retvals>
         <parameters>
@@ -9337,13 +9337,13 @@
         </description>
         <retvals>
             retval - did the user click OK in the dialog(true) or close/cancel the dialog(false)
-            retvals_csv - the data from each of the input-fields, seperated by a comma ,
+            retvals_csv - the data from each of the input-fields, separated by a comma ,
         </retvals>
         <parameters>
             title - title of the window
             num_inputs - number of input-fields, 1-16.
-            captions_csv - a string with the captions for each input-field, each seperated by a comma. Can be fewer than num_inputs. If a caption begins with *, the inputfield will display * instead of characters(for i.e. passwords).
-            retvals_csv - default-values for each input-field, seperated by a comma.
+            captions_csv - a string with the captions for each input-field, each separated by a comma. Can be fewer than num_inputs. If a caption begins with *, the inputfield will display * instead of characters(for i.e. passwords).
+            retvals_csv - default-values for each input-field, separated by a comma.
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -9426,7 +9426,7 @@
             Runs the system color chooser dialog. Returns 0 if the user cancels the dialog.
         </description>
         <retvals>
-            retval - 1, user chose a color; 0, user cancelled dialog
+            retval - 1, user chose a color; 0, user canceled dialog
             color - the returned color as a native-color-value.
         </retvals>
         <parameters>
@@ -12706,8 +12706,8 @@
             Reaper=5.62
             Lua=5.3
         </requires>
-        <description prog_lang="*">
-            See [PCM_Source_CreateFromFileEx">PCM_Source_CreateFromFileEx).
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            See [PCM_Source_CreateFromFileEx](#PCM_Source_CreateFromFileEx).
         </description>
         <retvals>
             PCM_source - 
@@ -26355,7 +26355,7 @@
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            
+            deprecated, removed from JS_0.952 and later
         </description>
         <retvals>
            boolean  - 
@@ -26712,7 +26712,177 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
-  
+    
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Dialog_BrowseForFolder</slug>
+        <title>JS_Dialog_BrowseForFolder(JS)</title>
+        <functioncall prog_lang="cpp">int JS_Dialog_BrowseForFolder(const char* caption, const char* initialFolder, char* folderOutNeedBig, int folderOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_Dialog_BrowseForFolder", "caption", "initialFolder", #folder)</functioncall>
+        <functioncall prog_lang="lua">integer retval, string folder = reaper.JS_Dialog_BrowseForFolder(string caption, string initialFolder)</functioncall>
+        <functioncall prog_lang="python">(Int retval, String caption, String initialFolder, String folderOutNeedBig, Int folderOutNeedBig_sz) = JS_Dialog_BrowseForFolder(caption, initialFolder, folderOutNeedBig, folderOutNeedBig_sz)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=0.962
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            retval is 1 if a folder was selected, 0 if the user canceled the dialog, and -1 if an error occurred.
+        </description>
+        <retvals>
+            integer retval - 0, no folder was selected(user hit cancel-button); 1, folder was selected; -1, in case of an error
+            string folder - the path to the folder that was selected
+        </retvals>
+        <parameters>
+           string caption - the captiontext for the folder-selection dialog
+           string initialFolder - the path to the folder, which shall be highlighted initially
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags>select, folder, dialog</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Dialog_BrowseForOpenFiles</slug>
+        <title>JS_Dialog_BrowseForOpenFiles(JS)</title>
+        <functioncall prog_lang="cpp">int JS_Dialog_BrowseForOpenFiles(const char* windowTitle, const char* initialFolder, const char* initialFile, const char* extensionList, bool allowMultiple, char* fileNamesOutNeedBig, int fileNamesOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_Dialog_BrowseForOpenFiles", "windowTitle", "initialFolder", "initialFile", "extensionList", bool allowMultiple, #fileNames)</functioncall>
+        <functioncall prog_lang="lua">integer retval, string fileNames = reaper.JS_Dialog_BrowseForOpenFiles(string windowTitle, string initialFolder, string initialFile, string extensionList, boolean allowMultiple)</functioncall>
+        <functioncall prog_lang="python">(Int retval, String windowTitle, String initialFolder, String initialFile, String extensionList, Boolean allowMultiple, String fileNamesOutNeedBig, Int fileNamesOutNeedBig_sz) = JS_Dialog_BrowseForOpenFiles(windowTitle, initialFolder, initialFile, extensionList, allowMultiple, fileNamesOutNeedBig, fileNamesOutNeedBig_sz)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=0.962
+            Lua=5.3
+        </requires>
+        <description>
+            Opens a file-chooser-dialog, which allows selecting one or more files.
+
+            If allowMultiple is true, multiple files may be selected. The returned string is 0-separated, with the first substring containing the folder path and subsequent substrings containing the file names. (If the first substring is empty, each file name contains its entire path.)
+
+            retval is 1 if a file was selected, 0 if the user cancelled the dialog, and -1 if an error occurred.
+
+            extensionList is a string containing pairs of 0-terminated substrings. The last substring must be terminated by two 0 characters. Each pair defines one filter pattern:
+            * The first substring in each pair describes the filter in user-readable form (for example, "Lua script files (*.lua)") and will be displayed in the dialog box.
+            * The second substring specifies the filter that the operating system must use to search for the files (for example, "*.txt"; the wildcard should not be omitted). To specify multiple extensions for a single display string, use a semicolon to separate the patterns (for example, "*.lua;*.eel").
+
+            An example of an extensionList string:
+            "ReaScript files\0*.lua;*.eel\0Lua files (.lua)\0*.lua\0EEL files (.eel)\0*.eel\0\0".
+
+            If the extensionList string is empty, it will display the default "All files (*.*)" filter.
+        </description>
+        <retvals>
+            integer retval - 1, file was selected; 0, no file selected; -1, in case of an error
+            string fileNames - the selected filenames.
+                             - when parameter allowMultiple=false, this returnvalue holds filename with path
+                             - when parameter allowMultiple=true, this returnvalue holds the path and all selected files, separated by \0
+                             -      path\0filename1\0filename2\0filename3
+        </retvals>
+        <parameters>
+           string windowTitle - the title of the file-selection-window
+           string initialFolder - the initial folder opened in the file-chooser-dialog
+           string initialFile - the default-filename already entered in the filename-entrybox
+           string extensionList - a list of extensions that can be selected in the selection-list.
+                                - the list has the following structure(separate the entries with a \0): 
+                                -       "description of type1\0type1\0description of type 2\0type2\0"
+                                - the description of type can be anything that describes the type(s), 
+                                - to define one type, write: *.ext 
+                                - to define multiple types, write: *.ext;*.ext2;*.ext3
+                                - the extensionList must end with a \0
+           boolean allowMultiple - true, allows selection of multiple files; false, allows only selection of one file
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags>select, select, file, filenames, path, dialog</tags>
+    </US_DocBloc>
+
+    
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Dialog_BrowseForSaveFile</slug>
+        <title>JS_Dialog_BrowseForSaveFile(JS)</title>
+        <functioncall prog_lang="cpp">int JS_Dialog_BrowseForSaveFile(const char* windowTitle, const char* initialFolder, const char* initialFile, const char* extensionList, char* fileNameOutNeedBig, int fileNameOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_Dialog_BrowseForSaveFile", "windowTitle", "initialFolder", "initialFile", "extensionList", #fileName)</functioncall>
+        <functioncall prog_lang="lua">integer retval, string fileName = reaper.JS_Dialog_BrowseForSaveFile(string windowTitle, string initialFolder, string initialFile, string extensionList)</functioncall>
+        <functioncall prog_lang="python">(Int retval, String windowTitle, String initialFolder, String initialFile, String extensionList, String fileNameOutNeedBig, Int fileNameOutNeedBig_sz) = JS_Dialog_BrowseForSaveFile(windowTitle, initialFolder, initialFile, extensionList, fileNameOutNeedBig, fileNameOutNeedBig_sz)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=0.962
+            Lua=5.3
+        </requires>
+        <description>
+            Opens a file-chooser-dialog for saving operations.
+
+            retval is 1 if a file was selected, 0 if the user cancelled the dialog, and -1 if an error occurred.
+
+            extensionList is a string containing pairs of 0-terminated substrings. The last substring must be terminated by two 0 characters. Each pair defines one filter pattern:
+            * The first substring in each pair describes the filter in user-readable form (for example, "Lua script files (*.lua)") and will be displayed in the dialog box.
+            * The second substring specifies the filter that the operating system must use to search for the files (for example, "*.txt"; the wildcard should not be omitted). To specify multiple extensions for a single display string, use a semicolon to separate the patterns (for example, "*.lua;*.eel").
+
+            An example of an extensionList string:
+            "ReaScript files\0*.lua;*.eel\0Lua files (.lua)\0*.lua\0EEL files (.eel)\0*.eel\0\0".
+
+            If the extensionList string is empty, it will display the default "All files (*.*)" filter.
+        </description>
+        <retvals>
+            integer retval - 1, file was selected; 0, no file selected; -1, in case of an error
+            string fileNames - the selected filename.
+        </retvals>
+        <parameters>
+           string windowTitle - the title of the file-selection-window
+           string initialFolder - the initial folder opened in the file-chooser-dialog
+           string initialFile - the default-filename already entered in the filename-entrybox
+           string extensionList - a list of extensions that can be selected in the selection-list.
+                                - the list has the following structure(separate the entries with a \0): 
+                                -       "description of type1\0type1\0description of type 2\0type2\0"
+                                - the description of type can be anything that describes the type(s), 
+                                - to define one type, write: *.ext 
+                                - to define multiple types, write: *.ext;*.ext2;*.ext3
+                                - the extensionList must end with a \0
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags>select, select, file, filenames, path, dialog, save</tags>
+    </US_DocBloc>
+    
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_ListView_EnumSelItems</slug>
+        <title>JS_ListView_EnumSelItems(JS)</title>
+        <functioncall prog_lang="cpp">int JS_ListView_EnumSelItems(void* listviewHWND, int index)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_ListView_EnumSelItems", void* listviewHWND, int index)</functioncall>
+        <functioncall prog_lang="lua">integer reaper.JS_ListView_EnumSelItems(identifier listviewHWND, integer index)</functioncall>
+        <functioncall prog_lang="python">Int JS_ListView_EnumSelItems(void listviewHWND, Int index)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=0.962
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Returns the index of the next selected list item with index greater that the specified number. Returns -1 if no selected items left.
+        </description>
+        <retvals>
+            integer retval - the index of the next selected list item
+        </retvals>
+        <parameters>
+            identifier listviewHWND - the HWND of the window
+            integer index - the index of the listitems before the next selected one
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags>listview, enumerate, selected, listview, items</tags>
+    </US_DocBloc>
+
+    
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>Xen_AudioWriter_Create</slug>
         <title>Xen_AudioWriter_Create(JS)</title>
@@ -28118,9 +28288,9 @@
             Measures the drawing dimensions of a character with the current font (as set by [gfx.setfont](#lua_gfx.setfont)). Returns width and height of character.
         </description>
         <parameters>
-            character - 
-            w - 
-            h - 
+            character - a character, whose dimensions you want to know
+            w - the width of this character
+            h - the height if this character
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -29846,6 +30016,19 @@
         </requires>
         <description indent="default">
             Adds code to be executed when the script finishes or is ended by the user. Typically used to clean up after the user terminates defer() or runloop() code.
+            
+            You can't defer this atexit-function, when it is run as exit-function, though, when it is run regularily before exiting the script.
+            
+            You can define more than one atexit-function. They will be run in the order they've been registered as atexit-functions.
+            For example:
+            
+                reaper.atexit(exit1)
+                reaper.atexit(exit2)
+                reaper.atexit(exit3)
+                
+            will run exit1, exit2 and then exit3, when exiting the script.
+            
+            You can have up to 1024 atexit-functions set in one script, no matter if its different or the same function.
         </description>
         <parameters>
             function function - the function, with which the script shall finish
@@ -29868,9 +30051,11 @@
         </requires>
         <description indent="default">
             Adds code to be called back by REAPER. Used to create persistent ReaScripts that continue to run and respond to input, while the user does other tasks. Identical to runloop().Note that no undo point will be automatically created when the script finishes, unless you create it explicitly.
+            
+            There can be 1024 defer-nodes running at the same time in one script, no matter if it's different functions or the same one.
         </description>
         <retvals>
-            boolean retval - unknown; usually true
+            boolean retval - true, node could be created; false, you tried to add more than 1024 defer-nodes in the script
         </retvals>
         <parameters>
             function function - the function to be called, when the current defer/runloop-run has ended
@@ -30328,7 +30513,7 @@
                         A=gfx.getchar() -- first byte
                         B=gfx.getchar() -- second byte
                         
-                        if A==261 and B==128 then reaper.MB("You typed the €-symbol.", "Message", 0) end -- typed character is the Euro-currency-symbol: €
+                        if A==261 and B==128 then reaper.MB("You typed the €-symbol.", "Message", 0) end -- typed character is the Euro-currency-symbol: �
                                                 
         </description>
         <retvals>
@@ -30929,16 +31114,30 @@
                 - idx=1..16 for a configurable font
             optional string "fontface" - the name of the font, like "arial"
             optional integer sz - the size of the font (8-100)
-            optional integer flags - flags, how to render the text; values are repeating every 256 numbers
+            optional integer flags - flags, how to render the text; up to 4 flags can be passed at the same time
                   - a multibyte character, which can include 'i' for italics, 'u' for underline, or 'b' for bold. 
                   - These flags may or may not be supported depending on the font and OS. 
-                  - 66 and 98, Bold (B), (b)
-                  - 73 and 105, italic (I), (i)
-                  - 79 and 111, white outline (O), (o)
-                  - 82 and 114, reduced(halfbright) (R), (r)
-                  - 83 and 115, sharpen (S), (s)
-                  - 85 and 117, underline (U), (u)
-                  - 86 and 118, inVerse (V), (v)
+                  -   66 and 98, Bold (B), (b)
+                  -   73 and 105, italic (I), (i)
+                  -   79 and 111, white outline (O), (o)
+                  -   82 and 114, blurred (R), (r)
+                  -   83 and 115, sharpen (S), (s)
+                  -   85 and 117, underline (U), (u)
+                  -   86 and 118, inVerse (V), (v)
+                  - 
+                  - To create such a multibyte-character, assume this flag-value as a 32-bit-value.
+                  - The first 8 bits are the first flag, the next 8 bits are the second flag, 
+                  - the next 8 bits are the third flag and the last 8 bits are the second flag.
+                  - The flagvalue(each dot is a bit): .... ....   .... ....   .... ....   .... ....
+                  - If you want to set it to Bold(B) and Italic(I), you use the ASCII-Codes of both(66 and 73 respectively),
+                  - take them apart into bits and set them in this 32-bitfield.
+                  - The first 8 bits will be set by the bits of ASCII-value 66(B), the second 8 bits will be set by the bits of ASCII-Value 73(I).
+                  - The resulting flagvalue is: 0100 0010   1001 0010   0000 0000   0000 0000
+                  - which is a binary representation of the integer value 18754, which combines 66 and 73 in it.
+
+                  
+                  
+                  
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -35423,36 +35622,6 @@
         </chapter_context>
         <tags>cpp, get, track, info, flag</tags>
     </US_DocBloc>        
-
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
-        <slug>KBD_OnMainActionEx</slug>
-        <title>KBD_OnMainActionEx</title>
-        <functioncall prog_lang="cpp">int (*KBD_OnMainActionEx)(int cmd, int val, int valhw, int relmode, HWND hwnd, ReaProject* proj)</functioncall>
-        <requires>
-            Reaper=5.62
-        </requires>
-        <description indent="default">
-            val/valhw are used for midi stuff.
-        </description>
-        <retvals>
-            int -
-        </retvals>
-        <parameters>
-            cmd - 
-            val - val=[0..127] and valhw=-1 (midi CC)
-            valhw - valhw >=0 (midi pitch (valhw | val<<7))
-            relmode - relmode absolute (0) or 1/2/3 for relative adjust modes
-            hwnd - 
-            proj -
-        </parameters>
-        <target_document>ReaperApiFunctionsReference</target_document>
-        <source_document>reaper_plugin.h</source_document>
-        <chapter_context>
-            Additional C++ Functions
-            reaper_plugin_functions.h
-        </chapter_context>
-        <tags>cpp, midi, command, value, relmode, main, action</tags>
-    </US_DocBloc>            
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
         <slug>KBD_OnMainActionEx</slug>
@@ -35768,4 +35937,369 @@
         </chapter_context>
         <tags>cpp, check, function, plugin, api</tags>
     </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_AboutInstalledPackage</slug>
+        <title>ReaPack_AboutInstalledPackage</title>
+        <functioncall prog_lang="cpp">bool ReaPack_AboutInstalledPackage(PackageEntry* entry)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("ReaPack_AboutInstalledPackage", PackageEntry entry)</functioncall>
+        <functioncall prog_lang="lua">boolean reaper.ReaPack_AboutInstalledPackage(PackageEntry entry)</functioncall>
+        <functioncall prog_lang="python">Boolean ReaPack_AboutInstalledPackage(PackageEntry entry)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Show the about dialog of the given package entry.
+            The repository index is downloaded asynchronously if the cached copy doesn't exist or is older than one week.
+        </description>
+        <retvals>
+            boolean - true, if the dialog is shown
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            PackageEntry entry - the installed Reapack-package, whose about dialog you want to show; see [ReaPack_GetOwner](#ReaPack_GetOwner) to get this parameter
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, show, about, install, package</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_AboutRepository</slug>
+        <title>ReaPack_AboutRepository</title>
+        <functioncall prog_lang="cpp">bool ReaPack_AboutRepository(const char* repoName)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("ReaPack_AboutRepository", "repoName")</functioncall>
+        <functioncall prog_lang="lua">boolean reaper.ReaPack_AboutRepository(string repoName)</functioncall>
+        <functioncall prog_lang="python">Boolean ReaPack_AboutRepository(String repoName)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Show the about dialog of the given repository. Returns true if the repository exists in the user configuration.
+            The repository index is downloaded asynchronously if the cached copy doesn't exist or is older than one week.
+        </description>
+        <retvals>
+            boolean - true, if the dialog is shown
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            string repoName - the repository, whose about-dialog you would love to have
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, show, about, repository</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_AddSetRepository</slug>
+        <title>ReaPack_AddSetRepository</title>
+        <functioncall prog_lang="cpp">bool ReaPack_AddSetRepository(const char* name, const char* url, bool enable, int autoInstall, char* errorOut, int errorOut_sz)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("ReaPack_AddSetRepository", "name", "url", bool enable, int autoInstall, #error)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string error = reaper.ReaPack_AddSetRepository(string name, string url, boolean enable, integer autoInstall)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String name, String url, Boolean enable, Int autoInstall, String errorOut, Int errorOut_sz) = ReaPack_AddSetRepository(name, url, enable, autoInstall, errorOut, errorOut_sz)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Add or modify a repository. Set url to nullptr (or empty string in Lua) to keep the existing URL. Call [ReaPack_ProcessQueue(true)](#ReaPack_ProcessQueue) when done to process the new list and update the GUI.
+
+            autoInstall: usually set to 2 (obey user setting).
+        </description>
+        <retvals>
+            boolean - true, if the repo has been added
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            string name - the name of the package
+            string url - the url to the repository's xml-file; set nil to keep the current one
+            boolean enable - set this repo as enabled in the GUI of ReaPack, so synchronizing is possible
+            integer autoInstall - shall this repository automatically installed, when synchronizing and an update is available?
+                                -    0, don't autoinstall new packages when synchronizing
+                                -    1, autoinstall new packages when synchronizing
+                                -    2, use user-settings
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, add, set, repository</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_BrowsePackages</slug>
+        <title>ReaPack_BrowsePackages</title>
+        <functioncall prog_lang="cpp">void ReaPack_BrowsePackages(const char* filter)</functioncall>
+        <functioncall prog_lang="eel">extension_api("ReaPack_BrowsePackages", "filter")</functioncall>
+        <functioncall prog_lang="lua">reaper.ReaPack_BrowsePackages(string filter)</functioncall>
+        <functioncall prog_lang="python">ReaPack_BrowsePackages(String filter)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Opens the package browser with the given filter string.
+        </description>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            string filter - the filter to be applied in the package browser. Only packages that feature words included in this filter will be shown.
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, browse, packages</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_CompareVersions</slug>
+        <title>ReaPack_CompareVersions</title>
+        <functioncall prog_lang="cpp">int ReaPack_CompareVersions(const char* ver1, const char* ver2, char* errorOut, int errorOut_sz)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("ReaPack_CompareVersions", "ver1", "ver2", #error)</functioncall>
+        <functioncall prog_lang="lua">integer retval, string error = reaper.ReaPack_CompareVersions(string ver1, string ver2)</functioncall>
+        <functioncall prog_lang="python">(Int retval, String ver1, String ver2, String errorOut, Int errorOut_sz) = ReaPack_CompareVersions(ver1, ver2, errorOut, errorOut_sz)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Compares two versionnumbers. Versionnumbers must start with a number/digit, or they can't be compared.
+            Returns 0 if both versions are equal, a positive value if ver1 is higher than ver2 and a negative value otherwise.
+        </description>
+        <retvals>
+            integer retval - -1, ver1&lt;ver2
+                           - 0, ver1 = ver2
+                           - 1, ver1&gt;ver2
+            string error - the errormessage, if comparing the parameters ver1 and ver2 is impossible
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            string ver1 - a first versionnumber to compare; must start with a number/digit
+            string ver2 - a second versionnumber to compare; must start with a number/digit
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, compare, versionnumber</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_EnumOwnedFiles</slug>
+        <title>ReaPack_EnumOwnedFiles</title>
+        <functioncall prog_lang="cpp">bool ReaPack_EnumOwnedFiles(PackageEntry* entry, int index, char* pathOut, int pathOut_sz, int* sectionsOut, int* typeOut)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("ReaPack_EnumOwnedFiles", PackageEntry entry, int index, #path, int &sections, int &type)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string path, number sections, number type = reaper.ReaPack_EnumOwnedFiles(PackageEntry entry, integer index)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, PackageEntry entry, Int index, String pathOut, Int pathOut_sz, Int sectionsOut, Int typeOut) = ReaPack_EnumOwnedFiles(entry, index, pathOut, pathOut_sz, sectionsOut, typeOut)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Enumerate the files owned by the given package. Returns false when there is no more data.
+
+                sections: 0=not in action list, &1=main, &2=midi editor, &4=midi inline editor
+                type: see [ReaPack_GetEntryInfo](#ReaPack_GetEntryInfo).
+        </description>
+        <retvals>
+            boolean retval - true, if more files exist; false, if this is the last/only file
+            string path - the path and filename of the installed file
+            number sections - the section(s), in which this file is installed; it is an integer bitfield
+                            -   0=not in action list
+                            -   &1=main
+                            -   &2=midi editor
+                            -   &4=midi inline editor
+            number type - the type of the extension, in which this file exists
+                        -   1, script 
+                        -   2, extension
+                        -   3, effect 
+                        -   4, data 
+                        -   5, theme
+                        -   6, langpack 
+                        -   7, webinterface
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            PackageEntry entry - the installed Reapack-package, whose file you want to enumerate; see [ReaPack_GetOwner](#ReaPack_GetOwner) to get this parameter
+            integer index - the index of the file of this ReaPack-package with 0 for the first file
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, enumerate, installed files, packageentry, package</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_FreeEntry</slug>
+        <title>ReaPack_FreeEntry</title>
+        <functioncall prog_lang="cpp">bool ReaPack_FreeEntry(PackageEntry* entry)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("ReaPack_FreeEntry", PackageEntry entry)</functioncall>
+        <functioncall prog_lang="lua">boolean reaper.ReaPack_FreeEntry(PackageEntry entry)</functioncall>
+        <functioncall prog_lang="python">Boolean ReaPack_FreeEntry(PackageEntry entry)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Free resources allocated for the given package entry. Must be used to free PackageEntry-objects created by [ReaPack_GetOwner](#ReaPack_GetOwner).
+        </description>
+        <retvals>
+            boolean retval - true, if freeing was successful; false, if no
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            PackageEntry entry - the installed Reapack-package, whose ressources you want to free; see [ReaPack_GetOwner](#ReaPack_GetOwner) to get this parameter
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, enumerate, free, ressources, packageentry, package</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_GetEntryInfo</slug>
+        <title>ReaPack_GetEntryInfo</title>
+        <functioncall prog_lang="cpp">bool ReaPack_GetEntryInfo(PackageEntry* entry, char* repoOut, int repoOut_sz, char* catOut, int catOut_sz, char* pkgOut, int pkgOut_sz, char* descOut, int descOut_sz, int* typeOut, char* verOut, int verOut_sz, char* authorOut, int authorOut_sz, bool* pinnedOut, int* fileCountOut)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("ReaPack_GetEntryInfo", PackageEntry entry, #repo, #cat, #pkg, #desc, int &type, #ver, #author, bool &pinned, int &fileCount)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string repo, string cat, string pkg, string desc, number type, string ver, string author, boolean pinned, number fileCount = reaper.ReaPack_GetEntryInfo(PackageEntry entry)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, PackageEntry entry, String repoOut, Int repoOut_sz, String catOut, Int catOut_sz, String pkgOut, Int pkgOut_sz, String descOut, Int descOut_sz, Int typeOut, String verOut, Int verOut_sz, String authorOut, Int authorOut_sz, Boolean pinnedOut, Int fileCountOut) = ReaPack_GetEntryInfo(entry, repoOut, repoOut_sz, catOut, catOut_sz, pkgOut, pkgOut_sz, descOut, descOut_sz, typeOut, verOut, verOut_sz, authorOut, authorOut_sz, pinnedOut, fileCountOut)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Get the repository name, category, package name, package description, package type, the currently installed version, author name, pinned status and how many files are owned by the given package entry.
+        </description>
+        <retvals>
+            boolean retval - true, if getting the info worked
+            string repo - the name of the repository
+            string cat - the category of this package
+            string pkg - the package-name of this package
+            string desc - the description of this package
+            number type - the type of this package
+            string ver - the currently installed version of this package
+            string author - the author of this package
+            boolean pinned - the pinned-status of this package
+            number fileCount - the number of files of this package
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            PackageEntry entry - the installed Reapack-package, whose package-infos you want; see [ReaPack_GetOwner](#ReaPack_GetOwner) to get this parameter
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, get, entry, info, packageentry, package</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_GetOwner</slug>
+        <title>ReaPack_GetOwner</title>
+        <functioncall prog_lang="cpp">PackageEntry* ReaPack_GetOwner(const char* fn, char* errorOut, int errorOut_sz)</functioncall>
+        <functioncall prog_lang="eel">PackageEntry extension_api("ReaPack_GetOwner", "fn", #error)</functioncall>
+        <functioncall prog_lang="lua">PackageEntry retval, string error = reaper.ReaPack_GetOwner(string fn)</functioncall>
+        <functioncall prog_lang="python">(PackageEntry retval, String fn, String errorOut, Int errorOut_sz) = ReaPack_GetOwner(fn, errorOut, errorOut_sz)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Returns the package entry owning the given file.
+            Delete the returned object from memory after use with [ReaPack_FreeEntry](#ReaPack_FreeEntry).
+        </description>
+        <retvals>
+            PackageEntry retval - the installed Reapack-package, who is owner of this file
+            string error - an errormessage, if the file is not part of a ReaPack-package
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            string fn - filename with path to a file, of which you want to know, whose package owns it
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, get, owner, filename, packageentry, package</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_GetRepositoryInfo</slug>
+        <title>ReaPack_GetRepositoryInfo</title>
+        <functioncall prog_lang="cpp">bool ReaPack_GetRepositoryInfo(const char* name, char* urlOut, int urlOut_sz, bool* enabledOut, int* autoInstallOut)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("ReaPack_GetRepositoryInfo", "name", #url, bool &enabled, int &autoInstall)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string url, boolean enabled, number autoInstall = reaper.ReaPack_GetRepositoryInfo(string name)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String name, String urlOut, Int urlOut_sz, Boolean enabledOut, Int autoInstallOut) = ReaPack_GetRepositoryInfo(name, urlOut, urlOut_sz, enabledOut, autoInstallOut)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Get the infos of the given repository.
+        </description>
+        <retvals>
+            boolean retval - true, such a repository exists; false, it does not exist
+            string url - the url of the repository
+            boolean enabled - true, the repository is enabled for installing/syncing; false, if not
+            number autoInstall - shall this repository be automatically installed when syncing?
+                               - 0, manual 
+                               - 1, when synchronizing
+                               - 2, obey user setting
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            string name - the name of the ReaPack package, whose repository you want to have
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, get, repository, url</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ReaPack_ProcessQueue</slug>
+        <title>ReaPack_ProcessQueue</title>
+        <functioncall prog_lang="cpp">void ReaPack_ProcessQueue(bool refreshUI)</functioncall>
+        <functioncall prog_lang="eel">extension_api("ReaPack_ProcessQueue", bool refreshUI)</functioncall>
+        <functioncall prog_lang="lua">reaper.ReaPack_ProcessQueue(boolean refreshUI)</functioncall>
+        <functioncall prog_lang="python">ReaPack_ProcessQueue(Boolean refreshUI)</functioncall>
+        <requires>
+            Reaper=5.965
+            ReaPack=1.2.2
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Run pending operations and save the configuration file. If refreshUI is true the browser and manager windows are guaranteed to be refreshed (otherwise it depends on which operations are in the queue).
+        </description>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            boolean refreshUI - true, refreshes the UI of the ReaPack-user-interface; false, doesn't update the UI
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            ReaPack
+        </chapter_context>
+        <tags>reapack, process, queue, refresh ui</tags>
+    </US_DocBloc>
+    
+    
 </USDocBloc>

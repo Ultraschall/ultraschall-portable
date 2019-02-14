@@ -1,9 +1,12 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 Tempfile=ultraschall.Api_Path.."/temp/temporary"
-ConversionToolMD2HTML="c:\\Program Files (x86)\\Pandoc\\pandoc.exe -f markdown -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
+ConversionToolMD2HTML="c:\\Program Files (x86)\\Pandoc\\pandoc.exe -f markdown_strict -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
 
 Infilename=ultraschall.Api_Path.."/misc/Reaper_StateChunk_Docs.USDOCML"
 Outfile=ultraschall.Api_Path.."/Documentation/Reaper_StateChunk_Docs.html"
+
+retval, scriptfilename=reaper.get_action_context()
+_temp,scriptfilename=ultraschall.GetPath(scriptfilename)
 
 --Infilename=ultraschall.Api_Path.."/misc/US_Api-Manual.USDocML"
 --Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Documentation2.html"
@@ -11,6 +14,8 @@ Outfile=ultraschall.Api_Path.."/Documentation/Reaper_StateChunk_Docs.html"
 func_done_count=progresscounter(false)
 
 --if L==nil then return end
+
+ultraschall.ShowErrorMessagesInReascriptConsole(true)
 
 local FunctionList2=""
 
@@ -504,7 +509,7 @@ end
 function contentindex()
   FunctionList=FunctionList.."<br><br><img src=\"gfx/us.png\"><div style=\"padding-left:0%;\"><br>"..beta.." \"John Cage - 4\'33\" - "..date.." - Build: "..build.."</div><h3>The Functions Reference</h3>To add the API to your script, just add<pre><code>           dofile(reaper.GetResourcePath()..\"/UserPlugins/ultraschall_api.lua\")</code></pre>as first line into your script.<br><br>For more details, read the docs in the <a href=\"US_Api_Introduction_and_Concepts.html\">Introduction and Concepts</a>-area of this page.<br><br><table style=\"font-size:10pt; width:100%;\" >"
   reaper.ClearConsole()
-  reaper.ShowConsoleMsg("Create Index\n")
+  reaper.ShowConsoleMsg(scriptfilename..": Create Index\n")
   HeaderList={}
   count=1
   count2=0
@@ -722,9 +727,19 @@ for lolo=1, 60 do
   if lua==nil then lua="" end
   if python==nil then python="" end  
   
+  temp1=lua:match("(.-) ")
+  temp2=lua:match(" (.*)")
+
+  if temp1==nil or temp2==nil then
+    EntryCall=lua.."</b>"
+  else
+    EntryCall=temp1.."</b> "..temp2
+  end
   
-  if C[index][2]:match("<chapter_context>.-API%-Documentation.-</chapter_context>")==nil then FunctionList=FunctionList.."<p style=\"padding-left:0.3%;\"><u>Functioncall:</u>" end
-  FunctionList=FunctionList.."<div style=\"padding-left:4%;font-size:100%\">"..lua.."</div><p>"
+--  if EntryCall==nil then EntryCall=lua end
+  
+  if C[index][2]:match("<chapter_context>.-API%-Documentation.-</chapter_context>")==nil then FunctionList=FunctionList.."<p style=\"padding-left:0.3%;\"><u>Functioncall:</u><b>" end
+  FunctionList=FunctionList.."<div style=\"padding-left:4%;font-size:100%\">"..EntryCall.."</div><p>"
   cpp=""
   eel=""
   lua=""
@@ -790,7 +805,7 @@ for lolo=1, 60 do
     b=b+1
     if b>=120 then 
       reaper.ClearConsole() 
-      reaper.ShowConsoleMsg("Creating ConfigVar-Docs\n")
+      reaper.ShowConsoleMsg("Creating StateChunk-Docs\n")
       reaper.ShowConsoleMsg((math.floor(100/Ccount*index)+1).."% : ")
       for iii=1, math.floor(progressbar/Ccount*index) do reaper.ShowConsoleMsg("#") end
       for iii=math.floor(progressbar/Ccount), math.floor(progressbar/Ccount*(Ccount-index))-1 do reaper.ShowConsoleMsg("~") end
@@ -806,7 +821,7 @@ for lolo=1, 60 do
     end  
     if index>=Ccount then break end
 end
-    if index<Ccount then reaper.defer(entries) else writefile() end
+    if index<Ccount then reaper.defer(entries) else writefile() reaper.SetExtState("ultraschall", "doc", reaper.time_precise(), false) end
 end
 
 --header()

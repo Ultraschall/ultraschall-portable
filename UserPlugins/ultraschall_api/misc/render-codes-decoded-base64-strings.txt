@@ -1,0 +1,662 @@
+Render_Codes as of Reaper 5.965 as decoded Base64-strings.
+
+documented by Meo Mespotine, 13th of February 2019 - mespotine.de
+licensed creative commons cc-by-nc.
+
+
+It follows the scheme Byteposition: value/meaning
+Fixed values will be shown as the value or the ASCII-value (e.g. space - value 32).
+Flexible values are described and the possible values, that can be set at this position.
+Multibyte-values have the same description including value-range and which byte keeps the lowest values(0-255) and which the highest(2147483647 and such)
+
+Couldn't figure out encoding-scheme of float values.
+
+WAVE:
+    01: e - value 101 Header
+    02: v - value 118 Header
+    03: a - value 97 Header
+    04: w - value 119 Header
+    05: The bitdepth:
+            2, 2 bit IMA cADPCM
+            4, 4 bit IMA ADPCM
+            8, 8 bit PCM
+            16, 16 bit PCM
+            24, 24 bit PCM
+            32, 32 bit FP
+            64, 64 bit FP
+    06: integer bitfield for checkboxes and dropdownlists
+            &1=0 - Write BWF ('bext')chunk - checkbox checked
+            &1=1 - Write BWF ('bext')chunk - checkbox unchecked
+            
+            &2=0 - Force WAV(see Byte 07 for more information) - auto
+            &2=1 - Force WAV(see Byte 07 for more information) - force 
+            
+            &4=0 - Include project filename in BWF data - checkbox unchecked
+            &4=1 - Include project filename in BWF data - checkbox checked
+            
+            &8 &16 &64 &128 - including markers and region-dropdownlist
+                0 0 0 0 - Do not include markers or regions
+                1 0 0 0 - Markers + regions
+                1 1 0 0 - Markers + regions starting with #
+                1 0 1 0 - Markers only
+                1 1 1 0 - Markers starting with # only
+                1 0 0 1 - Regions only
+                1 1 0 1 - Regions starting with # only
+                
+            &32=0 - Embed project tempo (use with care) - checkbox unchecked
+            &32=1 - Embed project tempo (use with care) - checkbox checked
+    07: Large Files (see Byte 06 - bit &2 for more settings)
+            When Byte 06 &2 is set to auto:
+                0, Auto WAV/Wave 64
+                1, Auto WAV/RF64
+                2, Force Wave64
+                3, Force RF64
+                
+            When Byte 06 &2 is set to force:
+                0, Force WAV
+    08: unused - value 0
+
+    
+AIFF:
+    01: f - value 102 Header
+    02: f - value 102 Header
+    03: i - value 105 Header
+    04: a - value 97 Header
+    05: The bitdepth:
+            8, 8 bit PCM
+            16, 16 bit PCM
+            24, 24 bit PCM
+            32, 32 bit PCM
+    06: unused - value 0
+    07: unused - value 0
+    08: unused - value 0
+
+    
+Audio CD:
+    01: space - value 32 Header
+    02: o - value 111 Header
+    03: s - value 115 Header
+    04: i - value 105 Header
+    05: Extra lead-in silence for disc - 32bit(0 to 2147483647) - lowest Byte 
+    06: Extra lead-in silence for disc - 32bit(0 to 2147483647)
+    07: Extra lead-in silence for disc - 32bit(0 to 2147483647)
+    08: Extra lead-in silence for disc - 32bit(0 to 2147483647) - highest Byte
+    09: Lead-In-Silence for Tracks - 32bit(0 to 2147483647) - lowest Byte 
+    10: Lead-In-Silence for Tracks - 32bit(0 to 2147483647) 
+    11: Lead-In-Silence for Tracks - 32bit(0 to 2147483647)
+    12: Lead-In-Silence for Tracks - 32bit(0 to 2147483647) - highest Byte 
+    13: Burn CD image after render-checkbox
+                0, checkbox; unchecked
+                1, checkbox; checked
+    14: unused - value 0
+    15: unused - value 0
+    16: unused - value 0
+    17: Track mode-dropdownlist
+                0, Markers define new track
+                1, Regions define tracks (other areas ignored)
+                2, One Track
+    18: unused - value 0
+    19: unused - value 0
+    20: unused - value 0
+    21: Only use markers starting with #
+                0, checkbox; unchecked
+                1, checkbox; checked
+    22: unused - value 0
+    23: unused - value 0
+    24: unused - value 0
+    25: unused - value 0
+    
+    
+DDP:
+    01: space - value 32 Header
+    02: p - value 112 Header
+    03: d - value 100 Header
+    04: d - value 100 Header
+    
+    
+FLAC:
+    01: c - value 99 Header
+    02: a - value 97 Header
+    03: l - value 108 Header
+    04: f - value 102 Header
+    05: FLAC encoding depth - dropdownlist
+            24, 24 bit
+            23, 23/24 bit
+            22, 22/24 bit
+            21, 21/24 bit
+            20, 20/24 bit
+            19, 19/24 bit
+            18, 18/24 bit
+            17, 17/24 bit
+            16, 16 bit
+    06: unused - value 0
+    07: unused - value 0
+    08: unused - value 0
+    09: Data compression - dropdownlist
+        0, 0 - Fastest
+        1, 1
+        2, 2
+        3, 3
+        4, 4
+        5, 5 - Default
+        6, 6
+        7, 7
+        8, 8 - Slowest
+    10: unused - value 0
+    11: unused - value 0
+    12: unused - value 0
+    13: unused - value 0
+    
+    
+    
+MP3:
+    01: l - value 108 Header
+    02: 3 - value 51 Header
+    03: p - value 112 Header
+    04: m - value 109 Header
+    05: Mode - dropdownlist (see Byte 17 as well)
+            0,  CBR
+            32, VBR/ABR
+            64, Maximum bitrate/quality
+    06: unused - value 0
+    07: unused - value 0
+    08: unused - value 0
+    09: Do not allow joint stereo - checkbox
+            232, checkbox checked
+            0, checkbox unchecked
+    10: unused - value 0
+    11: Write Replay Gain Tag
+            0, Write Replay Gain Tag, checkbox checked
+            4, Write Replay Gain Tag, checkbox checked
+    12: unused - value 0
+    13: VBR: encoding quality
+            0, Maximum q=0(slow)
+            2, Better q=2(recommended)
+            3, Normal q=3
+            5, Fast encode q=5
+            7, Faster encode q=7
+            9, Fastest encode q=9
+    14: unused - value 0
+    15: unused - value 0
+    16: unused - value 0
+    17: Mode - dropdownlist (see Byte 05 as well)
+        0, VBR
+        4, ABR
+        255, CBR, Maximum bitrate/quality
+    18: unused - value 0
+    19: unused - value 0
+    20: unused - value 0
+    21: VBR: Quality - dropdownlist
+            0, 100(best)
+            1, 90
+            2, 80
+            3, 70
+            4, 60
+            5, 50
+            6, 40
+            7, 30
+            8, 20
+            9, 10(worst)
+        Maximum bitrate/quality, ABR, CBR:
+            4, 60 - this is the only setting available for these other modes!
+    22: unused - value 0
+    23: unused - value 0
+    24: unused - value 0
+    25: Bitrate CBR: - all other modes: default value is 64
+    26: Bitrate CBR: - all other modes: default value is 64
+            320, 320 kbps
+            256, 256 kbps
+            224, 224 kbps
+            192, 192 kbps
+            160, 160 kbps
+            128, 128 kbps
+            112, 112 kbps
+            96,  96 kbps
+            80,  80 kbps
+            64,  64 kbps
+            56,  56 kbps
+            48,  48 kbps
+            40,  40 kbps
+            32,  32 kbps
+            24,  24 kbps
+            16,  16 kbps
+            8,   8  kbps 
+    27: unused - value 0
+    28: unused - value 0
+    29: ABR: Bitrate - for all other modes, use 0
+    30: ABR: Bitrate - for all other modes, use 0
+            320, 320 kbps
+            256, 256 kbps
+            224, 224 kbps
+            192, 192 kbps
+            160, 160 kbps
+            128, 128 kbps
+            112, 112 kbps
+            96,  96 kbps
+            80,  80 kbps
+            64,  64 kbps
+            56,  56 kbps
+            48,  48 kbps
+            40,  40 kbps
+            32,  32 kbps
+            24,  24 kbps
+            16,  16 kbps
+            8,   8  kbps 
+    31: unused - value 0
+    32: unused - value 0
+    33: unused - value 0
+    
+    
+OGG Vorbis:
+    01: v - value 118 Header
+    02: g - value 103 Header
+    03: g - value 103 Header
+    04: o - value 111 Header
+    05: VBR quality - floating point, but unknown, how it is encoded...
+    06: VBR quality - floating point, but unknown, how it is encoded...
+    07: VBR quality - floating point, but unknown, how it is encoded...
+    08: VBR quality - floating point, but unknown, how it is encoded...
+            0.00:   0   0   0   0 
+            0.01:  10 215  35  60 
+            0.02:  10 215 163  60 
+            0.03: 143 194 245  60 
+            0.04:  10 215  35  61 
+            0.05: 205 204  76  61 
+            0.06: 143 194 117  61 
+            0.07:  41  92 143  61 
+            0.08:  10 215 163  61 
+            0.09: 236  81 184  61 
+            0.10: 205 204 204  61 
+            0.11: 174  71 225  61 
+            0.12: 143 194 245  61 
+            0.13: 184  30   5  62 
+            0.14:  41  92  15  62 
+            0.15: 154 153  25  62 
+            0.16:  10 215  35  62 
+            0.17: 123  20  46  62 
+            0.18: 236  81  56  62 
+            0.19:  92 143  66  62 
+            0.20: 205 204  76  62 
+            0.21:  61  10  87  62 
+            0.22: 174  71  97  62 
+            0.23:  31 133 107  62 
+            0.24: 143 194 117  62 
+            0.25:   0   0 128  62 
+            0.26: 184  30 133  62 
+            0.27: 113  61 138  62 
+            0.28:  41  92 143  62 
+            0.29: 225 122 148  62 
+            0.30: 154 153 153  62 
+            0.31:  82 184 158  62 
+            0.32:  10 215 163  62 
+            0.33: 195 245 168  62 
+            0.34: 123  20 174  62 
+            0.35:  51  51 179  62 
+            0.36: 236  81 184  62 
+            0.37: 164 112 189  62 
+            0.38:  92 143 194  62 
+            0.39:  20 174 199  62 
+            0.40: 205 204 204  62 
+            0.41: 133 235 209  62 
+            0.42:  61  10 215  62 
+            0.43: 246  40 220  62 
+            0.44: 174  71 225  62 
+            0.45: 102 102 230  62 
+            0.46:  31 133 235  62 
+            0.47: 215 163 240  62 
+            0.48: 143 194 245  62 
+            0.49:  72 225 250  62 
+            0.50:   0   0   0  63 
+            0.51:  92 143   2  63 
+            0.52: 184  30   5  63 
+            0.53:  20 174   7  63 
+            0.54: 113  61  10  63 
+            0.55: 205 204  12  63 
+            0.56:  41  92  15  63 
+            0.57: 133 235  17  63 
+            0.58: 225 122  20  63 
+            0.59:  61  10  23  63 
+            0.60: 154 153  25  63 
+            0.61: 246  40  28  63 
+            0.62:  82 184  30  63 
+            0.63: 174  71  33  63 
+            0.64:  10 215  35  63 
+            0.65: 102 102  38  63 
+            0.66: 195 245  40  63 
+            0.67:  31 133  43  63 
+            0.68: 123  20  46  63 
+            0.69: 215 163  48  63 
+            0.70:  51  51  51  63 
+            0.71: 143 194  53  63 
+            0.72: 236  81  56  63 
+            0.73:  72 225  58  63 
+            0.74: 164 112  61  63 
+            0.75:   0   0  64  63 
+            0.76:  92 143  66  63 
+            0.77: 184  30  69  63 
+            0.78:  20 174  71  63 
+            0.79: 113  61  74  63 
+            0.80: 205 204  76  63 
+            0.81:  41  92  79  63 
+            0.82: 133 235  81  63 
+            0.83: 225 122  84  63 
+            0.84:  61  10  87  63 
+            0.85: 154 153  89  63 
+            0.86: 246  40  92  63 
+            0.87:  82 184  94  63 
+            0.88: 174  71  97  63 
+            0.89:  10 215  99  63 
+            0.90: 102 102 102  63 
+            0.91: 195 245 104  63 
+            0.92:  31 133 107  63 
+            0.93: 123  20 110  63 
+            0.94: 215 163 112  63 
+            0.95:  51  51 115  63 
+            0.96: 143 194 117  63 
+            0.97: 236  81 120  63 
+            0.98:  72 225 122  63 
+            0.99: 164 112 125  63 
+            1.00:   0   0 128  63 
+    09: Mode
+            0, VBR
+            1, CBR
+            2, ABR
+    10: CBR - bitrate(0 to 4294967295) - lowest byte
+    11: CBR - bitrate(0 to 4294967295)
+    12: CBR - bitrate(0 to 4294967295)
+    13: CBR - bitrate(0 to 4294967295) - highest byte
+    14: ABR - bitrate(0 to 4294967295) - lowest byte
+    15: ABR - bitrate(0 to 4294967295)
+    16: ABR - bitrate(0 to 4294967295)
+    17: ABR - bitrate(0 to 4294967295) - highest byte
+    18: ABR - min-bitrate(0 to 4294967295) - lowest byte
+    19: ABR - min-bitrate(0 to 4294967295)
+    20: ABR - min-bitrate(0 to 4294967295)
+    21: ABR - min-bitrate(0 to 4294967295) - highest byte
+    22: ABR - max-bitrate(0 to 4294967295) - lowest byte
+    23: ABR - max-bitrate(0 to 4294967295)
+    24: ABR - max-bitrate(0 to 4294967295)
+    25: ABR - max-bitrate(0 to 4294967295) - highest byte
+    26: unused - value 0
+    
+    
+OGG-Opus:
+    01: S - value 83 Header
+    02: g - value 103 Header
+    03: g - value 103 Header
+    04: O - value 79 Header
+    05: unused - value 0
+    06: Bitrate (1-65536) - for some reasons, it is float, although you can only enter integernumbers into the inputfield; unknown, how it's encoded
+    07: Bitrate (1-65536) - for some reasons, it is float, although you can only enter integernumbers into the inputfield; unknown, how it's encoded
+    08: Bitrate (1-65536) - for some reasons, it is float, although you can only enter integernumbers into the inputfield; unknown, how it's encoded
+    09: Mode
+            0, VBR
+            1, CVBR
+            2, Hard-CBR
+    10: Complexity
+            0 to 10
+    11: unused - value 0
+    12: unused - value 0
+    13: unused - value 0
+    14: Encode 3-8 channel audio as 2.1-7.1 (LFE)-checkbox and Per channel (6-256 kbps)/Combined-radiobuttons
+            &1=0, Encode 3-8 channel audio as 2.1-7.1 (LFE)-checkbox unchecked
+            &1=1, Encode 3-8 channel audio as 2.1-7.1 (LFE)-checkbox checked
+            
+            &2=0, Per channel (6-256 kbps) - radiobutton
+            &2=1, Combined - radiobutton
+    15: unused - value 0
+    16: unused - value 0
+    17: unused - value 0
+    18: unused - value 0
+    
+    
+Video(ffmpeg/libav encoder)
+    01: P - value 80 Header
+    02: M - value 77 Header
+    03: F - value 70 Header
+    04: F - value 70 Header
+    05: Format:
+                0, AVI
+                3, QT/MOV/MP4
+                4, MKV
+                6, WEBM
+    06: unused - value 0
+    07: unused - value 0
+    08: unused - value 0
+    09: Video Codec:
+            with AVI:
+                2, DV
+                3, MJPEG
+                4, FFV1 (lossless)
+                5, Hufyuv (lossless)
+            with QT/MOV/MP4
+                2, MJPEG
+            with MKV
+                2, FFV1 (lossless)
+                3, Hufyuv (lossles)
+                4, MJPEG
+            with WEBM
+                0, VP8
+    10: unused - value 0
+    11: unused - value 0
+    12: unused - value 0
+    13: WEBM: VP8 kbps(0 to 2147483647) - lowest byte
+    14: WEBM: VP8 kbps(0 to 2147483647)
+    15: WEBM: VP8 kbps(0 to 2147483647)
+    16: WEBM: VP8 kbps(0 to 2147483647) - highest byte
+    17: Audio Codec:
+            with AVI:
+                3, 16 bit PCM
+                4, 24 bit PCM
+                5, 32 bit FP
+            with QT/MOV/MP4, MKV
+                2, 16 bit PCM
+                3, 24 bit PCM
+                4, 32 bit FP
+            with WEBM
+                0, VORBIS
+    18: unused - value 0
+    19: unused - value 0
+    20: unused - value 0
+    21: WEBM: VORBIS-bitrate(0 to 2147483647) - lowest byte
+    22: WEBM: VORBIS-bitrate(0 to 2147483647)
+    23: WEBM: VORBIS-bitrate(0 to 2147483647)
+    24: WEBM: VORBIS-bitrate(0 to 2147483647) - highest byte
+    25: Resolution width(0 to 2147483647) - lowest byte
+    26: Resolution width(0 to 2147483647)
+    27: Resolution width(0 to 2147483647)
+    28: Resolution width(0 to 2147483647) - highest byte
+    29: Resolution height(0 to 2147483647) - lowest byte
+    30: Resolution height(0 to 2147483647)
+    31: Resolution height(0 to 2147483647)
+    32: Resolution height(0 to 2147483647) - highest byte
+    33: Framerate - encoded as float but unknown how(0.01 to 1000000000.00, encoded as 10 215 35 60 to 40 107 110 78)
+    34: Framerate - encoded as float but unknown how
+    35: Framerate - encoded as float but unknown how
+    36: Framerate - encoded as float but unknown how
+    37: Aspect Ratio-setting
+            0, Keep source aspect ratio - unchecked
+            1, Keep source aspect ratio - checked
+    38: unused - value 0
+    39: unused - value 0
+    40: unused - value 0
+    41: MJPEG quality(0 to 2147483647) - lowest byte
+    42: MJPEG quality(0 to 2147483647)
+    43: MJPEG quality(0 to 2147483647)
+    44: MJPEG quality(0 to 2147483647) - highest byte
+    45: unused - value 0
+    
+
+Video(MPEG-4/MOV (macOS 10.7+ AVFoundation))
+    01: F - value 70 Header
+    02: V - value 86 Header
+    03: A - value 65 Header
+    04: X - value 88 Header
+    05: Format:
+                0, MPEG-4 Video (streaming optimized)
+                1, MPEG-4 Video
+                2, Quicktime MOV
+                3, MPEG-4 Audio
+    06: unused - value 0
+    07: unused - value 0
+    08: unused - value 0
+    09: Video Codec:
+            with Quicktime MOV
+                0, h264
+                1, Apple ProRes 4444
+                2, Apple ProRes 422
+                3, MJPEG
+            with all other codecs
+                0, h264 or no video with MPEG-4 Audio
+    10: unused - value 0
+    11: unused - value 0
+    12: unused - value 0
+    13: h264 kbps(0 to 2147483647) - lowest byte
+    14: h264 kbps(0 to 2147483647)
+    15: h264 kbps(0 to 2147483647)
+    16: h264 kbps(0 to 2147483647) - highest byte
+    17: Audio Codec:
+            with Quicktime MOV
+                0, AAC
+                1, 16-bit PCM
+                2, 24-bit PCM
+                3, 32-bit FP PCM
+            all other codecs
+                0, AAC
+    18: unused - value 0
+    19: unused - value 0
+    20: unused - value 0
+    21: AAC-bitrate(0 to 2147483647) - lowest byte
+    22: AAC-bitrate(0 to 2147483647)
+    23: AAC-bitrate(0 to 2147483647)
+    24: AAC-bitrate(0 to 2147483647) - highest byte
+    25: Resolution width(0 to 2147483647) - lowest byte
+    26: Resolution width(0 to 2147483647)
+    27: Resolution width(0 to 2147483647)
+    28: Resolution width(0 to 2147483647) - highest byte
+    29: Resolution height(0 to 2147483647) - lowest byte
+    30: Resolution height(0 to 2147483647)
+    31: Resolution height(0 to 2147483647)
+    32: Resolution height(0 to 2147483647) - highest byte
+    33: Framerate - encoded as float but unknown how(0.01 to 1000000000.00, encoded as 10 215 35 60 to 40 107 110 78)
+    34: Framerate - encoded as float but unknown how
+    35: Framerate - encoded as float but unknown how
+    36: Framerate - encoded as float but unknown how
+    37: Aspect Ratio-setting
+            0, Keep source aspect ratio - unchecked
+            1, Keep source aspect ratio - checked
+    38: unused - value 0
+    39: unused - value 0
+    40: unused - value 0
+    41: MJPEG quality(0 to 2147483647) - lowest byte
+    42: MJPEG quality(0 to 2147483647)
+    43: MJPEG quality(0 to 2147483647)
+    44: MJPEG quality(0 to 2147483647) - highest byte
+    45: unused - value 0
+    
+    
+Video(GIF):
+    01: Space - value 32 Header
+    02: F - value 70 Header
+    03: I - value 73 Header
+    04: G - value 71 Header
+    05: Width(1 to 2147483647 pixels) - lowest byte
+    06: Width(1 to 2147483647 pixels)
+    07: Width(1 to 2147483647 pixels) 
+    08: Width(1 to 2147483647 pixels) - highest byte
+    09: Height(1 to 2147483647 pixels) - lowest byte
+    10: Height(1 to 2147483647 pixels) - 
+    11: Height(1 to 2147483647 pixels) - 
+    12: Height(1 to 2147483647 pixels) - highest byte
+    13: Max framerate - encoded as float but unknown how
+    14: Max framerate - encoded as float but unknown how
+    15: Max framerate - encoded as float but unknown how
+    16: Max framerate - encoded as float but unknown how
+    17: Preserve aspect ratio (black bars, if necessary) - checkbox
+            0, checkbox unchecked
+            1, checkbox checked
+    18: Ignore changed in low bits of color (0-7, 0 = full quality)-inputbox AND 
+        Encode transparency (bad for normal video, good for some things possibly)-checkbox
+            This value must be twice the value entered in the input-box!
+                1 -> 2
+                5 -> 10
+                7 -> 14
+                etc.
+             Add 1 to set the encode transparency-checkbox to checked.
+    19: unknown - value 0
+    
+
+Video (LCF):
+    01: Space - value 32
+    02: F - value 70 Header
+    03: C - value 67 Header
+    04: L - value 76 Header
+    05: Width(1 to 2147483647) - lowest byte
+    06: Width(1 to 2147483647)
+    07: Width(1 to 2147483647)
+    08: Width(1 to 2147483647) - highest byte
+    09: Height(1 to 2147483647) - lowest byte
+    10: Height(1 to 2147483647)
+    11: Height(1 to 2147483647)
+    12: Height(1 to 2147483647) - highest byte
+    13: Max framerate(0 to 10000000000.00) encoded as float but unknown how
+    14: Max framerate(0 to 10000000000.00) encoded as float but unknown how
+    15: Max framerate(0 to 10000000000.00) encoded as float but unknown how
+    16: Max framerate(0 to 10000000000.00) encoded as float but unknown how
+    17: Preserve aspect ratio (black bars if necessary)-checkbox
+            0, checkbox unchecked
+            1, checkbox checked
+    18 to 82: - the contents of the LCF options tweak-entryfield as a human-readable string of 64 bytes
+                usually contains "t20 x128 y16" by default
+    
+    
+WAVPACK:
+    01: k - value 107 Header
+    02: p - value 112 Header
+    03: v - value 118 Header
+    04: w - value 119 Header
+    05: Mode - dropdownlist
+            0, Normal
+            1, Fast
+            3, High
+            4, Very High (slowest)
+    06: unused - value 0
+    07: unused - value 0
+    08: unused - value 0
+    09: BitDepth - dropdownlist
+            0, 16 bit
+            1, 24 bit
+            2, 32 bit integer
+            3, 32 bit FP
+            4, 23/24 bit
+            5, 22/24 bit
+            6, 21/24 bit
+            7, 20/24 bit
+            8, 19/24 bit
+            9, 18/24 bit
+           10, 17/24 bit
+           11, 32 bit FP -144dB floor
+           12, 32 bit FP -120dB floor
+           13, 32 bit FP -96dB floor
+    10: unused - value 0
+    11: unused - value 0
+    12: unused - value 0
+    13: Write markers with cues-checkboxed - bitfield
+            &1=0 Only write markers starting with #-checkbox checked
+            &1=1 Only write markers starting with #-checkbox unchecked
+            
+            &2=0 Write markers with cues-checkbox unchecked
+            &2=1 Write markers with cues-checkbox checked
+    14: unused - value 0
+    15: unused - value 0
+    16: unused - value 0
+    17: BFW-checkboxes
+        &1=0 Write BFW chunk-checkbox unchecked
+        &1=1 Write BFW chunk-checkbox checked
+        
+        &2=0 Include project filename in BWF data-checkbox unchecked
+        &2=1 Include project filename in BWF data-checkbox unchecked
+    18: unused - value 0
+    19: unused - value 0
+    20: unused - value 0
+    21: unused - value 0

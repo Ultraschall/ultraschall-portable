@@ -17,7 +17,7 @@
                    - [Trackstates](#Trackstate_Management_001_Introduction) - you can access and set all(!) track-states available
                    - [Mediaitem-states](#GetSetStates_Project_Track_Item_Env_001_Introduction) - you can access and set many mediaitem-states (more will follow)
                    - [ItemExtStates/TrackExtStates](#ExtStateManagement_005_TrackItemExtStates) - you can save additional metadata easily for specific tracks and items using ItemExtStates and TrackExtStates
-                   - [File access](#1FileManagement_001_Introduction) - many helperfunctions for reading, writing, copying files. No more hassle writing it yourself!
+                   - [File access](#FileManagement_001_Introduction) - many helperfunctions for reading, writing, copying files. No more hassle writing it yourself!
                        e.g [ReadFullFile](usdocml://ReadFullFile), [WriteValueToFile](usdocml://WriteValueToFile), etc
                    - [Cough-Mute-management](#Cough_Mute_Buttons_001_Introduction) - you can write your own cough-buttons, that set the state of the mute-envelope of a track easily
                    - [Marker](#MarkersAndRegions_001_Introduction) - extensive set of marker functions, get, set, export, import, enumerate, etc
@@ -38,6 +38,8 @@
                    - [Data Manipulation](#Helper_Functions_003_Data_Manipulation) - manipulate a lot of your data, including bitwise-integers, tables, etc
                    - [Clipboard-Management](#Helper_Functions_002_ClipboardManagement) - get items from clipboard, put them to clipboard, even multiple ones
                    - [Error Messaging System](#Error_Messaging_System_001_Introduction) - all functions create useful error-messages that can be shown using, eg: [ShowLastErrorMessage](usdocml://ShowLastErrorMessage), for easier debugging
+                   - [Child-scripts](#ChildScripts_001_Introduction) - start scripts numerous times and be able to pass parameters and returnvalues back and forth; adds uniqe scriptidentifier to do that
+                   - [Defer-function-alternative](#DeferScripts_001_Introduction) - run defer-cycles only every nth cycle/seconds and be able to stop a defer loop from inside and outside of a script instance
                    - tons of other helper-functions
                    - my Reaper-Internals Documentation AND
                 
@@ -45,13 +47,13 @@
                 
                    Happy coding and let's see, what you can do with it :D
                     
-                   Meo Mespotine (mespotine.de) (api.ultraschall.fm)
+                   Meo Mespotine (mespotine.de) (ultraschall.fm/api)
                 
                 For more information about Ultraschall itself, see [ultraschall.fm](http://www.ultraschall.fm) and if you want to support us, see [ultraschall.fm/danke](http://www.ultraschall.fm/danke) for donating to us.
                 
                 PS: In this documentation, I assume you have some basic knowledge in Lua and in using Reaper's own API-functions. Explaining both of these is beyond the scope of this doc.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Introduction
@@ -68,15 +70,15 @@
             Using the Ultraschall-API is quite easy.
             
             First make sure, you use the right versions of Reaper and SWS:
-               [Reaper 5.95](https://www.reaper.fm), [SWS 2.9.7](https://www.sws-extension.org) and [Julian Sader's plugin 0.951.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
+               [Reaper 5.95](https://www.reaper.fm), [SWS 2.9.7](https://www.sws-extension.org) and [Julian Sader's plugin 0.963.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             You can download them at [reaper.fm](http://www.reaper.fm) and [sws-extension.org](http://www.sws-extension.org) respectively.
             Julian Sader's plugin can be installed using ReaPack or gotten from [his own github-site](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             
             To install the Ultraschall-API:
             
-            1. Just download the zip-file of the current version from [api.ultraschall.fm](http://api.ultraschall.fm).  
+            1. Just download the zip-file of the current version from [ultraschall.fm/api](http://ultraschall.fm/api).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
-               The folder UserPlugins should contain the folder ultraschall_api and the files ultraschall_api_readme.txt and ultraschall_api.lua after this step.  
+               The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Now create a new script, by opening the Actions-window (Menu: Actions -> Show action list) and clicking the New-button next to "ReaScript:", give it a name and hit save.  
                Include the following line in your script at the beginning:   
                
@@ -105,7 +107,7 @@
             
             Oh, before I forget: The ultraschall_api-folder holds a folder "Scripts_Examples" in which you can find some demos and example-scripts using this API.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Introduction
@@ -123,7 +125,7 @@
             So I added two ways to deal with that.
             
             1. Hotfixes  
-                   Hotfixes are available at [api.ultraschall.fm](http://api.ultraschall.fm). They provide fixes for functions and bugs that came across after a release, but no new functions.  
+                   Hotfixes are available at [ultraschall.fm/api](http://ultraschall.fm/api). They provide fixes for functions and bugs that came across after a release, but no new functions.  
                    Just download the ultraschall\_hotfixes.lua and put it into UserPlugins/ultraschall\_api-folder.  
                    The chance is high, that there is already an ultraschall\_hotfixes.lua-file in the folder. You can safely overwrite it.  
                    Voila, you have added the most recent bugfixes.  
@@ -135,7 +137,7 @@
                    Check again from time to time to get the latest hotfixes.
                 
              2. Beta-functions and features
-                Beta-functions are functions intended for a future release of the Ultraschall-API. If you want to test them, just download the latest Beta-Pack from [api.ultraschall.fm](http://api.ultraschall.fm).  
+                Beta-functions are functions intended for a future release of the Ultraschall-API. If you want to test them, just download the latest Beta-Pack from [ultraschall.fm/api](http://ultraschall.fm/api).  
                 Extract the files in the Beta-pack to UserPlugins of the Resources-folder of your Reaper-installation. Voila, the beta-functions are installed.  
                  
                 To use them, you need to explicitly turn them on in your script, using the following lines:
@@ -149,7 +151,7 @@
                  
                 Be aware, they are in beta-stage. They will probably change, disappear or be exchanged with better functions. Beta-functions are only for testing purposes, not for productive coding!
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Introduction
@@ -183,7 +185,7 @@
 
             PS: If you know how to implement impossible things or do things better than the current implementation, you are welcome to donate your improved codes. :)
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Introduction
@@ -198,7 +200,7 @@
         <title>Introduction: License</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
                          
-             Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
+             Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
              
              Permission is hereby granted, free of charge, to any person obtaining a copy
              of this software and associated documentation files (the "Software"), to deal
@@ -232,7 +234,7 @@
             MakeCopyOfTable-function adapted from Tyler Neylon's (twitter.com/tylerneylon) function, found at [Stack Overflow](https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value/26367080#26367080)
             Thanks to him for allowing me to use it :)
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Introduction
@@ -293,7 +295,7 @@
                     
             These Ultraschall-API-specific datatypes are described in more detail in the following chapters.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Datatypes
@@ -330,7 +332,7 @@
                     [GetAllMediaItemsBetween](usdocml://GetAllMediaItemsBetween), [GetAllMediaItemsInTimeSelection](usdocml://GetAllMediaItemsInTimeSelection), [DeleteMediaItems_Position](usdocml://DeleteMediaItems_Position), [IsItemInTrack3](usdocml://IsItemInTrack3), and more
 
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Datatypes
@@ -375,7 +377,7 @@
             - Some of the functions who make use of MediaItemArray are:  
                     [DeleteMediaItemsFromArray](usdocml://DeleteMediaItemsFromArray), [DeselectMediaItems_MediaItemArray](usdocml://DeselectMediaItems_MediaItemArray), [GetAllLockedItemsFromMediaItemArray](usdocml://GetAllLockedItemsFromMediaItemArray), [InsertMediaItemArray](usdocml://InsertMediaItemArray), and more
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Datatypes
@@ -427,7 +429,7 @@
             - Some of the functions who make use of MediaItemStateChunkArrays are:  
                     [GetMediaItemStateChunkArrayLength](usdocml://GetMediaItemStateChunkArrayLength), [InsertMediaItemStateChunkArray](usdocml://InsertMediaItemStateChunkArray), [RippleInsert_MediaItemStateChunks](usdocml://RippleInsert_MediaItemStateChunks), [GetAllMediaItemsFromTrackStateChunk](usdocml://GetAllMediaItemsFromTrackStateChunk) and more
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Datatypes
@@ -477,7 +479,7 @@
             - Some of the functions who make use of EnvelopePointObjects are: 
                     [AddEnvelopePoints_EnvelopePointObject](usdocml://AddEnvelopePoints_EnvelopePointObject), [SetEnvelopePoints_EnvelopePointObject](usdocml://SetEnvelopePoints_EnvelopePointObject), [DeleteEnvelopePoints_EnvelopePointObject](usdocml://DeleteEnvelopePoints_EnvelopePointObject) and more
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Datatypes
@@ -518,7 +520,7 @@
             - Some of the functions who make use of EnvelopePointArrays are: 
                     [AddEnvelopePoints_EnvelopePointArray](usdocml://AddEnvelopePoints_EnvelopePointArray), [SetEnvelopePoints_EnvelopePointArray](usdocml://SetEnvelopePoints_EnvelopePointArray), [DeleteEnvelopePoints_EnvelopePointArray](usdocml://DeleteEnvelopePoints_EnvelopePointArray) and more
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Datatypes
@@ -557,7 +559,7 @@
             - Some of the functions who make use of ColorTables are: 
                     [ApplyColorTableToTrackColors](usdocml://ApplyColorTableToTrackColors)            
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Datatypes
@@ -596,30 +598,30 @@
 
                 Ultraschall-API-specific:
                 
-                   - [IsValidTrackString](usdocml://IsValidTrackString) - checks, if a string is a valid [trackstring](#Datatypes_002_trackstring)  
-                   - [IsValidMediaItemArray](usdocml://IsValidMediaItemArray) - checks, if a table is a valid [MediaItemArray](#Datatypes_003_MediaItemArray)  
-                   - [IsValidMediaItemStateChunkArray](usdocml://IsValidMediaItemStateChunkArray) - checks, if a table is a valid [MediaItemStateChunkArray](#Datatypes_004_MediaItemStateChunkArray)  
-                   - [IsValidEnvelopePointObject](usdocml://IsValidEnvelopePointObject) - checks, if a table is a valid [EnvelopePointObject](#Datatypes_005_EnvelopePointObject)  
-                   - [IsValidEnvelopePointArray](usdocml://IsValidEnvelopePointArray) - checks, if a table is a valid [EnvelopePointArray](#Datatypes_006_EnvelopePointArray)
-                   - [IsValidArrangeviewSnapshot](usdocml://IsValidArrangeviewSnapshot) - checks, if an extstate is a valid ArrangeviewSnapshot
+                 - [IsValidTrackString](usdocml://IsValidTrackString) - checks, if a string is a valid [trackstring](#Datatypes_002_trackstring)  
+                 - [IsValidMediaItemArray](usdocml://IsValidMediaItemArray) - checks, if a table is a valid [MediaItemArray](#Datatypes_003_MediaItemArray)  
+                 - [IsValidMediaItemStateChunkArray](usdocml://IsValidMediaItemStateChunkArray) - checks, if a table is a valid [MediaItemStateChunkArray](#Datatypes_004_MediaItemStateChunkArray)  
+                 - [IsValidEnvelopePointObject](usdocml://IsValidEnvelopePointObject) - checks, if a table is a valid [EnvelopePointObject](#Datatypes_005_EnvelopePointObject)  
+                 - [IsValidEnvelopePointArray](usdocml://IsValidEnvelopePointArray) - checks, if a table is a valid [EnvelopePointArray](#Datatypes_006_EnvelopePointArray)
+                 - [IsValidArrangeviewSnapshot](usdocml://IsValidArrangeviewSnapshot) - checks, if an extstate is a valid ArrangeviewSnapshot
                     
                 Other Reaper-datatypes:
                 
-                   - [IsValidReaProject](usdocml://IsValidReaProject) - checks, if an object is a valid ReaProject
-                   - [IsValidProjectStateChunk](usdocml://IsValidProjectStateChunk) - checks, if a string is a valid ProjectStateChunk
-                   - [IsValidTrackStateChunk](usdocml://IsValidTrackStateChunk) - checks, if a string is a valid TrackStateChunk
-                   - [IsValidMediaItemStateChunk](usdocml://IsValidMediaItemStateChunk) - checks, if a string is a valid MediaItemStateChunk
-                   - [IsValidEnvStateChunk](usdocml://IsValidEnvStateChunk) - checks, if a string is a valid EnvelopeStateChunk
+                 - [IsValidReaProject](usdocml://IsValidReaProject) - checks, if an object is a valid ReaProject
+                 - [IsValidProjectStateChunk](usdocml://IsValidProjectStateChunk) - checks, if a string is a valid ProjectStateChunk
+                 - [IsValidTrackStateChunk](usdocml://IsValidTrackStateChunk) - checks, if a string is a valid TrackStateChunk
+                 - [IsValidMediaItemStateChunk](usdocml://IsValidMediaItemStateChunk) - checks, if a string is a valid MediaItemStateChunk
+                 - [IsValidEnvStateChunk](usdocml://IsValidEnvStateChunk) - checks, if a string is a valid EnvelopeStateChunk
                     
                 They will be part of ultraschall.type() someday.
                 
             3. other types of data  
                 These aren't datatypes, but you may want to check them for validity as well  
                 
-                   - [IsValidGuid](usdocml://IsValidGuid) - checks, whether a string is a valid GUID  
-                   - [IsValidMatchingPattern](usdocml://IsValidMatchingPattern) - checks, whether a string is a valid matching pattern for Lua's pattern-matching  
+                 - [IsValidGuid](usdocml://IsValidGuid) - checks, whether a string is a valid GUID  
+                 - [IsValidMatchingPattern](usdocml://IsValidMatchingPattern) - checks, whether a string is a valid matching pattern for Lua's pattern-matching  
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Datatypes
@@ -650,7 +652,7 @@
             
             You could change them as well, but that would be pointless.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             API-Variables
@@ -692,7 +694,7 @@
                
                Read the accompanying documentation-entries for [CreateRenderCFG_MP3CBR](usdocml://CreateRenderCFG_MP3CBR) and [RenderProject_RenderCFG](usdocml://RenderProject_RenderCFG) for more details and/or the following chapters.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Rendering
@@ -736,7 +738,7 @@
                      [CreateRenderCFG_MP3VBR](usdocml://CreateRenderCFG_MP3VBR), [CreateRenderCFG_OGG](usdocml://CreateRenderCFG_OGG), [CreateRenderCFG_Opus](usdocml://CreateRenderCFG_Opus), [CreateRenderCFG_Opus2](usdocml://CreateRenderCFG_Opus2), [CreateRenderCFG_WAV](usdocml://CreateRenderCFG_WAV), [CreateRenderCFG_WAVPACK](usdocml://CreateRenderCFG_WAVPACK),  
                      [CreateRenderCFG_WebMVideo](usdocml://CreateRenderCFG_WebMVideo)            
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Rendering
@@ -796,7 +798,7 @@
             
             For more enhanced customization of Rendering, see [Rendering: Change more render-settings](#Rendering_004_Change_more_render_settings) for more details.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Rendering
@@ -839,7 +841,7 @@
             The functions in step 2) are just a small selection of the functions to alter project-files, as provided by the Ultraschall-API. Browse through the functions in the "Project-Files"-section of the index of the Ultraschall-API-Functions-Reference for many more of them.  
             However, changing some of the stuff might cause issues with the rendering-functions provided with this API.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Rendering
@@ -864,7 +866,7 @@
             
             Due limitations with Reaper's own API, storing the vertical-scroll-position of the arrangeview isn't possible yet. This will change as soon as the limitation is raised from Reaper's own API.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Arrangeview Snapshots
@@ -885,7 +887,8 @@
                         slot        - the slot for the snapshot, which must be an integer. The function will overwrite an already existing snapshot. To prevent that,
                                       use ultraschall.IsValidArrangeviewSnapshot() to check, if it's already existing.
                         description - a short description, what the snapshot contains so you know, what to expect from it
-                        position    - set to true to store the startposition and endposition of the arrangeview. Otherwise(false), it will only store the current horizontal zoom-factor
+                        position    - set to true to store the startposition and endposition of the arrangeview. Otherwise(false), it will only store the 
+                                      current horizontal zoom-factor
                         vzoom       - set to true, if you want to store the vertical zoom-factor as well; set to false, if you don't want it to be stored.
                 
             If you want to retrieve the settings of a certain Arrange-View-Snapshot, you can use [RetrieveArrangeviewSnapshot](usdocml://RetrieveArrangeviewSnapshot), which will
@@ -895,7 +898,7 @@
             
             To delete a certain slot, just use [DeleteArrangeviewSnapshot](usdocml://DeleteArrangeviewSnapshot).
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Arrangeview Snapshots
@@ -929,7 +932,7 @@
                          
             This should give you full control in what to restore from an Arrangeview-Snapshot and what to ignore.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Arrangeview Snapshots
@@ -952,7 +955,7 @@
             
             This should give you more control about programming faster and quicker navigation-capabilities.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Navigation
@@ -981,7 +984,7 @@
                - Both:
                   - [SetPlayAndEditCursor_WhenPlaying](usdocml://SetPlayAndEditCursor_WhenPlaying) - sets play and editcursor to position during playback
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Navigation
@@ -1028,7 +1031,7 @@
             The function [GetClosestGoToPoints](usdocml://GetClosestGoToPoints) is the combination of all of these functions, which let's you decide fully, which edges/positions you want to check for.   
             It will also check, if the next/previous closest edge is the beginning or the end of the project.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Navigation
@@ -1062,7 +1065,7 @@
             
             This functions only centers the given position/cursor-position to the arrangeview. It keeps the zoom-factor intact.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Navigation
@@ -1097,7 +1100,7 @@
             which means, it sets if a certain autoscrolling behavior is turned on or not.  
             If you have your own custom actions toggling these actions, you probably shouldn't use this function. Otherwise it probably messes up your workflows.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Navigation
@@ -1149,7 +1152,7 @@
             StateChunks can be gotten using reaper.GetTrackStateChunk(), reaper.SetTrackStateChunk(), reaper.GetItemStateChunk(), reaper.SetItemStateChunk(), reaper.GetEnvelopeStateChunk(), reaper.SetEnvelopeStateChunk().  
             To get ProjectStateChunks, you need to read the rpp-file, as currently there's no Get/SetProjectStateChunk-function in Reaper's own API.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Get/Set Project/Track/MediaItem-States
@@ -1175,7 +1178,7 @@
             
             Let's begin with getting items by time(range) and tracks.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             MediaItems
@@ -1237,7 +1240,7 @@
                - [GetSelectedMediaItemsAtPosition](usdocml://GetSelectedMediaItemsAtPosition) - gets all selected MediaItems in given tracks from a time-position
                - [GetSelectedMediaItemsBetween](usdocml://GetSelectedMediaItemsBetween) - gets all selected MediaITems in given tracks between start- and endposition
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             MediaItems
@@ -1278,7 +1281,7 @@
             
             >This function returns, if splitting was successful and the newly "created"-right-hand-split-items as an MediaItemAray. Only the right-hand-split-MediaItem of MediaItems, that could be split, will be returned. If a MediaItem could not be split(position outside MediaItemstart and MediaItemEnd), there will be no returned MediaItem for it then.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             MediaItems
@@ -1341,7 +1344,7 @@
 
             With all these functions, deleting MediaItems is now comfortable to do.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             MediaItems
@@ -1435,7 +1438,7 @@
              
              This should give you many additional use-cases into your hands.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             MediaItems
@@ -1569,7 +1572,7 @@
                - [SelectMediaItems_MediaItemArray](usdocml://SelectMediaItems_MediaItemArray) - sets MediaItems in MediaItemArray to selected  
                - [DeselectMediaItems_MediaItemArray](usdocml://DeselectMediaItems_MediaItemArray) - sets MediaItems in MediaItemArray deselected  
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             MediaItems
@@ -1644,7 +1647,7 @@
            >This is a special function, focusing on inserting image-files into the project. You can set the track, position, length of the image-MediaItem and, if it shall be looped.  
            >If you don't loop it(looped=false), the MediaItem will have the length anyway, but the image will be shown only for 1 second in the VideoProcessor-window.  
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             MediaItems
@@ -1744,7 +1747,7 @@
               - [GetItemSpectralConfig](usdocml://GetItemSpectralConfig) - to get the current resolution(FFT-size) of the SpectralEdit of the MediaItem  
               - [CountItemSpectralEdits](usdocml://CountItemSpectralEdits) - to count the number of currently existing SpectralEdit-instances in a MediaItem  
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             MediaItems
@@ -1838,18 +1841,18 @@
             >This function is especially helpful, when mass manipulating StateChunks and wanting to mass-apply the changed ones back.  
             >Easy to do now.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             MediaItems
         </chapter_context>
         <previous_chapter>Getting_Manipulating_Items_008_Spectral_Edit</previous_chapter>
-        <next_chapter>1FileManagement_001_Introduction</next_chapter>
+        <next_chapter>FileManagement_001_Introduction</next_chapter>
         <tags>documentation, mediaitems, items, preview, apply actions, apply function, normalize, apply statechunks</tags>
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-        <slug>1FileManagement_001_Introduction</slug>
+        <slug>FileManagement_001_Introduction</slug>
         <title>File Management: Introduction</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Even if file-management isn't that hard to program in Lua, it is quite inconvenient. Especially for "normal" use-cases, it is often a drag to always go through the four steps, checking if file exists, open file, read/write, close file.  
@@ -1863,7 +1866,7 @@
             
             Let's start with reading files.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             File Management
@@ -1957,7 +1960,7 @@
             
             These functions should fulfill most of your daily file-read-usecases.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             File Management
@@ -2016,7 +2019,7 @@
             
             This should make saving files easier than having to code it completely yourself by hand.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             File Management
@@ -2073,7 +2076,7 @@
             
             > After that, the function returns an array with all files, that are of the filetype you gave to parameter filetype.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             File Management
@@ -2101,7 +2104,7 @@
             - [GetReaperWorkDir](usdocml://GetReaperWorkDir) - returns the current workdir of Reaper, where files(without a path) will be created in
             - [SetReaperWorkDir](usdocml://SetReaperWorkDir) - sets the current workdir of Reaper, where files(without a path) will be created in(needs Reaper-restart)
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             File Management
@@ -2129,7 +2132,7 @@
             - [IsValidProjectStateChunk](usdocml://IsValidProjectStateChunk) - checks, whether a string is a valid ProjectStateChunk(i.e. you read an rpp-roject into a variable, you can check this)
             - [IsValidReaProject](usdocml://IsValidReaProject) - checks, whether an object is a valid ReaProject-object
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Project Management
@@ -2169,7 +2172,7 @@
             
             That way, you can for instance work with newly created projects, to automatically add things to projects, that can't be added using TemplateProjects.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         <chapter_context>
             Project Management
@@ -2215,7 +2218,7 @@
             
             So I thought, why not adding functions, that make that stuff easier?
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2295,7 +2298,7 @@
                
             With that, you can convert color-values into all color-values you ever want to have.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2369,7 +2372,7 @@
             >By that, it will desaturate or saturate.  
             
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2392,7 +2395,7 @@
             
             Over time, I intend to add functions to these colortables as well, so adding, removing, altering and changing colors in the colortable(like brightness, saturation and such) is possible more easily.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2436,7 +2439,7 @@
             >Simply pass a table to check for and it will return, whether it is a valid ColorTable(true) or nor(false)
             
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2471,7 +2474,7 @@
             >This applies a ColorTable to MediaItems and works basically as the ApplyColorTableToTrackColors-function above, with the exception, that you pass MediaItems as MediaItemArray.  
             >The rest is the same, pass to the function a ColorTable and in the parameter Spread, how to spread/cycle the colors over the MediaItems.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2501,7 +2504,7 @@
             >**[GetLastCursorPosition](usdocml://GetLastCursorPosition)** - gets the last editcursor-position before the current one. Helpful for left-click-triggered scripts, who change the editcursorposition due the mouseclick  
             >**[GetLastPlayState](usdocml://GetLastPlayState)** - gets the last playstate before the current one. Helpful for monitoring "event-based"-statechanges
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2525,7 +2528,7 @@
             
             Let's go into more detail.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2558,7 +2561,7 @@
                                     
             >This works the same as ToggleMute, but accepts a MediaTrack instead of a tracknumber. The rest is the same, position for the position of the new mutepoint and state for mute(0) or unmute(1).
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2620,7 +2623,7 @@
              
             With that, you should get a good overview over the mute-points in your project.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2653,7 +2656,7 @@
                                     
             >Works exactly like DeleteMuteState, but expects a MediaTrack-object instead of a tracknumber.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2679,7 +2682,7 @@
             
             Let's go into more details on that.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2733,7 +2736,7 @@
             
             Now, we've created a new error-message, which is now kept by the Ultraschall-API-instance locally within your script.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2801,7 +2804,7 @@
              - [GetErrorMessage_Funcname](usdocml://GetErrorMessage_Funcname) - gets an errormessage a specific function provided, can be indexed  
              - [GetLastErrorMessage_Funcname](usdocml://GetLastErrorMessage_Funcname) - gets the last errormessage a specific function provided  
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2839,7 +2842,7 @@
             
             And that's all you need to know about deleting errormessages.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2864,7 +2867,7 @@
             >This toggles, whether to display error-messages at the bottom of the ReaScript-IDE-window/Reaper's error-window or if you prefer using Ultraschall-API's own functions for error-handling.  
             >Optionally, you can set it by setting togglevalue to either true(show errormessages at the bottom of the IDE) or false(use the Ultraschall-API error-management-behavior).
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2904,7 +2907,7 @@
                 
             and many more related to working with TrackStateChunks.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -2935,7 +2938,7 @@
             
             Let's start with the routing.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3023,7 +3026,7 @@
             
             Another thing: Routing-settings of the master-track aren't possible that way. You need to use [GetTrackMainSendState](usdocml://GetTrackMainSendState) and [SetTrackMainSendState](usdocml://SetTrackMainSendState) to route the signal of a track to the master-channel. Unlike the former functions, MainSend must be set in the sending track!  
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3096,7 +3099,7 @@
                                     integer count_HWOuts = ultraschall.CountTrackHWOuts(integer tracknumber)
             
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3125,7 +3128,7 @@
             
             Let's go into more detail on these concepts.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3168,7 +3171,7 @@
             Changing Reaper's config-files needs a restart of Reaper for the changes to take effect.  
             Some of the configuration-settings can be set also at runtime, but need another approach, which you can find on the Reaper-Internals-page for [Configuration Variables](Reaper_Config_Variables.html)
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3280,7 +3283,7 @@
               
               >>Just like EnumerateKeysByPattern, but this enumerates through the values within a given section. It will return the value and it's corresponding keyname found.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3313,7 +3316,7 @@
              - [EnumerateUSExternalState_sec](usdocml://EnumerateUSExternalState_sec) - enumerates the sections of the ultraschall.ini
 
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3359,7 +3362,7 @@
             One important thing to mention: these extstates are bound to the project(if they aren't stored globally via parameter savelocation), so when copying an item with extstates into another project, the extstates will not be part of the new project.  
             I will look into that problem at some point.  
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3390,7 +3393,7 @@
             >This returns a stored trackextstate. Just pass to it a MediaTrack-object and the key, whose value you want.
             >It will return if getting the value was successful or not with return-value retval, as well as the value with value.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3422,7 +3425,7 @@
             >This returns a stored itemextstate. Just pass to it a MediaItem-object and the key, whose value you want.
             >It will return if getting the value was successful or not with return-value retval, as well as the value with value.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3454,7 +3457,7 @@
             
             These kind of markers get the most attention, though regular marker/region/tempo-time signature marker-management is part of this API as well.  
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3554,7 +3557,7 @@
             The other marker-types follow the same lead, so if you understood it for this marker, you understood it for all others as well.  
             One limitation though, you can't (yet) export/import regions into/from an exportfile.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3601,17 +3604,476 @@
 
             So, with this, most of your wishes in regards of marker-management should be fulfilled.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
             Marker Management
         </chapter_context>
         <previous_chapter>MarkersAndRegions_002_General_How_To</previous_chapter>
-        <next_chapter>Helper_Functions_001_Introduction</next_chapter>
+        <next_chapter>ChildScripts_001_Introduction</next_chapter>
         <tags>markermanagement, manipulate, move, get marker by time, renumerate, get marker by screen coordinate, is marker at position</tags>
     </US_DocBloc>
 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ChildScripts_001_Introduction</slug>
+        <title>Child Scripts: Introduction</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            One of the cool features in Reaper is the possibility to run scripts at your mouse- or keyclick. One of the biggest drawbacks though,
+            is that you can't individualise the scripts, or better: you can pass parameters to scripts to tell them, how to behave.  
+            There are some very limited ways of getting input, like some MIDI-values or current states of many Reaper-elements, but they are either
+            very limited, or they involve a heavy load of guessing what the states mean and hoping, you guessed right.
+            
+            It also annoyed me, so I had for some time the idea of child-scripts in my mind.
+            
+            Child scripts in the sense of the Ultraschall-API, are scripts, that can be run from another script, BUT you can also pass parameters and returnvalues back and forth.
+            Even better, if you run a child-script, you will also get a unique datastructure called ScriptIdentifier, which is an identifier for a script that can be used as
+            extstate to pass over information back and forth.
+            And as this identifier is unique, you can run two or more instances of a defer script and communicate with all of them individually, as they all have
+            their own ScriptIdentifier that they can listen to.
+            More on ScriptIdentifiers in the next chapter.
+            
+            With that, you can finally pass over as many parameters/returnvalues/other information over to a child-script as you want.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Child Scripts
+        </chapter_context>
+        <previous_chapter>MarkersAndRegions_003_Helpers_and_Manipulation</previous_chapter>
+        <next_chapter>ChildScripts_002_The_Unique_Scriptidentifier</next_chapter>
+        <tags>child scripts, introduction</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ChildScripts_002_The_Unique_Scriptidentifier</slug>
+        <title>Child Scripts: The unique ScriptIdentifier</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Every script, that uses the Ultraschall-API, gets its own ScriptIdentifier, that is something like a unique name that your script. 
+            Such a ScriptIdentifier can then be used to communicate with that given script. So, if you want to run multiple instances of a defer-script and this script uses the Ultraschall-API,
+            you can use these script-identifiers to communicate with each of these instances without disturbing the other instances of the defer-script that are running at the same time.
+            
+            A ScriptIdentifier is of the following format:
+                
+                    ScriptIdentifier:path/scriptname-{guid}.lua
+                    
+            For example, if I have a script called my_script.lua in the scripts-folder of my Reaper-installation and this
+            Reaper-installation is located at C:\Reaper, the ScriptIdentifier could look like this:
+            
+                    ScriptIdentifier:C:/Reaper/Scripts/my_script-{E0020927-08C4-4BE3-B8C6-4A52D042ED60}.lua
+                    
+            Why do I say, "could" look like this. You may have noticed, theres this cryptic string "{E0020927-08C4-4BE3-B8C6-4A52D042ED60}" inside of the ScriptIdentifier.  
+            This is a so called guid, which is a unique number. This can be created by a Reaper-function called reaper.genGuid("") and has the cool feature, that it is quite unique.  
+            And this will be created new, every time a script is started, that uses the Ultraschall-API to create this unique ScriptIdentifier, making this scriptinstance unique in itself.  
+            
+            Now here's the thing: If you know this ScriptIdentifier, you can pass information to it, like with using extstates:
+            
+                        reaper.SetExtState("ScriptIdentifier:C:/Reaper/Scripts/my_script-{E0020927-08C4-4BE3-B8C6-4A52D042ED60}.lua", 
+                                           "I'll tell you a secret", 
+                                           "I am your father, child-script!"), 
+                                           false)
+                
+            and as long as the script with this ScriptIdentifier is running, it can read the extstate for themselves, by using
+            
+                        secret = reaper.GetExtState("ScriptIdentifier:C:/Reaper/Scripts/my_script-{E0020927-08C4-4BE3-B8C6-4A52D042ED60}.lua", 
+                                                    "I'll tell you a secret")
+                
+            That way you can pass messages to this scriptinstance back and forth, which is quite cool.  
+            
+            To get the ScriptIdentifier for your own script, you can use [GetScriptIdentifier](usdocml://GetScriptIdentifier), which will return your unique ScriptIdentifier.
+            Write a script that returns this ScriptIdentifier and run it a few times and you will see, that the guid-part is changing every time you run it.  
+            That way you can be sure, that every script-instance that you create has their own ScriptIdentifier.  
+            
+            
+            But you may ask: how can I know, what kind of a ScriptIdentifier a script has, that I want to run?
+            
+            Good question. For that I added another feature, that is actually used by the [ultraschall.Main_OnCommandByFilename](usdocml://Main_OnCommandByFilename)-function of the Ultraschall-API itself.
+            
+            You can, if you want, influence this ScriptIdentifier yourself, by influencing the filename of the script.
+            So, what you should do is, create a copy of the script, using [MakeCopyOfFile](usdocml://MakeCopyOfFile) and give it a different name of the following scheme:
+            
+                        filename-{guid}.lua
+            
+            So if you have a script called "testscript\_that\_displays\_stuff.lua", this copy chould be called
+            
+                        testscript_that_displays_stuff-{A6A79CC4-9DE2-4791-A5F8-62EEF4ABEAC3}.lua
+                
+            Now register this file as new script, run it using Reaper's own reaper.Main_OnCommand-function and unregister it again.
+            
+            When "testscript\_that\_displays\_stuff-{A6A79CC4-9DE2-4791-A5F8-62EEF4ABEAC3}.lua" is using the Ultraschall-API, it will not only create a ScriptIdentifier, but one, that includes the guid you added to the filename.
+            That way, you can decide, which ScriptIdentifier the script shall have, that you want to run, as the script knows the same ScriptIdentifier that you can now know, as you have the guid now.
+            
+            This is too difficult to do for you?
+            No problem, I created functions that'll do that just for you.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Child Scripts
+        </chapter_context>
+        <previous_chapter>ChildScripts_001_Introduction</previous_chapter>
+        <next_chapter>ChildScripts_003_RunChildScripts</next_chapter>
+        <tags>child scripts, unique, scriptidentifier</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ChildScripts_003_RunChildScripts</slug>
+        <title>Child Scripts: Running Childscripts</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Now that you know a lot about ScriptIdentifiers, you probably want to know, how to run such a child-script and get its ScriptIdentifier.
+            For that, I added mainly two functions: [Main_OnCommandByFilename](usdocml://Main_OnCommandByFilename) and [MIDI_OnCommandByFilename](usdocml://MIDI_OnCommandByFilename) 
+            
+            These two functions allow you to run a script and get the corresponding ScriptIdentifier returned.  
+            Let's have a look:  
+            
+            >**[Main_OnCommandByFilename](usdocml://Main_OnCommandByFilename)**
+            
+                                    boolean retval, string script_identifier = ultraschall.Main_OnCommandByFilename(string filename, string ...)
+                                    
+            >This function runs a script in the Main-section-context of Reaper. Just pass to it the filename of the script you want to run.  
+            >You may also note the string ... parameter after filename. That can be used to pass over parameters to the script you are about to run.  
+            >These must be strings. If you pass anything else, it will be converted to string. Nil-values will be considered as the last parameter, so you can't pass nil and hope it gets converted!
+            >
+            >This function also returns a boolean that signals, if the script has been started or not.
+            >It also returns the ScriptIdentifier for the script, you've just started.
+            
+            This is good, but if you want to have such a script started within a Midi-Editor-context, you should use:
+            
+            >**[MIDI_OnCommandByFilename](usdocml://MIDI_OnCommandByFilename)**
+            
+                                    boolean retval, string script_identifier = ultraschall.MIDI_OnCommandByFilename(string filename, optional HWND Midi_EditorHWND, string ...)
+                                    
+            >This does the same, but runs the script in a MIDI-editor-context. To pass over a MIDI-Editor, you set the parameter Midi_EditorHWND using the HWND-object of the Midi-Editor of your choice.  
+            >To select the last used open MidiEditor, set this parameter to nil. If no MidiEditor is opened, it will not(!) run the script.  
+            >In regards of parameters, we have the same rules as above: replace string ... with the parameters you want to pass.  
+            >You can pass more than one parameter and it must be a string.
+            >
+            >Like Main_OnCommandByFilename, this also returns a return value that signals if starting the script was successful.
+            >And the script-identifier for the started script as well.
+            
+            Now, let's have a closer look on passing parameters and returnvalues between caller-scripts and called child-scripts.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Child Scripts
+        </chapter_context>
+        <previous_chapter>ChildScripts_002_The_Unique_Scriptidentifier</previous_chapter>
+        <next_chapter>ChildScripts_004_PassingParametersAndReturnvalues</next_chapter>
+        <tags>child scripts, run, start, script, childscript</tags>
+    </US_DocBloc>
+    
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ChildScripts_004_PassingParametersAndReturnvalues</slug>
+        <title>Child Scripts: Passing Parameters and Returnvalues</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Sometimes you want to pass parameters after you've started a script. Or you are a started script and want to return values to the script that started you.  
+            
+            For that, I added the functions: [GetScriptParameters](usdocml://GetScriptParameters), [SetScriptParameters](usdocml://SetScriptParameters), [GetScriptReturnvalues](usdocml://GetScriptReturnvalues), [SetScriptReturnvalues](usdocml://SetScriptReturnvalues), [GetScriptReturnvalues_Sender](usdocml://GetScriptReturnvalues_Sender)
+            
+            If you remember from [the previous chapter about running child-scripts](#ChildScripts_003_RunChildScripts), the function returns a unique identifier for that started script.  
+            Don't lose that identifier, as we'll need that to communicate with it, like for passing parameters to the childscript.  
+            
+            >**[GetScriptParameters](usdocml://GetScriptParameters)**
+            
+                    integer num_params, array params, string caller_script_identifier = ultraschall.GetScriptParameters(optional string script_identifier, optional boolean remove)
+                    
+            >If you've passed parameters to a child-script, you probably would want this child-script to actually get the parameters. And, of course, who they got them from.  
+            >This function does all that. It returns an array with the parameters as string. It also returns the ScriptIdentifier of the script, that started the child-script.  
+            >If you want to retrieve the parameters for your own script, leave the parameter script\_identifier as nil, otherwise pass here the ScriptIdentifier, whose currently set parameters you want to retrieve.  
+            >As parameters are passed as extstates and you probably want to save resources, you can either set the parameter remove to nil or true to remove the extstates from memory, after your retrieval.  
+            >You can set remove to false, if you need the parameters for later use, but remove them, when you exit your script(just run this function again with remove set to nil or true).  
+            
+            If, for some reason, you would love to change parameters after the childscript is started, you can use the function:
+            
+            >**[SetScriptParameters](usdocml://SetScriptParameters)**
+            
+                    boolean retval, string script_identifier = ultraschall.SetScriptParameters(string script_identifier, string ...)
+                    
+            >Pass to it the ScriptIdentifier of your child-script and the parameters you want to pass. The same parameter-rules for [Main_OnCommandByFilename](usdocml://Main_OnCommandByFilename) apply here:  
+            >Parameters must be strings. Everything else will be converted into a string, except a nil, which is seen as the last parameter, no matter if parameters would follow.  
+            
+            Passing parameters is quite cool, but if you're a child-script, you may want to return something to your parent/caller-script.  
+            For that, I included:
+            
+            >**[SetScriptReturnvalues](usdocml://SetScriptReturnvalues)**
+            
+                    boolean retval, string script_identifier = ultraschall.SetScriptReturnvalues(string script_identifier, string ...)
+            
+            >This allows you to set return-values to a specific script with a specific ScriptIdentifier. It basically works like SetScriptParameters, so the rules for SetScriptParameters apply here too.  
+            >With that, you can return values to the caller-script or any other script, whose ScriptIdentifier you have.
+            
+            And if you're a parent/caller-script and would love to hear from you child-script, you can use:
+            
+            >**[GetScriptReturnvalues](usdocml://GetScriptReturnvalues)**
+            
+                    integer num_params, array retvals = ultraschall.GetScriptReturnvalues(string script_identifier, optional boolean remove)
+                    
+            >This returns the return-values stored for the current script by another script. Just pass to it the ScriptIdentifier of the script that sent the returnvalues.  
+            >The rules for the remove-parameter apply also here: as the return-values are stored as extstates, these should be removed after usage to prevent wasting of resources.  
+            >To do that, either set remove to nil or to true. If for some reason you need these returnvalues for longer, set remove to false. Keep in mind, to save resources,
+            >that you should remove the retvals later, before exiting the script. Just run the function again with remove set to nil or true in that case.
+            
+            Now, there's only one question left: How do I know, which script has sent me returnvalues and what ScriptIdentifier it has?
+            Well, use this function:
+            
+            >**[GetScriptReturnvalues_Sender](usdocml://GetScriptReturnvalues_Sender)**
+            
+                    integer count, array retval_sender = ultraschall.GetScriptReturnvalues_Sender()
+                    
+            >This returns the number of scripts, that have sent returnvalues and their corresponding ScriptIdentifier.
+            >As the ScriptIdentifier also includes the filename of the sender-script, you can use this to get, if a script that you've started, send you the returnvalues, if you don't have the ScriptIdentifier available.
+            
+            This should give you a lot to work with, when working with child-scripts.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Child Scripts
+        </chapter_context>
+        <previous_chapter>ChildScripts_003_RunChildScripts</previous_chapter>
+        <next_chapter>DeferScripts_001_Introduction</next_chapter>
+        <tags>child scripts, parameters, returnvalues, pass, set, get</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>DeferScripts_001_Introduction</slug>
+        <title>DeferScripts: Introduction to Ultraschall's Defer-functions</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Sometimes, when programming Lua-scripts in Reaper, you would love to have scripts, that run continuously. Normally, you would do that using a while-loop, but this blocks the userinterface of Reaper after a few seconds.  
+            So the developers of Reaper added another structure, called defer-loops.  
+            
+            These defer-loops create nodes in your script, that means: you pass over to the reaper.defer-function a function, that you would love to run continuously.  
+            This continuous running of the function works like that:  
+              
+             - Reaper runs through the script.
+             - Then it does all the other stuff it needs to do(Gui, other scripts, etc).
+             - Then Reaper returns to the script and runs the function you've passed to the defer-function(and only that one).
+             - Then it does all the other stuff it needs to do(Gui, other scripts, etc).
+             - Then Reaper returns to the script and runs the function you've passed to the defer-function(and only that one).
+             - Then it does all the other stuff it needs to do(Gui, other scripts, etc).
+             - Then Reaper returns to the script and runs the function you've passed to the defer-function(and only that one).
+             
+             etc.  
+             You get the idea.
+             
+             Now here's the problem: it runs the deferred function everytime. Even if you need it run only every few seconds, it will be run about 30 times a second.  
+             And if you have a condition, under which the defer-loop should end, you need to construct more or less complex structures to take care of that.  
+             Rule of thumb: the decision-making of how often the deferred function shall be run, is complex. Quitting a defer-loop as well(for beginners at least), especially, if you want to stop the defer-loop from the outside of the script-instance.  
+             
+             For that, I created my own defer-loops, that take care of that.  
+            
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Defer Loops
+        </chapter_context>
+        <previous_chapter>ChildScripts_004_PassingParametersAndReturnvalues</previous_chapter>
+        <next_chapter>DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API</next_chapter>
+        <tags>defer, introduction</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API</slug>
+        <title>DeferScripts: Special Defer-loops in the Ultraschall-API</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            It always bugged me, when I wanted to write a simple defer-loop that should run every 3 seconds or so, as the logic to do that is at some times very annoying to code time and again.  
+            So, I added my own defer-loop-functions, that take care of that.  
+            In total 20 of them.  
+            
+            Let's have a look at a regular defer-loop in Reaper:  
+                    
+                        A=1
+                        
+                        function main()
+                            reaper.ShowConsoleMsg(A.."\n")
+                            A=A+1
+                            reaper.defer(main)
+                        end
+                        
+                        main()
+                
+            This code counts up the variable A in every defer-cycle, which is approximately 30 times a second(depending on how much other stuff Reaper has to do inbetween two defer-cycles).
+            It also displays the value of variable A into the ReaScript-console.  
+            Now, if I want to have this code in the function only executed every 30th cycle(as it would eat too much resources otherwise), I need to add extra structures to do that:
+                
+                        A=1
+                        cycle_counter=1
+                        
+                        function main()
+                            
+                            if cycle_counter==30 then
+                                cycle_counter=1
+                                reaper.ShowConsoleMsg(A.."\n")
+                                A=A+1
+                            end
+                            cycle_counter=cycle_counter+1
+                            
+                            reaper.defer(main)
+                        end
+                        
+                        main()
+            
+            This code counts up the variable A every 30 cycles, only. (It also displays the value of variable A into the ReaScript-console.)  
+            The same goes with executing the code only every x seconds.
+            
+                        A=1
+                        seconds_counter=reaper.time_precise()+3
+                        
+                        function main()
+                            if reaper.time_precise()>seconds_counter then
+                                seconds_counter=reaper.time_precise()+3
+                                reaper.ShowConsoleMsg(A.."\n")
+                                A=A+1
+                            end
+                            
+                            reaper.defer(main)
+                        end
+                        
+                        main()
+            
+            This code counts up variable A every 3 seconds and shows it to the ReaScript-console.  
+            It quickly becomes messy or at least harder to read. And I hate my code being hard to read, especially if it contains more lines than the examples above.  
+            
+            The Ultraschall-API has for that the functions [Defer1](usdocml://Defer1) to [Defer20](usdocml://Defer20).
+            
+            >**[Defer1](usdocml://Defer1)**
+            
+                        boolean retval, string defer_identifier = ultraschall.Defer1(function func, optional integer mode, optional number timer_counter)
+                    
+            >This works like reaper.defer, but has additional benefits, like the parameters mode and timer\_counter, who allow you to specify, how often the defer-cycle shall be executed.  
+            >Either all the time(mode=0), every nth-cycle(mode=1) or every nth-second(mode=2). If mode is 1 or 2, you should set timer\_counter to the amount of cycles/seconds to wait for the next execution of the defer-loop.  
+            >It also returns a defer_identifier, which can be used by [StopDeferCycle](usdocml://StopDeferCycle) to stop the defer-loop from inside and outside of the script(more on that later).  
+            
+            As you've seen, there are 20 Defer-functions in the Ultraschall-API. If you want to use only one defer-cycle in your script, just use [Defer1](usdocml://Defer1), but if you need multiple defer-loops in one script-instance,  
+            you should use another of these 20 Defer-functions, as otherwise the timer/cycle-counter of a ultraschall.Defer-function could get confused.  
+            So, rule of thumb: in one script-instance, every of the 20 Defer-functions can only be used for ONE defer-loop!  
+            This is due limitations in Lua and Reaper. I hope, I can raise this limitation at some point though.  
+            
+            Now, let's get back to our examples and see, how it would look with these new Defer-functions.
+            
+                        dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+                        
+                        A=1
+                         
+                        function main()
+                           reaper.ShowConsoleMsg(A.."\n")
+                           A=A+1
+                           
+                           ultraschall.Defer1(main, 1, 30)
+                        end
+                        
+                        main()
+            
+            Like our previous example, this counts variable A up every 30th cycle and shows in in the ReaScript console. But as you can see, the code is much cleaner due fewer lines.
+            You can also see, that ultraschall.Defer1 defers the function main, is set to mode 1(execute every nth cycle) and the number of cycles to wait inbetween execution(30).
+            
+            Now let's see, whether we can modify the other example as well, that counts variable A up every 3 seconds:
+            
+                        dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+                        A=1
+                         
+                        function main()
+                           reaper.ShowConsoleMsg(A.."\n")
+                           A=A+1
+                         
+                           ultraschall.Defer1(main, 2, 3)
+                        end
+                        
+                        main()
+            
+            You see, it is basically the same code. All that changed was the parameters for Defer1, which is now set to mode 2(execute code every nth seconds) and the number of seconds to wait(3 in this case).
+            
+            This makes it much easier to run code of defer-scripts only when it is needed(and keep the code cleaner).  
+            Save computer-resources, save electrical power, save the world!  
+            
+            In the next chapter, I will show you, how to stop such a defer-loop from within and without the current script-instance.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Defer Loops
+        </chapter_context>
+        <previous_chapter>DeferScripts_001_Introduction</previous_chapter>
+        <next_chapter>DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside</next_chapter>
+        <tags>defer, running, loops, defer, seconds, cycles</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside</slug>
+        <title>DeferScripts: Stopping Defer-loops from in- and outside of scripts</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            I was talking about being able to stop these Defer-loops I added to the Ultraschall-API.  
+            For that, we should have another look at the functions-description of Defer1(but this works as well for Defer2 to Defer20).  
+            
+            >**[Defer1](usdocml://Defer1)**
+            
+                        boolean retval, string defer_identifier = ultraschall.Defer1(function func, optional integer mode, optional number timer_counter)
+                    
+            As you can see, it returns a string called defer\_identifier. This is a unique identifier for this defer-loop, which can be used to stop this exact defer-loop from in- and outside of this script-instance.  
+            
+            
+            To stop a defer-loop, I added another function, called [StopDeferCycle](usdocml://StopDeferCycle).  
+            
+            >**[StopDeferCycle](usdocml://StopDeferCycle)**
+            
+                        boolean retval = ultraschall.StopDeferCycle(string defer_identifier)
+                    
+            >Just pass to it the defer\_identifier that the Defer-function returned, and it will stop that running loop.
+            
+            Now here's the clou: you can do that from inside of the script, that is running the Defer-Cycle, BUT: you can also do this from another script.
+            
+            Let's take the following example:
+            
+                        dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+                        A=1
+                         
+                        function main()
+                           reaper.ShowConsoleMsg(A.."\n")
+                           A=A+1
+                         
+                           retval, defer_identifier = ultraschall.Defer1(main, 2, 1)
+                           reaper.CF_SetClipboard(defer_identifier)
+                        end
+                        
+                        main()
+            
+            This code puts the defer_identifier into the clipboard and runs the Defer-script, that counts variable A up every 3 seconds and shows it in the ReaScript-console.  
+            If we write now another script, that does the following:
+            
+                        dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+                        defer_identifier_from_clipboard = reaper.CF_GetClipboard("")
+
+                        retval = ultraschall.StopDeferCycle(defer_identifier_from_clipboard)
+                
+            We can stop this defer-cycle, immediately. Try this for yourself.
+            
+            One last note: in the example above, we stopped the script from the outside, but you can stop that script from inside the script as well.  
+            So, if you have two defer-loops, where the second defer-loop shall control, if the first defer-loop is running or not:  
+            Run the function, that shall be deferred(and has one of Defer1 to Defer20 inside of it) and stop it using StopDeferCycle.  
+            
+            If for some reason you didn't get the defer\_identifier, no problem: use [GetDeferIdentifier](usdocml://GetDeferIdentifier) to get it for a specific Ultraschall-Defer-function in your script.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Defer Loops
+        </chapter_context>
+        <previous_chapter>DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API</previous_chapter>
+        <next_chapter>Helper_Functions_001_Introduction</next_chapter>
+        <tags>defer, stop, defer loops, inside scripts, outside scripts</tags>
+    </US_DocBloc>
+    
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Helper_Functions_001_Introduction</slug>
         <title>Helper_Functions: Introduction</title>
@@ -3622,7 +4084,7 @@
             
             In this chapter, I want you to introduce you to some of these things.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3643,7 +4105,7 @@
             Putting MediaItems into the clipboard or finding out, which MediaItems are located in the clipboard is also possible but really inconvenient.  
             So I added functions to deal with that.
             
-            >**[GetStringFromClipboard_SWS](udsocml://GetStringFromClipboard_SWS)**
+            >**[GetStringFromClipboard_SWS](usdocml://GetStringFromClipboard_SWS)**
             
                                     string clipboard_string = ultraschall.GetStringFromClipboard_SWS()
                                     
@@ -3671,7 +4133,7 @@
             >a MediaItem into a project using it's StateChunk.  
             >How does GetMediaItemsFromClipboard work? It inserts the Items from the clipboard at the end of the project, gets them, using [GetAllMediaItemsBetween](usdocml://GetAllMediaItemsBetween) and deletes them again.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3725,7 +4187,7 @@
             - [ReturnTableAsIndividualValues](usdocml://ReturnTableAsIndividualValues) - returns the 64 first entries of an integer-indexed table as return-values  
             - [ReverseTable](usdocml://ReverseTable) - reversed the entries of a table  
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3759,7 +4221,7 @@
             >The other parameters are all the parameters the function Func needs to run. Just write them in the order you would do, if you would run the function Func directly.  
             >It will return a boolean(true for success), the current undo-message and alle the return-values returned by function Func.
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3837,7 +4299,7 @@
             
             and more and more and more....
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3882,7 +4344,7 @@
             
             Meo Mespotine, Leipzig(Germany) 30th of November 2018
         </description>
-        <target_document>ReaperApiConcepts</target_document>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
         </chapter_context>
         <chapter_context>
@@ -3894,5 +4356,6 @@
     </US_DocBloc>
 </USDocML>
 >**[](usdocml://)**
+
 
 

@@ -1,0 +1,50 @@
+Notes:
+The first occurence of a variable
+	Ultraschall_Event_Section="EditCursorPosition"
+signals the section, in which the event is located. It must be a unique one. When in doubt, use a signature for yourself.
+So if your name is Jimmy Barns and you want to monitor playstates, use:
+    Ultraschall_Event_Section="JB_PlayState"
+    
+The signature "US_" is reserved for UltraSchall!
+
+The section will hold the following keys:
+	Old - the oldstate
+	New - the newstate (when starting, this is the same as Old
+	NumEvents - the number of events available
+	Event1 - a keyword for an event
+	...
+	...
+	Eventx - a keyword for an event
+    ScriptIdentifier - a scriptidentifier that helps quitting defer-scripts, who use ultraschall.Defer1(deferfunction), when that eventlistener isn't needed anymore.
+
+    
+Events are:
+	 - Fixed Events are written in UPPERCASE punctuation/space/specialcharacters are allowed.
+		PLAY, PAUSE, REC
+	    They can be compared by = and ~=
+
+	 - Flexible Events are written in lowercase. The following are available
+		number
+	    They can be compared with < = >
+	    flexible events only allow flexible events. That means, the oldstate and the newstate must be either FIXED_KEYS or numbers, never mixed!
+
+
+
+After declaration of the variable Ultraschall_Event_Section, the following procedure is mandatory:
+
+	1) ultraschall.ResetEvent(Ultraschall_Event_Section) 
+		-- resets all event-settings stored in the system
+	2) ultraschall.RegisterEvent(Ultraschall_Event_Section, "EVENT")
+		-- registers one or more events, that can happen in this script
+		-- unregistered events will be ignored!
+		-- if you register flexible events, you are only allowed to use one event, like number!
+	3) write a defer-loop, that monitors changes for the events you declared
+	3a) When a change happened, use:
+		ultraschall.SetEventState(Ultraschall_Event_Section, OldState, NewState)
+		-- this tells the event-system that events have changed
+		-- and what the old and what the new state is
+	3b) Use ultraschall.Defer1(deferfunction)! (NEVER reaper.defer(deferfunction)) This allows the event-system to shutdown unneeded event-checker-scripts.
+	4) before running the defer-function, define an atexit-function
+		reaper.atexit(ultraschall.ResetEvent)
+		-- this cleans up everything, after the script is done
+	5) run the defer-loop
