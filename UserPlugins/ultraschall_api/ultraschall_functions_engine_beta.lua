@@ -44,6 +44,10 @@ if type(ultraschall)~="table" then
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 end
 
+function ultraschall.ApiBetaFunctionsTest()
+    ultraschall.functions_beta_works="on"
+end
+
 -- Let's create a unique script-identifier
 ultraschall.dump=ultraschall.tempfilename:match("%-%{%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x%}")
 if ultraschall.dump==nil then 

@@ -1,16 +1,31 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+ultraschall.ShowErrorMessagesInReascriptConsole(true)
+
+-- set this to the online-repo of the Ultraschall-API
+Url="http://localhost/US_Api_test/"
+
+-- set this to the repository-folder of the api on your system
+Target_Dir="c:\\Xampp\\htdocs\\US_Api_test\\"
+
 
 
 found_dirs, dirs_array, found_files, files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(reaper.GetResourcePath().."/UserPlugins/ultraschall_api")
-Url="http://localhost"
-Target_Dir="c:\\Xampp\\htdocs\\temp2\\"
+
+
+--found_files=found_files+2
+--files_array[found_files-1]=ultraschall.Api_InstallPath.."/ultraschall_api.lua"
+--files_array[found_files]=ultraschall.Api_InstallPath.."/ultraschall_api_readme.txt"
+
+L=ultraschall.MakeCopyOfFile_Binary(ultraschall.Api_InstallPath.."/ultraschall_api.lua", Target_Dir.."/ultraschall_api.lua")
+L=ultraschall.MakeCopyOfFile_Binary(ultraschall.Api_InstallPath.."/ultraschall_api_readme.txt", Target_Dir.."/ultraschall_api_readme.txt")
 
 C,C1,C2,C3,C4,C5,C6,C7=ultraschall.GetApiVersion()
 --Version=(tonumber(C)*100)+(tonumber(C2:match(" (.*)"))/10).."04"
 retval, Version = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+--Version=Version+1
 D=os.date()
 Date=string.gsub(D:match("(.-) "),"%.","-").."T"..D:match(" (.*)").."Z"
-Hotfix="08"
+Hotfix="00"
 
 Markdown2RTF="c:\\Program Files (x86)\\Pandoc\\pandoc -f markdown -w plain -s -o c:\\temp\\tempfile.rtf c:\\temp\\tempfile"
 
@@ -319,26 +334,36 @@ PS: In this documentation, I assume you have some basic knowledge in Lua and in 
   
 --end
 
+-- needs to be run twice, or not all files will be copied. Why that is? Dunno yet.
+-- Maybe bug in US-API, maybe in Reaper or Lua
+-- Or my system is too slow...
+for j=1, 2 do --A0="c:\\windows\\system32\\cmd.exe /Q /C md "..reaper.GetResourcePath().."\\UserPlugins\\ultraschall_api "..Target_Dir.." /T"
+  A0="c:\\windows\\system32\\cmd.exe /Q /C xcopy "..reaper.GetResourcePath().."\\UserPlugins\\ultraschall_api "..Target_Dir.."\\ultraschall_api\\ /T /E /Y"
+  A,A1,A2,A3=reaper.ExecProcess(A0, -1)
+  
+  for i=1, found_files do
+    tempfile=files_array[i]:match("(ultraschall_api/.*)")
+  --  if tempfile==nil then tempfile=files_array[i]:match("UserPlugins(/.*)") end
+    L=ultraschall.MakeCopyOfFile_Binary(files_array[i], Target_Dir..tempfile)
+  end
 
---A0="c:\\windows\\system32\\cmd.exe /Q /C md "..reaper.GetResourcePath().."\\UserPlugins\\ultraschall_api "..Target_Dir.." /T"
-A0="c:\\windows\\system32\\cmd.exe /Q /C xcopy "..reaper.GetResourcePath().."\\UserPlugins\\ultraschall_api "..Target_Dir.."\\ultraschall_api\\ /T /Y"
-A,A1,A2,A3=reaper.ExecProcess(A0, -1)
-
-for i=1, found_files do
-  L=ultraschall.MakeCopyOfFile_Binary(files_array[i], Target_Dir.."/"..files_array[i]:match("(ultraschall_api/.*)"))
 end
-
 --reaper.CF_SetClipboard(A0)
 
 
-XML_file="\t"..[[<source file="ultraschall_api.lua" type="extension">]]..Url.."/temp2/ultraschall_api.lua</source>\n"
-XML_file=XML_file.."\t"..[[<source file="ultraschall_api_readme.txt" type="extension">]]..Url.."/temp2/ultraschall_api_readme.txt</source>\n"
+XML_file="\t"..[[<source file="ultraschall_api.lua" type="extension">]]..Url.."/ultraschall_api.lua</source>\n"
+XML_file=XML_file.."\t"..[[<source file="ultraschall_api_readme.txt" type="extension">]]..Url.."/ultraschall_api_readme.txt</source>\n"
+
 
 for i=1, found_files do
-  XML_file=XML_file.."\t<source file=\""..files_array[i]:match("(ultraschall_api/.*)").."\" type=\"extension\">"..Url.."/temp2/"..files_array[i]:match("(ultraschall_api/.*)").."</source>\n"
+  tempfile=files_array[i]:match("(ultraschall_api/.*)")
+  if tempfile==nil then tempfile=files_array[i]:match("UserPlugins(/.*)") end
+  XML_file=XML_file.."\t<source file=\"/"..tempfile.."\" type=\"extension\">"..Url..tempfile.."</source>\n"
 end
 
 --print2(XML_file:sub(1,2000))
 --print(XML_end)
 
-B=ultraschall.WriteValueToFile(Target_Dir.."/test3.xml", XML_start..XML_file..XML_end)
+B=ultraschall.WriteValueToFile(Target_Dir.."/ultraschall_api_index.xml", XML_start..XML_file..XML_end)
+
+
