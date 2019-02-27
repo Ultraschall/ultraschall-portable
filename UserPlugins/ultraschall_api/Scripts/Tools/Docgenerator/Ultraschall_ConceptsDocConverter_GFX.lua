@@ -1,11 +1,10 @@
 --reaper.MB("Still Work To Do With This Here!","",0)
-is_new_value, filename_with_path, sectionID, cmdID, mode, resolution, val = reaper.get_action_context()
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 Tempfile=ultraschall.Api_Path.."/temp/temporary"
 ConversionToolMD2HTML="c:\\Program Files (x86)\\Pandoc\\pandoc.exe -f markdown_strict -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
 
-Infilename=ultraschall.Api_Path.."/misc/US_Api-Manual.USDocML"
-Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Introduction_and_Concepts.html"
+Infilename=ultraschall.Api_Path.."/DocsSourcefiles/US_Api-Concepts_GFX.USDocML"
+Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Concepts_GFX.html"
 
 retval, scriptfilename=reaper.get_action_context()
 _temp,scriptfilename=ultraschall.GetPath(scriptfilename)
@@ -414,7 +413,9 @@ function ultraschall.ColorateDatatypes(String)
   return String:sub(2,-2)
 end
 
-local String=ultraschall.ReadFullFile(Infilename, false)
+String=ultraschall.ReadFullFile(Infilename, false)
+--ultraschall.ShowLastErrorMessage()
+--reaper.MB(String,"",0)
 
 local Ccount, C=ultraschall.SplitUSDocBlocs(String)
 --A,B=ultraschall.GetAllChapterContexts(C)
@@ -476,8 +477,8 @@ Ultraschall API functions
                 </tr>
                 <tr>
                     <td></td>
-                    <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Introduction_and_Concepts.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;Introduction/Concepts</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
+                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Introduction_and_Concepts.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;Introduction/Concepts</a></td>
+                    <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
                     <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GUI.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
                     <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_VID.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
                     <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_AUD.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>

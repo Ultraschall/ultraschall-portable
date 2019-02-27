@@ -10,44 +10,44 @@
                 
                 This API was to be used within Ultraschall only, but quickly evolved into a huge 700 function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:
                
-                   - [Rendering](#Rendering_001_Introduction) - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want.
+                - [Rendering](#Rendering_001_Introduction) - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want.
                                    Just create a renderstring and pass it over to [RenderProject_RenderCFG](usdocml://RenderProject_RenderCFG) or [RenderProjectRegions_RenderCFG](usdocml://RenderProjectRegions_RenderCFG)
-                   - [Navigation, Follow and Arrangeview-Manipulation](#Navigation_001_Introduction) - get/set cursors, zoom, autoscroll-management, scroll, etc
-                   - [ArrangeView-Snapshots](#Arrangeview_Snapshots_001_Introduction) - you can save, retrieve snapshots of the arrangeview, including position, zoomstates to quickly jump through parts of your project
-                   - [Trackstates](#Trackstate_Management_001_Introduction) - you can access and set all(!) track-states available
-                   - [Mediaitem-states](#GetSetStates_Project_Track_Item_Env_001_Introduction) - you can access and set many mediaitem-states (more will follow)
-                   - [ItemExtStates/TrackExtStates](#ExtStateManagement_005_TrackItemExtStates) - you can save additional metadata easily for specific tracks and items using ItemExtStates and TrackExtStates
-                   - [File access](#FileManagement_001_Introduction) - many helperfunctions for reading, writing, copying files. No more hassle writing it yourself!
-                       e.g [ReadFullFile](usdocml://ReadFullFile), [WriteValueToFile](usdocml://WriteValueToFile), etc
-                   - [Cough-Mute-management](#Cough_Mute_Buttons_001_Introduction) - you can write your own cough-buttons, that set the state of the mute-envelope of a track easily
-                   - [Marker](#MarkersAndRegions_001_Introduction) - extensive set of marker functions, get, set, export, import, enumerate, etc
-                   - [Spectrogram](#Getting_Manipulating_Items_008_Spectral_Edit) - you can program the spectrogram-view
-                   - [Routing](#Routing_001_Introduction) - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions. Includes mastertrack as well.
-                   - [Get MediaItems](#Getting_Manipulating_Items_002_GetMediaItems) - you can get all media-items within a time-range AND within the tracks you prefer; a 2D-approach
-                       e.g. [GetAllMediaItemsBetween](usdocml://GetAllMediaItemsBetween) and [GetMediaItemsAtPosition ](usdocml://GetMediaItemsAtPosition ), etc
-                   - Gaps between items - you can get the gaps between items in a track, using [GetGapsBetweenItems](usdocml://GetGapsBetweenItems)
-                   - [Edit item(s)](#Getting_Manipulating_Items_001_Introduction) - Split, Cut, Copy, Paste, Move, RippleCut, RippleInsert, SectionCut by tracks AND time/start to endposition
-                       e.g. [RippleCut](usdocml://RippleCut), [RippleInsert](RippleInsert), [SectionCut](usdocml://SectionCut), [SplitMediaItems_Position](usdocml://SplitMediaItems_Position), [MoveMediaItemsBefore_By](usdocml://MoveMediaItemsBefore_By), [MoveMediaItemsSectionTo](usdocml://MoveMediaItemsSectionTo) and many more
-                   - [Previewing MediaItems and files](#Getting_Manipulating_Items_009_Miscellaneous) - you can preview MediaItems and files without having to start playback of a project
-                   - KB-Ini-Management - manipulate the reaper-kb.ini-file with custom-settings
-                   - [Checking for Datatypes](#Datatypes_050_CheckingDatatypes) - check all datatypes introduced with Ultraschall-API and all Lua/Reaper-datatypes
-                   - [UndoManagement](#Helper_Functions_004_UndoManagement) - functions for easily making undoing of functions as well as preventing creating an undo-point
-                   - [Run an Action](#Helper_Functions_005_Miscellaneous) for Items/Tracks - apply actions to specific items/tracks
-                   - [Checking for changed projecttabs](#Project_Management_002_Check_Changed_Projecttabs) - check, if projecttabs have been added/removed
-                   - [ExtState-Management](#ExtStateManagement_001_Introduction) - an extensive set of functions for working with extstates as well as ini-files
-                   - [Data Manipulation](#Helper_Functions_003_Data_Manipulation) - manipulate a lot of your data, including bitwise-integers, tables, etc
-                   - [Clipboard-Management](#Helper_Functions_002_ClipboardManagement) - get items from clipboard, put them to clipboard, even multiple ones
-                   - [Error Messaging System](#Error_Messaging_System_001_Introduction) - all functions create useful error-messages that can be shown using, eg: [ShowLastErrorMessage](usdocml://ShowLastErrorMessage), for easier debugging
-                   - [Child-scripts](#ChildScripts_001_Introduction) - start scripts numerous times and be able to pass parameters and returnvalues back and forth; adds uniqe scriptidentifier to do that
-                   - [Defer-function-alternative](#DeferScripts_001_Introduction) - run defer-cycles only every nth cycle/seconds and be able to stop a defer loop from inside and outside of a script instance
-                   - tons of other helper-functions
-                   - my Reaper-Internals Documentation AND
-                
-                   - it's documented with this documentation. :D
-                
-                   Happy coding and let's see, what you can do with it :D
-                    
-                   Meo Mespotine (mespotine.de) (ultraschall.fm/api)
+                - [Navigation, Follow and Arrangeview-Manipulation](#Navigation_001_Introduction) - get/set cursors, zoom, autoscroll-management, scroll, etc
+                - [ArrangeView-Snapshots](#Arrangeview_Snapshots_001_Introduction) - you can save, retrieve snapshots of the arrangeview, including position, zoomstates to quickly jump through parts of your project
+                - [Trackstates](#Trackstate_Management_001_Introduction) - you can access and set all(!) track-states available
+                - [Mediaitem-states](#GetSetStates_Project_Track_Item_Env_001_Introduction) - you can access and set many mediaitem-states (more will follow)
+                - [ItemExtStates/TrackExtStates](#ExtStateManagement_005_TrackItemExtStates) - you can save additional metadata easily for specific tracks and items using ItemExtStates and TrackExtStates
+                - [File access](#FileManagement_001_Introduction) - many helperfunctions for reading, writing, copying files. No more hassle writing it yourself!
+                    e.g [ReadFullFile](usdocml://ReadFullFile), [WriteValueToFile](usdocml://WriteValueToFile), etc
+                - [Cough-Mute-management](#Cough_Mute_Buttons_001_Introduction) - you can write your own cough-buttons, that set the state of the mute-envelope of a track easily
+                - [Marker](#MarkersAndRegions_001_Introduction) - extensive set of marker functions, get, set, export, import, enumerate, etc
+                - [Spectrogram](#Getting_Manipulating_Items_008_Spectral_Edit) - you can program the spectrogram-view
+                - [Routing](#Routing_001_Introduction) - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions. Includes mastertrack as well.
+                - [Get MediaItems](#Getting_Manipulating_Items_002_GetMediaItems) - you can get all media-items within a time-range AND within the tracks you prefer; a 2D-approach
+                    e.g. [GetAllMediaItemsBetween](usdocml://GetAllMediaItemsBetween) and [GetMediaItemsAtPosition ](usdocml://GetMediaItemsAtPosition ), etc
+                - Gaps between items - you can get the gaps between items in a track, using [GetGapsBetweenItems](usdocml://GetGapsBetweenItems)
+                - [Edit item(s)](#Getting_Manipulating_Items_001_Introduction) - Split, Cut, Copy, Paste, Move, RippleCut, RippleInsert, SectionCut by tracks AND time/start to endposition
+                    e.g. [RippleCut](usdocml://RippleCut), [RippleInsert](RippleInsert), [SectionCut](usdocml://SectionCut), [SplitMediaItems_Position](usdocml://SplitMediaItems_Position), [MoveMediaItemsBefore_By](usdocml://MoveMediaItemsBefore_By), [MoveMediaItemsSectionTo](usdocml://MoveMediaItemsSectionTo) and many more
+                - [Previewing MediaItems and files](#Getting_Manipulating_Items_009_Miscellaneous) - you can preview MediaItems and files without having to start playback of a project
+                - KB-Ini-Management - manipulate the reaper-kb.ini-file with custom-settings
+                - [Checking for Datatypes](#Datatypes_050_CheckingDatatypes) - check all datatypes introduced with Ultraschall-API and all Lua/Reaper-datatypes
+                - [UndoManagement](#Helper_Functions_004_UndoManagement) - functions for easily making undoing of functions as well as preventing creating an undo-point
+                - [Run an Action](#Helper_Functions_005_Miscellaneous) for Items/Tracks - apply actions to specific items/tracks
+                - [Checking for changed projecttabs](#Project_Management_002_Check_Changed_Projecttabs) - check, if projecttabs have been added/removed
+                - [ExtState-Management](#ExtStateManagement_001_Introduction) - an extensive set of functions for working with extstates as well as ini-files
+                - [Data Manipulation](#Helper_Functions_003_Data_Manipulation) - manipulate a lot of your data, including bitwise-integers, tables, etc
+                - [Clipboard-Management](#Helper_Functions_002_ClipboardManagement) - get items from clipboard, put them to clipboard, even multiple ones
+                - [Error Messaging System](#Error_Messaging_System_001_Introduction) - all functions create useful error-messages that can be shown using, eg: [ShowLastErrorMessage](usdocml://ShowLastErrorMessage), for easier debugging
+                - [Child-scripts](#ChildScripts_001_Introduction) - start scripts numerous times and be able to pass parameters and returnvalues back and forth; adds uniqe scriptidentifier to do that
+                - [Defer-function-alternative](#DeferScripts_001_Introduction) - run defer-cycles only every nth cycle/seconds and be able to stop a defer loop from inside and outside of a script instance
+                - tons of other helper-functions
+                - my Reaper-Internals Documentation AND
+             
+                - it's documented with this documentation. :D
+             
+                Happy coding and let's see, what you can do with it :D
+                   
+                Meo Mespotine (mespotine.de) (ultraschall.fm/api)
                 
                 For more information about Ultraschall itself, see [ultraschall.fm](http://www.ultraschall.fm) and if you want to support us, see [ultraschall.fm/danke](http://www.ultraschall.fm/danke) for donating to us.
                 
@@ -70,23 +70,60 @@
             Using the Ultraschall-API is quite easy.
             
             First make sure, you use the right versions of Reaper and SWS:
-               [Reaper 5.95](https://www.reaper.fm), [SWS 2.9.7](https://www.sws-extension.org) and [Julian Sader's plugin 0.963.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
+               [Reaper 5.965](https://www.reaper.fm), [SWS 2.9.7](https://www.sws-extension.org) and [Julian Sader's plugin 0.963.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             You can download them at [reaper.fm](http://www.reaper.fm) and [sws-extension.org](http://www.sws-extension.org) respectively.
             Julian Sader's plugin can be installed using ReaPack or gotten from [his own github-site](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             
-            To install the Ultraschall-API:
+            To install the Ultraschall-API, just follow the following steps:
             
-            1. Just download the zip-file of the current version from [ultraschall.fm/api](http://ultraschall.fm/api).  
+            **Installation via ReaPack**:
+            
+            The easiest way is to install the Ultraschall-API using ReaPack. ReaPack is a package-manager for extensions and helper-stuff for Reaper, which allows you to easily install and update content done by the Reaper community.
+            Many Scripts, Themes, JSFX-FX, etc are available through that.
+            
+            1. Install ReaPack. Get it from [https://reapack.com/](https://reapack.com/). There's also a real good [User guide](https://reapack.com/user-guide) for it available, that explains, how to do it.  
+               Copy the downloaded dll(Windows), dylib(Mac) or so(Linux)-file into the UserPlugins-folder in the Resources-folder of Reaper. 
+               You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
+            2. (Re-)Start Reaper  
+            3. Go into the Menu Extensions -> ReaPack -> manage Repositories  
+            4. Click on Import/export...-button and choose Import repositories  
+            5. Paste into the dialog the following link  
+                    
+                    https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api_index.xml
+               
+               and hit OK.  
+            6. Doubleclick on the Ultraschall-API-entry. A dialog will pop up with a description of the Ultraschall-API  
+            7. Hit the Install/update Ultraschall-API-button and select Install all packages in this repository  
+            8. ReaPack will ask you, if you want to install new packages/updates the next time you synchronize ReaPack.  
+               Hit Yes.  
+            9. ReaPack installs the Ultraschall-API. If no error appears, it will tell you to restart Reaper, as a new extension has been installed  
+            10. Restart Reaper.  
+            
+            To update the Ultraschall-API in the future, choose in the menu Extensions -> ReaPack -> Synchronize packages. If an update is available, it will install it automatically.  
+            For more information on ReaPack and it's usage, refer [User guide](https://reapack.com/user-guide).
+            
+            **Manual Installation**:
+            
+            If you can't or don't want to install ReaPack, you can also install it manually.
+            
+            1. Just download the zip-file of the current version from [ultraschall_api4.00_beta2.72.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.72.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
-            3. Now create a new script, by opening the Actions-window (Menu: Actions -> Show action list) and clicking the New-button next to "ReaScript:", give it a name and hit save.  
+            3. Restart Reaper.
+            
+            
+            ** Check Installation **
+            
+            After installation, you might want to check, whether installing the Ultraschall-API was successful.
+            
+            1. Create a new script, by opening the Actions-window (Menu: Actions -> Show action list) and clicking the New-button next to "ReaScript:", give it a name and hit save.  
                Include the following line in your script at the beginning:   
                
                         dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
                
             Now you can program with the Ultraschall-API. Just add the functions AFTER the dofile-line.
             
-            4. To test, if it's successfully installed, add 
+            2. To test, if it's successfully installed, add 
                 
                         ultraschall.ApiTest()
                 
@@ -105,7 +142,7 @@
             
             See the functions-reference for all available functions or read on in this documentation for a collection of concepts introduced by the Ultraschall-API.
             
-            Oh, before I forget: The ultraschall_api-folder holds a folder "Scripts_Examples" in which you can find some demos and example-scripts using this API.
+            Oh, before I forget: The ultraschall\_api-folder holds a folder "Scripts\_Examples" in which you can find some demos and example-scripts using this API.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
@@ -129,7 +166,7 @@
                    Just download the ultraschall\_hotfixes.lua and put it into UserPlugins/ultraschall\_api-folder.  
                    The chance is high, that there is already an ultraschall\_hotfixes.lua-file in the folder. You can safely overwrite it.  
                    Voila, you have added the most recent bugfixes.  
-                     
+                   
                    To get the bugs back, just delete the ultraschall_hotfixes.lua.
                    
                    All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
@@ -139,16 +176,16 @@
              2. Beta-functions and features
                 Beta-functions are functions intended for a future release of the Ultraschall-API. If you want to test them, just download the latest Beta-Pack from [ultraschall.fm/api](http://ultraschall.fm/api).  
                 Extract the files in the Beta-pack to UserPlugins of the Resources-folder of your Reaper-installation. Voila, the beta-functions are installed.  
-                 
+                
                 To use them, you need to explicitly turn them on in your script, using the following lines:
-                 
-                 
+                
+                
                          ultraschall.US_BetaFunctions="ON"          -- Only has an effect, if ultraschall-beta-functions exist in Scripts-folder  
                                                                     -- Turn ON, if you want BETA-Api-Functions
-                 
-                 
+                
+                
                 The documentation for beta-versions can be found at [api.ultraschall.fm/Downloads.html](http://api.ultraschall.fm/Downloads.html)
-                 
+                
                 Be aware, they are in beta-stage. They will probably change, disappear or be exchanged with better functions. Beta-functions are only for testing purposes, not for productive coding!
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
@@ -887,8 +924,8 @@
                         slot        - the slot for the snapshot, which must be an integer. The function will overwrite an already existing snapshot. To prevent that,
                                       use ultraschall.IsValidArrangeviewSnapshot() to check, if it's already existing.
                         description - a short description, what the snapshot contains so you know, what to expect from it
-                        position    - set to true to store the startposition and endposition of the arrangeview. Otherwise(false), it will only store the 
-                                      current horizontal zoom-factor
+                        position    - set to true to store the startposition and endposition of the arrangeview. Otherwise(false), 
+                                      it will only store the current horizontal zoom-factor
                         vzoom       - set to true, if you want to store the vertical zoom-factor as well; set to false, if you don't want it to be stored.
                 
             If you want to retrieve the settings of a certain Arrange-View-Snapshot, you can use [RetrieveArrangeviewSnapshot](usdocml://RetrieveArrangeviewSnapshot), which will
@@ -1629,7 +1666,8 @@
            >**[InsertMediaItemFromFile](usdocml://InsertMediaItemFromFile)**
            
                             integer retval, MediaItem item, number endposition, integer numchannels, integer Samplerate, string Filetype
-                               = ultraschall.InsertMediaItemFromFile(string filename, integer track, number position, number endposition, integer editcursorpos, optional number offset)
+                               = ultraschall.InsertMediaItemFromFile(string filename, integer track, number position, number endposition, 
+                                                                     integer editcursorpos, optional number offset)
                                
            >This function allows you to insert a file as a new MediaItem into your project, including the tracknumber, position, endposition(if wanted), the editcursorposition and the offset, if wanted.  
            >Example:
@@ -2494,15 +2532,73 @@
             
             >**[RunBackgroundHelperFeatures](usdocml://RunBackgroundHelperFeatures)**
             
-                                ultraschall.RunBackgroundHelperFeatures()
+                                ultraschall.RunBackgroundHelperFeatures(true)
                                 
             >This starts the background-scripts, that provide additional features.
+            >To stop them again, set the parameter to false.
             
             Without having the background-scripts started, some functions will always produce error-codes.  
             Features that use these background-scripts are:
             
             >**[GetLastCursorPosition](usdocml://GetLastCursorPosition)** - gets the last editcursor-position before the current one. Helpful for left-click-triggered scripts, who change the editcursorposition due the mouseclick  
             >**[GetLastPlayState](usdocml://GetLastPlayState)** - gets the last playstate before the current one. Helpful for monitoring "event-based"-statechanges
+            >**[GetLastLoopState](usdocml://GetLastLoopState)** - gets the last loopstate before the current one. Helpful for monitoring "event-based"-statechanges
+            
+            With this, you can create event-managers, reacting to e.g. playstate-changes.
+            
+            Such a script could look like this:
+            
+                    -- Ultraschall-API demoscript by Meo Mespotine 26.02.2019
+                    -- 
+                    -- a simple event-manager, that employs background-helper-scripts for listening for statechanges and
+                    -- the Defer-functions in Ultraschall-API 4.00 beta 2.72, who allow you to control, how often the deferred code
+                    -- shall be executed (every x seconds/every x defer-cycles).
+
+                    dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+                    -- the following code will stop the Background-listener-scripts when script is exited
+                    function exit()
+                      ultraschall.RunBackgroundHelperFeatures(false)
+                    end
+
+                    reaper.atexit(exit)
+
+
+                    -- start background-listener scripts
+                    ultraschall.RunBackgroundHelperFeatures(true)
+
+                    function main()
+                      -- get the last/current playstates
+                      last_play_state, new_play_state, statechangetime = ultraschall.GetLastPlayState()
+                      
+                      -- if the state has been changed in general since last time calling GetLastPlayState:
+                      if statechangetime~=oldstatechangetime then
+                        -- show the old and new playstate in the console
+                        print("Old Playstate: "..last_play_state.." - New Playstate: "..new_play_state)
+                        
+                        -- if the state has changed from REC or RECPAUSE to STOP then
+                        if (last_play_state=="RECPAUSE" or last_play_state=="REC") and new_play_state=="STOP" then
+                          -- show a messagebox that displays that recording has stopped
+                          print2("Recording or Rec+Pause has stopped!")
+                        end
+                      end  
+                      
+                      -- store the current statechangetime as the old one for comparison in the next defer-cycle
+                      oldstatechangetime=statechangetime
+                      
+                      -- run the function main in mode 2(every x seconds) every 1 second
+                      -- Defer1(functionname, mode(0, normaldefer; 1, every x cycles; 2, every x seconds), 
+                      -- counter(number of seconds or cycles))
+                      ultraschall.Defer1(main,2,1)
+                    end
+
+                    -- run the fun
+                    main()
+                    
+            This script displays into the ReaScript-console the message "Recording or Rec+Pause has stopped!" everytime recording and/or recording+pause changes to STOP
+            It also displays playstate-changes in general, when they happen, into the ReaScript-console.
+            
+            Refer [DeferScripts: Introduction to Ultraschall's Defer-functions](#DeferScripts_001_Introduction) for more information on the Defer1-function used in this demo-script.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
@@ -2866,6 +2962,7 @@
                                     
             >This toggles, whether to display error-messages at the bottom of the ReaScript-IDE-window/Reaper's error-window or if you prefer using Ultraschall-API's own functions for error-handling.  
             >Optionally, you can set it by setting togglevalue to either true(show errormessages at the bottom of the IDE) or false(use the Ultraschall-API error-management-behavior).
+
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
@@ -2874,8 +2971,34 @@
             Error Messaging System
         </chapter_context>
         <previous_chapter>Error_Messaging_System_004_Deleting_Error_Messages</previous_chapter>
-        <next_chapter>Trackstate_Management_001_Introduction</next_chapter>
+        <next_chapter>Error_Messaging_System_006_TogglingIDEErrorMessages</next_chapter>
         <tags>error messaging system, toggle, ide, error message</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Error_Messaging_System_006_Helpers</slug>
+        <title>Error Messaging System: Other helpers for Error-Messaging-system</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            For other use-cases, I'm adding other error-messaging-system-features as well. If you need more, feel free to ask me.  
+            
+            >**[ShowErrorMessagesInReascriptConsole](usdocml://ShowErrorMessagesInReascriptConsole)**
+            
+                                    ultraschall.ShowErrorMessagesInReascriptConsole(boolean state)
+                                    
+            >This toggles, whether error-messages shall be shown in the ReaScript-console, WHEN THEY HAPPEN.  
+            >That way you can immediately see, which functions complained and how often. This is more detailed, than 
+            >[ShowLastErrorMessage()](usdocml://ShowLastErrorMessage), which only shows the last error that has happened.
+
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Error Messaging System
+        </chapter_context>
+        <previous_chapter>Error_Messaging_System_005_TogglingIDEErrorMessages</previous_chapter>
+        <next_chapter>Trackstate_Management_001_Introduction</next_chapter>
+        <tags>error messaging system, helpers, error message</tags>
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -3454,6 +3577,7 @@
             - Podrange-regions - intended to signal, where a podcast starts and where it ends. So if you didn't start the podcast at position 0 in the project and want to save the chapters 
               into your mp3-audiofile, they risk to be offset by the amount of time between projectstart and the actual start of the podcast. So using a PodRangeRegion, the proper start- 
               and endtimes for rendering as well as chaptermarker export can be set by the user.  
+            - custom-markers and custom-regions, where you can define yourself, what to include betweem \_ and :, like "\_foobar: markertext"
             
             These kind of markers get the most attention, though regular marker/region/tempo-time signature marker-management is part of this API as well.  
         </description>
@@ -3601,7 +3725,7 @@
             - [GetMarkerByName_Pattern](usdocml://GetMarkerByName_Pattern) - returns markers by their title but using the title as a pattern
             - [ImportMarkersFromFile](usdocml://ImportMarkersFromFile) - imports markers from an exported file as normal markers
             - [SetMarkerByIndex](usdocml://SetMarkerByIndex) - allows you to set markers and regions on their own, without having to deal with differentiating between them
-
+            - [GetNextFreeRegionIndex](usdocml://GetNextFreeRegionIndex) - gets the next free region-shown-indexnumber
             So, with this, most of your wishes in regards of marker-management should be fulfilled.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
@@ -3611,10 +3735,91 @@
             Marker Management
         </chapter_context>
         <previous_chapter>MarkersAndRegions_002_General_How_To</previous_chapter>
-        <next_chapter>ChildScripts_001_Introduction</next_chapter>
+        <next_chapter>MarkersAndRegions_004_Custom_Markers_and_Regions</next_chapter>
         <tags>markermanagement, manipulate, move, get marker by time, renumerate, get marker by screen coordinate, is marker at position</tags>
     </US_DocBloc>
 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>MarkersAndRegions_004_Custom_Markers_and_Regions</slug>
+        <title>Markers and Regions: Custom-Markers and Custom-Regions</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Even if I already included many markertypes, sometimes this isn't enough. In fact, you might want to have other markertypes beside \_Edit: or \_PodRange:  
+            For that, I added custom-markers and custom-regions.
+            
+            A custom-marker/custom-region is like a normal marker/region, but their name start with a certain signature. You may have seen it from edit-markers already.  
+            
+                        _Edit:
+                
+            Which is basically a custom-marker of the type Edit. Such a signature starts with an underscore \_ and ends with a :
+            Custom-markers and custom-regions work like the same, but you can insert your own custom-marker-name into it.  
+            For example, if you want to have a custom-marker-type called foobar, it would look like:
+            
+                        _foobar:
+                
+            Now, doing that manually is very inconvenient to do, so I made a bunch of functions, who do that for you. All you need to do is to declare the name of 
+            the custom-marker/region and pass that over to the function and it does the rest.
+            
+            Let's take the example above with foobar and use ultraschall-functions for adding such a marker.
+            
+                        retval = ultraschall.AddCustomMarker("foobar", 20, "I am the text of this marker", 1, 0)
+                    
+            This would produce a custom-marker at position 20. And it's markertext would look like:
+            
+                        _foobar: I am the text of this marker
+                    
+            To set this to another text, you could use the following function. As this is our only foobar-custom-marker, we use 0 as it's index:
+            
+                        retval = ultraschall.SetCustomMarker("foobar", 0, 20, "I am the new text, pinky!", 1, 0)
+                    
+            This results in a custom-marker name:
+            
+                        _foobar: I am the new text, pinky!
+                    
+            Now here's the thing: you can add other foobar-markers as well, can set them, enumerate them, count them, just as a regular marker.  
+            The only difference being, that with custom-markers, you tell the functions, which name a certain custom-marker-type shall have, 
+            like foobar in our example.  
+            Now you can work, manipulate, and work with all foobar-custom-markers, without having to deal with other ones.  
+            
+            The only thing you need to take care of: when deleting numerous custom-markers, you should start with the last one toward the first, 
+            as otherwise you will delete markers you wanted to keep.
+            
+            The things I said about custom-markers are also valid for custom-regions. They work like custom-markers, with the custom-marker-name 
+            as starting signature in their name. The only difference from markers: it is regions.
+            
+            The following functions I added to the Ultraschall-API for:
+            
+            **Markers:**  
+            
+              - [AddCustomMarker](usdocml://AddCustomMarker) - adds a custom-marker of a certain name  
+              - [SetCustomMarker](usdocml://SetCustomMarker) - sets a custom-marker of a certain name  
+              - [GetAllCustomMarkers](usdocml://GetAllCustomMarkers) - gets all custom-markers of a certain name, as table  
+              - [EnumerateCustomMarkers](usdocml://EnumerateCustomMarkers) - enumerates a custom-marker of a certain name  
+              - [DeleteCustomMarkers](usdocml://DeleteCustomMarkers) - deletes a custom-marker of a certain name  
+              - [CountAllCustomMarkers](usdocml://CountAllCustomMarkers) - counts all custom-markers of a certain name  
+              - [IsMarkerValidCustomMarker](usdocml://IsMarkerValidCustomMarker) - checks a marker, if it's a valid custom-marker  
+            
+            **Regions:**  
+            
+              - [AddCustomRegion](usdocml://AddCustomRegion) - adds a custom-region of a certain name  
+              - [SetCustomRegion](usdocml://SetCustomRegion) - sets a custom-region of a certain name  
+              - [GetAllCustomRegions](usdocml://GetAllCustomRegions) - gets all custom-regions of a certain name, as table  
+              - [EnumerateCustomRegions](usdocml://EnumerateCustomRegions) - enumerates a custom-region of a certain name  
+              - [DeleteCustomRegions](usdocml://DeleteCustomRegions) - deletes a custom-region of a certain name  
+              - [CountAllCustomRegions](usdocml://CountAllCustomRegions) - counts all custom-regions of a certain name  
+              - [IsRegionValidCustomRegion](usdocml://IsRegionValidCustomRegion) - checks a marker, if it's a valid custom-region  
+              
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Marker Management
+        </chapter_context>
+        <previous_chapter>MarkersAndRegions_003_Helpers_and_Manipulation</previous_chapter>
+        <next_chapter>ChildScripts_001_Introduction</next_chapter>
+        <tags>markermanagement, custom-markers, custom-regions, get, set, enumerate, delete, count, isvalid, check</tags>
+    </US_DocBloc>
+    
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ChildScripts_001_Introduction</slug>
         <title>Child Scripts: Introduction</title>

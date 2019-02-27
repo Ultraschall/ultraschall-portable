@@ -1,10 +1,11 @@
 --reaper.MB("Still Work To Do With This Here!","",0)
+is_new_value, filename_with_path, sectionID, cmdID, mode, resolution, val = reaper.get_action_context()
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 Tempfile=ultraschall.Api_Path.."/temp/temporary"
 ConversionToolMD2HTML="c:\\Program Files (x86)\\Pandoc\\pandoc.exe -f markdown_strict -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
 
-Infilename=ultraschall.Api_Path.."/misc/US_Api-DOC.USDocML"
-Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Concepts_DOC.html"
+Infilename=ultraschall.Api_Path.."/DocsSourcefiles/US_Api-Concepts.USDocML"
+Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Introduction_and_Concepts.html"
 
 retval, scriptfilename=reaper.get_action_context()
 _temp,scriptfilename=ultraschall.GetPath(scriptfilename)
@@ -303,12 +304,260 @@ function ultraschall.ConvertPlainTextToHTML(text)
   return text
 end
 
+
+function ultraschall.Markdown2HTML_Converter_DISABLED(A)
+--unfinished
+-- still missing: Lists, Reference-Links, Images, Images Reference-styles, 
+--                Headers(setext-style, means == below H1 and ---- below a text, which must be taken care of before(!) <hr>,
+--                Blockquotes(I need them!), and Code Spans(with backticks `)
+
+
+  function single_tagreplacer(stringer, pattern, tag1, tag2, skip_precode)
+    local C, precode, pattern_s, splitcount, split_string, line2, line, offset, retval, temp, templin, posarray, lenline, count
+    C=""
+    precode=false
+    pattern_s=true
+    splitcount, split_string = ultraschall.SplitStringAtLineFeedToArray(stringer)
+    for i=1, splitcount do
+      line=split_string[i]
+  --    print2(tostring(precode).." "..line)
+      if skip_precode==true and line:match("<pre><code>")~=nil then
+        precode=true
+        C=C..line
+      elseif skip_precode==true and line:match("</code></pre>")~=nil then
+        precode=false
+        C=C..line.."\n"
+      elseif precode==true then 
+        C=C..line.."\n"
+      else
+        line2=line
+        count, posarray = ultraschall.SearchStringInString(line, pattern)
+        offset=0
+        for i=1, count, 1 do
+          if line:sub(posarray[i]+offset, posarray[i]+offset)~="\\" and 
+             line:sub(posarray[i]-1+offset, posarray[i]-1+offset)~="\\"then
+            if pattern_s==true then temp=tag1 pattern_s=false else temp=tag2 pattern_s=true end
+            templin=line
+            lenline=line:len()
+            line = ultraschall.ReplacePartOfString(line, temp, posarray[i]+offset, string.gsub(pattern,"%%",""):len())
+            offset=offset+line:len()-lenline
+          end
+        end
+        if line==nil then line="" end
+        C=C..line.."\n"
+      end
+    end
+    return C:sub(1,-2)
+  end
+  
+  
+  function tagreplacer(stringer, pattern, tag1, tag2, skip_precode)
+    local C, precode, pattern_s, splitcount, split_string, line2, line, offset, retval, temp, templin, posarray, lenline, count
+    C=""
+    precode=false
+    pattern_s=true
+    splitcount, split_string = ultraschall.SplitStringAtLineFeedToArray(stringer)
+    for i=1, splitcount do
+      line=split_string[i]
+  --    print2(tostring(precode).." "..line)
+      if skip_precode==true and line:match("<pre><code>")~=nil then
+        precode=true
+        C=C..line
+      elseif skip_precode==true and line:match("</code></pre>")~=nil then
+        precode=false
+        C=C..line.."\n"
+      elseif precode==true then 
+        C=C..line.."\n"
+      else
+        line2=line
+        count, posarray = ultraschall.SearchStringInString(line, pattern)
+        offset=0
+        for i=1, count, 1 do
+          if line:sub(posarray[i]+offset, posarray[i]+offset)~="\\" then
+            if pattern_s==true then temp=tag1 pattern_s=false else temp=tag2 pattern_s=true end
+            templin=line
+            lenline=line:len()
+            line = ultraschall.ReplacePartOfString(line, temp, posarray[i]+offset, string.gsub(pattern,"%%",""):len())
+            offset=offset+line:len()-lenline
+          end
+        end
+        if line==nil then line="" end
+        C=C..line.."\n"
+      end
+    end
+    return C:sub(1,-2)
+  end
+  
+  
+  function linereplacer(stringer, pattern, start, endline, skip_precode)
+    local splitcount, split_string = ultraschall.SplitStringAtLineFeedToArray(stringer)  
+    local finalstring=""
+    local skip=false
+  
+  
+    for i=1, splitcount do
+  --    print2(tostring(skip).." - "..split_string[i])
+      if split_string[i]:match("<pre><code>")~=nil and skip_precode == true then 
+        skip=true
+      elseif split_string[i]:match("</code></pre>")~=nil and skip_precode == true then 
+        skip=false
+      end
+      
+      
+      if split_string[i]:match(pattern)~=nil and skip==false then
+        split_string[i]=string.gsub(split_string[i], pattern, start)
+        split_string[i]=split_string[i]..endline
+      end
+      finalstring=finalstring..split_string[i].."\n"
+    end
+    return finalstring:sub(1,-2)
+  end
+  
+  function multilinereplacer(stringer, pattern, start, endline, inside)
+    splitcount, split_string = ultraschall.SplitStringAtLineFeedToArray(stringer)  
+    local finalstring=""
+    local found=false
+    for i=1, splitcount do
+  --    print2(split_string[i])
+      if split_string[i]:match(pattern) and found==false 
+      and split_string[i-1]:match("[%s]*"):len()==split_string[i-1]:len()
+      then
+--        print2(split_string[i-1]:match("[%s]*"):len().." - "..split_string[i-1]:len().." - "..split_string[i])
+         split_string[i]=start..inside..split_string[i]:sub(pattern:len()+1,-1).."\n"
+         found=true
+      elseif split_string[i]:match(pattern) and found==true then
+        --split_string[i]=string.gsub(split_string[i], pattern, "")
+        split_string[i]=split_string[i].."\n"
+      elseif found==true then
+        split_string[i]=endline..split_string[i]
+        found=false
+      else
+        split_string[i]=split_string[i].."\n"
+      end
+      finalstring=finalstring..split_string[i]
+    end
+    if found==true then finalstring=finalstring..endline end
+    return finalstring:sub(1,-2)
+  end
+
+  
+  
+  
+  -- code indentation
+  A=multilinereplacer(A, "^    ", "<pre><code>\n", "\n</code></pre>\n","    ")
+  
+  -- header with #
+  A=linereplacer(A, "^######", "<h6>", "</h6>\n", true)
+  A=linereplacer(A, "^#####", "<h5>", "</h5>\n", true)
+  A=linereplacer(A, "^####", "<h4>", "</h4>\n", true)
+  A=linereplacer(A, "^###", "<h3>", "</h3>\n", true)
+  A=linereplacer(A, "^##", "<h2>", "</h2>\n", true)
+  A=linereplacer(A, "^#", "<h1>", "</h1>\n", true)
+
+
+  -- spaces at the end of a line-to br-converter
+  L=linereplacer(A, "  $", "", "  <br>", true)
+  
+--print2(L)
+  
+  -- horizontal rule
+  splitcount, split_string = ultraschall.SplitStringAtLineFeedToArray(L)
+  L=""
+  for i=1, splitcount do
+  --  print2(split_string[i]:match("[%s*]*"))
+    if split_string[i]:sub(1,4)~="    " and split_string[i]:match("[%s*]*"):len()==split_string[i]:len() and split_string[i]:match("[%s*]*"):len()>0 then
+      L=L.."<hr>".."\n"
+    elseif split_string[i]:sub(1,4)~="    " and split_string[i]:match("[%s-]*"):len()==split_string[i]:len() and split_string[i]:match("[%s-]*"):len()>0 then
+      L=L.."<hr>".."\n"
+    else
+      L=L..split_string[i].."\n"
+    end
+  end
+  
+  
+  -- links
+  while L~=nil do
+    Start, InlineLink, Stop=L:match("()(%[.-%]%(.-%))()")
+    if InlineLink==nil then break end
+    Desc, URL, Title = InlineLink:match("%[(.-)%]%((.-) \"(.-)\"%)")
+    if Title==nil then
+      Desc, URL = InlineLink:match("%[(.-)%]%((.-)%)")
+      Title=""
+    end
+    
+    Desc=tostring(Desc)
+    URL=tostring(URL)
+    Title=tostring(Title)
+    URL=string.gsub(URL, "_", "\\_")
+    Title=string.gsub(Title, "_", "\\_")
+    Desc=string.gsub(Desc, "_", "\\_")
+    
+    L=L:sub(1, Start-1).."<a href=\""..URL.."\" alt=\""..Title.."\">"..Desc.."</a>"..L:sub(Stop,-1)  
+  end
+  
+  -- lists
+  -- unordered and unnested
+  splitcount, split_string = ultraschall.SplitStringAtLineFeedToArray(L)
+  L=""
+  for i=1, splitcount do
+    if split_string[i]:sub(1,2)=="* " then
+      if ul~=true then ulins="<ul>" ul=true end
+      split_string[i]=ulins.."<li>"..split_string[i]:sub(3,-1).."</li>" 
+      ulins=""
+    elseif split_string[i]:sub(1,2)=="- " then 
+      if ul~=true then ulins="<ul>" ul=true end
+      split_string[i]=ulins.."<li>"..split_string[i]:sub(3,-1).."</li>" 
+      ulins=""
+    elseif split_string[i]:match("[%s]*"):len()==split_string[i]:len() and ul==true then
+      ul=false
+      split_string[i]="</ul>"..split_string[i]
+    end
+    L=L..split_string[i].."\n" 
+  end
+  
+  -- ordered and unnested
+  splitcount, split_string = ultraschall.SplitStringAtLineFeedToArray(L)
+  L=""
+  for i=1, splitcount do
+    if split_string[i]:match("%d+%s")~=nil then
+      if ol~=true then olins="<ol>" ol=true end
+      split_string[i]=olins.."<li>"..split_string[i]:sub(3,-1).."</li>" 
+      olins=""
+    elseif split_string[i]:match("[%s]*"):len()==split_string[i]:len() and ol==true then
+      ol=false
+      split_string[i]="</ol>"..split_string[i]
+    end
+    L=L..split_string[i].."\n" 
+  end
+
+  
+  -- bold and italic
+  L=tagreplacer(L, "%*%*", "<b>", "</b>", true)
+  L=tagreplacer(L, "%_%_", "<b>", "</b>", true)
+  L=single_tagreplacer(L, "%*", "<i>", "</i>", true)
+  L=single_tagreplacer(L, "%_", "<i>", "</i>", true)
+  
+  L=string.gsub(L, "\n[%s]*\n", "\n<p>\n")  
+  
+  
+  -- remove escapes
+  L=string.gsub(L, "\\%*", "*")
+  L=string.gsub(L, "\\%_", "_")
+  
+  return L
+end
+
 function ultraschall.ConvertMarkdownToHTML(text, version)
-  text=string.gsub(text, "usdocml://", "US_Api_Functions.html#") -- this line is a hack, just supporting functions-reference!
-  ultraschall.WriteValueToFile(Tempfile..".md", text)
-  L=reaper.ExecProcess(ConversionToolMD2HTML, 0)
-  L3=text
-  L3=ultraschall.ReadFullFile(Tempfile..".html")
+  if ultraschall.Markdown2HTML_Converter~=nil then 
+    return ultraschall.Markdown2HTML_Converter(text)
+  else
+    text=string.gsub(text, "usdocml://", "US_Api_Functions.html#") -- this line is a hack, just supporting functions-reference!
+    ultraschall.WriteValueToFile(Tempfile..".md", text)
+    L=reaper.ExecProcess(ConversionToolMD2HTML, 0)
+    L3=text
+    L3=ultraschall.ReadFullFile(Tempfile..".html")
+    return L3
+  end
 --  L3=string.gsub(L3, "\r", "")
 --  L3=string.gsub(L3, "\n", "<br>\n")
 --  if L3:sub(-4,-1)=="<br>" then L3=L3:sub(1,-5) end
@@ -318,7 +567,6 @@ function ultraschall.ConvertMarkdownToHTML(text, version)
 --  L3=string.gsub(L3, "  ", "&nbsp;&nbsp;")
 --  L3=string.gsub(L3, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
 --  reaper.MB(L3,"",0)
-  return L3
 end
 
   
@@ -475,12 +723,12 @@ Ultraschall API functions
                 </tr>
                 <tr>
                     <td></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Introduction_and_Concepts.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;Introduction/Concepts</a></td>
+                    <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Introduction_and_Concepts.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;Introduction/Concepts</a></td>
                     <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
                     <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GUI.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
                     <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_VID.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
                     <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_AUD.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
-                    <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_DOC.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
+                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_DOC.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
                 </tr>
                 <tr>
                     <td></td>

@@ -39,7 +39,7 @@ ultraschall.temp, ultraschall.Script_Context=reaper.get_action_context()
 
 
 -- Beta-Functions On
-ultraschall.US_BetaFunctions="ON"
+--ultraschall.US_BetaFunctions="ON"
 
 
 
@@ -69,6 +69,15 @@ ultraschall.Api_Path=string.gsub(ultraschall.Api_Path,"\\","/")
 ultraschall.Api_InstallPath=reaper.GetResourcePath().."/UserPlugins/"
 
 ultraschall.Api_ScriptPath=ultraschall.Api_Path.."/Scripts"
+
+local L=reaper.GetExtState("ultraschall_api", "helpinstalled")
+if L~="4.0beta2.7" then 
+  reaper.AddRemoveReaScript(true, 0, ultraschall.Api_ScriptPath.."/ultraschall_Help_Ultraschall_Api_Functions_Reference.lua", false)
+  reaper.AddRemoveReaScript(true, 0, ultraschall.Api_ScriptPath.."/ultraschall_Help_Ultraschall_Api_Introduction_and_Concepts.lua", false)
+  reaper.AddRemoveReaScript(true, 0, ultraschall.Api_ScriptPath.."/ultraschall_Help_Reaper_Api_Documentation.lua", true)
+  reaper.SetExtState("ultraschall_api", "helpinstalled", "4.0beta2.7", true)
+end
+
 
 
 

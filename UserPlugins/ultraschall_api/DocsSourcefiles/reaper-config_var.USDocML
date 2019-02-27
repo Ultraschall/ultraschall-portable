@@ -3,7 +3,7 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 5.965 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 5.97 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -86,7 +86,7 @@
   
          the following variables are available in pre-releases of Reaper only  
          
-           >[ara](#ara), [bouncecfg](#bouncecfg), [defstretchmode](#defstretchmode), [wiring_options](#wiring_options), [uiscale](#uiscale)  
+           >[bouncecfg](#bouncecfg), [defstretchmode](#defstretchmode), [wiring_options](#wiring_options), [uiscale](#uiscale)  
       </description>  
       <chapter_context>  
          An Introduction  
@@ -417,7 +417,6 @@
       <slug>ara</slug>  
       <title>ara</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Only available in pre-releases of Reaper, yet!  
           It is an integer.  
           Enable ARA for VST3 plug-ins that support it(requires restarting REAPER) in section VST compatibility, as set in Preferences -> VST  
           
@@ -523,7 +522,7 @@
           For other settings in Preferences -> Audio, see [audiocloseinactive](#audiocloseinactive), [errnowarn](#errnowarn), [hwfadex](#hwfadex), [optimizesilence](#optimizesilence)  
             
                     
-          Stored in reaper.ini under the same           in the section REAPER.  
+          Stored in reaper.ini under the same in the section REAPER.  
             
       </description>  
       <chapter_context>  
@@ -6641,6 +6640,12 @@
            >&32=0, items when changing swing-dropdownlist(all)  
            >&32=1, items when changing swing-dropdownlist(selected)  
            
+           >&64=0, grid-line-spacing set to Frame  
+           >&64=1, grid-line-spacing set to Measure  
+           
+           >&128=0, grid-snap-spacing set to Frame  
+           >&128=1, grid-snap-spacing set to Measure  
+           
           For other Snap/Grid-settings, see [projgriddivsnap](#projgriddivsnap), [projshowgrid](#projshowgrid), [projgriddiv](#projgriddiv), [loopgranlen](#loopgranlen), [relsnap](#relsnap), [projgridmin](#projgridmin), [projgridswing](#projgridswing), [loopgran](#loopgran),    
                                  [maxsnaptrack](#maxsnaptrack), [snapextraden](#snapextraden), [snapextrad](#snapextrad), [itemsnap](#itemsnap), [projgridsnapmin](#projgridsnapmin)  
             
@@ -11097,7 +11102,7 @@
       <slug>volenvrange</slug>  
       <title>volenvrange</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The scaling for new envelopes, as set in Preferences Envelope display
+          The scaling for new envelopes, as set in Preferences -> Editing Behavior -> Envelope Display.
           It is an integer-bitfield  
           
            >&1 and &4, the Volume envelope range-dropdownlist  
@@ -11738,8 +11743,8 @@
           
           It is an integer  
           
-          >0, video-processor-window is closed  
-          >1, video-processor-window is open
+          - 0, video-processor-window is closed  
+          - 1, video-processor-window is open
             
       </description>  
       <chapter_context>  
@@ -11752,15 +11757,15 @@
       <slug>reaper_video->smp</slug>  
       <title>reaper_video->smp</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-            Only available in prereleases yet  
             Video Processor multiprocessing, as set in the context-menu of the Video-Processor -> Performance tweaks(experimental)  
             This can't be set, only read from reaper.ini -> [reaper_video] !  
-            Holds the last used setting, not the current one!  
             
             It is an integer
 
-            >0, checked  
-            >1, unchecked
+            - 0, Disabled(default)
+            - 1, 2 threads
+            - 2, 3 threads
+            - 3, 4 threads
       </description>  
       <chapter_context>  
          Config Variables  
@@ -11772,14 +11777,16 @@
       <slug>reaper_video->vdprefetch_threads</slug>  
       <title>reaper_video->vdprefetch_threads</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-            Only available in prereleases yet  
             Video decoder pre-fetch-threads, as set in the context-menu of the Video-Processor -> Performance tweaks(experimental) -> Video decoder pre-fetch  
             This can't be set, only read from reaper.ini -> [reaper_video] !  
-            Holds the last used setting, not the current one!  
             
             It is an integer
             
-            >number of threads, with 0 being disabled(default)
+            - 0, Disabled(default)
+            - 1, 2 threads
+            - 2, 3 threads
+            - 3, 4 threads
+            
       </description>  
       <chapter_context>  
          Config Variables  
@@ -11791,18 +11798,19 @@
       <slug>reaper_video->misc_flags</slug>  
       <title>reaper_video->misc_flags</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-            Only available in prereleases yet  
             Misc settings as set in the context-menu of the Video-Processor -> Performance tweaks(experimental)  
             This can't be set, only read from reaper.ini -> [reaper_video] !  
-            Holds the last used setting, not the current one!  
 
             It is an integer-bitfield
 
-            &1=0, show underruns during playback as green frames - checked  
-            &1=1, show underruns during playback as green frames - unchecked  
+            &1=0, show underruns during playback as green frames - unchecked  
+            &1=1, show underruns during playback as green frames - checked  
                 
-            &2=0, Aggressively update video during arrange/edit scrolls - checked  
-            &2=1, Aggressively update video during arrange/edit scrolls - unchecked  
+            &2=0, Aggressively update video during arrange/edit scrolls - unchecked  
+            &2=1, Aggressively update video during arrange/edit scrolls - checked  
+            
+            &4=0, Send MIDI CC control messages [BB xx vv] when mouse dragging in video window - unchecked
+            &4=1, Send MIDI CC control messages [BB xx vv] when mouse dragging in video window - checked
       </description>  
       <chapter_context>  
          Config Variables  
@@ -11814,14 +11822,15 @@
       <slug>reaper_video->playback_cache</slug>  
       <title>reaper_video->playback_cache</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-                Only available in prereleases yet  
                 Rendered frame cache size, as set in the context-menu of the Video-Processor -> Performance tweaks(experimental) -> Rendered-frame cache size  
                 This can't be set, only read from reaper.ini -> [reaper_video] !  
-                Holds the last used setting, not the current one!  
 
                 It is a double
 
-                Given in seconds
+                Given in seconds.
+                
+                The menu holds the values for:
+                0.100, 0.250, 0.500, 1.000(default), 1.500, 2.000
       </description>  
       <chapter_context>  
          Config Variables  
@@ -11834,16 +11843,15 @@
       <slug>reaper_video->fx_mode</slug>  
       <title>reaper_video->fx_mode</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-                Only available in prereleases yet  
                 Monitoring/master FX-settings, as set in the context-menu of the Video-Processor -> Performance tweaks(experimental) -> Monitoring/master FX  
                 This can't be set, only read from reaper.ini -> [reaper_video] !  
-                Holds the last used setting, not the current one!  
                 
                 It is an integer
                     
                 0, Monitoring FX are low latency(default)  
                 1, Monitoring FX and master FX are low latency  
                 2, Monitoring FX and master FX are processed like track FX  
+                3, All media and FX are not cached
       </description>  
       <chapter_context>  
          Config Variables  
@@ -11855,10 +11863,8 @@
       <slug>reaper_video->vdprefetch_srcs</slug>  
       <title>reaper_video->vdprefetch_srcs</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-            Only available in prereleases yet  
             Video-decoder prefetch last x sourced, as set in the context-menu of the Video-Processor -> Performance tweaks(experimental) -> Video decoder pre-fetch  
             This can't be set, only read from reaper.ini -> [reaper_video] !  
-            Holds the last used setting, not the current one!  
                 
             It is an integer
                 

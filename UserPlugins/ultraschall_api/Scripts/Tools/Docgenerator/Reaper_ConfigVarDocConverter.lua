@@ -2,7 +2,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 Tempfile=ultraschall.Api_Path.."/temp/temporary"
 ConversionToolMD2HTML="c:\\Program Files (x86)\\Pandoc\\pandoc.exe -f markdown -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
 
-Infilename=ultraschall.Api_Path.."/misc/reaper-config_var.USDocML"
+Infilename=ultraschall.Api_Path.."/DocsSourcefiles/reaper-config_var.USDocML"
 Outfile=ultraschall.Api_Path.."/Documentation/Reaper_Config_Variables.html"
 
 --Infilename=ultraschall.Api_Path.."/misc/US_Api-Manual.USDocML"
@@ -537,7 +537,7 @@ function header()
 end
 
 function contentindex()
-  FunctionList=FunctionList.."<br><h3>The Configuration-Variables</h3>Configuration-variables hold many settings of Reaper, may it be from Preferences, Dialogs or Menus and Context-Menus.<br>Many of them can be read from and even set.<br>Some of them are integers, some numbers and some are integer-bitfields. In rare instances, it can be a string.<br><br>Read the <a href=\"#Introduction\">Introduction to Config Variables</a> to get an idea how it works and how to work with them.<table style=\"font-size:10pt; width:100%;\" >"
+  FunctionList=FunctionList.."<h2>The Configuration-Variables</h2>Configuration-variables hold many settings of Reaper, may it be from Preferences, Dialogs or Menus and Context-Menus.<br>Many of them can be read from and even set.<br>Some of them are integers, some numbers and some are integer-bitfields. In rare instances, it can be a string.<br><br>Read the <a href=\"#Introduction\">Introduction to Config Variables</a> to get an idea how it works and how to work with them.<table style=\"font-size:10pt; width:100%;\" >"
   reaper.ClearConsole()
   reaper.ShowConsoleMsg("Create Index\n")
   HeaderList={}

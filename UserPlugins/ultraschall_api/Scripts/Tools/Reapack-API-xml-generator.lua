@@ -1,27 +1,36 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 ultraschall.ShowErrorMessagesInReascriptConsole(true)
 
+--!!TODO
+-- script has issues with urls, that contain spaces and other characters in them, that aren't url-suitable.
+
+
+-- set this to the folder, that you want to create a reapack of
+SourceDir="c:/Ultraschall-Hackversion_3.2_alpha_Februar2019/UserPlugins/"
+
+
 -- set this to the online-repo of the Ultraschall-API
-Url="http://localhost/US_Api_test/"
+--Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API4.00-beta2.71/"
+Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/master/"
 
 -- set this to the repository-folder of the api on your system
-Target_Dir="c:\\Xampp\\htdocs\\US_Api_test\\"
+Target_Dir="c:\\Ultraschall-Api-Git-Repo\\Ultraschall-Api-for-Reaper\\"
 
 
 
-found_dirs, dirs_array, found_files, files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(reaper.GetResourcePath().."/UserPlugins/ultraschall_api")
+found_dirs, dirs_array, found_files, files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(SourceDir.."/ultraschall_api")
 
 
 --found_files=found_files+2
 --files_array[found_files-1]=ultraschall.Api_InstallPath.."/ultraschall_api.lua"
 --files_array[found_files]=ultraschall.Api_InstallPath.."/ultraschall_api_readme.txt"
 
-L=ultraschall.MakeCopyOfFile_Binary(ultraschall.Api_InstallPath.."/ultraschall_api.lua", Target_Dir.."/ultraschall_api.lua")
-L=ultraschall.MakeCopyOfFile_Binary(ultraschall.Api_InstallPath.."/ultraschall_api_readme.txt", Target_Dir.."/ultraschall_api_readme.txt")
+L=ultraschall.MakeCopyOfFile_Binary(SourceDir.."/ultraschall_api.lua", Target_Dir.."/ultraschall_api.lua")
+L=ultraschall.MakeCopyOfFile_Binary(SourceDir.."/ultraschall_api_readme.txt", Target_Dir.."/ultraschall_api_readme.txt")
 
 C,C1,C2,C3,C4,C5,C6,C7=ultraschall.GetApiVersion()
 --Version=(tonumber(C)*100)+(tonumber(C2:match(" (.*)"))/10).."04"
-retval, Version = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+retval, Version = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", SourceDir.."/ultraschall_api/IniFiles/ultraschall_api.ini")
 --Version=Version+1
 D=os.date()
 Date=string.gsub(D:match("(.-) "),"%.","-").."T"..D:match(" (.*)").."Z"
@@ -29,7 +38,7 @@ Hotfix="00"
 
 Markdown2RTF="c:\\Program Files (x86)\\Pandoc\\pandoc -f markdown -w plain -s -o c:\\temp\\tempfile.rtf c:\\temp\\tempfile"
 
-ChangeLog=ultraschall.ReadFullFile(ultraschall.Api_Path.."/Changelog-Api.txt")
+ChangeLog=ultraschall.ReadFullFile(SourceDir.."/ultraschall_api/Changelog-Api.txt")
 ChangeLog=string.gsub(ChangeLog, "<TODO>.-</TODO>", "")
 --reaper.CF_SetClipboard(ChangeLog)
 ultraschall.WriteValueToFile("c:\\temp\\tempfile", ChangeLog)
@@ -299,6 +308,12 @@ This API was to be used within Ultraschall only, but quickly evolved into a huge
 - Clipboard-Management - get items from clipboard, put them to clipboard, even multiple ones}
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
     }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
+- Child-scripts - start scripts numerous times and be able to pass parameters and returnvalues back and forth; adds uniqe scriptidentifier to do that}
+\par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
+    }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
+- Defer-function-alternative - run defer-cycles only every nth cycle/seconds and be able to stop a defer loop from inside and outside of a script instance}
+\par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
+    }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
 - Error Messaging System - all functions create useful error-messages that can be shown using, eg: ShowLastErrorMessage, for easier debugging}
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
     }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
@@ -330,24 +345,20 @@ PS: In this documentation, I assume you have some basic knowledge in Lua and in 
   </metadata>
 </index>]]
 
---for i=1, found_dirs do
-  
---end
 
--- needs to be run twice, or not all files will be copied. Why that is? Dunno yet.
--- Maybe bug in US-API, maybe in Reaper or Lua
--- Or my system is too slow...
-for j=1, 2 do --A0="c:\\windows\\system32\\cmd.exe /Q /C md "..reaper.GetResourcePath().."\\UserPlugins\\ultraschall_api "..Target_Dir.." /T"
-  A0="c:\\windows\\system32\\cmd.exe /Q /C xcopy "..reaper.GetResourcePath().."\\UserPlugins\\ultraschall_api "..Target_Dir.."\\ultraschall_api\\ /T /E /Y"
-  A,A1,A2,A3=reaper.ExecProcess(A0, -1)
-  
-  for i=1, found_files do
-    tempfile=files_array[i]:match("(ultraschall_api/.*)")
-  --  if tempfile==nil then tempfile=files_array[i]:match("UserPlugins(/.*)") end
-    L=ultraschall.MakeCopyOfFile_Binary(files_array[i], Target_Dir..tempfile)
-  end
+SourceDir=string.gsub(SourceDir, "/", ultraschall.Separator)
+A0="c:\\windows\\system32\\cmd.exe /Q /C xcopy "..SourceDir.."\\ultraschall_api "..Target_Dir.."\\ultraschall_api\\ /T /E /Y"
 
+reaper.CF_SetClipboard(A0)
+A,A1,A2,A3=reaper.ExecProcess(A0, 0)
+  
+for i=1, found_files do
+  tempfile=files_array[i]:match("(ultraschall_api/.*)")
+--  if tempfile==nil then tempfile=files_array[i]:match("UserPlugins(/.*)") end
+  L=ultraschall.MakeCopyOfFile_Binary(files_array[i], Target_Dir..tempfile)
 end
+
+
 --reaper.CF_SetClipboard(A0)
 
 
@@ -364,6 +375,10 @@ end
 --print2(XML_file:sub(1,2000))
 --print(XML_end)
 
-B=ultraschall.WriteValueToFile(Target_Dir.."/ultraschall_api_index.xml", XML_start..XML_file..XML_end)
+B=ultraschall.WriteValueToFile(Target_Dir.."/ultraschall_api_index-beta_rename_when_installing_it_works.xml", XML_start..XML_file..XML_end)
 
 
+ultraschall.ShowLastErrorMessage()
+
+os.execute("c:\\Ultraschall-Hackversion_3.2_alpha_Februar2019\\UserPlugins\\ultraschall_api\\Scripts\\Tools\\batter.bat")
+reaper.MB("Done", "", 0)

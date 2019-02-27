@@ -1,23 +1,23 @@
---reaper.MB("Still Work To Do With This Here!","",0)
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 Tempfile=ultraschall.Api_Path.."/temp/temporary"
-ConversionToolMD2HTML="c:\\Program Files (x86)\\Pandoc\\pandoc.exe -f markdown_strict -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
+ConversionToolMD2HTML="c:\\Program Files (x86)\\Pandoc\\pandoc.exe -f markdown_strict -t html \""..ultraschall.Api_Path.."/temp/temporary.md\" -o \""..ultraschall.Api_Path.."/temp/temporary.html\""
 
-Infilename=ultraschall.Api_Path.."/misc/US_Api-AUD.USDocML"
-Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Concepts_AUD.html"
+Infilename=ultraschall.Api_Path.."/DocsSourcefiles/reaper-apidocs.USDocML"
+--Infilename="c:\\test.usdocml"
+Outfile=ultraschall.Api_Path.."/Documentation/Reaper_Api_Documentation.html"
 
---Infilename=ultraschall.Api_Path.."/misc/US_Api-Manual.USDocML"
---Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Documentation2.html"
+  local retval, string3 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Docs-ReaperApi", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+  string2=tonumber(string2)
+  string2=string2+1
+  string3=tonumber(string3)
+  string3=string3+1
+  
 
-retval, scriptfilename=reaper.get_action_context()
-_temp,scriptfilename=ultraschall.GetPath(scriptfilename)
+  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Docs-ReaperApi", string3, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")    
+  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
 
 local FunctionList2=""
-
-temp, build=reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."/IniFiles/ultraschall_api.ini")
-version,date,beta,D,Tagline,F,G=ultraschall.GetApiVersion()
-
---if LLLLLL2==nil then return end
 
 function ultraschall.SplitUSDocBlocs(String)
   local Table={}
@@ -33,7 +33,9 @@ function ultraschall.SplitUSDocBlocs(String)
     Table[Counter][5]=Table[Counter][2]:match("<US_DocBloc.-prog_lang=\"(.-)\".->") -- prog-language
     
     String=String:sub(Offset,-1)
+    -- if Counter==300 then break end -- DebugCode
   end
+
   return Counter, Table
 end
 
@@ -43,14 +45,19 @@ function ultraschall.ParseSlug(String)
 end
 
 
+
 function ultraschall.ParseTitle(String)
   return String:match("<title>\n*%s*\t*(.-)\n*%s*\t*</title>")
 end
+
+
+--if KLOSS==nil then return end
 
 function ultraschall.ParseFunctionCall(String)
   local FoundFuncArray={}
   local count, positions = ultraschall.CountPatternInString(String, "<functioncall", true) 
   local temp, func, prog_lang
+  i=1
   for i=1, count do
     temp=String:sub(positions[i], String:match("</functioncall>\n()", positions[i]))
     func=temp:match("<functioncall.->\n*(.-)\n*</functioncall>")
@@ -106,19 +113,17 @@ function ultraschall.ParseDescription(String)
       if line:len()==0 then line="\n" end
       description=description:sub(offset,-1)
       newdesc=newdesc..line
---      reaper.CF_SetClipboard(newdesc)
     end
   elseif indent=="minus_starts_line" then
     -- remove all spaces and tabs, until the first -
 -- Still missing: what if a line has no - at the beginning? (Leave it that way, probably.)
     newdesc=string.gsub(description, "\n%s*%t*-", "\n")
   end
---  reaper.ShowConsoleMsg(newdesc)
   return newdesc, markup_type, markup_version, lang, prog_lang
 end
 
 function ultraschall.ParseRequires(String)
-  return String:match("Reaper=(.-)\n"), String:match("SWS=(.-)\n"), String:match("Lua=(.-)\n")
+  return String:match("Reaper=(.-)\n"), String:match("SWS=(.-)\n"), String:match("Lua=(.-)\n"), String:match("JS=(.-)\n")
 end
 
 function ultraschall.ParseChapterContext(String)
@@ -189,16 +194,16 @@ end
 
 function ultraschall.ParseRetvals(String)
 --reaper.MB(String,"",0)
-  MarkupType=String:match("markup_type=\"(.-)\"")
-  MarkupVers=String:match("markup_version=\"(.-)\"")
-  ASLUG=String:match("slug>\n*(.-)\n*</slug")
+  local MarkupType=String:match("markup_type=\"(.-)\"")
+  local MarkupVers=String:match("markup_version=\"(.-)\"")
+  local ASLUG=String:match("slug>\n*(.-)\n*</slug")
   String=String:match("<retvals.->\n*(.*)\n*</retvals>")
-  Retvals={}
-  counter=0
-  Count, Splitarray = ultraschall.CSV2IndividualLinesAsArray(String, "\n")
+  local Retvals={}
+  local counter=0
+  local Count, Splitarray = ultraschall.CSV2IndividualLinesAsArray(String, "\n")
   if Count==-1 then return -1 end
   for i=1, Count do
-    tempretv, tempdesc=Splitarray[i]:match("(.-)%s-%-(.*)")
+    local tempretv, tempdesc=Splitarray[i]:match("(.-)%s-%-(.*)")
 --    reaper.MB(Splitarray[i],"",0)
     if tempretv==nil then break end -- Hack, make it better plz
     if tempretv:match("%a")~=nil then 
@@ -207,12 +212,9 @@ function ultraschall.ParseRetvals(String)
       Retvals[counter][1]=tempretv:match("^%t*%s*(.*)")
       Retvals[counter][2]=tempdesc
     else
-      if Retvals[counter]==nil then Retvals[counter]={} Retvals[counter][2]="" end
       Retvals[counter][2]=Retvals[counter][2].."\n"..tempdesc
     end
   end
-  if MarkupType==nil then MarkupType="plain_text" end
-  if MarkupVers==nil then MarkupVers="-" end
   return counter, Retvals, MarkupType, MarkupVers
 end
 
@@ -289,7 +291,7 @@ function ultraschall.GetAllChapterContexts(Table)
 
     counter=counter+1
   end
---  table.sort(ChapterTable)
+  table.sort(ChapterTable)
   
   return count, ChapterTable
 end
@@ -303,20 +305,18 @@ function ultraschall.ConvertPlainTextToHTML(text)
 end
 
 function ultraschall.ConvertMarkdownToHTML(text, version)
-  text=string.gsub(text, "usdocml://", "US_Api_Functions.html#") -- this line is a hack, just supporting functions-reference!
-  ultraschall.WriteValueToFile(Tempfile..".md", text)
+--  if l==nil then return text end
+  text=string.gsub(text, "\r", "")
+  text=string.gsub(text, "\n", "<br>\n")
+  if text:sub(-4,-1)=="<br>" then text=text:sub(1,-5) end
+  LLLL=ultraschall.WriteValueToFile(Tempfile..".md", text)
   L=reaper.ExecProcess(ConversionToolMD2HTML, 0)
   L3=text
-  L3=ultraschall.ReadFullFile(Tempfile..".html")
---  L3=string.gsub(L3, "\r", "")
---  L3=string.gsub(L3, "\n", "<br>\n")
---  if L3:sub(-4,-1)=="<br>" then L3=L3:sub(1,-5) end
-
---  L3=string.gsub(L3,"<p>","")
---  L3=string.gsub(L3,"</p>","")
---  L3=string.gsub(L3, "  ", "&nbsp;&nbsp;")
---  L3=string.gsub(L3, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
---  reaper.MB(L3,"",0)
+  local L2=ultraschall.ReadFullFile(Tempfile..".html")
+  L3=string.gsub(L2,"<p>","")
+  L3=string.gsub(L3,"</p>","")
+  L3=string.gsub(L3, "  ", "&nbsp;&nbsp;")
+  L3=string.gsub(L3, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
   return L3
 end
 
@@ -331,7 +331,6 @@ function ultraschall.ColorateDatatypes(String)
   String=string.gsub(String, " bool ", " <i style=\"color:#0000ff;\">bool</i> ")
   String=string.gsub(String, " bool%* ", " <i style=\"color:#0000ff;\">bool*</i> ")
 --reaper.MB("LULA:"..String,"",0)
-  String=string.gsub(String, " %.%.%. ", " <i style=\"color:#0000ff;\">...</i> ")
   String=string.gsub(String, " void ", " <i style=\"color:#0000ff;\">void</i> ")
   String=string.gsub(String, " void%* ", " <i style=\"color:#0000ff;\">void*</i> ")
   String=string.gsub(String, " integer ", " <i style=\"color:#0000ff;\">integer</i> ")
@@ -399,22 +398,15 @@ function ultraschall.ColorateDatatypes(String)
   String=string.gsub(String, " ReaperArray ", " <i style=\"color:#0000ff;\">ReaperArray</i> ")  
   String=string.gsub(String, " optional ", " <i style=\"color:#0000ff;\">optional</i> ")  
   
---  String=string.gsub(String, " trackstring ", " <i style=\"color:#0000ff;\">trackstring</i> ")  
-  String=string.gsub(String, " MediaItemArray ", " <i style=\"color:#0000ff;\">MediaItemArray</i> ")  
-  String=string.gsub(String, " MediaItemStateChunkArray ", " <i style=\"color:#0000ff;\">MediaItemStateChunkArray</i> ")  
-  String=string.gsub(String, " table ", " <i style=\"color:#0000ff;\">table</i> ")  
-  String=string.gsub(String, " array ", " <i style=\"color:#0000ff;\">array</i> ")  
-  String=string.gsub(String, " identifier ", " <i style=\"color:#0000ff;\">identifier</i> ")  
-  String=string.gsub(String, " EnvelopePointArray ", " <i style=\"color:#0000ff;\">EnvelopePointArray</i> ")  
-  
   String=string.gsub(String, "%( ", "(")
   String=string.gsub(String, "%[ ", "[")
   return String:sub(2,-2)
 end
 
-local String=ultraschall.ReadFullFile(Infilename, false)
+String=ultraschall.ReadFullFile(Infilename, false)
+ultraschall.ShowLastErrorMessage()
+Ccount, C=ultraschall.SplitUSDocBlocs(String)
 
-local Ccount, C=ultraschall.SplitUSDocBlocs(String)
 --A,B=ultraschall.GetAllChapterContexts(C)
 --A=ultraschall.BubbleSortDocBlocTable_Slug(C)
 --A=ultraschall.ConvertSplitDocBlocTableIndex_Slug(C)
@@ -440,16 +432,51 @@ local Ccount, C=ultraschall.SplitUSDocBlocs(String)
   b=0
 FunctionList=[[
 <html><head><title>
-Ultraschall API functions
+REAPER API functions
 </title>
-
+<script type="text/javascript">
+function set_class_style(c,s) { 
+  var list = document.getElementsByClassName(c);
+  for (i=0;i<list.length;i++) {
+    list[i].style.display = s; 
+  }
+}
+function set_class_innerHTML(c,s) { 
+  var list = document.getElementsByClassName(c);
+  for (i=0;i<list.length;i++) {
+    list[i].innerHTML = s; 
+  }
+}
+function setdocview(v) {
+  var list = new Array('c_doc', 'c_func', 'c_funcs',
+                       'l_doc', 'l_func', 'l_funcs',
+                       'e_doc', 'e_func', 'e_funcs',
+                       'p_doc', 'p_func', 'p_funcs');
+  var i;
+  set_class_style('all_view', v == '' ? 'inline' : 'none');
+  for (i=0;i<list.length;i++) {
+    set_class_style(list[i], (v == '' || list[i].slice(0,1) == v) ? 'block' : 'none'); 
+  }
+  set_class_innerHTML('aclick', v=='' ? 'all' : "<a href=\"#\" onClick=\"setdocview('')\">all</a>");
+  set_class_innerHTML('cclick', v=='c' ? 'C/C++' : "<a href=\"#c\" onClick=\"setdocview('c')\">C/C++</a>");
+  set_class_innerHTML('eclick', v=='e' ? 'EEL' : "<a href=\"#e\" onClick=\"setdocview('e')\">EEL</a>");
+  set_class_innerHTML('lclick', v=='l' ? 'Lua' : "<a href=\"#l\" onClick=\"setdocview('l')\">Lua</a>");
+  set_class_innerHTML('pclick', v=='p' ? 'Python' : "<a href=\"#p\" onClick=\"setdocview('p')\">Python</a>");
+}
+function onLoad() {
+  if (window.location.hash == '#c') setdocview('c');
+  else if (window.location.hash == '#e') setdocview('e');
+  else if (window.location.hash == '#l') setdocview('l');
+  else if (window.location.hash == '#p') setdocview('p');
+}
+</script>
 </head><body>
     <div style=" position: absolute; padding-left:4%; ">
         <div style="background-color:#282828;width:95%; font-family:tahoma; font-size:16;">
 
 
-           <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
-           <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
+           <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_Un.png" alt="Ultraschall Internals Documentation"></a>  
+           <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button.png" alt="Reaper Internals Documentation"></a>
          <img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
          <img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
          <img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
@@ -461,43 +488,35 @@ Ultraschall API functions
            <div style="padding-top:2.5%">
            <table border="0" style="color:#aaaaaa; width:100%;">
                 <tr>
-                    <td style="width:10%;">
-                        <a href="http://www.ultraschall.fm"><img style="width:120%;" src="gfx/US-header.png" alt="Ultraschall-logo"></a>
+                    <td style="width:27.2%;">
+                      <a href="http://www.reaper.fm"><img style="width:118%;" src="gfx/Reaper_Internals.png" alt="Reaper internals logo"></a>
                     </td>
-                    <td width="1%;"><u>Functions Engine</u></td>
-                    <td width="1%;"><u>GFX Engine</u></td>
-                    <td width="1%;"><u>GUI Engine</u></td>
-                    <td width="1%;"><u>Video Engine</u></td>
-                    <td width="1%;"><u>Audio Engine</u></td>
-                    <td width="1%;"><u>Doc Engine</u></td>
-                    <td width="1%;">&nbsp;<u></u></td>
+                    <td style="width:14%;"><u>Documentation</u></td>
+                    <td style="width:12.7%;"><u> </u></td>
+                    <td style="width:12.7%;"><u> </u></td>
+                    <td style="width:12%;"><u> </u></td>
+                    <td style="width:12%;"><u> </u></td>
+                    <td style="width:12%;"><u> </u></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Introduction_and_Concepts.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;Introduction/Concepts</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GUI.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_VID.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
-                    <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_AUD.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_DOC.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
+                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper-Filetype-Descriptions.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Filetype Descriptions&nbsp;</a></td>
+                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Config_Variables.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Config Variables&nbsp;</a></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Functions.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_GUI.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_VID.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_AUD.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_DOC.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
+                    <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Api_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;ReaScript-Api-Docs&nbsp;</a></td>
+                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_API_Video_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;Video-Api-Docs&nbsp;</a></td>
+                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_API_Web_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;WebRC-Api-Docs&nbsp;</a></td>
                 </tr>
                 <tr><td></td><tr>
-                </table>
+           </table> 
            </div>
         </div>
     </div>
-    <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
+    <div style="position:absolute; top:17%; padding-left:5%; width:90%;"><p></p>
 ]]
-
+FunctionList=FunctionList.."<hr><table width=\"100%\"><td>View: [<span class='aclick'>all</span>] [<span class='cclick'><a href=\"#c\" onClick=\"setdocview('c')\">C/C++</a></span>] [<span class='eclick'><a href=\"#e\" onClick=\"setdocview('e')\">EEL</a></span>] [<span class='lclick'><a href=\"#l\" onClick=\"setdocview('l')\">Lua</a></span>] [<span class='pclick'><a href=\"#p\" onClick=\"setdocview('p')\">Python</a></span>]</td><td>&#160;</td><td style=\"padding-left:20.5%;\">Automatically generated by Ultraschall-API 4.00 beta 2.7 - "..Ccount.." functions available (Reaper, SWS and JS)</td></table><hr>"
 
 function header()
 -- 
@@ -505,116 +524,157 @@ function header()
 --<a href="Downloads.html"><img style="position:absolute; left:72.5%; width:6.9%;" src="gfx/header/Downloads.png" alt="Downloads"></a><a href="Changelog.html"><img style="position:absolute; left:79.5%; width:6.9%;" src="gfx/header/changelog.png" alt="Changelog of documentation"></a><a href="Impressum.html"><img style="position:absolute; left:86.5%; width:6.9%;" src="gfx/header/impressum.png" alt="Impressum and Contact"></a>
   FunctionList=FunctionList..[[<div style="background-color:#282828;">
 <img alt="" width="100%" height="32" src="gfx/header/linedance.png">
-<a href="Reaper_Introduction.html"><img style="position:absolute; top:0%; right:10%;" width="10%" src="gfx/header/US.png" alt="Ultraschall-API Documentation"></a>
+<a href="Reaper_Introduction.html"><img style="position:absolute; top:0%;" width="10%" src="gfx/header/Reaper_Button.png" alt="Reaper Internals Documentation"></a>
 
+<p>Tudelu</p>
+<p>Tudelu</p>
+<p>Tudelu</p>
 
         </div><p> ]]
 end
 
 function contentindex()
-  -- let's prepare all data-structures
+  FunctionList=FunctionList.."<h2><img src=\"gfx/reaper.png\"><br>Reaper Reascript-Api-Documentation 5.97 - \"Up and away, got a big day, sorry can't stay\"</h2><h3>The Functions Reference</h3><table style=\"font-size:10pt;\" width=\"100%\">"
   reaper.ClearConsole()
-  reaper.ShowConsoleMsg(scriptfilename.. ": Create Index\n")
+  reaper.ShowConsoleMsg("Create Index\n")
   HeaderList={}
-  local A,B=ultraschall.GetAllChapterContexts(C)
-  local count=1
-  while B[count]~=nil do
-    HeaderList[B[count]]={}
-    count=count+1
-  end
   count=1
-  local count2=1
+  count2=0
+  
+  -- get the chapter-contexts
+  -- every entry in HeaderList is "chaptercontext1, chaptercontext2,"
   while C[count]~=nil do
-    -- associate slugs to chapters
-    A1,B1,B2=ultraschall.ParseChapterContext(C[count][2])
-    while HeaderList[B2][count2]~=nil do      
-      count2=count2+1
-    end    
-    Title=ultraschall.ParseTitle(C[count][2])
-    if Title==nil then Title=C[count][1] end
-    HeaderList[B2][count2]=C[count][1].."\n"..Title
-    count2=1
-    count=count+1    
-  end
-  count=1
-  while B[count]~=nil do
-    -- sort slugs within chapters
-    table.sort(HeaderList[B[count]])
-    HeaderList[B[count]][0]=""
+    A, AA, AAA = ultraschall.ParseChapterContext(C[count][2])
+    
+      temp=AAA.."\n"
+      for i=1, count2 do
+        if HeaderList[i]==temp then found=true end
+      end
+      if found~=true then
+        count2=count2+1
+        HeaderList[count2]=temp
+      end
+      found=false
+    
     count=count+1
   end
   
-  -- now we create the actual index
+  table.sort(HeaderList)
+  
+  -- add to the chapter-contexts the accompanying slugs, using newlines
+  -- "chaptercontext1, chaptercontext2,\nslug1\nslug2\nslug3\n" etc
   count=1
-  FunctionList=FunctionList.."<br><br><img src=\"gfx/us.png\"><div style=\"padding-left:0%;\"><br>"..beta.." - "..Tagline.." - "..date.." - Build: "..build.."</div><h3>Introduction and Concepts</h3><table style=\"font-size:10pt; width:100%;\" >"
-  while B[count]~=nil do
-    count2=1
-    local tud=1
-    HeaderList[B[count]][0]="<tr><td>&nbsp;</td></tr><tr><td><b>"..B[count]:sub(1,-3).."</b></td></tr><tr>"
-    while HeaderList[B[count]][count2]~=nil do      
-      IDX=HeaderList[B[count][count2]]
-    
-      HeaderList[B[count]][0]=HeaderList[B[count]][0].."<td><a href=\"#"..HeaderList[B[count]][count2]:match("(.-)\n").."\">"..HeaderList[B[count]][count2]:match("\n(.*)").."</a></td>\n"
-      if tud==4 and B[count]~="API-Documentation" then HeaderList[B[count]][0]=HeaderList[B[count]][0].."</tr><tr>" tud=0 end
-      if B[count]=="API-Documentation" then HeaderList[B[count]][0]=HeaderList[B[count]][0].."</tr><tr>" end
-      tud=tud+1
-      count2=count2+1
-    end
-    HeaderList[B[count]][0]=HeaderList[B[count]][0].."</tr><p>"
-    FunctionList=FunctionList..HeaderList[B[count]][0]
---    reaper.ShowConsoleMsg(B[count]..": \n"..HeaderList[B[count]][0].."\n\n")
---    reaper.ShowConsoleMsg(IndexString.."\n")
---    reaper.MB("","",0)
+  while C[count]~=nil do    
+    A1, AA1, AAA1 = ultraschall.ParseChapterContext(C[count][2])
+    Slug=C[count][1]
+    temp=AAA1.."\n"
+       
+    for i=1, count2 do
+      if HeaderList[i]:match("(.-\n)")==temp then 
+  
+            HeaderList[i]=HeaderList[i]..Slug.."\n"
+            break 
+      end
+    end    
     count=count+1
   end
-  FunctionList=FunctionList.."</table>"
-  entries()
+  
+  table.sort(HeaderList)
+  
+  -- now we sort the slugs
+  for i=1, count2 do
+    chapter=HeaderList[i]:match("(.-\n)")
+    slugs=HeaderList[i]:match("\n(.*)\n")
+    A2, AA2, AAA2 = ultraschall.SplitStringAtLineFeedToArray(slugs)
+    table.sort(AA2)
+    slugs=""
+    for i=1, A2 do
+      slugs=slugs..AA2[i].."\n"
+    end
+    HeaderList[i]=chapter..slugs
+  end
+  
+--  FunctionList=""
+  
+  -- now we create the index
+  for i=1, count2 do
+    Top=HeaderList[i]:match("(.-),")
+    Second=HeaderList[i]:match(".-,(.-),")
+    Third=HeaderList[i]:match(".-,.-,(.-),")
+    Counts, Slugs=ultraschall.SplitStringAtLineFeedToArray(HeaderList[i]:match(".-\n(.*)\n"))
+    slugs=""    
+    if Top==nil then Top="" else Top="<br><strong><u>"..Top.."</u></strong><br><br>\n" end
+    if i>1 and Top:match("u%>(.-)%</u")==HeaderList[i-1]:match("(.-),") then Top="" end
+    if Second==nil then Second="" else Second="<b style=\"font-size:small;\">"..Second.."</b>\n" end
+    if i>1 and Second:match("%>(.-)%<")==HeaderList[i-1]:match("(.-),") then Second="" end
+    if Third==nil then Third="" else Third=Third.."\n" end
+    if i>1 and Third:match("%>(.-)%<")==HeaderList[i-1]:match("(.-),") then Third="" end
+    
+    linebreaker=1
+    for a=1, Counts do
+      if linebreaker==1 then slugs=slugs.."<tr>" end
+      if linebreaker==5 then slugs=slugs.."</tr>" linebreaker=1 end
+      slugs=slugs.."<td style=\"width:25%; font-size:small;\"><a href=\"#"..Slugs[a].."\">"..Slugs[a].."</a></td>"
+      linebreaker=linebreaker+1
+    end
+    if linebreaker==1 then slugs=slugs.."<td style=\"width:25%;\">&nbsp;</td>" linebreaker=linebreaker+1 end
+    if linebreaker==2 then slugs=slugs.."<td style=\"width:25%;\">&nbsp;</td>" linebreaker=linebreaker+1 end
+    if linebreaker==3 then slugs=slugs.."<td style=\"width:25%;\">&nbsp;</td>" linebreaker=linebreaker+1 end
+    if linebreaker==4 then slugs=slugs.."<td style=\"width:25%;\">&nbsp;</td>" linebreaker=linebreaker+1 end
+    slugs=slugs.."</tr>"
+    
+    FunctionList=FunctionList.."<table style=\"width:100%;\" border=\"0\"><tr><td>"..Top..Second..Third.."</td></tr>"..slugs.."</table>"
+
+  end
+
+    FunctionList=FunctionList.."<br>"
+    entries()
+--    writefile()
 end
 
 function entries()
-for lolo=1, 1 do
+
+for inf=0, 0 do
 -- Slug as HTML-Anchor
+
   FunctionList=FunctionList.."<hr><a id=\""..C[index][1].."\"></a>"
   FunctionList=FunctionList.."\n"
 
 -- Requirement-images + Functionname
-  A,A2,A3=ultraschall.ParseRequires(C[index][2])
---  FunctionList=FunctionList..
-  if A~=nil then FunctionList=FunctionList.."<img width=\"3%\" src=\"gfx/reaper"..A..".png\" alt=\"Reaper version "..A.."\">" end
-  if A2~=nil then FunctionList=FunctionList.."<img width=\"3%\" src=\"gfx/sws"..A2..".png\" alt=\"SWS version "..A2.."\">" end
-  if A3~=nil then FunctionList=FunctionList.."<img width=\"3%\" src=\"gfx/lua"..A3..".png\" alt=\"Lua version "..A3.."\">" end
-  if A~=nil or A2~=nil or A3~=nil then 
-    Title=ultraschall.ParseTitle(C[index][2])
-    if Title==nil then Title=C[index][1] end
-    FunctionList=FunctionList.." <a href=\"#"..C[index][1].."\"><b>"..Title.."</b></a>"--" <b>"..C[index][1].."</b>"--.." - "..C[index][2]:match("<tags>(.-)</tags>") 
-  end
---  FunctionList=FunctionList
 
--- Functioncalls
-  A,B=ultraschall.ParseTitle(C[index][2])
+  A,A2,A3,A4=ultraschall.ParseRequires(C[index][2])
   
---  reaper.MB(tostring(C[index][2]),tostring(B[1][1]),0)
---[[
+  Temp=nil
+  if A~=nil then Temp="<img width=\"3%\" src=\"gfx/reaper"..A..".png\" alt=\"Reaper version "..A.."\">" end
+  if A2~=nil then Temp=Temp.."<img width=\"3%\" src=\"gfx/sws"..A2..".png\" alt=\"SWS version "..A2.."\">" end
+  if A4~=nil then Temp=Temp.."<img width=\"3%\" src=\"gfx/JS_"..A4..".png\" alt=\"Julian Sader's plugin version "..A4.."\">" end
+  if A3~=nil then Temp=Temp.."<img width=\"3%\" src=\"gfx/lua"..A3..".png\" alt=\"Lua version "..A3.."\">" end
+  --if Temp==nil then reaper.MB(ultraschall.ParseTitle(C[index][2]),"",0) end
+  if A~=nil or A2~=nil or A3~=nil then     
+    Insert=""
+  else
+    Temp=""
+    Insert="" --Insert=" style=\"padding-left:4%;\" "
+  end
+
+  FunctionList=FunctionList.."  <a href=\"#"..C[index][1].."\"> ^</a> "..Temp.." <b "..Insert.." ><u>"..ultraschall.ParseTitle(C[index][2]).."</u></b>"--" <b>"..C[index][1].."</b>"--.." - "..C[index][2]:match("<tags>(.-)</tags>") 
+  
+-- Functioncalls
+  A,B=ultraschall.ParseFunctionCall(C[index][2])
   for i=1, A do
     B[i][1]=ultraschall.ColorateDatatypes(B[i][1])
-    temp=B[i][1]:match("(ultraschall.-%()")
-    
-    if temp~=nil then B[i][1]=string.gsub(B[i][1],temp:sub(1,-2).."%(","<b>"..temp.."</b>") lua=B[i][1] end
-    if B[i][2]=="cpp" then cpp="<div class=\"c_func\"><span class='all_view'>C: </span><code>"..B[i][1]:sub(1,-2).."<b>)</b></code><br><br></div>" end
-    if B[i][2]=="eel" then eel="<div class=\"e_func\"><span class='all_view'>EEL: </span><code>"..B[i][1]:sub(1,-2).."<b>)</b></code><br><br></div>" end
-    if B[i][2]=="lua" then lua="<div class=\"l_func\"><span class='all_view'></span><code>"..B[i][1]:sub(1,-2).."<b>)</b></code><br><br></div>" end
-    if B[i][2]=="python" then python="<div class=\"p_func\"><span class='all_view'>Python: </span><code>"..B[i][1]:sub(1,-2).."<b>)</b></code><br><br></div>" end
+    if B[i][2]=="cpp" then cpp="<div class=\"c_func\"><span class='all_view'>C: </span><code>"..B[i][1].."</code><br><br></div>" end
+    if B[i][2]=="eel" then eel="<div class=\"e_func\"><span class='all_view'>EEL: </span><code>"..B[i][1].."</code><br><br></div>" end
+    if B[i][2]=="lua" then lua="<div class=\"l_func\"><span class='all_view'>Lua: </span><code>"..B[i][1].."</code><br><br></div>" end
+    if B[i][2]=="python" then python="<div class=\"p_func\"><span class='all_view'>Python: </span><code>"..B[i][1].."</code><br><br></div>" end
   end
-  --]]
-  lua=A
   if cpp==nil then cpp="" end
   if eel==nil then eel="" end
   if lua==nil then lua="" end
   if python==nil then python="" end  
   
-  
---  if C[index][2]:match("<chapter_context>.-API%-Documentation.-</chapter_context>")==nil then FunctionList=FunctionList.."<p style=\"padding-left:0.3%;\"><u>Functioncall:</u>" end
-  FunctionList=FunctionList.."<div style=\"font-size:100%\"><h4><a href=\"#"..C[index][1].."\">^</a> <u>"..A.."</u></h4></div><p>"
+  if C[index][2]:match("<chapter_context>.-API%-Documentation.-</chapter_context>")==nil then FunctionList=FunctionList.."<p><u>Functioncall:</u>" end
+  FunctionList=FunctionList.."<div style=\"padding-left:4%;font-size:104%\">\n<b>"..cpp.."\n"..eel.."\n"..lua.."\n"..python.."</b></div>\n"
   cpp=""
   eel=""
   lua=""
@@ -625,14 +685,11 @@ for lolo=1, 1 do
   if markup_type=="plain_text" then newdesc=ultraschall.ConvertPlainTextToHTML(newdesc)
   elseif markup_type=="markdown" then newdesc=ultraschall.ConvertMarkdownToHTML(newdesc, markup_version)
   end
---  reaper.MB(tostring(C[index][2]:match("<chapter_context>(.-API%-Documentation.-)</chapter_context>")),C[index][1],0)
---  if C[index][2]:match("<chapter_context>.-API%-Documentation.-</chapter_context>")==nil then --FunctionList=FunctionList.."<table style=\"width:100%;\"><tr><td><u>Description:</u></td></tr>" end
---  FunctionList=FunctionList.."<tr><td style=\"vertical-align:top;\">"..newdesc.."</td></tr></table>"
-  FunctionList=FunctionList..tostring(newdesc)
---  if C[index][2]:match("<chapter_context>.-API%-Documentation.-</chapter_context>")==nil then FunctionList=FunctionList.."</divl>" end  
-  
+  if C[index][2]:match("<chapter_context>.-API%-Documentation.-</chapter_context>")==nil then FunctionList=FunctionList.."\n<u>Description:</u>".."<br><div style=\"padding-left:4%;\">" end
+  FunctionList=FunctionList..newdesc
+  if C[index][2]:match("<chapter_context>.-API%-Documentation.-</chapter_context>")==nil then FunctionList=FunctionList.."</div>" end
+
 -- Parameters
-  FunctionList=FunctionList.."\n<table style=\"margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;\" border=\"0\">"
   counter, params, markup_type, markup_version= ultraschall.ParseParameters(C[index][2])
   for a=1, counter do
     params[a][1]=ultraschall.ColorateDatatypes(params[a][1])
@@ -640,14 +697,14 @@ for lolo=1, 1 do
     elseif markup_type=="markdown" then params[a][2]=ultraschall.ConvertMarkdownToHTML(params[a][2], markup_version)
     end
   end
-  if counter>0 then    
---  FunctionList=FunctionList.."<tr><td style=\"width:10%;\"><u>Parameters:</u></td></tr>"
-  FunctionList=FunctionList.."<tr><td style=\"padding-left:7%;\"><u>Parameters:</u></td></tr>"
+
+  if counter>0 then
+    FunctionList=FunctionList.."\n<table style=\"border-collapse: separate;border-spacing: 0px 0px;\"><tr><td><u>Parameters:</u></td></tr>"
     for a=1, counter do
-      FunctionList=FunctionList.."<tr style=\"background:#EEEEEE;\"><td style=\"background:white;\"></td><td style=\"vertical-align:top; white-space:pre;\">&nbsp;<i>"..params[a][1].."</i>&nbsp;</td><td style=\"vertical-align:top; \">&nbsp;"..params[a][2].."&nbsp;</td></tr>"
+      FunctionList=FunctionList.."<tr><td style=\"vertical-align:top; \">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>"..params[a][1].."</i></td><td style=\"vertical-align:top; \"><i> - </i></td><td style=\"vertical-align:top; \">"..params[a][2].."</td></tr>"
     end   
   end
---  FunctionList=FunctionList.."</table>"
+  FunctionList=FunctionList.."</table>"
 
 -- Retvals
   counter, retvals, markup_type, markup_version= ultraschall.ParseRetvals(C[index][2])
@@ -659,29 +716,25 @@ for lolo=1, 1 do
   end
 
   if counter>0 then
-    --    FunctionList=FunctionList.."\n<table style=\"border-collapse: separate;border-spacing: 0px 0px; width:90%;\" border=\"1\">
---    FunctionList=FunctionList.."<u>Parameters:</u><br>"
---    FunctionList=FunctionList.."\n<table style=\"border-collapse: separate; border-spacing: 6px 2px; padding-left:4%;\" border=\"0\">"
-    FunctionList=FunctionList.."<tr><td style=\"padding-left:7%;\"><u>Returnvalues:</u></td><td> </td><td> </td></tr>"
+    FunctionList=FunctionList.."\n<table><tr><td><u>Returnvalues:</u></td></tr>"
     for a=1, counter do
-      FunctionList=FunctionList.."<tr style=\"background:#EEEEEE;\"><td style=\"background:white;\"></td><td style=\"vertical-align:top; white-space:pre;\">&nbsp;<i>"..retvals[a][1].."</i>&nbsp;</td><td style=\"vertical-align:top;\">&nbsp;"..retvals[a][2].."&nbsp;</td></tr>"
+      FunctionList=FunctionList.."<tr><td style=\"vertical-align:top; \">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>"..retvals[a][1].."</i></td><td style=\"vertical-align:top; \"><i> - </i></td><td style=\"vertical-align:top; \">"..retvals[a][2].."</td></tr>"
     end   
   end
-  --]]
   FunctionList=FunctionList.."</table><br>"
-  --Debug-Code  
---  FunctionArray[FunctionArrayCounter]=FunctionList
---  FunctionArrayCounter=FunctionArrayCounter+1
+
   FunctionList2=FunctionList2..FunctionList
   FunctionList=""
-  --Debug-Code Ende
+  end
   progressbar=30
+
   if index<Ccount then 
-    index=index+1
+    index=index+1    
     b=b+1
-    if b>=120 then 
+    --[
+    if b>=3 then 
       reaper.ClearConsole() 
-      reaper.ShowConsoleMsg("Creating Ultraschall-Introduction/Concepts-Docs\n")
+      reaper.ShowConsoleMsg("Creating ReaScript Api-Docs\n")
       reaper.ShowConsoleMsg((math.floor(100/Ccount*index)+1).."% : ")
       for iii=1, math.floor(progressbar/Ccount*index) do reaper.ShowConsoleMsg("#") end
       for iii=math.floor(progressbar/Ccount), math.floor(progressbar/Ccount*(Ccount-index))-1 do reaper.ShowConsoleMsg("~") end
@@ -689,37 +742,26 @@ for lolo=1, 1 do
       b=0
     else 
       b=b+1
-    end
-  elseif kuddel==nil then
-    FunctionList=FunctionList.."<br><hr><table width=\"100%\"><td style=\"position:absolute; right:0;\">Automatically generated by Ultraschall-API "..version.." "..beta.." - "..Ccount.." chapters available</td></table><br><hr></div></body></html>"
+    end--]]
+    reaper.defer(entries)
+  else
+    FunctionList=FunctionList.."<br><hr><table width=\"100%\"><td>View: [<span class='aclick'>all</span>] [<span class='cclick'><a href=\"#c\" onClick=\"setdocview('c')\">C/C++</a></span>] [<span class='eclick'><a href=\"#e\" onClick=\"setdocview('e')\">EEL</a></span>] [<span class='lclick'><a href=\"#l\" onClick=\"setdocview('l')\">Lua</a></span>] [<span class='pclick'><a href=\"#p\" onClick=\"setdocview('p')\">Python</a></span>]</td><td>&#160;</td><td style=\"padding-left:20.5%;\">Automatically generated by Ultraschall-API 4.00 beta 2.7 - "..Ccount.." functions available (Reaper and SWS)</td></table><hr></div></body></html>"
     reaper.ShowConsoleMsg("\nSave File\n")
-    
---    FunctionArray[FunctionArrayCounter]=FunctionList
---    FunctionArrayCounter=FunctionArrayCounter+1
---    FunctionList2=""
- --   for i=1, FunctionArrayCounter-1 do
- --     FunctionList2=FunctionList2..FunctionArray[i]
- --   end
-    
-    KLONGEL=ultraschall.WriteValueToFile(Outfile, FunctionList2..FunctionList)
-    reaper.SetExtState("ultraschall", "doc", reaper.time_precise(), false)
-    if KLONGEL==-1 then ultraschall.ShowLastErrorMessage() end
+    ultraschall.WriteValueToFile(Outfile, FunctionList2..FunctionList)
+    reaper.SetExtState("ultraschall", "doc", "reaper-docs", false)    
 
-    reaper.ShowConsoleMsg("Done\n")
+--    reaper.ShowConsoleMsg("Done\n")
     Time2=reaper.time_precise()    
     Time3=reaper.format_timestr(Time2-Time1, "")
---    reaper.MB(Time3,"",0)
-    kuddel=1
+    reaper.MB(Time3,"",0)
   end  
-  end
-  if kuddel==nil then reaper.defer(entries) end
+
+
 end
 
 --header()
 Time1=reaper.time_precise()
 contentindex()
-
-
 
 
 --    ultraschall.WriteValueToFile("c:\\Reaper-Help-Redone.html", FunctionList)
