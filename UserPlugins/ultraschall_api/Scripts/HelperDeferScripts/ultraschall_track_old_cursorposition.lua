@@ -27,7 +27,9 @@
 -- Meo Mespotine, 13th November 2018
 
 -- stores the last editcursorposition into the non-persistant extstate
--- "Ultraschall" -> "last_editcursor_position"
+-- "Ultraschall" -> "editcursor_position_old" - the old editcursor-position
+-- "Ultraschall" -> "editcursor_position_new" - the new editcursor-position
+-- "Ultraschall" -> "editcursor_position_changetime" - the time the last change has happened
 --
 -- This is a workaround for scripts, that run after the user left-clicked into the 
 -- arrangeview, as this usually changes the editcursorposition before running an action
@@ -42,20 +44,27 @@ filename2=filename:match(".*/(.*)")
 if filename2==nil then filename2=filename:match(".*\\(.*)") end
 if filename2==nil then filename2=filename end
 
-reaper.SetExtState("ultraschall", "last_editcursor_position", cursorpos, false)
+reaper.SetExtState("ultraschall", "editcursor_position_old", cursorpos, false)
+reaper.SetExtState("ultraschall", "editcursor_position_new", cursorpos, false)
+reaper.SetExtState("ultraschall", "editcursor_position_changetime", -1, false)
 reaper.SetExtState("ultraschall", "defer_scripts_"..filename2, "true", false)
 
 
 function main()
   if reaper.GetCursorPosition()~=cursorpos then
-    reaper.SetExtState("ultraschall", "last_editcursor_position", cursorpos, false)
+    reaper.SetExtState("ultraschall", "editcursor_position_old", cursorpos, false)
+    reaper.SetExtState("ultraschall", "editcursor_position_new", reaper.GetCursorPosition(), false)
+    reaper.SetExtState("ultraschall", "editcursor_position_changetime", reaper.time_precise(), false)
     cursorpos=reaper.GetCursorPosition()
   end
-  reaper.defer(main)
+  if reaper.GetExtState("ultraschall", "defer_scripts_"..filename2)~="false" then reaper.defer(main) end
 end
 
 function exit()
-  reaper.SetExtState("ultraschall", "defer_scripts_"..filename2, "false", false)
+  reaper.DeleteExtState("ultraschall", "editcursor_position_old", false)
+  reaper.DeleteExtState("ultraschall", "editcursor_position_new", false)
+  reaper.DeleteExtState("ultraschall", "editcursor_position_changetime", false)
+  reaper.DeleteExtState("ultraschall", "defer_scripts_"..filename2, false)
 end
 
 reaper.atexit(exit)

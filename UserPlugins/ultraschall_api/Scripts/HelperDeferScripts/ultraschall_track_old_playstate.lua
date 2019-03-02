@@ -27,7 +27,9 @@
 -- Meo Mespotine, 27th December 2018
 
 -- stores the last playstate into the non-persistant extstate
--- "Ultraschall" -> "last_playstate"
+-- "Ultraschall" -> "playstate_old" - the old playstate
+-- "Ultraschall" -> "playstate_new" - the new playstate
+-- "Ultraschall" -> "playstate_changetime" - the time the last change has happened
 --
 -- If you want to have event-based scripts, that trigger at certain changes from-to playstates.
 -- That way, you can react to, e.g. Rec changes to Stop and such
@@ -39,20 +41,36 @@ filename2=filename:match(".*/(.*)")
 if filename2==nil then filename2=filename:match(".*\\(.*)") end
 if filename2==nil then filename2=filename end
 
-reaper.SetExtState("ultraschall", "last_playstate", playstate, false)
-reaper.SetExtState("ultraschall", "defer_scripts_"..filename2, "true", false)
+function StateConverter(state)
+  if state==0 then return "STOP"
+  elseif state==1 then return "PLAY"
+  elseif state==2 then return "PLAYPAUSE"
+  elseif state==5 then return "REC"
+  elseif state==6 then return "RECPAUSE"
+  end
+end
 
+
+reaper.SetExtState("ultraschall", "playstate_old", StateConverter(playstate), false)
+reaper.SetExtState("ultraschall", "playstate_new", StateConverter(playstate), false)
+reaper.SetExtState("ultraschall", "playstate_changetime", -1, false)
+reaper.SetExtState("ultraschall", "defer_scripts_"..filename2, "true", false)
 
 function main()
   if reaper.GetPlayState()~=playstate then
-    reaper.SetExtState("ultraschall", "last_playstate", playstate, false)
+    reaper.SetExtState("ultraschall", "playstate_old", StateConverter(playstate), false)
+    reaper.SetExtState("ultraschall", "playstate_new", StateConverter(reaper.GetPlayState()), false)
+    reaper.SetExtState("ultraschall", "playstate_changetime", reaper.time_precise(), false)
     playstate=reaper.GetPlayState()
   end
-  reaper.defer(main)
+  if reaper.GetExtState("ultraschall", "defer_scripts_"..filename2)~="false" then reaper.defer(main) end
 end
 
 function exit()
-  reaper.SetExtState("ultraschall", "defer_scripts_"..filename2, "false", false)
+  reaper.DeleteExtState("ultraschall", "playstate_old", false)
+  reaper.DeleteExtState("ultraschall", "playstate_new", false)
+  reaper.DeleteExtState("ultraschall", "playstate_changetime", false)
+  reaper.DeleteExtState("ultraschall", "defer_scripts_"..filename2, false)
 end
 
 reaper.atexit(exit)

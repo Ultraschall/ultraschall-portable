@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 ################################################################################
 ]]
 
--- Ultraschall State-Inspector 2.1.1 [Ultraschall-Developer Tools] 04.4.2018
+-- Ultraschall State-Inspector 2.1.2 [Ultraschall-Developer Tools] 14.1.2019
 --
 -- This Inspector monitors toggle-command-states or external-states of your choice.
 -- It's good for checking, if some toggling of states or changing of external-states
@@ -40,9 +40,33 @@ Aa,Ab,Ac,Ad,Ae=reaper.get_action_context()
 Path=Ab:match("(.*\\)")
 if Path==nil then Path=Ab:match("(.*/)") end
 
-version="2.1.1 - 04. 04. 2018"
+version="2.1.2 - 14. 01. 2019"
 
 gfx.init("Ultraschall State Inspector "..version, 560, 520)
+
+
+function StateChunkLayouter(sc)
+  local num_tabs=0
+  local newsc=""
+  for k in string.gmatch(sc, "(.-\n)") do
+    if k:sub(1,1)==">" then num_tabs=num_tabs-1 end
+    for i=0, num_tabs-1 do
+      newsc=newsc.."  "
+    end
+    if k:sub(1,1)=="<" then num_tabs=num_tabs+1 end
+    newsc=newsc..k
+  end
+  return newsc
+end
+
+--A,B=reaper.GetTrackStateChunk(reaper.GetTrack(0,1),"",false)
+--C=StateChunkLayouter(B)
+--reaper.MB(C,"",0)
+--reaper.CF_SetClipboard(C)
+
+--if l==nil then return end
+
+
 
 KeyCodeIni_File=Path.."/Ultraschall_Inspector_Gfx_GetKey_Codes.ini"
 InspectorIni_File=Path.."/Ultraschall-Inspector.ini"
@@ -113,7 +137,7 @@ end
 
 font_height=gfx.measurechar(65)+3
 clicked=false
-retval = gfx.loadimg(1,reaper.GetResourcePath().."/scripts/us.png")
+retval = gfx.loadimg(1,Path.."/us.png")
 counter=0
 states={}
 row1=30
@@ -1366,6 +1390,7 @@ function ShowSelectedEnvelopeState()
     gfx.set(1,1,1,1,0,10)
     gfx.x=10
     gfx.y=30
+    str=StateChunkLayouter(str)
     gfx.drawstr(str)
     oldstatechange=statechange
   end  
@@ -1375,6 +1400,7 @@ function ShowSelectedEnvelopeState()
   gfx.blit(10,1,0,0+(sidestep*font_height),0+(font_height*math.floor(start_state2)),1024,1024)
 
 end
+
 
 function ShowSelectedItemState()
  if oldstatechange==nil then oldstatechange=-1 end
@@ -1389,6 +1415,7 @@ function ShowSelectedItemState()
     gfx.set(1,1,1,1,0,10)
     gfx.x=10
     gfx.y=30
+    str=StateChunkLayouter(str)
     gfx.drawstr(str)
     oldstatechange=statechange
     --gfx.set(0.1,0.1,0.1,1,0,-1)
@@ -1405,7 +1432,8 @@ function ShowSelectedTrackState()
  statechange=reaper.GetProjectStateChangeCount(0)
  if statechange~=oldstatechange then 
    str=""
-   MediaTrack=reaper.GetSelectedTrack(0,0)
+   MediaTrack=reaper.GetLastTouchedTrack()--reaper.GetSelectedTrack(0,0)
+--   if MediaTrack==nil then MediaTrack=reaper.GetMasterTrack
    if MediaTrack~=nil then _h, str = reaper.GetTrackStateChunk(MediaTrack,"",false) end
     gfx.set(0.01,0.01,0.01,1,0,10)
     gfx.setimgdim(10,2048,2048)
@@ -1413,6 +1441,7 @@ function ShowSelectedTrackState()
     gfx.set(1,1,1,1,0,10)
     gfx.x=10
     gfx.y=30
+    str=StateChunkLayouter(str)
     gfx.drawstr(str)
     oldstatechange=statechange
     --gfx.set(0.1,0.1,0.1,1,0,-1)
