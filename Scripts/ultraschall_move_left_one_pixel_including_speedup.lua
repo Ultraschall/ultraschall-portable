@@ -24,17 +24,29 @@
 ################################################################################
 --]]
 
+ultraschall={}
+
+function ultraschall.GetUSExternalState(section, key)
+  -- get value
+  local A, B = reaper.BR_Win32_GetPrivateProfileString(section, key, "", reaper.GetResourcePath().."/".."ultraschall.ini")
+  return B
+end
+
 lasttime=reaper.GetExtState("ultraschall", "left_key_speedup")
 lastfactor=reaper.GetExtState("ultraschall", "left_key_speedup_factor")
+
+speedupfactor = ultraschall.GetUSExternalState("ultraschall_navigation", "move_cursor_speedup")
+if tonumber(speedupfactor)==nil then speedupfactor=0.4 else speedupfactor=tonumber(speedupfactor) end
 
 if lasttime=="" then lasttime=reaper.time_precise() end
 if lastfactor=="" then lastfactor=0 end
 
 if tonumber(lasttime)>=reaper.time_precise() then
-  lastfactor=lastfactor+0.7
+  lastfactor=lastfactor+speedupfactor
 else
   lastfactor=1
 end
+
 
 for i=0, lastfactor do
   reaper.Main_OnCommand(40104,0)

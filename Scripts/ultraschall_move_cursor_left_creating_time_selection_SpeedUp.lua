@@ -32,10 +32,10 @@ function ultraschall.GetUSExternalState(section, key)
   return B
 end
 
-lasttime=reaper.GetExtState("ultraschall", "right_key_speedup")
-lastfactor=reaper.GetExtState("ultraschall", "right_key_speedup_factor")
+lasttime=reaper.GetExtState("ultraschall", "left_key_speedup_time_selection")
+lastfactor=reaper.GetExtState("ultraschall", "left_key_speedup_factor_time_selection")
 
-speedupfactor = ultraschall.GetUSExternalState("ultraschall_navigation", "move_cursor_speedup")
+speedupfactor = ultraschall.GetUSExternalState("ultraschall_navigation", "move_cursor_and_timesel_speedup")
 if tonumber(speedupfactor)==nil then speedupfactor=0.4 else speedupfactor=tonumber(speedupfactor) end
 
 if lasttime=="" then lasttime=reaper.time_precise() end
@@ -47,10 +47,9 @@ else
   lastfactor=1
 end
 
-
 for i=0, lastfactor do
-  reaper.Main_OnCommand(40105,0)
+  reaper.Main_OnCommand(40102,0)
 end
 
-reaper.SetExtState("ultraschall", "right_key_speedup", reaper.time_precise()+0.1, false)
-reaper.SetExtState("ultraschall", "right_key_speedup_factor", lastfactor, false)
+reaper.SetExtState("ultraschall", "left_key_speedup_time_selection", reaper.time_precise()+0.1, false)
+reaper.SetExtState("ultraschall", "left_key_speedup_factor_time_selection", lastfactor, false)
