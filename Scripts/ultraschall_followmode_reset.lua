@@ -30,7 +30,7 @@
 wait_seconds=0.1                    -- recommended 0.1; how long to wait inbetween two checks. In seconds.
 midarrangeview_followoff_offset=1   -- recommended 1; how far above the center of the arrangeview can the playcursor
                                     --                move, before follow toggles off. In percentages.
-maxstrike=10                        -- recommended 10; how many cycles can the arrangeview stop, until we stop followmode
+maxstrike=20                        -- recommended 10; how many cycles can the arrangeview stop, until we stop followmode
                                     --                 the bigger, the longer the stopping time. Don't choose too small
                                     --                 as this affects users scrolling by hand using the timeline!
 
@@ -117,6 +117,8 @@ function main()
       -- if nothing shall be checked, update statevariables for a possible check in the next cycle
       oldplayposition=reaper.GetPlayPosition()
       oldCursorPosition=reaper.GetCursorPosition()
+      if strike~=0 then laststrike=strike end
+      strike=0
       reaper.SetExtState("follow", "skip", "false", false) --reset skip-state      -- buggy line?
     end
   current_time=reaper.time_precise()
