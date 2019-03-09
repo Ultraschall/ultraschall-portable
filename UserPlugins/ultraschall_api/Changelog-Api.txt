@@ -1,6 +1,58 @@
 
 ## Ultraschall Framework - Changelog
 
+### 4.00 Beta 2.73: - "Radiohead - Bangers'n'Mash" - 9th of March 2019
+
+   Has now 800 functions, with 20 new ones
+
+   - **New HWNDs** to get, like Render Queue, Preferences, Project Settings and more
+   
+   - **Routing-Convenience Features** to work better with Routing-stuff. Includes now MKVOL from/to DB-converter for that!
+   
+   - **print3** outputs it's parameters to the Clipboard.
+
+#### New features in 4.00beta2.73
+  - print3 - like print and print2, but puts the parameters into the clipboard instead
+  - ClearRoutingMatrix - clears the routing-matrix, either completely or just parts of it(Send/Receive, HWOuts, MasterSends) including or excluding the Master-Track
+  - DB2MKVOL - converts a dB-value into its MKVOL-representation, which can be used by routing-functions for the volume
+  - MKVOL2DB - converts a MKVOL-value(as used by volume in routing-settings) into its dB-representation
+  - GetRenderQueueHWND - gets the HWND of the Render-Queue-window, if opened
+  - GetProjectSettingsHWND - gets the HWND of the Project Settings-window, if opened
+  - GetSaveLiveOutputToDiskHWND - gets the HWND of the Save Live Output To Disk-window, if opened
+  - GetConsolidateTracksHWND - gets the HWND of the Consolidate Tracks-window, if opened
+  - GetExportProjectMIDIHWND - gets the HWND of the Export Project MIDI-window, if opened
+  - GetProjectDirectoryCleanupHWND - gets the HWND of the Project Directory Cleanup-window, if opened
+  - GetBatchFileItemConverterHWND - gets the HWND of the Batch File/Item Converter-window, if opened
+  - GetAllHWOuts - returns a table with all HWOut-settings of all tracks of the current project
+  - GetAllAUXSendReceive - returns a table with all Send/Receive-settings of all tracks of the current project
+  - GetAllMainSendStates - returns a table with all MainSend(Master Send)-settings of all tracks of the current project
+  - ApplyAllHWOuts - applies a table, as returned by GetAllHWOuts to all tracks. That way, you can easily alter HWOuts of multiple tracks in that table, before passing it to ApplyAllHWOuts
+  - ApplyAllAUXSendReceives - applies a table, as returned by GetAllAUXSendReceive to all tracks. That way, you can easily alter AUXSendReceives of multiple tracks in that table, before passing it to ApplyAllAUXSendReceives
+  - ApplyAllMainSendStates - applies a table, as returned by GetAllMainSendStates to all tracks. That way, you can easily alter MainSend(Master-Send)-states of multiple tracks in that table, before passing it to ApplyAllMainSendStates
+  - GetSetConfigAutoMute - gets/sets the automute-config-variable
+  - GetSetConfigAutoMuteFlags - gets/sets the automuteflags-config-variable
+  - GetSetConfigAutoSaveInt - gets/sets the autosaveint-config-variable
+  - GetSetConfigAutoSaveMode - gets/sets the autosavemode-config-variable
+
+#### Changes from 4.00beta2.72 to 4.00beta2.73
+  - Ultraschall.ScriptIdentifier - fixed bugs with Scriptidentifier-creation
+  - Main\_OnCommandByFilename - fixed bug with Scriptidentifier-creation
+  - MIDI\_OnCommandByFilename - fixed bug with Scriptidentifier-creation
+  - DeleteTrackAUXSendReceives - allows now to delete all AuxSendReceives of a track at once, when idx=-1
+  - Reaper-Api-docs: fixed further layout-problems with Markdown in some descriptions
+                     I really, really, really, really, really, really, really need to write my own MarkDown-dialect.
+                     It makes me nuts, having to deal with Markdown's ambiguities...
+  - CountTrackAUXSendReceives - when track isn't found, it returns now an error-message
+  - GetTrackAUXSendReceives - had internal variable exposed -> fixed now
+  - DeleteTrackHWOut - allows now to delete all HWOuts of a track at once, when idx=-1
+  - SetTrackHWOut - fixed bug with an incorrect idx-numbering
+  - SetTrackAUXSendReceives - fixed bug with an incorrect idx-numbering
+  - Reaper Api docs: Video Processor: corrected YET ANOTHER Markdown-f....p in the example code of chapter Coding Introduction
+  - GetIniFileValue - improved code
+  - SetIniFileValue - fixed bug that caused inifiles to explode in size
+  - Reaper-Docs: updated to Reaper 5.972
+  
+
 ### 4.00 Beta 2.72: - "Blue Oyster Cult - Don't fear the Reaper" - 1st of March 2019
 
    Has now 780 functions, with 80 new ones
@@ -341,8 +393,6 @@
   - SetTrackRecCFG - improved checking for validity of parameters
   
 <TODO>
-    API 4.00beta2.72
-      TODO!! finish up ReaPack installation of the Ultraschall-API
       
     API 4.00beta2.75
       TODO!! Doccreation: - wrong number of functions in any other docspage than functions-engine

@@ -112,7 +112,7 @@
             3. Restart Reaper.
             
             
-            ** Check Installation **
+            **Check Installation**:
             
             After installation, you might want to check, whether installing the Ultraschall-API was successful.
             
@@ -127,7 +127,7 @@
                 
                         ultraschall.ApiTest()
                 
-                   after the dofile-line and hit ctrl+s or cmd+s(on mac).
+            after the dofile-line and hit ctrl+s or cmd+s(on mac).
                 
             The script should show a messagebox, that tells you, which of the Ultraschall-API-parts are activated. If it shows, everything works fine :)
             

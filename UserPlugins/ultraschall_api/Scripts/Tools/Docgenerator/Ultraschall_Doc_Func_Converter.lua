@@ -13,7 +13,7 @@ _temp,scriptfilename=ultraschall.GetPath(scriptfilename)
 --Infilename=ultraschall.Api_Path.."/misc/US_Api-Manual.USDocML"
 --Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Documentation2.html"
 
-func_done_count=progresscounter(false)-1
+func_done_count=progresscounter(false)-2
 
 --if L==nil then return end
 

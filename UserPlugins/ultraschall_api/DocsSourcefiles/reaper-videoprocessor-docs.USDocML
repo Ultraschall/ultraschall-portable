@@ -34,30 +34,31 @@
         <requires>
             Reaper=5.97
         </requires>
-        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
+        <description>
             To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin.
             Next to it, on the left side of the editor-field, your parameter-knobs will appear(if you've defined some). 
             Code for the Video-Processor-Plugin must be written in EEL, not in Lua or Python.
             Example code, with a knob for turning the video on and off:
+                    <pre><code>
+                    // A small demo-script that turns video on&off
+                    //@amp;param1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
 
-                // A small demo-script that turns video on&off
-                //@amp;param1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
+                    frame=input_track(0); // variable frame set with the videoframe from the first 
+                                          // videoitem in the project at a given position
+              
+                    gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
+                                                           // to prevent from having the last frame(s) be shown indefinately
 
-                frame=input_track(0); // variable frame set with the videoframe from the first 
-                                      // videoitem in the project at a given position
-          
-                gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
-                                                       // to prevent from having the last frame(s) be shown indefinately
-
-                //Now, put the picture to the framebuffer -> outputting the video
-                gfx_blit(frame,  // the current video-frame
-                            1,   // don't preserve aspect-ratio
-                            0,0, // put upper right corner of the video at position 0,0
-                            project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
-                                                                      //   multiplied by the VideoOnOff-Parameter
-                                                                      //   1=video squeezed to 100% height & width 
-                                                                      //   0=video squeezed to 0% height & width
-                            );
+                    //Now, put the picture to the framebuffer -> outputting the video
+                    gfx_blit(frame,  // the current video-frame
+                                1,   // don't preserve aspect-ratio
+                                0,0, // put upper right corner of the video at position 0,0
+                                project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
+                                                                          //   multiplied by the VideoOnOff-Parameter
+                                                                          //   1=video squeezed to 100% height & width 
+                                                                          //   0=video squeezed to 0% height & width
+                                );
+                      </code></pre>
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>

@@ -3,7 +3,7 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 5.97 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 5.972 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -15,9 +15,7 @@
             >For (Global) Configuration, use [get_config_var()](Reaper_Api_Documentation.html#get_config_var)
              For Project-configuration, use[projectconfig_var_addr()](Reaper_Api_Documentation.html#projectconfig_var_addr) and [projectconfig_var_getoffs()](Reaper_Api_Documentation.html#projectconfig_var_getoffs)  
             
-         and Reaper's prerelease-only function:  
-         
-            >string value = get_config_var_string(string config_variable)  
+         and Reaper's function:  [get_config_var_string()](Reaper_Api_Documentation.html#get_config_var_string)
           
          who change Reaper's configuration-variables at run time. Just pass the variable-name to the parameter "varname".
           
@@ -309,12 +307,6 @@
           The alternate peak cache path for the following paths-inputbox, as set in the Preferences -> Paths  
           It is a string  
             
-          Note: the string-representation can be accessed only using get_config_var_string(), which is only available in pre-releases of Reaper  
-           at the time of writing.  
-           
-          The value can be accessed as integer as well. In that case, it is a combination of the first 8 letters of the name of the pathname on bitlevel.  
-          Supports only the first 8 letters.  
-            
           For other paths, see [altpeaks](#altpeaks), [altpeakspath](#altpeakspath), [defrenderpath](#defrenderpath), [defsavepath](#defsavepath)   
             
                     
@@ -332,12 +324,6 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The alternate peaks-path, as set in the Preferences -> Paths  
           It is a string  
-            
-          Note: the string-representation can be accessed only using get_config_var_string(), which is only available in pre-releases of Reaper  
-           at the time of writing.  
-           
-          The value can be accessed as integer as well. In that case, it is a combination of the first 8 letters of the name of the pathname on bitlevel.  
-          Supports only the first 8 letters.  
             
           For other paths, see [altpeaks](#altpeaks), [altpeaksopathlist](#altpeaksopathlist), [defrenderpath](#defrenderpath), [defsavepath](#defsavepath)  
             
@@ -2143,12 +2129,6 @@
           The Default render path-inputbox, as set in the Preferences -> Paths  
           It is a string  
             
-          Note: the string-representation can be accessed only using get_config_var_string(), which is only available in pre-releases of Reaper  
-           at the time of writing.  
-           
-          The value can be accessed as integer as well. In that case, it is a combination of the first 8 letters of the name of the pathname on bitlevel.  
-          Supports only the first 8 letters.  
-            
           For other paths, see [altpeaks](#altpeaks), [altpeakspath](#altpeakspath), [altpeaksopathlist](#altpeaksopathlist), [defsavepath](#defsavepath)  
             
                     
@@ -2166,12 +2146,6 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Default path to save new projects-inputbox, as set in the Preferences -> Paths  
           It is a string  
-            
-          Note: the string-representation can be accessed only using get_config_var_string(), which is only available in pre-releases of Reaper  
-           at the time of writing.  
-           
-          The value can be accessed as integer as well. In that case, it is a combination of the first 8 letters of the name of the pathname on bitlevel.  
-          Supports only the first 8 letters.  
             
           For other paths, see [altpeaks](#altpeaks), [altpeakspath](#altpeakspath), [altpeaksopathlist](#altpeaksopathlist), [defrenderpath](#defrenderpath), defsavepath   
             
@@ -4285,13 +4259,6 @@
           It is a string  
           
            >&lt;classic&gt; for the classic-theme; others are path+filename.ReaperTheme  
-           
-          Note: the string-representation can be accessed only using get_config_var_string(), which is only available in pre-releases of Reaper  
-           at the time of writing.  
-           
-          The value can be accessed as integer as well. In that case, it is a combination of the first 8 letters of the name of the pathname on bitlevel.  
-          Supports only the first 8 letters.  
-            
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -4833,12 +4800,6 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Default note color map-inputbox, as set in the Preferences -> MIDI Editor  
           It is a string  
-          Note: the string-representation can be accessed only using get_config_var_string(), which is only available in pre-releases of Reaper  
-           at the time of writing.  
-           
-          The value can be accessed as integer as well. In that case, it is a combination of the first 8 letters of the name of the pathname on bitlevel.  
-          Supports only the first 8 letters.  
-            
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -11020,12 +10981,6 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Video decoder priority-inputbox, as set in section Video of Preferences -> Video/REX/Misc  
           It is a string  
-            
-          Note: the string-representation can be accessed only using get_config_var_string(), which is only available in pre-releases of Reaper  
-           at the time of writing.  
-           
-          The value can be accessed as integer as well. In that case, it is a combination of the first 8 letters of the name of the pathname on bitlevel.  
-          Supports only the first 8 letters.  
             
           For other video-settings, see [video_colorspace](#video_colorspace), [video_delayms](#video_delayms)  
             
