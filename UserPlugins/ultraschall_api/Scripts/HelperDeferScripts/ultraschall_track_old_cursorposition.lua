@@ -56,8 +56,14 @@ function main()
     reaper.SetExtState("ultraschall", "editcursor_position_new", reaper.GetCursorPosition(), false)
     reaper.SetExtState("ultraschall", "editcursor_position_changetime", reaper.time_precise(), false)
     cursorpos=reaper.GetCursorPosition()
+    --[[reaper.ClearConsole()
+    reaper.ShowConsoleMsg("Previous:"..reaper.GetExtState("ultraschall", "editcursor_position_old").."\nCurrent : "..
+                          reaper.GetExtState("ultraschall", "editcursor_position_new").."\n".."Time of Last Change: "..
+                          reaper.GetExtState("ultraschall", "editcursor_position_changetime"))--]]
   end
-  if reaper.GetExtState("ultraschall", "defer_scripts_"..filename2)~="false" then reaper.defer(main) end
+  if reaper.GetExtState("ultraschall", "defer_scripts_"..filename2)~="false" then 
+    reaper.defer(main) 
+  end
 end
 
 function exit()

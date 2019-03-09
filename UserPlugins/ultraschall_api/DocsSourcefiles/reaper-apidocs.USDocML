@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 5.971
+            ## ReaScript API as of Reaper 5.972
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -4319,6 +4319,38 @@
         <tags>helperfunctions, guid, generate, create</tags>
     </US_DocBloc>
 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>get_config_var_string</slug>
+        <title>get_config_var_string</title>
+        <functioncall prog_lang="cpp">bool get_config_var_string(const char* name, char* bufOut, int bufOut_sz)</functioncall>
+        <functioncall prog_lang="eel">bool get_config_var_string("name", #buf)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string buf = reaper.get_config_var_string(string name)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String name, String bufOut, Int bufOut_sz) = RPR_get_config_var_string(name, bufOut, bufOut_sz)</functioncall>
+        <requires>
+            Reaper=5.972
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            gets ini configuration variable value as string
+            
+            see the [configuration-variable documentation](Reaper_Config_Variables.html) for more details
+        </description>
+        <retvals>
+            boolean retval - true, the configuration-variable is a valid string variable
+            string buf - the current value of the configuration-variable
+        </retvals>
+        <parameters>
+            string name - the config-var, whose value you want
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            Api-Helper-Functions
+        </chapter_context>
+        <tags>helperfunctions, configuration variable, configvar, string, get</tags>
+    </US_DocBloc>
+
+    
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>get_ini_file</slug>
         <title>get_ini_file</title>
@@ -9018,20 +9050,20 @@
             category is &gt;0 for receives, 0=sends, &gt;0 for hardware outputs
             parameter names:
             
-                B_MUTE : returns bool *
-                B_PHASE : returns bool *, true to flip phase
-                B_MONO : returns bool *
-                D_VOL : returns double *, 1.0 = +0dB etc
-                D_PAN : returns double *, -1..+1
-                D_PANLAW : returns double *,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
-                I_SENDMODE : returns int *, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
-                I_AUTOMODE : returns int * : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
-                I_SRCCHAN : returns int *, index,&amp;1024=mono, -1 for none
-                I_DSTCHAN : returns int *, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
-                I_MIDIFLAGS : returns int *, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chan
-                P_DESTTRACK : read only, returns MediaTrack *, destination track, only applies for sends/recvs
-                P_SRCTRACK : read only, returns MediaTrack *, source track, only applies for sends/recvs
-                P_ENV : read only, returns TrackEnvelope *, setNewValue=&lt;VOLENV, &lt;PANENV, etc
+                B\_MUTE : returns bool \*
+                B\_PHASE : returns bool \*, true to flip phase
+                B\_MONO : returns bool \*
+                D\_VOL : returns double \*, 1.0 = +0dB etc
+                D\_PAN : returns double \*, -1..+1
+                D\_PANLAW : returns double \*,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
+                I\_SENDMODE : returns int \*, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
+                I\_AUTOMODE : returns int \* : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
+                I\_SRCCHAN : returns int \*, index,&amp;1024=mono, -1 for none
+                I\_DSTCHAN : returns int \*, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
+                I\_MIDIFLAGS : returns int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chan
+                P\_DESTTRACK : read only, returns MediaTrack \*, destination track, only applies for sends/recvs
+                P\_SRCTRACK : read only, returns MediaTrack \*, source track, only applies for sends/recvs
+                P\_ENV : read only, returns TrackEnvelope \*, setNewValue=&lt;VOLENV, &lt;PANENV, etc
                 
             See [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
         </description>
@@ -14847,17 +14879,17 @@
             category is &gt;0 for receives, 0=sends, &gt;0 for hardware outputs
             parameter names:
 
-                B_MUTE : returns bool *
-                B_PHASE : returns bool *, true to flip phase
-                B_MONO : returns bool *
-                D_VOL : returns double *, 1.0 = +0dB etc
-                D_PAN : returns double *, -1..+1
-                D_PANLAW : returns double *,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
-                I_SENDMODE : returns int *, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
-                I_AUTOMODE : returns int * : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
-                I_SRCCHAN : returns int *, index,&amp;1024=mono, -1 for none
-                I_DSTCHAN : returns int *, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
-                I_MIDIFLAGS : returns int *, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chan
+                B\_MUTE : returns bool \*
+                B\_PHASE : returns bool \*, true to flip phase
+                B\_MONO : returns bool \*
+                D\_VOL : returns double \*, 1.0 = +0dB etc
+                D\_PAN : returns double \*, -1..+1
+                D\_PANLAW : returns double \*,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
+                I\_SENDMODE : returns int \*, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
+                I\_AUTOMODE : returns int \* : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
+                I\_SRCCHAN : returns int \*, index,&amp;1024=mono, -1 for none
+                I\_DSTCHAN : returns int \*, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
+                I\_MIDIFLAGS : returns int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chan
 
             See [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
         </description>
@@ -16402,6 +16434,94 @@
         <tags>midimanagement, take, item, check</tags>
     </US_DocBloc>
 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ThemeLayout_GetParameter</slug>
+        <title>ThemeLayout_GetParameter</title>
+        <functioncall prog_lang="cpp">const char* ThemeLayout_GetParameter(int wp, const char** descOutOptional, int* valueOutOptional, int* defValueOutOptional, int* minValueOutOptional, int* maxValueOutOptional)</functioncall>
+        <functioncall prog_lang="eel">bool ThemeLayout_GetParameter(#retval, int wp, optional #desc, optional int &value, optional int &defValue, optional int &minValue, optional int &maxValue)</functioncall>
+        <functioncall prog_lang="lua">string retval, optional string desc, optional number value, optional number defValue, optional number minValue, optional number maxValue = reaper.ThemeLayout_GetParameter(integer wp)</functioncall>
+        <functioncall prog_lang="python">(String retval, Int wp, String descOutOptional, Int valueOutOptional, Int defValueOutOptional, Int minValueOutOptional, Int maxValueOutOptional) = RPR_ThemeLayout_GetParameter(wp, descOutOptional, valueOutOptional, defValueOutOptional, minValueOutOptional, maxValueOutOptional)</functioncall>
+        <requires>
+            Reaper=5.972
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            returns theme layout parameter. return value is cfg-name, or nil/empty if out of range.
+        </description>
+        <retvals>
+            string retval - 
+            optional string desc - 
+            optional number value - 
+            optional number defValue - 
+            optional number minValue - 
+            optional number maxValue - 
+        </retvals>
+        <parameters>
+            integer wp - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            Theme management
+        </chapter_context>
+        <tags>theme management, get, layout, theme, parameter</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ThemeLayout_RefreshAll</slug>
+        <title>ThemeLayout_RefreshAll</title>
+        <functioncall prog_lang="cpp">void ThemeLayout_RefreshAll()</functioncall>
+        <functioncall prog_lang="eel">ThemeLayout_RefreshAll()</functioncall>
+        <functioncall prog_lang="lua">reaper.ThemeLayout_RefreshAll()</functioncall>
+        <functioncall prog_lang="python">RPR_ThemeLayout_RefreshAll()</functioncall>
+        <requires>
+            Reaper=5.972
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Refreshes all layouts
+        </description>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            Theme management
+        </chapter_context>
+        <tags>theme management, refresh, layout, theme</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ThemeLayout_SetParameter</slug>
+        <title>ThemeLayout_SetParameter</title>
+        <functioncall prog_lang="cpp">bool ThemeLayout_SetParameter(int wp, int value, bool persist)</functioncall>
+        <functioncall prog_lang="eel">bool ThemeLayout_SetParameter(int wp, int value, bool persist)</functioncall>
+        <functioncall prog_lang="lua">boolean retval = reaper.ThemeLayout_SetParameter(integer wp, integer value, boolean persist)</functioncall>
+        <functioncall prog_lang="python">Boolean RPR_ThemeLayout_SetParameter(Int wp, Int value, Boolean persist)</functioncall>
+        <requires>
+            Reaper=5.972
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            sets theme layout parameter to value. persist=true in order to have change loaded on next theme load. 
+            
+            note that the caller should update layouts via ??? to make changes visible.
+        </description>
+        <retvals>
+            boolean retval - 
+        </retvals>
+        <parameters>
+            integer wp - 
+            integer value - 
+            boolean persist - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            Theme management
+        </chapter_context>
+        <tags>theme management, set, layout, theme, parameter</tags>
+    </US_DocBloc>
+    
+    
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>time_precise</slug>
         <title>time_precise</title>
@@ -20680,20 +20800,20 @@
 
             List of possible parameters:
             
-                B_MUTE : send mute state (1.0 if muted, otherwise 0.0)
-                B_PHASE : send phase state (1.0 if phase is inverted, otherwise 0.0)
-                B_MONO : send mono state (1.0 if send is set to mono, otherwise 0.0)
-                D_VOL : send volume (1.0=+0dB etc...)
-                D_PAN : send pan (-1.0=100%L, 0=center, 1.0=100%R)
-                D_PANLAW : send pan law (1.0=+0.0db, 0.5=-6dB, -1.0=project default etc...)
-                I_SENDMODE : send mode (0=post-fader, 1=pre-fx, 2=post-fx(deprecated), 3=post-fx)
-                I_SRCCHAN : audio source starting channel index or -1 if audio send is disabled (&amp;1024=mono...note that in that case, when reading index, you should do (index XOR 1024) to get starting channel index)
-                I_DSTCHAN : audio destination starting channel index (&amp;1024=mono (and in case of hardware output &amp;512=rearoute)...note that in that case, when reading index, you should do (index XOR (1024 OR 512)) to get starting channel index)
-                I_MIDI_SRCCHAN : source MIDI channel, -1 if MIDI send is disabled (0=all, 1-16)
-                I_MIDI_DSTCHAN : destination MIDI channel, -1 if MIDI send is disabled (0=original, 1-16)
-                I_MIDI_SRCBUS : source MIDI bus, -1 if MIDI send is disabled (0=all, otherwise bus index)
-                I_MIDI_DSTBUS : receive MIDI bus, -1 if MIDI send is disabled (0=all, otherwise bus index)
-                I_MIDI_LINK_VOLPAN : link volume/pan controls to MIDI
+                B\_MUTE : send mute state (1.0 if muted, otherwise 0.0)
+                B\_PHASE : send phase state (1.0 if phase is inverted, otherwise 0.0)
+                B\_MONO : send mono state (1.0 if send is set to mono, otherwise 0.0)
+                D\_VOL : send volume (1.0=+0dB etc...)
+                D\_PAN : send pan (-1.0=100%L, 0=center, 1.0=100%R)
+                D\_PANLAW : send pan law (1.0=+0.0db, 0.5=-6dB, -1.0=project default etc...)
+                I\_SENDMODE : send mode (0=post-fader, 1=pre-fx, 2=post-fx(deprecated), 3=post-fx)
+                I\_SRCCHAN : audio source starting channel index or -1 if audio send is disabled (&amp;1024=mono...note that in that case, when reading index, you should do (index XOR 1024) to get starting channel index)
+                I\_DSTCHAN : audio destination starting channel index (&amp;1024=mono (and in case of hardware output &amp;512=rearoute)...note that in that case, when reading index, you should do (index XOR (1024 OR 512)) to get starting channel index)
+                I\_MIDI\_SRCCHAN : source MIDI channel, -1 if MIDI send is disabled (0=all, 1-16)
+                I\_MIDI\_DSTCHAN : destination MIDI channel, -1 if MIDI send is disabled (0=original, 1-16)
+                I\_MIDI\_SRCBUS : source MIDI bus, -1 if MIDI send is disabled (0=all, otherwise bus index)
+                I\_MIDI\_DSTBUS : receive MIDI bus, -1 if MIDI send is disabled (0=all, otherwise bus index)
+                I\_MIDI\_LINK\_VOLPAN : link volume/pan controls to MIDI
 
             Note: To get or set other send attributes, see [BR\_GetMediaTrackSendInfo\_Envelope](#BR_GetMediaTrackSendInfo_Envelope) and [BR\_GetMediaTrackSendInfo\_Track](#BR_GetMediaTrackSendInfo_Track).
         </description>
@@ -25941,14 +26061,21 @@
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Similar to the C++ WIN32 function GetDlgItem, this function finds child windows by ID.
 
-            (The ID of a window may be retrieved by JS_Window_GetLongPtr.)
+            (The ID of a window may be retrieved by JS\_Window\_GetLongPtr.)
+            
+            For Reaper's [MainHWND](#GetMainHwnd), you can get:
+                0: Transport(Windows)/MainHWND(Mac)
+                999: project-tabs(if existing, otherwise will be nil)
+                1000: trackview
+                1005: timeline
+                1259: Mouse editing help in the area beneath the track control panels
         </description>
         <parameters>
-           identifier parentHWND - 
-           integer ID - 
+           identifier parentHWND - the parent HWND, whose child-HWNDs you want to search through
+           integer ID - the ID of the childHWND
         </parameters>
         <retvals>
-            identifier HWND - 
+            identifier HWND - the HWND of the window, that the function found
         </retvals>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>

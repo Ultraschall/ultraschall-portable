@@ -534,7 +534,7 @@ function header()
 end
 
 function contentindex()
-  FunctionList=FunctionList.."<h2><img src=\"gfx/reaper.png\"><br>Reaper Reascript-Api-Documentation 5.97 - \"Up and away, got a big day, sorry can't stay\"</h2><h3>The Functions Reference</h3><table style=\"font-size:10pt;\" width=\"100%\">"
+  FunctionList=FunctionList.."<h2><img src=\"gfx/reaper.png\"><br>Reaper Reascript-Api-Documentation 5.972 - \"Up and away, got a big day, sorry can't stay\"</h2><h3>The Functions Reference</h3><table style=\"font-size:10pt;\" width=\"100%\">"
   reaper.ClearConsole()
   reaper.ShowConsoleMsg("Create Index\n")
   HeaderList={}
