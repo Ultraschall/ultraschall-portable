@@ -26,6 +26,7 @@
  
 -- little helpers
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+-- global lastchange = 0
 
 function checkrouting()
  --  reaper.ShowConsoleMsg(A.."\n")
@@ -35,18 +36,26 @@ function checkrouting()
  -- 	print (changed)
  	-- if changed == false then
 
-	 	step = ultraschall.GetUSExternalState("ultraschall_magicrouting", "step")
+	 	-- currentchange = reaper.GetProjectStateChangeCount(0)
+	 	-- if currentchange > lastchange + 1 then 
+if reaper.CountTracks(0) > 0 then
 
-	 	if step == "preshow" then 
-	 		commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Preshow")
-	 	elseif step == "recording" then
-			commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Recording")
-	 	else -- editing
-			commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Editing")
-		end
+		 	step = ultraschall.GetUSExternalState("ultraschall_magicrouting", "step")
 
-	 	reaper.Main_OnCommand(commandid,0)         -- update Matrix
+		 	if step == "preshow" then 
+		 		commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Preshow")
+		 	elseif step == "recording" then
+				commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Recording")
+		 	else -- editing
+				commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Editing")
+			end
 
+		 	reaper.Main_OnCommand(commandid,0)         -- update Matrix
+end
+		-- 	lastchange = currentchange
+		 	
+		-- 	print (lastchange)
+		-- end
 
   retval, defer_identifier = ultraschall.Defer1(checkrouting, 2, 1)
   reaper.CF_SetClipboard(defer_identifier)
