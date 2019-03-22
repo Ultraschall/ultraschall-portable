@@ -46,6 +46,7 @@ function buildRoutingMatrix ()
     	retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- StudioLink-Spuren gehen immer auf den MainHardwareOut Zurück
 
     	for j=1, number_of_tracks do
+  
     		if ultraschall.GetTypeOfTrack(j) ~= "StudioLink" then
 
 					-- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
@@ -60,6 +61,7 @@ function buildRoutingMatrix ()
       retval = ultraschall.AddTrackHWOut(i, 0, 0, 0.5, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
 
     	for j=1, number_of_tracks do
+        
     		if ultraschall.GetTypeOfTrack(j) ~= "SoundBoard" then -- jeder Track der nicht Soundboard ist schickt sein Signal auf den 3/4 Kanal des Soundboards
 
 					-- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
@@ -75,8 +77,25 @@ function buildRoutingMatrix ()
 
 end
 
-
 retval = ultraschall.ClearRoutingMatrix(true, true, true, true, false)
 buildRoutingMatrix ()
+ultraschall.SetUSExternalState("ultraschall_magicrouting", "step", "preshow")
+
+is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
+state = reaper.GetToggleCommandStateEx(sec, cmd)                           
+
+ID_1 = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Preshow") -- Setup Button
+ID_2 = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Recording") -- Record Button
+ID_3 = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Editing") -- Edit Button
+
+if state <= 0 then                                                                  
+  reaper.SetToggleCommandState(sec, cmd, 1)
+end  
+
+reaper.SetToggleCommandState(sec, ID_2, 0)
+reaper.SetToggleCommandState(sec, ID_3, 0)
+
+reaper.RefreshToolbar2(sec, cmd)
+
 
 
