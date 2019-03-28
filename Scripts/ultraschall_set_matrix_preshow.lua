@@ -24,6 +24,11 @@
 ################################################################################
 ]]
 
+local profile = require(reaper.GetResourcePath().."/Scripts/profile")
+-- consider "Lua" functions only
+profile.hookall("Lua")
+
+
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- dofile(reaper.GetResourcePath().."/Scripts/ser.lua")
 
@@ -77,8 +82,15 @@ function buildRoutingMatrix ()
 
 end
 
+
+profile.start()
+
 retval = ultraschall.ClearRoutingMatrix(true, true, true, true, false)
-buildRoutingMatrix ()
+
+if reaper.CountTracks(0) > 0 then 
+  buildRoutingMatrix () 
+end
+
 ultraschall.SetUSExternalState("ultraschall_magicrouting", "step", "preshow")
 
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
@@ -98,4 +110,8 @@ reaper.SetToggleCommandState(sec, ID_3, 0)
 reaper.RefreshToolbar2(sec, cmd)
 
 
+profile.stop()
+-- report for the top 10 functions, sorted by execution time
+local r = profile.report('time', 10)
+print(r)
 

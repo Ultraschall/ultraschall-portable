@@ -26,9 +26,9 @@
  
 
 
-local profile = require(reaper.GetResourcePath().."/Scripts/profile")
+-- local profile = require(reaper.GetResourcePath().."/Scripts/profile")
 -- consider "Lua" functions only
-profile.hookall("Lua")
+-- profile.hookall("Lua")
 
 -- execute code that will be profiled
 
@@ -81,7 +81,7 @@ end
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
 state = reaper.GetToggleCommandStateEx(sec, cmd)             
 
-profile.start()
+-- profile.start()
 
 
 if state ~= 1 then                            
@@ -103,10 +103,10 @@ end
 
 
 
-reaper.RefreshToolbar2(sec, cmd)
+-- reaper.RefreshToolbar2(sec, cmd)
 
-profile.stop()
+-- profile.stop()
 -- report for the top 10 functions, sorted by execution time
-local r = profile.report('time', 10)
-print(r)
+-- local r = profile.report('time', 10)
+-- print(r)
 

@@ -242,7 +242,7 @@ local function expand(s, l2)
 end
 
 local function pretty(t)
-  local c = { 3, 32, 8, 24, 32 }
+  local c = { 3, 32, 8, 24, 42 }
   for i = 1, #t do
     if type(t[i] == 'table') then
       for j = 1, 5 do
@@ -251,8 +251,8 @@ local function pretty(t)
       t[i] = concat(t[i], ' | ')
     end
   end
-  local row = " +-----+----------------------------------+----------+--------------------------+----------------------------------+ \n"
-  local col = " | #   | Function                         | Calls    | Time                     | Code                             | \n"
+  local row = " +-----+----------------------------------+----------+--------------------------+--------------------------------------------+ \n"
+  local col = " | #   | Function                         | Calls    | Time                     | Code                                       | \n"
   local out = row..col..row
   if #t > 0 then
     out = out..' | '..concat(t, ' | \n | ')..' | \n'
