@@ -24,9 +24,22 @@
 ################################################################################
 ]]
  
+
+
+local profile = require(reaper.GetResourcePath().."/Scripts/profile")
+-- consider "Lua" functions only
+profile.hookall("Lua")
+
+-- execute code that will be profiled
+
+
+
+
+
 -- little helpers
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- global lastchange = 0
+
 
 function checkrouting()
  --  reaper.ShowConsoleMsg(A.."\n")
@@ -38,6 +51,7 @@ function checkrouting()
 
 	 	-- currentchange = reaper.GetProjectStateChangeCount(0)
 	 	-- if currentchange > lastchange + 1 then 
+
 if reaper.CountTracks(0) > 0 then
 
 		 	step = ultraschall.GetUSExternalState("ultraschall_magicrouting", "step")
@@ -63,8 +77,11 @@ end
 end
 
 
+
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
 state = reaper.GetToggleCommandStateEx(sec, cmd)             
+
+profile.start()
 
 
 if state ~= 1 then                            
@@ -84,5 +101,12 @@ else
 	retval = ultraschall.StopDeferCycle(defer_identifier_from_clipboard)
 end
 
+
+
 reaper.RefreshToolbar2(sec, cmd)
+
+profile.stop()
+-- report for the top 10 functions, sorted by execution time
+local r = profile.report('time', 10)
+print(r)
 
