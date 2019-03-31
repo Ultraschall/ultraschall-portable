@@ -50,6 +50,7 @@ local function triggersoundcheck()
 	local retval, override = reaper.GetProjExtState(0, "ultraschall_soundcheck", "override")
 
 	if currentCountTracks == 0 then
+		reaper.SetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks", "0")
 		return needsTrigger
 	
 	elseif override == "on" then  -- automatic was just started by pressing button
@@ -60,7 +61,6 @@ local function triggersoundcheck()
 	elseif currentCountTracks ~= tonumber(lastCountTracks) then
 		needsTrigger = true
 		reaper.SetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks", currentCountTracks)
-
 		return needsTrigger
 	
 	else	
