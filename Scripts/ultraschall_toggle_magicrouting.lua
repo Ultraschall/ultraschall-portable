@@ -49,6 +49,9 @@ local function triggersoundcheck()
 	local retval, lastCountTracks = reaper.GetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks")
 	local retval, override = reaper.GetProjExtState(0, "ultraschall_soundcheck", "override")
 
+	-- local retval, deviceInfo = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+	-- print (deviceInfo)
+
 	if currentCountTracks == 0 then
 		reaper.SetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks", "0")
 		return needsTrigger
