@@ -35,45 +35,65 @@
 
 
 
-
 -- little helpers
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
--- global lastchange = 0
 
 
-function checkrouting()
- --  reaper.ShowConsoleMsg(A.."\n")
- --  A=A+1
- -- 	currentmatrix, number_of_tracks = ultraschall.GetAllAUXSendReceives2()
- -- 	changed = ultraschall.AreAUXSendReceivesTablesEqual(currentmatrix, lastmatrix)
- -- 	print (changed)
- 	-- if changed == false then
+defer_identifier = "hallo"
+
+local function triggersoundcheck()
+	
+	local needsTrigger = false
+	
+	local currentCountTracks = reaper.CountTracks(0)
+	local retval, lastCountTracks = reaper.GetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks")
+	local retval, override = reaper.GetProjExtState(0, "ultraschall_soundcheck", "override")
+
+	if currentCountTracks == 0 then
+		return needsTrigger
+	
+	elseif override == "on" then  -- automatic was just started by pressing button
+		needsTrigger = true
+		reaper.SetProjExtState(0, "ultraschall_soundcheck", "override", "off")
+		return needsTrigger
+
+	elseif currentCountTracks ~= tonumber(lastCountTracks) then
+		needsTrigger = true
+		reaper.SetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks", currentCountTracks)
+
+		return needsTrigger
+	
+	else	
+		return needsTrigger
+
+	end
+
+end
+
+
+local function checkrouting()
 
 	 	-- currentchange = reaper.GetProjectStateChangeCount(0)
 	 	-- if currentchange > lastchange + 1 then 
 
-if reaper.CountTracks(0) > 0 then
+	if triggersoundcheck() then -- wird ein Update der Matrix wirklich benötigt?
 
-		 	step = ultraschall.GetUSExternalState("ultraschall_magicrouting", "step")
+			 	step = ultraschall.GetUSExternalState("ultraschall_magicrouting", "step")
 
-		 	if step == "preshow" then 
-		 		commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Preshow")
-		 	elseif step == "recording" then
-				commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Recording")
-		 	else -- editing
-				commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Editing")
-			end
+			 	if step == "preshow" then 
+			 		commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Preshow")
+			 	elseif step == "recording" then
+					commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Recording")
+			 	else -- editing
+					commandid = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Editing")
+				end
 
-		 	reaper.Main_OnCommand(commandid,0)         -- update Matrix
-end
-		-- 	lastchange = currentchange
-		 	
-		-- 	print (lastchange)
-		-- end
+			 	reaper.Main_OnCommand(commandid,0)         -- update Matrix
+	end
 
   retval, defer_identifier = ultraschall.Defer1(checkrouting, 2, 1)
-  reaper.CF_SetClipboard(defer_identifier)
-
+ 
+  return defer_identifier
 end
 
 
@@ -88,8 +108,12 @@ if state ~= 1 then
 	-- Magicrouting on                                      
 	reaper.SetToggleCommandState(sec, cmd, 1)
 	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 1)
-	A=1      
-  checkrouting()
+
+	reaper.SetProjExtState(0, "ultraschall_soundcheck", "override", "on")	-- automation was started so trigger at least one Soundcheck
+
+  defer_identifier = checkrouting()
+  reaper.SetProjExtState(0, "ultraschall_soundcheck", "defer_identifier", defer_identifier)
+
 
 else
 	-- Magicrouting off
@@ -97,16 +121,7 @@ else
 	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 0)
 	-- reaper.ShowConsoleMsg("Stop".."\n")
 
-	defer_identifier_from_clipboard = reaper.CF_GetClipboard("")
-	retval = ultraschall.StopDeferCycle(defer_identifier_from_clipboard)
+	retval, stop_defer_identifier = reaper.GetProjExtState(0, "ultraschall_soundcheck", "defer_identifier")
+	retval = ultraschall.StopDeferCycle(stop_defer_identifier)
 end
-
-
-
--- reaper.RefreshToolbar2(sec, cmd)
-
--- profile.stop()
--- report for the top 10 functions, sorted by execution time
--- local r = profile.report('time', 10)
--- print(r)
 
