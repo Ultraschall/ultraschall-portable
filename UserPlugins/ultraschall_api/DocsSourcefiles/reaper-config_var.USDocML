@@ -3,7 +3,7 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 5.972 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 5.974 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -66,7 +66,7 @@
          If you want, you can thank me for this work at [ultraschall.fm/danke](http://www.ultraschall.fm/danke), where you can find my Amazon-wishlist(hint hint, nudge nudge ;) )  
   
   
-         393 variables documented, including settings for:
+         395 variables documented, including settings for:
          
            >Preferences, Playrate context menu, Help-information display context-menu, Transport-Context Menus, Project Settings, the Master VU-settings,   
            >Ruler context-menu, Metronome and pre-roll settings, Projecttab-context-menu, MixerControlPanel-context menu, Action-menu,   
@@ -84,7 +84,7 @@
   
          the following variables are available in pre-releases of Reaper only  
          
-           >[bouncecfg](#bouncecfg), [defstretchmode](#defstretchmode), [wiring_options](#wiring_options), [uiscale](#uiscale)  
+           >[bouncecfg](#bouncecfg), [defstretchmode](#defstretchmode), [wiring_options](#wiring_options)
       </description>  
       <chapter_context>  
          An Introduction  
@@ -797,7 +797,6 @@
       <slug>bouncecfg</slug>  
       <title>bouncecfg</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          only available in pre-releases of Reaper, yet  
           unknown, but seems to be for storing bounce-settings  
           it is an integer  
             
@@ -2255,7 +2254,6 @@
       <slug>defstretchmode</slug>  
       <title>defstretchmode</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          only available in pre-releases of Reaper, yet  
           unknown  
           It is an integer  
             
@@ -4239,6 +4237,13 @@
            
            >&32=0, Except when the media item height is less than the label height(off) - unchecked  
            >&32=1, Except when the media item height is less than the label height(on) - checked  
+           
+           >&64 &128 &256 -> Preferences -> Video/REX/Misc -> still image thumbnail display mode
+           >>0 0 0, Center/tile image (default in earlier Reaper-versions)
+           >>0 1 0, No thumbnail
+           >>1 0 0, Full height
+           >>0 0 1, Stretch image
+           for more image-settings, see [video_defimglen](#video_defimglen)
            
           For other settings set in Preferences -> Media, see [itemlabel_minheight](#itemlabel_minheight), [peaksedges](#peaksedges), [itemicons](#itemicons), [itemicons_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
             
@@ -6356,7 +6361,30 @@
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
-  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>pooledenvtranstime</slug>  
+      <title>pooledenvtranstime</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Default edge transition time for new automation items ms(max 200)-inputbox, as set in Preferences -> Automation -> Automation items
+          It is a double
+          
+            0 to 200(though higher values can be set)
+           
+          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime_action](#autoreturntime_action), [env_autoadd](#env_autoadd), [env_options](#env_options), [env_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
+                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime)  
+          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf_minheight](#itemlowerhalf_minheight), [itemclickmovecurs](#itemclickmovecurs), [handzoom](#handzoom), [scnotes](#scnotes)  
+                    
+          Stored in reaper.ini under the same name in the section REAPER, but with higher precision.  
+            
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+    
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>prebufperb</slug>  
       <title>prebufperb</title>  
@@ -10689,7 +10717,6 @@
       <slug>uiscale</slug>  
       <title>uiscale</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          only available in pre-releases of Reaper, yet  
           Seems to be the ui-scale-setting, as set in Preferences -> General -> Advanced UI/system tweaks-button, but isn't updated when the option is changed, unlike it's reaper.ini-entry.  
           It is an integer  
            
@@ -10934,11 +10961,17 @@
           Many setting-checkboxes and dropdownlists, as set in Preferences -> Video/REX/Misc  
           It is an integer-bitfield.  
           
-           >&1=0, Allow I420/YV12 colorspace output (recommended) - unchecked  
-           >&1=1, Allow I420/YV12 colorspace output (recommended) - checked  
-           
-           >&2=0, Allow YUY2 colorspace output - unchecked  
-           >&2=1, Allow YUY2 colorspace output - checked  
+           >&1 &2 &64 &65536 &131072
+           >> 1 1 0 0 0, Direct Show EVR(recommended)
+           >> 1 0 0 0 0, Direct Show EVR - Force YV12
+           >> 0 1 0 0 0, Direct Show EVR - Force YUY2
+           >> 0 0 0 0 0, Direct Show EVR - Force RGB
+           >> 1 1 1 0 0, Direct Show - Automatic
+           >> 1 0 1 0 0, Direct Show - Force YV12
+           >> 0 1 1 0 0, Direct Show - Force YUY2
+           >> 0 0 1 0 0, Direct Show - Force RGB
+           >> 0 0 1 1 0, BitBlit() nearest-neighbor (slow)
+           >> 0 0 1 1 1, BitBlit() bilinear (slowest)
            
            >&4=0, unknown  
            >&4=1, unknown  
@@ -10951,9 +10984,6 @@
             >> 0 0, Mouse cursor position  
             >> 1 0, Start of audio item  
             >> 0 1, Snap offset of audio item  
-           
-           >&64=0, use Enhanced Video Renderer (EVR) - checked  
-           >&64=1, use Enhanced Video Renderer (EVR) - unchecked  
            
            >&128=0, unknown  
            >&128=1, unknown  
@@ -10982,7 +11012,7 @@
           Video decoder priority-inputbox, as set in section Video of Preferences -> Video/REX/Misc  
           It is a string  
             
-          For other video-settings, see [video_colorspace](#video_colorspace), [video_delayms](#video_delayms)  
+          For other video-settings, see [video_colorspace](#video_colorspace), [video_delayms](#video_delayms), [video_defimglen](#video_defimglen)
             
           Stored in reaper.ini under the same name in the section REAPER, but only if it differs from the default settings:   
           
@@ -11004,6 +11034,30 @@
           
            >0 to 2147483647  
             
+          For other video-settings, see [video_colorspace](#video_colorspace), [video_decprio](#video_decprio), [video_defimglen](#video_defimglen)
+            
+                    
+          Stored in reaper.ini under the same name in the section REAPER.  
+            
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>video_defimglen</slug>  
+      <title>video_defimglen</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Still image thumbnail display mode -> Default length(ms)-inputbox, as set in the Video-section of Preferences -> Video/REX/Misc  
+          It is an integer.  
+          
+           >-2147483647 to 2147483647  
+            
+          Negative values set length in frames; positive values, set length in milliseconds.
+          
           For other video-settings, see [video_colorspace](#video_colorspace), [video_decprio](#video_decprio)  
             
                     
@@ -11015,7 +11069,8 @@
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
-  
+
+    
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>viewadvance</slug>  
       <title>viewadvance</title>  

@@ -3,7 +3,6 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Introduction</slug>
         <title>Introduction</title>
-        <functioncall prog_lang="eel2"></functioncall>
         <requires>
             Reaper=5.97
         </requires>
@@ -30,7 +29,6 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Coding Introduction</slug>
         <title>Coding Introduction</title>
-        <functioncall prog_lang="eel2"></functioncall>
         <requires>
             Reaper=5.97
         </requires>

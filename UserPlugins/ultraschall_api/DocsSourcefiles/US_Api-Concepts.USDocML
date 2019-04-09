@@ -22,7 +22,7 @@
                 - [Cough-Mute-management](#Cough_Mute_Buttons_001_Introduction) - you can write your own cough-buttons, that set the state of the mute-envelope of a track easily
                 - [Marker](#MarkersAndRegions_001_Introduction) - extensive set of marker functions, get, set, export, import, enumerate, etc
                 - [Spectrogram](#Getting_Manipulating_Items_008_Spectral_Edit) - you can program the spectrogram-view
-                - [Routing](#Routing_001_Introduction) - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions. Includes mastertrack as well.
+                - [Routing](#Routing_001_Introduction) - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions, including TrackStateChunks and mass manipulation of routings. Includes mastertrack as well.
                 - [Get MediaItems](#Getting_Manipulating_Items_002_GetMediaItems) - you can get all media-items within a time-range AND within the tracks you prefer; a 2D-approach
                     e.g. [GetAllMediaItemsBetween](usdocml://GetAllMediaItemsBetween) and [GetMediaItemsAtPosition ](usdocml://GetMediaItemsAtPosition ), etc
                 - Gaps between items - you can get the gaps between items in a track, using [GetGapsBetweenItems](usdocml://GetGapsBetweenItems)
@@ -2899,6 +2899,7 @@
              - [CountErrorMessage_Funcname](usdocml://CountErrorMessage_Funcname) - returns the number of error-messages a specific function provided  
              - [GetErrorMessage_Funcname](usdocml://GetErrorMessage_Funcname) - gets an errormessage a specific function provided, can be indexed  
              - [GetLastErrorMessage_Funcname](usdocml://GetLastErrorMessage_Funcname) - gets the last errormessage a specific function provided  
+             - [ShowErrorMessagesInReascriptConsole](usdocml://ShowErrorMessagesInReascriptConsole) - prints the errormessages to the console, when they happen for "realtime"-debug-errorchecking
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
@@ -3058,7 +3059,8 @@
             - setting new states to an already existing HWOut/Routing-setting of a track  
             - deleting an existing HWOut/Routing-setting from a track  
             - counting all HWOuts/routings in a track  
-            
+
+            In addition to that, I also added numerous functions, that allow "mass manipulation" of the Routings.
             Let's start with the routing.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
@@ -3090,12 +3092,13 @@
             
             >**[AddTrackAUXSendReceives](usdocml://AddTrackAUXSendReceives)**
             
-                                   boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, 
-                                                                                        number volume, number pan, integer mute, integer mono_stereo, integer phase, 
-                                                                                        integer chan_src, integer snd_chan, number unknown, integer midichanflag, 
-                                                                                        integer automation, boolean undo)
+                                   boolean retval, optional string TrackStateChunk 
+                                                    = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, 
+                                                                                          number volume, number pan, integer mute, integer mono_stereo, integer phase, 
+                                                                                          integer chan_src, integer snd_chan, number pan_law, integer midichanflag, 
+                                                                                          integer automation, optional string TrackStateChunk)
             
-            >This adds a receive to a specific track. To tell the function, from which track the received signal comes from, you need to set the parameter recv\_tracknumber to the tracknumber of the sending track.  
+            >This adds a receive to a specific track or TrackStateChunk. To tell the function, from which track the received signal comes from, you need to set the parameter recv\_tracknumber to the tracknumber of the sending track.  
             >The other parameters are simply all other settings for this send/receive, like 
             
             >- post\_pre\_fader - shall the signal be post, pre fader or even pre-fx
@@ -3106,8 +3109,10 @@
             >- phase - the phase of the received signal
             >- chan\_src - the source-channel to receive from. That is the sending-track's-channel!
             >- snd\_chan - the track's own channel to pass the received signal to. This is in the receiving track's channels!
+            >- pan\_law - the pan-law-setting for this AUXSendReceive
             >- midichanflag - manages the whole MIDI-receiving settings, like to receive from which MIDI-source-channel and to send to which of the track's own MIDI-channels. Includes also the MIDI-On-switching as well as no channels at all.  
             >- automation - the automation-mode of the receive
+            >- TrackStateChunk - set this, if you want to add AUXSendReceives to a TrackStateChunk; set tracknumber=-1 in that case
             
             Setting a receive-setting works basically the same:
             
@@ -3116,7 +3121,8 @@
                                     boolean retval = ultraschall.SetTrackAUXSendReceives(integer tracknumber, integer idx, integer recv_tracknumber, 
                                                                                          integer post_pre_fader, number volume, number pan, integer mute, 
                                                                                          integer mono_stereo, integer phase, integer chan_src, integer snd_chan, 
-                                                                                         number unknown, integer midichanflag, integer automation, boolean undo)
+                                                                                         number pan_law, integer midichanflag, integer automation, 
+                                                                                         optional string TrackStateChunk)
             
             >This works the same as AddTrackAUXSendReceives, but changes an already existing setting.
             
@@ -3126,24 +3132,25 @@
             
                                     integer recv_tracknumber, integer post_pre_fader, number volume, 
                                     number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, 
-                                    integer snd_chan, number unknown, integer midichanflag, integer automation 
-                                                                        = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx)
+                                    integer snd_chan, number pan_law, integer midichanflag, integer automation 
+                                                                        = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)
             
-            >This receives all the settings of a receive of a track. The same rules for the former functions (AddTrackAUXSendReceives and SetTrackAUXSendReceives) apply also here.
+            >This receives all the settings of a receive of a track or a TrackStateChunk. The same rules for the former functions (AddTrackAUXSendReceives and SetTrackAUXSendReceives) apply also here.
             
             And when you want to delete a receive, you can use the following function:
             
             >**[DeleteTrackAUXSendReceives](usdocml://DeleteTrackAUXSendReceives)**
             
-                                    boolean retval = ultraschall.DeleteTrackAUXSendReceives(integer tracknumber, integer idx, boolean undo)
+                                    boolean retval = ultraschall.DeleteTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)
                                     
-            >This deletes a receive-setting from a track. Just pass to it the tracknumber, which receives and the idx of the receive-setting. To know, which setting to delete, you can use GetTrackAUXSendReceives.  
+            >This deletes a receive-setting from a track or a TrackStateChunk. Just pass to it the tracknumber, which receives and the idx of the receive-setting. To know, which setting to delete, you can use GetTrackAUXSendReceives.
+            >Set tracknumber=-1 to use the parameter TrackStateChunk to delete an AUXSendReceive from a TrackStateChunk.
             
             If you want to know, how many receives a track has, you can use:
             
             >**[CountTrackAUXSendReceives](usdocml://CountTrackAUXSendReceives)**
             
-                                    integer count_SendReceives = ultraschall.CountTrackAUXSendReceives(integer tracknumber)
+                                    integer count_SendReceives = ultraschall.CountTrackAUXSendReceives(integer tracknumber, optional string TrackStateChunk)
                                     
             >This returns the number of received tracks a the track tracknumber has.
             
@@ -3157,7 +3164,7 @@
         </chapter_context>
         <previous_chapter>Trackstate_Management_001_Introduction</previous_chapter>
         <next_chapter>Routing_003_HWOuts</next_chapter>
-        <tags>routing, send, receive, count, get, set, delete, master, track</tags>
+        <tags>routing, send, receive, count, get, set, delete, master, track, trackstatechunk</tags>
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -3171,9 +3178,9 @@
             
                                     boolean retval = ultraschall.AddTrackHWOut(integer tracknumber, integer outputchannel, integer post_pre_fader, 
                                                                                number volume, number pan, integer mute, integer phase, integer source, 
-                                                                               number unknown, integer automationmode, boolean undo)
+                                                                               number pan_law, integer automationmode, optional string TrackStateChunk)
                                                                                
-            >This adds a new HWOut to a track. The tracknumber is either 0 for the master track or 1 and higher for track 1 or higher.  
+            >This adds a new HWOut to a track or a TrackStateChunk. The tracknumber is either 0 for the master track or 1 and higher for track 1 or higher or -1, if you want to pass a TrackStateChunk.  
             >The other options are to some extend familiar to the [AUXSendReceive-functions](#Routing_002_Send_Receive):
             >
             >- outputchannel - the outputchannel, either single tracks or stereo-tracks
@@ -3183,7 +3190,9 @@
             >- mute - shall it be muted or not
             >- phase - the phase of the HWOut
             >- source - the channel(s) to output to the outputchannels
+            >- pan\_law - the pan-law-setting of the HWOut
             >- automationmode - the automation of the HWOut
+            >- TrackStateChunk - the trackstatechunk, into which you want to add HWOut-settings; only available when tracknumber=-1
             
             Setting an already existing HWOut can be done using the function:
             
@@ -3191,8 +3200,8 @@
             
                                     boolean retval = ultraschall.SetTrackHWOut(integer tracknumber, integer idx, integer outputchannel, 
                                                                                integer post_pre_fader, number volume, number pan, integer mute, 
-                                                                               integer phase, integer source, number unknown, integer automationmode, 
-                                                                               boolean undo)
+                                                                               integer phase, integer source, number pan_law, integer automationmode, 
+                                                                               optional string TrackStateChunk)
             
             >This sets the settings of an already existing HWOut. The rest is the same, as the parameters for AddTrackHWOut.  
             
@@ -3201,17 +3210,17 @@
             >**[GetTrackHWOut](usdocml://GetTrackHWOut)**
             
                                     integer outputchannel, integer post_pre_fader, number volume, number pan, 
-                                    integer mute, integer phase, integer source, number unknown, integer automationmode 
-                                                                                = ultraschall.GetTrackHWOut(integer tracknumber, integer idx)
+                                    integer mute, integer phase, integer source, number pan_law, integer automationmode 
+                                                                                = ultraschall.GetTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)
                                                                                 
-            >This returns the settings of a HWOut. The tracknumbers are the same, with 0 for the master-track; 1 and higher for track 1 and higher.
+            >This returns the settings of a HWOut. The tracknumbers are the same, with 0 for the master-track; 1 and higher for track 1 and higher; -1 if you want to use the parameter TrackStateChunk.
             >The idx is the index of the HWOut-setting of the track.
             
             To delete it, use:
             
             >**[DeleteTrackHWOut](usdocml://DeleteTrackHWOut)**
             
-                                    boolean retval = ultraschall.DeleteTrackHWOut(integer tracknumber, integer idx, boolean undo)
+                                    boolean retval = ultraschall.DeleteTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)
             
             >This deletes a HWOut-setting from a track.
             
@@ -3219,7 +3228,7 @@
             
             >**[CountTrackHWOuts](usdocml://CountTrackHWOuts)**
             
-                                    integer count_HWOuts = ultraschall.CountTrackHWOuts(integer tracknumber)
+                                    integer count_HWOuts = ultraschall.CountTrackHWOuts(integer tracknumber, optional string TrackStateChunk)
             
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
@@ -3229,10 +3238,146 @@
             Routing
         </chapter_context>
         <previous_chapter>Routing_002_Send_Receive</previous_chapter>
-        <next_chapter>ExtStateManagement_001_Introduction</next_chapter>
-        <tags>routing, hwout, count, get, set, delete, master, track</tags>
+        <next_chapter>Routing_004_RoutingMassManipulation</next_chapter>
+        <tags>routing, hwout, count, get, set, delete, master, track, trackstatechunk</tags>
     </US_DocBloc>
 
+        <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Routing_004_RoutingMassManipulation</slug>
+        <title>Routing: Mass manipulation of Routings</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Sometimes, working with individual settings isn't enough. Sometimes, you want to work with all Routing-Settings at once.  
+            For that, I included the functions: [ClearRoutingMatrix](usdocml://ClearRoutingMatrix), [GetAllHWOuts](usdocml://GetAllHWOuts), [ApplyAllHWOuts](usdocml://ApplyAllHWOuts), [AreHWOutsTablesEqual](usdocml://AreHWOutsTablesEqual), [GetAllAUXSendReceives](usdocml://GetAllAUXSendReceives), [ApplyAllAUXSendReceives](usdocml://ApplyAllAUXSendReceives), [AreAUXSendReceivesTablesEqual](usdocml://AreAUXSendReceivesTablesEqual), [GetAllMainSendStates](usdocml://GetAllMainSendStates), [ApplyAllMainSendStates](usdocml://ApplyAllMainSendStates), [AreMainSendsTablesEqual](usdocml://AreMainSendsTablesEqual)
+            
+            >**[ClearRoutingMatrix](usdocml://ClearRoutingMatrix)**
+            
+                                    boolean retval = ultraschall.ClearRoutingMatrix(boolean ClearHWOuts, boolean ClearAuxRecvs, boolean ClearTrackMasterSends, 
+                                                                                    boolean ClearMasterTrack, boolean undo)
+                                                                               
+            >This clears the routing-matrix. You can control, what parts of the routing-matrix shall be cleared(MainSends, AUXSendReceives, HWOuts) and if this shall include the master-track as well.
+            
+            To mass-manipulate all HWOuts, see the following functions:
+            
+            >**[GetAllHWOuts](usdocml://GetAllHWOuts)**
+            
+                                    table AllHWOuts, integer number_of_tracks = ultraschall.GetAllHWOuts()
+                                                                               
+            >This returns all HWOut-settings as a nice handy table, which you can alter. The name of each index reflects the name of the parameters of the add/get/set-HWOut-functions.  
+            >returned table is of structure:  
+                table["HWOuts"]=true - signals, this is a HWOuts-table; don't change that!  
+                table["number_of_tracks"] - the number of tracks in this table, from track 0(master) to track n  
+                table[tracknumber]["HWOut_count"] - the number of HWOuts of tracknumber, beginning with 1  
+                table[tracknumber]["TrackID"] - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)  
+                table[tracknumber][HWOutIndex]["outputchannel"] - the number of outputchannels of this HWOutIndex of tracknumber  
+                table[tracknumber][HWOutIndex]["post_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber  
+                table[tracknumber][HWOutIndex]["volume"] - the volume of this HWOutIndex of tracknumber  
+                table[tracknumber][HWOutIndex]["pan"] - the panning of this HWOutIndex of tracknumber  
+                table[tracknumber][HWOutIndex]["mute"] - the mute-setting of this HWOutIndex of tracknumber  
+                table[tracknumber][HWOutIndex]["phase"] - the phase-setting of this HWOutIndex of tracknumber  
+                table[tracknumber][HWOutIndex]["source"] - the source/input of this HWOutIndex of tracknumber  
+                table[tracknumber][HWOutIndex]["pan_law"] - pan-law, default is -1  
+                table[tracknumber][HWOutIndex]["automationmode"] - the automation-mode of this HWOutIndex of tracknumber   
+            
+            You can manipulate these entries now. For the valid value-ranges, see the [GetTrackHWOut](usdocml://GetTrackHWOut)-function.  
+            After that, you can add them back to the Routings at once, using:
+            
+            >**[ApplyAllHWOuts](usdocml://ApplyAllHWOuts)**
+            
+                                    boolean retval = ultraschall.ApplyAllHWOuts(table AllHWOuts, optional integer option)
+                                                                               
+            >This applies the settings of the AllHWOuts-table to all the tracks.  
+            >The parameter option allows you to set, whether the settings shall be applied by tracknumber or by track-guid.  
+            >Each MediaTrack in a project has it's own ID, stored as a 64-digits-string. This allows one to know a certain track, even if the order or the trackname change.  
+            >If you choose option=2, this function will look into the table and retrieve the stored guid of a track and apply the setting to exact this track. If you choose option=1 or option=nil, 
+            >then it will apply it to the tracknumber, even if the tracknumber doesn't reflect the tracknumber of the track with the guid.  
+            >So depending on how much you want to "hook" the settings to a specific track or a tracknumber, you set option to 2 or to nil.
+            
+            Let's assume, you have two AllHWOuts-tables and want to compare, if they are the same or if they are different, you can use:
+            
+            >**[AreHWOutsTablesEqual](usdocml://AreHWOutsTablesEqual)**
+            
+                                    boolean retval = ultraschall.AreHWOutsTablesEqual(table AllHWOuts, table AllHWOuts2, optional integer option)
+                                                                               
+            >This compares two AllHWOut-tables and returns false, if they are different.  
+            >With the parameter option, you can choose, whether to check for the guids as well(option=2) or if they shall be ignored in the comparison(option=nil).
+            
+            The same principles can be used for MainSendStates and AUXSendReceives, who also have the same functions:
+            
+            - [GetAllAUXSendReceives](usdocml://GetAllAUXSendReceives) - returns all Send/Receive-settings as a handy table, that can be altered and readded, using ApplyAllAUXSendReceives
+            - [ApplyAllAUXSendReceives](usdocml://ApplyAllAUXSendReceives) - this applies a AllAUXSendReceive-table, as returned by GetAllAUXSendReceives
+            - [AreAUXSendReceivesTablesEqual](usdocml://AreAUXSendReceivesTablesEqual) - compares two AllAUXSendReceive-tables
+            - [GetAllMainSendStates](usdocml://GetAllMainSendStates) - returns all MainSend-states as a handy table, that can be altered and readded, using ApplyAllMainSendStates
+            - [ApplyAllMainSendStates](usdocml://ApplyAllMainSendStates) - this applies a AllMainSends-table, as returned by GetAllMainSendStates
+            - [AreMainSendsTablesEqual](usdocml://AreMainSendsTablesEqual) - compares two AllMainSends-tables
+            
+            **Regarding the guid, versus tracknumber-difference**  
+            
+            To get an idea of the differences between applying settings by guid versus applying settings by tracknumbers, consider the following example:  
+            Just create a new project with 5 tracks in them and name them A, B, C, D and E.  
+            The routing-matrix could look something like this:  
+            
+            ![Routing Matrix - before](gfx/Routing_004_RoutingMassManipulation_RoutingMatrix_before.png)
+            
+            Now, we look at the following two code-snippets, who get all MainSend-states of a track, add two new tracks before the first track, toggle the states of the MainSends in the AllMainSends-table and reapply them.
+            The only difference is, how they use the parameter option.
+            
+            Using option=nil:
+            
+                        dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+                        -- get all current MainSendStates
+                        AllMainSends_Table, NumberOfTracksInTable = ultraschall.GetAllMainSendStates()
+                        -- insert two track before the first track
+                        ultraschall.InsertTrackAtIndex(0, 2, true)
+
+                        -- toggle the Main-Sends-states.
+                        if AllMainSends_Table[1]["MainSendOn"]==0 then newstate=1 else newstate=0 end
+                        for i=1, NumberOfTracksInTable do
+                          AllMainSends_Table[i]["MainSendOn"]=newstate
+                        end
+
+                        -- apply them to all track using their tracknumbers(option=nil)
+                        ultraschall.ApplyAllMainSendStates(AllMainSends_Table,nil)
+            
+            This changes the main-send-states, beginning with Track 1, although the first two tracks are not A, B, C, D or E.
+            
+            The resulting routing-matrix will look like this:  
+            ![Routing Matrix - after, using option=nil](gfx/Routing_004_RoutingMassManipulation_RoutingMatrix_after_option_nil.png)
+            
+            Using option=2:
+            
+                        dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+                        -- get all current MainSendStates
+                        AllMainSends_Table, NumberOfTracksInTable = ultraschall.GetAllMainSendStates()
+                        -- insert two track before the first track
+                        ultraschall.InsertTrackAtIndex(0, 2, true)
+
+                        -- toggle the Main-Sends-states.
+                        if AllMainSends_Table[1]["MainSendOn"]==0 then newstate=1 else newstate=0 end
+                        for i=1, NumberOfTracksInTable do
+                          AllMainSends_Table[i]["MainSendOn"]=newstate
+                        end
+
+                        -- apply them to all track using their guids(option=2)
+                        ultraschall.ApplyAllMainSendStates(AllMainSends_Table,2)
+
+            This changes the main-send-states only at tracks A, B, C, D, E, leaving the newly inserted tracks untouched.
+            
+            The resulting routing-matrix will look like this:  
+            ![Routing Matrix - after, using option=2](gfx/Routing_004_RoutingMassManipulation_RoutingMatrix_after_option_2.png)
+
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Routing
+        </chapter_context>
+        <previous_chapter>Routing_003_HWOuts</previous_chapter>
+        <next_chapter>ExtStateManagement_001_Introduction</next_chapter>
+        <tags>routing, hwout, count, get, set, delete, master, track, trackstatechunk</tags>
+    </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ExtStateManagement_001_Introduction</slug>
@@ -3454,6 +3599,8 @@
         <slug>ExtStateManagement_005_TrackItemExtStates</slug>
         <title>ExtState Management: Track and Item-Extstates</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            **Note: This is deprecated, as Reaper will have the same feature in better in a future version!**
+        
             Another concept, I introduce with the Ultraschall-API are Track and Item-Extstates.
             
             To store them, I make use of the fact, that tracks and items have their own guids. I use these guids as basis for the section-name, while the key and value can be freely chosen by you.  
@@ -3500,6 +3647,8 @@
         <slug>ExtStateManagement_006_TrackExtStates</slug>
         <title>ExtState Management: Track Extstates</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            **Note: This is deprecated, as Reaper will have the same feature in better in a future version!**
+            
             Let's store some extstates for tracks. For that, I added the functions: [GetTrackExtState](usdocml://GetTrackExtState), [SetTrackExtState](usdocml://SetTrackExtState)  
             TrackExtStates are stored as ProjectExtState within the projectfile.
             
@@ -3531,6 +3680,8 @@
         <slug>ExtStateManagement_007_ItemExtStates</slug>
         <title>ExtState Management: Item Extstates</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            **Note: This is deprecated, as Reaper will have the same feature in better in a future version!**
+        
             Let's store some extstates for items. For that, I added the functions: [GetItemExtState](usdocml://GetItemExtState), [SetItemExtState](usdocml://SetItemExtState)  
             ItemExtStates are stored as ProjectExtState within the projectfile.
             These functions work basically like the ones for TrackExtStates
@@ -3598,16 +3749,14 @@
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             All functions for all kinds of markers settable in the Ultraschall-Api share the same basic subset of workflows.  
             All markers can be added, set, deleted, enumerated, counted, imported and exported from/to a file, checked for being a certain markertype and converted into a certain markertype(if possible).  
-            Let's take edit-markers as an example, who have the functions: 
-                
-            [AddEditMarker](usdocml://AddEditMarker), [SetEditMarker](usdocml://SetEditMarker), [DeleteEditMarker](usdocml://DeleteEditMarker), [EnumerateEditMarkers](usdocml://EnumerateEditMarkers), [CountEditMarkers](usdocml://CountEditMarkers), [ImportEditFromFile](usdocml://ImportEditFromFile), [ExportEditMarkersToFile](usdocml://ExportEditMarkersToFile),  [IsMarkerEdit](usdocml://IsMarkerEdit), [MarkerToEditMarker](usdocml://MarkerToEditMarker), [EditToMarker](usdocml://EditToMarker)  
+            Let's take edit-markers as an example, who have the functions: [AddEditMarker](usdocml://AddEditMarker), [SetEditMarker](usdocml://SetEditMarker), [DeleteEditMarker](usdocml://DeleteEditMarker), [EnumerateEditMarkers](usdocml://EnumerateEditMarkers), [CountEditMarkers](usdocml://CountEditMarkers), [ImportEditFromFile](usdocml://ImportEditFromFile), [ExportEditMarkersToFile](usdocml://ExportEditMarkersToFile),  [IsMarkerEdit](usdocml://IsMarkerEdit), [MarkerToEditMarker](usdocml://MarkerToEditMarker), [EditToMarker](usdocml://EditToMarker)  
             
             >**[AddEditMarker](usdocml://AddEditMarker)**
             
                                   integer marker_number = ultraschall.AddEditMarker(number position, integer shown_number, string edittitle)
                                   
             >This adds a new edit-marker. Give it a position, the shown number and an edittitle, which should hint at the reason of having to edit later.  
-            >The title will be shown in the marker as "_edit: Title". You can change it manually in Reaper, but should retain "_edit: ", as this signals the  
+            >The title will be shown in the marker as "\_edit: Title". You can change it manually in Reaper, but should retain "\_edit: ", as this signals the  
             >Ultraschall-API, if this is an edit-marker. The editmarker also is red (255 0 0).  
             >It will return the marker-number, which is the index of all markers in the project, means: markers and regions.  
             
@@ -4156,6 +4305,7 @@
             >This works like reaper.defer, but has additional benefits, like the parameters mode and timer\_counter, who allow you to specify, how often the defer-cycle shall be executed.  
             >Either all the time(mode=0), every nth-cycle(mode=1) or every nth-second(mode=2). If mode is 1 or 2, you should set timer\_counter to the amount of cycles/seconds to wait for the next execution of the defer-loop.  
             >It also returns a defer_identifier, which can be used by [StopDeferCycle](usdocml://StopDeferCycle) to stop the defer-loop from inside and outside of the script(more on that later).  
+            >Important: A defer-identifier is only valid, until the script stops/Reaper closes. The next time the script is started, it gets another defer-identifier!
             
             As you've seen, there are 20 Defer-functions in the Ultraschall-API. If you want to use only one defer-cycle in your script, just use [Defer1](usdocml://Defer1), but if you need multiple defer-loops in one script-instance,  
             you should use another of these 20 Defer-functions, as otherwise the timer/cycle-counter of a ultraschall.Defer-function could get confused.  
@@ -4478,7 +4628,6 @@
             - [ZoomVertical_MidiEditor](usdocml://ZoomVertical_MidiEditor) - this zooms vertically within the current or another Midi-Editor  
             - [GetVZoom](usdocml://GetVZoom) - gets the vertical-zoom-factor currently set in the arrange-view  
             - [SetVZoom](usdocml://SetVZoom) - sets the vertical-zoom-factor in the arrange-view  
-            - [CloseReaConsole](usdocml://CloseReaConsole) - closes the ReaConsole-window  
             - [GetScreenHeight](usdocml://GetScreenHeight) - returns the current screen-height in pixels  
             - [GetScreenWidth](usdocml://GetScreenWidth) - returns the current screen-width in pixels  
             - [GetIDEFontSize](usdocml://GetIDEFontSize) - gets the current size of the font in the IDE  
@@ -4490,6 +4639,19 @@
             - [ApplyActionToMediaItem](usdocml://ApplyActionToMediaItem) - this function applies a Reaper-action to a certain MediaItem. That given action must apply itself to selected MediaItems.  
             - [ApplyActionToMediaItemArray](usdocml://ApplyActionToMediaItemArray) - this function applies a Reaper-action to all MediaItems in MediaItemArray individually. That given action must apply itself to selected MediaItems.  
             - [ApplyActionToMediaItemArray2](usdocml://ApplyActionToMediaItemArray2) - this function applies a Reaper-action to all MediaItems in MediaItemArray at once. That given action must apply itself to selected MediaItems.  
+
+            ** ReaScript-console-stuff**
+            - [CloseReaConsole](usdocml://CloseReaConsole) - closes the ReaConsole-window  
+            - [SetReaScriptConsole_FontStyle](usdocml://SetReaScriptConsole_FontStyle) - sets a new font-style to the ReaScript-console  
+            - [GetReaScriptConsoleWindow](usdocml://GetReaScriptConsoleWindow) - gets the hwnd-window-handler of the ReaScript-console
+            
+            ** print replacements**
+            [print](usdocml://print) - prints its parameters to the ReaScript-console, separated by newlines
+            [print_alt](usdocml://print_alt) - prints its parameters to the ReaScript-console, separated by two spaces. Ends with a newline.
+            [print_update](usdocml://print_update) - prints its parameters to the ReaScript-console, but clears it first
+            [print2](usdocml://print2) - prints its parameters to a message-box-window
+            [print3](usdocml://print3) - prints its parameters to the clipboard
+
             
             **miscellaneous**
                 

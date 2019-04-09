@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 5.972
+            ## ReaScript API as of Reaper 5.974
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -4856,12 +4856,12 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>GetEnvelopeName</slug>
         <title>GetEnvelopeName</title>
-        <functioncall prog_lang="cpp">bool GetEnvelopeName(TrackEnvelope* env, char* buf, int buf_sz)</functioncall>
+        <functioncall prog_lang="cpp">bool GetEnvelopeName(TrackEnvelope* env, char* bufOut, int bufOut_sz)</functioncall>
         <functioncall prog_lang="eel">bool GetEnvelopeName(TrackEnvelope env, #buf)</functioncall>
         <functioncall prog_lang="lua">boolean retval, string buf = reaper.GetEnvelopeName(TrackEnvelope env, string buf)</functioncall>
-        <functioncall prog_lang="python">(Boolean retval, TrackEnvelope env, String buf, Int buf_sz) = RPR_GetEnvelopeName(env, buf, buf_sz)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, TrackEnvelope env, String bufOut, Int bufOut_sz) = RPR_GetEnvelopeName(env, bufOut, bufOut_sz)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=5.974
             Lua=5.3
         </requires>
         <description prog_lang="*">
@@ -6289,7 +6289,7 @@
         <functioncall prog_lang="lua">number retval = reaper.GetMediaTrackInfo_Value(MediaTrack tr, string parmname)</functioncall>
         <functioncall prog_lang="python">Float RPR_GetMediaTrackInfo_Value(MediaTrack tr, String parmname)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             Lua=5.3
         </requires>
         <description prog_lang="*">
@@ -6322,7 +6322,7 @@
             D_DUALPANR : double * : dualpan position 2 (-1..1), only if I_PANMODE==6
             I_PANMODE : int * : pan mode (0 = classic 3.x, 3=new balance, 5=stereo pan, 6 = dual pan)
             D_PANLAW : double * : pan law of track. &gt;0 for project default, 1.0 for +0dB, etc
-            P_ENV : read only, returns TrackEnvelope *, setNewValue=&gt;VOLENV, &gt;PANENV, etc
+            P_ENV:&lt;envchunkname : read only, returns TrackEnvelope *. To get a specific TrackEnvelope, call with :&lt;VOLENV, :&lt;PANENV, etc appended to P_ENV.
             B_SHOWINMIXER : bool * : show track panel in mixer -- do not use on master
             B_SHOWINTCP : bool * : show track panel in tcp -- do not use on master
             B_MAINSEND : bool * : track sends audio to parent
@@ -7552,6 +7552,41 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>GetSetAutomationItemInfo_String</slug>
+        <title>GetSetAutomationItemInfo_String</title>
+        <functioncall prog_lang="cpp">bool GetSetAutomationItemInfo_String(TrackEnvelope* env, int autoitem_idx, const char* desc, char* valuestrNeedBig, bool is_set)</functioncall>
+        <functioncall prog_lang="eel">bool GetSetAutomationItemInfo_String(TrackEnvelope env, int autoitem_idx, "desc", #valuestrNeedBig, bool is_set)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string valuestrNeedBig = reaper.GetSetAutomationItemInfo_String(TrackEnvelope env, integer autoitem_idx, string desc, string valuestrNeedBig, boolean is_set)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, TrackEnvelope env, Int autoitem_idx, String desc, String valuestrNeedBig, Boolean is_set) = RPR_GetSetAutomationItemInfo_String(env, autoitem_idx, desc, valuestrNeedBig, is_set)</functioncall>
+        <requires>
+            Reaper=5.974
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Get or set automation item information. autoitem_idx==0 for the first automation item on an envelope, 1 for the second item, etc. returns true on success. desc can be any of the following:
+            
+            P_POOL_NAME : char *, name of the underlying automation item pool
+        </description>
+        <retvals>
+            boolean retval -
+            string valuestrNeedBig - 
+        </retvals>
+        <parameters>
+            TrackEnvelope env - 
+            integer autoitem_idx - 
+            string desc - 
+            string valuestrNeedBig - 
+            boolean is_set - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            Automation Management
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>GetSetEnvelopeState</slug>
         <title>GetSetEnvelopeState</title>
         <functioncall prog_lang="cpp">bool GetSetEnvelopeState(TrackEnvelope* env, char* str, int str_sz)</functioncall>
@@ -7838,6 +7873,84 @@
         <tags></tags>
     </US_DocBloc>
 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>GetSetProjectInfo</slug>
+        <title>GetSetProjectInfo</title>
+        <functioncall prog_lang="cpp">double GetSetProjectInfo(ReaProject* project, const char* desc, double value, bool is_set)</functioncall>
+        <functioncall prog_lang="eel">double GetSetProjectInfo(ReaProject project, "desc", value, bool is_set)</functioncall>
+        <functioncall prog_lang="lua">number value = reaper.GetSetProjectInfo(ReaProject project, string desc, number value, boolean is_set)</functioncall>
+        <functioncall prog_lang="python">Float RPR_GetSetProjectInfo(ReaProject project, String desc, Float value, Boolean is_set)</functioncall>
+        <requires>
+            Reaper=5.974
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Get or set project information.
+
+            RENDER_SETTINGS: int *, &1=stems+master mix, &2=stems only, &4=multichannel tracks to multichannel files, &8=use render matrix, &16=tracks with only modo media to mono files, &32=selected media items
+            RENDER_BOUNDSFLAG : int *, 0=custom time bounds, 1=entire project, 2=time selection, 3=all project regions, 4=selected media items, 5=selected project regions
+            RENDER_CHANNELS: int *, number of channels in rendered file
+            RENDER_SRATE: int *, sample rate of rendered file
+            RENDER_STARTPOS : double *, render start time when RENDER_BOUNDSFLAG=0
+            RENDER_ENDPOS : double *, render end time when RENDER_BOUNDSFLAG=0
+            RENDER_TAILFLAG: int *, apply render tail setting when rendering: &1=custom time bounds, &2=entire project, &4=time selection, &8=all project regions, &16=selected media items, &32=selected project regions
+            RENDER_TAILMS: int *, tail length in ms to render (only used if RENDER_BOUNDSFLAG and RENDER_TAILFLAG are set)
+            RENDER_ADDTOPROJ: int *, 1=add rendered files to project
+            RENDER_DITHER: int *, &1=dither, &2=noise shaping
+        </description>
+        <retvals>
+            number value -
+        </retvals>
+        <parameters>
+            ReaProject project -
+            string desc - 
+            number value - 
+            boolean is_set -
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            Project Management
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>GetSetProjectInfo_String</slug>
+        <title>GetSetProjectInfo_String</title>
+        <functioncall prog_lang="cpp">bool GetSetProjectInfo_String(ReaProject* project, const char* desc, char* valuestrNeedBig, bool is_set)</functioncall>
+        <functioncall prog_lang="eel">bool GetSetProjectInfo_String(ReaProject project, "desc", #valuestrNeedBig, bool is_set)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string valuestrNeedBig = reaper.GetSetProjectInfo_String(ReaProject project, string desc, string valuestrNeedBig, boolean is_set)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, ReaProject project, String desc, String valuestrNeedBig, Boolean is_set) = RPR_GetSetProjectInfo_String(project, desc, valuestrNeedBig, is_set)</functioncall>
+        <requires>
+            Reaper=5.974
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Get or set project information.
+
+            RECORD_PATH: char *, recording directory
+            RENDER_FILE: char *, render directory
+            RENDER_PATTERN: char *, render file name (may contain wildcards)
+        </description>
+        <retvals>
+            boolean retval - 
+            string valuestrNeedBig - 
+        </retvals>
+        <parameters>
+             ReaProject project - 
+             string desc - 
+             string valuestrNeedBig - 
+             boolean is_set - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            Project Management
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>GetSetProjectNotes</slug>
         <title>GetSetProjectNotes</title>
@@ -8859,12 +8972,12 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>GetTrackName</slug>
         <title>GetTrackName</title>
-        <functioncall prog_lang="cpp">bool GetTrackName(MediaTrack* track, char* buf, int buf_sz)</functioncall>
+        <functioncall prog_lang="cpp">bool GetTrackName(MediaTrack* track, char* bufOut, int bufOut_sz)</functioncall>
         <functioncall prog_lang="eel">bool GetTrackName(MediaTrack track, #buf)</functioncall>
-        <functioncall prog_lang="lua">boolean retval, string buf = reaper.GetTrackName(MediaTrack track, string buf)</functioncall>
-        <functioncall prog_lang="python">(Boolean retval, MediaTrack track, String buf, Int buf_sz) = RPR_GetTrackName(track, buf, buf_sz)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string buf = reaper.GetTrackName(MediaTrack track)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, MediaTrack track, String bufOut, Int bufOut_sz) = RPR_GetTrackName(track, bufOut, bufOut_sz)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=5.974
             Lua=5.3
         </requires>
         <description prog_lang="*">
@@ -8876,7 +8989,6 @@
         </retvals>
         <parameters>
             track - the MediaTrack, whose name you want to know
-            buf - unknown
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -8933,7 +9045,7 @@
         </retvals>
         <parameters>
             tr - the MediaTrack, whose number of sends/receives/hardware outputs you want to know
-            category - &gt;0 for receives; 0=sends; &gt;0 for hardware outputs
+            category - &lt;0 for receives; 0=sends; &gt;0 for hardware outputs
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -9042,28 +9154,27 @@
         <functioncall prog_lang="lua">number = reaper.GetTrackSendInfo_Value(MediaTrack tr, integer category, integer sendidx, string parmname)</functioncall>
         <functioncall prog_lang="python">Float RPR_GetTrackSendInfo_Value(MediaTrack tr, Int category, Int sendidx, String parmname)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Get send/receive/hardware output numerical-value attributes.
-            category is &gt;0 for receives, 0=sends, &gt;0 for hardware outputs
+            category is &lt;0 for receives, 0=sends, &gt;0 for hardware outputs
             parameter names:
             
-                B\_MUTE : returns bool \*
-                B\_PHASE : returns bool \*, true to flip phase
-                B\_MONO : returns bool \*
-                D\_VOL : returns double \*, 1.0 = +0dB etc
-                D\_PAN : returns double \*, -1..+1
-                D\_PANLAW : returns double \*,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
-                I\_SENDMODE : returns int \*, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
-                I\_AUTOMODE : returns int \* : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
-                I\_SRCCHAN : returns int \*, index,&amp;1024=mono, -1 for none
-                I\_DSTCHAN : returns int \*, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
-                I\_MIDIFLAGS : returns int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chan
-                P\_DESTTRACK : read only, returns MediaTrack \*, destination track, only applies for sends/recvs
-                P\_SRCTRACK : read only, returns MediaTrack \*, source track, only applies for sends/recvs
-                P\_ENV : read only, returns TrackEnvelope \*, setNewValue=&lt;VOLENV, &lt;PANENV, etc
+                B\_MUTE : bool *
+                B\_PHASE : bool *, true to flip phase
+                B\_MONO : bool *
+                D\_VOL : double *, 1.0 = +0dB etc
+                D\_PAN : double *, -1..+1
+                D\_PANLAW : double *,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
+                I\_SENDMODE : int *, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
+                I\_AUTOMODE : int * : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
+                I\_SRCCHAN : int *, index,&amp;1024=mono, -1 for none
+                I\_DSTCHAN : int *, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
+                I\_MIDIFLAGS : int *, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanP_DESTTRACK : read only, returns MediaTrack *, destination track, only applies for sends/recvs
+                P\_SRCTRACK : read only, returns MediaTrack *, source track, only applies for sends/recvs
+                P\_ENV:&lt;envchunkname : read only, returns TrackEnvelope *. To get a specific TrackEnvelope, call with :&lt;VOLENV, :&lt;PANENV, etc appended.
                 
             See [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
         </description>
@@ -10904,6 +11015,31 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>MIDI_DisableSort</slug>
+        <title>MIDI_DisableSort</title>
+        <functioncall prog_lang="cpp">void MIDI_DisableSort(MediaItem_Take* take)</functioncall>
+        <functioncall prog_lang="eel">MIDI_DisableSort(MediaItem_Take take)</functioncall>
+        <functioncall prog_lang="lua">reaper.MIDI_DisableSort(MediaItem_Take take)</functioncall>
+        <functioncall prog_lang="python">RPR_MIDI_DisableSort(MediaItem_Take take)</functioncall>
+        <requires>
+            Reaper=5.974
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Disable sorting for all MIDI insert, delete, get and set functions, until MIDI_Sort is called.
+        </description>
+        <parameters>
+            MediaItem_Take take - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            MIDI Management
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>MIDI_EnumSelCC</slug>
         <title>MIDI_EnumSelCC</title>
         <functioncall prog_lang="cpp">int MIDI_EnumSelCC(MediaItem_Take* take, int ccidx)</functioncall>
@@ -12586,7 +12722,7 @@
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Parse hh:mm:ss.sss time string, return time in seconds (or 0.0 on error). See [parse_timestr_pos](#parse_timestr_pos), [parse_timestr_len](#parse_timestr_len).
+            Parse hh:mm:ss.sss time string, return time in seconds (or 0.0 on error). See [parse\_timestr_pos](#parse_timestr_pos), [parse\_timestr_len](#parse_timestr_len).
         </description>
         <retvals>
             number - the converted time in seconds
@@ -14091,7 +14227,7 @@
         <functioncall prog_lang="lua">boolean = reaper.SetMediaTrackInfo_Value(MediaTrack tr, string parmname, number newvalue)</functioncall>
         <functioncall prog_lang="python">Boolean RPR_SetMediaTrackInfo_Value(MediaTrack tr, String parmname, Float newvalue)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             Lua=5.3
         </requires>
         <description prog_lang="*">
@@ -14124,7 +14260,7 @@
             D_DUALPANR : double * : dualpan position 2 (-1..1), only if I_PANMODE==6
             I_PANMODE : int * : pan mode (0 = classic 3.x, 3=new balance, 5=stereo pan, 6 = dual pan)
             D_PANLAW : double * : pan law of track. &gt;0 for project default, 1.0 for +0dB, etc
-            P_ENV : read only, returns TrackEnvelope *, setNewValue=&gt;VOLENV, &gt;PANENV, etc
+            P_ENV:&lt;envchunkname : read only, returns TrackEnvelope *. To get a specific TrackEnvelope, call with :&lt;VOLENV, :&lt;PANENV, etc appended.
             B_SHOWINMIXER : bool * : show track panel in mixer -- do not use on master
             B_SHOWINTCP : bool * : show track panel in tcp -- do not use on master
             B_MAINSEND : bool * : track sends audio to parent
@@ -14876,20 +15012,21 @@
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Set send/receive/hardware output numerical-value attributes, return true on success.
-            category is &gt;0 for receives, 0=sends, &gt;0 for hardware outputs
+            category is &lt;0 for receives, 0=sends, &gt;0 for hardware outputs
             parameter names:
 
-                B\_MUTE : returns bool \*
-                B\_PHASE : returns bool \*, true to flip phase
-                B\_MONO : returns bool \*
-                D\_VOL : returns double \*, 1.0 = +0dB etc
-                D\_PAN : returns double \*, -1..+1
-                D\_PANLAW : returns double \*,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
-                I\_SENDMODE : returns int \*, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
-                I\_AUTOMODE : returns int \* : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
-                I\_SRCCHAN : returns int \*, index,&amp;1024=mono, -1 for none
-                I\_DSTCHAN : returns int \*, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
-                I\_MIDIFLAGS : returns int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chan
+                B\_MUTE : bool *
+                B\_PHASE : bool *, true to flip phase
+                B\_MONO : bool *
+                D\_VOL : double *, 1.0 = +0dB etc
+                D\_PAN : double *, -1..+1
+                D\_PANLAW : double *,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
+                I\_SENDMODE : int *, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
+                I\_AUTOMODE : int * : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
+                I\_SRCCHAN : int *, index,&amp;1024=mono, -1 for none
+                I\_DSTCHAN : int *, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
+                I\_MIDIFLAGS : int *, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanSee <a href="#CreateTrackSend">CreateTrackSend</a>, <a href="#RemoveTrackSend">RemoveTrackSend</a>, <a href="#GetTrackNumSends">GetTrackNumSends</a>.
+
 
             See [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
         </description>
@@ -14923,7 +15060,7 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            send_idx&gt;0 for receives, &gt;=0 for hw ouputs, &gt;=nb_of_hw_ouputs for sends. isend=1 for end of edit, -1 for an instant edit (such as reset), 0 for normal tweak.
+            send_idx&lt;0 for receives, &gt;=0 for hw ouputs, &gt;=nb_of_hw_ouputs for sends. isend=1 for end of edit, -1 for an instant edit (such as reset), 0 for normal tweak.
         </description>
         <retvals>
             boolean - 
@@ -14954,7 +15091,7 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            send_idx&gt;0 for receives, &gt;=0 for hw ouputs, &gt;=nb_of_hw_ouputs for sends. isend=1 for end of edit, -1 for an instant edit (such as reset), 0 for normal tweak.
+            send_idx&lt;0 for receives, &gt;=0 for hw ouputs, &gt;=nb_of_hw_ouputs for sends. isend=1 for end of edit, -1 for an instant edit (such as reset), 0 for normal tweak.
         </description>
         <retvals>
             boolean - 
@@ -16435,6 +16572,42 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ThemeLayout_GetLayout</slug>
+        <title>ThemeLayout_GetLayout</title>
+        <functioncall prog_lang="cpp">bool ThemeLayout_GetLayout(const char* section, int idx, char* nameOut, int nameOut_sz)</functioncall>
+        <functioncall prog_lang="eel">bool ThemeLayout_GetLayout("section", int idx, #name)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string name = reaper.ThemeLayout_GetLayout(string section, integer idx)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String section, Int idx, String nameOut, Int nameOut_sz) = RPR_ThemeLayout_GetLayout(section, idx, nameOut, nameOut_sz)</functioncall>
+        <requires>
+            Reaper=5.974
+            Lua=5.3
+        </requires>
+        <description>
+            Gets theme layout information. 
+            
+            section can be 'global' for global layout override, 'seclist' to enumerate a list of layout sections, otherwise a layout section such as 'mcp', 'tcp', 'trans', etc. 
+            idx can be -1 to query the current value, -2 to get the description of the section (if not global), or 0..x. 
+            
+            returns false if failed.
+        </description>
+        <retvals>
+            boolean retval - 
+            string name - 
+        </retvals>
+        <parameters>
+            string section - 
+            integer idx - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            Theme management
+        </chapter_context>
+        <tags>theme management, get, layout, theme</tags>
+    </US_DocBloc>
+
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ThemeLayout_GetParameter</slug>
         <title>ThemeLayout_GetParameter</title>
         <functioncall prog_lang="cpp">const char* ThemeLayout_GetParameter(int wp, const char** descOutOptional, int* valueOutOptional, int* defValueOutOptional, int* minValueOutOptional, int* maxValueOutOptional)</functioncall>
@@ -16487,6 +16660,41 @@
             Theme management
         </chapter_context>
         <tags>theme management, refresh, layout, theme</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ThemeLayout_SetLayout</slug>
+        <title>ThemeLayout_SetLayout</title>
+        <functioncall prog_lang="cpp">bool ThemeLayout_SetLayout(const char* section, const char* layout)</functioncall>
+        <functioncall prog_lang="eel">bool ThemeLayout_SetLayout("section", " layout")</functioncall>
+        <functioncall prog_lang="lua">boolean retval = reaper.ThemeLayout_SetLayout(string section, string layout)</functioncall>
+        <functioncall prog_lang="python">Boolean RPR_ThemeLayout_SetLayout(String section, String layout)</functioncall>
+        <requires>
+            Reaper=5.974
+            Lua=5.3
+        </requires>
+        <description>
+            Sets theme layout override for a particular section 
+            
+            section can be 'global' or 'mcp' etc. 
+            
+            If setting global layout, prefix a ! to the layout string to clear any per-layout overrides. 
+            
+            Returns false if failed.
+        </description>
+        <retvals>
+            boolean retval - 
+        </retvals>
+        <parameters>
+            string section - 
+            string layout - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            Theme management
+        </chapter_context>
+        <tags>theme management, set, layout, theme</tags>
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -17040,7 +17248,7 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            send_idx&gt;0 for receives, &gt;=0 for hw ouputs, &gt;=nb_of_hw_ouputs for sends.
+            send_idx&lt;0 for receives, &gt;=0 for hw ouputs, &gt;=nb_of_hw_ouputs for sends.
         </description>
         <retvals>
             boolean - 
@@ -20320,7 +20528,7 @@
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             \[BR\] Get track envelope for send/receive/hardware output.
 
-            category is &gt;0 for receives, 0=sends, &gt;0 for hardware outputs
+            category is &lt;0 for receives, 0=sends, &gt;0 for hardware outputs
             sendidx is zero-based (see [GetTrackNumSends](#GetTrackNumSends) to count track sends/receives/hardware outputs)
             envelopeType determines which envelope is returned (0=volume, 1=pan, 2=mute)
 
@@ -20358,11 +20566,11 @@
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             \[BR\] Get source or destination media track for send/receive.
 
-            category is &gt;0 for receives, 0=sends
+            category is &lt;0 for receives, 0=sends
             sendidx is zero-based (see [GetTrackNumSends](#GetTrackNumSends) to count track sends/receives)
             trackType determines which track is returned (0=source track, 1=destination track)
 
-            Note: To get or set other send attributes, see [BR_GetSetTrackSendInfo](#BR_GetSetTrackSendInfo) and [BR_GetMediaTrackSendInfo_Envelope](#BR_GetMediaTrackSendInfo_Envelope).
+            Note: To get or set other send attributes, see [BR\_GetSetTrackSendInfo](#BR_GetSetTrackSendInfo) and [BR\_GetMediaTrackSendInfo_Envelope](#BR_GetMediaTrackSendInfo_Envelope).
         </description>
         <retvals>
             MediaTrack - 
@@ -20794,7 +21002,7 @@
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             \[BR\] Get or set send attributes.
 
-            category is &gt;0 for receives, 0=sends, &gt;0 for hardware outputs
+            category is &lt;0 for receives, 0=sends, &gt;0 for hardware outputs
             sendidx is zero-based (see [GetTrackNumSends](#GetTrackNumSends) to count track sends/receives/hardware outputs)
             To set attribute, pass setNewValue as true
 
@@ -22893,6 +23101,118 @@
     </US_DocBloc>
   
     <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Composite</slug>
+        <title>JS_Composite(JS)</title>
+        <functioncall prog_lang="cpp">int JS_Composite(void* windowHWND, int srcx, int srcy, int srcw, int srch, void* sysBitmap, int dstx, int dsty, int dstw, int dsth)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_Composite", void* windowHWND, int srcx, int srcy, int srcw, int srch, void* sysBitmap, int dstx, int dsty, int dstw, int dsth)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.JS_Composite(identifier windowHWND, integer srcx, integer srcy, integer srcw, integer srch, identifier sysBitmap, integer dstx, integer dsty, integer dstw, integer dsth)</functioncall>
+        <functioncall prog_lang="python">Int JS_Composite(void windowHWND, Int srcx, Int srcy, Int srcw, Int srch, void sysBitmap, Int dstx, Int dsty, Int dstw, Int dsth)</functioncall>
+        <requires>
+            Reaper=5.965
+            JS=0.980
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Composites a LICE bitmap with a REAPER window.
+
+            Each time that the window is re-drawn, the bitmap will be blitted over the window's client area (with per-pixel alpha blending).
+
+            Notes:
+
+            * Re-drawing can also be induced by JS_Window_InvalidateRect.
+            * This function should not be applied directly to top-level windows, but rather to child windows.
+            * Some classes of UI elements, particularly buttons, do not take kindly to being composited, and may crash REAPER.
+
+            Returns:
+            1 if successful, otherwise -1 = windowHWND is not window, -3 = Could not obtain the original window process, -4 = sysBitmap is not a LICE bitmap, -5 = sysBitmap is not a system bitmap, -6 = Could not obtain the window HDC.
+
+        </description>
+        <retvals>
+           integer retval - 
+        </retvals>
+        <parameters>
+           identifier windowHWND - 
+           integer srcx - 
+           integer srcy - 
+           integer srcw - 
+           integer srch - 
+           identifier sysBitmap - 
+           integer dstx - 
+           integer dsty - 
+           integer dstw - 
+           integer dsth - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Composite_ListBitmaps</slug>
+        <title>JS_Composite_ListBitmaps(JS)</title>
+        <functioncall prog_lang="cpp">int JS_Composite_ListBitmaps(void* windowHWND, char* listOutNeedBig, int listOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_Composite_ListBitmaps", void* windowHWND, #list)</functioncall>
+        <functioncall prog_lang="lua">integer retval, string list = reaper.JS_Composite_ListBitmaps(identifier windowHWND)</functioncall>
+        <functioncall prog_lang="python">(Int retval, void windowHWND, String listOutNeedBig, Int listOutNeedBig_sz) = JS_Composite_ListBitmaps(windowHWND, listOutNeedBig, listOutNeedBig_sz)</functioncall>
+        <requires>
+            Reaper=5.965
+            JS=0.980
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Returns all bitmaps composited to the given window.
+
+            The list is formatted as a comma-separated string of hexadecimal values, each representing a LICE_IBitmap\* pointer.
+
+            retval is the number of linked bitmaps found, or negative if an error occured.
+
+        </description>
+        <retvals>
+           integer retval - 
+           string list - 
+        </retvals>
+        <parameters>
+           identifier windowHWND - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Composite_Unlink</slug>
+        <title>JS_Composite_Unlink(JS)</title>
+        <functioncall prog_lang="cpp">void JS_Composite_Unlink(void* windowHWND, void* bitmap)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_Composite_Unlink", void* windowHWND, void* bitmap)</functioncall>
+        <functioncall prog_lang="lua">reaper.JS_Composite_Unlink(identifier windowHWND, identifier bitmap)</functioncall>
+        <functioncall prog_lang="python">JS_Composite_Unlink(void windowHWND, void bitmap)</functioncall>
+        <requires>
+            Reaper=5.965
+            JS=0.980
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            
+        </description>
+        <parameters>
+           identifier windowHWND - 
+           identifier bitmap - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
+    <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Double</slug>
         <title>JS_Double(JS)</title>
         <functioncall prog_lang="cpp">void JS_Double(void* pointer, int offset, double* doubleOut)</functioncall>
@@ -22925,19 +23245,20 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_GDI_Blit</slug>
         <title>JS_GDI_Blit(JS)</title>
-        <functioncall prog_lang="cpp">void JS_GDI_Blit(void* destHDC, int dstx, int dsty, void* sourceHDC, int srcx, int srxy, int width, int height)</functioncall>
-        <functioncall prog_lang="eel">extension_api("JS_GDI_Blit", void* destHDC, int dstx, int dsty, void* sourceHDC, int srcx, int srxy, int width, int height)</functioncall>
-        <functioncall prog_lang="lua">reaper.JS_GDI_Blit(identifier destHDC, integer dstx, integer dsty, identifier sourceHDC, integer srcx, integer srxy, integer width, integer height)</functioncall>
-        <functioncall prog_lang="python">JS_GDI_Blit(void destHDC, Int dstx, Int dsty, void sourceHDC, Int srcx, Int srxy, Int width, Int height)</functioncall>
+        <functioncall prog_lang="cpp">void JS_GDI_Blit(void* destHDC, int dstx, int dsty, void* sourceHDC, int srcx, int srxy, int width, int height, const char* modeOptional)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_GDI_Blit", void* destHDC, int dstx, int dsty, void* sourceHDC, int srcx, int srxy, int width, int height, optional "mode")</functioncall>
+        <functioncall prog_lang="lua">reaper.JS_GDI_Blit(identifier destHDC, integer dstx, integer dsty, identifier sourceHDC, integer srcx, integer srxy, integer width, integer height, optional string mode)</functioncall>
+        <functioncall prog_lang="python">JS_GDI_Blit(void destHDC, Int dstx, Int dsty, void sourceHDC, Int srcx, Int srxy, Int width, Int height, String modeOptional)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.980
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Blits between two device contexts, which may include LICE "system bitmaps".
-        </description>
 
+            modeOptional: "SRCCOPY" by default, or specify "ALPHA" to enable per-pixel alpha blending.
+        </description>
         <parameters>
            identifier destHDC - 
            integer dstx - 
@@ -22947,6 +23268,7 @@
            integer srxy - 
            integer width - 
            integer height - 
+           optional string mode - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -23640,20 +23962,20 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_GDI_StretchBlit</slug>
         <title>JS_GDI_StretchBlit(JS)</title>
-        <functioncall prog_lang="cpp">void JS_GDI_StretchBlit(void* destHDC, int dstx, int dsty, int dstw, int dsth, void* sourceHDC, int srcx, int srxy, int srcw, int srch)</functioncall>
-        <functioncall prog_lang="eel">extension_api("JS_GDI_StretchBlit", void* destHDC, int dstx, int dsty, int dstw, int dsth, void* sourceHDC, int srcx, int srxy, int srcw, int srch)</functioncall>
-        <functioncall prog_lang="lua">reaper.JS_GDI_StretchBlit(identifier destHDC, integer dstx, integer dsty, integer dstw, integer dsth, identifier sourceHDC, integer srcx, integer srxy, integer srcw, integer srch)</functioncall>
-        <functioncall prog_lang="python">JS_GDI_StretchBlit(void destHDC, Int dstx, Int dsty, Int dstw, Int dsth, void sourceHDC, Int srcx, Int srxy, Int srcw, Int srch)</functioncall>
+        <functioncall prog_lang="cpp">void JS_GDI_StretchBlit(void* destHDC, int dstx, int dsty, int dstw, int dsth, void* sourceHDC, int srcx, int srxy, int srcw, int srch, const char* modeOptional)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_GDI_StretchBlit", void* destHDC, int dstx, int dsty, int dstw, int dsth, void* sourceHDC, int srcx, int srxy, int srcw, int srch, optional "mode")</functioncall>
+        <functioncall prog_lang="lua">reaper.JS_GDI_StretchBlit(identifier destHDC, integer dstx, integer dsty, integer dstw, integer dsth, identifier sourceHDC, integer srcx, integer srxy, integer srcw, integer srch, optional string mode)</functioncall>
+        <functioncall prog_lang="python">JS_GDI_StretchBlit(void destHDC, Int dstx, Int dsty, Int dstw, Int dsth, void sourceHDC, Int srcx, Int srxy, Int srcw, Int srch, String modeOptional)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.980
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Blits between two device contexts, which may include LICE "system bitmaps".
 
+            modeOptional: "SRCCOPY" by default, or specify "ALPHA" to enable per-pixel alpha blending.
         </description>
-
         <parameters>
            identifier destHDC - 
            integer dstx - 
@@ -23665,6 +23987,7 @@
            integer srxy - 
            integer srcw - 
            integer srch - 
+           optional string mode
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -24478,11 +24801,11 @@
         <functioncall prog_lang="python">void  JS_LICE_LoadPNG(String filename)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.980
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Returns a (non-system) LICE bitmap containing the PNG.
+            Returns a system LICE bitmap containing the PNG.
 
         </description>
         <retvals>
@@ -24995,6 +25318,8 @@
            Parameters:
            
             * flags, state: The parameter and the return value both use the same format as gfx.mouse_cap. I.e., to get the states of the left mouse button and the ctrl key, use flags = 0b00000101.
+            
+            use -1 as flags to retrieve the states of all mouse-buttons and modifier
 
         </description>
         <retvals>
@@ -25228,7 +25553,125 @@
         <tags></tags>
     </US_DocBloc>
 
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_VKeys_ClearHistory</slug>
+        <title>JS_VKeys_ClearHistory(JS)</title>
+        <functioncall prog_lang="cpp">void JS_VKeys_ClearHistory()</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_VKeys_ClearHistory")</functioncall>
+        <functioncall prog_lang="lua">reaper.JS_VKeys_ClearHistory()</functioncall>
+        <functioncall prog_lang="python">JS_VKeys_ClearHistory()</functioncall>
+        <requires>
+            Reaper=5.965
+            JS=0.980
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            
+        </description>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_VKeys_GetHistory</slug>
+        <title>JS_VKeys_GetHistory(JS)</title>
+        <functioncall prog_lang="cpp">bool JS_VKeys_GetHistory(char* stateOutNeedBig, int* stateOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_VKeys_GetHistory", #state)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string state = reaper.JS_VKeys_GetHistory()</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetHistory(stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
+        <requires>
+            Reaper=5.965
+            JS=0.980
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Retrieves the cumulative states of all virtual keys since the last [JS\_VKeys\_ClearHistory](#JS_VKeys_ClearHistory), in a 255-byte array.
 
+            Note: Mouse buttons and modifier keys are not (currently) reliably detected, and [JS\_Mouse\_GetState](#JS_Mouse_GetState) can be used instead.
+        </description>
+        <retvals>
+           boolean retval - 
+           string state - 
+        </retvals>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_VKeys_GetState</slug>
+        <title>JS_VKeys_GetState(JS)</title>
+        <functioncall prog_lang="cpp">bool JS_VKeys_GetState(char* stateOutNeedBig, int* stateOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_VKeys_GetState", #state)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string state = reaper.JS_VKeys_GetState()</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetState(stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
+        <requires>
+            Reaper=5.965
+            JS=0.980
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Retrieves the current states of all virtual keys, from 0x01 to 0xFF, in a 255-byte array.
+
+            Note: Mouse buttons and modifier keys are not (currently) reliably detected, and [JS\_Mouse\_GetState](#JS_Mouse_GetState) can be used instead.
+        </description>
+        <retvals>
+           boolean retval - 
+           string state - 
+        </retvals>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+    
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_VKeys_Intercept</slug>
+        <title>JS_VKeys_Intercept(JS)</title>
+        <functioncall prog_lang="cpp">int JS_VKeys_Intercept(int keyCode, int intercept)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_VKeys_Intercept", int keyCode, int intercept)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.JS_VKeys_Intercept(integer keyCode, integer intercept)</functioncall>
+        <functioncall prog_lang="python">Int JS_VKeys_Intercept(Int keyCode, Int intercept)</functioncall>
+        <requires>
+            Reaper=5.965
+            JS=0.980
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Intercepting (blocking) virtual keys work similar to the native function PreventUIRefresh: Each key has a (non-negative) intercept state, and the key is passed through as usual if the state equals 0, or blocked if the state is greater than 0.
+
+            keyCode: The virtual key code of the key, or -1 to change the state of all keys.
+
+            intercept: A script can increase the intercept state by passing +1, or lower the state by passing -1. 
+            Multiple scripts can block the same key, and the intercept state may reach up to 255. 
+            If zero is passed, the intercept state is not changed, but the current state is returned.
+
+            Returns: If keyCode refers to a single key, the intercept state of that key is returned. If keyCode = -1, the state of the key that is most strongly blocked (highest intercept state) is returned.
+        </description>
+        <retvals>
+           integer retval - 
+        </retvals>
+        <parameters>
+            integer keyCode - 
+            integer intercept - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_WindowMessage_Intercept</slug>
@@ -25239,13 +25682,11 @@
         <functioncall prog_lang="python">Int  JS_WindowMessage_Intercept(void windowHWND, String messages, Boolean passThrough)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.980
             Lua=5.3
         </requires>
         <description>
-            Intercepts window messages to specified window.
-           
-           
+           Intercepts window messages to specified window.
            
            Parameters:
            
@@ -25269,6 +25710,7 @@
            
             * -3: Failure getting original window process / window not valid.
            
+            * -6: Could not obtain the window client HDC.
            
            
            Notes:
@@ -25280,7 +25722,8 @@
             * To check whether a message type is being blocked or passed through, Peek the message type, or retrieve the entire List of intercepts.
            
             * Mouse events are typically received by the child window under the mouse, not the parent window.
-
+            
+            Keyboard events are usually *not* received by any individual window. To intercept keyboard events, use the VKey functions.
         </description>
         <retvals>
            integer  - 
@@ -25307,7 +25750,7 @@
         <functioncall prog_lang="python">Int  JS_WindowMessage_InterceptList(void windowHWND, String messages)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.980
             Lua=5.3
         </requires>
         <description>
@@ -25337,7 +25780,7 @@
            
             * -3: Failure getting original window process.
            
-           
+            * -6: Could not obtain the window client HDC.
            
            Notes:
            
@@ -26439,7 +26882,7 @@
            
            Parameters:
            
-            * scrollbar: "v" (or "SB_VERT", or "VERT") for vertical scroll, "h" (or "SB_HORZ" or "HORZ") for horizontal.
+            * scrollbar: "v" (or "SB\_VERT", or "VERT") for vertical scroll, "h" (or "SB\_HORZ" or "HORZ") for horizontal.
            
            
            
@@ -26499,6 +26942,47 @@
         <tags></tags>
     </US_DocBloc>
   
+  
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_GetViewportFromRect</slug>
+        <title>JS_Window_GetViewportFromRect(JS)</title>
+        <functioncall prog_lang="cpp">void JS_Window_GetViewportFromRect(int x1, int y1, int x2, int y2, bool wantWork, int* leftOut, int* topOut, int* rightOut, int* bottomOut)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_Window_GetViewportFromRect", int x1, int y1, int x2, int y2, bool wantWork, int &left, int &top, int &right, int &bottom)</functioncall>
+        <functioncall prog_lang="lua">number left, number top, number right, number bottom = reaper.JS_Window_GetViewportFromRect(integer x1, integer y1, integer x2, integer y2, boolean wantWork)</functioncall>
+        <functioncall prog_lang="python">(Int x1, Int y1, Int x2, Int y2, Boolean wantWork, Int leftOut, Int topOut, Int rightOut, Int bottomOut) = JS_Window_GetViewportFromRect(x1, y1, x2, y2, wantWork, leftOut, topOut, rightOut, bottomOut)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=0.980
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Retrieves the dimensions of the display monitor that has the largest area of intersection with the specified rectangle.
+
+            If the monitor is not the primary display, some of the rectangle's coordinates may be negative.
+
+            wantWork: Returns the work area of the display, which excludes the system taskbar or application desktop toolbars.
+        </description>
+        <retvals>
+           number left - 
+           number top - 
+           number right - 
+           number bottom - 
+        </retvals>
+        <parameters>
+           integer x1 - 
+           integer y1 - 
+           integer x2 - 
+           integer y2 - 
+           boolean wantWork - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_HandleFromAddress</slug>
         <title>JS_Window_HandleFromAddress(JS)</title>
@@ -26528,7 +27012,43 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
-  
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_InvalidateRect</slug>
+        <title>JS_Window_InvalidateRect(JS)</title>
+        <functioncall prog_lang="cpp">bool JS_Window_InvalidateRect(void* windowHWND, int left, int top, int right, int bottom, bool eraseBackground)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_Window_InvalidateRect", void* windowHWND, int left, int top, int right, int bottom, bool eraseBackground)</functioncall>
+        <functioncall prog_lang="lua">boolean retval = reaper.JS_Window_InvalidateRect(identifier windowHWND, integer left, integer top, integer right, integer bottom, boolean eraseBackground)</functioncall>
+        <functioncall prog_lang="python">Boolean JS_Window_InvalidateRect(void windowHWND, Int left, Int top, Int right, Int bottom, Boolean eraseBackground)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=0.980
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Similar to the Win32 function InvalidateRect.
+
+        </description>
+        <retvals>
+           boolean retval  - 
+        </retvals>
+        <parameters>
+           identifier windowHWND - 
+           integer left - 
+           integer top - 
+           integer right - 
+           integer bottom - 
+           boolean eraseBackground - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
+    
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_IsChild</slug>
         <title>JS_Window_IsChild(JS)</title>
@@ -26728,6 +27248,42 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_MonitorFromRect</slug>
+        <title>JS_Window_MonitorFromRect(JS)</title>
+        <functioncall prog_lang="cpp">void JS_Window_MonitorFromRect(int x1, int y1, int x2, int y2, bool wantWork, int* leftOut, int* topOut, int* rightOut, int* bottomOut)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_Window_MonitorFromRect", int x1, int y1, int x2, int y2, bool wantWork, int &left, int &top, int &right, int &bottom)</functioncall>
+        <functioncall prog_lang="lua">number left, number top, number right, number bottom = reaper.JS_Window_MonitorFromRect(integer x1, integer y1, integer x2, integer y2, boolean wantWork)</functioncall>
+        <functioncall prog_lang="python">(Int x1, Int y1, Int x2, Int y2, Boolean wantWork, Int leftOut, Int topOut, Int rightOut, Int bottomOut) = JS_Window_MonitorFromRect(x1, y1, x2, y2, wantWork, leftOut, topOut, rightOut, bottomOut)</functioncall>
+        <requires>
+            Reaper=5.965
+            JS=0.963
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Deprecated - use [GetViewportFromRect](#GetViewportFromRect) instead.
+        </description>
+        <retvals>
+            number left - 
+            number top - 
+            number right - 
+            number bottom - 
+        </retvals>
+        <parameters>
+           integer x1 - 
+           integer y1 - 
+           integer x2 - 
+           integer y2 - 
+           boolean wantWork - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
   
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_Move</slug>
@@ -26768,7 +27324,7 @@
         <title>JS_Window_OnCommand(JS)</title>
         <functioncall prog_lang="cpp">bool JS_Window_OnCommand(void* windowHWND, int commandID)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("JS_Window_OnCommand", void* windowHWND, int commandID)</functioncall>
-        <functioncall prog_lang="lua">boolean retval =r eaper.JS_Window_OnCommand(identifier windowHWND, integer commandID)</functioncall>
+        <functioncall prog_lang="lua">boolean retval = reaper.JS_Window_OnCommand(identifier windowHWND, integer commandID)</functioncall>
         <functioncall prog_lang="python">Boolean JS_Window_OnCommand(void windowHWND, Int commandID)</functioncall>
         <requires>
             Reaper=5.965
@@ -26776,9 +27332,9 @@
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Sends a "WM_COMMAND" message to the specified window, which simulates a user selecting a command in the window menu.
+            Sends a "WM\_COMMAND" message to the specified window, which simulates a user selecting a command in the window menu.
 
-            This function is similar to Main_OnCommand and MIDIEditor_OnCommand, but can send commands to any window that has a menu.
+            This function is similar to Main\_OnCommand and MIDIEditor\_OnCommand, but can send commands to any window that has a menu.
 
             In the case of windows that are listed among the Action list's contexts (such as the Media Explorer), the commandIDs of the actions in the Actions list may be used.
         </description>
@@ -27167,6 +27723,33 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_Update</slug>
+        <title>JS_Window_Update(JS)</title>
+        <functioncall prog_lang="cpp">void JS_Window_Update(void* windowHWND)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_Window_Update", void* windowHWND)</functioncall>
+        <functioncall prog_lang="lua">reaper.JS_Window_Update(identifier windowHWND)</functioncall>
+        <functioncall prog_lang="python">JS_Window_Update(void windowHWND)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=0.980
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+           Similar to the Win32 function UpdateWindow.
+        </description>
+        <parameters>
+           identifier windowHWND - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
     
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Dialog_BrowseForFolder</slug>
@@ -34048,7 +34631,7 @@
             Lua=5.3
         </requires>
         <description indent="default">
-            Read (number) value from shared memory attached-to by gmem_attach(). index can be \[0..1&lt;&lt;25).
+            Read (number) value from shared memory attached-to by gmem_attach(). index can be [0..1&lt;&lt;25).
             
             returns nil if not available
         </description>

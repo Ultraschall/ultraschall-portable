@@ -55,7 +55,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>Beta 2.73 - "Radiohead - Bangers'n'Mash " - 9th of March 2019 - Build: 30472</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>Beta 2.74 - "Talking Heads - Once in a Lifetime" - 10th of April 2019 - Build: 33434</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to use Beta functions and hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -119,7 +119,8 @@ Ultraschall API functions
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Routing</b></td></tr><tr><td><a href="#Routing_001_Introduction">Routing: Introduction</a></td>
 <td><a href="#Routing_002_Send_Receive">Routing: Send and Receives</a></td>
 <td><a href="#Routing_003_HWOuts">Routing: Hardware Outs</a></td>
-</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>ExtState Management</b></td></tr><tr><td><a href="#ExtStateManagement_001_Introduction">ExtState Management: Introduction</a></td>
+<td><a href="#Routing_004_RoutingMassManipulation">Routing: Mass manipulation of Routings</a></td>
+</tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>ExtState Management</b></td></tr><tr><td><a href="#ExtStateManagement_001_Introduction">ExtState Management: Introduction</a></td>
 <td><a href="#ExtStateManagement_002_IniFiles">ExtState Management: Ini-Files</a></td>
 <td><a href="#ExtStateManagement_003_IniFiles_Functions">ExtState Management: Inifile-Functions</a></td>
 <td><a href="#ExtStateManagement_004_Ultraschall_Ini">ExtState Management: Ultraschall.ini</a></td>
@@ -158,7 +159,7 @@ Ultraschall API functions
 <li><a href="#Cough_Mute_Buttons_001_Introduction">Cough-Mute-management</a> - you can write your own cough-buttons, that set the state of the mute-envelope of a track easily</li>
 <li><a href="#MarkersAndRegions_001_Introduction">Marker</a> - extensive set of marker functions, get, set, export, import, enumerate, etc</li>
 <li><a href="#Getting_Manipulating_Items_008_Spectral_Edit">Spectrogram</a> - you can program the spectrogram-view</li>
-<li><a href="#Routing_001_Introduction">Routing</a> - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions. Includes mastertrack as well.</li>
+<li><a href="#Routing_001_Introduction">Routing</a> - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions, including TrackStateChunks and mass manipulation of routings. Includes mastertrack as well.</li>
 <li><a href="#Getting_Manipulating_Items_002_GetMediaItems">Get MediaItems</a> - you can get all media-items within a time-range AND within the tracks you prefer; a 2D-approach e.g. <a href="US_Api_Functions.html#GetAllMediaItemsBetween">GetAllMediaItemsBetween</a> and <a href="US_Api_Functions.html#GetMediaItemsAtPosition">GetMediaItemsAtPosition</a>, etc</li>
 <li>Gaps between items - you can get the gaps between items in a track, using <a href="US_Api_Functions.html#GetGapsBetweenItems">GetGapsBetweenItems</a></li>
 <li><a href="#Getting_Manipulating_Items_001_Introduction">Edit item(s)</a> - Split, Cut, Copy, Paste, Move, RippleCut, RippleInsert, SectionCut by tracks AND time/start to endposition e.g. <a href="US_Api_Functions.html#RippleCut">RippleCut</a>, <a href="RippleInsert">RippleInsert</a>, <a href="US_Api_Functions.html#SectionCut">SectionCut</a>, <a href="US_Api_Functions.html#SplitMediaItems_Position">SplitMediaItems_Position</a>, <a href="US_Api_Functions.html#MoveMediaItemsBefore_By">MoveMediaItemsBefore_By</a>, <a href="US_Api_Functions.html#MoveMediaItemsSectionTo">MoveMediaItemsSectionTo</a> and many more</li>
@@ -2119,7 +2120,9 @@ When setread is set to true, ShowLastErrorMessage will not show this errormessag
 </li>
 <li><a href="US_Api_Functions.html#GetErrorMessage_Funcname">GetErrorMessage_Funcname</a> - gets an errormessage a specific function provided, can be indexed<br />
 </li>
-<li><a href="US_Api_Functions.html#GetLastErrorMessage_Funcname">GetLastErrorMessage_Funcname</a> - gets the last errormessage a specific function provided</li>
+<li><a href="US_Api_Functions.html#GetLastErrorMessage_Funcname">GetLastErrorMessage_Funcname</a> - gets the last errormessage a specific function provided<br />
+</li>
+<li><a href="US_Api_Functions.html#ShowErrorMessagesInReascriptConsole">ShowErrorMessagesInReascriptConsole</a> - prints the errormessages to the console, when they happen for "realtime"-debug-errorchecking</li>
 </ul>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Error_Messaging_System_004_Deleting_Error_Messages"></a>
@@ -2215,7 +2218,7 @@ So I desired some functions that keep programming the routing simple and down to
 </li>
 <li>counting all HWOuts/routings in a track</li>
 </ul>
-<p>Let's start with the routing.</p>
+<p>In addition to that, I also added numerous functions, that allow "mass manipulation" of the Routings. Let's start with the routing.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Routing_002_Send_Receive"></a>
 <div style="font-size:100%"><h4><a href="#Routing_002_Send_Receive">^</a> <u>Routing: Send and Receives</u></h4></div><p><p>Before we start, some basics, if you're not familiar with routing.</p>
@@ -2229,12 +2232,13 @@ Let's create a new send/receive-setting.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#AddTrackAUXSendReceives">AddTrackAUXSendReceives</a></strong></p>
 </blockquote>
-<pre><code>                   boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, 
-                                                                        number volume, number pan, integer mute, integer mono_stereo, integer phase, 
-                                                                        integer chan_src, integer snd_chan, number unknown, integer midichanflag, 
-                                                                        integer automation, boolean undo)</code></pre>
+<pre><code>                   boolean retval, optional string TrackStateChunk 
+                                    = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, 
+                                                                          number volume, number pan, integer mute, integer mono_stereo, integer phase, 
+                                                                          integer chan_src, integer snd_chan, number pan_law, integer midichanflag, 
+                                                                          integer automation, optional string TrackStateChunk)</code></pre>
 <blockquote>
-<p>This adds a receive to a specific track. To tell the function, from which track the received signal comes from, you need to set the parameter recv_tracknumber to the tracknumber of the sending track.<br />
+<p>This adds a receive to a specific track or TrackStateChunk. To tell the function, from which track the received signal comes from, you need to set the parameter recv_tracknumber to the tracknumber of the sending track.<br />
 The other parameters are simply all other settings for this send/receive, like</p>
 </blockquote>
 <blockquote>
@@ -2247,9 +2251,11 @@ The other parameters are simply all other settings for this send/receive, like</
 <li>phase - the phase of the received signal</li>
 <li>chan_src - the source-channel to receive from. That is the sending-track's-channel!</li>
 <li>snd_chan - the track's own channel to pass the received signal to. This is in the receiving track's channels!</li>
+<li>pan_law - the pan-law-setting for this AUXSendReceive</li>
 <li>midichanflag - manages the whole MIDI-receiving settings, like to receive from which MIDI-source-channel and to send to which of the track's own MIDI-channels. Includes also the MIDI-On-switching as well as no channels at all.<br />
 </li>
 <li>automation - the automation-mode of the receive</li>
+<li>TrackStateChunk - set this, if you want to add AUXSendReceives to a TrackStateChunk; set tracknumber=-1 in that case</li>
 </ul>
 </blockquote>
 <p>Setting a receive-setting works basically the same:</p>
@@ -2259,7 +2265,8 @@ The other parameters are simply all other settings for this send/receive, like</
 <pre><code>                    boolean retval = ultraschall.SetTrackAUXSendReceives(integer tracknumber, integer idx, integer recv_tracknumber, 
                                                                          integer post_pre_fader, number volume, number pan, integer mute, 
                                                                          integer mono_stereo, integer phase, integer chan_src, integer snd_chan, 
-                                                                         number unknown, integer midichanflag, integer automation, boolean undo)</code></pre>
+                                                                         number pan_law, integer midichanflag, integer automation, 
+                                                                         optional string TrackStateChunk)</code></pre>
 <blockquote>
 <p>This works the same as AddTrackAUXSendReceives, but changes an already existing setting.</p>
 </blockquote>
@@ -2269,25 +2276,25 @@ The other parameters are simply all other settings for this send/receive, like</
 </blockquote>
 <pre><code>                    integer recv_tracknumber, integer post_pre_fader, number volume, 
                     number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, 
-                    integer snd_chan, number unknown, integer midichanflag, integer automation 
-                                                        = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx)</code></pre>
+                    integer snd_chan, number pan_law, integer midichanflag, integer automation 
+                                                        = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)</code></pre>
 <blockquote>
-<p>This receives all the settings of a receive of a track. The same rules for the former functions (AddTrackAUXSendReceives and SetTrackAUXSendReceives) apply also here.</p>
+<p>This receives all the settings of a receive of a track or a TrackStateChunk. The same rules for the former functions (AddTrackAUXSendReceives and SetTrackAUXSendReceives) apply also here.</p>
 </blockquote>
 <p>And when you want to delete a receive, you can use the following function:</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#DeleteTrackAUXSendReceives">DeleteTrackAUXSendReceives</a></strong></p>
 </blockquote>
-<pre><code>                    boolean retval = ultraschall.DeleteTrackAUXSendReceives(integer tracknumber, integer idx, boolean undo)
+<pre><code>                    boolean retval = ultraschall.DeleteTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)
                     </code></pre>
 <blockquote>
-<p>This deletes a receive-setting from a track. Just pass to it the tracknumber, which receives and the idx of the receive-setting. To know, which setting to delete, you can use GetTrackAUXSendReceives.</p>
+<p>This deletes a receive-setting from a track or a TrackStateChunk. Just pass to it the tracknumber, which receives and the idx of the receive-setting. To know, which setting to delete, you can use GetTrackAUXSendReceives. Set tracknumber=-1 to use the parameter TrackStateChunk to delete an AUXSendReceive from a TrackStateChunk.</p>
 </blockquote>
 <p>If you want to know, how many receives a track has, you can use:</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#CountTrackAUXSendReceives">CountTrackAUXSendReceives</a></strong></p>
 </blockquote>
-<pre><code>                    integer count_SendReceives = ultraschall.CountTrackAUXSendReceives(integer tracknumber)
+<pre><code>                    integer count_SendReceives = ultraschall.CountTrackAUXSendReceives(integer tracknumber, optional string TrackStateChunk)
                     </code></pre>
 <blockquote>
 <p>This returns the number of received tracks a the track tracknumber has.</p>
@@ -2302,10 +2309,10 @@ For that, I included the functions: <a href="US_Api_Functions.html#AddTrackHWOut
 </blockquote>
 <pre><code>                    boolean retval = ultraschall.AddTrackHWOut(integer tracknumber, integer outputchannel, integer post_pre_fader, 
                                                                number volume, number pan, integer mute, integer phase, integer source, 
-                                                               number unknown, integer automationmode, boolean undo)
+                                                               number pan_law, integer automationmode, optional string TrackStateChunk)
                                                                </code></pre>
 <blockquote>
-<p>This adds a new HWOut to a track. The tracknumber is either 0 for the master track or 1 and higher for track 1 or higher.<br />
+<p>This adds a new HWOut to a track or a TrackStateChunk. The tracknumber is either 0 for the master track or 1 and higher for track 1 or higher or -1, if you want to pass a TrackStateChunk.<br />
 The other options are to some extend familiar to the <a href="#Routing_002_Send_Receive">AUXSendReceive-functions</a>:</p>
 <ul>
 <li>outputchannel - the outputchannel, either single tracks or stereo-tracks</li>
@@ -2315,7 +2322,9 @@ The other options are to some extend familiar to the <a href="#Routing_002_Send_
 <li>mute - shall it be muted or not</li>
 <li>phase - the phase of the HWOut</li>
 <li>source - the channel(s) to output to the outputchannels</li>
+<li>pan_law - the pan-law-setting of the HWOut</li>
 <li>automationmode - the automation of the HWOut</li>
+<li>TrackStateChunk - the trackstatechunk, into which you want to add HWOut-settings; only available when tracknumber=-1</li>
 </ul>
 </blockquote>
 <p>Setting an already existing HWOut can be done using the function:</p>
@@ -2324,8 +2333,8 @@ The other options are to some extend familiar to the <a href="#Routing_002_Send_
 </blockquote>
 <pre><code>                    boolean retval = ultraschall.SetTrackHWOut(integer tracknumber, integer idx, integer outputchannel, 
                                                                integer post_pre_fader, number volume, number pan, integer mute, 
-                                                               integer phase, integer source, number unknown, integer automationmode, 
-                                                               boolean undo)</code></pre>
+                                                               integer phase, integer source, number pan_law, integer automationmode, 
+                                                               optional string TrackStateChunk)</code></pre>
 <blockquote>
 <p>This sets the settings of an already existing HWOut. The rest is the same, as the parameters for AddTrackHWOut.</p>
 </blockquote>
@@ -2334,17 +2343,17 @@ The other options are to some extend familiar to the <a href="#Routing_002_Send_
 <p><strong><a href="US_Api_Functions.html#GetTrackHWOut">GetTrackHWOut</a></strong></p>
 </blockquote>
 <pre><code>                    integer outputchannel, integer post_pre_fader, number volume, number pan, 
-                    integer mute, integer phase, integer source, number unknown, integer automationmode 
-                                                                = ultraschall.GetTrackHWOut(integer tracknumber, integer idx)
+                    integer mute, integer phase, integer source, number pan_law, integer automationmode 
+                                                                = ultraschall.GetTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)
                                                                 </code></pre>
 <blockquote>
-<p>This returns the settings of a HWOut. The tracknumbers are the same, with 0 for the master-track; 1 and higher for track 1 and higher. The idx is the index of the HWOut-setting of the track.</p>
+<p>This returns the settings of a HWOut. The tracknumbers are the same, with 0 for the master-track; 1 and higher for track 1 and higher; -1 if you want to use the parameter TrackStateChunk. The idx is the index of the HWOut-setting of the track.</p>
 </blockquote>
 <p>To delete it, use:</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#DeleteTrackHWOut">DeleteTrackHWOut</a></strong></p>
 </blockquote>
-<pre><code>                    boolean retval = ultraschall.DeleteTrackHWOut(integer tracknumber, integer idx, boolean undo)</code></pre>
+<pre><code>                    boolean retval = ultraschall.DeleteTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)</code></pre>
 <blockquote>
 <p>This deletes a HWOut-setting from a track.</p>
 </blockquote>
@@ -2352,7 +2361,120 @@ The other options are to some extend familiar to the <a href="#Routing_002_Send_
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#CountTrackHWOuts">CountTrackHWOuts</a></strong></p>
 </blockquote>
-<pre><code>                    integer count_HWOuts = ultraschall.CountTrackHWOuts(integer tracknumber)</code></pre>
+<pre><code>                    integer count_HWOuts = ultraschall.CountTrackHWOuts(integer tracknumber, optional string TrackStateChunk)</code></pre>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Routing_004_RoutingMassManipulation"></a>
+<div style="font-size:100%"><h4><a href="#Routing_004_RoutingMassManipulation">^</a> <u>Routing: Mass manipulation of Routings</u></h4></div><p><p>Sometimes, working with individual settings isn't enough. Sometimes, you want to work with all Routing-Settings at once.<br />
+For that, I included the functions: <a href="US_Api_Functions.html#ClearRoutingMatrix">ClearRoutingMatrix</a>, <a href="US_Api_Functions.html#GetAllHWOuts">GetAllHWOuts</a>, <a href="US_Api_Functions.html#ApplyAllHWOuts">ApplyAllHWOuts</a>, <a href="US_Api_Functions.html#AreHWOutsTablesEqual">AreHWOutsTablesEqual</a>, <a href="US_Api_Functions.html#GetAllAUXSendReceives">GetAllAUXSendReceives</a>, <a href="US_Api_Functions.html#ApplyAllAUXSendReceives">ApplyAllAUXSendReceives</a>, <a href="US_Api_Functions.html#AreAUXSendReceivesTablesEqual">AreAUXSendReceivesTablesEqual</a>, <a href="US_Api_Functions.html#GetAllMainSendStates">GetAllMainSendStates</a>, <a href="US_Api_Functions.html#ApplyAllMainSendStates">ApplyAllMainSendStates</a>, <a href="US_Api_Functions.html#AreMainSendsTablesEqual">AreMainSendsTablesEqual</a></p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#ClearRoutingMatrix">ClearRoutingMatrix</a></strong></p>
+</blockquote>
+<pre><code>                    boolean retval = ultraschall.ClearRoutingMatrix(boolean ClearHWOuts, boolean ClearAuxRecvs, boolean ClearTrackMasterSends, 
+                                                                    boolean ClearMasterTrack, boolean undo)
+                                                               </code></pre>
+<blockquote>
+<p>This clears the routing-matrix. You can control, what parts of the routing-matrix shall be cleared(MainSends, AUXSendReceives, HWOuts) and if this shall include the master-track as well.</p>
+</blockquote>
+<p>To mass-manipulate all HWOuts, see the following functions:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#GetAllHWOuts">GetAllHWOuts</a></strong></p>
+</blockquote>
+<pre><code>                    table AllHWOuts, integer number_of_tracks = ultraschall.GetAllHWOuts()
+                                                               </code></pre>
+<blockquote>
+<p>This returns all HWOut-settings as a nice handy table, which you can alter. The name of each index reflects the name of the parameters of the add/get/set-HWOut-functions.<br />
+returned table is of structure:<br />
+table["HWOuts"]=true - signals, this is a HWOuts-table; don't change that!<br />
+table["number<em>of</em>tracks"] - the number of tracks in this table, from track 0(master) to track n<br />
+table[tracknumber]["HWOut_count"] - the number of HWOuts of tracknumber, beginning with 1<br />
+table[tracknumber]["TrackID"] - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)<br />
+table[tracknumber][HWOutIndex]["outputchannel"] - the number of outputchannels of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["post<em>pre</em>fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["volume"] - the volume of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["pan"] - the panning of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["mute"] - the mute-setting of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["phase"] - the phase-setting of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["source"] - the source/input of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["pan_law"] - pan-law, default is -1<br />
+table[tracknumber][HWOutIndex]["automationmode"] - the automation-mode of this HWOutIndex of tracknumber</p>
+</blockquote>
+<p>You can manipulate these entries now. For the valid value-ranges, see the <a href="US_Api_Functions.html#GetTrackHWOut">GetTrackHWOut</a>-function.<br />
+After that, you can add them back to the Routings at once, using:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#ApplyAllHWOuts">ApplyAllHWOuts</a></strong></p>
+</blockquote>
+<pre><code>                    boolean retval = ultraschall.ApplyAllHWOuts(table AllHWOuts, optional integer option)
+                                                               </code></pre>
+<blockquote>
+<p>This applies the settings of the AllHWOuts-table to all the tracks.<br />
+The parameter option allows you to set, whether the settings shall be applied by tracknumber or by track-guid.<br />
+Each MediaTrack in a project has it's own ID, stored as a 64-digits-string. This allows one to know a certain track, even if the order or the trackname change.<br />
+If you choose option=2, this function will look into the table and retrieve the stored guid of a track and apply the setting to exact this track. If you choose option=1 or option=nil, then it will apply it to the tracknumber, even if the tracknumber doesn't reflect the tracknumber of the track with the guid.<br />
+So depending on how much you want to "hook" the settings to a specific track or a tracknumber, you set option to 2 or to nil.</p>
+</blockquote>
+<p>Let's assume, you have two AllHWOuts-tables and want to compare, if they are the same or if they are different, you can use:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#AreHWOutsTablesEqual">AreHWOutsTablesEqual</a></strong></p>
+</blockquote>
+<pre><code>                    boolean retval = ultraschall.AreHWOutsTablesEqual(table AllHWOuts, table AllHWOuts2, optional integer option)
+                                                               </code></pre>
+<blockquote>
+<p>This compares two AllHWOut-tables and returns false, if they are different.<br />
+With the parameter option, you can choose, whether to check for the guids as well(option=2) or if they shall be ignored in the comparison(option=nil).</p>
+</blockquote>
+<p>The same principles can be used for MainSendStates and AUXSendReceives, who also have the same functions:</p>
+<ul>
+<li><a href="US_Api_Functions.html#GetAllAUXSendReceives">GetAllAUXSendReceives</a> - returns all Send/Receive-settings as a handy table, that can be altered and readded, using ApplyAllAUXSendReceives</li>
+<li><a href="US_Api_Functions.html#ApplyAllAUXSendReceives">ApplyAllAUXSendReceives</a> - this applies a AllAUXSendReceive-table, as returned by GetAllAUXSendReceives</li>
+<li><a href="US_Api_Functions.html#AreAUXSendReceivesTablesEqual">AreAUXSendReceivesTablesEqual</a> - compares two AllAUXSendReceive-tables</li>
+<li><a href="US_Api_Functions.html#GetAllMainSendStates">GetAllMainSendStates</a> - returns all MainSend-states as a handy table, that can be altered and readded, using ApplyAllMainSendStates</li>
+<li><a href="US_Api_Functions.html#ApplyAllMainSendStates">ApplyAllMainSendStates</a> - this applies a AllMainSends-table, as returned by GetAllMainSendStates</li>
+<li><a href="US_Api_Functions.html#AreMainSendsTablesEqual">AreMainSendsTablesEqual</a> - compares two AllMainSends-tables</li>
+</ul>
+<p><strong>Regarding the guid, versus tracknumber-difference</strong></p>
+<p>To get an idea of the differences between applying settings by guid versus applying settings by tracknumbers, consider the following example:<br />
+Just create a new project with 5 tracks in them and name them A, B, C, D and E.<br />
+The routing-matrix could look something like this:</p>
+<p><img src="gfx/Routing_004_RoutingMassManipulation_RoutingMatrix_before.png" alt="Routing Matrix - before" /></p>
+<p>Now, we look at the following two code-snippets, who get all MainSend-states of a track, add two new tracks before the first track, toggle the states of the MainSends in the AllMainSends-table and reapply them. The only difference is, how they use the parameter option.</p>
+<p>Using option=nil:</p>
+<pre><code>        dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+
+        -- get all current MainSendStates
+        AllMainSends_Table, NumberOfTracksInTable = ultraschall.GetAllMainSendStates()
+        -- insert two track before the first track
+        ultraschall.InsertTrackAtIndex(0, 2, true)
+
+        -- toggle the Main-Sends-states.
+        if AllMainSends_Table[1][&quot;MainSendOn&quot;]==0 then newstate=1 else newstate=0 end
+        for i=1, NumberOfTracksInTable do
+          AllMainSends_Table[i][&quot;MainSendOn&quot;]=newstate
+        end
+
+        -- apply them to all track using their tracknumbers(option=nil)
+        ultraschall.ApplyAllMainSendStates(AllMainSends_Table,nil)</code></pre>
+<p>This changes the main-send-states, beginning with Track 1, although the first two tracks are not A, B, C, D or E.</p>
+<p>The resulting routing-matrix will look like this:<br />
+<img src="gfx/Routing_004_RoutingMassManipulation_RoutingMatrix_after_option_nil.png" alt="Routing Matrix - after, using option=nil" /></p>
+<p>Using option=2:</p>
+<pre><code>        dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+
+        -- get all current MainSendStates
+        AllMainSends_Table, NumberOfTracksInTable = ultraschall.GetAllMainSendStates()
+        -- insert two track before the first track
+        ultraschall.InsertTrackAtIndex(0, 2, true)
+
+        -- toggle the Main-Sends-states.
+        if AllMainSends_Table[1][&quot;MainSendOn&quot;]==0 then newstate=1 else newstate=0 end
+        for i=1, NumberOfTracksInTable do
+          AllMainSends_Table[i][&quot;MainSendOn&quot;]=newstate
+        end
+
+        -- apply them to all track using their guids(option=2)
+        ultraschall.ApplyAllMainSendStates(AllMainSends_Table,2)</code></pre>
+<p>This changes the main-send-states only at tracks A, B, C, D, E, leaving the newly inserted tracks untouched.</p>
+<p>The resulting routing-matrix will look like this:<br />
+<img src="gfx/Routing_004_RoutingMassManipulation_RoutingMatrix_after_option_2.png" alt="Routing Matrix - after, using option=2" /></p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#ExtStateManagement_001_Introduction">^</a> <u>ExtState Management: Introduction</u></h4></div><p><p>One of the concepts of Reaper to exchange data between scripts, functions, instances are so called extstates.<br />
@@ -2560,7 +2682,8 @@ This is only for the ultraschall.ini-file, all other ini-files can be used by yo
 </ul>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_005_TrackItemExtStates"></a>
-<div style="font-size:100%"><h4><a href="#ExtStateManagement_005_TrackItemExtStates">^</a> <u>ExtState Management: Track and Item-Extstates</u></h4></div><p><p>Another concept, I introduce with the Ultraschall-API are Track and Item-Extstates.</p>
+<div style="font-size:100%"><h4><a href="#ExtStateManagement_005_TrackItemExtStates">^</a> <u>ExtState Management: Track and Item-Extstates</u></h4></div><p><p><strong>Note: This is deprecated, as Reaper will have the same feature in better in a future version!</strong></p>
+<p>Another concept, I introduce with the Ultraschall-API are Track and Item-Extstates.</p>
 <p>To store them, I make use of the fact, that tracks and items have their own guids. I use these guids as basis for the section-name, while the key and value can be freely chosen by you.<br />
 A valid guid is a string that follows the following pattern {........-....-....-....-............} where . is a hexadecimal value(0-F) These extstates are stored as ProjectExtStates, that means: when you save the project, these extstates will be saved with it.</p>
 <p>To make this possible in general, I included two functions: <a href="US_Api_Functions.html#GetGuidExtState">GetGuidExtState</a>, <a href="US_Api_Functions.html#SetGuidExtState">SetGuidExtState</a><br />
@@ -2589,7 +2712,8 @@ You can choose, whether to overwrite it, if it already exists and if the state s
 I will look into that problem at some point.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_006_TrackExtStates"></a>
-<div style="font-size:100%"><h4><a href="#ExtStateManagement_006_TrackExtStates">^</a> <u>ExtState Management: Track Extstates</u></h4></div><p><p>Let's store some extstates for tracks. For that, I added the functions: <a href="US_Api_Functions.html#GetTrackExtState">GetTrackExtState</a>, <a href="US_Api_Functions.html#SetTrackExtState">SetTrackExtState</a><br />
+<div style="font-size:100%"><h4><a href="#ExtStateManagement_006_TrackExtStates">^</a> <u>ExtState Management: Track Extstates</u></h4></div><p><p><strong>Note: This is deprecated, as Reaper will have the same feature in better in a future version!</strong></p>
+<p>Let's store some extstates for tracks. For that, I added the functions: <a href="US_Api_Functions.html#GetTrackExtState">GetTrackExtState</a>, <a href="US_Api_Functions.html#SetTrackExtState">SetTrackExtState</a><br />
 TrackExtStates are stored as ProjectExtState within the projectfile.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#SetTrackExtState">SetTrackExtState</a></strong></p>
@@ -2608,7 +2732,8 @@ TrackExtStates are stored as ProjectExtState within the projectfile.</p>
 </blockquote>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_007_ItemExtStates"></a>
-<div style="font-size:100%"><h4><a href="#ExtStateManagement_007_ItemExtStates">^</a> <u>ExtState Management: Item Extstates</u></h4></div><p><p>Let's store some extstates for items. For that, I added the functions: <a href="US_Api_Functions.html#GetItemExtState">GetItemExtState</a>, <a href="US_Api_Functions.html#SetItemExtState">SetItemExtState</a><br />
+<div style="font-size:100%"><h4><a href="#ExtStateManagement_007_ItemExtStates">^</a> <u>ExtState Management: Item Extstates</u></h4></div><p><p><strong>Note: This is deprecated, as Reaper will have the same feature in better in a future version!</strong></p>
+<p>Let's store some extstates for items. For that, I added the functions: <a href="US_Api_Functions.html#GetItemExtState">GetItemExtState</a>, <a href="US_Api_Functions.html#SetItemExtState">SetItemExtState</a><br />
 ItemExtStates are stored as ProjectExtState within the projectfile. These functions work basically like the ones for TrackExtStates</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#SetItemExtState">SetItemExtState</a></strong></p>
@@ -2650,8 +2775,7 @@ ItemExtStates are stored as ProjectExtState within the projectfile. These functi
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="MarkersAndRegions_002_General_How_To"></a>
 <div style="font-size:100%"><h4><a href="#MarkersAndRegions_002_General_How_To">^</a> <u>Markers and Regions: General How To</u></h4></div><p><p>All functions for all kinds of markers settable in the Ultraschall-Api share the same basic subset of workflows.<br />
 All markers can be added, set, deleted, enumerated, counted, imported and exported from/to a file, checked for being a certain markertype and converted into a certain markertype(if possible).<br />
-Let's take edit-markers as an example, who have the functions:</p>
-<p><a href="US_Api_Functions.html#AddEditMarker">AddEditMarker</a>, <a href="US_Api_Functions.html#SetEditMarker">SetEditMarker</a>, <a href="US_Api_Functions.html#DeleteEditMarker">DeleteEditMarker</a>, <a href="US_Api_Functions.html#EnumerateEditMarkers">EnumerateEditMarkers</a>, <a href="US_Api_Functions.html#CountEditMarkers">CountEditMarkers</a>, <a href="US_Api_Functions.html#ImportEditFromFile">ImportEditFromFile</a>, <a href="US_Api_Functions.html#ExportEditMarkersToFile">ExportEditMarkersToFile</a>, <a href="US_Api_Functions.html#IsMarkerEdit">IsMarkerEdit</a>, <a href="US_Api_Functions.html#MarkerToEditMarker">MarkerToEditMarker</a>, <a href="US_Api_Functions.html#EditToMarker">EditToMarker</a></p>
+Let's take edit-markers as an example, who have the functions: <a href="US_Api_Functions.html#AddEditMarker">AddEditMarker</a>, <a href="US_Api_Functions.html#SetEditMarker">SetEditMarker</a>, <a href="US_Api_Functions.html#DeleteEditMarker">DeleteEditMarker</a>, <a href="US_Api_Functions.html#EnumerateEditMarkers">EnumerateEditMarkers</a>, <a href="US_Api_Functions.html#CountEditMarkers">CountEditMarkers</a>, <a href="US_Api_Functions.html#ImportEditFromFile">ImportEditFromFile</a>, <a href="US_Api_Functions.html#ExportEditMarkersToFile">ExportEditMarkersToFile</a>, <a href="US_Api_Functions.html#IsMarkerEdit">IsMarkerEdit</a>, <a href="US_Api_Functions.html#MarkerToEditMarker">MarkerToEditMarker</a>, <a href="US_Api_Functions.html#EditToMarker">EditToMarker</a></p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#AddEditMarker">AddEditMarker</a></strong></p>
 </blockquote>
@@ -2659,7 +2783,7 @@ Let's take edit-markers as an example, who have the functions:</p>
                   </code></pre>
 <blockquote>
 <p>This adds a new edit-marker. Give it a position, the shown number and an edittitle, which should hint at the reason of having to edit later.<br />
-The title will be shown in the marker as "<em>edit: Title". You can change it manually in Reaper, but should retain "</em>edit: ", as this signals the<br />
+The title will be shown in the marker as "_edit: Title". You can change it manually in Reaper, but should retain "_edit: ", as this signals the<br />
 Ultraschall-API, if this is an edit-marker. The editmarker also is red (255 0 0).<br />
 It will return the marker-number, which is the index of all markers in the project, means: markers and regions.</p>
 </blockquote>
@@ -3049,7 +3173,8 @@ It quickly becomes messy or at least harder to read. And I hate my code being ha
 <blockquote>
 <p>This works like reaper.defer, but has additional benefits, like the parameters mode and timer_counter, who allow you to specify, how often the defer-cycle shall be executed.<br />
 Either all the time(mode=0), every nth-cycle(mode=1) or every nth-second(mode=2). If mode is 1 or 2, you should set timer_counter to the amount of cycles/seconds to wait for the next execution of the defer-loop.<br />
-It also returns a defer_identifier, which can be used by <a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a> to stop the defer-loop from inside and outside of the script(more on that later).</p>
+It also returns a defer_identifier, which can be used by <a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a> to stop the defer-loop from inside and outside of the script(more on that later).<br />
+Important: A defer-identifier is only valid, until the script stops/Reaper closes. The next time the script is started, it gets another defer-identifier!</p>
 </blockquote>
 <p>As you've seen, there are 20 Defer-functions in the Ultraschall-API. If you want to use only one defer-cycle in your script, just use <a href="US_Api_Functions.html#Defer1">Defer1</a>, but if you need multiple defer-loops in one script-instance,<br />
 you should use another of these 20 Defer-functions, as otherwise the timer/cycle-counter of a ultraschall.Defer-function could get confused.<br />
@@ -3310,8 +3435,6 @@ It will return a boolean(true for success), the current undo-message and alle th
 </li>
 <li><a href="US_Api_Functions.html#SetVZoom">SetVZoom</a> - sets the vertical-zoom-factor in the arrange-view<br />
 </li>
-<li><a href="US_Api_Functions.html#CloseReaConsole">CloseReaConsole</a> - closes the ReaConsole-window<br />
-</li>
 <li><a href="US_Api_Functions.html#GetScreenHeight">GetScreenHeight</a> - returns the current screen-height in pixels<br />
 </li>
 <li><a href="US_Api_Functions.html#GetScreenWidth">GetScreenWidth</a> - returns the current screen-width in pixels<br />
@@ -3330,6 +3453,10 @@ It will return a boolean(true for success), the current undo-message and alle th
 </li>
 <li><a href="US_Api_Functions.html#ApplyActionToMediaItemArray2">ApplyActionToMediaItemArray2</a> - this function applies a Reaper-action to all MediaItems in MediaItemArray at once. That given action must apply itself to selected MediaItems.</li>
 </ul>
+<p>** ReaScript-console-stuff** - <a href="US_Api_Functions.html#CloseReaConsole">CloseReaConsole</a> - closes the ReaConsole-window<br />
+- <a href="US_Api_Functions.html#SetReaScriptConsole_FontStyle">SetReaScriptConsole_FontStyle</a> - sets a new font-style to the ReaScript-console<br />
+- <a href="US_Api_Functions.html#GetReaScriptConsoleWindow">GetReaScriptConsoleWindow</a> - gets the hwnd-window-handler of the ReaScript-console</p>
+<p>** print replacements** <a href="US_Api_Functions.html#print">print</a> - prints its parameters to the ReaScript-console, separated by newlines <a href="US_Api_Functions.html#print_alt">print_alt</a> - prints its parameters to the ReaScript-console, separated by two spaces. Ends with a newline. <a href="US_Api_Functions.html#print_update">print_update</a> - prints its parameters to the ReaScript-console, but clears it first <a href="US_Api_Functions.html#print2">print2</a> - prints its parameters to a message-box-window <a href="US_Api_Functions.html#print3">print3</a> - prints its parameters to the clipboard</p>
 <p><strong>miscellaneous</strong></p>
 <ul>
 <li><a href="US_Api_Functions.html#toboolean">toboolean</a> - this tries to convert a value into a boolean. Never understood, why Lua hasn't this function itself. Has no ultraschall. at the beginning of the functionname!<br />
@@ -3371,4 +3498,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.73 - 88 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.74 - 89 chapters available</td></table><br><hr></div></body></html>

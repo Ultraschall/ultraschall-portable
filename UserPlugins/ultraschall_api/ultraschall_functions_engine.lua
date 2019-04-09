@@ -57,81 +57,85 @@ ultraschall.StartTime=os.clock()
 ultraschall.ErrorMessage={}
 
 -- HoHoHo
-ultraschall.snowB=os.date("*t")
-
-ultraschall.snowtodaysdate=ultraschall.snowB.day.."."..ultraschall.snowB.month
-ultraschall.snowoldgfx=gfx.update
-
-ultraschall.temp,ultraschall.tempfilename=reaper.get_action_context()
-
-ultraschall.Dump, ultraschall.ScriptFileName=reaper.get_action_context()
-
-if ultraschall.tempfilename:match("ultraschall_startscreen.lua")~=nil and 
-    (ultraschall.snowtodaysdate=="24.12" or 
-     ultraschall.snowtodaysdate=="25.12" or 
-     ultraschall.snowtodaysdate=="26.12") then
-  ultraschall.snowoldgfx=gfx.update
-  function gfx.update()
-    if ultraschall.US_snowmain~=nil then ultraschall.US_snowmain() end
-    ultraschall.snowoldgfx()
-  end      
-end
---gfx.init()
-
--- initial values
-ultraschall.snowspeed=1.3       -- the falling speed of the snowflakes
-ultraschall.snowsnowfactor=5000 -- the number of snowflakes
-ultraschall.snowwindfactor=3    -- the amount the wind influences the snow; wind has an effect sideways and on the falling-speed. 
-                                -- Don't set too high(>100), will look ugly otherwise. Rather experimental, than a real wind simulation...
-
--- let's create some basic shapes to blit as snowflakes for:
--- close snowflakes
-gfx.setimgdim(200,1,1)
-gfx.dest=200
-gfx.set(0.5,0.5,0.5)
-gfx.rect(0,0,1,1)
--- medium snowflakes
-gfx.setimgdim(400,1,1)
-gfx.dest=400
-gfx.set(0.3,0.3,0.3)
-gfx.rect(0,0,1,1)
--- small and far snowflakes
-gfx.setimgdim(401,1,1)
-gfx.dest=401
-gfx.set(0.2,0.2,0.2)
-gfx.rect(0,0,1,1)
-
-
--- set framebuffer to the shown one
-gfx.dest=-1
-
--- Let's create an initial set of snowflakes
-ultraschall.snowSnowflakes={}
-for a=1, ultraschall.snowsnowfactor do
-  -- random x-position
-  -- random y-position
-  -- speed(which I also use as size-factor) and
-  -- another speed-factor(useful? Don't know...)
-  if gfx.w==0 then ultraschall.snowwidth=1000 else ultraschall.snowwidth=gfx.w end
-  if gfx.h==0 then ultraschall.snowheight=500 else ultraschall.snowheight=gfx.h end
-  ultraschall.snowSnowflakes[a]={math.random(1,ultraschall.snowwidth),math.random(-1500,0),math.random()*2,(math.random()/4)*math.random(-1,1)}
-  if ultraschall.snowSnowflakes[a][3]<0.4 then ultraschall.snowSnowflakes[a][3]=ultraschall.snowSnowflakes[a][3]*2 end
-end
+function ultraschall.OperationHoHoHo()
+  ultraschall.snowB=os.date("*t")
   
-
--- Let's create a table, that is meant to influence the fall of the snowflakes, as wind would do.
--- For laziness, I simply choose a sinus-wave to create it
--- this could be improved much much more...
-  ultraschall.snowwind=-3.6  
-  ultraschall.snowWindtable={}
-  for windcounter=0, ultraschall.snowsnowfactor do
-   ultraschall.snowwind=(ultraschall.snowwind+ultraschall.snowwindfactor*.001)--/(speed*2)
-   if ultraschall.snowwind>3.6 then ultraschall.snowwind=-3.6 end
-   ultraschall.snowWindtable[windcounter]=math.sin(windcounter)-(math.random()/2)*ultraschall.snowwindfactor
+  ultraschall.snowtodaysdate=ultraschall.snowB.day.."."..ultraschall.snowB.month
+  ultraschall.snowoldgfx=gfx.update
+  
+  ultraschall.temp,ultraschall.tempfilename=reaper.get_action_context()
+  
+  ultraschall.tempfilename=string.gsub(ultraschall.tempfilename,"\n","")
+  ultraschall.tempfilename=string.gsub(ultraschall.tempfilename,"\r","")
+  
+  ultraschall.Dump, ultraschall.ScriptFileName=reaper.get_action_context()
+  
+  if ultraschall.tempfilename:match("ultraschall_startscreen.lua")~=nil and 
+      (ultraschall.snowtodaysdate=="24.12" or 
+       ultraschall.snowtodaysdate=="25.12" or 
+       ultraschall.snowtodaysdate=="26.12") then
+    ultraschall.snowoldgfx=gfx.update
+    function gfx.update()
+      if ultraschall.US_snowmain~=nil then ultraschall.US_snowmain() end
+      ultraschall.snowoldgfx()
+    end      
   end
-
-ultraschall.snowwindoffset=1
-
+  --gfx.init()
+  
+  -- initial values
+  ultraschall.snowspeed=1.3       -- the falling speed of the snowflakes
+  ultraschall.snowsnowfactor=5000 -- the number of snowflakes
+  ultraschall.snowwindfactor=3    -- the amount the wind influences the snow; wind has an effect sideways and on the falling-speed. 
+                                  -- Don't set too high(>100), will look ugly otherwise. Rather experimental, than a real wind simulation...
+  
+  -- let's create some basic shapes to blit as snowflakes for:
+  -- close snowflakes
+  gfx.setimgdim(200,1,1)
+  gfx.dest=200
+  gfx.set(0.5,0.5,0.5)
+  gfx.rect(0,0,1,1)
+  -- medium snowflakes
+  gfx.setimgdim(400,1,1)
+  gfx.dest=400
+  gfx.set(0.3,0.3,0.3)
+  gfx.rect(0,0,1,1)
+  -- small and far snowflakes
+  gfx.setimgdim(401,1,1)
+  gfx.dest=401
+  gfx.set(0.2,0.2,0.2)
+  gfx.rect(0,0,1,1)
+  
+  
+  -- set framebuffer to the shown one
+  gfx.dest=-1
+  
+  -- Let's create an initial set of snowflakes
+  ultraschall.snowSnowflakes={}
+  for a=1, ultraschall.snowsnowfactor do
+    -- random x-position
+    -- random y-position
+    -- speed(which I also use as size-factor) and
+    -- another speed-factor(useful? Don't know...)
+    if gfx.w==0 then ultraschall.snowwidth=1000 else ultraschall.snowwidth=gfx.w end
+    if gfx.h==0 then ultraschall.snowheight=500 else ultraschall.snowheight=gfx.h end
+    ultraschall.snowSnowflakes[a]={math.random(1,ultraschall.snowwidth),math.random(-1500,0),math.random()*2,(math.random()/4)*math.random(-1,1)}
+    if ultraschall.snowSnowflakes[a][3]<0.4 then ultraschall.snowSnowflakes[a][3]=ultraschall.snowSnowflakes[a][3]*2 end
+  end
+    
+  
+  -- Let's create a table, that is meant to influence the fall of the snowflakes, as wind would do.
+  -- For laziness, I simply choose a sinus-wave to create it
+  -- this could be improved much much more...
+    ultraschall.snowwind=-3.6  
+    ultraschall.snowWindtable={}
+    for windcounter=0, ultraschall.snowsnowfactor do
+     ultraschall.snowwind=(ultraschall.snowwind+ultraschall.snowwindfactor*.001)--/(speed*2)
+     if ultraschall.snowwind>3.6 then ultraschall.snowwind=-3.6 end
+     ultraschall.snowWindtable[windcounter]=math.sin(windcounter)-(math.random()/2)*ultraschall.snowwindfactor
+    end
+  
+  ultraschall.snowwindoffset=1
+end
 --if GUI==nil then GUI={} end
 function ultraschall.US_snowmain()
   -- set sky to gray  
@@ -186,6 +190,7 @@ function ultraschall.US_snowmain()
 --  if gfx.getchar()~=-1 then reaper.defer(ultraschall.US_snowmain) end
 end
 
+ultraschall.OperationHoHoHo()
 ultraschall.US_snowmain()
   if ultraschall.US_snowmain~=nil then ultraschall.US_snowmain() end
 --end
@@ -212,7 +217,7 @@ if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
 --]]  
 
 
--- Let's create a unique script-identifier
+-- Let's create a unique script-identifier for childscripts
 ultraschall.dump=ultraschall.tempfilename:match("%-%{%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x%}")
 
 --reaper.MB(tostring(ultraschall.dump),"",0)
@@ -225,7 +230,10 @@ if ultraschall.dump==nil then
 else  
   ultraschall.ScriptIdentifier="ScriptIdentifier:"..ultraschall.tempfilename
 end
-  ultraschall.ScriptIdentifier=string.gsub(ultraschall.ScriptIdentifier, "\\", "/")
+ultraschall.ScriptIdentifier=string.gsub(ultraschall.ScriptIdentifier, "\\", "/")
+
+ultraschall.ScriptIdentifier_Description=""
+ultraschall.ScriptIdentifier_Title=ultraschall.tempfilename:match(".*"..ultraschall.Separator..("(.*)"))
 
 --reaper.MB(tostring(ultraschall.ScriptIdentifier),"",0)
 
@@ -236,6 +244,24 @@ end
 
 --A=reaper.GetTrackEnvelope(reaper.GetTrack(0,1),0)
 --B,C,D=ultraschall.GetEnvelopeStateChunk(A, "", true, true)
+
+function ultraschall.IntToDouble(integer)
+  for c in io.lines(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int.ini") do
+    if c:match(integer)~=nil then return c:match("(.-)=") end
+  end
+end
+
+--A=ultraschall.IntToDouble(1153139098)
+
+function ultraschall.DoubleToInt(float)
+  float=tostring(float)
+  if (float:match("%.(.*)")):len()==1 then 
+    float=float.."0" end
+  retval, string = reaper.BR_Win32_GetPrivateProfileString("FloatsInt", float, "-1", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int.ini")
+  return string
+end
+
+--B=ultraschall.DoubleToInt(1500.00)
 
 function print2(...)
 --[[
@@ -277,20 +303,20 @@ end
 --print("Hula","Hoop",reaper.GetTrack(0,0))
 --print("tudel")
 
-function print(...)
+function print_alt(...)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>print</slug>
+  <slug>print_alt</slug>
   <requires>
     Ultraschall=4.00
     Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>print(parameter_1 to parameter_n)</functioncall>
+  <functioncall>print_alt(parameter_1 to parameter_n)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     replaces Lua's own print-function, that is quite useless in Reaper.
     
-    Converts all parametes given into string using tostring() and displays them in the ReaScript-console, separated by two spaces, ending with a newline.
+    like [print](#print), but separates the entries by a two spaced, not a newline
   </description>
   <parameters>
     parameter_1 to parameter_n - the parameters, that you want to have printed out
@@ -318,6 +344,45 @@ end
 --print2("Hula","Hoop",reaper.GetTrack(0,0))
 --print("tudel")
 
+function print(...)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>print</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>print(parameter_1 to parameter_n)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    replaces Lua's own print-function, that is quite useless in Reaper.
+    
+    Converts all parametes given into string using tostring() and displays them in the ReaScript-console, separated by a newline and ending with a newline.
+  </description>
+  <parameters>
+    parameter_1 to parameter_n - the parameters, that you want to have printed out
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunctions, print, console</tags>
+</US_DocBloc>
+]]
+
+  local string=""
+  local count=1
+  local temp={...}
+  while temp[count]~=nil do
+    string=string.."\n"..tostring(temp[count])
+    count=count+1
+  end
+  if string:sub(-1,-1)=="\n" then string=string:sub(1,-2) end
+  reaper.ShowConsoleMsg(string:sub(2,-1).."\n","Print",0)
+end
+
+--print_alt(9,1,2)
 
 function ultraschall.AddErrorMessage(functionname, parametername, errormessage, errorcode)
 --[[
@@ -544,7 +609,7 @@ function ultraschall.GetTrackStateChunk_Tracknumber(tracknumber)
     Reaper=5.92
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string trackstatechunk, boolean overflow = ultraschall.GetTrackStateChunk_Tracknumber(integer tracknumber)</functioncall>
+  <functioncall>boolean retval, string trackstatechunk = ultraschall.GetTrackStateChunk_Tracknumber(integer tracknumber)</functioncall>
   <description>
     returns the trackstatechunk for track tracknumber
     
@@ -3573,7 +3638,7 @@ function ultraschall.GetTrackMainSendState(tracknumber, str)
   -- check parameters
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackMainSendState", "tracknumber", "must be an integer", -1) return nil end
   if tracknumber~=-1 then
-  
+    --[[
     -- get trackstatechunk
     local retval, MediaTrack
     if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackMainSendState", "tracknumber", "no such track", -2) return nil end
@@ -3581,6 +3646,14 @@ function ultraschall.GetTrackMainSendState(tracknumber, str)
       else MediaTrack=reaper.GetTrack(0, tracknumber-1)
       end
       retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
+    --]]
+    local tr
+    if tracknumber==0 then
+      tr=reaper.GetMasterTrack(0)
+    else
+      tr=reaper.GetTrack(0,0)
+    end
+    return math.floor(reaper.GetMediaTrackInfo_Value(tr, "B_MAINSEND")), math.floor(reaper.GetMediaTrackInfo_Value(tr, "C_MAINSEND_OFFS"))
   else
   end
   if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackMainSendState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
@@ -3593,7 +3666,7 @@ function ultraschall.GetTrackMainSendState(tracknumber, str)
          tonumber(str:match("%s.-%s(.-)%s"))
 end
 
---A,AA= ultraschall.GetTrackMainSendState(1.1)
+--A,AA= ultraschall.GetTrackMainSendState(-1,"")
 
 function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
 --[[
@@ -6252,13 +6325,13 @@ function ultraschall.SetTrackMainSendState(tracknumber, MainSendOn, ParentChanne
     Ultraschall=4.00
     Reaper=5.40
   </requires>
-  <functioncall>boolean retval, string TrackStateChunk = ultraschall.SetTrackMainSendState(integer tracknumber, integer MainSendOn, integer ParentChannels, optional string TrackStateChunk)</functioncall>
+  <functioncall>boolean retval, optional string TrackStateChunk = ultraschall.SetTrackMainSendState(integer tracknumber, integer MainSendOn, integer ParentChannels, optional string TrackStateChunk)</functioncall>
   <description>
     Sets MAINSEND, as set in the routing-settings, of a track or a TrackStateChunk.
   </description>
   <retvals>
     boolean retval  - true, if successful, false if unsuccessful
-    string TrackStateChunk - the altered TrackStateChunk
+    optional string TrackStateChunk - the altered TrackStateChunk, if tracknumber=-1
   </retvals>
   <parameters>
     integer tracknumber - number of the track, beginning with 1; 0 for master-track; -1 if you want to use parameter TrackStateChunk
@@ -6291,7 +6364,10 @@ function ultraschall.SetTrackMainSendState(tracknumber, MainSendOn, ParentChanne
     else
       Mediatrack=reaper.GetTrack(0,tracknumber-1)
     end
-    A,AA=ultraschall.GetTrackStateChunk(Mediatrack,str,false)
+    --A,AA=ultraschall.GetTrackStateChunk(Mediatrack,str,false)
+    reaper.SetMediaTrackInfo_Value(Mediatrack, "B_MAINSEND", MainSendOn)
+    reaper.SetMediaTrackInfo_Value(Mediatrack, "C_MAINSEND_OFFS", ParentChannels)
+    return true
   else
     if type(TrackStateChunk)~="string" then ultraschall.AddErrorMessage("SetTrackMainSendState", "TrackStateChunk", "must be a string", -5) return false end
     AA=TrackStateChunk
@@ -6312,7 +6388,7 @@ function ultraschall.SetTrackMainSendState(tracknumber, MainSendOn, ParentChanne
   return B, B1.."\n"..str.."\n"..B3
 end
 
---A,B=ultraschall.SetTrackMainSendState(1, 1, 1)
+--A,B=ultraschall.SetTrackMainSendState(1, 1, 60)
 --reaper.MB(MstStCh,"",0)
 
 function ultraschall.SetTrackLockState(tracknumber, LockedState, TrackStateChunk)
@@ -23970,7 +24046,7 @@ end
   </requires>
   <functioncall>ultraschall.Api_InstallPath</functioncall>
   <description>
-    Contains the current path to the installation folder of the Ultraschall-Api(usually Resourcesfolder/UserPlugins
+    Contains the current path to the installation folder of the Ultraschall-Api(usually Resourcesfolder/UserPlugins)
   </description>
   <chapter_context>
     API-Variables
@@ -27775,7 +27851,7 @@ end
 --A=ultraschall.IsValidMediaItemArray(1)
 --L=ultraschall.GetMediaItemStateChunksFromMediaItemArray(1)
 
-function ultraschall.GetTrackHWOut(tracknumber,idx)
+function ultraschall.GetTrackHWOut(tracknumber, idx, TrackStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTrackHWOut</slug>
@@ -27784,7 +27860,7 @@ function ultraschall.GetTrackHWOut(tracknumber,idx)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer outputchannel, integer post_pre_fader, number volume, number pan, integer mute, integer phase, integer source, number unknown, integer automationmode = ultraschall.GetTrackHWOut(integer tracknumber, integer idx)</functioncall>
+  <functioncall>integer outputchannel, integer post_pre_fader, number volume, number pan, integer mute, integer phase, integer source, number pan_law, integer automationmode = ultraschall.GetTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)</functioncall>
   <description>
     Returns the settings of the HWOUT-HW-destination, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber. There can be more than one, which you can choose with idx.
     
@@ -27792,9 +27868,10 @@ function ultraschall.GetTrackHWOut(tracknumber,idx)
     
     returns -1 in case of failure
   </description>
-  <parameters>
+  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
     integer tracknumber - the number of the track, whose HWOut you want, 0 for Master Track
     integer idx - the id-number of the HWOut, beginning with 1 for the first HWOut-Settings
+    optional string TrackStateChunk - a TrackStateChunk, whose HWOUT-entries you want to get
   </parameters>
   <retvals>
     integer outputchannel - outputchannel, with 1024+x the individual hw-outputchannels, 0,2,4,etc stereo output channels
@@ -27815,7 +27892,7 @@ function ultraschall.GetTrackHWOut(tracknumber,idx)
     -                                    2048 - MultiChannel 4 Channels 1-4
     -                                    2050 - Multichannel 4 Channels 3-6
     -                                    3072 - Multichannel 6 Channels 1-6
-    number unknown - unknown, standard set to -1
+    number pan_law - pan-law, as set in the dialog that opens, when you right-click on the pan-slider in the routing-settings-dialog; default is -1 for +0.0dB
     integer automationmode - automation mode, as set in the Destination "Controls for Track"-dialogue
     -                                    -1 - Track Automation Mode
     -                                     0 - Trim/Read
@@ -27831,43 +27908,54 @@ function ultraschall.GetTrackHWOut(tracknumber,idx)
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, track, get, hwout, routing, phase, source, mute, pan, volume, post, pre, fader, channel, automation</tags>
+  <tags>trackmanagement, track, get, hwout, routing, phase, source, mute, pan, volume, post, pre, fader, channel, automation, pan-law, trackstatechunk</tags>
 </US_DocBloc>
 ]]
 -- HWOUT %d %d %.14f %.14f %d %d %d %.14f:U %d
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackHWOut", "tracknumber", "must be an integer", -1) return -1 end
-  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackHWOut", "tracknumber", "no such track", -2) return -1 end
+  if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackHWOut", "tracknumber", "no such track", -2) return -1 end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetTrackHWOut", "idx", "must be an integer", -3) return -1 end
 
-  local Track=reaper.GetTrack(0,tracknumber-1)
-  if tracknumber==0 then Track=reaper.GetMasterTrack(0) end
-  local A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
-  local TrackStateChunkArray={}
-  local retstring
-  local count=1
-  while TrackStateChunk:match("HWOUT")=="HWOUT" do
-    if count==idx then retstring=TrackStateChunk:match("(HWOUT.-)%c") end
-    if retstring~=nil then retstring=retstring.." " end
-    TrackStateChunk=TrackStateChunk:match("HWOUT.-%c(.*)")
-    count=count+1
+  if tracknumber~=-1 then 
+    local tr
+    if tracknumber==0 then tr=reaper.GetMasterTrack(0)
+    else tr=reaper.GetTrack(0,tracknumber-1) end
+    
+    if reaper.GetTrackNumSends(tr, 1)<idx then ultraschall.AddErrorMessage("GetTrackHWOut", "idx", "no such index available", -5) return -1 end
+    local sendidx=idx
+    return math.tointeger(reaper.GetTrackSendInfo_Value(tr, 1, sendidx-1, "I_DSTCHAN")), -- D1
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, 1, sendidx-1, "I_SENDMODE")), -- D2
+           reaper.GetTrackSendInfo_Value(tr, 1, sendidx-1, "D_VOL"),  -- D3
+           reaper.GetTrackSendInfo_Value(tr, 1, sendidx-1, "D_PAN"),  -- D4
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, 1, sendidx-1, "B_MUTE")), -- D5
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, 1, sendidx-1, "B_PHASE")),-- D6
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, 1, sendidx-1, "I_SRCCHAN")), -- D7
+           reaper.GetTrackSendInfo_Value(tr, 1, sendidx-1, "D_PANLAW"), -- D8
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, 1, sendidx-1, "I_AUTOMODE")) -- D9
   end
-  if retstring~=nil then
-    return tonumber(retstring:match(" (.-) ")),
-           tonumber(retstring:match(" .- (.-) ")),
-           tonumber(retstring:match(" .- .- (.-) ")),
-           tonumber(retstring:match(" .- .- .- (.-) ")),
-           tonumber(retstring:match(" .- .- .- .- (.-) ")),
-           tonumber(retstring:match(" .- .- .- .- .- (.-) ")),
-           tonumber(retstring:match(" .- .- .- .- .- .- (.-) ")),
-           tonumber(retstring:match(" .- .- .- .- .- .- .- (.-):U ")),
-           tonumber(retstring:match(" .- .- .- .- .- .- .- .- (.-) "))
-  else ultraschall.AddErrorMessage("GetTrackHWOut", "tracknumber", "no HWOuts available", -4) return -1
+  
+  if ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("GetTrackHWOut", "TrackStateChunk", "must be a valid TrackStateChunk", -6) return -1 end
+  if ultraschall.CountTrackHWOuts(-1, TrackStateChunk)<idx then ultraschall.AddErrorMessage("GetTrackHWOut", "idx", "no such entry", -7) return -1 end
+  
+  local count=1
+  
+  for k in string.gmatch(TrackStateChunk, "HWOUT.-\n") do
+    if count==idx then 
+      local count2, individual_values = ultraschall.CSV2IndividualLinesAsArray(k:match(" (.*)".." "), " ")
+      table.remove(individual_values, count2)
+      for i=1, count2-1 do
+        if tonumber(individual_values[i])~=nil then individual_values[i]=tonumber(individual_values[i]) end
+      end
+      return table.unpack(individual_values)
+    end
+    count=count+1
   end
 end
 
---A,B,C,D,E,F,G,H,I=ultraschall.GetTrackHWOut(1,1)
+--L,LL = reaper.GetTrackStateChunk(reaper.GetTrack(0,0),"",false)
+--A,B,C,D,E,F,G,H,I=ultraschall.GetTrackHWOut(1, 2, LL)
 
-function ultraschall.GetTrackAUXSendReceives(tracknumber,idx)
+function ultraschall.GetTrackAUXSendReceives(tracknumber, idx, TrackStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTrackAUXSendReceives</slug>
@@ -27876,7 +27964,7 @@ function ultraschall.GetTrackAUXSendReceives(tracknumber,idx)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx)</functioncall>
+  <functioncall>integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number pan_law, integer midichanflag, integer automation = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)</functioncall>
   <description>
     Returns the settings of the Send/Receive, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber. There can be more than one, which you can choose with idx.
     Remember, if you want to get the sends of a track, you need to check the recv_tracknumber-returnvalues of the OTHER(!) tracks, as you can only get the receives. With the receives checked, you know, which track sends.
@@ -27885,9 +27973,10 @@ function ultraschall.GetTrackAUXSendReceives(tracknumber,idx)
     
     returns -1 in case of failure
   </description>
-  <parameters>
+  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
     integer tracknumber - the number of the track, whose Send/Receive you want
     integer idx - the id-number of the Send/Receive, beginning with 1 for the first Send/Receive-Settings
+    optional string TrackStateChunk - a TrackStateChunk, whose AUXRECV-entries you want to get
   </parameters>
   <retvals>
     integer recv_tracknumber - Tracknumber, from where to receive the audio from
@@ -27912,7 +28001,7 @@ function ultraschall.GetTrackAUXSendReceives(tracknumber,idx)
     -                                        ...
     -                                        1024 - Mono Channel 1
     -                                        1025 - Mono Channel 2
-    number unknown - unknown, default is -1
+    number pan_law - pan-law, as set in the dialog that opens, when you right-click on the pan-slider in the routing-settings-dialog; default is -1 for +0.0dB
     integer midichanflag -0 - All Midi Tracks
     -                                        1 to 16 - Midi Channel 1 to 16
     -                                        32 - send to Midi Channel 1
@@ -27949,58 +28038,53 @@ function ultraschall.GetTrackAUXSendReceives(tracknumber,idx)
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, track, get, send, receive, phase, source, mute, pan, volume, post, pre, fader, channel, automation, midi</tags>
+  <tags>trackmanagement, track, get, send, receive, phase, source, mute, pan, volume, post, pre, fader, channel, automation, midi, trackstatechunk, pan-law</tags>
 </US_DocBloc>
 ]]
---AUXRECV %d %d %.14f %.14f %d %d %d %d %d %.14f:U %d %d '%s'
+
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackAUXSendReceives", "tracknumber", "must be an integer", -1) return -1 end
-  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackAUXSendReceives", "tracknumber", "no such track", -2) return -1 end
+  if tracknumber~=-1 and (tracknumber<1 or tracknumber>reaper.CountTracks(0)) then ultraschall.AddErrorMessage("GetTrackAUXSendReceives", "tracknumber", "no such track", -2) return -1 end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetTrackAUXSendReceives", "idx", "must be an integer", -3) return -1 end
-  
-  local Track=reaper.GetTrack(0,tracknumber-1)
-  if Track==nil then return -1 end
-  local retstring
-  local A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
-  local TrackStateChunkArray={}
-  local count=1
-  while TrackStateChunk:match("AUXRECV")=="AUXRECV" do
-    if count==idx then retstring=TrackStateChunk:match("(AUXRECV.-)%c") end
-    if retstring~=nil then retstring=retstring.." " end
-    TrackStateChunk=TrackStateChunk:match("AUXRECV.-%c(.*)")
-    count=count+1
+  if idx<1 then ultraschall.AddErrorMessage("GetTrackAUXSendReceives", "idx", "no such index available", -4) return -1 end
+
+  if tracknumber~=-1 then 
+    local tr=reaper.GetTrack(0,tracknumber-1)
+    if reaper.GetTrackNumSends(tr, -1)<idx then ultraschall.AddErrorMessage("GetTrackAUXSendReceives", "idx", "no such index available", -5) return -1 end
+    local sendidx=idx
+    return math.tointeger(reaper.GetMediaTrackInfo_Value(reaper.BR_GetMediaTrackSendInfo_Track(tr, -1, sendidx-1, 0), "IP_TRACKNUMBER")-1), -- D1
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "I_SENDMODE")), -- D2
+           reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "D_VOL"),  -- D3
+           reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "D_PAN"),  -- D4
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "B_MUTE")), -- D5
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "B_MONO")), -- D6
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "B_PHASE")),-- D7
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "I_SRCCHAN")), -- D8
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "I_DSTCHAN")), -- D9
+           reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "D_PANLAW"), -- D10
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "I_MIDIFLAGS")), -- D11
+           math.tointeger(reaper.GetTrackSendInfo_Value(tr, -1, sendidx-1, "I_AUTOMODE")) -- D12  
   end
+  if ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("GetTrackAUXSendReceives", "TrackStateChunk", "must be a valid TrackStateChunk", -6) return -1 end
+  if ultraschall.CountTrackAUXSendReceives(-1, TrackStateChunk)<idx then ultraschall.AddErrorMessage("GetTrackAUXSendReceives", "idx", "no such entry", -7) return -1 end
   
---  print3("Retstring", retstring)
-  if retstring~=nil then 
-    count, individual_values = ultraschall.CSV2IndividualLinesAsArray(retstring, " ")
---    print2(count)
-    individual_values[11]=individual_values[11]:match("(.-):")
-    for i=1, count-1 do
-      individual_values[i]=tonumber(individual_values[i])
+  local count=1
+  
+  for k in string.gmatch(TrackStateChunk, "AUXRECV.-\n") do
+    if count==idx then 
+      local count2, individual_values = ultraschall.CSV2IndividualLinesAsArray(k:match(" (.*)".." "), " ")
+      table.remove(individual_values, count2)
+      for i=1, count2-1 do
+        if tonumber(individual_values[i])~=nil then individual_values[i]=tonumber(individual_values[i]) end
+      end
+      individual_values[10]=tonumber(individual_values[10]:sub(1,-3))
+      return table.unpack(individual_values)
     end
-    table.remove(individual_values, 14)
-    table.remove(individual_values, 1)
-    return table.unpack(individual_values)
-  --[[return tonumber(retstring:match(" (.-) ")),
-                                tonumber(retstring:match(" .- (.-) ")),
-                                tonumber(retstring:match(" .- .- (.-) ")),
-                                tonumber(retstring:match(" .- .- .- (.-) ")),
-                                tonumber(retstring:match(" .- .- .- .- (.-) ")),
-                                tonumber(retstring:match(" .- .- .- .- .- (.-) ")),
-                                tonumber(retstring:match(" .- .- .- .- .- .- (.-) ")),
-                                tonumber(retstring:match(" .- .- .- .- .- .- .- (.-) ")),
-                                tonumber(retstring:match(" .- .- .- .- .- .- .- .- (.-) ")),
-                                tonumber(retstring:match(" .- .- .- .- .- .- .- .- .- (.-):U ")),
-                                tonumber(retstring:match(" .- .- .- .- .- .- .- .- .- .- (.-) ")),
-                                tonumber(retstring:match(" .- .- .- .- .- .- .- .- .- .- .- (.-) "))--]]
-  else return -1
+    count=count+1
   end
 end
 
---A,B,C,D,E,F,G,H,I=ultraschall.GetTrackAUXSendReceives(0,1)
 
-
-function ultraschall.CountTrackHWOuts(tracknumber)
+function ultraschall.CountTrackHWOuts(tracknumber, TrackStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountTrackHWOuts</slug>
@@ -28009,13 +28093,14 @@ function ultraschall.CountTrackHWOuts(tracknumber)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer count_HWOuts = ultraschall.CountTrackHWOuts(integer tracknumber)</functioncall>
+  <functioncall>integer count_HWOuts = ultraschall.CountTrackHWOuts(integer tracknumber, optional string TrackStateChunk)</functioncall>
   <description>
     Counts and returns the number of existing HWOUT-HW-destination, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber.
     returns -1 in case of failure
   </description>
   <parameters>
-    integer tracknumber - the number of the track, whose HWOUTs you want to count. 0 for Master Track
+    integer tracknumber - the number of the track, whose HWOUTs you want to count. 0 for Master Track; -1, to use optional parameter TrackStateChunk instead
+    optional string TrackStateChunk - the TrackStateChunk, whose hwouts you want to count; only when tracknumber=-1
   </parameters>
   <retvals>
     integer count_HWOuts - the number of HWOuts in tracknumber
@@ -28026,16 +28111,24 @@ function ultraschall.CountTrackHWOuts(tracknumber)
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, track, get, count, hwout, routing</tags>
+  <tags>trackmanagement, track, get, count, hwout, routing, trackstatechunk</tags>
 </US_DocBloc>
 ]]
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("CountTrackHWOuts", "tracknumber", "must be an integer", -1) return -1 end
-  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("CountTrackHWOuts", "tracknumber", "no such track", -2) return -1 end
-  
-  local Track=reaper.GetTrack(0,tracknumber-1)
-  if tracknumber==0 then Track=reaper.GetMasterTrack(0) end
-  if Track==nil then return -1 end
-  local A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
+  local Track, A
+  if tracknumber>-1 then
+    if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("CountTrackHWOuts", "tracknumber", "must be an integer", -1) return -1 end
+    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("CountTrackHWOuts", "tracknumber", "no such track", -2) return -1 end
+    Track=reaper.GetTrack(0,tracknumber-1)
+    if tracknumber==0 then Track=reaper.GetMasterTrack(0) end
+--    if Track==nil then return -1 end  
+--    A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
+    return reaper.GetTrackNumSends(Track, 1)
+  elseif tracknumber==-1 then
+    if ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("CountTrackHWOuts", "TrackStateChunk", "must be a valid TrackStateChunk", -3) return -1 end
+  else
+    ultraschall.AddErrorMessage("CountTrackHWOuts", "tracknumber", "no such track", -4)
+    return -1
+  end
   local TrackStateChunkArray={}
   local count=1
   while TrackStateChunk:match("HWOUT")=="HWOUT" do
@@ -28046,9 +28139,10 @@ function ultraschall.CountTrackHWOuts(tracknumber)
   return count-1, TrackStateChunkArray
 end
 
---B2,BB2=ultraschall.CountTrackHWOuts(0)
+--A1,A2=reaper.GetTrackStateChunk(reaper.GetTrack(0,0), "", false)
+--B2,BB2=ultraschall.CountTrackHWOuts(-2, A2)
 
-function ultraschall.CountTrackAUXSendReceives(tracknumber)
+function ultraschall.CountTrackAUXSendReceives(tracknumber, TrackStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountTrackAUXSendReceives</slug>
@@ -28057,13 +28151,14 @@ function ultraschall.CountTrackAUXSendReceives(tracknumber)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer count_SendReceives = ultraschall.CountTrackAUXSendReceives(integer tracknumber)</functioncall>
+  <functioncall>integer count_SendReceives = ultraschall.CountTrackAUXSendReceives(integer tracknumber, optional string TrackStateChunk)</functioncall>
   <description>
     Counts and returns the number of existing Send/Receives/Routing-settings, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber.
     returns -1 in case of failure
   </description>
   <parameters>
-    integer tracknumber - the number of the track, whose Send/Receive you want
+    integer tracknumber - the number of the track, whose Send/Receive you want; -1, if you want to pass a TrackStateChunk instead
+    optional string TrackStateChunk - the TrackStateChunk, whose hwouts you want to count; only when tracknumber=-1
   </parameters>
   <retvals>
     integer count_SendReceives - the number of Send/Receives-Settings in tracknumber
@@ -28074,15 +28169,24 @@ function ultraschall.CountTrackAUXSendReceives(tracknumber)
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, track, get, count, send, receive, routing</tags>
+  <tags>trackmanagement, track, get, count, send, receive, routing, trackstatechunk</tags>
 </US_DocBloc>
 ]]
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("CountTrackAUXSendReceives", "tracknumber", "must be an integer", -1) return -1 end
-  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("CountTrackAUXSendReceives", "tracknumber", "no such track", -2) return -1 end
+  local A, Track
+  if tracknumber>-1 then
+    if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("CountTrackAUXSendReceives", "tracknumber", "must be an integer", -1) return -1 end
+    if tracknumber<1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("CountTrackAUXSendReceives", "tracknumber", "no such track", -2) return -1 end
+    Track=reaper.GetTrack(0,tracknumber-1)
+    if Track==nil then ultraschall.AddErrorMessage("CountTrackAUXSendReceives", "tracknumber", "no such track", -3) return -1 end
+    A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
+  elseif tracknumber==-1 then
+    if ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("CountTrackAUXSendReceives", "TrackStateChunk", "must be a valid TrackStateChunk", -4) return -1 end
+  else
+    ultraschall.AddErrorMessage("CountTrackAUXSendReceives", "tracknumber", "no such track", -5)
+    return -1
+  end
   
-  local Track=reaper.GetTrack(0,tracknumber-1)
-  if Track==nil then ultraschall.AddErrorMessage("CountTrackAUXSendReceives", "tracknumber", "no such track", -3) return -1 end
-  local A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
+  
   local TrackStateChunkArray={}
   local count=1
   while TrackStateChunk:match("AUXRECV")=="AUXRECV" do
@@ -28093,9 +28197,11 @@ function ultraschall.CountTrackAUXSendReceives(tracknumber)
   return count-1, TrackStateChunkArray
 end
 
---A=ultraschall.CountTrackAUXSendReceives(0)
+--C1,C2=reaper.GetTrackStateChunk(reaper.GetTrack(0,1), "", false)
+--A,AA=ultraschall.CountTrackAUXSendReceives(-1, C2)
+--outputchannel, post_pre_fader, volume, pan, mute, phase, source, pan_law, automationmode
 
-function ultraschall.AddTrackHWOut(tracknumber, a, b, c, d, e, f, g, h, i, undo)
+function ultraschall.AddTrackHWOut(tracknumber, outputchannel, post_pre_fader, volume, pan, mute, phase, source, pan_law, automationmode, TrackStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AddTrackHWOut</slug>
@@ -28104,15 +28210,15 @@ function ultraschall.AddTrackHWOut(tracknumber, a, b, c, d, e, f, g, h, i, undo)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.AddTrackHWOut(integer tracknumber, integer outputchannel, integer post_pre_fader, number volume, number pan, integer mute, integer phase, integer source, number unknown, integer automationmode, boolean undo)</functioncall>
+  <functioncall>boolean retval, optional string TrackStateChunk = ultraschall.AddTrackHWOut(integer tracknumber, integer outputchannel, integer post_pre_fader, number volume, number pan, integer mute, integer phase, integer source, number pan_law, integer automationmode, optional parameter TrackStateChunk)</functioncall>
   <description>
     Adds a setting of the HWOUT-HW-destination, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber.
     This function does not check the parameters for plausability, so check your settings twice!
     
     returns false in case of failure
   </description>
-  <parameters>
-    integer tracknumber - the number of the track, whose HWOut you want. 0 for Master Track
+  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
+    integer tracknumber - the number of the track, whose HWOut you want. 0 for Master Track; -1, use parameter TrackStateChunk instead
     integer outputchannel - outputchannel, with 1024+x the individual hw-outputchannels, 0,2,4,etc stereo output channels
     integer post_pre_fader - 0-post-fader(post pan), 1-preFX, 3-pre-fader(Post-FX), as set in the Destination "Controls for Track"-dialogue
     number volume - volume, as set in the Destination "Controls for Track"-dialogue; see [DB2MKVOL](#DB2MKVOL) to convert from a dB-value
@@ -28131,7 +28237,7 @@ function ultraschall.AddTrackHWOut(tracknumber, a, b, c, d, e, f, g, h, i, undo)
     -                                    2048 - MultiChannel 4 Channels 1-4
     -                                    2050 - Multichannel 4 Channels 3-6
     -                                    3072 - Multichannel 6 Channels 1-6
-    number unknown - unknown, standard set to -1
+    number pan_law - pan-law, as set in the dialog that opens, when you right-click on the pan-slider in the routing-settings-dialog; default is -1 for +0.0dB
     integer automationmode - automation mode, as set in the Destination "Controls for Track"-dialogue
     -                                    -1 - Track Automation Mode
     -                                     0 - Trim/Read
@@ -28140,10 +28246,11 @@ function ultraschall.AddTrackHWOut(tracknumber, a, b, c, d, e, f, g, h, i, undo)
     -                                     3 - Write
     -                                     4 - Latch
     -                                     5 - Latch Preview
-    boolean undo - true, sets undo-state, false, doesn't set undo
+    optional parameter TrackStateChunk - a TrackStateChunk into which to add the hwout-setting; only available, when tracknumber=-1
   </parameters>
   <retvals>
     boolean retval - true, if it worked; false if it didn't
+    optional parameter TrackStateChunk - an altered TrackStateChunk into which you added the new hwout-setting
   </retvals>
   <chapter_context>
     Track Management
@@ -28151,54 +28258,59 @@ function ultraschall.AddTrackHWOut(tracknumber, a, b, c, d, e, f, g, h, i, undo)
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, track, add, hwout, routing, phase, source, mute, pan, volume, post, pre, fader, channel, automation</tags>
+  <tags>trackmanagement, track, add, hwout, routing, phase, source, mute, pan, volume, post, pre, fader, channel, automation, pan-law, trackstatechunk</tags>
 </US_DocBloc>
 ]]
---integer tracknumber, integer outputchannel, integer post_pre_fader, number volume, number pan, 
---integer mute, integer phase, integer source, number unknown, integer automationmode, boolean undo
-
--- tracknumber, a, b, c, d, e, f, g, h, i, undo  
-
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "tracknumber", "must be an integer", -1) return false end
-  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("AddTrackHWOut", "tracknumber", "no such track", -2) return false end
-  if math.type(a)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "outputchannel", "must be an integer", -3) return false end
-  if math.type(b)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "post_pre_fader", "must be an integer", -4) return false end
-  if type(c)~="number" then ultraschall.AddErrorMessage("AddTrackHWOut", "volume", "must be a number", -5) return false end
-  if type(d)~="number" then ultraschall.AddErrorMessage("AddTrackHWOut", "pan", "must be a number", -6) return false end
-  if math.type(e)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "mute", "must be an integer", -7) return false end
-  if math.type(f)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "phase", "must be an integer", -8) return false end
-  if math.type(g)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "source", "must be an integer", -9) return false end
-  if type(h)~="number" then ultraschall.AddErrorMessage("AddTrackHWOut", "unknown", "must be a number", -10) return false end
-  if math.type(i)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "automationmode", "must be an integer", -11) return false end
-  if type(undo)~="boolean" then ultraschall.AddErrorMessage("AddTrackHWOut", "undo", "must be a boolean", -12) return false end
+  if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("AddTrackHWOut", "tracknumber", "no such track", -2) return false end
+  if math.type(outputchannel)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "outputchannel", "must be an integer", -3) return false end
+  if math.type(post_pre_fader)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "post_pre_fader", "must be an integer", -4) return false end
+  if type(volume)~="number" then ultraschall.AddErrorMessage("AddTrackHWOut", "volume", "must be a number", -5) return false end
+  if type(pan)~="number" then ultraschall.AddErrorMessage("AddTrackHWOut", "pan", "must be a number", -6) return false end
+  if math.type(mute)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "mute", "must be an integer", -7) return false end
+  if math.type(phase)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "phase", "must be an integer", -8) return false end
+  if math.type(source)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "source", "must be an integer", -9) return false end
+  if type(pan_law)~="number" then ultraschall.AddErrorMessage("AddTrackHWOut", "pan_law", "must be a number", -10) return false end
+  if math.type(automationmode)~="integer" then ultraschall.AddErrorMessage("AddTrackHWOut", "automationmode", "must be an integer", -11) return false end
 
-  local Track=reaper.GetTrack(0,tracknumber-1)
-  if tracknumber==0 then Track=reaper.GetMasterTrack(0) end
-  local A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
-  local B,C=ultraschall.CountTrackHWOuts(tracknumber)
-  local finalstring=""  
-  local Begin
-  local Ending
-
-  if B<=0 then Begin=TrackStateChunk:match("(.-MAINSEND.-%c)")
-  else Begin=TrackStateChunk:match("(.-)HWOUT.-%c")
-  end
-  if B<=0 then Ending=TrackStateChunk:match(".*MAINSEND.-%c(.*)")
-  else Ending=TrackStateChunk:match(".*HWOUT.-%c(.*)")
+  if tracknumber>-1 then
+    -- get track
+    if tracknumber==0 then tr=reaper.GetMasterTrack(0)
+    else tr=reaper.GetTrack(0,tracknumber-1) end
+    -- create new hwout
+    local sendidx=reaper.CreateTrackSend(tr, nil)
+    -- change it's settings
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx, "I_DSTCHAN", outputchannel) -- D2
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx, "I_SENDMODE", post_pre_fader) -- D2
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx, "D_VOL", volume)  -- D3
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx, "D_PAN", pan)  -- D4
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx, "B_MUTE", mute) -- D5
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx, "B_PHASE", phase)-- D6
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx, "I_SRCCHAN", source) -- D7
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx, "D_PANLAW", pan_law) -- D8
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx, "I_AUTOMODE", automationmode) -- D9
+    return true
   end
   
-  finalstring=Begin
-  for i=1,B do
-    finalstring=finalstring..C[i]
-  end
-  finalstring=finalstring.."HWOUT "..a.." "..b.." "..c.." "..d.." "..e.." "..f.." "..g.." "..h..":U "..i.."\n"..Ending
---  reaper.ShowConsoleMsg(finalstring)
-  return reaper.SetTrackStateChunk(Track, finalstring, undo)
+  -- if dealing with a TrackStateChunk, then do the following
+  if ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("AddTrackHWOut", "TrackStateChunk", "must be a valid TrackStateChunk", -13) return false end
+  local Startoffs=TrackStateChunk:match("MAINSEND .-\n()")
+  
+  TrackStateChunk=TrackStateChunk:sub(1,Startoffs-1)..
+                  "HWOUT "..outputchannel.." "..post_pre_fader.." "..volume.." "..pan.." "..mute.." "..phase.." "..source.." "..pan_law..":U "..automationmode.."\n"..
+                  TrackStateChunk:sub(Startoffs,-1)
+                  
+  return true, TrackStateChunk
+  
+
 end
 
---A=ultraschall.AddTrackHWOut(0,1,1,1,1,1,1,1,1,1,false)
+--B,BB=ultraschall.GetTrackStateChunk_Tracknumber(1)
+--A,AA=ultraschall.AddTrackHWOut(-1,0,0,1,0,0,0,0,-1,-1,false,BB)
+--reaper.MB(AA,"",0)
+--C,CC=reaper.SetTrackStateChunk(reaper.GetTrack(0,2),AA,false)
 
-function ultraschall.AddTrackAUXSendReceives(tracknumber, a, b, c, d, e, f, g, h, i, j, k, l, undo)
+function ultraschall.AddTrackAUXSendReceives(tracknumber, recv_tracknumber, post_pre_fader, volume, pan, mute, mono_stereo, phase, chan_src, snd_chan, pan_law, midichanflag, automation, TrackStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AddTrackAUXSendReceives</slug>
@@ -28207,7 +28319,7 @@ function ultraschall.AddTrackAUXSendReceives(tracknumber, a, b, c, d, e, f, g, h
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)</functioncall>
+  <functioncall>boolean retval, optional string TrackStateChunk = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number pan_law, integer midichanflag, integer automation, optional string TrackStateChunk)</functioncall>
   <description>
     Adds a setting of Send/Receive, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber. There can be more than one.
     Remember, if you want to set the sends of a track, you need to add it to the track, that shall receive, not the track that sends! Set recv_tracknumber in the track that receives with the tracknumber that sends, and you've set it successfully.
@@ -28215,8 +28327,8 @@ function ultraschall.AddTrackAUXSendReceives(tracknumber, a, b, c, d, e, f, g, h
     Due to the complexity of send/receive-settings, this function does not check, whether the parameters are plausible. So check twice, whether the added sends/receives appear, as they might not appear!
     returns false in case of failure
   </description>
-  <parameters>
-    integer tracknumber - the number of the track, whose Send/Receive you want
+  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
+    integer tracknumber - the number of the track, whose Send/Receive you want; -1, if you want to use the parameter TrackStateChunk
     integer recv_tracknumber - Tracknumber, from where to receive the audio from
     integer post_pre_fader - 0-PostFader, 1-PreFX, 3-Pre-Fader
     number volume - Volume, see [DB2MKVOL](#DB2MKVOL) to convert from a dB-value
@@ -28239,7 +28351,7 @@ function ultraschall.AddTrackAUXSendReceives(tracknumber, a, b, c, d, e, f, g, h
     -                                        ...
     -                                        1024 - Mono Channel 1
     -                                        1025 - Mono Channel 2
-    number unknown - unknown, default is -1
+    number pan_law - pan-law, as set in the dialog that opens, when you right-click on the pan-slider in the routing-settings-dialog; default is -1 for +0.0dB
     integer midichanflag -0 - All Midi Tracks
     -                                        1 to 16 - Midi Channel 1 to 16
     -                                        32 - send to Midi Channel 1
@@ -28269,10 +28381,11 @@ function ultraschall.AddTrackAUXSendReceives(tracknumber, a, b, c, d, e, f, g, h
     -                                        3 - Write
     -                                        4 - Latch
     -                                        5 - Latch Preview
-    boolean undo - true, sets undo-state, false, doesn't set undo
+    optional string TrackStateChunk - the TrackStateChunk, to which you want to add a new receive-routing
   </parameters>
   <retvals>
     boolean retval - true if it worked, false if it didn't.
+    optional parameter TrackStateChunk - an altered TrackStateChunk into which you added a new receive/routing; only available, when tracknumber=-1
   </retvals>
   <chapter_context>
     Track Management
@@ -28280,55 +28393,73 @@ function ultraschall.AddTrackAUXSendReceives(tracknumber, a, b, c, d, e, f, g, h
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, track, add, send, receive, phase, source, mute, pan, volume, post, pre, fader, channel, automation, midi</tags>
+  <tags>trackmanagement, track, add, send, receive, phase, source, mute, pan, volume, post, pre, fader, channel, automation, midi, pan-law, trackstatechunk</tags>
 </US_DocBloc>
 ]]
 -- integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, 
 --                      number pan, integer mute, integer mono_stereo, integer phase, 
 --                      integer chan_src, integer snd_chan, number unknown, integer midichanflag, 
 --                      integer automation, boolean undo
+
+-- recv_tracknumber, post_pre_fader, volume, pan, mute, mono_stereo, phase, chan_src, snd_chan, pan_law, midichanflag, automation
+
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "tracknumber", "must be an integer", -1) return false end
-  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "tracknumber", "no such track", -2) return false end
-  if math.type(a)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "recv_tracknumber", "must be an integer", -3) return false end
-  if math.type(b)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "post_pre_fader", "must be an integer", -4) return false end
-  if type(c)~="number" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "volume", "must be a number", -5) return false end
-  if type(d)~="number" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "pan", "must be a number", -6) return false end
-  if math.type(e)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "mute", "must be an integer", -7) return false end
-  if math.type(f)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "mono_stereo", "must be an integer", -8) return false end
-  if math.type(g)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "phase", "must be an integer", -9) return false end
-  if math.type(h)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "chan_src", "must be a number", -10) return false end
-  if math.type(i)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "snd_chan", "must be an integer", -11) return false end
-  if type(j)~="number" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "unknown", "must be a number", -12) return false end
-  if math.type(k)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "midichanflag", "must be an integer", -13) return false end
-  if math.type(l)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "automation", "must be an integer", -14) return false end
-  if type(undo)~="boolean" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "undo", "must be a boolean", -15) return false end
+  if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "tracknumber", "no such track", -2) return false end
+  if math.type(recv_tracknumber)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "recv_tracknumber", "must be an integer", -3) return false end
+  if math.type(post_pre_fader)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "post_pre_fader", "must be an integer", -4) return false end
+  if type(volume)~="number" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "volume", "must be a number", -5) return false end
+  if type(pan)~="number" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "pan", "must be a number", -6) return false end
+  if math.type(mute)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "mute", "must be an integer", -7) return false end
+  if math.type(mono_stereo)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "mono_stereo", "must be an integer", -8) return false end
+  if math.type(phase)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "phase", "must be an integer", -9) return false end
+  if math.type(chan_src)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "chan_src", "must be a number", -10) return false end
+  if math.type(snd_chan)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "snd_chan", "must be an integer", -11) return false end
+  if type(pan_law)~="number" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "pan_law", "must be a number", -12) return false end
+  if math.type(midichanflag)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "midichanflag", "must be an integer", -13) return false end
+  if math.type(automation)~="integer" then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "automation", "must be an integer", -14) return false end
 
-  local Track=reaper.GetTrack(0,tracknumber-1)
-  if tracknumber==0 then Track=reaper.GetMasterTrack(0) end
-  local A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
-  local B,C=ultraschall.CountTrackAUXSendReceives(tracknumber)
-  local finalstring=""  
-  local Begin
-  local Ending
-
-  if B<=0 then Begin=TrackStateChunk:match("(.-PERF.-%c)")
-  else Begin=TrackStateChunk:match("(.-)AUXRECV.-%c")
-  end
-  if B<=0 then Ending=TrackStateChunk:match(".*PERF.-%c(.*)")
-  else Ending=TrackStateChunk:match(".*AUXRECV.-%c(.*)")
+  if tracknumber>-1 then
+    -- get track
+    if tracknumber==0 then tr=reaper.GetMasterTrack(0)
+    else tr=reaper.GetTrack(0,tracknumber-1) end
+    -- create new AUXRecv
+    local sendidx=reaper.CreateTrackSend(tr, reaper.GetTrack(0,recv_tracknumber-1))
+    -- change it's settings
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "I_SENDMODE", post_pre_fader) -- D2
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "D_VOL", volume)  -- D3
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "D_PAN", pan)  -- D4
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "B_MUTE", mute) -- D5
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "B_MONO", mono_stereo) -- D6
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "B_PHASE", phase)-- D7
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "I_SRCCHAN", chan_src) -- D8
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "I_DSTCHAN", snd_chan) -- D9
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "D_PANLAW", pan_law) -- D10
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "I_MIDIFLAGS", midichanflag) -- D11
+      reaper.SetTrackSendInfo_Value(tr, 0, sendidx, "I_AUTOMODE", automation) -- D12  
+    return true
   end
   
-  finalstring=Begin
-  for i=1,B do
-    finalstring=finalstring..C[i]
-  end
-  finalstring=finalstring.."AUXRECV "..(a-1).." "..b.." "..c.." "..d.." "..e.." "..f.." "..g.." "..h.." "..i.." "..j..":U "..k.." "..l.."\n"..Ending
-  return reaper.SetTrackStateChunk(Track, finalstring, undo)
+  if ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("AddTrackAUXSendReceives", "TrackStateChunk", "must be a valid TrackStateChunk", -16) return false end
+  -- if dealing with a TrackStateChunk, then do the following
+  local Startoffs=TrackStateChunk:match("PERF .-\n()")
+  
+  TrackStateChunk=TrackStateChunk:sub(1,Startoffs-1)..
+                  "AUXRECV "..(recv_tracknumber-1).." "..post_pre_fader.." "..volume.." "..pan.." "..mute.." "..mono_stereo.." "..
+                  phase.." "..chan_src.." "..snd_chan.." "..pan_law..":U "..midichanflag.." "..automation.."\n"..
+                  TrackStateChunk:sub(Startoffs,-1)
+                  
+  return true, TrackStateChunk
 end
 
---ultraschall.AddTrackAUXSendReceives(1,1,1,1,1,1,1,1,1,1,1,1,1,false)
+--A=reaper.GetTrack(0,0)
+--B,BB=reaper.GetTrackStateChunk(A,"",false)
+--reaper.MB(BB,"",0)
+--DD=BB
+--D,DD=ultraschall.AddTrackAUXSendReceives(-1,1,2,0.1,4,5,6,7,8,9,10,11,12,false,BB) 
+--print2(DD)
+--reaper.SetTrackStateChunk(reaper.GetTrack(0,4), DD, false)
 
-function ultraschall.DeleteTrackHWOut(tracknumber,idx,undo)
+function ultraschall.DeleteTrackHWOut(tracknumber, idx, TrackStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>DeleteTrackHWOut</slug>
@@ -28337,18 +28468,19 @@ function ultraschall.DeleteTrackHWOut(tracknumber,idx,undo)
     Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.DeleteTrackHWOut(integer tracknumber, integer idx, boolean undo)</functioncall>
+  <functioncall>boolean retval, optional string TrackStateChunk = ultraschall.DeleteTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)</functioncall>
   <description>
     Deletes the idxth HWOut-Setting of tracknumber.
     returns false in case of failure
   </description>
   <parameters>
-    integer tracknumber - the number of the track, whose HWOUTs you want to delete. 0 for Master Track.
+    integer tracknumber - the number of the track, whose HWOUTs you want to delete. 0 for Master Track. -1, if you want to use the parameter TrackStateChunk instead
     integer idx - the number of the HWOut-setting, that you want to delete; -1, to delete all HWOuts from this track
-    boolean undo - shall this be set to undo(true) or not(false)
+    optional string TrackStateChunk - the TrackStateChunk, from which you want to delete HWOut-entries
   </parameters>
   <retvals>
     boolean retval - true if it worked, false if it didn't.
+    optional string TrackStateChunk - the altered TrackStateChunk, from which you deleted HWOut-entries; only available, when tracknumber=-1
   </retvals>
   <chapter_context>
     Track Management
@@ -28356,19 +28488,23 @@ function ultraschall.DeleteTrackHWOut(tracknumber,idx,undo)
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, track, delete, hwout, routing</tags>
+  <tags>trackmanagement, track, delete, hwout, routing, trackstatechunk</tags>
 </US_DocBloc>
 ]]
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("DeleteTrackHWOut", "tracknumber", "must be an integer", -1) return false end
-  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("DeleteTrackHWOut", "tracknumber", "no such track", -2) return false end
+  if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("DeleteTrackHWOut", "tracknumber", "no such track", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("DeleteTrackHWOut", "idx", "must be an integer", -3) return false end
-  if type(undo)~="boolean" then ultraschall.AddErrorMessage("DeleteTrackHWOut", "undo", "must be a boolean", -4) return false end
-
-  local Track=reaper.GetTrack(0,tracknumber-1)
-  if tracknumber==0 then Track=reaper.GetMasterTrack(0) end
-  local A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
-  if idx==-1 then return reaper.SetTrackStateChunk(Track, string.gsub(TrackStateChunk, "HWOUT.-\n", ""), undo) end
-  local B,C=ultraschall.CountTrackHWOuts(tracknumber)
+  local Track, A
+  if tracknumber>-1 then
+    Track=reaper.GetTrack(0,tracknumber-1)
+    if tracknumber==0 then Track=reaper.GetMasterTrack(0) end
+    A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
+    if idx==-1 then return reaper.SetTrackStateChunk(Track, string.gsub(TrackStateChunk, "HWOUT.-\n", ""), undo) end
+  elseif ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("DeleteTrackHWOut", "TrackStateChunk", "must be a valid TrackStateChunk", -5) return false
+  else
+    if idx==-1 then return true, string.gsub(TrackStateChunk, "HWOUT.-\n", "") end
+  end  
+  local B,C=ultraschall.CountTrackHWOuts(-1, TrackStateChunk)
   local finalstring=""  
   local Begin
   local Ending
@@ -28386,12 +28522,23 @@ function ultraschall.DeleteTrackHWOut(tracknumber,idx,undo)
     end
   end
   
-  return reaper.SetTrackStateChunk(Track, finalstring, undo)
+  if tracknumber>-1 then 
+    return reaper.SetTrackStateChunk(Track, finalstring, undo)
+  else
+    return true, finalstring
+  end
 end
 
---L=ultraschall.DeleteTrackHWOut(0,1,false)
+--A1,B1=reaper.GetTrackStateChunk(reaper.GetTrack(0,0),"",false)
+--reaper.MB(B1:sub(1,1500),"",0)
 
-function ultraschall.DeleteTrackAUXSendReceives(tracknumber,idx,undo)
+--L1,LL1=ultraschall.DeleteTrackAUXSendReceives(-1,1,false, B1)
+--L1, LL1=ultraschall.DeleteTrackHWOut(0,-1,false,B1)
+--ultraschall.ShowLastErrorMessage()
+--reaper.MB(LL1:sub(1,1500),"",0)
+
+
+function ultraschall.DeleteTrackAUXSendReceives(tracknumber, idx, TrackStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>DeleteTrackAUXSendReceives</slug>
@@ -28400,18 +28547,19 @@ function ultraschall.DeleteTrackAUXSendReceives(tracknumber,idx,undo)
     Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.DeleteTrackAUXSendReceives(integer tracknumber, integer idx, boolean undo)</functioncall>
+  <functioncall>boolean retval = ultraschall.DeleteTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)</functioncall>
   <description>
     Deletes the idxth Send/Receive-Setting of tracknumber.
     returns false in case of failure
   </description>
   <parameters>
-    integer tracknumber - the number of the track, whose Send/Receive you want
+    integer tracknumber - the number of the track, whose Send/Receive you want; -1, if you want to use the parameter TrackStateChunk
     integer idx - the number of the send/receive-setting, that you want to delete; -1, deletes all AuxReceives on this track
-    boolean undo - shall this be set to undo(true) or not(false)
+    optional string TrackStateChunk - a TrackStateChunk, from which you want to delete Send/Receive-entries; only available, when tracknumber=-1
   </parameters>
   <retvals>
     boolean retval - true if it worked, false if it didn't.
+    optional string TrackStateChunk - an altered TrackStateChunk, from which you deleted a Send/Receive-entrie; only available, when tracknumber=-1
   </retvals>
   <chapter_context>
     Track Management
@@ -28419,19 +28567,23 @@ function ultraschall.DeleteTrackAUXSendReceives(tracknumber,idx,undo)
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, track, delete, send, receive, routing</tags>
+  <tags>trackmanagement, track, delete, send, receive, routing, trackstatechunk</tags>
 </US_DocBloc>
 ]]
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("DeleteTrackAUXSendReceives", "tracknumber", "must be an integer", -1) return false end
-  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("DeleteTrackAUXSendReceives", "tracknumber", "no such track", -2) return false end
+  if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("DeleteTrackAUXSendReceives", "tracknumber", "no such track", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("DeleteTrackAUXSendReceives", "idx", "must be an integer", -3) return false end
-  if type(undo)~="boolean" then ultraschall.AddErrorMessage("DeleteTrackAUXSendReceives", "undo", "must be a boolean", -4) return false end
-  
-  local Track=reaper.GetTrack(0,tracknumber-1)
-  if tracknumber==0 then Track=reaper.GetMasterTrack(0) end  
-  local A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
-  if idx==-1 then return reaper.SetTrackStateChunk(Track, string.gsub(TrackStateChunk, "AUXRECV.-\n", ""), undo) end
-  local B,C=ultraschall.CountTrackAUXSendReceives(tracknumber)
+  local Track, A
+  if tracknumber>-1 then
+    Track=reaper.GetTrack(0,tracknumber-1)
+    if tracknumber==0 then Track=reaper.GetMasterTrack(0) end  
+    if idx==-1 then return reaper.SetTrackStateChunk(Track, string.gsub(TrackStateChunk, "AUXRECV.-\n", ""), undo) end
+    A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
+  elseif ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("DeleteTrackAUXSendReceives", "TrackStateChunk", "must be a valid TrackStateChunk", -5) return false
+  else
+    if idx==-1 then return true, string.gsub(TrackStateChunk, "AUXRECV.-\n", "") end
+  end
+  local B,C=ultraschall.CountTrackAUXSendReceives(-1, TrackStateChunk)
   local finalstring=""  
   local Begin
   local Ending  
@@ -28450,13 +28602,20 @@ function ultraschall.DeleteTrackAUXSendReceives(tracknumber,idx,undo)
     end
   end
   finalstring=finalstring..Ending
-  return reaper.SetTrackStateChunk(Track, finalstring, undo)
+  if tracknumber~=-1 then
+    return reaper.SetTrackStateChunk(Track, finalstring, undo)
+  else
+    return true, finalstring
+  end
 end
 
---L=ultraschall.DeleteTrackAUXSendReceives(1,-1,false)
+--A1,B1=reaper.GetTrackStateChunk(reaper.GetTrack(0,0),"",false)
+--reaper.MB(B1:sub(1,1000),"",0)
 
+--L1,LL1=ultraschall.DeleteTrackAUXSendReceives(-1,1,false, B1)
+--reaper.MB(LL1:sub(1,1000),"",0)
 
-function ultraschall.SetTrackHWOut(tracknumber, idx, a, b, c, d, e, f, g, h, i, undo)
+function ultraschall.SetTrackHWOut(tracknumber, idx, outputchannel, post_pre_fader, volume, pan, mute, phase, source, pan_law, automationmode, TrackStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetTrackHWOut</slug>
@@ -28465,7 +28624,7 @@ function ultraschall.SetTrackHWOut(tracknumber, idx, a, b, c, d, e, f, g, h, i, 
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.SetTrackHWOut(integer tracknumber, integer idx, integer outputchannel, integer post_pre_fader, number volume, number pan, integer mute, integer phase, integer source, number unknown, integer automationmode, boolean undo)</functioncall>
+  <functioncall>boolean retval, optional string TrackStateChunk = ultraschall.SetTrackHWOut(integer tracknumber, integer idx, integer outputchannel, integer post_pre_fader, number volume, number pan, integer mute, integer phase, integer source, number pan_law, integer automationmode, optional string TrackStateChunk)</functioncall>
   <description>
     Sets a setting of the HWOUT-HW-destination, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber. There can be more than one, so choose the one you want to change with idx.
     To retain old-settings, use nil with the accompanying parameters.
@@ -28473,7 +28632,7 @@ function ultraschall.SetTrackHWOut(tracknumber, idx, a, b, c, d, e, f, g, h, i, 
     
     returns false in case of failure
   </description>
-  <parameters>
+  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
     integer tracknumber - the number of the track, whose HWOut you want. 0 for Master Track
     integer idx - the number of the HWOut-setting, you want to change
     integer outputchannel - outputchannel, with 1024+x the individual hw-outputchannels, 0,2,4,etc stereo output channels
@@ -28494,7 +28653,7 @@ function ultraschall.SetTrackHWOut(tracknumber, idx, a, b, c, d, e, f, g, h, i, 
     -                                    2048 - MultiChannel 4 Channels 1-4
     -                                    2050 - Multichannel 4 Channels 3-6
     -                                    3072 - Multichannel 6 Channels 1-6
-    number unknown - unknown, standard set to -1
+    number pan_law - pan-law, as set in the dialog that opens, when you right-click on the pan-slider in the routing-settings-dialog; default is -1 for +0.0dB
     integer automationmode - automation mode, as set in the Destination "Controls for Track"-dialogue
     -                                    -1 - Track Automation Mode
     -                                     0 - Trim/Read
@@ -28503,10 +28662,11 @@ function ultraschall.SetTrackHWOut(tracknumber, idx, a, b, c, d, e, f, g, h, i, 
     -                                     3 - Write
     -                                     4 - Latch
     -                                     5 - Latch Preview
-    boolean undo - true, sets undo-state, false, doesn't set undo
+    optional string TrackStateChunk - sets an HWOUT-entry in a TrackStateChunk
   </parameters>
   <retvals>
     boolean retval - true, if it worked; false if it didn't
+    optional string TrackStateChunk - an altered TrackStateChunk, in which you've set a send/receive-setting; only available when track=-1
   </retvals>
   <chapter_context>
     Track Management
@@ -28514,65 +28674,67 @@ function ultraschall.SetTrackHWOut(tracknumber, idx, a, b, c, d, e, f, g, h, i, 
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, track, set, hwout, routing, phase, source, mute, pan, volume, post, pre, fader, channel, automation</tags>
+  <tags>trackmanagement, track, set, hwout, routing, phase, source, mute, pan, volume, post, pre, fader, channel, automation, pan-law, trackstatechunk</tags>
 </US_DocBloc>
 ]]
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "tracknumber", "must be an integer", -1) return false end
-  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("SetTrackHWOut", "tracknumber", "no such track", -2) return false end
+  if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("SetTrackHWOut", "tracknumber", "no such track", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "idx", "must be an integer", -13) return false end
-  if math.type(a)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "outputchannel", "must be an integer", -3) return false end
-  if math.type(b)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "post_pre_fader", "must be an integer", -4) return false end
-  if type(c)~="number" then ultraschall.AddErrorMessage("SetTrackHWOut", "volume", "must be a number", -5) return false end
-  if type(d)~="number" then ultraschall.AddErrorMessage("SetTrackHWOut", "pan", "must be a number", -6) return false end
-  if math.type(e)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "mute", "must be an integer", -7) return false end
-  if math.type(f)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "phase", "must be an integer", -8) return false end
-  if math.type(g)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "source", "must be an integer", -9) return false end
-  if type(h)~="number" then ultraschall.AddErrorMessage("SetTrackHWOut", "unknown", "must be a number", -10) return false end
-  if math.type(i)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "automationmode", "must be an integer", -11) return false end
-  if type(undo)~="boolean" then ultraschall.AddErrorMessage("SetTrackHWOut", "undo", "must be a boolean", -12) return false end
-
-  local Track=reaper.GetTrack(0,tracknumber-1)
-  if tracknumber==0 then Track=reaper.GetMasterTrack(0) end
-  local A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
-  local B,C=ultraschall.CountTrackHWOuts(tracknumber)
-  local finalstring=""  
-  local Begin
-  local Ending
-
-  if B<=0 then Begin=TrackStateChunk:match("(.-MAINSEND.-%c)")
-  else Begin=TrackStateChunk:match("(.-)HWOUT.-%c")
+  if idx<1 then ultraschall.AddErrorMessage("SetTrackHWOut", "idx", "no such index", -14) return false end
+  if math.type(outputchannel)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "outputchannel", "must be an integer", -3) return false end
+  if math.type(post_pre_fader)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "post_pre_fader", "must be an integer", -4) return false end
+  if type(volume)~="number" then ultraschall.AddErrorMessage("SetTrackHWOut", "volume", "must be a number", -5) return false end
+  if type(pan)~="number" then ultraschall.AddErrorMessage("SetTrackHWOut", "pan", "must be a number", -6) return false end
+  if math.type(mute)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "mute", "must be an integer", -7) return false end
+  if math.type(phase)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "phase", "must be an integer", -8) return false end
+  if math.type(source)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "source", "must be an integer", -9) return false end
+  if type(pan_law)~="number" then ultraschall.AddErrorMessage("SetTrackHWOut", "pan_law", "must be a number", -10) return false end
+  if math.type(automationmode)~="integer" then ultraschall.AddErrorMessage("SetTrackHWOut", "automationmode", "must be an integer", -11) return false end
+  
+  if tracknumber~=-1 then
+    local tr
+    if tracknumber==0 then tr=reaper.GetMasterTrack(0)
+    else tr=reaper.GetTrack(0,tracknumber-1) end
+    if idx>reaper.GetTrackNumSends(tr, 1) then ultraschall.AddErrorMessage("SetTrackHWOut", "idx", "no such index", -15) return false end
+    sendidx=idx
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx-1, "I_DSTCHAN", outputchannel) -- D2
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx-1, "I_SENDMODE", post_pre_fader) -- D2
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx-1, "D_VOL", volume)  -- D3
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx-1, "D_PAN", pan)  -- D4
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx-1, "B_MUTE", mute) -- D5
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx-1, "B_PHASE", phase)-- D6
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx-1, "I_SRCCHAN", source) -- D7
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx-1, "D_PANLAW", pan_law) -- D8
+    reaper.SetTrackSendInfo_Value(tr, 1, sendidx-1, "I_AUTOMODE", automationmode) -- D9
+    return true
+  end  
+  if ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("SetTrackHWOut", "TrackStateChunk", "must be a valid TrackStateChunk", -16) return false end
+  if ultraschall.CountTrackHWOuts(-1, TrackStateChunk)<idx then ultraschall.AddErrorMessage("SetTrackHWOut", "idx", "no such index", -17) return false end
+  
+  local Start, Offset=TrackStateChunk:match("(.-MAINSEND.-\n)()")
+  local Ende = TrackStateChunk:match(".*HWOUT.-\n(.*)")
+  local count=1
+  local Middle="HWOUT "..outputchannel.." "..post_pre_fader.." "..volume.." "..pan.." "..mute.." "..phase.." ".. source.." "..pan_law..":U "..automationmode.."\n"
+  local Middle1=""
+  local Middle2=""
+  
+  for k in string.gmatch(TrackStateChunk, "HWOUT.-\n") do
+    if count<idx then Middle1=Middle1..k end
+    if count>idx then Middle2=Middle2..k end
+    count=count+1
   end
-  if B<=0 then Ending=TrackStateChunk:match(".*MAINSEND.-%c(.*)")
-  else Ending=TrackStateChunk:match(".*HWOUT.-%c(.*)")
-  end
-    
-  finalstring=Begin
-  for i=1,B do
-    if idx~=i then 
-      finalstring=finalstring..C[i]
-    end
-    if idx==i then
-      a1, b1, c1, d1, e1, f1, g1, h1, i1 = ultraschall.GetTrackHWOut(tracknumber,idx)
-      if a==nil then a=a1 end
-      if b==nil then b=b1 end
-      if c==nil then c=c1 end
-      if d==nil then d=d1 end
-      if e==nil then e=e1 end
-      if f==nil then f=f1 end
-      if g==nil then g=g1 end
-      if h==nil then h=h1 end
-      if i==nil then i=i1 end
-      finalstring=finalstring.."HWOUT "..a.." "..b.." "..c.." "..d.." "..e.." "..f.." "..g.." "..h..":U "..i.."\n"
-    end
-  end
-  finalstring=finalstring..Ending
-  return reaper.SetTrackStateChunk(Track, finalstring, undo)
+  
+  TrackStateChunk=Start..Middle1..Middle..Middle2..Ende
+  return true, TrackStateChunk
 end
 
---L=ultraschall.SetTrackHWOut(0, 1, 9, 1, 1, 1, 1, 1, 1, 1, 1, true)
+--A,AA=reaper.GetTrackStateChunk(reaper.GetTrack(0,0),"",false)
+--L,LL=ultraschall.SetTrackHWOut(-1, 1, 0, 0, 4, 5, 0, 7, 8, 9, 10, true,AA)
+--B=reaper.SetTrackStateChunk(reaper.GetTrack(0,1), LL, false)
+--print2(LL)
 
 
-function ultraschall.SetTrackAUXSendReceives(tracknumber, idx, a, b, c, d, e, f, g, h, i, j, k, l, undo)
+function ultraschall.SetTrackAUXSendReceives(tracknumber, idx, recv_tracknumber, post_pre_fader, volume, pan, mute, mono_stereo, phase, chan_src, snd_chan, pan_law, midichanflag, automation, TrackStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetTrackAUXSendReceives</slug>
@@ -28581,7 +28743,7 @@ function ultraschall.SetTrackAUXSendReceives(tracknumber, idx, a, b, c, d, e, f,
     Reaper=5.95
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.SetTrackAUXSendReceives(integer tracknumber, integer idx, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)</functioncall>
+  <functioncall>boolean retval, optional string TrackStateChunk = ultraschall.SetTrackAUXSendReceives(integer tracknumber, integer idx, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number pan_law, integer midichanflag, integer automation, optional string TrackStateChunk)</functioncall>
   <description>
     Alters a setting of Send/Receive, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber. There can be more than one, so choose the right one with idx.
     You can keep the old-setting by using nil as a parametervalue.
@@ -28590,7 +28752,7 @@ function ultraschall.SetTrackAUXSendReceives(tracknumber, idx, a, b, c, d, e, f,
     Due to the complexity of send/receive-settings, this function does not check, whether the parameters are plausible. So check twice, whether the change sends/receives still appear, as they might disappear with faulty settings!
     returns false in case of failure
   </description>
-  <parameters>
+  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
     integer tracknumber - the number of the track, whose Send/Receive you want
     integer idx - the send/receive-setting, you want to set
     integer recv_tracknumber - Tracknumber, from where to receive the audio from
@@ -28615,7 +28777,7 @@ function ultraschall.SetTrackAUXSendReceives(tracknumber, idx, a, b, c, d, e, f,
     -                                        ...
     -                                        1024 - Mono Channel 1
     -                                        1025 - Mono Channel 2
-    number unknown - unknown, default is -1
+    number pan_law - pan-law, as set in the dialog that opens, when you right-click on the pan-slider in the routing-settings-dialog; default is -1 for +0.0dB
     integer midichanflag -0 - All Midi Tracks
     -                                        1 to 16 - Midi Channel 1 to 16
     -                                        32 - send to Midi Channel 1
@@ -28645,10 +28807,11 @@ function ultraschall.SetTrackAUXSendReceives(tracknumber, idx, a, b, c, d, e, f,
     -                                        3 - Write
     -                                        4 - Latch
     -                                        5 - Latch Preview
-    boolean undo - true, sets undo-state, false, doesn't set undo
+    optional string TrackStateChunk - a TrackStateChunk, whose AUXRECV-entries you want to set
   </parameters>
   <retvals>
     boolean retval - true if it worked, false if it didn't.
+    optional string TrackStateChunk - an altered TrackStateChunk, whose AUXRECV-entries you've altered
   </retvals>
   <chapter_context>
     Track Management
@@ -28656,74 +28819,66 @@ function ultraschall.SetTrackAUXSendReceives(tracknumber, idx, a, b, c, d, e, f,
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, track, set, send, receive, phase, source, mute, pan, volume, post, pre, fader, channel, automation, midi</tags>
+  <tags>trackmanagement, track, set, send, receive, phase, source, mute, pan, volume, post, pre, fader, channel, automation, midi, trackstatechunk, pan-law</tags>
 </US_DocBloc>
 ]]
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "tracknumber", "must be an integer", -1) return false end
-  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "tracknumber", "no such track", -2) return false end
+  if tracknumber~=-1 and (tracknumber<1 or tracknumber>reaper.CountTracks(0)) then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "tracknumber", "no such track", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "idx", "must be an integer", -16) return false end
-  if math.type(a)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "recv_tracknumber", "must be an integer", -3) return false end
-  if math.type(b)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "post_pre_fader", "must be an integer", -4) return false end
-  if type(c)~="number" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "volume", "must be a number", -5) return false end
-  if type(d)~="number" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "pan", "must be a number", -6) return false end
-  if math.type(e)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "mute", "must be an integer", -7) return false end
-  if math.type(f)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "mono_stereo", "must be an integer", -8) return false end
-  if math.type(g)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "phase", "must be an integer", -9) return false end
-  if math.type(h)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "chan_src", "must be a number", -10) return false end
-  if math.type(i)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "snd_chan", "must be an integer", -11) return false end
-  if type(j)~="number" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "unknown", "must be a number", -12) return false end
-  if math.type(k)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "midichanflag", "must be an integer", -13) return false end
-  if math.type(l)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "automation", "must be an integer", -14) return false end
-  if type(undo)~="boolean" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "undo", "must be a boolean", -15) return false end
-
-  local Track=reaper.GetTrack(0,tracknumber-1)
-  if tracknumber==0 then Track=reaper.GetMasterTrack(0) end
-  local A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
-  local B,C=ultraschall.CountTrackAUXSendReceives(tracknumber)
-  local finalstring=""  
-  local Begin
-  local Ending
-
-  if B<=0 then Begin=TrackStateChunk:match("(.-PERF.-%c)")
-  else Begin=TrackStateChunk:match("(.-)AUXRECV.-%c")
-  end
-  if B<=0 then Ending=TrackStateChunk:match(".*PERF.-%c(.*)")
-  else Ending=TrackStateChunk:match(".*AUXRECV.-%c(.*)")
+  if idx<1 then ultraschall.AddErrorMessage("SetTrackHWOut", "idx", "no such index", -20) return false end
+  if math.type(recv_tracknumber)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "recv_tracknumber", "must be an integer", -3) return false end
+  if math.type(post_pre_fader)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "post_pre_fader", "must be an integer", -4) return false end
+  if type(volume)~="number" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "volume", "must be a number", -5) return false end
+  if type(pan)~="number" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "pan", "must be a number", -6) return false end
+  if math.type(mute)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "mute", "must be an integer", -7) return false end
+  if math.type(mono_stereo)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "mono_stereo", "must be an integer", -8) return false end
+  if math.type(phase)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "phase", "must be an integer", -9) return false end
+  if math.type(chan_src)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "chan_src", "must be a number", -10) return false end
+  if math.type(snd_chan)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "snd_chan", "must be an integer", -11) return false end
+  if type(pan_law)~="number" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "pan_law", "must be a number", -12) return false end
+  if math.type(midichanflag)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "midichanflag", "must be an integer", -13) return false end
+  if math.type(automation)~="integer" then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "automation", "must be an integer", -14) return false end
+  
+  local tr, temp, Track
+  if tracknumber~=-1 then
+    if tracknumber==0 then tr=reaper.GetMasterTrack(0)
+    else tr=reaper.GetTrack(0,tracknumber-1) end
+    if idx>reaper.GetTrackNumSends(tr, -1) then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "idx", "no such index", -17) return false end
+    temp, TrackStateChunk=reaper.GetTrackStateChunk(tr, "", false)
+  end  
+  if ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "TrackStateChunk", "must be a valid TrackStateChunk", -18) return false end
+  if ultraschall.CountTrackAUXSendReceives(-1, TrackStateChunk)<idx then ultraschall.AddErrorMessage("SetTrackAUXSendReceives", "idx", "no such index", -19) return false end
+  
+  local Start, Offset=TrackStateChunk:match("(.-PERF.-\n)()")
+  local Ende = TrackStateChunk:match(".*AUXRECV.-\n(.*)")
+  local count=1
+  local Middle="AUXRECV "..recv_tracknumber.." "..post_pre_fader.." "..volume.." "..pan.." "..mute.." ".. mono_stereo.." "..phase.." "..chan_src.." "..snd_chan.." "..pan_law..":U "..midichanflag.." "..automation.." ''\n"
+  local Middle1=""
+  local Middle2=""
+  
+  for k in string.gmatch(TrackStateChunk, "AUXRECV.-\n") do
+    if count<idx then Middle1=Middle1..k end
+    if count>idx then Middle2=Middle2..k end
+    count=count+1
   end
   
---  print2("Ivorher:",i)
-  
-  finalstring=Begin
-  for i=1,B do
-    if idx~=i then 
-      finalstring=finalstring..C[i]
-    end
-    if idx==i then
-      a1, b1, c1, d1, e1, f1, g1, h1, i1, j1, k1, l1 = ultraschall.GetTrackAUXSendReceives(tracknumber,idx)
-      if a==nil then a=a1 end
-      if b==nil then b=b1 end
-      if c==nil then c=c1 end
-      if d==nil then d=d1 end
-      if e==nil then e=e1 end
-      if f==nil then f=f1 end
-      if g==nil then g=g1 end
-      if h==nil then h=h1 end
-      if i==nil then i=i1 end
-      if j==nil then j=j1 end
-      if k==nil then k=k1 end
-      if l==nil then l=l1 end
-     
---  print2("Inachher:",i)
-      
-      finalstring=finalstring.."AUXRECV "..(a).." "..b.." "..c.." "..d.." "..e.." "..f.." "..g.." "..h.." "..i.." "..j..":U "..k.." "..l.." ''\n"
-    end
+  TrackStateChunk=Start..Middle1..Middle..Middle2..Ende
+  if tracknumber==-1 then
+    return true, TrackStateChunk
+  else
+    reaper.SetTrackStateChunk(tr, TrackStateChunk, false)
   end
-  finalstring=finalstring..Ending
---  reaper.MB(finalstring,"",0)
-  return reaper.SetTrackStateChunk(Track, finalstring, undo)
 end
 
---ultraschall.SetTrackAUXSendReceives(1,1,1,1,1,1,1,1,1,1,1,1,1,1,true)
+--A,AA=reaper.GetTrackStateChunk(reaper.GetTrack(0,0),"",false)
+--A,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12=ultraschall.GetTrackAUXSendReceives(1,1)
+
+--B,BB=ultraschall.SetTrackAUXSendReceives(1,1,1,2,1,1,1,1,1,1,1,1,1,1,true,AA)
+--ultraschall.SetTrackAUXSendReceives(1,1,1,2,3,4,5,6,7,8,9,10,11,12,true)
+--reaper.SetTrackStateChunk(reaper.GetTrack(0,1),BB,false)
+
+--print2(AA)
+--print2(BB)
 
 function ultraschall.GetReaperWindowPosition_Left()
 -- Due to Api-limitations: when the reaper-window is too small, it returns a wrong value, up to 72 pixels too high!
@@ -31066,6 +31221,7 @@ function ultraschall.SetTrackStateChunk_Tracknumber(tracknumber, trackstatechunk
 ]]
 
   tracknumber=tonumber(tracknumber)
+  local Track
   if type(trackstatechunk)~="string" then ultraschall.AddErrorMessage("SetTrackStateChunk_Tracknumber","trackstatechunk", "not a valid trackstatechunk", -1) return false end
   if undo==nil then undo=true end
   if type(undo)~="boolean" then ultraschall.AddErrorMessage("SetTrackStateChunk_Tracknumber","undo", "only true or false are allowed", -2) return false end
@@ -31074,7 +31230,7 @@ function ultraschall.SetTrackStateChunk_Tracknumber(tracknumber, trackstatechunk
   if tracknumber==0 then Track=reaper.GetMasterTrack(0)
   else Track=reaper.GetTrack(0,tracknumber-1)
   end
-  A=reaper.SetTrackStateChunk(Track, trackstatechunk, boolean)
+  A=reaper.SetTrackStateChunk(Track, trackstatechunk, undo)
   return A
 end
 
@@ -33543,17 +33699,17 @@ end
 --L,LL=ultraschall.GetGuidExtState("TRACK_"..reaper.GetTrackGUID(reaper.GetTrack(0,0)),"Hulas", 1, true, true)
 --ultraschall.ShowLastErrorMessage()
 
-function ultraschall.GetVZoom()
+function ultraschall.GetVerticalZoom()
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetVZoom</slug>
+  <slug>GetVerticalZoom</slug>
   <requires>
     Ultraschall=4.00
     Reaper=5.40
     SWS=2.9.7
     Lua=5.3
   </requires>
-  <functioncall>integer vertical_zoom_factor = ultraschall.GetVZoom()</functioncall>
+  <functioncall>integer vertical_zoom_factor = ultraschall.GetVerticalZoom()</functioncall>
   <description>
     Returns the vertical-zoom-factor.
     
@@ -33578,25 +33734,27 @@ function ultraschall.GetVZoom()
   if vzoom==checkvzoom then 
     return vzoom
   else
-    ultraschall.AddErrorMessage("GetVZoom", "", "Unknown error while retrieving vertical zoom-level. Please contact the developers of the Ultraschall-Api!", -1) return -1
+    ultraschall.AddErrorMessage("GetVerticalZoom", "", "Unknown error while retrieving vertical zoom-level. Please contact the developers of the Ultraschall-Api!", -1) return -1
   end
 end
 
---L=ultraschall.GetVZoom()
+--L=ultraschall.GetVerticalZoom()
 
-function ultraschall.SetVZoom(vertical_zoom_factor)
+function ultraschall.SetVerticalZoom(vertical_zoom_factor)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>SetVZoom</slug>
+  <slug>SetVerticalZoom</slug>
   <requires>
     Ultraschall=4.00
     Reaper=5.40
     SWS=2.9.7
     Lua=5.3
   </requires>
-  <functioncall>integer retval = ultraschall.SetVZoom(integer vertical_zoom_factor)</functioncall>
-  <description>
+  <functioncall>integer retval = ultraschall.SetVerticalZoom(integer vertical_zoom_factor)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets the vertical zoom factor.
+
+    To set it relative to the current vertical-zoom-value, use Reaper's own API-function [CSurf_OnZoom](Reaper_Api_Documentation.html#CSurf_OnZoom)
     
     Returns -1 in case of error.
   </description>
@@ -33616,8 +33774,8 @@ function ultraschall.SetVZoom(vertical_zoom_factor)
 </US_DocBloc>
 --]]
   -- check parameters
-  if math.type(vertical_zoom_factor)~="integer" then ultraschall.AddErrorMessage("SetVZoom","vertical_zoom_factor", "Must be an integer", -1) return -1 end
-  if vertical_zoom_factor<0 or vertical_zoom_factor>40 then ultraschall.AddErrorMessage("SetVZoom","vertical_zoom_factor", "Must be between 0 and 40", -2) return -1 end
+  if math.type(vertical_zoom_factor)~="integer" then ultraschall.AddErrorMessage("SetVerticalZoom","vertical_zoom_factor", "Must be an integer", -1) return -1 end
+  if vertical_zoom_factor<0 or vertical_zoom_factor>40 then ultraschall.AddErrorMessage("SetVerticalZoom","vertical_zoom_factor", "Must be between 0 and 40", -2) return -1 end
 
   -- prepare variables
   local OldVzoom=reaper.SNM_GetIntConfigVar("vzoom2",-20)
@@ -33627,9 +33785,11 @@ function ultraschall.SetVZoom(vertical_zoom_factor)
   reaper.CSurf_OnZoom(0, DiffVZoom)
 end
 
---L=ultraschall.SetVZoom(0)
---LL=ultraschall.GetVZoom(30)
+--L=ultraschall.SetVerticalZoom(0)
+--LL=ultraschall.GetVerticalZoom(30)
 --reaper.UpdateArrange()
+
+
 
 function ultraschall.StoreArrangeviewSnapshot(slot, description, position, vzoom, vscroll)
 --[[
@@ -33676,7 +33836,7 @@ function ultraschall.StoreArrangeviewSnapshot(slot, description, position, vzoom
   -- prepare variables
   local slot=tostring(slot)
   local start,ende=reaper.GetSet_ArrangeView2(0,false,0,0)
-  local vzoom2=ultraschall.GetVZoom()
+  local vzoom2=ultraschall.GetVerticalZoom()
   local hzoom=reaper.GetHZoomLevel()
 
   -- store start/end-position, verticalzoom and description; position and vzoom only, if parameters position and vzoom are set to true
@@ -33911,7 +34071,7 @@ function ultraschall.RestoreArrangeviewSnapshot(slot, position, vzoom, hcentermo
   
   
   if vzoom3~=-1 and vzoom==true then 
-    ultraschall.SetVZoom(vzoom3)
+    ultraschall.SetVerticalZoom(vzoom3)
   end  
   
   if verticalscroll==true or verticalscroll==nil then
@@ -33926,10 +34086,10 @@ end
 --ultraschall.StoreArrangeviewSnapshot(3, "LSubisubisu", true, true, true)
 
 --A,B,C,D,E,F=ultraschall.RestoreArrangeviewSnapshot(1,false, true, 1)
---ultraschall.SetVZoom(40)
+--ultraschall.SetVerticalZoom(40)
 
 
---ultraschall.SetVZoom(29.1)
+--ultraschall.SetVerticalZoom(29.1)
 
 function ultraschall.SetBitfield(integer_bitfield, set_to, ...)
 --[[
@@ -34631,6 +34791,8 @@ function ultraschall.SetItemExtState(item, key, value, overwrite)
   </requires>
   <functioncall>boolean retval = ultraschall.SetItemExtState(MediaItem item, string key, string value, boolean overwrite)</functioncall>
   <description>
+    **Note: This is deprecated, as Reaper will have the same feature in better in a future version!**
+    
     Sets a new extstate for a MediaItem.
     
     Returns false in case of an error
@@ -34674,6 +34836,8 @@ function ultraschall.GetItemExtState(item, key)
   </requires>
   <functioncall>boolean retval, string value = ultraschall.GetItemExtState(MediaItem item, string key)</functioncall>
   <description>
+    **Note: This is deprecated, as Reaper will have the same feature in better in a future version!**
+  
     Sets a new extstate for a MediaItem.
     
     Returns false in case of an error
@@ -34715,6 +34879,8 @@ function ultraschall.SetTrackExtState(track, key, value, overwrite)
   </requires>
   <functioncall>boolean retval = ultraschall.SetTrackExtState(MediaTrack track, string key, string value, boolean overwrite)</functioncall>
   <description>
+   **Note: This is deprecated, as Reaper will have the same feature in better in a future version!**
+   
     Sets a new extstate for a MediaTrack.
     
     Returns false in case of an error
@@ -34758,6 +34924,8 @@ function ultraschall.GetTrackExtState(track, key)
   </requires>
   <functioncall>boolean retval, string value = ultraschall.GetTrackExtState(MediaTrack track, string key)</functioncall>
   <description>
+    **Note: This is deprecated, as Reaper will have the same feature in better in a future version!**
+  
     Sets a new extstate for a MediaTrack.
     
     Returns false in case of an error
@@ -38061,7 +38229,7 @@ function ultraschall.type(object)
     Reaper=5.77
     Lua=5.3
   </requires>
-  <functioncall>string type_of_object = ultraschall.type(identifier object)</functioncall>
+  <functioncall>string type_of_object, optional boolean isnumber = ultraschall.type(identifier object)</functioncall>
   <description>
     Returns the type of the object.
     Supported types are Lua's own datatypes as well as Reaper's own datatypes.
@@ -38073,6 +38241,7 @@ function ultraschall.type(object)
                           - nil, number: integer, number: float, boolean, string, function, table, thread, userdata, 
                           - ReaProject, MediaItem, MediaItem_Take, MediaTrack, TrackEnvelope, AudioAccessor, joystick_device, PCM_source
                           - userdata will be shown, if object isn't of any known type
+    optional boolean isnumber - true, if object is a number(either integer or number)
   </retvals>
   <parameters>
     identifier object - the object, whose type you want to know
@@ -38086,8 +38255,8 @@ function ultraschall.type(object)
 </US_DocBloc>
 ]]
   if     object==nil then return "nil"
-  elseif math.type(object)=="integer" then return "number: integer"
-  elseif math.type(object)=="float" then return "number: float"
+  elseif math.type(object)=="integer" then return "number: integer", true
+  elseif math.type(object)=="float" then return "number: float", true
   elseif type(object)=="boolean" then return "boolean"
   elseif type(object)=="string" then return "string"
   elseif type(object)=="function" then return "function"
@@ -39481,12 +39650,12 @@ function ultraschall.pause_follow_one_cycle()
     This function is only relevant, if you want to develop scripts that work perfectly within the Ultraschall.fm-extension.
   </description>
   <chapter_context>
-    User Interface
-    Arrangeview Management
+    Ultraschall Specific
+    Followmode
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>userinterface, follow, off, followmode, turn off one cycle</tags>
+  <tags>ultraschall, userinterface, follow, off, followmode, turn off one cycle</tags>
 </US_DocBloc>
 --]]
   local follow_actionnumber = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
@@ -44953,6 +45122,8 @@ function ultraschall.GetLastCursorPosition()
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns the last and current editcursor-position. Needs Ultraschall-API-background-scripts started first, see [RunBackgroundHelperFeatures()](#RunBackgroundHelperFeatures).
     
+    Has an issue, when editcursor-position was changed using a modifier, like alt+click or shift+click! Because of that, you should use this only in defer-scripts.
+    
     returns -1, if Ultraschall-API-backgroundscripts weren't started yet.
   </description>
   <retvals>
@@ -45092,6 +45263,7 @@ function ultraschall.Main_OnCommandByFilename(filename, ...)
 
   if filename2==filename then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "No valid script, must be either Lua, Python or EEL-script and end with such an extension.", -4) return false end
 
+
 --reaper.MB(filename2,"",0)
 
   local OO=ultraschall.MakeCopyOfFile(filename, filename2)
@@ -45101,6 +45273,8 @@ function ultraschall.Main_OnCommandByFilename(filename, ...)
   local commandid=reaper.AddRemoveReaScript(true, 0, filename2, true)
   if commandid==0 then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "Couldn't register filename. Is it a valid ReaScript?.", -3) return false end
   ultraschall.SetScriptParameters(string.gsub("ScriptIdentifier:"..filename2, "\\", "/"), ...)
+--  ultraschall.SetScriptParameters("Hula",...)
+
   reaper.Main_OnCommand(commandid, 0)
   local commandid2=reaper.AddRemoveReaScript(false, 0, filename2, true)
   
@@ -45257,6 +45431,7 @@ function ultraschall.GetScriptParameters(script_identifier, remove)
     counter=counter+1
   end
   local caller_script=reaper.GetExtState(script_identifier, "parm_0")
+  
   if remove==true or remove==nil then reaper.DeleteExtState(script_identifier, "parm_0", false) end
   return counter-1, parms, caller_script
 end
@@ -45299,7 +45474,7 @@ function ultraschall.SetScriptParameters(script_identifier, ...)
   local parms={...}
   local counter=1
   reaper.SetExtState(script_identifier, "parm_0", ultraschall.ScriptIdentifier, false)
---  print2("LOL"..reaper.GetExtState(script_identifier, "parm_0"))
+
   while parms[counter]~=nil do
     reaper.SetExtState(script_identifier, "parm_"..counter, tostring(parms[counter]), false)
     counter=counter+1
@@ -45321,19 +45496,20 @@ function ultraschall.GetScriptReturnvalues(script_identifier, remove)
     Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>integer num_params, array retvals, string caller_script_identifier = ultraschall.GetScriptReturnvalues(optional string script_identifier, optional boolean remove)</functioncall>
+  <functioncall>integer num_params, array retvals = ultraschall.GetScriptReturnvalues(sender_script_identifier, optional boolean remove)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Gets the return-values stored by a specific script_identifier for the current script.
+    Gets the return-values which a specific sender_script_identifier sent to the current script.
+    
+    If you have started numerous child-scripts and want to know, which child-script sent you return-values, see [GetScriptReturnvalues_Sender](#GetScriptReturnvalues_Sender)
     
     returns -1 in case of an error
   </description>
   <retvals>
     integer num_retvals - the number of return-values available
     array params - the values of the return-values as an array
-    string caller_script_identifier - the scriptidentifier of the script, that set the return-values
   </retvals>
   <parameters>
-    optional string script_identifier - the script-identifier, whose return-values you want to retrieve; 
+    optional string sender_script_identifier - the script-identifier, that sent the return-values to your script
     optional boolean remove - true or nil, remove the stored retval-extstates; false, keep them for later retrieval
   </parameters>
   <chapter_context>
@@ -45345,10 +45521,12 @@ function ultraschall.GetScriptReturnvalues(script_identifier, remove)
   <tags>helper functions, get, script, returnvalues, scriptidentifier</tags>
 </US_DocBloc>
 ]]
-  if type(script_identifier)~="string" then ultraschall.AddErrorMessage("GetScriptReturnvalues", "must be a string", -1) return -1 end
+  if type(script_identifier)~="string" then ultraschall.AddErrorMessage("GetScriptReturnvalues", "script_identifier", "must be a string", -1) return -1 end
   local counter=1
   local retvals={}
+
   while reaper.GetExtState(ultraschall.ScriptIdentifier, script_identifier.."_retval_"..counter)~="" do
+    --print(reaper.GetExtState(ultraschall.ScriptIdentifier, script_identifier.."_retval_"..counter))
     retvals[counter]=reaper.GetExtState(ultraschall.ScriptIdentifier, script_identifier.."_retval_"..counter)
     if remove==true or remove==nil then
       reaper.DeleteExtState(ultraschall.ScriptIdentifier, script_identifier.."_retval_"..counter, false)
@@ -45360,6 +45538,7 @@ function ultraschall.GetScriptReturnvalues(script_identifier, remove)
     end
     counter=counter+1
   end
+  
   return counter-1, retvals
 end
 
@@ -45396,12 +45575,14 @@ function ultraschall.SetScriptReturnvalues(script_identifier, ...)
 </US_DocBloc>
 ]]
   if type(script_identifier)~="string" then ultraschall.AddErrorMessage("SetScriptReturnvalues", "must be a string", -1) return false end
+
   local retvals={...}
   local counter=1
   local retval_identifier = reaper.GetExtState(script_identifier, "retval_sender_identifier")
   if retval_identifier:match(ultraschall.ScriptIdentifier)==nil then
     reaper.SetExtState(script_identifier, "retval_sender_identifier", retval_identifier..ultraschall.ScriptIdentifier.."\n", false)
   end
+  
   while retvals[counter]~=nil do
     reaper.SetExtState(script_identifier, ultraschall.ScriptIdentifier.."_retval_"..counter, tostring(retvals[counter]), false)
     counter=counter+1
@@ -45426,7 +45607,7 @@ function ultraschall.GetScriptReturnvalues_Sender()
   </requires>
   <functioncall>integer count, array retval_sender = ultraschall.GetScriptReturnvalues_Sender()</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Retrieves, which scripts send returnvalues to the current script.
+    Retrieves, which scripts sent returnvalues to the current script.
   </description>
   <retvals>
     integer count - the number of scripts, who have left returnvalues for the current script
@@ -45486,6 +45667,7 @@ function ultraschall.IsValidHWND(HWND)
   <tags>window, hwnd, is valid, check</tags>
 </US_DocBloc>
 ]]
+  if reaper.ValidatePtr(HWND, "HWND*")==false then ultraschall.AddErrorMessage("IsValidHWND", "HWND", "Not a valid HWND.", -2) return false end
   if pcall(reaper.JS_Window_GetTitle, HWND, "")==false then ultraschall.AddErrorMessage("IsValidHWND", "HWND", "Not a valid HWND.", -1) return false end
   return true
 end
@@ -45755,7 +45937,7 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  return "4.00","9th of March 2019", "Beta 2.73", 400.0273,  "\"Radiohead - Bangers'n'Mash \"", ultraschall.hotfixdate
+  return "4.00","10th of April 2019", "Beta 2.74", 400.0274,  "\"Talking Heads - Once in a Lifetime\"", ultraschall.hotfixdate
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -47116,10 +47298,10 @@ function ultraschall.StateChunkLayouter(statechunk)
   return newsc
 end
 
-
+--[[
 function ultraschall.CountUltraschallEffectPlugins(track)
 --[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+</US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountUltraschallEffectPlugins</slug>
   <requires>
     Ultraschall=4.00
@@ -47159,8 +47341,9 @@ function ultraschall.CountUltraschallEffectPlugins(track)
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>fx_pluginmanagement, count, get, studiolink, studiolinkonair, soundboard, ultraschall_dynamics, bypass-state, offline-state</tags>
-</US_DocBloc>
+<//US_DocBloc>
 ]]
+--[[
   local MediaTrack
   if math.type(track)~="integer" then ultraschall.AddErrorMessage("CountUltraschallEffectPlugins", "track", "must be an integer", -1) return -1 end
   if track==0 then MediaTrack=reaper.GetMasterTrack(0) else MediaTrack=reaper.GetTrack(0, track-1) end
@@ -47178,6 +47361,7 @@ function ultraschall.CountUltraschallEffectPlugins(track)
   local A,B=reaper.GetTrackStateChunk(MediaTrack,"",false)
   
   for k in string.gmatch(B,"(.-\n)") do
+--    print2(k)
     if k:match("<.-StudioLinkOnAir ")~=nil then 
       num_slonair=num_slonair+1 
       slonair_byp[num_slonair]={lastbypassline:match(" (%d) (%d) (%d)")} 
@@ -47190,7 +47374,8 @@ function ultraschall.CountUltraschallEffectPlugins(track)
       sl_byp[num_sl][1]=tonumber(sl_byp[num_sl][1]) 
       sl_byp[num_sl][2]=tonumber(sl_byp[num_sl][2]) 
       sl_byp[num_sl][3]=tonumber(sl_byp[num_sl][3])
-    elseif k:match("<.-Soundboard %(Ultraschall%)")~=nil then 
+    elseif k:match("<.-Soundboard %(Ultraschall%)")~=nil or k:match("<.-Ultraschall: Soundboard")~=nil then 
+    print2(k)
       num_soundboard=num_soundboard+1
       soundboard_byp[num_soundboard]={lastbypassline:match(" (%d) (%d) (%d)")} 
       soundboard_byp[num_soundboard][1]=tonumber(soundboard_byp[num_soundboard][1]) 
@@ -47207,6 +47392,9 @@ function ultraschall.CountUltraschallEffectPlugins(track)
   end
   return num_sl, sl_byp, num_slonair, slonair_byp, num_soundboard, soundboard_byp, num_usdynamics, usdynamics_byp
 end
+
+--A,B,C,D,E,F,G,H=ultraschall.CountUltraschallEffectPlugins(3)
+--]]
 
 
 function ultraschall.GetTopmostHWND(hwnd)
@@ -47831,7 +48019,7 @@ end
 
 function ultraschall.ConvertIntegerIntoString(integervalue)
 --[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+</US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ConvertIntegerIntoString</slug>
   <requires>
     Ultraschall=4.00
@@ -47859,7 +48047,7 @@ function ultraschall.ConvertIntegerIntoString(integervalue)
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>helper functions, convert, integer, string</tags>
 </US_DocBloc>
-]]
+--]]
   if math.type(integervalue)~="integer" then ultraschall.AddErrorMessage("ConvertIntegerIntoString", "integervalue", "must be an integer", -1) return end
   local Byte1, Byte2, Byte3, Byte4 = ultraschall.SplitIntegerIntoBytes(integervalue)
   local String=string.char(Byte1)..string.char(Byte2)..string.char(Byte3)..string.char(Byte4)
@@ -47867,6 +48055,7 @@ function ultraschall.ConvertIntegerIntoString(integervalue)
 end
 
 --A=ultraschall.ConvertIntegerIntoString(65)
+--]]
 
 function ultraschall.ConvertIntegerToBits(integer)
 --[[
@@ -48014,7 +48203,7 @@ function ultraschall.GetScriptIdentifier()
     </retvals>
     <chapter_context>
       API-Helper functions
-      Data Manipulation
+      Child Scripts
     </chapter_context>
     <target_document>US_Api_Documentation</target_document>
     <source_document>ultraschall_functions_engine.lua</source_document>
@@ -50326,7 +50515,7 @@ function ultraschall.SetVerticalScroll(scrollposition)
   </requires>
   <functioncall>boolean retval = ultraschall.SetVerticalScroll(integer scrollposition)</functioncall>
   <description>
-    Sets the vertical-scroll-factor.
+    Sets the absolute vertical-scroll-factor.
     
     The possible value-range depends on the vertical-zoom.
     
@@ -50347,14 +50536,56 @@ function ultraschall.SetVerticalScroll(scrollposition)
   <tags>arrangeviewmanagement, set, vertical, scroll factor</tags>
 </US_DocBloc>
 --]]
-  if math.type(position)~="integer" then ultraschall.AddErrorMessage("SetVerticalScroll", "scrollposition", "must be an integer", -1) return false end
+  if math.type(scrollposition)~="integer" then ultraschall.AddErrorMessage("SetVerticalScroll", "scrollposition", "must be an integer", -1) return false end
   
   return reaper.JS_Window_SetScrollPos(ultraschall.GetHWND_ArrangeViewAndTimeLine(), "SB_VERT", scrollposition)
 end
 
---A=ultraschall.SetVerticalScroll(2000000)
+--A=ultraschall.SetVerticalScroll(100)
 
-function ultraschall.GetUserInputs(title, caption_names, default_retvals, length)
+function ultraschall.SetVerticalRelativeScroll(relative_scrollposition)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetVerticalRelativeScroll</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    JS=0.962
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetVerticalRelativeScroll(integer relative_scrollposition)</functioncall>
+  <description>
+    Sets the vertical-scroll-factor, relative to it's current position.
+    
+    The possible value-range depends on the vertical-zoom.
+    
+    returns false in case of an error or if scrolling is impossible(e.g. zoomed out fully)
+  </description>
+  <retvals>
+    boolean retval - true, if setting was successful; false, if setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer scrollposition - the vertical scrolling-position
+  </parameters>
+  <chapter_context>
+    User Interface
+    Arrangeview Management
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>arrangeviewmanagement, set, relative, vertical, scroll factor</tags>
+</US_DocBloc>
+--]]
+  if math.type(relative_scrollposition)~="integer" then ultraschall.AddErrorMessage("SetVerticalRelativeScroll", "relative_scrollposition", "must be an integer", -1) return false end
+  
+  local A=ultraschall.GetVerticalScroll()
+  
+  return reaper.JS_Window_SetScrollPos(ultraschall.GetHWND_ArrangeViewAndTimeLine(), "SB_VERT", A+relative_scrollposition)
+end
+
+--ultraschall.SetVerticalRelativeScroll(1)
+
+function ultraschall.GetUserInputs(title, caption_names, default_retvals, values_length)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetUserInputs</slug>
@@ -50363,7 +50594,7 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, length
     Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, integer number_of_inputfields, table returnvalues = ultraschall.GetUserInputs(string title, table caption_names, table default_retvals, integer length)</functioncall>
+  <functioncall>boolean retval, integer number_of_inputfields, table returnvalues = ultraschall.GetUserInputs(string title, table caption_names, table default_retvals, optional integer values_length)</functioncall>
   <description>
     Gets inputs from the user.
     
@@ -50383,8 +50614,15 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, length
   <parameters>
     string title - the title of the inputwindow
     table caption_names - a table with all inputfield-captions. All non-string-entries will be converted to string-entries. Begin an entry with a * for password-entry-fields.
+                        - This dialog only allows limited caption-field-length, about 19-30 characters, depending on the size of the used characters.
+                        - no commas allowed!
     table default_retvals - a table with all default retvals. All non-string-entries will be converted to string-entries.
-    integer length - the extralength of the user-inputfield. With that, you can enhance the length of the inputfields. 1-500
+                          - no commas allowed!
+    optional integer values_length - the extralength of the values-inputfield. With that, you can enhance the length of the inputfields. 
+                            - 1-500; 
+                            - nil, for default length 10
+                            - -1, for autlength, where the function adjusts the length of the UserInputs-dialog according to the length of the longest default-value-string
+                            -     keep in mind, that the font used in this dialog isn't of fixed length, so some characters are smaller than others, which could lead to longer entryfields than needed, with this option set
   </parameters>
   <chapter_context>
     User Interface
@@ -50395,34 +50633,59 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, length
   <tags>userinterface, dialog, get, user input</tags>
 </US_DocBloc>
 --]]
+  local count33, autolength
+
   if type(title)~="string" then ultraschall.AddErrorMessage("GetUserInputs", "title", "must be a string", -1) return false end
   if type(caption_names)~="table" then ultraschall.AddErrorMessage("GetUserInputs", "caption_names", "must be a table", -2) return false end
   if type(default_retvals)~="table" then ultraschall.AddErrorMessage("GetUserInputs", "default_retvals", "must be a table", -3) return false end
-  if math.type(length)~="integer" then ultraschall.AddErrorMessage("GetUserInputs", "length", "must be an integer", -4) return false end
-  if length>500 or length<1 then ultraschall.AddErrorMessage("GetUserInputs", "length", "must be between 1 and 500", -5) return false end
+  if values_length~=nil and math.type(values_length)~="integer" then ultraschall.AddErrorMessage("GetUserInputs", "values_length", "must be an integer", -4) return false end
+  if values_length==nil then values_length=10 end
+  if (values_length>500 or values_length<1) and values_length~=-1 then ultraschall.AddErrorMessage("GetUserInputs", "values_length", "must be between 1 and 500, or -1 for autolength", -5) return false end
+  if values_length==-1 then values_length=1 autolength=true end
   local count = ultraschall.CountEntriesInTable_Main(caption_names)
-  length=(length*2)+18
-  
+  local count2 = ultraschall.CountEntriesInTable_Main(default_retvals)
+  if count2>count then count33=count2 else count33=count end
+  values_length=(values_length*2)+18
+    
   local captions=""
-  local retvals=""
+  local retvals=""  
+  
+  for i=1, count2 do
+    if default_retvals[i]==nil then default_retvals[i]="" end
+    retvals=retvals..tostring(default_retvals[i])..","
+    if autolength==true and values_length<tostring(default_retvals[i]):len() then values_length=(tostring(default_retvals[i]):len()*6.6)+18 end
+  end
+  retvals=retvals:sub(1,-2)  
   
   for i=1, count do
     if caption_names[i]==nil then caption_names[i]="" end
     captions=captions..tostring(caption_names[i])..","
+    --if autolength==true and length<tostring(caption_names[i]):len()+length then length=(tostring(caption_names[i]):len()*16.6)+18+length end
   end
   captions=captions:sub(1,-2)
-  captions=captions..",extrawidth="..length
-  
-  for i=1, count do
-    if default_retvals[i]==nil then default_retvals[i]="" end
-    retvals=retvals..tostring(default_retvals[i])..","
+  if count<count2 then
+    for i=count, count2 do
+      captions=captions..","
+    end
   end
-  retvals=retvals:sub(1,-2)  
+  captions=captions..",extrawidth="..values_length
   
-  local retval, retvalcsv = reaper.GetUserInputs(title, count, captions, retvals)
-  if retval==false then return false end
-  return retval, ultraschall.CSV2IndividualLinesAsArray(retvalcsv) 
+  --print2(captions)
+  local temptitle="Tudelu"..reaper.genGuid()
+  ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/Scripts/GetUserInputValues_Helper_Script.lua", temptitle, title)
+
+  local retval, retvalcsv = reaper.GetUserInputs(temptitle, count33, captions, retvals)
+  if retval==false then reaper.DeleteExtState(ultraschall.ScriptIdentifier, "values", false) return false end
+  local Values=reaper.GetExtState(ultraschall.ScriptIdentifier, "values")
+  reaper.DeleteExtState(ultraschall.ScriptIdentifier, "values", false)
+  local count2,Values=ultraschall.CSV2IndividualLinesAsArray(Values ,"\n")
+  for i=count+1, 17 do
+    Values[i]=nil
+  end
+  return retval, count33, Values
 end
+
+--A,B,C,D=ultraschall.GetUserInputs("I got you", {"ShalalalaOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOHAH"}, {"HHHAAAAHHHHHHHHHHHHHHHHHHHHHHHHAHHHHHHHA"}, -1)
 
 function ultraschall.CreateRenderCFG_AIFF(bits)
 --[[
@@ -50699,7 +50962,7 @@ function ultraschall.GetRenderToFileHWND()
       if ultraschall.HasHWNDChildWindowNames(hwnd_array[i], 
                                             open_render_queue_tr.."\0"..
                                             save_changes_and_close_tr.."\0"..
-                                            render_tr.."\0"..
+--                                            render_tr.."\0".. -- includes number of to be rendered files, so you can't use this
                                             wildcards_tr)==true then return hwnd_array[i] end
     end
   end
@@ -51890,9 +52153,15 @@ function ultraschall.ClearRoutingMatrix(ClearHWOuts, ClearAuxRecvs, ClearTrackMa
   if undo==nil then undo=false end
   if ClearMasterTrack==false then minimumTrack=1 else minimumTrack=0 end
   
+  local track, A
   for i=minimumTrack, reaper.CountTracks(0) do
-    if ClearHWOuts~=false then ultraschall.DeleteTrackHWOut(i,-1,undo) end
-    if ClearAuxRecvs~=false then ultraschall.DeleteTrackAUXSendReceives(i,-1,undo) end
+    if i==0 then track=reaper.GetMasterTrack(0) else track=reaper.GetTrack(0,i-1) end
+    if ClearHWOuts~=false then 
+      ultraschall.DeleteTrackHWOut(i,-1,undo) 
+    end
+    if ClearAuxRecvs~=false then 
+      ultraschall.DeleteTrackAUXSendReceives(i,-1,undo) 
+    end
     if ClearTrackMasterSends~=false then 
       local MainSendOn, ParentChannels = ultraschall.GetTrackMainSendState(i)
       ultraschall.SetTrackMainSendState(i, 0, ParentChannels)
@@ -51902,6 +52171,7 @@ function ultraschall.ClearRoutingMatrix(ClearHWOuts, ClearAuxRecvs, ClearTrackMa
 end
 
 --A=ultraschall.ClearRoutingMatrix(nil,nil,nil,nil,nil)
+--O=ultraschall.ClearRoutingMatrix(false, true, false, true, false)
 
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -52491,6 +52761,58 @@ end
 --B=reaper.JS_Window_GetTitle(A)
 
 
+function ultraschall.GetTracknumberByGuid(guid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTracknumberByGuid</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    SWS=2.9.7
+    Lua=5.3
+  </requires>
+  <functioncall>integer tracknumber, MediaTrack tr = ultraschall.GetTracknumberByGuid(string guid)</functioncall>
+  <description>
+    returns the tracknumber and track of a guid. The track must be in the currently active project!
+    
+    Supports the returned guids by reaper.BR_GetMediaTrackGUID and reaper.GetTrackGUID.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer tracknumber - the number of the track; 0, for master track; 1, for track 1; 2, for track 2, etc. -1, in case of an error
+    MediaTrack tr - the MediaTrack-object of the requested track; nil, if no track is found
+  </retvals>
+  <parameters>
+    string gui - the guid of the track, that you want to request
+  </parameters>
+  <chapter_context>
+    Track Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>track management, get, track, guid, tracknumber</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.IsValidGuid(guid, true)==false then ultraschall.AddErrorMessage("GetTracknumberByGuid", "guid", "no valid guid", -1) return -1 end
+  if reaper.GetTrackGUID(reaper.GetMasterTrack(0))==guid then return 0, reaper.GetMasterTrack(0) end
+  if guid=="{00000000-0000-0000-0000-000000000000}" then 
+    return 0, reaper.GetMasterTrack(0)
+  else 
+    local MediaTrack = reaper.BR_GetMediaTrackByGUID(0, guid)
+    if MediaTrack==nil then ultraschall.AddErrorMessage("GetTracknumberByGuid", "guid", "no track with that guid available", -2) return -1 end
+    return math.floor(reaper.GetMediaTrackInfo_Value(MediaTrack, "IP_TRACKNUMBER") ), MediaTrack 
+  end
+end
+
+--A = reaper.BR_GetMediaTrackGUID(reaper.GetMasterTrack(0))
+--GUID = reaper.GetTrackGUID(reaper.GetTrack(0,2))
+
+--A,B=ultraschall.GetTracknumberByGuid(GUID)
+
+--A=ultraschall.GetTracknumberByGuid("{00000000-0000-0000-0000-000000000000}")
+
 function ultraschall.GetAllHWOuts()
   -- returned table is of structure:
   --    table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1
@@ -52511,7 +52833,7 @@ function ultraschall.GetAllHWOuts()
   <slug>GetAllHWOuts</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.40
+    Reaper=5.965
     Lua=5.3
   </requires>
   <functioncall>table AllHWOuts, integer number_of_tracks = ultraschall.GetAllHWOuts()</functioncall>
@@ -52522,6 +52844,7 @@ function ultraschall.GetAllHWOuts()
       table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!
       table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n
       table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1
+      table[tracknumber]["TrackID"]                     - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
       table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber
       table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber
       table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber
@@ -52529,7 +52852,7 @@ function ultraschall.GetAllHWOuts()
       table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber
       table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber
       table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["unknown"]         - unknown, leave it -1
+      table[tracknumber][HWOutIndex]["pan\_law"]         - pan-law, default is -1
       table[tracknumber][HWOutIndex]["automationmode"]  - the automation-mode of this HWOutIndex of tracknumber    
       
       See [GetTrackHWOut](#GetTrackHWOut) for more details on the individual settings, stored in the entries.
@@ -52556,6 +52879,11 @@ function ultraschall.GetAllHWOuts()
     HWOuts[i]={}
     local count_HWOuts = ultraschall.CountTrackHWOuts(i)
     HWOuts[i]["HWOut_count"]=count_HWOuts
+    if i>0 then 
+      HWOuts[i]["TrackID"]=reaper.BR_GetMediaTrackGUID(reaper.GetTrack(0,i-1))
+    else
+      HWOuts[i]["TrackID"]=reaper.BR_GetMediaTrackGUID(reaper.GetMasterTrack(0))
+    end
     for a=1, count_HWOuts do
       HWOuts[i][a]={}
       HWOuts[i][a]["outputchannel"],
@@ -52565,31 +52893,40 @@ function ultraschall.GetAllHWOuts()
       HWOuts[i][a]["mute"], 
       HWOuts[i][a]["phase"], 
       HWOuts[i][a]["source"], 
-      HWOuts[i][a]["unknown"], 
+      HWOuts[i][a]["pan_law"], 
       HWOuts[i][a]["automationmode"] = ultraschall.GetTrackHWOut(i, a)
     end
   end
   return HWOuts, reaper.CountTracks()
 end
 
-function ultraschall.ApplyAllHWOuts(AllHWOuts)
+--A=ultraschall.GetAllHWOuts()
+
+function ultraschall.ApplyAllHWOuts(AllHWOuts, option)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyAllHWOuts</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.40
+    Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.ApplyAllHWOuts(table AllHWOuts)</functioncall>
+  <functioncall>boolean retval = ultraschall.ApplyAllHWOuts(table AllHWOuts, optional integer option)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    takes a table, as returned by [GetAllHWOuts](#GetAllHWOuts) with all HWOut-settings of all tracks and applies it to all tracks.
+    Takes a table, as returned by [GetAllHWOuts](#GetAllHWOuts) with all HWOut-settings of all tracks and applies it to all tracks.
+
+    When you set option to 2, the individual entries will be applied to the tracks, that have the guids stored in table
+    table[tracknumber]["TrackID"], otherwise, this function will apply it to track0 to trackn, which is the same as table["number\_of_tracks"].
+    That way, you can create RoutingSnapshots, that will stay in the right tracks, even if they are ordered differently or when tracks have been added/deleted.
+
+    This influences the MasterTrack as well!
     
     expected table is of structure:
       
       table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!
       table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n
       table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1
+      table[tracknumber]["TrackID"]                     - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
       table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber
       table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber
       table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber
@@ -52597,13 +52934,14 @@ function ultraschall.ApplyAllHWOuts(AllHWOuts)
       table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber
       table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber
       table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["unknown"]         - unknown, leave it -1
+      table[tracknumber][HWOutIndex]["pan\_law"]         - pan-law, default is -1
       table[tracknumber][HWOutIndex]["automationmode"]  - the automation-mode of this HWOutIndex of tracknumber    
           
       See [GetTrackHWOut](#GetTrackHWOut) for more details on the individual settings, stored in the entries.
   </description>
   <parameters>
     table AllHWOuts - a table with all AllHWOut-entries of the current project
+    optional integer option - nil or 1, HWOuts will be applied to Track 0(MasterTrack) to table["number_of_tracks"]; 2, HWOuts will be applied to the tracks with the guid TrackID
   </parameters>
   <retvals>
     boolean retval - true, setting was successful; false, it was unsuccessful
@@ -52619,36 +52957,44 @@ function ultraschall.ApplyAllHWOuts(AllHWOuts)
 ]]
   if type(AllHWOuts)~="table" then ultraschall.AddErrorMessage("ApplyAllHWOuts", "AllHWOuts", "Must be a table.", -1) return false end
   if AllHWOuts["number_of_tracks"]==nil or AllHWOuts["HWOuts"]~=true then ultraschall.AddErrorMessage("ApplyAllHWOuts", "AllHWOuts", "Must be a valid AllAUXSendReceives, as returned by GetAllAUXSendReceive. Get it from there, alter that and pass it into here.", -2) return false end 
+  local trackstatechunk, retval, aa
   for i=0, AllHWOuts["number_of_tracks"] do
+    if option==2 then aa=ultraschall.GetTracknumberByGuid(AllHWOuts[i]["TrackID"]) else aa=i end
+    retval, trackstatechunk = ultraschall.GetTrackStateChunk_Tracknumber(aa)
     for a=1, AllHWOuts[i]["HWOut_count"] do
-      ultraschall.SetTrackHWOut(i, a, 
-           AllHWOuts[i][a]["outputchannel"],
-           AllHWOuts[i][a]["post_pre_fader"],
-           AllHWOuts[i][a]["volume"], 
-           AllHWOuts[i][a]["pan"], 
-           AllHWOuts[i][a]["mute"], 
-           AllHWOuts[i][a]["phase"], 
-           AllHWOuts[i][a]["source"], 
-           AllHWOuts[i][a]["unknown"], 
-           AllHWOuts[i][a]["automationmode"],
-           false)--]]
-
+      retval, trackstatechunk = ultraschall.SetTrackHWOut(-1, a, 
+                                   AllHWOuts[i][a]["outputchannel"],
+                                   AllHWOuts[i][a]["post_pre_fader"],
+                                   AllHWOuts[i][a]["volume"], 
+                                   AllHWOuts[i][a]["pan"], 
+                                   AllHWOuts[i][a]["mute"], 
+                                   AllHWOuts[i][a]["phase"], 
+                                   AllHWOuts[i][a]["source"], 
+                                   AllHWOuts[i][a]["pan_law"], 
+                                   AllHWOuts[i][a]["automationmode"],
+                                   trackstatechunk)
       end
+    
+      ultraschall.SetTrackStateChunk_Tracknumber(aa, trackstatechunk, false)
+--      reaper.MB(tostring(trackstatechunk),"",0)
   end
   return true
 end
+
 --[[
 A1,B=ultraschall.GetAllHWOuts()
 for i=0, B do
   for a=1, A1[i]["HWOut_count"] do
---    A1[i][a]["volume"]=1
+    A1[i][a]["volume"]=1
   end
 end
-C=ultraschall.ApplyAllHWOuts(A1)
---]]
+
+--ultraschall.InsertTrackAtIndex(2,5,false)
+--C=ultraschall.ApplyAllHWOuts(A1,1)
+
 --A,B,C,D,E,F,G,H,I=ultraschall.GetTrackHWOut(0,1)
 --ultraschall.SetTrackHWOut(0,1,A-1024,B,C,D,E,F,G,H,I,false)
-
+--]]
 
 function ultraschall.GetAllAUXSendReceives()
   -- returned table is of structure:
@@ -52671,7 +53017,7 @@ function ultraschall.GetAllAUXSendReceives()
   <slug>GetAllAUXSendReceives</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.40
+    Reaper=5.965
     Lua=5.3
   </requires>
   <functioncall>table AllAUXSendReceives, integer number_of_tracks = ultraschall.GetAllAUXSendReceives()</functioncall>
@@ -52682,7 +53028,9 @@ function ultraschall.GetAllAUXSendReceives()
       table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!
       table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n
       table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1
+      table[tracknumber]["TrackID"]                                 - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
       table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["recv\_track\_guid"] - the guid of the receive-track; with that, you can be sure to get the right receive-track, even if trackorder changes
       table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber
       table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber
       table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber
@@ -52691,7 +53039,7 @@ function ultraschall.GetAllAUXSendReceives()
       table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber
       table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber
       table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["unknown"]           - unknown, leave it -1
+      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1
       table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0
       table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber
       
@@ -52713,12 +53061,14 @@ function ultraschall.GetAllAUXSendReceives()
 
   local AUXSendReceives={}
   AUXSendReceives["number_of_tracks"]=reaper.CountTracks()
-  AUXSendReceives["AllAUXSendReceive"]=true 
+  AUXSendReceives["AllAUXSendReceives"]=true 
   
   for i=1, reaper.CountTracks() do
     AUXSendReceives[i]={}
     local count_AUXSendReceives = ultraschall.CountTrackAUXSendReceives(i)
     AUXSendReceives[i]["AUXSendReceives_count"]=count_AUXSendReceives
+    AUXSendReceives[i]["TrackID"]=reaper.GetTrackGUID(reaper.GetTrack(0,i-1))
+
     for a=1, count_AUXSendReceives do
       AUXSendReceives[i][a]={}
       AUXSendReceives[i][a]["recv_tracknumber"],
@@ -52730,16 +53080,19 @@ function ultraschall.GetAllAUXSendReceives()
       AUXSendReceives[i][a]["phase"], 
       AUXSendReceives[i][a]["chan_src"], 
       AUXSendReceives[i][a]["snd_src"], 
-      AUXSendReceives[i][a]["unknown"], 
+      AUXSendReceives[i][a]["pan_law"], 
       AUXSendReceives[i][a]["midichanflag"], 
-      AUXSendReceives[i][a]["automation"] = ultraschall.GetTrackAUXSendReceives(i, a)
+      AUXSendReceives[i][a]["automation"] = ultraschall.GetTrackAUXSendReceives(i, a)     
+      AUXSendReceives[i][a]["recv_track_guid"]=reaper.GetTrackGUID(reaper.GetTrack(0,AUXSendReceives[i][a]["recv_tracknumber"]))
+      --]]
     end
   end
   return AUXSendReceives, reaper.CountTracks()
 end
 
+--A,B,C=ultraschall.GetAllAUXSendReceives()
 
-function ultraschall.ApplyAllAUXSendReceives(AllAUXSendReceives)
+function ultraschall.ApplyAllAUXSendReceives(AllAUXSendReceives, option)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyAllAUXSendReceives</slug>
@@ -52748,15 +53101,22 @@ function ultraschall.ApplyAllAUXSendReceives(AllAUXSendReceives)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.ApplyAllAUXSendReceives(table AllAUXSendReceives)</functioncall>
+  <functioncall>boolean retval = ultraschall.ApplyAllAUXSendReceives(table AllAUXSendReceives, optional integer option)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     takes a table, as returned by [GetAllAUXSendReceive](#GetAllAUXSendReceive) with all AUXSendReceive-settings of all tracks and applies it to all tracks.
+
+    When you set option to 2, the individual entries will be applied to the tracks, that have the guids stored in table
+    table[tracknumber]["TrackID"], otherwise, this function will apply it to track1 to trackn, which is the same as table["number\_of_tracks"].
+    That way, you can create RoutingSnapshots, that will stay in the right tracks, even if they are ordered differently or when tracks have been added/deleted.
+
     
     expected table is of structure:
       table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!
       table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n
       table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1
+      table[tracknumber]["TrackID"]                                 - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
       table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["recv\_track\_guid"] - the guid of the receive-track; with that, you can be sure to get the right receive-track, even if trackorder changes
       table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber
       table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber
       table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber
@@ -52765,7 +53125,7 @@ function ultraschall.ApplyAllAUXSendReceives(AllAUXSendReceives)
       table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber
       table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber
       table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["unknown"]           - unknown, leave it -1
+      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1
       table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0
       table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber
       
@@ -52773,6 +53133,7 @@ function ultraschall.ApplyAllAUXSendReceives(AllAUXSendReceives)
   </description>
   <parameters>
     table AllAUXSendReceives - a table with all AllAUXSendReceive-entries of the current project
+    optional integer option - nil or 1, AUXRecvs will be applied to Track 1 to table["number_of_tracks"]; 2, AUXRecvs will be applied to the tracks with the guid TrackID
   </parameters>
   <retvals>
     boolean retval - true, setting was successful; false, it was unsuccessful
@@ -52787,39 +53148,75 @@ function ultraschall.ApplyAllAUXSendReceives(AllAUXSendReceives)
 </US_DocBloc>
 ]]
   if type(AllAUXSendReceives)~="table" then ultraschall.AddErrorMessage("GetAllAUXSendReceives", "AllAUXSendReceives", "Must be a table.", -1) return false end
-  if AllAUXSendReceives["number_of_tracks"]==nil or AllAUXSendReceives["AllAUXSendReceive"]~=true then ultraschall.AddErrorMessage("GetAllAUXSendReceives", "AllAUXSendReceives", "Must be a valid AllAUXSendReceives, as returned by GetAllAUXSendReceive. Get it from there, alter that and pass it into here.", -2) return false end 
+  if AllAUXSendReceives["number_of_tracks"]==nil or AllAUXSendReceives["AllAUXSendReceives"]~=true then ultraschall.AddErrorMessage("GetAllAUXSendReceives", "AllAUXSendReceives", "Must be a valid AllAUXSendReceives, as returned by GetAllAUXSendReceive. Get it from there, alter that and pass it into here.", -2) return false end 
+
+  local trackstatechunk, retval, b
+  
   for i=1, AllAUXSendReceives["number_of_tracks"] do
+    if option~=2 then b=i
+    else b=ultraschall.GetTracknumberByGuid(AllAUXSendReceives[i]["TrackID"]) 
+    end
+    retval, trackstatechunk = ultraschall.GetTrackStateChunk_Tracknumber(b)
+--    print_alt(b,i, ultraschall.IsValidTrackStateChunk(trackstatechunk),"\n")
+    
     for a=1, AllAUXSendReceives[i]["AUXSendReceives_count"] do
-      ultraschall.SetTrackAUXSendReceives(i, a, 
-           AllAUXSendReceives[i][a]["recv_tracknumber"],
-           AllAUXSendReceives[i][a]["post_pre_fader"],
-           AllAUXSendReceives[i][a]["volume"], 
-           AllAUXSendReceives[i][a]["pan"], 
-           AllAUXSendReceives[i][a]["mute"], 
-           AllAUXSendReceives[i][a]["mono_stereo"], 
-           AllAUXSendReceives[i][a]["phase"], 
-           AllAUXSendReceives[i][a]["chan_src"], 
-           AllAUXSendReceives[i][a]["snd_src"], 
-           AllAUXSendReceives[i][a]["unknown"], 
-           AllAUXSendReceives[i][a]["midichanflag"], 
-           AllAUXSendReceives[i][a]["automation"],
-           false)--]]
-           --print2(i,a)
+      if option~=2 then
+        retval, trackstatechunk=ultraschall.SetTrackAUXSendReceives(-1, a, 
+             AllAUXSendReceives[i][a]["recv_tracknumber"],
+             AllAUXSendReceives[i][a]["post_pre_fader"],
+             AllAUXSendReceives[i][a]["volume"], 
+             AllAUXSendReceives[i][a]["pan"], 
+             AllAUXSendReceives[i][a]["mute"], 
+             AllAUXSendReceives[i][a]["mono_stereo"], 
+             AllAUXSendReceives[i][a]["phase"], 
+             AllAUXSendReceives[i][a]["chan_src"], 
+             AllAUXSendReceives[i][a]["snd_src"], 
+             AllAUXSendReceives[i][a]["pan_law"], 
+             AllAUXSendReceives[i][a]["midichanflag"], 
+             AllAUXSendReceives[i][a]["automation"],
+             trackstatechunk)--]]
+      else
+           retval, trackstatechunk=ultraschall.SetTrackAUXSendReceives(-1, a, 
+                ultraschall.GetTracknumberByGuid(AllAUXSendReceives[i][a]["recv_track_guid"])-1,
+                AllAUXSendReceives[i][a]["post_pre_fader"],
+                AllAUXSendReceives[i][a]["volume"], 
+                AllAUXSendReceives[i][a]["pan"], 
+                AllAUXSendReceives[i][a]["mute"], 
+                AllAUXSendReceives[i][a]["mono_stereo"], 
+                AllAUXSendReceives[i][a]["phase"], 
+                AllAUXSendReceives[i][a]["chan_src"], 
+                AllAUXSendReceives[i][a]["snd_src"], 
+                AllAUXSendReceives[i][a]["pan_law"], 
+                AllAUXSendReceives[i][a]["midichanflag"], 
+                AllAUXSendReceives[i][a]["automation"],
+                trackstatechunk)--]]
       end
+    end
+      ultraschall.SetTrackStateChunk_Tracknumber(b, trackstatechunk, false)
+      --print(P)
   end
   return true
 end
+
+
 
 --[[
 A1,B=ultraschall.GetAllAUXSendReceives()
 
 for i=1, B do
   for a=1, A1[i]["AUXSendReceives_count"] do
---    A1[i][a]["volume"]=1
+    A1[i][a]["volume"]=1
   end
 end
 
-A0=ultraschall.ApplyAllAUXSendReceives(A1)
+-- wenn man track am Anfang des Projekts einfügt, gehen AUXREcvs verloren
+-- muss das so?
+--mespotine
+--ultraschall.InsertTrackAtIndex(0,1,false)
+--ultraschall.InsertTrackAtIndex(3,1,false)
+--ultraschall.InsertTrackAtIndex(6,1,false)
+
+A0=ultraschall.ApplyAllAUXSendReceives(A1,2)
 --]]
 --C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15 = ultraschall.GetTrackAUXSendReceives(1,1)
 --ultraschall.SetTrackAUXSendReceives(1,1,C1, C2-1, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12,false)
@@ -52836,7 +53233,8 @@ function ultraschall.GetAllMainSendStates()
   <slug>GetAllMainSendStates</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.40
+    Reaper=5.965
+    SWS=2.9.7
     Lua=5.3
   </requires>
   <functioncall>table AllMainSends, integer number_of_tracks  = ultraschall.GetAllMainSendStates()</functioncall>
@@ -52847,7 +53245,8 @@ function ultraschall.GetAllMainSendStates()
     
     returned table is of structure:
       Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n
-      Table[tracknumber]["MainSend"]       - Send to Master on(1) or off(1)
+      table[tracknumber]["TrackID"]        - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
+      Table[tracknumber]["MainSendOn"]     - Send to Master on(1) or off(1)
       Table[tracknumber]["ParentChannels"] - the parent channels of this track
       
       See [GetTrackMainSendState](#GetTrackMainSendState) for more details on the individual settings, stored in the entries.
@@ -52868,8 +53267,10 @@ function ultraschall.GetAllMainSendStates()
   
   local MainSend={}
   MainSend["number_of_tracks"]=reaper.CountTracks()
+  MainSend["MainSend"]=true
   for i=1, reaper.CountTracks() do
     MainSend[i]={}
+    MainSend[i]["TrackID"]=reaper.BR_GetMediaTrackGUID(reaper.GetTrack(0,i-1))
     MainSend[i]["MainSendOn"], MainSend[i]["ParentChannels"] = ultraschall.GetTrackMainSendState(i)
   end
   return MainSend, reaper.CountTracks()
@@ -52877,30 +53278,38 @@ end
 
 --A,B=ultraschall.GetAllMainSendStates()
 
-function ultraschall.ApplyAllMainSendStates(AllMainSendsTable)
+function ultraschall.ApplyAllMainSendStates(AllMainSendsTable, option)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyAllMainSendStates</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.40
+    Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.ApplyAllMainSendStates(table AllMainSendsTable)</functioncall>
+  <functioncall>boolean retval = ultraschall.ApplyAllMainSendStates(table AllMainSendsTable, optional integer option)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     takes a table, as returned by [GetAllMainSendStates](#GetAllMainSendStates) with all MainSend-settings of all tracks and applies it to all tracks.
     
-    The MainSend-settings are the settings, if a certain track sends it's signal to the Master Track
+    The MainSend-settings are the settings, if a certain track sends it's signal to the Master Track.
+    
+    When you set option to 2, the individual entries will be applied to the tracks, that have the guids stored in table
+    table[tracknumber]["TrackID"], otherwise, this function will apply it to track0 to trackn, which is the same as table["number\_of_tracks"].
+    That way, you can create RoutingSnapshots, that will stay in the right tracks, even if they are ordered differently or when tracks have been added/deleted.
+    
+    This influences the MasterTrack as well!
     
     expected table is of structure:
       Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n
-      Table[tracknumber]["MainSend"]       - Send to Master on(1) or off(1)
+      table[tracknumber]["TrackID"]        - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
+      Table[tracknumber]["MainSendOn"]     - Send to Master on(1) or off(1)
       Table[tracknumber]["ParentChannels"] - the parent channels of this track
       
       See [GetTrackMainSendState](#GetTrackMainSendState) for more details on the individual settings, stored in the entries.
   </description>
   <parameters>
     table AllMainSends - a table with all AllMainSends-entries of the current project
+    optional integer option - nil or 1, MainSend-settings will be applied to Track 1 to table["number_of_tracks"]; 2, MasterSends will be applied to the tracks with the guid stored in table[tracknumber]["TrackID"].
   </parameters>
   <retvals>
     boolean retval - true, setting was successful; false, it was unsuccessful
@@ -52916,19 +53325,26 @@ function ultraschall.ApplyAllMainSendStates(AllMainSendsTable)
 ]]
   if type(AllMainSendsTable)~="table" then ultraschall.AddErrorMessage("ApplyAllMainSendStates", "AllMainSendsTable", "Must be a table.", -1) return false end
   if AllMainSendsTable["number_of_tracks"]==nil or AllMainSendsTable[1]["MainSendOn"]==nil then ultraschall.AddErrorMessage("ApplyAllMainSendStates", "AllMainSendsTable", "Must be a valid AllMainSendsTable, as returned by GetAllMainSendStates. Get it from there, alter that and pass it into here.", -2) return false end 
+  local a
   for i=1, AllMainSendsTable["number_of_tracks"] do
-    ultraschall.SetTrackMainSendState(i, AllMainSendsTable[i]["MainSendOn"], AllMainSendsTable[i]["ParentChannels"])
+    if option~=2 then a=i
+    else a=ultraschall.GetTracknumberByGuid(AllMainSendsTable[i]["TrackID"]) 
+    end
+    ultraschall.SetTrackMainSendState(a, AllMainSendsTable[i]["MainSendOn"], AllMainSendsTable[i]["ParentChannels"])
   end
   return true
 end
 --[[
 
 A,B=ultraschall.GetAllMainSendStates()
+--ultraschall.InsertTrackAtIndex(0, 1, true)
+O=reaper.DeleteTrack(reaper.GetTrack(0,0))
 for i=1, B do
   A[i]["MainSendOn"]=1
 end
 
-A0=ultraschall.ApplyAllMainSendStates(A)
+--ultraschall.ShowErrorMessagesInReascriptConsole(true)
+A0=ultraschall.ApplyAllMainSendStates(A,2)
 --]]
 
 
@@ -53117,5 +53533,1445 @@ function ultraschall.GetSetConfigAutoSaveMode(set, setting, persist)
 end
 
 --A=ultraschall.GetSetConfigAutoSaveMode(true, 2, true)
+
+
+function ultraschall.IsTrackSoundboard(tracknumber)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>IsTrackSoundboard</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.95
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.IsTrackSoundboard(integer tracknumber)</functioncall>
+  <description>
+    Returns, if this track is a soundboard-track, means, contains an Ultraschall-Soundboard-plugin.
+    
+    Only relevant in Ultraschall-installations
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, it is an Ultraschall-Soundboard-track; false, it is not
+  </retvals>
+  <parameters>
+    integer tracknumber - the tracknumber to check for; 0, for master-track; 1, for track 1; n for track n
+  </parameters>
+  <chapter_context>
+    Ultraschall Specific
+    Track Management
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>ultraschall, isvalid, soundboard, track</tags>
+</US_DocBloc>
+--]]
+  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("IsTrackSoundboard", "tracknumber", "must be an integer", -1) return false end
+  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("IsTrackSoundboard", "tracknumber", "no such track; must be between 1 and "..reaper.CountTracks(0).." for the current project. 0, for master-track.", -2) return false end
+  if tracknumber==0 then track=reaper.GetMasterTrack(0) else track=reaper.GetTrack(0,tracknumber-1) end
+  if track~=nil then
+    local count=0
+    while reaper.TrackFX_GetFXName(track, count, "")~="" do
+      local retval, buf = reaper.TrackFX_GetFXName(track, count, "")
+      if buf=="AUi: Ultraschall: Soundboard" then return true, count end -- Mac-check
+      if buf=="VSTi: Soundboard (Ultraschall)" then return true, count end -- Windows-check
+      if buf=="" then return false end
+      count=count+1
+    end
+  end
+  return false
+end
+
+--A=ultraschall.IsTrackSoundboard(33)
+
+function ultraschall.IsTrackStudioLink(tracknumber)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>IsTrackStudioLink</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.95
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.IsTrackStudioLink(integer tracknumber)</functioncall>
+  <description>
+    Returns, if this track is a StudioLink-track, means, contains a StudioLink-Plugin
+    
+    Only relevant in Ultraschall-installations
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, it is a StudioLink-track; false, it is not
+  </retvals>
+  <parameters>
+    integer tracknumber - the tracknumber to check for; 0, for master-track; 1, for track 1; n for track n
+  </parameters>
+  <chapter_context>
+    Ultraschall Specific
+    Track Management
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>ultraschall, isvalid, studiolink, track</tags>
+</US_DocBloc>
+--]]
+  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("IsTrackStudioLink", "tracknumber", "must be an integer", -1) return false end
+  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("IsTrackStudioLink", "tracknumber", "no such track; must be between 1 and "..reaper.CountTracks(0).." for the current project. 0, for master-track.", -2) return false end
+  if tracknumber==0 then track=reaper.GetMasterTrack(0) else track=reaper.GetTrack(0,tracknumber-1) end
+  if track~=nil then
+    local count=0
+    while reaper.TrackFX_GetFXName(track, count, "")~="" do
+      local retval, buf = reaper.TrackFX_GetFXName(track, count, "")
+      if buf=="AU: ITSR: StudioLink" then return true, count end -- Mac-check
+      if buf=="VST: StudioLink (IT-Service Sebastian Reimers)" then return true, count end -- Windows-check
+      if buf=="" then return false end
+      count=count+1
+    end
+  end
+  return false
+end
+
+--A=ultraschall.IsTrackStudioLink(3)
+
+
+function ultraschall.IsTrackStudioLinkOnAir(tracknumber)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>IsTrackStudioLinkOnAir</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.95
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.IsTrackStudioLinkOnAir(integer tracknumber)</functioncall>
+  <description>
+    Returns, if this track is a StudioLinkOnAir-track, means, contains a StudioLinkOnAir-Plugin
+    
+    Only relevant in Ultraschall-installations
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, it is a StudioLinkOnAir-track; false, it is not
+  </retvals>
+  <parameters>
+    integer tracknumber - the tracknumber to check for; 0, for master-track; 1, for track 1; n for track n
+  </parameters>
+  <chapter_context>
+    Ultraschall Specific
+    Track Management
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>ultraschall, isvalid, studiolinkonair, track</tags>
+</US_DocBloc>
+--]]
+  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("IsTrackStudioLinkOnAir", "tracknumber", "must be an integer", -1) return false end
+  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("IsTrackStudioLinkOnAir", "tracknumber", "no such track; must be between 1 and "..reaper.CountTracks(0).." for the current project. 0, for master-track.", -2) return false end
+  if tracknumber==0 then track=reaper.GetMasterTrack(0) else track=reaper.GetTrack(0,tracknumber-1) end
+  if track~=nil then
+    local count=0
+    while reaper.TrackFX_GetFXName(track, count, "")~="" do
+      local retval, buf = reaper.TrackFX_GetFXName(track, count, "")
+      if buf=="ITSR: StudioLinkOnAir" then return true, count end -- Mac-check
+      if buf=="VST: StudioLinkOnAir (IT-Service Sebastian Reimers)" then return true, count end -- Windows-check
+      if buf=="" then return false end
+      count=count+1
+    end
+  end
+  return false
+end
+
+
+function ultraschall.GetTypeOfTrack(tracknumber)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTypeOfTrack</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.95
+    Lua=5.3
+  </requires>
+  <functioncall>string type, boolean multiple = ultraschall.GetTypeOfTrack(integer tracknumber)</functioncall>
+  <description>
+    Returns the tracktype of a specific track. Will return the type of the first valid SoundBoard, StudioLink, StudioLinkOnAir-plugin in the track-fx-chain.
+    If there are multiple valid plugins and therefore types, the second retval multiple will be set to true, else to false.
+    
+    Only relevant in Ultraschall-installations
+    
+    returns "", false in case of an error
+  </description>
+  <retvals>
+    string type - Either "StudioLink", "StudioLinkOnAir", "SoundBoard" or "Other". "", in case of an error
+    boolean multiple - true, the track has other valid plugins as well; false, it is a "pure typed" track
+  </retvals>
+  <parameters>
+    integer tracknumber - the tracknumber to check for; 0, for master-track; 1, for track 1; n for track n
+  </parameters>
+  <chapter_context>
+    Ultraschall Specific
+    Track Management
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>ultraschall, get, type, soundboard, studiolink, studiolinkonair, track</tags>
+</US_DocBloc>
+--]]
+  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("IsTrackStudioLinkOnAir", "tracknumber", "must be an integer", -1) return "", false end
+  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("IsTrackStudioLinkOnAir", "tracknumber", "no such track; must be between 1 and "..reaper.CountTracks(0).." for the current project. 0, for master-track.", -2) return "", false end
+  if tracknumber==0 then track=reaper.GetMasterTrack(0) else track=reaper.GetTrack(0,tracknumber-1) end
+  local A,A1=ultraschall.IsTrackStudioLink(tracknumber)
+  local B,B1=ultraschall.IsTrackStudioLinkOnAir(tracknumber)
+  local C,C1=ultraschall.IsTrackSoundboard(tracknumber)
+  
+  -- hacky, find a better way
+  if A1==nil then A1=99999999999 end 
+  if B1==nil then B1=99999999999 end
+  if C1==nil then C1=99999999999 end
+  
+  if A==true and B==false and C==false then return "StudioLink", false
+  elseif A==false and B==true and C==false then return "StudioLinkOnAir", false
+  elseif A==false and B==false and C==true then return "SoundBoard", false
+  elseif A==true and B==true and C==false then 
+    if A1<B1 then return "StudioLink", true else return "StudioLinkOnAir", true end
+  elseif A==false and B==true and C==true then 
+    if B1<C1 then return "StudioLinkOnAir", true else return "SoundBoard", true end
+  elseif A==true and B==false and C==true then 
+    if A1<C1 then return "StudioLink", true else return "SoundBoard", true end
+  elseif A==true and B==true and C==true then
+    if A1<B1 and A1<C1 then return "StudioLink", true
+    elseif B1<A1 and B1<C1 then return "StudioLinkOnAir", true
+    elseif C1<A1 and C1<B1 then return "SoundBoard", true
+    end
+  else
+    return "Other", false
+  end
+end
+
+
+--DABBA,DBABBA=ultraschall.GetTypeOfTrack(1)
+
+function ultraschall.GetAllAUXSendReceives2()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllAUXSendReceives2</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>table AllAUXSendReceives, integer number_of_tracks = ultraschall.GetAllAUXSendReceives2()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns a table with all AUX-SendReceive-settings of all tracks, excluding master-track
+    
+    like [GetAllAUXSendReceives](#GetAllAUXSendReceives), but returns the type of a track as well
+    
+    returned table is of structure:
+      table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!
+      table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n
+      table[tracknumber]["type"]                                    - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other
+      table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1
+      table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["mute"]              - the mute-setting of this AUXSendReceivesIndex  of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["mono\_stereo"]      - the mono/stereo-button-setting of this AUXSendReceivesIndex  of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber
+      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1
+      table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0
+      table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber
+      
+      See [GetTrackAUXSendReceives](#GetTrackAUXSendReceives) for more details on the individual settings, stored in the entries.
+  </description>
+  <retvals>
+    table AllAUXSendReceives - a table with all SendReceive-entries of the current project.
+    integer number_of_tracks - the number of tracks in the AllMainSends-table
+  </retvals>
+  <chapter_context>
+    Ultraschall Specific
+    Routing
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>routing, trackmanagement, track, get, all, send, receive, aux, routing</tags>
+</US_DocBloc>
+]]
+
+  local AllAUXSendReceives, number_of_tracks = ultraschall.GetAllAUXSendReceives()
+  for i=1, number_of_tracks do
+    AllAUXSendReceives[i]["type"]=ultraschall.GetTypeOfTrack(i)
+  end
+  return AllAUXSendReceives, number_of_tracks
+end
+
+--A,B=ultraschall.GetAllAUXSendReceives2()
+
+function ultraschall.GetAllHWOuts2()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllHWOuts2</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>table AllHWOuts, integer number_of_tracks = ultraschall.GetAllHWOuts2()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns a table with all HWOut-settings of all tracks, including master-track(track index: 0)
+    
+    like [GetAllHWOuts](#GetAllHWOuts) but includes the type of a track as well
+    
+    returned table is of structure:
+      table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!
+      table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n
+      table[tracknumber]["type"]                        - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other
+      table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1
+      table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber
+      table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber
+      table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber
+      table[tracknumber][HWOutIndex]["pan"]             - the panning of this HWOutIndex of tracknumber
+      table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber
+      table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber
+      table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber
+      table[tracknumber][HWOutIndex]["pan\law"]         - pan-law, default is -1
+      table[tracknumber][HWOutIndex]["automationmode"]  - the automation-mode of this HWOutIndex of tracknumber    
+      
+      See [GetTrackHWOut](#GetTrackHWOut) for more details on the individual settings, stored in the entries.
+  </description>
+  <retvals>
+    table AllHWOuts - a table with all HWOuts of the current project.
+    integer number_of_tracks - the number of tracks in the AllMainSends-table
+  </retvals>
+  <chapter_context>
+    Ultraschall Specific
+    Routing
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>ultraschall, trackmanagement, track, get, all, hwouts, hardware outputs, routing</tags>
+</US_DocBloc>
+]]
+
+  local AllHWOuts, number_of_tracks = ultraschall.GetAllHWOuts()
+  for i=0, number_of_tracks do
+    AllHWOuts[i]["type"]=ultraschall.GetTypeOfTrack(i)
+  end
+  return AllHWOuts, number_of_tracks
+end
+
+--A=ultraschall.GetAllHWOuts2()
+
+function ultraschall.GetAllMainSendStates2()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllMainSendStates2</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>table AllMainSends, integer number_of_tracks  = ultraschall.GetAllMainSendStates2()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns a table with all MainSend-settings of all tracks, excluding master-track.
+    
+    like [GetAllMainSendStates](#GetAllMainSendStates), but includes the type of the track as well.
+    
+    The MainSend-settings are the settings, if a certain track sends it's signal to the Master Track
+    
+    returned table is of structure:
+      Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n
+      Table[tracknumber]["type"]           - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other
+      Table[tracknumber]["MainSend"]       - Send to Master on(1) or off(1)
+      Table[tracknumber]["ParentChannels"] - the parent channels of this track
+      
+      See [GetTrackMainSendState](#GetTrackMainSendState) for more details on the individual settings, stored in the entries.
+  </description>
+  <retvals>
+    table AllMainSends - a table with all AllMainSends-entries of the current project.
+    integer number_of_tracks - the number of tracks in the AllMainSends-table
+  </retvals>
+  <chapter_context>
+    Ultraschall Specific
+    Routing
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>ultraschall, trackmanagement, track, get, all, send, main send, master send, routing</tags>
+</US_DocBloc>
+]]
+
+  local AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates()
+  for i=1, number_of_tracks do
+    AllMainSends[i]["type"]=ultraschall.GetTypeOfTrack(i)
+  end
+  return AllMainSends, number_of_tracks
+end
+
+
+--A,B=ultraschall.GetAllMainSendStates2()
+
+function ultraschall.AreHWOutsTablesEqual(Table1, Table2, option)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AreHWOutsTablesEqual</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval  = ultraschall.AreHWOutsTablesEqual(table AllHWOuts, table AllHWOuts2, optional integer option)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Compares two HWOuts-tables, as returned by [GetAllHWOuts](#GetAllHWOuts) or [GetAllHWOuts2](#GetAllHWOuts)
+
+    if option=2 then it will also compare, if the stored track-guids are the equal. Otherwise, it will only check the individual settings, even if the guids are different between the two tables.
+  </description>
+  <retvals>
+    boolean retval - true, if the two tables are equal HWOuts; false, if not
+  </retvals>
+  <parameters>
+    table AllHWOuts - a table with all HWOut-settings of all tracks
+    table AllHWOuts2 - a table with all HWOut-settings of all tracks, that you want to compare to AllHWOuts
+    optional integer option - nil or 1, to compare everything, except the stored TrackGuids; 2, include comparing the stored TrackGuids as well
+  </parameters>
+  <chapter_context>
+    Track Management
+    Hardware Out
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>trackmanagement, compare, equal, hwouttable</tags>
+</US_DocBloc>
+]]
+  if type(Table1)~="table" then return false end
+  if type(Table2)~="table" then return false end
+  if Table1["HWOuts"]~=true or Table2["HWOuts"]~=true then return false end
+  if Table1["HWOuts"]~=Table2["HWOuts"] then return false end
+  if Table1["number_of_tracks"]~=Table2["number_of_tracks"] then return false end
+  for i=0, Table1["number_of_tracks"] do
+    if Table1[i]["HWOut_count"]~=Table2[i]["HWOut_count"] then return false end
+    if Table1[i]["type"]~=nil and Table2[i]["type"]~=nil and Table1[i]["type"]~=Table2[i]["type"] then return false end
+    for a=1, Table1[i]["HWOut_count"] do
+      if option==2 and Table1[i]["TrackID"]~=Table2[i]["TrackID"] then return false end
+      if Table1[i][a]["automationmode"]~=Table2[i][a]["automationmode"] then return false end
+      if Table1[i][a]["mute"]~=Table2[i][a]["mute"] then return false end
+      if Table1[i][a]["outputchannel"]~=Table2[i][a]["outputchannel"] then return false end
+      if Table1[i][a]["pan"]~=Table2[i][a]["pan"] then return false end
+      if Table1[i][a]["phase"]~=Table2[i][a]["phase"] then return false end
+      if Table1[i][a]["post_pre_fader"]~=Table2[i][a]["post_pre_fader"] then return false end
+      if Table1[i][a]["source"]~=Table2[i][a]["source"] then return false end
+      if Table1[i][a]["pan_law"]~=Table2[i][a]["pan_law"] then return false end
+      if Table1[i][a]["volume"]~=Table2[i][a]["volume"] then return false end
+    end
+  end
+  return true
+end
+
+--AllHWOuts=ultraschall.GetAllHWOuts2()
+--AllHWOuts2=ultraschall.GetAllHWOuts2()
+--AllHWOuts[0]["TrackID"]=3
+--AAAA=ultraschall.AreHWOutsTablesEqual(AllHWOuts, AllHWOuts2, 1)
+
+
+
+--AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates2() 
+--AllMainSends2, number_of_tracks = ultraschall.GetAllMainSendStates2() 
+
+function ultraschall.AreMainSendsTablesEqual(Table1, Table2, option)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AreMainSendsTablesEqual</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval  = ultraschall.AreMainSendsTablesEqual(table AllMainSends, table AllMainSends2, optional integer option)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Compares two AllMainSends-tables, as returned by [GetAllMainSendStates](#GetAllMainSendStates) or [GetAllMainSendStates2](#GetAllMainSendStates2)
+
+    if option=2 then it will also compare, if the stored track-guids are the equal. Otherwise, it will only check the individual settings, even if the guids are different between the two tables.
+  </description>
+  <retvals>
+    boolean retval - true, if the two tables are equal AllMainSends; false, if not
+  </retvals>
+  <parameters>
+    table AllMainSends - a table with all AllMainSends-settings of all tracks
+    table AllMainSends2 - a table with all AllMainSends-settings of all tracks, that you want to compare to AllMainSends
+    optional integer option - nil or 1, to compare everything, except the stored TrackGuids; 2, include comparing the stored TrackGuids as well
+  </parameters>
+  <chapter_context>
+    Track Management
+    Send/Receive-Routing
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>trackmanagement, compare, equal, allmainsendstable</tags>
+</US_DocBloc>
+]]
+  if type(Table1)~="table" then return false end
+  if type(Table2)~="table" then return false end
+  if Table1["MainSend"]~=true or Table2["MainSend"]~=true then return false end
+  if Table1["MainSend"]~=Table2["MainSend"] then return false end
+  if Table1["number_of_tracks"]~=Table2["number_of_tracks"] then return false end
+  for i=1, Table1["number_of_tracks"] do
+    if option==2 and Table1[i]["TrackID"]~=Table2[i]["TrackID"] then return false end
+    if Table1[i]["type"]~=nil and Table2[i]["type"]~=nil and Table1[i]["type"]~=Table2[i]["type"] then return false end
+    if Table1[i]["MainSendOn"]~=Table2[i]["MainSendOn"] then return false end
+    if Table1[i]["ParentChannels"]~=Table2[i]["ParentChannels"] then return false end
+  end
+  return true
+end
+
+--AllMainSends[1]["TrackID"]=0
+
+--AA=ultraschall.AreMainSendsTablesEqual(AllMainSends, AllMainSends2,2)
+
+
+
+--AllAUXSendReceives, number_of_tracks = ultraschall.GetAllAUXSendReceives2()
+--AllAUXSendReceives2, number_of_tracks = ultraschall.GetAllAUXSendReceives2()
+
+function ultraschall.AreAUXSendReceivesTablesEqual(Table1, Table2, option)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AreAUXSendReceivesTablesEqual</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval  = ultraschall.AreAUXSendReceivesTablesEqual(table AllAUXSendReceives, table AllAUXSendReceives2, optional integer option)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Compares two AllAUXSendReceives-tables, as returned by [GetAllAUXSendReceives](#GetAllAUXSendReceives) or [GetAllAUXSendReceives2](#GetAllAUXSendReceives2)
+    
+    if option=2 then it will also compare, if the stored track-guids are the equal. Otherwise, it will only check the individual settings, even if the guids are different between the two tables.
+  </description>
+  <retvals>
+    boolean retval - true, if the two tables are equal AllMainSends; false, if not
+  </retvals>
+  <parameters>
+    table AllAUXSendReceives - a table with all AllAUXSendReceives-settings of all tracks
+    table AllAUXSendReceives2 - a table with all AllAUXSendReceives-settings of all tracks, that you want to compare to AllAUXSendReceives
+    optional integer option - nil or 1, to compare everything, except the stored TrackGuids; 2, include comparing the stored TrackGuids as well
+  </parameters>
+  <chapter_context>
+    Track Management
+    Send/Receive-Routing
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>trackmanagement, compare, equal, allauxsendreceivestables</tags>
+</US_DocBloc>
+]]
+  if type(Table1)~="table" then return false end
+  if type(Table2)~="table" then return false end
+  if Table1["AllAUXSendReceives"]~=true or Table2["AllAUXSendReceives"]~=true then return false end
+  if Table1["AllAUXSendReceives"]~=Table2["AllAUXSendReceives"] then return false end
+  if Table1["number_of_tracks"]~=Table2["number_of_tracks"] then return false end
+  for i=1, Table1["number_of_tracks"] do
+    if Table1[i]["AUXSendReceives_count"]~=Table2[i]["AUXSendReceives_count"] then return false end
+    if option==2 and Table1[i]["TrackID"]~=Table2[i]["TrackID"] then return false end
+    if Table1[i]["type"]~=nil and Table2[i]["type"]~=nil and Table1[i]["type"]~=Table2[i]["type"] then return false end
+    for a=1, Table1[i]["AUXSendReceives_count"] do
+      if Table1[i][a]["automation"]~=Table2[i][a]["automation"] then return false end
+      if Table1[i][a]["chan_src"]~=Table2[i][a]["chan_src"] then return false end
+      if Table1[i][a]["midichanflag"]~=Table2[i][a]["midichanflag"] then return false end
+      if Table1[i][a]["mono_stereo"]~=Table2[i][a]["mono_stereo"] then return false end
+      if Table1[i][a]["mute"]~=Table2[i][a]["mute"] then return false end
+      if Table1[i][a]["pan"]~=Table2[i][a]["pan"] then return false end
+      if Table1[i][a]["phase"]~=Table2[i][a]["phase"] then return false end
+      if Table1[i][a]["post_pre_fader"]~=Table2[i][a]["post_pre_fader"] then return false end
+      if Table1[i][a]["recv_tracknumber"]~=Table2[i][a]["recv_tracknumber"] then return false end
+      if option==2 and Table1[i][a]["recv_track_guid"]~=Table2[i][a]["recv_track_guid"] then return false end
+      if Table1[i][a]["snd_src"]~=Table2[i][a]["snd_src"] then return false end
+      if Table1[i][a]["pan_law"]~=Table2[i][a]["pan_law"] then return false end
+      if Table1[i][a]["volume"]~=Table2[i][a]["volume"] then return false end
+    end
+  end
+  return true
+end
+
+--AllAUXSendReceives, number_of_tracks = ultraschall.GetAllAUXSendReceives2()
+--AllAUXSendReceives2, number_of_tracks = ultraschall.GetAllAUXSendReceives2()
+--AllAUXSendReceives[1]["TrackID"]=1
+--A=ultraschall.AreAUXSendReceivesTablesEqual(AllAUXSendReceives, AllAUXSendReceives2, 1)
+ 
+
+function ultraschall.ConvertIntegerIntoString2(Size, ...)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertIntegerIntoString2</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>string converted_value = ultraschall.ConvertIntegerIntoString2(integer Size, integer integervalue_1, ..., integer integervalue_n)</functioncall>
+  <description>
+    Splits numerous integers into its individual bytes and converts them into a string-representation.
+    Maximum 32bit-integers are supported.
+    
+    Returns nil in case of an error.
+  </description>
+  <parameters>
+    integer Size - the maximum size of the integer to convert, 1(8 bit) to 4(32 bit)
+    integer integervalue_1 - the first integer value to convert from
+    ... - 
+    integer integervalue_n - the last integer value to convert from
+  </parameters>
+  <retvals>
+    string converted_value - the string-representation of the integer
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Data Manipulation
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, convert, integer, string</tags>
+</US_DocBloc>
+]]
+  if math.type(Size)~="integer" then ultraschall.AddErrorMessage("ConvertIntegerIntoString2", "Size", "must be an integer", -1) return -1 end
+  if Size<1 or Size>4 then ultraschall.AddErrorMessage("ConvertIntegerIntoString2", "Size", "must be between 1(for 8 bit) and 4(for 32 bit)", -2) return -1 end
+  local Table={...}
+  local String=""
+  local count=1
+  while Table[count]~=nil do
+    if math.type(Table[count])~="integer" then ultraschall.AddErrorMessage("ConvertIntegerIntoString2", "parameter "..count, "must be an integer", -3) return end
+    if Table[count]>2^32 then ultraschall.AddErrorMessage("ConvertIntegerIntoString2", "parameter "..count, "must be between 0 and 2^32", -4) return end
+    local Byte1, Byte2, Byte3, Byte4 = ultraschall.SplitIntegerIntoBytes(Table[count])
+    String=String..string.char(Byte1)
+    if Size>1 then String=String..string.char(Byte2) end
+    if Size>2 then String=String..string.char(Byte3) end
+    if Size>3 then String=String..string.char(Byte4) end
+    count=count+1
+  end
+  return String
+end
+
+--A=ultraschall.ConvertIntegerIntoString(3, 1752132965,65)
+--B=A:len()
+
+function ultraschall.ConvertStringToIntegers(String, Size)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertStringToIntegers</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>integer num_integers, array individual_integers = ultraschall.ConvertStringToIntegers(string String, integer Size)</functioncall>
+  <description>
+    Converts a string into its integer-representation. Allows you to set the size of the integers between 1 Byte and 8 Bytes(64 bits).
+    
+    Returns -1 in case of an error.
+  </description>
+  <parameters>
+    string String - the string to convert into its integer representation
+    integer Size - the size of the integers. 1 for 8 bits, 2 for 16 bits, ..., 8 for 64 bits
+  </parameters>
+  <retvals>
+    integer num_integers - the number of integers converted from this string
+    array individual_integers - the individual integers, as converted from the original string
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Data Manipulation
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, convert, string, integer, size</tags>
+</US_DocBloc>
+]]
+  if type(String)~="string" then ultraschall.AddErrorMessage("ConvertStringToIntegers", "String", "must be a string", -1) return -1 end
+  if math.type(Size)~="integer" then ultraschall.AddErrorMessage("ConvertStringToIntegers", "Size", "must be an integer", -2) return -1 end
+  if Size<1 or Size>8 then ultraschall.AddErrorMessage("ConvertStringToIntegers", "Size", "must be between 1(for 8 bit) and 8(for 64 bit)", -3) return -1 end
+  local Table={}
+  for i=1, String:len(), Size do
+    if Size==1 then 
+      Table[i]=string.byte(String:sub(i,i))
+    elseif Size==2 then
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
+                                                 string.byte(String:sub(i+1,i+1)))
+    elseif Size==3 then
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
+                                                 string.byte(String:sub(i+1,i+1)),
+                                                 string.byte(String:sub(i+2,i+2)))
+    elseif Size==4 then
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
+                                                 string.byte(String:sub(i+1,i+1)),
+                                                 string.byte(String:sub(i+2,i+2)),
+                                                 string.byte(String:sub(i+3,i+3)))
+    elseif Size==5 then
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
+                                                 string.byte(String:sub(i+1,i+1)),
+                                                 string.byte(String:sub(i+2,i+2)),
+                                                 string.byte(String:sub(i+3,i+3)),
+                                                 string.byte(String:sub(i+4,i+4)))
+    elseif Size==6 then
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
+                                                 string.byte(String:sub(i+1,i+1)),
+                                                 string.byte(String:sub(i+2,i+2)),
+                                                 string.byte(String:sub(i+3,i+3)),
+                                                 string.byte(String:sub(i+4,i+4)),
+                                                 string.byte(String:sub(i+5,i+5)))
+    elseif Size==7 then
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
+                                                 string.byte(String:sub(i+1,i+1)),
+                                                 string.byte(String:sub(i+2,i+2)),
+                                                 string.byte(String:sub(i+3,i+3)),
+                                                 string.byte(String:sub(i+4,i+4)),
+                                                 string.byte(String:sub(i+5,i+5)),
+                                                 string.byte(String:sub(i+6,i+6))
+                                                 )
+    elseif Size==8 then
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
+                                                 string.byte(String:sub(i+1,i+1)),
+                                                 string.byte(String:sub(i+2,i+2)),
+                                                 string.byte(String:sub(i+3,i+3)),
+                                                 string.byte(String:sub(i+4,i+4)),
+                                                 string.byte(String:sub(i+5,i+5)),
+                                                 string.byte(String:sub(i+6,i+6)),
+                                                 string.byte(String:sub(i+7,i+7)))
+
+    end
+  end
+  
+  return String:len(), Table
+end
+
+--A,B=ultraschall.ConvertStringToIntegers("Haleluja",7)
+--print3(B[1])
+
+--C=ultraschall.CombineBytesToInteger(0,101)
+
+function print_update(...)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>print_update</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>print_update(parameter_1 to parameter_n)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    replaces Lua's own print-function, that is quite useless in Reaper.
+    
+    Converts all parametes given into string using tostring() and displays them in the ReaScript-console, separated by two spaces, ending with a newline.
+    
+    This is like [print](#print), but clears console everytime before displaying the values. Good for status-display, that shall not scroll.
+  </description>
+  <parameters>
+    parameter_1 to parameter_n - the parameters, that you want to have printed out
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunctions, print, clear, update, console</tags>
+</US_DocBloc>
+]]
+
+  reaper.ClearConsole()
+  print(...)
+end
+
+
+
+function ultraschall.SetScriptIdentifier_Description(description)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SetScriptIdentifier_Description</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>integer retval = ultraschall.SetScriptIdentifier_Description(string description)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      The Ultraschall-API gives any script, that uses the API, a unique identifier generated when the script is run.
+      This identifier can be used to communicate with this script. If you start numerous instances of a script, it will create for each instance
+      its own script-identifier, so you can be sure, that you communicate with the right instance.
+      
+      With this function, you can set its description, that is less cryptic than the ScriptIdentifier itself.
+      
+      You can get it using [GetScriptIdentifier_Description](#GetScriptIdentifier_Description).
+      
+      returns -1 in case of an error
+    </description>
+    <retvals>
+      integer retval - -1 in case of an error
+    </retvals>
+    <parameters>
+      string description - the new description of your script
+    </parameters>
+    <chapter_context>
+      API-Helper functions
+      Child Scripts
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>helper functions, set, script_identifier, description</tags>
+  </US_DocBloc>
+  ]]
+  if type(description)~="string" then ultraschall.AddErrorMessage("SetScriptIdentifier_Description", "description", "must be a string", -1) return -1 end
+  ultraschall.ScriptIdentifier_Description=description
+end
+
+function ultraschall.GetScriptIdentifier_Description()
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetScriptIdentifier_Description</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>string script_identifier_description = ultraschall.GetScriptIdentifier_Description()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      The Ultraschall-API gives any script, that uses the API, a unique identifier generated when the script is run.
+      This identifier can be used to communicate with this script. If you start numerous instances of a script, it will create for each instance
+      its own script-identifier, so you can be sure, that you communicate with the right instance.
+      
+      With this function, you can get its description, that is less cryptic than the ScriptIdentifier itself.
+      
+      You can set it using [SetScriptIdentifier_Description](#SetScriptIdentifier_Description).
+    </description>
+    <retvals>
+      string script_identifier_description - the description of your script
+    </retvals>
+    <chapter_context>
+      API-Helper functions
+      Child Scripts
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>helper functions, get, script_identifier, description</tags>
+  </US_DocBloc>
+  ]]
+  return ultraschall.ScriptIdentifier_Description
+end
+
+function ultraschall.SetScriptIdentifier_Title(title)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SetScriptIdentifier_Title</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>integer retval = ultraschall.SetScriptIdentifier_Title(string title)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      The Ultraschall-API gives any script, that uses the API, a unique identifier generated when the script is run.
+      This identifier can be used to communicate with this script. If you start numerous instances of a script, it will create for each instance
+      its own script-identifier, so you can be sure, that you communicate with the right instance.
+      
+      With this function, you can set its title, that is less cryptic than the ScriptIdentifier itself.
+      No \n-newlines, \r-carriag returns or \0-nullbytes are allowed and will be removed
+      
+      You can get it using [GetScriptIdentifier_Title](#GetScriptIdentifier_Title).
+      
+      returns -1 in case of an error
+    </description>
+    <retvals>
+      integer retval - -1 in case of an error
+    </retvals>
+    <parameters>
+      string title - the new title of your script
+    </parameters>
+    <chapter_context>
+      API-Helper functions
+      Child Scripts
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>helper functions, set, script_identifier, title</tags>
+  </US_DocBloc>
+  ]]
+  if type(title)~="string" then ultraschall.AddErrorMessage("SetScriptIdentifier_Title", "title", "must be a string", -1) return -1 end
+  title=string.gsub(title, "\0", "")
+  title=string.gsub(title, "\n", "")
+  title=string.gsub(title, "\r", "")
+  
+  ultraschall.ScriptIdentifier_Title=title
+end
+
+function ultraschall.GetScriptIdentifier_Title()
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetScriptIdentifier_Title</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>string script_identifier_title = ultraschall.GetScriptIdentifier_Title()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      The Ultraschall-API gives any script, that uses the API, a unique identifier generated when the script is run.
+      This identifier can be used to communicate with this script. If you start numerous instances of a script, it will create for each instance
+      its own script-identifier, so you can be sure, that you communicate with the right instance.
+      
+      With this function, you can get its description, that is less cryptic than the ScriptIdentifier itself.
+      
+      Default is the script's filename.
+      
+      You can set it using [SetScriptIdentifier_Title](#SetScriptIdentifier_Title).
+    </description>
+    <retvals>
+      string script_identifier_title - the title of your script; default is the filename of the script
+    </retvals>
+    <chapter_context>
+      API-Helper functions
+      Child Scripts
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>helper functions, get, script_identifier, title</tags>
+  </US_DocBloc>
+  ]]
+  return ultraschall.ScriptIdentifier_Title
+end
+
+--ultraschall.SetScriptIdentifier_Title("1\n2\r3\0 4")
+--print_update(ultraschall.GetScriptIdentifier_Title())
+
+function ultraschall.ResetProgressBar()
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ResetProgressBar</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.ResetProgressBar()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Resets the initial-values of the progressbar. Should be called, if you want to start a new progressbar after you filled up the former one, or you may have update-issues.
+    </description>
+    <chapter_context>
+      API-Helper functions
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>helper functions, reset, progressbar</tags>
+  </US_DocBloc>
+  ]]
+    ultraschall.progressbar_lastupdate=-1
+    ultraschall.lasttoptext=nil
+    ultraschall.progressbar_lastbottomtext=nil
+    ultraschall.progressbar_starttime=nil
+    ultraschall.cur_time=nil
+end
+
+function ultraschall.PrintProgressBar(show, length, maximumvalue, currentvalue, percentage, offset, toptext, bottomtext, remaining_time)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PrintProgressBar</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.PrintProgressBar(boolean show, integer length, integer maximumvalue, integer currentvalue, boolean percentage, integer offset, optional string toptext, optional string bottomtext)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Calculate a simple progressbar, which can be optionally displayed in the ReaScript console; Will clear the console before displaying the next updated progressbar.
+
+      Will update it only, if the current-value of last time this function got called is different from the current one or toptext or bottomtext changed.
+      
+      You can also use the returnvalues to draw your own progressbar, e.g. in a gfx.init-window
+
+      If you need to calculate a new progressbar, after the former got to 100%, it is wise to call [ResetProgressBar](#ResetProgressBar), or it might not update the first time you call this function.
+      
+      Returns false in case of an error
+    </description>
+    <retvals>
+      boolean retval - true, displaying was successful; false, displaying wasn't successful
+      string ProgressString - the progressbar including its full statuses and layout
+      integer percentage - the progression of the progressbar in percent
+      integer progress_position - the current progress-position, relative to length and maximumvalue
+    </retvals>
+    <parameters>
+      boolean show - true, show progressbar in the ReaScript-console; false, don't show it there
+      integer length - the length of the progressbar in characters. Minimum is 10.
+      integer maximumvalue - the maximum integer-value, to which to count; minimum 1
+      integer currentvalue - the current integer-value, at which we are with counting, minimum 0
+      boolean percentage - true, show percentage in progressbar; false, show only progressbar
+      integer offset - an offset to be added before the progressbar, so you can indent it
+      optional string toptext - an optional string, that shall be displayed above the progressbar
+      optional string bottomtext - an optional string, that shall be displayed below the progressbar
+    </parameters>
+    <chapter_context>
+      API-Helper functions
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>helper functions, calculate, progressbar, show, display, percentage</tags>
+  </US_DocBloc>
+  ]]
+  if type(show)~="boolean" then ultraschall.AddErrorMessage("PrintProgressBar", "show", "must be a boolean", -12) return false end
+  if math.type(length)~="integer" then ultraschall.AddErrorMessage("PrintProgressBar", "length", "must be an integer", -1) return false end
+  if length<10 then ultraschall.AddErrorMessage("PrintProgressBar", "length", "must be 10 at least", -2) return false end
+  if math.type(maximumvalue)~="integer" then ultraschall.AddErrorMessage("PrintProgressBar", "maximumvalue", "must be an integer", -3) return false end
+  if maximumvalue<1 then ultraschall.AddErrorMessage("PrintProgressBar", "maximumvalue", "must be 1 at least", -11) return false end
+  if math.type(currentvalue)~="integer" then ultraschall.AddErrorMessage("PrintProgressBar", "currentvalue", "must be an integer", -4) return false end
+  if currentvalue<0 then ultraschall.AddErrorMessage("PrintProgressBar", "currentvalue", "must be 0 at least", -11) return false end
+  if currentvalue>maximumvalue then ultraschall.AddErrorMessage("PrintProgressBar", "currentvalue", "must be smaller or equal than maximumvalue", -5) return false end
+  if type(percentage)~="boolean" then ultraschall.AddErrorMessage("PrintProgressBar", "percentage", "must be a boolean", -6) return false end  
+  if math.type(offset)~="integer" then ultraschall.AddErrorMessage("PrintProgressBar", "offset", "must be an integer", -7) return false end  
+  if offset<0 then ultraschall.AddErrorMessage("PrintProgressBar", "offset", "must be 0 or bigger", -8) return false end
+  if toptext~=nil and type(toptext)~="string" then ultraschall.AddErrorMessage("PrintProgressBar", "toptext", "must be a string", -9) return false end  
+  if bottomtext~=nil and type(bottomtext)~="string" then ultraschall.AddErrorMessage("PrintProgressBar", "bottomtext", "must be a string", -10) return false end  
+  if remaining_time~=nil and type(remaining_time)~="string" then ultraschall.AddErrorMessage("PrintProgressBar", "remaining_time", "must be a string", -11) return false end  
+
+  local ProgressString, status, String_offset, String_progress, String_unprogress, Percentage
+    -- remaining time-calculator
+  if remaining_time~=nil then
+    if ultraschall.progressbar_starttime==nil then
+      ultraschall.progressbar_starttime=reaper.time_precise()
+    end
+    if ultraschall.progressbar_startcurvalue==nil then
+      ultraschall.progressbar_startcurvalue=currentvalue
+    end
+    ultraschall.progressbar_cur_time=reaper.time_precise()
+    
+    local temptime=ultraschall.progressbar_cur_time-ultraschall.progressbar_starttime
+    local tempmaxtime=(temptime/(currentvalue))*maximumvalue
+    local tempremainingtime=tempmaxtime-temptime
+    tempremainingtime=reaper.format_timestr(tempremainingtime, ""):match("(.-)%.")
+    remaining_time=remaining_time..tempremainingtime
+  end  
+  if ultraschall.progressbar_lastupdate~=math.ceil(currentvalue) or 
+    ultraschall.lasttoptext~=progressbar_toptext or
+    ultraschall.progressbar_lastbottomtext~=bottomtext then
+    reaper.ClearConsole()
+    String_progress=""
+    String_unprogress=""
+    String_offset=""
+    for i=1, length do
+      String_progress=String_progress.."+"
+      String_unprogress=String_unprogress.."_"
+    end
+    for i=1, offset do
+      String_offset=String_offset.." "
+      if remaining_time~=nil then
+        remaining_time=" "..remaining_time
+      end
+    end
+    status=math.ceil((length/maximumvalue)*currentvalue)
+    
+    ProgressString=String_progress:sub(0,status)..String_unprogress:sub(status+1,-1)
+    if percentage==true then
+      Percentage=tostring(math.ceil((100/maximumvalue)*currentvalue)).." %"
+      if Percentage:len()==4 then Percentage=" "..Percentage end
+      if Percentage:len()==3 then Percentage="  "..Percentage end
+      if math.ceil((100/maximumvalue)*currentvalue)<100 then
+        ProgressString=String_offset..ProgressString:sub(1,math.ceil(ProgressString:len()/2-3))..Percentage..ProgressString:sub(math.ceil(ProgressString:len()/2+3),-1)
+      else
+        ProgressString=String_progress:sub(0,status)
+        ProgressString=String_offset..ProgressString:sub(1,math.ceil(ProgressString:len()/2-3))..Percentage..ProgressString:sub(math.ceil(ProgressString:len()/2+2),-1)
+      end
+    end
+    if remaining_time~=nil then ProgressString=ProgressString.."\n"..remaining_time end
+    if toptext~=nil then ProgressString=toptext.."\n"..ProgressString end
+    if bottomtext~=nil then ProgressString=ProgressString.."\n"..bottomtext end
+    if show==true then
+      print(ProgressString)
+    end
+    ultraschall.progressbar_lastupdate=math.ceil(currentvalue)
+    ultraschall.lasttoptext=toptext
+    ultraschall.progressbar_lastbottomtext=bottomtext
+  else
+    ultraschall.progressbar_lastupdate=math.ceil(currentvalue)
+    ultraschall.lasttoptext=toptext
+    ultraschall.progressbar_lastbottomtext=bottomtext
+  end
+  return true, ProgressString, tonumber(Percentage:sub(1,-2)), status
+end
+
+--A,B,C,D,E,F=ultraschall.PrintProgressBar(true, 20, 50, 6, true, 19, "Hula", "Hoop", "HUi:")
+
+--A=ultraschall.GetVerticalZoom()
+--B=ultraschall.SetVerticalZoom(30)
+--B=ultraschall.SetVerticalRelativeZoom(-40)
+--C=ultraschall.GetVerticalZoom()
+--C=GetVerticalZoom()
+--ultraschall.SetVerticalRelativeScroll(1)
+--ultraschall.SetVerticalRelativeScroll(-1)
+--reaper.UpdateArrange()
+--reaper.UpdateTimeline()
+
+--[[
+function ultraschall.SetReaScriptConsole_FontStyle(style)
+  --[[
+  <\US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SetReaScriptConsole_FontStyle</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.SetReaScriptConsole_FontStyle(integer style)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      If the ReaScript-console is opened, you can change the font-style of it.
+      You can choose between 19 different styles, with 3 being of fixed character length. It will change the next time you output text to the ReaScriptConsole.
+      
+      If you close and reopen the Console, you need to set the font-style again!
+      
+      You can only have one style active in the console!
+      
+      Returns false in case of an error
+    </description>
+    <retvals>
+      boolean retval - true, displaying was successful; false, displaying wasn't successful
+    </retvals>
+    <parameters>
+      integer length - the font-style used. There are 19 different ones.
+                      - fixed-character-length:
+                      -     1,  fixed, console
+                      -     2,  fixed, console alt
+                      -     3,  thin, fixed
+                      - 
+                      - normal from large to small:
+                      -     4-8
+                      -     
+                      - bold from largest to smallest:
+                      -     9-14
+                      - 
+                      - thin:
+                      -     15, thin
+                      - 
+                      - underlined:
+                      -     16, underlined, thin
+                      -     17, underlined
+                      -     18, underlined
+                      - 
+                      - symbol:
+                      -     19, symbol
+    </parameters>
+    <chapter_context>
+      User Interface
+      Miscellaneous
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>user interface, reascript, console, font, style</tags>
+  <\/US_DocBloc>
+  ]]
+--[[
+  if math.type(style)~="integer" then ultraschall.AddErrorMessage("SetReaScriptConsole_FontStyle", "style", "must be an integer", -1) return false end
+  if style>19 or style<1 then ultraschall.AddErrorMessage("SetReaScriptConsole_FontStyle", "style", "must be between 1 and 19", -2) return false end
+  local reascript_console_hwnd = ultraschall.GetReaScriptConsoleWindow()
+  if reascript_console_hwnd==nil then return false end
+  local styles={32,33,36,31,214,37,218,1606,4373,3297,220,3492,3733,3594,35,1890,2878,3265,4392}
+  local Textfield=reaper.JS_Window_FindChildByID(reascript_console_hwnd, 1177)
+  reaper.ShowConsoleMsg(" ")
+  reaper.JS_WindowMessage_Post(Textfield, "WM_SETFONT", styles[style] ,0,0,0)
+  return true
+end
+--]]
+--reaper.ClearConsole()
+--ultraschall.SetReaScriptConsole_FontStyle(10)
+--reaper.ShowConsoleMsg("ABCDEFGhijklmnop\n123456789.-,!\"§$%&/()=\n----------\nOOOOOOOOOO")
+--print("Hula")
+
+--A=ultraschall.GetRenderToFileHWND()
+--    B=reaper.JS_WindowMessage_Send(A, "WM_CREATE", 666,666,0,0)
+--[[
+for i=0, 100000 do 
+  Textfield=reaper.JS_Window_FindChildByID(A, i)
+  if Textfield~=nil then 
+--    B=reaper.JS_WindowMessage_Send(Textfield, "WM_DESTROY", i,i,0,0)
+--    reaper.JS_Window_Destroy(Textfield)
+  end
+end
+--]]
+
+function ultraschall.GetHWInputs_Aliasnames()
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetHWInputs_Aliasnames</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      SWS=2.9.7
+      Lua=5.3
+    </requires>
+    <functioncall>integer number_of_aliases, table aliases = ultraschall.GetHWInputs_Aliasnames()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Returns the aliasnames and their associated channels of the currently selected audio-device.
+      
+      The returned table is of the format
+        table[index][1] - the name of the alias
+        table[index][2] - the hardware-input-channel, associated to this aliasname
+    </description>
+    <retvals>
+      integer number_of_aliases - the number of aliases available
+      table aliases - a table, that contains all alias-names and their associated Hardware-Input-channels
+    </retvals>
+    <chapter_context>
+      Audio Management
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>audiomanagement, get, alias, names, input, channels</tags>
+  </US_DocBloc>
+  ]]
+  local retval, Bdesc = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+  
+  local Reaper_ini=reaper.get_ini_file()
+  local retval, nums = reaper.BR_Win32_GetPrivateProfileString("alias_in_"..string.gsub(Bdesc," ","_"), "map_size", "Tudelu", Reaper_ini)
+  
+  local Table={}
+  for i=0, nums-1 do  
+--    retval, Table[i+1] = reaper.BR_Win32_GetPrivateProfileString("alias_in_"..string.gsub(Bdesc," ","_"), "name"..i, "Tudelu", Reaper_ini)
+    Table[i+1]={}
+    retval, Table[i+1][1] = reaper.BR_Win32_GetPrivateProfileString("alias_in_"..string.gsub(Bdesc," ","_"), "name"..i, "Tudelu", Reaper_ini)
+    retval, Table[i+1][2] = reaper.BR_Win32_GetPrivateProfileString("alias_in_"..string.gsub(Bdesc," ","_"), "ch"..i, "Tudelu", Reaper_ini)
+  end
+  
+  return tonumber(nums), Table
+end
+
+--A,B=ultraschall.GetHWInputs_Aliasnames()
+
+function ultraschall.GetHWOutputs_Aliasnames()
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetHWOutputs_Aliasnames</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      SWS=2.9.7
+      Lua=5.3
+    </requires>
+    <functioncall>integer number_of_aliases, table aliases = ultraschall.GetHWOutputs_Aliasnames()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Returns the aliasnames and their associated channels of the currently selected audio-device.
+      
+      The returned table is of the format
+        table[index][1] - the name of the alias
+        table[index][2] - the hardware-output-channel, associated to this aliasname
+    </description>
+    <retvals>
+      integer number_of_aliases - the number of aliases available
+      table aliases - a table, that contains all alias-names and their associated Hardware-Output-channels
+    </retvals>
+    <chapter_context>
+      Audio Management
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>audiomanagement, get, alias, names, output, channels</tags>
+  </US_DocBloc>
+  ]]
+  local retval, Bdesc = reaper.GetAudioDeviceInfo("IDENT_OUT", "")
+  
+  local Reaper_ini=reaper.get_ini_file()
+  local retval, nums = reaper.BR_Win32_GetPrivateProfileString("alias_out_"..string.gsub(Bdesc," ","_"), "map_size", "Tudelu", Reaper_ini)
+  
+  local Table={}
+  for i=0, nums-1 do  
+    Table[i+1]={}
+    retval, Table[i+1][1] = reaper.BR_Win32_GetPrivateProfileString("alias_out_"..string.gsub(Bdesc," ","_"), "name"..i, "Tudelu", Reaper_ini)
+    retval, Table[i+1][2] = reaper.BR_Win32_GetPrivateProfileString("alias_out_"..string.gsub(Bdesc," ","_"), "ch"..i, "Tudelu", Reaper_ini)
+  end
+  
+  return tonumber(nums), Table
+end
+
+--A,B=ultraschall.GetHWOutputs_Aliasnames()
+
+
+function ultraschall.CopyMediaItemToDestinationTrack(MediaItem, MediaTrack_destination, position)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>CopyMediaItemToDestinationTrack</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>MediaItem newMediaItem, MediaItemStateChunk statechunk = ultraschall.CopyMediaItemToDestinationTrack(MediaItem MediaItem, MediaTrack MediaTrack_destination, number position)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Copies MediaItem to MediaTrack_destination at position.
+      
+      Returns nil in case of an error
+    </description>
+    <retvals>
+      MediaItem newMediaItem - the newly created MediaItem; nil, if no item could be created
+      MediaItemStateChunk statechunk - the statechunk of the newly created MediaItem
+    </retvals>
+    <parameters>
+      MediaItem MediaItem - the MediaItem, that you want to create a copy from
+      MediaTrack MediaTrack_destination - the track, into which you want to copy the MediaItem
+      number position - the position of the copy of the MediaItem; negative, to keep the position of the source-MediaItem
+    </parameters>
+    <chapter_context>
+      MediaItem Management
+      Assistance functions
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>mediaitem management, copy, mediaitem, track, mediatrack, position</tags>
+  </US_DocBloc>
+  ]]
+  if ultraschall.type(MediaItem)~="MediaItem" then ultraschall.AddErrorMessage("CopyMediaItemToDestinationTrack", "MediaItem", "must be a valid MediaItem", -1) return end
+  if ultraschall.type(MediaTrack_destination)~="MediaTrack" then ultraschall.AddErrorMessage("CopyMediaItemToDestinationTrack", "MediaTrack_destination", "must be a valid MediaTrack-object", -2) return end
+  if type(position)~="number" then ultraschall.AddErrorMessage("CopyMediaItemToDestinationTrack", "position", "must be a number", -3) return end
+--  if position<0 then ultraschall.AddErrorMessage("CopyMediaItemToDestinationTrack", "position", "must be bigger than 0", -4) return end
+  
+  local original_position =  reaper.GetMediaItemInfo_Value( MediaItem, "D_POSITION" )
+  reaper.SetMediaItemInfo_Value( MediaItem, "D_POSITION" , position )
+  local retval, chunk = reaper.GetItemStateChunk(MediaItem, "", false)
+  
+  local temp_item = reaper.CreateNewMIDIItemInProj(MediaTrack_destination, 3, 0.1, false )
+  if ultraschall.type(temp_item)~="MediaItem" then ultraschall.AddErrorMessage("CopyMediaItemToDestinationTrack", "", "could not create the new copy of the MediaItem", -5) return end
+  reaper.SetMediaItemInfo_Value(MediaItem, "D_POSITION" , original_position)
+  
+  chunk=string.gsub(chunk, "\nIGUID.-\n", "\nIGUID "..reaper.genGuid().."\n")
+  chunk=string.gsub(chunk, "\nGUID.-\n", "\nGUID "..reaper.genGuid().."\n")
+  reaper.SetItemStateChunk(temp_item, chunk, false)
+  return temp_item, chunk
+end
+
+
+--ultraschall.CopyMediaItemToDestinationTrack(reaper.GetMediaItem(0,0), reaper.GetTrack(0,2), -10)
+
+function ultraschall.MoveChildWithinParentHWND(parenthwnd, childhwnd, relative, left, top, width, height)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MoveChildWithinParentHWND</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      JS=0.972
+      Lua=5.3
+    </requires>
+    <functioncall>integer newxpos, integer newypos, integer newrightpos, integer newbottompos, integer newrelativeleft, integer newrelativetop, integer newwidth, integer newheight = ultraschall.MoveChildWithinParentHWND(hwnd parenthwnd, hwnd childhwnd, boolean relative, integer left, integer top, integer width, integer height)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Moves a childhwnd within the coordinates of its parenthwnd.
+      Good for moving gui-elements around without having to deal with screen-coordinates.
+      
+      You can decide, whether the new position shall be relative to its old position or absolute within the parenthwnd-position.
+      
+      The parent-hwnd must not be necessarily the parenthwnd of the childhwnd, so you can move the childhwnd relative to other hwnds as well, but
+      keep in mind, that the childhwnd is only seeable within the boundaries of it's own parenthwnd!
+      
+      Returns nil in case of an error
+    </description>
+    <retvals>
+      integer newxpos - the new x-position on the screen in pixels
+      integer newypos - the new y-position on the screen in pixels
+      integer newrightpos - the new right-position on the screen in pixels
+      integer newbottompos - the new bottom-position on the screen in pixels
+      integer newrelativex - the new x-position of the childhwnd, relative to it's position within the parenthwnd
+      integer newrelativey - the new y-position of the childhwnd, relative to it's position within the parenthwnd
+      integer newwidth - the new width of the childhwnd in pixels
+      integer newheight - the new height of the childhwnd in pixels
+    </retvals>
+    <parameters>
+      hwnd parenthwnd - the parenthwnd of the childhwnd, within whose dimensions you want to move the childhwnd
+      hwnd childhwnd - the childhwnd, that you want to move
+      boolean relative - true, new position will be relative to the old position; false, new position will be absolute within the boundaries of the parenthwnd
+      integer left - the new x-position of the childhwnd in pixels
+      integer top - the new y-position of the childhwnd in pixels
+      integer width - the new width of the childhwnd in pixels; when relative=true then 0 keeps the old width; when relative=false then 0 is width of 0 pixels
+      integer height - the new height of the childhwnd in pixels; when relative=true then 0 keeps the old height; when relative=false then 0 is height of 0 pixels
+    </parameters>
+    <chapter_context>
+      User Interface
+      Window Management
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>user interface, move, childhwnd, hwnd, parenthwnd, relative, absolute, top, left, bottom, right, width, height</tags>
+  </US_DocBloc>
+  ]]
+  if ultraschall.IsValidHWND(parenthwnd)==false then ultraschall.AddErrorMessage("MoveChildWithinParentHWND", "parenthwnd", "not a valid HWND", -1) return nil end
+  if ultraschall.IsValidHWND(childhwnd)==false then ultraschall.AddErrorMessage("MoveChildWithinParentHWND", "childhwnd", "not a valid HWND", -2) return nil end
+  if type(relative)~="boolean" then ultraschall.AddErrorMessage("MoveChildWithinParentHWND", "relative", "must be a boolean", -3) return nil end
+  if math.type(left)~="integer" then ultraschall.AddErrorMessage("MoveChildWithinParentHWND", "left", "must be an integer", -4) return nil end
+  if math.type(top)~="integer" then ultraschall.AddErrorMessage("MoveChildWithinParentHWND", "top", "must be an integer", -5) return nil end
+  if math.type(width)~="integer" then ultraschall.AddErrorMessage("MoveChildWithinParentHWND", "width", "must be an integer", -6) return nil end
+  if math.type(height)~="integer" then ultraschall.AddErrorMessage("MoveChildWithinParentHWND", "height", "must be an integer", -7) return nil end
+
+  
+  local a,b,c,d,e=reaper.JS_Window_GetClientRect(childhwnd)
+  local a,bpar,cpar,dpar,epar=reaper.JS_Window_GetClientRect(parenthwnd)
+  
+  local newleft, newtop, newwidth, newheight, a1,b1,c1,d1,e1
+  
+  if relative==true then
+    newleft=b-bpar
+    newtop=c-cpar
+    newwidth=d-b
+    newheight=e-c
+  else
+    newleft=1
+    newtop=1
+    newwidth=0--d-b
+    newheight=0--e-c
+  end
+
+  reaper.JS_Window_SetPosition(childhwnd,newleft+left,newtop+top,newwidth+width,newheight+height)
+  a1,b1,c1,d1,e1=reaper.JS_Window_GetClientRect(childhwnd)
+
+  return b1,c1,d1,e1, b1-bpar, c1-cpar, d1-b1, e1-c1
+end
+
+--A,B,C,D,E,F,G,H=ultraschall.MoveChildWithinParentHWND(reaper.GetMainHwnd(), reaper.JS_Window_FindChildByID(reaper.GetMainHwnd(), 1005), true, 2, 1, 1, 0)
+
+function ultraschall.GetChildSizeWithinParentHWND(parenthwnd, childhwnd)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetChildSizeWithinParentHWND</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      JS=0.972
+      Lua=5.3
+    </requires>
+    <functioncall>integer xpos, integer ypos, integer width, integer height = ultraschall.GetChildSizeWithinParentHWND(hwnd parenthwnd, hwnd childhwnd)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Returns the position, height and width of a childhwnd, relative to the position of parenthwnd
+      
+      Returns nil in case of an error
+    </description>
+    <retvals>
+      integer xpos - the x-position of the childhwnd relative to the position of the parenthwnd in pixels
+      integer ypos - the y-position of the childhwnd relative to the position of the parenthwnd in pixels
+      integer width - the width of the childhwnd in pixels
+      integer height - the height of the childhwnd in pixels
+    </retvals>
+    <parameters>
+      hwnd parenthwnd - the parenthwnd of the childhwnd, whose position will be the base for position-calculation of the childhwnd
+      hwnd childhwnd - the childhwnd, whose dimensions you want to get, relative to the position of the parenthwnd
+    </parameters>
+    <chapter_context>
+      User Interface
+      Window Management
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>user interface, get, childhwnd, hwnd, parenthwnd, relative, top, left, width, height</tags>
+  </US_DocBloc>
+  ]]
+  if ultraschall.IsValidHWND(parenthwnd)==false then ultraschall.AddErrorMessage("GetChildSizeWithinParentHWND", "parenthwnd", "not a valid HWND", -1) return nil end
+  if ultraschall.IsValidHWND(childhwnd)==false then ultraschall.AddErrorMessage("GetChildSizeWithinParentHWND", "childhwnd", "not a valid HWND", -2) return nil end
+  local a,b,c,d,e=reaper.JS_Window_GetClientRect(childhwnd)
+  local a,bpar,cpar,dpar,epar=reaper.JS_Window_GetClientRect(parenthwnd)
+  return b-bpar, c-cpar, d-b, e-c
+end
+
+--A,B,C,D,E=ultraschall.GetChildSizeWithinParentHWND(reaper.GetMainHwnd(), reaper.GetMainHwnd())
 
 ultraschall.ShowLastErrorMessage()
