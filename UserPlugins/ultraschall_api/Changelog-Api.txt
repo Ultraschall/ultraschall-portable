@@ -1,7 +1,16 @@
 <TODO>
     
     API 4.00beta2.75
+TODO!!
+>Render to File-dialog -> FLAC
+    1002  FLAC encoding depth-dropdownlist  -   ComboBox
+    1003  Data compression-dropdownlist     -   ComboBox
+    65535  FLAC encoding depth:             -   Static
+    
+    is missing a static-text for "compression"
+    
 TODO!! don't include folder temp in creation of the reapack-index
+TODO!! Downloads.html -> autogenerate to automatically include the correct zip-file-downloadlink
 TODO!! winterlysnowflakes - should be initialized only, when WinterlySnowflakes is started the first time; otherwise makes calling API more laggy than useful
 TODO!! buggy function, crashes Reaper on Mac for some reason...try to fix it
         the line "reaper.JS_WindowMessage_Send(Textfield, "WM_SETFONT", styles[style] ,0,0,0)" seems to be the problem due WM_SETFONT
