@@ -28494,7 +28494,8 @@ function ultraschall.DeleteTrackHWOut(tracknumber, idx, TrackStateChunk)
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("DeleteTrackHWOut", "tracknumber", "must be an integer", -1) return false end
   if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("DeleteTrackHWOut", "tracknumber", "no such track", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("DeleteTrackHWOut", "idx", "must be an integer", -3) return false end
-  local Track, A
+  local Track, A, undo
+  undo=false
   if tracknumber>-1 then
     Track=reaper.GetTrack(0,tracknumber-1)
     if tracknumber==0 then Track=reaper.GetMasterTrack(0) end
@@ -28573,12 +28574,13 @@ function ultraschall.DeleteTrackAUXSendReceives(tracknumber, idx, TrackStateChun
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("DeleteTrackAUXSendReceives", "tracknumber", "must be an integer", -1) return false end
   if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("DeleteTrackAUXSendReceives", "tracknumber", "no such track", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("DeleteTrackAUXSendReceives", "idx", "must be an integer", -3) return false end
-  local Track, A
+  local Track, A, undo
+  undo=false
   if tracknumber>-1 then
     Track=reaper.GetTrack(0,tracknumber-1)
     if tracknumber==0 then Track=reaper.GetMasterTrack(0) end  
-    if idx==-1 then return reaper.SetTrackStateChunk(Track, string.gsub(TrackStateChunk, "AUXRECV.-\n", ""), undo) end
     A,TrackStateChunk=ultraschall.GetTrackStateChunk(Track,"",true)
+    if idx==-1 then return reaper.SetTrackStateChunk(Track, string.gsub(TrackStateChunk, "AUXRECV.-\n", ""), undo) end
   elseif ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage("DeleteTrackAUXSendReceives", "TrackStateChunk", "must be a valid TrackStateChunk", -5) return false
   else
     if idx==-1 then return true, string.gsub(TrackStateChunk, "AUXRECV.-\n", "") end
@@ -52160,7 +52162,8 @@ function ultraschall.ClearRoutingMatrix(ClearHWOuts, ClearAuxRecvs, ClearTrackMa
       ultraschall.DeleteTrackHWOut(i,-1,undo) 
     end
     if ClearAuxRecvs~=false then 
-      ultraschall.DeleteTrackAUXSendReceives(i,-1,undo) 
+        --print2(i, -1, undo)
+      ultraschall.DeleteTrackAUXSendReceives(i,-1) 
     end
     if ClearTrackMasterSends~=false then 
       local MainSendOn, ParentChannels = ultraschall.GetTrackMainSendState(i)
@@ -53245,6 +53248,7 @@ function ultraschall.GetAllMainSendStates()
     
     returned table is of structure:
       Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n
+      Table["MainSend"]=true               - signals, this is an AllMainSends-table
       table[tracknumber]["TrackID"]        - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
       Table[tracknumber]["MainSendOn"]     - Send to Master on(1) or off(1)
       Table[tracknumber]["ParentChannels"] - the parent channels of this track
@@ -53301,6 +53305,7 @@ function ultraschall.ApplyAllMainSendStates(AllMainSendsTable, option)
     
     expected table is of structure:
       Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n
+      Table["MainSend"]=true               - signals, this is an AllMainSends-table
       table[tracknumber]["TrackID"]        - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
       Table[tracknumber]["MainSendOn"]     - Send to Master on(1) or off(1)
       Table[tracknumber]["ParentChannels"] - the parent channels of this track
@@ -53324,7 +53329,9 @@ function ultraschall.ApplyAllMainSendStates(AllMainSendsTable, option)
 </US_DocBloc>
 ]]
   if type(AllMainSendsTable)~="table" then ultraschall.AddErrorMessage("ApplyAllMainSendStates", "AllMainSendsTable", "Must be a table.", -1) return false end
-  if AllMainSendsTable["number_of_tracks"]==nil or AllMainSendsTable[1]["MainSendOn"]==nil then ultraschall.AddErrorMessage("ApplyAllMainSendStates", "AllMainSendsTable", "Must be a valid AllMainSendsTable, as returned by GetAllMainSendStates. Get it from there, alter that and pass it into here.", -2) return false end 
+  if AllMainSendsTable["number_of_tracks"]==nil or AllMainSendsTable["MainSend"]==nil  then 
+    ultraschall.AddErrorMessage("ApplyAllMainSendStates", "AllMainSendsTable", "Must be a valid AllMainSendsTable, as returned by GetAllMainSendStates. Get it from there, alter that and pass it into here.", -2) return false 
+  end
   local a
   for i=1, AllMainSendsTable["number_of_tracks"] do
     if option~=2 then a=i
@@ -53334,11 +53341,12 @@ function ultraschall.ApplyAllMainSendStates(AllMainSendsTable, option)
   end
   return true
 end
---[[
 
+--[[
 A,B=ultraschall.GetAllMainSendStates()
+
 --ultraschall.InsertTrackAtIndex(0, 1, true)
-O=reaper.DeleteTrack(reaper.GetTrack(0,0))
+--O=reaper.DeleteTrack(reaper.GetTrack(0,0))
 for i=1, B do
   A[i]["MainSendOn"]=1
 end
@@ -54975,3 +54983,4 @@ end
 --A,B,C,D,E=ultraschall.GetChildSizeWithinParentHWND(reaper.GetMainHwnd(), reaper.GetMainHwnd())
 
 ultraschall.ShowLastErrorMessage()
+
