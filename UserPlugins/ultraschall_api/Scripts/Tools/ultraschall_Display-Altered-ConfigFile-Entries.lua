@@ -106,9 +106,10 @@ function main()
         Value=line:match("=(.*)")
   
         if vartable[FILE..SECTION..Key]~=line:match(".-=(.*)") then 
-          reaper.ShowConsoleMsg(FILE.."->["..SECTION.."] -> "..Key.." = "..tostring(vartable[FILE..SECTION..Key]).."\n")
+          reaper.ShowConsoleMsg(FILE.."->["..SECTION.."] -> "..Key..": \n\tOld: "..tostring(vartable[FILE..SECTION..Key]).."   -   ")
           T=true
           vartable[FILE..SECTION..Key]=Value
+          reaper.ShowConsoleMsg("New: "..tostring(vartable[FILE..SECTION..Key]).."\n")
         end
       end
     end

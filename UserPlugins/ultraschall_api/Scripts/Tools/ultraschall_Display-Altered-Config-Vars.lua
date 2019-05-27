@@ -577,7 +577,7 @@ function main()
       line=vars2[a]
       if reaper.get_config_var_string==nil then 
       temp="String variable not available in this Reaper-version, sorry." 
-      else _t,temp=reaper.get_config_var_string(line) end
+      else _t,temp=reaper.get_config_var_string(tostring(line)) end
       -- go through all variables and see, if their values have changed since last defer-run
       -- if they've changed, display them and update the value stored in the table vars
       if reaper.SNM_GetIntConfigVar(line,-8)==vars[line] and 
