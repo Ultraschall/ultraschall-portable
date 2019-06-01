@@ -49316,7 +49316,8 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
   <slug>GetUserInputs</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.965
+    Reaper=5.977
+    JS=0.986
     Lua=5.3
   </requires>
   <functioncall>boolean retval, integer number_of_inputfields, table returnvalues = ultraschall.GetUserInputs(string title, table caption_names, table default_retvals, optional integer values_length)</functioncall>
@@ -49340,9 +49341,7 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
     string title - the title of the inputwindow
     table caption_names - a table with all inputfield-captions. All non-string-entries will be converted to string-entries. Begin an entry with a * for password-entry-fields.
                         - This dialog only allows limited caption-field-length, about 19-30 characters, depending on the size of the used characters.
-                        - no commas allowed!
     table default_retvals - a table with all default retvals. All non-string-entries will be converted to string-entries.
-                          - no commas allowed!
     optional integer values_length - the extralength of the values-inputfield. With that, you can enhance the length of the inputfields. 
                             - 1-500; 
                             - nil, for default length 10
@@ -49396,12 +49395,30 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
   captions=captions..",extrawidth="..values_length
   
   --print2(captions)
-  local temptitle="Tudelu"..reaper.genGuid()
-  ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/Scripts/GetUserInputValues_Helper_Script.lua", temptitle, title)
+  -- fill up empty caption-names, so the passed parameters are 16 in count
+  for i=1, 16 do
+    if caption_names[i]==nil then
+      caption_names[i]=""
+    end
+  end
 
-  local retval, retvalcsv = reaper.GetUserInputs(temptitle, count33, captions, retvals)
+  -- fill up empty default-values, so the passed parameters are 16 in count  
+  for i=1, 16 do
+    if default_retvals[i]==nil then
+      default_retvals[i]=""
+    end
+  end
+
+  local numentries, concatenated_table = ultraschall.ConcatIntegerIndexedTables(caption_names, default_retvals)
+  
+  local temptitle="Tudelu"..reaper.genGuid()
+  
+  ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/Scripts/GetUserInputValues_Helper_Script.lua", temptitle, title, "", "", table.unpack(concatenated_table))--, table.unpack(default_retvals))
+
+  local retval, retvalcsv = reaper.GetUserInputs(temptitle, count33, "", "")
   if retval==false then reaper.DeleteExtState(ultraschall.ScriptIdentifier, "values", false) return false end
   local Values=reaper.GetExtState(ultraschall.ScriptIdentifier, "values")
+  --print2(Values)
   reaper.DeleteExtState(ultraschall.ScriptIdentifier, "values", false)
   local count2,Values=ultraschall.CSV2IndividualLinesAsArray(Values ,"\n")
   for i=count+1, 17 do
