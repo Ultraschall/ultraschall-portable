@@ -31,7 +31,7 @@ end
 --Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API4.00-beta2.71/"
 Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/master/"
 --Url="file:///c:/Ultraschall-Api-Git-Repo/Ultraschall-Api-for-Reaper/" -- for reapindex-tests first
-Url2="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-4.00-beta2.75/"
+Url2="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-4.00-beta2.76/"
 
 -- set this to the repository-folder of the api on your system
 Target_Dir="c:\\Ultraschall-Api-Git-Repo\\Ultraschall-Api-for-Reaper\\"
@@ -159,7 +159,7 @@ This API was to be used within Ultraschall only, but quickly evolved into a huge
 }
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
     }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
-- Rendering - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to RenderProject_RenderCFG or RenderProjectRegions_RenderCFG}
+- Rendering - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to RenderProject or RenderProjectRegions}
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
     }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
 - Navigation, Follow and Arrangeview-Manipulation - get/set cursors, zoom, autoscroll-management, scroll, etc}
@@ -298,7 +298,7 @@ This API was to be used within Ultraschall only, but quickly evolved into a huge
 }
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
     }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
-- Rendering - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to RenderProject_RenderCFG or RenderProjectRegions_RenderCFG}
+- Rendering - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to RenderProject or RenderProjectRegions}
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
     }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
 - Navigation, Follow and Arrangeview-Manipulation - get/set cursors, zoom, autoscroll-management, scroll, etc}

@@ -158,24 +158,30 @@ MP3:
             0,  CBR
             32, VBR/ABR
             64, Maximum bitrate/quality
-    06: unused - value 0
+            
+            With cbr, this with byte 6, is also the bitrate, encoded the same way as in bytes 25&26.
+            Important: When encoding bitrate in CBR, you need to set bytes 25&26 as well, or it doesn't work!
+    06: Mode - dropdownlist
+            This is only used, when Mode is CBR. In that case, byte 5 and byte 6 encode the bitrate of cbr.
     07: unused - value 0
     08: unused - value 0
     09: Do not allow joint stereo - checkbox
-            232, checkbox checked
+    10: Do not allow joint stereo - checkbox
+            1000, checkbox checked
             0, checkbox unchecked
-    10: unused - value 0
     11: Write Replay Gain Tag
             0, Write Replay Gain Tag, checkbox checked
             4, Write Replay Gain Tag, checkbox checked
     12: unused - value 0
-    13: VBR: encoding quality
+    13: encoding quality
             0, Maximum q=0(slow)
             2, Better q=2(recommended)
             3, Normal q=3
             5, Fast encode q=5
             7, Faster encode q=7
             9, Fastest encode q=9
+            10, only available for MP3-MaxQuality(though this should go to eleven, right? ;) )
+                this value 10 could also be used as separator from cbr(0 to 9) and maxquality(10)
     14: unused - value 0
     15: unused - value 0
     16: unused - value 0
@@ -202,8 +208,9 @@ MP3:
     22: unused - value 0
     23: unused - value 0
     24: unused - value 0
-    25: Bitrate CBR: - all other modes: default value is 64
-    26: Bitrate CBR: - all other modes: default value is 64
+    25: Bitrate CBR: - bitrate for CBR
+    26: Bitrate CBR: - bitrate for CBR 
+        Important: When encoding bitrate in CBR, you need to set bytes 5&6 as well to the bitrate-values, or it doesn't work!
             320, 320 kbps
             256, 256 kbps
             224, 224 kbps
@@ -530,11 +537,11 @@ Video(MPEG-4/MOV (macOS 10.7+ AVFoundation))
     22: AAC-bitrate(0 to 2147483647)
     23: AAC-bitrate(0 to 2147483647)
     24: AAC-bitrate(0 to 2147483647) - highest byte
-    25: Resolution width(0 to 2147483647) - lowest byte
+    25: Resolution width(0 to 2147483647) - lowest byte - only even values possible (2,4,6,etc)
     26: Resolution width(0 to 2147483647)
     27: Resolution width(0 to 2147483647)
     28: Resolution width(0 to 2147483647) - highest byte
-    29: Resolution height(0 to 2147483647) - lowest byte
+    29: Resolution height(0 to 2147483647) - lowest byte - only even values possible (2,4,6,etc)
     30: Resolution height(0 to 2147483647)
     31: Resolution height(0 to 2147483647)
     32: Resolution height(0 to 2147483647) - highest byte
@@ -578,6 +585,7 @@ Video(GIF):
     18: Ignore changed in low bits of color (0-7, 0 = full quality)-inputbox AND 
         Encode transparency (bad for normal video, good for some things possibly)-checkbox
             This value must be twice the value entered in the input-box!
+                0 -> 0 (!)
                 1 -> 2
                 5 -> 10
                 7 -> 14
@@ -606,7 +614,8 @@ Video (LCF):
     17: Preserve aspect ratio (black bars if necessary)-checkbox
             0, checkbox unchecked
             1, checkbox checked
-    18 to 82: - the contents of the LCF options tweak-entryfield as a human-readable string of 64 bytes
+    18: unused
+    19 to 82: - the contents of the LCF options tweak-entryfield as a human-readable string of 63 bytes
                 usually contains "t20 x128 y16" by default
     
     
