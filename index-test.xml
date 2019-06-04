@@ -30,8 +30,8 @@
 	<source file="Ultraschall-WebInstaller/reaper-screensets.ini" type="extension">https://github.com/Ultraschall/ultraschall-portable/raw/webinstaller-test//reaper-screensets.ini</source>
 	<source file="Ultraschall-WebInstaller/reaper-vstplugins64.ini" type="extension">https://github.com/Ultraschall/ultraschall-portable/raw/webinstaller-test//reaper-vstplugins64.ini</source>
 	<source file="Ultraschall-WebInstaller/reaper.ini" type="extension">https://github.com/Ultraschall/ultraschall-portable/raw/webinstaller-test//reaper.ini</source>
-	<source file="Ultraschall-WebInstaller/S&M.ini" type="extension">https://github.com/Ultraschall/ultraschall-portable/raw/webinstaller-test//S&M.ini</source>
-	<source file="Ultraschall-WebInstaller/S&M_Cyclactions.ini" type="extension">https://github.com/Ultraschall/ultraschall-portable/raw/webinstaller-test//S&M_Cyclactions.ini</source>
+	<source file="Ultraschall-WebInstaller/S&M.ini" type="extension">https://github.com/Ultraschall/ultraschall-portable/raw/webinstaller-test//S%26M.ini</source>
+	<source file="Ultraschall-WebInstaller/S&M_Cyclactions.ini" type="extension">https://github.com/Ultraschall/ultraschall-portable/raw/webinstaller-test//S%26M_Cyclactions.ini</source>
 	<source file="Ultraschall-WebInstaller/sws-autocoloricon.ini" type="extension">https://github.com/Ultraschall/ultraschall-portable/raw/webinstaller-test//sws-autocoloricon.ini</source>
 	<source file="Ultraschall-WebInstaller/sws-autocoloricon_MAC.ini" type="extension">https://github.com/Ultraschall/ultraschall-portable/raw/webinstaller-test//sws-autocoloricon_MAC.ini</source>
 	<source file="Ultraschall-WebInstaller/sws-autocoloricon_WIN.ini" type="extension">https://github.com/Ultraschall/ultraschall-portable/raw/webinstaller-test//sws-autocoloricon_WIN.ini</source>
