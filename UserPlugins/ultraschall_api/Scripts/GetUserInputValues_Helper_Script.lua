@@ -1,4 +1,4 @@
--- Meo Mespotine 1st of June 2019
+-- Meo Mespotine 12th of June 2019
 --
 -- Ultraschall-API-helper-script for GetUserInputs, which will circumvent Reaper's limitation with
 -- commas in the GetUserInputs-inputfields
@@ -25,7 +25,7 @@ function main2()
     end
     reaper.SetExtState(caller_script_identifier, "values", A, false)
     found=true
-  reaper.defer(main2)
+  if ultraschall.IsValidHWND(hwnd2)==true then reaper.defer(main2) end
 end
 
 function main()
