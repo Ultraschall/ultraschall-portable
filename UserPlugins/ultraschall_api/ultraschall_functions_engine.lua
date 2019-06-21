@@ -44703,6 +44703,7 @@ function ultraschall.GetPath(str,sep)
     result=str:match("(.*".."[\\/]"..")")
     file=str:match(".*".."[\\/]".."(.*)")
   end
+  if result==nil then file=str result="" end
   return result, file
 end
 
@@ -49329,6 +49330,9 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
       caption_names[1]="first caption name"
       caption_names[2]="second caption name"
       caption_names[1]="*third caption name, which creates an inputfield for passwords, due the * at the beginning"
+      
+    Note: Don't use this function within defer-scripts or scripts that are started by defer-scripts, as this produces errors.
+          This is due limitations in Reaper, sorry.
      
     returns false in case of an error.
   </description>
@@ -60003,7 +60007,7 @@ function ultraschall.RenderProject_Regions(projectfilename_with_path, renderfile
   local retval
   local curProj=reaper.EnumProjects(-1,"")
   if math.type(region)~="integer" then ultraschall.AddErrorMessage("RenderProject_Regions", "region", "Must be an integer.", -1) return -1 end
-
+  if region<1 then ultraschall.AddErrorMessage("RenderProject_Regions", "region", "Must be 1 or higher", -8) return -1 end
   if projectfilename_with_path~=nil and reaper.file_exists(projectfilename_with_path)==false then ultraschall.AddErrorMessage("RenderProject_Regions", "projectfilename_with_path", "File does not exist.", -3) return -1 end
   if type(renderfilename_with_path)~="string" then ultraschall.AddErrorMessage("RenderProject_Regions", "renderfilename_with_path", "Must be a string.", -4) return -1 end  
   if rendercfg==nil or ultraschall.GetOutputFormat_RenderCfg(rendercfg)==nil or ultraschall.GetOutputFormat_RenderCfg(rendercfg)=="Unknown" then ultraschall.AddErrorMessage("RenderProject_Regions", "rendercfg", "No valid render_cfg-string.", -5) return -1 end
@@ -60016,6 +60020,7 @@ function ultraschall.RenderProject_Regions(projectfilename_with_path, renderfile
   else
     countmarkers, countregions = ultraschall.CountMarkersAndRegions()
     numregions, markertable_temp = ultraschall.GetAllRegions()
+
     for index=1, numregions do
       markertable[index]={}
       markertable[index][1]=true
@@ -60028,14 +60033,35 @@ function ultraschall.RenderProject_Regions(projectfilename_with_path, renderfile
   end
   if region>numregions then ultraschall.AddErrorMessage("RenderProject_Regions", "region", "No such region in the project.", -7) return -1 end
   local regioncount=0
+  
   for i=1, countmarkers do
     if markertable[i][1]==true then 
       regioncount=regioncount+1
       if regioncount==region then region=i break end
     end
   end
+  
+--  print2("Häh?", renderfilename_with_path)
+
   if addregionname==true then 
-    local renderfilename_with_path2=renderfilename_with_path:match("(.*)%.")..markertable[region][4]..renderfilename_with_path:match(".*(%..*)")
+    render_filename_with_path2=renderfilename_with_path:match("(.*)%.")
+    render_filename_with_path3=renderfilename_with_path:match("(.*)%.")
+    if render_filename_with_path2==nil then
+      render_filename_with_path2=renderfilename_with_path.."O"
+      render_filename_with_path2=markertable[region][4].."O"
+    else
+      render_filename_with_path2=render_filename_with_path2..markertable[region][4]..render_filename_with_path2
+    end
+  -- old buggy code. In here only for future reference, if my new code(the lines after if addregionname==true then) introduced new bugs, 
+  -- rather than only fixing them
+--      print(region, markertable[region], projectfilename_with_path)
+      --[[
+      renderfilename_with_path2=
+          renderfilename_with_path:match("(.*)%.").."O"
+--          markertable[region][4]..
+--          renderfilename_with_path:match(".*(%..*)")
+
+  --]]
     if renderfilename_with_path==nil then 
       renderfilename_with_path=renderfilename_with_path..markertable[region][4]
     else
