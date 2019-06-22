@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -139,6 +139,7 @@ function Init()
     clockfont="Arial" clockfont_bold="Arial"
     font_divisor=2.8 --window height / font_divisor = fontsize
   else clockfont="Arial" clockfont_bold="Arial"
+    font_divisor=3.2
   end
   
   -- get the last docked-state and selected preset from the ultraschall.ini
