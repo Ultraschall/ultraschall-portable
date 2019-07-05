@@ -21831,7 +21831,7 @@ function ultraschall.GetAllRegions()
         regionarray[index][0] - position
         regionarray[index][1] - endposition
         regionarray[index][2] - name
-        regionarray[index][3] - indexnumber of the region within all markers in the project
+        regionarray[index][3] - indexnumber of the region within all markers in the project. This is 1-based, unlike in Reaper's own API!
         regionarray[index][4] - the shown index-number
         regionarray[index][5] - the color of the region
         
@@ -21859,7 +21859,7 @@ function ultraschall.GetAllRegions()
       RegionArray[RegCount][0]=pos
       RegionArray[RegCount][1]=rgnend
       RegionArray[RegCount][2]=name
-      RegionArray[RegCount][3]=retval-1
+      RegionArray[RegCount][3]=retval
       RegionArray[RegCount][4]=markrgnindexnumber
       RegionArray[RegCount][5]=color
       RegCount=RegCount+1
@@ -59965,7 +59965,7 @@ function ultraschall.RenderProject_Regions(projectfilename_with_path, renderfile
     Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>integer retval, integer renderfilecount, array MediaItemStateChunkArray, array Filearray = ultraschall.RenderProject_Regions(string projectfilename_with_path, string renderfilename_with_path, integer region, boolean addregionname, boolean overwrite_without_asking, boolean renderclosewhendone, boolean filenameincrease, string rendercfg)</functioncall>
+  <functioncall>integer retval, integer renderfilecount, array MediaItemStateChunkArray, array Filearray = ultraschall.RenderProject_Regions(string projectfilename_with_path, string renderfilename_with_path, integer region, boolean addregionname, boolean overwrite_without_asking, boolean renderclosewhendone, boolean filenameincrease, string rendercfg, optional string addregionnameseparator)</functioncall>
   <description>
     Renders a region of a project, using a specific render-cfg-string.
     To get render-cfg-strings, see <a href="#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a>, <a href="#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>
@@ -59981,9 +59981,8 @@ function ultraschall.RenderProject_Regions(projectfilename_with_path, renderfile
   <parameters>
     string projectfilename_with_path - the project to render; nil, for the currently opened project
     string renderfilename_with_path - the filename of the output-file. 
-                                    - Don't add a file-extension, when using addregionname=true!
                                     - You can use wildcards to some extend in the actual filename(not the path!); doesn't support $region yet
-                                    - Give a path only, when you want to use only the regionname as render-filename(set addregionname=true !)
+                                    - Will be seen as path only, when you set addregionname=true and addregionnameseparator="/"
     integer region - the number of the region in the Projectfile to render
     boolean addregionname - add the name of the region to the renderfilename; only works, when you don't add a file-extension to renderfilename_with_path
     boolean overwrite_without_asking - true, overwrite an existing renderfile; false, don't overwrite an existing renderfile
@@ -59994,6 +59993,9 @@ function ultraschall.RenderProject_Regions(projectfilename_with_path, renderfile
                              - 
                              - If you want to render the current project, you can use a four-letter-version of the render-string; will use the default settings for that format. Not available with projectfiles!
                              - "evaw" for wave, "ffia" for aiff, " iso" for audio-cd, " pdd" for ddp, "calf" for flac, "l3pm" for mp3, "vggo" for ogg, "SggO" for Opus, "PMFF" for FFMpeg-video, "FVAX" for MP4Video/Audio on Mac, " FIG" for Gif, " FCL" for LCF, "kpvw" for wavepack 
+    optional string addregionnameseparator - when addregionname==true, this parameter allows you to set a separator between renderfilename_with_path and regionname. 
+                                           - Also allows / or \\ to use renderfilename_with_path as only path as folder, into which the files are stored having the regionnames only.
+                                           - Default is an empty string.
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -60001,7 +60003,7 @@ function ultraschall.RenderProject_Regions(projectfilename_with_path, renderfile
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>projectfiles, render, output, file</tags>
+  <tags>projectfiles, render, output, file, region</tags>
 </US_DocBloc>
 ]]
   local retval

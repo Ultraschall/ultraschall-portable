@@ -412,17 +412,6 @@ end
 </TODO>
 ## Ultraschall Framework - Changelog
 
-### 4.00 Beta 2.76: - "The Cure - Burn like Fire in Cairo" - 30th of July 2019
-
-#### New features in 4.00beta2.75
-    
-#### Changes from Beta 2.75 to Beta 2.76
-    - Helpers: GetUserInputs - allows now commas in captions and default-values; title is now the one defined by the title-parameter(used to have temporary title previously) (reported by X-Raym)
-
-    ---
-
-## Ultraschall Framework - Changelog
-
 ### 4.00 Beta 2.75: - "Nick Cave & the Bad Seeds - Babe, I'm on fire" - 29th of May 2019
 tagline inspired by a comment from \_stevie\_ ;)
   
