@@ -571,7 +571,6 @@ function ColorPic:onmousedown()
     ----------------------------------
     -- step 3: assign colors to tracks
     ----------------------------------
-
     nothingselected = false
     countTracks = reaper.CountSelectedTracks(0)
     countItems = reaper.CountSelectedMediaItems(0)
@@ -582,6 +581,7 @@ function ColorPic:onmousedown()
         countTracks = reaper.CountSelectedTracks(0)
     end
     
+    reaper.Undo_BeginBlock()
     if countTracks > 0 then -- SELECTED TRACKS LOOP
         for j = 0, countTracks-1 do
             track = reaper.GetSelectedTrack(0, j)
@@ -601,6 +601,8 @@ function ColorPic:onmousedown()
       reaper.Main_OnCommand(40297,0)         -- unselect all tracks
     end
 
+    reaper.Undo_EndBlock("Ultraschall Color Picker", 1)
+    
   end
 end
 

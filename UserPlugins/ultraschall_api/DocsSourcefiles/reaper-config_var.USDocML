@@ -3,7 +3,7 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 5.979 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 5.978 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -66,7 +66,7 @@
          If you want, you can thank me for this work at [ultraschall.fm/danke](http://www.ultraschall.fm/danke), where you can find my Amazon-wishlist(hint hint, nudge nudge ;) )  
   
   
-         396 variables documented, including settings for:
+         395 variables documented, including settings for:
          
            >Preferences, Playrate context menu, Help-information display context-menu, Transport-Context Menus, Project Settings, the Master VU-settings,   
            >Ruler context-menu, Metronome and pre-roll settings, Projecttab-context-menu, MixerControlPanel-context menu, Action-menu,   
@@ -5510,46 +5510,6 @@
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
-
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
-      <slug>midiccdensity</slug>  
-      <title>midiccdensity</title>  
-      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Events per quarter note when drawing in CC lines-inputbox, as set in Preferences -> MIDI Editor  
-          It is an integer  
-          The zoom-dependent-checkbox is signalled with a negative version of this value!  
-          
-           >0 to 2147483647; higher values become negative; default is 32  
-            
-          For other MIDI editor-settings, see [midivu](#midivu), [midieditor](#midieditor), [rbn](#rbn), [mididefcolormap](#mididefcolormap)  
-            
-                    
-          Stored in reaper.ini under the same name in the section REAPER.  
-            
-      </description>  
-      <chapter_context>  
-         Config Variables  
-      </chapter_context>  
-      <target_document>Reaper_Config_Variables</target_document>  
-    </US_DocBloc>  
-  
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
-      <slug>midicctouchtimeout</slug>  
-      <title>midicctouchtimeout</title>  
-      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          MIDI CC touch-replace recording timeout-inputbox, as set in the Preferences -> MIDI Settings  
-          It is an integer  
-                    
-           >0 to 2147483647;in milliseconds
-                    
-          Stored in reaper.ini under the same name in the section REAPER.  
-      </description>  
-      <chapter_context>  
-         Config Variables  
-      </chapter_context>  
-      <target_document>Reaper_Config_Variables</target_document>  
-    </US_DocBloc>  
-
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>midieditor</slug>  

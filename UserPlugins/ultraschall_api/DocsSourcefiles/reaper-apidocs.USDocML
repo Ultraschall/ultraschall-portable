@@ -962,11 +962,11 @@
         <functioncall prog_lang="lua">integer = reaper.CountEnvelopePoints(TrackEnvelope envelope)</functioncall>
         <functioncall prog_lang="python">Int RPR_CountEnvelopePoints(TrackEnvelope envelope)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
-        <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            Returns the number of points in the envelope. See [#CountEnvelopePointsEx](#CountEnvelopePointsEx)
+        <description prog_lang="*">
+            Returns the number of points in the envelope.
         </description>
         <retvals>
             integer - the number of envelope-points in the envelopeobject envelope
@@ -990,17 +990,11 @@
         <functioncall prog_lang="lua">integer = reaper.CountEnvelopePointsEx(TrackEnvelope envelope, integer autoitem_idx)</functioncall>
         <functioncall prog_lang="python">Int RPR_CountEnvelopePointsEx(TrackEnvelope envelope, Int autoitem_idx)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.975
             Lua=5.3
         </requires>
-        <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            Returns the number of points in the envelope.
-            autoitem\_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc.
-            For automation items, pass autoitem\_idx|0x10000000 to base ptidx on the number of points in one full loop iteration,
-            even if the automation item is trimmed so that not all points are visible.
-            Otherwise, ptidx will be based on the number of visible points in the automation item, including all loop iterations.
-            
-            See [GetEnvelopePointEx](#GetEnvelopePointEx), [SetEnvelopePointEx](#SetEnvelopePointEx), [InsertEnvelopePointEx](#InsertEnvelopePointEx), [DeleteEnvelopePointEx](#DeleteEnvelopePointEx).
+        <description prog_lang="*">
+            Returns the number of points in the envelope. autoitem_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc.<br><br>
         </description>
         <retvals>
             integer - the number of envelope-points in the envelopeobject envelope
@@ -2105,7 +2099,6 @@
         </chapter_context>
         <tags>trackmanagement, routing, receive, volume, set, alter, relative</tags>
     </US_DocBloc>
-    
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>CSurf_OnRew</slug>
@@ -2970,46 +2963,6 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-        <slug>DeleteEnvelopePointEx</slug>
-        <title>DeleteEnvelopePointEx</title>
-        <functioncall prog_lang="cpp">bool DeleteEnvelopePointEx(TrackEnvelope* envelope, int autoitem_idx, int ptidx)</functioncall>
-        <functioncall prog_lang="eel">bool DeleteEnvelopePointEx(TrackEnvelope envelope, int autoitem_idx, int ptidx)</functioncall>
-        <functioncall prog_lang="lua">boolean reaper.DeleteEnvelopePointEx(TrackEnvelope envelope, integer autoitem_idx, integer ptidx)</functioncall>
-        <functioncall prog_lang="python">Boolean RPR_DeleteEnvelopePointEx(TrackEnvelope envelope, Int autoitem_idx, Int ptidx)</functioncall>
-        <requires>
-            Reaper=5.979
-            Lua=5.3
-        </requires>
-        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
-            Delete an envelope point. If setting multiple points at once, set noSort=true, and call Envelope_SortPoints when done.
-            autoitem\_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc.
-            For automation items, pass autoitem\_idx|0x10000000 to base ptidx on the number of points in one full loop iteration,
-            even if the automation item is trimmed so that not all points are visible.
-            Otherwise, ptidx will be based on the number of visible points in the automation item, including all loop iterations.
-            
-            See [CountEnvelopePointsEx](#CountEnvelopePointsEx), [GetEnvelopePointEx](#GetEnvelopePointEx), [SetEnvelopePointEx](#SetEnvelopePointEx), [InsertEnvelopePointEx](#InsertEnvelopePointEx).
-        </description>
-        <retvals>
-            boolean - true, deleting was successful; false, deleting was unsuccessful
-        </retvals>
-        <parameters>
-            TrackEnvelope envelope - the envelope, in which the point lies, that you want to delete
-            integer autoitem_idx - -1, the underlying envelope; 
-                                 - 0 to x, the 1st to x-1th automation-item
-                                 - |0x10000000 to base ptidx on the number of points in one full loop iteration,
-                                 - even if the automation item is trimmed so that not all points are visible.
-                                 - Otherwise, ptidx will be based on the number of visible points in the automation item, including all loop iterations.
-            integer ptidx - the envelope-point to delete
-        </parameters>
-        <target_document>ReaperApiFunctionsReference</target_document>
-        <source_document></source_document>
-        <chapter_context>
-            Envelope Management
-        </chapter_context>
-        <tags>envelopemanagement, envelopepoints, delete, range</tags>
-    </US_DocBloc>
-
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>DeleteEnvelopePointRange</slug>
         <title>DeleteEnvelopePointRange</title>
         <functioncall prog_lang="cpp">bool DeleteEnvelopePointRange(TrackEnvelope* envelope, double time_start, double time_end)</functioncall>
@@ -3017,13 +2970,11 @@
         <functioncall prog_lang="lua">boolean = reaper.DeleteEnvelopePointRange(TrackEnvelope envelope, number time_start, number time_end)</functioncall>
         <functioncall prog_lang="python">Boolean RPR_DeleteEnvelopePointRange(TrackEnvelope envelope, Float time_start, Float time_end)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
-        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
-            Delete a range of envelope points. 
-            
-            See [DeleteEnvelopePointRangeEx](#DeleteEnvelopePointRangeEx), [DeleteEnvelopePointEx](#DeleteEnvelopePointEx).
+        <description prog_lang="*">
+            Delete a range of envelope points.
         </description>
         <retvals>
             boolean - true, if it succeeded
@@ -4946,11 +4897,11 @@
         <functioncall prog_lang="lua">boolean retval, optional number time, optional number value, optional number shape, optional number tension, optional boolean selected = reaper.GetEnvelopePoint(TrackEnvelope envelope, integer ptidx)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, TrackEnvelope envelope, Int ptidx, Float timeOutOptional, Float valueOutOptional, Int shapeOutOptional, Float tensionOutOptional, Boolean selectedOutOptional) = RPR_GetEnvelopePoint(envelope, ptidx, timeOutOptional, valueOutOptional, shapeOutOptional, tensionOutOptional, selectedOutOptional)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Get the attributes of an envelope point. See [GetEnvelopePointEx](#GetEnvelopePointEx)
+            Get the attributes of an envelope point. See [GetEnvelopePointByTime](#GetEnvelopePointByTime), [SetEnvelopePoint](#SetEnvelopePoint).
         </description>
         <retvals>
             boolean retval - 
@@ -4980,13 +4931,11 @@
         <functioncall prog_lang="lua">integer = reaper.GetEnvelopePointByTime(TrackEnvelope envelope, number time)</functioncall>
         <functioncall prog_lang="python">Int RPR_GetEnvelopePointByTime(TrackEnvelope envelope, Float time)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Returns the envelope point at or immediately prior to the given time position. 
-            
-            See [GetEnvelopePointByTimeEx](#GetEnvelopePointByTimeEx)
+            Returns the envelope point at or immediately prior to the given time position. See [GetEnvelopePoint](#GetEnvelopePoint), [SetEnvelopePoint](#SetEnvelopePoint), [Envelope_Evaluate](#Envelope_Evaluate).
         </description>
         <retvals>
             integer - 
@@ -5011,17 +4960,11 @@
         <functioncall prog_lang="lua">integer = reaper.GetEnvelopePointByTimeEx(TrackEnvelope envelope, integer autoitem_idx, number time)</functioncall>
         <functioncall prog_lang="python">Int RPR_GetEnvelopePointByTimeEx(TrackEnvelope envelope, Int autoitem_idx, Float time)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.975
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Returns the envelope point at or immediately prior to the given time position.
-            autoitem\_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc.
-            For automation items, pass autoitem\_idx|0x10000000 to base ptidx on the number of points in one full loop iteration,
-            even if the automation item is trimmed so that not all points are visible.
-            Otherwise, ptidx will be based on the number of visible points in the automation item, including all loop iterations.
-
-            See [GetEnvelopePointEx](#GetEnvelopePointEx), [SetEnvelopePointEx](#SetEnvelopePointEx), [InsertEnvelopePointEx](#InsertEnvelopePointEx), [DeleteEnvelopePointEx](#DeleteEnvelopePointEx).
+            Returns the envelope point at or immediately prior to the given time position. autoitem\_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc. See [GetEnvelopePoint](#GetEnvelopePoint), [SetEnvelopePoint](#SetEnvelopePoint), [Envelope_Evaluate](#Envelope_Evaluate).
         </description>
         <retvals>
             integer - 
@@ -5047,17 +4990,11 @@
         <functioncall prog_lang="lua">boolean retval, optional number time, optional number value, optional number shape, optional number tension, optional boolean selected = reaper.GetEnvelopePointEx(TrackEnvelope envelope, integer autoitem_idx, integer ptidx)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, TrackEnvelope envelope, Int autoitem_idx, Int ptidx, Float timeOutOptional, Float valueOutOptional, Int shapeOutOptional, Float tensionOutOptional, Boolean selectedOutOptional) = RPR_GetEnvelopePointEx(envelope, autoitem_idx, ptidx, timeOutOptional, valueOutOptional, shapeOutOptional, tensionOutOptional, selectedOutOptional)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.975
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Get the attributes of an envelope point.
-            autoitem\_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc.
-            For automation items, pass autoitem\_idx|0x10000000 to base ptidx on the number of points in one full loop iteration,
-            even if the automation item is trimmed so that not all points are visible.
-            Otherwise, ptidx will be based on the number of visible points in the automation item, including all loop iterations.
-
-            See [CountEnvelopePointsEx](#CountEnvelopePointsEx), [SetEnvelopePointEx](#SetEnvelopePointEx), [InsertEnvelopePointEx](#InsertEnvelopePointEx), [DeleteEnvelopePointEx](#DeleteEnvelopePointEx).
+            Get the attributes of an envelope point. autoitem\_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc. See [GetEnvelopePointByTime](#GetEnvelopePointByTime), [SetEnvelopePoint](#SetEnvelopePoint).
         </description>
         <retvals>
             boolean retval - 
@@ -5203,21 +5140,18 @@
         <functioncall prog_lang="lua">integer retval, integer tracknumber, integer itemnumber, integer fxnumber = reaper.GetFocusedFX()</functioncall>
         <functioncall prog_lang="python">(Int retval, Int tracknumberOut, Int itemnumberOut, Int fxnumberOut) = RPR_GetFocusedFX(tracknumberOut, itemnumberOut, fxnumberOut)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Get focused FX. 
-            
-            See [GetLastTouchedFX](#GetLastTouchedFX).
+            Get focused FX.
+            If item FX, fxnumber will have the high word be the take index, the low word the FX index. See [GetLastTouchedFX](#GetLastTouchedFX).
         </description>
         <retvals>
-            integer retval - 0, if no FX window has focus
-                           - 1, if a track FX window has focus or was the last focused and still open
-                           - 2, if an item FX window has focus or was the last focused and still open
+            integer retval - 1, track FX window has focus; 2, item FX window has focus; 0, no FX window has focus
             integer tracknumber - tracknumber; 0, master track; 1, track 1; etc. 
             integer itemnumber - -1, if it's a track-fx; 0 and higher, the mediaitem-number
-            integer fxnumber - If item FX, fxnumber will have the high word be the take index, the low word the FX index
+            integer fxnumber - the FX-idx within the fxchain of tracknumber; 0, first fx; 1, second fx; 2, third fx; etc
         </retvals>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -5574,23 +5508,17 @@
         <functioncall prog_lang="lua">boolean retval, integer tracknumber, integer fxnumber, integer paramnumber = reaper.GetLastTouchedFX()</functioncall>
         <functioncall prog_lang="python">(Boolean retval, Int tracknumberOut, Int fxnumberOut, Int paramnumberOut) = RPR_GetLastTouchedFX(tracknumberOut, fxnumberOut, paramnumberOut)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Returns the last touched track, it's last touched parameter and tracknumber.
-            
-            The low word of tracknumber is the 1-based track index -- 0 means the master track, 1 means track 1, etc. 
-            
             See [GetFocusedFX](#GetFocusedFX).
         </description>
         <retvals>
             boolean retval - true, if last touched FX parameter is valid; false, if otherwise
             integer tracknumber - the tracknumber; 0 means the master track, 1 means track 1, etc.
-                                - If the high word of tracknumber is nonzero, it refers to the 1-based item index (1 is the first item on the track, etc).                                 
             integer fxnumber - the id of the FX in the track tracknumber, zero-based
-                             - For track FX, the low 24 bits of fxnumber refer to the FX index in the chain, and if the next 8 bits are 01, then the FX is record FX. 
-                             - For item FX, the low word defines the FX index in the chain, and the high word defines the take number. 
             integer paramnumber - the id of the last parameter touched, zero-based
         </retvals>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -7725,7 +7653,7 @@
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
         <chapter_context>
-            Envelope Management
+            Automation Management
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
@@ -8034,7 +7962,7 @@
         <description prog_lang="*">
             Get or set project information.
 
-            RENDER_SETTINGS: &amp;(1|2)=0:master mix, &amp;1=stems+master mix, &amp;2=stems only, &amp;4=multichannel tracks to multichannel files, &amp;8=use render matrix, &amp;16=tracks with only mono media to mono files, &amp;32=selected media items; &amp;64=selected media items via master
+            RENDER_SETTINGS: &amp;(1|2)=0:master mix, &amp;1=stems+master mix, &amp;2=stems only, &amp;4=multichannel tracks to multichannel files, &amp;8=use render matrix, &amp;16=tracks with only mono media to mono files, &amp;32=selected media items
             RENDER_BOUNDSFLAG : 0=custom time bounds, 1=entire project, 2=time selection, 3=all project regions, 4=selected media items, 5=selected project regions
             RENDER_CHANNELS: number of channels in rendered file
             RENDER_SRATE: sample rate of rendered file (or 0 for project sample rate)
@@ -9710,36 +9638,26 @@
         <functioncall prog_lang="lua">boolean retval, string retvals_csv = reaper.GetUserInputs(string title, integer num_inputs, string captions_csv, string retvals_csv)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, String title, Int num_inputs, String captions_csv, String retvals_csv, Int retvals_csv_sz) = RPR_GetUserInputs(title, num_inputs, captions_csv, retvals_csv, retvals_csv_sz)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
-        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+        <description prog_lang="*">
             Opens a window with input-fields to get values from the user.
             If a caption begins with *, for example "*password", the edit field will not display the input text.
-            Maximum fields is 16. Values are returned as a comma/custom separator-separated string. 
-            Returns false if the user canceled the dialog. 
-            
-            You can supply special extra information via additional caption fields: extrawidth=XXX to increase text field width, separator=X to use a different separator for returned fields(separator=\n is recommended).
-            
-            Example:
-            
-            retval, retvals_csv = reaper.GetUserInputs("Title", 2, "Hello,World, separator=\n", "defaultvalue1\ndefaultvalue2")
-            
-            will return the values input by the user, separated by a newline.
-            
-            \n is recommended, as this allows the user entering everything, a one-lined-inputbox can handle.
-            
-            Important: the separator-field in the captions has no effect on how captions are separated from each other. They still need to be separated by commas!
+            Maximum fields is 16. Values are returned as a comma-separated string. Returns false if the user canceled the dialog. To increase text field width, add an extra caption field, and specify extrawidth=(number of characters for the inputfields; 0 to 1000 and higher)
+
+            You can type maximum 1023 characters into one inputfield, everything longer will be cut to 1023 characters!
+            The user can input a comma (,), which is not escaped by Reaper. This could cause trouble, when analysing multiple returned retvals_csv.
         </description>
         <retvals>
             retval - did the user click OK in the dialog(true) or close/cancel the dialog(false)
-            retvals_csv - the data from each of the input-fields, separated by a comma , or a separator you chose.
+            retvals_csv - the data from each of the input-fields, separated by a comma ,
         </retvals>
         <parameters>
             title - title of the window
             num_inputs - number of input-fields, 1-16.
             captions_csv - a string with the captions for each input-field, each separated by a comma. Can be fewer than num_inputs. If a caption begins with *, the inputfield will display * instead of characters(for i.e. passwords).
-            retvals_csv - default-values for each input-field, separated by a comma or a separator you chose.
+            retvals_csv - default-values for each input-field, separated by a comma.
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -10071,11 +9989,11 @@
         <functioncall prog_lang="lua">boolean = reaper.InsertEnvelopePoint(TrackEnvelope envelope, number time, number value, integer shape, number tension, boolean selected, optional boolean noSortIn)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, TrackEnvelope envelope, Float time, Float value, Int shape, Float tension, Boolean selected, Boolean noSortInOptional) = RPR_InsertEnvelopePoint(envelope, time, value, shape, tension, selected, noSortInOptional)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Insert an envelope point. If setting multiple points at once, set noSort=true, and call Envelope_SortPoints when done. See [InsertEnvelopePointEx](#InsertEnvelopePointEx).
+            Insert an envelope point. If setting multiple points at once, set noSort=true, and call Envelope_SortPoints when done. See [GetEnvelopePoint](#GetEnvelopePoint), [SetEnvelopePoint](#SetEnvelopePoint), [GetEnvelopeScalingMode](#GetEnvelopeScalingMode).
         </description>
         <retvals>
             boolean - 
@@ -10105,17 +10023,11 @@
         <functioncall prog_lang="lua">boolean = reaper.InsertEnvelopePointEx(TrackEnvelope envelope, integer autoitem_idx, number time, number value, integer shape, number tension, boolean selected, optional boolean noSortIn)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, TrackEnvelope envelope, Int autoitem_idx, Float time, Float value, Int shape, Float tension, Boolean selected, Boolean noSortInOptional) = RPR_InsertEnvelopePointEx(envelope, autoitem_idx, time, value, shape, tension, selected, noSortInOptional)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.975
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Insert an envelope point. If setting multiple points at once, set noSort=true, and call Envelope_SortPoints when done.
-            autoitem\_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc.
-            For automation items, pass autoitem\_idx|0x10000000 to base ptidx on the number of points in one full loop iteration,
-            even if the automation item is trimmed so that not all points are visible.
-            Otherwise, ptidx will be based on the number of visible points in the automation item, including all loop iterations.
-
-            See [CountEnvelopePointsEx](#CountEnvelopePointsEx), [GetEnvelopePointEx](#GetEnvelopePointEx), [SetEnvelopePointEx](#SetEnvelopePointEx), [DeleteEnvelopePointEx](#DeleteEnvelopePointEx).
+            Insert an envelope point. If setting multiple points at once, set noSort=true, and call Envelope\_SortPoints when done. autoitem\_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc. See [GetEnvelopePoint](#GetEnvelopePoint), [SetEnvelopePoint](#SetEnvelopePoint), [GetEnvelopeScalingMode](#GetEnvelopeScalingMode).
         </description>
         <retvals>
             boolean - 
@@ -14032,11 +13944,11 @@
         <functioncall prog_lang="lua">boolean = reaper.SetEnvelopePoint(TrackEnvelope envelope, integer ptidx, optional number timeIn, optional number valueIn, optional number shapeIn, optional number tensionIn, optional boolean selectedIn, optional boolean noSortIn)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, TrackEnvelope envelope, Int ptidx, Float timeInOptional, Float valueInOptional, Int shapeInOptional, Float tensionInOptional, Boolean selectedInOptional, Boolean noSortInOptional) = RPR_SetEnvelopePoint(envelope, ptidx, timeInOptional, valueInOptional, shapeInOptional, tensionInOptional, selectedInOptional, noSortInOptional)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Set attributes of an envelope point. Values that are not supplied will be ignored. If setting multiple points at once, set noSort=true, and call Envelope_SortPoints when done. See [SetEnvelopePointEx](#SetEnvelopePointEx).
+            Set attributes of an envelope point. Values that are not supplied will be ignored. If setting multiple points at once, set noSort=true, and call Envelope_SortPoints when done. See [GetEnvelopePoint](#GetEnvelopePoint), [InsertEnvelopePoint](#InsertEnvelopePoint), [GetEnvelopeScalingMode](#GetEnvelopeScalingMode).
         </description>
         <retvals>
             boolean - 
@@ -14067,16 +13979,11 @@
         <functioncall prog_lang="lua">boolean = reaper.SetEnvelopePointEx(TrackEnvelope envelope, integer autoitem_idx, integer ptidx, optional number timeIn, optional number valueIn, optional number shapeIn, optional number tensionIn, optional boolean selectedIn, optional boolean noSortIn)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, TrackEnvelope envelope, Int autoitem_idx, Int ptidx, Float timeInOptional, Float valueInOptional, Int shapeInOptional, Float tensionInOptional, Boolean selectedInOptional, Boolean noSortInOptional) = RPR_SetEnvelopePointEx(envelope, autoitem_idx, ptidx, timeInOptional, valueInOptional, shapeInOptional, tensionInOptional, selectedInOptional, noSortInOptional)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.975
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Set attributes of an envelope point. Values that are not supplied will be ignored. If setting multiple points at once, set noSort=true, and call Envelope_SortPoints when done.
-            autoitem\_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc.
-            For automation items, pass autoitem\_idx|0x10000000 to base ptidx on the number of points in one full loop iteration,
-            even if the automation item is trimmed so that not all points are visible.
-            Otherwise, ptidx will be based on the number of visible points in the automation item, including all loop iterations.
-            See [CountEnvelopePointsEx](#CountEnvelopePointsEx), [GetEnvelopePointEx](#GetEnvelopePointEx), [InsertEnvelopePointEx](#InsertEnvelopePointEx), [DeleteEnvelopePointEx](#DeleteEnvelopePointEx).
+            Set attributes of an envelope point. Values that are not supplied will be ignored. If setting multiple points at once, set noSort=true, and call Envelope\_SortPoints when done. autoitem\_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc. See [GetEnvelopePoint](#GetEnvelopePoint), [InsertEnvelopePoint](#InsertEnvelopePoint), [GetEnvelopeScalingMode](#GetEnvelopeScalingMode).
         </description>
         <retvals>
             boolean - 
@@ -19475,24 +19382,15 @@
         <functioncall prog_lang="lua">reaper.Undo_EndBlock(string descchange, integer extraflags)</functioncall>
         <functioncall prog_lang="python">RPR_Undo_EndBlock(String descchange, Int extraflags)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
         <description prog_lang="*">
             call to end the block,with extra flags if any,and a description
         </description>
         <parameters>
-            descchange - a string that describes the changes of the undo-block
-            extraflags - -1, all undo states
-                       - 1, track/master vol/pan/routing, routing/hwout envelopes too
-                       - 2, track/master fx
-                       - 4, track items
-                       - 8, loop selection, markers, regions, extensions
-                       - 16, freeze state
-                       - 32, non-FX envelopes only
-                       - 64, FX envelopes, implied by UNDO_STATE_FX too
-                       - 128, contents of automation items -- not position, length, rate etc of automation items, which is part of envelope state
-                       - 256, ARA state
+            descchange - 
+            extraflags - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -19510,7 +19408,7 @@
         <functioncall prog_lang="lua">reaper.Undo_EndBlock2(ReaProject proj, string descchange, integer extraflags)</functioncall>
         <functioncall prog_lang="python">RPR_Undo_EndBlock2(ReaProject proj, String descchange, Int extraflags)</functioncall>
         <requires>
-            Reaper=5.979
+            Reaper=5.62
             Lua=5.3
         </requires>
         <description prog_lang="*">
@@ -19518,17 +19416,8 @@
         </description>
         <parameters markup_type="markdown" markup_version="1.0.1">
             proj - the project-number. 0 for the current project. Can also be a ReaProject-object, as returned by [EnumProjects](#EnumProjects)
-            descchange - a string that describes the changes of the undo-block
-            extraflags - -1, all undo states
-                       - 1, track/master vol/pan/routing, routing/hwout envelopes too
-                       - 2, track/master fx
-                       - 4, track items
-                       - 8, loop selection, markers, regions, extensions
-                       - 16, freeze state
-                       - 32, non-FX envelopes only
-                       - 64, FX envelopes, implied by UNDO_STATE_FX too
-                       - 128, contents of automation items -- not position, length, rate etc of automation items, which is part of envelope state
-                       - 256, ARA state
+            descchange - 
+            extraflags - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -23546,15 +23435,13 @@
         <functioncall prog_lang="python">JS_GDI_Blit(void destHDC, Int dstx, Int dsty, void sourceHDC, Int srcx, Int srxy, Int width, Int height, String modeOptional)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.988
+            JS=0.980
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Blits between two device contexts, which may include LICE "system bitmaps".
 
-            mode: Optional parameter. "SRCCOPY" by default, or specify "ALPHA" to enable per-pixel alpha blending.
-
-            WARNING: On WindowsOS, GDI_Blit does not perform alpha multiplication of the source bitmap. For proper color rendering, a seperate pre-multiplication step is therefore required, using either LICE_Blit or LICE_ProcessRect.
+            modeOptional: "SRCCOPY" by default, or specify "ALPHA" to enable per-pixel alpha blending.
         </description>
         <parameters>
            identifier destHDC - 
@@ -24323,69 +24210,6 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
-
-    <US_DocBloc version="1.0" spok_lang="en">
-        <slug>JS_LICE_AlterBitmapHSV</slug>
-        <title>JS_LICE_AlterBitmapHSV(JS)</title>
-        <functioncall prog_lang="cpp">void JS_LICE_AlterBitmapHSV(void* bitmap, double hue, double saturation, double value)</functioncall>
-        <functioncall prog_lang="eel">extension_api("JS_LICE_AlterBitmapHSV", void* bitmap, hue, saturation, value)</functioncall>
-        <functioncall prog_lang="lua">reaper.JS_LICE_AlterBitmapHSV(identifier bitmap, number hue, number saturation, number value)</functioncall>
-        <functioncall prog_lang="python">(JS_LICE_AlterBitmapHSV(void bitmap, Float hue, Float saturation, Float value)</functioncall>
-        <requires>
-            Reaper=5.965
-            JS=0.988
-            Lua=5.3
-        </requires>
-        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Hue is rolled over, saturation and value are clamped, all 0..1. (Alpha remains unchanged.)
-        </description>
-        <parameters>
-           identifier bitmap - 
-           number hue - 
-           number saturation - 
-           number value - 
-        </parameters>
-        <target_document>ReaperApiFunctionsReference</target_document>
-        <source_document></source_document>
-        <chapter_context>
-            JS_Plugin
-        </chapter_context>
-        <tags></tags>
-    </US_DocBloc>
-
-    <US_DocBloc version="1.0" spok_lang="en">
-        <slug>JS_LICE_AlterRectHSV</slug>
-        <title>JS_LICE_AlterRectHSV(JS)</title>
-        <functioncall prog_lang="cpp">void JS_LICE_AlterRectHSV(void* bitmap, int x, int y, int w, int h, double hue, double saturation, double value)</functioncall>
-        <functioncall prog_lang="eel">extension_api("JS_LICE_AlterRectHSV", void* bitmap, int x, int y, int w, int h, hue, saturation, value)</functioncall>
-        <functioncall prog_lang="lua">reaper.JS_LICE_AlterRectHSV(identifier bitmap, integer x, integer y, integer w, integer h, number hue, number saturation, number value)</functioncall>
-        <functioncall prog_lang="python">JS_LICE_AlterRectHSV(void bitmap, Int x, Int y, Int w, Int h, Float hue, Float saturation, Float value)</functioncall>
-        <requires>
-            Reaper=5.965
-            JS=0.988
-            Lua=5.3
-        </requires>
-        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Hue is rolled over, saturation and value are clamped, all 0..1. (Alpha remains unchanged.)
-        </description>
-        <parameters>
-           identifier bitmap - 
-           integer x - 
-           integer y - 
-           integer w - 
-           integer h - 
-           number hue - 
-           number saturation - 
-           number value - 
-        </parameters>
-        <target_document>ReaperApiFunctionsReference</target_document>
-        <source_document></source_document>
-        <chapter_context>
-            JS_Plugin
-        </chapter_context>
-        <tags></tags>
-    </US_DocBloc>
-
   
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_LICE_Arc</slug>
@@ -24478,16 +24302,11 @@
         <functioncall prog_lang="python">JS_LICE_Blit(void destBitmap, Int dstx, Int dsty, void sourceBitmap, Int srcx, Int srcy, Int width, Int height, Float alpha, String mode)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.988
+            JS=0.986
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Standard LICE modes: "COPY" (default if empty string), "MASK", "ADD", "DODGE", "MUL", "OVERLAY" or "HSVADJ", any of which may be combined with "ALPHA" to enable per-pixel alpha blending.
-
-            In addition to the standard LICE modes, LICE_Blit also offers:
-            * "CHANCOPY_XTOY", with X and Y any of the four channels, A, R, G or B. (CHANCOPY_ATOA is similar to MASK mode.)
-            * "BLUR"
-            * "ALPHAMUL", which overwrites the destination with a per-pixel alpha-multiplied copy of the source. (Similar to first clearing the destination with 0x00000000 and then blitting with "COPY,ALPHA".)
+            LICE modes: "COPY" (default if empty string), "MASK", "ADD", "DODGE", "MUL", "OVERLAY" or "HSVADJ", any of which may be combined with "ALPHA" to enable per-pixel alpha blending.
         </description>
         <parameters>
            identifier destBitmap - 
@@ -25205,49 +25024,6 @@
     </US_DocBloc>
   
     <US_DocBloc version="1.0" spok_lang="en">
-        <slug>JS_LICE_ProcessRect</slug>
-        <title>JS_LICE_ProcessRect(JS)</title>
-        <functioncall prog_lang="cpp">bool JS_LICE_ProcessRect(void* bitmap, int x, int y, int w, int h, const char* mode, double operand)</functioncall>
-        <functioncall prog_lang="eel">bool extension_api("JS_LICE_ProcessRect", void* bitmap, int x, int y, int w, int h, "mode", operand)</functioncall>
-        <functioncall prog_lang="lua">boolean reaper.JS_LICE_ProcessRect(identifier bitmap, integer x, integer y, integer w, integer h, string mode, number operand)</functioncall>
-        <functioncall prog_lang="python">Boolean JS_LICE_ProcessRect(void bitmap, Int x, Int y, Int w, Int h, String mode, Float operand)</functioncall>
-        <requires>
-            Reaper=5.95
-            JS=0.988
-            Lua=5.3
-        </requires>
-        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Applies bitwise operations to each pixel in the target rectangle.
-
-            operand: a color in 0xAARRGGBB format.
-
-            modes:
-            * "XOR", "OR" or "AND".
-            * "SET_XYZ", with XYZ any combination of A, R, G, and B: copies the specified channels from operand to the bitmap. (Useful for setting the alpha values of a bitmap.)
-            * "ALPHAMUL": Performs alpha pre-multiplication on each pixel in the rect. operand is ignored in this mode. (On WindowsOS, GDI_Blit does not perform alpha multiplication on the fly, and a separate alpha pre-multiplication step is therefore required.)
-
-            NOTE:
-            LICE_Blit and LICE_ScaledBlit are also useful for processing bitmap colors. For example, to multiply all channel values by 1.5:
-            reaper.JS_LICE_Blit(bitmap, x, y, bitmap, x, y, w, h, 0.5, "ADD").
-        </description>
-        <parameters>
-           identifier bitmap - 
-           integer x - 
-           integer y - 
-           integer w - 
-           integer h - 
-           string mode - 
-           number operand - 
-        </parameters>
-        <target_document>ReaperApiFunctionsReference</target_document>
-        <source_document></source_document>
-        <chapter_context>
-            JS_Plugin
-        </chapter_context>
-        <tags></tags>
-    </US_DocBloc>
-  
-    <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_LICE_PutPixel</slug>
         <title>JS_LICE_PutPixel(JS)</title>
         <functioncall prog_lang="cpp">void JS_LICE_PutPixel(void* bitmap, int x, int y, int color, double alpha, const char* mode)</functioncall>
@@ -25431,34 +25207,6 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
-
-    <US_DocBloc version="1.0" spok_lang="en">
-        <slug>JS_LICE_SetAlphaFromColorMask</slug>
-        <title>JS_LICE_SetAlphaFromColorMask(JS)</title>
-        <functioncall prog_lang="cpp">void JS_LICE_SetAlphaFromColorMask(void* bitmap, int colorRGB)</functioncall>
-        <functioncall prog_lang="eel">extension_api("JS_LICE_SetAlphaFromColorMask", void* bitmap, int colorRGB)</functioncall>
-        <functioncall prog_lang="lua">reaper.JS_LICE_SetAlphaFromColorMask(identifier bitmap, integer colorRGB)</functioncall>
-        <functioncall prog_lang="python">JS_LICE_SetAlphaFromColorMask(void bitmap, Int colorRGB)</functioncall>
-        <requires>
-            Reaper=5.95
-            JS=0.988
-            Lua=5.3
-        </requires>
-        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Sets all pixels that match the given color's RGB values to fully transparent, and all other pixels to fully opaque. (All pixels' RGB values remain unchanged.)
-        </description>
-        <parameters>
-           identifier bitmap - 
-           integer colorRGB - 
-        </parameters>
-        <target_document>ReaperApiFunctionsReference</target_document>
-        <source_document></source_document>
-        <chapter_context>
-            JS_Plugin
-        </chapter_context>
-        <tags></tags>
-    </US_DocBloc>
-
   
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_LICE_SetFontBkColor</slug>
@@ -25767,33 +25515,6 @@
            string packedString - 
            integer stringLength - 
         </parameters>
-        <target_document>ReaperApiFunctionsReference</target_document>
-        <source_document></source_document>
-        <chapter_context>
-            JS_Plugin
-        </chapter_context>
-        <tags></tags>
-    </US_DocBloc>
-    
-    <US_DocBloc version="1.0" spok_lang="en">
-        <slug>JS_Mouse_GetCursor</slug>
-        <title>JS_Mouse_GetCursor(JS)</title>
-        <functioncall prog_lang="cpp">void* JS_Mouse_GetCursor()</functioncall>
-        <functioncall prog_lang="eel">void* extension_api("JS_Mouse_GetCursor")</functioncall>
-        <functioncall prog_lang="lua">identifier = reaper.JS_Mouse_GetCursor()</functioncall>
-        <functioncall prog_lang="python">void JS_Mouse_GetCursor()</functioncall>
-        <requires>
-            Reaper=5.965
-            JS=0.988
-            Lua=5.3
-        </requires>
-        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            On Windows, retrieves a handle to the current mouse cursor.
-            On Linux and macOS, retrieves a handle to the last cursor set by REAPER or its extensions via SWELL.
-        </description>
-        <retvals>
-           identifier - 
-        </retvals>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
         <chapter_context>
@@ -26847,13 +26568,11 @@
         <functioncall prog_lang="python">void JS_Window_AttachTopmostPin(void windowHWND)</functioncall>
         <requires>
             Reaper=5.965
-            JS=0.988
+            JS=0.964
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Attaches a "pin on top" button to the window frame. The button should remember its state when closing and re-opening the window.
-
-            WARNING: This function does not yet work on Linux.
+            
         </description>
         <retvals>
             identifier HWND - 
@@ -26968,24 +26687,25 @@
         <functioncall prog_lang="python">void  JS_Window_Find(String title, Boolean exact)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.989
+            JS=0.951
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Returns a HWND to a window whose title matches the specified string.
-            * Unlike the Win32 function FindWindow, this function searches top-level as well as child windows, so that the target window can be found irrespective of docked state.
-            * In addition, the function can optionally match substrings of the title.
-            * Matching is not case sensitive.
+            Returns a HWND to the top-level window whose title matches the specified string. This function does not search child window, and is not case sensitive.
+           
+           
+           
+           Parameters:
+           
+            * exact: Match entire title exactly, or match substring of title.
 
-            Parameters:
-            * exact: Match entire title, or match substring of title.
         </description>
         <retvals>
-           identifier  - the identifier of the found window, or nil
+           identifier  - 
         </retvals>
         <parameters>
-           string title - the title of the window to find
-           boolean exact - true, title must match exactly the name of the window; false, title can only partially match the windowtitle 
+           string title - 
+           boolean exact - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -27008,7 +26728,9 @@
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-           Returns a HWND to the child window whose title matches the specified string.
+            Returns a HWND to the child window whose title matches the specified string.
+           
+           
            
            Parameters:
            
@@ -27016,12 +26738,12 @@
 
         </description>
         <retvals>
-           identifier  - the identifier for the window found; nil, if no such window found
+           identifier  - 
         </retvals>
         <parameters>
-           identifier parentHWND - the identifier of the parent window to the child-window
-           string title - the title of the child-window to find
-           boolean exact - true, title must match exactly the name of the window; false, title can only partially match the windowtitle 
+           identifier parentHWND - 
+           string title - 
+           boolean exact - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -27048,7 +26770,7 @@
 
             (The ID of a window may be retrieved by JS\_Window\_GetLongPtr.)
             
-            For instance: with Reaper's [MainHWND](#GetMainHwnd), you can get:
+            For Reaper's [MainHWND](#GetMainHwnd), you can get:
                 0: Transport(Windows)/MainHWND(Mac)
                 999: project-tabs(if existing, otherwise will be nil)
                 1000: trackview
@@ -27090,13 +26812,13 @@
             * title: An empty string, "", will match all windows. (Search is not case sensitive.)
         </description>
         <parameters>
-           identifier parentHWND - the parent hwnd of the child-window to find
-           identifier childHWND - the parent child-window of the window to find; set it to parentHWND to search beginning with the first childhwnd of the parenthwnd
-           string className - the name of the class of the child-window, that you want to find
-           string title - the title of the child-window to find
+           identifier parentHWND - 
+           identifier childHWND - 
+           string className - 
+           string title - 
         </parameters>
         <retvals>
-            identifier HWND - the found window; nil, if no window has been found
+            identifier HWND - 
         </retvals>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -27106,38 +26828,6 @@
         <tags></tags>
     </US_DocBloc>
 
-    <US_DocBloc version="1.0" spok_lang="en">
-        <slug>JS_Window_FindTop</slug>
-        <title>JS_Window_FindTop(JS)</title>
-        <functioncall prog_lang="cpp">void* JS_Window_FindTop(const char* title, bool exact)</functioncall>
-        <functioncall prog_lang="eel">void* extension_api("JS_Window_FindTop", "title", bool exact)</functioncall>
-        <functioncall prog_lang="lua">identifier reaper.JS_Window_FindTop(string title, boolean exact)</functioncall>
-        <functioncall prog_lang="python">void JS_Window_FindTop(String title, Boolean exact)</functioncall>
-        <requires>
-            Reaper=5.965
-            JS=0.989
-            Lua=5.3
-        </requires>
-        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Returns a HWND to a top-level window whose title matches the specified string.
-
-            Parameters:
-            * exact: Match entire title length, or match substring of title. In both cases, matching is not case sensitive.
-        </description>
-        <parameters>
-           string title - the title of the top-level window to find
-           boolean exact - true, title must match exactly the name of the window; false, title can only partially match the windowtitle 
-        </parameters>
-        <retvals>
-            identifier HWND - the found identifier of the window; nil, if not found
-        </retvals>
-        <target_document>ReaperApiFunctionsReference</target_document>
-        <source_document></source_document>
-        <chapter_context>
-            JS_Plugin
-        </chapter_context>
-        <tags></tags>
-    </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_FromPoint</slug>
@@ -27156,11 +26846,11 @@
 
         </description>
         <retvals>
-           identifier  - the window found at the coordinates
+           identifier  - 
         </retvals>
         <parameters>
-           integer x - the x-position in pixels, at which to find the window
-           integer y - the y-position in pixels, at which to find the window
+           integer x - 
+           integer y - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -28084,25 +27774,31 @@
         <slug>JS_Window_SetOpacity</slug>
         <title>JS_Window_SetOpacity(JS)</title>
         <functioncall prog_lang="cpp">bool JS_Window_SetOpacity(void* windowHWND, const char* mode, double value)</functioncall>
-        <functioncall prog_lang="eel">bool extension_api("JS_Window_SetOpacity", void* windowHWND, "mode", value)</functioncall>
+        <functioncall prog_lang="eel">bool  extension_api("JS_Window_SetOpacity", void* windowHWND, "mode", value)</functioncall>
         <functioncall prog_lang="lua">boolean reaper.JS_Window_SetOpacity(identifier windowHWND, string mode, number value)</functioncall>
-        <functioncall prog_lang="python">Boolean JS_Window_SetOpacity(void windowHWND, String mode, Float value)</functioncall>
+        <functioncall prog_lang="python">Boolean  JS_Window_SetOpacity(void windowHWND, String mode, Float value)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.988
+            JS=0.951
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Sets the window opacity.
+           
+           
+           
+           Parameters:
+           
+           mode: either "ALPHA" or "COLOR". 
+           
+           value: If ALPHA, the specified value may range from zero to one, and will apply to the entire window. 
+           
+           If COLOR, value specifies a 0xRRGGBB color, and all pixels in this color will be made transparent. (All mouse clicks over transparent pixels will pass through, too).
+           
+           
+           
+           WARNING: COLOR mode is only available in Windows, not Linux or MacOS.
 
-            Parameters:
-            mode: either "ALPHA" or "COLOR". 
-            value: If ALPHA, the specified value may range from zero to one, and will apply to the entire window. 
-            If COLOR, value specifies a 0xRRGGBB color, and all pixels in this color will be made transparent. (All mouse clicks over transparent pixels will pass through, too).
-
-            WARNINGS:
-            This function does not yet work properly on macOS.
-            COLOR mode is only available in Windows, not Linux or macOS.
         </description>
         <retvals>
            boolean  - 
@@ -28224,25 +27920,28 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_SetZOrder</slug>
         <title>JS_Window_SetZOrder(JS)</title>
-        <functioncall prog_lang="cpp">bool JS_Window_SetZOrder(void* windowHWND, const char* ZOrder, void* insertAfterHWND)</functioncall>
-        <functioncall prog_lang="eel">bool extension_api("JS_Window_SetZOrder", void* windowHWND, "ZOrder", void* insertAfterHWND)</functioncall>
-        <functioncall prog_lang="lua">boolean reaper.JS_Window_SetZOrder(identifier windowHWND, string ZOrder, identifier insertAfterHWND)</functioncall>
-        <functioncall prog_lang="python">Boolean JS_Window_SetZOrder(void windowHWND, String ZOrder, void insertAfterHWND)</functioncall>
+        <functioncall prog_lang="cpp">void JS_Window_SetZOrder(void* windowHWND, const char* ZOrder, void* insertAfterHWND)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_Window_SetZOrder", void* windowHWND, "ZOrder", void* insertAfterHWND)</functioncall>
+        <functioncall prog_lang="lua">reaper.JS_Window_SetZOrder(identifier windowHWND, string ZOrder, identifier insertAfterHWND)</functioncall>
+        <functioncall prog_lang="python">JS_Window_SetZOrder(void windowHWND, String ZOrder, void insertAfterHWND)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.988
+            JS=0.951
             Lua=5.3
         </requires>
         <description>
             Sets the window Z order.
+           
+           
+           
+           Parameters:
+           
+            * ZOrder: "INSERT_AFTER", "BOTTOM", "TOPMOST", "NOTOPMOST" or "TOP" ).
+           
+            * InsertAfterHWND: If ZOrder is INSERT_AFTER, insertAfterHWND must be a handle to the window to precede windowHWND in the Z order; otherwise, insertAfterHWND is ignored.
 
-            Parameters:
-            * ZOrder: "BOTTOM", "TOPMOST", "NOTOPMOST", "TOP" or "INSERT_AFTER".
-            * InsertAfterHWND: If ZOrder is INSERT_AFTER, insertAfterHWND must be a handle to the window to precede windowHWND in the Z order; otherwise, insertAfterHWND is ignored (in which case it can be set to the same value as windowHWND).
         </description>
-        <retvals>
-           boolean  - 
-        </retvals>
+
         <parameters>
            identifier windowHWND - 
            string ZOrder - 
@@ -31845,28 +31544,24 @@
         </requires>
         <description indent="default">
             Blits from srcimg(srcs,srct,srcw,srch) to destination (destx,desty,destw,desth). Source texture coordinates are s/t, dsdx represents the change in s coordinate for each x pixel, dtdy represents the change in t coordinate for each y pixel, etc. dsdxdy represents the change in dsdx for each line. If usecliprect is specified and 0, then srcw/srch are ignored.
-            
-            This function allows you to manipulate the image, which you want to blit, by transforming, moving or cropping it.
-            
-            To do rotation, you can manipulate dtdx and dsdy together.
         </description>
         <parameters>
-            srcimg - image - the image to blit
-            srcs - positiondeltaX - the delta of the x-position of the image within the blitted area in pixels(useful default: 0)
-            srct - positiondeltaY - the delta of the y-position of the image within the blitted area in pixels(useful default: 0)
-            srcw - unknown - (useful default: 0)
-            srch - unknown - (useful default: 0)
-            destx - positiondeltaX - the delta of the x-position of the blitted area in pixels(useful default: 0)
-            desty - positiondeltaY - the delta of the y-position of the blitted area in pixels(useful default: 0)
-            destw - blitsizeX - the x-size of the blitted area in pixels; the deltaimage might be cropped, if it exceeds this size(useful default: width of the image)
-            desth - blitsizeY - the y-size of the blitted area in pixels; the deltaimage might be cropped, if it exceeds this size(useful default: height of the image)
-            dsdx - stretchfactorX, the lower, the more stretched is the image(minimum 0; 1 for full size); limited by blitsizeX(useful default: 1)
-            dtdx - deltaY: the delta of the right side of the image, related to the left side of the image; positive, right is moved up; negative, right is moved down; this delta is linear(useful default: 0)
-            dsdy - deltaX: the delta of the bottom side of the image, related to the top side of the image; positive, bottom is moved left; negative, bottom is moved right; this delta is linear(useful default: 0)
-            dtdy - stretchfactorY, the lower, the more stretched is the image(minimum 0; 1 for full size); limited by blitsizeY(useful default: 1)
-            dsdxdy - deltacurvedY: the delta of the right side of the image, related to the left side of the image; positive, right is moved up; negative, right is moved down; this delta "curves" the delta via a bezier(useful default: 0)
-            dtdxdy - deltacurvedX: the delta of the bottom side of the image, related to the top side of the image; positive, bottom is moved left; negative, bottom is moved right; this delta "curves" the delta via a bezier(useful default: 0)
-            usecliprect - can be set to 0 or 1(useful default: 0)
+            srcimg - 
+            srcs - 
+            srct - 
+            srcw - 
+            srch -
+            destx - 
+            desty - 
+            destw - 
+            desth - 
+            dsdx -
+            dtdx - 
+            dsdy - 
+            dtdy - 
+            dsdxdy - 
+            dtdxdy -
+            usecliprect - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -34113,8 +33808,7 @@
         </description>
         <parameters>
            integer source - the source-image/framebuffer to blit; -1 to 1023; -1 for the currently displayed framebuffer.
-           number scale - the scale-factor; 1, for normal size; smaller or bigger than 1 make image smaller or bigger
-                        - has no effect, when destx, desty, destw, desth are given
+           number scale - the scale-factor; 1, for normal size; smaller or bigger than 1 make image smaller or bigger; has no effect, when destx, desty, destw, desth are given
            number rotation - the rotation-factor; 0 to 6.28; 3.14 for 180 degrees.
            optional number srcx - the x-coordinate-offset in the source-image
            optional number srcy - the y-coordinate-offset in the source-image
@@ -34136,17 +33830,15 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="lua">
-        <slug>lua_gfx.blit_simplified</slug>
-        <title>gfx.blit(simplified)</title>
+        <slug>lua_gfx.blit</slug>
+        <title>gfx.blit</title>
         <functioncall prog_lang="lua">integer source = gfx.blit(integer source, number scale, number rotation)</functioncall>
         <requires>
             Reaper=5.62
             Lua=5.3
         </requires>
-        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+        <description indent="default">
             Blits(draws) the content of source-image to another source-image or an opened window.
-            
-            This is a simplified version of [gfx.blit()](#lua_gfx.blit).
             
             If three parameters are specified, copies the entirity of the source bitmap to gfx.x,gfx.y using current opacity and copy mode (set with gfx.a, gfx.mode). You can specify scale (1.0 is unscaled) and rotation (0.0 is not rotated, angles are in radians).For the "source" parameter specify -1 to use the main framebuffer as source, or an image index (see gfx.loadimg()).
         </description>
@@ -34266,38 +33958,31 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="lua">
         <slug>lua_gfx.deltablit</slug>
         <title>gfx.deltablit</title>
-        <functioncall prog_lang="lua">number retval = gfx.deltablit(integer srcimg, integer srcs, integer srct, integer srcw, integer srch, number destx, number desty, number destw, number desth, number dsdx, number dtdx, number dsdy, number dtdy, number dsdxdy, number dtdxdy,optional integer usecliprect)</functioncall>
+        <functioncall prog_lang="lua">gfx.deltablit(srcimg,srcs,srct,srcw,srch,destx,desty,destw,desth,dsdx,dtdx,dsdy,dtdy,dsdxdy,dtdxdy[,usecliprect=1])</functioncall>
         <requires>
             Reaper=5.95
             Lua=5.3
         </requires>
         <description indent="default">
             Blits from srcimg(srcs,srct,srcw,srch) to destination (destx,desty,destw,desth). Source texture coordinates are s/t, dsdx represents the change in s coordinate for each x pixel, dtdy represents the change in t coordinate for each y pixel, etc. dsdxdy represents the change in dsdx for each line. If usecliprect is specified and 0, then srcw/srch are ignored.
-            
-            This function allows you to manipulate the image, which you want to blit, by transforming, moving or cropping it.
-            
-            To do rotation, you can manipulate dtdx and dsdy together.
         </description>
-        <retvals>
-            number retval - unknown, usually 0
-        </retvals>
         <parameters>
-            integer srcimg - image - the image to blit
-            integer srcs - positiondeltaX - the delta of the x-position of the image within the blitted area in pixels(useful default: 0)
-            integer srct - positiondeltaY - the delta of the y-position of the image within the blitted area in pixels(useful default: 0)
-            integer srcw - unknown - (useful default: 0)
-            integer srch - unknown - (useful default: 0)
-            number destx - positiondeltaX - the delta of the x-position of the blitted area in pixels(useful default: 0)
-            number desty - positiondeltaY - the delta of the y-position of the blitted area in pixels(useful default: 0)
-            number destw - blitsizeX - the x-size of the blitted area in pixels; the deltaimage might be cropped, if it exceeds this size(useful default: width of the image)
-            number desth - blitsizeY - the y-size of the blitted area in pixels; the deltaimage might be cropped, if it exceeds this size(useful default: height of the image)
-            number dsdx - stretchfactorX, the lower, the more stretched is the image(minimum 0; 1 for full size); limited by blitsizeX(useful default: 1)
-            number dtdx - deltaY: the delta of the right side of the image, related to the left side of the image; positive, right is moved up; negative, right is moved down; this delta is linear(useful default: 0)
-            number dsdy - deltaX: the delta of the bottom side of the image, related to the top side of the image; positive, bottom is moved left; negative, bottom is moved right; this delta is linear(useful default: 0)
-            number dtdy - stretchfactorY, the lower, the more stretched is the image(minimum 0; 1 for full size); limited by blitsizeY(useful default: 1)
-            number dsdxdy - deltacurvedY: the delta of the right side of the image, related to the left side of the image; positive, right is moved up; negative, right is moved down; this delta "curves" the delta via a bezier(useful default: 0)
-            number dtdxdy - deltacurvedX: the delta of the bottom side of the image, related to the top side of the image; positive, bottom is moved left; negative, bottom is moved right; this delta "curves" the delta via a bezier(useful default: 0)
-            optional integer usecliprect - can be set to 0 or 1(useful default: 0)
+            srcimg - 
+            srcs - 
+            srct - 
+            srcw - 
+            srch - 
+            destx - 
+            desty - 
+            destw - 
+            desth - 
+            dsdx - 
+            dtdx - 
+            dsdy - 
+            dtdy - 
+            dsdxdy - 
+            dtdxdy -
+            usecliprect - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -34461,7 +34146,7 @@
                         A=gfx.getchar() -- first byte
                         B=gfx.getchar() -- second byte
                         
-                        if A==261 and B==128 then reaper.MB("You typed the Euro-symbol.", "Message", 0) end -- typed character is the Euro-currency-symbol: €
+                        if A==261 and B==128 then reaper.MB("You typed the â‚¬-symbol.", "Message", 0) end -- typed character is the Euro-currency-symbol: €
                                                 
         </description>
         <retvals>
@@ -35776,7 +35461,6 @@
             is a stable sorting function with an API similar to qsort().
             HOWEVER, it requires some temporary space, equal to the size of the data being sorted, so you can pass it as the last parameter,
             or NULL and it will allocate and free space internally. 
-            
         </description>
         <retvals>
             void* -

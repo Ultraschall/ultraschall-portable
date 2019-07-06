@@ -39,13 +39,11 @@ reaper.Undo_BeginBlock()
 A=ultraschall.GetUSExternalState("ultraschall_follow", "state")
 
 function get_position()
-  if reaper.GetPlayState() == 0 or reaper.GetPlayState() == 2 then -- 0 = Stop, 2 = Pause
-	current_position = reaper.GetCursorPosition() -- Position of edit-cursor
+  if reaper.GetPlayState() & 2 == 2 then -- 2 = Pause
+		current_position = reaper.GetCursorPosition() -- Position of edit-cursor
   else
     if A~="0" then -- follow mode is active
 		current_position = reaper.GetPlayPosition() -- Position of play-cursor
---    elseif reaper.GetPlayState()~=0 then
---          current_position = reaper.GetCursorPosition() -- Position of play-cursor
     else
 		current_position = reaper.GetCursorPosition() -- Position of edit-cursor
     end
