@@ -74,7 +74,9 @@ function Highscore()
     if Table[i]==nil then Table[i]="000," end
   end
   Add=0
-  if tonumber(Table[10]:match("(.-),"))<level then
+  temp=tonumber(Table[10]:match("(.-),"))
+  if temp==nil then temp=0 end
+  if temp<level then
     a,b=reaper.GetUserInputs("Enter your name, stranger", 1, "Name", "")
     
     if b==nil then b="" end
@@ -91,7 +93,12 @@ function Highscore()
   count=0
   for i=10+Add, 1+Add, -1 do
     count=count+1
-    textstring=textstring.."\n"..Table[i]:match("(.-),").."\t...\t"..Table[i]:match(",(.*)")
+    local a=Table[i]:match("(.-),")
+    local b=Table[i]:match(",(.*)")
+    if a==nil then a="" end
+    if b==nil then b="" end
+    
+    textstring=textstring.."\n"..a.."\t...\t"..b
     reaper.SetExtState("Mespotine's Moonlander", "Place"..count, Table[i], true)
   end
   Creditcounter=1
@@ -348,7 +355,7 @@ Credits={
 "\"The Eagle Has Landed\" \n   and \n\"It's one small step for (a) man...\"\n   said by Neil Armstrong on the moon.",
 "Music",
 "Klangkonstellation\n  \"selected views on earth\"\nwritten by Meo Mespotine",
-"Klangkonstellation X:\n  \"A Scanner Darkly pt.1\"\nexcerpts\nwritten by Meo Mespotine",
+"Klangkonstellation IX:\n  \"A Scanner Darkly pt.1\"\nexcerpts\nwritten by Meo Mespotine",
 "Klangkonstellation can be found at\nhttps://klangkonstellation.bandcamp.com/",
 "Ultraschall-logo designed by \nGraphorama\nhttp://www.graphorama.de/",
 "find more about Ultraschall at\nultraschall.fm",
@@ -367,7 +374,11 @@ speculator=1
 function GetHighscores()
   local text="Highscore:\n        Level\t      Name"
   for i=1, 10 do
-    text=text.."\n          "..reaper.GetExtState("Mespotine's Moonlander", "Place"..i):match("(.-),").."      "..reaper.GetExtState("Mespotine's Moonlander", "Place"..i):match(",(.*)")
+    local a=reaper.GetExtState("Mespotine's Moonlander", "Place"..i):match("(.-),")
+    local b=reaper.GetExtState("Mespotine's Moonlander", "Place"..i):match(",(.*)")
+    if a==nil then a="" end
+    if b==nil then b="" end
+    text=text.."\n          "..a.."      "..b
   end
   return text
 end
