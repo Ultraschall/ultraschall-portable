@@ -1,4 +1,11 @@
--- Moonlander - Meo Mespotine
+-- Moonlander - Meo Mespotine Juli 2019
+
+-- the game is licensed under an MIT-license
+-- radio-communication, lunar-module-photo by NASA during the Apollo program and are public domain
+-- svoe.mp3 and kkst10.mp3 are by Meo Mespotine from the Klangkonstellation-project and 
+-- is licensed under a creative-commons-license cc-by-nc
+-- find more from Klangkonstellation at https://klangkonstellation.bandcamp.com/
+
 -- TODO: 
 -- when changing length of window, the landscape doesn't move accordingly, unlike Apollo11
 -- crash, thruster-sounds still missing
@@ -26,7 +33,7 @@ gfx.setfont(5,"arial",15,0)
   PCM_sourcebgm1=reaper.PCM_Source_CreateFromFile(Path.."/moonlander/svoe.mp3")
   PCM_source2bgm=reaper.Xen_StartSourcePreview(PCM_sourcebgm1, 0.2, false)
   PCM_sourcebgm=reaper.PCM_Source_CreateFromFile(Path.."/moonlander/kkst10.mp3")
-  PCM_source2bgm=reaper.Xen_StartSourcePreview(PCM_sourcebgm, 0.1, true)
+  PCM_source2bgm=reaper.Xen_StartSourcePreview(PCM_sourcebgm, 0.15, true)
   
   PCM_sourcebgm=reaper.PCM_Source_CreateFromFile(Path.."/moonlander/onesmallstepforman.mp3")
   PCM_source2bgm=reaper.Xen_StartSourcePreview(PCM_sourcebgm, 0.1, false)
@@ -142,6 +149,8 @@ end
 function crashed()
   endit=true
   crash=true
+  PCM_source_landed=reaper.PCM_Source_CreateFromFile(Path.."/moonlander/wehadaproblem2.mp3")
+  PCM_source2=reaper.Xen_StartSourcePreview(PCM_source_landed, 0.1, false)
   reaper.MB("Crashed","",0)
   restart_game()
 end
@@ -149,6 +158,8 @@ end
 function lostinspace()
   endit=true
   crash=true
+  PCM_source_landed=reaper.PCM_Source_CreateFromFile(Path.."/moonlander/wehadaproblem.mp3")
+  PCM_source2=reaper.Xen_StartSourcePreview(PCM_source_landed, 0.1, false)
   reaper.MB("Lost in Space","",0)
   thrust=-1.0
   restart_game()
@@ -333,14 +344,19 @@ end
 Credits={
 "",
 "written and composed by Meo Mespotine",
-"Apollo-LunarModule-photo by Michael Collins",
-"\"The Eagle Has Landed\" said by Neil Armstrong, \nwhen landed on the moon",
+"Photo of Apollo Lunar Module by Michael Collins.",
+"\"The Eagle Has Landed\" \n   and \n\"It's one small step for (a) man...\"\n   said by Neil Armstrong on the moon.",
 "Music",
-"Klangkonstellation\n\"selected views on earth\"\nwritten by Meo Mespotine",
-"Klangkonstellation X:\n\"A Scanner Darkly pt.1\"\nexcerpts\nwritten by Meo Mespotine",
-"Klangkonstellation can be found at\nklangkonstellation.mespotine.de",
-"Ultraschall-logo designed by Graphorama",
+"Klangkonstellation\n  \"selected views on earth\"\nwritten by Meo Mespotine",
+"Klangkonstellation X:\n  \"A Scanner Darkly pt.1\"\nexcerpts\nwritten by Meo Mespotine",
+"Klangkonstellation can be found at\nhttps://klangkonstellation.bandcamp.com/",
+"Ultraschall-logo designed by \nGraphorama\nhttp://www.graphorama.de/",
 "find more about Ultraschall at\nultraschall.fm",
+"",
+"Your goal is to successfully soft-land on a plateau\non the moon.",
+"Control Lunar-Lander using left/right and up.",
+"Every such maneuver costs fuel.\nWith every new level, you get some more fuel.",
+"The game is over when crashing, flying into space\nor if the fuel is empty.",
 ""
 }
 
