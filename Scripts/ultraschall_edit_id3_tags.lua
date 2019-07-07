@@ -24,9 +24,7 @@
 ################################################################################
 ]]
 
-reaper.MB(reaper.GetSetProjectNotes(0, false, ""),"",0)
-
-retval, result = reaper.GetUserInputs("Edit ID3 Podcast Metadata", 6, "Title:,Artist:,Podcast:,Year:,Genre:,Comment:,extrawidth=100, separator=\n", reaper.GetSetProjectNotes(0, false, ""))
+retval, result = reaper.GetUserInputs("Edit ID3 Podcast Metadata", 6, "Title:,Artist:,Podcast:,Year:,Genre:,Comment:,extrawidth=300, separator=\n", reaper.GetSetProjectNotes(0, false, ""))
 
 if retval == true then  
   notes = reaper.GetSetProjectNotes(0, true, result) -- write new notes
