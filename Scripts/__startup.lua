@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,14 @@
 ################################################################################
 ]]
  
+if reaper.CF_SetClipboard==nil or reaper.JS_ReaScriptAPI_Version==nil then 
+  reaper.MB("It seems, that Ultraschall is not completely installed. Did you follow all installation steps?\n\nUltraschall can not properly run, until you've installed Ultraschall completely.\n\nSee ultraschall.fm for a detailed installation description.", "Ultraschall not properly installed.", 0)
+  reaper.MB("Ultraschall will now exit.", "Ultraschall Error", 0)
+  reaper.Main_OnCommand(40004,0)
+  return
+end
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
 
 
 theme_version_now = 20180114 -- version of this theme
@@ -40,9 +47,7 @@ error_msg = false
 
 theme_version = reaper.GetExtState("ultraschall_versions", "theme")
 plugin_version = reaper.GetExtState("ultraschall_versions", "plugin")
-views = ultraschall.GetUSExternalState("ultraschall_gui", "views")
 view = ultraschall.GetUSExternalState("ultraschall_gui", "view")
-sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
 mouse = ultraschall.GetUSExternalState("ultraschall_mouse", "state")
 first_start = ultraschall.GetUSExternalState("ultraschall_start", "firststart")
 startscreen = ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
@@ -51,7 +56,7 @@ follow = ultraschall.GetUSExternalState("ultraschall_follow", "state")
   follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
 
 if theme_version ~= tostring(theme_version_now) then 
-  error_msg = "Your ULTRASCHALL THEME is out of date. \n\nULTRASCHALL wil NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/" 
+  error_msg = "Your ULTRASCHALL THEME is out of date. \n\nULTRASCHALL will NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/" 
 end
 
 if plugin_version ~= theme_version then -- different versions of theme and plugin isntalled
@@ -78,46 +83,40 @@ elseif first_start == "true" or startscreen == "1" or startscreen == "-1" then
   reaper.Main_OnCommand(start_id,0)   --Show Startscreen    
 end
 
-if sec=="-1" then sec=0 end
 if view=="-1" then view="setup" end
-if views=="-1" then views=55796 end
 
 --------------------------
 -- Restore GUI and Buttons
 --------------------------
 
-
-if views then
-  reaper.SetToggleCommandState(sec, views, 1)
-  reaper.RefreshToolbar2(sec, views)
-  if view == "setup" then
-    reaper.Main_OnCommand(40454,0)      --(re)load Setup Screenset
-  elseif view == "record" then
-    reaper.Main_OnCommand(40455,0)      --(re)load Setup Screenset
-  elseif view == "edit" then
-    reaper.Main_OnCommand(40456,0)      --(re)load Setup Screenset
-  elseif view == "story" then
-    reaper.Main_OnCommand(40457,0)      --(re)load Setup Screenset
-  end
+if view == "setup" then
+  ultraschall.RunCommand("_Ultraschall_Set_View_Setup")
+elseif view == "record" then
+  ultraschall.RunCommand("_Ultraschall_Set_View_Record")
+elseif view == "edit" then
+  ultraschall.RunCommand("_Ultraschall_Set_View_Edit")
+elseif view == "story" then
+  ultraschall.RunCommand("_Ultraschall_Set_View_Story")
 end
+
 
 if tonumber(mouse) <= 0 then -- selection is activated
   mouse_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Mouse_Selection")
-  reaper.SetToggleCommandState(sec, mouse_id, 1)
-  reaper.RefreshToolbar2(sec, mouse_id)
+  reaper.SetToggleCommandState(0, mouse_id, 1)
+  reaper.RefreshToolbar2(0, mouse_id)
 end
 
 
 if follow == "1" and reaper.GetToggleCommandState(follow_id)~=1 then -- follow is activated
-  reaper.SetToggleCommandState(sec, follow_id, 1)
-  reaper.RefreshToolbar2(sec, follow_id)
+  reaper.SetToggleCommandState(0, follow_id, 1)
+  reaper.RefreshToolbar2(0, follow_id)
 end
 
 
 -- set OnAir button off
 
 on_air_button_id = reaper.NamedCommandLookup("_Ultraschall_OnAir")
-reaper.SetToggleCommandState(sec, on_air_button_id, 0) 
+reaper.SetToggleCommandState(0, on_air_button_id, 0) 
 
 --------------------------
 -- Restore opened/closed Windows

@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -67,12 +67,9 @@ end
 -----------------------------
 
 m = reaper.GetMasterTrack(0)                                                  --streaming is always on the master track
-os = reaper.GetOS()
-sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
-if sec=="-1" then sec="0" end
-sec=tonumber(sec)
+Os = reaper.GetOS()
 
-if string.match(os, "OSX") then 
+if string.match(Os, "OSX") then 
 	fx_slot = reaper.TrackFX_GetByName(m, "ITSR: StudioLinkOnAir", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
 else     -- Windows
 	fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
@@ -82,8 +79,8 @@ reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
 
 on_air_button_id = reaper.NamedCommandLookup("_Ultraschall_OnAir")
 
-reaper.SetToggleCommandState(sec, on_air_button_id, 0)
-reaper.RefreshToolbar2(sec, on_air_button_id)
+reaper.SetToggleCommandState(0, on_air_button_id, 0)
+reaper.RefreshToolbar2(0, on_air_button_id)
 
 -----------------------------
 -- Enable all sends to master for rendering
