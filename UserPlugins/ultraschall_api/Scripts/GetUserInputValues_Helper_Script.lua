@@ -1,8 +1,8 @@
--- Meo Mespotine 12th of June 2019
+-- Meo Mespotine 11th of June 2019
 --
 -- Ultraschall-API-helper-script for GetUserInputs, which will circumvent Reaper's limitation with
 -- commas in the GetUserInputs-inputfields
--- so now, we have no need for csvs anymore, which is more stable in all ways
+-- so now, we have no need for csvs anymore
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
@@ -35,6 +35,28 @@ function main()
     reaper.defer(main)
   else
     -- the GetUserInputs-window is open, so go into the main2-function
+    
+    local retval, left, top, right, bottom = reaper.JS_Window_GetClientRect(hwnd)
+    
+    if params[4]~="keep" or params[5]~="keep" then
+        if params[4]~="keep" then left=tonumber(params[4]) end
+        if params[5]~="keep" then top=tonumber(params[5]) end
+
+        reaper.JS_Window_Move(hwnd, left, top)
+    end
+    retval, left, top, right, bottom = reaper.JS_Window_GetRect(hwnd)
+    if params[6]~="keep" then
+        for i=1000, 1015 do
+            ultraschall.MoveChildWithinParentHWND(hwnd, reaper.JS_Window_FindChildByID(hwnd, i), true, tonumber(params[6]), 0, 0, 0)
+        end
+        for i=2000, 2015 do
+            ultraschall.MoveChildWithinParentHWND(hwnd, reaper.JS_Window_FindChildByID(hwnd, i), true, 0, 0, tonumber(params[6]), 0)
+        end
+        ultraschall.MoveChildWithinParentHWND(hwnd, reaper.JS_Window_FindChildByID(hwnd, 1), true, tonumber(params[6]), 0,0,0)
+        ultraschall.MoveChildWithinParentHWND(hwnd, reaper.JS_Window_FindChildByID(hwnd, 2), true, tonumber(params[6]), 0,0,0)
+        
+        reaper.JS_Window_SetPosition(hwnd, left-math.floor(params[6]/2), top, right-left+params[6], bottom-top)
+    end
     reaper.JS_Window_SetTitle(hwnd, params[2])
     for i=1, 16 do
         reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,1999+i), params[i+caption_offset+4])
@@ -42,11 +64,14 @@ function main()
     for i=1, 16 do
         reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,999+i), params[i+caption_offset+20])
     end
+    
+    
+    
     reaper.defer(main2)
   end
 end
 
-caption_offset=tonumber(params[3])-1
+caption_offset=tonumber(params[3])
 
 main()
 

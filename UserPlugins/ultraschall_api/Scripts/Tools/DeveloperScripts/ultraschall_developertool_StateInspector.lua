@@ -68,9 +68,9 @@ end
 
 
 
-KeyCodeIni_File=Path.."/Ultraschall_Inspector_Gfx_GetKey_Codes.ini"
-InspectorIni_File=Path.."/Ultraschall-Inspector.ini"
-ActionlistReaper_File=Path.."/ActionList_Reaper.ini"
+KeyCodeIni_File=Path.."/Ultraschall_StateInspector/Ultraschall_Inspector_Gfx_GetKey_Codes.ini"
+InspectorIni_File=Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.ini"
+ActionlistReaper_File=Path.."/Ultraschall_StateInspector/ActionList_Reaper.ini"
 
 ultraschall={}
 
@@ -137,7 +137,7 @@ end
 
 font_height=gfx.measurechar(65)+3
 clicked=false
-retval = gfx.loadimg(1,Path.."/us.png")
+retval = gfx.loadimg(1,Path.."Ultraschall_StateInspector/us.png")
 counter=0
 states={}
 row1=30

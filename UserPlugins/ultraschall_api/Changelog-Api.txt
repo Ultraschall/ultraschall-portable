@@ -1,91 +1,22 @@
 <TODO>
-    
-    API 4.00beta2.75
-      Done: keep it as docs in here:
-             RenderProject_RenderCfg - new implementation, that exploits the render-queue, rather the reopening of a project
-                                       should work with opened projects, but still unknown, how to add unopened projects properly and how to find out the rendered files afterwards...
-                                       maybe that way: RENDER_FILE contains the path, where the file is stored in, either with or without the actual filename(the latter when using RENDER_PATTERNS).
-                                       I just need to take a "file_in_path_snapshot" before and after the rendering, get rid of the files that are there before AND after and what's left if the newly rendered file(s).
-                                       Could this work? Try it.
-                                       
-                                       Other notes for that follow now:
-                                       
-            Renderpattern:
-                    der Renderpath kommt in RENDER_FILE rein, wenn dieser nicht gesetzt ist, wird das Verzeichnis genommen, in der das rpp liegt
-
-                    Wenn man RENDER_PATTERN nutzt und gleichzeitig einen "Dateinamen" bei RENDER_FILE einträgt, so wird ein Unterverzeichnis angelegt, in das reingerendert wird.
-                    Sprich: Ich muss vorher noch checken, ob der Renderpath ein gültiger ist
-
-
-                    Pfad zu relativen Dateien:
-                          RECORD_PATH "Recordingss" ""
-                          
-                          ist der Record-Path, der im Projektverzeichnis liegt.
-                          Sprich: Pfad/Projektdatei.rpp wird zu Pfad/Record_Path
-                          
-                          Zu klären ist noch, wie das mit dem secondary-record-path geht...
-                          
-                          Reaper selbst macht beim speichern aus relativen Pfaden absolute Pfade, wenn es nötig ist, außer beim
-                          erstellen von queue-renderfiles, wo sämtliche Pfade absolutiert werden.
-                          Sprich: alle Pfad/Record_Path-Angaben kann ich in relativ ändern, um das ursprüngliche ProjectStateChunk zu bekommen
-
-
-                    RenderQueue:
-                    QUEUED_RENDER_OUTFILE "C:\Users\meo\Documents\REAPER Media\untitled.flac" 0 {EB98934F-A3C1-403D-AC70-7F07975740C1}
-
-                    QUEUED_RENDER_OUTFILE renderfilename_with_path_for_queue  integer various_checkboxes  string guid
-                        integer various_checkboxes - &1, Automatically close when finished-checkbox(Rendering to file...)
-                                                     &16, Silently increment filenames to avoid overwriting
-                                                     &65537, Save copy of project to outfile.wav.RPP
-                                                     
-
-                    stores the output-filename with path for the render-queue. If omitted while project is in QueuedRenders, the renderfilename will be created like a regular projectfile
-
-
-                    QUEUED_RENDER_ORIGINAL_FILENAME string projectfilename
-
-                    stores the original filename of the project
-                    
-                    RENDER_QDELAY 30 - the render-queue-delay time in seconds, between   RENDER_ADDTOPROJ 0 and RENDER_STEMS 0
-
-      
-                    The queue-filename MUST have the following namingpattern: qrender_123456_123456_projectname.RPP, 
-                                      where the first number is a datestamp yymmdd and the second a timestamp hhmmss.
-                                      the projectname is optional BUT the _ before it is mandatory. Otherwise, Reaper 
-                                      stops rendering with an error!
-      
-      More Notes on Queued Rendering:
-            If RENDER_PATTERN is set, RENDER_NAME will be seen as folder.
-            If neither RENDER_NAME, RENDER_PATTERN or QUEUED_RENDER_OUTFILE are set, Reaper will use the folder in
-                QUEUED_RENDER_ORIGINAL_FILENAME as export-folder.
-            If none of them is set, not even QUEUED_RENDER_ORIGINAL_FILENAME, the files will be exported to the QueuedRenders-folder as
-            -001.ext, -002.ext, etc
-            
-      Multiple exported files are always according the numbering filename-001.ext, filename-002.ext, etc, 
-      where filename-001.ext is the one for the master-track, if stem+master-rendering is set.
-      
-      Check in the exportfolder, if there are new files. Needs a new function "GetRenderExportFolderOfProject(string projectname)"
-      which checks, according to the former rules, which exportfolder is used.
-      
-      For QueuedOutput-folders:
-          1) if RENDER_PATTERN does not exist, RENDER_FILE "" or RENDER_FILE does not exist and QUEUED_RENDER_ORIGINAL_FILENAME and QUEUED_RENDER_OUTFILE do no exist:
-                outputfolder is the project-folder
-           
-          2) if RENDER_FILE is set and RENDER_PATTERN does not exist or isn't set, RENDER_FILE is the filename+path
-            2a) if RENDER_FILE has no absolute path, the QUEUED_RENDER_ORIGINAL_FILENAME\RENDER_FILE\ will be export path
-               2ab) if QUEUED_RENDER_ORIGINAL_FILENAME does not exist, QueuedRenders\RENDER_FILE\ will be the exportfolder
-          
-          3) if RENDER_PATTERN is set to anything, RENDER_FILE will be the exportfolder
-            3a) if RENDER_FILE isn't set to anything, the export-folder will be QueuedRenders\
-            3b) if QUEUED_RENDER_ORIGINAL_FILENAME exists it will be the exportfolder
-                3ba) if RENDER_FILE is set to anything, the output will be QUEUED_RENDER_ORIGINAL_FILENAME\RENDER_FILE
-
     For 4.00beta2.76:
+        - TODO: Doc: Concepts: Localize
+
+    For 4.00beta2.77
+        - TODO!! Localize: can we detect, which language-file is currently installed and which language it holds, to decide, which language to use?
         - TODO!! concepts-documentation, autoupdate the download-link on Introduction_002_How_to_Use-chapter
-        - TODO!! Add/Set/Delete ParameterLean,Modulation,LFOLearn
-        - TODO!! ultraschall.RenderProject_Loops()
-        - TODO!! Monitor the rendering to file-dialog for queue-renders, to get the rendered filenames, using a background script, if possible at all
-        - TODO!! GetUserInputs 
+        - TODO!! XML-generator has problems with spaces and & in filenames; use this to overcome this:
+                      tempfile=files_array[i]
+                      tempfile2=string.gsub(tempfile, "&", "%%26")
+                      tempfile2=string.gsub(tempfile2, " ", "%%20")
+                      Notes: really tempfile2(!)? And, do I need to exchange only on source or also on target-file?
+        - TODO!! Default-Color-Theme-Colortables and loading ColorTable from Theme-functions
+                Originally Posted by mespotine  View Post
+                A second action focusing on only random-strong colors would be useful, I think. Should be scriptable as well though.
+
+                Regarding default color-values, IIRC they are stored in the .ReaperTheme-files, with the currently used stored in reaper.ini as well.
+                So how would one reset color palette in reaper without losing theme config otherwise? just colors.
+         - TODO!! GetUserInputs 
                 - set length of caption-textfields and move inputboxes accordingly, as well as the width of the DialogWindow AND
                   position it correctly centered
                 - Captions ending with \n shall be the full width of the window(for full readability of the caption), where the 
@@ -94,58 +25,11 @@
                 - additional parameters, x,y, to set a position of the GetUserInput-window
                 - maybe auto_size, using caption length and input-box-default-value length to get the desired widths(needs GetLength of Text working somehow, using
                   JS-extension-plugin)
+        - TODO!! reaper.GetLastTouchedFX, reaper.GetFocusedFX - high word/low word-management is too difficult, make new functions of them
         - TODO!! SetProjectZeug fertig machen
-        - TODO!! localization:
-            boolean retval, string errors = ultraschall.Localize_UseLocalizeFile(string localizationfile, string section)
-                sets internal variables 
-                    ultraschall.Localize_File    - the filename+path of the translation-file, if no path is given, it is GetResourcePath().."/LangPack/"
-                    ultraschall.Localize_Section - the section used
-                    ultraschall.Localized_File_Content - a table, which holds the translated texts from the localize-file, using the untranslated text as index
-            Should return possible parsing-errors as retval errors, so one can see, whether there's a faulty entry in localization-file and in which line.
-            
-            ultraschall.Localize_ReloadLocalization()
-                    reloads the contents of ultraschall.Localized_File_Content, for automatic updating of translated texts in translationfile during runtime
-            
-            ultraschall.Localize(string text)
-                translates the text in text into the translated version, stored in file ultraschall.Localize_File, section ultraschall.Localize_Section
-                if text can't be found, it will simply return the text passed as parameter.
-            
-            Translationfile is of structure(maybe simplifying possible?)
-            
-            -- for multilined texts, the translated_text-tag directly underneath original_text-tag is the translation of original_text-tag
-            -- newlines with only spaced/tabs are allowed inbetween them, anything else means, original text is untranslated
-            <section "sectionname">
-                <original_text>
-                    original_text
-                    with_newlines1
-                </original_text>
-                <translated_text>
-                    übersetzter Text1
-                    mit newlines
-                </translated_text>
-            </section>
-            
-            -- for  single-lined texts
-            <section "sectionname">
-                <localized original="original_text" translated="translated_text"/>
-                <localized original="original_text2" translated="translated_text2"/>
-                <localized original="original_text3" translated="translated_text3"/>
-            </section>
-            
-            -- for mixed
-            <section "sectionname">
-                <original_text>
-                    original_text
-                    with_newlines1
-                </original_text>
-                <translated_text>
-                    übersetzter Text1
-                    mit newlines
-                </translated_text>
-                <localized original="original_text"  translated="translated_text"/>
-                <localized original="original_text2" translated="translated_text2"/>
-                <localized original="original_text3" translated="translated_text3"/>
-            </section>
+        - TODO!! Add/Set/DeleteModulation
+        - TODO!! ultraschall.RenderProject_Loops()
+        - TODO!! Monitor the rendering to file-dialog for queue-renders, to get the rendered filenames, using a background script, if possible at all
         - TODO!! ChildScripts: Run code directly
                     Folgende Idee:
                     Ich füge 100 dummy-scripte in Reaper hinzu, die Folgendes in etwa tun(an Beispiel von Skript 1):
@@ -175,7 +59,6 @@
         
                    Vielleicht kann ich das auch nutzen, um Skripte allgemein zu starten, aber nur dann, wenn ich das "Wo bin ich"-Relative, Absolute-Pfadproblem vorher löse. Sonst geht das Skript davon aus im Ursprungsverzeichnis zu liegen, nicht in Scripts.
                    Dunno, wie wichtig das ist zu machen, oder ob das nicht eigentlich egal ist, weil die Standardverzeichnisse von denen Skripte ausgehen ohnehin nur die von Reaper sind(check that plz)
-        
     For 4.00beta2.8:
         TODO!! Multipass-rendering
                     When you want to render out a "wet"-loop, that needs reverb or something, you would need to render this loop three times:
@@ -190,15 +73,6 @@
                         Render that out into a new file
                         Delete the temp-rendered-files
                         close the projects and return the filename
-        TODO!!: add this to undo-functions, as they are the explanation of the extraflags
-        #ifndef UNDO_STATE_ALL
-        #define UNDO_STATE_ALL 0xFFFFFFFF
-        #define UNDO_STATE_TRACKCFG 1 // has track/master vol/pan/routing, ALL envelopes (matser included)
-        #define UNDO_STATE_FX 2  // track/master fx
-        #define UNDO_STATE_ITEMS 4  // track items
-        #define UNDO_STATE_MISCCFG 8 // loop selection, markers, regions, extensions!
-        #endif
-
       
       TODO!! GetTrackPanLaw_Boost(tracknumber, sendidx, setstate)
                     setstate=true -> don't insert it
@@ -317,6 +191,12 @@
         
         TODO!! Event-System, as defined on the Congress
             -- too difficult to use, needs a better way to deal with it...
+            maybe by passing functions to the event-manager:
+                You write a function, which in a very efficient/ressourcefriendly way returns "true" under certain conditions.
+                You pass it to the eventmanager and tell it to run script/action xyz, maybe with parameters like returned returnvalues by the passed function.
+                
+                Needs more research, though much easier and more flexible than my previous attempt.
+                
         TODO!!  - Mix-Snapshots, who store/retrieve the current/a former mix
 
       TODO!! SaveProjectAs(ReaProject project, newfilename, relative_sourcefilenames, ProjectStateChunk)
@@ -340,76 +220,129 @@
 TODO!! buggy function
         the line "reaper.JS_WindowMessage_Send(Textfield, "WM_SETFONT", styles[style] ,0,0,0)" seems to be the problem due WM_SETFONT
 
-function ultraschall.SetReaScriptConsole_FontStyle(style)
-  --[[
-  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>SetReaScriptConsole_FontStyle</slug>
-    <requires>
-      Ultraschall=4.00
-      Reaper=5.965
-      Lua=5.3
-    </requires>
-    <functioncall>boolean retval = ultraschall.SetReaScriptConsole_FontStyle(integer style)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
-      If the ReaScript-console is opened, you can change the font-style of it.
-      You can choose between 19 different styles, with 3 being of fixed character length. It will change the next time you output text to the ReaScriptConsole.
-      
-      If you close and reopen the Console, you need to set the font-style again!
-      
-      You can only have one style active in the console!
-      
-      Returns false in case of an error
-    </description>
-    <retvals>
-      boolean retval - true, displaying was successful; false, displaying wasn't successful
-    </retvals>
-    <parameters>
-      integer length - the font-style used. There are 19 different ones.
-                      - fixed-character-length:
-                      -     1,  fixed, console
-                      -     2,  fixed, console alt
-                      -     3,  thin, fixed
-                      - 
-                      - normal from large to small:
-                      -     4-8
-                      -     
-                      - bold from largest to smallest:
-                      -     9-14
-                      - 
-                      - thin:
-                      -     15, thin
-                      - 
-                      - underlined:
-                      -     16, underlined, thin
-                      -     17, underlined
-                      -     18, underlined
-                      - 
-                      - symbol:
-                      -     19, symbol
-    </parameters>
-    <chapter_context>
-      User Interface
-      Miscellaneous
-    </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
-    <tags>user interface, reascript, console, font, style</tags>
-  </US_DocBloc>
-  ]]
-  if math.type(style)~="integer" then ultraschall.AddErrorMessage("SetReaScriptConsole_FontStyle", "style", "must be an integer", -1) return false end
-  if style>19 or style<1 then ultraschall.AddErrorMessage("SetReaScriptConsole_FontStyle", "style", "must be between 1 and 17", -2) return false end
-  local reascript_console_hwnd = ultraschall.GetReaScriptConsoleWindow()
-  if reascript_console_hwnd==nil then return false end
-  local styles={32,33,36,31,214,37,218,1606,4373,3297,220,3492,3733,3594,35,1890,2878,3265,4392}
-  local Textfield=reaper.JS_Window_FindChildByID(reascript_console_hwnd, 1177)
-  reaper.JS_WindowMessage_Send(Textfield, "WM_SETFONT", styles[style] ,0,0,0)
-  return true
-end
---reaper.ClearConsole()
---ultraschall.SetReaScriptConsole_FontStyle(1)
---reaper.ShowConsoleMsg("ABCDEFGhijklmnop\n123456789.-,!\"§$%&/()=\n----------\nOOOOOOOOOO")
+
 
 </TODO>
+## Ultraschall Framework - Changelog
+
+### 4.00 Beta 2.76: - "The Police - Walking on the Moon" - 20th of July 2019
+
+Has now 977 functions with 42 new ones!
+
+  **New in this release:**
+    
+  - **Parameter Learn**  
+  You can set/get/delete parameter-learning in Statechunks.  
+    1) get a StateChunk  
+    2) get its FXStateChunk using GetFXStateChunk  
+    3) alter this FXStateChunk using the ParmLearn-functions  
+    4) set this FXStateChunk using SetFXStateChunk  
+    5) (re-)apply the final StateChunk to the Track/Item  
+    
+  - **Localize**  
+  You can localize your scripts using an external localize-file.   
+  If that exists, ultraschall.Localize will convert your string into it's localized one, otherwise it uses it's original text.  
+   
+  - **DocEngine**   
+  long time on my list, functions for the DocEngine. With them, you can use my Reaper-internal-sourcefiles (.USDocML) and create your own conversions of them.  
+  
+  - **get\_action\_context\_MediaItemDiff**  
+  a function, which helps you to get the diff of an MediaItem since last time calling this function. Good for RippleDrag-features.  
+          
+  - **AddSelectedItemsToRenderQueue**  
+  this adds MediaItems into the Render-Queued, either as single-queued or multiqueued-project-files(requested by Travesty)  
+
+  - **GetUserInputs**  
+  allows now setting the length of the captions-fields.  
+  No more cutting off of longer captions!(requested by Julian Sader)  
+  
+  - **More functions, more bugfixes, updated Reaper-docs, speedups**  
+        
+#### New features in 4.00beta2.76
+   - Actions: GetAllActions - gets all actions, actioncommandids and scriptnames of all actions in a specific section
+   - DocEngine: Docs\_ConvertPlainTextToHTML - converts a plaintext into html
+   - DocEngine: Docs\_GetAllUSDocBlocsFromString - gets all US_DocBlocs from a string
+   - DocEngine: Docs\_GetUSDocBloc\_ChapterContext - gets the chapters of an US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_Description - gets the description of an US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_Functioncall - gets a functioncall of an US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_NextChapter - gets the slug of the next chapter of the US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_Params - gets the parameters of an US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_PreviousChapter - gets the slug of the previous chapter of the US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_Requires - gets the requires-tag from an US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_Retvals - gets the retvals of an US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_Slug - gets the slug from an US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_SourceDocument - gets the source-document-entry from an US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_TargetDocument - gets the target-document-entry from an US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_Tags - gets the tags-entry from an US_DocBloc
+   - DocEngine: Docs\_GetUSDocBloc\_Title - gets the title from an US_DocBloc
+   - DocEngine: Docs\_RemoveIndent - removes indentation from a text(usually taken from an US_DocBloc)
+   - Docs: Concepts: Localize\_001\_Introduction - Introduction to Localization
+   - Docs: Concepts: Localize\_002\_LangPack\_Fileformat - How to write the translation-file
+   - Docs: Concepts: Localize\_003\_Localize\_Functions - usage of Localization functions
+   - FXManagement: AutoDetectVSTPlugins - auto-searches for the vst-plugin-folder
+   - FXManagement: AddParmAlias\_FXStateChunk - adds a parameter-alias-entry to an FXStateChunk
+   - FXManagement: AddParmLearn\_FXStateChunk - adds a parameter-learn-entry to an FXStateChunk
+   - FXManagement: AddParmLFOLearn\_FXStateChunk - adds a parameter-lfo-learn-entry to an FXStateChunk
+   - FXManagement: CountParmAlias\_FXStateChunk - counts parameter-alias-entries in an FXStateChunk
+   - FXManagement: CountParmLearn\_FXStateChunk - counts parameter-learn-entries in an FXStateChunk
+   - FXManagement: CountParmLFOLearn\_FXStateChunk - counts parameter-lfo-learn-entries in an FXStateChunk
+   - FXManagement: DeleteParmAlias\_FXStateChunk - deletes a parameter-alias-entry from a specific fx in an FXStateChunk
+   - FXManagement: DeleteParmLFOLearn\_FXStateChunk - deletes a parameter-lfo-learn-entry from a specific fx in an FXStateChunk
+   - FXManagement: DeleteParmLearn\_FXStateChunk - deletes a ParmLearn-entry from a specific fx in an FXStateChunk
+   - FXManagement: ScanDXPlugins - rescans all DX(DirectX)-plugins, optionally scans all or just the new ones
+   - FXManagement: ScanVSTPlugins - rescans all vst-plugins, optionally clears vst-plugin-cache first
+   - FXManagement: SetFXStateChunk - sets an FXStateChunk into a TrackStateChunk or MediaItemStateChunk
+   - FXManagement: SetParmAlias\_FXStateChunk - sets a parameter-alias-entry from a specific fx in an FXStateChunk
+   - FXManagement: SetParmLearn\_FXStateChunk - sets a parameter-learn-entry from a specific fx in an FXStateChunk
+   - FXManagement: SetParmLFOLearn\_FXStateChunk - sets a parameter-lfo-learn-entry from a specific fx in an FXStateChunk
+   - GFX-Management: GFX\_SetFont - sets a font to be used in a gfx-window; adjust Mac-fonts to match the size of Windows-fonts(unlike Reaper's own gfx.setfont)(code by lokasenna with contributions by Justin and Schwa)
+   - HelperFunctions: get\_action\_context\_MediaItemDiff - gets the MediaItemDifference(position, start, end, length, offset) since last time calling this function. Good for ripple-drag-scripts.
+   - Localize: Localize - localizes a string, using the texts from a translationfile; can be used with or without ultraschall. at the beginning
+   - Localize: Localize\_RefreshFile - reloads an already set translation-file, so translations can be updated at runtime
+   - Localize: Localize\_UseFile - sets a translationfile, that shall be used by function ultraschall.Localize
+   - Localize: ultraschall\_translation\_file\_format.USLangPack - has a description of the USLangPack-fileformat for usage with the Localize-functions(see in misc-folder)
+   - Misc: Developer_Reaper5965.ReaperLangPack - a language-pack, which displays the sections, in which the caption is located in a langpack
+   - ReaMote: AutoSearchReaMoteSlaves - autosearches for new ReaMote-slaves
+   - Render: AddSelectedItemsToRenderQueue - adds selected MediaItems to render-queue as either one render-queued-project or individual projects(requested by Travesty)
+   - Render: GetRenderingToFileHWND - gets the hwnd of the rendering-to-file-dialog, during rendering
+   - Tools: LangPack2Developer\_langpack\_converter.lua - converts a language-pack into a developer-langpack, which displays the sections, in which every caption is located in the langpack
+   - Tools: ultraschall\_Add\_Developertools\_To\_Reaper.lua - allows installing developertools into Reaper (requested by X-Raym)
+   - Tools: ultraschall\_developertool\_CheckForNewConfigVars.lua - checks the individual lines of a string in clipboard for valid config-vars; thought I already had added that...
+   - Tools: ultraschall\_Remove\_Developertools\_From\_Reaper.lua - allows removing already installed developertools from Reaper
+   - Track Management: AnyTrackMute - returns, if any track is muted; optionally includes the master-track as well
+
+    
+#### Changes from Beta 2.75 to Beta 2.76
+   - API: versionscheck - had problems with pre/rc and dev-versions of Reaper -> fixed(reported by X-Raym)
+   - Docs: Concepts-RenderTable - layout was totally messed up due Markdown -> fixed
+   - Docs: FileType-Description - added missing info to ReaperConfigZip-Filetype-description
+   - Docs: Index - index in all docs was missing chapters -> fixed
+   - Docs: updated Reaper-docs to 5.980 and JS-extension 0.989
+   - Helpers: GetPath - when filename has no path, it returns now "", filename
+   - Helpers: GetUserInputs - allows now setting width of the captions-fields(requested by Julian Sader), allows now commas in captions and default-values as well; title is now the one defined by the title-parameter(used to have temporary title previously) (reported by X-Raym)
+   - Helpers: SplitStringAtLineFeedToArray - sped up by magnitudes, should now work much faster with megabyte-strings
+   - Markers: GetAllRegions - returned index in allregionsarray[index][3] wasn't 1-based, causing problems with other functions -> fixed
+   - Render: RenderProject\_Regions - produced Lua-error, when passing a filename without extension and if region was <1, returns error-messages now in that case
+                                     allows now giving an optional separator between renderfilename\_with\_path and regionname when addregionname=true, including /
+                                     check docs for that new feature(reported by reapero)
+   - Scripts: HWND-Displayer.lua - reimplemented, much more comfortable now with a lot of more features.
+   - Tools - the following scripts renamed to:  
+      ultraschall\_developertool\_ActionlistToIni-Converter.lua  
+      ultraschall\_developertool\_Display-Altered-ConfigFile-Entries.lua  
+      ultraschall\_developertool\_Display-Altered-Config-Vars.lua  
+      ultraschall\_developertool\_Env\_State\_Diffs\_Monitor.lua  
+      ultraschall\_developertool\_findConfigVarsToggledByActions.lua  
+      ultraschall\_developertool\_GetPitchShiftModes.lua  
+      ultraschall\_developertool\_gfx\_deltablit\_displayer.lua  
+      ultraschall\_developertool\_HWND-Displayer.lua  
+      ultraschall\_developertool\_Item\_State\_Diffs\_Monitor.lua  
+      ultraschall\_developertool\_Project\_State\_Diffs\_Monitor.lua  
+      ultraschall\_developertool\_StateInspector.lua  
+      ultraschall\_developertool\_Track\_State\_Diffs\_Monitor.lua  
+   - Tools: ultraschall\_Remove\_ExampleScripts\_To\_Reaper.lua - renamed to ultraschall\_Remove\_ExampleScripts\_From\_Reaper.lua, better name that way
+ 
+   ---
+
 ## Ultraschall Framework - Changelog
 
 ### 4.00 Beta 2.75: - "Nick Cave & the Bad Seeds - Babe, I'm on fire" - 29th of May 2019

@@ -804,3 +804,70 @@ end
 
 --ultraschall.ShowLastErrorMessage()
 
+  -- Usage: Font.set("Arial", 10, "bi")
+function ultraschall.GFX_SetFont(fontindex, font, size, flagStr)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_SetFont</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.GFX_SetFont(integer fontindex, string font, integer size, string flagStr)</functioncall>
+  <description>
+    Sets the font of the gfx-window.
+    
+    As Mac and Windows have different visible font-sizes for the same font-size, this function adapts the font-size correctly(unlike Reaper's own native gfx.setfont-function).
+    
+    returns false in case of an error
+  </description>
+  <parameters>
+    integer fontindex - the font-id; idx=0 for default bitmapped font, no configuration is possible for this font. idx=1..16 for a configurable font
+    string font - the name of the font
+    integer size - the size of the font
+    string flagStr - a string, which holds the desired font-styles. You can combine multiple ones, up to 4.
+                   - The following are valid:
+                   - B - bold
+                   - i - italic
+                   - o - white outline
+                   - r - blurred
+                   - s - sharpen
+                   - u - underline
+                   - v - inverse
+  </parameters>
+  <chapter_context>
+    Font Handling
+  </chapter_context>
+  <target_document>USApiGfxReference</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, functions, font, set, mac, windows</tags>
+</US_DocBloc>
+]]
+  if type(font)~="string" then ultraschall.AddErrorMessage("GFX_SetFont", "font", "must be a string", -1) return false end
+  if math.type(size)~="integer" then ultraschall.AddErrorMessage("GFX_SetFont", "size", "must be an integer", -2) return false end
+  if type(flagStr)~="string" then ultraschall.AddErrorMessage("GFX_SetFont", "flagStr", "must be a string", -3) return false end
+  if flagStr:len()>4 then ultraschall.AddErrorMessage("GFX_SetFont", "flagStr", "You can only give up to maximum 4 attributes.", -4) return false end
+  if math.type(fontindex)~="integer" then ultraschall.AddErrorMessage("GFX_SetFont", "size", "must be an integer", -5) return false end
+  -- following code done by lokasenna with contributions by Justin and Schwa
+  
+  -- Different OSes use different font sizes, for some reason
+  -- This should give a similar size on Mac/Linux as on Windows
+  if not string.match( reaper.GetOS(), "Win") then
+    size = math.floor(size * 0.8)
+  end
+    
+  -- Cheers to Justin and Schwa for this
+  local flags = 0
+  if flagStr then
+    for i = 1, flagStr:len() do
+      flags = flags * 256 + string.byte(flagStr, i)
+    end
+  end
+
+  gfx.setfont(fontindex, font, size, flags)
+  return true
+end
+                        
+--A=ultraschall.GFX_SetFont(1, "Arial", 20, "usijv")
+--gfx.drawstr("huioh")

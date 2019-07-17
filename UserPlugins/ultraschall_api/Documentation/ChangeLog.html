@@ -40,6 +40,116 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.00 Beta 2.76: - "The Police - Walking on the Moon" - 20th of July 2019</h3>
+<p>Has now 977 functions with 42 new ones!</p>
+<p><strong>New in this release:</strong></p>
+<ul>
+<li><p><strong>Parameter Learn</strong><br />
+You can set/get/delete parameter-learning in Statechunks.<br />
+1) get a StateChunk<br />
+2) get its FXStateChunk using GetFXStateChunk<br />
+3) alter this FXStateChunk using the ParmLearn-functions<br />
+4) set this FXStateChunk using SetFXStateChunk<br />
+5) (re-)apply the final StateChunk to the Track/Item</p></li>
+<li><p><strong>Localize</strong><br />
+You can localize your scripts using an external localize-file.<br />
+If that exists, ultraschall.Localize will convert your string into it's localized one, otherwise it uses it's original text.</p></li>
+<li><p><strong>DocEngine</strong><br />
+long time on my list, functions for the DocEngine. With them, you can use my Reaper-internal-sourcefiles (.USDocML) and create your own conversions of them.</p></li>
+<li><p><strong>get_action_context_MediaItemDiff</strong><br />
+a function, which helps you to get the diff of an MediaItem since last time calling this function. Good for RippleDrag-features.</p></li>
+<li><p><strong>AddSelectedItemsToRenderQueue</strong><br />
+this adds MediaItems into the Render-Queued, either as single-queued or multiqueued-project-files(requested by Travesty)</p></li>
+<li><p><strong>GetUserInputs</strong><br />
+allows now setting the length of the captions-fields.<br />
+No more cutting off of longer captions!(requested by Julian Sader)</p></li>
+<li><p><strong>More functions, more bugfixes, updated Reaper-docs, speedups</strong></p></li>
+</ul>
+<h4>New features in 4.00beta2.76</h4>
+<ul>
+<li>Actions: GetAllActions - gets all actions, actioncommandids and scriptnames of all actions in a specific section</li>
+<li>DocEngine: Docs_ConvertPlainTextToHTML - converts a plaintext into html</li>
+<li>DocEngine: Docs_GetAllUSDocBlocsFromString - gets all US_DocBlocs from a string</li>
+<li>DocEngine: Docs_GetUSDocBloc_ChapterContext - gets the chapters of an US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_Description - gets the description of an US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_Functioncall - gets a functioncall of an US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_NextChapter - gets the slug of the next chapter of the US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_Params - gets the parameters of an US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_PreviousChapter - gets the slug of the previous chapter of the US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_Requires - gets the requires-tag from an US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_Retvals - gets the retvals of an US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_Slug - gets the slug from an US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_SourceDocument - gets the source-document-entry from an US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_TargetDocument - gets the target-document-entry from an US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_Tags - gets the tags-entry from an US_DocBloc</li>
+<li>DocEngine: Docs_GetUSDocBloc_Title - gets the title from an US_DocBloc</li>
+<li>DocEngine: Docs_RemoveIndent - removes indentation from a text(usually taken from an US_DocBloc)</li>
+<li>Docs: Concepts: Localize_001_Introduction - Introduction to Localization</li>
+<li>Docs: Concepts: Localize_002_LangPack_Fileformat - How to write the translation-file</li>
+<li>Docs: Concepts: Localize_003_Localize_Functions - usage of Localization functions</li>
+<li>FXManagement: AutoDetectVSTPlugins - auto-searches for the vst-plugin-folder</li>
+<li>FXManagement: AddParmAlias_FXStateChunk - adds a parameter-alias-entry to an FXStateChunk</li>
+<li>FXManagement: AddParmLearn_FXStateChunk - adds a parameter-learn-entry to an FXStateChunk</li>
+<li>FXManagement: AddParmLFOLearn_FXStateChunk - adds a parameter-lfo-learn-entry to an FXStateChunk</li>
+<li>FXManagement: CountParmAlias_FXStateChunk - counts parameter-alias-entries in an FXStateChunk</li>
+<li>FXManagement: CountParmLearn_FXStateChunk - counts parameter-learn-entries in an FXStateChunk</li>
+<li>FXManagement: CountParmLFOLearn_FXStateChunk - counts parameter-lfo-learn-entries in an FXStateChunk</li>
+<li>FXManagement: DeleteParmAlias_FXStateChunk - deletes a parameter-alias-entry from a specific fx in an FXStateChunk</li>
+<li>FXManagement: DeleteParmLFOLearn_FXStateChunk - deletes a parameter-lfo-learn-entry from a specific fx in an FXStateChunk</li>
+<li>FXManagement: DeleteParmLearn_FXStateChunk - deletes a ParmLearn-entry from a specific fx in an FXStateChunk</li>
+<li>FXManagement: ScanDXPlugins - rescans all DX(DirectX)-plugins, optionally scans all or just the new ones</li>
+<li>FXManagement: ScanVSTPlugins - rescans all vst-plugins, optionally clears vst-plugin-cache first</li>
+<li>FXManagement: SetFXStateChunk - sets an FXStateChunk into a TrackStateChunk or MediaItemStateChunk</li>
+<li>FXManagement: SetParmAlias_FXStateChunk - sets a parameter-alias-entry from a specific fx in an FXStateChunk</li>
+<li>FXManagement: SetParmLearn_FXStateChunk - sets a parameter-learn-entry from a specific fx in an FXStateChunk</li>
+<li>FXManagement: SetParmLFOLearn_FXStateChunk - sets a parameter-lfo-learn-entry from a specific fx in an FXStateChunk</li>
+<li>GFX-Management: GFX_SetFont - sets a font to be used in a gfx-window; adjust Mac-fonts to match the size of Windows-fonts(unlike Reaper's own gfx.setfont)(code by lokasenna with contributions by Justin and Schwa)</li>
+<li>HelperFunctions: get_action_context_MediaItemDiff - gets the MediaItemDifference(position, start, end, length, offset) since last time calling this function. Good for ripple-drag-scripts.</li>
+<li>Localize: Localize - localizes a string, using the texts from a translationfile; can be used with or without ultraschall. at the beginning</li>
+<li>Localize: Localize_RefreshFile - reloads an already set translation-file, so translations can be updated at runtime</li>
+<li>Localize: Localize_UseFile - sets a translationfile, that shall be used by function ultraschall.Localize</li>
+<li>Localize: ultraschall_translation_file_format.USLangPack - has a description of the USLangPack-fileformat for usage with the Localize-functions(see in misc-folder)</li>
+<li>Misc: Developer_Reaper5965.ReaperLangPack - a language-pack, which displays the sections, in which the caption is located in a langpack</li>
+<li>ReaMote: AutoSearchReaMoteSlaves - autosearches for new ReaMote-slaves</li>
+<li>Render: AddSelectedItemsToRenderQueue - adds selected MediaItems to render-queue as either one render-queued-project or individual projects(requested by Travesty)</li>
+<li>Render: GetRenderingToFileHWND - gets the hwnd of the rendering-to-file-dialog, during rendering</li>
+<li>Tools: LangPack2Developer_langpack_converter.lua - converts a language-pack into a developer-langpack, which displays the sections, in which every caption is located in the langpack</li>
+<li>Tools: ultraschall_Add_Developertools_To_Reaper.lua - allows installing developertools into Reaper (requested by X-Raym)</li>
+<li>Tools: ultraschall_developertool_CheckForNewConfigVars.lua - checks the individual lines of a string in clipboard for valid config-vars; thought I already had added that...</li>
+<li>Tools: ultraschall_Remove_Developertools_From_Reaper.lua - allows removing already installed developertools from Reaper</li>
+<li>Track Management: AnyTrackMute - returns, if any track is muted; optionally includes the master-track as well</li>
+</ul>
+<h4>Changes from Beta 2.75 to Beta 2.76</h4>
+<ul>
+<li>API: versionscheck - had problems with pre/rc and dev-versions of Reaper -&gt; fixed(reported by X-Raym)</li>
+<li>Docs: Concepts-RenderTable - layout was totally messed up due Markdown -&gt; fixed</li>
+<li>Docs: FileType-Description - added missing info to ReaperConfigZip-Filetype-description</li>
+<li>Docs: Index - index in all docs was missing chapters -&gt; fixed</li>
+<li>Docs: updated Reaper-docs to 5.980 and JS-extension 0.989</li>
+<li>Helpers: GetPath - when filename has no path, it returns now "", filename</li>
+<li>Helpers: GetUserInputs - allows now setting width of the captions-fields(requested by Julian Sader), allows now commas in captions and default-values as well; title is now the one defined by the title-parameter(used to have temporary title previously) (reported by X-Raym)</li>
+<li>Helpers: SplitStringAtLineFeedToArray - sped up by magnitudes, should now work much faster with megabyte-strings</li>
+<li>Markers: GetAllRegions - returned index in allregionsarray[index][3] wasn't 1-based, causing problems with other functions -&gt; fixed</li>
+<li>Render: RenderProject_Regions - produced Lua-error, when passing a filename without extension and if region was &lt;1, returns error-messages now in that case allows now giving an optional separator between renderfilename_with_path and regionname when addregionname=true, including / check docs for that new feature(reported by reapero)</li>
+<li>Scripts: HWND-Displayer.lua - reimplemented, much more comfortable now with a lot of more features.</li>
+<li>Tools - the following scripts renamed to:<br />
+ultraschall_developertool_ActionlistToIni-Converter.lua<br />
+ultraschall_developertool_Display-Altered-ConfigFile-Entries.lua<br />
+ultraschall_developertool_Display-Altered-Config-Vars.lua<br />
+ultraschall_developertool_Env_State_Diffs_Monitor.lua<br />
+ultraschall_developertool_findConfigVarsToggledByActions.lua<br />
+ultraschall_developertool_GetPitchShiftModes.lua<br />
+ultraschall_developertool_gfx_deltablit_displayer.lua<br />
+ultraschall_developertool_HWND-Displayer.lua<br />
+ultraschall_developertool_Item_State_Diffs_Monitor.lua<br />
+ultraschall_developertool_Project_State_Diffs_Monitor.lua<br />
+ultraschall_developertool_StateInspector.lua<br />
+ultraschall_developertool_Track_State_Diffs_Monitor.lua<br />
+</li>
+<li>Tools: ultraschall_Remove_ExampleScripts_To_Reaper.lua - renamed to ultraschall_Remove_ExampleScripts_From_Reaper.lua, better name that way</li>
+</ul>
+<hr />
+<h2>Ultraschall Framework - Changelog</h2>
 <h3>4.00 Beta 2.75: - "Nick Cave &amp; the Bad Seeds - Babe, I'm on fire" - 29th of May 2019</h3>
 <p>tagline inspired by a comment from _stevie_ ;)</p>
 <p><strong>!RenderMania Update!</strong> Has now 935 functions with 95 new ones!</p>

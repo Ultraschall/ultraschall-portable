@@ -25,7 +25,6 @@
 ]] 
 
 
-
 if type(ultraschall)~="table" then 
   -- update buildnumber and add ultraschall as a table, when programming within this file
   local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
@@ -45,7 +44,6 @@ if type(ultraschall)~="table" then
   ultraschall={} 
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 end
-
     
 function ultraschall.ApiBetaFunctionsTest()
     -- tell the api, that the beta-functions are activated
@@ -539,102 +537,137 @@ function ultraschall.GetAllMediaItemTake_StateChunks(MediaItem)
 end
 
 
-function ultraschall.AddProjectfileToRenderQueue(Projectfilename2)
--- Todo
--- add 
---  QUEUED_RENDER_OUTFILE "C:\defrenderpath\untitled.flac" 65553 {8B34A896-AAE3-4F7F-9A5E-63C19B1C9AE0}
---  QUEUED_RENDER_ORIGINAL_FILENAME C:\Render-Queue-Documentation.RPP
--- to them
--- the former being dependend on, whether some render-stems is selected
-
-  --Projectfilename2="c:\\Render-Queue-Documentation.RPP"
-  local path, projfilename = ultraschall.GetPath(Projectfilename2)
-  local Projectfilename=ultraschall.API_TempPath..projfilename
-  local A,B, Count, Individual_values, tempa, tempb, filename, Qfilename
-  
-  ultraschall.MakeCopyOfFile(Projectfilename2, Projectfilename)
-  
-  --k,Projectfilename = reaper.EnumProjects(-1,"")
-  A=ultraschall.ReadFullFile(Projectfilename) 
-  B=""
-  
-  Count, Individual_values = ultraschall.CSV2IndividualLinesAsArray(A, "\n")
-  
-  
-  for i=1, Count do
-    if Individual_values[i]:match("^        FILE \"")~=nil then
-      filename=Individual_values[i]:match("\"(.-)\"")
-      if reaper.file_exists(path..filename)==true then
-        tempa, tempb=Individual_values[i]:match("(.-\").-(\".*)")
-        Individual_values[i]=tempa..path..filename..tempb
-      end
-    end
-    B=B.."\n"..Individual_values[i]
-  end
-  
-  -- let's create a valid render-queue-filename
-  local A, month, day, hour, min, sec
-  A=os.date("*t")
-  if tostring(A["month"]):len()==1 then month="0"..tostring(A["month"]) else month=tostring(A["month"]) end
-  if tostring(A["day"]):len()==1 then day="0"..tostring(A["day"]) else day=tostring(A["day"]) end
-  
-  if tostring(A["hour"]):len()==1 then hour="0"..tostring(A["hour"]) else hour=tostring(A["hour"]) end
-  if tostring(A["min"]):len()==1 then min="0"..tostring(A["min"]) else min=tostring(A["min"]) end
-  if tostring(A["sec"]):len()==1 then sec="0"..tostring(A["sec"]) else sec=tostring(A["sec"]) end
-  
-  Qfilename="qrender_"..tostring(A["year"]):sub(-2,-1)..month..day.."_"..hour..min..sec.."_"..Projectfilename2:match("[\\/](.*)")
-
-  ultraschall.WriteValueToFile("c:\\Ultraschall-Hackversion_3.2_US_beta_2_75\\QueuedRenders\\"..Qfilename, B)
+function ultraschall.SetReaScriptConsole_FontStyle(style)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SetReaScriptConsole_FontStyle</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.SetReaScriptConsole_FontStyle(integer style)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      If the ReaScript-console is opened, you can change the font-style of it.
+      You can choose between 19 different styles, with 3 being of fixed character length. It will change the next time you output text to the ReaScriptConsole.
+      
+      If you close and reopen the Console, you need to set the font-style again!
+      
+      You can only have one style active in the console!
+      
+      Returns false in case of an error
+    </description>
+    <retvals>
+      boolean retval - true, displaying was successful; false, displaying wasn't successful
+    </retvals>
+    <parameters>
+      integer length - the font-style used. There are 19 different ones.
+                      - fixed-character-length:
+                      -     1,  fixed, console
+                      -     2,  fixed, console alt
+                      -     3,  thin, fixed
+                      - 
+                      - normal from large to small:
+                      -     4-8
+                      -     
+                      - bold from largest to smallest:
+                      -     9-14
+                      - 
+                      - thin:
+                      -     15, thin
+                      - 
+                      - underlined:
+                      -     16, underlined, thin
+                      -     17, underlined
+                      -     18, underlined
+                      - 
+                      - symbol:
+                      -     19, symbol
+    </parameters>
+    <chapter_context>
+      User Interface
+      Miscellaneous
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>user interface, reascript, console, font, style</tags>
+  </US_DocBloc>
+  ]]
+  if math.type(style)~="integer" then ultraschall.AddErrorMessage("SetReaScriptConsole_FontStyle", "style", "must be an integer", -1) return false end
+  if style>19 or style<1 then ultraschall.AddErrorMessage("SetReaScriptConsole_FontStyle", "style", "must be between 1 and 17", -2) return false end
+  local reascript_console_hwnd = ultraschall.GetReaScriptConsoleWindow()
+  if reascript_console_hwnd==nil then return false end
+  local styles={32,33,36,31,214,37,218,1606,4373,3297,220,3492,3733,3594,35,1890,2878,3265,4392}
+  local Textfield=reaper.JS_Window_FindChildByID(reascript_console_hwnd, 1177)
+  reaper.JS_WindowMessage_Send(Textfield, "WM_SETFONT", styles[style] ,0,0,0)
+  return true
 end
+--reaper.ClearConsole()
+--ultraschall.SetReaScriptConsole_FontStyle(1)
+--reaper.ShowConsoleMsg("ABCDEFGhijklmnop\n123456789.-,!\"§$%&/()=\n----------\nOOOOOOOOOO")
 
---A=9879
---HHhwnd = ultraschall.GetRenderQueueHWND()
-
---ultraschall.AddProjectfileToRenderQueue("c:\\Render-Queue-Documentation.RPP")
 
 
 
 --a,b=reaper.EnumProjects(-1,"")
 --A=ultraschall.ReadFullFile(b)
 
+--Mespotine
 
-function ultraschall.GetUserInputs(title, caption_names, default_retvals, values_length, x_pos, y_pos)
+
+
+--[[
+hwnd = ultraschall.GetPreferencesHWND()
+hwnd2 = reaper.JS_Window_FindChildByID(hwnd, 1110)
+
+--reaper.JS_Window_Move(hwnd2, 110,11)
+
+
+for i=-1000, 10 do
+  A,B,C,D=reaper.JS_WindowMessage_Post(hwnd2, "TVHT_ONITEM", i,i,i,i)
+end
+--]]
+
+function ultraschall.GetAllActions(section)
+-- ToDo:
+-- pattern matching through the actions, so you can filter them
+-- return the consolidate-state of actions 
+-- and the consolidate/terminate running-script-state of scripts as well
+-- Bonus: maybe returning shortcuts as well, but maybe, this fits better in it's own function
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetUserInputs</slug>
+  <slug>GetAllActions</slug>
   <requires>
     Ultraschall=4.00
     Reaper=5.977
-    JS=0.986
+    SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, integer number_of_inputfields, table returnvalues = ultraschall.GetUserInputs(string title, table caption_names, table default_retvals, optional integer values_length)</functioncall>
-  <description>
-    Gets inputs from the user.
+  <functioncall>integer number_of_actions, table actiontable = ultraschall.GetAllActions(integer section)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns all actions from a specific section as a handy table
     
-    The captions and the default-returnvalues must be passed as an integer-index table.
-    e.g.
-      caption_names[1]="first caption name"
-      caption_names[2]="second caption name"
-      caption_names[1]="*third caption name, which creates an inputfield for passwords, due the * at the beginning"
+    The table is of the following format:
+
+            actiontable[index]["commandid"]       - the command-id-number of the action
+            actiontable[index]["actioncommandid"] - the action-command-id-string of the action, if it's a named command(usually scripts or extensions), otherwise empty string
+            actiontable[index]["name"]            - the name of command
+            actiontable[index]["scriptfilename"]  - the filename+path of a command, that is a ReaScript, otherwise empty string
      
-    returns false in case of an error.
+    returns -1 in case of an error.
   </description>
   <retvals>
-    boolean retval - true, the user clicked ok on the userinput-window; false, the user clicked cancel or an error occured
-    integer number_of_inputfields - the number of returned values; nil, in case of an error
-    table returnvalues - the returnvalues input by the user as a table; nil, in case of an error
+    integer number_of_actions - the number of actions found; -1 in case of an error
+    table actiontable - a table, which holds all attributes of an action
   </retvals>
   <parameters>
-    string title - the title of the inputwindow
-    table caption_names - a table with all inputfield-captions. All non-string-entries will be converted to string-entries. Begin an entry with a * for password-entry-fields.
-                        - This dialog only allows limited caption-field-length, about 19-30 characters, depending on the size of the used characters.
-    table default_retvals - a table with all default retvals. All non-string-entries will be converted to string-entries.
-    optional integer values_length - the extralength of the values-inputfield. With that, you can enhance the length of the inputfields. 
-                            - 1-500; 
-                            - nil, for default length 10
-                            - -1, for autlength, where the function adjusts the length of the UserInputs-dialog according to the length of the longest default-value-string
-                            -     keep in mind, that the font used in this dialog isn't of fixed length, so some characters are smaller than others, which could lead to longer entryfields than needed, with this option set
+    integer sections - the section, whose actions you want to retrieve
+                     - 0, Main=0
+                     - 100, Main (alt recording)
+                     - 32060, MIDI Editor=32060
+                     - 32061, MIDI Event List Editor
+                     - 32062, MIDI Inline Editor
+                     - 32063, Media Explorer=32063
   </parameters>
   <chapter_context>
     User Interface
@@ -645,82 +678,298 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
   <tags>userinterface, dialog, get, user input</tags>
 </US_DocBloc>
 --]]
-  local count33, autolength
-  if type(title)~="string" then ultraschall.AddErrorMessage("GetUserInputs", "title", "must be a string", -1) return false end
-  if type(caption_names)~="table" then ultraschall.AddErrorMessage("GetUserInputs", "caption_names", "must be a table", -2) return false end
-  if type(default_retvals)~="table" then ultraschall.AddErrorMessage("GetUserInputs", "default_retvals", "must be a table", -3) return false end
-  if values_length~=nil and math.type(values_length)~="integer" then ultraschall.AddErrorMessage("GetUserInputs", "values_length", "must be an integer", -4) return false end
-  if values_length==nil then values_length=10 end
-  if (values_length>500 or values_length<1) and values_length~=-1 then ultraschall.AddErrorMessage("GetUserInputs", "values_length", "must be between 1 and 500, or -1 for autolength", -5) return false end
-  if values_length==-1 then values_length=1 autolength=true end
-  local count = ultraschall.CountEntriesInTable_Main(caption_names)
-  local count2 = ultraschall.CountEntriesInTable_Main(default_retvals)
-  print2("Achherrje")
-  print2("Hudel",count, count2)
-  if count>16 then ultraschall.AddErrorMessage("GetUserInputs", "caption_names", "must be no more than 16 caption-names!", -5) return false end
-  if count2>16 then ultraschall.AddErrorMessage("GetUserInputs", "default_retvals", "must be no more than 16 default-retvals!", -6) return false end
-  if count2>count then count33=count2 else count33=count end
-  values_length=(values_length*2)+18
-    
-  local captions=""
-  local retvals=""  
-  
-  for i=1, count2 do
-    if default_retvals[i]==nil then default_retvals[i]="" end
-    retvals=retvals..tostring(default_retvals[i])..","
-    if autolength==true and values_length<tostring(default_retvals[i]):len() then values_length=(tostring(default_retvals[i]):len()*6.6)+18 end
+  if section~=0 and section~=100 and section~=32060 and section~=32061 and section~=32062 and section~=32063 then
+    ultraschall.AddErrorMessage("GetAllActions", "section", "no valid section, must be a number for one of the following sections: Main=0, Main (alt recording)=100, MIDI Editor=32060, MIDI Event List Editor=32061, MIDI Inline Editor=32062, Media Explorer=32063", -1) 
+    return -1 
   end
-  retvals=retvals:sub(1,-2)  
-  
-  for i=1, count do
-    if caption_names[i]==nil then caption_names[i]="" end
-    captions=captions..tostring(caption_names[i])..","
-    --if autolength==true and length<tostring(caption_names[i]):len()+length then length=(tostring(caption_names[i]):len()*16.6)+18+length end
-  end
-  captions=captions:sub(1,-2)
-  if count<count2 then
-    for i=count, count2 do
-      captions=captions..","
-    end
-  end
-  captions=captions..",extrawidth="..values_length
-  
-  --print2(captions)
-  -- fill up empty caption-names, so the passed parameters are 16 in count
-  for i=1, 16 do
-    if caption_names[i]==nil then
-      caption_names[i]=""
-    end
-  end
-  caption_names[17]=nil
 
-  -- fill up empty default-values, so the passed parameters are 16 in count  
-  for i=1, 16 do
-    if default_retvals[i]==nil then
-      default_retvals[i]=""
+  local A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-kb.ini").."\n"
+  local B=""
+  for k in string.gmatch(A, "SCR.-\n") do
+    B=B..k
+  end
+  
+  local Table={}
+  local counter=1
+  for i=0, 65555 do
+    counter=counter+1
+    local retval, name = reaper.CF_EnumerateActions(section, i, "")
+    if retval==0 then break end
+    Table[counter]={}
+    Table[counter]["commandid"]=retval
+    Table[counter]["name"]=name
+    Table[counter]["actioncommandid"]=reaper.ReverseNamedCommandLookup(retval)
+    if Table[counter]["actioncommandid"]~=nil then
+      Table[counter]["scriptfilename"]=B:match(""..Table[counter]["actioncommandid"]..".*%s(.-)\n")
+      if Table[counter]["scriptfilename"]~=nil and reaper.file_exists(Table[counter]["scriptfilename"])==false then 
+        Table[counter]["scriptfilename"]=reaper.GetResourcePath()..ultraschall.Separator.."Scripts"..ultraschall.Separator..Table[counter]["scriptfilename"]
+      end
+    --  if Table[counter]["scriptfilename"]~=nil then print3(Table[counter]["scriptfilename"]) end
+    --else
+    --  counter=counter-1
     end
+    if Table[counter]["actioncommandid"]==nil then Table[counter]["actioncommandid"]="" end
+    if Table[counter]["scriptfilename"]==nil then Table[counter]["scriptfilename"]="" end
   end
-  default_retvals[17]=nil
-
-  local numentries, concatenated_table = ultraschall.ConcatIntegerIndexedTables(caption_names, default_retvals)
-  
-  local temptitle="Tudelu"..reaper.genGuid()
-  
-  ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/Scripts/GetUserInputValues_Helper_Script.lua", temptitle, title, "", "", table.unpack(concatenated_table), "HulaBingo")
-
-  local retval, retvalcsv = reaper.GetUserInputs(temptitle, count33, "", "")
-  if retval==false then reaper.DeleteExtState(ultraschall.ScriptIdentifier, "values", false) return false end
-  local Values=reaper.GetExtState(ultraschall.ScriptIdentifier, "values")
-  --print2(Values)
-  reaper.DeleteExtState(ultraschall.ScriptIdentifier, "values", false)
-  local count2,Values=ultraschall.CSV2IndividualLinesAsArray(Values ,"\n")
-  for i=count+1, 17 do
-    Values[i]=nil
-  end
-  return retval, count33, Values
+  return counter-1, Table
 end
 
---A,B,C,D=ultraschall.GetUserInputs("I got you", {"ShalalalaOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOHAH"}, {"HHHAAAAHHHHHHHHHHHHHHHHHHHHHHHHAHHHHHHHA"}, -1)
+--A,B=ultraschall.GetAllActions(0)
 
-ultraschall.ShowLastErrorMessage()
+function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x, y)
+-- TODO:: nice to have feature: when mouse is above crossfades between two adjacent items, return this state as well as a boolean
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>get_action_context_MediaItemDiff</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>MediaItem MediaItem, MediaItem_Take MediaItem_Take, MediaItem MediaItem_unlocked, boolean Item_moved, number StartDiffTime, number EndDiffTime, number LengthDiffTime, number OffsetDiffTime = ultraschall.get_action_context_MediaItemDiff(optional boolean exlude_mousecursorsize, optional integer x, optional integer y)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the currently clicked MediaItem, Take as well as the difference of position, end, length and startoffset since last time calling this function.
+    Good for implementing ripple-drag/editing-functions, whose position depends on changes in the currently clicked MediaItem.
+    Repeatedly call this (e.g. in a defer-cycle) to get all changes made, during dragging position, length or offset of the MediaItem underneath mousecursor.
+    
+    This function takes into account the size of the start/end-drag-mousecursor, that means: if mouse-position is within 3 pixels before start/after end of the item, it will get the correct MediaItem. 
+    This is a workaround, as the mouse-cursor changes to dragging and can still affect the MediaItem, even though the mouse at this position isn't above a MediaItem anymore.
+    To be more strict, set exlude_mousecursorsize to true. That means, it will only detect MediaItems directly beneath the mousecursor. If the mouse isn't above a MediaItem, this function will ignore it, even if the mouse could still affect the MediaItem.
+    If you don't understand, what that means: simply omit exlude_mousecursorsize, which should work in almost all use-cases. If it doesn't work as you want, try setting it to true and see, whether it works now.    
+  </description>
+  <retvals>
+    MediaItem MediaItem - the MediaItem at the current mouse-position; nil if not found
+    MediaItem_Take MediaItem_Take - the MediaItem_Take underneath the mouse-cursor
+    MediaItem MediaItem_unlocked - if the MediaItem isn't locked, you'll get a MediaItem here. If it is locked, this retval is nil
+    boolean Item_moved - true, the item was moved; false, only a part(either start or end or offset) of the item was moved
+    number StartDiffTime - if the start of the item changed, this is the difference;
+                         -   positive, the start of the item has been changed towards the end of the project
+                         -   negative, the start of the item has been changed towards the start of the project
+                         -   0, no changes to the itemstart-position at all
+    number EndDiffTime - if the end of the item changed, this is the difference;
+                         -   positive, the end of the item has been changed towards the end of the project
+                         -   negative, the end of the item has been changed towards the start of the project
+                         -   0, no changes to the itemend-position at all
+    number LengthDiffTime - if the length of the item changed, this is the difference;
+                         -   positive, the length is longer
+                         -   negative, the length is shorter
+                         -   0, no changes to the length of the item
+    number OffsetDiffTime - if the offset of the item-take has changed, this is the difference;
+                         -   positive, the offset has been changed towards the start of the project
+                         -   negative, the offset has been changed towards the end of the project
+                         -   0, no changes to the offset of the item-take
+                         - Note: this is the offset of the take underneath the mousecursor, which might not be the same size, as the MediaItem itself!
+                         - So changes to the offset maybe changes within the MediaItem or the start of the MediaItem!
+                         - This could be important, if you want to affect other items with rippling.
+  </retvals>
+  <parameters>
+    optional boolean exlude_mousecursorsize - false or nil, get the item underneath, when it can be affected by the mouse-cursor(dragging etc): when in doubt, use this
+                                            - true, get the item underneath the mousecursor only, when mouse is strictly above the item,
+                                            -       which means: this ignores the item when mouse is not above it, even if the mouse could affect the item
+    optional integer x - nil, use the current x-mouseposition; otherwise the x-position in pixels
+    optional integer y - nil, use the current y-mouseposition; otherwise the y-position in pixels
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, get, action, context, difftime, item, mediaitem, offset, length, end, start, locked, unlocked</tags>
+</US_DocBloc>
+--]]
+  if x~=nil and math.type(x)~="integer" then ultraschall.AddErrorMessage("get_action_context_MediaItemDiff", "x", "must be either nil or an integer", -1) return nil end
+  if y~=nil and math.type(y)~="integer" then ultraschall.AddErrorMessage("get_action_context_MediaItemDiff", "y", "must be either nil or an integer", -2) return nil end
+  if (x~=nil and y==nil) or (y~=nil and x==nil) then ultraschall.AddErrorMessage("get_action_context_MediaItemDiff", "x or y", "must be either both nil or both an integer!", -3) return nil end
+  local MediaItem, MediaItem_Take, MediaItem_unlocked
+  local StartDiffTime, EndDiffTime, Item_moved, LengthDiffTime, OffsetDiffTime
+  if x==nil and y==nil then x,y=reaper.GetMousePosition() end
+  MediaItem, MediaItem_Take = reaper.GetItemFromPoint(x, y, true)
+  MediaItem_unlocked = reaper.GetItemFromPoint(x, y, false)
+  if MediaItem==nil and exlude_mousecursorsize~=true then
+    MediaItem, MediaItem_Take = reaper.GetItemFromPoint(x+3, y, true)
+    MediaItem_unlocked = reaper.GetItemFromPoint(x+3, y, false)
+  end
+  if MediaItem==nil and exlude_mousecursorsize~=true then
+    MediaItem, MediaItem_Take = reaper.GetItemFromPoint(x-3, y, true)
+    MediaItem_unlocked = reaper.GetItemFromPoint(x-3, y, false)
+  end
+  
+  -- crossfade-stuff
+  -- example-values for crossfade-parts
+  -- Item left: 811 -> 817 , Item right: 818 -> 825
+  --               6           7
+  -- first:  get, if the next and previous items are at each other/crossing; if nothing -> no crossfade
+  -- second: get, if within the aforementioned pixel-ranges, there's another item
+  --              6 pixels for the one before the current item
+  --              7 pixels for the next item
+  -- third: if yes: crossfade-area, else: no crossfade area
+  --[[
+  -- buggy: need to know the length of the crossfade, as the aforementioned attempt would work only
+  --        if the items are adjacent but not if they overlap
+  --        also need to take into account, what if zoomed out heavily, where items might be only
+  --        a few pixels wide
+  
+  if MediaItem~=nil then
+    ItemNumber = reaper.GetMediaItemInfo_Value(MediaItem, "IP_ITEMNUMBER")
+    ItemTrack  = reaper.GetMediaItemInfo_Value(MediaItem, "P_TRACK")
+    ItemBefore = reaper.GetTrackMediaItem(ItemTrack, ItemNumber-1)
+    ItemAfter = reaper.GetTrackMediaItem(ItemTrack, ItemNumber+1)
+    if ItemBefore~=nil then
+      ItemBefore_crossfade=reaper.GetMediaItemInfo_Value(ItemBefore, "D_POSITION")+reaper.GetMediaItemInfo_Value(ItemBefore, "D_LENGTH")>=reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION")
+    end
+  end
+  --]]
+  
+  if ultraschall.get_action_context_MediaItem_old~=MediaItem then
+    StartDiffTime=0
+    EndDiffTime=0
+    LengthDiffTime=0
+    OffsetDiffTime=0
+    if MediaItem~=nil then
+      ultraschall.get_action_context_MediaItem_Start=reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION")
+      ultraschall.get_action_context_MediaItem_End=reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")+reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION")
+      ultraschall.get_action_context_MediaItem_Length=reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
+      ultraschall.get_action_context_MediaItem_Offset=reaper.GetMediaItemTakeInfo_Value(MediaItem_Take, "D_STARTOFFS")
+    end
+  else
+    if MediaItem~=nil then      
+      StartDiffTime=ultraschall.get_action_context_MediaItem_Start
+      EndDiffTime=ultraschall.get_action_context_MediaItem_End
+      LengthDiffTime=ultraschall.get_action_context_MediaItem_Length
+      OffsetDiffTime=ultraschall.get_action_context_MediaItem_Offset
+      
+      ultraschall.get_action_context_MediaItem_Start=reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION")
+      ultraschall.get_action_context_MediaItem_End=reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")+reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION")
+      ultraschall.get_action_context_MediaItem_Length=reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
+      ultraschall.get_action_context_MediaItem_Offset=reaper.GetMediaItemTakeInfo_Value(MediaItem_Take, "D_STARTOFFS")
+      
+      Item_moved=(ultraschall.get_action_context_MediaItem_Start~=StartDiffTime
+              and ultraschall.get_action_context_MediaItem_End~=EndDiffTime)
+              
+      StartDiffTime=ultraschall.get_action_context_MediaItem_Start-StartDiffTime
+      EndDiffTime=ultraschall.get_action_context_MediaItem_End-EndDiffTime
+      LengthDiffTime=ultraschall.get_action_context_MediaItem_Length-LengthDiffTime
+      OffsetDiffTime=ultraschall.get_action_context_MediaItem_Offset-OffsetDiffTime
+      
+    end    
+  end
+  ultraschall.get_action_context_MediaItem_old=MediaItem
+
+  return MediaItem, MediaItem_Take, MediaItem_unlocked, Item_moved, StartDiffTime, EndDiffTime, LengthDiffTime, OffsetDiffTime
+end
+
+--a,b,c,d,e,f,g,h,i=ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x, y)
+
+function ultraschall.Localize_UseFile(filename, section, language)
+-- TODO: getting the currently installed language for the case, that language = set to nil
+--       I think, filename as place for the language is better: XRaym_de.USLangPack, XRaym_us.USLangPack, XRaym_fr.USLangPack or something
+--       
+--       Maybe I should force to use the extension USLangPack...
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Localize_UseFile</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Localize_UseFile(string filename, string section, string language)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets the localize-file and the section to use in the localize-file.
+    If file cannot be found, the function will also look into resource-path/LangPack/ as well to find it.
+    
+    The file is of the format:
+    ;comment
+    ;another comment
+    [section]
+    original text=translated text
+    More Text with\nNewlines and %s - substitution=Translated Text with\nNewlines and %s - substitution
+    A third\=example with escaped equal\=in it = translated text with escaped\=equaltext
+    
+    see [../misc/ultraschall_translation_file_format.USLangPack](specs for more information).
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, translation-file has been found and set successfully; false, translation-file hasn't been found
+  </retvals>
+  <parameters>
+    string filename - the filename with path to the translationfile; if no path is given, it will look in resource-folder/LangPack for the translation-file
+    string section - the section of the translation-file, from which to read the translated strings
+    string language - the language, which will be put after filename and before extension, like mylangpack_de.USLangPack; 
+                    - us, usenglish
+                    - es, spanish
+                    - fr, french
+                    - de, german
+                    - jp, japanese
+                    - etc
+  </parameters>
+  <chapter_context>
+    Localization
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>localization, use, set, translationfile, section, filename</tags>
+</US_DocBloc>
+--]]
+  if type(filename)~="string" then ultraschall.AddErrorMessage("Localize_UseFile", "filename", "must be a string", -1) return false end
+  if type(section)~="string" then ultraschall.AddErrorMessage("Localize_UseFile", "section", "must be a string", -2) return false end
+  local filenamestart, filenamsendof=ultraschall.GetPath(filename)
+  local filenamext=filenamsendof:match(".*(%..*)")
+  if language==nil then language="" end
+  local filename2=filename
+  if filenamext==nil or filenamsendof==nil then 
+    filename=filename.."_"..language
+  else
+    filename=filenamestart..filenamsendof:sub(1, -filenamext:len()-1).."_"..language..filenamext
+  end
+  
+  if reaper.file_exists(filename)==false then
+    if reaper.file_exists(reaper.GetResourcePath().."/LangPack/"..filename)==false then
+      ultraschall.AddErrorMessage("Localize_UseFile", "filename", "file does not exist", -3) return false
+    else
+      ultraschall.Localize_Filename=reaper.GetResourcePath().."/LangPack/"..filename2
+      ultraschall.Localize_Section=section
+      ultraschall.Localize_Language=language
+    end
+  else
+    ultraschall.Localize_Filename=filename2
+    ultraschall.Localize_Section=section
+    ultraschall.Localize_Language=language
+  end
+  ultraschall.Localize_File=ultraschall.ReadFullFile(filename).."\n["
+  ultraschall.Localize_File=ultraschall.Localize_File:match(section.."%]\n(.-)%[")
+  ultraschall.Localize_File_Content={}
+  for k in string.gmatch(ultraschall.Localize_File, "(.-)\n") do
+    k=string.gsub(k, "\\n", "\n")
+    k=string.gsub(k, "=", "\0")
+    k=string.gsub(k, "\\\0", "=")
+    local left, right=k:match("(.-)\0(.*)")
+    --print2(left, "======", right)
+    ultraschall.Localize_File_Content[left]=right
+  end
+  
+  
+--  ultraschall.Localize_File2=string.gsub(ultraschall.Localize_File, "\n;.-\n", "\n")
+  
+  while ultraschall.Localize_File~=ultraschall.Localize_File2 do
+    ultraschall.Localize_File2=ultraschall.Localize_File
+    ultraschall.Localize_File=string.gsub(ultraschall.Localize_File2, "\n;.-\n", "\n")
+  end
+  
+  ultraschall.Localize_File=string.gsub(ultraschall.Localize_File, "\n\n", "\n")
+  
+  --print2("9"..ultraschall.Localize_File)
+  --print3(ultraschall.Localize_File)
+  
+  return true
+end
+
+--O=ultraschall.Localize_UseFile(reaper.GetResourcePath().."/LangPack/ultraschall.USLangPack", "Export Assistant", "de")
+
+
+--O={1,2,3}
+--P=#O
+
+
 

@@ -106,7 +106,7 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall\_api4.00\_beta2.75.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.75.zip).  
+            1. Just download the zip-file of the current version from [ultraschall\_api4.00\_beta2.76.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.76.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.
@@ -602,30 +602,76 @@
             A Rendertable is a table, which stores all rendersettings you can set in Reaper. And with all, I mean all!
             
             Structure:  
-                        RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
-                        RenderTable["Bounds"] - 0, Custom time range; 1, Entire project; 2, Time selection; 3, Project regions; 4, Selected Media Items(in combination with Source 32); 5, Selected regions
-                        RenderTable["Channels"] - the number of channels in the rendered file; 1, mono; 2, stereo; higher, the number of channels
-                        RenderTable["CloseAfterRender"] - true, close rendering to file-dialog after render; false, don't close it
-                        RenderTable["Dither"] - &1, dither master mix; &2, noise shaping master mix; &4, dither stems; &8, dither noise shaping
-                        RenderTable["Endposition"] - the endposition of the rendering selection in seconds
-                        RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
-                        RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 0, Full-speed Offline; 1, 1x Offline; 2, Online Render; 3, Online Render(Idle); 4, Offline Render(Idle)
-                        RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
-                        RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
-                        RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog
-                        RenderTable["RenderPattern"] - the render pattern as input into the File name-inputbox of the Render to File-dialog
-                        RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
+            
+                        RenderTable["AddToProj"]               - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
+                        RenderTable["Bounds"]                  - the Bounds-dropdownlist
+                                                                     0, Custom time range
+                                                                     1, Entire project
+                                                                     2, Time selection
+                                                                     3, Project regions
+                                                                     4, Selected Media Items(in combination with Source 32)
+                                                                     5, Selected regions
+                        RenderTable["Channels"]                - the number of channels in the rendered file
+                                                                     1, mono
+                                                                     2, stereo
+                                                                     higher, the number of channels
+                        RenderTable["CloseAfterRender"]        - true, close rendering to file-dialog after render
+                                                                     false, don't close it
+                        RenderTable["Dither"]                  - the dither-checkboxes
+                                                                      &1, dither master mix
+                                                                      &2, noise shaping master mix
+                                                                      &4, dither stems
+                                                                      &8, dither noise shaping
+                        RenderTable["Endposition"]             - the endposition of the rendering selection in seconds
+                        RenderTable["MultiChannelFiles"]       - Multichannel tracks to multichannel files-checkbox
+                                                                      true, checked; false, unchecked
+                        RenderTable["OfflineOnlineRendering"]  - Offline/Online rendering-dropdownlist
+                                                                      0, Full-speed Offline
+                                                                      1, 1x Offline
+                                                                      2, Online Render
+                                                                      3, Online Render(Idle)
+                                                                      4, Offline Render(Idle)
+                        RenderTable["OnlyMonoMedia"]           - Tracks with only mono media to mono files-checkbox
+                                                                      true, checked; false, unchecked
+                        RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox
+                                                                       true, checked; false, unchecked
+                        RenderTable["RenderFile"]              - the contents of the Directory-inputbox of the Render to File-dialog
+                        RenderTable["RenderPattern"]           - the render pattern as input into the File name-inputbox of the Render to File-dialog
+                        RenderTable["RenderQueueDelay"]        - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
                         RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay
-                        RenderTable["RenderResample"] - Resample mode-dropdownlist; 0, Medium (64pt Sinc); 1, Low (Linear Interpolation); 2, Lowest (Point Sampling); 3, Good (192pt Sinc); 4, Better (348 pt Sinc); 5, Fast (IIR + Linear Interpolation); 6, Fast (IIRx2 + Linear Interpolation); 7, Fast (16pt Sinc); 8, HQ (512 pt); 9, Extreme HQ(768pt HQ Sinc)
-                        RenderTable["RenderString"] - the render-cfg-string, that holds all settings of the currently set render-ouput-format as BASE64 string
-                        RenderTable["RenderTable"]=true - signals, this is a valid render-table
-                        RenderTable["SampleRate"] - the samplerate of the rendered file(s)
-                        RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; true, checked; false, unchecked
-                        RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked
-                        RenderTable["Source"] - 0, Master mix; 1, Master mix + stems; 3, Stems (selected tracks); 8, Region render matrix; 32, Selected media items
-                        RenderTable["Startposition"] - the startposition of the rendering selection in seconds
-                        RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? &1, custom time bounds; &2, entire project; &4, time selection; &8, all project regions; &16, selected media items; &32, selected project regions
-                        RenderTable["TailMS"] - the amount of milliseconds of the tail
+                        RenderTable["RenderResample"]          - Resample mode-dropdownlist
+                                                                      0, Medium (64pt Sinc)
+                                                                      1, Low (Linear Interpolation)
+                                                                      2, Lowest (Point Sampling)
+                                                                      3, Good (192pt Sinc)
+                                                                      4, Better (348 pt Sinc)
+                                                                      5, Fast (IIR + Linear Interpolation)
+                                                                      6, Fast (IIRx2 + Linear Interpolation)
+                                                                      7, Fast (16pt Sinc)
+                                                                      8, HQ (512 pt)
+                                                                      9, Extreme HQ(768pt HQ Sinc)
+                        RenderTable["RenderString"]            - the render-cfg-string, that holds all settings of the currently set render-ouput-format as BASE64 string
+                        RenderTable["RenderTable"]=true        - signals, this is a valid render-table
+                        RenderTable["SampleRate"]              - the samplerate of the rendered file(s)
+                        RenderTable["SaveCopyOfProject"]       - the "Save copy of project to outfile.wav.RPP"-checkbox
+                                                                    true, checked; false, unchecked
+                        RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox
+                                                                     true, checked; false, unchecked
+                        RenderTable["Source"]                  - the source-dropdownlist
+                                                                      0, Master mix
+                                                                      1, Master mix + stems
+                                                                      3, Stems (selected tracks)
+                                                                      8, Region render matrix
+                                                                      32, Selected media items
+                        RenderTable["Startposition"]           - the startposition of the rendering selection in seconds
+                        RenderTable["TailFlag"]                - in which bounds is the Tail-checkbox checked? 
+                                                                       &1, custom time bounds
+                                                                       &2, entire project
+                                                                       &4, time selection
+                                                                       &8, all project regions
+                                                                       &16, selected media items
+                                                                       &32, selected project regions
+                        RenderTable["TailMS"]                  - the amount of milliseconds of the tail
                     
             This rendertable can be used by, e.g. [RenderProject_RenderTable](usdocml://RenderProject_RenderTable)
             
@@ -4735,8 +4781,204 @@
             Defer Loops
         </chapter_context>
         <previous_chapter>DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API</previous_chapter>
-        <next_chapter>Helper_Functions_001_Introduction</next_chapter>
+        <next_chapter>Localize_001_Introduction</next_chapter>
         <tags>defer, stop, defer loops, inside scripts, outside scripts</tags>
+    </US_DocBloc>
+    
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Localize_001_Introduction</slug>
+        <title>Localize Scripts: Introduction</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Reaper has (among thousands of others) one great thing: Localization. That means, you can translate the whole software into many languages.  
+            Unfortunately, this isn't possible for scripts, or better: Not that easy.
+            
+            So I thought, that adding such functionalities for Lua-Scripts would be a good idea too.
+            
+            The whole process consists of two main things:  
+            
+              1. The USLangPack-file, which holds all the original texts and their translated counterparts  
+              2. The functions, with whom you can easily translate text within your scripts.  
+                
+            Let's start with the first one, the translationfile.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Localize Scripts
+        </chapter_context>
+        <previous_chapter>DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside</previous_chapter>
+        <next_chapter>Localize_002_LangPack_Fileformat</next_chapter>
+        <tags>localize, uslangpack</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Localize_002_LangPack_Fileformat</slug>
+        <title>Localize Scripts: Language-pack-fileformat</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            A USLangPack-translationfile is a simple ini-file of the format:
+            
+                            [section]
+                            key=value
+                
+            In our case, the section is the scriptname, the key is the original string and the value is the translated string.
+            
+                            [myluascript.lua]
+                            Hello World=Hallo Welt
+
+            **Basics**
+
+            In this example, the text "Hello World" in myluascript.lua would be translated to the german translation "Hallo Welt".  
+            If you need to add comments, you can simply write a semicolon. Everything written in that line after the semicolon will be ignored.
+            
+                            [myluascript.lua]
+                            Hello World=Hallo Welt ;It looks like part of the translation, but it's not!
+                    
+            Now here's the thing, you may want to add = into your text, but ini-files use this as separator between key and value.  
+            So, to write an = you need to escape it, using \=
+                    
+                            [myluascript.lua]
+                            Hello\=World=Hallo\=Welt
+                    
+            In the above example, the text holds now an =  
+            The escape-symbol will be removed when reading it from the translationfile automatically. If you don't want that, write \\= and it will become \= in the text.
+            
+            Newlines are also possible. Just write \n in the places, where you want to have a newline:
+            
+                            [myluascript.lua]
+                            Hello\nWorld=Hallo\nWelt
+                    
+            The newlines (\n) in the above example, will be replaced by the Localize-function automatically into newlines.
+            
+            **Advanced**
+            
+            Sometimes, you want to have substitutions, like filenames, variable numbers, etc. As this is very important, I added ways of adding them into the translation as well.  
+            Substitutions are written into the text using %sxxx, where xxx is a number between 000 and 999.  
+            The number between 000 and 999 reflects the order of the substitutions.  
+            Let's assume the following translationentry:
+            
+                            [myluascript.lua]
+                            The filename %s000 is the one that you have selected.=Du hast den Dateinamen %s000 ausgewählt.
+                    
+             In this example, the text has the substituion of %s000, which will represent the filename.  
+             Now look closely: the substitution %s000 in the english text is on the third position, while in the german translation, it is on the fifth!  
+             That's why substitutions are numbered, as the translator may need to rearrange the substitutions per requirements of the other language.  
+             Especially, if you have a number of substitutions, the order in the translated version can be "disordered", compared to the original one.  
+             The Localize-function takes care of substituting the right words into the substitutions.
+             
+             As a good practice, you should add a comment directly above the line, which holds the substitution, which explains the meaning of the substitution(s).
+             
+                            [myluascript.lua]
+                            ;%s000 - this is a filename, which could also hold the path to the file
+                            The filename %s000 is the one that you have selected.=Du hast den Dateinamen %s000 ausgewählt.
+                    
+             That way, the translator knows, what to expect from it, which improves quality of the translation.
+             
+             **Different Languages**
+             
+             Now you can do one translation, but there are many more languages. So how to make that work?  
+             Via the filename.
+             
+             The used languages in a translationfile is always added to the USLangPack-file:
+             
+                            mylangpack_language.USLangPack
+                    
+             So an english, german and spanish version would be named like this:
+             
+                            mylangpack_en.USLangPack
+                            mylangpack_de.USLangPack
+                            mylangpack_es.USLangPack
+                        
+             The Localize\_UseFile-function will load the right LangPack for you.
+             
+             **Best Practices**
+             
+             I will add some final notes on how to translate properly, for scripters as well as for translators:
+             
+             Scripters:  
+             You should never assume a specific length of your string, as other languages may need longer texts in their translation.  
+             English vs German is such an example. In many cases, English is much more efficient than German, leading to longer translated texts.  
+             If you don't take care of that, texts in your script will look ugly, maybe even unreadable.  
+             So keep your texts as short as possible(no novels please!) and make the displayed text more flexible for different stringlengths.  
+             This makes life and work much more easier for the translator.  
+             
+             Translators:  
+             Even though it is good practice, if displayed strings allow certain flexibility in length, you can't rely on that.  
+             So if you want to translate the texts for a script, try to make the translation not longer than the original string and check, whether your translation will be displayed at all.  
+             If there's no way to translate the text in any way, without clipped texts, etc, ask the scripter to modify the script for more flexibility.  
+             So what I wrote for scripters is also valid for you: So keep your texts as short as possible(no novels please!).  
+             This makes life easier for the user and the scripter.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Localize Scripts
+        </chapter_context>
+        <previous_chapter>Localize_001_Introduction</previous_chapter>
+        <next_chapter>Localize_003_Localize_Functions</next_chapter>
+        <tags>localize, uslangpack, translationfileformat</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Localize_003_Localize_Functions</slug>
+        <title>Localize Scripts: Functions</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Using a translationfile to localize texts in your script is very easy. There are only three functions to deal with that:  
+            [Localize_UseFile](usdocml://Localize_UseFile), [Localize\_RefreshFile](usdocml://Localize_RefreshFile), [Localize](usdocml://Localize)  
+            
+            Let's go into more detail:
+            
+            >**[Localize\_UseFile](usdocml://Localize_UseFile)**
+            
+                            boolean retval = ultraschall.Localize_UseFile(string filename, string section, string language)
+                    
+            >This function loads the contents of a translationfile into your script.  
+            >You need to pass the filename of the translationfile. If you omit the path, it will look in the Resource-folder/LangPack/ for the file.  
+            >The next part is the section of the file. As you may remember from the previous chapter, you should give the section your scriptname.  
+            >That way, you can have one translationfile for all your scripts, with each section dedicated to one of your scripts.  
+            >The last parameter is the used languages. You should use the common abbreviations, like en, es, de, it and so on.  
+            >This function will load the right translationfile with the right language and the translations from a specific section. If it can't, it will return false.
+            
+            >**[Localize\_RefreshFile](usdocml://Localize_RefreshFile)**
+            
+                            boolean retval = ultraschall.Localize_RefreshFile()
+                    
+            >If the translationfile has been updated, you might want to reload it. Just run this function, and it reloads an already loaded translation.
+            
+            Now there's one thing remaining: How to actually translate/localize a string? With this function:
+            
+            >**[Localize](usdocml://Localize)**
+            
+                            string translated_string, boolean translated = ultraschall.Localize(string original_string, ...)
+                        
+             >or alternatively
+                        
+                            string translated_string, boolean translated = Localize(string original_string, ...)
+                    
+             >This localizes a string, using the loaded translation. Just pass the original-string into the first parameter.  
+             >If you have substitutions, you pass them as additional parameters in the order of appearance.  
+             >That means, if you have a string "I am a filename %s000 and a number %s001" the Localize-functioncall will be  
+             
+                            translated_string, translated = Localize("I am a filename %s000 and a number %s001", "name_of_the_file0ab.txt", "135")
+             
+             >This will return the localized string with the substitutions in the right places.  
+             >If for one reason or another, no translation can be done(no loaded translationfile, etc), the second returnvalue translated will be set to false.  
+             >  
+             >For convenience, you can use Localize without ultraschall. at the beginning.
+             
+             This should make having your scripts localized an easy and convenient task.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Localize Scripts
+        </chapter_context>
+        <previous_chapter>Localize_002_LangPack_Fileformat</previous_chapter>
+        <next_chapter>Helper_Functions_001_Introduction</next_chapter>
+        <tags>localize, uslangpack</tags>
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">

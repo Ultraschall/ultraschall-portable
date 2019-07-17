@@ -573,13 +573,14 @@ function contentindex()
   for i=1, count2 do
     chapter=HeaderList[i]:match("(.-\n)")
     slugs=HeaderList[i]:match("\n(.*)\n")
-    A2, AA2, AAA2 = ultraschall.SplitStringAtLineFeedToArray(slugs)
+    A2, AA2, AAA2 = ultraschall.SplitStringAtLineFeedToArray(slugs.."\n")
     table.sort(AA2)
     slugs=""
     for i=1, A2 do
       slugs=slugs..AA2[i].."\n"
     end
     HeaderList[i]=chapter..slugs
+--    print2(HeaderList[i])
   end
   
 --  FunctionList=""
@@ -589,7 +590,9 @@ function contentindex()
     Top=HeaderList[i]:match("(.-),")
     Second=HeaderList[i]:match(".-,(.-),")
     Third=HeaderList[i]:match(".-,.-,(.-),")
-    Counts, Slugs=ultraschall.SplitStringAtLineFeedToArray(HeaderList[i]:match(".-\n(.*)\n"))
+--    print2(HeaderList[i]:match(".-\n(.*)\n"))
+    Counts, Slugs=ultraschall.SplitStringAtLineFeedToArray(HeaderList[i]:match(".-\n(.*)"))
+--    if i==2 then print2(Counts) return end
     slugs=""    
     if Top==nil then Top="" else Top="<br><strong><u>"..Top.."</u></strong><br><br>\n" end
     if i>1 and Top:match("u%>(.-)%</u")==HeaderList[i-1]:match("(.-),") then Top="" end
@@ -610,6 +613,7 @@ function contentindex()
     if linebreaker==3 then slugs=slugs.."<td style=\"width:25%;\">&nbsp;</td>" linebreaker=linebreaker+1 end
     if linebreaker==4 then slugs=slugs.."<td style=\"width:25%;\">&nbsp;</td>" linebreaker=linebreaker+1 end
     slugs=slugs.."</tr>"
+
     
     FunctionList=FunctionList.."<table style=\"width:100%;\" border=\"0\"><tr><td>"..Top..Second..Third.."</td></tr>"..slugs.."</table>"
 

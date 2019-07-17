@@ -1,0 +1,50 @@
+;USLangPack-fileformat - Meo Mespotine - 12th of June 2019
+;
+;[section] - this is a piece in the file, that should get a useful name, usually your scriptname
+;originaltext=translated text
+;
+;Example:
+;[Mespotine_MyScript.lua]
+;Button Text 1 that says hello world!=Knopftext 1 der Hallo Welt sagt!
+;
+; Semicolons are comments, who will be ignored by the parser.
+;
+; To include newlines in a text, just write \n at these positions
+;
+; = in texts must be escaped with \=
+;
+; For substitutions in a string, use %sxxx, where xxx is a number starting with %s1 to as high as you want (%s1234 or so)
+; %s must contain a space after it, which will be removed by the substitution. So if you want a space after the substituted string, you need to include
+; two spaces after the %sxxx, like "%s123  ". If you want to have a comma after the %sxxx, you need to write "%s123 ,".
+; If a text ends with a %sxxx-substitution, you need to add a space at the end as well!
+;
+; You can have multiple %sxxx with the same number, so if you need to repeat the same substitute text multiple times, this is possible:
+; Example:
+;       I am %s1 the text %s2, that has the same %s1 substitute twice=Translated%s1%s2 %s1 %s2
+; A simple %s without a number will be ignored!
+; If the user does not pass enough substitute-parameters to ultraschall.Localize, the remaining %sxxx will stay %sxxx.
+; So if you have %s1 %s2 %s3 %s4 and the user passes only three parameters, %s1 to %s3 will be substituted, while %s4 will stay the same.
+; You can safely "disorder" the %sxxx-entries, so putting %s2 first and %s1 as last in the string is totally allowed!
+;
+; If you have multiple %sxxx, you should document their contents as a comment directly above it, so the translator knows, what is what. 
+; This is important, as the order of the substitutions may need to be changed in another language, so the translated sentence makes sense. 
+; For that, the translator needs to know, which %sxxx stands for what, to make the correct translation.
+; Example:
+; %s1 - filename, %s2 - audio device name, %s3 - remaining free harddrive-space, %s4 - my grandmother's birthdaydate
+;
+; The filename is filename_language.USLangPack
+; so the german filename would be   "filename_de.USLangPack"
+; the english filename would be     "filename_us.USLangPack"
+; and the spanish filename would be "filename_es.USLangPack"
+;
+; The file can be stored in resource-folder/LangPack/ (default location) or anywhere else.
+;
+; As a general note to translators: As you don't know, how much space you have, you shouldn't write longer translations than the original text, if possible.
+; As a general note to scripters: You should either make the string longer or keep the visual instance(window, textbox, etc) flexible for differn kinds of textlengths.
+;                                 As english is usually more efficient than, e.g. german, the translated text might become longer than your original one.
+;                                 Keep that in mind!
+
+[Export Assistant]
+Export MP3\nEcht=Export MP3%sHudelDudel%sHui Hui \n hjsiudhsd%s
+Export MP3\nRender your Podcast to a MP3 File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image:\nFound.\n\n\n\n\nFinalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!=Ach was\ndas kann gar nicht sein\n
+Hud\=el%s\==Dud\=el%s
