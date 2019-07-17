@@ -76,17 +76,6 @@ ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api
 
 ultraschall.Api_ScriptPath=ultraschall.Api_Path.."/Scripts"
 
-local L=reaper.GetExtState("ultraschall_api", "helpinstalled")
-if L~="4.0beta2.7" then 
-  reaper.AddRemoveReaScript(true, 0, ultraschall.Api_ScriptPath.."/ultraschall_Help_Ultraschall_Api_Functions_Reference.lua", false)
-  reaper.AddRemoveReaScript(true, 0, ultraschall.Api_ScriptPath.."/ultraschall_Help_Ultraschall_Api_Introduction_and_Concepts.lua", false)
-  reaper.AddRemoveReaScript(true, 0, ultraschall.Api_ScriptPath.."/ultraschall_Help_Reaper_Api_Documentation.lua", true)
-  reaper.SetExtState("ultraschall_api", "helpinstalled", "4.0beta2.7", true)
-end
-
-
-
-
 
 ultraschall.ApiFunctionTest=function()
   --reaper.MB("Ultraschall Functions-Engine is OFF","Ultraschall-API",0)
