@@ -14,7 +14,7 @@
 AA,BB,CC,DD=reaper.get_action_context()
 Path=BB:match("(.*)[/\\]").."/"
 
-if reaper.JS_Window_Find==nil then reaper.MB("Sorry, you need to have JS-extension 0.989 or higher installed", "Error", 0) return end
+if reaper.JS_Window_Find==nil or reaper.Xen_StopSourcePreview==nil then reaper.MB("Sorry, you need to have JS-extension 0.989 or higher installed", "Error", 0) return end
 
 function atexit()
   reaper.Xen_StopSourcePreview(-1)
@@ -353,6 +353,7 @@ Credits={
 "written and composed by Meo Mespotine",
 "Photo of Apollo Lunar Module by Michael Collins.",
 "\"The Eagle Has Landed\" \n   and \n\"It's one small step for (a) man...\"\n   said by Neil Armstrong on the moon.",
+"\"Ok Houston, we had a problem here\" \n   and \n\"Houston we had a problem\"\n   by the Astronauts of Apollo 13.",
 "Music",
 "Klangkonstellation\n  \"selected views on earth\"\nwritten by Meo Mespotine",
 "Klangkonstellation IX:\n  \"A Scanner Darkly pt.1\"\nexcerpts\nwritten by Meo Mespotine",
