@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,124 +24,105 @@
 ################################################################################
 ]]
 
+-- AutoFollowOff v4 - 23.02.2019
+-- Meo Mespotine
 
--- Resets the Followmode, when someone moves the editcursor or when the playcursor leaves
--- the arrange-view
--- If you want to signal this script to skip one check-cycle, set external state
---    "follow" -> "skip" to "true"
--- in cases, where auto-follow-off reacts without your consent.
--- You must set this external state before(!) taking the action, that triggers the
--- auto-follow-off, or this script might keep on causing you the trouble...
+wait_seconds=0.1                    -- recommended 0.1; how long to wait inbetween two checks. In seconds.
+midarrangeview_followoff_offset=1   -- recommended 1; how far above the center of the arrangeview can the playcursor
+                                    --                move, before follow toggles off. In percentages.
+maxstrike=20                        -- recommended 10; how many cycles can the arrangeview stop, until we stop followmode
+                                    --                 the bigger, the longer the stopping time. Don't choose too small
+                                    --                 as this affects users scrolling by hand using the timeline!
 
+-- prepare variables
+startTime, endTime = reaper.BR_GetArrangeView(0)
+oldstartTime, oldendTime = reaper.BR_GetArrangeView(0)
+oldCursorPosition=reaper.GetCursorPosition()
+oldplayposition=-100
+strike=0
 
-factor=0.5 -- how long to wait inbetween checks, in seconds.
+midarrangeview_followoff_offset=midarrangeview_followoff_offset/10
 
---Initialize variables
-internal_skip=false
-recognized=false
-waittime=reaper.time_precise()+factor 
-timeframe=0.5
-editcursor=reaper.GetCursorPosition()
-start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-integer = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
-follow_on_id = reaper.NamedCommandLookup("_Ultraschall_Turn_On_Followmode")
-follow_off_id = reaper.NamedCommandLookup("_Ultraschall_Turn_Off_Followmode")
-start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-old_starttime, old_endtime= reaper.GetSet_ArrangeView2(0, false, 0, 0)
-rec_timeframe=0
-env=reaper.GetSelectedEnvelope()
-oldpoints=-1
-if env==nil then oldpoints="-1"
-else
-  tempo, oldpoints=reaper.GetEnvelopeStateChunk(env,"",false)
+-- get commandids
+id=reaper.NamedCommandLookup("_Ultraschall_Turn_Off_Followmode")
+follow_toggle_id=reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+B=reaper.GetToggleCommandState(follow_toggle_id)
+
+function waiter()
+  -- the waiter-function, that defers in idle-time
+  if current_time+wait_seconds>reaper.time_precise() then
+    reaper.defer(waiter)
+  else
+    reaper.defer(main)
+  end
 end
-if oldpoints==nil then oldpoints=-1 end
 
 function main()
---  if reaper.GetExtState("follow", "recognized")=="false" then recognized=false reaper.SetExtState("follow", "recognized", "true", false) end
-  start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-  timeframe2=(end_time-start_time)/8
-  if timeframe2>0.5 then timeframe2=0.5 end
-  if reaper.GetPlayState()&4==4 then rec_timeframe=1 else rec_timeframe=0 end
-  if waittime<reaper.time_precise() and reaper.GetToggleCommandState(integer)==1 then
-    --wait until waittime has been reached; after that execute the following lines
+    -- here is, where the magic happens.
     
-    if reaper.GetHZoomLevel()>1500 then
-      -- with high zoom-levels, we need more recheck-cycles
-      -- or changing the editcursor might not be recognized
-      factor2=0.0000000001
-      timeframe=0.5--20/reaper.GetHZoomLevel()
-    else
-      factor2=factor
-      timeframe=0.5
-    end
-    
-     --if followmode is on, play and rec 
-    if reaper.GetPlayState()~=0 and 
-    reaper.GetPlayState()&2~=2 and  -- comment, if you want to trigger AutoFollowOff during pause
-    reaper.GetExtState("follow", "skip")~="true" then
-
-     -- check, if editcursor has been moved    
-      window, segment, details = reaper.BR_GetMouseCursorContext()
-      if reaper.GetCursorPosition()~=editcursor and window~="ruler" then
-        reaper.Main_OnCommand(integer,0)
-        editcursor=reaper.GetCursorPosition()
+    -- check only, when Playstate isn't stopped or paused and followmode is on
+    if reaper.GetPlayState()~=0  
+       and reaper.GetPlayState()&2~=2  -- comment, if you want to trigger AutoFollowOff during pause
+       and reaper.GetExtState("follow", "skip")~="true" -- buggy line?
+       and reaper.GetToggleCommandState(follow_toggle_id)==1
+    then
+      startTime, endTime = reaper.BR_GetArrangeView(0)
+  
+      -- check, if arrangeview is still moving and if not, wait a certain time(count strike up)  
+      -- the strikercount starts, when playcursor is more than 51% of the arrangeview, which is past
+      -- the time, where the autoscrolling reactivates automatically(in most cases)  
+      if oldstartTime<startTime and oldendTime<endTime then
+        A="yes"
+        strike=0
+      elseif reaper.GetPlayPosition()<((endTime-startTime)*0.5+midarrangeview_followoff_offset)+startTime then
+        A="yes"
+        strike=0
+      elseif oldstartTime==startTime and oldendTime==endTime then
+        A="no"
+        strike=strike+1
       end
       
-     -- check, if playcursor is outside of view
-      start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-      if reaper.GetPlayPosition()<start_time-timeframe or reaper.GetPlayPosition()>end_time+rec_timeframe then   
-        reaper.Main_OnCommand(integer,0)  
+      if oldCursorPosition~=reaper.GetCursorPosition()then
+        -- if editcursor moves, stop followmode
+        strike=maxstrike
       end
       
-      if end_time<=old_starttime then
-      -- reaper.ShowConsoleMsg("flip links\n")
-      -- reaper.Main_OnCommand(integer,0)  
+      if reaper.GetPlayPosition()<startTime or reaper.GetPlayPosition()>endTime then
+        -- if playcursor is out of arrangeview, stop followmode
+        strike=maxstrike
       end
-
-      -- hacky workaround for envelopes. if anything is changed in envelopes, follow will be turned off
-      window, segment, details = reaper.BR_GetMouseCursorContext()
-      if env~=nil then
-        tempo, temppoints=reaper.GetEnvelopeStateChunk(env,"",false)
+      
+      if oldplayposition>reaper.GetPlayPosition()+2 or oldplayposition<reaper.GetPlayPosition()-2 and reaper.GetPlayPosition()==reaper.GetCursorPosition() then
+      -- if playcursor moves to a position, where the editcursor is already
+      -- (like clicked on markers, where the editcursor is, which starts playback and stops scrolling)
+      
+      -- possibly buggy but needed, if editcursor is already at a marker-position, and the user clicks on the marker again
+      -- which restarts playback
+      -- but this triggers also, when I try to skip the checks for one cycle...
+        strike=maxstrike
+      end
+      
+      -- store current states for comparisons in next cycle
+      oldplayposition=reaper.GetPlayPosition()
+      oldCursorPosition=reaper.GetCursorPosition()
+      oldstartTime, oldendTime = startTime, endTime
+      
+      -- if the waiting-cycles for a paused arrangeviewscrolling has reached the maximum,
+      -- stop followmode
+      if strike<maxstrike then
       else
-        temppoints="-1"
+        reaper.Main_OnCommand(id,0)
       end
-      if env~=reaper.GetSelectedEnvelope() and window=="arrange" and segment=="envelope" then
-        -- if selected envelope has changed and mouse is inside the envelope-lane of arrange-view,
-        -- turn off followmode
-        reaper.Main_OnCommand(integer,0)
-        env=reaper.GetSelectedEnvelope()
-        if env~=nil then
-          tempo, oldpoints=reaper.GetEnvelopeStateChunk(env,"",false) --reaper.CountEnvelopePoints(env)
-        else
-          oldpoints="-1"
-        end
-      elseif env==reaper.GetSelectedEnvelope() and oldpoints~=temppoints then --reaper.CountEnvelopePoints(env) then
-        -- if anything within the envelope-lane (points, values, number of points) has changed,
-        -- turn off followmode
-        reaper.Main_OnCommand(integer,0)
-        oldpoints=temppoints--reaper.CountEnvelopePoints(env)
-        if oldpoints==nil then oldpoints=-1 end        
-      end
-
-
     else
-      editcursor=reaper.GetCursorPosition()
-    end  
-    
-        
-    reaper.SetExtState("follow", "skip", "false", false) --reset skip-state
-    waittime=reaper.time_precise()+factor2
-    editcursor=reaper.GetCursorPosition()
-    if env~=nil then 
-      tempo, temppoints=reaper.GetEnvelopeStateChunk(env,"",false)
-      tempo, oldpoints=reaper.GetEnvelopeStateChunk(env,"",false)
-    else
-      temppoints="-1"
-      oldpoints="-1"
+      -- if nothing shall be checked, update statevariables for a possible check in the next cycle
+      oldplayposition=reaper.GetPlayPosition()
+      oldCursorPosition=reaper.GetCursorPosition()
+      if strike~=0 then laststrike=strike end
+      strike=0
+      reaper.SetExtState("follow", "skip", "false", false) --reset skip-state      -- buggy line?
     end
-  end
-  reaper.defer(main)
+  current_time=reaper.time_precise()
+  reaper.defer(waiter)
 end
 
 main()

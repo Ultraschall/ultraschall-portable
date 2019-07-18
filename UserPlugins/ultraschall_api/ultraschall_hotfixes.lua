@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,8 @@
 --      c) comment, what you've changed(this is for me to find out, what you did)
 --      d) add information to the <US_DocBloc>-bloc of the function. So if the information in the
 --         <US_DocBloc> isn't correct anymore after your changes, rewrite it to fit better with your fixes
---      e) add your name into it and a link to something you do(the latter, if you want), so I can credit you and your contribution properly
+--      e) add as an additional comment in the function your name and a link to something you do(the latter, if you want), 
+--         so I can credit you and your contribution properly
 --      f) submit the file as PullRequest via Github: https://github.com/Ultraschall/Ultraschall-Api-for-Reaper.git (preferred !)
 --         or send it via lspmp3@yahoo.de(only if you can't do it otherwise!)
 --
@@ -45,500 +46,182 @@
 -- If you have new functions to contribute, you can use this file as well. Keep in mind, that I will probably change them to work
 -- with the error-messaging-system as well as adding information for the API-documentation.
 
-function ultraschall.GetMarkerByScreenCoordinates(xmouseposition, retina)
---returns a string with the marker(s) in the timeline at given 
---screen-x-position. No Regions!
---string will be "Markeridx\npos\nName\nMarkeridx2\npos2\nName2"
+ultraschall.hotfixdate="1_Mar_2019"
 
---xmouseposition - x mouseposition
---retina - if it's retina/hiDPI, set it true, else, set it false
+-- Let's create a unique script-identifier
+ultraschall.dump=ultraschall.tempfilename:match("%-%{%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x%}")
+--reaper.MB(tostring(ultraschall.dump),"",0)
+if ultraschall.dump==nil then 
+  ultraschall.dump, ultraschall.dump2 = ultraschall.tempfilename:sub(1,-5), ultraschall.tempfilename:sub(-4,-1)
+  if ultraschall.dump2==nil then ultraschall.dump2="" ultraschall.dump=ultraschall.tempfilename end
+  ultraschall.ScriptIdentifier="ScriptIdentifier:"..ultraschall.dump..ultraschall.dump2
+  
+  ultraschall.ScriptIdentifier="ScriptIdentifier:"..ultraschall.dump.."-"..reaper.genGuid("")..ultraschall.dump2
+else  
+  ultraschall.ScriptIdentifier="ScriptIdentifier:"..ultraschall.tempfilename
+end
+  ultraschall.ScriptIdentifier=string.gsub(ultraschall.ScriptIdentifier, "\\", "/")
 
+--reaper.MB(tostring(ultraschall.ScriptIdentifier),"",0)
+
+function ultraschall.Main_OnCommandByFilename(filename, ...)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetMarkerByScreenCoordinates</slug>
+  <slug>Main_OnCommandByFilename</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.40
+    Reaper=5.95
     Lua=5.3
   </requires>
-  <functioncall>string marker = ultraschall.GetMarkerByScreenCoordinates(integer xmouseposition, boolean retina)</functioncall>
-  <description>
-    returns the markers at a given absolute-x-pixel-position. It sees markers according their graphical representation in the arrange-view, not just their position! Returned string will be "Markeridx\npos\nName\nMarkeridx2\npos2\nName2\n...".
-    Returns only markers, no time markers or regions!
+  <functioncall>boolean retval, string script_identifier = ultraschall.Main_OnCommandByFilename(string filename, string ...)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Runs a command by a filename. It internally registers the file temporarily as command, runs it and unregisters it again.
+    This is especially helpful, when you want to run a command for sure without possible command-id-number-problems.
     
-    returns nil in case of an error
-  </description>
-  <retvals>
-    string marker - a string with all markernumbers, markerpositions and markertitles, separated by a newline. 
-    -Can contain numerous markers, if there are more markers in one position.
-  </retvals>
-  <parameters>
-    integer xmouseposition - the absolute x-screen-position, like current mouse-position
-    boolean retina - if the screen-resolution is retina or hidpi, turn this true, else false
-  </parameters>
-  <chapter_context>
-    Markers
-    Assistance functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>markermanagement, navigation, get marker, position, marker</tags>
-</US_DocBloc>
-]]
-  if math.type(xmouseposition)~="integer" then ultraschall.AddErrorMessage("GetMarkerByScreenCoordinates", "xmouseposition", "must be an integer", -1) return nil end
-  local one,two,three,four,five,six,seven,eight,nine,ten
-  if retina==false then
-    ten=84
-    nine=76
-    eight=68
-    seven=60
-    six=52
-    five=44
-    four=36
-    three=28
-    two=20
-    one=12
-  else
-    ten=84*2
-    nine=76*2
-    eight=68*2
-    seven=60*2
-    six=52*2
-    five=44*2
-    four=36*2
-    three=28*2
-    two=20*2
-    one=12*2
-  end
-  local retstring=""
-  local temp
-  
-  local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
-  for i=0, retval do
-    local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
-    if isrgn==false then
-      if markrgnindexnumber>999999999 then temp=ten
-      elseif markrgnindexnumber>99999999 and markrgnindexnumber<1000000000  then temp=nine
-      elseif markrgnindexnumber>9999999 and markrgnindexnumber<100000000 then temp=eight
-      elseif markrgnindexnumber>999999 and markrgnindexnumber<10000000 then temp=seven
-      elseif markrgnindexnumber>99999 and markrgnindexnumber<1000000 then temp=six
-      elseif markrgnindexnumber>9999 and markrgnindexnumber<100000 then temp=five
-      elseif markrgnindexnumber>999 and markrgnindexnumber<10000 then temp=four
-      elseif markrgnindexnumber>99 and markrgnindexnumber<1000 then temp=three
-      elseif markrgnindexnumber>9 and markrgnindexnumber<100 then temp=two
-      elseif markrgnindexnumber>-1 and markrgnindexnumber<10 then temp=one
-      end
-      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition) 
-      local ALABAMA=xmouseposition
-      if pos>=Ax and pos<=AAx then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name end
-    end
-  end
-  return retstring--:match("(.-)%c.-%c")), tonumber(retstring:match(".-%c(.-)%c")), retstring:match(".-%c.-%c(.*)")
-end
-
-function ultraschall.GetMarkerByTime(position, retina)
---returns a string with the marker(s) at given timeline-position. No Regions!
---string will be "Markeridx\npos\nName\nMarkeridx2\npos2\nName2"
-
---position - position in time
---retina - if it's retina/hiDPI, set it true, else, set it false
-
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetMarkerByTime</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.40
-    SWS=2.8.8
-    Lua=5.3
-  </requires>
-  <functioncall>string markers = ultraschall.GetMarkerByTime(number position, boolean retina)</functioncall>
-  <description>
-    returns the markers at a given project-position in seconds. 
-    It sees markers according their actual graphical representation in the arrange-view, not just their position. 
-    If, for example, you pass to it the current playposition, the function will return the marker as long as the playcursor is behind the marker-graphics.
+    It returns a unique script-identifier for this script, which can be used to communicate with this script-instance.
+    The started script gets its script-identifier using [GetScriptIdentifier](#GetScriptIdentifier).
+    You can use this script-identifier e.g. as extstate.
     
-    Returned string will be "Markeridx\npos\nName\nMarkeridx2\npos2\nName2\n...".
-    Returns only markers, no time markers or regions!
+    Returns false in case of an error
   </description>
   <retvals>
-    string marker - a string with all markernumbers, markerpositions and markertitles, separated by a newline. 
-    -Can contain numerous markers, if there are more markers in one position.
+    boolean retval - true, if running it was successful; false, if not
+    string script_identifier - a unique script-identifier, which can be used as extstate to communicate with the started scriptinstance
   </retvals>
   <parameters>
-    number position - the time-position in seconds
-    boolean retina - if the screen-resolution is retina or hidpi, turn this true, else false
+    string filename - the name and path of the scriptfile to run
+    string ... - parameters that shall be passed over to the script
   </parameters>
-  <chapter_context>
-    Markers
-    Assistance functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>markermanagement, navigation, get marker, position, marker</tags>
-</US_DocBloc>
-]]
-  if type(position)~="number" then ultraschall.AddErrorMessage("GetMarkerByTime", "position", "must be a number", -1) return nil end
-  local one,two,three,four,five,six,seven,eight,nine,ten
-  if retina==false then
-    ten=84
-    nine=76
-    eight=68
-    seven=60
-    six=52
-    five=44
-    four=36
-    three=28
-    two=20
-    one=12
-  else
-    ten=84*2
-    nine=76*2
-    eight=68*2
-    seven=60*2
-    six=52*2
-    five=44*2
-    four=36*2
-    three=28*2
-    two=20*2
-    one=12*2
-  end
-  local retstring=""
-  local temp
-  
-  local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
-  for i=0, retval do
-    local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
-    if isrgn==false then
-      if markrgnindexnumber>999999999 then temp=ten
-      elseif markrgnindexnumber>99999999 and markrgnindexnumber<1000000000  then temp=nine
-      elseif markrgnindexnumber>9999999 and markrgnindexnumber<100000000 then temp=eight
-      elseif markrgnindexnumber>999999 and markrgnindexnumber<10000000 then temp=seven
-      elseif markrgnindexnumber>99999 and markrgnindexnumber<1000000 then temp=six
-      elseif markrgnindexnumber>9999 and markrgnindexnumber<100000 then temp=five
-      elseif markrgnindexnumber>999 and markrgnindexnumber<10000 then temp=four
-      elseif markrgnindexnumber>99 and markrgnindexnumber<1000 then temp=three
-      elseif markrgnindexnumber>9 and markrgnindexnumber<100 then temp=two
-      elseif markrgnindexnumber>-1 and markrgnindexnumber<10 then temp=one
-      end
-      local Aretval,ARetval2=reaper.BR_Win32_GetPrivateProfileString("REAPER", "leftpanewid", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
-      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, ARetval2+57-temp,ARetval2+57) 
-      local Bx=AAx-Ax
-      if Bx+pos>=position and pos<=position then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name end      
-    end
-  end
-  return retstring
-end
-
-
-function ultraschall.GetRegionByScreenCoordinates(xmouseposition, retina)
---returns a string with the marker(s) at given screen-x-position in the timeline. No Regions!
---string will be "Markeridx\npos\nName\nMarkeridx2\npos2\nName2"
-
---xmouseposition - x mouseposition
---retina - if it's retina/hiDPI, set it true, else, set it false
-
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetRegionByScreenCoordinates</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.40
-    Lua=5.3
-  </requires>
-  <functioncall>string markers = ultraschall.GetRegionByScreenCoordinates(integer xmouseposition, boolean retina)</functioncall>
-  <description>
-    returns the regions at a given absolute-x-pixel-position. It sees regions according their graphical representation in the arrange-view, not just their position! Returned string will be "Regionidx\npos\nName\nRegionidx2\npos2\nName2\n...".
-    Returns only regions, no time markers or other markers!
-  </description>
-  <retvals>
-    string marker - a string with all regionnumbers, regionpositions and regionnames, separated by a newline. 
-    -Can contain numerous regions, if there are more regions in one position.
-  </retvals>
-  <parameters>
-    integer xmouseposition - the absolute x-screen-position, like current mouse-position
-    boolean retina - if the screen-resolution is retina or hidpi, turn this true, else false
-  </parameters>
-  <chapter_context>
-    Markers
-    Assistance functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>markermanagement, navigation, get region, position, region</tags>
-</US_DocBloc>
-]]
-  if math.type(xmouseposition)~="integer" then ultraschall.AddErrorMessage("GetRegionByScreenCoordinates", "xmouseposition", "must be an integer", -1) return nil end
-  
-  local one,two,three,four,five,six,seven,eight,nine,ten
-  if retina==false then
-    ten=84
-    nine=76
-    eight=68
-    seven=60
-    six=52
-    five=44
-    four=36
-    three=28
-    two=20
-    one=12
-  else
-    ten=84*2
-    nine=76*2
-    eight=68*2
-    seven=60*2
-    six=52*2
-    five=44*2
-    four=36*2
-    three=28*2
-    two=20*2
-    one=12*2
-  end
-  local retstring=""
-  local temp
-  local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
-  for i=0, retval do
-    local ALABAMA=xmouseposition
-    local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
-    if isrgn==true then
-      if markrgnindexnumber>999999999 then temp=ten
-      elseif markrgnindexnumber>99999999 and markrgnindexnumber<1000000000  then temp=nine
-      elseif markrgnindexnumber>9999999 and markrgnindexnumber<100000000 then temp=eight
-      elseif markrgnindexnumber>999999 and markrgnindexnumber<10000000 then temp=seven
-      elseif markrgnindexnumber>99999 and markrgnindexnumber<1000000 then temp=six
-      elseif markrgnindexnumber>9999 and markrgnindexnumber<100000 then temp=five
-      elseif markrgnindexnumber>999 and markrgnindexnumber<10000 then temp=four
-      elseif markrgnindexnumber>99 and markrgnindexnumber<1000 then temp=three
-      elseif markrgnindexnumber>9 and markrgnindexnumber<100 then temp=two
-      elseif markrgnindexnumber>-1 and markrgnindexnumber<10 then temp=one
-      end
-      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition) 
-      if pos>=Ax and pos<=AAx then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name.."\n" 
-      elseif Ax>=pos and Ax<=rgnend then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name
-      end
-    end
-  end
-  return retstring
-end
-
-function ultraschall.GetRegionByTime(position, retina)
---returns a string with the marker(s) at given timeline-position. No Regions!
---string will be "Markeridx\npos\nName\nMarkeridx2\npos2\nName2"
-
---position - position in time
---retina - if it's retina/hiDPI, set it true, else, set it false
-
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetRegionByTime</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.40
-    SWS=2.8.8
-    Lua=5.3
-  </requires>
-  <functioncall>string markers = ultraschall.GetRegionByTime(number position, boolean retina)</functioncall>
-  <description>
-    returns the regions at a given absolute-x-pixel-position. It sees regions according their graphical representation in the arrange-view, not just their position! Returned string will be "Regionidx\npos\nName\nRegionidx2\npos2\nName2\n...".
-    Returns only regions, no time markers or other markers!
-  </description>
-  <retvals>
-    string marker - a string with all regionnumbers, regionpositions and regionnames, separated by a newline. 
-    -Can contain numerous regions, if there are more regions in one position.
-  </retvals>
-  <parameters>
-    number position - position in seconds
-    boolean retina - if the screen-resolution is retina or hidpi, turn this true, else false
-  </parameters>
-  <chapter_context>
-    Markers
-    Assistance functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>markermanagement, navigation, get region, position, region</tags>
-</US_DocBloc>
-]]
-  if type(position)~="number" then ultraschall.AddErrorMessage("GetRegionByTime", "position", "must be a number", -1) return nil end
-  local one,two,three,four,five,six,seven,eight,nine,ten
-  if retina==false then
-    ten=84
-    nine=76
-    eight=68
-    seven=60
-    six=52
-    five=44
-    four=36
-    three=28
-    two=20
-    one=12
-  else
-    ten=84*2
-    nine=76*2
-    eight=68*2
-    seven=60*2
-    six=52*2
-    five=44*2
-    four=36*2
-    three=28*2
-    two=20*2
-    one=12*2
-  end
-  local retstring=""
-  local temp
-  local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
-  for i=0, retval do
-    local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
-    if isrgn==true then
-      if markrgnindexnumber>999999999 then temp=ten
-      elseif markrgnindexnumber>99999999 and markrgnindexnumber<1000000000  then temp=nine
-      elseif markrgnindexnumber>9999999 and markrgnindexnumber<100000000 then temp=eight
-      elseif markrgnindexnumber>999999 and markrgnindexnumber<10000000 then temp=seven
-      elseif markrgnindexnumber>99999 and markrgnindexnumber<1000000 then temp=six
-      elseif markrgnindexnumber>9999 and markrgnindexnumber<100000 then temp=five
-      elseif markrgnindexnumber>999 and markrgnindexnumber<10000 then temp=four
-      elseif markrgnindexnumber>99 and markrgnindexnumber<1000 then temp=three
-      elseif markrgnindexnumber>9 and markrgnindexnumber<100 then temp=two
-      elseif markrgnindexnumber>-1 and markrgnindexnumber<10 then temp=one
-      end
-      local Aretval,ARetval2=reaper.BR_Win32_GetPrivateProfileString("REAPER", "leftpanewid", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
-      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, ARetval2+57-temp,ARetval2+57) 
-      local Bx=AAx-Ax
-      if Bx+pos>=position and pos<=position then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name.."\n"
-      elseif pos<=position and rgnend>=position then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name
-      end
-    end
-  end
-  return retstring
-end
-
-function ultraschall.GetApiVersion()
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetApiVersion</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.40
-    Lua=5.3
-  </requires>
-  <functioncall>string version, string date, string beta, number versionnumber, string tagline = ultraschall.GetApiVersion()</functioncall>
-  <description>
-    returns the version, release-date and if it's a beta-version
-  </description>
-  <retvals>
-    string version - the current Api-version
-    string date - the release date of this api-version
-    string beta - if it's a beta version, this is the beta-version-number
-    number versionnumber - a number, that you can use for comparisons like, "if requestedversion>versionnumber then"
-    string tagline - the tagline of the current release
-  </retvals>
   <chapter_context>
     API-Helper functions
+    Child Scripts
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>version,versionmanagement</tags>
-</US_DocBloc>
---]]
-  return "4.00","15th of December 2018", "Beta 2.7", 400.027, "\"Frank Zappa - The Return of the Son of Monster Magnet\""
-end
-
-function ultraschall.ConvertColor(r,g,b)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>ConvertColor</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.52
-    Lua=5.3
-  </requires>
-  <functioncall>integer colorvalue, boolean retval = ultraschall.ConvertColor(integer r, integer g, integer b)</functioncall>
-  <description>
-    converts r, g, b-values to native-system-color. Works like reaper's ColorToNative, but doesn't need |0x1000000 added.
-    
-    returns color-value 0, and retval=false in case of an error
-  </description>
-  <retvals>
-    integer colorvalue - the native-system-color; 0 to 33554431
-  </retvals>
-  <parameters>
-    integer r - the red colorvalue
-    integer g - the green colorvalue
-    integer b - the blue colorvalue
-  </parameters>
-  <chapter_context>
-    Color Management
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>helper functions, color, native, convert, red, gree, blue</tags>
+  <tags>helper functions, run command, filename, scriptidentifier, scriptparameters</tags>
 </US_DocBloc>
 ]]
-    if math.type(r)~="integer" then ultraschall.AddErrorMessage("ConvertColor","r", "only integer allowed", -1) return 0, false end
-    if math.type(g)~="integer" then ultraschall.AddErrorMessage("ConvertColor","g", "only integer allowed", -2) return 0, false end
-    if math.type(b)~="integer" then ultraschall.AddErrorMessage("ConvertColor","b", "only integer allowed", -3) return 0, false end
-    if ultraschall.IsOS_Mac()==true then r,b=b,r end
-    return reaper.ColorToNative(r,g,b)|0x1000000, true
+  -- check parameters
+  if type(filename)~="string" then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "Must be a string.", -1) return false end
+  if reaper.file_exists(filename)==false then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "File does not exist.", -2) return false end
+  
+  -- create temporary copy of the scriptfile, with a guid in its name  
+  local filename2
+  if filename:sub(-4,-1)==".lua" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".lua"
+  elseif filename:sub(-4,-1)==".eel" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".eel" 
+  elseif filename2==nil and filename:sub(-3,-1)==".py" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".py" end
+
+  if filename2==filename then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "No valid script, must be either Lua, Python or EEL-script and end with such an extension.", -4) return false end
+
+--reaper.MB(filename2,"",0)
+
+  local OO=ultraschall.MakeCopyOfFile(filename, filename2)
+  if OO==false then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "Couldn't create a temporary copy of the script.", -4) return false end
+
+  -- register, run and unregister the temporary scriptfile  
+  local commandid=reaper.AddRemoveReaScript(true, 0, filename2, true)
+  if commandid==0 then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "Couldn't register filename. Is it a valid ReaScript?.", -3) return false end
+  ultraschall.SetScriptParameters(string.gsub("ScriptIdentifier:"..filename2, "\\", "/"), ...)
+  reaper.Main_OnCommand(commandid, 0)
+  local commandid2=reaper.AddRemoveReaScript(false, 0, filename2, true)
+  
+  -- delete the temporary scriptfile
+  os.remove(filename2)
+  
+  -- return true and the script-identifier of the started script
+  return true, string.gsub("ScriptIdentifier:"..filename2, "\\", "/")
 end
 
-function ultraschall.SetUSExternalState(section, key, value)
--- stores value into ultraschall.ini
--- returns true if successful, false if unsuccessful
+--reaper.MB("Hui: "..tostring(ultraschall.tempfilename:match("%-")),ultraschall.tempfilename:sub(50,-1),0) -- %-%{%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x%}")),"",0)
+--if ultraschall.tempfilename:match("%-%{%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x%}")~=nil then reaper.MB("","zusido",0) else reaper.MB("Oh", "",0) end
+--ultraschall.ScriptIdentifier="HULA"
+
+--reaper.MB(ultraschall.ScriptIdentifier,"",0)
+
+
+
+
+function ultraschall.MIDI_OnCommandByFilename(filename, MIDIEditor_HWND, ...)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>SetUSExternalState</slug>
+  <slug>MIDI_OnCommandByFilename</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.40
-    SWS=2.8.8
+    Reaper=5.965
+    JS=0.962
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.SetUSExternalState(string section, string key, string value)</functioncall>
-  <description>
-    stores values into ultraschall.ini. Returns true if successful, false if unsuccessful.
+  <functioncall>boolean retval, string script_identifier = ultraschall.MIDI_OnCommandByFilename(string filename, optional HWND Midi_EditorHWND, string ...)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Runs a command by a filename in the MIDI-editor-context. It internally registers the file temporarily as command, runs it and unregisters it again.
+    This is especially helpful, when you want to run a command for sure without possible command-id-number-problems.
     
-    unlike other Ultraschall-API-functions, this converts the values, that you pass as parameters, into strings, regardless of their type
+    It returns a unique script-identifier for this script, which can be used to communicate with this script-instance.
+    The started script gets its script-identifier using [GetScriptIdentifier](#GetScriptIdentifier).
+    You can use this script-identifier e.g. as extstate.
+    
+    Returns false in case of an error
   </description>
   <retvals>
-    boolean retval - true, if successful, false if unsuccessful.
+    boolean retval - true, if running it was successful; false, if not
+    string script_identifier - a unique script-identifier, which can be used as extstate to communicate with the started scriptinstance
   </retvals>
   <parameters>
-    string section - section within the ini-file
-    string key - key within the section
-    string value - the value itself
+    HWND Midi_EditorHWND - the window-handler of the MIDI-editor, in which to run the script; nil, for the last active MIDI-editor
+    string filename - the name plus path of the scriptfile to run
+    string ... - parameters, that shall be passed over to the script
   </parameters>
   <chapter_context>
-    Configuration-Files Management
-    Ultraschall.ini
+    API-Helper functions
+    Child Scripts
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>configurationmanagement, value, insert, store</tags>
+  <tags>helper functions, run command, filename, midi, midieditor, scriptidentifier, scriptparameters</tags>
 </US_DocBloc>
---]]
-  -- check parameters
-  section=tostring(section)
-  key=tostring(key)
-  value=tostring(value)  
-  if section:match(".*(%=).*")=="=" then ultraschall.AddErrorMessage("SetUSExternalState","section", "no = allowed in section", -4) return false end
+]]
+  -- check parameters and MIDI-Editor
+  if type(filename)~="string" then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "filename", "Must be a string.", -1) return false end
+  if reaper.file_exists(filename)==false then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "filename", "File does not exist.", -2) return false end
+  if MIDIEditor_HWND~=nil then
+    if pcall(reaper.JS_Window_GetTitle, MIDIEditor_HWND, "")==false then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "MIDIEditor_HWND", "Not a valid HWND.", -3) return false end
+    if pcall(reaper.JS_Window_GetTitle(MIDIEditor_HWND, ""):match("MIDI"))==false then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "MIDIEditor_HWND", "Not a valid MIDI-Editor-HWND.", -4) return false end
+  end  
 
-  -- set value
-  return reaper.BR_Win32_WritePrivateProfileString(section, key, value, reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")
-end
+  -- create temporary scriptcopy with a guid in its filename
+  local filename2
+  if filename:sub(-4,-1)==".lua" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".lua"
+  elseif filename:sub(-4,-1)==".eel" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".eel" 
+  elseif filename2==nil and filename:sub(-3,-1)==".py" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".py" end
 
-function Msg(val)
-  reaper.ShowConsoleMsg(tostring(val).."\n")
-end
+  if filename2==filename then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "filename", "No valid script, must be either Lua, Python or EEL-script and end with such an extension.", -4) return false end
 
-function runcommand(cmd)     -- run a command by its name
-
-  start_id = reaper.NamedCommandLookup(cmd)
-  reaper.Main_OnCommand(start_id,0) 
-
-end
-
-function GetPath(str,sep)
- 
-    return str:match("(.*"..sep..")")
-
+  local OO=ultraschall.MakeCopyOfFile(filename, filename2)
+  if OO==false then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "filename", "Couldn't create a temporary copy of the script.", -4) return false end
+  
+  -- register and run the temporary-scriptfile
+  local commandid =reaper.AddRemoveReaScript(true, 32060, filename2, true)
+  local commandid2=reaper.AddRemoveReaScript(true, 32061, filename2, true)
+  local commandid3=reaper.AddRemoveReaScript(true, 32062, filename2, true)
+  if commandid==0 then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "filename", "Couldn't register filename. Is it a valid ReaScript?.", -5) return false end
+  if MIDIEditor_HWND==nil then 
+    ultraschall.SetScriptParameters(string.gsub("ScriptIdentifier:"..filename2, "\\", "/"), ...)
+    local A2=reaper.MIDIEditor_LastFocused_OnCommand(commandid, true)
+    if A2==false then A2=reaper.MIDIEditor_LastFocused_OnCommand(commandid, false) end
+    if A2==false then 
+      ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "MIDIEditor_HWND", "No last focused MIDI-Editor open.", -6) 
+      ultraschall.GetScriptParameters(string.gsub("ScriptIdentifier:"..filename2, "\\", "/"), true)
+      return false 
+    end
+  end
+  local L=reaper.MIDIEditor_OnCommand(MIDIEditor_HWND, commandid)
+  
+  -- unregister the temporary-scriptfile
+  local commandid_2=reaper.AddRemoveReaScript(false, 32060, filename2, true)
+  local commandid_3=reaper.AddRemoveReaScript(false, 32061, filename2, true)
+  local commandid_4=reaper.AddRemoveReaScript(false, 32062, filename2, true)
+  
+  -- delete the temporary scriptfile and return true and the script-identifier for the started script
+  os.remove(filename2)
+  return true, string.gsub("ScriptIdentifier:"..filename2, "\\", "/")
 end

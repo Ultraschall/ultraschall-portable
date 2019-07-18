@@ -42,6 +42,19 @@ function RippleCut()
   reaper.Main_OnCommand(40289, 0)            -- Unselect all Items 
 end
 
+function AddMuteEnvelopePoint_IfNecessary(startsel, endsel)
+  for i=1, reaper.CountTracks(0) do
+    Track=reaper.GetTrack(0,i-1)
+    Envelope=reaper.GetTrackEnvelopeByName(Track, "Mute")
+    retval, envIDX, envVal = ultraschall.IsMuteAtPosition(i, endsel)
+    
+    if retval==false and Envelope~=nil then
+      envIDX, envVal, envPosition = ultraschall.GetPreviousMuteState(i, endsel)
+      reaper.InsertEnvelopePoint(Envelope, endsel, envVal, 1, 0, false, false)
+    end
+  end
+end
+
 playstate=reaper.GetPlayState()
 if playstate&4==4 then return end -- quit if recording
 
@@ -62,6 +75,7 @@ if init_end_timesel == init_start_timesel and reaper.CountSelectedMediaItems(0) 
 end
 
 if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
+  AddMuteEnvelopePoint_IfNecessary(init_start_timesel, init_end_timesel)
   RippleCut()
   if (playstate==0 or playstate&2==2) then -- pause/stop -> move to start of selection
     reaper.MoveEditCursor(init_start_timesel-reaper.GetCursorPosition(), 0)

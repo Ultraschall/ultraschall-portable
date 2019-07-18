@@ -26,7 +26,11 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-current_position = reaper.GetPlayPosition() -- Position of play-cursor
+if reaper.GetPlayState() & 2 == 2 then -- if pause, use edit cursor position
+  current_position = reaper.GetCursorPosition() 
+else
+  current_position = reaper.GetPlayPosition() -- Position of play-cursor
+end
 
 markercount=ultraschall.CountNormalMarkers_NumGap()
 

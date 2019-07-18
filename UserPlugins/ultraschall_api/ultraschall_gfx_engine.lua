@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -47,10 +47,12 @@ if type(ultraschall)~="table" then
   reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
   ultraschall={} 
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-  gfx.init()
+  local Retval, HWND=ultraschall.GFX_Init()
 end
 
-function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness)
+if ultraschall.GFX_WindowHWND==nil then ultraschall.GFX_WindowHWND="Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window." end
+
+function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness, roundness, antialias)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GFX_DrawThickRoundRect</slug>
@@ -59,7 +61,7 @@ function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness)
     Reaper=5.95
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.GFX_DrawThickRoundRect(integer x, integer y, integer w, integer h, number thickness)</functioncall>
+  <functioncall>boolean retval = ultraschall.GFX_DrawThickRoundRect(integer x, integer y, integer w, integer h, number thickness, number roundness, boolean antialias)</functioncall>
   <description>
     draws a round-rectangle with a custom thickness.
     
@@ -72,7 +74,9 @@ function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness)
     integer y - the y position of the rectangle
     integer w - the width of the rectangle
     integer h - the height of the rectangle
-    number thickness - the angle of the rectangle's corners
+    number thickness - the thickness of the rectangle's edges
+    number roundness - the angle of the rectangle's corners
+    boolean antialias - true, draw antialiased; false, simply draw aliased
   </parameters>
   <retvals>
     boolean retval - true, drawing was successful; false, drawing wasn't successful
@@ -91,23 +95,25 @@ function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness)
   if ultraschall.type(w)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "w", "must be an integer", -4) return false end
   if ultraschall.type(h)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "h", "must be an integer", -5) return false end
   if type(thickness)~="number" then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "thickness", "must be a number", -6) return false end
+  if type(roundness)~="number" then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "roundness", "must be a number", -12) return false end
   if x<0 then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "x", "must be bigger than 0", -7) return false end
   if y<0 then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "y", "must be bigger than 0", -8) return false end
   if w<0 then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "w", "must be bigger than 0", -9) return false end
   if h<0 then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "h", "must be bigger than 0", -10) return false end
   if thickness<0 then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "thickness", "must be bigger than 0", -11) return false end
+  if antialias==true then antialias=1 else antialias=0 end
   for i=1, thickness, 0.5 do
-    gfx.roundrect(x+i,y+1+i,w-1-(i*2),h-(i*2),round)
+    gfx.roundrect(x+i,y+1+i,w-1-(i*2),h-(i*2),roundness, antialias)
     if thickness>1 then
-      gfx.roundrect(x+1+i,y+i,w-1-(i*2),h-(i*2),round)
-      gfx.roundrect(x+i,y+i,w+1-(i*2),h-(i*2),round)
-      gfx.roundrect(x+i,y+i,w+1-(i*2),h-1-(i*2),round)
+      gfx.roundrect(x+1+i,y+i,w-1-(i*2),h-(i*2),roundness, antialias)
+      gfx.roundrect(x+i,y+i,w+1-(i*2),h-(i*2),roundness, antialias)
+      gfx.roundrect(x+i,y+i,w+1-(i*2),h-1-(i*2),roundness, antialias)
     end
   end
   return true
 end
-
---A=ultraschall.GFX_DrawThickRoundRect(1,2,30,40,10)
+--gfx.init()
+--A=ultraschall.GFX_DrawThickRoundRect(1,2,300,140,5,40,true)
 
 function ultraschall.GFX_BlitFramebuffer(framebufferidx, showidx)
 --[[
@@ -518,6 +524,115 @@ function Editormain()
   if KeyCode~=-1 then reaper.defer(Editormain) end
 end
 
+
+function ultraschall.GFX_Init(...)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_Init</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    JS=0.964
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval, HWND hwnd = ultraschall.GFX_Init(string "name", optional integer width, optional integer height, optional integer dockstate, optional integer xpos, optional integer ypos)</functioncall>
+  <description>
+    Opens a new graphics window and returns its HWND-windowhandler object.
+  </description>
+  <parameters>
+    string "name" - the name of the window, which will be shown in the title of the window
+    optional integer width -  the width of the window; minmum is 50
+    optional integer height -  the height of the window; minimum is 16
+    optional integer dockstate - &1=0, undocked; &1=1, docked
+    optional integer xpos - x-position of the window in pixels; minimum is -80
+    optional integer ypos - y-position of the window in pixels; minimum is -15
+  </parameters>
+  <retvals>
+    number retval  -  1.0, if window is opened
+    HWND hwnd - the window-handler of the newly created window; can be used with JS_Window_xxx-functions of the JS-extension-plugin
+  </retvals>
+  <chapter_context>
+    Window Handling
+  </chapter_context>
+  <target_document>USApiGfxReference</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, functions, gfx, init, window, create, hwnd</tags>
+</US_DocBloc>
+]]
+  local A=gfx.getchar(65536)
+  local HWND, retval
+  if A&4==0 then
+    local parms={...}
+    local temp=parms[1]
+  
+    -- check, if the given windowtitle is a valid one, 
+    -- if that's not the case, use "" as name
+    if temp==nil or type(temp)~="string" then temp="" end  
+    if type(parms[1])~="string" then parms[1]="" 
+    end
+    
+    -- check for a window-name not being used yet, which is 
+    -- windowtitleX, where X is a number
+    local freeslot=0
+    for i=0, 65555 do
+      if reaper.JS_Window_Find(parms[1]..i, true)==nil then freeslot=i break end
+    end
+    -- use that found, unused windowtitle as temporary windowtitle
+    parms[1]=parms[1]..freeslot
+    
+    -- open window  
+    retval=gfx.init(table.unpack(parms))
+    
+    -- find the window with the temporary windowtitle and get its HWND
+    HWND=reaper.JS_Window_Find(parms[1], true)
+    
+    -- rename it to the original title
+    if HWND~=nil then reaper.JS_Window_SetTitle(HWND, temp) end
+    ultraschall.GFX_WindowHWND=HWND
+  else 
+    retval=0.0
+  end
+  return retval, ultraschall.GFX_WindowHWND
+end
+
+
+
+function ultraschall.GFX_GetWindowHWND()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_GetWindowHWND</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    JS_0.964
+    Lua=5.3
+  </requires>
+  <functioncall>HWND hwnd = ultraschall.GFX_GetWindowHWND()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the HWND of the currently opened gfx-window. You need to use [ultraschall.GFX_Init()](#GFX_Init), otherwise 
+    it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."
+  </description>
+  <retvals>
+     HWND hwnd - the window-handler of the opened gfx-window; will contain a helpermessage, if you didn't use [ultraschall.GFX_Init()](#GFX_Init) for window creation.
+  </retvals>
+  <chapter_context>
+    Window Handling
+  </chapter_context>
+  <target_document>USApiGfxReference</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, functions, gfx, init, window, get, hwnd</tags>
+</US_DocBloc>
+]]
+  return ultraschall.GFX_WindowHWND
+end
+
+--O=ultraschall.GFX_GetWindowHWND()
+
+--A1,B1=reaper.JS_Window_Find("Tudel", true)
+--A,B=ultraschall.GFX_Init("Hula")
+--gfx.init("Tudelu")
+--C,D=reaper.JS_Window_Find("Tudels", true)
+--O2=ultraschall.GFX_GetWindowHWND()
 --[[
 -- Let's initialize some stuff
   gfx.init("TRET",720,420)    -- open a window

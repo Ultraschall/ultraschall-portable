@@ -1,5 +1,5 @@
 <html><head><title>
-REAPER VideoProcessor-API functions
+REAPER API functions
 </title>
 <script type="text/javascript">
 function set_class_style(c,s) { 
@@ -81,223 +81,603 @@ function onLoad() {
            </div>
         </div>
     </div>
-    <div style="position:absolute; top:17%; padding-left:5%; width:90%;"><p></p>    
-            <h2>Reaper Api - Video Processor Plugin for Reaper 5.965 </h2>
-                        
-            <h3>Index</h3>
-            <a href="#introduction">Introduction</a><br>
-            <a href="#codingintroduction">Coding Introduction</a><br>
-            <b>special variables</b><br>
-            <div style="padding-left: 3%;">
-                        <a href="#project_time">	project_time: project time in seconds	</a><br>
-                        <a href="#project_tempo">	project_tempo: current tempo in BPM	</a><br>
-                        <a href="#project_ts_num">	project_ts_num: current time signature numerator	</a><br>
-                        <a href="#project_ts_denom">	project_ts_denom: current time signature denominator	</a><br>
-                        <a href="#project_time_qn">	project_time_qn: current project position in QN	</a><br>
-                        <a href="#time">	time: item time in seconds (if in item)	</a><br>
-                        <a href="#framerate">	framerate: project FPS (30.0, 29.97, etc)	</a><br>
-                        <a href="#project_w">	project_w: project preferred video width	</a><br>
-                        <a href="#project_h">	project_h: project preferred video height	</a><br>
-                        <a href="#project_wh_valid">	project_wh_valid: set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)	</a><br>
-                        <a href="#colorspace">	colorspace: current rendering colorspace, e.g. 'RGBA', 'YV12', or 'YUY2'. you can override this with extreme caution.	</a><br>
-                        <a href="#param_wet">	param_wet: if in FX form, wet/dry mix of effect. 	</a><br>
-                        <a href="#param">	param1..param16: parameters, you can name these by adding lines: //@param [:varname] 'name' [defval minval maxval centval step]. 	</a><br>
-                        <a href="#gfx_r">	gfx_r: current drawing color (red 0..1)	</a><br>
-                        <a href="#gfx_g">	gfx_g: current drawing color (green 0..1)	</a><br>
-                        <a href="#gfx_b">	gfx_b: current drawing color (blue 0..1)	</a><br>
-                        <a href="#gfx_a">	gfx_a: current drawing alpha (0..1)	</a><br>
-                        <a href="#gfx_mode">	gfx_mode: 0=normal, 1= additive, 3=mul (works different in YUV vs RGB)	</a><br>
-                        <a href="#gfx_dest">	gfx_dest: destination image handle, or -1 for main framebuffer	</a><br>
-            </div>
+    <div style="position:absolute; top:17%; padding-left:5%; width:90%;"><p></p>
+    <h2>Reaper Video Processor Plugin API</h2>
+    Video processors are written in the EEL2 language, and are primarily code. If the first line is a comment beginning with //, it will be used as the name of the processor.<p>
+    
+    The processor can define up to 24 parameters using special comment lines:<p>
+    
+    <pre><code>//@param [<idx>[:varname]|varname] 'name' [defval minval maxval centval step] </code></pre><p>
+    
+    For more information on the code language, please see <a ="http://www.cockos.com/EEL2/">the EEL2 programming-language-reference</a>
+    <table style="font-size:10pt;" width="100%"><table style="width:100%;" border="0"><tr><td><br><strong><u>1. Introduction</u></strong><br><br>
+</td></tr><tr><td style="width:25%; font-size:small;"><a href="#Coding Introduction">Coding Introduction</a></td><td style="width:25%; font-size:small;"><a href="#Introduction">Introduction</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><br><strong><u>2. Special Variables</u></strong><br><br>
+</td></tr><tr><td style="width:25%; font-size:small;"><a href="#colorspace">colorspace</a></td><td style="width:25%; font-size:small;"><a href="#framerate">framerate</a></td><td style="width:25%; font-size:small;"><a href="#gfx_a">gfx_a</a></td><td style="width:25%; font-size:small;"><a href="#gfx_a2">gfx_a2</a></td></tr><td style="width:25%; font-size:small;"><a href="#gfx_b">gfx_b</a></td><td style="width:25%; font-size:small;"><a href="#gfx_dest">gfx_dest</a></td><td style="width:25%; font-size:small;"><a href="#gfx_g">gfx_g</a></td><td style="width:25%; font-size:small;"><a href="#gfx_mode">gfx_mode</a></td></tr><td style="width:25%; font-size:small;"><a href="#gfx_r">gfx_r</a></td><td style="width:25%; font-size:small;"><a href="#param1..param24">param1..param24</a></td><td style="width:25%; font-size:small;"><a href="#param_wet">param_wet</a></td><td style="width:25%; font-size:small;"><a href="#project_h">project_h</a></td></tr><td style="width:25%; font-size:small;"><a href="#project_tempo">project_tempo</a></td><td style="width:25%; font-size:small;"><a href="#project_time">project_time</a></td><td style="width:25%; font-size:small;"><a href="#project_time_qn">project_time_qn</a></td><td style="width:25%; font-size:small;"><a href="#project_ts_denom">project_ts_denom</a></td></tr><td style="width:25%; font-size:small;"><a href="#project_ts_num">project_ts_num</a></td><td style="width:25%; font-size:small;"><a href="#project_w">project_w</a></td><td style="width:25%; font-size:small;"><a href="#project_wh_valid">project_wh_valid</a></td><td style="width:25%; font-size:small;"><a href="#time">time</a></td></tr></table><table style="width:100%;" border="0"><tr><td><br><strong><u>3. Specific Functions</u></strong><br><br>
+</td></tr><tr><td style="width:25%; font-size:small;"><a href="#gfx_blit">gfx_blit</a></td><td style="width:25%; font-size:small;"><a href="#gfx_deltablit">gfx_deltablit</a></td><td style="width:25%; font-size:small;"><a href="#gfx_destkeyedblit">gfx_destkeyedblit</a></td><td style="width:25%; font-size:small;"><a href="#gfx_evalrect">gfx_evalrect</a></td></tr><td style="width:25%; font-size:small;"><a href="#gfx_fillrect">gfx_fillrect</a></td><td style="width:25%; font-size:small;"><a href="#gfx_getpixel">gfx_getpixel</a></td><td style="width:25%; font-size:small;"><a href="#gfx_gradrect">gfx_gradrect</a></td><td style="width:25%; font-size:small;"><a href="#gfx_img_alloc">gfx_img_alloc</a></td></tr><td style="width:25%; font-size:small;"><a href="#gfx_img_free">gfx_img_free</a></td><td style="width:25%; font-size:small;"><a href="#gfx_img_getptr">gfx_img_getptr</a></td><td style="width:25%; font-size:small;"><a href="#gfx_img_hold">gfx_img_hold</a></td><td style="width:25%; font-size:small;"><a href="#gfx_img_info">gfx_img_info</a></td></tr><td style="width:25%; font-size:small;"><a href="#gfx_img_resize">gfx_img_resize</a></td><td style="width:25%; font-size:small;"><a href="#gfx_keyedblit">gfx_keyedblit</a></td><td style="width:25%; font-size:small;"><a href="#gfx_procrect">gfx_procrect</a></td><td style="width:25%; font-size:small;"><a href="#gfx_rotoblit">gfx_rotoblit</a></td></tr><td style="width:25%; font-size:small;"><a href="#gfx_set">gfx_set</a></td><td style="width:25%; font-size:small;"><a href="#gfx_setfont">gfx_setfont</a></td><td style="width:25%; font-size:small;"><a href="#gfx_str_draw">gfx_str_draw</a></td><td style="width:25%; font-size:small;"><a href="#gfx_str_measure">gfx_str_measure</a></td></tr><td style="width:25%; font-size:small;"><a href="#gfx_xformblit">gfx_xformblit</a></td><td style="width:25%; font-size:small;"><a href="#input_count">input_count</a></td><td style="width:25%; font-size:small;"><a href="#input_get_name">input_get_name</a></td><td style="width:25%; font-size:small;"><a href="#input_info">input_info</a></td></tr><td style="width:25%; font-size:small;"><a href="#input_ismaster">input_ismaster</a></td><td style="width:25%; font-size:small;"><a href="#input_next_item">input_next_item</a></td><td style="width:25%; font-size:small;"><a href="#input_next_track">input_next_track</a></td><td style="width:25%; font-size:small;"><a href="#input_track">input_track</a></td></tr><td style="width:25%; font-size:small;"><a href="#input_track_count">input_track_count</a></td><td style="width:25%; font-size:small;"><a href="#input_track_exact">input_track_exact</a></td><td style="width:25%; font-size:small;"><a href="#input_track_exact_count">input_track_exact_count</a></td><td style="width:25%; font-size:small;"><a href="#rgb2yuv">rgb2yuv</a></td></tr><td style="width:25%; font-size:small;"><a href="#yuv2rgb">yuv2rgb</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><br><strong><u>4. Advanced Functions</u></strong><br><br>
+</td></tr><tr><td style="width:25%; font-size:small;"><a href="#convolve_c">convolve_c</a></td><td style="width:25%; font-size:small;"><a href="#fft">fft</a></td><td style="width:25%; font-size:small;"><a href="#fft_ipermute">fft_ipermute</a></td><td style="width:25%; font-size:small;"><a href="#fft_permute">fft_permute</a></td></tr><td style="width:25%; font-size:small;"><a href="#fft_real">fft_real</a></td><td style="width:25%; font-size:small;"><a href="#gmem">gmem</a></td><td style="width:25%; font-size:small;"><a href="#ifft">ifft</a></td><td style="width:25%; font-size:small;"><a href="#ifft_real">ifft_real</a></td></tr><td style="width:25%; font-size:small;"><a href="#on_parameter_change">on_parameter_change</a></td><td style="width:25%; font-size:small;"><a href="#time_precise">time_precise</a></td><td style="width:25%; font-size:small;"><a href="#ui_get_state">ui_get_state</a></td><td style="width:25%;">&nbsp;</td></tr></table><br><hr><a id="Introduction"></a>
+  <a href="#Introduction"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>Introduction</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code></code><br><br></div>
 
-            <b>functions</b>
-        <div style="padding-left:3%; ">
-                <a href="#input_count">	input_count() returns number of inputs available (total), range [0..n)	</a><br>
-                <a href="#input_track_count">	input_track_count() returns the number of available inputs on discrete tracks	</a><br>
-                <a href="#input_track">	input_track(x) returns input for bottommost item or FX on discrete-track x 	</a><br>
-                <a href="#input_track_exact_count">	input_track_exact_count() returns the number of tracks above the current track that could possibly contain video items.	</a><br>
-                <a href="#input_track_exact">	input_track_exact(x) returns input for bottommost item or FX on track relative to current track.</a><br>
-                <a href="#input_next_item">	input_next_item(x) returns the next input after x which is on a different item or track	</a><br>
-                <a href="#input_next_track">	input_next_track(x) returns the next input after x which is on a different track	</a><br>
-                <a href="#input_ismaster">	input_ismaster() returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain	</a><br>
-                <a href="#input_info">	input_info(input, w, h[,srctime, wet, parm1, ...]) returns 1 if input is available, sets w/h to dimensions. </a><br>
-                <a href="#gfx_img_alloc">	gfx_img_alloc([w,h,clear]) returns an image index for drawing .</a><br>
-                <a href="#gfx_img_resize">	gfx_img_resize(handle,w,h[,clear]) sets an image size.	</a><br>
-                <a href="#gfx_img_hold">	gfx_img_hold(handle) (cheaply) retains a read-only copy of an image in handle. </a><br>
-                <a href="#gfx_img_getptr">	gfx_img_getptr(handle) gets a unique identifier for an image, valid for while the image is retained. </a><br>
-                <a href="#gfx_img_free">	gfx_img_free(handle) frees an earlier allocated image index.	</a><br>
-                <a href="#gfx_img_info">	gfx_img_info(handle,w,h) gets dimensions of image.	</a><br>
-                <a href="#gfx_set">	gfx_set(r,g,b[,a=1,mode=0,dest]) - updates r/g/b/a/mode always.</a><br>
-                <a href="#gfx_blit">	gfx_blit(input[,preserve_aspect=0,x,y,w,h,srcx,srcy,srcw,srch]) copies input to framebuffer.</a><br>
-                <a href="#gfx_fillrect">	gfx_fillrect(x,y,w,h) fills a rectangle	</a><br>
-                <a href="#gfx_procrect">	gfx_procrect(x,y,w,h,channel_tab) processes a rectangle with 768-entry channel table [256 items of 0..1 per channel]	</a><br>
-                <a href="#gfx_evalrect">	gfx_evalrect(x,y,w,h,code_string[,flags,src2]) processes a rectangle with code_string being executed for every pixel/pixel-group. </a><br>                
-                <a href="#gfx_gradrect">	gfx_gradrect(x,y,w,h, r,g,b,a	[,drdx,dgdx,dbdx,dadx,	drdy,dgdy,dbdy,dady]);	</a><br>
-                <a href="#gfx_rotoblit">	gfx_rotoblit(srcidx, angle [,x, y, w, h, srcx, srcy, w, h, cliptosrcrect = 0, centxoffs=0, centyoffs=0])	</a><br>
-                <a href="#gfx_deltablit">	gfx_deltablit(srcidx, x,y,w,h srcx,srcy, dsdx, dtdx, dsdy, dtdy, dsdxdy, dtdxdy[, dadx, dady, dadxdy])	</a><br>
-                <a href="#gfx_xformblit">	gfx_xformblit(srcidx, x,y,w,h, wdiv, hdiv, tab[, wantalpha=0]) - tab is wdiv*hdiv*2 table of src points.</a><br>
-                <a href="#gfx_keyedblit">	gfx_keyedblit(input[,x,y,w,h,srcx,srcy,kv1,kv2,kv3,kv4]) chroma-key blits, using the source color as key. </a><br>
-                <a href="#gfx_destkeyedblit">	gfx_destkeyedblit(input[,x,y,w,h,srcx,srcy,kv1,kv2,kv3,kv4]) chroma-key blits, using destination color as key. ignores gfx_a and gfx_mode.	</a><br>
-                <a href="#gfx_setfont">	gfx_setfont(pxsize[,#fontname, flags) - sets a font.	</a><br>
-                <a href="#gfx_str_measure">	gfx_str_measure(#string[,w,h]) - measures the size of #string, returns width	</a><br>
-                <a href="#gfx_str_draw">	gfx_str_draw(#string[,x,y,fxc_r,fxc_g,fxc_b]) - draw string	</a><br>
-                <a href="#rgb2yuv">	rgb2yuv(r,g,b) -- utility, converts r,g,b to YUV, does not clamp [0..1]	</a><br>
-                <a href="#yuv2rgb">	yuv2rgb(r,g,b) -- utility, converts YUV to r,g,b, not clamping [0..1]	</a><br>
+</b></div>
 
-        </div>
-            <br>
-        <div style="width:89%;">
-            <h3><a id="introduction">Introduction</a></h3>
-            Since Reaper 5, Reaper has proper video-editing support. In addition to that, Reaper has a plugin, called "Video Processor Plugin", that is focused on video-effect handling.<p>
-                Though it is still in it's very early stages, it supports already a handful of useful effects that can be selected via the presets-selection.<br>
-                It is also programmable. It opens up a small IDE-window, as part of the "Video-Processor-Plugin"-UI, in which you can put Eel-code(no Lua or Python!), that processes the video.<p>
-                Unlike with other scripts, the scripts for the video processor plugin do not support the standard-reaper-API-commands, but have an own set of variables and functions. The list of functions can be reached by clicking into the IDE-window of the "video processor plugin" and hitting the F1-key.<p>
-                <b>Some general notes on the video-processor-plugin:</b><br>
-            It has a very limited set of programmable UI-elements, means, only a knob (refer the <a href="#param">param</a>-variable for more details) at the time.<br>
-            The plugin has also sometimes the behaviour of "added effects". That means: If you have several tracks whith video items and you put a video processor plugin on every track as track-FX, they do not only influence the video-items in this track. In fact, they also influence the video-items on the other tracks as well. If you have 10 tracks and every track has a video-effect as track-FX that turns the brightness down by 10%, the resulting image will be a black one. All effects added up each other (10 times -10% brightness).<br>
-            This effect can be circumvented by putting the video-processor-plugin as item-FX, NOT as track-FX.<p>
-            
-                
-            <h3><a id="codingintroduction">Coding Introduction</a></h3>
-                To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin.<br>
-                Next to it, on the left side of the editor-field, your parameter-knobs will appear(if you've defined some). <br>
-                Code for the Video-Processor-Plugin must be written in EEL, not in Lua or Python.<p>
-                    Example code, with a knob for turning the video on and off:<p>
-            <pre><code>
-                // A small demo-script that turns video on&off
-                //@amp;param1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
+<u>Description:</u><br><div style="padding-left:4%;">Since Reaper 5, Reaper has proper video-editing support. In addition to that, Reaper has a plugin, called "Video Processor Plugin", that is focused on video-effect handling.<br>Though it is still in it's very early stages, it supports already a handful of useful effects that can be selected via the presets-selection.<br>It is also programmable. It opens up a small IDE-window, as part of the "Video-Processor-Plugin"-UI, in which you can put Eel-code(no Lua or Python!), that processes the video.<br><br>Unlike with other scripts, the scripts for the video processor plugin do not support the standard-reaper-API-commands, but have an own set of variables and functions. The list of functions can be reached by clicking into the IDE-window of the "video processor plugin" and hitting the F1-key.<br><br>Some general notes on the video-processor-plugin:<br>It has a very limited set of programmable UI-elements, means, only a knob (refer the param-variable for more details) at the time.<br>The plugin has also sometimes the behaviour of "added effects". That means: If you have several tracks whith video items and you put a video processor plugin on every track as track-FX, they do not only influence the video-items in this track. In fact, they also influence the video-items on the other tracks as well. If you have 10 tracks and every track has a video-effect as track-FX that turns the brightness down by 10%, the resulting image will be a black one. All effects added up each other (10 times -10% brightness).<br>This effect can be circumvented by putting the video-processor-plugin as item-FX, NOT as track-FX.<br><br></div></table></table><br><hr><a id="Coding Introduction"></a>
+  <a href="#Coding Introduction"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>Coding Introduction</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code></code><br><br></div>
 
-                frame=input_track(0); // variable frame set with the videoframe from the first 
-                                      // videoitem in the project at a given position
-          
-                gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
-                                                       // to prevent from having the last frame(s) be shown indefinately
+</b></div>
 
-                //Now, put the picture to the framebuffer -> outputting the video
-                gfx_blit(frame,  // the current video-frame
-                            1,   // don't preserve aspect-ratio
-                            0,0, // put upper right corner of the video at position 0,0
-                            project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
-                                                                      //   multiplied by the VideoOnOff-Parameter
-                                                                      //   1=video squeezed to 100% height & width 
-                                                                      //   0=video squeezed to 0% height & width
-                            );
+<u>Description:</u><br><div style="padding-left:4%;">To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin.<br>Next to it, on the left side of the editor-field, your parameter-knobs will appear(if you've defined some). <br>Code for the Video-Processor-Plugin must be written in EEL, not in Lua or Python.<br>Example code, with a knob for turning the video on and off:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<pre><code><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// A small demo-script that turns video on&off<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//@amp;param1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;frame=input_track(0); // variable frame set with the videoframe from the first <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// videoitem in the project at a given position<br>&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // to prevent from having the last frame(s) be shown indefinately<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Now, put the picture to the framebuffer -> outputting the video<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gfx_blit(frame,&nbsp;&nbsp;// the current video-frame<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,&nbsp;&nbsp; // don't preserve aspect-ratio<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,0, // put upper right corner of the video at position 0,0<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp; multiplied by the VideoOnOff-Parameter<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp; 1=video squeezed to 100% height & width <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp; 0=video squeezed to 0% height & width<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></pre><br><br></div></table></table><br><hr><a id="project_time"></a>
+  <a href="#project_time"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>project_time</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>project_time</code><br><br></div>
 
-</code></pre>
-            <h3>Special Variables</h3>
-         <hr><i><a id="project_time">	project_time</a></i><p>
-            project time in seconds	
- <hr><i><a id="project_tempo">	project_tempo</a></i><p>
- current tempo in BPM
- <hr><i><a id="project_ts_num">	project_ts_num</a></i><p>
-current time signature numerator	
- <hr><i><a id="project_ts_denom">	project_ts_denom</a></i><p>
-current time signature denominator	
- <hr><i><a id="project_time_qn">	project_time_qn</a></i><p>
-current project position in QN	<p> 
- <hr><i><a id="time">	time</a></i><p>
- item time in seconds (if in item)	
- <hr><i><a id="framerate">	framerate </a></i><p>
-project FPS (30.0, 29.97, etc)	
- <hr><i><a id="project_w">	project_w </a></i><p>
-project preferred video width	
- <hr><i><a id="project_h">	project_h </a></i><p>
-project preferred video height	
- <hr><i><a id="project_wh_valid">	project_wh_valid</a></i><p>
- set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)	
- <hr><i><a id="colorspace">	colorspace </a></i><p>
-current rendering colorspace, e.g. 'RGBA', 'YV12', or 'YUY2'. you can override this with extreme caution.	
- <hr><i><a id="param_wet">	param_wet</a></i><p>
- if in FX form, wet/dry mix of effect. 	
- <hr><i><a id="param">	param1..param16</a></i><p>
- parameters, you can name these by adding lines //@param [:varname] 'name' [defval minval maxval centval step]. 	
- <hr><i><a id="gfx_r">	gfx_r </a></i><p>
-current drawing color (red 0..1)	
- <hr><i><a id="gfx_g">	gfx_g </a></i><p>
-current drawing color (green 0..1)	
- <hr><i><a id="gfx_b">	gfx_b </a></i><p>
-current drawing color (blue 0..1)	
- <hr><i><a id="gfx_a">	gfx_a </a></i><p>
-current drawing alpha (0..1)	
- <hr><i><a id="gfx_mode">	gfx_mode</a></i><p>
-        0=normal, 1= additive, 3=mul (works different in YUV vs RGB)	<br>
-        &Tab; add 0x100 for blit() to enable filtering (if possible)	<br>
-        &Tab; add 0x10000 to use source alpha (only valid when using RGBA colorspace)	<br>
-        &Tab; add 0x40000 to use extra clamping (for out of range alpha/gradient values)<br>	
-        &Tab; add 0x80000 to treat gfx_r/gfx_g/gfx_b as YUV values (in non-RGB colorspace)<br>	
- <hr><i><a id="gfx_dest">	gfx_dest</a></i><p>
-    destination image handle, or -1 for main framebuffer	<p><br>
-		
-<h3>Functions</h3>
- <hr><i><a id="input_count">	input_count() 	</a></i><p>
-returns number of inputs available (total), range [0..n)
- <hr><i><a id="input_track_count">	input_track_count() </a></i><p>
-returns the number of available inputs on discrete tracks	
- <hr><i><a id="input_track">	input_track(x) </a></i><p>
-returns input for bottommost item or FX on discrete-track x (0 is first track with video item above current, etc)	
- <hr><i><a id="input_track_exact_count">	input_track_exact_count() </a></i><p>
-returns the number of tracks above the current track that could possibly contain video items.	
- <hr><i><a id="input_track_exact">	input_track_exact(x) </a></i><p>
-returns input for bottommost item or FX on track relative to current track. Returns -1000 if track does not contain any video items at the current time, or -10000 if no further tracks contain video.	
- <hr><i><a id="input_next_item">	input_next_item(x) </a></i><p>
-returns the next input after x which is on a different item or track	
- <hr><i><a id="input_next_track">	input_next_track(x) </a></i><p>
-returns the next input after x which is on a different track	
- <hr><i><a id="input_ismaster">	input_ismaster() </a></i><p>
-returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain	
- <hr><i><a id="input_info">	input_info(input, w, h[,srctime, wet, parm1, ...]) </a></i><p>
-returns 1 if input is available, sets w/h to dimensions. If srctime specified, it will be set with the source-local time of the underlying media. if input is a video processor in effect form, automated parameters can be queried via wet/parm1/etc.	
- <hr><i><a id="gfx_img_alloc">	gfx_img_alloc([w,h,clear]) </a></i><p>
-returns an image index for drawing (can create up to 32 images). contents of image undefined unless clear set.	
- <hr><i><a id="gfx_img_resize">	gfx_img_resize(handle,w,h[,clear]) </a></i><p>
-sets an image size (handle can be -1 for main framebuffer). contents of image undefined after resize, unless clear set. clear=-1 will only clear if resize occurred.	
- <hr><i><a id="gfx_img_hold">	gfx_img_hold(handle) </a></i><p>
-(cheaply) retains a read-only copy of an image in handle. This copy should be released using gfx_img_free() when finished. Up to 32 images can be held.	
- <hr><i><a id="gfx_img_getptr">	gfx_img_getptr(handle) </a></i><p>
-gets a unique identifier for an image, valid for while the image is retained. can be used (along with gfx_img_hold) to detect when frames change in a low frame rate video	
- <hr><i><a id="gfx_img_free">	gfx_img_free(handle) </a></i><p>
-frees an earlier allocated image index.	
- <hr><i><a id="gfx_img_info">	gfx_img_info(handle,w,h) </a></i><p>
-gets dimensions of image, returns 1 if valid (resize if inexplicably invalidated)	
- <hr><i><a id="gfx_set">	gfx_set(r,g,b[,a=1,mode=0,dest]) </a></i><p>
-updates r/g/b/a/mode always, dest only if specified	
- <hr><i><a id="gfx_blit">	gfx_blit(input[,preserve_aspect=0,x,y,w,h,srcx,srcy,srcw,srch]) </a></i><p>
-copies input to framebuffer. preserve_aspect=-1 for no fill in pad areas	
- <hr><i><a id="gfx_fillrect">	gfx_fillrect(x,y,w,h) </a></i><p>
-fills a rectangle	
- <hr><i><a id="gfx_procrect">	gfx_procrect(x,y,w,h,channel_tab[,mode]) </a></i><p>
-processes a rectangle with 768-entry channel table [256 items of 0..1 per channel]. specify mode=1 to use Y value for U/V source channels (colorization mode)
- <hr><i><a id="gfx_evalrect">	gfx_evalrect(x,y,w,h,code_string[,flags,src2]) </a></i><p>
-processes a rectangle with code_string being executed for every pixel/pixel-group. code should reference, depending on colorspace: RGBA:  r/g/b/a, YUY2: y1,y2,u,v, YV12: y1-y4, u, v. Values are 0-255, and are not clamped. set flags|=1 in order to prevent multiprocessing (if your routine needs to process pixels in-order; side-note: variables _1-_99 are thread-local variables which will always be initialized to 0, and _0 will be initialized to the thread index (0 or 1 usually)). set flags|=2 to ignore output (analysis-only). if src2 specified, sr/sg/sb/sa, sy1/su/sv etc will be available to read. In this case only the intersection of valid rectangles between src2 and the destination buffer will be valid.
- <hr><i><a id="gfx_gradrect">	gfx_gradrect(x,y,w,h, r,g,b,a
-	&Tab; [,drdx,dgdx,dbdx,dadx,	
-	&Tab; drdy,dgdy,dbdy,dady]);		</a></i><p>
- <hr><i><a id="gfx_rotoblit">	gfx_rotoblit(srcidx, angle [,x, y, w, h, srcx, srcy, w, h, cliptosrcrect = 0, centxoffs=0, centyoffs=0])	</a></i><p>
- <hr><i><a id="gfx_deltablit">	gfx_deltablit(srcidx, x,y,w,h srcx,srcy, dsdx, dtdx, dsdy, dtdy, dsdxdy, dtdxdy[, dadx, dady, dadxdy])	</a></i><p>
- <hr><i><a id="gfx_xformblit">	gfx_xformblit(srcidx, x,y,w,h, wdiv, hdiv, tab[, wantalpha=0])</a></i><p>
-tab is wdiv*hdiv*2 table of src points. if wantalpha=1, tab is wdiv*hdiv*3 table of src points including alpha.	
- <hr><i><a id="gfx_keyedblit">	gfx_keyedblit(input[,x,y,w,h,srcx,srcy,kv1,kv2,kv3,kv4])</a></i><p>
-     chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colorspace:	<br>
-     YV12/YUY2: kv1 is U target (-0.5 default), kv2 is V target (-0.5 default), kv3 is closeness-factor (0.4 default), kv4 is the gain (2.0 default)	<br>
-     RGBA: kv1 is green-factor (1.0 default), kv2 is blue-factor (-1.0 default), kv3 is offset (-1.0 default), kv4 enables spill removal (1.0 default)<br>	
- <hr><i><a id="gfx_destkeyedblit">	gfx_destkeyedblit(input[,x,y,w,h,srcx,srcy,kv1,kv2,kv3,kv4]) </a></i><p>
-chroma-key blits, using destination color as key. ignores gfx_a and gfx_mode.	
- <hr><i><a id="gfx_setfont">	gfx_setfont(pxsize[,#fontname, flags) </a></i><p>
-sets a font, flags can be 'B' for bold, 'I' for italics, 'BI' for bold italics, etc	
- <hr><i><a id="gfx_str_measure">	gfx_str_measure(#string[,w,h])</a></i><p>
-measures the size of #string, returns width	
- <hr><i><a id="gfx_str_draw">	gfx_str_draw(#string[,x,y,fxc_r,fxc_g,fxc_b]) </a></i><p>
-draw string	
- <hr><i><a id="rgb2yuv">	rgb2yuv(r,g,b) </a></i><p>
-utility, converts r,g,b to YUV, does not clamp [0..1]	
- <hr><i><a id="yuv2rgb">	yuv2rgb(r,g,b) </a></i><p>
-utility, converts YUV to r,g,b, not clamping [0..1]	
+</b></div>
 
+<u>Description:</u><br><div style="padding-left:4%;">project time in seconds<br><br></div></table></table><br><hr><a id="project_tempo"></a>
+  <a href="#project_tempo"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>project_tempo</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>project_tempo</code><br><br></div>
 
+</b></div>
 
+<u>Description:</u><br><div style="padding-left:4%;">current tempo in BPM<br><br></div></table></table><br><hr><a id="project_ts_num"></a>
+  <a href="#project_ts_num"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>project_ts_num</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>project_ts_num</code><br><br></div>
 
+</b></div>
 
-        </div>
-        </div>
-    </body>
-</html>
+<u>Description:</u><br><div style="padding-left:4%;">current time signature numerator<br><br></div></table></table><br><hr><a id="project_ts_denom"></a>
+  <a href="#project_ts_denom"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>project_ts_denom</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>project_ts_denom</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">current time signature denominator<br><br></div></table></table><br><hr><a id="project_time_qn"></a>
+  <a href="#project_time_qn"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>project_time_qn</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>project_time_qn</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">current project position in QN<br><br></div></table></table><br><hr><a id="time"></a>
+  <a href="#time"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>time</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>time</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">item time in seconds (if in item)<br><br></div></table></table><br><hr><a id="framerate"></a>
+  <a href="#framerate"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>framerate</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>framerate</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">project FPS (30.0, 29.97, etc)<br><br></div></table></table><br><hr><a id="project_w"></a>
+  <a href="#project_w"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>project_w</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>project_w</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">project preferred video width (code can override this before drawing)<br><br></div></table></table><br><hr><a id="project_h"></a>
+  <a href="#project_h"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>project_h</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>project_h</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">project preferred video height (code can override this before drawing)<br><br></div></table></table><br><hr><a id="project_wh_valid"></a>
+  <a href="#project_wh_valid"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>project_wh_valid</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>project_wh_valid</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)<br><br></div></table></table><br><hr><a id="colorspace"></a>
+  <a href="#colorspace"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>colorspace</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>colorspace</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">current rendering colorspace, e.g. 'RGBA', 'YV12', or 'YUY2'. <br>You can override this before drawing (or between drawing). <br><br>This may be set to 0 initially if the user has the Auto project colorspace set. <br>It will be automatically changed if 0 and a drawing operation occurs or an input is successfully queried via input_info().<br><br></div></table></table><br><hr><a id="param_wet"></a>
+  <a href="#param_wet"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>param_wet</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>param_wet</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">if in FX form, wet/dry mix of effect. <br><br></div></table></table><br><hr><a id="param1..param24"></a>
+  <a href="#param1..param24"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>param1..param24</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>param1..param24</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Hold the values for the individual parameters, means param1 hold the value for parameter 1 .. param24 for parameter 24.<br><br></div></table></table><br><hr><a id="gfx_r"></a>
+  <a href="#gfx_r"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_r</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gfx_r</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">current drawing color (red 0..1)<br><br></div></table></table><br><hr><a id="gfx_g"></a>
+  <a href="#gfx_g"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_g</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gfx_g</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">current drawing color (green 0..1)<br><br></div></table></table><br><hr><a id="gfx_b"></a>
+  <a href="#gfx_b"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_b</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gfx_b</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">current drawing color (blue 0..1)<br><br></div></table></table><br><hr><a id="gfx_a"></a>
+  <a href="#gfx_a"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_a</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gfx_a</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">current drawing color (alpha 0..1)<br><br></div></table></table><br><hr><a id="gfx_a2"></a>
+  <a href="#gfx_a2"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_a2</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gfx_a2</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">current drawing color alpha channel value (RGB-only, 0..1, defaults to 1)<br><br></div></table></table><br><hr><a id="gfx_mode"></a>
+  <a href="#gfx_mode"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_mode</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gfx_mode</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">drawing mode<br><br>&nbsp;&nbsp;&nbsp;&nbsp;0 = normal<br>&nbsp;&nbsp;&nbsp;&nbsp;1 = additive<br>&nbsp;&nbsp;&nbsp;&nbsp;3 = multiply (very different in YUV vs RGBA)<br>&nbsp;&nbsp;&nbsp;&nbsp;17 = (dest + src*gfx_a)*.5 + .5 (only valid when using YUV colorspaces)<br>&nbsp;&nbsp;&nbsp;&nbsp;18 = dest + (src-0.5)*gfx_a*2.0 (only valid when using YUV colorspaces)<br>&nbsp;&nbsp;&nbsp;&nbsp;19 = absolute difference: abs(dest-src)*gfx_a (only valid when using YUV colorspaces)<br>&nbsp;&nbsp;&nbsp;&nbsp;0x100 (flag ORed to above mode) for blit() to enable filtering (if possible)<br>&nbsp;&nbsp;&nbsp;&nbsp;0x10000 (flag ORed to above mode) to use source alpha (only valid when using RGBA colorspace)<br>&nbsp;&nbsp;&nbsp;&nbsp;0x40000 (flag ORed to above mode) to use extra clamping in normal mode (for out of range alpha/gradient values)<br>&nbsp;&nbsp;&nbsp;&nbsp;0x80000 (flag ORed to above mode) to interpret gfx_r/gfx_g/gfx_b as YUV values (in YUV colorspaces)<br><br></div></table></table><br><hr><a id="gfx_dest"></a>
+  <a href="#gfx_dest"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_dest</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gfx_dest</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">destination image handle, or -1 for main framebuffer<br><br></div></table></table><br><hr><a id="input_count"></a>
+  <a href="#input_count"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>input_count</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> count_inputs = input_count()</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Returns number of inputs available (total), range [0..n)<br><br></div></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> count_inputs</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the number of inputs available</td></tr></table><br><hr><a id="input_track_count"></a>
+  <a href="#input_track_count"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>input_track_count</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> count_tracks = input_track_count()</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Returns the number of available inputs on discrete tracks<br><br></div></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> count_tracks</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the number of tracks available</td></tr></table><br><hr><a id="input_track"></a>
+  <a href="#input_track"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>input_track</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> input = input_track(<i style="color:#0000ff;">integer</i> track)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Returns input for bottommost item or FX on discrete-track track (0 is first track with video item above current, etc)<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> track</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the track, whose bottommost item or FX you want</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the input for bottomost item or FX</td></tr></table><br><hr><a id="input_track_exact_count"></a>
+  <a href="#input_track_exact_count"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>input_track_exact_count</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>nteger num_tracks = input_track_exact_count()</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Returns the number of tracks above the current track that could possibly contain video items.<br><br></div></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> num_tracks</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the number of tracks above the current track, that could contain videoitems</td></tr></table><br><hr><a id="input_track_exact"></a>
+  <a href="#input_track_exact"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>input_track_exact</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> inputs = input_track_exact(<i style="color:#0000ff;">integer</i> track)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Returns input for bottommost item or FX on track relative to current track. <br><br>Returns -1000 if track does not contain any video items at the current time, or -10000 if no further tracks contain video.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> track</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the tracknumber, whose bottommost input you want</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> inputs</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the input for bottommost item or FX</td></tr></table><br><hr><a id="input_next_item"></a>
+  <a href="#input_next_item"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>input_next_item</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> next_input = input_next_item(<i style="color:#0000ff;">integer</i> input)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Returns the next_input after input which is on a different item or track<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the input whose next_input you want</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> next_input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the next input after input</td></tr></table><br><hr><a id="input_next_track"></a>
+  <a href="#input_next_track"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>input_next_track</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> next_input = input_next_track(<i style="color:#0000ff;">integer</i> input)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Returns the next_input after input which is on a different track.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the input, whose next input on a different track you want</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> next_input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the next input on a different track</td></tr></table><br><hr><a id="input_ismaster"></a>
+  <a href="#input_ismaster"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>input_ismaster</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">float</i> fx_position = input_ismaster()</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain<br><br></div></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> fx_position</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 1.0, FX is on master chain; 2.0, FX is on monitoring FX chain</td></tr></table><br><hr><a id="input_info"></a>
+  <a href="#input_info"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>input_info</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = input_info(<i style="color:#0000ff;">integer</i> input, <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">integer</i> h[, <i style="color:#0000ff;">double</i> srctime, <i style="color:#0000ff;">double</i> wet, <i style="color:#0000ff;">double</i> parm1, ...])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Returns 1 if input is available, sets w/h to dimensions. <br><br>If srctime specified, it will be set with the source-local time of the underlying media. <br><br>If input is a video processor in effect form, automated parameters can be queried via wet/parm1/...<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the input, whose information you want</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> width-dimension in pixels; will be set, if input is available</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> height-dimension in pixels; will be set, if input is available</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">double</i> srctime</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> </td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">double</i> wet</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> </td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">double</i> parm1</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> </td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 1, if input is available</td></tr></table><br><hr><a id="input_get_name"></a>
+  <a href="#input_get_name"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>input_get_name</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = input_get_name(<i style="color:#0000ff;">integer</i> input, <i style="color:#0000ff;">string</i> #str)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Gets the input take name or track name. returns >0 on success<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the input, whose name you want to query</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">string</i> #str</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the pointer to a string-variable, into which the input-name shall be stored</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> >0, if name can be gotten</td></tr></table><br><hr><a id="gfx_img_alloc"></a>
+  <a href="#gfx_img_alloc"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_img_alloc</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> image_index = gfx_img_alloc([<i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> clear])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Returns an image index for drawing (can create up to 32 images). Contents of image undefined unless clear set.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> set the width in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> set the height in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> clear</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> clear the image, before using it</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> image_index</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the index of the newly created image</td></tr></table><br><hr><a id="gfx_img_resize"></a>
+  <a href="#gfx_img_resize"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_img_resize</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> image_handle = gfx_img_resize(<i style="color:#0000ff;">integer</i> handle, <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">integer</i> h[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> clear])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Sets an image size (handle can be -1 for main framebuffer). <br><br>Contents of image undefined after resize, unless clear set. <br><br>Clear=-1 will only clear if resize occurred. <br><br>Returns the image handle (if handle is invalid, returns a newly-allocated image handle)<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> handle</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the handle of the image, that you want to resize</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the new width in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the new height in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> clear</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> set to clear the image; -1, clears only, if resize has occurred.</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> image_handle</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the image-handle of the resized image; will be a newly allocated one, if parameter handle was invalid</td></tr></table><br><hr><a id="gfx_img_hold"></a>
+  <a href="#gfx_img_hold"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_img_hold</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gfx_img_hold(<i style="color:#0000ff;">integer</i> handle)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Retains (cheaply) a read-only copy of an image in handle. <br> <br> This copy should be released using <a href="#gfx_img_free">gfx_img_free()</a> when finished. Up to 32 images can be held.<br> <br>
+</div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> handle</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the handle, that you want to make read-only
+</td></tr></table></table><br><hr><a id="gfx_img_getptr"></a>
+  <a href="#gfx_img_getptr"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_img_getptr</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> unique_identifier = gfx_img_getptr(<i style="color:#0000ff;">integer</i> handle)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Gets a unique identifier for an image, valid for while the image is retained. <br> <br> Can be used (along with <a href="#gfx_img_hold">gfx_img_hold</a>) to detect when frames change in a low frame rate video<br> <br>
+</div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> handle</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the image-handle, of which you want to have a unique identifier
+</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> unique_identifier</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the unique identifier for image "handle"
+</td></tr></table><br><hr><a id="gfx_img_free"></a>
+  <a href="#gfx_img_free"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_img_free</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gfx_img_free(<i style="color:#0000ff;">integer</i> handle)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Releases an earlier allocated image index.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> handle</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the image handle, that you want to delete from further use</td></tr></table></table><br><hr><a id="gfx_img_info"></a>
+  <a href="#gfx_img_info"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_img_info</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_img_info(<i style="color:#0000ff;">integer</i> handle, <i style="color:#0000ff;">integer</i> #w, <i style="color:#0000ff;">integer</i> #h)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Gets dimensions of image, returns 1 if valid (resize it if it's inexplicably invalidated)<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> handle</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the image-handle, whose dimensions you want to retrieve</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> #w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the pointer of a variable, into which the width in pixels shall be stored</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> #h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the pointer of a variable, into which the height in pixels shall be stored</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 1, if it's a valid image-handle</td></tr></table><br><hr><a id="gfx_set"></a>
+  <a href="#gfx_set"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_set</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gfx_set(<i style="color:#0000ff;">float</i> r,[<i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> g, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> b, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> a=1, <i style="color:#0000ff;">integer</i> mode=0, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> dest, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> a2=1])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Updates r/g/b/a/mode to values specified, dest is only updated if parameter specified.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> r</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the red-value(0 to 1); if set as the only parameter, this will be used for g and b as well
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> g</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the green-value(0 to 1); if unset, the value of r will be used
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> b</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the blue-value(0 to 1); if unset, the value of r will be used
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> a=1</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the alpha-value(0 to 1); if unset, the value defaults to 1
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> mode</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">see <a href="#gfx_mode">gfx_mode</a> for the available modes; if unset, defaults to 0
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> dest</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the destination, into which to draw
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> a2</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the alpha2-value, see<a href="#gfx_a2">gfx_a2</a>; if unset, defaults to 1
+</td></tr></table></table><br><hr><a id="gfx_blit"></a>
+  <a href="#gfx_blit"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_blit</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_blit(<i style="color:#0000ff;">integer</i> input[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> preserve_aspect=0, <i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcy, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcw, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srch])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Draws input to framebuffer. preserve_aspect=-1 for no fill in pad areas<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the input, that shall be blit into the framebuffer</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> preserve_aspect</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 0, preserve aspect ratio; -1, no fill in pad areas</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the x-position in pixels, at which the input shall be blit to</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the y-position in pixels, at which the input shall be blit to</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the width in pixels, with which the input shall be blit to</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the height in pixels, with which the input shall be blit to</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the x-offset in the source pixels, from which the input shall be blit from</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the y-offset in the source pixels, from which the input shall be blit from</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcw</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the width-offset in the source pixels, from which the input shall be blit from</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srch</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the height-offset in the source pixels, from which the input shall be blit from</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 0, if blitting is impossible; 1, if blitting was successful</td></tr></table><br><hr><a id="gfx_fillrect"></a>
+  <a href="#gfx_fillrect"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_fillrect</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_fillrect(<i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">integer</i> h)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Fills a rectangle with the current color/mode/alpha set by <a href="#gfx_set">gfx_set</a><br> <br>
+</div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the x-position of the rectangle in pixels
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the y-position of the rectangle in pixels
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the width of the rectangle in pixels
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the height of the rectangle in pixels
+</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">0, in case of an error; 1, in case of success
+</td></tr></table><br><hr><a id="gfx_procrect"></a>
+  <a href="#gfx_procrect"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_procrect</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_procrect(<i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">integer</i> h, table channel_tab[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> mode])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Processes a rectangle with 768-entry channel table [256 items of 0..1 per channel]. <br><br>Specify mode=1 to use Y value for U/V source channels (colorization mode).<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the x-position of the rectangle in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the y-position of the rectangle in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the width of the rectangle in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the height of the rectangle in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>table channel_tab</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a 768-entry-table which will be used for the processing</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> mode</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 1, to use Y-value for U/V-source-channels</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> unknown</td></tr></table><br><hr><a id="gfx_evalrect"></a>
+  <a href="#gfx_evalrect"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_evalrect</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_evalrect(<i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">string</i> code_string[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> flags, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> src, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">string</i> init_code_string, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">string</i> src2])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Processes a rectangle with code_string being executed for every pixel/pixel-group. <br><br>Returns -1 if code_string failed to compile. <br><br>Code should reference per pixel values (0-255, unclamped), depending on colorspace:<br>&nbsp;&nbsp;&nbsp;&nbsp;RGBA:&nbsp;&nbsp;r/g/b/a (0-255, unclamped)<br>&nbsp;&nbsp;&nbsp;&nbsp;YUY2: y1,y2, u, v (0-255, unclamped; u/v are centered at 128)<br>&nbsp;&nbsp;&nbsp;&nbsp;YV12: y1-y4, u, v (0-255, unclamped; u/v are centered at 128)<br><br>example for a codestring:<br>&nbsp;&nbsp;&nbsp;&nbsp;"r[0]+=1; g[256]+=1; b[512]+=1;<br>&nbsp;&nbsp;&nbsp;&nbsp;(0.299*r + 0.587*g + 0.114*b)[768] += 1;"<br><br><br>Additional options:<br>&nbsp;&nbsp;&nbsp;&nbsp;flags|=1 in order to prevent multiprocessing (if your routine needs&nbsp;&nbsp;to process pixels in-order)<br>&nbsp;&nbsp;&nbsp;&nbsp;flags|=2 to ignore output (analysis-only). This is only valid when not using src2 and not using one of the 4/8 modes.<br>&nbsp;&nbsp;&nbsp;&nbsp;flags|=4,8 -- only valid in RGBA/YV12, and only if src/src2 not specified. flags&8 means process in vertical slices (top to bottom unless flags&4). flags&4 but not flags&8 means right-to-left. In each case y1-y4 are reordered for convenience (the same filter code can typically be used in various orientations).<br>&nbsp;&nbsp;&nbsp;&nbsp;If init_code_string specified, it will be executed in each thread context before processing<br>&nbsp;&nbsp;&nbsp;&nbsp;If src specified (and >= -1), sr/sg/sb/sa, sy1/su/sv etc will be available to read. In this case only the intersection of valid rectangles between src and the destination buffer will be processed. <br>&nbsp;&nbsp;&nbsp;&nbsp;If src and src2 specified (and >= -1), s2r/s2g/s2b/s2a, s2y1/s2u/s2v etc will also be available to read. <br>&nbsp;&nbsp;&nbsp;&nbsp;Note: variables _1-_99 are thread-local variables which will always be initialized to 0, and _0 will be initialized to the thread index (usually 0 or 1)<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the x-position of the rectangle</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the y-position of the rectangle</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the width of the rectangle</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the height of the rectangle</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">string</i> code_string</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a string with code, with which the rectangle shall be processed</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> flags</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> flags, that influence the processing</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> src</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the source-image</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">string</i> init_code_string</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a code-string, that shall be used during initialization</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">string</i> src2</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a second source-image</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> -1, in case of an error(compilation of the code_string was unsuccessful)</td></tr></table><br><hr><a id="gfx_gradrect"></a>
+  <a href="#gfx_gradrect"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_gradrect</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_gradrect(<i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">float</i> r, <i style="color:#0000ff;">float</i> g, <i style="color:#0000ff;">float</i> b, <i style="color:#0000ff;">float</i> a [, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> drdx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dgdx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dbdx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dadx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> drdy, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dgdy, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dbdy, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dady])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Fills rectangle. r/g/b/a supply color at top left corner, drdx (if specified) is amount red changes per X-pixel, etc.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the x-position of the rectangle in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the y-position of the rectangle in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the width of the rectangle in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the height of the rectangle in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> r</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the red-color-value(0-1)</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> g</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the green-color-value(0-1)</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> b</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the blue-color-value(0-1)</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> a</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the alpha-color-value(0-1)</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> drdx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the amount of delta-value, how the red-color shall be changed each pixel in x-direction</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dgdx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the amount of delta-value, how the green-color shall be changed each pixel in x-direction</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dbdx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the amount of delta-value, how the blue-color shall be changed each pixel in x-direction</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dadx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the amount of delta-value, how the alpha-color shall be changed each pixel in x-direction</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> drdy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the amount of delta-value, how the red-color shall be changed each pixel in y-direction</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dgdy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the amount of delta-value, how the green-color shall be changed each pixel in y-direction</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dbdy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the amount of delta-value, how the blue-color shall be changed each pixel in y-direction</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dady</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the amount of delta-value, how the alpha-color shall be changed each pixel in y-direction</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> unknown</td></tr></table><br><hr><a id="gfx_rotoblit"></a>
+  <a href="#gfx_rotoblit"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_rotoblit</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_rotoblit(<i style="color:#0000ff;">integer</i> srcidx, <i style="color:#0000ff;">float</i> angle [, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcy, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> cliptosrcrect, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> centxoffs, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> centyoffs])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Blits with rotate. This function behaves a bit odd when the source and destination sizes/aspect ratios differ, so <a href="#gfx_deltablit">gfx_deltablit()</a> is generally more useful.<br> <br>
+</div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> srcidx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the source-image, that shall be blit as rotated image
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> angle</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the angle by width the image shall be rotated
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the x-position in pixels, at which the blitting shall be put to
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the y-position in pixels, at which the blitting shall be put to
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the width in pixels of the rotated-blit-image; affects stretching of the image!
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the height in pixels of the rotated-blit-image; affects stretching of the image!
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the x-position in pixels in the source-image, from which to blit from
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the y-position in pixels in the source-image, from which to blit from
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the width in pixels of the source-image, from which to blit from; affects stretching of the image!
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the height in pixels of the source-image, from which to blit from; affects stretching of the image!
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> cliptosrcrect=0</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">clips the source-image rectangle; 1, clip; 0, don't clip
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> centxoffs=0</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">adds an offset to the center of the image at x-position in pixels
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> centyoffs=0</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">adds an offset to the center of the image at x-position in pixels
+</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful
+</td></tr></table><br><hr><a id="gfx_deltablit"></a>
+  <a href="#gfx_deltablit"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_deltablit</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_deltablit(<i style="color:#0000ff;">integer</i> srcidx, <i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">integer</i> srcx, <i style="color:#0000ff;">integer</i> srcy, <i style="color:#0000ff;">integer</i> dsdx, <i style="color:#0000ff;">integer</i> dtdx, <i style="color:#0000ff;">integer</i> dsdy, <i style="color:#0000ff;">integer</i> dtdy, <i style="color:#0000ff;">integer</i> dsdxdy, <i style="color:#0000ff;">integer</i> dtdxdy[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> dadx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> dady, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> dadxdy])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Blits with source pixel transformation control. <br><br>S and T refer to source coordinates: <br>&nbsp;&nbsp;&nbsp;&nbsp;dsdx is how much the source X position changes with each X destination pixel, <br>&nbsp;&nbsp;&nbsp;&nbsp;dtdx is how much the source Y position changes with each X destination pixel, etc.<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>All of the S, T and A parameters accept negative values as well.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> srcidx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the index of the image, from which you want to deltablit</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the x-position of the blitted-image in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the y-position of the blitted-image in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the width of the blitted-image in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the height of the blitted-image in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> srcx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the x-offset in pixels of the source-image, that shall be blitted; use 0 for original picture position</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> srcy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the y-offset in pixels of the source-image, that shall be blitted; use 0 for original picture position</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> dsdx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the source X position change with each X destination pixel; use 1 for original picture position</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> dtdx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the source Y position change with each X destination pixel; use 0 for original picture position</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> dsdy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the source X position change with each Y destination pixel; use 1 for original picture position</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> dtdy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the source Y position change with each Y destination pixel; use 0 for original picture position</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> dsdxdy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> affects x and y-direction at the same time and can be produced for curved images; use 0 for original picture position</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> dtdxdy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> affects x and y-direction at the same time and can be produced for curved images; use 0 for original picture position</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dadx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the source-alpha change with each X destination pixel; can be used for noise-effects; use 0 for original picture position</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dady</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the source-alpha change with each Y destination pixel; can be used for noise-effects; use 0 for original picture position</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> dadxdy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> affects x and y-direction at the same time; can be used for noise-effects; use 0 for original picture position</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful</td></tr></table><br><hr><a id="gfx_xformblit"></a>
+  <a href="#gfx_xformblit"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_xformblit</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_xformblit(<i style="color:#0000ff;">integer</i> srcidx, <i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">integer</i> h,  <i style="color:#0000ff;">integer</i> wdiv, <i style="color:#0000ff;">integer</i> hdiv, table tab[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> wantalpha])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Blits with a transformation table. <br>tab is wdiv*hdiv*2 table of source point coordinates in float-values.<br><br>If wantalpha=1, tab is wdiv*hdiv*3 table of src points including alpha for each point.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> srcidx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the index of the image, that you want to transformblit</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> x-position in pixels of the transform-blitted-image</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> y-position in pixels of the transform-blitted-image</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> width in pixels of the transform-blitted-image</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> height in pixels of the transform-blitted-image</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> wdiv</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the divisor of the table tab for width transformation</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> hdiv</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the divisor of the table tab for height transformation</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>table tab</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a table with all the transform-values in them, who are float and can be negative as well</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> wantalpha</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 0, transform the image only; 1, transform on an alpha-level</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful</td></tr></table><br><hr><a id="gfx_keyedblit"></a>
+  <a href="#gfx_keyedblit"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_keyedblit</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_keyedblit(<i style="color:#0000ff;">integer</i> input[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcy, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv1, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv2, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv3, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv4])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colorspace:<br>&nbsp;&nbsp;&nbsp;&nbsp;YV12/YUY2:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv1 is U target (-0.5 default)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv2 is V target (-0.5 default)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv3 is closeness-factor (0.4 default)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv4 is the gain (2.0 default)<br>&nbsp;&nbsp;&nbsp;&nbsp;RGBA:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv1 is green-factor (1.0 default)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv2 is blue-factor (-1.0 default)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv3 is offset (-1.0 default)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv4 enables spill removal (1.0 default)<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the image, to which the chroma-key shall be applied to</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the x-position of the chroma-key-area in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the y-position of the chroma-key-area in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the width-position of the chroma-key-area in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the height-position of the chroma-key-area in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the offset-x-position of the source-image</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the offset-y-position of the source-image</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv1</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> U target(YV12/YUV2) / green(RGBA)</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv2</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> V target(YV12/YUV2) / blue(RGBA)</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv3</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> closeness-factor(YV12/YUV2) / offset(RGBA)</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv4</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> gain(YV12/YUV2) / spill removal(RGBA)</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> unknown</td></tr></table><br><hr><a id="gfx_destkeyedblit"></a>
+  <a href="#gfx_destkeyedblit"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_destkeyedblit</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_destkeyedblit(input input[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcy, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv1, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv2, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv3, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv4])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Chroma-key blits, using destination color as key. ignores gfx_a and gfx_mode. <br> <br> See <a href="#gfx_keyedblit">gfx_keyedblit()</a> for kv1-kv4 explanation.<br> <br>
+</div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the image, to which the chroma-key shall be applied to
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the x-position of the chroma-key-area in pixels
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the y-position of the chroma-key-area in pixels
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the width-position of the chroma-key-area in pixels
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the height-position of the chroma-key-area in pixels
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the offset-x-position of the source-image
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> srcy</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">the offset-y-position of the source-image
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv1</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">U target(YV12/YUV2) / green(RGBA)
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv2</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">V target(YV12/YUV2) / blue(RGBA)
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv3</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">closeness-factor(YV12/YUV2) / offset(RGBA)
+</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> kv4</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">gain(YV12/YUV2) / spill removal(RGBA)
+</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; ">unknown
+</td></tr></table><br><hr><a id="gfx_setfont"></a>
+  <a href="#gfx_setfont"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_setfont</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_setfont(<i style="color:#0000ff;">integer</i> pxsize[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">string</i> #fontname, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> flags)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Sets a font. flags are specified as a multibyte integer, using a combination of the following flags (specify multiple as 'BI' or 'OI' or 'OBI' etc):<br>&nbsp;&nbsp;&nbsp;&nbsp;'B' - Bold<br>&nbsp;&nbsp;&nbsp;&nbsp;'I' - Italics<br>&nbsp;&nbsp;&nbsp;&nbsp;'R' - Blur<br>&nbsp;&nbsp;&nbsp;&nbsp;'V' - Invert<br>&nbsp;&nbsp;&nbsp;&nbsp;'M' - Mono<br>&nbsp;&nbsp;&nbsp;&nbsp;'S' - Shadow<br>&nbsp;&nbsp;&nbsp;&nbsp;'O' - Outline<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> pxsize</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the size of the font in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">string</i> #fontname</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the name of the font you want to use</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> flags</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the flags, that can influence the design of the font. Just put one or more of the following into single quotes<br>&nbsp;&nbsp;&nbsp;&nbsp; 'B' - Bold<br>&nbsp;&nbsp;&nbsp;&nbsp; 'I' - Italics<br>&nbsp;&nbsp;&nbsp;&nbsp; 'R' - Blur<br>&nbsp;&nbsp;&nbsp;&nbsp; 'V' - Invert<br>&nbsp;&nbsp;&nbsp;&nbsp; 'M' - Mono<br>&nbsp;&nbsp;&nbsp;&nbsp; 'S' - Shadow<br>&nbsp;&nbsp;&nbsp;&nbsp; 'O' - Outline<br>&nbsp;&nbsp;&nbsp;&nbsp;example: 'BI'</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> unknown</td></tr></table><br><hr><a id="gfx_str_measure"></a>
+  <a href="#gfx_str_measure"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_str_measure</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> string_length = gfx_str_measure(<i style="color:#0000ff;">string</i> #string[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #w, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #h])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Measures the size of #string, returns width<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">string</i> #string</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the string, whose width/height you want to know; it depends on the currently set font and fontsize</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #w</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a reference to a variable, that shall be set with the width in pixels by the function gfx_str_measure</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #h</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a reference to a variable, that shall be set with the height in pixels by the function gfx_str_measure</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> string_length</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the length of the string in pixels</td></tr></table><br><hr><a id="gfx_str_draw"></a>
+  <a href="#gfx_str_draw"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_str_draw</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_str_draw(<i style="color:#0000ff;">string</i> #string[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> fxc_r, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> fxc_g, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> fxc_b])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Draw string, fxc_r/g/b are the FX color if Shadow/Outline are set in the font<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">string</i> #string</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the string, that shall be drawn into the video</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> x-position of the string, in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> y-position of the string, in pixels</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> fxc_r</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> red-color-value for outline/shadow, if set in the current font(0-1)</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> fxc_g</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> green-color-value for outline/shadow, if set in the current font(0-1)</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> fxc_b</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> blue-color-value for outline/shadow, if set in the current font(0-1)</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> unknown</td></tr></table><br><hr><a id="gfx_getpixel"></a>
+  <a href="#gfx_getpixel"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gfx_getpixel</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = gfx_getpixel(<i style="color:#0000ff;">integer</i> input, <i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">integer</i> #v1, <i style="color:#0000ff;">integer</i> #v2, <i style="color:#0000ff;">integer</i> #v3[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #v4])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Gets the value of a pixel from input at x,y. <br><br>v1/v2/v3 will be YUV or RGB (v4 can be used to get Alphavalue), returns 1 on success<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> input</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the input-image from which to get the pixel</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the x-position of the pixel, whose color you want</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the y-position of the pixel, whose color you want</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> #v1</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer to a variable, into which gfx_getpixel writes the red-value</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> #v2</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer to a variable, into which gfx_getpixel writes the green-value</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> #v3</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer to a variable, into which gfx_getpixel writes the blue-value</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #v4</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer to a variable, into which gfx_getpixel writes the alpha-value</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 0, getting the pixel wasn't successful; 1, getting the pixel was successful</td></tr></table><br><hr><a id="rgb2yuv"></a>
+  <a href="#rgb2yuv"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>rgb2yuv</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = rgb2yuv(<i style="color:#0000ff;">float</i> #r, <i style="color:#0000ff;">float</i> #g, <i style="color:#0000ff;">float</i> #b)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Converts r,g,b to YUV, does not clamp [0..1]<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> #r</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer-variable; put the r-value into it, pass it to the function and it will replace the r-value with the y value</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> #g</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer-variable; put the g-value into it, pass it to the function and it will replace the g-value with the u value</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> #b</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer-variable; put the b-value into it, pass it to the function and it will replace the b-value with the v value</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> unknown</td></tr></table><br><hr><a id="yuv2rgb"></a>
+  <a href="#yuv2rgb"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>yuv2rgb</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = yuv2rgb(<i style="color:#0000ff;">float</i> #r, <i style="color:#0000ff;">float</i> #g, <i style="color:#0000ff;">float</i> #b)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Converts YUV to r,g,b, not clamping [0..1]<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> #y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer-variable; put the y-value into it, pass it to the function and it will replace the y-value with the r value</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> #u</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer-variable; put the u-value into it, pass it to the function and it will replace the u-value with the g value</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> #v</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer-variable; put the v-value into it, pass it to the function and it will replace the v-value with the b value</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> unknown</td></tr></table><br><hr><a id="fft"></a>
+  <a href="#fft"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>fft</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = fft(table buffer, <i style="color:#0000ff;">integer</i> size)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Performs a FFT on the data in the local memory buffer at the offset specified by the first parameter. <br>The size of the FFT is specified by the second parameter, which must be a power of two 16-32768. <br>The outputs are permuted, so if you plan to use them in-order, call fft_permute(buffer, size) before and fft_ipermute(buffer,size) after in-order use. <br>Inputs or outputs will need to be scaled down by 1/size. <br>Notes:<br>&nbsp;&nbsp;&nbsp;&nbsp;fft()/ifft() require real / imaginary input pairs, so a 256 point FFT actually works with 512 items.<br>&nbsp;&nbsp;&nbsp;&nbsp;fft()/ifft() must NOT cross a 65,536 item boundary, so be sure to specify the offset accordingly.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>table buffer</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a table, with all values that shall be processed using the FFT</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> size</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> value of buffer, if buffer is only one variable instead of a table</td></tr></table><br><hr><a id="ifft"></a>
+  <a href="#ifft"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>ifft</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = ifft(table buffer, <i style="color:#0000ff;">integer</i> size)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Performs an inverse FFT. For more information see fft().<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>table buffer</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a table, with all values that shall be processed using the iFFT</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> size</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> value of buffer, if buffer is only one variable instead of a table</td></tr></table><br><hr><a id="fft_real"></a>
+  <a href="#fft_real"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>fft_real</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = fft_real(table buffer, <i style="color:#0000ff;">integer</i> size)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Performs a real FFT, taking size input samples and producing size/2 complex output pairs. Usually used along with fft_permute(size/2). <br>Inputs/outputs will need to be scaled by 0.5/size. The first output complex pair will be (DC, nyquist).<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>table buffer</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a table, with all values that shall be processed using the FFT</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> size</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> value of buffer, if buffer is only one variable instead of a table</td></tr></table><br><hr><a id="ifft_real"></a>
+  <a href="#ifft_real"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>ifft_real</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = ifft_real(table buffer, <i style="color:#0000ff;">integer</i> size)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Performs an inverse FFT, taking size/2 complex input pairs (the first being DC, nyquist) and producing size real output values. <br>Usually used along with fft_ipermute(size/2).<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>table buffer</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a table, with all values that shall be processed using the iFFT</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> size</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> value of buffer, if buffer is only one variable instead of a table</td></tr></table><br><hr><a id="fft_permute"></a>
+  <a href="#fft_permute"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>fft_permute</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = fft_permute(table buffer, <i style="color:#0000ff;">integer</i> size)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Permutes the output of fft() to have bands in-order.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>table buffer</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a table, with all values that shall be processed using the FFT</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> size</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> value of buffer, if buffer is only one variable instead of a table</td></tr></table><br><hr><a id="fft_ipermute"></a>
+  <a href="#fft_ipermute"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>fft_ipermute</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = fft_ipermute(buffer,size)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Permutes the input for ifft(), taking bands from in-order to the order ifft() requires. See fft() for more information.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>table buffer</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a table, with all values that shall be processed using the FFT</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> size</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> value of buffer, if buffer is only one variable instead of a table</td></tr></table><br><hr><a id="convolve_c"></a>
+  <a href="#convolve_c"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>convolve_c</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = convolve_c(table dest, table src, <i style="color:#0000ff;">integer</i> size)</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Multiplies each of size complex pairs in dest by the complex pairs in src. Often used for convolution.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>table dest</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the table, in which the function will write the destination-values</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>table src</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the table, from which the function will get the destination-values</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> size</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the size of the tables</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> unknown</td></tr></table><br><hr><a id="gmem"></a>
+  <a href="#gmem"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>gmem</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>gmem</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">gmem[] can be used for a shared memory buffer (similar to JSFX) -- <br><br>you can specify a named buffer which can be shared with EEL2 ReaScripts and JSFX, by using:<br>&nbsp;&nbsp;&nbsp;&nbsp;//@gmem=sharedBufferName<br>on a line by itself. <br><br>Note that when synchronizing with ReaScripts or JSFX, all processing is asynchronous, so your code will have to deal with <br>synchronization issues (including vast differences between project_time and playback_position, and including race conditions).<br><br>To get/set values from gmem, use gmem[index].<br>Example:<br>&nbsp;&nbsp;&nbsp;&nbsp;variable=gmem[7]; // put the value from gmem with index 7 into variable<br>&nbsp;&nbsp;&nbsp;&nbsp;gmem[8]=project_time; // put the current project_time into gmem with index 8<br><br></div></table></table><br><hr><a id="ui_get_state"></a>
+  <a href="#ui_get_state"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>ui_get_state</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = ui_get_state(<i style="color:#0000ff;">integer</i> #ctx[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #mouse_x, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #mouse_y, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> force_frame_in, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #mouse_wheel_state, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #mouse_hwheel_state])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Gets UI state and context, only usable from Monitoring FX (returns 0 if used from track). <br>Returns state <br>&nbsp;&nbsp; (1/2/4 are l/r/m mouse buttons, <br>&nbsp;&nbsp;&nbsp;&nbsp;8/16/32 are ctrl/shift/alt, <br>&nbsp;&nbsp;&nbsp;&nbsp;1024 is whether configuration for this processor is visible). <br>&nbsp;&nbsp;&nbsp;&nbsp;<br>If 'ctx' set to -1, context is video window and any returned mouse coordinates are [0..1] (where 0,0 is upper left corner, 1,1 is lower right corner of the video area). <br>If 'ctx' is set to [1..24], it means the user is editing that knob. <br>If force_frame_in is specified and is positive, then the processor will be re-executed in this amount of time (even if no new video source is available), otherwise only updated during playback or change of the video.<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> #ctx</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> -1, mouse is above video-processor; 1-24, mouse is changing knob 1-24; 0, mouse is outside the video-window</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #mouse_x</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> ui_get_state puts into this variable the current x-mouse-position(0-1)/knob-control area-xposition, when ctc>-1</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #mouse_y</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> ui_get_state puts into this variable the current y-mouse-position(0-1)/knob-control area-yposition, when ctc>-1</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> force_frame_in</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> positive, update getting the ui-state even if no video is available; in seconds</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #mouse_wheel_state</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> ui_get_state puts into this variable the current mouse-wheel-state</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> #mouse_hwheel_state</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> ui_get_state puts into this variable the current horizontal-mouse-wheel-state</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> unknown</td></tr></table><br><hr><a id="time_precise"></a>
+  <a href="#time_precise"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>time_precise</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code><i style="color:#0000ff;">integer</i> retval = time_precise([<i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i> #val])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Sets the parameter (or a temporary buffer if omitted) to a system-local timestamp in seconds, and returns a reference to that value. <br><br>The granularity of the value returned is system defined (but generally significantly smaller than one second).<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">float</i></i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> a pointer to a variable, into which time_precise can write the current time</td></tr></table>
+<table><tr><td><u>Returnvalues:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">integer</i> retval</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the precise time</td></tr></table><br><hr><a id="on_parameter_change"></a>
+  <a href="#on_parameter_change"> ^</a> <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97"> <b  ><u>on_parameter_change</u></b><p><u>Functioncall:</u><div style="padding-left:4%;font-size:104%">
+<b>
+<div class="e_func"><span class='all_view'>EEL2: </span><code>on_parameter_change(<i style="color:#0000ff;">float</i> pvar[, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> isdone])</code><br><br></div>
+
+</b></div>
+
+<u>Description:</u><br><div style="padding-left:4%;">Notifies that the parameter pointed to by pvar (must be param1..param24 or a user-defined parameter) has changed. <br><br>Specify isdone=1 when done modifying parameter (e.g. releasing touch)<br><br></div>
+<table style="border-collapse: separate;border-spacing: 0px 0px;"><tr><td><u>Parameters:</u></td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">float</i> pvar</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> the parameter, whose parameter-change you want to notify</td></tr><tr><td style="vertical-align:top; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> isdone</i></td><td style="vertical-align:top; "><i> - </i></td><td style="vertical-align:top; "> 1, when done modifying parameter</td></tr></table></table><br><br><hr><table width="100%"><td>View: [<span class='aclick'>all</span>] [<span class='cclick'><a href="#c" onClick="setdocview('c')">C/C++</a></span>] [<span class='eclick'><a href="#e" onClick="setdocview('e')">EEL</a></span>] [<span class='lclick'><a href="#l" onClick="setdocview('l')">Lua</a></span>] [<span class='pclick'><a href="#p" onClick="setdocview('p')">Python</a></span>]</td><td>&#160;</td><td style="padding-left:20.5%;">Automatically generated by Ultraschall-API 4.00 beta 2.7 - 66 functions available (Reaper and SWS)</td></table><hr></div></body></html>
