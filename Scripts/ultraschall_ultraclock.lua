@@ -66,7 +66,7 @@ end
 function Init()
   -- Initializes the UltraClock
   
-  width,height=400,300 -- size of the window
+  width,height=400,400 -- size of the window
   refresh= 0.5 --in seconds
   
   --STD Settings
@@ -78,19 +78,19 @@ function Init()
   -- these parameters will be fitted to the current size of the UltraClock automatically
   txt_line={} 
   for i=1,7 do txt_line[i]={} end -- create 2d array for 4 lines of text
-  txt_line[2]={y=0.0, size=0.3}    -- current date
-  txt_line[1]={y=0.075 , size=0.8}   -- current time
-  txt_line[3]={y=0.33, size=0.27}  -- current playstate
-  txt_line[4]={y=0.4, size=0.6}  -- current position
+  txt_line[2]={y=0.0, size=0.25}    -- current date
+  txt_line[1]={y=0.1 , size=0.8}   -- current time
+  txt_line[3]={y=0.38, size=0.27}  -- current playstate
+  txt_line[4]={y=0.47, size=0.6}  -- current position
   
- txt_line[7]={y=0.62, size=0.15}     -- time-selection-text
- txt_line[8]={y=0.67, size=0.22}  -- time-selection
+ txt_line[7]={y=0.69, size=0.15}     -- time-selection-text
+ txt_line[8]={y=0.75, size=0.25}  -- time-selection
  
- txt_line[9]={y=0.76, size=0.15}  -- project-length-text
- txt_line[10]={y=0.81, size=0.2} -- project-length
+ txt_line[9]={y=0.86, size=0.15}  -- project-length-text
+ txt_line[10]={y=0.91, size=0.25} -- project-length
  
- txt_line[5]={y=0.88, size=0.15}  -- markernames
- txt_line[6]={y=0.93, size=0.2}   -- marker positions  
+ txt_line[5]={y=1.01, size=0.15}  -- markernames
+ txt_line[6]={y=1.07, size=0.25}   -- marker positions  
  
  
  --[[
@@ -349,13 +349,15 @@ function drawClock()
   end
     
   if uc_menu[6].checked then
-    WriteAlignedText("Time Selection:",0xdddd00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
     start, end_loop = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
     length=end_loop-start
-    start=reaper.format_timestr_len(start, "", 0, 5):match("(.*):")
-    end_loop=reaper.format_timestr_len(end_loop, "", 0, 5):match("(.*):")
-    length=reaper.format_timestr_len(length, "", 0, 5):match("(.*):")
-    WriteAlignedText(start.." < (".. length..") > "..end_loop,0xdddd44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
+    if length > 0 then
+      WriteAlignedText("Time Selection:",0xdddd00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
+      start=reaper.format_timestr_len(start, "", 0, 5):match("(.*):")
+      end_loop=reaper.format_timestr_len(end_loop, "", 0, 5):match("(.*):")
+      length=reaper.format_timestr_len(length, "", 0, 5):match("(.*):")
+      WriteAlignedText(start.." < (".. length..") > "..end_loop,0xdddd44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
+    end
   end
   
   if uc_menu[7].checked then
