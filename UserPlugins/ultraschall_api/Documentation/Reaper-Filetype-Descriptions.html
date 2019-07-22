@@ -120,7 +120,7 @@ function onLoad() {
                 </div>
             <div style="width: 95%;">
                                 <hr>
-                <a id="Reaper-kb.ini"><h2>Reaper-kb.ini (as of Reaper 5.77)</h2></a>
+                <a id="Reaper-kb.ini"><h2>Reaper-kb.ini (as of Reaper 5.979)</h2></a>
                 Stored in Reaper-ressources-folder or in the Reaper-Application-Folder(in portable installations)<p>
                     In the file Reaper-kb.ini, the custom shortcuts, scripts and acts, their descriptions, sections-association and Action-Command-IDs are defined.<p> 
                     The reaper-kb.ini does NOT store OSC-Keybindings or FX-shortcuts, they are stored in reaper-osc-actions.ini or reaper-fxoptions.ini respectively.<p>
@@ -449,6 +449,55 @@ function onLoad() {
                     That way, you can find out, whether specific factory-default-shortcuts are set or not at all: if they aren't set to another action and not set to action 0, then they are used by Reaper as factory-default-shortcut.<p>
                     </div>
 
+                    <u>Global shortcuts</u><p>
+
+                    <div style="padding-left: 4%;">
+                    Global keybinding can be stored only in main and main-alt-sections.
+                    
+                    Each global keybinding consists of two KEY-entries in the reaper-kb.ini-file, one for the keybinding to an Action Command ID, which is of the format:<p>
+                        <div style="padding-left: 4%;">
+                        <i>KEY modifier keyvalue action_command_id section</i>
+                        </div><p>
+
+                    which holds the keybinding itself(read chapter above for further information about them).<br>
+
+                    In addition to that, there's a second KEY-entry, following the first KEY-entry, which holds the global-shortcut-state. <br>
+                    This is of the following format:<p>
+                    <div style="padding-left: 4%;">
+                        <i>KEY  modifier  keyvalue  global_key_scope  section</i>
+                     </div><p>
+
+                     modifier and keyvalue are the same as the first KEY-entry, where global_key_scope and section differ.
+                     <div style="padding-left: 4%;">
+                            <i>global_key_scope:</i>
+                            <div style="padding-left: 4%;">
+                                1   - global<br>
+                                101 - global+textfields
+                             </div>
+
+                            <i>section:</i>
+                                <div style="padding-left: 4%;">
+                                102 - main(global shortcuts)<br>
+                                103 - main-alt(global shortcuts)
+                                </div>
+                      </div><p>
+
+                    Example: <p>
+
+                    a global keybinding of the key "Q", associated with the action:<br>
+                        <div style="padding-left: 4%;">
+                            1007 - Transport: Play
+                        </div><p>
+                            
+                        in section main is store in the reaper-kb.ini as<p>
+                        <div style="padding-left: 4%;">
+                            KEY 1 81 1007 0<br>
+                            KEY 1 81 1 102
+                        </div><p>
+
+                    where the first entry holds the keybinding of the q-key to the play-action and the second sets the keybinding to global without(!) textfields.
+                    </div>
+                    
                     <h3>Additional Downloads</h3>
                     <div style="padding-left: 4%;">
                     <b>- All KEY-codes</b> and their meaning, as an .ini-file, use <a href="../IniFiles/Reaper-KEY-Codes_for_reaper-kb_ini.ini">Reaper-KEY-Codes_final.ini</a> that includes all keycodes with the accompanyming shortcut-name(like TAB or Backspace, etc) associated, except MIDI-shortcuts(they can be generated systematically using the rules above).<p>
@@ -614,6 +663,8 @@ Files can be described in the reaper-configzip-info, but will be imported/export
 <i>langpacks</i> - Language Packs - Languagepacks from LangPack-Folder<br>
 <i>mediadb</i> - Media Explorer Databases - Media Explorer Database from MediaDB-folder<br>
 <i>wwwroot</i> - Web Interface Pages - Web Interface-pages from reaper_www_root (not the one from Applicationfolder/Plugins/reaper_www_root !)<br>
+<i>autoitems</i> - Automation Items stored in folder AutomationItems<br>
+<i>midinotenames</i> - MIDINoteNames-aliases stored in folder MIDINoteNames<br>
 </div><p>
     FLAGS must be written directly after FLAG with a space between them, i.e.:<p>
                     <i style="padding-left:4%;">FLAGS configex ctheme wwwroot</i><p>

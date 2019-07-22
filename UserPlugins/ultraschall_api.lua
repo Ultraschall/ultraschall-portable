@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,21 @@
 ################################################################################
 ]] 
 
--- 1. put the ultraschall_api-folder into your ressources-folder. The whole folder, not just the contents!
+-- 1. put the ultraschall_api-folder and the accompanying file into UserPlugins in your ressources-folder. The whole folder, not just the contents!
 -- 2. open a new Lua-script in Reaper
 -- 3. type in 
 --          dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- 4. have fun using the API. Test it with ultraschall.ApiTest()
 
-if reaper.CF_GetClipboardBig==nil then reaper.MB("Sorry, SWS 2.9.7 or higher must be installed to use the API. \nGo to sws-extension.org to get it.","SWS missing",0) return end
-if reaper.JS_ReaScriptAPI_Version==nil then reaper.MB("Sorry, JS-extension-plugin 0.963 or higher must be installed to use the API. \nGo to https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/ to get it.","JS-Extension plugin missing",0) return end
+-- requires at least Reaper 5.980, SWS 2.10.0.1 and JS-extension 0.986
+
+
+local ReaperVersion=reaper.GetAppVersion()
+ReaperVersion=tonumber(ReaperVersion:match("(%d%.%d*)"))
+
+if ReaperVersion<5.980 then reaper.MB("Sorry, Reaper 5.980 or higher must be installed to use the API. \nGo to reaper.fm to get it.","Reaper version too old",0) return end
+if reaper.CF_LocateInExplorer==nil then reaper.MB("Sorry, SWS 2.10.0.1 or higher must be installed to use the API. \nGo to sws-extension.org to get it.","SWS missing",0) return end
+if reaper.JS_ReaScriptAPI_Version==nil or reaper.JS_ReaScriptAPI_Version()<0.986 then reaper.MB("Sorry, JS-extension-plugin 0.986 or higher must be installed to use the API. \nGo to https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/ to get it.","JS-Extension plugin missing",0) return end
 
 if type(ultraschall)~="table" then ultraschall={} end
 
@@ -39,9 +46,7 @@ ultraschall.temp, ultraschall.Script_Context=reaper.get_action_context()
 
 
 -- Beta-Functions On
---ultraschall.US_BetaFunctions="ON"
-
-
+ultraschall.US_BetaFunctions="OFF"
 
 ultraschall.temp1,ultraschall.temp=reaper.get_action_context()
 ultraschall.temp=string.gsub(ultraschall.temp,"\\","/")
@@ -67,19 +72,9 @@ local script_path = reaper.GetResourcePath().."/UserPlugins/ultraschall_api"..ul
 ultraschall.Api_Path=script_path
 ultraschall.Api_Path=string.gsub(ultraschall.Api_Path,"\\","/")
 ultraschall.Api_InstallPath=reaper.GetResourcePath().."/UserPlugins/"
+ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
 
 ultraschall.Api_ScriptPath=ultraschall.Api_Path.."/Scripts"
-
-local L=reaper.GetExtState("ultraschall_api", "helpinstalled")
-if L~="4.0beta2.7" then 
-  reaper.AddRemoveReaScript(true, 0, ultraschall.Api_ScriptPath.."/ultraschall_Help_Ultraschall_Api_Functions_Reference.lua", false)
-  reaper.AddRemoveReaScript(true, 0, ultraschall.Api_ScriptPath.."/ultraschall_Help_Ultraschall_Api_Introduction_and_Concepts.lua", false)
-  reaper.AddRemoveReaScript(true, 0, ultraschall.Api_ScriptPath.."/ultraschall_Help_Reaper_Api_Documentation.lua", true)
-  reaper.SetExtState("ultraschall_api", "helpinstalled", "4.0beta2.7", true)
-end
-
-
-
 
 
 ultraschall.ApiFunctionTest=function()

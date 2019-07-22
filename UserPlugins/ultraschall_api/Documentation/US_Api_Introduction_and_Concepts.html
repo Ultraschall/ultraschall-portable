@@ -55,9 +55,9 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>Beta 2.73 - "Radiohead - Bangers'n'Mash " - 9th of March 2019 - Build: 30472</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.76 - "The Police - Walking on the Moon" - 20th of July 2019 - Build: 40294</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
-<td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to use Beta functions and hotfixes</a></td>
+<td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
 </tr><tr><td><a href="#Introduction_005_License">Introduction: License</a></td>
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Datatypes</b></td></tr><tr><td><a href="#Datatypes_001_Introduction">Datatypes: Introduction</a></td>
@@ -67,13 +67,17 @@ Ultraschall API functions
 </tr><tr><td><a href="#Datatypes_005_EnvelopePointObject">Datatypes: EnvelopePointObject</a></td>
 <td><a href="#Datatypes_006_EnvelopePointArray">Datatypes: EnvelopePointArray</a></td>
 <td><a href="#Datatypes_007_ColorTable">Datatypes: ColorTable</a></td>
-<td><a href="#Datatypes_050_CheckingDatatypes">Datatypes: Checking Datatypes</a></td>
-</tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>API-Variables</b></td></tr><tr><td><a href="#API_Variables_001_Introduction">API-Variables</a></td>
+<td><a href="#Datatypes_008_RenderTable">Datatypes: RenderTable</a></td>
+</tr><tr><td><a href="#Datatypes_050_CheckingDatatypes">Datatypes: Checking Datatypes</a></td>
+</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>API-Variables</b></td></tr><tr><td><a href="#API_Variables_001_Introduction">API-Variables</a></td>
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Rendering</b></td></tr><tr><td><a href="#Rendering_001_Introduction">Rendering: Introduction</a></td>
 <td><a href="#Rendering_002_About_Renderstrings">Rendering: About Renderstrings</a></td>
+<td><a href="#Rendering_002a_About_RenderTables">Rendering: About RenderTables</a></td>
 <td><a href="#Rendering_003_About_Renderingfunctions">Rendering: About Rendering-functions</a></td>
-<td><a href="#Rendering_004_Change_more_render_settings">Rendering: Change more render-settings</a></td>
-</tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Arrangeview Snapshots</b></td></tr><tr><td><a href="#Arrangeview_Snapshots_001_Introduction">Arrangeview Snapshots: Introduction</a></td>
+</tr><tr><td><a href="#Rendering_004_Change_more_render_settings">Rendering: Change more render-settings in projectfiles</a></td>
+<td><a href="#Rendering_005_RenderPresets">Rendering: Render Presets</a></td>
+<td><a href="#Rendering_006_RenderQueue">Rendering: Render Queue</a></td>
+</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Arrangeview Snapshots</b></td></tr><tr><td><a href="#Arrangeview_Snapshots_001_Introduction">Arrangeview Snapshots: Introduction</a></td>
 <td><a href="#Arrangeview_Snapshots_002_HowToStoreRetrieveDelete">Arrangeview Snapshots: How to store, retrieve, delete</a></td>
 <td><a href="#Arrangeview_Snapshots_003_HowToRestore">Arrangeview Snapshots: How to restore</a></td>
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Navigation</b></td></tr><tr><td><a href="#Navigation_001_Introduction">Navigation: Introduction</a></td>
@@ -119,7 +123,8 @@ Ultraschall API functions
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Routing</b></td></tr><tr><td><a href="#Routing_001_Introduction">Routing: Introduction</a></td>
 <td><a href="#Routing_002_Send_Receive">Routing: Send and Receives</a></td>
 <td><a href="#Routing_003_HWOuts">Routing: Hardware Outs</a></td>
-</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>ExtState Management</b></td></tr><tr><td><a href="#ExtStateManagement_001_Introduction">ExtState Management: Introduction</a></td>
+<td><a href="#Routing_004_RoutingMassManipulation">Routing: Mass manipulation of Routings</a></td>
+</tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>ExtState Management</b></td></tr><tr><td><a href="#ExtStateManagement_001_Introduction">ExtState Management: Introduction</a></td>
 <td><a href="#ExtStateManagement_002_IniFiles">ExtState Management: Ini-Files</a></td>
 <td><a href="#ExtStateManagement_003_IniFiles_Functions">ExtState Management: Inifile-Functions</a></td>
 <td><a href="#ExtStateManagement_004_Ultraschall_Ini">ExtState Management: Ultraschall.ini</a></td>
@@ -137,6 +142,9 @@ Ultraschall API functions
 </tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Defer Loops</b></td></tr><tr><td><a href="#DeferScripts_001_Introduction">DeferScripts: Introduction to Ultraschall's Defer-functions</a></td>
 <td><a href="#DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API">DeferScripts: Special Defer-loops in the Ultraschall-API</a></td>
 <td><a href="#DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside">DeferScripts: Stopping Defer-loops from in- and outside of scripts</a></td>
+</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Localize Scripts</b></td></tr><tr><td><a href="#Localize_001_Introduction">Localize Scripts: Introduction</a></td>
+<td><a href="#Localize_002_LangPack_Fileformat">Localize Scripts: Language-pack-fileformat</a></td>
+<td><a href="#Localize_003_Localize_Functions">Localize Scripts: Functions</a></td>
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Helper Functions</b></td></tr><tr><td><a href="#Helper_Functions_001_Introduction">Helper_Functions: Introduction</a></td>
 <td><a href="#Helper_Functions_002_ClipboardManagement">Helper_Functions: Clipboard Management</a></td>
 <td><a href="#Helper_Functions_003_Data_Manipulation">Helper_Functions: Data Manipulation</a></td>
@@ -146,9 +154,9 @@ Ultraschall API functions
 </tr><p></table><hr><a id="Introduction_001_Api"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_001_Api">^</a> <u>Introduction to the Ultraschall API</u></h4></div><p><p>The Ultraschall-Extension is intended to be an extension for the DAW Reaper, that enhances it with podcast functionalities. Most DAWs are intended to be used by musicians, for music, but podcasters have their own needs to be fulfilled. In fact, in some places their needs differ from the needs of a musician heavily. Ultraschall is intended to optimise the Reaper's workflows, by reworking them with functionalities for the special needs of podcasters.</p>
 <p>The Ultraschall-Framework itself is intended to include a set of Lua-functions, that help creating such functionalities. By giving programmers helper functions to get access to each and every corner of Reaper. That way, extending Ultraschall and Reaper is more comfortable to do.</p>
-<p>This API was to be used within Ultraschall only, but quickly evolved into a huge 700 function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:</p>
+<p>This API was to be used within Ultraschall only, but quickly evolved into a huge 900+ function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:</p>
 <ul>
-<li><a href="#Rendering_001_Introduction">Rendering</a> - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to <a href="US_Api_Functions.html#RenderProject_RenderCFG">RenderProject_RenderCFG</a> or <a href="US_Api_Functions.html#RenderProjectRegions_RenderCFG">RenderProjectRegions_RenderCFG</a></li>
+<li><a href="#Rendering_001_Introduction">Rendering</a> - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to <a href="US_Api_Functions.html#RenderProject">RenderProject</a> or <a href="US_Api_Functions.html#RenderProject_Regions">RenderProject_Regions</a></li>
 <li><a href="#Navigation_001_Introduction">Navigation, Follow and Arrangeview-Manipulation</a> - get/set cursors, zoom, autoscroll-management, scroll, etc</li>
 <li><a href="#Arrangeview_Snapshots_001_Introduction">ArrangeView-Snapshots</a> - you can save, retrieve snapshots of the arrangeview, including position, zoomstates to quickly jump through parts of your project</li>
 <li><a href="#Trackstate_Management_001_Introduction">Trackstates</a> - you can access and set all(!) track-states available</li>
@@ -158,7 +166,7 @@ Ultraschall API functions
 <li><a href="#Cough_Mute_Buttons_001_Introduction">Cough-Mute-management</a> - you can write your own cough-buttons, that set the state of the mute-envelope of a track easily</li>
 <li><a href="#MarkersAndRegions_001_Introduction">Marker</a> - extensive set of marker functions, get, set, export, import, enumerate, etc</li>
 <li><a href="#Getting_Manipulating_Items_008_Spectral_Edit">Spectrogram</a> - you can program the spectrogram-view</li>
-<li><a href="#Routing_001_Introduction">Routing</a> - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions. Includes mastertrack as well.</li>
+<li><a href="#Routing_001_Introduction">Routing</a> - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions, including TrackStateChunks and mass manipulation of routings. Includes mastertrack as well.</li>
 <li><a href="#Getting_Manipulating_Items_002_GetMediaItems">Get MediaItems</a> - you can get all media-items within a time-range AND within the tracks you prefer; a 2D-approach e.g. <a href="US_Api_Functions.html#GetAllMediaItemsBetween">GetAllMediaItemsBetween</a> and <a href="US_Api_Functions.html#GetMediaItemsAtPosition">GetMediaItemsAtPosition</a>, etc</li>
 <li>Gaps between items - you can get the gaps between items in a track, using <a href="US_Api_Functions.html#GetGapsBetweenItems">GetGapsBetweenItems</a></li>
 <li><a href="#Getting_Manipulating_Items_001_Introduction">Edit item(s)</a> - Split, Cut, Copy, Paste, Move, RippleCut, RippleInsert, SectionCut by tracks AND time/start to endposition e.g. <a href="US_Api_Functions.html#RippleCut">RippleCut</a>, <a href="RippleInsert">RippleInsert</a>, <a href="US_Api_Functions.html#SectionCut">SectionCut</a>, <a href="US_Api_Functions.html#SplitMediaItems_Position">SplitMediaItems_Position</a>, <a href="US_Api_Functions.html#MoveMediaItemsBefore_By">MoveMediaItemsBefore_By</a>, <a href="US_Api_Functions.html#MoveMediaItemsSectionTo">MoveMediaItemsSectionTo</a> and many more</li>
@@ -185,7 +193,7 @@ Ultraschall API functions
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_002_How_to_Use"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_002_How_to_Use">^</a> <u>How to use the Ultraschall API</u></h4></div><p><p>Using the Ultraschall-API is quite easy.</p>
-<p>First make sure, you use the right versions of Reaper and SWS: <a href="https://www.reaper.fm">Reaper 5.965</a>, <a href="https://www.sws-extension.org">SWS 2.9.7</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 0.963.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
+<p>First make sure, you use the right versions of Reaper and SWS: <a href="https://www.reaper.fm">Reaper 5.977</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 0.986.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
 <p>To install the Ultraschall-API, just follow the following steps:</p>
 <p><strong>Installation via ReaPack</strong>:</p>
 <p>The easiest way is to install the Ultraschall-API using ReaPack. ReaPack is a package-manager for extensions and helper-stuff for Reaper, which allows you to easily install and update content done by the Reaper community. Many Scripts, Themes, JSFX-FX, etc are available through that.</p>
@@ -219,7 +227,7 @@ For more information on ReaPack and it's usage, refer <a href="https://reapack.c
 <p><strong>Manual Installation</strong>:</p>
 <p>If you can't or don't want to install ReaPack, you can also install it manually.</p>
 <ol>
-<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.72.zip">ultraschall<em>api4.00</em>beta2.72.zip</a>.<br />
+<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.76.zip">ultraschall_api4.00_beta2.76.zip</a>.<br />
 </li>
 <li>Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -&gt; Show REAPER resource path in explorer/finder...".<br />
 The folder UserPlugins should contain the folder ultraschall_api and the files ultraschall_api_readme.txt and ultraschall_api.lua after this step.<br />
@@ -239,7 +247,8 @@ Include the following line in your script at the beginning:</p>
 <pre><code>     ultraschall.ApiTest()</code></pre></li>
 </ol>
 <p>after the dofile-line and hit ctrl+s or cmd+s(on mac).</p>
-<p>The script should show a messagebox, that tells you, which of the Ultraschall-API-parts are activated. If it shows, everything works fine :)</p>
+<p>The script should show a messagebox, that tells you, which of the Ultraschall-API-parts are activated. If it shows, everything works fine :)<br />
+If not, it will probably show you a messagebox, which will tell you, which required extension or Reaper-version is missing and where to find it.</p>
 <p>If you are already familiar with programming Reaper's own API-functions, you know, that all of Reaper's functions are placed in a table called "reaper."<br />
 e.g. reaper.ShowConsoleMsg("msg")</p>
 <p>The Ultraschall-API is quite the same, but is using the table "ultraschall." instead.<br />
@@ -249,27 +258,18 @@ e.g. ultraschall.ApiTest()</p>
 <p>Oh, before I forget: The ultraschall_api-folder holds a folder "Scripts_Examples" in which you can find some demos and example-scripts using this API.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes"></a>
-<div style="font-size:100%"><h4><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">^</a> <u>How to use Beta functions and hotfixes</u></h4></div><p><p>Before a new version of the Ultraschall-API is finished, it is in beta-stage. But sometimes, bugs need to be fixed even before a new release is done or you may want to test new functions from the next release for bugs and quirks.<br />
-So I added two ways to deal with that.</p>
-<ol>
-<li><p>Hotfixes<br />
+<div style="font-size:100%"><h4><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">^</a> <u>How to install hotfixes</u></h4></div><p><p>Before a new version of the Ultraschall-API is finished, it is in beta-stage. But sometimes, bugs need to be fixed even before a new release is done or you may want to test new functions from the next release for bugs and quirks.<br />
+So I added a way to deal with that.</p>
+<p>Hotfixes<br />
 Hotfixes are available at <a href="http://ultraschall.fm/api">ultraschall.fm/api</a>. They provide fixes for functions and bugs that came across after a release, but no new functions.<br />
 Just download the ultraschall_hotfixes.lua and put it into UserPlugins/ultraschall_api-folder.<br />
 The chance is high, that there is already an ultraschall_hotfixes.lua-file in the folder. You can safely overwrite it.<br />
 Voila, you have added the most recent bugfixes.</p>
-<pre><code>To get the bugs back, just delete the ultraschall_hotfixes.lua.
-
-All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
-
-Check again from time to time to get the latest hotfixes.</code></pre></li>
-<li><p>Beta-functions and features Beta-functions are functions intended for a future release of the Ultraschall-API. If you want to test them, just download the latest Beta-Pack from <a href="http://ultraschall.fm/api">ultraschall.fm/api</a>.<br />
-Extract the files in the Beta-pack to UserPlugins of the Resources-folder of your Reaper-installation. Voila, the beta-functions are installed.</p>
-<p>To use them, you need to explicitly turn them on in your script, using the following lines:</p>
-<pre><code>     ultraschall.US_BetaFunctions=&quot;ON&quot;          -- Only has an effect, if ultraschall-beta-functions exist in Scripts-folder  
-                                                -- Turn ON, if you want BETA-Api-Functions</code></pre>
-<p>The documentation for beta-versions can be found at <a href="http://api.ultraschall.fm/Downloads.html">api.ultraschall.fm/Downloads.html</a></p>
-<p>Be aware, they are in beta-stage. They will probably change, disappear or be exchanged with better functions. Beta-functions are only for testing purposes, not for productive coding!</p></li>
-</ol>
+<pre><code>   To get the bugs back, just delete the ultraschall_hotfixes.lua.
+   
+   All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
+   
+   Check again from time to time to get the latest hotfixes.</code></pre>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_004_Bugreporting_FeatureRequests"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_004_Bugreporting_FeatureRequests">^</a> <u>Introduction: Bugreporting and Feature Requests</u></h4></div><p><p>If you find any bugs or itches and want to report them, I suggest you the following procedure:</p>
@@ -430,7 +430,7 @@ Examplecode:</p>
         retval, EnvelopePointObject = ultraschall.CreateEnvelopePointObject(TrackEnvelope, 1, 20, 10, 0, 0, false) -- create EnvelopePointObject</code></pre>
 <p>An EnvelopePointObject is an array with all the attributes of an envelope-point, containing the following values:</p>
 <pre><code>        EnvelopePointObject[1] - Trackenvelope; The TrackEnvelope-object, in which the point lies
-        EnvelopePointObject[2] - integer; Envelope-idx
+        EnvelopePointObject[2] - integer; Envelope-idx, with 0 for the first envelope-point; 1, for the second, etc
         EnvelopePointObject[3] - number; the time in seconds
         EnvelopePointObject[4] - number; the raw value of the envelope-point
         EnvelopePointObject[5] - integer; the shape of the envelope-point, with 
@@ -492,6 +492,89 @@ Structure:</p>
 <li>Some of the functions who make use of ColorTables are: <a href="US_Api_Functions.html#ApplyColorTableToTrackColors">ApplyColorTableToTrackColors</a></li>
 </ul>
 
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_008_RenderTable"></a>
+<div style="font-size:100%"><h4><a href="#Datatypes_008_RenderTable">^</a> <u>Datatypes: RenderTable</u></h4></div><p><p>When working with rendering, you have to deal with dozens of potential options. I tried to add all these options as parameters into the rendering-functions but, I failed miserably.<br />
+This is mostly because, there are so many.</p>
+<p>So I added a new construct, called: the RenderTable.</p>
+<p>A Rendertable is a table, which stores all rendersettings you can set in Reaper. And with all, I mean all!</p>
+<p>Structure:</p>
+<pre><code>        RenderTable[&quot;AddToProj&quot;]               - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
+        RenderTable[&quot;Bounds&quot;]                  - the Bounds-dropdownlist
+                                                     0, Custom time range
+                                                     1, Entire project
+                                                     2, Time selection
+                                                     3, Project regions
+                                                     4, Selected Media Items(in combination with Source 32)
+                                                     5, Selected regions
+        RenderTable[&quot;Channels&quot;]                - the number of channels in the rendered file
+                                                     1, mono
+                                                     2, stereo
+                                                     higher, the number of channels
+        RenderTable[&quot;CloseAfterRender&quot;]        - true, close rendering to file-dialog after render
+                                                     false, don&#39;t close it
+        RenderTable[&quot;Dither&quot;]                  - the dither-checkboxes
+                                                      &amp;1, dither master mix
+                                                      &amp;2, noise shaping master mix
+                                                      &amp;4, dither stems
+                                                      &amp;8, dither noise shaping
+        RenderTable[&quot;Endposition&quot;]             - the endposition of the rendering selection in seconds
+        RenderTable[&quot;MultiChannelFiles&quot;]       - Multichannel tracks to multichannel files-checkbox
+                                                      true, checked; false, unchecked
+        RenderTable[&quot;OfflineOnlineRendering&quot;]  - Offline/Online rendering-dropdownlist
+                                                      0, Full-speed Offline
+                                                      1, 1x Offline
+                                                      2, Online Render
+                                                      3, Online Render(Idle)
+                                                      4, Offline Render(Idle)
+        RenderTable[&quot;OnlyMonoMedia&quot;]           - Tracks with only mono media to mono files-checkbox
+                                                      true, checked; false, unchecked
+        RenderTable[&quot;ProjectSampleRateFXProcessing&quot;] - Use project sample rate for mixing and FX/synth processing-checkbox
+                                                       true, checked; false, unchecked
+        RenderTable[&quot;RenderFile&quot;]              - the contents of the Directory-inputbox of the Render to File-dialog
+        RenderTable[&quot;RenderPattern&quot;]           - the render pattern as input into the File name-inputbox of the Render to File-dialog
+        RenderTable[&quot;RenderQueueDelay&quot;]        - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
+        RenderTable[&quot;RenderQueueDelaySeconds&quot;] - the amount of seconds for the render-queue-delay
+        RenderTable[&quot;RenderResample&quot;]          - Resample mode-dropdownlist
+                                                      0, Medium (64pt Sinc)
+                                                      1, Low (Linear Interpolation)
+                                                      2, Lowest (Point Sampling)
+                                                      3, Good (192pt Sinc)
+                                                      4, Better (348 pt Sinc)
+                                                      5, Fast (IIR + Linear Interpolation)
+                                                      6, Fast (IIRx2 + Linear Interpolation)
+                                                      7, Fast (16pt Sinc)
+                                                      8, HQ (512 pt)
+                                                      9, Extreme HQ(768pt HQ Sinc)
+        RenderTable[&quot;RenderString&quot;]            - the render-cfg-string, that holds all settings of the currently set render-ouput-format as BASE64 string
+        RenderTable[&quot;RenderTable&quot;]=true        - signals, this is a valid render-table
+        RenderTable[&quot;SampleRate&quot;]              - the samplerate of the rendered file(s)
+        RenderTable[&quot;SaveCopyOfProject&quot;]       - the &quot;Save copy of project to outfile.wav.RPP&quot;-checkbox
+                                                    true, checked; false, unchecked
+        RenderTable[&quot;SilentlyIncrementFilename&quot;] - Silently increment filenames to avoid overwriting-checkbox
+                                                     true, checked; false, unchecked
+        RenderTable[&quot;Source&quot;]                  - the source-dropdownlist
+                                                      0, Master mix
+                                                      1, Master mix + stems
+                                                      3, Stems (selected tracks)
+                                                      8, Region render matrix
+                                                      32, Selected media items
+        RenderTable[&quot;Startposition&quot;]           - the startposition of the rendering selection in seconds
+        RenderTable[&quot;TailFlag&quot;]                - in which bounds is the Tail-checkbox checked? 
+                                                       &amp;1, custom time bounds
+                                                       &amp;2, entire project
+                                                       &amp;4, time selection
+                                                       &amp;8, all project regions
+                                                       &amp;16, selected media items
+                                                       &amp;32, selected project regions
+        RenderTable[&quot;TailMS&quot;]                  - the amount of milliseconds of the tail
+    </code></pre>
+<p>This rendertable can be used by, e.g. <a href="US_Api_Functions.html#RenderProject_RenderTable">RenderProject_RenderTable</a></p>
+<ul>
+<li>You can create Rendertables using: <a href="US_Api_Functions.html#CreateNewRenderTable">CreateNewRenderTable</a>(new rendertable), <a href="US_Api_Functions.html#GetRenderTable_Project">GetRenderTable_Project</a>(create from the current project), <a href="US_Api_Functions.html#GetRenderTable_ProjectFile">GetRenderTable_ProjectFile</a>(create from an rpp-projectfile), <a href="US_Api_Functions.html#GetRenderPreset_RenderTable">GetRenderPreset_RenderTable</a>(create from render-preset)</li>
+<li>You can check for valid RenderTables using: <a href="US_Api_Functions.html#IsValidRenderTable">IsValidRenderTable</a></li>
+<li>Some of the functions who make use of RenderTables are: <a href="US_Api_Functions.html#RenderProject_RenderTable">RenderProject_RenderTable</a></li>
+</ul>
+
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_050_CheckingDatatypes"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_050_CheckingDatatypes">^</a> <u>Datatypes: Checking Datatypes</u></h4></div><p><p>When you work with data of different sources but need to work with data of a specific type, it would be handy to have ways of checking, whether a certain variable has data of a specific type.<br />
 Lua provides ways of checking for valid datatypes(type() and math.type()) as well as Reaper(ValidatePtr() and ValidatePtr2()).</p>
@@ -524,6 +607,8 @@ To check for Ultraschall-API specific or other Reaper-datatypes, you can use the
 </li>
 <li><a href="US_Api_Functions.html#IsValidEnvelopePointArray">IsValidEnvelopePointArray</a> - checks, if a table is a valid <a href="#Datatypes_006_EnvelopePointArray">EnvelopePointArray</a></li>
 <li><a href="US_Api_Functions.html#IsValidArrangeviewSnapshot">IsValidArrangeviewSnapshot</a> - checks, if an extstate is a valid ArrangeviewSnapshot</li>
+<li><a href="US_Api_Functions.html#IsValidRenderTable">IsValidRenderTable</a> - checks, if a table is a valid <a href="#Datatypes_008_RenderTable">RenderTable</a></li>
+<li><a href="US_Api_Functions.html#IsValidTrackString">IsValidTrackString</a> - checks, whether a string is a <a href="#Datatypes_002_trackstring">trackstrings</a></li>
 </ul>
 <p>Other Reaper-datatypes:</p>
 <ul>
@@ -532,6 +617,8 @@ To check for Ultraschall-API specific or other Reaper-datatypes, you can use the
 <li><a href="US_Api_Functions.html#IsValidTrackStateChunk">IsValidTrackStateChunk</a> - checks, if a string is a valid TrackStateChunk</li>
 <li><a href="US_Api_Functions.html#IsValidMediaItemStateChunk">IsValidMediaItemStateChunk</a> - checks, if a string is a valid MediaItemStateChunk</li>
 <li><a href="US_Api_Functions.html#IsValidEnvStateChunk">IsValidEnvStateChunk</a> - checks, if a string is a valid EnvelopeStateChunk</li>
+<li><a href="US_Api_Functions.html#IsValidFXStateChunk">IsValidFXStateChunk</a> - checks, if a string is a valid FXStateChunk(both, from tracks and/or items)</li>
+<li><a href="US_Api_Functions.html#IsValidHWND">IsValidHWND</a> - checks, if a identifier is a valid HWND</li>
 </ul>
 <p>They will be part of ultraschall.type() someday.</p></li>
 <li><p>other types of data<br />
@@ -561,55 +648,131 @@ So I added some API-variables, like:</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Rendering_001_Introduction">^</a> <u>Rendering: Introduction</u></h4></div><p><p>The Ultraschall-API provides functions for rendering your projects, without having to use the Rendering-dialog of Reaper. This gives you a wide range of possibilities to customize your rendering-needs.</p>
-<p>Basically the process is based on:</p>
+<p>There are two basic ways to render a file.</p>
+<p>The easy way:</p>
 <ol>
 <li><p>creating a renderstring with all format-specific-settings, using the accompanying functions:<br />
-<a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a>, <a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>,<br />
-<a href="US_Api_Functions.html#CreateRenderCFG_Opus2">CreateRenderCFG_Opus2</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a></p></li>
+<a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a> ,<a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>,<a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a> <a href="US_Api_Functions.html#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a></p></li>
 <li><p>passing the render-string to one of the Render-functions<br />
-<a href="US_Api_Functions.html#RenderProject_RenderCFG">RenderProject_RenderCFG</a>, <a href="US_Api_Functions.html#RenderProjectRegions_RenderCFG">RenderProjectRegions_RenderCFG</a></p></li>
+<a href="US_Api_Functions.html#RenderProject">RenderProject</a>, <a href="US_Api_Functions.html#RenderProject_Regions">RenderProject_Regions</a></p></li>
 </ol>
-<p>So the following code should render the current project into an MP3 with a Constant Bitrate of 128kbps. Note: to render the currently opened project, it must be saved first!</p>
+<p>So the following code should render the current project into an MP3 with a Constant Bitrate of 128kbps.</p>
 <pre><code>       -- create Render-string
        render_cfg_string = ultraschall.CreateRenderCFG_MP3CBR(11, 2)
        
        -- Pass this Render-string to the rendering-function
-       ultraschall.RenderProject_RenderCFG(nil, &quot;c:\\exportfile.mp3&quot;, 0, -1, false, false, false, render_cfg_string)</code></pre>
-<p>One downside, though: when you want to render the currently opened project, it will be opened a second time for the rendering.<br />
-So if the current project has many effect-plugins and/or uses much memory, this means, the rendering of the current project using the UltraschallAPI-functions needs twice the ressources of your project! This is due Reaper-limitations, unfortunately.</p>
-<p>Read the accompanying documentation-entries for <a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a> and <a href="US_Api_Functions.html#RenderProject_RenderCFG">RenderProject_RenderCFG</a> for more details and/or the following chapters.</p>
+       retval, rendered_files_count, rendered_files_MediaItemStateChunk, rendered_files_array 
+                      = ultraschall.RenderProject(nil, &quot;c:\\exportfile.mp3&quot;, 0, -1, false, false, false, render_cfg_string)</code></pre>
+<p>The full control way:</p>
+<ol>
+<li><p>creating a <a href="#Datatypes_008_RenderTable">RenderTable</a>, which holds all settings you can set for the rendering-process, using one of the following functions:<br />
+<a href="US_Api_Functions.html#CreateNewRenderTable">CreateNewRenderTable</a>(new rendertable), <a href="US_Api_Functions.html#GetRenderTable_Project">GetRenderTable_Project</a>(create from the current project), <a href="US_Api_Functions.html#GetRenderTable_ProjectFile">GetRenderTable_ProjectFile</a>(create from an rpp-projectfile), <a href="US_Api_Functions.html#GetRenderPreset_RenderTable">GetRenderPreset_RenderTable</a>(create from render-preset)</p></li>
+<li><p>optionally exchanging the renderstring(which holds all format-specific-settings) in the RenderTable, using the accompanying functions:<br />
+<a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a> ,<a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>,<a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a> <a href="US_Api_Functions.html#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a></p></li>
+<li><p>Render the project, using the function:<br />
+<a href="US_Api_Functions.html#RenderProject_RenderTable">RenderProject_RenderTable</a></p></li>
+</ol>
+<p>So the following code should render the current project, using the settings stored in a projectfile "c:\testproject.rpp", into an MP3 with a Constant Bitrate of 128kbps.</p>
+<pre><code>    -- create RenderTable
+    RenderTable = ultraschall.GetRenderTable_ProjectFile(&quot;c:\\testproject.rpp&quot;)
+    
+    -- create Render-string
+    RenderTable[&quot;RenderString&quot;] = ultraschall.CreateRenderCFG_MP3CBR(11, 2)
+    
+    -- Render project using that RenderTable
+    rendered_files_count, rendered_files_MediaItemStateChunk, rendered_files_array 
+                                                = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, false, false)</code></pre>
+<p>Read the accompanying documentation-entries for <a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a> and <a href="US_Api_Functions.html#RenderProject">RenderProject</a> for more details and/or the following chapters.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_002_About_Renderstrings"></a>
 <div style="font-size:100%"><h4><a href="#Rendering_002_About_Renderstrings">^</a> <u>Rendering: About Renderstrings</u></h4></div><p><p>Render-strings(or render_cfg, as they are named in Reaper) are strings, that contain all settings for a specific Render-Output-format, as MP3, WAV, AIF, FLAC, etc.<br />
 They are usually stored into RPP-projectfiles and are quite cryptic(for those of you, who know what that means: BASE64-encoded).<br />
-These are essential for rendering a project using the provided rendering-functions, so the Ultraschall-API provides functions who create these render-strings.</p>
+These are essential for rendering a project using the provided rendering-functions, so the Ultraschall-API provides functions who create or analyze such render-strings.</p>
 <p>All these functions start with CreateRenderCFG_ in their name, so if you are looking for a specific format, use CreateRenderCFG_audioformat (like CreateRenderCFG_FLAC, etc).<br />
-The parameters of these functions represent all format-options as you are used from the Render-dialog. They should be fairly complete, though some formats (Video, OGG) are limited with some of their options(fps, width, height, kbps, etc).<br />
-This is due my approach decoding them, though I tried to provide all settings that are useful in your everyday use(documented in the accompanying parameter-descriptions in the functions-reference).</p>
+The parameters of these functions represent all format-options as you are used from the Render-dialog. They should be fairly complete, though some formats (Video, OGG) are limited with some of their options(fps only supported up to 2000.00).</p>
 <p>Example for FLAC:</p>
 <pre><code>        render_string = ultraschall.CreateRenderCFG_FLAC(integer BitDepth, integer EncSpeed)</code></pre>
 <p>creates the render-string for the FLAC-fileformat. Just provide the BitDepth(e.g 0 for 24 Bit) and the encoding-speed(EncSpeed) (e.g 5 for the default encoding speed).<br />
 Have a look into the functions-reference to get the possible values for these parameters.</p>
 <pre><code>        render_string = ultraschall.CreateRenderCFG_FLAC(0, 5)</code></pre>
 <p>This will create a render-string for FLAC with 24bit-depth and the encoding-speed of 5(which is the default-setting in the render-dialog).</p>
-<p>This renderstring can then be passed over to <a href="US_Api_Functions.html#SetProject_RenderCFG">SetProject_RenderCFG</a> to set it into a project-file, or to <a href="US_Api_Functions.html#RenderProject_RenderCFG">RenderProject_RenderCFG</a> to render a projectfile using the format-settings in the Render-string.</p>
-<p>The following render-string-functions are available in Ultraschall-API:<br />
-<a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a>, <a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus2">CreateRenderCFG_Opus2</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a>,<br />
-<a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a></p>
+<p>This renderstring can then be passed over to <a href="US_Api_Functions.html#SetProject_RenderCFG">SetProject_RenderCFG</a> to set it into a project-file, or to <a href="US_Api_Functions.html#RenderProject">RenderProject</a> to render a projectfile using the format-settings in the Render-string or put into <a href="#Datatypes_008_RenderTable">RenderTables</a>, that can be used for the rendering function <a href="US_Api_Functions.html#RenderProject_RenderTable">RenderProject_RenderTable</a>.</p>
+<p>The following render-string-functions are available in Ultraschall-API:</p>
+<blockquote>
+<p><a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a> ,<a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>,<a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a></p>
+</blockquote>
+<p>If you have already a Base64-encoded-renderstring but would love to know, which settings it holds, you can analyze them as well. First, you need to determine, which format is stored in this render-string, using:</p>
+<p><strong><a href="US_Api_Functions.html#GetOutputFormat_RenderCfg">GetOutputFormat_RenderCfg</a></strong></p>
+<pre><code>        string outputformat, string renderstring = ultraschall.GetOutputFormat_RenderCfg(string Renderstring, optional ReaProject ReaProject)
+    </code></pre>
+<blockquote>
+<p>This allows you to get the output-format stored in a Renderstring. If you set it to nil, it will return the output-format set in the current active project.<br />
+You can also pass a ReaProject as optional second parameter, so the function will return the output-format of it as well.<br />
+To make life easier, it also returns the analysed render-string. So if you want to know the renderoutput-format of a ReaProject, you also get the render-string to work on further.</p>
+</blockquote>
+<p>Now that we know, of which format the renderstring is, we can get the settings stored in it. So let's assume, it is a renderstring of the format FLAC, you can use the following function to analyse it's settings:</p>
+<p><strong><a href="US_Api_Functions.html#GetRenderCFG_Settings_FLAC">GetRenderCFG_Settings_FLAC</a></strong></p>
+<pre><code>        integer encoding_depth, integer compression = ultraschall.GetRenderCFG_Settings_FLAC(string rendercfg)</code></pre>
+<blockquote>
+<p>Pass to this function the renderstring of the flac-format and it will return the settings for encoding_depth and compression, as settable in the Render to File-dialog.</p>
+</blockquote>
+<p>The following functions are available for analysing the render-strings in all kinds of formats:</p>
+<blockquote>
+<p><a href="US_Api_Functions.html#GetRenderCFG_Settings_AIFF">GetRenderCFG_Settings_AIFF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_AudioCD">GetRenderCFG_Settings_AudioCD</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_DDP">GetRenderCFG_Settings_DDP</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_FLAC">GetRenderCFG_Settings_FLAC</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_M4AMac">GetRenderCFG_Settings_M4AMac</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3">GetRenderCFG_Settings_MP3</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3ABR">GetRenderCFG_Settings_MP3ABR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3CBR">GetRenderCFG_Settings_MP3CBR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3MaxQuality">GetRenderCFG_Settings_MP3MaxQuality</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3VBR">GetRenderCFG_Settings_MP3VBR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_OGG">GetRenderCFG_Settings_OGG</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_OPUS">GetRenderCFG_Settings_OPUS</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WAV">GetRenderCFG_Settings_WAV</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WAVPACK">GetRenderCFG_Settings_WAVPACK</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_AVI_Video">GetRenderCFG_Settings_AVI_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_GIF">GetRenderCFG_Settings_GIF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_LCF">GetRenderCFG_Settings_LCF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MKV_Video">GetRenderCFG_Settings_MKV_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MOVMac_Video">GetRenderCFG_Settings_MOVMac_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP4Mac_Video">GetRenderCFG_Settings_MP4Mac_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_QTMOVMP4_Video">GetRenderCFG_Settings_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WebMVideo">GetRenderCFG_Settings_WebMVideo</a></p>
+</blockquote>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_002a_About_RenderTables"></a>
+<div style="font-size:100%"><h4><a href="#Rendering_002a_About_RenderTables">^</a> <u>Rendering: About RenderTables</u></h4></div><p><p>RenderTables are tables, who hold all settings, that one can set in Reaper for the rendering-process. Most of the stuff about them, I've told already in the chapter <a href="#Datatypes_008_RenderTable">RenderTables</a>.<br />
+The main goal behind them is, to make passing the dozens of render-settings much easier and comfortable.</p>
+<p>But even then, creating one is very painful, so I made functions, who create valid RenderTables.</p>
+<p>It is always a good idea to use the US-API-functions for creating RenderTables, as I may add more settings into RenderTables(when Reaper gets new ones). If you would create a RenderTable by hand without my functions, you not only miss out the new features. In fact, your old RenderTable would be seen as invalid by the API, as it's missing new settings.<br />
+So be advised to always use the CreateRenderTable-functions from the API. They will always create valid RenderTables, setting unset settings to useful defaults.<br />
+That way, your old scripts will not break, even if you don't update them to use new settings.<br />
+After a RenderTable is created, you can safely alter it's settings to valid values, but creating them must be done by US-API's functions.</p>
+<p>I wrote numerous functions to create and work with RenderTables.</p>
+<p><strong>Create new RenderTable:</strong></p>
+<ul>
+<li><strong><a href="US_Api_Functions.html#CreateNewRenderTable">CreateNewRenderTable</a></strong> - creates a new RenderTable, where you can set all rendersettings.</li>
+</ul>
+<p><strong>Get render-settings a RenderTable:</strong></p>
+<ul>
+<li><strong><a href="US_Api_Functions.html#GetRenderTable_Project">GetRenderTable_Project</a></strong> - creates a new RenderTable, taking the render-settings from the current active project<br />
+</li>
+<li><strong><a href="US_Api_Functions.html#GetRenderTable_ProjectFile">GetRenderTable_ProjectFile</a></strong> - creates a new RenderTable, taking the render-settings from an rpp-projectfile<br />
+</li>
+<li><strong><a href="US_Api_Functions.html#GetRenderPreset_RenderTable">GetRenderPreset_RenderTable</a></strong> - creates a new RenderTable, taking the render-settings from stored render-presets(more on render-presets later)</li>
+</ul>
+<p><strong>Apply settings from a RenderTable:</strong></p>
+<ul>
+<li><strong><a href="US_Api_Functions.html#ApplyRenderTable_Project">ApplyRenderTable_Project</a></strong> - applies settings from a RenderTable to the current active project<br />
+</li>
+<li><strong><a href="US_Api_Functions.html#ApplyRenderTable_ProjectFile">ApplyRenderTable_ProjectFile</a></strong> - applies settings from a RenderTable to an rpp-projectfile<br />
+</li>
+<li><strong><a href="US_Api_Functions.html#SetRenderPreset">SetRenderPreset</a></strong> - applies settings from a RenderTable to a render-preset</li>
+</ul>
+<p><strong>Check for validity:</strong></p>
+<ul>
+<li><strong><a href="US_Api_Functions.html#IsValidRenderTable">IsValidRenderTable</a></strong> - checks, whether a table is a valid RenderTable</li>
+</ul>
+<p>With that, you can interoperate with RenderTables and render-settings from/to projects, projectfiles and presets in any way you wish.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_003_About_Renderingfunctions"></a>
-<div style="font-size:100%"><h4><a href="#Rendering_003_About_Renderingfunctions">^</a> <u>Rendering: About Rendering-functions</u></h4></div><p><p>The rendering-functions let you render a project, either a stored rpp-project-file or the currently opened one(only when it has been saved!).<br />
-They provide you with a wide range of functionality, so the rendering process should be quite close to Reaper's "official"-own-process using the render-dialog.<br />
+<div style="font-size:100%"><h4><a href="#Rendering_003_About_Renderingfunctions">^</a> <u>Rendering: About Rendering-functions</u></h4></div><p><p>The rendering-functions let you render a project, either a stored rpp-project-file or the currently opened one.<br />
+They provide you with a wide range of functionality, so the rendering process should be quite close to Reaper's "official"-own-process using the Render to File-dialog.<br />
 They also return the filenames of the rendered files, as well as MediaItemStateChunks of all rendered files, so you can easily import them into your project.</p>
-<p>There are currently two different render-functions available:</p>
+<p>There are currently three different render-functions available:</p>
 <ol>
-<li><a href="US_Api_Functions.html#RenderProject_RenderCFG">RenderProject_RenderCFG</a> - with this one, you can render a whole project or just from startposition to endposition in seconds</li>
-<li><a href="US_Api_Functions.html#RenderProjectRegions_RenderCFG">RenderProjectRegions_RenderCFG</a> with this one, you can render specific regions of a project</li>
+<li><a href="US_Api_Functions.html#RenderProject">RenderProject</a> - with this one, you can render a whole project or just timeselection or from startposition to endposition in seconds<br />
+</li>
+<li><a href="US_Api_Functions.html#RenderProject_Regions">RenderProject_Regions</a> - with this one, you can render specific regions of a project<br />
+</li>
+<li><a href="US_Api_Functions.html#RenderProject_RenderTable">RenderProject_RenderTable</a> - with this one, you can render a project using a <a href="#Rendering_002a_About_RenderTables">RenderTable</a>, which allows you full control over all render-settings</li>
 </ol>
-<p>Basically they are the same, with the only difference, that with the first one you can set a specific startposition and endposition, while the second one, you set it to a region-number.<br />
+<h4>RenderProject and RenderProject_Regions</h4>
+<p>are basically the same, with the only difference, that with the first one you can set a specific startposition and endposition, while the second one, you set it to a region-number.<br />
 That said, a lot of the parameters are the same.</p>
 <pre><code>         projectfilename_with_path - the projectfile with path, that you want to render. Set it to nil, if you want to render the 
-                                     currently opened project(which must be saved before rendering!)
+                                     currently opened project
          renderfilename_with_path  - the filename with path of the output-file
          overwrite_without_asking  - if you want to overwrite already existing outputfiles, set this to true; else, set it to false</code></pre>
 <p>The following two are directly connected to some of Reaper's dialogs:</p>
@@ -624,22 +787,43 @@ That said, a lot of the parameters are the same.</p>
 <p>The last parameter is the place for your render-string:</p>
 <pre><code>         rendercfg           - the renderstring, as created using a CreateRenderCFG_XXX-function, as described in 
                                the chapter &quot;Rendering: About Renderstrings&quot;
-                               if you omit it or set it to nil, it will use the format-settings already set in the projectfile</code></pre>
+                               if you omit it or set it to nil, it will use the format-settings already set in the project or projectfile</code></pre>
 <p>It also returns some interesting return-values:</p>
-<pre><code>        retval - 0, if rendering was successful; -1, in case of an error; -2, if the project hasn&#39;t been saved yet
-        renderfilecount - the number of rendered files. Usually 1, but can be higher, when rendering stems as well
-        MediaItemStateChunkArray - an array with MediaItemStateChunks of the rendered projects, ready to include into a project of your choice
-                                   the first entry is for the Master-render-file
-        Filearray - an array with filenames-with-path of all rendered files, with the first entry being the one of the master-track-rendered-file</code></pre>
+<pre><code>        retval                   - 0, if rendering was successful; -1, in case of an error(like invalid parametervalues or user aborted rendering)  
+        renderfilecount          - the number of rendered files. Usually 1, but can be higher, when rendering stems as well  
+        MediaItemStateChunkArray - an array with MediaItemStateChunks of the rendered projects, ready to include into a project of your choice  
+                                   the first entry is for the master-track-rendered-file  
+        Filearray                - an array with filenames-with-path of all rendered files, with the first entry being the one of  
+                                   the master-track-rendered-file</code></pre>
+<h4>RenderProject_RenderTable</h4>
+<p>works different and uses a <a href="#Datatypes_008_RenderTable">RenderTable</a>, which stores all rendersettings(and I mean: ALL).<br />
+This gives you full control over the rendering-process and you can customize it in anyway you want.</p>
+<p>You can set the following parameters:</p>
+<pre><code>        projectfilename_with_path - You can pass here the filename+path of the project that you want to render.  
+                                    To render the current active project, set this parameter to nil.  
+        RenderTable               - a RenderTable, which holds all render-settings you want to set; to use the already set settings, set this to nil  
+                                    This RenderTable allows you to control all render-settings.  
+        AddToProj                 - when rendering the current project, shall the rendered files be added to the project(true) or not(false)?  </code></pre>
+<p>The following two are directly connected to some of Reaper's dialogs:</p>
+<pre><code>        CloseAfterRender          - the render-progress-window, that is shown during the actual rendering can be closed automatically after  
+                                    rendering is finished(there&#39;s a checkbox in that window to set this). Set this to true to automatically  
+                                    close it; set it to false to keep it shown; set it to nil and it will use the setting the user set with  
+                                    the checkbox  
+        SilentlyIncrementFilename - another of Reaper&#39;s dialogs, that will pop up, when an output-file already exists and overwrite_without_asking   
+                                    is set to false. It will ask you to automatically increase the filename with a number to prevent accidental  
+                                    overwriting. Set this to true to automatically increase filename;   
+                                    set it to false to show the dialog; set it to nil to use the settings the user chose  </code></pre>
+<p>The return-values should be quite familiar to you from the other render-functions:</p>
+<pre><code>        renderfilecount          - the number of rendered files. Usually 1, but can be higher, when rendering stems as well  
+        MediaItemStateChunkArray - an array with MediaItemStateChunks of the rendered projects, ready to include into a project of your choice  
+                                   the first entry is for the master-track-rendered-file  
+        Filearray                - an array with filenames-with-path of all rendered files, with the first entry being the one of  
+                                   the master-track-rendered-file</code></pre>
 <p>With that, you should be able to successfully render your project and do some neat stuff afterwards.</p>
-<p>For more enhanced customization of Rendering, see <a href="#Rendering_004_Change_more_render_settings">Rendering: Change more render-settings</a> for more details.</p>
+<p>For more enhanced customization of projectfiles for Rendering, see <a href="#Rendering_004_Change_more_render_settings">Rendering: Change more render-settings in projectfiles</a>.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_004_Change_more_render_settings"></a>
-<div style="font-size:100%"><h4><a href="#Rendering_004_Change_more_render_settings">^</a> <u>Rendering: Change more render-settings</u></h4></div><p><p>Reaper's own render-dialog provides you with much more possibilities, than the rendering-functions themselves provide you with.</p>
-<p>In the likely case, that you want to influence more things for rendering, like samplerate, stereo or mono, etc, you should do the following things:</p>
-<ol>
-<li>make a copy of the rpp-file that you want to render using <a href="US_Api_Functions.html#MakeCopyOfFile">MakeCopyOfFile</a>. The copy must have a different name and be in the same folder, as the original rpp-file!</li>
-<li><p>Now you can alter the copy of the projectfile using the following Ultraschall-Framework-functions, that represent certain elements from Reaper's Render-Dialog:</p>
+<div style="font-size:100%"><h4><a href="#Rendering_004_Change_more_render_settings">^</a> <u>Rendering: Change more render-settings in projectfiles</u></h4></div><p><p>Sometimes, you want to alter Render-Settings in a projectfile by hand, without using RenderTables for that. So, the API has many useful functions as well, starting with SetProject_ You can alter a projectfile using the following Ultraschall-Framework-functions, that represent certain elements from Reaper's Render-Dialog:</p>
 <ul>
 <li><a href="US_Api_Functions.html#SetProject_RenderFilename">SetProject_RenderFilename</a> - to alter the output-filename</li>
 <li><a href="US_Api_Functions.html#SetProject_RenderPattern">SetProject_RenderPattern</a> - to set the wildcards for the output-filename</li>
@@ -649,15 +833,89 @@ That said, a lot of the parameters are the same.</p>
 <li><a href="US_Api_Functions.html#SetProject_RenderResample">SetProject_RenderResample</a> - to set "Resample mode (if needed)"</li>
 <li><a href="US_Api_Functions.html#SetProject_RenderSpeed">SetProject_RenderSpeed</a> to set the render-speed, and</li>
 <li><a href="US_Api_Functions.html#SetProject_RenderStems">SetProject_RenderStems</a> to set, whether to render stems, Master mix, region-render-matrix, etc (Source-dropdownlist)</li>
-</ul></li>
-<li><p>after you've set the individual render-settings, you create a render-string, as described in <a href="#Rendering_002_About_Renderstrings">Rendering: About Renderstrings</a>.</p></li>
-<li><p>render using the altered copy(!) of the projectfile(not the original projectfile!), as described in <a href="#Rendering_003_About_Renderingfunctions">Rendering: About Rendering-functions</a>.</p></li>
-</ol>
-<p>If you want to alter the currently opened project, you need to save it first. After that, use:</p>
+</ul>
+<p>If you want to alter the currently opened project in its rpp-projectfile, you need to save it first. After that, use:</p>
 <pre><code>        retval, projectfilename_with_path = reaper.EnumProjects(-1,&quot;&quot;)</code></pre>
-<p>to get the projectfilename_with_path of the current project as returnvalue. Use projectfilename_with_path and go through steps 1 through 4.</p>
-<p>The functions in step 2) are just a small selection of the functions to alter project-files, as provided by the Ultraschall-API. Browse through the functions in the "Project-Files"-section of the index of the Ultraschall-API-Functions-Reference for many more of them.<br />
-However, changing some of the stuff might cause issues with the rendering-functions provided with this API.</p>
+<p>to get the projectfilename_with_path of the current project as returnvalue. Use projectfilename_with_path as parameter for the SetProject-functions needed for you alterations.</p>
+<p>The functions are just a small selection of the functions to alter project-files, as provided by the Ultraschall-API. Browse through the functions in the "Project-Files"-section of the index of the Ultraschall-API-Functions-Reference for many more of them.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_005_RenderPresets"></a>
+<div style="font-size:100%"><h4><a href="#Rendering_005_RenderPresets">^</a> <u>Rendering: Render Presets</u></h4></div><p><p>Reaper has the concept of render-presets, who hold all render-settings you can set in the Render to File-dialog and you want to store for quick retrieval.<br />
+These can be reused within the Render to File-dialog, when clicking the Preset-button.<br />
+Render-presets are split into two main parts: Bounds and Options and Formats, who each hold parts of the full render-settings-package.</p>
+<p>Options and Format holds the following settings:<br />
+OutputAndFormatPresetname, SampleRate, Channels, offline_online_dropdownlist, useprojectsamplerate_checkbox, resamplemode_dropdownlist, various_checkboxes and rendercfg</p>
+<p>Bounds holds the following settings: BoundsPresetname, bounds_dropdownlist, start_position, endposition, source_dropdownlist_and_checkboxes, unknown, outputfilename_renderpattern, tail_checkbox</p>
+<p>That means, to get the full render-settings as a Rendertable, you need to get both, the settings for a Renderformat-preset and a Bounds-preset.<br />
+And to make that easier, I added numerous functions:</p>
+<p><strong><a href="US_Api_Functions.html#GetRenderPreset_Names">GetRenderPreset_Names</a></strong></p>
+<pre><code>        integer bounds_presets, table bounds_names, integer options_format_presets, table options_format_names, 
+                                      integer both_presets, table both_names = ultraschall.GetRenderPreset_Names()</code></pre>
+<blockquote>
+<p>This gets all Bounds-presetnames and all Options and Format-presetnames. These are important, as you need them to for getting them as RenderTable using <a href="US_Api_Functions.html#GetRenderPreset_RenderTable">GetRenderPreset_RenderTable</a>.<br />
+As a general rule: RenderPresets who were stored using "All Settings" in the Render-Presets-menu of the Render to File-dialog, share the same presetname.</p>
+</blockquote>
+<p>If you know the preset-names, you can create a <a href="#Datatypes_008_RenderTable">RenderTable</a>, that stores all render-settings stored in their presets.</p>
+<p><strong><a href="US_Api_Functions.html#GetRenderPreset_RenderTable">GetRenderPreset_RenderTable</a></strong></p>
+<pre><code>        RenderTable RenderTable = ultraschall.GetRenderPreset_RenderTable(string Bounds_Name, string Options_and_Format_Name)</code></pre>
+<blockquote>
+<p>This function returns a RenderTable from render-presets. You simply pass to the function the Bounds-presetname and the options and format-presetname and it will take these settings and put them into a RenderTable.</p>
+<p>Some settings aren't stored in Render-Presets and therefore will get default values:<br />
+TailMS=0, SilentlyIncrementFilename=false, AddToProj=false, SaveCopyOfProject=false, RenderQueueDelay=false, RenderQueueDelaySeconds=false</p>
+<p>This RenderTable can be used for the <a href="US_Api_Functions.html#RenderProject_RenderTable">RenderProject_RenderTable</a>-function.</p>
+</blockquote>
+<p>Using already existing render-presets is nice, but being able to change them is even nicer. Once they are added/set, they are available after (re-)opening the Render to File-dialog.</p>
+<p><strong><a href="US_Api_Functions.html#AddRenderPreset">AddRenderPreset</a></strong></p>
+<pre><code>        boolean retval = ultraschall.AddRenderPreset(string Bounds_Name, string Options_and_Format_Name, 
+                                                                                  RenderTable RenderTable)</code></pre>
+<blockquote>
+<p>With this one, you can add a new render-setting, the usage is simple: pass to it a new Bounds-presetname, a new Options and Format-presetname and a RenderTable, which holds all render-settings. If you want to just store one of the render-presets, you pass nil to the other presetname. So if you want to add only a Bounds-preset, the functioncall could look like that:</p>
+</blockquote>
+<pre><code>        retval = ultraschall.AddRenderPreset(&quot;My new bounds-render-preset&quot;, nil, RenderTable)</code></pre>
+<blockquote>
+<p>The function will check, whether the chosen name is already in use and return false in that case.</p>
+</blockquote>
+<p><strong><a href="US_Api_Functions.html#SetRenderPreset">SetRenderPreset</a></strong></p>
+<pre><code>        boolean retval = ultraschall.SetRenderPreset(string Bounds_Name, string Options_and_Format_Name, 
+                                                                                  RenderTable RenderTable)</code></pre>
+<blockquote>
+<p>As you can see, it basically works like the aforementioned <a href="US_Api_Functions.html#AddRenderPreset">AddRenderPreset</a>. The only difference is that is checks, whether the preset-name does not exists. In that case, it returns false, otherwise it exchanges the render-preset-settings with the settings stored in the RenderTable.</p>
+</blockquote>
+<p>Now we have get, add and set, so what is still missing? You're right: deleting them.</p>
+<p><strong><a href="US_Api_Functions.html#DeleteRenderPreset_Bounds">DeleteRenderPreset_Bounds</a></strong></p>
+<pre><code>        boolean retval = ultraschall.DeleteRenderPreset_Bounds(string Bounds_Name)</code></pre>
+<blockquote>
+<p>This function deletes an already stored bounds-render-preset. Just pass the Bounds-presetname and it deletes it, if existing. If the preset does not exist, it returns false, otherwise it returns true.</p>
+</blockquote>
+<p><strong><a href="US_Api_Functions.html#DeleteRenderPreset_FormatOptions">DeleteRenderPreset_FormatOptions</a></strong></p>
+<pre><code>        boolean retval = ultraschall.DeleteRenderPreset_FormatOptions(string Options_and_Format_Name)</code></pre>
+<blockquote>
+<p>Basically like <a href="US_Api_Functions.html#DeleteRenderPreset_Bounds">DeleteRenderPreset_Bounds</a>, but deletes an Options and Format-renderpreset. Just pass the Options and Format-presetname and it deletes it from the presets. If the preset does not exist, it returns false, otherwise it returns true.</p>
+</blockquote>
+<p>This should give you a lot of control over render-presets.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_006_RenderQueue"></a>
+<div style="font-size:100%"><h4><a href="#Rendering_006_RenderQueue">^</a> <u>Rendering: Render Queue</u></h4></div><p><p>Another way to render projects is using the RenderQueue, which is often practical. For that, I included some functions to deal with the render-queue:</p>
+<p><strong><a href="US_Api_Functions.html#GetRenderQueuedProjects">GetRenderQueuedProjects</a></strong></p>
+<pre><code>        integer Filecount, array Filearray = ultraschall.GetRenderQueuedProjects()</code></pre>
+<blockquote>
+<p>This function allows you to get the projects currently stored in RenderQueue and the number of queued projects.<br />
+The order of the projects in FileArray represent the index, which can be used in <a href="US_Api_Functions.html#RenderProject_RenderQueue">RenderProject_RenderQueue</a>, with the first project being index 1, the second being index 2, etc.<br />
+You can also render these projects using the other render-functions as well.</p>
+</blockquote>
+<p><strong><a href="US_Api_Functions.html#RenderProject_RenderQueue">RenderProject_RenderQueue</a></strong></p>
+<pre><code>        boolean retval = ultraschall.RenderProject_RenderQueue(integer index)</code></pre>
+<blockquote>
+<p>This renders a project in the render-queue. The index represents the project within the render-queue, with 1 for the first.<br />
+To know, which queued project has which index, use <a href="US_Api_Functions.html#GetRenderQueuedProjects">GetRenderQueuedProjects</a>.<br />
+If you set index to -1, it will attempt rendering all projects in the render-queue. Due API-limitations, this function can not return the rendered files(I hope I can circumvent this limitation at some point).</p>
+</blockquote>
+<p><strong><a href="US_Api_Functions.html#AddProjectFileToRenderQueue">AddProjectFileToRenderQueue</a></strong></p>
+<pre><code>        boolean retval = ultraschall.AddProjectFileToRenderQueue(string projectfilename_with_path)</code></pre>
+<blockquote>
+<p>If you have a project, which you want to add to the RenderQueue, but is not currently opened yet, you can use this function.<br />
+Just pass to it the projectfilename+path of the project, that you want to add to the RenderQueue and it will do what is needed for that.</p>
+</blockquote>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Arrangeview_Snapshots_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Arrangeview_Snapshots_001_Introduction">^</a> <u>Arrangeview Snapshots: Introduction</u></h4></div><p><p>When working with big or complex projects:</p>
@@ -1847,7 +2105,8 @@ The rest is the same, pass to the function a ColorTable and in the parameter Spr
 Features that use these background-scripts are:</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#GetLastCursorPosition">GetLastCursorPosition</a></strong> - gets the last editcursor-position before the current one. Helpful for left-click-triggered scripts, who change the editcursorposition due the mouseclick<br />
-<strong><a href="US_Api_Functions.html#GetLastPlayState">GetLastPlayState</a></strong> - gets the last playstate before the current one. Helpful for monitoring "event-based"-statechanges <strong><a href="US_Api_Functions.html#GetLastLoopState">GetLastLoopState</a></strong> - gets the last loopstate before the current one. Helpful for monitoring "event-based"-statechanges</p>
+<strong><a href="US_Api_Functions.html#GetLastPlayState">GetLastPlayState</a></strong> - gets the last playstate before the current one. Helpful for monitoring "event-based"-statechanges<br />
+<strong><a href="US_Api_Functions.html#GetLastLoopState">GetLastLoopState</a></strong> - gets the last loopstate before the current one. Helpful for monitoring "event-based"-statechanges</p>
 </blockquote>
 <p>With this, you can create event-managers, reacting to e.g. playstate-changes.</p>
 <p>Such a script could look like this:</p>
@@ -2119,7 +2378,9 @@ When setread is set to true, ShowLastErrorMessage will not show this errormessag
 </li>
 <li><a href="US_Api_Functions.html#GetErrorMessage_Funcname">GetErrorMessage_Funcname</a> - gets an errormessage a specific function provided, can be indexed<br />
 </li>
-<li><a href="US_Api_Functions.html#GetLastErrorMessage_Funcname">GetLastErrorMessage_Funcname</a> - gets the last errormessage a specific function provided</li>
+<li><a href="US_Api_Functions.html#GetLastErrorMessage_Funcname">GetLastErrorMessage_Funcname</a> - gets the last errormessage a specific function provided<br />
+</li>
+<li><a href="US_Api_Functions.html#ShowErrorMessagesInReascriptConsole">ShowErrorMessagesInReascriptConsole</a> - prints the errormessages to the console, when they happen for "realtime"-debug-errorchecking</li>
 </ul>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Error_Messaging_System_004_Deleting_Error_Messages"></a>
@@ -2215,7 +2476,7 @@ So I desired some functions that keep programming the routing simple and down to
 </li>
 <li>counting all HWOuts/routings in a track</li>
 </ul>
-<p>Let's start with the routing.</p>
+<p>In addition to that, I also added numerous functions, that allow "mass manipulation" of the Routings. Let's start with the routing.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Routing_002_Send_Receive"></a>
 <div style="font-size:100%"><h4><a href="#Routing_002_Send_Receive">^</a> <u>Routing: Send and Receives</u></h4></div><p><p>Before we start, some basics, if you're not familiar with routing.</p>
@@ -2229,12 +2490,13 @@ Let's create a new send/receive-setting.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#AddTrackAUXSendReceives">AddTrackAUXSendReceives</a></strong></p>
 </blockquote>
-<pre><code>                   boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, 
-                                                                        number volume, number pan, integer mute, integer mono_stereo, integer phase, 
-                                                                        integer chan_src, integer snd_chan, number unknown, integer midichanflag, 
-                                                                        integer automation, boolean undo)</code></pre>
+<pre><code>                   boolean retval, optional string TrackStateChunk 
+                                    = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, 
+                                                                          number volume, number pan, integer mute, integer mono_stereo, integer phase, 
+                                                                          integer chan_src, integer snd_chan, number pan_law, integer midichanflag, 
+                                                                          integer automation, optional string TrackStateChunk)</code></pre>
 <blockquote>
-<p>This adds a receive to a specific track. To tell the function, from which track the received signal comes from, you need to set the parameter recv_tracknumber to the tracknumber of the sending track.<br />
+<p>This adds a receive to a specific track or TrackStateChunk. To tell the function, from which track the received signal comes from, you need to set the parameter recv_tracknumber to the tracknumber of the sending track.<br />
 The other parameters are simply all other settings for this send/receive, like</p>
 </blockquote>
 <blockquote>
@@ -2247,9 +2509,11 @@ The other parameters are simply all other settings for this send/receive, like</
 <li>phase - the phase of the received signal</li>
 <li>chan_src - the source-channel to receive from. That is the sending-track's-channel!</li>
 <li>snd_chan - the track's own channel to pass the received signal to. This is in the receiving track's channels!</li>
+<li>pan_law - the pan-law-setting for this AUXSendReceive</li>
 <li>midichanflag - manages the whole MIDI-receiving settings, like to receive from which MIDI-source-channel and to send to which of the track's own MIDI-channels. Includes also the MIDI-On-switching as well as no channels at all.<br />
 </li>
 <li>automation - the automation-mode of the receive</li>
+<li>TrackStateChunk - set this, if you want to add AUXSendReceives to a TrackStateChunk; set tracknumber=-1 in that case</li>
 </ul>
 </blockquote>
 <p>Setting a receive-setting works basically the same:</p>
@@ -2259,7 +2523,8 @@ The other parameters are simply all other settings for this send/receive, like</
 <pre><code>                    boolean retval = ultraschall.SetTrackAUXSendReceives(integer tracknumber, integer idx, integer recv_tracknumber, 
                                                                          integer post_pre_fader, number volume, number pan, integer mute, 
                                                                          integer mono_stereo, integer phase, integer chan_src, integer snd_chan, 
-                                                                         number unknown, integer midichanflag, integer automation, boolean undo)</code></pre>
+                                                                         number pan_law, integer midichanflag, integer automation, 
+                                                                         optional string TrackStateChunk)</code></pre>
 <blockquote>
 <p>This works the same as AddTrackAUXSendReceives, but changes an already existing setting.</p>
 </blockquote>
@@ -2269,25 +2534,25 @@ The other parameters are simply all other settings for this send/receive, like</
 </blockquote>
 <pre><code>                    integer recv_tracknumber, integer post_pre_fader, number volume, 
                     number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, 
-                    integer snd_chan, number unknown, integer midichanflag, integer automation 
-                                                        = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx)</code></pre>
+                    integer snd_chan, number pan_law, integer midichanflag, integer automation 
+                                                        = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)</code></pre>
 <blockquote>
-<p>This receives all the settings of a receive of a track. The same rules for the former functions (AddTrackAUXSendReceives and SetTrackAUXSendReceives) apply also here.</p>
+<p>This receives all the settings of a receive of a track or a TrackStateChunk. The same rules for the former functions (AddTrackAUXSendReceives and SetTrackAUXSendReceives) apply also here.</p>
 </blockquote>
 <p>And when you want to delete a receive, you can use the following function:</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#DeleteTrackAUXSendReceives">DeleteTrackAUXSendReceives</a></strong></p>
 </blockquote>
-<pre><code>                    boolean retval = ultraschall.DeleteTrackAUXSendReceives(integer tracknumber, integer idx, boolean undo)
+<pre><code>                    boolean retval = ultraschall.DeleteTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)
                     </code></pre>
 <blockquote>
-<p>This deletes a receive-setting from a track. Just pass to it the tracknumber, which receives and the idx of the receive-setting. To know, which setting to delete, you can use GetTrackAUXSendReceives.</p>
+<p>This deletes a receive-setting from a track or a TrackStateChunk. Just pass to it the tracknumber, which receives and the idx of the receive-setting. To know, which setting to delete, you can use GetTrackAUXSendReceives. Set tracknumber=-1 to use the parameter TrackStateChunk to delete an AUXSendReceive from a TrackStateChunk.</p>
 </blockquote>
 <p>If you want to know, how many receives a track has, you can use:</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#CountTrackAUXSendReceives">CountTrackAUXSendReceives</a></strong></p>
 </blockquote>
-<pre><code>                    integer count_SendReceives = ultraschall.CountTrackAUXSendReceives(integer tracknumber)
+<pre><code>                    integer count_SendReceives = ultraschall.CountTrackAUXSendReceives(integer tracknumber, optional string TrackStateChunk)
                     </code></pre>
 <blockquote>
 <p>This returns the number of received tracks a the track tracknumber has.</p>
@@ -2302,10 +2567,10 @@ For that, I included the functions: <a href="US_Api_Functions.html#AddTrackHWOut
 </blockquote>
 <pre><code>                    boolean retval = ultraschall.AddTrackHWOut(integer tracknumber, integer outputchannel, integer post_pre_fader, 
                                                                number volume, number pan, integer mute, integer phase, integer source, 
-                                                               number unknown, integer automationmode, boolean undo)
+                                                               number pan_law, integer automationmode, optional string TrackStateChunk)
                                                                </code></pre>
 <blockquote>
-<p>This adds a new HWOut to a track. The tracknumber is either 0 for the master track or 1 and higher for track 1 or higher.<br />
+<p>This adds a new HWOut to a track or a TrackStateChunk. The tracknumber is either 0 for the master track or 1 and higher for track 1 or higher or -1, if you want to pass a TrackStateChunk.<br />
 The other options are to some extend familiar to the <a href="#Routing_002_Send_Receive">AUXSendReceive-functions</a>:</p>
 <ul>
 <li>outputchannel - the outputchannel, either single tracks or stereo-tracks</li>
@@ -2315,7 +2580,9 @@ The other options are to some extend familiar to the <a href="#Routing_002_Send_
 <li>mute - shall it be muted or not</li>
 <li>phase - the phase of the HWOut</li>
 <li>source - the channel(s) to output to the outputchannels</li>
+<li>pan_law - the pan-law-setting of the HWOut</li>
 <li>automationmode - the automation of the HWOut</li>
+<li>TrackStateChunk - the trackstatechunk, into which you want to add HWOut-settings; only available when tracknumber=-1</li>
 </ul>
 </blockquote>
 <p>Setting an already existing HWOut can be done using the function:</p>
@@ -2324,8 +2591,8 @@ The other options are to some extend familiar to the <a href="#Routing_002_Send_
 </blockquote>
 <pre><code>                    boolean retval = ultraschall.SetTrackHWOut(integer tracknumber, integer idx, integer outputchannel, 
                                                                integer post_pre_fader, number volume, number pan, integer mute, 
-                                                               integer phase, integer source, number unknown, integer automationmode, 
-                                                               boolean undo)</code></pre>
+                                                               integer phase, integer source, number pan_law, integer automationmode, 
+                                                               optional string TrackStateChunk)</code></pre>
 <blockquote>
 <p>This sets the settings of an already existing HWOut. The rest is the same, as the parameters for AddTrackHWOut.</p>
 </blockquote>
@@ -2334,17 +2601,17 @@ The other options are to some extend familiar to the <a href="#Routing_002_Send_
 <p><strong><a href="US_Api_Functions.html#GetTrackHWOut">GetTrackHWOut</a></strong></p>
 </blockquote>
 <pre><code>                    integer outputchannel, integer post_pre_fader, number volume, number pan, 
-                    integer mute, integer phase, integer source, number unknown, integer automationmode 
-                                                                = ultraschall.GetTrackHWOut(integer tracknumber, integer idx)
+                    integer mute, integer phase, integer source, number pan_law, integer automationmode 
+                                                                = ultraschall.GetTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)
                                                                 </code></pre>
 <blockquote>
-<p>This returns the settings of a HWOut. The tracknumbers are the same, with 0 for the master-track; 1 and higher for track 1 and higher. The idx is the index of the HWOut-setting of the track.</p>
+<p>This returns the settings of a HWOut. The tracknumbers are the same, with 0 for the master-track; 1 and higher for track 1 and higher; -1 if you want to use the parameter TrackStateChunk. The idx is the index of the HWOut-setting of the track.</p>
 </blockquote>
 <p>To delete it, use:</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#DeleteTrackHWOut">DeleteTrackHWOut</a></strong></p>
 </blockquote>
-<pre><code>                    boolean retval = ultraschall.DeleteTrackHWOut(integer tracknumber, integer idx, boolean undo)</code></pre>
+<pre><code>                    boolean retval = ultraschall.DeleteTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)</code></pre>
 <blockquote>
 <p>This deletes a HWOut-setting from a track.</p>
 </blockquote>
@@ -2352,7 +2619,120 @@ The other options are to some extend familiar to the <a href="#Routing_002_Send_
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#CountTrackHWOuts">CountTrackHWOuts</a></strong></p>
 </blockquote>
-<pre><code>                    integer count_HWOuts = ultraschall.CountTrackHWOuts(integer tracknumber)</code></pre>
+<pre><code>                    integer count_HWOuts = ultraschall.CountTrackHWOuts(integer tracknumber, optional string TrackStateChunk)</code></pre>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Routing_004_RoutingMassManipulation"></a>
+<div style="font-size:100%"><h4><a href="#Routing_004_RoutingMassManipulation">^</a> <u>Routing: Mass manipulation of Routings</u></h4></div><p><p>Sometimes, working with individual settings isn't enough. Sometimes, you want to work with all Routing-Settings at once.<br />
+For that, I included the functions: <a href="US_Api_Functions.html#ClearRoutingMatrix">ClearRoutingMatrix</a>, <a href="US_Api_Functions.html#GetAllHWOuts">GetAllHWOuts</a>, <a href="US_Api_Functions.html#ApplyAllHWOuts">ApplyAllHWOuts</a>, <a href="US_Api_Functions.html#AreHWOutsTablesEqual">AreHWOutsTablesEqual</a>, <a href="US_Api_Functions.html#GetAllAUXSendReceives">GetAllAUXSendReceives</a>, <a href="US_Api_Functions.html#ApplyAllAUXSendReceives">ApplyAllAUXSendReceives</a>, <a href="US_Api_Functions.html#AreAUXSendReceivesTablesEqual">AreAUXSendReceivesTablesEqual</a>, <a href="US_Api_Functions.html#GetAllMainSendStates">GetAllMainSendStates</a>, <a href="US_Api_Functions.html#ApplyAllMainSendStates">ApplyAllMainSendStates</a>, <a href="US_Api_Functions.html#AreMainSendsTablesEqual">AreMainSendsTablesEqual</a></p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#ClearRoutingMatrix">ClearRoutingMatrix</a></strong></p>
+</blockquote>
+<pre><code>                    boolean retval = ultraschall.ClearRoutingMatrix(boolean ClearHWOuts, boolean ClearAuxRecvs, boolean ClearTrackMasterSends, 
+                                                                    boolean ClearMasterTrack, boolean undo)
+                                                               </code></pre>
+<blockquote>
+<p>This clears the routing-matrix. You can control, what parts of the routing-matrix shall be cleared(MainSends, AUXSendReceives, HWOuts) and if this shall include the master-track as well.</p>
+</blockquote>
+<p>To mass-manipulate all HWOuts, see the following functions:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#GetAllHWOuts">GetAllHWOuts</a></strong></p>
+</blockquote>
+<pre><code>                    table AllHWOuts, integer number_of_tracks = ultraschall.GetAllHWOuts()
+                                                               </code></pre>
+<blockquote>
+<p>This returns all HWOut-settings as a nice handy table, which you can alter. The name of each index reflects the name of the parameters of the add/get/set-HWOut-functions.<br />
+returned table is of structure:<br />
+table["HWOuts"]=true - signals, this is a HWOuts-table; don't change that!<br />
+table["number_of_tracks"] - the number of tracks in this table, from track 0(master) to track n<br />
+table[tracknumber]["HWOut_count"] - the number of HWOuts of tracknumber, beginning with 1<br />
+table[tracknumber]["TrackID"] - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)<br />
+table[tracknumber][HWOutIndex]["outputchannel"] - the number of outputchannels of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["post<em>pre</em>fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["volume"] - the volume of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["pan"] - the panning of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["mute"] - the mute-setting of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["phase"] - the phase-setting of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["source"] - the source/input of this HWOutIndex of tracknumber<br />
+table[tracknumber][HWOutIndex]["pan_law"] - pan-law, default is -1<br />
+table[tracknumber][HWOutIndex]["automationmode"] - the automation-mode of this HWOutIndex of tracknumber</p>
+</blockquote>
+<p>You can manipulate these entries now. For the valid value-ranges, see the <a href="US_Api_Functions.html#GetTrackHWOut">GetTrackHWOut</a>-function.<br />
+After that, you can add them back to the Routings at once, using:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#ApplyAllHWOuts">ApplyAllHWOuts</a></strong></p>
+</blockquote>
+<pre><code>                    boolean retval = ultraschall.ApplyAllHWOuts(table AllHWOuts, optional integer option)
+                                                               </code></pre>
+<blockquote>
+<p>This applies the settings of the AllHWOuts-table to all the tracks.<br />
+The parameter option allows you to set, whether the settings shall be applied by tracknumber or by track-guid.<br />
+Each MediaTrack in a project has it's own ID, stored as a 64-digits-string. This allows one to know a certain track, even if the order or the trackname change.<br />
+If you choose option=2, this function will look into the table and retrieve the stored guid of a track and apply the setting to exact this track. If you choose option=1 or option=nil, then it will apply it to the tracknumber, even if the tracknumber doesn't reflect the tracknumber of the track with the guid.<br />
+So depending on how much you want to "hook" the settings to a specific track or a tracknumber, you set option to 2 or to nil.</p>
+</blockquote>
+<p>Let's assume, you have two AllHWOuts-tables and want to compare, if they are the same or if they are different, you can use:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#AreHWOutsTablesEqual">AreHWOutsTablesEqual</a></strong></p>
+</blockquote>
+<pre><code>                    boolean retval = ultraschall.AreHWOutsTablesEqual(table AllHWOuts, table AllHWOuts2, optional integer option)
+                                                               </code></pre>
+<blockquote>
+<p>This compares two AllHWOut-tables and returns false, if they are different.<br />
+With the parameter option, you can choose, whether to check for the guids as well(option=2) or if they shall be ignored in the comparison(option=nil).</p>
+</blockquote>
+<p>The same principles can be used for MainSendStates and AUXSendReceives, who also have the same functions:</p>
+<ul>
+<li><a href="US_Api_Functions.html#GetAllAUXSendReceives">GetAllAUXSendReceives</a> - returns all Send/Receive-settings as a handy table, that can be altered and readded, using ApplyAllAUXSendReceives</li>
+<li><a href="US_Api_Functions.html#ApplyAllAUXSendReceives">ApplyAllAUXSendReceives</a> - this applies a AllAUXSendReceive-table, as returned by GetAllAUXSendReceives</li>
+<li><a href="US_Api_Functions.html#AreAUXSendReceivesTablesEqual">AreAUXSendReceivesTablesEqual</a> - compares two AllAUXSendReceive-tables</li>
+<li><a href="US_Api_Functions.html#GetAllMainSendStates">GetAllMainSendStates</a> - returns all MainSend-states as a handy table, that can be altered and readded, using ApplyAllMainSendStates</li>
+<li><a href="US_Api_Functions.html#ApplyAllMainSendStates">ApplyAllMainSendStates</a> - this applies a AllMainSends-table, as returned by GetAllMainSendStates</li>
+<li><a href="US_Api_Functions.html#AreMainSendsTablesEqual">AreMainSendsTablesEqual</a> - compares two AllMainSends-tables</li>
+</ul>
+<p><strong>Regarding the guid, versus tracknumber-difference</strong></p>
+<p>To get an idea of the differences between applying settings by guid versus applying settings by tracknumbers, consider the following example:<br />
+Just create a new project with 5 tracks in them and name them A, B, C, D and E.<br />
+The routing-matrix could look something like this:</p>
+<p><img src="gfx/Routing_004_RoutingMassManipulation_RoutingMatrix_before.png" alt="Routing Matrix - before" /></p>
+<p>Now, we look at the following two code-snippets, who get all MainSend-states of a track, add two new tracks before the first track, toggle the states of the MainSends in the AllMainSends-table and reapply them. The only difference is, how they use the parameter option.</p>
+<p>Using option=nil:</p>
+<pre><code>        dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+
+        -- get all current MainSendStates
+        AllMainSends_Table, NumberOfTracksInTable = ultraschall.GetAllMainSendStates()
+        -- insert two track before the first track
+        ultraschall.InsertTrackAtIndex(0, 2, true)
+
+        -- toggle the Main-Sends-states.
+        if AllMainSends_Table[1][&quot;MainSendOn&quot;]==0 then newstate=1 else newstate=0 end
+        for i=1, NumberOfTracksInTable do
+          AllMainSends_Table[i][&quot;MainSendOn&quot;]=newstate
+        end
+
+        -- apply them to all track using their tracknumbers(option=nil)
+        ultraschall.ApplyAllMainSendStates(AllMainSends_Table,nil)</code></pre>
+<p>This changes the main-send-states, beginning with Track 1, although the first two tracks are not A, B, C, D or E.</p>
+<p>The resulting routing-matrix will look like this:<br />
+<img src="gfx/Routing_004_RoutingMassManipulation_RoutingMatrix_after_option_nil.png" alt="Routing Matrix - after, using option=nil" /></p>
+<p>Using option=2:</p>
+<pre><code>        dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+
+        -- get all current MainSendStates
+        AllMainSends_Table, NumberOfTracksInTable = ultraschall.GetAllMainSendStates()
+        -- insert two track before the first track
+        ultraschall.InsertTrackAtIndex(0, 2, true)
+
+        -- toggle the Main-Sends-states.
+        if AllMainSends_Table[1][&quot;MainSendOn&quot;]==0 then newstate=1 else newstate=0 end
+        for i=1, NumberOfTracksInTable do
+          AllMainSends_Table[i][&quot;MainSendOn&quot;]=newstate
+        end
+
+        -- apply them to all track using their guids(option=2)
+        ultraschall.ApplyAllMainSendStates(AllMainSends_Table,2)</code></pre>
+<p>This changes the main-send-states only at tracks A, B, C, D, E, leaving the newly inserted tracks untouched.</p>
+<p>The resulting routing-matrix will look like this:<br />
+<img src="gfx/Routing_004_RoutingMassManipulation_RoutingMatrix_after_option_2.png" alt="Routing Matrix - after, using option=2" /></p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#ExtStateManagement_001_Introduction">^</a> <u>ExtState Management: Introduction</u></h4></div><p><p>One of the concepts of Reaper to exchange data between scripts, functions, instances are so called extstates.<br />
@@ -2560,7 +2940,8 @@ This is only for the ultraschall.ini-file, all other ini-files can be used by yo
 </ul>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_005_TrackItemExtStates"></a>
-<div style="font-size:100%"><h4><a href="#ExtStateManagement_005_TrackItemExtStates">^</a> <u>ExtState Management: Track and Item-Extstates</u></h4></div><p><p>Another concept, I introduce with the Ultraschall-API are Track and Item-Extstates.</p>
+<div style="font-size:100%"><h4><a href="#ExtStateManagement_005_TrackItemExtStates">^</a> <u>ExtState Management: Track and Item-Extstates</u></h4></div><p><p><strong>Note: This is deprecated, as Reaper will have the same feature in better in a future version!</strong></p>
+<p>Another concept, I introduce with the Ultraschall-API are Track and Item-Extstates.</p>
 <p>To store them, I make use of the fact, that tracks and items have their own guids. I use these guids as basis for the section-name, while the key and value can be freely chosen by you.<br />
 A valid guid is a string that follows the following pattern {........-....-....-....-............} where . is a hexadecimal value(0-F) These extstates are stored as ProjectExtStates, that means: when you save the project, these extstates will be saved with it.</p>
 <p>To make this possible in general, I included two functions: <a href="US_Api_Functions.html#GetGuidExtState">GetGuidExtState</a>, <a href="US_Api_Functions.html#SetGuidExtState">SetGuidExtState</a><br />
@@ -2589,7 +2970,8 @@ You can choose, whether to overwrite it, if it already exists and if the state s
 I will look into that problem at some point.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_006_TrackExtStates"></a>
-<div style="font-size:100%"><h4><a href="#ExtStateManagement_006_TrackExtStates">^</a> <u>ExtState Management: Track Extstates</u></h4></div><p><p>Let's store some extstates for tracks. For that, I added the functions: <a href="US_Api_Functions.html#GetTrackExtState">GetTrackExtState</a>, <a href="US_Api_Functions.html#SetTrackExtState">SetTrackExtState</a><br />
+<div style="font-size:100%"><h4><a href="#ExtStateManagement_006_TrackExtStates">^</a> <u>ExtState Management: Track Extstates</u></h4></div><p><p><strong>Note: This is deprecated, as Reaper will have the same feature in better in a future version!</strong></p>
+<p>Let's store some extstates for tracks. For that, I added the functions: <a href="US_Api_Functions.html#GetTrackExtState">GetTrackExtState</a>, <a href="US_Api_Functions.html#SetTrackExtState">SetTrackExtState</a><br />
 TrackExtStates are stored as ProjectExtState within the projectfile.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#SetTrackExtState">SetTrackExtState</a></strong></p>
@@ -2608,7 +2990,8 @@ TrackExtStates are stored as ProjectExtState within the projectfile.</p>
 </blockquote>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_007_ItemExtStates"></a>
-<div style="font-size:100%"><h4><a href="#ExtStateManagement_007_ItemExtStates">^</a> <u>ExtState Management: Item Extstates</u></h4></div><p><p>Let's store some extstates for items. For that, I added the functions: <a href="US_Api_Functions.html#GetItemExtState">GetItemExtState</a>, <a href="US_Api_Functions.html#SetItemExtState">SetItemExtState</a><br />
+<div style="font-size:100%"><h4><a href="#ExtStateManagement_007_ItemExtStates">^</a> <u>ExtState Management: Item Extstates</u></h4></div><p><p><strong>Note: This is deprecated, as Reaper will have the same feature in better in a future version!</strong></p>
+<p>Let's store some extstates for items. For that, I added the functions: <a href="US_Api_Functions.html#GetItemExtState">GetItemExtState</a>, <a href="US_Api_Functions.html#SetItemExtState">SetItemExtState</a><br />
 ItemExtStates are stored as ProjectExtState within the projectfile. These functions work basically like the ones for TrackExtStates</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#SetItemExtState">SetItemExtState</a></strong></p>
@@ -2650,8 +3033,7 @@ ItemExtStates are stored as ProjectExtState within the projectfile. These functi
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="MarkersAndRegions_002_General_How_To"></a>
 <div style="font-size:100%"><h4><a href="#MarkersAndRegions_002_General_How_To">^</a> <u>Markers and Regions: General How To</u></h4></div><p><p>All functions for all kinds of markers settable in the Ultraschall-Api share the same basic subset of workflows.<br />
 All markers can be added, set, deleted, enumerated, counted, imported and exported from/to a file, checked for being a certain markertype and converted into a certain markertype(if possible).<br />
-Let's take edit-markers as an example, who have the functions:</p>
-<p><a href="US_Api_Functions.html#AddEditMarker">AddEditMarker</a>, <a href="US_Api_Functions.html#SetEditMarker">SetEditMarker</a>, <a href="US_Api_Functions.html#DeleteEditMarker">DeleteEditMarker</a>, <a href="US_Api_Functions.html#EnumerateEditMarkers">EnumerateEditMarkers</a>, <a href="US_Api_Functions.html#CountEditMarkers">CountEditMarkers</a>, <a href="US_Api_Functions.html#ImportEditFromFile">ImportEditFromFile</a>, <a href="US_Api_Functions.html#ExportEditMarkersToFile">ExportEditMarkersToFile</a>, <a href="US_Api_Functions.html#IsMarkerEdit">IsMarkerEdit</a>, <a href="US_Api_Functions.html#MarkerToEditMarker">MarkerToEditMarker</a>, <a href="US_Api_Functions.html#EditToMarker">EditToMarker</a></p>
+Let's take edit-markers as an example, who have the functions: <a href="US_Api_Functions.html#AddEditMarker">AddEditMarker</a>, <a href="US_Api_Functions.html#SetEditMarker">SetEditMarker</a>, <a href="US_Api_Functions.html#DeleteEditMarker">DeleteEditMarker</a>, <a href="US_Api_Functions.html#EnumerateEditMarkers">EnumerateEditMarkers</a>, <a href="US_Api_Functions.html#CountEditMarkers">CountEditMarkers</a>, <a href="US_Api_Functions.html#ImportEditFromFile">ImportEditFromFile</a>, <a href="US_Api_Functions.html#ExportEditMarkersToFile">ExportEditMarkersToFile</a>, <a href="US_Api_Functions.html#IsMarkerEdit">IsMarkerEdit</a>, <a href="US_Api_Functions.html#MarkerToEditMarker">MarkerToEditMarker</a>, <a href="US_Api_Functions.html#EditToMarker">EditToMarker</a></p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#AddEditMarker">AddEditMarker</a></strong></p>
 </blockquote>
@@ -2659,7 +3041,7 @@ Let's take edit-markers as an example, who have the functions:</p>
                   </code></pre>
 <blockquote>
 <p>This adds a new edit-marker. Give it a position, the shown number and an edittitle, which should hint at the reason of having to edit later.<br />
-The title will be shown in the marker as "<em>edit: Title". You can change it manually in Reaper, but should retain "</em>edit: ", as this signals the<br />
+The title will be shown in the marker as "_edit: Title". You can change it manually in Reaper, but should retain "_edit: ", as this signals the<br />
 Ultraschall-API, if this is an edit-marker. The editmarker also is red (255 0 0).<br />
 It will return the marker-number, which is the index of all markers in the project, means: markers and regions.</p>
 </blockquote>
@@ -3049,7 +3431,8 @@ It quickly becomes messy or at least harder to read. And I hate my code being ha
 <blockquote>
 <p>This works like reaper.defer, but has additional benefits, like the parameters mode and timer_counter, who allow you to specify, how often the defer-cycle shall be executed.<br />
 Either all the time(mode=0), every nth-cycle(mode=1) or every nth-second(mode=2). If mode is 1 or 2, you should set timer_counter to the amount of cycles/seconds to wait for the next execution of the defer-loop.<br />
-It also returns a defer_identifier, which can be used by <a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a> to stop the defer-loop from inside and outside of the script(more on that later).</p>
+It also returns a defer_identifier, which can be used by <a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a> to stop the defer-loop from inside and outside of the script(more on that later).<br />
+Important: A defer-identifier is only valid, until the script stops/Reaper closes. The next time the script is started, it gets another defer-identifier!</p>
 </blockquote>
 <p>As you've seen, there are 20 Defer-functions in the Ultraschall-API. If you want to use only one defer-cycle in your script, just use <a href="US_Api_Functions.html#Defer1">Defer1</a>, but if you need multiple defer-loops in one script-instance,<br />
 you should use another of these 20 Defer-functions, as otherwise the timer/cycle-counter of a ultraschall.Defer-function could get confused.<br />
@@ -3130,6 +3513,138 @@ If we write now another script, that does the following:</p>
 So, if you have two defer-loops, where the second defer-loop shall control, if the first defer-loop is running or not:<br />
 Run the function, that shall be deferred(and has one of Defer1 to Defer20 inside of it) and stop it using StopDeferCycle.</p>
 <p>If for some reason you didn't get the defer_identifier, no problem: use <a href="US_Api_Functions.html#GetDeferIdentifier">GetDeferIdentifier</a> to get it for a specific Ultraschall-Defer-function in your script.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Localize_001_Introduction"></a>
+<div style="font-size:100%"><h4><a href="#Localize_001_Introduction">^</a> <u>Localize Scripts: Introduction</u></h4></div><p><p>Reaper has (among thousands of others) one great thing: Localization. That means, you can translate the whole software into many languages.<br />
+Unfortunately, this isn't possible for scripts, or better: Not that easy.</p>
+<p>So I thought, that adding such functionalities for Lua-Scripts would be a good idea too.</p>
+<p>The whole process consists of two main things:</p>
+<ol>
+<li>The USLangPack-file, which holds all the original texts and their translated counterparts<br />
+</li>
+<li>The functions, with whom you can easily translate text within your scripts.</li>
+</ol>
+<p>Let's start with the first one, the translationfile.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Localize_002_LangPack_Fileformat"></a>
+<div style="font-size:100%"><h4><a href="#Localize_002_LangPack_Fileformat">^</a> <u>Localize Scripts: Language-pack-fileformat</u></h4></div><p><p>A USLangPack-translationfile is a simple ini-file of the format:</p>
+<pre><code>            [section]
+            key=value</code></pre>
+<p>In our case, the section is the scriptname, the key is the original string and the value is the translated string.</p>
+<pre><code>            [myluascript.lua]
+            Hello World=Hallo Welt</code></pre>
+<p><strong>Basics</strong></p>
+<p>In this example, the text "Hello World" in myluascript.lua would be translated to the german translation "Hallo Welt".<br />
+If you need to add comments, you can simply write a semicolon. Everything written in that line after the semicolon will be ignored.</p>
+<pre><code>            [myluascript.lua]
+            Hello World=Hallo Welt ;It looks like part of the translation, but it&#39;s not!
+    </code></pre>
+<p>Now here's the thing, you may want to add = into your text, but ini-files use this as separator between key and value.<br />
+So, to write an = you need to escape it, using \=</p>
+<pre><code>            [myluascript.lua]
+            Hello\=World=Hallo\=Welt
+    </code></pre>
+<p>In the above example, the text holds now an =<br />
+The escape-symbol will be removed when reading it from the translationfile automatically. If you don't want that, write \= and it will become \= in the text.</p>
+<p>Newlines are also possible. Just write \n in the places, where you want to have a newline:</p>
+<pre><code>            [myluascript.lua]
+            Hello\nWorld=Hallo\nWelt
+    </code></pre>
+<p>The newlines (\n) in the above example, will be replaced by the Localize-function automatically into newlines.</p>
+<p><strong>Advanced</strong></p>
+<p>Sometimes, you want to have substitutions, like filenames, variable numbers, etc. As this is very important, I added ways of adding them into the translation as well.<br />
+Substitutions are written into the text using %sxxx, where xxx is a number between 000 and 999.<br />
+The number between 000 and 999 reflects the order of the substitutions.<br />
+Let's assume the following translationentry:</p>
+<pre><code>            [myluascript.lua]
+            The filename %s000 is the one that you have selected.=Du hast den Dateinamen %s000 ausgewählt.
+    </code></pre>
+<p>In this example, the text has the substituion of %s000, which will represent the filename.<br />
+Now look closely: the substitution %s000 in the english text is on the third position, while in the german translation, it is on the fifth!<br />
+That's why substitutions are numbered, as the translator may need to rearrange the substitutions per requirements of the other language.<br />
+Especially, if you have a number of substitutions, the order in the translated version can be "disordered", compared to the original one.<br />
+The Localize-function takes care of substituting the right words into the substitutions.</p>
+<p>As a good practice, you should add a comment directly above the line, which holds the substitution, which explains the meaning of the substitution(s).</p>
+<pre><code>            [myluascript.lua]
+            ;%s000 - this is a filename, which could also hold the path to the file
+            The filename %s000 is the one that you have selected.=Du hast den Dateinamen %s000 ausgewählt.
+    </code></pre>
+<p>That way, the translator knows, what to expect from it, which improves quality of the translation.</p>
+<p><strong>Different Languages</strong></p>
+<p>Now you can do one translation, but there are many more languages. So how to make that work?<br />
+Via the filename.</p>
+<p>The used languages in a translationfile is always added to the USLangPack-file:</p>
+<pre><code>            mylangpack_language.USLangPack
+    </code></pre>
+<p>So an english, german and spanish version would be named like this:</p>
+<pre><code>            mylangpack_en.USLangPack
+            mylangpack_de.USLangPack
+            mylangpack_es.USLangPack
+        </code></pre>
+<p>The Localize_UseFile-function will load the right LangPack for you.</p>
+<p><strong>Best Practices</strong></p>
+<p>I will add some final notes on how to translate properly, for scripters as well as for translators:</p>
+<p>Scripters:<br />
+You should never assume a specific length of your string, as other languages may need longer texts in their translation.<br />
+English vs German is such an example. In many cases, English is much more efficient than German, leading to longer translated texts.<br />
+If you don't take care of that, texts in your script will look ugly, maybe even unreadable.<br />
+So keep your texts as short as possible(no novels please!) and make the displayed text more flexible for different stringlengths.<br />
+This makes life and work much more easier for the translator.</p>
+<p>Translators:<br />
+Even though it is good practice, if displayed strings allow certain flexibility in length, you can't rely on that.<br />
+So if you want to translate the texts for a script, try to make the translation not longer than the original string and check, whether your translation will be displayed at all.<br />
+If there's no way to translate the text in any way, without clipped texts, etc, ask the scripter to modify the script for more flexibility.<br />
+So what I wrote for scripters is also valid for you: So keep your texts as short as possible(no novels please!).<br />
+This makes life easier for the user and the scripter.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Localize_003_Localize_Functions"></a>
+<div style="font-size:100%"><h4><a href="#Localize_003_Localize_Functions">^</a> <u>Localize Scripts: Functions</u></h4></div><p><p>Using a translationfile to localize texts in your script is very easy. There are only three functions to deal with that:<br />
+<a href="US_Api_Functions.html#Localize_UseFile">Localize_UseFile</a>, <a href="US_Api_Functions.html#Localize_RefreshFile">Localize_RefreshFile</a>, <a href="US_Api_Functions.html#Localize">Localize</a></p>
+<p>Let's go into more detail:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#Localize_UseFile">Localize_UseFile</a></strong></p>
+</blockquote>
+<pre><code>            boolean retval = ultraschall.Localize_UseFile(string filename, string section, string language)
+    </code></pre>
+<blockquote>
+<p>This function loads the contents of a translationfile into your script.<br />
+You need to pass the filename of the translationfile. If you omit the path, it will look in the Resource-folder/LangPack/ for the file.<br />
+The next part is the section of the file. As you may remember from the previous chapter, you should give the section your scriptname.<br />
+That way, you can have one translationfile for all your scripts, with each section dedicated to one of your scripts.<br />
+The last parameter is the used languages. You should use the common abbreviations, like en, es, de, it and so on.<br />
+This function will load the right translationfile with the right language and the translations from a specific section. If it can't, it will return false.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#Localize_RefreshFile">Localize_RefreshFile</a></strong></p>
+</blockquote>
+<pre><code>            boolean retval = ultraschall.Localize_RefreshFile()
+    </code></pre>
+<blockquote>
+<p>If the translationfile has been updated, you might want to reload it. Just run this function, and it reloads an already loaded translation.</p>
+</blockquote>
+<p>Now there's one thing remaining: How to actually translate/localize a string? With this function:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#Localize">Localize</a></strong></p>
+</blockquote>
+<pre><code>            string translated_string, boolean translated = ultraschall.Localize(string original_string, ...)
+        </code></pre>
+<blockquote>
+<p>or alternatively</p>
+</blockquote>
+<pre><code>            string translated_string, boolean translated = Localize(string original_string, ...)
+    </code></pre>
+<blockquote>
+<p>This localizes a string, using the loaded translation. Just pass the original-string into the first parameter.<br />
+If you have substitutions, you pass them as additional parameters in the order of appearance.<br />
+That means, if you have a string "I am a filename %s000 and a number %s001" the Localize-functioncall will be</p>
+</blockquote>
+<pre><code>            translated_string, translated = Localize(&quot;I am a filename %s000 and a number %s001&quot;, &quot;name_of_the_file0ab.txt&quot;, &quot;135&quot;)</code></pre>
+<blockquote>
+<p>This will return the localized string with the substitutions in the right places.<br />
+If for one reason or another, no translation can be done(no loaded translationfile, etc), the second returnvalue translated will be set to false.</p>
+<p>For convenience, you can use Localize without ultraschall. at the beginning.</p>
+</blockquote>
+<p>This should make having your scripts localized an easy and convenient task.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Helper_Functions_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Helper_Functions_001_Introduction">^</a> <u>Helper_Functions: Introduction</u></h4></div><p><p>Beside all the concepts you just read about, I also added tons of functions and things to the API, that are helpful in one way or another in your everyday coding.<br />
@@ -3310,8 +3825,6 @@ It will return a boolean(true for success), the current undo-message and alle th
 </li>
 <li><a href="US_Api_Functions.html#SetVZoom">SetVZoom</a> - sets the vertical-zoom-factor in the arrange-view<br />
 </li>
-<li><a href="US_Api_Functions.html#CloseReaConsole">CloseReaConsole</a> - closes the ReaConsole-window<br />
-</li>
 <li><a href="US_Api_Functions.html#GetScreenHeight">GetScreenHeight</a> - returns the current screen-height in pixels<br />
 </li>
 <li><a href="US_Api_Functions.html#GetScreenWidth">GetScreenWidth</a> - returns the current screen-width in pixels<br />
@@ -3329,6 +3842,24 @@ It will return a boolean(true for success), the current undo-message and alle th
 <li><a href="US_Api_Functions.html#ApplyActionToMediaItemArray">ApplyActionToMediaItemArray</a> - this function applies a Reaper-action to all MediaItems in MediaItemArray individually. That given action must apply itself to selected MediaItems.<br />
 </li>
 <li><a href="US_Api_Functions.html#ApplyActionToMediaItemArray2">ApplyActionToMediaItemArray2</a> - this function applies a Reaper-action to all MediaItems in MediaItemArray at once. That given action must apply itself to selected MediaItems.</li>
+</ul>
+<p><strong>ReaScript-console-stuff</strong></p>
+<ul>
+<li><a href="US_Api_Functions.html#CloseReaConsole">CloseReaConsole</a> - closes the ReaConsole-window<br />
+</li>
+<li><a href="US_Api_Functions.html#GetReaScriptConsoleWindow">GetReaScriptConsoleWindow</a> - gets the hwnd-window-handler of the ReaScript-console</li>
+</ul>
+<p><strong>print replacements</strong></p>
+<ul>
+<li><a href="US_Api_Functions.html#print">print</a> - prints its parameters to the ReaScript-console, separated by newlines<br />
+</li>
+<li><a href="US_Api_Functions.html#print_alt">print_alt</a> - prints its parameters to the ReaScript-console, separated by two spaces. Ends with a newline.<br />
+</li>
+<li><a href="US_Api_Functions.html#print_update">print_update</a> - prints its parameters to the ReaScript-console, but clears it first<br />
+</li>
+<li><a href="US_Api_Functions.html#print2">print2</a> - prints its parameters to a message-box-window<br />
+</li>
+<li><a href="US_Api_Functions.html#print3">print3</a> - prints its parameters to the clipboard</li>
 </ul>
 <p><strong>miscellaneous</strong></p>
 <ul>
@@ -3371,4 +3902,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.73 - 88 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.76 - 96 chapters available</td></table><br><hr></div></body></html>

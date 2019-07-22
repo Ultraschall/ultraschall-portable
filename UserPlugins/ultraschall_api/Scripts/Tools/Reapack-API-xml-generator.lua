@@ -1,34 +1,108 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 ultraschall.ShowErrorMessagesInReascriptConsole(true)
 
+NumFuncs=progresscounter()
+
+-- set this to the folder, that you want to create a reapack of
+SourceDir=reaper.GetResourcePath().."/UserPlugins/"--"c:/Ultraschall-Hackversion_3.2_alpha_Februar2019/UserPlugins/"
+
+retval, Version = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", SourceDir.."/ultraschall_api/IniFiles/ultraschall_api.ini")
+
+if ultraschall.US_BetaFunctions=="ON" then
+  BetaRelease="(Ultraschall-API pre-release-version: Build "..Version.." from "..os.date()..")"
+else
+  BetaRelease=""
+end
+
+--if lulu==nil then return end
+
 --!!TODO
 -- script has issues with urls, that contain spaces and other characters in them, that aren't url-suitable.
 
+Docs={12,
+"ultraschall_Add_ExampleScripts_To_Reaper.lua",
+"ultraschall_Add_Developertools_To_Reaper.lua",
+"ultraschall_Help_Reaper_Api_Documentation.lua",
+"ultraschall_Help_Reaper_Api_Video_Documentation.lua",
+"ultraschall_Help_Reaper_Api_Web_Documentation.lua",
+"ultraschall_Help_Reaper_ConfigVars_Documentation.lua",
+"ultraschall_Help_Ultraschall_Api_Functions_Reference.lua",
+"ultraschall_Help_Ultraschall_Api_Introduction_and_Concepts.lua",
+"ultraschall_OpenFolder_Api_Documentation.lua",
+"ultraschall_OpenFolder_Api_ExampleScripts.lua",
+"ultraschall_Remove_ExampleScripts_From_Reaper.lua",
+"ultraschall_Remove_Developertools_From_Reaper.lua"
+}
 
--- set this to the folder, that you want to create a reapack of
-SourceDir="c:/Ultraschall-Hackversion_3.2_alpha_Februar2019/UserPlugins/"
+
+-- remove all temp-files
+found_dirs, dirs_array, found_files, files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(SourceDir.."/ultraschall_api/temp/")
+for i=1, found_files do
+  os.remove(files_array[i])
+end
+
+C,C1,C2,C3,C4,C5,C6,C7=ultraschall.GetApiVersion()
+
+version, date, beta, versionnumber, tagline = ultraschall.GetApiVersion()
+majorversion, subversion, bits, Os, portable = ultraschall.GetReaperAppVersion()
+
+SWS=reaper.CF_GetSWSVersion("")
+JS= reaper.JS_ReaScriptAPI_Version()
+
+C2vers=string.gsub(C2," ","")
+C2vers=C2vers:lower()
 
 
 -- set this to the online-repo of the Ultraschall-API
 --Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API4.00-beta2.71/"
 Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/master/"
+--Url="file:///c:/Ultraschall-Api-Git-Repo/Ultraschall-Api-for-Reaper/" -- for reapindex-tests first
+Url2="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-4.00-"..C2vers.."/"
 
 -- set this to the repository-folder of the api on your system
 Target_Dir="c:\\Ultraschall-Api-Git-Repo\\Ultraschall-Api-for-Reaper\\"
 
-
-
 found_dirs, dirs_array, found_files, files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(SourceDir.."/ultraschall_api")
-
-
---found_files=found_files+2
---files_array[found_files-1]=ultraschall.Api_InstallPath.."/ultraschall_api.lua"
---files_array[found_files]=ultraschall.Api_InstallPath.."/ultraschall_api_readme.txt"
 
 L=ultraschall.MakeCopyOfFile_Binary(SourceDir.."/ultraschall_api.lua", Target_Dir.."/ultraschall_api.lua")
 L=ultraschall.MakeCopyOfFile_Binary(SourceDir.."/ultraschall_api_readme.txt", Target_Dir.."/ultraschall_api_readme.txt")
 
-C,C1,C2,C3,C4,C5,C6,C7=ultraschall.GetApiVersion()
+
+ReadMe_Reaper_Internals=[[
+compiled by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
+
+Documentation for Reaper-Internals ]]..majorversion.."."..subversion..[[ and Ultraschall Api 4.00-]]..beta..[[, SWS ]]..SWS..[[, JS-extension-plugin ]]..JS..[[ and ReaPack
+
+Written and compiled by Meo Mespotine (mespotine.de) for the Ultraschall.FM-project.
+licensed under creative-commons by-sa-nc-license
+
+Some docs are enhanced versions of the original docs and the Reaper-logo is by the Cockos Inc.
+The SWS-logo is by SWS-extension.org
+
+You can download the full Ultraschall-API-framework at ultraschall.fm/api
+]]
+
+ultraschall.WriteValueToFile(SourceDir.."/ultraschall_api/Reaper-Internals-readme.txt", ReadMe_Reaper_Internals)
+
+Batter=[[
+cd ]]..SourceDir..[[
+
+del c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\ultraschall_api4.00_]]..C2vers..[[.zip
+zip.exe c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\ultraschall_api4.00_]]..C2vers..[[.zip *.lua *.txt ultraschall_api -r
+
+del c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\Reaper-Internals-Ultraschall-Api-Docs.zip
+cd ultraschall_api
+
+..\zip.exe c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\Reaper-Internals-Ultraschall-Api-Docs.zip Documentation\* Reaper-Internals-readme.txt c:\Reaper-Internal-Docs-Miscellaneous_Maybe_Helpful_Files -r
+del Reaper-Internals-readme.txt
+
+del Scripts\Tools\batter.bat
+]]
+
+
+ultraschall.WriteValueToFile(SourceDir.."/ultraschall_api/Scripts/Tools/batter.bat", Batter)
+--if l==nil then return end
+
 --Version=(tonumber(C)*100)+(tonumber(C2:match(" (.*)"))/10).."04"
 retval, Version = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", SourceDir.."/ultraschall_api/IniFiles/ultraschall_api.ini")
 --Version=Version+1
@@ -81,7 +155,7 @@ Ultraschall API}
 \par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\kerning1\hich\af9\langfe2052\dbch\af7\afs24\lang1081\loch\f0\fs24\lang1031{\b\ab\rtlch \ltrch\loch\loch\f3
 }
 \par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\kerning1\hich\af9\langfe2052\dbch\af7\afs24\lang1081\loch\f0\fs24\lang1031{\b0\ab0\rtlch \ltrch\loch\loch\f3
-a 700+ Lua-functions library for Reaper.}
+a ]]..NumFuncs..[[ Lua-functions library for Reaper]]..BetaRelease..[[.}
 \par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\kerning1\hich\af9\langfe2052\dbch\af7\afs24\lang1081\loch\f0\fs24\lang1031{\b0\ab0\rtlch \ltrch\loch\loch\f3
 }
 \par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\kerning1\hich\af9\langfe2052\dbch\af7\afs24\lang1081\loch\f0\fs24\lang1031{\b0\ab0\rtlch \ltrch\loch\loch\f3
@@ -95,12 +169,12 @@ The Ultraschall-Framework itself is intended to include a set of Lua-functions, 
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
 }
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
-This API was to be used within Ultraschall only, but quickly evolved into a huge 700 function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:}
+This API was to be used within Ultraschall only, but quickly evolved into a huge ]]..NumFuncs..[[ function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:}
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
 }
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
     }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
-- Rendering - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to RenderProject_RenderCFG or RenderProjectRegions_RenderCFG}
+- Rendering - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to RenderProject or RenderProjectRegions}
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
     }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
 - Navigation, Follow and Arrangeview-Manipulation - get/set cursors, zoom, autoscroll-management, scroll, etc}
@@ -220,7 +294,7 @@ Ultraschall API}
 \par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\kerning1\hich\af9\langfe2052\dbch\af7\afs24\lang1081\loch\f0\fs24\lang1031{\b\ab\rtlch \ltrch\loch\loch\f3
 }
 \par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\kerning1\hich\af9\langfe2052\dbch\af7\afs24\lang1081\loch\f0\fs24\lang1031{\b0\ab0\rtlch \ltrch\loch\loch\f3
-a 700+ Lua-functions library for Reaper.}
+a ]]..NumFuncs..[[ Lua-functions library for Reaper]]..BetaRelease..[[.}
 \par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\kerning1\hich\af9\langfe2052\dbch\af7\afs24\lang1081\loch\f0\fs24\lang1031{\b0\ab0\rtlch \ltrch\loch\loch\f3
 }
 \par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\kerning1\hich\af9\langfe2052\dbch\af7\afs24\lang1081\loch\f0\fs24\lang1031{\b0\ab0\rtlch \ltrch\loch\loch\f3
@@ -234,12 +308,12 @@ The Ultraschall-Framework itself is intended to include a set of Lua-functions, 
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
 }
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
-This API was to be used within Ultraschall only, but quickly evolved into a huge 700 function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:}
+This API was to be used within Ultraschall only, but quickly evolved into a huge ]]..NumFuncs..[[ function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:}
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
 }
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
     }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
-- Rendering - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to RenderProject_RenderCFG or RenderProjectRegions_RenderCFG}
+- Rendering - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to RenderProject or RenderProjectRegions}
 \par \pard\plain \s18\sb0\sa120{\b0\afs24\ab0\rtlch \ltrch\fs24\loch\f3
     }{\b0\afs24\ab0\rtlch \ltrch\loch\fs24\loch\f3
 - Navigation, Follow and Arrangeview-Manipulation - get/set cursors, zoom, autoscroll-management, scroll, etc}
@@ -349,7 +423,7 @@ PS: In this documentation, I assume you have some basic knowledge in Lua and in 
 SourceDir=string.gsub(SourceDir, "/", ultraschall.Separator)
 A0="c:\\windows\\system32\\cmd.exe /Q /C xcopy "..SourceDir.."\\ultraschall_api "..Target_Dir.."\\ultraschall_api\\ /T /E /Y"
 
-reaper.CF_SetClipboard(A0)
+--reaper.CF_SetClipboard(A0)
 A,A1,A2,A3=reaper.ExecProcess(A0, 0)
   
 for i=1, found_files do
@@ -361,7 +435,7 @@ end
 
 --reaper.CF_SetClipboard(A0)
 
-
+-- generate ReaPack-indexfile
 XML_file="\t"..[[<source file="ultraschall_api.lua" type="extension">]]..Url.."/ultraschall_api.lua</source>\n"
 XML_file=XML_file.."\t"..[[<source file="ultraschall_api_readme.txt" type="extension">]]..Url.."/ultraschall_api_readme.txt</source>\n"
 
@@ -372,13 +446,40 @@ for i=1, found_files do
   XML_file=XML_file.."\t<source file=\"/"..tempfile.."\" type=\"extension\">"..Url..tempfile.."</source>\n"
 end
 
+for i=1, Docs[1] do
+  XML_file=XML_file.."\t<source main=\"true\" file=\"/"..Docs[i+1].."\" type=\"script\">"..Url.."/ultraschall_api/Scripts/"..Docs[i+1].."</source>\n"
+end
+
 --print2(XML_file:sub(1,2000))
 --print(XML_end)
 
 B=ultraschall.WriteValueToFile(Target_Dir.."/ultraschall_api_index-beta_rename_when_installing_it_works.xml", XML_start..XML_file..XML_end)
 
+-- generate ReaPack-indexfile for prerelease-alphas
+XML_file="\t"..[[<source file="ultraschall_api.lua" type="extension">]]..Url2.."/ultraschall_api.lua</source>\n"
+XML_file=XML_file.."\t"..[[<source file="ultraschall_api_readme.txt" type="extension">]]..Url2.."/ultraschall_api_readme.txt</source>\n"
+
+
+for i=1, found_files do
+  tempfile=files_array[i]:match("(ultraschall_api/.*)")
+  if tempfile==nil then tempfile=files_array[i]:match("UserPlugins(/.*)") end
+  XML_file=XML_file.."\t<source file=\"/"..tempfile.."\" type=\"extension\">"..Url2..tempfile.."</source>\n"
+end
+
+
+for i=1, Docs[1] do
+  XML_file=XML_file.."\t<source main=\"true\" file=\"/"..Docs[i+1].."\" type=\"script\">"..Url2.."/ultraschall_api/Scripts/"..Docs[i+1].."</source>\n"
+end
+
+--  print2(XML_file:sub(-1000,-1))
+  
+--print2(XML_file:sub(1,2000))
+--print(XML_end)
+
+B=ultraschall.WriteValueToFile(Target_Dir.."/ultraschall_api_prerelease_index.xml", XML_start..XML_file..XML_end)
 
 ultraschall.ShowLastErrorMessage()
 
-os.execute("c:\\Ultraschall-Hackversion_3.2_alpha_Februar2019\\UserPlugins\\ultraschall_api\\Scripts\\Tools\\batter.bat")
+--os.execute("c:\\Ultraschall-Hackversion_3.2_alpha_Februar2019\\UserPlugins\\ultraschall_api\\Scripts\\Tools\\batter.bat")
+os.execute(SourceDir.."/ultraschall_api/Scripts/Tools/batter.bat")
 reaper.MB("Done", "", 0)

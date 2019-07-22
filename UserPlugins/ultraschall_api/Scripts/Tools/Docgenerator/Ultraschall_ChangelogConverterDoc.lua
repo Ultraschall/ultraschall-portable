@@ -126,6 +126,7 @@ if p~=1 and pp~=1 then ultraschall.CloseReaScriptConsole() return end
 A=0
 
 Docfiles={}
+Docfiles[0]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/Docgenerator/Ultraschall_ApiDownloads_Generator.lua"
 Docfiles[1]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/Docgenerator/Ultraschall_Doc_Func_Converter.lua"
 Docfiles[2]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/Docgenerator/Ultraschall_ConceptsDocConverter.lua"
 Docfiles[3]=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/Docgenerator/Ultraschall_ConceptsDocConverter_AUD.lua"
@@ -149,14 +150,14 @@ if p==1 then
   Docfiles[17-Len]="tudelu"
 end
 
-for i=1, 16-Len do
+for i=0, 16-Len do
 --    if reaper.file_exists(Docfiles[i])==false then reaper.MB(Docfiles[i],"missing script",0) end
 end
 
 Timer=reaper.time_precise()
 reaper.SetExtState("ultraschall", "doc", Timer, false)
 
-i=1
+i=0
 commandid=reaper.AddRemoveReaScript(true, 0, Docfiles[i], true)
 reaper.Main_OnCommand(commandid,0)
 OL=0

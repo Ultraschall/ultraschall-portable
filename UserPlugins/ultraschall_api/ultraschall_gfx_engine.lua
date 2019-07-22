@@ -649,5 +649,225 @@ end
 --]]
 
 
+function ultraschall.GFX_GetMouseCap(doubleclick_wait, drag_wait)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_GetMouseCap</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>string clickstate, string specific_clickstate, integer mouse_cap, integer click_x, integer click_y, integer drag_x, integer drag_y, integer mouse_wheel, integer mouse_hwheel = ultraschall.GFX_GetMouseCap(optional integer doubleclick_wait, optional integer drag_wait)</functioncall>
+  <description>
+    Checks mouseclick/wheel-behavior, since last time calling this function and returns it's state.
+    Allows you to get click, doubleclick, dragging, including the appropriate coordinates and mousewheel-states.
+
+    Much more convenient, than fiddling around with gfx.mouse_cap
+    
+    Note: After doubleclicked, this will not return mouse-clicked-states, until the mouse-button is released. So any mouse-clicks during that can be only gotten from the retval mouse_cap.
+          This is to prevent automatic mouse-dragging after double-clicks.
+  </description>
+  <parameters>
+    optional integer doubleclick_wait - the timeframe, in which a second click is recognized as double-click, in defer-cycles. 30 is approximately 1 second; nil, will use 15(default)
+    optional integer drag_wait - the timeframe, after which a mouseclick without moving the mouse is recognized as dragging, in defer-cycles. 30 is approximately 1 second; nil, will use 5(default)
+  </parameters>
+  <retvals>
+      string clickstate - "", if not clicked, "CLK" for clicked and "FirstCLK", if the click is a first-click.
+      string specific_clickstate - either "" for not clicked, "CLK" for clicked, "DBLCLK" for doubleclick or "DRAG" for dragging
+      integer mouse_cap - the mouse_cap, a bitfield of mouse and keyboard modifier states
+                        -   1: left mouse button
+                        -   2: right mouse button
+                        -   4: Control key
+                        -   8: Shift key
+                        -   16: Alt key
+                        -   32: Windows key
+                        -   64: middle mouse button
+      integer click_x - the x position, when the mouse has been clicked the last time
+      integer click_y - the y position, when the mouse has been clicked the last time
+      integer drag_x  - the x-position of the mouse-dragging-coordinate; is like click_x for non-dragging mousestates
+      integer drag_y  - the y-position of the mouse-dragging-coordinate; is like click_y for non-dragging mousestates
+      integer mouse_wheel - the mouse_wheel-delta, since the last time calling this function
+      integer mouse_hwheel - the mouse_horizontal-wheel-delta, since the last time calling this function
+  </retvals>
+  <chapter_context>
+    Mouse Handling
+  </chapter_context>
+  <target_document>USApiGfxReference</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, functions, mouse, mouse cap, leftclick, rightclick, doubleclick, drag, wheel, mousewheel, horizontal mousewheel</tags>
+</US_DocBloc>
+]]
+--HUITOO=reaper.time_precise()
+  -- prepare variables
+  if ultraschall.mouse_last_mousecap==nil then
+    -- if mouse-function hasn't been used yet, initialize variables
+    ultraschall.mouse_last_mousecap=0         -- last mousecap when last time this function got called, including 0
+    ultraschall.mouse_last_clicked_mousecap=0 -- last mousecap, the last time a button was clicked
+    ultraschall.mouse_dragcounter=0           -- the counter for click and wait, until drag is "activated"
+    ultraschall.mouse_lastx=0                 -- last mouse-x position
+    ultraschall.mouse_lasty=0                 -- last mouse-y position
+    ultraschall.mouse_endx=0                  -- end-x-position, for dragging
+    ultraschall.mouse_endy=0                  -- end-y-position, for dragging
+    ultraschall.mouse_dblclick=0              -- double-click-counter; 1, if a possible doubleclick can happen
+    ultraschall.mouse_dblclick_counter=0      -- double-click-waiting-counter; doubleclicks are only recognized, until this is "full"
+    ultraschall.mouse_clickblock=false        -- blocks mouseclicks after double-click, until button-release
+    ultraschall.mouse_last_hwheel=0           -- last horizontal mouse-wheel-state, the last time this function got called
+    ultraschall.mouse_last_wheel=0            -- last mouse-wheel-state, the last time this function got called
+  end
+  if math.type(doubleclick_wait)~="integer" then doubleclick_wait=15 end
+  if math.type(drag_wait)~="integer" then drag_wait=5 end
+  
+  -- if mousewheels have been changed, store the new values and reset the gfx-variables
+  if ultraschall.mouse_last_hwheel~=gfx.mouse_hwheel or ultraschall.mouse_last_wheel~=gfx.mouse_wheel then
+    ultraschall.mouse_last_hwheel=math.floor(gfx.mouse_hwheel)
+    ultraschall.mouse_last_wheel=math.floor(gfx.mouse_wheel)
+  end
+  gfx.mouse_hwheel=0
+  gfx.mouse_wheel=0
+  
+  local newmouse_cap=0
+  if gfx.mouse_cap&1~=0 then newmouse_cap=newmouse_cap+1 end
+  if gfx.mouse_cap&2~=0 then newmouse_cap=newmouse_cap+2 end
+  if gfx.mouse_cap&64~=0 then newmouse_cap=newmouse_cap+64 end
+  
+  if newmouse_cap==0 then
+  -- if no mouse_cap is set, reset all counting-variables and return just the basics
+    ultraschall.mouse_last_mousecap=0
+    ultraschall.mouse_dragcounter=0
+    ultraschall.mouse_dblclick_counter=ultraschall.mouse_dblclick_counter+1
+    if ultraschall.mouse_dblclick_counter>doubleclick_wait then
+      -- if the doubleclick-timer is over, the next click will be recognized as normal click
+      ultraschall.mouse_dblclick=0
+      ultraschall.mouse_dblclick_counter=doubleclick_wait
+    end
+    ultraschall.mouse_clickblock=false
+    return "", "", gfx.mouse_cap, gfx.mouse_x, gfx.mouse_y, gfx.mouse_x, gfx.mouse_y, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+  end
+  if ultraschall.mouse_clickblock==false then
+    
+    if newmouse_cap~=ultraschall.mouse_last_mousecap then
+      -- first mouseclick
+      if ultraschall.mouse_dblclick~=1 or (ultraschall.mouse_lastx==gfx.mouse_x and ultraschall.mouse_lasty==gfx.mouse_y) then
+
+        -- double-click-checks
+        if ultraschall.mouse_dblclick~=1 then
+          -- the first click, activates the double-click-timer
+          ultraschall.mouse_dblclick=1
+          ultraschall.mouse_dblclick_counter=0
+        elseif ultraschall.mouse_dblclick==1 and ultraschall.mouse_dblclick_counter<doubleclick_wait 
+            and ultraschall.mouse_last_clicked_mousecap==newmouse_cap then
+          -- when doubleclick occured, gfx.mousecap is still the same as the last clicked mousecap:
+          -- block further mouseclick, until mousebutton is released and return doubleclick-values
+          ultraschall.mouse_dblclick=2
+          ultraschall.mouse_dblclick_counter=doubleclick_wait
+          ultraschall.mouse_clickblock=true
+          return "CLK", "DBLCLK", gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+        elseif ultraschall.mouse_dblclick_counter==doubleclick_wait then
+          -- when doubleclick-timer is full, reset mouse_dblclick to 0, so the next mouseclick is 
+          -- recognized as normal mouseclick
+          ultraschall.mouse_dblclick=0
+          ultraschall.mouse_dblclick_counter=doubleclick_wait
+        end
+      end
+      -- in every other case, this is a first-click, so set the appropriate variables and return 
+      -- the first-click state and values
+      ultraschall.mouse_last_mousecap=newmouse_cap
+      ultraschall.mouse_last_clicked_mousecap=newmouse_cap
+      ultraschall.mouse_lastx=gfx.mouse_x
+      ultraschall.mouse_lasty=gfx.mouse_y
+      return "CLK", "FirstCLK", gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+    elseif newmouse_cap==ultraschall.mouse_last_mousecap and ultraschall.mouse_dragcounter<drag_wait
+      and (gfx.mouse_x~=ultraschall.mouse_lastx or gfx.mouse_y~=ultraschall.mouse_lasty) then
+      -- dragging when mouse moves, sets dragcounter to full waiting-period
+      ultraschall.mouse_endx=gfx.mouse_x
+      ultraschall.mouse_endy=gfx.mouse_y
+      ultraschall.mouse_dragcounter=drag_wait
+      ultraschall.mouse_dblclick=0
+      return "CLK", "DRAG", gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_endx, ultraschall.mouse_endy, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+    elseif newmouse_cap==ultraschall.mouse_last_mousecap and ultraschall.mouse_dragcounter<drag_wait then
+      -- when clicked but mouse doesn't move, count up, until we reach the countlimit for
+      -- activating dragging
+      ultraschall.mouse_dragcounter=ultraschall.mouse_dragcounter+1
+      return "CLK", "CLK", gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_endx, ultraschall.mouse_endy, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+    elseif newmouse_cap==ultraschall.mouse_last_mousecap and ultraschall.mouse_dragcounter==drag_wait then
+      -- dragging, after drag-counter is set to full waiting-period
+      ultraschall.mouse_endx=gfx.mouse_x
+      ultraschall.mouse_endy=gfx.mouse_y
+      ultraschall.mouse_dblclick=0
+      return "CLK", "DRAG", gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_endx, ultraschall.mouse_endy, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+    end
+  else
+    return "", "", gfx.mouse_cap, gfx.mouse_x, gfx.mouse_y, gfx.mouse_x, gfx.mouse_y, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+  end
+end
+
 --ultraschall.ShowLastErrorMessage()
 
+  -- Usage: Font.set("Arial", 10, "bi")
+function ultraschall.GFX_SetFont(fontindex, font, size, flagStr)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_SetFont</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.GFX_SetFont(integer fontindex, string font, integer size, string flagStr)</functioncall>
+  <description>
+    Sets the font of the gfx-window.
+    
+    As Mac and Windows have different visible font-sizes for the same font-size, this function adapts the font-size correctly(unlike Reaper's own native gfx.setfont-function).
+    
+    returns false in case of an error
+  </description>
+  <parameters>
+    integer fontindex - the font-id; idx=0 for default bitmapped font, no configuration is possible for this font. idx=1..16 for a configurable font
+    string font - the name of the font
+    integer size - the size of the font
+    string flagStr - a string, which holds the desired font-styles. You can combine multiple ones, up to 4.
+                   - The following are valid:
+                   - B - bold
+                   - i - italic
+                   - o - white outline
+                   - r - blurred
+                   - s - sharpen
+                   - u - underline
+                   - v - inverse
+  </parameters>
+  <chapter_context>
+    Font Handling
+  </chapter_context>
+  <target_document>USApiGfxReference</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, functions, font, set, mac, windows</tags>
+</US_DocBloc>
+]]
+  if type(font)~="string" then ultraschall.AddErrorMessage("GFX_SetFont", "font", "must be a string", -1) return false end
+  if math.type(size)~="integer" then ultraschall.AddErrorMessage("GFX_SetFont", "size", "must be an integer", -2) return false end
+  if type(flagStr)~="string" then ultraschall.AddErrorMessage("GFX_SetFont", "flagStr", "must be a string", -3) return false end
+  if flagStr:len()>4 then ultraschall.AddErrorMessage("GFX_SetFont", "flagStr", "You can only give up to maximum 4 attributes.", -4) return false end
+  if math.type(fontindex)~="integer" then ultraschall.AddErrorMessage("GFX_SetFont", "size", "must be an integer", -5) return false end
+  -- following code done by lokasenna with contributions by Justin and Schwa
+  
+  -- Different OSes use different font sizes, for some reason
+  -- This should give a similar size on Mac/Linux as on Windows
+  if not string.match( reaper.GetOS(), "Win") then
+    size = math.floor(size * 0.8)
+  end
+    
+  -- Cheers to Justin and Schwa for this
+  local flags = 0
+  if flagStr then
+    for i = 1, flagStr:len() do
+      flags = flags * 256 + string.byte(flagStr, i)
+    end
+  end
+
+  gfx.setfont(fontindex, font, size, flags)
+  return true
+end
+                        
+--A=ultraschall.GFX_SetFont(1, "Arial", 20, "usijv")
+--gfx.drawstr("huioh")
