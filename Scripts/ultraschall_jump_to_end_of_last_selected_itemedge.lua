@@ -24,24 +24,16 @@
 ################################################################################
 --]]
 
--- move cursor right to previous edge.
--- You can set the pre-roll-offset in the ultraschall.ini -> [Ultraschall_Jump_To_ItemEdge] -> PrerollTime_Right
--- default is zero seconds before the previous splitedge
-
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-preroll = ultraschall.GetUSExternalState("Ultraschall_Jump_To_ItemEdge", "PrerollTime_Right")
+preroll = ultraschall.GetUSExternalState("Ultraschall_Jump_To_Selected_ItemEdge", "SelItem_PrerollTime_End")
 if preroll=="" then preroll=0 end
 
-trackstring= ultraschall.CreateTrackString_SelectedTracks() 
+-- right
+if reaper.CountSelectedMediaItems(0) > 0 then -- items are selected
+    reaper.Main_OnCommand(41174,0)            -- move cursor to last selected item
+end
 
-if trackstring=="" then trackstring=ultraschall.CreateTrackString(1, reaper.CountTracks(), 1) end -- get a string with the existing number of tracks
-
-if reaper.GetPlayState()~=0 then
-  -- during play and recording, set Play and Editcursor to previous closest item or marker
-  elementposition_prev, elementtype_prev, number_prev, elementposition_next, elementtype_next, number_next = ultraschall.GetClosestGoToPoints(trackstring, reaper.GetPlayPosition()+0.001, true, false, false)
-  ultraschall.SetPlayAndEditCursor_WhenPlaying(elementposition_next+preroll)
-else
-  -- during stop, set Editcursor to previous closest item or marker
-  elementposition_prev, elementtype_prev, number_prev, elementposition_next, elementtype_next, number_next = ultraschall.GetClosestGoToPoints(trackstring, reaper.GetCursorPosition()+0.001, true, false, false)
-  reaper.SetEditCurPos(elementposition_next, true, true)
+if reaper.GetPlayState()~=0 then 
+  -- if playstate isn't stopped, move the playcursor to the new position
+    reaper.SetEditCurPos(reaper.GetCursorPosition()+preroll, true, true)
 end
