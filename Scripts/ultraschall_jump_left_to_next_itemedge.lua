@@ -26,26 +26,19 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
--- move cursor right to previous edge. If one or more items are selected move cursor to the end start of right most item.
- 
-if reaper.CountSelectedMediaItems(0) > 0 then		-- items are selected
-	reaper.Main_OnCommand(41173,0)	-- move cursor to previous selected item
+trackstring= ultraschall.CreateTrackString_SelectedTracks() 
 
-else 	-- no items are selected
+if trackstring=="" then trackstring=ultraschall.CreateTrackString(1, reaper.CountTracks(), 1) end -- get a string with the existing number of tracks
 
-	trackstring= ultraschall.CreateTrackString_SelectedTracks() 
-
-	if trackstring=="" then trackstring=ultraschall.CreateTrackString(1, reaper.CountTracks(), 1) end -- get a string with the existing number of tracks
-
-	if reaper.GetPlayState()~=0 then
-	  -- during play and recording, set Play and Editcursor to previous closest item or marker
-	  elementposition_prev, elementtype_prev, number_prev, elementposition_next, elementtype_next, number_next = ultraschall.GetClosestGoToPoints(trackstring, reaper.GetPlayPosition()-1, true, false, false)
-	  ultraschall.SetPlayAndEditCursor_WhenPlaying(elementposition_prev)
-	else
-	  -- during stop, set Editcursor to previous closest item or marker
-	  elementposition_prev, elementtype_prev, number_prev, elementposition_next, elementtype_next, number_next = ultraschall.GetClosestGoToPoints(trackstring, reaper.GetCursorPosition()-0.001, true, false, false)
-	  reaper.SetEditCurPos(elementposition_prev, true, true)
-	end
+if reaper.GetPlayState()~=0 then
+  -- during play and recording, set Play and Editcursor to previous closest item or marker
+  elementposition_prev, elementtype_prev, number_prev, elementposition_next, elementtype_next, number_next = ultraschall.GetClosestGoToPoints(trackstring, reaper.GetPlayPosition()-1, true, false, false)
+  ultraschall.SetPlayAndEditCursor_WhenPlaying(elementposition_prev)
+else
+  -- during stop, set Editcursor to previous closest item or marker
+  elementposition_prev, elementtype_prev, number_prev, elementposition_next, elementtype_next, number_next = ultraschall.GetClosestGoToPoints(trackstring, reaper.GetCursorPosition()-0.001, true, false, false)
+  reaper.SetEditCurPos(elementposition_prev, true, true)
 end
+
 
 
