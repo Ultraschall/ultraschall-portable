@@ -5,7 +5,8 @@
 # Apple/Mac
 *.app
 # Windows
-*.exe
+reaper.exe
+reamote.exe
 
 ## Licence file
 *.rk
