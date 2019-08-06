@@ -294,7 +294,7 @@ function ultraschall.Docs_GetUSDocBloc_Description(String, unindent_description,
     Reaper=5.978
     Lua=5.3
   </requires>
-  <functioncall>string title, string spok_lang = ultraschall.Docs_GetUSDocBloc_Description(string String, boolean unindent_description, integer index)</functioncall>
+  <functioncall>string description, string markup_type, string markup_version, string indent, optional string language, optional string prog_lang = ultraschall.Docs_GetUSDocBloc_Description(string String, boolean unindent_description, integer index)</functioncall>
   <description>
     returns the description-text from an US_DocBloc-element.
     There can be multiple descriptions, e.g. in multiple languages
@@ -305,13 +305,21 @@ function ultraschall.Docs_GetUSDocBloc_Description(String, unindent_description,
     returns nil in case of an error
   </description>
   <retvals>
-    string title - the title, as stored in the USDocBloc
-    string spok_lang - the language, in which the title is stored
+    string description - the description-text found in the USDocBloc in the string
+    string markup_type - the markup-type the description is written in
+    string markup_version - the version of the markup-language, in which the description is written in
+    string indent - the indentation of the text; can be either
+                  -   as_typed - keeps the text, as it is
+                  -   minus_starts_line - will throw away everything from start of the line until(and including) the first - in it
+                  -   preceding_spaces - will remove all spaces/tabs in the beginning of each line
+                  -   default - will take the indentation of the first line and apply it to each of the following lines
+    string language - the language, in which the description is written in; "", if not set
+    string prog_lang - the programming-language, in which the description is written in; ", if not set
   </retvals>
   <parameters>
     string String - a string which hold a US_DocBloc to retrieve the description from
     boolean unindent_description - true, will remove indentation as given in the description-tag; false, return the text as it is
-    integer index - the index of the title to get, starting with 1 for the first title
+    integer index - the index of the description to get, starting with 1 for the first description
   </parameters>
   <chapter_context>
     Ultraschall DocML
@@ -340,14 +348,16 @@ function ultraschall.Docs_GetUSDocBloc_Description(String, unindent_description,
   local markup_version=Description:match("markup_version=\"(.-)\"")
   local indent=String:match("indent=\"(.-)\"")
   local language=String:match("spok_lang=\"(.-)\"")
+  local prog_language=String:match("prog_lang=\"(.-)\"")
   if language==nil then language="" end
   if indent==nil then indent="default" end
-  if markup_type==nil then markup_type="text" end
+  if prog_language==nil then prog_language="" end
+  if markup_type==nil then markup_type="plaintext" end
   if markup_version==nil then markup_version="" end
   if unindent_description~=false then 
     Description=ultraschall.Docs_RemoveIndent(Description, indent)
   end
-  return Description, markup_type, markup_version, indent, language
+  return Description, markup_type, markup_version, indent, language, prog_language
 end
 
 function ultraschall.Docs_GetUSDocBloc_TargetDocument(String)
@@ -437,7 +447,7 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
   <retvals>
     integer count - the number of chapters found
     array chapters - the chapternams as an array
-    string spok_lang - the language of the chapters; "" if no languages is given
+    string spok_lang - the language of the chapters; "", if no language is given
   </retvals>
   <parameters>
     string String - a string which hold a US_DocBloc to retrieve the source-document-entry from
@@ -494,9 +504,9 @@ function ultraschall.Docs_GetUSDocBloc_Tags(String, index)
     returns nil in case of an error
   </description>
   <retvals>
-    integer count - the number of chapters found
+    integer count - the number of tags found
     array tags - the tags as an array
-    string spok_lang - the language of the chapters; "" if no languages is given
+    string spok_lang - the language of the tags; "" if no language is given
   </retvals>
   <parameters>
     string String - a string which hold a US_DocBloc to retrieve the tags-entry from
@@ -544,7 +554,7 @@ function ultraschall.Docs_GetUSDocBloc_Params(String, unindent_description, inde
     Reaper=5.978
     Lua=5.3
   </requires>
-  <functioncall>integer count, table params, string spok_lang = ultraschall.Docs_GetUSDocBloc_Params(string String, boolean unindent_description, integer index)</functioncall>
+  <functioncall>integer parmcount, table Params, string markuptype, string markupversion, string prog_lang, string spok_lang, string indent = ultraschall.Docs_GetUSDocBloc_Params(string String, boolean unindent_description, integer index)</functioncall>
   <description>
     returns the parameters of an US_DocBloc-entry
     A US_DocBloc can have multiple parameter-entries, e.g. for multiple languages.
@@ -552,12 +562,20 @@ function ultraschall.Docs_GetUSDocBloc_Params(String, unindent_description, inde
     returns nil in case of an error
   </description>
   <retvals>
-    integer count - the number of chapters found
-    table params - the params as a table
-                 - this table is of the format:
-                 -      params[index][1] - parameter-name(possibly including datatype)
-                 -      params[index][2] - parameter-description
-    string spok_lang - the language of the chapters; "" if no languages is given
+    integer parmcount - the number of parameters found
+    table Params - all parameters found, as an array
+                 -   Params[index][1] - parametername
+                 -   Params[index][2] - parameterdescription
+    string markuptype - the markuptype found; if no markuptype is given, it returns "plaintext"
+    string markupversion - the version of the markuptype found; "", if not given
+    string prog_lang - the programming-language used in these parameters; "", if not given
+    string spok_lang - the spoken-language used in these parameters; "", if not given
+    string indent - the type of indentation you want to remove
+                  -   as_typed - keeps the text, as it is
+                  -   minus_starts_line - will throw away everything from start of the line until(and including) the first - in it
+                  -   preceding_spaces - will remove all spaces/tabs in the beginning of each line
+                  -   default - will take the indentation of the first line and apply it to each of the following lines
+                  - That means, indentation relative to the first line is kept.
   </retvals>
   <parameters>
     string String - a string which hold a US_DocBloc to retrieve the parameter-entry from
@@ -604,7 +622,7 @@ function ultraschall.Docs_GetUSDocBloc_Params(String, unindent_description, inde
     end
   end
   local markuptype=split_string[1]:match("markup_type=\"(.-)\"")
-  if markuptype==nil then markuptype="text" end
+  if markuptype==nil then markuptype="plaintext" end
   local markupversion=split_string[1]:match("markup_version=\"(.-)\"")
   if markupversion==nil then markupversion="" end
   local prog_lang=split_string[1]:match("prog_lang=\"(.-)\"")
@@ -632,32 +650,40 @@ function ultraschall.Docs_GetUSDocBloc_Retvals(String, unindent_description, ind
     Reaper=5.978
     Lua=5.3
   </requires>
-  <functioncall>integer count, table params, string spok_lang = ultraschall.Docs_GetUSDocBloc_Retvals(string String, boolean unindent_description, integer index)</functioncall>
+  <functioncall>integer retvalscount, table retvals, string markuptype, string markupversion, string prog_lang, string spok_lang, string indent = ultraschall.Docs_GetUSDocBloc_Retvals(string String, boolean unindent_description, integer index)</functioncall>
   <description>
-    returns the parameters of an US_DocBloc-entry
-    A US_DocBloc can have multiple parameter-entries, e.g. for multiple languages.
+    returns the retvals of an US_DocBloc-entry
+    A US_DocBloc can have multiple retvals-entries, e.g. for multiple languages.
     
     returns nil in case of an error
   </description>
   <retvals>
-    integer count - the number of chapters found
-    table params - the params as a table
-                 - this table is of the format:
-                 -      params[index][1] - parameter-name(possibly including datatype)
-                 -      params[index][2] - parameter-description
-    string spok_lang - the language of the chapters; "" if no languages is given
+    integer retvalscount - the number of retvals found
+    array retvals - all retvals found, as an array
+                 -   retvals[index][1] - retvalsname
+                 -   retvals[index][2] - retvalsdescription
+    string markuptype - the markuptype found; if no markuptype is given, it returns "plaintext"
+    string markupversion - the version of the markuptype found; "", if not given
+    string prog_lang - the programming-language used in these retvals; "", if not given
+    string spok_lang - the spoken-language used in these retvals; "", if not given
+    string indent - the type of indentation you want to remove
+                  -   as_typed - keeps the text, as it is
+                  -   minus_starts_line - will throw away everything from start of the line until(and including) the first - in it
+                  -   preceding_spaces - will remove all spaces/tabs in the beginning of each line
+                  -   default - will take the indentation of the first line and apply it to each of the following lines
+                  - That means, indentation relative to the first line is kept.
   </retvals>
   <parameters>
-    string String - a string which hold a US_DocBloc to retrieve the parameter-entry from
-    boolean unindent_description - true, will remove indentation as given in the parameter-tag; false, return the text as it is
-    integer index - the index of the parameter-entries, starting with 1 for the first
+    string String - a string which hold a US_DocBloc to retrieve the retvals-entry from
+    boolean unindent_description - true, will remove indentation as given in the retvals-tag; false, return the text as it is
+    integer index - the index of the retvals-entries, starting with 1 for the first
   </parameters>
   <chapter_context>
     Ultraschall DocML
   </chapter_context>
   <target_document>US_Api_DOC</target_document>
   <source_document>ultraschall_doc_engine.lua</source_document>
-  <tags>doc engine, get, parameters, spoken languages, usdocbloc</tags>
+  <tags>doc engine, get, retvals, spoken languages, usdocbloc</tags>
 </US_DocBloc>
 ]]
   if type(String)~="string" then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_Retvals", "String", "must be a string", -1) return nil end
@@ -694,7 +720,7 @@ function ultraschall.Docs_GetUSDocBloc_Retvals(String, unindent_description, ind
     end
   end
   local markuptype=split_string[1]:match("markup_type=\"(.-)\"")
-  if markuptype==nil then markuptype="text" end
+  if markuptype==nil then markuptype="plaintext" end
   local markupversion=split_string[1]:match("markup_version=\"(.-)\"")
   if markupversion==nil then markupversion="" end
   local prog_lang=split_string[1]:match("prog_lang=\"(.-)\"")

@@ -17,6 +17,8 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 A2=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/DocsSourcefiles/reaper-config_var.USDocML")
 if A2==nil then A2="" end
 
+A2=""
+
 orgvars={}
 Acount=1
 
@@ -34,8 +36,34 @@ end
 
 local Clipboard_string = ultraschall.GetStringFromClipboard_SWS()
 
-Clipboard_string=Clipboard_string.."\n "
 
+-- read strings from Reaper.exe
+-- unfortunately too slow.. :/
+--[[
+A = ultraschall.ReadFullFile(reaper.GetExePath().."/reaper.exe", true):lower()
+
+--if OL==nil then return end
+
+Clipboard_string=""
+
+--for D in string.gmatch(A, "([%w%d%p_]+)()") do
+for D in string.gmatch(A, "([%l_]+)") do
+  if D:len()>1 then
+    Clipboard_string=Clipboard_string..D.."\n"
+  end
+end
+
+--print3(Clipboard_string)
+
+if OL==nil then return end
+--]]
+
+
+Clipboard_string=Clipboard_string.."\n "
+--print3(Clipboard_string)
+--if LLLLL==nil then return end
+
+-- let's check the strings
 
 ints={}
 local integers=""
@@ -141,7 +169,9 @@ end
 
 Stringsstring="Strings:\n"
 for i=1, Stringscount do
-  Stringsstring=Stringsstring..Strings[i].."\n"
+  if Strings[i]~=nil then
+    Stringsstring=Stringsstring..Strings[i].."\n"
+  end
 end
 
 print3(Intstring.."\n"..Doublestring.."\n"..Stringsstring)

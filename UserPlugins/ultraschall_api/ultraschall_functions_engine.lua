@@ -61379,13 +61379,14 @@ function ultraschall.GetFXStateChunk(StateChunk, TakeFXChain_id)
     StateChunk=ultraschall.StateChunkLayouter(StateChunk)
   end
   for w in string.gmatch(StateChunk, " <FXCHAIN.-\n  >") do
-    return w
+    return string.gsub("\n"..w, "\n      ", "\n    "):sub(2,-1)
+    --return w
   end
   local count=0
   for w in string.gmatch(StateChunk, " <TAKEFX.-\n  >") do
     count=count+1
     if TakeFXChain_id==count then
-      return w
+      return string.gsub("\n"..w, "\n      ", "\n    "):sub(2,-1)
     end
   end
 end
