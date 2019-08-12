@@ -168,6 +168,29 @@ GUI.elms.versions  = GUI.Btn:new(          276, 185, 120, 24,         " Show Det
 
 ---- Put all of your own functions and whatever here ----
 
+
+-- Suche die Sections der ultraschall.ini heraus, die in der Settings-GUI angezeigt werden sollen
+
+-- section_count = ultraschall.CountUSExternalState_sec()
+
+usinipath = reaper.GetResourcePath().."/ultraschall.ini"
+section_count = ultraschall.CountIniFileExternalState_sec(usinipath)
+
+print(section_count)
+
+for i = 1, section_count , 1 do
+  sectionName = ultraschall.EnumerateUSExternalState_sec(i)
+  if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
+    print(sectionName)
+
+    key_count = ultraschall.CountUSExternalState_key(sectionName)
+    print(key_count)
+
+  end
+
+end
+
+
 USStart=ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
 USUpdate=reaper.GetExtState("ultraschall_update", "update_check")
 
