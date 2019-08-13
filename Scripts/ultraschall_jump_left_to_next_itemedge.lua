@@ -28,7 +28,7 @@
 -- You can set the pre-roll-offset in the ultraschall.ini -> [Ultraschall_Jump_To_ItemEdge] -> PrerollTime_left
 -- default is one second before the previous splitedge; only negative values allowed
 --
--- if playstate==stopped, the editcursor at a splitposition and preroll~=0 then it jumps only left by the amount 
+-- if playstate==stopped or stopped, the editcursor is at a splitposition and preroll~=0 then it jumps only left by the amount 
 -- of the preroll-length
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
@@ -58,9 +58,15 @@ trackstring= ultraschall.CreateTrackString_SelectedTracks()
 if trackstring=="" then trackstring=ultraschall.CreateTrackString(1, reaper.CountTracks(), 1) end -- get a string with the existing number of tracks
 
 if reaper.GetPlayState()~=0 then
-  -- during play and recording, set Play and Editcursor to previous closest item or marker
-  elementposition_prev, elementtype_prev, number_prev, elementposition_next, elementtype_next, number_next = ultraschall.GetClosestGoToPoints(trackstring, reaper.GetPlayPosition()-1, true, false, false)
-  ultraschall.SetPlayAndEditCursor_WhenPlaying(elementposition_prev+preroll)
+  if reaper.GetPlayState()&2==2 and ultraschall.IsSplitAtPosition(trackstring, reaper.GetCursorPosition())==true and preroll~=0 then
+    -- if paused and current editcursor-position is already at a split-position/mediaitemedge, within the selected tracks, 
+    -- just jump backwards by the amount of pre-roll
+    reaper.SetEditCurPos(reaper.GetCursorPosition()+preroll, true, true)
+  else  
+    -- during play and recording, set Play and Editcursor to previous closest item or marker
+    elementposition_prev, elementtype_prev, number_prev, elementposition_next, elementtype_next, number_next = ultraschall.GetClosestGoToPoints(trackstring, reaper.GetPlayPosition()-1, true, false, false)
+    ultraschall.SetPlayAndEditCursor_WhenPlaying(elementposition_prev+preroll)
+  end
 else
   -- during stop, set Editcursor to previous closest item or marker
   if ultraschall.IsSplitAtPosition(trackstring, reaper.GetCursorPosition())==true and preroll~=0 then
