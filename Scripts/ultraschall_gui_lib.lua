@@ -916,15 +916,17 @@ function Sldr:draw()
   local steps = self.steps
   local curstep = self.curstep
   
+  local offset = 0
+
   -- Size of the handle
   local radius = 8
 
 
   -- Draw track
   GUI.color("elm_bg")
-  GUI.roundrect(x, y, w, h, 4, 1, 1)
+  GUI.roundrect(x+offset, y, w, h, 4, 1, 1)
   GUI.color("elm_outline")
-  GUI.roundrect(x, y, w, h, 4, 1, 0)
+  GUI.roundrect(x+offset, y, w, h, 4, 1, 0)
 
   
   -- limit everything to be drawn within the square part of the track
@@ -952,15 +954,15 @@ function Sldr:draw()
   GUI.color("shadow")
   for i = 1, GUI.shadow_dist do
     
-    gfx.circle(ox + i, oy + i, radius - 1, 1, 1)
+    gfx.circle(ox + i + offset, oy + i, radius - 1, 1, 1)
     
   end
 
-  GUI.color("elm_frame")
-  gfx.circle(ox, oy, radius - 1, 1, 1)
+  GUI.color("txt")
+  gfx.circle(ox + offset, oy, radius - 1, 1, 1)
   
   GUI.color("elm_outline")
-  gfx.circle(ox, oy, radius, 0, 1)
+  gfx.circle(ox + offset , oy, radius, 0, 1)
 
 
   -- Draw caption  
@@ -969,8 +971,8 @@ function Sldr:draw()
   
   local str_w, str_h = gfx.measurestr(self.caption)
   
-  gfx.x = x + (w - str_w) / 2
-  gfx.y = y - h - str_h
+  gfx.x = x + 110
+  gfx.y = y - 2
   
   gfx.drawstr(self.caption)
   
@@ -981,8 +983,8 @@ function Sldr:draw()
   GUI.font(4)
   
   local str_w, str_h = gfx.measurestr(self.retval)
-  gfx.x = x + (w - str_w) / 2
-  gfx.y = y + h + h
+  gfx.x = x + 200
+  gfx.y = y -2
   
   gfx.drawstr(self.retval)
   

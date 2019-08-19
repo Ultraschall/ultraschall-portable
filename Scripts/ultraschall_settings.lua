@@ -109,7 +109,7 @@ end
 ------------------------------------------------------
 function show_menu(str)
     
-  gfx.x, gfx.y = GUI.mouse.x, GUI.mouse.y
+  gfx.x, gfx.y = GUI.mouse.x+20, GUI.mouse.y-10
   selectedMenu = gfx.showmenu(str)
   return selectedMenu
 
@@ -143,23 +143,42 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 
 
 
+--[[  Sldr class.
+
+  ---- User parameters ----
+x, y, w      Coordinates of top-left corner, width. Height is fixed.
+caption      Label / question
+min, max    Minimum and maximum slider values
+steps      How many steps between min and max
+default      Where the slider should start
+
+  ---- Additional values ----
+retval      Current value of the slider
+  
+]]--
+
+
+
   -- body
   ---- GUI Elements ----
   
 GUI.elms = {
   
 --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
-  logo             = GUI.Pic:new(          240,  10,   0,  0,    1,   script_path.."us.png"),
-  label            = GUI.Lbl:new(          165, 160,                  "Ultraschall 3.1 - Miedinger - was successfully installed.",          0),
+  logo             = GUI.Pic:new(          240,  10,   0,  0,    1,   script_path.."us_small.png"),
+  label            = GUI.Lbl:new(          313, 110,                  "Settings",          0),
   checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
   checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
-  tutorials        = GUI.Btn:new(           30, 320, 190, 40,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/"),
+  reaper           = GUI.Sldr:new(30, 250, 100, "Preroll Time:", 0.2, 2, 5, 4),
+
+  -- tutorials        = GUI.Btn:new(           30, 320, 190, 40,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/"),
+
 }
 
 
 versionsTable = get_versions()
 version_items = build_menu(versionsTable)
-GUI.elms.versions  = GUI.Btn:new(          276, 185, 120, 24,         " Show Details",                                                      show_menu, version_items)
+-- GUI.elms.versions  = GUI.Btn:new(          276, 185, 120, 24,         " Show Details",                                                      show_menu, version_items)
 
 -- open_info(build_info(versionsTable),"Version Info for cut & paste")
 
@@ -171,23 +190,35 @@ GUI.elms.versions  = GUI.Btn:new(          276, 185, 120, 24,         " Show Det
 
 -- Suche die Sections der ultraschall.ini heraus, die in der Settings-GUI angezeigt werden sollen
 
--- section_count = ultraschall.CountUSExternalState_sec()
+section_count = ultraschall.CountUSExternalState_sec()
 
-usinipath = reaper.GetResourcePath().."/ultraschall.ini"
-section_count = ultraschall.CountIniFileExternalState_sec(usinipath)
+-- usinipath = reaper.GetResourcePath().."/ultraschall.ini"
+-- section_count = ultraschall.CountIniFileExternalState_sec(usinipath)
 
-print(section_count)
+-- print(section_count)
+
+settingsCount = 0
 
 for i = 1, section_count , 1 do
   sectionName = ultraschall.EnumerateUSExternalState_sec(i)
   if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
-    print(sectionName)
+    settingsCount = settingsCount + 1
+    position = 150 + (settingsCount * 30)
+    -- print(sectionName)
 
     key_count = ultraschall.CountUSExternalState_key(sectionName)
-    print(key_count)
-
+    -- print(key_count)
+    settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype")
+    if settings_Type == "checkbox" then
+      checkers = GUI.Checklist:new(20, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name"), 4)
+      table.insert(GUI.elms, checkers)
+      -- info = GUI.Btn:new(200, position, 20, 20,         "?", open_info(ultraschall.GetUSExternalState(sectionName,"description"), ultraschall.GetUSExternalState(sectionName,"name")))
+      info = GUI.Btn:new(400, position, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
+      table.insert(GUI.elms, info)
+    end
   end
-
+  
+  
 end
 
 
