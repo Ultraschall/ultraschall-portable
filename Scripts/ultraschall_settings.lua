@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -39,43 +39,6 @@ function open_url(url)
   end
 end
 
-------------------------------------------------------
--- Open a info windows for cut & paste
-------------------------------------------------------
-function open_info(msg, title)
-
-    type = 0
-    result = reaper.ShowMessageBox( msg, title, type )
-end
-
-------------------------------------------------------
--- Get Versions and return them as a table
-------------------------------------------------------
-function get_versions()
-
-  local versionsTable = {}
-  local versionItemsCount = tonumber(reaper.GetExtState("ultraschall_bom", "found_items"))  -- number of entrie
-  if versionItemsCount and versionItemsCount > 0 then -- there are any items
-    for i = 1, versionItemsCount, 1 do
-      versionsTable[i] = reaper.GetExtState("ultraschall_bom", "item_"..tostring(i))
-    end
-  else
-    open_info("There are parts of the ULTRASCHALL install missing.\n\nULTRASCHALL wil NOT work properly until you fix this.\n\nPlease check the installation guide on http://ultraschall.fm/install/","Ultraschall Configuration Problem")  -- Fehleranzeige hier
-  end  
-  return versionsTable
-end
-
-------------------------------------------------------
--- Build menu string from table
-------------------------------------------------------
-function build_menu(table)
-
-  local menuString = "Version Check:||"
-  for i, item in ipairs(table) do 
-    menuString = menuString.."!"..item.."|"
-  end
-  return menuString
-end
 
 ------------------------------------------------------
 --  Getting the values of startscreen and updatecheck
@@ -85,7 +48,19 @@ function check_values()
   local startscreen
   local updatecheck
 
-  startscreen = ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
+  settingsCount2 = 3
+  testing = {}
+
+
+  for i = 1, settingsCount2*2 , 2 do
+
+    table.insert (testing, GUI["elms"][i]["retval"])
+
+  end
+
+
+--[[
+
   if GUI.Val("checkers")[1] == true  and (startscreen == "0" or startscreen=="-1") then      -- ckeckbox is activated
     ultraschall.SetUSExternalState("ultraschall_start", "startscreen", "1", true)
   elseif GUI.Val("checkers")[1] == false and startscreen == "1" then    -- ckeckbox is deactivated
@@ -102,7 +77,11 @@ function check_values()
     ultraschall.SetUSExternalState("ultraschall_update", "update_check", "0", true)
   end
 
+]]
+
 end
+
+
 
 ------------------------------------------------------
 --  Show the GUI menu item
@@ -169,20 +148,11 @@ GUI.elms = {
   label            = GUI.Lbl:new(          313, 110,                  "Settings",          0),
   checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
   checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
-  reaper           = GUI.Sldr:new(30, 250, 100, "Preroll Time:", 0.2, 2, 5, 4),
-
+  
   -- tutorials        = GUI.Btn:new(           30, 320, 190, 40,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/"),
 
 }
 
-
-versionsTable = get_versions()
-version_items = build_menu(versionsTable)
--- GUI.elms.versions  = GUI.Btn:new(          276, 185, 120, 24,         " Show Details",                                                      show_menu, version_items)
-
--- open_info(build_info(versionsTable),"Version Info for cut & paste")
-
--- Version check:||!Ultraschall REAPER Extension 3.0.3|!Ultraschall REAPER Theme 3.0.3|#UltraschallHub 1.0.1|!Ultraschall Soundboard 3.0.0|#StudioLink Plug-in 16.12.0|!StudioLink OnAir Plug-in 17.02.1|!LAME MP3 Encoder 3.98.3|!SWS REAPER Extension 2.8.8|>REAPER 5.35|<REAPER 5.40 available||Copy to clipboard
 
 
 ---- Put all of your own functions and whatever here ----
@@ -191,12 +161,6 @@ version_items = build_menu(versionsTable)
 -- Suche die Sections der ultraschall.ini heraus, die in der Settings-GUI angezeigt werden sollen
 
 section_count = ultraschall.CountUSExternalState_sec()
-
--- usinipath = reaper.GetResourcePath().."/ultraschall.ini"
--- section_count = ultraschall.CountIniFileExternalState_sec(usinipath)
-
--- print(section_count)
-
 settingsCount = 0
 
 for i = 1, section_count , 1 do
@@ -204,42 +168,37 @@ for i = 1, section_count , 1 do
   if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
     settingsCount = settingsCount + 1
     position = 150 + (settingsCount * 30)
-    -- print(sectionName)
+  --  print(sectionName)
 
     key_count = ultraschall.CountUSExternalState_key(sectionName)
-    -- print(key_count)
+  --  print(key_count)
     settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype")
+    
     if settings_Type == "checkbox" then
-      checkers = GUI.Checklist:new(20, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name"), 4)
-      table.insert(GUI.elms, checkers)
-      -- info = GUI.Btn:new(200, position, 20, 20,         "?", open_info(ultraschall.GetUSExternalState(sectionName,"description"), ultraschall.GetUSExternalState(sectionName,"name")))
+      id = GUI.Checklist:new(20, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name"), 4)
+      table.insert(GUI.elms, id)
+    
       info = GUI.Btn:new(400, position, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
+      table.insert(GUI.elms, info)
+    
+    elseif settings_Type == "slider" then
+      position = position+8
+      id = GUI.Sldr:new(30, position, 100, ultraschall.GetUSExternalState(sectionName,"name"), ultraschall.GetUSExternalState(sectionName,"minimum"), ultraschall.GetUSExternalState(sectionName,"maximum"), ultraschall.GetUSExternalState(sectionName,"steps"), ultraschall.GetUSExternalState(sectionName,"value"))
+      table.insert(GUI.elms, id)
+    
+      info = GUI.Btn:new(400, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
       table.insert(GUI.elms, info)
     end
   end
-  
-  
 end
 
 
-USStart=ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
-USUpdate=reaper.GetExtState("ultraschall_update", "update_check")
-
-if USStart == "1" or USStart == "-1" then
-  GUI.Val("checkers",true)
-end
-
-if USUpdate == "1" or USUpdate =="" then
-  GUI.Val("checkers2",true)
-end
 
 GUI.func = check_values
-GUI.freq = 0
-
-
--- Open Startscreen, when it hasn't been opened yet
-    if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already). 
-                                                                                      -- If yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
+GUI.freq = 1
+   
+-- Open Settings Screen, when it hasn't been opened yet
+    if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
     else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
 
     if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time. 

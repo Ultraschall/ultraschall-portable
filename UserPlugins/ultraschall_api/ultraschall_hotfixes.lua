@@ -45,7 +45,7 @@
 --
 -- If you have new functions to contribute, you can use this file as well. Keep in mind, that I will probably change them to work
 -- with the error-messaging-system as well as adding information for the API-documentation.
-ultraschall.hotfixdate="23_July_2019"
+ultraschall.hotfixdate="14th_August_2019"
 
 --ultraschall.ShowLastErrorMessage()
 
@@ -202,3 +202,182 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
 end
 
 --A,B,C,D=ultraschall.GetUserInputs("I got you", {"ShalalalaOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOHAH"}, {"HHHAAAAHHHHHHHHHHHHHHHHHHHHHHHHAHHHHHHHA"}, -1)
+
+function ultraschall.CountUSExternalState_sec()
+--count number of sections in the ultraschall.ini
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CountUSExternalState_sec</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer section_count = ultraschall.CountUSExternalState_sec()</functioncall>
+  <description>
+    returns the number of [sections] in the ultraschall.ini
+  </description>
+  <retvals>
+    integer section_count  - the number of section in the ultraschall.ini
+  </retvals>
+  <chapter_context>
+    Ultraschall Specific
+    Ultraschall.ini
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>configurationmanagement, count, section</tags>
+</US_DocBloc>
+
+--]]
+  -- check existence of ultraschall.ini
+  if reaper.file_exists(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")==false then ultraschall.AddErrorMessage("CountUSExternalState_sec","", "ultraschall.ini does not exist", -1) return -1 end
+  
+  -- count external-states
+  local count=0
+  for line in io.lines(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini") do
+    --local check=line:match(".*=.*")
+    check=line:match("%[.*.%]")
+    if check~=nil then check="" count=count+1 end
+  end
+  return count
+end
+
+function ultraschall.CountIniFileExternalState_sec(ini_filename_with_path)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CountIniFileExternalState_sec</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    SWS=2.8.8
+    Lua=5.3
+  </requires>
+  <functioncall>integer sectioncount = ultraschall.CountIniFileExternalState_sec(string ini_filename_with_path)</functioncall>
+  <description>
+    Count external-state-[sections] from an ini-configurationsfile.
+    
+    Returns -1, if the file does not exist.
+  </description>
+  <retvals>
+    integer sectioncount - number of sections within an ini-configuration-file
+  </retvals>
+  <parameters>
+    string ini_filename_with_path - filename of the ini-file
+  </parameters>
+  <chapter_context>
+    Configuration-Files Management
+    Ini-Files
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>configurationmanagement, count, sections, ini-files</tags>
+</US_DocBloc>
+]]
+  if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("CountIniFileExternalState_sec", "ini_filename_with_path", "File does not exist.", -1) return -1 end
+  local count=0
+  
+  for line in io.lines(ini_filename_with_path) do
+    --local check=line:match(".*=.*")
+    check=line:match("%[.*.%]")
+    if check~=nil then check="" count=count+1 end
+  end
+  return count
+end
+
+function ultraschall.EnumerateIniFileExternalState_sec(number_of_section, ini_filename_with_path)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>EnumerateIniFileExternalState_sec</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    SWS=2.8.8
+    Lua=5.3
+  </requires>
+  <functioncall>string sectionname = ultraschall.EnumerateIniFileExternalState_sec(integer number_of_section, string ini_filename_with_path)</functioncall>
+  <description>
+    Returns the numberth section in an ini_filename_with_path.
+    
+    Returns nil, in case of an error.
+  </description>
+  <retvals>
+    string sectionname - the name of the numberth section in the ini-file
+  </retvals>
+  <parameters>
+    integer number_of_section - the section within the ini-filename; 1, for the first section
+    string ini_filename_with_path - filename of the ini-file
+  </parameters>
+  <chapter_context>
+    Configuration-Files Management
+    Ini-Files
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>configurationmanagement, get, section, enumerate, ini-files</tags>
+</US_DocBloc>
+]]
+  if math.type(number_of_section)~="integer" then ultraschall.AddErrorMessage("EnumerateIniFileExternalState_sec", "number_of_section", "Must be an integer.", -1) return nil end
+  if type(ini_filename_with_path)~="string" then ultraschall.AddErrorMessage("EnumerateIniFileExternalState_sec", "ini_filename_with_path", "Must be a string.", -2) return nil end
+
+  if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("EnumerateIniFileExternalState_sec", "ini_filename_with_path", "File does not exist.", -3) return nil end
+  
+  if number_of_section<=0 then ultraschall.AddErrorMessage("EnumerateIniFileExternalState_sec", "ini_filename_with_path", "No such section.", -4) return nil end
+  if number_of_section>ultraschall.CountIniFileExternalState_sec(ini_filename_with_path) then ultraschall.AddErrorMessage("EnumerateIniFileExternalState_sec", "ini_filename_with_path", "No such section.", -5) return nil end
+  
+  local count=0
+  for line in io.lines(ini_filename_with_path) do
+    --local check=line:match(".*=.*")
+    check=line:match("%[.*.%]")
+    if check==nil then count=count+1 end
+    if count==number_of_section then return line:sub(2,-2) end
+  end
+end
+
+
+function ultraschall.EnumerateUSExternalState_sec(number)
+-- returns name of the numberth section in ultraschall.ini or nil, if invalid
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>EnumerateUSExternalState_sec</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>string section_name = ultraschall.EnumerateUSExternalState_sec(integer number)</functioncall>
+  <description>
+    returns name of the numberth section in ultraschall.ini or nil if invalid
+  </description>
+  <retvals>
+    string section_name  - the name of the numberth section within ultraschall.ini
+  </retvals>
+  <parameters>
+    integer number - the number of section, whose name you want to know
+  </parameters>
+  <chapter_context>
+    Configuration-Files Management
+    Ultraschall.ini
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>configurationmanagement, enumerate, section</tags>
+</US_DocBloc>
+--]]
+  -- check parameter and existence of ultraschall.ini
+  if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "number", "only integer allowed", -1) return false end
+  if reaper.file_exists(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")==false then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "", "ultraschall.ini does not exist", -2) return -1 end
+
+  if number<=0 then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","number", "no negative number allowed", -3) return nil end
+  if number>ultraschall.CountUSExternalState_sec() then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","number", "only "..ultraschall.CountUSExternalState_sec().." sections available", -4) return nil end
+
+  -- look for and return the requested line
+  local count=0
+  for line in io.lines(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini") do
+    local check=line:match("%[.-%]")
+    if check~=nil then count=count+1 end
+    if count==number then return line:sub(2,-2) end
+  end
+end 
+
+
