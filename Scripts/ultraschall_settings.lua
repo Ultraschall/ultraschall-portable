@@ -44,19 +44,21 @@ end
 --  Getting the values of startscreen and updatecheck
 ------------------------------------------------------
 function check_values()
-  
-  local startscreen
-  local updatecheck
 
-  settingsCount2 = 3
-  testing = {}
+  for i = 1, #GUI["elms"] , 2 do  -- Anzahl der Einträge ist immer doppelt so hoch durch die Info-Buttons pro Eintrag
 
-
-  for i = 1, settingsCount2*2 , 2 do
-
-    table.insert (testing, GUI["elms"][i]["retval"])
+    if GUI["elms"][i]["type"] == "Checklist" then
+      newvalue = GUI["elms"][i]["retval"][1]
+    else
+      newvalue = GUI["elms"][i]["retval"]
+    end
+    
+    update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "value", newvalue , true)
 
   end
+
+
+  
 
 
 --[[
@@ -146,8 +148,8 @@ GUI.elms = {
 --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
   logo             = GUI.Pic:new(          240,  10,   0,  0,    1,   script_path.."us_small.png"),
   label            = GUI.Lbl:new(          313, 110,                  "Settings",          0),
-  checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
-  checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
+  -- checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
+  -- checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
   
   -- tutorials        = GUI.Btn:new(           30, 320, 190, 40,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/"),
 
@@ -175,8 +177,8 @@ for i = 1, section_count , 1 do
     settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype")
     
     if settings_Type == "checkbox" then
-      id = GUI.Checklist:new(20, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name"), 4)
-      table.insert(GUI.elms, id)
+      id = GUI.Checklist:new(20, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"value")), sectionName)
+      table.insert(GUI.elms, id)      
     
       info = GUI.Btn:new(400, position, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
       table.insert(GUI.elms, info)
@@ -188,6 +190,7 @@ for i = 1, section_count , 1 do
     
       info = GUI.Btn:new(400, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
       table.insert(GUI.elms, info)
+
     end
   end
 end
@@ -201,8 +204,9 @@ GUI.freq = 1
     if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
     else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
 
-    if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time. 
+    if windowcounter<10 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time. 
                             -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
       GUI.Init()
+
       GUI.Main()
     end

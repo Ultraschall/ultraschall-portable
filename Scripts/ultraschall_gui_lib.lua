@@ -1392,14 +1392,18 @@ caption      Title / question
 opts      String separated by commas, just like for GetUserInputs().
         ex: "Alice,Bob,Charlie,Denise,Edward"
 pad        Padding between the caption and each option
+value     selected an/aus (numerischer Wert 0/1)
 ]]--
 
 -- Checklist - New
 local Checklist = {}
-function Checklist:new(x, y, w, h, caption, opts, pad)
+function Checklist:new(x, y, w, h, caption, opts, pad, value, sectionName)
   
+
+
   local chk = {}
   chk.type = "Checklist"
+  chk.sectionname = sectionName
   
   chk.x, chk.y, chk.w, chk.h = x, y, w, h
 
@@ -1407,13 +1411,12 @@ function Checklist:new(x, y, w, h, caption, opts, pad)
   
   chk.pad = pad
 
-
   -- Parse the string of options into a table
   chk.optarray, chk.optsel = {}, {}
   local tempidx = 1
   for word in string.gmatch(opts, '([^,]+)') do
     chk.optarray[tempidx] = word
-    chk.optsel[tempidx] = false
+    chk.optsel[tempidx] = value
     tempidx = tempidx + 1
   end
   
@@ -1471,7 +1474,8 @@ function Checklist:draw()
     gfx.rect(x + size / 2, cur_y + (optheight - size) / 2, size, size, 0)
         
     -- Fill in if selected
-    if self.optsel[i] == true then
+    -- modifiziert von boolean zu number (0/1) da sonst Typen-Fledermausland beim Speichern in .ini
+    if self.optsel[i] == 1 then
       
       GUI.color("elm_fill")
       gfx.rect(x + size * 0.75, cur_y + (optheight - size) / 2 + size / 4, size / 2, size / 2, 1)
@@ -1521,8 +1525,11 @@ function Checklist:onmousedown()
   mouseopt = math.floor(mouseopt * self.numopts) + 1
   
   -- Make that the current option
-  self.optsel[mouseopt] = not self.optsel[mouseopt]
-  
+  -- self.optsel[mouseopt] = not self.optsel[mouseopt]
+  -- modifiziert von boolean zu number (0/1) da sonst Typen-Fledermausland beim Speichern in .ini
+
+  if self.optsel[mouseopt] == 0 then self.optsel[mouseopt] = 1 else self.optsel[mouseopt] = 0 end
+
   self:val()
   
 end
