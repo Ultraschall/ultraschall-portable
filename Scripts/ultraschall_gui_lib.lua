@@ -883,7 +883,7 @@ retval      Current value of the slider
 
 -- Sldr - New
 local Sldr = {}
-function Sldr:new(x, y, w, caption, min, max, steps, default)
+function Sldr:new(x, y, w, caption, min, max, steps, default, sectionName)
   
   local sldr = {}
   sldr.type = "Sldr"
@@ -891,6 +891,7 @@ function Sldr:new(x, y, w, caption, min, max, steps, default)
   sldr.x, sldr.y, sldr.w, sldr.h = x, y, w, 8
 
   sldr.caption = caption
+  sldr.sectionname = sectionName
   
   sldr.min, sldr.max = min, max
   sldr.steps = steps
