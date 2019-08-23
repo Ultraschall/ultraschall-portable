@@ -129,7 +129,6 @@ GUI.elms = {
 
 
 section_count = ultraschall.CountUSExternalState_sec()
-settingsCount = 0
 
 -- Gehe alle Sektionen der ultraschall.ini durch
 
@@ -141,8 +140,7 @@ for i = 1, section_count , 1 do
 
   if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
 
-    settingsCount = settingsCount + 1
-    position = 150 + (settingsCount * 30) -- Feintuning notwendig
+    position = 150 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position")) * 30) -- Feintuning notwendig
     key_count = ultraschall.CountUSExternalState_key(sectionName)
     settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype")
     
