@@ -185,12 +185,11 @@ if USUpdate == "1" or USUpdate =="" then
 end
 
 GUI.func = check_values
-GUI.freq = 0
+GUI.freq = 1
 
 
 -- Open Startscreen, when it hasn't been opened yet
-    if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already). 
-                                                                                      -- If yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
+    if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already). f yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
     else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
 
     if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time. 

@@ -165,7 +165,6 @@ for i = 1, section_count , 1 do
   end
 end
 
-
 GUI.func = set_values
 GUI.freq = 1 -- Aufruf jede Sekunde
    
