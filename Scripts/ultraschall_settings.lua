@@ -57,6 +57,12 @@ function set_values()
       -- print (newvalue)
       -- print("change")
       update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "value", newvalue , true)
+      
+      -- Ausnahme: das Preroll von SWS ebenfalls dorthin schreiben
+      if GUI["elms"][i]["sectionname"] == "ultraschall_settings_preroll" then
+        writesws = ultraschall.SetIniFileExternalState("XENAKIOSCOMMANDS", "CURPOSSECSAMOUNT", newvalue, reaper.GetResourcePath().."/Xenakios_Commands.ini")
+                   
+      end
     end
 
   end
