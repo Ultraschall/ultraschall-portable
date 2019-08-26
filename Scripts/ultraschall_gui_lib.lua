@@ -883,7 +883,7 @@ retval      Current value of the slider
 
 -- Sldr - New
 local Sldr = {}
-function Sldr:new(x, y, w, caption, min, max, steps, default, sectionName)
+function Sldr:new(x, y, w, caption, min, max, steps, value, actualstep, sectionName)
   
   local sldr = {}
   sldr.type = "Sldr"
@@ -895,9 +895,10 @@ function Sldr:new(x, y, w, caption, min, max, steps, default, sectionName)
   
   sldr.min, sldr.max = min, max
   sldr.steps = steps
-  sldr.default, sldr.curstep = default, default
+  sldr.default= actualstep
+  sldr.curstep = tonumber(actualstep)
   
-  sldr.curval = sldr.curstep / steps
+  sldr.curval = value
   sldr.retval = ((max - min) / steps) * sldr.curstep + min  
   
 

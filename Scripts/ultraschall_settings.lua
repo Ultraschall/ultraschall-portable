@@ -49,7 +49,7 @@ function set_values()
 
     if GUI["elms"][i]["type"] == "Checklist" then
       newvalue = tostring(GUI["elms"][i]["retval"][1])
-    else
+    elseif GUI["elms"][i]["type"] == "Sldr" then
       newvalue = tostring(GUI["elms"][i]["retval"])
     end
     
@@ -57,12 +57,13 @@ function set_values()
       -- print (newvalue)
       -- print("change")
       update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "value", newvalue , true)
-      
-      -- Ausnahme: das Preroll von SWS ebenfalls dorthin schreiben
-      if GUI["elms"][i]["sectionname"] == "ultraschall_settings_preroll" then
-        writesws = ultraschall.SetIniFileExternalState("XENAKIOSCOMMANDS", "CURPOSSECSAMOUNT", newvalue, reaper.GetResourcePath().."/Xenakios_Commands.ini")
-                   
+
+      -- Ausnahme: für Slider wird auch noch die Position geschrieben (könnte man prinzipiell auch berechnen lassen)
+
+      if GUI["elms"][i]["type"] == "Sldr" then
+        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "actualstep", tostring(GUI["elms"][i]["curstep"]) , true)
       end
+
     end
 
   end
@@ -160,7 +161,7 @@ for i = 1, section_count , 1 do
     
     elseif settings_Type == "slider" then
       position = position+8
-      id = GUI.Sldr:new(30, position, 100, ultraschall.GetUSExternalState(sectionName,"name"), ultraschall.GetUSExternalState(sectionName,"minimum"), ultraschall.GetUSExternalState(sectionName,"maximum"), ultraschall.GetUSExternalState(sectionName,"steps"), ultraschall.GetUSExternalState(sectionName,"value"), sectionName)
+      id = GUI.Sldr:new(30, position, 100, ultraschall.GetUSExternalState(sectionName,"name"), ultraschall.GetUSExternalState(sectionName,"minimum"), ultraschall.GetUSExternalState(sectionName,"maximum"), ultraschall.GetUSExternalState(sectionName,"steps"), ultraschall.GetUSExternalState(sectionName,"value"), ultraschall.GetUSExternalState(sectionName,"actualstep"), sectionName)
       table.insert(GUI.elms, id)
     
       -- Info-Button
