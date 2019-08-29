@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -34,62 +34,42 @@
 6=record paused
 ]]
 
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-
-function main()
 state = reaper.GetPlayState()
--- reaper.ShowConsoleMsg(state)
--- reaper.ShowConsoleMsg(result)
- 
+   
 if state == 5 then -- is recording
-
-  --[[type:
-  0=OK,
-  1=OKCANCEL,
-  2=ABORTRETRYIGNORE,
-   3=YESNOCANCEL,
-   4=YESNO,
-   5=RETRYCANCEL]]
-
-  type = 4
+  
+    --[[type:
+    0=OK,
+    1=OKCANCEL,
+    2=ABORTRETRYIGNORE,
+     3=YESNOCANCEL,
+     4=YESNO,
+     5=RETRYCANCEL]]
+  
+  msgboxtype = 4
   title = "Stop Recording?"
   msg = "Stop the currently running recording. No more audio will be recorded to disk."
- 
- 
--- Safe-Mode Toggle-Logic
-A,SafeModeToggleState=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle") -- Get the Safemode-Toggle-State
-
-if SafeModeToggleState=="OFF" then -- If Safe-Mode is OFF, show no message-box
-    result = 6
+   
+   
+  -- Safe-Mode Toggle-Logic
+  SafeModeToggleState=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle") -- Get the Safemode-Toggle-State
+   
+  if SafeModeToggleState=="OFF" then -- If Safe-Mode is OFF, show no message-box
+      result = 6
+  elseif SafeModeToggleState=="ON" or SafeModeToggleState=="" or SafeModeToggleState=="-1" then -- If Safe-Mode is ON or was never toggled, show the message-box
+      result=reaper.ShowMessageBox( msg, title, msgboxtype )
+  end
     
-elseif SafeModeToggleState=="ON" or SafeModeToggleState=="" or SafeModeToggleState=="-1" then -- If Safe-Mode is ON or was never toggled, show the message-box
-    result=reaper.ShowMessageBox( msg, title, type )
-end
-    
-
-  --[[result:
-  1=OK,
-   2=CANCEL,
-   3=ABORT,
-   4=RETRY,
-   5=IGNORE,
-   6=YES,
-   7=NO
-  ]]
-
   if result == 6 then -- it's ok to stop the recording
     reaper.OnStopButton()
   end
-
+    
 elseif state == 1 then -- playing
-  reaper.OnStopButton()
-  
+    reaper.OnStopButton()
+      
 else -- pause or stop
-  reaper.OnPlayButton()
-
+    reaper.OnPlayButton()   
 end
- end
-reaper.defer(main)
+

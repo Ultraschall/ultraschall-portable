@@ -24,12 +24,13 @@
 ################################################################################
 ]]
 
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-dofile(script_path .. "ultraschall_helper_functions.lua")
-
-current_position = reaper.GetPlayPosition() -- Position of play-cursor
+if reaper.GetPlayState() & 2 == 2 then -- if pause, use edit cursor position
+  current_position = reaper.GetCursorPosition() 
+else
+  current_position = reaper.GetPlayPosition() -- Position of play-cursor
+end
 
 color = ultraschall.ConvertColor(255,0,0) -- set color of edit markers to red
 reaper.AddProjectMarker2(0, false, current_position, 0, "_Edit", 0, color) -- set red edit-marker

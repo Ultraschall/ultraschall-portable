@@ -12,6 +12,7 @@ slider2:2<0,3,1{rectangular,hamming,blackman-harris,blackman}>-window
 slider3:-180<-180,6,1>-gate (dB)
 slider4:0<0,10,0.1}>-frequency curve
 slider5:0<0,1,1>-scroll
+slider6:1<1,40,1>-rate
 
 in_pin:left input
 in_pin:right input
@@ -37,9 +38,9 @@ recpos=0;
 gfx_clear=-1;
 windowtype=-1;
 over24=1/24;
-histsize=fftsize + fftsize*0.5 - 1;
-window=histsize;
-fftworkspace=window+fftsize*0.5 + 1;
+histsize=fftsize*4;
+fftworkspace=histsize;
+window=fftworkspace + fftsize*2;
 
 lrecpos=0;
 need_button_refs=1;
@@ -51,15 +52,16 @@ a<0?a=0:a>11?a=11;
 fftsize=2^(a+4);
 minvol=10^(slider3/20*2); // squared
 islogmode = slider4>0.0;
-g_logscale=pow(10.0,(slider4<1 ? slider4: slider4*10.0-11.0));
+g_logscale=pow(10.0,(slider4<1 ? slider4: slider4*4.0-3.0));
+pixels_per_frame = slider6;
 
 @block
 
 ifftsize=1/fftsize;
-
 @sample
 recpos[]=(spl0+spl1);
 recpos+=1;
+reccnt+=1;
 recpos >= histsize ? recpos=0;
 
 
@@ -103,28 +105,24 @@ function draw_button(xp, yp, str) instance(w,h,x,y)
    globals(g_button_right_extent,gfx_r,gfx_g,gfx_b,gfx_x,gfx_y,gfx_w) 
 (
   gfx_measurestr(str, w, h);
-  xp + w + 2 >= gfx_w - 140 ? (
-    w = 0;
-  ) : (
-    x=xp;
-    y=yp;
-    gfx_r=gfx_g=0;
-    gfx_b=0.75;
-    w+=3;
-    h+=3;
-    gfx_rect(x,y,w,h);
-    gfx_b=1.0;
-    gfx_g=0.5;
-    gfx_line(x,y,x+w,y);
-    gfx_line(x+w,y,x+w,y+h);
-    gfx_line(x,y+h,x+w,y+h);
-    gfx_line(x,y,x,y+h);
-    h+=1;
-    w+=1;
-    gfx_x=xp+2; gfx_y=yp+2;
-    gfx_drawstr(str);
-    g_button_right_extent = gfx_x + 2;
-  )
+  x=xp;
+  y=yp;
+  gfx_r=gfx_g=0;
+  gfx_b=0.75;
+  w+=3;
+  h+=3;
+  gfx_rect(x,y,w,h);
+  gfx_b=1.0;
+  gfx_g=0.5;
+  gfx_line(x,y,x+w,y);
+  gfx_line(x+w,y,x+w,y+h);
+  gfx_line(x,y+h,x+w,y+h);
+  gfx_line(x,y,x,y+h);
+  h+=1;
+  w+=1;
+  gfx_x=xp+2; gfx_y=yp+2;
+  gfx_drawstr(str);
+  g_button_right_extent = gfx_x + 2;
 );
 function hit_button(xp,yp,cv) 
 instance(w,h,x,y) 
@@ -149,6 +147,7 @@ globals(cap_mode, cap_last_x, cap_last_y)
          gate_button.hit_button(mouse_x,mouse_y,1)||
          curve_button.hit_button(mouse_x,mouse_y,2) ||
          fft_button.hit_button(mouse_x,mouse_y,3) ||
+         rate_button.hit_button(mouse_x,mouse_y,5) ||
          window_button.hit_button(mouse_x,mouse_y,4);
        );
     );
@@ -163,7 +162,7 @@ globals(cap_mode, cap_last_x, cap_last_y)
       slider4 = min(max(slider4 + 0.005 * (cap_last_y-mouse_y),0.0),10.0);
       cap_last_y=mouse_y;
       islogmode = slider4>0.0;
-      g_logscale=pow(10.0,(slider4<1 ? slider4: slider4*10.0-11.0));
+      g_logscale=pow(10.0,(slider4<1 ? slider4: slider4*4.0-3.0));
       need_button_refs=1;
       slider_automate(slider4);
     );
@@ -182,6 +181,14 @@ globals(cap_mode, cap_last_x, cap_last_y)
       need_button_refs=1;
       slider_automate(slider2);
     );
+    cap_mode == 5 && cap_last_y != mouse_y ? (
+      slider6 = min(max(slider6 + (cap_last_y-mouse_y)*.1,1.0),40.0)|0;
+      pixels_per_frame = slider6;
+      
+      cap_last_y=mouse_y;
+      need_button_refs=1;
+      slider_automate(slider6);
+    );
   );
 
 last_mouse_cap = mouse_cap;
@@ -192,20 +199,37 @@ need_button_refs ? (
   gfx_r=gfx_g=gfx_b=0;
   gfx_rect(0,use_h,gfx_w,gfx_h-use_h);
   gfx_x=0;
+  is_extra_small = gfx_w<550;
+  is_small = gfx_w<640;
   g_button_right_extent = 0;
-  scroll_button.draw_button(gfx_x, use_h, slider5 ? "[x] scroll"  : "[ ] scroll");  
-  fft_button.draw_button(gfx_x+8,use_h, sprintf(#,"FFT: %d",16<<slider1));
+  scroll_button.draw_button(gfx_x, use_h, sprintf(#,"[%s]%s",slider5 ?"x":" ",is_extra_small?"scr":" scroll"));  
+  fft_button.draw_button(gfx_x+8,use_h, sprintf(#,"%s%d",is_extra_small?"F:":"FFT: ",16<<slider1));
   window_button.draw_button(gfx_x+8,use_h,
+     is_small ? (
+       (slider2|0)==1?"hamm":
+          (slider2|0)==2?"bm-h":
+          (slider2|0)==3?"bman":"rect"
+     ) :
      (slider2|0)==1?"hamming":
      (slider2|0)==2?"blackman-harris":
      (slider2|0)==3?"blackman":"rectangular");
 
-  curve_button.draw_button(gfx_x+8,use_h, sprintf(#,"curve: %.1f",slider4));
+  rate_button.draw_button(gfx_x+8,use_h, sprintf(#,"%s%d",is_extra_small?"r:":"rate: ",slider6));
   
-  gate_button.draw_button(gfx_x+8,use_h, sprintf(#,"gate: %.1fdB",slider3));
+  curve_button.draw_button(gfx_x+8,use_h, sprintf(#,"%s%.1f",is_small?"c:":"curve: ",slider4));
+  gfx_w  < 430 ? gate_button.w = 0 : 
+    gate_button.draw_button(gfx_x+8,use_h, sprintf(#,"%s%.1fdB",is_small?"g:":"gate: ",slider3));
 );
 
-recpos != lrecpos ? (
+reccnt>0 ? (
+  amt = min(reccnt,histsize*2);
+  reccnt=0;
+  drecpos = amt/pixels_per_frame;
+  lrecpos = recpos - amt;
+  draw_pos=0;
+  
+  loop(pixels_per_frame,
+
   windowsize != fftsize || windowtype != (slider2|0) ? (
     windowtype=slider2|0; 
     windowsize=fftsize;
@@ -226,9 +250,9 @@ recpos != lrecpos ? (
     loop(fftsize,window[i-=1]*=pwr; );
   );
 
-  lrecpos=recpos;
+  lrecpos += drecpos;
 
-  buf1=lrecpos-fftsize;
+  buf1=(lrecpos|0)-fftsize;
   buf1<0 ? buf1+=histsize;
   buf2=window;
   buf3=fftworkspace;
@@ -257,8 +281,9 @@ recpos != lrecpos ? (
   !(mouse_cap&1) || cap_mode>0 ? (
    slider5 ? (
      gfx_a=1;
-     cur_xpos = gfx_w-1;
-     gfx_blit(-1,1,0, 1,0,gfx_w-1,use_h, 0,0,gfx_w-1,use_h);
+     cur_xpos = gfx_w-1-pixels_per_frame+draw_pos;
+     draw_pos==0?
+       gfx_blit(-1,pixels_per_frame,0, pixels_per_frame,0,gfx_w-pixels_per_frame,use_h, 0,0,gfx_w-pixels_per_frame,use_h);
    ) : (
      gfx_a=0.1;
      gfx_x=cur_xpos+1;
@@ -303,6 +328,8 @@ recpos != lrecpos ? (
 
   cur_xpos+=1;
   cur_xpos >= gfx_w ? cur_xpos=0;
+  draw_pos+=1;
+  );
   );
 );
 
@@ -338,19 +365,21 @@ mouse_y >= 0 && mouse_y < use_h ? (
     bla+=1;
   );
   (
-    mb > -168 ? (
-     sprintf(#infostr, "%.1f",mb);
-    ) : (
-     #infostr = "-oo";
-    );
     disp_hz=mouse_y/use_h;
     islogmode ? ( 
       disp_hz = log(1+disp_hz*g_logscale)/log(1+g_logscale);
     );
 
-    #infostr += sprintf(#,"dB %.0fHz",(1-disp_hz)*srate*0.5);
+    sprintf(#infostr,"%.0fHz",(1-disp_hz)*srate*0.5);
+    
+    mb > -168 ? (
+     sprintf(#infostr, "%s %.1fdB",#infostr,mb);
+    ) : (
+     #infostr += " -oodB";
+    );
+    
     gfx_measurestr(#infostr,wid,0);
-    gfx_x=gfx_w-wid;
+    gfx_x=max(gfx_w-wid,g_button_right_extent+4);
     gfx_y=use_h + 2;
     gfx_r=gfx_g=gfx_b=1;    
     gfx_drawstr(#infostr);

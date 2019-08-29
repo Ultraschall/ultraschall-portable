@@ -1,0 +1,64 @@
+Introduction
+
+How To Install and Setup
+
+Writing First Scripts
+
+Function Categories
+    API-Helper functions
+    API-Variables
+    Clipboard Functions
+    Configuration-Files Management
+    Cough-Button
+    Developer
+    Envelope Management
+    File Management
+    Help and Documentation
+    Markers
+    MediaItem Management
+    Meta Data Management
+    Navigation
+    Project-Files
+    Reaper Element Positions
+    Rendering of Project
+    Track Management    
+
+Used Datatypes and Datastructures
+    boolean
+    integer
+    number
+    string
+    MediaItem
+    string MediaItemStateChunk
+    MediaTrack
+    TrackStateChunk
+    string MediaTrackStateChunk
+    TrackEnvelope
+    string TrackEnvelopeStateChunk
+    
+    string trackstring
+    array trackstringarray
+    array MediaItemArray
+    array MediaItemStateChunkArray
+    array TrackEnvelopeArray
+    array EnvelopePointObject
+    
+    optional
+
+Error Messaging System
+    Getting error-messages
+    Setting error-messages
+    
+Rendering Functions
+
+Examples and How Tos
+
+Third-Party-Development
+    Scripts
+    Functions
+    
+Updating, Contributing, Reporting Bugs and Feature Requests
+
+Contact
+
+License

@@ -1,0 +1,45 @@
+Markdown NewSpeak
+draft 23th February 2019 - Meo Mespotine
+
+    Bold and Italic
+        * -> **     zum escapen *\*
+        _ -> __     zum escapen _\_
+    
+    Header
+        ====== entfällt
+    
+    Citation:
+        > - entfällt, wird stattdessen durch Einrückung erreicht; jedes Tab/4 Spaces entspricht dabei einem >
+            > kann davor geschrieben werden wenn man will, hat aber keinen Einfluss auf die Einrückung
+
+    Horizontal Rulers
+        --- (drei oder mehrere -) wird zu <hr>, wenn es alleinig in einer Zeile steht. Spaces nur davor oder danach erlaubt!
+        - - - - entfällt
+        ***     entfällt
+        * * *   entfällt
+    
+    Aufzählung
+        * muss als erstes in einer Zeile kommen(preceding spaces erlaubt), sonst wirds nicht erkannt
+        - Aufzählung
+        1. wird als Aufzählung erkannt, wenn es eine Nummer.Space ist
+        2. 
+        3. 
+        
+    Code
+    ` - backticks start and end code; inline and not-inline-code are treated the same
+        Für Einrückung muss der erste Backtick eingerückt sein und das erste Element in seiner Zeile sein.
+        Alle nachfolgenden Zeilen richten sich nach der Ausrichtung des Backticks.
+        
+    Zeilenumbruch
+        SpaceSpace am Ende einer Zeile forciert Zeilenumbruch
+    
+    Paragraph
+        Leerzeile wird zu Paragraph
+        
+    Links
+        wie in Markdown-strict
+        
+    
+        
+    Generelle Regeln:
+        

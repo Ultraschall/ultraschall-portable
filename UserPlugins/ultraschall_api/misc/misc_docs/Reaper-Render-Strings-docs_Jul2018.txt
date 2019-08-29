@@ -1,0 +1,309 @@
+compiled by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
+
+Introduction:
+    This is a collection of the render-cfg-codes, as stored into .rpp-project-files. They are encoded as BASE64-strings(undocumented as of now). 
+    In this document, I analysed the encoded strings, not the unencoded ones.
+    
+    Some formats have only on specific code(like DDP), others follow a certain scheme.
+    The latter is described in a matrix like the following example for FLAC:
+
+    First, there's a string with all symbols, that always stay the same with all encoder-settings, with . for each character, 
+    that can be changed in the string.
+        Y2FsZh.AAAA.AAAA 
+    These . are placeholders for characters or strings, that signal Reaper changes in the Audio-Format.
+    
+    The next lines tell you, which string/characters shall replace the individual dots. in the render-string.
+    ------.--------- signals the Bitrate, like g for 24bit
+    -----------.---- signals the encoding-speed, with F for default encoding-speed.
+
+    So if you want to set renderstring to FLAC with 24bit and default encoding speed, the string
+        Y2FsZh.AAAA.AAAA 
+     becomes
+        Y2FsZhgAAAAFAAAA
+    This way, you can construct yourself your own render-string. You will find all other settings for FLAC later in this document.
+    To insert a render-string, look into your rpp-file for the following section:
+   
+        <RENDER_CFG
+            ZXZhdxAhAQ==
+        >
+
+    Just replace the string in the middle with the one you've constructed. This, in combination with the action 
+        41824 - File: Render project, using the most recent render settings
+    can be used, to create your own rendering-functions in Lua, Python or EEL.
+    
+    These strings can also be used for creation of render-preset-entries in the reaper-render.ini.
+    To insert a render-string, look into your reaper-render.ini for the following entry
+    
+        <RENDERPRESET MP3 44100 2 0 1 7 0
+            bDNwbYAAAAABAAAABQAAAP////8EAAAAgAAAAAAAAAA=
+        >
+        
+    and replace the string in the middle with your own created one.
+    
+    The documentation is still missing m4a(mac-only).
+
+AIFF:
+    .....------- ZmZpY signals AIFF
+    -----..-----
+    ZmZpYQgAAA== 8 bit PCM
+    ZmZpYRAAAA== 16 bit PCM
+    ZmZpYRgAAA== 24 bit PCM
+    ZmZpYSAAAA== 32 bit PCM
+
+    
+Audio CD Image(CUE/BIN format):
+    IG9zaQAAAAAAAAAAAAAAAAAAAAAAAAAA
+    .....--------------------------- IG9za signals Audio CD Image
+    -----......--------------------- Extra lead-in silence for disc (0 to 2147483647)
+    ----------......---------------- Lead-in silence for tracks (0 to 2147483647)
+    ----------.--------------------- The lead-in-values overlap here, when Extra lead in silence is high; separate on bitlevel, if necessary
+    -----------------.-------------- A(Burn CD image after render -> unchecked), Q(Burn CD image after render -> checked)
+    ----------------------.--------- A(markers define new tracks), E(Regions define tracks(other areas ignored)), I(One track)
+    ---------------------------.---- A(Only use markers starting with # -> unchecked), B(Only use markers starting with # -> checked)
+    
+    
+WAV:
+    Some of the settings concentrate on one placeholder in the render-string. These are just added values, means: when I write, 
+    set 2 letters higher, that means, you shall count the letters forward by the order of the alphabet: A->C is two letters 
+    forward from the A.
+    In some cases, you would need to add higher than Z, in that case, the alphabet starts counting again with small letters like a,b,c,etc.
+    So, when I say, count two letters forward, this could mean: Z -> b (Z, a, b).
+    
+    This is confusing in the beginning but take some time to get your head around it.
+    
+        ZXZhdwgBAQ==
+        .....------- ZXZhd signals WAV-audio
+        -----..----- Wav bit depth: wg(8 bit PCM), xA(16 bit PCM), xg(24 bit PCM), yA(32 bit FP), 0A(64 bit FP), wQ(4 bit IMA ADPCM), wI(2 bit cADPCM)
+        -------...-- Large Files: BAA(Auto WAV/Wave64), BAQ(Auto WAV/RF64), DAA(Force WAV), BAg(Force Wave64), BAw(Force RF64)
+        -------.---- Write BWF ('btext') chunk: Checkbox enabled: Set one letter lower, than was set in "Large Files": B->A, D->C
+        -------.---- Include project filename in BWF data: Checkbox enabled: Set four letters higher, than was set in "Write BWF": C->G, A->E
+                         you can also set Include project filename with Write BWF disabled. In that case, set the letter one higher, though
+                         this setting will probably be ignored by Reaper, as this greyes out the Include project filename-checkbox in the
+                         render-dialog.                      
+
+        -------.---- Include marker dropdownlist; only one of the entries from the dropdownlist is selectable
+                         Do not include markers or regions: keep the value.
+                         Markers + regions - set 8 letters higher: B->J, etc
+                         Markers + regions starting with # - set 24 letters higher (B->Z)
+
+                      Include marker dropdownlist(continuation); still only one of all entries from the dropdownlist is selectable, but
+                      these entries need two characters to be altered in the render-string.
+        ------..----    Markers only - set the first letter one higher(A->B) and the second eight higher(B->J)
+                        Markers starting with # only - set the first letter one higher(A->B) and the second 24 higher(B->Z)
+                        Regions only - set the first letter two higher(A->C) and the second eight higher(B->J)
+                        Regions starting with # only - set the first letter two higher(A->C) and the second 24 higher(B->Z)
+        
+        -------.---- Embed project tempo (use with care): checked -> add 38 to the letter (B->h): 
+                                                                            only for: Do not include markers or regions, Markers + regions,
+                                                                                      Markers only, Regions only
+                                                                     subtract 43 from the letter (c->8)
+                                                                            only for: Markers + regions starting with #, Markers starting with # only
+                                                                                      Regions starting with # only
+                                                                     unchecked -> keep the value
+
+        
+WAVPACK:
+        a3B2dwQAAAANAAAAAAAAAAMAAAA= 
+        a3B2dw[MODE]AAAA[BITDEPTH]AAAAA[WRITEMARKERS]AAAA[BWFCHUNK]AAAA=
+        ......---------------------- a3B2dw signals WAVPACK
+        ------.--------------------- Mode: A(Normal), E(Fast), M(High), Q(Very High (slowest))
+        -----------.---------------- Bit depth: A(16Bit), B(24Bit), C(32Bit integer), D(32Bit floating point), E(23/24 Bit), F(22/24 Bit), G(21/24 Bit), 
+                                                H(20/24 Bit), I(19/24 Bit), J(18/24 Bit), K(17/24 Bit), L(32 bit floating point -144dB floor), 
+                                                M(32 bit floating point -120dB floor), N(32 bit floating point -96dB floor)
+        -----------------.---------- Write markers as cues: 
+                                                A(nothing checked), g(Write markers as cues->checked), Q(Write markers as cues and Only write markers starting with #->checked)
+        ----------------------.----- Write BWF chunk and Include project filename in BWF data-checkboxes)
+                                                A(nothing checked), E(Only Write BWF-chunk), I(Include project filename in BWF data), 
+                                                M(Write BWF-chunk and Include project filename in BWF data)
+                                                
+DDP:
+    IHBkZA= - DDP
+
+    
+FLAC:
+    Y2FsZh.AAAA.AAAA 
+    ......---------- Y2FsZh signals FLAC
+    ------.--------- Bitrate: g(24 Bit), c(23/24 Bit), Y(22/24 Bit), U(21/24 Bit), Q(20/24 Bit), M(19/24 Bit), I(18/24 Bit), E(17/24Bit), A(16 Bit)
+    -----------.---- Encoding Speed: I(8 - slowest), H(7), G(6), F(5 - default), E(4), D(3), C(2), B(1), A(0 - fastest)
+
+    
+MP3:
+    Each format (maximum bitrate, VBR, ABR and CBR) has it's own render-string. With the exception of Maximum bitrate/quality, you can set the 
+    encoding quality, as shown in render-matrix. This position is the same for VBR, ABR and CBR, even if they have different render-strings.
+    
+    Format-matrix
+    .....--------------------------------------- bDNwb signals MP3
+    -----...------------------------------------ kbps(CBR) another CBR-kbps-value(unknown, why a second one); only available with CBR
+    ----------------..-------------------------- Encoding Speed   CQ(fastest encode), Bw(FastEncode), BQ(Normal), Ag(Better), AA(maximum slow); only available for VBR, ABR & CBR.
+                                                                  Cg(only with Maximum bitrate/quality-setting)
+    ---------------------------.---------------- VBR-Quality (VBR only) - A(100), B(90), C(80), D(70), E(60), F(50), G(40), H(30), I(20), J(10)
+    --------------------------------...--------- kbps(CBR only)
+    -------------------------------------...---- kbps(ABR only)
+
+    Maximum bitrate/quality:
+        bDNwbUABAAABAAAACgAAAP////8EAAAAQAEAAAAAAAA=
+        
+    VBR:
+        bDNwbSAAAAABAAAA..AAAAAAAAA.AAAAQAEAAAAAAAA=
+        ----------------..-------------------------- Encoding Speed   CQ(fastest encode), Bw(FastEncode), BQ(Normal), Ag(Better), AA(maximum slow); only available for VBR, ABR & CBR.
+                                                                      Cg(only with Maximum bitrate/quality-setting)
+        ---------------------------.---------------- VBR-Quality (VBR only) - A(100), B(90), C(80), D(70), E(60), F(50), G(40), H(30), I(20), J(10)
+        
+      The following strings have slowest encoding-speed set:
+        bDNwbSAAAAABAAAAAAAAAAAAAAAAAAAAQAEAAAAAAAA= - 100(Best) Quality - maximum encode
+        bDNwbSAAAAABAAAAAAAAAAAAAAABAAAAQAEAAAAAAAA= - 90 Quality - maximum encode
+        bDNwbSAAAAABAAAAAAAAAAAAAAACAAAAQAEAAAAAAAA= - 80 Quality - maximum encode
+        bDNwbSAAAAABAAAAAAAAAAAAAAADAAAAQAEAAAAAAAA= - 70 Quality - max encode
+        bDNwbSAAAAABAAAAAAAAAAAAAAAEAAAAQAEAAAAAAAA= - 60 Quality - max encode
+        bDNwbSAAAAABAAAAAAAAAAAAAAAFAAAAQAEAAAAAAAA= - 50 Quality - max encode
+        bDNwbSAAAAABAAAAAAAAAAAAAAAGAAAAQAEAAAAAAAA= - 40 Quality - max encode
+        bDNwbSAAAAABAAAAAAAAAAAAAAAHAAAAQAEAAAAAAAA= - 30 Quality - max encode
+        bDNwbSAAAAABAAAAAAAAAAAAAAAIAAAAQAEAAAAAAAA= - 20 Quality - max encode
+        bDNwbSAAAAABAAAAAAAAAAAAAAAJAAAAQAEAAAAAAAA= - 10(Worst) Quality - max encode
+
+    ABR (Target Bitrate):
+        bDNwbSAAAAABAAAA..AAAAQAAAAEAAAAQAEAAEABAAA=
+        ----------------..-------------------------- Encoding Speed   CQ(fastest encode), Bw(FastEncode), BQ(Normal), Ag(Better), AA(maximum slow); only available for VBR, ABR & CBR.
+                                                                      Cg(only with Maximum bitrate/quality-setting)
+        -------------------------------------...---- kbps(ABR)  EAB(320), AAB(256), OAA(224), MAA(192), KAA(160), IAA(128), HAA(112), GAA(96), 
+                                                                FAA(80), EAA(64), DgA(56), DAA(48), CgA(40), CAA(32), BgA(24), BAA(16), AgA(8)
+
+      The following strings have slowest encoding-speed set:        
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAEABAAA= - 320 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAAABAAA= - 256 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAOAAAAA= - 224 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAMAAAAA= - 192 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAKAAAAA= - 160 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAIAAAAA= - 128 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAHAAAAA= - 112 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAGAAAAA= - 96 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAFAAAAA= - 80 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAEAAAAA= - 64 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAADgAAAA= - 56 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAADAAAAA= - 48 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAACgAAAA= - 40 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAACAAAAA= - 32 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAABgAAAA= - 24 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAABAAAAA= - 16 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAAQAAAAEAAAAQAEAAAgAAAA= - 8 kbps - max encode
+
+    CBR (Constant Bitrate):
+        bDNwb...AAABAAAA..AAAP////8EAAAAQAEAAAAAAAA= - the encoding speed, refer the format-matrix above for the values to insert here
+        -----...------------------------------------ kbps(CBR) another kbps-value(unknown, why)
+                                                               UAB(320), QAB(256), eAA(224), cAA(192), aAA(160), YAA(128), XAA(112), WAA(96)
+                                                               VAA(80), UAA(64), TgA(56), TAA(48), SgA(40), SAA(32), RgA(24), RAA(16), QgA(8)
+        ----------------..-------------------------- Encoding Speed   CQ(fastest encode), Bw(FastEncode), BQ(Normal), Ag(Better), AA(maximum slow); only available for VBR, ABR & CBR.
+                                                                      Cg(only with Maximum bitrate/quality-setting)
+        --------------------------------...--------- kbps(CBR)  QAE(320), AAE(256), 4AA(224), wAA(192), oAA(160), gAA(128), cAA(112), YAA(96), 
+                                                                UAA(80), QAA(64), OAA(56), MAA(48), KAA(40), IAA(32), GAA(24), EAA(16), CAA(8)
+      
+      The following strings have slowest encoding-speed set:
+        bDNwbUABAAABAAAAAAAAAP////8EAAAAQAEAAAAAAAA= - 320 kbps - max encode
+        bDNwbQABAAABAAAAAAAAAP////8EAAAAAAEAAAAAAAA= - 256 kbps - max encode
+        bDNwbeAAAAABAAAAAAAAAP////8EAAAA4AAAAAAAAAA= - 224 kbps - max encode
+        bDNwbcAAAAABAAAAAAAAAP////8EAAAAwAAAAAAAAAA= - 192 kbps - max encode
+        bDNwbaAAAAABAAAAAAAAAP////8EAAAAoAAAAAAAAAA= - 160 kbps - max encode
+        bDNwbYAAAAABAAAAAAAAAP////8EAAAAgAAAAAAAAAA= - 128 kbps - max encode
+        bDNwbXAAAAABAAAAAAAAAP////8EAAAAcAAAAAAAAAA= - 112 kbps - max encode
+        bDNwbWAAAAABAAAAAAAAAP////8EAAAAYAAAAAAAAAA= - 96 kbps - max encode
+        bDNwbVAAAAABAAAAAAAAAP////8EAAAAUAAAAAAAAAA= - 80 kbps - max encode
+        bDNwbUAAAAABAAAAAAAAAP////8EAAAAQAAAAAAAAAA= - 64 kbps - max encode
+        bDNwbTgAAAABAAAAAAAAAP////8EAAAAOAAAAAAAAAA= - 56 kbps - max encode
+        bDNwbTAAAAABAAAAAAAAAP////8EAAAAMAAAAAAAAAA= - 48 kbps - max encode
+        bDNwbSgAAAABAAAAAAAAAP////8EAAAAKAAAAAAAAAA= - 40 kbps - max encode
+        bDNwbSAAAAABAAAAAAAAAP////8EAAAAIAAAAAAAAAA= - 32 kbps - max encode
+        bDNwbRgAAAABAAAAAAAAAP////8EAAAAGAAAAAAAAAA= - 24 kbps - max encode
+        bDNwbRAAAAABAAAAAAAAAP////8EAAAAEAAAAAAAAAA= - 16 kbps - max encode
+        bDNwbQgAAAABAAAAAAAAAP////8EAAAACAAAAAAAAAA= - 8 kbps - max encode
+        
+        
+M4A(MP4):
+    RlZBWAMAAAAAAAAAAAgAAAAAAACAAAAAgAcAADgEAAAAAPBBAQAAAF8AAAA=
+        
+        
+Opus(Reaper 5.941 and earlier):
+    U2dnTwAA      AAAA==
+    ........------------ U2dnTwAA signals Opus Audio; render-string-length of 20 characters signals Opus-Render-String of Reaper5.941 and earlier
+    --------...--------- Bitrate
+    -----------.-------- Bitrate-mode, A(VBR), B(CVBR), C(HARD-CBR)
+    ------------..------ complexity: Cg(10), CQ, CA, Bw, Bg, BQ, BA, Aw, Ag, AQ, AA(0)
+
+Opus (Reaper 5.95 and later):
+    U2dnTwAAgD8AAAAAAAIAAAA=
+
+    U2dnTwAAgEQCAAAAAAAAAAA=
+    U2dnTwAAgD8CAAAAAAAAAAA=
+    U2dnTwCAzUMCAAAAAAAAAAA=
+    U2dnTwBMMkYCAAAAAAAAAAA=
+    
+    ......------------------ U2dnTwAA signals Opus-Render-String; render-cfg-length of 24 characters is Reaper 5.95 and higher
+    ------.....------------- Bitrate 6 to 256
+    -----------.------------ Mode: A(VBR), B (CVBR), C(Hard-CBR)
+    ------------..---------- Complexity : Cg(10), CQ, CA, Bw, Bg, BQ, BA, Aw, Ag, AQ, AA(0)
+    ------------------.----- Encode 3-8 channel audio as 2.1-7.1(LFE)-checkbox and per-channel-bitrate-radiobuttons
+                                             A - Encode-checkbox unchecked and per channel (6-256)-radiobutton
+                                             I - Encode-checkbox unchecked and Combined-radiobutton
+                                             E - Encode-checkbox checked and per channel (6-256)-radiobutton
+                                             M - Encode-checkbox checked and Combined-radiobutton    
+
+Ogg Vorbis:
+    dmdnbwAAAD8AAAAAAAAAAAAgAAAAAAEAAA==
+    .....------------------------------- dmdnb signals Ogg Vorbis
+    -----......------------------------- VBR-quality(0.0 to 1.0)
+    -----------.------------------------ Bitrate-setting: A=VBR; B=CBR, C=ABR    
+    ------------......------------------ CBR-kbps (0 to 4294967295)
+    -----------------......------------- ABR-kbps (0 to 4294967295)
+    -----------------.------------------ CBR and ABR-values overlap in here, when CBR is becoming bigger, so this must be separated on bitlevel in such cases!
+    ----------------------.------------- ABR-kbps and ABR-minimum overlap in here, when ABR-kbps is becoming bigger, so this must be separated on bitlevel in such cases!
+    ----------------------......-------- ABR - minimum kbps (0 to 4294967295)
+    ----------------------------......-- ABR - maximum kbps (0 to 4294967295)
+   
+    
+Video:
+    UE1GRg.AAAA.AAAA...AAA.AAA....AA...AA...AA......A.AAA..AAAA= the render-string for video; fill the gaps with the accompanying 
+                                                                         setting-strings/characters
+                                                                         
+    ......------------------------------------------------------ UE1GRg signals Video
+    ------.----------------------------------------------------- Video Container Y(WebM), Q(MKV), M(MP4,QT,MOV), A(AVI)
+    -----------.------------------------------------------------ Video Format AVI: C(DV),D(MJPEG),E(FFV1 Losless),F(Huffyuv Losless)
+                                                                              QT/MOV/MP4: C(MJPEG)
+                                                                              MKV: C(FFV1 Losless), D(Huffyuv losless), E(MJPEG)
+                                                                              WebM: A(VP8)
+    ----------------...----------------------------------------- Video Bit Rate
+    ----------------------.------------------------------------- Audio-Format M(16 Bit PCM), Q(24 Bit PCM), U(32 Bit FP), 
+                                                                              QT/MOV/MP4: I(16 Bit PCM), M(24 Bit PCM), Q(32 Bit FP)
+                                                                              MKV: I(16 Bit PCM), M(24 Bit PCM), Q(32 Bit FP)
+                                                                              WebM: A(Vorbis)
+    --------------------------....------------------------------ Audio Bitrate (only used with WebM, has no effect with other containers.)
+                                                                              When using other containers, just use any of the bitrate-codes existing.
+    --------------------------------XXX------------------------- Width
+    -------------------------------------YYY-------------------- Height
+    ------------------------------------------FPS...------------ FPS (not encoded as 29.97 but rather as 97.29 !)
+    -------------------------------------------------.---------- Keep source aspect ratio: A -> unchecked; Q -> checked
+    -----------------------------------------------------..----- MJPEG quality (only when MPJPEG is selected, has no effect with other encoding methods)
+                                                                              If you don't use MJPEG, use any of the MJPEG-quality-codes.
+    
+
+Video (GIF):
+    IEZJR4ACAABoAQAAAADwQQAA
+    .....------------------- IEZJR signals Video (GIF)
+    -----......------------- width(1 to 2147483647)
+    ----------......-------- height(1 to 2147483647)
+    ----------.------------- width and height overlap here, when width is big; separate on bit-level
+    ----------------......-- fps (0 to 4294967296)
+    ----------------------.- A(Preserve aspect ratio (black bars if necessary) -> unchecked), E(Preserve aspect ratio (black bars if necessary) -> checked)
+    -----------------------. Ignore changes in low bits of color (0-7, 0=full quality)
+                               A(0), C(1), E(2), G(3), I(4), K(5), M(6), O(7) when checkbox "Encode transparency (bad for normal video, good for some things possibly" -> unchecked
+                               B(0), D(1), F(2), H(3), J(4), L(5), N(6), P(7) when checkbox "Encode transparency (bad for normal video, good for some things possibly" -> checked
+                               
+
+Video (LCF):
+    IEZDTIACAADgAQAAAADwQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    .....------------------------------------------------------------------------------------------------------- IEZDT signals Video (LCF)
+    -----......------------------------------------------------------------------------------------------------- width(1 to 2147483647)
+    ----------......-------------------------------------------------------------------------------------------- height(1 to 2147483647)
+    ----------.------------------------------------------------------------------------------------------------- width and height overlap here, when width is a big value; separate on bitlevel!
+    ----------------......-------------------------------------------------------------------------------------- fps (0.00 to 4294967296.00)
+    ----------------------.------------------------------------------------------------------------------------- preserve aspect ratio (black bars if necessary): A(unchecked), E(checked)
+    ----------------------.................--------------------------------------------------------------------- LCF options tweak: AAAAAAAAAAAAAAAAA for t20 x128 y16
+    ----------------------.------------------------------------------------------------------------------------- preserve aspect ratio and LCF options tweak overlap here. Add one letter, to set preserve aspect ratio to checked!

@@ -1,0 +1,30 @@
+desc:video sample peeker
+// copies samples to shared global memory for use by some video processor presets
+
+slider1:lookahead_seconds=1<0,1.8,0.1>lookahead (seconds, 1.0 is normal)
+options:gmem=jsfx_to_video
+
+in_pin:left
+in_pin:right
+out_pin:none
+
+@init
+send_nch=2;
+pos=bufstart=16;
+bufend=bufstart+((2.0 /*seconds*/ *srate*send_nch)|0);
+
+@slider
+pdc_delay=(lookahead_seconds*srate)|0;
+
+@block
+gmem[0]=play_position;
+gmem[1]=pos;
+gmem[2]=srate;
+gmem[3]=bufstart;
+gmem[4]=bufend;
+gmem[5]=send_nch; // stereo
+  
+@sample
+gmem[pos]  =spl0;
+gmem[pos+1]=spl1;
+(pos+=send_nch) >= bufend ? pos=bufstart;
