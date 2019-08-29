@@ -1,0 +1,54 @@
+desc:MIDI Examiner
+//tags: MIDI analysis utility
+//author: Schwa
+
+//Examine midi messages (http://www.midi.org/about-midi/table1.shtml)
+
+slider1:0<0,255,1>Sample Offset Within @block
+slider2:0<0,255,1>Status Byte
+slider3:0<0,127,1>Data Byte 1
+slider4:0<0,127,1>Data Byte 2
+slider5:0<0,16,1>Status High Bits
+slider6:0<0,16,1>Status Low Bits
+slider7:0<0,8,1{-,Note Off,Note On,Poly Aftertouch,Control Change,Program Change,Channel Aftertouch,Pitch Wheel,System Special}>Status High Bits Interpretation
+
+in_pin:none
+out_pin:none
+
+// Data byte high bit is used for system exclusive messages, 
+// we're ignoring it here.
+
+@block
+
+  while (
+    midirecv(mpos, msg1, msg23) ? (
+      midisend(mpos, msg1, msg23);
+  
+      status = msg1;
+
+      statusHi = (msg1 / 16) | 0;
+      statusLo = msg1 - (statusHi * 16);     
+
+      data2 = (msg23 / 256) | 0;
+      data1 = msg23 - (data2 * 256);
+
+      /*
+      You could reassemble the message like this.
+      msg1 = (statusHi * 16 + statusLo) | 0;
+      msg23 = (data2 * 256 + data1) | 0;
+      */
+
+      slider1 = mpos;
+      slider2 = status;
+      slider3 = data1;
+      slider4 = data2;
+      slider5 = statusHi;
+      slider6 = statusLo;
+      slider7 = statusHi - 7;
+
+      sliderchange(255);  // We changed all the sliders.
+    );
+  );
+       
+
+

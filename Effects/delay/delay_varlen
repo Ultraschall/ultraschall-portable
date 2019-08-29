@@ -1,0 +1,55 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+desc: Delay w/LFO-Modulated Length
+//tags: delay modulation LFO
+//author: Cockos
+
+slider1:300<0,4000,20>Delay (ms)
+slider2:-6<-120,6,1>Update Wet (dB)
+slider3:-6<-120,6,1>Update Dry (dB)
+slider4:-6<-120,6,1>Out Wet (dB)
+slider5:-6<-120,6,1>Out Dry (dB)
+slider6:1<0.001,30,0.1>Period (sec)
+slider7:0.3<0.001,1.0,0.01>Amplitude (ratio)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+delaypos=0;
+
+@slider
+odelay=delaylen;
+delaylen=min(slider1 * srate / 1000,500000);
+odelay != delaylen ? freembuf(delaylen*2);
+
+wetmix = 2 ^ (slider2/6);
+drymix = 2 ^ (slider3/6);
+wetmix2 = 2 ^ (slider4/6);
+drymix2 = 2 ^ (slider5/6);
+dppossc = $pi/(slider6 * srate);
+dpbacksc = min(max(slider7,0),1)*delaylen*0.5 - 1;
+
+
+@sample
+
+dppos = dppos+dppossc;
+dpback = (sin(dppos)+1)*dpbacksc;
+dpint = delaypos-dpback-1;
+dpint < 0 ? dpint += delaylen;
+dpint *= 2;
+
+os1=dpint[0];
+os2=dpint[1];
+
+dpint = delaypos*2;
+
+dpint[0]=min(max(spl0*drymix + os1*wetmix,-4),4);
+dpint[1]=min(max(spl1*drymix + os2*wetmix,-4),4);
+
+(delaypos+=1) >= delaylen ? delaypos=0;
+
+spl0=spl0*drymix2 + os1*wetmix2;
+spl1=spl1*drymix2 + os2*wetmix2;

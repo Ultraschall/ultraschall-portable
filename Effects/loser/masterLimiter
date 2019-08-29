@@ -1,0 +1,89 @@
+// (C) 2006, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+
+desc:Master Limiter
+//tags: dynamics limiter
+//author: LOSER
+
+slider1:-3<-20,-.1,.1>Threshold (dB)
+slider2:200<0,1000,1>Look Ahead (és)
+slider3:100<0,1000,1>Attack (és)
+slider4:0<0,10,.1>Hold (ms)
+slider5:250<0,1000,1>Release (ms)
+slider6:-.1<-6,0,.01>Limit (dB)
+slider7:0,Reduction
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+gain = seekgain = 1;
+c_ampdB = 8.65617025;
+
+@slider
+treshdB = min(slider1,-.1);
+tresh = exp(treshdB/c_ampdB);
+
+treshdB == -.1 ? (gain = seekgain = 1; );
+
+look = floor(max( min( slider2/1000000*srate , 500000) , 1));
+attack = exp( -treshdB/max( slider3/1000000*srate , 0) / c_ampdB  ) ;
+hold = slider4/1000*srate;
+under_tresh = 0;
+release = exp( -treshdB/max( slider5/1000*srate , 0) / c_ampdB ) ;
+
+limit = exp(slider6/c_ampdB);
+
+mode_make_up = 1;
+
+volume = limit / (mode_make_up ? tresh : 1);
+
+seekgain = 1;
+
+@sample
+detect = max(abs(spl0),abs(spl1));
+
+bufPos[0] = spl0;
+bufPos[look] = spl1;
+(bufPos += 1) >= look ? bufPos = 0 ;
+spl0 = bufPos[0];
+spl1 = bufPos[look];
+
+// Prevent From Preopening, I Know There Might Be Transients In Between, But Fuck'Em :/
+detect = max(max(abs(spl0),abs(spl1)),detect);
+
+detect > tresh ? (
+    under_tresh = 0;
+    hold ? seekgain = min( tresh/detect ,seekgain ) : seekgain = tresh/detect;
+):(
+    (under_tresh+=1)>hold ? (seekgain = 1; );
+);
+
+gain > seekgain ? gain=max(gain/attack,seekgain):gain=min(gain*release,seekgain);
+
+spl0 *= gain * volume;
+spl1 *= gain * volume;
+
+// Prevent From Unecessary Distortion, Better Distort Just Once Even Tho Hard :)
+max(abs(spl0),abs(spl1)) > limit ? gain = seekgain; // Uber Nifty Metering For This Doesn't Work :(
+
+spl0 = max(min(spl0,limit),-limit);
+spl1 = max(min(spl1,limit),-limit); 
+
+slider7 = log(gain)*c_ampdB;
+sliderchange(64);
+

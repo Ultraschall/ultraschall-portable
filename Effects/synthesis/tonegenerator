@@ -1,0 +1,43 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Tone Generator
+//tags: analysis generator synthesis
+//author: Cockos
+
+slider1:-12<-120,6,1>Wet Mix (dB)
+slider2:-6<-120,6,1>Dry Mix (dB)
+slider3:440<20,24000,1>Base Frequency (Hz)
+slider4:0<0,11,1{A,A#,B,C,C#,D,D#,E,F,F#,G,G#}>Note
+slider5:0<-4,4,1>Octave
+slider6:0<-100,100,1>Fine Tune (cents)
+slider7:0<0,2,1{Sine,Triangle,Saw}>Shape
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+  vol=2 ^ (slider1/6); 
+  dry=2 ^ (slider2/6); 
+  adj = 2.0*$pi*slider3*(2^(slider5+slider4/12+slider6/1200))/srate;
+
+@sample
+
+(slider7 < 0.67) ? (
+  tone = cos(pos);
+) : 
+(slider7 < 1.33) ? (
+  tone = 2.0*pos/$pi-1.0;
+  (tone > 1.0) ? tone = 2.0-tone;
+) : (
+  tone = 1.0-pos/$pi;
+);
+
+tone *= vol;
+spl0 = tone+spl0*dry;
+spl1 = tone+spl1*dry;
+
+pos=pos+adj;
+(pos >= 2.0*$pi) ? pos -= 2.0*$pi;

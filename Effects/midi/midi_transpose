@@ -1,0 +1,108 @@
+desc:MIDI Transpose Notes
+//tags: MIDI processing
+
+slider1:0<-64,64,1>Transpose Semitones
+slider2:1<-16,16,1>Premultiply
+slider3:0<0,127,1>Lowest Key (MIDI Note #)
+slider4:127<0,127,1>Highest Key (MIDI Note #)
+
+// these lines tell Reaper the effect has no audio input/output,
+// which enables processing optimizations.
+// MIDI-only FX should always have these lines.
+in_pin:none
+out_pin:none
+
+@init
+
+notebuf = 0; // 4 entries per open note: orignote, channel, vel, transnote
+buflen = 0;
+
+last_transpose = 0;
+last_mult = 1;
+last_samplepos = 0;
+
+@slider
+
+@block
+
+samplepos = play_position*srate;
+samplechg = samplepos-last_samplepos;
+samplechg < -samplesblock/2.0 || samplechg > samplesblock*3.0/2.0 ?
+(
+  buflen = 0;	// clear state on seek   
+);
+last_samplepos = samplepos;
+
+slider1|0 != last_transpose || slider2 != last_mult ?
+(
+  last_transpose = slider1|0;
+  last_mult = slider2;
+
+  i = 0;
+  loop
+  (
+    buflen,    
+
+    n = notebuf[4*i]|0; // original note
+    c = notebuf[4*i+1]|0; // channel
+    v = notebuf[4*i+2]|0; // velocity
+    t = notebuf[4*i+3]|0; // transposed note
+
+    midisend(0, $x80|c, t); // clear the sustaining transposed note
+    
+    t = (n*last_mult+last_transpose)|0; // new transposed note	  
+    t < 0 ? t = 0 : t > 127 ? t = 127;
+    midisend(0, $x90|c, (v*256)|t); // send the new transposed note
+    notebuf[4*i+3] = t; // update the buffer
+ 
+    i = i+1;
+  );
+);
+
+while 
+(
+  midirecv(offs, m1, m2) ?
+  (
+    s = m1&$xF0;
+    s == $x90 || s == $x80 ? // note-on or note-off
+    (
+      n = m2&$xFF; // original note
+   
+      n >= slider3 && n <= slider4 ?
+      (
+	c = m1&$xF; // channel
+        v = (m2&$xFF00)/256; // velocity
+        t = (n*last_mult+last_transpose)|0; // transposed note
+        t < 0 ? t = 0 : t > 127 ? t = 127;
+        m2 = m2+t-n; // apply transposition      
+
+        i = -1;
+        while // look for this note|channel already in the buffer
+        (
+          i = i+1;
+          i < buflen && (notebuf[4*i]|0 != n || notebuf[4*i+1]|0 != c);
+        );
+
+        (s == $x90 && v > 0) ? // note-on, add to buffer
+        (
+          notebuf[4*i] = n;
+          notebuf[4*i+1] = c;
+          notebuf[4*i+2] = v;
+          notebuf[4*i+3] = t;
+          i == buflen ? buflen = buflen+1;
+        ) 
+        : // note-off, remove from buffer
+        (
+          i < buflen ?
+          (
+            memcpy(notebuf+4*i, notebuf+4*(i+1), 4*(buflen-i-1));	// delete the entry
+            buflen = buflen-1;
+          );
+        );
+      );
+    );
+    midisend(offs, m1, m2);
+  );
+);
+
+

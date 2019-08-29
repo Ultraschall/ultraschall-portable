@@ -1,0 +1,68 @@
+// (C) 2007, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED.  THIS PLUG-IN  IS PROVIDED FOR FREE  ON  AN  "AS  IS"
+// BASIS, WITHOUT WARRANTY OF ANY KIND.  NO LIABILITY IS GRANTED, INCLUDING, BUT
+// NOT LIMITED TO, ANY DIRECT OR INDIRECT,  SPECIAL, INCIDENTAL OR CONSEQUENTIAL
+// DAMAGE ARISING OUT OF THE USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER
+// FAILTURE  OF  MALFUNCTION  INCLUDED.  THE  USE  OF THE  SOURCE  CODE,  EITHER
+// PARTIALLY OR IN TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S
+// INTENTION,  AND USED WITH ACKNOWLEDGEMENT OF THE AUTHOR.  LAST BUT NOT LEAST,
+// BY USING THIS  PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR,  AS WELL
+// AS YOUR CLAIM TO ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+// NOTE: This is a early alpha release!
+
+desc:Compciter
+desc:Compciter [LOSER]
+//tags: processing distortion exciter
+//author: LOSER
+
+slider1:0<0,60,.1>Drive (dB)
+slider2:25<0,100,1>Distortion (%)
+slider3:5000<800,12000,1>Highpass (Hz)
+slider4:-6<-60,24,1>Wet (dB)
+slider5:0<-120,0,1>Dry (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+gain = seekgain = 1;
+c = 8.65617025;
+dc = 10^-30;
+
+gain = seekGain = 1;
+
+@slider
+threshDB = -slider1;
+thresh = exp(threshDB/c);
+ratio = 1/20;
+
+release = exp( -60 / (    pow(1-slider2/100,3)   *500*srate/1000) / c );
+
+t0 = t1 = 0;
+blp = -exp(-2*$pi*slider3*3 / srate );
+alp = 1.0 + blp;
+
+wet = exp(slider4/c) / exp(( threshDB -threshDB*ratio )/c);
+dry = exp(slider5/c);
+
+seekgain = 1;
+
+
+@sample
+s0 =      (t00 = alp*spl0-blp*t00);
+s1 =      (t01 = alp*spl1-blp*t01);
+s0 =      (t10 = alp*s0  -blp*t10);
+s1 =      (t11 = alp*s1  -blp*t11);
+s0 = spl0-(t20 = alp*s0-blp*t20);
+s1 = spl1-(t21 = alp*s1-blp*t21);
+
+rms = max( abs(spl0) , abs(spl1) );
+seekGain = ((rms > thresh) ? exp((threshDB + (log(rms)*c-threshDB)*ratio) /c) / rms : 1);
+gain = ((gain > seekGain) ? seekGain : min( gain/release , seekGain ));
+spl0 = spl0*dry + s0 *gain * wet;
+spl1 = spl1*dry + s1 *gain * wet;
+

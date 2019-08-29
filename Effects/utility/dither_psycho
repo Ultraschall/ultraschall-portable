@@ -1,0 +1,157 @@
+desc:Bit Reduction/Dither w/Noise Shaping
+desc:Bit Reduction and Dither with Psychoacoustic Noise Shaping
+//tags: utility processing dither
+//author: Cockos
+
+slider1:16<1,32,1>Output Bit Depth
+slider2:1<0,3,1{Off,On,Disabled (Sample Rate Not Supported),Disabled (Overload)}>Psychoacoustic Noise Shaping
+slider3:2<0,1,2{Off (Truncate),On (TPDF),On (Highpass TPDF)}>Dither
+slider4:2<1,2,0.1>Dither Bit Width (LSB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+
+N = 0;
+coeffs = 0;
+
+// All coefficients John Schwartz 2007.
+// http://www.gnu.org/licenses/gpl.html
+
+(srate == 44100) ? (
+  N = 9;
+  coeffs[0] = 2.372839;
+  coeffs[1] = -3.132662;
+  coeffs[2] = 3.203963;
+  coeffs[3] = -2.853749;
+  coeffs[4] = 1.971429;
+  coeffs[5] = -1.013035;
+  coeffs[6] = 0.369805;
+  coeffs[7] = -0.091063;
+  coeffs[8] = 0.013578;
+
+  // Wannamaker 1992 coefficients for reference.
+  //
+  // coeffs[0] =  2.412;
+  // coeffs[1] = -3.370;
+  // coeffs[2] =  3.937;
+  // coeffs[3] = -4.174;
+  // coeffs[4] =  3.353;
+  // coeffs[5] = -2.205;
+  // coeffs[6] =  1.281;
+  // coeffs[7] = -0.569;
+  // coeffs[8] =  0.0847;
+) : 
+(srate == 48000) ? (
+  N = 9;
+  coeffs[0] = 2.077677;
+  coeffs[1] = -2.721001;
+  coeffs[2] = 2.602012;
+  coeffs[3] = -2.157415;
+  coeffs[4] = 1.398085;
+  coeffs[5] = -0.84755;
+  coeffs[6] = 0.373337;
+  coeffs[7] = -0.161701;
+  coeffs[8] = 0.003758;
+) :
+(srate == 88200) ? (
+  N = 10;
+  coeffs[0] = -0.037508;
+  coeffs[1] = 2.14333;
+  coeffs[2] = -0.089328;
+  coeffs[3] = -2.38445;
+  coeffs[4] = 0.376261;
+  coeffs[5] = 1.940341;
+  coeffs[6] = -0.463485;
+  coeffs[7] = -1.241821;
+  coeffs[8] = 0.157735;
+  coeffs[9] = 0.412081;
+) :
+(srate == 96000) ? (
+  N = 10;
+  coeffs[0] = -0.26496;
+  coeffs[1] = 1.847721;
+  coeffs[2] = 0.692557;
+  coeffs[3] = -1.949565;
+  coeffs[4] = -0.691542;
+  coeffs[5] = 1.415063;
+  coeffs[6] = 0.463352;
+  coeffs[7] = -0.792872;
+  coeffs[8] = -0.229575;
+  coeffs[9] = 0.156314;
+);
+
+(N == 0) ? (
+  psycho = 0;
+  slider2 = 2;
+  sliderchange(slider2);
+);
+
+errBufL = coeffs + N;
+errBufR = errBufL + N;
+
+@slider
+
+resolution = 2 ^ (slider1 - 1);
+psycho = (slider2 == 1);  
+tpdf = (slider3 == 1);
+hiTPDF = (slider3 == 2);
+ditherX = slider4 / 2.0;
+
+memset(errBufL, 0, N);
+memset(errBufR, 0, N);
+p = 0;
+
+zL = zR = 0.5;
+rndL = rndR = 0.0;
+
+@sample
+
+sL = spl0;
+sR = spl1;
+
+(psycho) ? (
+  i = 0;
+  q = p;
+  loop(N,
+    sL -= coeffs[i] * errBufL[q];
+    sR -= coeffs[i] * errBufR[q];
+    i += 1;
+    q += 1;
+    (q == N) ? (q = 0);    // % is expensive.
+  );
+);
+
+(tpdf) ? (
+  zL = 0.5 + (rand(1) + rand(1) - 1.0) * ditherX;
+  zR = 0.5 + (rand(1) + rand(1) - 1.0) * ditherX;
+) : 
+(hiTPDF) ? (
+  zL = 0.5 + rndL;
+  zR = 0.5 + rndR;
+  rndL = rand(1) * ditherX;
+  rndR = rand(1) * ditherX;
+  zL -= rndL;
+  zR -= rndR;
+);
+
+spl0 = floor(sL * resolution + zL) / resolution;
+spl1 = floor(sR * resolution + zR) / resolution;
+
+spl0 = max(-1.0, min(spl0, 1.0));
+spl1 = max(-1.0, min(spl1, 1.0));
+
+(psycho) ? (
+  (p == 0) ? (p = N - 1) : (p -= 1);  // % is expensive.
+  errBufL[p] = spl0 - sL;
+  errBufR[p] = spl1 - sR;
+
+  (abs(spl0) == 1 || abs(spl1) == 1) ? (
+    psycho = 0;
+    slider2 = 3;
+    sliderchange(slider2);
+  );
+);

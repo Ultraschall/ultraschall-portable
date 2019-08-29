@@ -1,0 +1,489 @@
+<!doctype html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+<title>MoreMe Personal Monitor</title>
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700" rel="stylesheet" type="text/css">
+<script src="main.js"></script>
+
+<style type="text/css">
+    
+    body {
+        background-color:#333333;
+        color:#A9ABAB;
+        font-family: 'Open Sans',sans-serif;
+        font-size: 1em;
+        text-align: center;
+        margin:0px;
+        user-select: none;
+        cursor: default;
+        }
+   #trackSelect {
+        width:100%;
+        color:#A9ABAB;
+        background-color:#262626;
+        border: none;
+        font-size: 1.5em;
+        padding:3%;
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 20px;
+        border-radius: 20px;
+        -webkit-appearance: none;
+        }
+    select option:first-child{
+        color: #555555;
+        font-style: italic;
+        }
+   #instructions {
+        display : block;
+        padding : 0% 10% 0% 10%;
+        }
+    .button:hover .mouseover {
+        visibility:visible;
+        }
+    .button:active .mouseover {
+        visibility:hidden;
+        pointer-events:all;
+        }
+    .button:active .shadow {
+        visibility: hidden;
+        }
+    .button:active .gloss {
+        visibility: hidden;
+        }
+    .button:active .active {
+        visibility: visible;
+        }  
+</style>
+
+<script type="text/javascript">
+            
+wwr_req_recur("NTRACK;TRACK",10);
+wwr_start(); 
+    
+var nTrack = 0, nTrackOld = 0, trackNameAr = [], trackRcvCntAr = [], trackHwOutCntAr = [], receiveIdxAr = [], receiveVolAr = [], receiveMuteAr = [], trackColoursAr = [], trackIsMonitorAr = [], trackIsMonitorArOld = [], selectChoiceIdx = 0, selectChoiceOld = "", mouseDown = 0, sendOutputdB = 0;    
+    
+function mouseDownEventHandler(msg) {
+    return function(e) {
+        if (typeof e == 'undefined') e=event;
+        if (e.preventDefault) e.preventDefault();
+        wwr_req(msg);
+        return false;
+        }
+    }
+ 
+function mouseUpHandler(event){mouseDown = 0;}
+function mouseDownHandler(event, target){mouseDown = 1;}
+function mouseLeaveHandler(event){mouseDown = 0;}   
+function mouseMoveHandler(event){
+    if (mouseDown != 1){ return; }
+    else {
+        var volTrackWidth = (this.getBoundingClientRect()["width"]);
+        var volThumbWidth = volTrackWidth * 0.14375;
+        var volThumbTrackWidth = (volTrackWidth - volThumbWidth);
+        var volThumbTrackLEdge = this.getBoundingClientRect()["left"];
+        offsetX = (event.pageX - volThumbTrackLEdge - (volThumbWidth / 2));
+
+        if (event.changedTouches != undefined) { //we're doing touch stuff
+            offsetX = (event.changedTouches[0].pageX - volThumbTrackLEdge - (volThumbWidth / 2));
+            }
+        if(offsetX<0){offsetX=0};
+        if(offsetX>volThumbTrackWidth){offsetX=volThumbTrackWidth};
+
+        var volThumb = this.getElementsByClassName("fader")[0];
+        var offsetX320 = offsetX * (320 / volTrackWidth);
+        var vteMove320 = "translate(" + offsetX320 + " 0)";
+        volThumb.setAttributeNS(null, "transform", vteMove320);
+        var volOutput = (offsetX  / volThumbTrackWidth);
+        var volOutputdB = Math.pow(volOutput, 4) * 4;
+        wwr_req("SET/TRACK/" + selectChoiceIdx  + "/SEND/" + -this.id + "/VOL/" + volOutputdB)
+        }
+    }    
+function sendMouseMoveHandler(event){
+    if (mouseDown != 1){ return; }
+    else {
+        var sendTrackWidth = this.getElementsByClassName("sendBg")[0].getBoundingClientRect()["width"];
+        var sendThumbWidth = this.getElementsByClassName("sendBg")[0].getBoundingClientRect()["height"];
+        var sendThumbTrackWidth = (sendTrackWidth - sendThumbWidth);
+        var sendThumbTrackLEdge = this.getElementsByClassName("sendBg")[0].getBoundingClientRect()["left"];
+
+        offsetX = event.pageX - sendThumbTrackLEdge - (sendThumbWidth / 2);
+        if (event.changedTouches != undefined) { //we're doing touch stuff
+            offsetX = (event.changedTouches[0].pageX - sendThumbTrackLEdge - (sendThumbWidth / 2));
+            }
+        if(offsetX<0){offsetX=0};
+        if(offsetX>sendThumbTrackWidth){offsetX=sendThumbTrackWidth};
+
+        var offsetX262 = offsetX * (262 / sendTrackWidth) + 26;
+        var sendThumb = this.getElementsByClassName("sendThumb")[0];
+        sendThumb.setAttributeNS(null, "cx", offsetX262 );
+        var sendLine = this.getElementsByClassName("sendLine")[0];
+        sendLine.setAttributeNS(null, "x2", offsetX262 );
+
+        var sendOutput = (offsetX  / sendThumbTrackWidth);
+        sendOutputdB = Math.pow(sendOutput, 4) * 4;
+        wwr_req("SET/TRACK/" + selectChoiceIdx + "/SEND/" + -this.id + "/VOL/" + sendOutputdB)
+        }
+    }
+    
+function sendMouseUpHandler(event){
+    wwr_req("SET/TRACK/" + selectChoiceIdx + "/SEND/" + -this.id + "/VOL/" + sendOutputdB + "e");
+    mouseDown = 0;
+    }    
+
+function volFaderConect(content, thumb){
+    content.addEventListener("mousemove", mouseMoveHandler, false);
+    content.addEventListener("touchmove", mouseMoveHandler, false);
+    content.addEventListener("mouseleave", mouseLeaveHandler, false);
+    content.addEventListener("mouseup", mouseUpHandler, false);
+    content.addEventListener("touchend", mouseUpHandler, false);
+    thumb.addEventListener("mousedown", function (event) {mouseDownHandler(event, event.srcElement)}, false);
+    thumb.addEventListener('touchstart', function(event){
+        if (event.touches.length > 0) mouseDownHandler(event, event.srcElement);
+        event.preventDefault(); }, false);
+    }    
+    
+function sendConect(content, thumb){
+    content.addEventListener("mousemove", sendMouseMoveHandler, false);
+    content.addEventListener("touchmove", sendMouseMoveHandler, false);
+    content.addEventListener("mouseleave", mouseLeaveHandler, false);
+    content.addEventListener("mouseup", sendMouseUpHandler, false);
+    content.addEventListener("touchend", sendMouseUpHandler, false);
+    thumb.addEventListener("mousedown", function (event) {mouseDownHandler(event, event.srcElement)}, false);
+    thumb.addEventListener('touchstart', function(event){
+        if (event.touches.length > 0) mouseDownHandler(event, event.srcElement);
+        event.preventDefault(); }, false);
+    }    
+    
+function wwr_onreply(results) {
+   var resultsDisplay = document.getElementById("_results");
+    if(resultsDisplay!=null){
+        resultsDisplay.innerHTML = results;
+        } 
+    
+var ar = results.split("\n");
+for (var x=0;x<ar.length;x++) {
+    var tok = ar[x].split("\t");
+    if (tok.length > 0) switch (tok[0]) {
+        case "NTRACK":
+            if (tok.length > 1) {
+                nTrack = parseInt(tok[1])+1;
+                if(nTrack!=nTrackOld){
+                    trackRcvCntAr=[];
+                    nTrackOld=nTrack;
+                    }
+                }
+        break;
+        case "TRACK":
+        idx = parseInt(tok[1]);
+            
+        if(tok[2]!=trackNameAr[idx]){
+            trackNameAr[idx] = tok[2];
+            }
+    
+        if(tok[11]!=trackRcvCntAr[idx]){
+            trackRcvCntAr[idx] = tok[11];
+            }
+    
+        if(tok[12]!=trackHwOutCntAr[idx]){
+            trackHwOutCntAr[idx] = tok[12];
+            }
+            
+        if(tok[13]>0 && tok[13]!=trackColoursAr[idx]){
+            trackColoursAr[idx] = tok[13];
+            }    
+            
+        break;
+            
+        case "SEND":
+            if (tok.length > 3) {
+                var f = -tok[2] - 1;
+                receiveIdxAr[f] = tok[6];
+                receiveVolAr[f] = tok[4];
+                if(tok[6]==-1){var hardVol = tok[4]}
+                if(tok[3]&8){receiveMuteAr[f] = 1}
+                else{receiveMuteAr[f] = 0}
+                }
+        break;    
+        }
+    }
+    
+    for(x=0;x<nTrack;x++){ 
+        if((trackHwOutCntAr[x]>0) && (trackRcvCntAr[x]>0)){
+            trackIsMonitorAr[x] = 1;
+            }
+        else {trackIsMonitorAr[x] = 0;}
+        }
+    var trackSelect = document.getElementById("trackSelect");
+    if(trackIsMonitorAr.length>(nTrack+1)){
+        trackIsMonitorAr.pop();
+        for(i=trackSelect.options.length ; i>=1 ; i--){
+                trackSelect.remove(i);
+            }
+        }
+    if(trackIsMonitorArOld.length>nTrack){
+        trackIsMonitorArOld.pop();
+        }
+    
+    for(x=0;x<trackIsMonitorArOld.length;x++){
+        if(trackIsMonitorArOld[x]===undefined){trackIsMonitorArOld[x]=0} //so that first time round doesn't count as 'changed'
+        }
+    function getSum(total, num) {return total + num;}
+    var trackIsMonitorArSum = trackIsMonitorAr.reduce(getSum);
+    if(trackIsMonitorArOld.length>0){var trackIsMonitorArOldSum = trackIsMonitorArOld.reduce(getSum)}
+    if(trackIsMonitorArSum!=trackIsMonitorArOldSum){
+        for(i=trackSelect.options.length ; i>=1 ; i--){
+                trackSelect.remove(i);
+            }
+        }
+    
+    if(trackSelect.options.length==1){
+        for(x=0;x<nTrack;x++){
+            if(trackIsMonitorAr[x]==1){
+                var option = document.createElement("option");
+                option.text = trackNameAr[x];
+                trackSelect.add(option);
+                }
+            trackIsMonitorArOld[x] = trackIsMonitorAr[x];
+            }
+        }
+    
+    var selectChoice = trackSelect.value;
+    if(selectChoice!=selectChoiceOld){
+        selectChoiceIdx = trackNameAr.indexOf(selectChoice);
+        selectChoiceOld = selectChoice;
+        }
+    
+    for(y=1;y<(parseInt(trackRcvCntAr[selectChoiceIdx])+1);y++){ 
+        wwr_req("GET/TRACK/" + selectChoiceIdx + "/SEND/" + (-y)); // requesting receive values of the track being displayed
+       }
+    wwr_req("GET/TRACK/" + selectChoiceIdx + "/SEND/" + 0); // request the first normal send, which should be the hardware send
+    
+    var faderContent = document.getElementsByClassName("trackRow2")[0];
+    var receivesContent = document.getElementById("receives");
+    var instructions = document.getElementById("instructions");
+    var cloneFader = document.getElementById("trackRow2Svg").cloneNode(true);
+    var cloneTrackSend = document.getElementById("trackSendSvg").cloneNode(true);
+    var drawnReceives = trackRcvCntAr[selectChoiceIdx];
+    var drawnReceivesDone = receivesContent.childNodes.length;
+    if (drawnReceives<drawnReceivesDone || drawnReceives==null){
+        if(receivesContent.lastChild){receivesContent.removeChild(receivesContent.lastChild)}
+        }
+    if (drawnReceives>drawnReceivesDone){
+        var sendDiv = document.createElement("div");
+        sendDiv.className = ("sendDiv");
+        receivesContent.appendChild(sendDiv);
+        sendDiv.appendChild(cloneTrackSend);
+        }
+    if (drawnReceives==null && faderContent.innerHTML){
+        faderContent.innerHTML=""
+        instructions.style.display = "block";
+        }
+    if (drawnReceives>=1 && faderContent.innerHTML===""){
+        faderContent.appendChild(cloneFader);
+        instructions.style.display = "none";
+        }
+    
+    
+    
+    //----------------------------------
+    // Now do things based on what's been DRAWN
+    //----------------------------------        
+    
+    var trackRow2Content = document.getElementById("trackRow2Svg");
+    if(trackRow2Content){
+        var volThumb = trackRow2Content.getElementsByClassName("fader")[0];
+            volFaderConect(trackRow2Content,volThumb);
+            volThumb.volSetting = (Math.pow(hardVol, 1/4) * 194.68);
+            if(volThumb.volSetting){
+                var vteMove = "translate(" + volThumb.volSetting + " 0)"
+                if(mouseDown != 1){volThumb.setAttributeNS(null, "transform", vteMove);}
+                }
+        }
+    
+    for(x=0;x<drawnReceivesDone;x++){ //remember not to spam the DOM like a twat
+        var thisChild = receivesContent.childNodes[x];
+        if(thisChild && receiveIdxAr[x] && receiveVolAr[x]){
+            thisChild.id = x+1;
+            thisName = trackNameAr[receiveIdxAr[x]];
+            thisVol = mkvolstr(receiveVolAr[x]);
+            var thisCol = ("#" + (trackColoursAr[receiveIdxAr[x]]|0x1000000).toString(16).substr(-6));
+            if(thisChild){
+                sendTitleText = thisChild.getElementsByClassName("sendTitleText")[0]
+                sDbText = thisChild.getElementsByClassName("sDbText")[0];
+                }
+            if(sendTitleText && sendTitleText.textContent!=thisName)sendTitleText.textContent = thisName;      
+            if(sDbText && sDbText.Content!=thisVol)sDbText.textContent = thisVol;
+            var sendLine = thisChild.getElementsByClassName("sendLine")[0];
+            sSetting = (Math.pow(receiveVolAr[x], 1/4) * 154) + 27;
+            if(mouseDown != 1){sendLine.setAttributeNS(null, "x2", sSetting);}
+            var sendThumb = thisChild.getElementsByClassName("sendThumb")[0];
+            if(mouseDown != 1){sendThumb.setAttributeNS(null, "cx", sSetting);}
+            
+            sendConect(thisChild,sendThumb);
+            
+            var sendThumbColour = thisChild.getAttribute("style")
+            var defaultColour = "#000000";
+            if(thisCol!=defaultColour){
+                if(sendThumbColour!=thisCol){
+                    sendThumb.setAttributeNS(null, "fill", thisCol);
+                    sendTitleText.setAttributeNS(null, "fill", thisCol);
+                    }
+                }
+                else{
+                    sendThumb.setAttributeNS(null, "fill", "#808080");
+                    sendTitleText.setAttributeNS(null, "fill", "#A3A3A3");
+                    }
+            
+            var sendMuteButton = thisChild.getElementsByClassName("send_mute")[0];
+            sendMuteButton.onmousedown = mouseDownEventHandler("SET/TRACK/" + selectChoiceIdx + "/SEND/" + (-x-1) + "/MUTE/-1");
+            var sendMuteOff = thisChild.getElementsByClassName("send_mute_off")[0];
+            var sendMuteOn = thisChild.getElementsByClassName("send_mute_on")[0];
+            if(receiveMuteAr[x]==1){
+                sendMuteOff.style.visibility = "hidden";
+                sendMuteOn.style.visibility = "visible";
+                }
+            else{
+                sendMuteOff.style.visibility = "visible";
+                sendMuteOn.style.visibility = "hidden";
+                }
+            }
+        }
+}
+
+function init(){
+  if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+    for (let l = 0; l < document.styleSheets.length; l ++) {
+      let ss = document.styleSheets[l];
+      if (ss.cssRules) for (let i=0; i < ss.cssRules.length; i++){
+        let st = ss.cssRules[i].selectorText;
+        if (st != undefined && st.startsWith(".button")) ss.removeRule(i--);
+      }
+    }
+  }
+}    
+</script>
+</head>
+<body>
+
+<div id="colWrap">
+
+<!--results : <span id="_results" style="font-size : 0.7em"></span><br><br>-->
+</div>
+<select id="trackSelect">
+    <option>Select your monitor track...</option>
+    </select><br><br>
+
+<div id="instructions">
+Each performer requires their own monitor track to be created in REAPER. <br><br>
+Set it to receive sends from all the tracks you want to monitor.<br><br>
+Give it a hardware send to the performer's output in its first send slot.<br><br>
+Don't forget - you'll probably want to disable its Master Send.<br><br>
+</div>
+  
+<div class="trackRow2"></div> 
+
+<div id="receives"></div>
+
+<div id="backLoad" style="display:none">
+   
+    <element id=trackRow2Svg>  
+        <svg version="1.1" class="faderSvg" display="block" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" viewBox="0 1 320 47" xml:space="preserve">
+        <rect x="0" fill="#333333" width="320" height="36"/>
+        <rect id="fader_track" x="23" y="16.7" transform="matrix(-1 -1.224647e-16 1.224647e-16 -1 320 37.3333)" opacity="0.5" fill="#1A1A1A" width="274" height="4"/>
+        <g class="fader">
+            <g>
+                    <linearGradient id="fGrad1" gradientUnits="userSpaceOnUse" x1="245.0833" y1="-114.0833" x2="245.0833" y2="-106.0833" gradientTransform="matrix(6.123234e-17 -1 -1 -6.123234e-17 -68.0833 263.0833)">
+                    <stop  offset="0" style="stop-color:#212121"/>
+                    <stop  offset="1" style="stop-color:#949494"/>
+                </linearGradient>
+                <rect x="38" y="0.5" fill="url(#fGrad1)" width="8" height="35"/>
+
+                    <linearGradient id="fGrad2" gradientUnits="userSpaceOnUse" x1="245.0833" y1="-106.0833" x2="245.0833" y2="-92.0833" gradientTransform="matrix(6.123234e-17 -1 -1 -6.123234e-17 -68.0833 263.0833)">
+                    <stop  offset="0" style="stop-color:#FFFFFF"/>
+                    <stop  offset="0.9991" style="stop-color:#7A7A7A"/>
+                </linearGradient>
+                <path fill="url(#fGrad2)" d="M26,0.5h12v35H26c-1.1,0-2-0.9-2-2v-31C24,1.4,24.9,0.5,26,0.5z"/>
+
+                    <linearGradient id="fGrad3" gradientUnits="userSpaceOnUse" x1="245.0833" y1="-91.0833" x2="245.0833" y2="-77.0833" gradientTransform="matrix(6.123234e-17 -1 -1 -6.123234e-17 -68.0833 263.0833)">
+
+                    <stop  offset="0" style="stop-color:#9C9C9C"/>
+                    <stop  offset="1" style="stop-color:#4D4D4D"/>
+                </linearGradient>
+                <path fill="url(#fGrad3)" d="M21,35.5c1.1,0,2-0.9,2-2v-31c0-1.1-0.9-2-2-2H9v35H21z"/>
+
+                    <linearGradient id="fGrad4" gradientUnits="userSpaceOnUse" x1="245.0833" y1="-77.0833" x2="245.0833" y2="-69.0833" gradientTransform="matrix(6.123234e-17 -1 -1 -6.123234e-17 -68.0833 263.0833)">
+                    <stop  offset="0" style="stop-color:#FFFFFF"/>
+                    <stop  offset="0.1231" style="stop-color:#F2F2F2"/>
+                    <stop  offset="0.3517" style="stop-color:#CFCFCF"/>
+                    <stop  offset="0.6607" style="stop-color:#979797"/>
+                    <stop  offset="1" style="stop-color:#525252"/>
+                </linearGradient>
+                <rect x="1" y="0.5" fill="url(#fGrad4)" width="8" height="35"/>
+            </g>
+            <path id="outline_1_" d="M1,0.5h20c1.1,0,2,0.9,2,2v31c0,1.1-0.9,2-2,2H1V0.5 M24,2.5c0-1.1,0.9-2,2-2h20v35H26c-1.1,0-2-0.9-2-2
+                V2.5 M0.5,0v36H21c1.4,0,2.5-1.1,2.5-2.5c0,1.4,1.1,2.5,2.5,2.5h20.5V0H26c-1.4,0-2.5,1.1-2.5,2.5C23.5,1.1,22.4,0,21,0H0.5L0.5,0z
+                "/>
+            <path opacity="0.1" fill="#FFFFFF" d="M2,1.5h19c0.6,0,1,0.4,1,1v31c0,0.6-0.4,1-1,1H2V1.5 M25,2.5
+                c0-0.6,0.4-1,1-1h19v33H26c-0.6,0-1-0.4-1-1V2.5 M1,0.5v35h20c1.1,0,2-0.9,2-2v-31c0-1.1-0.9-2-2-2H1L1,0.5z M24,2.5v31
+                c0,1.1,0.9,2,2,2h20v-35H26C24.9,0.5,24,1.4,24,2.5L24,2.5z"/>
+
+                <linearGradient id="fGrad5" gradientUnits="userSpaceOnUse" x1="245.0833" y1="-1061.0476" x2="245.0833" y2="-1058.0729" gradientTransform="matrix(6.123234e-17 -1 -1 -6.123234e-17 -1034.0834 263.0833)">
+                <stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0"/>
+                <stop  offset="0.5" style="stop-color:#FFFFFF"/>
+            </linearGradient>
+            <path opacity="0.33" fill="url(#fGrad5)" d="M26,35.5h1v-1h-1c-0.6,0-1-0.4-1-1v-31c0-0.6,0.4-1,1-1
+                h1v-1h-1c-1,0-1.8,0.7-2,1.6v31.8C24.2,34.8,25,35.5,26,35.5z"/>
+        </g>
+        </svg>  
+    </element>
+   
+    <element id=trackSendSvg>    
+        <svg version="1.1"  display="block" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%"
+             height="100%" viewBox="0 0 320 48" xml:space="preserve">
+        <rect class="sendPanelBg" fill="#333333" width="320" height="49"/>
+        <path class="sendBg" fill="#262626" d="M244,0c-0.3,0-0.7,0-1,0v0H142h-17H27v0c-0.3,0-0.7,0-1,0C13.8,0,4,9.8,4,22s9.8,22,22,22
+            c0.3,0,0.7,0,1,0v0h98h17h101v0c0.3,0,0.7,0,1,0c12.2,0,22-9.8,22-22S256.2,0,244,0z"/>
+        <line class="sendLine" style="pointer-events:none" fill="none" opacity="0.5" stroke="#404040"  stroke-width="38" stroke-linecap="round" stroke-miterlimit="10" x1="27" y1="22" x2="130" y2="22"/>
+        <text class="sendTitleText" style="pointer-events:none" transform="matrix(1 0 0 1 25 29)" fill="#A3A3A3" font-family="'Open Sans'" font-size="19px">Target Name</text>
+        <text class="sDbText" style="pointer-events:none" text-anchor="end" transform="matrix(1 0 0 1 250 27)" fill="#A3A3A3" font-family="'Open Sans'" font-size="12px">xx dB</text>
+        <circle class="sendThumb" opacity="0.5" fill="#808080" stroke="#262626" stroke-width="2" stroke-miterlimit="10" cx="26" cy="22" r="19"/>
+
+            <g class="send_mute button">
+                <g class="send_mute_off" visibility="visible">
+                    <path class="shadow" opacity="0.15" d="M314.4,45.2c0,1-0.8,1.8-1.8,1.8h-39c-1,0-1.8-0.8-1.8-1.8
+                        v-4.6h42.7v4.6H314.4z"/>
+                        <linearGradient id="smoGrad" gradientUnits="userSpaceOnUse" x1="1720.0585" y1="-785.3847" x2="1720.0585" y2="-828.6583" gradientTransform="matrix(1 0 0 -1 -1427 -785)">
+                        <stop  offset="0" style="stop-color:#404040"/>
+                        <stop  offset="1" style="stop-color:#333333"/>
+                    </linearGradient>
+                    <path fill="url(#smoGrad)" d="M273.6,43.6c-1.2,0-2.1-1-2.1-2.1v-39c0-1.2,1-2.1,2.1-2.1h39c1.2,0,2.1,1,2.1,2.1v39
+                        c0,1.2-1,2.1-2.1,2.1H273.6z"/>
+                    <g>
+                        <path fill="#805240" d="M293.1,25.9L293.1,25.9l4.2-10h2.2v12.3h-1.8V19h-0.1l-3.9,9.1h-1.2l-4-9.5h-0.1v9.5h-1.8V15.9h2.3
+                            L293.1,25.9z"/>
+                    </g>
+                    <path class="mouseover" visibility="hidden" opacity="0.05" fill="#FFFFFF" d="M273.6,43.6c-1.2,0-2.1-1-2.1-2.1v-39 c0-1.2,1-2.1,2.1-2.1h39c1.2,0,2.1,1,2.1,2.1v39c0,1.2-1,2.1-2.1,2.1H273.6z"/>
+                </g>
+                <g class="send_mute_on" visibility="hidden">
+                    <path display="inline" fill="#F13F24" d="M273.6,43.6c-1.2,0-2.1-1-2.1-2.1v-39c0-1.2,1-2.1,2.1-2.1h39c1.2,0,2.1,1,2.1,2.1v39
+                        c0,1.2-1,2.1-2.1,2.1H273.6z"/>
+                    <g display="inline">
+                        <path fill="#FFFFFF" d="M293.1,25.9L293.1,25.9l4.2-10h2.2v12.3h-1.8V19h-0.1l-3.9,9.1h-1.2l-4-9.5h-0.1v9.5h-1.8V15.9h2.3
+                            L293.1,25.9z"/>
+                    </g>
+                    <path class="mouseover" visibility="hidden" opacity="0" fill="#FFFFFF" d="M273.6,43.6 c-1.2,0-2.1-1-2.1-2.1v-39c0-1.2,1-2.1,2.1-2.1h39c1.2,0,2.1,1,2.1,2.1v39c0,1.2-1,2.1-2.1,2.1H273.6z"/>
+                </g>
+                <path fill="#1A1A1A" d="M312.6,0.7c1,0,1.8,0.8,1.8,1.8v39c0,1-0.8,1.8-1.8,1.8h-39c-1,0-1.8-0.8-1.8-1.8v-39
+                    c0-1,0.8-1.8,1.8-1.8H312.6 M312.6,0.1h-39c-1.3,0-2.4,1.1-2.4,2.4v39c0,1.3,1.1,2.4,2.4,2.4h39c1.3,0,2.4-1.1,2.4-2.4v-39
+                    C315,1.2,313.9,0.1,312.6,0.1L312.6,0.1z"/>
+            </g>
+        </svg>            
+    </element>     
+</div>
+
+</body>
+</html>
+
+
+<!--TO DO : change colours when colours change to default -->

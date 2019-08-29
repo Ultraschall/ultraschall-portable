@@ -1,0 +1,65 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+desc: Delay (Lo-Fi)
+//tags: delay lo-fi bitreduce
+//author: Cockos
+
+slider1:300<0,4000,20>Delay (ms)
+slider2:-6<-120,6,1>Update Wet (dB)
+slider3:-6<-120,6,1>Update Dry (dB)
+slider4:-6<-120,6,1>Out Wet (dB)
+slider5:-6<-120,6,1>Out Dry (dB)
+slider6:8<1,24,1>Resolution (bits)
+slider7:0<0,1,1{Off,On}>Resample On Length Change
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+resol=2^((slider6|=0)-1); 
+invresl=1/resol; 
+
+
+odelay=delaylen;
+delaylen=slider1 * srate / 1000;
+odelay!=delaylen ? (
+  slider7 && odelay > 0 ? (
+      // resample delay buffer, heh
+      rspos=0; rspos2=0;
+      drspos=odelay/delaylen;
+      loop(delaylen,
+         
+         tpos = ((rspos)|0)*2;
+         rspos2[0]=tpos[0];
+         rspos2[1]=tpos[1];
+
+         rspos2+=2;
+         rspos+=drspos;
+      );
+      delaypos *= delaylen/odelay;
+      delaypos<0 ? delaypos=0;
+  );
+  !slider7 && delaypos >= delaylen ? delaypos = 0;
+);
+
+wet=2^(slider2/6); 
+dry=2^(slider3/6);
+wet2=2^(slider4/6); 
+dry2=2^(slider5/6);
+
+
+
+@sample
+dpint = delaypos*2;
+os1=dpint[0];
+os2=dpint[1];
+
+dpint[0]=min(max((((spl0*dry + os1*wet)*resol)|0)*invresl,-4),4);
+dpint[1]=min(max((((spl1*dry + os2*wet)*resol)|0)*invresl,-4),4);
+
+spl0=spl0*dry2+os1*wet2;
+spl1=spl1*dry2+os2*wet2;
+
+(delaypos+=1) >= delaylen ? ( delaypos=0 );

@@ -1,0 +1,111 @@
+desc:4x4 EQ
+desc:4x4 EQ [Stillwell]
+//tags: equalizer saturation
+//author: Stillwell
+
+slider1:0<0,100,0.1>Low Drive (%)
+slider2:0<-12,12,0.1>Low Gain (dB)
+slider3:0<0,100,0.1>Mid Drive (%)
+slider4:0<-12,12,0.1>Mid Gain (dB)
+slider5:0<0,100,0.1>High Drive (%)
+slider6:0<-12,12,0.1>High Gain (dB)
+slider7:240<60,500,1>Low-Mid Crossover (Hz)
+slider8:2400<510,10000,10>Mid-High Crossover (Hz)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  log2db = 8.6858896380650365530225783783321; // 20 / ln(10)
+  db2log = 0.11512925464970228420089957273422; // ln(10) / 20 
+  pi = 3.1415926535;
+  halfpi = pi / 2;
+  halfpiscaled = halfpi * 1.41254;
+
+@slider
+
+  mixl = slider1 / 100;
+  mixm = slider3 / 100;
+  mixh = slider5 / 100;
+  drivel = mixl;
+  drivem = mixm;
+  driveh = mixh;
+  drivel1 = 1 / (1 - (drivel / 2));
+  drivem1 = 1 / (1 - (drivem / 2));
+  driveh1 = 1 / (1 - (driveh / 2));
+  drivel2 = drivel / 2;
+  drivem2 = drivem / 2;
+  driveh2 = driveh / 2;
+  al = min(slider7,srate) / srate;
+  ah = max( min(slider8,srate) / srate , al );
+  mixl1 = 1 - mixl;
+  mixm1 = 1 - mixm;
+  mixh1 = 1 - mixh;
+  mixl2 = mixl / 2;
+  mixm2 = mixm / 2;
+  mixh2 = mixh / 2;
+  gainl = exp(slider2 * db2log);
+  gainm = exp(slider4 * db2log);
+  gainh = exp(slider6 * db2log);
+  mixlg = mixl * gainl;
+  mixmg = mixm * gainm;
+  mixhg = mixh * gainh;
+  mixlgd = mixl * gainl * drivel1;
+  mixmgd = mixm * gainm * drivem1;
+  mixhgd = mixh * gainh * driveh1;
+  mixlg1 = mixl1 * gainl;
+  mixmg1 = mixm1 * gainm;
+  mixhg1 = mixh1 * gainh;
+
+
+
+@sample
+
+  dry0 = spl0;
+  dry1 = spl1;
+
+  lf1h=lfh; 
+  lfh=dry0 + lfh - ah*lf1h;
+  high_l=dry0-lfh*ah;
+
+  lf1l=lfl;
+  lfl=dry0 + lfl - al*lf1l; 
+  low_l=lfl*al;
+
+  mid_l = dry0 - low_l - high_l;
+
+  rf1h=rfh; 
+  rfh=dry1 + rfh - ah*rf1h;
+  high_r=dry1-rfh*ah;
+
+  rf1l=rfl;
+  rfl=dry1 + rfl - al*rf1l; 
+  low_r=rfl*al;
+
+  mid_r = dry1 - low_r - high_r;
+
+  wet0_l = mixlgd * low_l * (1 - abs(low_l * drivel2));
+  wet0_m = mixmgd * mid_l * (1 - abs(mid_l * drivem2));
+  wet0_h = mixhgd * high_l * (1 - abs(high_l * driveh2));
+  wet0 = (wet0_l + wet0_m + wet0_h);
+
+  dry0_l = low_l * mixlg1;
+  dry0_m = mid_l * mixmg1;
+  dry0_h = high_l * mixhg1;
+  dry0 = (dry0_l + dry0_m + dry0_h);
+
+  wet1_l = mixlgd * low_r *  (1 - abs(low_r * drivel2));
+  wet1_m = mixmgd * mid_r * (1 - abs(mid_r * drivem2));
+  wet1_h = mixhgd * high_r * (1 - abs(high_r * driveh2));
+  wet1 = (wet1_l + wet1_m + wet1_h);
+
+  dry1_l = low_r * mixlg1;
+  dry1_m = mid_r * mixmg1;
+  dry1_h = high_r * mixhg1;
+  dry1 = (dry1_l + dry1_m + dry1_h);
+
+  spl0 = dry0 + wet0;
+  spl1 = dry1 + wet1;
+

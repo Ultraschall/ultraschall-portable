@@ -1,0 +1,36 @@
+desc:Distortion (Fuzz)
+//tags: guitar distortion waveshaper
+//author: Cockos
+
+slider1:20<1,300>Shape
+slider2:-25<-60,60,1>Hard Limit (dB)
+slider3:0<-120,0,1>Wet Mix (dB)
+slider4:-60<-120,0,1>Dry Mix (dB)
+slider5:0<0,2,1{Left,Right,Stereo}>Channel Mode
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+@slider
+maxv=2 ^ (slider2/6);
+s11=slider1-1;
+wet=2^(slider3/6);
+dry=2^(slider4/6);
+
+@block
+@sample
+
+slider5 != 1 ? (
+as=abs(spl0);
+s0=spl0 * (as + slider1) / (as*(as + s11) + 1);
+spl0=max(min(s0,maxv),-maxv)*wet + spl0*dry;
+);
+
+slider5 != 0 ? (
+as=abs(spl1);
+s0=spl1 * (as + slider1) / (as*(as + s11) + 1);
+spl1=max(min(s0,maxv),-maxv)*wet + spl1*dry;
+);

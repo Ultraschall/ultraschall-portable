@@ -1,0 +1,13 @@
+//	Default Kit
+//
+// This is an empty kit.
+//
+// Note name line syntax: 
+// MIDI note value, tab, Note name
+//
+// Here is an example (remove comment marks '//' to take line into use):
+//36	Kick
+//37	Rim
+//38	Snare
+
+

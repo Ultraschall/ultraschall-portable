@@ -1,0 +1,72 @@
+desc:Bit Reduction/Dither
+//tags: processing lo-fi dither
+//author: Cockos
+
+slider1:16<1,32,1>Resolution (bits)
+slider2:0<-48,48,1>Input Gain (dB)
+slider3:1<0,1,1{Off,On}>Dither
+slider4:0<0,1,1{Off,On}>Noise Shaping
+slider5:2<0,2,1{Rectangular,Triangular,Gaussian}>Dither Type
+slider6:0<0,1,1{Off,On}>Highpass Dither
+slider7:1<0,4,.01>Dither Amplitude (LSB)
+slider8:0<-2,2,.01>DC Shift (LSB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+resol=2^((slider1|0)-1); 
+invresl=1/resol; 
+gain=2^(slider2/6);
+dit=slider3?1:0;
+s=slider4>0.5?0.5:0;
+s1l=s1r=s2l=s2r=0;
+ldv=0;
+dcshift = slider8+0.5;
+GAUSSIAN_UNINITIALIZED = -9999;  // Magic number.
+z0 = z1 = GAUSSIAN_UNINITIALIZED;
+
+@sample
+
+s0 = spl0*gain + s * (s1l+s1l - s2l);
+s1 = spl1*gain + s * (s1r+s1r - s2r);
+
+slider6 ? dv2 = dv:dv2=0;
+dit ? (
+  slider5==0 ? dv=rand(20000)/10000 - 1;
+  slider5==1 ? dv=(rand(10000)+rand(10000))/10000 - 1;
+
+  slider5==2 ? (
+    (z1 == GAUSSIAN_UNINITIALIZED) ? (
+      // Box-Muller twofer.
+      w = 0;
+      while (
+        z0 = 2.0 * rand(1) - 1.0;
+        z1 = 2.0 * rand(1) - 1.0;
+        w = z0 * z0 + z1 * z1;
+        w >= 1.0;
+      );
+      w = sqrt(-2.0 * log(w) / w);
+      z0 *= w;
+      z1 *= w;
+      dv = z0*0.25;
+    ) : (
+      dv = z1*0.25;
+      z0 = z1 = GAUSSIAN_UNINITIALIZED;
+    );
+  );
+) : dv=0;
+
+noise = (dv-dv2) * slider7 + dcShift;
+
+spl0 = max(min((floor(s0*resol + noise))*invresl,1),-1);
+spl1 = max(min((floor(s1*resol + noise))*invresl,1),-1);
+
+s2l=s1l;
+s2r=s1r;
+
+s1l = s0 - spl0;
+s1r = s1 - spl1;
+

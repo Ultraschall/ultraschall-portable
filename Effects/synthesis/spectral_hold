@@ -1,0 +1,252 @@
+desc: Spectral Hold (Cockos)
+//tags: FFT spectral hold
+//author: Cockos
+// license: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+// triggers: 0=update+hold
+//           1=toggle hold (no update)
+//           2=update
+//           3=stop hold
+
+slider1:6<0,6,1{512,1024,2048,4096,8192,16384,32768}>FFT Size
+slider2:0.5<0.01,0.99,0.01>analysis overlap
+slider3:0.75<0.1,0.9,0.01>output overlap
+slider4:0<-150,32,1>hold volume (dB)
+slider5:-150<-150,32,1>dry mix during hold (dB)
+slider6:0<-150,32,1>dry mix when not holding (dB)
+slider7:slider_phasemul=0<0,12,.5>phase increase
+slider8:slider_hold=0<0,2,1{off,hold,hold (do not update on switch)}>hold
+slider9:slider_update=1<0,1,1{-,update}>update state
+slider10:0<0,1,1{clear hold,preserve hold}>transport start behavior
+slider11:slider_mixin=1<0,1,.001>mix-in on update
+slider12:slider_autoupdate=0<0,30,.05>auto-update every (s)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init 
+
+
+/////// memory map
+analysis_hist = 0; // interleaved history of input samples
+analysis_hist_size = 32768 * 2 * 2; // 32768*2 sample pairs (max fft size *2 for various overlaps)
+
+fft_buf = analysis_hist + analysis_hist_size;
+fft_buf_size = (32768*2) * 2; // two FFT buffers (both used in analysis, only first used in synthesis)
+
+outstate_buf = fft_buf + fft_buf_size;
+outstate_buf_size = 16384 * 2; // mag, phase per channel
+
+outstate_diff_buf = outstate_buf + outstate_buf_size*2;
+outstate_diff_buf_size = 16384; // phase diff per each channel
+
+outqueue = outstate_diff_buf + outstate_diff_buf_size*2;
+outqueue_size = 32768 * 2; // interleaved stereo output
+
+window_in = outqueue + outqueue_size; // window for analysis
+window_out = window_in + 32768;           // window for synthesis
+
+in_fftsize=-1;
+slider10==0 ? slider_hold=hold_state=0;
+
+function parmchg.db_begin(idx,sv) 
+  instance(chg_splpos, val, tgtval, dval)
+  global(samplesblock)
+(
+  chg_splpos=slider_next_chg(idx, tgtval);
+  chg_splpos > 0 ? (
+    val=sv<=-150?0:exp(sv*(0.05*log(10)));
+    tgtval = tgtval<=-150?0:exp(tgtval*(0.05*log(10)));
+  ) : (
+    tgtval = sv<=-150?0:exp(sv*(0.05*log(10)));
+    chg_splpos = samplesblock;
+  );
+  dval=(tgtval-val)/chg_splpos;    
+);
+
+function parmchg.process(idx, sv) 
+  instance(val, dval, chg_splpos, tgtval)
+  global(at.cnt)
+(
+  dval=0.0;
+  chg_splpos=slider_next_chg(idx, tgtval);
+  chg_splpos > at.cnt ? 
+  (
+    tgtval = tgtval<=-150 ? 0 : exp(tgtval*(0.05*log(10)));
+    dval=(tgtval-val)/(chg_splpos-at.cnt);
+  );
+);
+
+last_slider_hold = slider_hold;
+last_slider_update = slider_update;
+
+@serialize
+file_avail(0);
+
+@block
+  at.cnt=0;
+  gain.parmchg.db_begin(4,slider4);
+  dry.parmchg.db_begin(5,slider5);
+  dry2.parmchg.db_begin(6,slider6);
+  
+  in_fftsize != (0|(2^(slider1+9))) ? (
+    in_fftsize=(2^(slider1+9))|0;  
+    i=0;
+    sc=2.0*$pi/in_fftsize;
+    loop(in_fftsize,
+      window_in[i] = 0.42 - 0.50 * cos(i*sc) + 0.08 * cos(2.0*i*sc);
+      i+=1;
+    );
+    pdc_delay=in_fftsize*.5;
+    pdc_top_ch=2;
+    pdc_bot_ch=0;
+  );
+
+  last_slider_hold != slider_hold ? (
+    hold_state = slider_hold;
+    last_slider_hold = slider_hold;
+  );
+  last_slider_update != slider_update ? (
+    last_slider_update=slider_update;
+    slider_update ? hold_state=1;
+  );
+  
+  autoupdate_pos == 0 ? autoupdate_pos = slider_autoupdate;
+  
+  autoupdate_pos += samplesblock/srate;
+  (trigger&1) ? (
+    last_slider_hold = slider_hold = hold_state=1;
+    last_slider_update = slider_update=0;
+  ) : (trigger&8) ? (
+    last_slider_hold = slider_hold = hold_state=0;
+  ) : (trigger&4) || (slider_autoupdate>0 && autoupdate_pos>=slider_autoupdate) ? (
+    last_slider_update=slider_update=hold_state=1;    
+    autoupdate_pos=0.0001;
+  ) : (trigger&2) ? (
+    last_slider_hold = slider_hold = hold_state= (slider_hold?0:2);
+    last_slider_update = slider_update=0;
+    hold_state == 2 ? outstate_procpos = outstate_fftsize;
+  );
+
+  hold_state == 1 ? (
+    chan = 0;
+    overlap_sampleoffs = max(1,min(in_fftsize,(in_fftsize * (1-slider2))|0));
+    mixin1 = outstate_fftsize == in_fftsize ? slider_mixin : 1.0;
+    mixin2 = 1.0-mixin1;
+    wr_st = outstate_buf;
+    wr_ph = outstate_diff_buf;
+    loop(2, // per channel
+    
+      // analyze two blocks in fft_buf
+      rd_offset=in_fftsize;
+      wr = fft_buf;
+      loop(2,
+        i = analysis_hist_pos - rd_offset*2;
+        i < 0 ? i += analysis_hist_size;
+        window=window_in;
+        loop(in_fftsize,
+          wr[0] = analysis_hist[i+chan]*window[0];
+          wr[1] = 0;
+          wr+=2;
+          window+=1;
+          (i+=2)>=analysis_hist_size?i=0;
+        );
+        fft(wr - in_fftsize*2,in_fftsize);
+        rd_offset += overlap_sampleoffs;
+      );
+      
+      // save state + phase difference
+      rd = fft_buf;
+      rd_prev = fft_buf + in_fftsize*2;
+      sc = in_fftsize/overlap_sampleoffs;
+      loop(in_fftsize*.5,
+        real = rd[0];
+        imag = rd[1];
+        wr_st[0] = sqrt(sqr(real)+sqr(imag)) * mixin1 + mixin2*wr_st[0];
+        ang1 = atan2(imag,real);
+        wr_st[1] = ang1 * mixin1 + mixin2*wr_st[1];
+        wr_ph[0] = (ang1 - atan2(rd_prev[1],rd_prev[0])) * sc * mixin1 + mixin2*wr_ph[0];
+        rd+=2;
+        rd_prev+=2;
+        wr_ph+=1;
+        wr_st+=2;
+      );
+      chan += 1;
+    );
+    memcpy(window_out,window_in,in_fftsize);
+    outstate_fftsize = in_fftsize;
+    slider_autoupdate == 0.0 ? (
+      outstate_procpos = outstate_fftsize;
+    );
+    hold_state=2;
+  );
+
+fade_len = outstate_fftsize*.5;
+fade_delta = hold_state && slider_hold ? ((1-fade_pos)*2)/fade_len : (-fade_pos*2)/fade_len;
+outstate_overlap = max(1,min(outstate_fftsize,(outstate_fftsize * (1-slider3))|0));
+
+@sample
+at.cnt == gain.parmchg.chg_splpos ? gain.parmchg.process(4,slider4);
+at.cnt == dry.parmchg.chg_splpos ? dry.parmchg.process(5,slider5);
+at.cnt == dry2.parmchg.chg_splpos ? dry2.parmchg.process(6,slider6);
+
+analysis_hist[analysis_hist_pos]=spl0;
+analysis_hist[analysis_hist_pos+1]=spl1;
+(analysis_hist_pos += 2) >= analysis_hist_size ? analysis_hist_pos=0;
+
+fade_pos=min(1,max(0,fade_pos+fade_delta));
+
+fade_pos > 0 && (outstate_procpos+=1) >= outstate_overlap ? (
+  // synthesize and add to outqueue at outqueue_pos
+  adv = (2^slider_phasemul)*outstate_procpos/outstate_fftsize;
+  gain = 1/(outstate_fftsize*max(slider3,0.5));
+  chan = 0;
+  rd_st = outstate_buf;
+  rd_diff = outstate_diff_buf;
+  loop(2,
+    wr = fft_buf;
+    loop(outstate_fftsize*.5,
+      mag = rd_st[0]*gain;
+      phase = (rd_st[1] += rd_diff[0]*adv);
+      wr[0] = mag*cos(phase);
+      wr[1] = mag*sin(phase);
+      wr+=2;
+      rd_st+=2;
+      rd_diff+=1;
+    );
+    memset(wr,0,outstate_fftsize); // clear second half
+    ifft(fft_buf,outstate_fftsize);
+    rd = fft_buf;
+    window = window_out;
+
+    i = outqueue_pos;
+    loop(outstate_fftsize,
+      outqueue[i+chan] += window[0]*rd[0];   
+      rd += 2;
+      window+=1;
+      (i += 2) >= outqueue_size ? i=0;
+    );
+    chan += 1;
+  );
+  
+  outstate_procpos=0;
+);
+
+hist = analysis_hist + analysis_hist_pos - pdc_delay*2;
+hist < analysis_hist ? hist += analysis_hist_size;
+
+at.dry = (dry2.parmchg.val+(dry.parmchg.val-dry2.parmchg.val)*fade_pos);
+spl0 = outqueue[outqueue_pos] * gain.parmchg.val * fade_pos + hist[0] * at.dry;
+spl1 = outqueue[outqueue_pos+1] * gain.parmchg.val * fade_pos + hist[1] * at.dry;
+
+outqueue[outqueue_pos]=0;
+outqueue[outqueue_pos+1]=0;
+(outqueue_pos+=2) >= outqueue_size ? outqueue_pos=0;
+
+at.cnt+=1;
+gain.parmchg.val += gain.parmchg.dval;
+dry.parmchg.val += dry.parmchg.dval;
+dry2.parmchg.val += dry2.parmchg.dval;
+

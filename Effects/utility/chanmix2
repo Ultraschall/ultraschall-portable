@@ -1,0 +1,29 @@
+desc:Stereo Channel Volume/Pan/Polarity Control
+//tags: utility processing stereo phase polarity gain
+//author: Cockos
+
+slider1:0<-120,12,1>Left Volume (dB)
+slider2:-1<-1,1,0.01>Left Pan
+slider3:0<0,1,1{Normal,Invert}>Left Phase
+slider4:0<-120,12,1>Right Volume (dB)
+slider5:1<-1,1,0.01>Right Pan
+slider6:0<0,1,1{Normal,Invert}>Right Phase
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+
+llv=(2^(slider1/6))*min(1-slider2,1);
+lrv=(2^(slider4/6))*min(1-slider5,1);
+rlv=(2^(slider1/6))*min(1+slider2,1);
+rrv=(2^(slider4/6))*min(1+slider5,1);
+
+slider3?(llv=-llv; rlv=-rlv;);
+slider6?(lrv=-lrv; rrv=-rrv;);
+
+@sample
+s0=spl0; s1=spl1;
+spl0=s0*llv+s1*lrv; spl1=s0*rlv+s1*rrv;

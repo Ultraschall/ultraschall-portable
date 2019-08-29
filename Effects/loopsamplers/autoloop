@@ -1,0 +1,110 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc:Auto Looper
+//tags: processing sampler
+//author: Cockos
+
+slider1:0<-120,6,1>Wet (dB)
+slider2:0<-120,6,1>Dry (dB)
+slider3:-30<-100,60,1>Threshold (dB)
+slider4:100<1,1000,20>Threshold Length (ms)
+slider5:60<0,400,10>Edge Overlap (ms)
+slider6:100<0,4000,30>Minimum Length (ms)
+slider7:0<-100,6,1>Decay (dB)
+slider8:1<0,1,1{Disabled,Enabled}>Record
+slider9:0<0,1,1,{Disabled,Enabled}>Flush Loop On Playback Start
+
+in_pin:input
+out_pin:output (mono)
+out_pin:output (mono)
+
+@init
+    isplay=1; 
+    silcnt=rbufpos=pbuflen=pbuf=0; 
+    rbuf=1000000/2;
+    sscnt=sstot=playfade=pbufpos=0;
+    ext_noinit=0;
+
+@serialize
+
+file_var(0,isplay);
+file_var(0,pbuf);
+file_var(0,pbuflen);
+file_var(0,playfade);
+isplay ? file_mem(0,pbuf,pbuflen);
+
+
+
+@slider
+    wet=2 ^ (slider1/6);
+    dry=2 ^ (slider2/6);
+    silthres=2 ^ (slider3/6); 
+    sillen=srate*slider4/1000; 
+    olsize=srate*slider5/1000; 
+    minsize=slider6*srate/1000;
+    decay=2 ^ (slider7/6); 
+    playfade=0;
+    ext_noinit=slider9<0.5;
+
+@sample
+
+s0=spl0;
+issil=abs(spl0) < silthres;
+
+slider8 ? (
+  isplay ? (
+     rbuf[sstot]=s0;
+     sstot+=1;
+
+     issil ? (
+         sscnt+=1;
+         sscnt > sstot*0.5 ? sstot=sscnt=0; // if our silent samples are a significant percent
+     );
+    
+     sstot > sillen ? (rbufpos=sstot; isplay=sstot=sscnt=silcnt=0; );
+  ) : (
+
+    rbuf[rbufpos]=spl0;
+
+    (rbufpos+=1) >= 500000 ? (
+      isplay=1;
+      pbuflen=rbufpos-silcnt;
+      tmp=rbuf; rbuf=pbuf; pbuf=tmp;
+      rbufpos=pbufpos=0;
+    );
+
+    issil ? (
+      (silcnt+=1) > sillen ? (
+         rbufpos > minsize ? (
+             isplay=1;
+             pbuflen=rbufpos-silcnt;
+             tmp=rbuf; rbuf=pbuf; pbuf=tmp;
+             rbufpos=0;
+             pbufpos=silcnt;
+         );
+         silcnt=0;
+      );
+    ) 
+    : 
+    silcnt=0;
+  );
+);
+
+isplay || playfade > 0 ? (
+
+  spl0= (pbuf[pbufpos]*=decay);
+
+  pbufpos < olsize ? (
+    tmpsc=pbufpos/olsize;
+    spl0=spl0*tmpsc + pbuf[pbuflen-olsize+pbufpos]*(1-tmpsc);
+  );
+
+  spl0=spl0*playfade;
+  playfade = isplay ? min(playfade+0.01,1) : max(playfade-0.01,0);
+  (pbufpos+=1) > (pbuflen-olsize-1) ? pbufpos=0;
+);
+
+spl0=spl0*wet + s0*dry;
+
+spl1=spl0;

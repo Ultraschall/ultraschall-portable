@@ -1,0 +1,1732 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<USDocBloc>
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Introduction</slug>
+        <title>Introduction</title>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Since Reaper 5, Reaper has proper video-editing support. In addition to that, Reaper has a plugin, called "Video Processor Plugin", that is focused on video-effect handling.
+            Though it is still in it's very early stages, it supports already a handful of useful effects that can be selected via the presets-selection.
+            It is also programmable. It opens up a small IDE-window, as part of the "Video-Processor-Plugin"-UI, in which you can put Eel-code(no Lua or Python!), that processes the video.
+
+            Unlike with other scripts, the scripts for the video processor plugin do not support the standard-reaper-API-commands, but have an own set of variables and functions. The list of functions can be reached by clicking into the IDE-window of the "video processor plugin" and hitting the F1-key.
+
+            Some general notes on the video-processor-plugin:
+            It has a very limited set of programmable UI-elements, means, only a knob (refer the param-variable for more details) at the time.
+            The plugin has also sometimes the behaviour of "added effects". That means: If you have several tracks whith video items and you put a video processor plugin on every track as track-FX, they do not only influence the video-items in this track. In fact, they also influence the video-items on the other tracks as well. If you have 10 tracks and every track has a video-effect as track-FX that turns the brightness down by 10%, the resulting image will be a black one. All effects added up each other (10 times -10% brightness).
+            This effect can be circumvented by putting the video-processor-plugin as item-FX, NOT as track-FX.
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            1. Introduction
+        </chapter_context>
+        <tags>video processor, eel2, introduction</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Coding Introduction</slug>
+        <title>Coding Introduction</title>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description>
+            To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin.
+            Next to it, on the left side of the editor-field, your parameter-knobs will appear(if you've defined some). 
+            Code for the Video-Processor-Plugin must be written in EEL, not in Lua or Python.
+            Example code, with a knob for turning the video on and off:
+                    <pre><code>
+                    // A small demo-script that turns video on&off
+                    //@amp;param1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
+
+                    frame=input_track(0); // variable frame set with the videoframe from the first 
+                                          // videoitem in the project at a given position
+              
+                    gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
+                                                           // to prevent from having the last frame(s) be shown indefinately
+
+                    //Now, put the picture to the framebuffer -> outputting the video
+                    gfx_blit(frame,  // the current video-frame
+                                1,   // don't preserve aspect-ratio
+                                0,0, // put upper right corner of the video at position 0,0
+                                project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
+                                                                          //   multiplied by the VideoOnOff-Parameter
+                                                                          //   1=video squeezed to 100% height & width 
+                                                                          //   0=video squeezed to 0% height & width
+                                );
+                      </code></pre>
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            1. Introduction
+        </chapter_context>
+        <tags>video processor, eel2, introduction</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>project_time</slug>
+        <title>project_time</title>
+        <functioncall prog_lang="eel2">project_time</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            project time in seconds
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, time, seconds</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>project_tempo</slug>
+        <title>project_tempo</title>
+        <functioncall prog_lang="eel2">project_tempo</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            current tempo in BPM
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, tempo, bpm</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>project_ts_num</slug>
+        <title>project_ts_num</title>
+        <functioncall prog_lang="eel2">project_ts_num</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            current time signature numerator
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, timesignature, numerator</tags>
+    </US_DocBloc>
+    
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>project_ts_denom</slug>
+        <title>project_ts_denom</title>
+        <functioncall prog_lang="eel2">project_ts_denom</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            current time signature denominator
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, timesignature, denominator</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>project_time_qn</slug>
+        <title>project_time_qn</title>
+        <functioncall prog_lang="eel2">project_time_qn</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            current project position in QN
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, position, qn, quantized</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>time</slug>
+        <title>time</title>
+        <functioncall prog_lang="eel2">time</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            item time in seconds (if in item)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, time, seconds</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>framerate</slug>
+        <title>framerate</title>
+        <functioncall prog_lang="eel2">framerate</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            project FPS (30.0, 29.97, etc)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, framerate</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>project_w</slug>
+        <title>project_w</title>
+        <functioncall prog_lang="eel2">project_w</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            project preferred video width (code can override this before drawing)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, width</tags>
+    </US_DocBloc>    
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>project_h</slug>
+        <title>project_h</title>
+        <functioncall prog_lang="eel2">project_h</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            project preferred video height (code can override this before drawing)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, height</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>project_wh_valid</slug>
+        <title>project_wh_valid</title>
+        <functioncall prog_lang="eel2">project_wh_valid</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, height, width, validity</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>colorspace</slug>
+        <title>colorspace</title>
+        <functioncall prog_lang="eel2">colorspace</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            current rendering colorspace, e.g. 'RGBA', 'YV12', or 'YUY2'. 
+            You can override this before drawing (or between drawing). 
+            
+            This may be set to 0 initially if the user has the Auto project colorspace set. 
+            It will be automatically changed if 0 and a drawing operation occurs or an input is successfully queried via input_info().
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, colorspace</tags>
+    </US_DocBloc>
+
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>param_wet</slug>
+        <title>param_wet</title>
+        <functioncall prog_lang="eel2">param_wet</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            if in FX form, wet/dry mix of effect. 
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, fx, parameter, dry, wet</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>param1..param24</slug>
+        <title>param1..param24</title>
+        <functioncall prog_lang="eel2">param1..param24</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Hold the values for the individual parameters, means param1 hold the value for parameter 1 .. param24 for parameter 24.
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, parameter, values</tags>
+    </US_DocBloc>
+
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_r</slug>
+        <title>gfx_r</title>
+        <functioncall prog_lang="eel2">gfx_r</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            current drawing color (red 0..1)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, gfx, red, drawing color</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_g</slug>
+        <title>gfx_g</title>
+        <functioncall prog_lang="eel2">gfx_g</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            current drawing color (green 0..1)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, gfx, green, drawing color</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_b</slug>
+        <title>gfx_b</title>
+        <functioncall prog_lang="eel2">gfx_b</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            current drawing color (blue 0..1)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, gfx, blue, drawing color</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_a</slug>
+        <title>gfx_a</title>
+        <functioncall prog_lang="eel2">gfx_a</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            current drawing color (alpha 0..1)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, gfx, alpha, drawing color</tags>
+    </US_DocBloc>
+
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_a2</slug>
+        <title>gfx_a2</title>
+        <functioncall prog_lang="eel2">gfx_a2</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            current drawing color alpha channel value (RGB-only, 0..1, defaults to 1)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, gfx, alpha, rgb, drawing color</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_mode</slug>
+        <title>gfx_mode</title>
+        <functioncall prog_lang="eel2">gfx_mode</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            drawing mode
+            
+                0 = normal
+                1 = additive
+                3 = multiply (very different in YUV vs RGBA)
+                17 = (dest + src*gfx_a)*.5 + .5 (only valid when using YUV colorspaces)
+                18 = dest + (src-0.5)*gfx_a*2.0 (only valid when using YUV colorspaces)
+                19 = absolute difference: abs(dest-src)*gfx_a (only valid when using YUV colorspaces)
+                0x100 (flag ORed to above mode) for blit() to enable filtering (if possible)
+                0x10000 (flag ORed to above mode) to use source alpha (only valid when using RGBA colorspace)
+                0x40000 (flag ORed to above mode) to use extra clamping in normal mode (for out of range alpha/gradient values)
+                0x80000 (flag ORed to above mode) to interpret gfx_r/gfx_g/gfx_b as YUV values (in YUV colorspaces)
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, normal, additive, multiply, yuv, rgba, alpha, blit, clamping, gradient, rgb, drawing mode</tags>
+    </US_DocBloc>
+    
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_dest</slug>
+        <title>gfx_dest</title>
+        <functioncall prog_lang="eel2">gfx_dest</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            destination image handle, or -1 for main framebuffer
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, destination, framebuffer, image, handle</tags>
+    </US_DocBloc>
+
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>input_count</slug>
+        <title>input_count</title>
+        <functioncall prog_lang="eel2">integer count_inputs = input_count()</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Returns number of inputs available (total), range [0..n)
+        </description>
+        <retvals>
+            integer count_inputs - the number of inputs available
+        </retvals>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, count, inputs</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>input_track_count</slug>
+        <title>input_track_count</title>
+        <functioncall prog_lang="eel2">integer count_tracks = input_track_count()</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Returns the number of available inputs on discrete tracks
+        </description>
+        <retvals>
+            integer count_tracks - the number of tracks available
+        </retvals>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, count, tracks</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>input_track</slug>
+        <title>input_track</title>
+        <functioncall prog_lang="eel2">integer input = input_track(integer track)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Returns input for bottommost item or FX on discrete-track track (0 is first track with video item above current, etc)
+        </description>
+        <retvals>
+            integer input - the input for bottomost item or FX
+        </retvals>
+        <parameters>
+            integer track - the track, whose bottommost item or FX you want
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, track, input, fx, bottommost, item</tags>
+    </US_DocBloc>
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>input_track_exact_count</slug>
+        <title>input_track_exact_count</title>
+        <functioncall prog_lang="eel2">nteger num_tracks = input_track_exact_count()</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Returns the number of tracks above the current track that could possibly contain video items.
+        </description>
+        <retvals>
+            integer num_tracks - the number of tracks above the current track, that could contain videoitems
+        </retvals>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, count, input, track, exact</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>input_track_exact</slug>
+        <title>input_track_exact</title>
+        <functioncall prog_lang="eel2">integer inputs = input_track_exact(integer track)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Returns input for bottommost item or FX on track relative to current track. 
+            
+            Returns -1000 if track does not contain any video items at the current time, or -10000 if no further tracks contain video.
+        </description>
+        <retvals>
+            integer inputs - the input for bottommost item or FX
+        </retvals>
+        <parameters>
+            integer track - the tracknumber, whose bottommost input you want
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, bottommost, input, fx, item, exact</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>input_next_item</slug>
+        <title>input_next_item</title>
+        <functioncall prog_lang="eel2">integer next_input = input_next_item(integer input)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Returns the next_input after input which is on a different item or track
+        </description>
+        <retvals>
+            integer next_input - the next input after input
+        </retvals>
+        <parameters>
+            integer input - the input whose next_input you want
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, input, next input</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>input_next_track</slug>
+        <title>input_next_track</title>
+        <functioncall prog_lang="eel2">integer next_input = input_next_track(integer input)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Returns the next_input after input which is on a different track.
+        </description>
+        <retvals>
+            integer next_input - the next input on a different track
+        </retvals>
+        <parameters>
+            integer input - the input, whose next input on a different track you want
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, next input, input, another track</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>input_ismaster</slug>
+        <title>input_ismaster</title>
+        <functioncall prog_lang="eel2">float fx_position = input_ismaster()</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain
+        </description>
+        <retvals>
+            float fx_position - 1.0, FX is on master chain; 2.0, FX is on monitoring FX chain
+        </retvals>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, position, fx, master chain, monitoring fx chain</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>input_info</slug>
+        <title>input_info</title>
+        <functioncall prog_lang="eel2">integer retval = input_info(integer input, integer w, integer h[, double srctime, double wet, double parm1, ...])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Returns 1 if input is available, sets w/h to dimensions. 
+            
+            If srctime specified, it will be set with the source-local time of the underlying media. 
+            
+            If input is a video processor in effect form, automated parameters can be queried via wet/parm1/...
+        </description>
+        <retvals>
+            integer retval - 1, if input is available
+        </retvals>
+        <parameters>
+            integer input - the input, whose information you want
+            integer w - width-dimension in pixels; will be set, if input is available
+            integer h - height-dimension in pixels; will be set, if input is available
+            optional double srctime - 
+            optional double wet - 
+            optional double parm1 - 
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, get, input, info, width, height, wet, parameters, sourcetime</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>input_get_name</slug>
+        <title>input_get_name</title>
+        <functioncall prog_lang="eel2">integer retval = input_get_name(integer input, string #str)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Gets the input take name or track name. returns >0 on success
+        </description>
+        <retvals>
+            integer retval - >0, if name can be gotten
+        </retvals>
+        <parameters>
+            integer input - the input, whose name you want to query
+            string #str - the pointer to a string-variable, into which the input-name shall be stored
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, input, name, query, get</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_img_alloc</slug>
+        <title>gfx_img_alloc</title>
+        <functioncall prog_lang="eel2">integer image_index = gfx_img_alloc([optional integer w, optional integer h, optional integer clear])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Returns an image index for drawing (can create up to 32 images). Contents of image undefined unless clear set.
+        </description>
+        <retvals>
+            integer image_index - the index of the newly created image
+        </retvals>
+        <parameters>
+            optional integer w - set the width in pixels
+            optional integer h - set the height in pixels
+            optional integer clear - clear the image, before using it
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, allocate, image, index, clear, dimensions, width, height</tags>
+    </US_DocBloc>
+    
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_img_resize</slug>
+        <title>gfx_img_resize</title>
+        <functioncall prog_lang="eel2">integer image_handle = gfx_img_resize(integer handle, integer w, integer h[, optional integer clear])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Sets an image size (handle can be -1 for main framebuffer). 
+            
+            Contents of image undefined after resize, unless clear set. 
+            
+            Clear=-1 will only clear if resize occurred. 
+            
+            Returns the image handle (if handle is invalid, returns a newly-allocated image handle)
+        </description>
+        <retvals>
+            integer image_handle - the image-handle of the resized image; will be a newly allocated one, if parameter handle was invalid
+        </retvals>
+        <parameters>
+            integer handle - the handle of the image, that you want to resize
+            integer w - the new width in pixels
+            integer h - the new height in pixels
+            optional integer clear - set to clear the image; -1, clears only, if resize has occurred.
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, resize, image, width, height, clear</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_img_hold</slug>
+        <title>gfx_img_hold</title>
+        <functioncall prog_lang="eel2">gfx_img_hold(integer handle)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
+            Retains (cheaply) a read-only copy of an image in handle. 
+            
+            This copy should be released using [gfx\_img\_free()](#gfx_img_free) when finished. Up to 32 images can be held.
+        </description>
+        <parameters>
+            integer handle - the handle, that you want to make read-only
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, hold, image, read-only</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_img_getptr</slug>
+        <title>gfx_img_getptr</title>
+        <functioncall prog_lang="eel2">integer unique_identifier = gfx_img_getptr(integer handle)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
+            Gets a unique identifier for an image, valid for while the image is retained. 
+            
+            Can be used (along with [gfx\_img_hold](#gfx_img_hold)) to detect when frames change in a low frame rate video
+        </description>
+        <retvals>
+            integer unique_identifier - the unique identifier for image "handle"
+        </retvals>
+        <parameters>
+            integer handle - the image-handle, of which you want to have a unique identifier
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, image, handle, unique identifier</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_img_free</slug>
+        <title>gfx_img_free</title>
+        <functioncall prog_lang="eel2">gfx_img_free(integer handle)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Releases an earlier allocated image index.
+        </description>
+        <parameters>
+            integer handle - the image handle, that you want to delete from further use
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, free, delete, image, handle</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_img_info</slug>
+        <title>gfx_img_info</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_img_info(integer handle, integer #w, integer #h)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Gets dimensions of image, returns 1 if valid (resize it if it's inexplicably invalidated)
+        </description>
+        <retvals>
+            integer retval - 1, if it's a valid image-handle
+        </retvals>
+        <parameters>
+            integer handle - the image-handle, whose dimensions you want to retrieve
+            integer #w - the pointer of a variable, into which the width in pixels shall be stored
+            integer #h - the pointer of a variable, into which the height in pixels shall be stored
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, image, dimension, get, height, width</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_set</slug>
+        <title>gfx_set</title>
+        <functioncall prog_lang="eel2">gfx_set(float r,[optional float g, optional float b, optional float a=1, integer mode=0, optional integer dest, optional float a2=1])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Updates r/g/b/a/mode to values specified, dest is only updated if parameter specified.
+        </description>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            float r - the red-value(0 to 1); if set as the only parameter, this will be used for g and b as well
+            optional float g - the green-value(0 to 1); if unset, the value of r will be used
+            optional float b - the blue-value(0 to 1); if unset, the value of r will be used
+            optional float a=1 - the alpha-value(0 to 1); if unset, the value defaults to 1
+            integer mode - see [gfx_mode](#gfx_mode) for the available modes; if unset, defaults to 0
+            optional integer dest - the destination, into which to draw
+            optional float a2 - the alpha2-value, see[gfx_a2](#gfx_a2); if unset, defaults to 1
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, set, red, green, blue, alpha, alpha2, destination, mode</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_blit</slug>
+        <title>gfx_blit</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_blit(integer input[, optional integer preserve_aspect=0, integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional integer srcw, optional integer srch])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Draws input to framebuffer. preserve_aspect=-1 for no fill in pad areas
+        </description>
+        <retvals>
+            integer retval - 0, if blitting is impossible; 1, if blitting was successful
+        </retvals>
+        <parameters>
+            integer input - the input, that shall be blit into the framebuffer
+            optional integer preserve_aspect - 0, preserve aspect ratio; -1, no fill in pad areas
+            optional integer x - the x-position in pixels, at which the input shall be blit to
+            optional integer y - the y-position in pixels, at which the input shall be blit to
+            optional integer w - the width in pixels, with which the input shall be blit to
+            optional integer h - the height in pixels, with which the input shall be blit to
+            optional integer srcx - the x-offset in the source pixels, from which the input shall be blit from
+            optional integer srcy - the y-offset in the source pixels, from which the input shall be blit from
+            optional integer srcw - the width-offset in the source pixels, from which the input shall be blit from
+            optional integer srch - the height-offset in the source pixels, from which the input shall be blit from
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, blit, height, width, x, y, aspect ratio, input</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_fillrect</slug>
+        <title>gfx_fillrect</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_fillrect(integer x, integer y, integer w, integer h)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
+            Fills a rectangle with the current color/mode/alpha set by [gfx\_set](#gfx_set)
+        </description>
+        <retvals>
+            integer retval - 0, in case of an error; 1, in case of success
+        </retvals>
+        <parameters>
+            integer x - the x-position of the rectangle in pixels
+            integer y - the y-position of the rectangle in pixels
+            integer w - the width of the rectangle in pixels
+            integer h - the height of the rectangle in pixels
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_procrect</slug>
+        <title>gfx_procrect</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_procrect(integer x, integer y, integer w, integer h, table channel_tab[, optional integer mode])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Processes a rectangle with 768-entry channel table [256 items of 0..1 per channel]. 
+            
+            Specify mode=1 to use Y value for U/V source channels (colorization mode).
+        </description>
+        <retvals>
+            integer retval - unknown
+        </retvals>
+        <parameters>
+            integer x - the x-position of the rectangle in pixels
+            integer y - the y-position of the rectangle in pixels
+            integer w - the width of the rectangle in pixels
+            integer h - the height of the rectangle in pixels
+            table channel_tab - a 768-entry-table which will be used for the processing
+            integer mode - 1, to use Y-value for U/V-source-channels
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, processing rectangle, mode</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_evalrect</slug>
+        <title>gfx_evalrect</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_evalrect(integer x, integer y, integer w, integer h, string code_string[, optional integer flags, optional integer src, optional string init_code_string, optional string src2])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Processes a rectangle with code_string being executed for every pixel/pixel-group. 
+            
+            Returns -1 if code_string failed to compile. 
+            
+            Code should reference per pixel values (0-255, unclamped), depending on colorspace:
+                RGBA:  r/g/b/a (0-255, unclamped)
+                YUY2: y1,y2, u, v (0-255, unclamped; u/v are centered at 128)
+                YV12: y1-y4, u, v (0-255, unclamped; u/v are centered at 128)
+            
+            example for a codestring:
+                "r[0]+=1; g[256]+=1; b[512]+=1;
+                (0.299*r + 0.587*g + 0.114*b)[768] += 1;"
+            
+
+            Additional options:
+                flags|=1 in order to prevent multiprocessing (if your routine needs  to process pixels in-order)
+                flags|=2 to ignore output (analysis-only). This is only valid when not using src2 and not using one of the 4/8 modes.
+                flags|=4,8 -- only valid in RGBA/YV12, and only if src/src2 not specified. flags&8 means process in vertical slices (top to bottom unless flags&4). flags&4 but not flags&8 means right-to-left. In each case y1-y4 are reordered for convenience (the same filter code can typically be used in various orientations).
+                If init_code_string specified, it will be executed in each thread context before processing
+                If src specified (and >= -1), sr/sg/sb/sa, sy1/su/sv etc will be available to read. In this case only the intersection of valid rectangles between src and the destination buffer will be processed. 
+                If src and src2 specified (and >= -1), s2r/s2g/s2b/s2a, s2y1/s2u/s2v etc will also be available to read. 
+                Note: variables _1-_99 are thread-local variables which will always be initialized to 0, and _0 will be initialized to the thread index (usually 0 or 1)
+        </description>
+        <retvals>
+            integer retval - -1, in case of an error(compilation of the code_string was unsuccessful)
+        </retvals>
+        <parameters>
+            integer x - the x-position of the rectangle
+            integer y - the y-position of the rectangle
+            integer w - the width of the rectangle
+            integer h - the height of the rectangle
+            string code_string - a string with code, with which the rectangle shall be processed
+            optional integer flags - flags, that influence the processing
+            optional integer src - the source-image
+            optional string init_code_string - a code-string, that shall be used during initialization
+            optional string src2 - a second source-image
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, eval, rect, source, codestring, process, rectangle</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_gradrect</slug>
+        <title>gfx_gradrect</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_gradrect(integer x, integer y, integer w, integer h, float r, float g, float b, float a [, optional float drdx, optional float dgdx, optional float dbdx, optional float dadx, optional float drdy, optional float dgdy, optional float dbdy, optional float dady])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Fills rectangle. r/g/b/a supply color at top left corner, drdx (if specified) is amount red changes per X-pixel, etc.
+        </description>
+        <retvals>
+            integer retval - unknown
+        </retvals>
+        <parameters>
+            integer x - the x-position of the rectangle in pixels
+            integer y - the y-position of the rectangle in pixels
+            integer w - the width of the rectangle in pixels
+            integer h - the height of the rectangle in pixels
+            float r - the red-color-value(0-1)
+            float g - the green-color-value(0-1)
+            float b - the blue-color-value(0-1)
+            float a - the alpha-color-value(0-1)
+            optional float drdx - the amount of delta-value, how the red-color shall be changed each pixel in x-direction
+            optional float dgdx - the amount of delta-value, how the green-color shall be changed each pixel in x-direction
+            optional float dbdx - the amount of delta-value, how the blue-color shall be changed each pixel in x-direction
+            optional float dadx - the amount of delta-value, how the alpha-color shall be changed each pixel in x-direction
+            optional float drdy - the amount of delta-value, how the red-color shall be changed each pixel in y-direction
+            optional float dgdy - the amount of delta-value, how the green-color shall be changed each pixel in y-direction
+            optional float dbdy - the amount of delta-value, how the blue-color shall be changed each pixel in y-direction
+            optional float dady - the amount of delta-value, how the alpha-color shall be changed each pixel in y-direction
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, rectangle, gradient, filled</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_rotoblit</slug>
+        <title>gfx_rotoblit</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_rotoblit(integer srcidx, float angle [, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional integer w, optional integer h, optional integer cliptosrcrect, optional integer centxoffs, optional integer centyoffs])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
+            Blits with rotate. This function behaves a bit odd when the source and destination sizes/aspect ratios differ, so [gfx\_deltablit()](#gfx_deltablit) is generally more useful.
+        </description>
+        <retvals>
+            integer retval - 0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful
+        </retvals>
+        <parameters>
+            integer srcidx - the source-image, that shall be blit as rotated image
+            float angle - the angle by width the image shall be rotated
+            optional integer x - the x-position in pixels, at which the blitting shall be put to
+            optional integer y - the y-position in pixels, at which the blitting shall be put to
+            optional integer w - the width in pixels of the rotated-blit-image; affects stretching of the image!
+            optional integer h - the height in pixels of the rotated-blit-image; affects stretching of the image!
+            optional integer srcx - the x-position in pixels in the source-image, from which to blit from
+            optional integer srcy - the y-position in pixels in the source-image, from which to blit from
+            optional integer w - the width in pixels of the source-image, from which to blit from; affects stretching of the image!
+            optional integer h - the height in pixels of the source-image, from which to blit from; affects stretching of the image!
+            optional integer cliptosrcrect=0 - clips the source-image rectangle; 1, clip; 0, don't clip
+            optional integer centxoffs=0 - adds an offset to the center of the image at x-position in pixels
+            optional integer centyoffs=0 - adds an offset to the center of the image at x-position in pixels
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, rotation, blit, image</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_deltablit</slug>
+        <title>gfx_deltablit</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_deltablit(integer srcidx, integer x, integer y, integer w, integer h, integer srcx, integer srcy, integer dsdx, integer dtdx, integer dsdy, integer dtdy, integer dsdxdy, integer dtdxdy[, optional integer dadx, optional integer dady, optional integer dadxdy])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Blits with source pixel transformation control. 
+            
+            S and T refer to source coordinates: 
+                dsdx is how much the source X position changes with each X destination pixel, 
+                dtdx is how much the source Y position changes with each X destination pixel, etc.
+                
+            All of the S, T and A parameters accept negative values as well.
+        </description>
+        <retvals>
+            integer retval - 0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful
+        </retvals>
+        <parameters>
+            integer srcidx - the index of the image, from which you want to deltablit
+            integer x - the x-position of the blitted-image in pixels
+            integer y - the y-position of the blitted-image in pixels
+            integer w - the width of the blitted-image in pixels
+            integer h - the height of the blitted-image in pixels
+            integer srcx - the x-offset in pixels of the source-image, that shall be blitted; use 0 for original picture position
+            integer srcy - the y-offset in pixels of the source-image, that shall be blitted; use 0 for original picture position
+            float dsdx - the source X position change with each X destination pixel; use 1 for original picture position
+            float dtdx - the source Y position change with each X destination pixel; use 0 for original picture position
+            float dsdy - the source X position change with each Y destination pixel; use 1 for original picture position
+            float dtdy - the source Y position change with each Y destination pixel; use 0 for original picture position
+            float dsdxdy - affects x and y-direction at the same time and can be produced for curved images; use 0 for original picture position
+            float dtdxdy - affects x and y-direction at the same time and can be produced for curved images; use 0 for original picture position
+            optional float dadx - the source-alpha change with each X destination pixel; can be used for noise-effects; use 0 for original picture position
+            optional float dady - the source-alpha change with each Y destination pixel; can be used for noise-effects; use 0 for original picture position
+            optional float dadxdy - affects x and y-direction at the same time; can be used for noise-effects; use 0 for original picture position
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, delta, blit, additive, transformation</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_xformblit</slug>
+        <title>gfx_xformblit</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_xformblit(integer srcidx, integer x, integer y, integer w, integer h,  integer wdiv, integer hdiv, table tab[, optional integer wantalpha])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Blits with a transformation table. 
+            tab is wdiv*hdiv*2 table of source point coordinates in float-values.
+            
+            If wantalpha=1, tab is wdiv*hdiv*3 table of src points including alpha for each point.
+        </description>
+        <retvals>
+            integer retval - 0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful
+        </retvals>
+        <parameters>
+            integer srcidx - the index of the image, that you want to transformblit
+            integer x - x-position in pixels of the transform-blitted-image
+            integer y - y-position in pixels of the transform-blitted-image
+            integer w - width in pixels of the transform-blitted-image
+            integer h - height in pixels of the transform-blitted-image
+            integer wdiv - the divisor of the table tab for width transformation
+            integer hdiv - the divisor of the table tab for height transformation
+            table tab - a table with all the transform-values in them, who are float and can be negative as well
+            optional integer wantalpha - 0, transform the image only; 1, transform on an alpha-level
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, transformation, blit</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_keyedblit</slug>
+        <title>gfx_keyedblit</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_keyedblit(integer input[, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional float kv1, optional float kv2, optional float kv3, optional float kv4])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colorspace:
+                YV12/YUY2:
+                    kv1 is U target (-0.5 default)
+                    kv2 is V target (-0.5 default)
+                    kv3 is closeness-factor (0.4 default)
+                    kv4 is the gain (2.0 default)
+                RGBA:
+                    kv1 is green-factor (1.0 default)
+                    kv2 is blue-factor (-1.0 default)
+                    kv3 is offset (-1.0 default)
+                    kv4 enables spill removal (1.0 default)
+        </description>
+        <retvals>
+            integer retval - unknown
+        </retvals>
+        <parameters>
+            integer input - the image, to which the chroma-key shall be applied to
+            optional integer x - the x-position of the chroma-key-area in pixels
+            optional integer y - the y-position of the chroma-key-area in pixels
+            optional integer w - the width-position of the chroma-key-area in pixels
+            optional integer h - the height-position of the chroma-key-area in pixels
+            optional integer srcx - the offset-x-position of the source-image
+            optional integer srcy - the offset-y-position of the source-image
+            optional float kv1 - U target(YV12/YUV2) / green(RGBA)
+            optional float kv2 - V target(YV12/YUV2) / blue(RGBA)
+            optional float kv3 - closeness-factor(YV12/YUV2) / offset(RGBA)
+            optional float kv4 - gain(YV12/YUV2) / spill removal(RGBA)
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, chroma, input, image, key, yuv, rgba, yv12, colorspace</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_destkeyedblit</slug>
+        <title>gfx_destkeyedblit</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_destkeyedblit(input input[, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional float kv1, optional float kv2, optional float kv3, optional float kv4])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
+            Chroma-key blits, using destination color as key. ignores gfx\_a and gfx\_mode. 
+            
+            See [gfx\_keyedblit()](#gfx_keyedblit) for kv1-kv4 explanation.
+        </description>
+        <retvals>
+            integer retval - unknown
+        </retvals>
+        <parameters>
+            integer input - the image, to which the chroma-key shall be applied to
+            optional integer x - the x-position of the chroma-key-area in pixels
+            optional integer y - the y-position of the chroma-key-area in pixels
+            optional integer w - the width-position of the chroma-key-area in pixels
+            optional integer h - the height-position of the chroma-key-area in pixels
+            optional integer srcx - the offset-x-position of the source-image
+            optional integer srcy - the offset-y-position of the source-image
+            optional float kv1 - U target(YV12/YUV2) / green(RGBA)
+            optional float kv2 - V target(YV12/YUV2) / blue(RGBA)
+            optional float kv3 - closeness-factor(YV12/YUV2) / offset(RGBA)
+            optional float kv4 - gain(YV12/YUV2) / spill removal(RGBA)
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, chroma key, yuv, rgba, yv12, input, image</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_setfont</slug>
+        <title>gfx_setfont</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_setfont(integer pxsize[, optional string #fontname, optional integer flags)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Sets a font. flags are specified as a multibyte integer, using a combination of the following flags (specify multiple as 'BI' or 'OI' or 'OBI' etc):
+                'B' - Bold
+                'I' - Italics
+                'R' - Blur
+                'V' - Invert
+                'M' - Mono
+                'S' - Shadow
+                'O' - Outline
+        </description>
+        <retvals>
+            integer retval - unknown
+        </retvals>
+        <parameters>
+            integer pxsize - the size of the font in pixels
+            optional string #fontname - the name of the font you want to use
+            optional integer flags - the flags, that can influence the design of the font. Just put one or more of the following into single quotes
+                                   -     'B' - Bold
+                                   -     'I' - Italics
+                                   -     'R' - Blur
+                                   -     'V' - Invert
+                                   -     'M' - Mono
+                                   -     'S' - Shadow
+                                   -     'O' - Outline
+                                   -    example: 'BI'
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, font, size, flags, bold, italics, blue, invert, mono, shadow, outline, set</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_str_measure</slug>
+        <title>gfx_str_measure</title>
+        <functioncall prog_lang="eel2">integer string_length = gfx_str_measure(string #string[, optional integer #w, optional integer #h])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Measures the size of #string, returns width
+        </description>
+        <retvals>
+            integer string_length - the length of the string in pixels
+        </retvals>
+        <parameters>
+            string #string - the string, whose width/height you want to know; it depends on the currently set font and fontsize
+            optional integer #w - a reference to a variable, that shall be set with the width in pixels by the function gfx_str_measure
+            optional integer #h - a reference to a variable, that shall be set with the height in pixels by the function gfx_str_measure
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, string, measure, width, height, pixels</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_str_draw</slug>
+        <title>gfx_str_draw</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_str_draw(string #string[, optional integer x, optional integer y, optional float fxc_r, optional float fxc_g, optional float fxc_b])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Draw string, fxc_r/g/b are the FX color if Shadow/Outline are set in the font
+        </description>
+        <retvals>
+            integer retval - unknown
+        </retvals>
+        <parameters>
+            string #string - the string, that shall be drawn into the video
+            optional integer x - x-position of the string, in pixels
+            optional integer y - y-position of the string, in pixels
+            optional float fxc_r - red-color-value for outline/shadow, if set in the current font(0-1)
+            optional float fxc_g - green-color-value for outline/shadow, if set in the current font(0-1)
+            optional float fxc_b - blue-color-value for outline/shadow, if set in the current font(0-1)
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, string, draw, shadow</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gfx_getpixel</slug>
+        <title>gfx_getpixel</title>
+        <functioncall prog_lang="eel2">integer retval = gfx_getpixel(integer input, integer x, integer y, integer #v1, integer #v2, integer #v3[, optional integer #v4])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Gets the value of a pixel from input at x,y. 
+            
+            v1/v2/v3 will be YUV or RGB (v4 can be used to get Alphavalue), returns 1 on success
+        </description>
+        <retvals>
+            integer retval - 0, getting the pixel wasn't successful; 1, getting the pixel was successful
+        </retvals>
+        <parameters>
+            integer input - the input-image from which to get the pixel
+            integer x - the x-position of the pixel, whose color you want
+            integer y - the y-position of the pixel, whose color you want
+            integer #v1 - a pointer to a variable, into which gfx_getpixel writes the red-value
+            integer #v2 - a pointer to a variable, into which gfx_getpixel writes the green-value
+            integer #v3 - a pointer to a variable, into which gfx_getpixel writes the blue-value
+            optional integer #v4 - a pointer to a variable, into which gfx_getpixel writes the alpha-value
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, get pixel, input</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>rgb2yuv</slug>
+        <title>rgb2yuv</title>
+        <functioncall prog_lang="eel2">integer retval = rgb2yuv(float #r, float #g, float #b)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Converts r,g,b to YUV, does not clamp [0..1]
+        </description>
+        <retvals>
+            integer retval - unknown
+        </retvals>
+        <parameters>
+            float #r - a pointer-variable; put the r-value into it, pass it to the function and it will replace the r-value with the y value
+            float #g - a pointer-variable; put the g-value into it, pass it to the function and it will replace the g-value with the u value
+            float #b - a pointer-variable; put the b-value into it, pass it to the function and it will replace the b-value with the v value
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, convert, rgb, yuv</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>yuv2rgb</slug>
+        <title>yuv2rgb</title>
+        <functioncall prog_lang="eel2">integer retval = yuv2rgb(float #r, float #g, float #b)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Converts YUV to r,g,b, not clamping [0..1]
+        </description>
+        <retvals>
+            integer retval - unknown
+        </retvals>
+        <parameters>
+            float #y - a pointer-variable; put the y-value into it, pass it to the function and it will replace the y-value with the r value
+            float #u - a pointer-variable; put the u-value into it, pass it to the function and it will replace the u-value with the g value
+            float #v - a pointer-variable; put the v-value into it, pass it to the function and it will replace the v-value with the b value
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            3. Specific Functions
+        </chapter_context>
+        <tags>video processor, eel2, specific functions, yuv, rgb, convert</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>fft</slug>
+        <title>fft</title>
+        <functioncall prog_lang="eel2">integer retval = fft(table buffer, integer size)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Performs a FFT on the data in the local memory buffer at the offset specified by the first parameter. 
+            The size of the FFT is specified by the second parameter, which must be a power of two 16-32768. 
+            The outputs are permuted, so if you plan to use them in-order, call fft_permute(buffer, size) before and fft_ipermute(buffer,size) after in-order use. 
+            Inputs or outputs will need to be scaled down by 1/size. 
+            Notes:
+                fft()/ifft() require real / imaginary input pairs, so a 256 point FFT actually works with 512 items.
+                fft()/ifft() must NOT cross a 65,536 item boundary, so be sure to specify the offset accordingly.
+        </description>
+        <retvals>
+            integer retval - value of buffer, if buffer is only one variable instead of a table
+        </retvals>
+        <parameters>
+            table buffer - a table, with all values that shall be processed using the FFT
+            integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, fft</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ifft</slug>
+        <title>ifft</title>
+        <functioncall prog_lang="eel2">integer retval = ifft(table buffer, integer size)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Performs an inverse FFT. For more information see fft().
+        </description>
+        <retvals>
+            integer retval - value of buffer, if buffer is only one variable instead of a table
+        </retvals>
+        <parameters>
+            table buffer - a table, with all values that shall be processed using the iFFT
+            integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, inverse, fft, ifft</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>fft_real</slug>
+        <title>fft_real</title>
+        <functioncall prog_lang="eel2">integer retval = fft_real(table buffer, integer size)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Performs a real FFT, taking size input samples and producing size/2 complex output pairs. Usually used along with fft_permute(size/2). 
+            Inputs/outputs will need to be scaled by 0.5/size. The first output complex pair will be (DC, nyquist).
+        </description>
+        <retvals>
+            integer retval - value of buffer, if buffer is only one variable instead of a table
+        </retvals>
+        <parameters>
+            table buffer - a table, with all values that shall be processed using the FFT
+            integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, real, fft</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ifft_real</slug>
+        <title>ifft_real</title>
+        <functioncall prog_lang="eel2">integer retval = ifft_real(table buffer, integer size)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Performs an inverse FFT, taking size/2 complex input pairs (the first being DC, nyquist) and producing size real output values. 
+            Usually used along with fft_ipermute(size/2).
+        </description>
+        <retvals>
+            integer retval - value of buffer, if buffer is only one variable instead of a table
+        </retvals>
+        <parameters>
+            table buffer - a table, with all values that shall be processed using the iFFT
+            integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, ifft, inverse, fft</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>fft_permute</slug>
+        <title>fft_permute</title>
+        <functioncall prog_lang="eel2">integer retval = fft_permute(table buffer, integer size)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Permutes the output of fft() to have bands in-order.
+        </description>
+        <retvals>
+            integer retval - value of buffer, if buffer is only one variable instead of a table
+        </retvals>
+        <parameters>
+            table buffer - a table, with all values that shall be processed using the FFT
+            integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, fft, permute, permutation</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>fft_ipermute</slug>
+        <title>fft_ipermute</title>
+        <functioncall prog_lang="eel2">integer retval = fft_ipermute(buffer,size)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Permutes the input for ifft(), taking bands from in-order to the order ifft() requires. See fft() for more information.
+        </description>
+        <retvals>
+            integer retval - value of buffer, if buffer is only one variable instead of a table
+        </retvals>
+        <parameters>
+            table buffer - a table, with all values that shall be processed using the FFT
+            integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, fft, ifft, permute, permutation, inverse</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>convolve_c</slug>
+        <title>convolve_c</title>
+        <functioncall prog_lang="eel2">integer retval = convolve_c(table dest, table src, integer size)</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Multiplies each of size complex pairs in dest by the complex pairs in src. Often used for convolution.
+        </description>
+        <retvals>
+            integer retval - unknown
+        </retvals>
+        <parameters>
+            table dest - the table, in which the function will write the destination-values
+            table src - the table, from which the function will get the destination-values
+            integer size - the size of the tables
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, convolve, convolution</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>gmem</slug>
+        <title>gmem</title>
+        <functioncall prog_lang="eel2">gmem</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            gmem[] can be used for a shared memory buffer (similar to JSFX) -- 
+            
+            you can specify a named buffer which can be shared with EEL2 ReaScripts and JSFX, by using:
+                //@gmem=sharedBufferName
+            on a line by itself. 
+            
+            Note that when synchronizing with ReaScripts or JSFX, all processing is asynchronous, so your code will have to deal with 
+            synchronization issues (including vast differences between project_time and playback_position, and including race conditions).
+            
+            To get/set values from gmem, use gmem[index].
+            Example:
+                variable=gmem[7]; // put the value from gmem with index 7 into variable
+                gmem[8]=project_time; // put the current project_time into gmem with index 8
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, gmem, global shared memory, eel2, jsfx, reascript, lua</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ui_get_state</slug>
+        <title>ui_get_state</title>
+        <functioncall prog_lang="eel2">integer retval = ui_get_state(integer #ctx[, optional integer #mouse_x, optional integer #mouse_y, optional integer force_frame_in, optional integer #mouse_wheel_state, optional integer #mouse_hwheel_state])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Gets UI state and context, only usable from Monitoring FX (returns 0 if used from track). 
+            Returns state 
+               (1/2/4 are l/r/m mouse buttons, 
+                8/16/32 are ctrl/shift/alt, 
+                1024 is whether configuration for this processor is visible). 
+                
+            If 'ctx' set to -1, context is video window and any returned mouse coordinates are [0..1] (where 0,0 is upper left corner, 1,1 is lower right corner of the video area). 
+            If 'ctx' is set to [1..24], it means the user is editing that knob. 
+            If force_frame_in is specified and is positive, then the processor will be re-executed in this amount of time (even if no new video source is available), otherwise only updated during playback or change of the video.
+        </description>
+        <retvals>
+            integer retval - unknown
+        </retvals>
+        <parameters>
+            integer #ctx - -1, mouse is above video-processor; 1-24, mouse is changing knob 1-24; 0, mouse is outside the video-window
+            optional integer #mouse_x - ui_get_state puts into this variable the current x-mouse-position(0-1)/knob-control area-xposition, when ctc>-1
+            optional integer #mouse_y - ui_get_state puts into this variable the current y-mouse-position(0-1)/knob-control area-yposition, when ctc>-1
+            optional number force_frame_in - positive, update getting the ui-state even if no video is available; in seconds
+            optional integer #mouse_wheel_state - ui_get_state puts into this variable the current mouse-wheel-state
+            optional integer #mouse_hwheel_state - ui_get_state puts into this variable the current horizontal-mouse-wheel-state
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, ui_state, video window, mouse, knobs, mousewheel, mouse horizontal wheel</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>time_precise</slug>
+        <title>time_precise</title>
+        <functioncall prog_lang="eel2">integer retval = time_precise([optional float #val])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Sets the parameter (or a temporary buffer if omitted) to a system-local timestamp in seconds, and returns a reference to that value. 
+            
+            The granularity of the value returned is system defined (but generally significantly smaller than one second).
+        </description>
+        <retvals>
+            integer retval - the precise time
+        </retvals>
+        <parameters>
+            optional float - a pointer to a variable, into which time_precise can write the current time
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, time precise</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>on_parameter_change</slug>
+        <title>on_parameter_change</title>
+        <functioncall prog_lang="eel2">on_parameter_change(float pvar[, optional integer isdone])</functioncall>
+        <requires>
+            Reaper=5.97
+        </requires>
+        <description prog_lang="*">
+            Notifies that the parameter pointed to by pvar (must be param1..param24 or a user-defined parameter) has changed. 
+            
+            Specify isdone=1 when done modifying parameter (e.g. releasing touch)
+        </description>
+        <parameters>
+            float pvar - the parameter, whose parameter-change you want to notify
+            optional integer isdone - 1, when done modifying parameter
+        </parameters>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            4. Advanced Functions
+        </chapter_context>
+        <tags>video processor, eel2, advanced functions, time precise, parameter, change, notify</tags>
+    </US_DocBloc>
+    
+</USDocBloc>

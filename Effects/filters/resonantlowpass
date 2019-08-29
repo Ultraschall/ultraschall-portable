@@ -1,0 +1,30 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Resonant Lowpass Filter
+//tags: filter
+//author: Cockos
+
+slider1:1000<20,20000>Frequency (Hz)
+slider2:0.8<0,1>Resonance
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+  cut_lp = slider1*2 / (srate); 
+  //res_lp!=slider2 ? n3=n4=rn3=rn4=0;
+  res_lp=slider2;
+  fb_lp=res_lp+res_lp/(1-cut_lp);
+
+@sample
+
+n3=n3+cut_lp*(spl0-n3+fb_lp*(n3-n4));
+n4=n4+cut_lp*(n3-n4);
+spl0=n4;
+
+rn3=rn3+cut_lp*(spl1-rn3+fb_lp*(rn3-rn4));
+rn4=rn4+cut_lp*(rn3-rn4);
+spl1=rn4;

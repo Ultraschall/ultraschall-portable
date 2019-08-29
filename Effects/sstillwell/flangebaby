@@ -1,0 +1,152 @@
+// Copyright 2007, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:Flange Baby
+desc:Flange Baby [Stillwell]
+//tags: modulation flanger
+//author: Stillwell
+
+slider1:5<1,10,0.01>Flange (Delay)
+slider2:0.5<0,1,0.01>Depth
+slider3:0<-1,1,0.01>Feedback
+slider4:0<0,10,0.01>Speed (Hz) (0=tempo sync)
+slider5:0.5<0,1,0.01>Mix
+slider6:0<0,5,0.01>Channel Offset
+slider7:0.25<0.0625,4,0.0625>Tempo Sync (fraction of whole note)
+slider8:0<0,1,1{Triangle,Sine}>LFO Waveform
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  MAX_WG_DELAY = 16384;
+  i = 0;
+  counter = 0;
+  buffer0 = 2048;
+  buffer1 = buffer0 + MAX_WG_DELAY;
+  memset(buffer0,0,MAX_WG_DELAY);
+  memset(buffer1,0,MAX_WG_DELAY);
+  feedback = 0;
+  delay = 5 ;
+  tdelay0 = delay;
+  tdelay1 = delay;
+  rate = 0;
+  mix = 0;
+  beat = 0.25;
+  triangle=0;
+  sinusoid=1;
+  lfo=triangle;
+  twopi = 2 * $pi;
+  
+
+@slider
+  delay = slider1;
+  offset = slider6;
+  beat = 240 * slider7;  
+  tdelay0 = delay;
+  tdelay1 = (delay + offset);
+  sdelay0 = tdelay0 / 1000 * srate;
+  sdelay1 = tdelay1 / 1000 * srate;
+  feedback = slider3;
+  depth = (delay - 0.1) * slider2;
+  mix = slider5;
+  lfo = (slider8 == triangle ? triangle : sinusoid);
+  tpos = 0;
+
+@block
+  slider4==0 ? (
+    rate=tempo / beat;
+  ):(
+    rate=slider4;
+  );
+
+  (lfo==triangle) ? (
+     trate = 4 * depth / (srate / rate);
+  ) : (
+     trate = twopi / (srate / rate );
+  );
+
+
+@sample
+  back0 = counter - sdelay0;
+  back1 = counter - sdelay1;
+  (back0 < 0) ? back0 = MAX_WG_DELAY + back0;
+  (back1 < 0) ? back1 = MAX_WG_DELAY + back1;
+  index00 = back0 | 0;
+  index01 = back1 | 0;
+  index_10 = index00 - 1;
+  index_11 = index01 - 1;
+  index10 = index00 + 1;
+  index11 = index01 + 1;
+  index20 = index00 + 2;
+  index21 = index01 + 2;
+  (index_10 < 0) ? index_10 = MAX_WG_DELAY + 1;
+  (index_11 < 0) ? index_11 = MAX_WG_DELAY + 1;
+  (index10 >= MAX_WG_DELAY) ? index10 = 0;
+  (index11 >= MAX_WG_DELAY) ? index11 = 0;
+  (index20 >= MAX_WG_DELAY) ? index20 = 0;
+  (index21 >= MAX_WG_DELAY) ? index21 = 0;
+  y_10 = buffer0[index_10];
+  y_11 = buffer1[index_11];
+  y00 = buffer0[index00];
+  y01 = buffer1[index01];
+  y10 = buffer0[index10];
+  y11 = buffer1[index11];
+  y20 = buffer0[index20];
+  y21 = buffer1[index21];
+  x0 = back0 - index00;
+  x1 = back1 - index01;
+  c00 = y00;
+  c01 = y01;
+  c10 = 0.5 * (y10 - y_10);
+  c11 = 0.5 * (y11 - y_11);
+  c20 = y_10 - 2.5 * y00 + 2.0 * y10 - 0.5 * y20;
+  c21 = y_11 - 2.5 * y01 + 2.0 * y11 - 0.5 * y21;
+  c30 = 0.5 * (y20 - y_10) + 1.5 * (y00 - y10);
+  c31 = 0.5 * (y21 - y_11) + 1.5 * (y01 - y11);
+  output0 = ((c30 * x0 + c20) * x0 + c10) * x0 + c00;
+  output1 = ((c31 * x1 + c21) * x1 + c11) * x1 + c01;
+  buffer0[counter] = spl0 + output0 * feedback;
+  buffer1[counter] = spl1 + output1 * feedback;
+  spl0 = spl0 * (1-mix) + output0 * mix;
+  spl1 = spl1 * (1-mix) + output1 * mix;
+  counter += 1;
+  (counter >= MAX_WG_DELAY) ? counter = 0;
+  (lfo == triangle) ? (
+    dir0 ? tdelay0 += trate : tdelay0 -= trate;
+    dir1 ? tdelay1 += trate : tdelay1 -= trate;
+    (tdelay0 >= delay + depth) ? dir0 = 0;
+    (tdelay1 >= delay + depth) ? dir1 = 0;
+    (tdelay0 <= delay - depth) ? dir0 = 1;
+    (tdelay1 <= delay - depth) ? dir1 = 1;
+  ) : (
+    tdelay0 = delay + (delay-0.1) * sin(tpos);
+    tdelay1 = delay + (delay-0.1) * sin(tpos+offset);
+    tpos += trate;
+    (tpos > twopi) ? tpos = 0;
+  );
+  sdelay0 = tdelay0 / 1000 * srate;
+  sdelay1 = tdelay1 / 1000 * srate;

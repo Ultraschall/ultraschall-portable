@@ -1,0 +1,192 @@
+/*******************************************************************************
+*  Copyright 2007 - 2011, Philip S. Considine                                  *
+*  This program is free software: you can redistribute it and/or modify        *
+*  it under the terms of the GNU General Public License as published by        *
+*  the Free Software Foundation, either version 3 of the License, or           *
+*  (at your option) any later version.                                         *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+*  GNU General Public License (http://www.gnu.org/licenses/)for more details.  *
+*******************************************************************************/
+
+desc: MIDI Pattern/Scale Variation Generator
+desc: MIDI Pattern/Scale Variation Generator [IXix]
+//tags: MIDI processing mapping
+//author: IXix
+
+slider1:0<0,15,1{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}>Input Channel
+slider2:0<0,127,1>Note Min
+slider3:127<0,127,1>Note Max
+
+// Note min/max (names) (disabled)
+//slider2:0<0,127,1{C0,C#0,D0,D#0,E0,F0,F#0,G0,G#0,A0,A#0,B0,C1,C#1,D1,D#1,E1,F1,F#1,G1,G#1,A1,A#1,B1,C2,C#2,D2,D#2,E2,F2,F#2,G2,G#2,A2,A#2,B2,C3,C#3,D3,D#3,E3,F3,F#3,G3,G#3,A3,A#3,B3,C4,C#4,D4,D#4,E4,F4,F#4,G4,G#4,A4,A#4,B4,C5,C#5,D5,D#5,E5,F5,F#5,G5,G#5,A5,A#5,B5,C6,C#6,D6,D#6,E6,F6,F#6,G6,G#6,A6,A#6,B6,C7,C#7,D7,D#7,E7,F7,F#7,G7,G#7,A7,A#7,B7,C8,C#8,D8,D#8,E8,F8,F#8,G8,G#8,A8,A#8,B8,C9,C#9,D9,D#9,E9,F9,F#9,G9,G#9,A9,A#9,B9,C10,C#10,D10,D#10,E10,F10,F#10,G10}>Note Min
+//slider3:127<0,127,1{C0,C#0,D0,D#0,E0,F0,F#0,G0,G#0,A0,A#0,B0,C1,C#1,D1,D#1,E1,F1,F#1,G1,G#1,A1,A#1,B1,C2,C#2,D2,D#2,E2,F2,F#2,G2,G#2,A2,A#2,B2,C3,C#3,D3,D#3,E3,F3,F#3,G3,G#3,A3,A#3,B3,C4,C#4,D4,D#4,E4,F4,F#4,G4,G#4,A4,A#4,B4,C5,C#5,D5,D#5,E5,F5,F#5,G5,G#5,A5,A#5,B5,C6,C#6,D6,D#6,E6,F6,F#6,G6,G#6,A6,A#6,B6,C7,C#7,D7,D#7,E7,F7,F#7,G7,G#7,A7,A#7,B7,C8,C#8,D8,D#8,E8,F8,F#8,G8,G#8,A8,A#8,B8,C9,C#9,D9,D#9,E9,F9,F#9,G9,G#9,A9,A#9,B9,C10,C#10,D10,D#10,E10,F10,F#10,G10}>Note Max
+
+slider4:0<0,11,1{C,C#,D,Eb,E,F,F#,G,G#,A,Bb,B}>Root Note
+slider5:/ix_scales:01 Major.txt:Scale File
+slider6:5<0,10,1> Low Octave
+slider7:5<0,10,1> High Octave
+slider8:/ix_sequences:none:Sequence File
+slider9:1<0,1,1{Off,On}>On/Off
+
+in_pin:none
+out_pin:none
+
+////////////////////////////////////////////////////////////////////////////////
+@init
+
+// Memory offsets
+inputTracker = 0;
+noteMap = 128;
+scale = 1024;
+seq = 2048;
+
+// MIDI constants
+statNoteOff = $x80;
+statNoteOn = $x90;
+
+// File change flags
+scaleFile = seqFile -1;
+
+////////////////////////////////////////////////////////////////////////////////
+@slider
+
+slider2 = min(max(slider2 | 0, 0), 127);  // Remove fractions and clamp to legal range
+slider3 = min(max(slider3 | 0, 0), 127);
+slider6 = min(max(slider6 | 0, 0), 10);
+slider7 = min(max(slider7 | 0, 0), 10);
+
+inChannel = slider1;
+noteMin = slider2;
+noteMax = slider3;
+root = slider4;
+octMin = slider6;
+octMax = slider7;
+
+// Reset if necessary
+slider9 != on ?
+(
+  on = slider9;
+  step = 0;
+);
+
+// Load scale if necessary
+scaleFile != slider5 ?
+(
+  scaleFile = slider5;
+  scaleSize = 0;
+  fileHandle = file_open(slider5);
+  fileHandle > 0 && file_text(fileHandle) ?
+  (
+    while
+    (
+      file_var(fileHandle, scale[scaleSize]);
+      file_avail(fileHandle) ? scaleSize += 1;
+    );
+    file_close(fileHandle);
+  );
+);
+
+// Load sequence if necessary
+seqFile != slider8 ?
+(
+  seqFile = slider8;
+  seqSize = 0;
+  fileHandle = file_open(slider8);
+  fileHandle > 0 && file_text(fileHandle) ?
+  (
+    while
+    (
+      file_var(fileHandle,seq[seqSize]);
+      file_avail(fileHandle) ? seqSize += 1;
+    );
+    file_close(fileHandle);
+  );
+);
+
+////////////////////////////////////////////////////////////////////////////////
+@block
+
+while
+(
+  midirecv(offset, msg1, msg23) ?
+  (  
+    passThru = 1; // Reset pass flag
+    
+    // Extract message type and channel
+    status = msg1 & $xF0;
+    channel = msg1 & $x0F;
+
+    // Is it on our channel and are we working?
+    channel == inChannel && on ? 
+    (
+      // Is it a note event?
+      (status == statNoteOn || status == statNoteOff) ?
+      (
+        // Extract note number and velocity
+        note = msg23 & $x7F;
+        velocity = msg23 >> 8;
+        
+        // Is it within our note range?
+        !(note < noteMin || note > noteMax) ?
+        (
+          // What kind of note event?
+          (status == statNoteOn && velocity > 0) ? // Note on (zero velocity is considered to be a note off)
+          (  
+            inputTracker[note] == 0 ?
+            (          
+              inputTracker[note] = 1; // Mark note as active
+
+              // Are we on an active step?
+              seq[step] > 0 ?
+              (
+                inputTracker[note] = 2; // Mark note as modified
+                
+                // Do note generation and clamp to useful range
+                noteMap[note] = scale[rand(scaleSize+1)] + root + (12 * (octMin + floor(rand(octMax - octMin))));
+                noteMap[note] = min(max(noteMap[note], 0), 127);
+                
+                msg23 = noteMap[note] | (velocity << 8); // Modify MIDI data
+              );
+              
+              // Advance/reset step counter
+              (step += 1) >= seqSize ?
+              (
+                step = 0;
+              );
+            )
+            :
+            (
+              // Note already active so block the message.
+              passThru = 0;
+            );
+          )
+          : // Note off
+          (
+            inputTracker[note] > 0 ?
+            (
+              // Is it a modified note?
+              inputTracker[note] == 2 ?
+              (
+                msg23 = noteMap[note] | (velocity << 8); // Modify MIDI data
+                noteMap[note] = note; // Reset noteMap
+              );
+              
+              inputTracker[note] = 0; // Mark note as inactive  
+            );
+          );
+        );
+      );
+    );
+    
+    // Pass message on if necessary
+    passThru ?
+    (
+      midisend(offset, msg1, msg23);
+    );
+    
+    1; // Force loop to continue until all messages have been processed
+  );
+);

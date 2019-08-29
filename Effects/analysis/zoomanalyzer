@@ -1,0 +1,155 @@
+desc:Zoom Analyzer Demo
+//tags: visualization scope analysis FFT
+//author: Cockos
+
+/*
+Copyright (C) 2007 Cockos Incorporated
+License: LGPL - http://www.gnu.org/licenses/lgpl.html
+*/
+
+in_pin:left input
+in_pin:right input
+
+@init
+recpos=0;
+fftsize=32768;
+gfx_clear=-1;
+windowtype=-1;
+
+histsize=128*1024;
+window=histsize;
+fftworkspace=window+65536;
+lrecpos=0;
+
+
+@slider
+lfft=fftsize;
+fftsize=4096;
+
+@block
+
+ifftsize=1/fftsize;
+
+@sample
+recpos[]=spl(0)+spl(1);
+recpos+=1;
+recpos >= histsize ? recpos=0;
+
+@gfx 640 400
+
+// only update if new fft data is there or if the size changed
+recpos != lrecpos || old_w != gfx_w || old_h!=gfx_h? (
+
+  gfx_mode=0;
+
+old_w=gfx_w; old_h=gfx_h;
+
+gfx_r=gfx_g=gfx_b=0; gfx_a=0.01;
+gfx_x=gfx_y=0;
+gfx_rectto(gfx_w,gfx_h);
+gfx_x=gfx_y=0;
+gfx_blurto(gfx_w,gfx_h);
+gfX_a=0.5;
+blitparms=2*1024*1024;
+blitparms[0]=blitparms[1]=0;
+blitparms[2]=gfx_w;
+blitparms[3]=gfx_h;
+
+blitparms[4]=-gfx_w*0.05; blitparms[5]=-gfx_h*0.05;
+blitparms[6]=gfx_w-blitparms[4]*2; 
+blitparms[7]=gfx_h-blitparms[5]*2;
+blitparms[8]=cos(colorang2*0.03)*gfx_w*0.09;
+blitparms[9]=cos(colorang*3.5)*gfx_h*0.09;
+gfx_blitext(-1,blitparms,sin(blitang)*$pi*0.1);
+
+blitang+=0.01*cos(colorang);
+
+
+sc=(gfx_h-20)*20/(120 * log(10));
+
+wsc=gfx_w/log(1+400);
+
+lrecpos=recpos;
+
+(
+  windowsize != fftsize ? (
+    windowsize=fftsize;
+    i=0;
+    dwindowpos = $pi*2/fftsize;
+    windowpos=-dwindowpos * m_fft_size / 4;
+
+    loop(fftsize,
+       window[i] = (0.42 - 0.50 * cos(windowpos) + 0.08 * cos(2.0*windowpos) )*ifftsize*0.5;
+       windowpos+=dwindowpos;
+       i+=1;
+    );
+  );
+
+  gfx_mode=1;
+ 
+  gfx_a=0.7;
+  gfx_x=gfx_w/2; gfx_y=gfx_h/2;
+  gfx_getpixel(r,g,b);
+  stupidcnt > 10 ? gfx_a=-gfx_a;
+
+  r>0.6 && g>0.6 && b>0.6 ? 
+  ( 
+    stupidcnt+=1; stupidcnt==9 ? stupidcnt=100;
+  )
+  : 
+  (  
+    stupidcnt-=1;
+    stupidcnt==10 ? stupidcnt=0;
+  );
+  colorang2+=cos(colorang);
+
+  gfX_r=1+sin(colorang*7);
+  gfx_g=1+cos(colorang*3.132+3);
+  gfx_b=1+cos(colorang*0.3125+1);
+  colorang+=0.005;
+
+  buf1=lrecpos-fftsize;
+  buf1<0 ? buf1+=histsize;
+  buf2=window;
+  buf3=fftworkspace;
+  loop(fftsize,
+    buf3[] = buf1[]*buf2[];
+    buf3[1]=0;
+    buf3+=2;
+
+    buf2+=1;
+    (buf1+=1) >= histsize ? buf1 -= histsize;
+  );
+  fft(fftworkspace,fftsize);
+  fft_permute(fftworkspace,fftsize);
+
+  i=0;
+  ascale=gfx_h/$pi*0.25;
+  xscale=800/(fftsize-1);
+  loop(fftsize*0.5-1,
+    aa=fftworkspace[i*2+2]; bb=fftworkspace[i*2+3];
+    dv=aa*aa+bb*bb;
+    dv<0.00000000000000000001 ? dv=0.0000000000000000000001;
+    ty= (-log(dv)*0.5)*sc+20;
+
+    ang=-atan2(aa,bb);
+
+    ty2=ang*ascale + gfx_h*0.5;
+
+    tx = log(1.0+i*xscale)*wsc;
+
+
+
+    i ? 
+    ( 
+
+      gfx_x=lx; gfx_y=ly; gfx_lineto(tx,ty,1) ;
+    );
+
+    lx=tx; ly=ty; ly2=ty2;
+    i+=1;
+  );
+);
+
+
+);

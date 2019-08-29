@@ -1,0 +1,35 @@
+/*******************************************************************************
+*  Copyright 2007 - 2011, Philip S. Considine                                  *
+*  This program is free software: you can redistribute it and/or modify        *
+*  it under the terms of the GNU General Public License as published by        *
+*  the Free Software Foundation, either version 3 of the License, or           *
+*  (at your option) any later version.                                         *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+*  GNU General Public License (http://www.gnu.org/licenses/)for more details.  *
+*******************************************************************************/
+
+desc:Channel Polarity Control
+desc:Channel Polarity Control [IXix]
+//tags: processing phase polarity
+//author: IXix
+
+slider1:0<0,3,1{Normal,Invert Left,Invert Right,Invert Both}>Polarity Mode
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+modL = slider1 & 1 ? -1 : 1;
+modR = slider1 & 2 ? -1 : 1;
+
+@sample
+spl0 *= modL ;
+spl1 *= modR ;
+
+
+

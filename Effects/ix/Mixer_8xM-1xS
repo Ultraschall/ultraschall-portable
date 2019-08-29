@@ -1,0 +1,128 @@
+/*******************************************************************************
+*  Copyright 2007 - 2011, Philip S. Considine                                  *
+*  This program is free software: you can redistribute it and/or modify        *
+*  it under the terms of the GNU General Public License as published by        *
+*  the Free Software Foundation, either version 3 of the License, or           *
+*  (at your option) any later version.                                         *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+*  GNU General Public License (http://www.gnu.org/licenses/)for more details.  *
+*******************************************************************************/
+
+desc:8x Mono to 1x Stereo Mixer
+desc:8x Mono to 1x Stereo Mixer [IXix]
+//tags: mixer gain pan
+//author: IXix
+
+////////////////////////////////////////////////////////////////////////////////
+slider1:0<-120,30,0.1>Level 1 (dB)
+slider2:0<-120,30,0.1>Level 2 (dB)
+slider3:0<-120,30,0.1>Level 3 (dB)
+slider4:0<-120,30,0.1>Level 4 (dB)
+slider5:0<-120,30,0.1>Level 5 (dB)
+slider6:0<-120,30,0.1>Level 6 (dB)
+slider7:0<-120,30,0.1>Level 7 (dB)
+slider8:0<-120,30,0.1>Level 8 (dB)
+slider9:0<0,1,0.01>Pan 1 L<>R
+slider10:1<0,1,0.01>Pan 2 L<>R
+slider11:0<0,1,0.01>Pan 3 L<>R
+slider12:1<0,1,0.01>Pan 4 L<>R
+slider13:0<0,1,0.01>Pan 5 L<>R
+slider14:1<0,1,0.01>Pan 6 L<>R
+slider15:0<0,1,0.01>Pan 7 L<>R
+slider16:1<0,1,0.01>Pan 8 L<>R
+
+in_pin:input 1
+in_pin:input 2
+in_pin:input 3
+in_pin:input 4
+in_pin:input 5
+in_pin:input 6
+in_pin:input 7
+in_pin:input 8
+out_pin:output L
+out_pin:output R
+
+////////////////////////////////////////////////////////////////////////////////
+@init
+gainMin = -120;
+gainMax = 30;
+
+////////////////////////////////////////////////////////////////////////////////
+@slider
+
+// Clamp to repectable values
+slider1 = min(max(slider1, gainMin), gainMax);
+slider2 = min(max(slider2, gainMin), gainMax);
+slider3 = min(max(slider3, gainMin), gainMax);
+slider4 = min(max(slider4, gainMin), gainMax);
+slider5 = min(max(slider5, gainMin), gainMax);
+slider6 = min(max(slider6, gainMin), gainMax);
+slider7 = min(max(slider7, gainMin), gainMax);
+slider8 = min(max(slider8, gainMin), gainMax);
+
+slider9 = min(max(slider9, 0), 1);
+slider10 = min(max(slider10, 0), 1);
+slider11 = min(max(slider11, 0), 1);
+slider12 = min(max(slider12, 0), 1);
+slider13 = min(max(slider13, 0), 1);
+slider14 = min(max(slider14, 0), 1);
+slider15 = min(max(slider15, 0), 1);
+slider16 = min(max(slider16, 0), 1);
+
+//Calculate gains and pans
+gain1 = 2 ^ (slider1 / 6); L1 = sqrt(1 - slider9); R1 = sqrt(slider9); 
+gain2 = 2 ^ (slider2 / 6); L2 = sqrt(1 - slider10); R2 = sqrt(slider10);
+gain3 = 2 ^ (slider3 / 6); L3 = sqrt(1 - slider11); R3 = sqrt(slider11);
+gain4 = 2 ^ (slider4 / 6); L4 = sqrt(1 - slider12); R4 = sqrt(slider12);
+gain5 = 2 ^ (slider5 / 6); L5 = sqrt(1 - slider13); R5 = sqrt(slider13);
+gain6 = 2 ^ (slider6 / 6); L6 = sqrt(1 - slider14); R6 = sqrt(slider14);
+gain7 = 2 ^ (slider7 / 6); L7 = sqrt(1 - slider15); R7 = sqrt(slider15);
+gain8 = 2 ^ (slider8 / 6); L8 = sqrt(1 - slider16); R8 = sqrt(slider16);
+
+modL1 = gain1 * L1;
+modL2 = gain2 * L2;
+modL3 = gain3 * L3;
+modL4 = gain4 * L4;
+modL5 = gain5 * L5;
+modL6 = gain6 * L6;
+modL7 = gain7 * L7;
+modL8 = gain8 * L8;
+
+modR1 = gain1 * R1;
+modR2 = gain2 * R2;
+modR3 = gain3 * R3;
+modR4 = gain4 * R4;
+modR5 = gain5 * R5;
+modR6 = gain6 * R6;
+modR7 = gain7 * R7;
+modR8 = gain8 * R8;
+
+////////////////////////////////////////////////////////////////////////////////
+@sample
+
+// Catch the inputs
+in1 = spl0; in2 = spl1; in3 = spl2; in4 = spl3;
+in5 = spl4; in6 = spl5; in7 = spl6; in8 = spl7;
+
+// Do the left mix
+spl0 =   (in1 * modL1) +
+    (in2 * modL2) +
+    (in3 * modL3) +
+    (in4 * modL4) +
+    (in5 * modL5) +
+    (in6 * modL6) +
+    (in7 * modL7) +
+    (in8 * modL8);
+
+// Do the right mix
+spl1 =   (in1 * modR1) +
+    (in2 * modR2) +
+    (in3 * modR3) +
+    (in4 * modR4) +
+    (in5 * modR5) +
+    (in6 * modR6) +
+    (in7 * modR7) +
+    (in8 * modR8);

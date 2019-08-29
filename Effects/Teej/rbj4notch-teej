@@ -1,0 +1,334 @@
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//
+//This modified version of the fabulous SS:rbj4eq is presented by TJ Higley.  (2/18/07)
+//
+//The depth of each notch is customizable by modifying 'notchCut' in line 40.
+//The width of each notch is customizable by modifying 'notchQ' in line 41.
+//The boost provided by the Sweep slider is customizable by modifying 'sweepBoost' in line 42.
+//The width of of the Sweep boost is customizable by modifying 'sweepQ' in line 43.
+
+desc:RBJ 4-Band Notch Filter
+//tags: filter
+//author: teej
+
+//based on RBJ Filter Cookbook
+
+slider1:0<0,400,1>HPF
+slider2:0<0,10000,5>Sweep
+slider3:0<0,10000,5>Notch 1
+slider4:0<0,10000,5>Notch 2
+slider5:0<0,10000,5>Notch 3
+slider6:0<0,10000,5>Notch 4
+slider7:22000<400,22000,5>LPF
+slider8:0<-12,12,0.5>Output Gain
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  cDcAdd = 10^-30;
+  cDenorm = 10^-30;
+  notchCut = -9;
+  notchQ = 8;
+  sweepBoost = 9;
+  sweepQ = 2;
+
+
+@slider
+
+  gain = 10^(slider8/20);
+
+  aHPF = 1;
+  sHPF = 1;
+  qHPF = 1 / (sqrt((aHPF + 1/aHPF)*(1/sHPF - 1) + 2));
+  w0HPF = 2 * $pi * slider1/srate;
+  cosw0HPF = cos(w0HPF);
+  sinw0HPF = sin(w0HPF);
+  alphaHPF = sinw0HPF / (2 * qHPF);
+
+  b0HPF = (1 + cosw0HPF)/2;
+  b1HPF = -(1 + cosw0HPF);
+  b2HPF = (1 + cosw0HPF)/2;
+  a0HPF = 1 + alphaHPF;
+  a1HPF = -2 * cosw0HPF;
+  a2HPF = 1 - alphaHPF;
+  b0HPF /= a0HPF;
+  b1HPF /= a0HPF;
+  b2HPF /= a0HPF;
+  a1HPF /= a0HPF;
+  a2HPF /= a0HPF;
+
+
+  aSWP = (10^(sweepBoost/40));
+  qSWP = sweepQ;
+  w0SWP = 2 * $pi * slider2/srate;
+  cosw0SWP = cos(w0SWP);
+  sinw0SWP = sin(w0SWP);
+  alphaSWP = sinw0SWP / (2 * qSWP);
+
+  b0SWP = 1 + alphaSWP * aSWP;
+  b1SWP = -2 * cosw0SWP;
+  b2SWP = 1 - alphaSWP * aSWP;
+  a0SWP = 1 + alphaSWP / aSWP;
+  a1SWP = -2 * cosw0SWP;
+  a2SWP = 1 - alphaSWP / aSWP;
+  b0SWP /= a0SWP;
+  b1SWP /= a0SWP;
+  b2SWP /= a0SWP;
+  a1SWP /= a0SWP;
+  a2SWP /= a0SWP;
+
+
+  aA = (10^(notchCut/40));
+  qA = notchQ;
+  w0A = 2 * $pi * slider3/srate;
+  cosw0A = cos(w0A);
+  sinw0A = sin(w0A);
+  alphaA = sinw0A / (2 * qA);
+
+  b0A = 1 + alphaA * aA;
+  b1A = -2 * cosw0A;
+  b2A = 1 - alphaA * aA;
+  a0A = 1 + alphaA / aA;
+  a1A = -2 * cosw0A;
+  a2A = 1 - alphaA / aA;
+  b0A /= a0A;
+  b1A /= a0A;
+  b2A /= a0A;
+  a1A /= a0A;
+  a2A /= a0A;
+
+
+  aB = (10^(notchCut/40));
+  qB = notchQ;
+  w0B = 2 * $pi * slider4/srate;
+  cosw0B = cos(w0B);
+  sinw0B = sin(w0B);
+  alphaB = sinw0B / (2 * qB);
+
+  b0B = 1 + alphaB * aB;
+  b1B = -2 * cosw0B;
+  b2B = 1 - alphaB * aB;
+  a0B = 1 + alphaB / aB;
+  a1B = -2 * cosw0B;
+  a2B = 1 - alphaB / aB;
+  b0B /= a0B;
+  b1B /= a0B;
+  b2B /= a0B;
+  a1B /= a0B;
+  a2B /= a0B;
+
+
+  aC = (10^(notchCut/40));
+  qC = notchQ;
+  w0C = 2 * $pi * slider5/srate;
+  cosw0C = cos(w0C);
+  sinw0C = sin(w0C);
+  alphaC = sinw0C / (2 * qC);
+
+  b0C = 1 + alphaC * aC;
+  b1C = -2 * cosw0C;
+  b2C = 1 - alphaC * aC;
+  a0C = 1 + alphaC / aC;
+  a1C = -2 * cosw0C;
+  a2C = 1 - alphaC / aC;
+  b0C /= a0C;
+  b1C /= a0C;
+  b2C /= a0C;
+  a1C /= a0C;
+  a2C /= a0C;
+
+
+  aD = (10^(notchCut/40));
+  qD = notchQ;
+  w0D = 2 * $pi * slider6/srate;
+  cosw0D = cos(w0D);
+  sinw0D = sin(w0D);
+  alphaD = sinw0D / (2 * qD);
+
+  b0D = 1 + alphaD * aD;
+  b1D = -2 * cosw0D;
+  b2D = 1 - alphaD * aD;
+  a0D = 1 + alphaD / aD;
+  a1D = -2 * cosw0D;
+  a2D = 1 - alphaD / aD;
+  b0D /= a0D;
+  b1D /= a0D;
+  b2D /= a0D;
+  a1D /= a0D;
+  a2D /= a0D;
+
+
+  aLPF = 1;
+  sLPF = 2;
+  qLPF = 1 / (sqrt((aLPF + 1/aLPF)*(1/sLPF - 1) + 2));
+  w0LPF = 2 * $pi * slider7/srate;
+  cosw0LPF = cos(w0LPF);
+  sinw0LPF = sin(w0LPF);
+  alphaLPF = sinw0LPF / (2 * qLPF);
+
+  b0LPF = (1 - cosw0LPF)/2;
+  b1LPF = (1 - cosw0LPF);
+  b2LPF = (1 - cosw0LPF)/2;
+  a0LPF = 1 + alphaLPF;
+  a1LPF = -2 * cosw0LPF;
+  a2LPF = 1 - alphaLPF;
+  b0LPF /= a0LPF;
+  b1LPF /= a0LPF;
+  b2LPF /= a0LPF;
+  a1LPF /= a0LPF;
+  a2LPF /= a0LPF;
+
+@sample
+
+
+  slider1 != 0 ? (
+  osplHPF = spl0;
+  spl0 = b0HPF * spl0 + b1HPF * xl1HPF + b2HPF * xl2HPF - a1HPF * yl1HPF - a2HPF * yl2HPF;
+  xl2HPF = xl1HPF;
+  xl1HPF = osplHPF;
+  yl2HPF = yl1HPF;
+  yl1HPF = abs(spl0) < cDenorm ? 0 : spl0;
+
+  ospl1 = spl1;
+  spl1 = b0HPF * spl1 + b1HPF * xr1HPF + b2HPF * xr2HPF - a1HPF * yr1HPF - a2HPF * yr2HPF;
+  xr2HPF = xr1HPF;
+  xr1HPF = ospl1;
+  yr2HPF = yr1HPF;
+  yr1HPF = abs(spl1) < cDenorm ? 0 : spl1;
+  );
+  
+
+  spl0 += cDcAdd;
+  spl1 += cDcAdd;
+
+
+  slider2 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0SWP * spl0 + b1SWP * xl1SWP + b2SWP * xl2SWP - a1SWP * yl1SWP - a2SWP * yl2SWP;
+  xl2SWP = xl1SWP;
+  xl1SWP = ospl0;
+  yl2SWP = yl1SWP;
+  yl1SWP = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0SWP * spl1 + b1SWP * xr1SWP + b2SWP * xr2SWP - a1SWP * yr1SWP - a2SWP * yr2SWP;
+  xr2SWP = xr1SWP;
+  xr1SWP = ospl1;
+  yr2SWP = yr1SWP;
+  yr1SWP = spl1;
+  );
+
+
+  slider3 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b0A * spl0 + b1A * xl1A + b2A * xl2A - a1A * yl1A - a2A * yl2A;
+  xl2A = xl1A;
+  xl1A = ospl0;
+  yl2A = yl1A;
+  yl1A = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0A * spl1 + b1A * xr1A + b2A * xr2A - a1A * yr1A - a2A * yr2A;
+  xr2A = xr1A;
+  xr1A = ospl1;
+  yr2A = yr1A;
+  yr1A = spl1;
+  );
+
+
+  slider4 != 0? (
+  ospl0 = spl0;
+  spl0 = b0B * spl0 + b1B * xl1B + b2B * xl2B - a1B * yl1B - a2B * yl2B;
+  xl2B = xl1B;
+  xl1B = ospl0;
+  yl2B = yl1B;
+  yl1B = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0B * spl1 + b1B * xr1B + b2B * xr2B - a1B * yr1B - a2B * yr2B;
+  xr2B = xr1B;
+  xr1B = ospl1;
+  yr2B = yr1B;
+  yr1B = spl1;
+  );
+
+
+  slider5 != 0? (
+  ospl0 = spl0;
+  spl0 = b0C * spl0 + b1C * xl1C + b2C * xl2C - a1C * yl1C - a2C * yl2C;
+  xl2C = xl1C;
+  xl1C = ospl0;
+  yl2C = yl1C;
+  yl1C = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0C * spl1 + b1C * xr1C + b2C * xr2C - a1C * yr1C - a2C * yr2C;
+  xr2C = xr1C;
+  xr1C = ospl1;
+  yr2C = yr1C;
+  yr1C = spl1;
+  );
+
+
+  slider6 != 0? (
+  ospl0 = spl0;
+  spl0 = b0D * spl0 + b1D * xl1D + b2D * xl2D - a1D * yl1D - a2D * yl2D;
+  xl2D = xl1D;
+  xl1D = ospl0;
+  yl2D = yl1D;
+  yl1D = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0D * spl1 + b1D * xr1D + b2D * xr2D - a1D * yr1D - a2D * yr2D;
+  xr2D = xr1D;
+  xr1D = ospl1;
+  yr2D = yr1D;
+  yr1D = spl1;
+  );
+
+
+  slider7 != 22000 ? (
+  ospl0 = spl0;
+  spl0 = b0LPF * spl0 + b1LPF * xl1LPF + b2LPF * xl2LPF - a1LPF * yl1LPF - a2LPF * yl2LPF;
+  xl2LPF = xl1LPF;
+  xl1LPF = ospl0;
+  yl2LPF = yl1LPF;
+  yl1LPF = spl0;
+
+  ospl1 = spl1;
+  spl1 = b0LPF * spl1 + b1LPF * xr1LPF + b2LPF * xr2LPF - a1LPF * yr1LPF - a2LPF * yr2LPF;
+  xr2LPF = xr1LPF;
+  xr1LPF = ospl1;
+  yr2LPF = yr1LPF;
+  yr1LPF = spl1;
+  );
+
+
+  spl0 *= gain;
+  spl1 *= gain;

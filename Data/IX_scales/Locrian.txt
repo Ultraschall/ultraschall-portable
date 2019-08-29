@@ -1,0 +1,8 @@
+//Scale file. Each step should be on a new line and there should be no more lines after the final step.
+0
+1
+3
+4
+7
+8
+10

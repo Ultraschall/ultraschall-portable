@@ -1,0 +1,102 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Pitch an Octave Up
+//tags: processing pitch
+//author: Cockos
+
+slider1:120<4,500,10>Chunk (ms)
+slider2:0.4<0,1>Overlap
+slider3:0<-120,6,1>Wet Mix (dB)
+slider4:-120<-120,6,1>Dry Mix (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+bufsize=-1;
+
+@slider
+nbufsize=srate*0.001*slider1; 
+nbufsize=nbufsize&(65536-1-7); 
+bufsize != nbufsize ? 
+(
+  bufsize=nbufsize; 
+  hbsz=bufsize*0.5; 
+  qbsz=bufsize*0.25;
+  playbuf=0;    
+  recpos=0; 
+  playpos=hbsz; 
+  recbuf=bufsize;
+);
+
+slider2=min(1,max(slider2,0));
+o_start=qbsz * (2 - slider2);
+o_end=qbsz * (2 + slider2);
+fadesc=1/(hbsz-o_start);
+drymix=2 ^ (slider4/6); wetmix=2 ^ (slider3/6);
+
+@sample
+
+s0=spl0;
+s1=spl1;
+
+recbuf[recpos*2]=spl0;
+recbuf[recpos*2+1]=spl1;
+
+playpos < o_start ? ( 
+    // first quarter (first half of first block)
+    spl0=playbuf[playpos*4];
+    spl1=playbuf[playpos*4+1];
+) : (
+    playpos < hbsz ? ( 
+      // second quarter
+        sc=(playpos-o_start)*fadesc;
+                      
+        spl0=
+           // second half of first block mix
+            playbuf[playpos*4]*(1-sc) + 
+           // first half of second block mix
+            playbuf[(playpos-qbsz)*4]*sc;
+        spl1=
+           // second half of first block mix
+            playbuf[playpos*4+1]*(1-sc) + 
+           // first half of second block mix
+            playbuf[(playpos-qbsz)*4+1]*sc;
+    ) : (
+      playpos < o_end ? (
+         // third quarter
+        sc=(playpos-hbsz)*fadesc;
+        spl0=
+           // second half of second block
+            playbuf[(playpos-qbsz)*4]*(1-sc) + 
+           // first half of third block
+            playbuf[(playpos-hbsz)*4]*sc;
+        spl1=
+           // second half of second block
+            playbuf[(playpos-qbsz)*4+1]*(1-sc) + 
+           // first half of third block
+            playbuf[(playpos-hbsz)*4+1]*sc;
+      ) : (
+          // last quarter (second half of third block)
+        spl0=playbuf[(playpos-hbsz)*4];
+        spl1=playbuf[(playpos-hbsz)*4+1];
+      )
+  )
+
+);
+
+(recpos+=1) >= bufsize ? (
+   recpos=0;
+   recbuf=(!recbuf)*bufsize*2;
+);
+
+(playpos+=1) >= bufsize ? (
+  playpos=0;
+  playbuf=(!playbuf)*bufsize*2;
+);
+
+spl0=spl0*wetmix + s0*drymix;
+spl1=spl1*wetmix + s1*drymix;

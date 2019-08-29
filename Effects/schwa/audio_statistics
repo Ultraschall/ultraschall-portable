@@ -1,0 +1,343 @@
+desc:Audio Statistics
+//tags: analysis utility visualization
+//author: Schwa
+
+slider1:300<50,1000,1.0>RMS Window (ms) (user input)
+slider2:-30<-44,-3,0.1>RMS Meter Min (dB) (user input)
+slider3:0<-44,3,0.1>RMS Window Current L (dB)
+slider4:0<-44,3,0.1>RMS Window Min L (dB)
+slider5:0<-44,3,0.1>RMS Window Max L (dB)
+slider6:0<0,18,0.1>RMS Dynamic Range L (dB)
+slider7:0<-44,3,0.1>RMS Window Current R (dB)
+slider8:0<-44,3,0.1>RMS Window Min R (dB)
+slider9:0<-44,3,0.1>RMS Window Max R (dB)
+slider10:0<0,18,0.1>RMS Dynamic Range R (dB)
+slider11:0<-44,3,0.1>Peak L (dB)
+slider12:0<-44,3,0.1>Peak R (dB)
+slider13:0<-44,3,0.1>RMS Total Loudness L (dB)
+slider14:0<-44,3,0.1>RMS Total Loudness R (dB)
+slider15:0<-1,1,0.0001>DC Offset L
+slider16:0<-1,1,0.0001>DC Offset R
+
+in_pin:left input
+in_pin:right input
+out_pin:none
+
+@init
+ 
+AMP_dB = 8.6562;
+DB_MAX = 0.0;
+
+GFX_RANGE_L = 0.05;
+GFX_RANGE_R = 0.95;
+GFX_RANGE_H = 0.23;
+GFX_RANGE_Y = 0.15;
+
+GFX_PEAK_W = 0.02;
+GFX_PEAK_H = 0.03;
+GFX_PEAK_Y = 0.07;
+GFX_CUR_Y = 0.08;
+
+GFX_SUM_W = 0.02;
+GFX_SUM_H = 0.03;
+GFX_SUM_Y = GFX_RANGE_Y+GFX_RANGE_H+0.04;
+
+GFX_METER_MAJ_Y = 0.47;
+GFX_METER_MIN_Y = 0.49;
+
+prevGfxW = 0;
+
+densityBufN = 2048;  // Something over the maximum screen width.
+densityBufL = 0;
+densityBufR = densityBufL + densityBufN;
+bufL = densityBufR + densityBufN;
+bufR = bufL + 131072;  // Something over the max # of samples in the RMS window.
+
+winMS = slider1;
+holdIdx = bufN = (0.001*winMS*srate)|0;
+nSamples = playing = 0;
+bufOK = bufIdx = initBuf = 0;
+peakL = peakR = ampEnvL = ampEnvR = 0.0;
+sumL = sumR = sum2L = sum2R = win2L = win2R = 0.0;
+win2LMin = win2LMax = win2RMin = win2RMax = 0.0;
+memset(densityBufL, 0, densityBufN);
+memset(densityBufR, 0, densityBufN);
+maxDensityL = maxDensityR = 0.0;
+
+@slider
+ 
+winMS = slider1;
+dbMin = slider2;
+
+dbRange = DB_MAX - dbMin;
+ 
+holdIdx = bufN = (0.001*winMS*srate)|0;
+bufOK = bufIdx = initBuf = 0;
+ampEnvCoeff = exp(-1.0/bufN);
+
+nSamples = playing = 0;
+bufOK = bufIdx = initBuf = 0;
+peakL = peakR = ampEnvL = ampEnvR = 0.0;
+sumL = sumR = sum2L = sum2R = win2L = win2R = 0.0;
+win2LMin = win2LMax = win2RMin = win2RMax = 0.0;
+memset(densityBufL, 0, densityBufN);
+memset(densityBufR, 0, densityBufN);
+maxDensityL = maxDensityR = 0.0;
+ 
+@block
+
+(playing && bufOK) ? (
+  slider3 = floor(dbRMSL*100.0)/100.0;
+  slider4 = floor(AMP_DB*log(sqrt(win2LMin/bufN))*100.0)/100.0;
+  slider5 = floor(AMP_DB*log(sqrt(win2LMax/bufN))*100.0)/100.0;
+  slider6 = slider5-slider4;
+  
+  slider7 = floor(dbRMSR*100.0)/100.0;
+  slider8 = floor(AMP_DB*log(sqrt(win2RMin/bufN))*100.0)/100.0;
+  slider9 = floor(AMP_DB*log(sqrt(win2RMax/bufN))*100.0)/100.0;
+  slider10 = slider9-slider8;
+  
+  slider11 = floor(AMP_DB*log(peakL)*100.0)/100.0;
+  slider12 = floor(AMP_DB*log(peakR)*100.0)/100.0;
+  
+  slider13 = floor(AMP_DB*log(sqrt(sum2L/nSamples))*100.0)/100.0;
+  slider14 = floor(AMP_DB*log(sqrt(sum2R/nSamples))*100.0)/100.0;
+  
+  slider15 = sumL/nSamples;
+  slider16 = sumR/nSamples;
+);
+
+(play_state == 1) ? (
+  playing = 1;
+) : (
+  playing = 0;
+);
+
+@sample
+
+(playing) ? (
+  (holdIdx) ? (
+    holdIdx -= 1;
+  ) : (
+    nSamples += 1;
+     
+    sumL += spl0;
+    sumR += spl1;
+    
+    ampL = abs(spl0);
+    ampR = abs(spl1);
+     
+    peakL = max(peakL, ampL);
+    peakR = max(peakR, ampR);
+    
+    (ampL > ampEnvL) ? (
+      ampEnvL = ampL;
+    ) : (
+      ampEnvL = ampL + ampEnvCoeff * (ampEnvL - ampL);
+    );
+     (ampR > ampEnvR) ? (
+      ampEnvR = ampR;
+    ) : (
+      ampEnvR = ampR + ampEnvCoeff * (ampEnvR - ampR);
+    ); 
+     
+    amp2L = ampL*ampL;
+    amp2R = ampR*ampR;
+    sum2L += amp2L;
+    sum2R += amp2R;
+    win2L += amp2L;
+    win2R += amp2R;
+
+    prev2L = bufL[bufIdx];
+    prev2R = bufR[bufIdx];
+    bufL[bufIdx] = amp2L;
+    bufR[bufIdx] = amp2R;
+
+    bufIdx += 1;
+    (bufIdx == bufN) ? (
+      bufIdx = 0;
+      (!bufOK) ? (
+        win2LMin = win2LMax = win2L;
+        win2RMin = win2RMax = win2R;
+        bufOK = 1;
+      );
+    );
+
+    (bufOK) ? (
+      win2LMin = min(win2LMin, win2L);
+      win2LMax = max(win2LMax, win2L);
+      win2RMin = min(win2RMin, win2R);
+      win2RMax = max(win2RMax, win2R);
+      win2L -= prev2L;
+      win2R -= prev2R;      
+
+      dbRMSL = AMP_DB*log(sqrt(win2L/bufN));
+      dbRMSLX = min(max((dbRMSL-dbMin)/dbRange, 0.0), 1.0);
+      densityIdx = floor(dbRMSLX*(densityBufN-1));
+      densityBufL[densityIdx] += 1;
+      maxDensityL = max(maxDensityL, densityBufL[densityIdx]);
+      
+      dbRMSR = AMP_DB*log(sqrt(win2R/bufN));
+      dbRMSRX = min(max((dbRMSR-dbMin)/dbRange, 0.0), 1.0);
+      densityIdx = floor(dbRMSRX*(densityBufN-1));
+      densityBufR[densityIdx] += 1;
+      maxDensityR = max(maxDensityR, densityBufR[densityIdx]);    
+    );
+  );
+);
+ 
+@gfx 400 150
+
+(gfx_w != prevGfxW) ? (
+  prevGfxW = gfx_w;
+  rangeL = floor(gfx_w*GFX_RANGE_L);
+  rangeR = floor(gfx_w*GFX_RANGE_R);
+  rangeW = rangeR-rangeL;
+  rangeH = floor(gfx_h*GFX_RANGE_H);
+  rangeY = floor(gfx_h*GFX_RANGE_Y);
+  peakW = floor(gfx_w*GFX_PEAK_W);
+  peakH = floor(gfx_h*GFX_PEAK_H);
+  peakY = floor(gfx_h*GFX_PEAK_Y);
+  curY = floor(gfx_h*GFX_CUR_Y);
+  sumW = floor(gfx_w*GFX_SUM_W);
+  sumH = floor(gfx_h*GFX_SUM_H);
+  sumY = floor(gfx_h*GFX_SUM_Y);
+  meterMajY = floor(gfx_h*GFX_METER_MAJ_Y);
+  meterMinY = floor(gfx_h*GFX_METER_MIN_Y);
+  
+  // Would be nice to preserve the existing data.
+  densityBufN = rangeW;
+  memset(densityBufL, 0, densityBufN);
+  memset(densityBufR, 0, densityBufN);
+  maxDensityL = maxDensityR = 0.0;  
+);  
+
+// Frame elements.
+
+gfx_r = gfx_g = gfx_b = gfx_a = 1.0;
+
+gfx_x = rangeL-1;
+gfx_y = rangeY-1;
+gfx_lineto(gfx_x+rangeW+2, gfx_y, 0);
+gfx_lineto(gfx_x, gfx_y+rangeH+2, 0);
+gfx_lineto(gfx_x-rangeW-2, gfx_y, 0);
+gfx_lineto(gfx_x, gfx_y-rangeH-2, 0);
+
+gfx_x = rangeL-1;
+gfx_y = gfx_h-rangeY-rangeH-1;
+gfx_lineto(gfx_x+rangeW+2, gfx_y, 0);
+gfx_lineto(gfx_x, gfx_y+rangeH+2, 0);
+gfx_lineto(gfx_x-rangeW-2, gfx_y, 0);
+gfx_lineto(gfx_x, gfx_y-rangeH-2, 0);
+
+// Meter.
+
+dbMeter = ceil(dbMin);
+while (gfx_x = rangeL+(dbMeter-dbMin)/dbRange*rangeW;
+  (dbMeter/3.0 == floor(dbMeter/3.0)) ? (
+    gfx_y = meterMajY;
+  ) : (
+    gfx_y = meterMinY;
+  );
+  gfx_lineto(gfx_x, gfx_h-gfx_y, 0);
+  dbMeter += 1.0;
+  dbMeter <= dbMax;
+);
+
+// Current amp lines.
+
+gfx_r = gfx_g = gfx_b = 0.5;
+
+ampDB = AMP_DB*log(ampEnvL);
+ampX = min(max((ampDB-dbMin)/dbRange, 0.0), 1.0);
+gfx_x = rangeL;
+gfx_y = curY;
+gfx_rectto(gfx_x+ampX*rangeW, gfx_y+3);
+
+ampDB = AMP_DB*log(ampEnvR);
+ampX = min(max((ampDB-dbMin)/dbRange, 0.0), 1.0);
+gfx_x = rangeL;
+gfx_y = gfx_h-curY;
+gfx_rectto(gfx_x+ampX*rangeW, gfx_y-3);
+
+// Peak markers.
+
+gfx_r = gfx_g = gfx_b = 0.75;
+
+peakX = min(max((slider11-dbMin)/dbRange, 0.0), 1.0);
+gfx_x = rangeL+peakX*rangeW;
+gfx_y = peakY;
+gfx_lineto(gfx_x-peakW/2, gfx_y-peakH, 1);
+gfx_lineto(gfx_x+peakW, gfx_y, 0);
+gfx_lineto(gfx_x-peakW/2, gfx_y+peakH, 1);
+
+peakX = min(max((slider12-dbMin)/dbRange, 0.0), 1.0);
+gfx_x = rangeL+peakX*rangeW;
+gfx_y = gfx_h-peakY;
+gfx_lineto(gfx_x-peakW/2, gfx_y+peakH, 1);
+gfx_lineto(gfx_x+peakW, gfx_y, 0);
+gfx_lineto(gfx_x-peakW/2, gfx_y-peakH, 1);
+
+(bufOK) ? (
+
+  // Total volume markers.
+
+  gfx_r = gfx_g = gfx_b = 1.0;
+  
+  sumX = min(max((slider13-dbMin)/dbRange, 0.0), 1.0);
+  gfx_x = rangeL+sumX*rangeW;
+  gfx_y = sumY;
+  gfx_lineto(gfx_x-sumW/2, gfx_y+sumH, 1);
+  gfx_lineto(gfx_x+sumW, gfx_y, 0);
+  gfx_lineto(gfx_x-sumW/2, gfx_y-sumH, 1);
+
+  sumX = min(max((slider14-dbMin)/dbRange, 0.0), 1.0);
+  gfx_x = rangeL+sumX*rangeW;
+  gfx_y = gfx_h-sumY;
+  gfx_lineto(gfx_x-sumW/2, gfx_y-sumH, 1);
+  gfx_lineto(gfx_x+sumW, gfx_y, 0);
+  gfx_lineto(gfx_x-sumW/2, gfx_y+sumH, 1);
+
+  // Density.
+
+  gfx_b = 0.0;
+  gfx_x = rangeL;
+  idx = 0;
+  loop(rangeW,
+    densityAtPxL = sqrt(densityBufL[idx]/maxDensityL);
+    densityAtPxR = sqrt(densityBufR[idx]/maxDensityR);
+    
+    gfx_r = max(2.0*(densityAtPxL-0.5), 0.0);
+    gfx_g = 1.0-abs(2.0*densityAtPxL-1.0);
+    gfx_y = rangeY;
+    gfx_lineto(gfx_x, gfx_y+rangeH, 0);
+
+    gfx_r = max(2.0*(densityAtPxR-0.5), 0.0);
+    gfx_g = 1.0-abs(2.0*densityAtPxR-1.0);
+    gfx_y = gfx_h-rangeY;
+    gfx_lineto(gfx_x, gfx_y-rangeH, 0);
+    
+    gfx_x += 1;
+    idx += 1;
+  );
+ 
+  // Current RMS lines.
+
+  gfx_r = gfx_g = gfx_b = 1.0;
+
+  gfx_x = rangeL+dbRMSLX*rangeW;
+  gfx_y = rangeY-3;
+  gfx_lineto(gfx_x, gfx_y+rangeH+6, 0);
+
+  gfx_x = rangeL+dbRMSRX*rangeW;
+  gfx_y = gfx_h-rangeY+3;
+  gfx_lineto(gfx_x, gfx_y-rangeH-6, 0); 
+);
+
+
+ 
+ 
+ 
+
+ 
+ 

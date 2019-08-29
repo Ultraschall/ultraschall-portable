@@ -1,0 +1,158 @@
+desc: MIDI Arpeggiator
+//tags: MIDI processing
+
+slider1:1<0.0,16,0.25>Rate (x BPM)
+slider2:1<0.01,1,0.1>Note Length
+slider3:0<0,3,1{Down,Up,Down Alt,Up Alt}>Mode
+slider4:0<0,3,1>Number Of Variants
+slider5:0<-64,64,1>Variant 1
+slider6:0<-64,64,1>Variant 2
+slider7:0<-64,64,1>Variant 3
+slider8:127<0,127,1>Velocity (0=use played velocity)
+
+in_pin:none
+out_pin:none
+
+@init 
+notelist=0;
+notecnt=0;
+lastnote=-1;
+
+pbincpos=0;
+pbnotepos=0;
+pbvarpos=0;
+
+@slider 
+rate=slider1;
+notelen=slider2;
+notelen<0?notelen=0:notelen>1?notelen=1;
+notedir= (slider3&1)?1:-1;
+diralt=slider3&2;
+nvar=slider4;
+var1=slider5;
+var2=slider6;
+var3=slider7;
+velmode=slider8|0;
+
+@block
+
+lastnotecnt=notecnt;
+
+
+while (
+midirecv(ts,msg1,msg23) ? 
+(
+  m=msg1&240;
+  note=msg23&127;
+  (m == 9*16 && msg23>=256) ? 
+  (
+    notelist[note] < 0.001 ? (
+      notelist[note]=velmode ? velmode : ((msg23/256.0)|0);
+      notecnt+=1;
+    );
+  ) : (m == 8*16 || m == 9*16) ? (
+    notelist[note] > 0.001 ? (
+      lastnote==note ? (
+        midisend(ts,8*16,note); // send note off
+        lastnote=-1;
+      );
+          
+      notecnt-=1;
+      notelist[note]=0.0; 
+    );
+  ) : (
+    midisend(ts,msg1,msg23); 
+  );
+  bla=1;
+);
+);
+notecnt < 1 && lastnote>=0 ? 
+(
+  midisend(0,8*16,lastnote); // send note off
+  lastnote=-1;
+);   
+
+spos=0;
+dinc=1/srate*(tempo/60)*rate;
+
+notecnt > 0 && !lastnotecnt ? 
+  (
+    pbincpos=1;
+    pbnotepos=0;
+    pbvarpos=1000;
+  );
+
+@sample
+pbincpos+=dinc;
+notecnt > 0 && pbincpos >= notelen ? (
+  lastnote>=0 ? 
+  (
+    midisend(spos,8*16,lastnote); // send note off
+    lastnote=-1;
+  );   
+);
+notecnt > 0 &&   pbincpos >= 1.0 ?
+(
+  pbincpos-=1;
+  // calc new lastnote
+  !diralt ? 
+  ( 
+    pbvarpos+=1;
+    pbvarpos > nvar || !notelist[pbnotepos] ? 
+    (
+      pbvarpos=0;
+      // next note
+      cnt=0;
+      while
+      (
+        cnt+=1;
+        pbnotepos += notedir;
+        pbnotepos > 127? pbnotepos=0 : pbnotepos<0 ? pbnotepos=127;
+        notelist[pbnotepos] > 0.001 ? 
+        (
+          pbnotepos >= 0 && pbnotepos < 128 ? (
+            lastnote=pbnotepos;
+            midisend(spos,9*16,lastnote+notelist[pbnotepos]*256); // send note on
+          );
+          tmp=0;
+        )     
+        : cnt < 128;
+      );
+    ) 
+    : 
+    ( 
+      lastnote=pbnotepos;
+      pbvarpos == 1? lastnote+=var1 : pbvarpos==2?lastnote+=var2:pbvarpos==3?lastnote+=var3;
+      lastnote >= 0 && lastnote < 128 ? (
+        midisend(spos,9*16,lastnote+notelist[pbnotepos]*256); // send note on
+      ) : lastnote=-1;
+    );
+  )
+  :
+  ( // alternate (notes first, then variants)
+    cnt=0;
+    while
+    (
+      cnt+=1;
+      pbnotepos += notedir;
+      turd=0;
+      pbnotepos > 127? pbnotepos=0 : pbnotepos<0 ? pbnotepos=127 : turd=1;
+      !turd ? (
+        pbvarpos+=1;
+        pbvarpos>nvar ? pbvarpos=0;
+      );
+      notelist[pbnotepos] > 0.001 ? 
+      (
+        lastnote=pbnotepos;
+        pbvarpos == 1? lastnote+=var1 : pbvarpos==2?lastnote+=var2:pbvarpos==3?lastnote+=var3;
+        midisend(spos,9*16,lastnote+notelist[pbnotepos]*256); // send note on
+        tmp=0;
+      )     
+      : cnt < 128;
+    );
+  );
+);
+
+//spos+=1;
+
+

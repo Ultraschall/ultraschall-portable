@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AudioComponents</key>
+	<array>
+		<dict>
+			<key>description</key>
+			<string>Ultraschall Soundboard</string>
+			<key>factoryFunction</key>
+			<string>SoundboardAUFactory</string>
+			<key>manufacturer</key>
+			<string>Ultr</string>
+			<key>name</key>
+			<string>Ultraschall: Soundboard</string>
+			<key>subtype</key>
+			<string>Soub</string>
+			<key>type</key>
+			<string>aumu</string>
+			<key>version</key>
+			<integer>196864</integer>
+		</dict>
+	</array>
+	<key>BuildMachineOSBuild</key>
+	<string>17D34a</string>
+	<key>CFBundleDisplayName</key>
+	<string>Plugin</string>
+	<key>CFBundleExecutable</key>
+	<string>Soundboard</string>
+	<key>CFBundleIdentifier</key>
+	<string>fm.ultraschall.Soundboard</string>
+	<key>CFBundleName</key>
+	<string>Plugin</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>3.1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleSupportedPlatforms</key>
+	<array>
+		<string>MacOSX</string>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>3.1.0</string>
+	<key>DTCompiler</key>
+	<string>com.apple.compilers.llvm.clang.1_0</string>
+	<key>DTPlatformBuild</key>
+	<string>9C40b</string>
+	<key>DTPlatformVersion</key>
+	<string>GM</string>
+	<key>DTSDKBuild</key>
+	<string>17C76</string>
+	<key>DTSDKName</key>
+	<string>macosx10.13</string>
+	<key>DTXcode</key>
+	<string>0920</string>
+	<key>DTXcodeBuild</key>
+	<string>9C40b</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Ultraschall</string>
+</dict>
+</plist>

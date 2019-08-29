@@ -1,0 +1,107 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: GPL - http://www.gnu.org/licenses/gpl.html
+
+desc:Chorus (Stereo)
+desc:Chorus Stereo [Stillwell]
+//tags: modulation chorus stereo
+//author: Stillwell
+
+slider1:15<1,500>Chorus Length (ms)
+slider2:1<1,8,1>Number Of Voices
+slider3:0.5<0,16,0.01>Rate (Hz) (0=tempo sync)
+slider4:0.7<0,1>Pitch Fudge Factor
+slider5:-6<-100,12,1>Wet Mix (dB)
+slider6:-6<-100,12,1>Dry Mix (dB)
+slider7:0.0<-1,1,0.01>Channel Rate Offset (Hz)
+slider8:0.25<0.0625,4,0.0625>Tempo Sync (fraction of whole note)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+
+bpos=0;
+
+@slider
+
+numvoices=min(16,max(slider2,1));
+choruslen=slider1*srate*0.001;
+
+i0=0;
+i1=0;
+i=0;
+loop(numvoices, 
+  i0[0]=(i+1)/numvoices*$pi; 
+  i1[0]=(i+1)/numvoices*$pi;
+  i+=1; 
+);
+bufofs0=32768;
+bufofs1=32768;
+
+csize=choruslen/numvoices * slider4;
+
+wetmix = 2 ^ (slider5/6);
+drymix = 2 ^ (slider6/6);
+
+
+@block
+
+
+slider3==0 ? (
+  rateadj=tempo/(240*slider8)*2*$pi/srate;
+  rateadj0=tempo/(240*slider8)*2*$pi/srate;
+  rateadj1=(tempo/(240*slider8)+slider7)*2*$pi/srate;
+):(
+  rateadj=slider3*2*$pi/srate;
+  rateadj0=slider3*2*$pi/srate;
+  rateadj1=(slider3+slider7)*2*$pi/srate;
+);
+
+@sample
+
+bpos0 >= choruslen ? (
+  bpos0=0;
+);
+os0=spl0;
+bpos1 >= choruslen ? (
+  bpos1=0;
+);
+os1=spl1;
+
+// calculate new sample based on numvoices
+
+spl0=spl0*drymix;
+spl1=spl1*drymix;
+vol=wetmix/numvoices;
+i0=0;
+i1=0;
+
+loop(numvoices,
+   tpos0 = bpos0 - (0.5+0.49*(sin( $pi*(i0[0] += rateadj0))/($pi*i0[0]))) * (i0+1) * csize;
+   tpos1 = bpos1 - (0.5+0.49*(sin( $pi*(i1[0] += rateadj1))/($pi*i1[0]))) * (i1+1) * csize;
+
+   tpos0 < 0 ? tpos0 += choruslen;
+   tpos1 < 0 ? tpos1 += choruslen;
+   tpos0 > choruslen ? tpos0 -= choruslen;
+   tpos1 > choruslen ? tpos1 -= choruslen;
+
+   frac0=tpos0-(0|tpos0);
+   tpos02=tpos0>=choruslen-1?0:tpos0+1;
+   frac1=tpos1-(0|tpos1);
+   tpos12=tpos1>=choruslen-1?0:tpos1+1;
+
+   spl0 += (bufofs0[tpos0]*(1-frac0)+bufofs0[tpos02]*frac0) * vol;
+   spl1 += (bufofs1[tpos1]*(1-frac1)+bufofs1[tpos12]*frac1) * vol;
+
+   i0+=1;
+   i1+=1;
+);
+
+
+bufofs0[bpos0]=os0;
+bufofs1[bpos1]=os1;
+
+bpos0+=1;
+bpos1+=1;

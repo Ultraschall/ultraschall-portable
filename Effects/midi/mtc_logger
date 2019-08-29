@@ -1,0 +1,264 @@
+desc:MTC Logger
+//tags: MIDI analysis utility
+
+in_pin:none
+out_pin:none
+
+@init
+ext_midi_bus = 1; // causes midi_bus to be used for send/recv and midirecv() receives on all buses
+ent_time = 0;
+ent_blockoffs = 1;
+ent_midiinfo = 2;
+ent_seq=3;
+ent_bus = 4;
+ent_size = 5;
+
+hextab = 0;
+i=0;
+loop(10,hextab[i] = $'0' + i; i+=1; );
+loop(6,hextab[i] = $'a' + i - 10; i+=1; );
+
+hist = 1000;
+hist_size = 0;
+hist_max = 10000*ent_size;
+hist_chunk = 1000*ent_size; // advance
+
+seq=0;
+
+log_active=1;
+g_cap=0;
+g_capst=0;
+g_at_end = 1;
+g_force_redraw=1;
+
+gfx_clear=-1;
+
+@block
+
+log_active ? while (
+  midirecv(ts,msg1,msg23) ? (
+    msg1 == 0xf1 ? (
+      hist_size >= hist_max ? (
+        memcpy(hist,hist+hist_chunk,hist_max-hist_chunk);
+        hist_size = hist_max - hist_chunk;
+      );    
+
+      hist[hist_size+ent_time] = play_position;
+      hist[hist_size+ent_blockoffs] = ts;
+      hist[hist_size+ent_midiinfo] = msg1 + msg23*256;
+      hist[hist_size+ent_seq] = seq; seq+=1;
+      hist[hist_size+ent_bus] = midi_bus;
+
+      hist_size+=ent_size;
+
+      g_force_redraw=1;
+    );
+    midisend(ts,msg1,msg23);
+    1;
+  );
+);
+
+@gfx 600 400
+
+top_margin=gfx_texth + 4.0;
+g_histsize = ((hist_size/ent_size / 8)|0);
+g_viewsize = (((gfx_h-top_margin-1)/(gfx_texth+2))|0);
+
+g_pos = g_histsize - g_viewsize;
+g_at_end ? (
+  g_pos += 1;
+  g_scroll = g_pos;
+) : (
+  g_pos > g_scroll ? g_pos = g_scroll;
+);
+  
+g_pos < 0 ? g_pos=0;
+
+g_scrollbar_top = top_margin+1 + g_pos * (gfx_h-top_margin-1) / g_histsize;
+g_scrollbar_bot = top_margin + 1+  (g_pos + g_viewsize)*(gfx_h-top_margin-1)/g_histsize;
+
+g_cap ? (
+  g_capst=0;
+  g_cap == 1 ? (
+    g_pos = mouse_y;
+    g_scrollbar_offs >= 0 ? g_pos-= g_scrollbar_offs;
+    g_pos -= top_margin+1;
+    g_pos = g_histsize * g_pos / (gfx_h-top_margin-1);
+
+    g_scroll = (g_pos |= 0);
+    g_pos < 0 ? g_pos=0;
+
+    g_pos >= g_histsize-g_viewsize ? ( g_at_end=1; g_pos = g_histsize-g_viewsize; ) : g_at_end=0;
+    g_pos < 0 ? g_pos=0;
+
+    g_scrollbar_top = top_margin+1 + g_pos * (gfx_h-top_margin-1) / g_histsize;
+    g_scrollbar_bot = top_margin + 1+  (g_pos + g_viewsize)*(gfx_h-top_margin-1)/g_histsize;
+  ) :
+  g_cap == 4 && mouse_y < top_margin && mouse_X >= g_logx && mouse_x <= g_logx_e ? (
+   !(mouse_cap&1)? log_active=!log_active;
+   g_capst=1;
+  ) : 
+  g_cap == 3 && mouse_y < top_margin && mouse_X >= g_clearx && mouse_x <= g_clearx_e ? (
+    !(mouse_cap&1) ? (
+       seq=hist_size=0;g_histsize=0;       
+       g_pos=1; g_at_end=1;
+       g_scrollbar_top = top_margin+1 + g_pos * (gfx_h-top_margin-1) / g_histsize;
+       g_scrollbar_bot = top_margin + 1+  (g_pos + g_viewsize)*(gfx_h-top_margin-1)/g_histsize;    );
+    g_capst=1;
+  );  
+
+  !(mouse_cap&1) ? g_cap=0; 
+  g_force_redraw=1;
+) : (
+  (mouse_cap & 1) ? (
+    g_capst=1;
+    mouse_y > top_margin && mouse_x > gfx_w - top_margin ? (
+      g_scrollbar_offs = -1;
+
+      mouse_y >= g_scrollbar_top && mouse_y <= g_scrollbar_bot ? g_scrollbar_offs = mouse_y - g_scrollbar_top;         
+  
+      g_cap=1; // scrollbar
+    ) : (
+      g_cap = 2;
+      mouse_y < top_margin ? (
+        mouse_x >= g_logx && mouse_x <= g_logx_e ? (
+          g_force_redraw=1;
+          g_cap=4;
+        ) : mouse_x >= g_clearx && mouse_x <= g_clearx_e ? ( 
+          g_force_redraw=1;
+          g_cap=3;
+        );        
+      );
+
+    );
+  ) : g_cap=0;
+);
+
+gfx_w != g_lw || gfx_h != g_lh ||  g_force_redraw ? (
+  g_force_redraw=0;
+  g_lw=gfx_w; g_lh=gfx_h;
+  gfx_r=gfx_g=gfx_b=0; gfx_a=1;
+  gfx_x=gfx_y=0;
+  gfx_rectto(g_lw,g_lh);
+
+
+  // draw top line
+  gfx_r=gfx_g=gfx_b=0.3;
+  gfx_x=gfx_y=0;
+  gfx_rectto(g_lw,top_margin);
+
+  g_cap == 4 && g_capst ? ( 
+    gfx_r=1; gfx_g=gfx_b=0; gfx_x=0; gfx_y=0; gfx_rectto(gfx_x+3*8,top_margin); 
+  );
+  gfx_r=gfx_g=gfx_b=log_active?1:0;
+  gfx_x=0; 
+  gfx_y=2;
+  g_logx = gfx_x;
+  gfx_drawchar($'L');
+  gfx_drawchar($'O');
+  gfx_drawchar($'G');
+  g_logx_e = gfx_x;
+
+  gfx_x += 16;
+
+  g_cap == 3 && g_capst ? ( 
+    g_lx=gfx_x;
+    gfx_y=0; gfx_r=1; gfx_g=gfx_b=0; gfx_rectto(gfx_x+5*8,top_margin);  
+    gfx_x=g_lx;
+    gfx_y=2;
+  );
+
+  gfx_r=gfx_g=gfx_b=1;
+  g_clearx = gfx_x;
+  gfx_drawchar($'C');
+  gfx_drawchar($'L');
+  gfx_drawchar($'E');
+  gfx_drawchar($'A');
+  gfx_drawchar($'R');
+  g_clearx_e = gfx_x;
+
+  // right scrollbar
+  gfx_r=0.0; gfx_g=gfx_b=0.3;
+  gfx_x=gfx_w-top_margin;
+  gfx_y=top_margin+1;
+  gfx_rectto(gfx_w,gfx_h);  
+
+  gfx_r=0.0; gfx_g=gfx_b=0.7;
+
+  gfx_y = g_scrollbar_top;
+  gfx_x=gfx_w-top_margin+1;
+  gfx_rectto(gfx_w-1,g_scrollbar_bot);
+ 
+
+  gfx_r=gfx_g=gfx_b=1; 
+  gfx_y=top_margin+1 - ((g_pos*8)|0)*(gfx_texth+2);
+  g_pos = hist;
+  g_lastseq = 0;
+  g_f_lsb=0;
+  g_s_lsb=0;
+  g_m_lsb=0;
+  g_h_lsb=0;
+  hist_size ? while (
+    g_msg = g_pos[ent_midiinfo];
+    g_sf = (g_msg>>8)&0xff;
+    g_wq = (g_sf>>4)&0xf;
+    g_nib = g_sf&0xf;
+    
+    g_wq == 0 ? g_f_lsb=g_nib;
+    g_wq == 2 ? g_s_lsb=g_nib;
+    g_wq == 4 ? g_m_lsb=g_nib;
+    g_wq == 6 ? g_h_lsb=g_nib;
+    g_wq == 1 ? g_f_lsb += g_nib*16.0;
+    g_wq == 3 ? g_s_lsb += g_nib*16.0;
+    g_wq == 5 ? g_m_lsb += g_nib*16.0;
+    g_wq == 7 ? g_h_lsb += g_nib*16.0;
+  
+          
+    gfx_y >= top_margin && (g_wq == 7 || g_wq != g_lastseq) ? (    
+      gfx_x=0;
+      gfx_drawnumber(g_pos[ent_seq],0);
+      gfx_x=60;
+      gfx_drawnumber(g_pos[ent_time] + g_pos[ent_blockoffs]/srate,4);
+      gfx_x=180;
+      gfx_drawnumber(g_pos[ent_blockoffs],0);
+      gfx_x=230;
+      gfx_drawchar($'B');
+      gfx_drawnumber(g_pos[ent_bus]+1,0);
+      gfx_x=300;
+      
+      g_wq != g_lastseq ? (
+        gfx_drawchar($'E');
+        gfx_drawchar($'R');
+        gfx_drawchar($'R');
+        gfx_x+=8;
+      ) : (
+            
+        gfx_drawchar($'T');
+        gfx_drawchar($'=');
+        gfx_x += 8;
+                
+        gfx_drawnumber(g_h_lsb>>5,0);
+        gfx_drawchar($':');
+        gfx_drawnumber(g_h_lsb&31,0);
+        gfx_drawchar($':');
+        gfx_drawnumber(g_m_lsb,0);
+        gfx_drawchar($':');
+        gfx_drawnumber(g_s_lsb,0);
+        gfx_drawchar($':');
+        gfx_drawnumber(g_f_lsb,0);                               
+      );            
+      gfx_y += gfx_texth+2;
+    ) : gfx_y < top_margin ? (
+      gfx_y += gfx_texth+2;
+    );
+    g_lastseq = (g_wq+1)&7;
+    
+    g_pos += ent_size;
+    gfx_y < gfx_h && g_pos < hist + hist_size;
+  );
+  g_at_end ? ( 
+    gfx_x=0;
+    gfx_drawchar($'_');
+  );
+
+);

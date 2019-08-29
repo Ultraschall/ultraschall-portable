@@ -1,0 +1,124 @@
+// rockband guitar input
+// user instructions:
+
+// for non-musical mode:
+// hold select and hit one of the first 4 fret buttons to select skill level (Green=easy, red=medium, yellow=hard, blue=expert)
+
+// for musical mode:
+// hold select and hit one of the first 4 fret buttons for octave adjust
+// hold select and strum up or down to adjust semitones
+
+// developer notes:
+// buttons (bitmask), numbuttons (valid bits in buttons)
+// systime (time in seconds)
+// axis(x), numaxis (number actually supported)
+// pov(x), numpov, pov(x) > 360 if not pointing
+
+@submode PS3
+@submode XBox360
+@submode PS3-musical
+@submode XBox360-musical
+
+// input config 
+(submode&1) ? ( 
+ // (these are for xbox 360 rockband2 guitar)
+  octave_button = 256;
+  buttonmask_1 = 1;
+  buttonmask_2 = 2;
+  buttonmask_3 = 8;
+  buttonmask_4 = 4;
+  buttonmask_5 = 16;
+  selectbutton = 512; // todo see what the real button is on the 360 rb2 controller
+  pitch_axis = 3;
+) : (
+ // (these are for ps3 rockband2 guitar)
+  octave_button = 64;
+  buttonmask_1 = 2;
+  buttonmask_2 = 4;
+  buttonmask_3 = 8;
+  buttonmask_4 = 1;
+  buttonmask_5 = 16;
+  pitch_axis = 2;
+  selectbutton = 256;
+);
+
+allbuttons = buttonmask_1|buttonmask_2|buttonmask_3|buttonmask_4|buttonmask_5;
+
+(buttons&selectbutton) ?(
+  (buttons&buttonmask_1) ? skill_level=0;
+  (buttons&buttonmask_2) ? skill_level=1;
+  (buttons&buttonmask_3) ? skill_level=2;
+  (buttons&buttonmask_4) ? skill_level=3;
+);
+
+
+// output config
+
+
+(submode&2) ? (
+
+// musical mode
+(buttons & selectbutton) ?(
+  strum = pov(0);
+  (strum!=laststrum && (abs(strum) < 1.0 || abs(strum-180.0)<1.0)) ? (
+    musicaloffset = musicaloffset + ((abs(strum) < 1.0) ? 1 : -1);
+  );
+);
+oct=12;
+
+note1 = 36 + skill_level*12 + musicaloffset; 
+note2 = note1+3; // deltas to each extra (These are more musical in this mode)
+note3 = note2+2; 
+note4 = note3+2;
+note5 = note4+3;
+
+) : (
+
+oct=0; // ignore octaves in this mode
+
+note1 = 60 + skill_level*12; // base note 
+note2 = note1+1; // deltas to each extra
+note3 = note2+1; 
+note4 = note3+1;
+note5 = note4+1;
+);
+
+pitch = (((axis(pitch_axis)+1)*4096+8192)|0);
+pitch<8192?pitch=8192:pitch>16383?pitch=16383;
+pitch != lastpitch ? (
+  event($xe0,(pitch&127),(pitch/128)|0);
+  lastpitch=pitch;
+);
+
+
+
+
+strum = pov(0);
+
+strum != laststrum ? (
+  // clear any notes
+  noteson ? (
+     useoct = (noteson&octave_button)? oct:0;
+     (noteson&buttonmask_1)?event($x80,note1+useoct,0);
+     (noteson&buttonmask_2)?event($x80,note2+useoct,0);
+     (noteson&buttonmask_3)?event($x80,note3+useoct,0);
+     (noteson&buttonmask_4)?event($x80,note4+useoct,0);
+     (noteson&buttonmask_5)?event($x80,note5+useoct,0);
+  );
+  noteson=0;
+
+  // if on, set any notes
+  abs(strum) < 1.0 || abs(strum-180.0)<1.0 ? (
+    ( noteson = (buttons&(allbuttons|octave_button))) ? (
+     useoct = (noteson&octave_button)? oct:0;
+     (noteson&buttonmask_1)?event($x90,note1+useoct,127);
+     (noteson&buttonmask_2)?event($x90,note2+useoct,127);
+     (noteson&buttonmask_3)?event($x90,note3+useoct,127);
+     (noteson&buttonmask_4)?event($x90,note4+useoct,127);
+     (noteson&buttonmask_5)?event($x90,note5+useoct,127);
+    );
+  );
+
+  laststrum=strum;
+);
+

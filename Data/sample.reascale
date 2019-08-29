@@ -1,0 +1,39 @@
+# .reascale files can be loaded into the REAPER MIDI editor, via the Scale dropdown list.
+#
+# Types (the first number):
+# -2: end of submenu
+# -1: separator
+# 0: scale
+# 1: chord
+# 2: submenu in scale section
+# 3: submenu in chord section
+#
+# Lines starting with '#' are ignored.
+#
+# To create a scale definition, place each interval number
+# at the correct number of semitones from the left (root).
+#
+# For snapping to scale, all that matters is which values are not zero.
+# The actual interval numbers are only used when transposing, and can be repeated.
+# If needed (for exotic scales), use A=10, B=11, C=12, etc.
+#
+# examples:
+#
+# 0 "Major"           102034050607
+# 1 "Major triad"     100030050000
+# 0 "Blues"           100304450070
+# 1 "Dim 7th chord"   100300500700
+
+-1
+0 "Whole Tone"        102030506070
+
+2 "Modes"
+0 "Dorian"	          102304050670
+0 "Phrygian"          120304056070
+0 "Lydian"            102030450607
+0 "Mixolydian"        102034050670
+0 "Aeolian"           102304056070
+0 "Locrian"           120304506070
+-2
+
+1 "Tritone"           100000500000

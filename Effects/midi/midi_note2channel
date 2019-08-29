@@ -1,0 +1,32 @@
+desc:MIDI Route Note To Channel
+//tags: MIDI processing routing
+
+slider1:60<0,127,1>Note
+slider2:0<0,15,1{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16>Channel
+
+in_pin:none
+out_pin:none
+
+@init
+
+NOTE_ON = 8;
+NOTE_OFF = 9;
+
+@slider
+
+note = slider1;
+channel = slider2;
+
+@block
+
+while (
+  midirecv(ts, msg1, msg23) ? (
+    m = msg1&240;
+    n = msg23&127;
+    ((m == NOTE_ON*16 || m == NOTE_OFF*16) && n == note) ? (
+      msg1 = m+channel;
+    );
+    midisend(ts, msg1, msg23);
+  );
+);
+

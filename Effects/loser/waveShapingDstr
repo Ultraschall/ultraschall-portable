@@ -1,0 +1,75 @@
+// (C) 2007, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:Waveshaping Distortion
+//tags: processing distortion waveshaper
+//author: LOSER
+
+slider1:0<0,100,.1>Distortion (%)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+hdistr = min(slider1/100,.999);
+foo = 2*hdistr/(1-hdistr);
+
+@sample
+spl0 = min(max(spl0,-1),1);
+spl1 = min(max(spl1,-1),1);
+
+spl0 = (1+foo)*spl0/(1+foo*abs(spl0));
+spl1 = (1+foo)*spl1/(1+foo*abs(spl1));
+
+
+@gfx 192 192
+gfxSize = min(gfx_w,gfx_h);
+
+
+gfx_r=gfx_g=gfx_b=0; gfx_a=1;
+gfx_x=gfx_y=0;
+gfx_rectto(gfx_w,gfx_h);
+
+gfx_r=gfx_g=gfx_b=0.8; gfx_a=1;
+gfx_x=gfxSize/2; gfx_y=0;
+gfx_lineto(gfxSize/2,gfxSize,0);
+gfx_x=0; gfx_y=gfxSize/2;
+gfx_lineto(gfxSize,gfxSize/2,0);
+
+gfx_x = gfxSize-20; gfx_y = gfxSize/2;
+gfx_drawchar($'I');
+gfx_drawchar($'N');
+
+gfx_x = gfxSize/2+2; gfx_y = 0;
+gfx_drawchar($'O');
+gfx_drawchar($'U');
+gfx_drawchar($'T');
+
+slider1 ? (
+	gfx_r=0.5; gfx_g=1; gfx_b=0; gfx_a=1;
+	gfx_x=0; gfx_y=gfxSize;
+	x = -1;
+	while(
+		y = -(1+foo)*x/(1+foo*abs(x));
+		gfx_lineto(x*gfxSize/2+gfxSize/2,y*gfxSize/2+gfxSize/2,1);
+		(x+=0.05) <= 1;
+	);
+	gfx_lineto(gfxSize,0,1);
+):(
+	gfx_r=0.5; gfx_g=1; gfx_b=0; gfx_a=1;
+	gfx_x=0; gfx_y=gfxSize;
+	gfx_lineto(gfxSize,0,1);
+);

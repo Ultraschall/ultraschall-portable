@@ -1,0 +1,181 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Convolution Dual Amp Modeler 
+desc: Convolution Dual Amp Modeler (mono->stereo)
+//tags: guitar amplifier convolution FFT
+
+slider1:/amp_models:none:Model (Left)
+slider2:/amp_models:none:Model (Right)
+slider3:0<-120,30,1>Preamp (dB)
+slider4:1<0,1,1{No,Yes}>Upsample Impulse If Required
+slider5:0,Filter Size
+slider6:0,FFT Size
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init 
+fftsize=-1;
+need_refft=1;
+convsrc=128*1024;
+lslider1=lslider2=-1;
+impbuf=256*1024;
+rimpbuf=512*1024;
+
+
+@slider
+
+  tmp=slider1|0;
+  tmp != lslider1 ? 
+  (
+    lslider1=tmp;
+    impbuf_nch=impbuf_srate=impbuf_l=0;
+    filehandle=file_open(slider1);
+    filehandle > 0 ?
+    (
+      file_riff(filehandle,impbuf_nch,impbuf_srate);
+      impbuf_nch?
+      (
+        impbuf_l=file_avail(filehandle)/impbuf_nch; 
+        need_refft=1; 
+        file_mem(filehandle,impbuf,impbuf_l*impbuf_nch);
+      );
+      file_close(filehandle);
+    );
+  );
+  tmp=slider2|0;
+  tmp != lslider2 ? 
+  (
+    lslider2=tmp;
+    rimpbuf_nch=rimpbuf_srate=rimpbuf_l=0;
+    filehandle=file_open(slider2);
+    filehandle > 0 ? 
+    (
+      file_riff(filehandle,rimpbuf_nch,rimpbuf_srate);
+      rimpbuf_nch?
+      (
+        rimpbuf_l=file_avail(filehandle)/rimpbuf_nch; 
+        need_refft=1; 
+        file_mem(filehandle,rimpbuf,rimpbuf_l*rimpbuf_nch);
+      );
+      file_close(filehandle);
+    );
+  );
+
+  useresample != slider4 ? (useresample=slider4; need_refft=1; );
+  slider6=fftsize;
+  preamp=2^(slider3/6);
+  slider6=fftsize;
+  slider5=filtersize;
+
+@block
+
+need_refft ? ( // prepare convolution source, here...
+  fs_l=impbuf_l;
+  fs_r=rimpbuf_l;
+  isc=1.0;
+  risc=1.0;
+
+  useresample ? (
+    srate > impbuf_srate && impbuf_srate > 1 ? (
+      fs_l=((srate*impbuf_l)/impbuf_srate)|0;
+      isc=impbuf_srate/srate;
+    );
+    srate > rimpbuf_srate && rimpbuf_srate > 1 ? (
+      fs_r=((srate*rimpbuf_l)/rimpbuf_srate)|0;
+      risc=rimpbuf_srate/srate;
+    );
+  );
+
+  filtersize = max(fs_l,fs_r);
+  fftsize=32;
+  while(
+    filtersize > fftsize*0.5 ? 
+    (
+      fftsize += fftsize;
+    ) : 0;
+  );
+  slider5=filtersize;
+  slider6=fftsize;
+  sliderchange(16+32);
+  chunksize=fftsize-filtersize-1; // size of chunk size of audio to use
+  chunksize2=chunksize*2;
+  bpos=0; 
+  curblock=0;
+  lastblock=64*1024;
+  invfsize=1/fftsize;
+
+  i=0;
+  i2=0;
+  loop(min(fftsize,fs_l),
+     ipos=i|0;
+     ipart=(i-ipos);
+     convsrc[i2]=impbuf[ipos*impbuf_nch]*(1-ipart) + 
+                 impbuf[(ipos+1)*impbuf_nch]*ipart;
+     i += isc;
+     i2+=2;
+  );
+  loop(fftsize-fs_l,
+     convsrc[i2]=i2==0?1:0;
+     i2+=2;
+  );
+
+  i=0;
+  i2=1;
+  loop(min(fftsize,fs_r),
+     ipos=i|0;
+     ipart=(i-ipos);
+     convsrc[i2]=rimpbuf[(ipos+1)*rimpbuf_nch-1]*(1-ipart) +
+                   rimpbuf[(ipos+2)*rimpbuf_nch-1]*(ipart);
+     i += risc;
+     i2+=2;
+  );
+  loop(fftsize-fs_r,
+     convsrc[i2]=i2==1?1:0;
+     i2+=2;
+  );
+
+  fft(convsrc,fftsize);
+
+  i=0;
+  loop(fftsize*2, convsrc[i] *= invfsize; i+=1; );
+  need_refft=0;
+);
+
+@sample
+
+bpos >= chunksize ? 
+(
+  t=lastblock;
+  lastblock=curblock;
+  curblock=t;
+
+  memset(curblock+chunksize*2,0,(fftsize-chunksize)*2);
+
+  fft(curblock,fftsize);
+  convolve_c(curblock,convsrc,fftsize);
+  ifft(curblock,fftsize);
+
+  bpos=0;
+);
+
+bp2=bpos*2;
+
+// save sample
+lastblock[bp2]=spl0*preamp;
+lastblock[bp2+1]=0;
+
+spl0=curblock[bp2];
+spl1=curblock[bp2+1];
+
+bpos < fftsize-chunksize ? 
+(
+  spl0+=lastblock[chunksize2+bp2];
+  spl1+=lastblock[chunksize2+bp2+1];
+);
+
+
+bpos += 1;

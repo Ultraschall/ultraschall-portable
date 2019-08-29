@@ -1,0 +1,79 @@
+// Copyright 2007, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//Contains code from stereoField (c) 2007 by Michael Gruhn, used by permission
+//
+
+desc:Stereo Width
+desc:Stereo Width [Stillwell]
+//tags: processing stereo
+//author: Stillwell
+
+slider1:0<-20,20>Width Boost (dB)
+slider2:0<-20,20>Center Boost (dB)
+slider3:0<-20,20>Gain (dB)
+slider4:0<-100,100>Width Balance (%)
+slider5:0<-90,90>Width Rotation (°)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  log2db = 8.6858896380650365530225783783321; // 20 / ln(10)
+  db2log = 0.11512925464970228420089957273422; // ln(10) / 20 
+  pi = 3.1415926535;
+  halfpi = pi / 2;
+
+@slider
+  wideboost=exp(slider1 * db2log);
+  centerboost=exp(slider2 * db2log);
+  gain=exp(slider3 * db2log);
+  leftrot = cos(((slider4+100)*0.005)*halfpi) * 2;
+  rightrot = sin(((slider4+100)*0.005)*halfpi) * 2;
+  rot=slider5*0.017453292;
+
+@sample
+  center = (spl0 + spl1) * 0.5;
+  left = spl0 - center;
+  right = spl1 - center;
+  spl0 += left * wideboost * leftrot;
+  spl1 += right * wideboost * rightrot;
+  spl0 += center * centerboost;
+  spl1 += center * centerboost;
+  spl0 *= gain;
+  spl1 *= gain;
+  s0 = sign(spl0);
+  s1 = sign(spl1);
+  angle = atan( spl0 / spl1 );
+  (s0 == 1 && s1 == -1) || (s0 == -1 && s1 == -1) ? angle += pi;
+  (s0 == -1 && s1 == 1) ? angle += 2 * pi;
+  (spl1 == 0) ? (spl0 > 0) ? angle = halfpi : angle = pi + halfpi;
+  (spl0 == 0) ? (spl1 > 0) ? angle = 0 : angle = pi;
+  angle -= rot;
+  radius = sqrt( sqr(spl0)+sqr(spl1) ) ;
+  spl0 = sin(angle)*radius;
+  spl1 = cos(angle)*radius;
+

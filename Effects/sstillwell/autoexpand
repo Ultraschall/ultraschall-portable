@@ -1,0 +1,130 @@
+// Copyright 2007, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:Auto Expander
+desc:Auto Expander [Stillwell]
+//tags: dynamics expander
+//author: Stillwell
+
+slider1:-120<-120,0,0.1>Threshold (dB)
+slider2:1<1,20,0.1>Ratio
+slider3:0<-20,20,0.1>Gain (dB)
+slider4:0<0,1,1{Hard,Soft}>Knee
+slider5:0<0,1,1{Normal,Sidechain}>Detector Input
+slider7:0<0,1,1{Peak,RMS}>Detection
+
+in_pin:left input
+in_pin:right input
+in_pin:sidechain left input
+in_pin:sidechain right input
+out_pin:left output
+out_pin:right output
+
+@init
+  log2db = 8.6858896380650365530225783783321; // 20 / ln(10)
+  db2log = 0.11512925464970228420089957273422; // ln(10) / 20 
+  i=0;
+  loop(
+    120,
+    attimes[i] = ((0.08924 / i) + (0.60755 / (i ^ 2)) - 0.00006);
+    i+=1;
+  );
+  attime=0.010;
+  reltime=0.100;
+  maxover=0;
+  ratio=0;
+  cratio=0;
+  rundb=0;
+  overdb=0;
+  maxover=0;
+  atcoef=exp(-1/(attime * srate));
+  relcoef=exp(-1/(reltime * srate));
+  fbacoef=exp(-1000/(2 * srate)); // 2 msec. opto attack for feedback detection
+  fbrcoef=exp(-1000/(200 * srate)); // 200 msec. opto release for feedback detection
+  sidechain = 0;
+  automakeup = 0;
+
+@slider
+  thresh = slider1;
+  threshv = exp(thresh * db2log);
+  ratio = slider2;
+  softknee = slider4;
+  cthresh = (softknee ? (thresh + 3) : thresh);
+  cthreshv = exp(cthresh * db2log);
+  sidechain = slider5;
+  makeup = slider3;
+  makeupv = exp((makeup) * db2log);
+  RMSdet = slider7;
+  RMSdet ? (
+    rmscoef=exp(-1000/(10 * srate));       // 10 ms RMS window
+  ) : (
+    rmscoef=exp(-1000/(0.0025 * srate));  // 2.5 us Peak detector
+  );
+  opto = 0;
+
+@sample
+  sidechain ? (
+    aspl0 = abs(spl2);
+    aspl1 = abs(spl3);
+  ) : (
+    aspl0 = abs(spl0);
+    aspl1 = abs(spl1);
+  );
+
+  RMSDet ? (  
+    ave = (aspl0 * aspl0) + (aspl1 * aspl1);
+    runave = ave + rmscoef * (runave - ave);
+    det = sqrt(max(0,runave));
+  ) : (
+    maxspl = max(aspl0, aspl1);
+    maxspl = maxspl * maxspl;
+    runave = maxspl + rmscoef * (runave - maxspl);
+    det = sqrt(max(0,runave));
+  );
+  overdb = 2.08136898 * log(det/cthreshv) * log2db;
+  overdb > maxover ? (
+    maxover = overdb;
+    attime = attimes[max(0,floor(abs(overdb)))];   // attack time per formula
+    atcoef = exp(-1/(attime * srate));
+    reltime = overdb / 125;                        // release at constant 125 dB/sec.
+    relcoef = exp(-1/(reltime * srate));
+  );
+  overdb = min(0,overdb);
+
+  overdb > rundb ? (
+    rundb = overdb + atcoef * (rundb - overdb);
+  ) : (
+    rundb = overdb + relcoef * (rundb - overdb);
+  );
+  overdb = rundb;
+
+  cratio = (softknee ? (1 + (ratio-1) * min(overdb, 6) / 6) : ratio);
+  
+  gr = overdb * (cratio-1)/cratio;
+  grv = exp(gr * db2log);
+  
+  runmax = maxover + relcoef * (runmax - maxover);  // highest peak for setting att/rel decays in reltime
+  maxover = runmax;
+  spl0 *= grv * makeupv;
+  spl1 *= grv * makeupv;  

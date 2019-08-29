@@ -1,0 +1,57 @@
+// buttons (bitmask), numbuttons (valid bits in buttons)
+// systime (time in seconds)
+// axis(x), numaxis (number actually supported)
+// pov(x), numpov, pov(x) > 360 if not pointing
+
+// event(msg1,msg2,msg3) to send events
+
+// this will send noteons/offs for each button
+// first axis will be pitch (14 bit), others will map to CC 1..n MSB/LSB
+// ignores povs
+
+
+// memory map
+oldaxis = 100; 
+
+
+//
+
+hasrun ? (
+  oldbuttons != buttons ? (
+    mc=0;
+    m=1;
+    loop(numbuttons,
+      (buttons&m) != (oldbuttons&m) ? (
+        event($x90, 64+mc, (buttons&m)?127:0);
+      );
+      m+=m;
+      mc+=1;
+    );
+  ); // button states
+
+  i=0;
+  loop(numaxis,
+    thisaxis = axis(i);
+    oldaxis[i] != thisaxis ? (
+      v=(thisaxis * 8192)+8192;
+      v<0?v=0:v>16383?v=16383;
+      i==0 ?  ( // pitch for first 
+        event($xe0, v&127, (v/128)|0);
+      ) : (
+        event($xb0, i, (v/128)|0);
+        event($xb0, i+32, v&127);
+      );
+    );
+    i+=1;
+  );
+) : hasrun=1;
+ 
+
+oldbuttons = buttons;
+
+i=0;
+loop(numaxis,
+  oldaxis[i] = axis(i);
+  i+=1;
+);
+

@@ -1,0 +1,95 @@
+desc:Volume/Pan Smoother v5
+//tags: utility gain stereo
+//author: Cockos
+
+slider1:0<-60,12,0.1>Volume (dB)
+slider2:0<-100,100,0.1>Pan
+slider3:0<-6,6,0.5>Pan Law (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+
+AMP_dB_i=1/8.68588963806504;
+
+db=slider1; // initialize here but not in @slider for playback start
+pan=0.01*slider2;
+
+@slider
+
+panlaw=exp(slider3*AMP_DB_i);
+pancomp=(panlaw > 1.0 ? 1.0/panlaw : panlaw);
+ddb=0.0;
+dpan=0.0;
+
+@block
+
+cnt=0;
+ddb=0.0;
+dpan=0.0;
+
+db_chg_splpos=slider_next_chg(1, tgtdb);
+db_chg_splpos > 0 ? 
+(
+  db=slider1;
+) : (
+  tgtdb = slider1;
+  db_chg_splpos = samplesblock;
+);
+
+ddb=(tgtdb-db)/db_chg_splpos;
+
+pan_chg_splpos=slider_next_chg(2, tgtpan);
+pan_chg_splpos > 0 ? 
+(
+  pan=0.01*slider2;
+) : (
+  tgtpan = slider2;
+  pan_chg_splpos = samplesblock;
+);
+dpan=(tgtpan*0.01-pan)/pan_chg_splpos;
+
+@sample
+
+cnt == db_chg_splpos ? 
+(
+  ddb=0.0;
+  db_chg_splpos=slider_next_chg(1, tgtdb);
+  db_chg_splpos > cnt ? 
+  (
+    ddb=(tgtdb-db)/(db_chg_splpos-cnt);
+  );
+);
+
+cnt == pan_chg_splpos ? 
+(
+  dpan=0.0;
+  pan_chg_splpos=slider_next_chg(2, tgtpan);
+  pan_chg_splpos > cnt ? 
+  (
+    dpan=(tgtpan*0.01-pan)/(pan_chg_splpos-cnt);
+  );
+);
+
+adj=exp(db*AMP_DB_i);
+panlaw != 1.0 ? 
+(
+  panlaw > 1.0 ? adj *= panlaw;
+  panatt = abs(pan);
+  adj *= pancomp+(1.0-pancomp)*(2.0/(2.0-panatt)-1.0);
+);
+
+adj0=adj1=adj;
+pan < 0.0 ? adj1 *= 1.0+pan;
+pan > 0.0 ? adj0 *= 1.0-pan;
+
+spl0 *= adj0;
+spl1 *= adj1;
+
+db += ddb;
+pan += dpan;
+cnt += 1;
+

@@ -1,0 +1,62 @@
+// (C) 2006, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:3-Band EQ
+desc:3-Band EQ [LOSER]
+//tags: equalizer
+//author: LOSER
+
+slider1:0<-24,24,1>Low (dB)
+slider2:200<0,22000,1>Frequency (Hz)
+slider3:0<-24,24,1>Mid (dB)
+slider4:2000<0,22000,1>Frequency (Hz)
+slider5:0<-24,24,1>High (dB)
+slider6:0<-24,24,1>Output (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+cDenorm = 10^-30;
+cAmpDB = 8.65617025;
+
+@slider
+lVol = exp(slider1/cAmpDB); 
+mVol = exp(slider3/cAmpDB); 
+hVol = exp(slider5/cAmpDB); 
+outVol = exp(slider6/cAmpDB); 
+
+freqLP = min(min(slider2,srate),slider4);
+xLP = exp(-2.0*$pi*freqLP/srate);
+a0LP = 1.0-xLP;
+b1LP = -xLP;
+
+freqHP = max(min(slider4,srate),slider2);
+xHP = exp(-2.0*$pi*freqHP/srate);
+a0HP = 1.0-xHP;
+b1HP = -xHP;
+
+@sample
+
+sl0 = (tmplLP = a0LP*spl0 - b1LP*tmplLP + cDenorm);
+sl1 = (tmprLP = a0LP*spl1 - b1LP*tmprLP + cDenorm);
+
+sh0 = spl0 - (tmplHP = a0HP*spl0 - b1HP*tmplHP + cDenorm);
+sh1 = spl1 - (tmprHP = a0HP*spl1 - b1HP*tmprHP + cDenorm);
+
+spl0 = (sl0*lVol + (spl0 - sl0 - sh0)*mVol + sh0*hVol)*outVol;
+spl1 = (sl1*lVol + (spl1 - sl1 - sh1)*mVol + sh1*hVol)*outVol;
+

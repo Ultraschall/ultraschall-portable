@@ -1,0 +1,27 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Tremolo
+//tags: guitar tremolo gain modulation
+//author: Cockos
+
+slider1:4<0,100,1>Frequency (Hz)
+slider2:-6<-60,0,1>Amount (dB)
+slider3:0<0,1>Stereo Seperation
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+  adv=$pi*2*slider1/srate;
+  sep=slider3*$pi;
+  amount=2 ^ (slider2/6);
+  sc=0.5*amount; amount=1-amount;
+
+@sample
+
+spl0=spl0*((cos(pos) + 1) * sc + amount);
+spl1=spl1*((cos(pos+sep) + 1) * sc + amount);
+pos+=adv;

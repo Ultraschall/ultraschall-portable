@@ -1,0 +1,279 @@
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:RBJ 4-Band Semi-Parametric EQ
+desc:RBJ 4-Band Semi-Parametric EQ [Stillwell]
+//tags: equalizer
+//author: Stillwell
+
+
+slider1:3<1,5,1{40,80,160,315,500}>Frequency 1 (Hz)
+slider2:0<-15,15,0.1>Boost/Cut (dB)
+slider3:3<1,5,1{125,250,500,1k,2k}>Frequency 2 (Hz)
+slider4:0<-15,15,0.1>Boost/Cut (dB)
+slider5:3<1,5,1{315,630,1.2k,2.5k,5k}>Frequency 3 (Hz)
+slider6:0<-15,15,0.1>Boost/Cut (dB)
+slider7:3<1,5,1{1.6k,3.2k,6.4k,9k,12k}>Frequency 4 (Hz)
+slider8:0<-15,15,0.1>Boost/Cut (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  gain1 = 0;
+  freq1 = 160;
+  a1 = (10^(gain1/40));
+  q1 = 0.8;
+  w01 = 2 * $pi * freq1/srate;
+  cosw01 = cos(w01);
+  sinw01 = sin(w01);
+  alpha1 = sinw01 / (2 * q1);
+
+  b01 = 1 + alpha1 * a1;
+  b11 = -2 * cosw01;
+  b21 = 1 - alpha1 * a1;
+  a01 = 1 + alpha1 / a1;
+  a11 = -2 * cosw01;
+  a21 = 1 - alpha1 / a1;
+  b01 /= a01;
+  b11 /= a01;
+  b21 /= a01;
+  a11 /= a01;
+  a21 /= a01;
+
+  gain3 = 0;
+  freq3 = 500;
+  a3 = (10^(gain3/40));
+  q3 = 0.8;
+  w03 = 2 * $pi * freq3/srate;
+  cosw03 = cos(w03);
+  sinw03 = sin(w03);
+  alpha3 = sinw03 / (2 * q3);
+
+  b03 = 1 + alpha3 * a3;
+  b13 = -2 * cosw03;
+  b23 = 1 - alpha3 * a3;
+  a03 = 1 + alpha3 / a3;
+  a13 = -2 * cosw03;
+  a23 = 1 - alpha3 / a3;
+  b03 /= a03;
+  b13 /= a03;
+  b23 /= a03;
+  a13 /= a03;
+  a23 /= a03;
+
+  gain5 = 0;
+  freq5 = 1200;
+  a5 = (10^(gain5/40));
+  q5 = 0.8;
+  w05 = 2 * $pi * freq5/srate;
+  cosw05 = cos(w05);
+  sinw05 = sin(w05);
+  alpha5 = sinw05 / (2 * q5);
+
+  b05 = 1 + alpha5 * a5;
+  b15 = -2 * cosw05;
+  b25 = 1 - alpha5 * a5;
+  a05 = 1 + alpha5 / a5;
+  a15 = -2 * cosw05;
+  a25 = 1 - alpha5 / a5;
+  b05 /= a05;
+  b15 /= a05;
+  b25 /= a05;
+  a15 /= a05;
+  a25 /= a05;
+
+  gain7 = 0;
+  freq7 = 6400;
+  a7 = (10^(gain7/40));
+  q7 = 0.8;
+  w07 = 2 * $pi * freq7/srate;
+  cosw07 = cos(w07);
+  sinw07 = sin(w07);
+  alpha7 = sinw07 / (2 * q7);
+
+  b07 = 1 + alpha7 * a7;
+  b17 = -2 * cosw07;
+  b27 = 1 - alpha7 * a7;
+  a07 = 1 + alpha7 / a7;
+  a17 = -2 * cosw07;
+  a27 = 1 - alpha7 / a7;
+  b07 /= a07;
+  b17 /= a07;
+  b27 /= a07;
+  a17 /= a07;
+  a27 /= a07;
+ 
+@slider
+  freq1 = (slider1 == 0 ? 40 : (slider1 == 1 ? 80 : (slider1 == 2 ? 160 : (slider1 == 3 ? 315 : 500))));
+  gain1 = slider2;
+  freq3 = (slider3 == 0 ? 125 : (slider3 == 1 ? 250 : (slider3 == 2 ? 500 : (slider3 == 3 ? 1000 : 2000))));
+  gain3 = slider4;
+  freq5 = (slider5 == 0 ? 315 : (slider5 == 1 ? 630 : (slider5 == 2 ? 1200 : (slider5 == 3 ? 2500 : 5000))));
+  gain5 = slider6;
+  freq7 = (slider7 == 0 ? 1600 : (slider7 == 1 ? 3200 : (slider7 == 2 ? 6400 : (slider7 == 3 ? 9000 : 12000))));
+  gain7 = slider8;
+
+  a1 = (10^(gain1/40));
+  q1 = 0.8;
+  w01 = 2 * $pi * freq1/srate;
+  cosw01 = cos(w01);
+  sinw01 = sin(w01);
+  alpha1 = sinw01 / (2 * q1);
+
+  b01 = 1 + alpha1 * a1;
+  b11 = -2 * cosw01;
+  b21 = 1 - alpha1 * a1;
+  a01 = 1 + alpha1 / a1;
+  a11 = -2 * cosw01;
+  a21 = 1 - alpha1 / a1;
+  b01 /= a01;
+  b11 /= a01;
+  b21 /= a01;
+  a11 /= a01;
+  a21 /= a01;
+
+  a3 = (10^(gain3/40));
+  q3 = 0.8;
+  w03 = 2 * $pi * freq3/srate;
+  cosw03 = cos(w03);
+  sinw03 = sin(w03);
+  alpha3 = sinw03 / (2 * q3);
+
+  b03 = 1 + alpha3 * a3;
+  b13 = -2 * cosw03;
+  b23 = 1 - alpha3 * a3;
+  a03 = 1 + alpha3 / a3;
+  a13 = -2 * cosw03;
+  a23 = 1 - alpha3 / a3;
+  b03 /= a03;
+  b13 /= a03;
+  b23 /= a03;
+  a13 /= a03;
+  a23 /= a03;
+
+  a5 = (10^(gain5/40));
+  q5 = 0.8;
+  w05 = 2 * $pi * freq5/srate;
+  cosw05 = cos(w05);
+  sinw05 = sin(w05);
+  alpha5 = sinw05 / (2 * q5);
+
+  b05 = 1 + alpha5 * a5;
+  b15 = -2 * cosw05;
+  b25 = 1 - alpha5 * a5;
+  a05 = 1 + alpha5 / a5;
+  a15 = -2 * cosw05;
+  a25 = 1 - alpha5 / a5;
+  b05 /= a05;
+  b15 /= a05;
+  b25 /= a05;
+  a15 /= a05;
+  a25 /= a05;
+
+  a7 = (10^(gain7/40));
+  q7 = 0.8;
+  w07 = 2 * $pi * freq7/srate;
+  cosw07 = cos(w07);
+  sinw07 = sin(w07);
+  alpha7 = sinw07 / (2 * q7);
+
+  b07 = 1 + alpha7 * a7;
+  b17 = -2 * cosw07;
+  b27 = 1 - alpha7 * a7;
+  a07 = 1 + alpha7 / a7;
+  a17 = -2 * cosw07;
+  a27 = 1 - alpha7 / a7;
+  b07 /= a07;
+  b17 /= a07;
+  b27 /= a07;
+  a17 /= a07;
+  a27 /= a07;
+
+@sample
+  gain1 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b01 * spl0 + b11 * xl11 + b21 * xl21 - a11 * yl11 - a21 * yl21;
+  xl21 = xl11;
+  xl11 = ospl0;
+  yl21 = yl11;
+  yl11 = spl0;
+
+  ospl1 = spl1;
+  spl1 = b01 * spl1 + b11 * xr11 + b21 * xr21 - a11 * yr11 - a21 * yr21;
+  xr21 = xr11;
+  xr11 = ospl1;
+  yr21 = yr11;
+  yr11 = spl1;
+  );
+
+  gain3 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b03 * spl0 + b13 * xl13 + b23 * xl23 - a13 * yl13 - a23 * yl23;
+  xl23 = xl13;
+  xl13 = ospl0;
+  yl23 = yl13;
+  yl13 = spl0;
+
+  ospl1 = spl1;
+  spl1 = b03 * spl1 + b13 * xr13 + b23 * xr23 - a13 * yr13 - a23 * yr23;
+  xr23 = xr13;
+  xr13 = ospl1;
+  yr23 = yr13;
+  yr13 = spl1;
+  );
+
+  gain5 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b05 * spl0 + b15 * xl15 + b25 * xl25 - a15 * yl15 - a25 * yl25;
+  xl25 = xl15;
+  xl15 = ospl0;
+  yl25 = yl15;
+  yl15 = spl0;
+
+  ospl1 = spl1;
+  spl1 = b05 * spl1 + b15 * xr15 + b25 * xr25 - a15 * yr15 - a25 * yr25;
+  xr25 = xr15;
+  xr15 = ospl1;
+  yr25 = yr15;
+  yr15 = spl1;
+  );
+
+  gain7 != 0 ? (
+  ospl0 = spl0;
+  spl0 = b07 * spl0 + b17 * xl17 + b27 * xl27 - a17 * yl17 - a27 * yl27;
+  xl27 = xl17;
+  xl17 = ospl0;
+  yl27 = yl17;
+  yl17 = spl0;
+
+  ospl1 = spl1;
+  spl1 = b07 * spl1 + b17 * xr17 + b27 * xr27 - a17 * yr17 - a27 * yr27;
+  xr27 = xr17;
+  xr17 = ospl1;
+  yr27 = yr17;
+  yr17 = spl1;
+  );

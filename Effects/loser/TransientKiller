@@ -1,0 +1,43 @@
+// (C) 2006, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:Transient Killer
+desc:Transient Killer (Instant Compressor) [LOSER]
+//tags: dynamics compressor
+//author: LOSER
+
+slider1:0<-12,1,.1>Threshold (dB)
+slider2:1<1,50,.1>Ratio
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+cAmpDB_ = 8.65617025;
+
+@slider
+treshDB = slider1;
+
+ratio = slider2;
+
+vol = 1/exp( (treshDB -treshDB/ratio) / cAmpDB_);
+
+@sample
+(db0 = log(abs(spl0))*cAmpDB_) > treshDB ? spl0 = exp( (treshDB + (db0 - treshDB)/ratio) / cAmpDB_)* sign(spl0);
+(db1 = log(abs(spl1))*cAmpDB_) > treshDB ? spl1 = exp( (treshDB + (db1 - treshDB)/ratio) / cAmpDB_)* sign(spl1);
+spl0 *= vol;
+spl1 *= vol;
+

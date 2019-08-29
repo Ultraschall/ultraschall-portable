@@ -1,0 +1,143 @@
+// Copyright 2006, Thomas Scott Stillwell
+// Portions Copyright (C) 2006 Cockos Incorporated
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc: Ozzifier Chorus
+desc: Ozzifier Chorus [Stillwell]
+//tags: modulation pitch delay stereo
+//author: Stillwell
+
+slider1:2<0,6,1>Number Of Voices
+slider2:10<0,120,0.1>Time Spread (ms)
+slider3:20<0,120,1>Pitch Spread (cents)
+slider4:-6<-120,6,1>Wet Mix (dB)
+slider5:-6<-120,6,1>Dry Mix (dB)
+slider6:100<0,100>Pan Spread (%)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  bufsize = srate|0;
+  xfade=(srate*0.10)|0; // 100ms xfade
+  bufloc0 = 10000;
+  bufloc1 = bufloc0+bufsize+1000;
+  voiceptr0loc = bufloc1+bufsize+1000;
+  voicerateloc = voiceptr-loc+1000;
+  cospanloc = voicerateloc+1000;
+  sinpanloc = cospanloc+1000;
+
+  buffer0 = bufloc0;
+  buffer1 = bufloc1;
+  voiceptr0 = voiceptr0loc;
+  voicerate = voicerateloc;
+  cospan = cospanloc;
+  sinpan = sinpanloc;
+
+  bufdiff=bufloc1-bufloc0;
+@slider
+  numvoices = slider1;
+
+  delaytime = (slider2*0.001*srate)|0;
+
+  pitchspread = slider3;
+
+  totalpitch = pitchspread * numvoices;
+
+  bufsize = (delaytime)|0; 
+  xfade=(bufsize*0.05)|0;
+
+  drymix = 2 ^ (slider5/6); 
+  wetmix = 2 ^ (slider4/6);
+
+  panwidth = slider6/100;
+  lpan = 0.5 - (panwidth/2);
+  panincr = panwidth/max(1,numvoices-1);
+
+  i = 1;
+
+  loop(numvoices,
+    voicerate[i] = 2 ^ (-((totalpitch / 2) - (pitchspread * i)) / 1200);
+    voiceptr0[i] = bufloc0 + bufsize - (i/numvoices) * delaytime;
+    (voiceptr0[i] < bufloc0) ? voiceptr0[i] += bufsize;
+    cospan[i] = cos((lpan + (i - 1) * panincr) * $pi / 2);
+    sinpan[i] = sin((lpan + (i - 1) * panincr) * $pi / 2);
+    i += 1;
+  );
+@sample
+  wet0 = wet1 = 0;
+  i = 1;
+  loop(numvoices,
+    v0=voiceptr0[i]; iv0=0|(v0); frac0=v0-iv0;
+    iv02 = iv0 >= (bufloc0+bufsize-1) ? iv0-bufsize+1 : iv0+1;   
+  
+    ren0=(iv0[0]*(1-frac0)+iv02[0]*frac0);
+    ren1=(iv0[bufdiff]*(1-frac0)+iv02[bufdiff]*frac0);
+    vr=voicerate[i];
+
+    vr >= 1.0 ?
+    (
+      tv=v0;
+      tv>buffer0?tv-=bufsize;
+      (tv >= buffer0-xfade && tv < buffer0) ? (
+         // xfade
+        frac=(buffer0-tv)/xfade;
+        tmp=v0+xfade;
+        tmp>=bufloc0+bufsize?tmp-=bufsize;
+        tmp2=tmp>=bufloc0+bufsize-1?bufloc0:tmp+1;
+        ren0 = ren0*frac + (1-frac)*( tmp[0]*(1-frac0)+tmp2[0]*frac0 );
+        ren1 = ren1*frac + (1-frac)*( tmp[bufdiff]*(1-frac0)+tmp2[bufdiff]*frac0 );
+        tv+vr > buffer0+1 ? v0+=xfade;
+      );
+    ) : ( // read pointer moving slower than write pointer
+      tv=v0;
+      tv<buffer0?tv+=bufsize;
+      (tv >= buffer0 && tv < buffer0+xfade) ? (
+         // xfade
+        frac=(tv-buffer0)/xfade;
+        tmp=v0+xfade;
+        tmp>=bufloc0+bufsize?tmp-=bufsize;
+        tmp2=tmp>=bufloc0+bufsize-1?bufloc0:tmp+1;
+        ren0 = ren0*frac + (1-frac)*( tmp[0]*(1-frac0)+tmp2[0]*frac0 );
+        ren1 = ren1*frac + (1-frac)*( tmp[bufdiff]*(1-frac0)+tmp2[bufdiff]*frac0 );
+        tv+vr < buffer0+1 ? v0+=xfade;
+      );
+    );
+    wet0 += cospan[i] * ren0;
+    wet1 += sinpan[i] * ren1;
+    
+    ((v0+=vr) >= (bufloc0+bufsize)) ? v0 -= bufsize;
+    voiceptr0[i]=v0;
+    i += 1;
+  );
+
+  buffer0[0] = spl0; // write after reading it to avoid clicks
+  buffer0[bufdiff] = spl1;
+
+  spl0 = wet0 * wetmix + spl0 * drymix;
+  spl1 = wet1 * wetmix + spl1 * drymix;
+
+  ((buffer0+=1) >= (bufloc0 + bufsize)) ? buffer0 -= bufsize;

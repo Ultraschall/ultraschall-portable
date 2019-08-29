@@ -1,0 +1,215 @@
+desc:Dynamic Range Meter
+//tags: analysis utility dynamics
+
+in_pin:left input
+in_pin:right input
+out_pin:none
+
+@init
+
+// change these if you like 
+RMS_MS = 300.0;
+GREEN_DR = 12;
+RED_DR = 6;
+
+// calibrate to JS frame meter numbers 
+MAX_DB = 0.0;
+MIN_DB = -54.0;
+
+MAX_DR = 40;
+DR_BINS = 128;
+
+decay = exp(-1.0/(RMS_MS*srate*0.001));
+
+DB_LO = -60.0;
+
+buf = 0;
+buflen = (RMS_MS*srate*0.001)|0;
+memset(p, 0, 2*buflen);
+pos = 0;
+
+peak0 = peak1 = 0.0;
+sumsq0 = sumsq1 = 0.0;
+peakdb0 = peakdb1 = rmsdb0 = rmsdb1 = DB_LO;
+
+dyn = sumdyn = meandyn = 0.0;
+ndyn = 0;
+
+@block
+
+peak0 <= 0.0 ? peakdb0 = DB_LO : peakdb0 = 8.6562*log(peak0);
+rms = sqrt(sumsq0/buflen);
+rms == 0.0 ? rmsdb0 = DB_LO : rmsdb0 = 8.6562*log(rms);
+
+peak1 <= 0.0 ? peakdb1 = DB_LO : peakdb1 = 8.6562*log(peak1);
+rms = sqrt(sumsq1/buflen);
+rms == 0.0 ? rmsdb1 = DB_LO : rmsdb1 = 8.6562*log(rms);
+
+dyn = 0.5*(peakdb0+peakdb1-rmsdb0-rmsdb1);
+dyn < 0.0 ? dyn = 0.0;
+
+play_state == 1 ?
+(
+  ndyn = ndyn+1;
+  sumdyn = sumdyn+dyn;
+  meandyn = sumdyn/ndyn;
+);
+
+@sample
+
+new = abs(spl0);
+new > peak0 ? peak0 = new : peak0 = peak0*decay;
+newsq = new*new;
+oldsq = buf[pos];
+buf[pos] = newsq;
+sumsq0 = sumsq0+newsq-oldsq;
+pos = pos+1;
+
+new = abs(spl1);
+new > peak1 ? peak1 = new : peak1 = peak1*decay;
+newsq = new*new;
+oldsq = buf[pos];
+buf[pos] = newsq;
+sumsq1 = sumsq1+newsq-oldsq;
+pos = pos+1;
+
+pos == 2*buflen ? pos = 0;
+
+@gfx 100 200
+
+// calibrate to JS frame meter numbers 
+T = (gfx_h-pxperdb*60.0)|0;
+B = (gfx_h-pxperdb*6.0)|0;
+pxperdb = (gfx_h+22.5)/66.0;
+
+greenpx = GREEN_DR*pxperdb;
+redpx = RED_DR*pxperdb;
+
+resetx = gfx_w-gfx_texth*5-4;
+
+doreset = 0;
+mouse_cap ?
+(
+  mouse_x >= resetx && mouse_y < 4+gfx_texth ? doreset = 1;
+);
+
+xw = -gfx_W*3/64;
+xs = -gfx_W/16;
+
+gfx_a = 1.0;
+
+i = 0;
+loop
+(
+  2,
+  i == 0 ?
+  (
+    tpeak = peakdb0;
+    trms = rmsdb0;
+  )
+  :
+  (
+    tpeak = peakdb1;
+    trms = rmsdb1;
+  );
+
+  peaky = B-pxperdb*(tpeak-MIN_DB);
+  peaky < T ? peaky = T : peaky > B ? peakY = B;
+  rmsy = B-pxperdb*(trms-MIN_DB);
+  rmsy < T ? rmsy = T : rmsy > B ? rmsY = B;
+
+  d = (rmsy-peaky-redpx)/(greenpx-redpx);
+  d < 0.0 ? d = 0.0 : d > 1.0 ? d = 1.0;
+  gfx_r = 1.0-d;
+  gfx_g = d;
+  gfx_b = 0.0;
+
+  gfx_x = gfx_w/2+xw/4;
+  gfx_y = rmsy;
+  gfx_rectto(gfx_x+xw, peaky);
+
+  gfx_r = 0.2;
+  gfx_g = 0.8;
+  gfx_b = 0.3;
+   
+  gfx_x = gfx_x+xs;
+  gfx_rectto(gfx_x+xw, B);
+  gfx_x = gfx_x+xs;
+  gfx_rectto(gfx_x+xw, rmsy);
+
+  xw = -xw;
+  xs = -xs;
+  i = i+1;
+);
+
+i = 0;
+db = 60;
+while 
+(
+  i%2 ? gfx_r=gfx_g=gfx_b=0.0 : gfx_r=gfx_g=gfx_b=0.375;
+  gfx_x = 4;
+  gfx_y = gfx_h-pxperdb*db-0.5;
+  gfx_lineto(gfx_w-4, gfx_y, 0);  
+  db = db-3;
+  i = i+1;
+  db > 0.0;
+);
+
+gfx_r=gfx_g=gfx_b=1.0;
+
+txtw = gfx_texth;
+dyn >= 10.0 ? txtw += gfx_texth;
+gfx_x = (gfx_w-txtw)/2;
+gfx_y = gfx_h-gfx_texth/2-20;
+gfx_drawnumber(dyn+0.5,0);
+
+gfx_x = (gfx_w-gfx_texth*14)/2;
+gfx_y = gfx_h-gfx_texth/2-8;
+gfx_drawchar($'c');
+gfx_drawchar($'u');
+gfx_drawchar($'m');
+gfx_drawchar($'u');
+gfx_drawchar($'l');
+gfx_drawchar($'a');
+gfx_drawchar($'t');
+gfx_drawchar($'i');
+gfx_drawchar($'v');
+gfx_drawchar($'e');
+gfx_drawchar($':');
+gfx_drawchar($' ');
+
+doreset ?
+(
+  gfx_r=gfx_g=gfx_b=1.0;
+  gfx_drawchar($'-');
+)
+:
+(
+  d = (meandyn-RED_DR)/(GREEN_DR-RED_DR);
+  d < 0.0 ? d = 0.0 : d > 1.0 ? d = 1.0;
+  gfx_r = 1.0-d;
+  gfx_g = d;
+  gfx_b = 0.0;
+
+  gfx_drawnumber(meandyn+0.5,0);
+  gfx_r=gfx_g=gfx_b=0.75;
+);
+
+gfx_x = resetx;
+gfx_y = 4;
+gfx_drawchar($'r');
+gfx_drawchar($'e');
+gfx_drawchar($'s');
+gfx_drawchar($'e');
+gfx_drawchar($'t');
+
+doreset ?
+(
+  memset(p, 0, 2*buflen);
+  peak0 = peak1 = 0.0;
+  sumsq0 = sumsq1 = 0.0;
+  peakdb0 = peakdb1 = rmsdb0 = rmsdb1 = DB_LO;
+  pos = 0;
+  dyn = sumdyn = meandyn = 0.0;
+  ndyn = 0;
+);

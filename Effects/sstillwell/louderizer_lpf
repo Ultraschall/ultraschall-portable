@@ -1,0 +1,93 @@
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:Louderizer LP
+desc:Louderizer LP [Stillwell]
+//tags: processing saturation filter
+//author: Stillwell
+
+slider1:0<0,100,0.1>Mix (%)
+slider2:0<0,100,0.1>Drive (%)
+slider3:22000<1,22000>LP Frequency (Hz)
+slider4:0.2<0,1>LP Size (1/Q) (0=resonant, 1=dull)
+slider5:1<0,1,1{Pre-filter,Post-filter}>Drive Circuit
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+
+  mix=slider1 / 100;
+  drive=slider2 / 100;
+  freq=slider3;
+  size=slider4;
+  prepost=slider5;
+
+  damp=0.01+size*20;
+  c = 1/tan($pi*freq/srate);
+  fk = 1 / (1 + c*(c+damp));
+  fa1 = 2 * (1 - c*c) * fk;
+  fa0 = (1 + c*(c-damp)) * fk;
+  oldamp=damp;
+
+  mix1 = 1 - mix;
+  drive1 = 1 / (1 - (drive / 2));
+  drive2 = drive / 2;
+
+
+@sample
+  
+  dry0 = spl0;
+  dry1 = spl1;
+
+  prepost>0.5 ? (
+    wet0 = drive1 * dry0 * (1 - abs(dry0 * drive2));
+    wet1 = drive1 * dry1 * (1 - abs(dry1 * drive2)); 
+
+    fd0l = (fk*wet0) - (fa1*fd1l) - (fa0*fd2l);
+    fd0r = (fk*wet1) - (fa1*fd1r) - (fa0*fd2r);
+
+    spl0 = mix1 * dry0 + (mix) * (fd0l + fd1l + fd1l + fd2l);
+    spl1 = mix1 * dry1 + (mix) * (fd0r + fd1r + fd1r + fd2r);
+  ) : (
+    fd0l = (fk*dry0) - (fa1*fd1l) - (fa0*fd2l);
+    fd0r = (fk*dry1) - (fa1*fd1r) - (fa0*fd2r);
+
+    wet0 = fd0l + fd1l + fd1l + fd2l;
+    wet1 = fd0r + fd1r + fd1r + fd2r;
+
+    wet0 = drive1 * wet0 * (1 - abs(dry0 * drive2));
+    wet1 = drive1 * wet1 * (1 - abs(dry1 * drive2)); 
+
+    spl0 = mix1 * dry0 + (mix) * wet0;
+    spl1 = mix1 * dry1 + (mix) * wet1;
+  );
+
+  fd2l = fd1l;
+  fd2r = fd1r;
+
+  fd1l = fd0l;
+  fd1r = fd0r;

@@ -1,0 +1,173 @@
+desc:MIDI Sequencer Baby
+//tags: MIDI generator sequencing
+
+slider1:0<0,15,1{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}>Pattern
+slider2:60<0,127,1>Note Start
+
+in_pin:none
+out_pin:none
+
+@init
+listlength=16;
+numnotes=16;
+lbeatpos=-1;
+npatterns=16;
+mstate=-1;
+lastpreviewsel=-1;
+gfx_clear=-1;
+ext_noinit=1;
+noteonstate=0;
+want_preview=-1;
+want_previewoff=0;
+
+
+@slider
+basenote=slider2|0; 
+p=slider1|0;
+p<0?p=0:p>=npatterns?p=npatterns-1;
+
+notelist=listlength*p;
+
+@serialize
+file_mem(0,0,listlength*npatterns);
+
+@block
+
+want_previewoff && last_preview >=0 ? (
+  midisend(0,$x80,last_preview+basenote);
+  last_preview=-1;
+);
+want_previewoff=0;
+
+
+want_preview >=0 ?
+(
+  midisend(0,$x90,want_preview+basenote+127*256);
+  last_preview=want_preview;
+  want_preview=-1;
+);
+
+curbeatpos = beat_position;
+cursplpos=0;
+dbeatpos = (tempo * 4.0 / (60.0 * ts_denom * srate));
+
+loop((play_state&1) ? samplesblock : 1,
+  beatpos=(play_state&1) ? (curbeatpos * 4.0)%listlength : -100;
+  beatpos != lbeatpos || !(play_state&1) ? (
+    a = (play_state&1) ? notelist[beatpos] : 0;
+    npos=basenote;
+    noneed=noteonstate;
+    noteonstate=0;
+    while(
+      (noneed&1) ? (
+         midisend(cursplpos,$x80,npos);  
+      );
+      (a&1) ? (
+        midisend(cursplpos,$x90,npos + 127*256);
+        noteonstate+=2^(npos-basenote);
+      );
+      npos+=1;
+      noneed*=0.5;
+      (a*=0.5) >=1 || noneed >= 1;
+    );
+    lbeatpos=beatpos;
+  );
+  cursplpos += 1;
+  curbeatpos += dbeatpos;
+);
+
+@sample
+
+@gfx 400 300
+
+lgfx_w != gfx_w || lgfx_h != gfx_h ? (
+  lgfx_w = gfx_w; lgfx_h = gfx_h;
+  gfx_r=gfx_g=gfx_b=gfx_x=gfx_y=0;
+  gfx_rectto(gfx_w,gfx_h);
+);
+
+y = numnotes - 1 - (((mouse_y / gfx_h)*numnotes )|0);
+
+(mouse_cap&2) ? (
+  y != lastpreviewsel && y >= 0 && y < numnotes ? 
+  (
+    lastpreviewsel>=0 ? want_previewoff=1;
+    want_preview=lastpreviewsel=y; 
+  );
+):(
+  want_previewoff=1;
+  lastpreviewsel=-1;
+);
+
+(mouse_cap&1) ? ( 
+    x = ((mouse_x/gfx_w)*listlength)|0;
+    x >= 0 && x < listlength && y >= 0 && y < numnotes? (
+      mstate<0 ? (
+        mask = 2^y;
+        nlm=(notelist[x] & mask);
+        mstate=nlm?0:1;
+        mstate==0 && nlm ? notelist[x]-=mask;
+        mstate==1 && !nlm ? notelist[x]+=mask;
+      ) : (
+        lcnt = max(abs(last_x-x),abs(last_y-y))|0;
+        dx = (x-last_x)/lcnt;
+        dy = (y-last_y)/lcnt;
+        lcnt >= 1 ? loop(lcnt,
+           last_x += dx;
+           last_y += dy;
+           mask = 2^(last_y|0);
+           nlm=(notelist[last_x|0] & mask);
+           mstate==0 && nlm ? notelist[last_x|0]-=mask;
+           mstate==1 && !nlm ? notelist[last_x|0]+=mask;
+           
+        );
+      );
+      last_x = x;
+      last_y = y;    
+    );
+) : (
+  mstate >= 0 ? sliderchange(-1);
+  mstate=-1;
+);
+
+
+ly=0;
+
+notepos=0;
+loop(numnotes,
+
+ty=((notepos+1)*gfx_h)/(numnotes);
+lx=0;
+xpos=0;
+mask = 2^(numnotes-1-notepos);
+cidx=(slider1&7);
+gfx_a=1;
+
+use_r=(cidx&1) ? 0.6 : 0.2;
+use_g=(cidx&2) ? 0.6 : 0.2;
+use_b=(cidx&4) ? 0.2 : 0.6;
+cidx==3  ? use_r*=2;
+cidx==4 ? use_g*=2;
+
+loop(listlength,
+  tx = ((xpos+1)*gfx_w)/listlength;
+
+  sel=(notelist[xpos]&mask);
+
+  gfx_r=use_r; gfx_g=use_g; gfx_b=use_b;  
+ 
+  !(xpos&3) ? ( gfx_g=gfx_r; gfx_r=gfx_b; gfx_b=use_g;);
+
+  lbeatpos == xpos ? ( gfx_r=gfx_g=gfx_b=sel?0.8:0.4; ) :
+      !sel ? (gfx_r*=0.55; gfx_g*=0.55; gfx_b*=0.55; );
+
+  
+  gfx_x=lx; gfx_y=ly; gfx_rectto(tx,ty);
+  
+  lx=tx+2;
+  xpos+=1;
+);  
+
+ly=ty+2;
+notepos+=1;
+);

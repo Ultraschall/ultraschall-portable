@@ -1,0 +1,547 @@
+<html>
+<head>
+<title>REAPER control (basic)</title>
+
+<style type="text/css">
+body {
+  background-color: #000;
+  color: #fff;
+}
+
+.transportbtab {
+  width:100%;
+  max-width:358px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.but {
+  background-color: #fff;
+  color: #000;
+  width: 50%;
+  height: 200px;
+  display: table-cell;
+  text-align: center;
+  vertical-align:middle;
+  font-size:200%;
+}
+.btab {
+  width:100%;
+}
+#status {
+  height:45px;
+  display: table-cell;
+  text-align: center;
+  vertical-align:middle;
+  background-color: #fff;
+  font-size:25px;
+  color: #000;
+}
+#abort {
+  background-color:#fee;
+}
+
+.trackbut {
+  background-color: #fff;
+  color: #000;
+  width: 60px;
+  height: 60px;
+  display: table-cell;
+  text-align: center;
+  vertical-align:middle;
+}
+
+.trackinspect_but {
+  background-color: #fff;
+  color: #000;
+  width: 140px;
+  height: 140px;
+  display: table-cell;
+  text-align: center;
+  vertical-align:middle;
+}
+
+.tracklbl {
+  background-color: #fff;
+  color: #000;
+  display: table-cell;
+  text-align: right;
+  padding-right:20px;
+  vertical-align:middle;
+}
+.trackinfo {
+  font-size:75%;
+}
+
+#trackinspect {
+  position:fixed;
+  left:0px;
+  top:0px;
+  width:100%;
+  height:100%;
+  background-color:#000;
+  display:none;
+}
+
+#trackinspect_title {
+  font-size:200%;
+  padding: 8px;
+  background-color:#fff;
+  color:#000;
+  text-align:center;
+}
+#trackinspect_close {
+  font-size:200%;
+  background-color:#000;
+  color:#fff;
+  padding:8px;
+  float:left;
+}
+
+.trackinspect_btab {
+  width:80%;
+  height:80%;
+}
+
+#trackinspect_volf {
+  width: 20%;
+  background-color:#444;
+  height: 80%;
+  float:left;
+}
+
+#trackinspect_volh {
+  background-color:#fff;
+  color: #000;
+  text-align:center;
+  position:absolute;
+  left:0px;
+  top:0px;
+  height: 20px;
+  width: 20%;
+}
+
+</style>
+
+<script src="main.js"></script>
+
+<script type="text/javascript">
+
+
+var last_transport_state = -1, last_out_states = [-1, -1], last_time_str = "", 
+    last_titles = [], last_flags = [], last_vols = [], last_pans = [],
+    last_metronome = false, last_track_cnt = 0,
+    g_inspect_tridx = -1;
+
+var minvol = -100, maxvol = 24;
+
+function setTextForObject(obj, text) { // thx cfillion
+  if (obj.lastChild) obj.lastChild.nodeValue = text;
+  else obj.appendChild(document.createTextNode(text));
+}
+
+function mouseDownEventHandler(msg) {
+  return function(e) {
+    if (typeof e == 'undefined') e=event; 
+    if (e.preventDefault) e.preventDefault();
+    wwr_req(msg);
+    return false;
+  }
+}
+
+function wwr_onreply(results) {
+  var ar = results.split("\n");
+  for (var x=0;x<ar.length;x++) {
+    var tok = ar[x].split("\t");
+    if (tok.length > 0) switch (tok[0]) {
+      case "TRANSPORT":
+        if (tok.length > 4) {
+          if (tok[1] != last_transport_state) {
+            last_transport_state=tok[1];
+            document.getElementById("play").style.background = (last_transport_state&1) ? "#0f0" : "#fff";
+            document.getElementById("rec").style.background = (last_transport_state&4) ? "#f33" : "#fff";
+          }
+          var obj = document.getElementById("status");
+          if (obj) {
+            var tmp="";
+            switch (parseInt(last_transport_state)) {
+               case 0: tmp += "stopped: "; break;
+               case 1: tmp += "playing: "; break;
+               case 2: tmp += "paused: "; break;
+               case 5: tmp += "recording: "; break;
+               case 6: tmp += "recpaused: "; break;
+            }
+
+            tmp += (last_time_str = tok[4]);
+            setTextForObject(obj,tmp);
+          }
+        }
+      break;
+      case "CMDSTATE":
+        if (tok[1] == 40364) {
+          if ((tok[2]>0) != last_metronome) {
+            last_metronome = tok[2]>0;
+            if (g_inspect_tridx == 0)
+              document.getElementById("trackinspect_clone").style.background = last_metronome ? "#8f8" : "#777";
+          }
+        }
+      break;
+      case "SEND":
+        if (tok.length > 3) {
+          var sendidx = parseInt(tok[2]);
+          if (tok[1] == 0 && (sendidx == 0 || sendidx == 1)) {
+            if ((tok[3]&8) != last_out_states[sendidx]) {
+              var host = document.getElementById("tracks").rows[0];
+              if (host) host.cells[1+sendidx].style.background = (last_out_states[sendidx]=(tok[3]&8)) ? "#88f" : "#fff";
+              if (g_inspect_tridx==0)
+              {
+                if (sendidx==0)
+                  document.getElementById("trackinspect_arm").style.background = last_out_states[sendidx] ? "#88f" : "#fff";
+                else
+                  document.getElementById("trackinspect_mon").style.background = last_out_states[sendidx] ? "#88f" : "#fff";
+              }
+            }
+          }
+        }
+      break;
+      case "NTRACK":
+        if (tok.length > 1 && tok[1] >= 0) {
+          var host = document.getElementById("tracks");
+          if (host) {
+            last_track_cnt = parseInt(tok[1]) + 1;
+            var l = host.rows.length;
+            while (l > last_track_cnt) host.deleteRow(--l);
+          }
+        }
+      break;
+      case "TRACK":
+        if (tok.length > 5) {
+          var host = document.getElementById("tracks");
+          var tidx = parseInt(tok[1]);
+          if (host && tidx < 200) {
+            var addtop = host.rows.length;
+            while (addtop <= tidx) {
+              var row = host.insertRow(addtop);
+              last_titles[addtop]=null;
+              last_flags[addtop]=null;
+              last_vols[addtop]=null;
+              last_pans[addtop]=null;
+
+              var cell = row.insertCell(0);
+              cell.className = "tracklbl";
+              cell.onmousedown = inspect_track_handler(addtop);
+
+              cell.appendChild(document.createElement('div'));
+              var div=document.createElement('div');
+              div.className = "trackinfo";
+              cell.appendChild(div);
+
+              cell = row.insertCell(1);
+              cell.className = "trackbut";
+              if (addtop > 0) {
+                cell.innerHTML = "arm";
+                cell.onmousedown = mouseDownEventHandler("SET/TRACK/" + addtop + "/RECARM/-1;TRACK/" + addtop);
+              } else {
+                cell.innerHTML = "main<br>out";
+                cell.onmousedown = mouseDownEventHandler("SET/TRACK/0/SEND/0/MUTE/-1;GET/TRACK/0/SEND/0");
+              }
+
+              cell = row.insertCell(2);
+              cell.className = "trackbut";
+              if (addtop > 0) {
+                cell.innerHTML = "mon";
+                cell.onmousedown = mouseDownEventHandler("SET/TRACK/" + addtop + "/RECMON/-1;TRACK/" + addtop);
+              } else {
+                cell.innerHTML = "aux<br>out";
+                cell.onmousedown = mouseDownEventHandler("SET/TRACK/0/SEND/1/MUTE/-1;GET/TRACK/0/SEND/1");
+              }
+
+              cell = row.insertCell(3);
+              cell.className = "trackbut";
+              cell.innerHTML = "mute";
+              cell.onmousedown = mouseDownEventHandler("SET/TRACK/" + addtop + "/MUTE/-1;TRACK/" + addtop);
+
+              addtop++;
+            }
+
+            host = host.rows[tidx];
+            if (host) {
+              if (tidx > 0) tok[2] = tidx + ". " + tok[2];
+              if (tok[2] != last_titles[tidx]) {
+                setTextForObject(host.cells[0].childNodes[0],last_titles[tidx] = tok[2]);
+                if (g_inspect_tridx == tidx)
+                  setTextForObject(document.getElementById("trackinspect_title"),tok[2]);
+              }
+              if (tok[4] != last_vols[tidx] || tok[5] != last_pans[tidx]) {
+                last_vols[tidx] = tok[4];
+                last_pans[tidx] = tok[5];
+
+                if (g_inspect_tridx == tidx) {
+                  var volf = document.getElementById("trackinspect_volf");
+                  var volh = document.getElementById("trackinspect_volh");
+                  setTextForObject(volh, mkvolstr(tok[4]));
+
+                  var vol = parseFloat(tok[4]);
+                  vol = vol < 0.0000001 ? -150 : Math.log(vol)*8.68588963806;
+                  if (vol < minvol) vol=minvol;
+                  if (vol > maxvol) vol=maxvol;
+
+                  var h=volf.offsetHeight - volh.offsetHeight;
+                  if (h < 10) h=10;
+                  volh.style.top = Math.floor(volf.offsetTop + h * (maxvol-vol)/(maxvol-minvol)) + "px";
+                }
+
+                setTextForObject(host.cells[0].childNodes[1],mkvolstr(tok[4]) + " " + mkpanstr(tok[5]));
+              }
+              if (tok[3] != last_flags[tidx]) {
+                last_flags[tidx] = tok[3];
+                if (tidx > 0) {
+                  host.cells[1].style.background = (tok[3] & 64) ? "#f88" : "#fff";
+                  var c = host.cells[2];
+                  switch (tok[3] & 384) {
+                    case 128: c.innerHTML = "mon<BR>on"; c.style.background = "#8f8"; break;
+                    case 256: c.innerHTML = "auto<BR>mon"; c.style.background = "#ff8"; break;
+                    default:  c.innerHTML = "mon<BR>off"; c.style.background = "#888"; break;
+                  }
+                }
+                var c =  host.cells[3];
+                c.style.background = (tok[3] & 8) ? "#88f" : "#fff";
+                c.innerHTML = (tok[3] & 8) ? "muted" : "mute";
+
+                if (g_inspect_tridx==tidx) {
+                  if (tidx > 0) {
+                    c = document.getElementById("trackinspect_arm");
+                    c.style.background = (tok[3] & 64) ? "#f88" : "#fff";
+
+                    c = document.getElementById("trackinspect_mon");
+                    switch (tok[3] & 384) {
+                      case 128: c.innerHTML = "mon<BR>on"; c.style.background = "#8f8"; break;
+                      case 256: c.innerHTML = "auto<BR>mon"; c.style.background = "#ff8"; break;
+                      default:  c.innerHTML = "mon<BR>off"; c.style.background = "#888"; break;
+                    }
+                  }
+
+                  c = document.getElementById("trackinspect_mute");
+                  c.style.background = (tok[3] & 8) ? "#88f" : "#fff";
+                  c.innerHTML = (tok[3] & 8) ? "muted" : "mute";
+
+                  c = document.getElementById("trackinspect_solo");
+                  c.style.background = (tok[3] & 16) ? "#88f" : "#fff";
+                  c.innerHTML = (tok[3] & 16) ? "soloed" : "solo";
+
+                }
+              }
+            }
+          }
+        }
+      break;
+    }
+  }
+}
+
+
+wwr_req_recur("TRANSPORT",10);
+wwr_req_recur("GET/TRACK/0/SEND/0;GET/TRACK/0/SEND/1;NTRACK;TRACK;GET/40364",1000);
+wwr_start();
+
+function updateOrientation() {
+  var a = document.getElementById("viewport-meta");
+  if (a) a.setAttribute("content","width=320, user-scalable = no, minimum-scale = 1.0, maximum-scale = 1.0, initial-scale = 1.0");
+}
+
+function prompt_abort() {
+  if (!(last_transport_state&4)) {
+    wwr_req(1016);
+  } else {
+    if (confirm("abort recording? contents will be lost!")) wwr_req(40668);
+  }
+}
+
+function prompt_seek() {
+  if (!(last_transport_state&4)) {
+    var seekto = prompt("Seek to position:",last_time_str);
+    if (seekto != null) {
+      wwr_req("SET/POS_STR/" + encodeURIComponent(seekto));
+    }
+  }
+}
+
+function prompt_clone() {
+  if (g_inspect_tridx>0) {
+    var title = last_titles[g_inspect_tridx];
+    var newtitle = prompt("Clone track " + title.replace(/[.] .*/,"") + " without media to new track:",
+        title.replace(/^[0-9]*?[.] /,""));
+    if (newtitle != null) {
+      wwr_req("SET/UNDO_BEGIN;40297;SET/TRACK/" + g_inspect_tridx + "/SEL/1;40062;40421;40006;" +
+              "SET/TRACK/" + (g_inspect_tridx+1) + "/P_NAME/" + encodeURIComponent(newtitle) + 
+              ";GET/TRACK/" + g_inspect_tridx + ";SET/UNDO_END/Clone%20track%20without%20media");
+
+      inspect_track_handler(g_inspect_tridx+1)();
+    }
+  }
+  return false;
+}
+
+function inspect_track_handler(tidx) {
+  return function(e) { 
+    if (typeof e == 'undefined') e=event; 
+    if (e.preventDefault) e.preventDefault();
+    g_inspect_tridx = parseInt(tidx);
+    document.getElementById("trackinspect").style.display = tidx>=0 ? "inline" : "none";
+    if (tidx>=0) {
+      document.ontouchmove = function (e) { e.preventDefault(); }
+
+      last_titles[tidx] = null;
+      last_vols[tidx] = null;
+      last_flags[tidx]=null;
+      wwr_req("TRACK/"+tidx);
+      if (tidx==0) { 
+        var c = document.getElementById("trackinspect_arm");
+        c.innerHTML = "main<br>out";
+        c.style.background = last_out_states[0] ? "#88f" : "#fff";
+
+        c=document.getElementById("trackinspect_mon");
+        c.innerHTML = "aux<br>out";
+        c.style.background = last_out_states[1] ? "#88f" : "#fff";
+
+        c = document.getElementById("trackinspect_clone");
+        c.innerHTML = "metronome";
+        c.style.background = last_metronome ? "#8f8" : "#777";
+      } else {
+        document.getElementById("trackinspect_arm").innerHTML = "arm";
+        document.getElementById("trackinspect_mon").innerHTML = "mon";
+        document.getElementById("trackinspect_clone").innerHTML = "clone<br>without<br>media";
+      }
+    } else {
+      setTextForObject(document.getElementById("trackinspect_title"),"");
+      setTextForObject(document.getElementById("trackinspect_volh"),"");
+      document.ontouchmove = function (e) { return true; }
+    }
+    return false;
+  };
+}
+
+function init() {
+  updateOrientation();
+
+  document.getElementById("trackinspect_clone").onmousedown = function(e) { 
+    if (g_inspect_tridx>0) return prompt_clone(); 
+    return mouseDownEventHandler("40364;GET/40364")(e);
+  };
+  document.getElementById("trackinspect_arm").onmousedown = function(e) {
+    if (g_inspect_tridx==0)
+      return mouseDownEventHandler("SET/TRACK/0/SEND/0/MUTE/-1;GET/TRACK/0/SEND/0")(e);
+    return mouseDownEventHandler("SET/TRACK/" + g_inspect_tridx + "/RECARM/-1;TRACK/" + g_inspect_tridx)(e);
+  };
+  document.getElementById("trackinspect_mon").onmousedown = function(e) {
+    if (g_inspect_tridx==0)
+      return mouseDownEventHandler("SET/TRACK/0/SEND/1/MUTE/-1;GET/TRACK/0/SEND/1")(e);
+    return mouseDownEventHandler("SET/TRACK/" + g_inspect_tridx + "/RECMON/-1;TRACK/" + g_inspect_tridx)(e);
+  };
+  document.getElementById("trackinspect_mute").onmousedown = function(e) {
+    return mouseDownEventHandler("SET/TRACK/" + g_inspect_tridx + "/MUTE/-1;TRACK/" + g_inspect_tridx)(e);
+  };
+  document.getElementById("trackinspect_solo").onmousedown = function(e) {
+    mouseDownEventHandler("SET/TRACK/" + g_inspect_tridx + "/SOLO/-1;TRACK/" + g_inspect_tridx)(e);
+  };
+}
+
+function volfader(e, istouch) {
+  var fader = document.getElementById("trackinspect_volf");
+  var handle = document.getElementById("trackinspect_volh");
+  if (typeof e == 'undefined') e=event;
+  if (e.preventDefault) e.preventDefault();
+  e.returnValue= false;
+
+  var sh = fader.offsetHeight - handle.offsetHeight;
+  if (sh < 10) sh=10;
+  var starty = e.pageY || e.clientY || e.touches[0].pageY;
+
+  var movee = function(e) {
+    if (typeof e == 'undefined') e=event;
+    if (e.preventDefault) e.preventDefault();
+    e.returnValue= false;
+    var thisy = e.pageY || e.clientY || e.touches[0].pageY;
+    var dy = thisy - starty;
+    starty = thisy;
+
+    dy = - 100 * dy / sh;
+    if (dy >= 0) dy = "+" + dy;
+
+    wwr_req("SET/TRACK/" + g_inspect_tridx + "/VOL/" + dy + ";TRACK/" + g_inspect_tridx)
+    return false;
+  };
+
+  if (istouch) {
+    var end = function(e) { document.removeEventListener('touchmove',movee,true); document.removeEventListener('touchend',end,true); return false; };
+    document.addEventListener('touchmove',movee,true);
+    document.addEventListener('touchend', end,true);
+  } else {
+    document.onmousemove = movee;
+    document.onmouseup = function(e) { document.onmousemove = null; document.onmouseup=null;  return false; }
+  }
+  return false;
+};
+
+function rename_track(e) {
+  if (g_inspect_tridx>0) {
+    var title = last_titles[g_inspect_tridx];
+    var newtitle = prompt("Rename track " + title.replace(/[.] .*/,"") + ":",
+        title.replace(/^[0-9]*?[.] /,""));
+    if (newtitle != null) {
+      wwr_req("SET/TRACK/" + g_inspect_tridx + "/P_NAME/" + encodeURIComponent(newtitle) + ";GET/TRACK/" + g_inspect_tridx + ";SET/UNDO/Rename%20Track");
+    }
+  }
+  return false;
+}
+
+function on_record_button(e) {
+  var x;
+  for (x = 1; x < last_track_cnt && 0==(last_flags[x]&64); x ++);
+  if (x < last_track_cnt || confirm("no tracks are armed, start record?")) wwr_req(1013);
+  return false;
+}
+
+</script>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" id="viewport-meta" content="" />
+</head>
+<body onLoad="init();">
+<table class="transportbtab">
+<tr>
+<td colspan=2 id="status" onClick="prompt_seek()">initializing...</td>
+</tr>
+<tr>
+<td class="but" id="play" onClick="wwr_req(1007)">play</td>
+<td class="but" id="rec" onClick="on_record_button()">rec</td>
+</tr>
+<tr>
+<td class="but" id="stop" onClick="wwr_req(40667)">stop</td>
+<td class="but" id="abort" onClick="prompt_abort()">abort rec</td>
+</tr>
+</table>
+<table class="btab" id="tracks"></table>
+<div id="trackinspect">
+  <div id="trackinspect_close" onClick="return inspect_track_handler(-1)(event);">&nbsp;X&nbsp;</div>
+  <div id="trackinspect_title" onMouseDown="return rename_track(event)"></div>
+
+  <div id="trackinspect_volf" onMouseDown="return volfader(event,0)" onTouchStart="return volfader(event,1)" onSelectStart="return false;">
+    <div id="trackinspect_volh"></div>
+  </div>
+  <table class="trackinspect_btab">
+  <tr>
+  <td class="trackinspect_but" id="trackinspect_mute">mute</td>
+  <td class="trackinspect_but" id="trackinspect_solo">solo</td>
+  </tr>
+  <tr>
+  <td class="trackinspect_but" id="trackinspect_arm">arm</td>
+  <td class="trackinspect_but" id="trackinspect_mon">mon</td>
+  </tr>
+  <tr>
+  <td class="trackinspect_but"></td>
+  <td class="trackinspect_but" id="trackinspect_clone"></td>
+  </tr>
+  </table>
+</div>
+</body>
+</html>

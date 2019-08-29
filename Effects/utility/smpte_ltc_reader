@@ -1,0 +1,190 @@
+desc:SMPTE LTC Reader/Meter
+//tags: utility visualization
+
+in_pin:input
+out_pin:none
+
+slider1:0<0,3,1.0{30,24,25,29.97}>Frame Rate
+
+@init
+minthresh=10^(-80/20);
+threshenv=exp(-1/(0.1*srate)); // 100ms
+gfx_clear=-1;
+syncstate=0;
+itm1=otm1=0;
+thresh = 1; // ~-10dB
+lastsign=1;
+sillen=0;
+buf=0;
+bufpos=0;
+gotbit=-1;
+syncpos=-1;
+blitparmbuf=1000;
+frates=2000;
+frates[0]=30;
+frates[1]=24;
+frates[2]=25;
+frates[3]=30*1000/1001;
+
+@slider
+pulsesize = (srate / frates[slider1] / (80.0 * 2.0));
+
+@sample
+
+// remove DC offset
+otm1=0.999*otm1 + spl0 - itm1; itm1=spl0; s=otm1;
+// s has DC offset removed sample 
+
+sillen+=1;
+
+sillen > pulsesize * 2.2 ? 
+(
+  syncpos=-1;
+   sillen=0;
+   gotbit=-1;
+   syncstate=1;
+ );
+
+thresh = thresh*threshenv + abs(s)*(1-threshenv);
+thresh < minthresh?thresh=minthresh;
+
+(s < -thresh*0.8 && lastsign > 0) || (s > thresh*0.8 && lastsign < 0) ? (
+  lastsign=-lastsign;
+  gotbit+=1;
+  sillen > pulsesize*1.8 ? // done with bit 
+  (  
+    gotbit=min(gotbit,1);
+    sillen=0;
+
+    buf[bufpos]=gotbit;
+    (bufpos += 1) >= 80 ? bufpos=0;
+
+    syncpos >= 0 ? syncpos += 1;
+    (syncpos < 0 || syncpos >= 80) ? 
+    (
+      syncpos=-1;
+       // try to get sync
+      (
+       buf[(bufpos+64)%80]==0 &&
+       buf[(bufpos+65)%80]==0 &&
+       buf[(bufpos+66)%80]==1 &&
+       buf[(bufpos+67)%80]==1 &&
+       buf[(bufpos+68)%80]==1 &&
+       buf[(bufpos+69)%80]==1 &&
+       buf[(bufpos+70)%80]==1 &&
+       buf[(bufpos+71)%80]==1 &&
+       buf[(bufpos+72)%80]==1 &&
+       buf[(bufpos+73)%80]==1 &&
+       buf[(bufpos+74)%80]==1 &&
+       buf[(bufpos+75)%80]==1 &&
+       buf[(bufpos+76)%80]==1 &&
+       buf[(bufpos+77)%80]==1 &&
+       buf[(bufpos+78)%80]==0 &&
+       buf[(bufpos+79)%80]==1) ?
+     (
+          
+       new_f=buf[(bufpos+0)%80]+
+              buf[(bufpos+1)%80]*2 + 
+              buf[(bufpos+2)%80]*4 +        
+              buf[(bufpos+3)%80]*8 +
+             10*(
+              buf[(bufpos+8)%80] + 
+              buf[(bufpos+9)%80]*2;// +
+//              buf[(bufpos+10)%80]*4      
+             );        
+
+       new_s=buf[(bufpos+16)%80]+
+              buf[(bufpos+17)%80]*2 + 
+              buf[(bufpos+18)%80]*4 +        
+              buf[(bufpos+19)%80]*8 +
+             10*(
+              buf[(bufpos+24)%80] + 
+              buf[(bufpos+25)%80]*2+       
+              buf[(bufpos+26)%80]*4       
+            );
+
+       new_m=buf[(bufpos+32)%80]+
+              buf[(bufpos+33)%80]*2 + 
+              buf[(bufpos+34)%80]*4 +        
+              buf[(bufpos+35)%80]*8 +
+             10*(
+              buf[(bufpos+40)%80] + 
+              buf[(bufpos+41)%80]*2+
+              buf[(bufpos+42)%80]*4       
+             );        
+
+       new_h=(buf[(bufpos+48)%80]+
+              buf[(bufpos+49)%80]*2 + 
+              buf[(bufpos+50)%80]*4 +        
+              buf[(bufpos+51)%80]*8 +
+             10*(
+              buf[(bufpos+56)%80] + 
+              buf[(bufpos+57)%80]*2       
+             ));        
+
+        hours=new_h; minutes=new_m; seconds=new_s; frames=new_f;
+	new_time = ((hours*80 + minutes)*80+seconds)*100+frames;
+
+        syncpos=0;
+        syncstate=2;
+     ) : 
+     (
+        syncstate=0;
+      );
+    ); 
+
+    gotbit=-1;
+  );   
+);
+
+
+@gfx
+gfxsize=gfx_w*10000  + gfx_h;
+new_time != old_time || gfxsize != old_size ? (
+old_time=new_time;
+old_size=gfxsize;
+gfx_r=gfx_g=gfx_b=0; gfx_a=1;
+gfx_x=gfx_y=0;
+gfx_rectto(gfx_w,gfx_h);
+gfx_r=gfx_g=gfx_b=1; 
+gfx_x=gfx_y=2;
+gfx_drawchar($'0' + ((hours/10)%10));
+gfx_drawchar($'0' + (hours%10));
+gfx_drawchar($':');
+gfx_drawchar($'0' + ((minutes/10)%10));
+gfx_drawchar($'0' + (minutes%10));
+gfx_drawchar($':');
+gfx_drawchar($'0' + ((seconds/10)%10));
+gfx_drawchar($'0' + (seconds%10));
+gfx_drawchar($':');
+gfx_drawchar($'0' + ((frames/10)%10));
+gfx_drawchar($'0' + (frames%10));
+
+draw1wid=gfx_x;
+
+blitparmbuf[0]=0;
+blitparmbuf[1]=0;
+blitparmbuf[2]=gfx_x;
+blitparmbuf[3]=(gfx_texth+4);
+
+ow=gfx_w;
+oh=(gfx_texth+4) * gfx_w / gfx_x * 1.3;
+
+oh > gfx_h ? oh=gfx_h;
+
+blitparmbuf[4]=0;
+blitparmbuf[5]=(gfx_h-oh)/2;
+blitparmbuf[6]=ow;
+blitparmbuf[7]=oh;
+
+
+gfx_blitext(-1,blitparmbuf,0);
+
+gfx_x=0;
+gfx_y=0;
+gfx_r=gfx_g=gfx_b=0;
+gfx_rectto(draw1wid,min(gfx_texth+2,blitparmbuf[5]));
+
+);
+
+

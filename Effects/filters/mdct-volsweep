@@ -1,0 +1,70 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: MDCT Sweeping Filter
+//tags: filter LFO
+//author: Cockos
+
+slider1:0.00<0,1>Min Frequency (0..1)
+slider2:0.05<0,1>Max Frequency (0..1)
+slider3:1000<10,30000,20>Sweep Interval (ms)
+slider4:-6<-120,120,1>Low Gain (dB)
+slider5:12<-120,120,1>High Gain (dB)
+
+in_pin:input
+out_pin:output (mono)
+out_pin:output (mono)
+
+@init
+  fftsize=1024;
+  bufpos=0; bi1=0; bi2=fftsize*2; halfsize=fftsize*0.5;
+  sweeppos=0;
+
+@slider
+  sweepsize=(slider1-slider2)/2 * fftsize/2; 
+  sweepcenter=((slider1+slider2))/2 * fftsize/2;
+  sweepinc = 1000 * $pi * 2 / (slider3*srate);
+  lowgain=2 ^ (slider4/6);
+  highgain=2 ^ (slider5/6);
+
+
+@sample
+
+sweeppos+=sweepinc;
+
+// bi2 was the previously transformed buffer, and by the time it
+// is bi2 we only touch the second half (the first was replaced when
+// it was bi1)
+
+// bi1 is the most recently transformed buffer, we only touch the first
+// half, because the second will be used for the next overlap
+
+t=bi1+bufpos;
+p0=t[0];
+t[0]=spl0;
+
+t=bi2+halfsize+bufpos;
+p1=t[0];
+t[0]=spl0;
+
+spl0 = p0 + p1; // our mdct handles windowing, so we just add
+
+bufpos+=1;
+
+bufpos >= halfsize ? 
+(
+  // swap bi1 and bi2
+  t=bi1; bi1=bi2; bi2=t;
+
+  mdct(bi1,fftsize);
+
+  bufpos=bi1;
+  len1=(sweepcenter+sweepsize*sin(sweeppos))|0;
+  loop(len1,bufpos[0]*=lowgain; bufpos+=1;);
+  loop(halfsize-len1,bufpos[0]*=highgain; bufpos+=1; );
+
+  imdct(bi1,fftsize);
+  bufpos=0;
+);
+
+spl1=spl0;

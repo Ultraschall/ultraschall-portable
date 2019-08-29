@@ -1,0 +1,81 @@
+// This effect Copyright (C) 2007 and later Thomas Scott Stillwell
+// Based on mdctfilter Copyright 2004 and later by Cockos Incorporated
+// License: GPL - http://www.gnu.org/licenses/gpl.html
+// 
+
+desc: Thunderkick
+desc: Thunderkick (MDCT subsynthesis filter) [Stillwell]
+//tags: processing generator filter synthesis
+//author: Stillwell
+
+slider1:-6<-40,40,0.1>Effect (dB)
+slider2:4<1,30,1>Cutoff
+slider3:0<-40,40,0.1>Gain (dB)
+slider4:1<0,10,1>Shift
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  fftsize=1024;
+  bucketsize = (srate * 0.5 ) / fftsize;
+  bufpos=bi1=0; 
+  bi2=fftsize*2; 
+  halfsize=fftsize*0.5;
+  bands = slider2;
+  gain = 2 ^ (slider3 / 6);
+  shift = slider4;
+
+@slider
+  adj=2 ^ (slider1/6);
+  bands = slider2;
+  gain = 2 ^ (slider3 / 6);
+  shift = (slider4 < slider2 ? slider4 : slider2);
+  slider4 = shift;
+
+@sample
+// bi2 was the previously transformed buffer, and by the time it
+// is bi2 we only touch the second half (the first was replaced when
+// it was bi1)
+
+// bi1 is the most recently transformed buffer, we only touch the first
+// half, because the second will be used for the next overlap
+
+
+dry0=spl0;
+dry1=spl1;
+wet0=spl0+spl1;
+
+t=bi1+bufpos;
+p0=t[0];
+t[0]=wet0;
+
+t=bi2+halfsize+bufpos;
+p1=t[0];
+t[0]=wet0;
+
+wet0 = p0 + p1; // our mdct handles windowing, so we just add
+
+bufpos+=1;
+
+bufpos >= halfsize ? (
+  // we hit our FFT size here
+  // swap bi1 and bi2
+  t=bi1; bi1=bi2; bi2=t;
+  // Map time -> frequency domain
+  mdct(bi1,fftsize);
+  // frequency-shift energy to lower bands
+  // memcpy(bi1,bi1+shift,bands);
+  i=0;
+  loop(bands, bi1[i]=bi1[i*shift+i]; i+=1;);
+  // zero out HF bands;
+  memset(bi1+bands,0,fftsize-bands);
+  imdct(bi1,fftsize);
+  bufpos=0;
+);
+
+
+spl0 = (dry0 + wet0 * adj) * gain;
+spl1 = (dry1 + wet0 * adj) * gain;

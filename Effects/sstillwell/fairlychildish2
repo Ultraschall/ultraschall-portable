@@ -1,0 +1,312 @@
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:Fairly Childish Stereo Compressor/Limiter
+desc:Fairly Childish Stereo Compressor/Limiter, similar to F670 [Stillwell]
+//tags: dynamics compressor limiter stereo
+//author: Stillwell
+
+slider1:0<-60,0,0.1>L/Lat Threshold (dB)
+slider2:0<-60,0,0.1>R/Vert Threshold (dB)
+slider3:70<0,100,0.1>L/Lat Bias
+slider4:70<0,100,0.1>R/Vert Bias
+slider5:0<-30,30,0.1>L/Lat Makeup Gain
+slider6:0<-30,30,0.1>R/Vert Makeup Gain
+slider7:0<0,1,1{Left/Right,Lat/Vert}>AGC
+slider8:1<1,6,1>L/Lat Time Constant
+slider9:1<1,6,1>R/Vert Time Constant
+slider10:100<1,10000,1>L/Lat RMS Window
+slider11:100<1,10000,1>R/Vert RMS Window
+//slider13:1<1,50,0.1>L/Lat Current Compression Ratio
+//slider14:1<1,50,0.1>R/Vert Current Compression Ratio
+//slider15:0<-90,0,0.1>L/Lat Gain Reduction
+//slider16:0<-90,0,0.1>R/Vert Gain Reduction
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  log2db = 8.6858896380650365530225783783321; // 20 / ln(10)
+  db2log = 0.11512925464970228420089957273422; // ln(10) / 20 
+  i=0;
+  lattime=0.0002; //200us
+  lreltime=0.300; //300ms
+  lrmstime=0.000050; //50us
+  lmaxover=0;
+  lratio=0;
+  lcratio=0;
+  lrundb=0;
+  loverdb=0;
+  lmaxover=0;
+  latcoef=exp(-1/(attime * srate));
+  lrelcoef=exp(-1/(reltime * srate));
+  lrmscoef=exp(-1/(rmstime * srate));
+  rattime=0.0002; //200us
+  rreltime=0.300; //300ms
+  rrmstime=0.000050; //50us
+  rmaxover=0;
+  rratio=0;
+  rcratio=0;
+  rrundb=0;
+  roverdb=0;
+  rmaxover=0;
+  ratcoef=exp(-1/(attime * srate));
+  rrelcoef=exp(-1/(reltime * srate));
+  rrmscoef=exp(-1/(rmstime * srate));
+  leftright = 0;
+  latvert = 1;
+
+@slider
+  agc = slider7;
+
+  agc == leftright ? (
+    lthresh = slider1;
+    lthreshv = exp(lthresh * db2log);
+    lratio = 20;
+    lbias = 80 * slider3 / 100;
+    lcthresh = lthresh - lbias;
+    lcthreshv = exp(lcthresh * db2log);
+    lmakeup = slider5;
+    lmakeupv = exp(lmakeup * db2log);
+    ltimeconstant = slider8;
+    ltimeconstant == 1 ? (
+      lattime = 0.0002;
+      lreltime = 0.300;
+    );
+    ltimeconstant == 2 ? (
+      lattime = 0.0002;
+      lreltime = 0.800;
+    );
+    ltimeconstant == 3 ? (
+      lattime = 0.0004;
+      lreltime = 2.000;
+    );
+    ltimeconstant == 4 ? (
+      lattime = 0.0008;
+      lreltime = 5.000;
+    );
+    ltimeconstant == 5 ? (
+      lattime = 0.0002;
+      lreltime = 10.000;
+    );
+    ltimeconstant == 6 ? (
+      lattime = 0.0004;
+      lreltime = 25.000;
+    );
+    latcoef = exp(-1 / (lattime * srate));
+    lrelcoef = exp(-1 / (lreltime * srate));
+    
+    lrmstime = slider10 / 1000000; 
+    lrmscoef=exp(-1/(lrmstime * srate));
+
+    slider2 = slider1;
+    slider4 = slider3;
+    slider6 = slider5;
+    slider9 = slider8;
+    slider11 = slider10;
+  ) : (
+    lthresh = slider1;
+    lthreshv = exp(lthresh * db2log);
+    lratio = 20;
+    lbias = 80 * slider3 / 100;
+    lcthresh = lthresh - lbias;
+    lcthreshv = exp(lcthresh * db2log);
+    lmakeup = slider5;
+    lmakeupv = exp(lmakeup * db2log);
+    ltimeconstant = slider8;
+    ltimeconstant == 1 ? (
+      lattime = 0.0002;
+      lreltime = 0.300;
+    );
+    ltimeconstant == 2 ? (
+      lattime = 0.0002;
+      lreltime = 0.800;
+    );
+    ltimeconstant == 3 ? (
+      lattime = 0.0004;
+      lreltime = 2.000;
+    );
+    ltimeconstant == 4 ? (
+      lattime = 0.0008;
+      lreltime = 5.000;
+    );
+    ltimeconstant == 5 ? (
+      lattime = 0.0002;
+      lreltime = 10.000;
+    );
+    ltimeconstant == 6 ? (
+      lattime = 0.0004;
+      lreltime = 25.000;
+    );
+    latcoef = exp(-1 / (lattime * srate));
+    lrelcoef = exp(-1 / (lreltime * srate));
+    
+    lrmstime = slider10 / 1000000; 
+    lrmscoef=exp(-1/(lrmstime * srate));
+    rthresh = slider2;
+    rthreshv = exp(rthresh * db2log);
+    rratio = 20;
+    rbias = 80 * slider4 / 100;
+    rcthresh = rthresh - rbias;
+    rcthreshv = exp(rcthresh * db2log);
+    rmakeup = slider6;
+    rmakeupv = exp(rmakeup * db2log);
+    rtimeconstant = slider9;
+    rtimeconstant == 1 ? (
+      rattime = 0.0002;
+      rreltime = 0.300;
+    );
+    rtimeconstant == 2 ? (
+      rattime = 0.0002;
+      rreltime = 0.800;
+    );
+    rtimeconstant == 3 ? (
+      rattime = 0.0004;
+      rreltime = 2.000;
+    );
+    rtimeconstant == 4 ? (
+      rattime = 0.0008;
+      rreltime = 5.000;
+    );
+    rtimeconstant == 5 ? (
+      rattime = 0.0002;
+      rreltime = 10.000;
+    );
+    rtimeconstant == 6 ? (
+      rattime = 0.0004;
+      rreltime = 25.000;
+    );
+    ratcoef = exp(-1 / (rattime * srate));
+    rrelcoef = exp(-1 / (rreltime * srate));
+    
+    rrmstime = slider11 / 1000000; 
+    rrmscoef=exp(-1/(rrmstime * srate));
+  );
+
+@sample
+  agc == leftright ? (
+    aspl0 = abs(spl0);
+    aspl1 = abs(spl1);
+    lmaxspl = max(aspl0, aspl1);
+    lmaxspl = lmaxspl * lmaxspl;
+
+    lrunave = lmaxspl + lrmscoef * (lrunave - lmaxspl);
+    ldet = sqrt(max(0,lrunave));
+
+    loverdb = 2.08136898 * log(ldet/lthreshv) * log2db;
+    loverdb = max(0,loverdb);
+
+    loverdb > lrundb ? (
+      lrundb = loverdb + latcoef * (lrundb - loverdb);
+    ) : (
+      lrundb = loverdb + lrelcoef * (lrundb - loverdb);
+    );
+    loverdb = max(lrundb,0);
+
+    lbias == 0 ? (
+      lcratio = lratio;
+    ) : (
+      lcratio = 1 + (lratio-1) * sqrt((loverdb + dcoffset) / (lbias + dcoffset));
+    );
+    //slider13 = lcratio;
+    //slider14 = lcratio;
+  
+    lgr = -loverdb * (lcratio-1)/lcratio;
+    //slider15 = -lgr;
+    //slider16 = -lgr;
+    lgrv = exp(lgr * db2log);
+  
+  ) : (  
+    aspl0 = abs(spl0+spl1)/2;
+    aspl1 = abs(spl0-spl1)/2;
+    lmaxspl = aspl0;
+    lmaxspl = lmaxspl * lmaxspl;
+
+    lrunave = lmaxspl + lrmscoef * (lrunave - lmaxspl);
+    ldet = sqrt(max(0,lrunave));
+
+    loverdb = 2.08136898 * log(ldet/lthreshv) * log2db;
+    loverdb = max(0,loverdb);
+
+    loverdb > lrundb ? (
+      lrundb = loverdb + latcoef * (lrundb - loverdb);
+    ) : (
+      lrundb = loverdb + lrelcoef * (lrundb - loverdb);
+    );
+    loverdb = max(lrundb,0);
+
+    lbias == 0 ? (
+      lcratio = lratio;
+    ) : (
+      lcratio = 1 + (lratio-1) * sqrt((loverdb + dcoffset) / (lbias + dcoffset));
+    );
+
+    rmaxspl = aspl1;
+    rmaxspl = rmaxspl * rmaxspl;
+
+    rrunave = rmaxspl + rrmscoef * (rrunave - rmaxspl);
+    rdet = sqrt(max(0,rrunave));
+
+    roverdb = 2.08136898 * log(rdet/rthreshv) * log2db;
+    roverdb = max(0,roverdb);
+
+    roverdb > rrundb ? (
+      rrundb = roverdb + ratcoef * (rrundb - roverdb);
+    ) : (
+      rrundb = roverdb + rrelcoef * (rrundb - roverdb);
+    );
+    roverdb = max(rrundb,0);
+
+    rbias == 0 ? (
+      rcratio = rratio;
+    ) : (
+      rcratio = 1 + (rratio-1) * sqrt((roverdb + dcoffset) / (rbias + dcoffset));
+    );
+
+    //slider13 = lcratio;
+    //slider14 = rcratio;
+  
+    lgr = -loverdb * (lcratio-1)/lcratio;
+    rgr = -roverdb * (rcratio-1)/rcratio;
+    //slider15 = -lgr;
+    //slider16 = -rgr;
+    lgrv = exp(lgr * db2log);
+    rgrv = exp(rgr * db2log);
+  
+  );
+
+  agc == leftright ? (
+    spl0 *= lgrv * lmakeupv;
+    spl1 *= lgrv * lmakeupv;
+  ) : (
+    sav0 = (spl0 + spl1) * lgrv;
+    sav1 = (spl0 - spl1) * rgrv;
+    sav0 *= lmakeupv;
+    sav1 *= rmakeupv;
+    spl0 = (sav0 + sav1) * 0.5;
+    spl1 = (sav0 - sav1) * 0.5;
+  );
+

@@ -1,0 +1,64 @@
+// (C) 2006, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+
+desc:Stereo Enhancer
+//tags: processing stereo
+//author: LOSER
+
+slider1:100<0,200,1>Width Low (%)
+slider2:500<0,20000,1>Crossover (Hz)
+slider3:100<0,200,1>Width High (%)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+cDenorm = 10^-30;
+
+@slider
+widthLP = slider1 / 200;
+width = slider3 / 200;
+
+freq = min(slider2,srate);
+x = exp(-2.0*$pi*freq/srate);
+a0 = 1.0-x;
+b1 = -x;
+
+@sample
+s0 = spl0;
+s1 = spl1;
+
+spl0 = (tmpl = a0*spl0 - b1*tmpl + cDenorm);
+spl1 = (tmpr = a0*spl1 - b1*tmpr + cDenorm);
+
+s0 -= spl0;
+s1 -= spl1;
+
+mono = (s0 + s1)/2;
+stereo = (s0 - s1);
+s0 = (mono + stereo * width) / max(width,1);
+s1 = (mono - stereo * width) / max(width,1);
+
+monoLP = (spl0 + spl1)/2;
+stereoLP = (spl0 - spl1);
+spl0 = (monoLP + stereoLP * widthLP) / max(widthLP,1);
+spl1 = (monoLP - stereoLP * widthLP) / max(widthLP,1);
+
+spl0 += s0;
+spl1 += s1;
+
+

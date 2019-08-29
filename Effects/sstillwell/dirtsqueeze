@@ -1,0 +1,121 @@
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:Dirt Squeeze Compressor
+desc:Dirt Squeeze Compressor [Stillwell]
+//tags: dynamics compressor
+//author: Stillwell
+
+slider1:0<-60,0,0.1>Threshold (dB)
+slider2:1<1,20,0.1>Ratio
+slider3:0<0,1,1{No,Yes}>Automatic Make-Up
+slider4:0<-20,20,0.1>Manual Gain
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  i=0;
+  loop(
+    120,
+    attimes[i] = ((0.08924 / i) + (0.60755 / (i ^ 2)) - 0.00006)*srate;
+    i+=1;
+  );
+  overthresh = 0;
+  compressing = 0;
+  relfactor = 2 ^ (-20.833333333 / srate);
+  attime=0;
+  atctr=0;
+  prevmax=0;
+  maxover=0;
+  relctr=0;
+  cratio=0;
+  ratio=0;
+
+@slider
+  thresh = slider1;
+  threshv = 2^(thresh/6);
+  ratio = slider2;
+  cratio = ratio;
+  autogain = slider3;
+  makeup = autogain ? (((abs(thresh) - (abs(thresh) / ratio))/2) + slider4) : slider4;
+  makeupv = 2^(makeup / 6);
+
+@sample
+  aspl0 = abs(spl0);
+  aspl1 = abs(spl1);
+  maxspl = max(aspl0,aspl1);
+  maxspl > threshv ? (
+    overthresh = 1;
+    overdb = log(6 * maxspl / threshv) / log(2);
+    overdb > maxover ? (
+        maxover = overdb;
+        prevattime = attime;
+        attime = attimes[floor(overdb+0.5)];
+        prevattime > 0 ? (atctr += prevattime - attime);
+ 	atctr = min(atctr,attime);
+        reltime = srate * overdb / 125;
+        relctr = 0;
+        cratio = ratio;
+    );
+    relctr = 0;
+    releasing = 0;
+    atctr == 0 ? atctr = attimes[floor(overdb)];
+  );
+  overthresh ? (
+     atctr += 1;
+     atctr >= attime ? (
+       compressing = 1;
+       relctr = 0;
+     );
+  );
+  compressing ? (
+    overthresh = 0;
+    atctr = 0;
+    thresh0 = threshv * sign(spl0);
+    thresh1 = threshv * sign(spl1);
+    spl0 = (aspl0 <= threshv ? spl0 : (thresh0 + (spl0-thresh0) / cratio));
+    spl1 = (aspl1 <= threshv ? spl1 : (thresh1 + (spl1-thresh1) / cratio));
+  );
+  maxspl <= threshv ? (
+    relctr += 1;
+    releasing = 1;
+    relctr >= (reltime - 1000) ? (
+      compressing = 0;
+      overthresh = 0;
+      relctr = 0;
+      reltime = 0;
+      atctr = 0;
+      attime = 0;
+      releasing = 0;
+      cratio = ratio;
+    );
+  );
+  releasing ? (
+    cratio = max(1,cratio * relfactor);
+  );
+  spl0 = spl0 * makeupv;
+  spl1 = spl1 * makeupv;  

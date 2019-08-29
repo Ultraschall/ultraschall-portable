@@ -1,0 +1,3563 @@
+/* Quick Guide
+
+  If you want drum maps for Battery 3 or Battery 4, they are included here:
+
+  http://stash.reaper.fm/v/18598/sequencer_baby_v2_jnif.zip
+
+- Right click/drag: Audition existing note or empty location.
+  Sets velocity for new notes if existing note is auditioned.
+  
+- Left click/drag: Draw or erase notes on the same row.
+- Shift + Ctrl + Alt + Left click/drag: Freehand draw or erase notes.  
+- Ctrl + Left click/drag: Edit velocity of notes.
+  Drag over multiple notes on the same row to create velocity curves.
+- Ctrl + Alt + Left click/drag: Adjust velocity of all notes on the same row.
+- Shift + Left click/drag left/right: Adjust note start offset.
+- Shift + Alt + Left click/drag: Adjust note start offset of all notes on the same row.
+- Alt + Left click: Tie/untie notes.
+- Alt + Left drag: Tie/untie multiple notes in a row.
+- Shift + Right click drag up/down: Subdivide note.
+
+- Left click drag up/down note names in Drum map mode: Transpose note row.
+- Left click drag up/down MIDI channel number in Drum map mode: Change MIDI channel of note row.
+- Shift + Left click piano keys / note names: Duplicate sequence. Sequence length is doubled.
+- Ctrl + Left click piano keys / note names: Halve steps per beat, slow down
+- Ctrl + Right click piano keys / note names: Double steps per beat, speed up
+- Ctrl + Alt + Left click piano keys / note names: Halve steps per beat, preserve note positions. Sequence length is halved. 
+- Ctrl + Alt + Right click piano keys / note names: Double steps per beat, preserve note positions. Sequence length is doubled.
+
+- Left click drag green area on toolbar pianokeys: Change base note of the grid.
+- Right click drag green area on toolbar pianokeys: Change number of notes in the grid.
+- Left click drag red area on toolbar pianokeys: Change MIDI trigger notes for pattern triggering.
+
+- Left click pattern button: Change pattern. 
+- Ctrl + Left click pattern button: Copy the active pattern to clicked pattern and change to the clicked pattern. 
+- Ctrl + Right click pattern button: Clear pattern.
+- Alt + Left click pattern button: Set pattern chain end
+
+- Left click Mode button (PR=Piano Roll, DM=Drum Map): Change mode.
+- Left click "Play before start" button: Enable/Disable playback before start beat position.
+  ">|>" = play everywhere
+  " |>" = play only after start beat position
+- Left click "Start beat position" value: Set start beat position to current play cursor position.
+- Left click "End beat position" value: Set end beat position to current play cursor position. "---" = play infinitely.
+- Right click "Start beat position" value: Set start beat position to default value, "0.000".
+- Right click "End beat position" value: Set end beat position to default value, "---".
+- Left click/drag "Note length" slider: Set/adjust note length for all notes. 100% equals full step length.
+- Left click/drag Swing slider: Set/adjust swing.
+
+- Left click/drag on envelope lane: Draw/adjust envelope of the active envelope type.
+- Right click/drag on envelope lane: Erase envelope of the active envelope type.
+- Left click drag up/down envelope MIDI channel (in Drum map mode): Change MIDI channel of envelope.
+- Left click drag up/down envelope type names/numbers: Change envelope type.
+  Types:
+  MIDI CC 0-127. 
+  On first envelope (the blue one) type 127 has a special meaning.
+  It controls probability of note playback on each sequence step.
+  Only notes on same channel as the envelope will be affected.
+
+*/
+
+desc:MIDI Sequencer Megababy
+//tags: MIDI generator sequencing
+//author: jnif
+
+slider1:0<0,15,1{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}>Pattern
+slider2:36<0,127,1>--Note Start
+slider3:16<4,128,1>Sequence Length
+slider4:16<1,32,1>--Number Of Notes
+slider5:1<0.125,4.0,.125>Rate
+slider6:100<1,100,1>--Note Length
+slider7:1<0,1,1{Piano Roll,Drum Map}>--Mode
+slider8:0<0,100,1>--Swing
+slider9:4<1,16,1>Steps Per Beat
+slider10:0<0,6,1{Off,On (Pattern Change),On (Pattern Change + Transpose),On (Pattern Change + Resync),On (Pattern Change + Transpose + Resync),On (Pattern Change + Resync Quantized),On (Pattern Change + Transpose + Resync Quantized)}>MIDI Trigger
+slider11:72<0,127,1>--Trigger Note Start
+slider12:0<0,15,1{Off,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}>--Chain
+slider13:0.2<0.0,1.0,0.001>--Lane Height Percent
+slider14:0<0,3,1>--CC To Adjust (Active For Editing)
+slider15:/seqbaby_data:_Default Kit.txt:Drum Map Note Names
+slider20:1<0,127,1>--Controller 1 Type
+slider21:7<0,127,1>--Controller 2 Type
+slider22:10<0,127,1>--Controller 3 Type
+slider23:11<0,127,1>--Controller 4 Type
+slider30:0<0,15,0>--Controller 1 Channel
+slider31:0<0,15,0>--Controller 2 Channel
+slider32:0<0,15,0>--Controller 3 Channel
+slider33:0<0,15,0>--Controller 4 Channel
+slider40:0<-99,9999,1>--Start Beat Position
+slider41:1<0,1,1>--Play Before Start
+slider42:-99<-99,9999,1>--End Beat Position
+
+in_pin:none
+out_pin:none
+
+@init
+
+octave_offset=-1; // Set this value as you prefer.
+// It works the same way as "MIDI octave name display offset" in Reaper's preferences
+//  1 : MIDI note 60 = C5
+//  0 : MIDI note 60 = C4 
+// -1 : MIDI note 60 = C3  ...
+
+listlength=16; // sequence length of current pattern
+numnotes=16;
+max_numnotes=32;
+max_seqlength=128;
+max_steps_per_beat=16;
+lbeatpos=-1;
+ltickpos=-1;
+npatterns=16;
+p=-1; //Current pattern (use -1 here to force call to change_pattern right after init)
+prev_p=p;
+
+// Mouse state encodings
+mstate=0; // OFF
+ms_grid=2^8; // note grid area
+ms_noteerase=ms_grid+0;
+ms_notedraw=ms_grid+1;
+ms_veloedit=ms_grid+2;
+ms_veloeditrow=ms_grid+3;
+ms_notetie=ms_grid+4;
+ms_startoffsetedit=ms_grid+5;
+ms_startoffseteditrow=ms_grid+6;
+ms_subdivnum=ms_grid+7;
+ms_pk=2^9; //piano key area
+ms_duplseq=ms_pk+0;
+ms_rowtranpose=ms_pk+1;
+ms_doublespbpreservepos=ms_pk+2; // double steps per beat, preserve note positions
+ms_halvespbpreservepos=ms_pk+3; // halve steps per beat, preserve note positions
+ms_doublespb=ms_pk+4;
+ms_halvespb=ms_pk+5;
+ms_tb=2^10; // toolbar area
+ms_tb_r1=2^5; // toolbar row 1
+ms_tb_pianokey_base=ms_tb+ms_tb_r1+0;
+ms_tb_pianokey_trig=ms_tb+ms_tb_r1+1;
+ms_tb_pianokey_numnotes=ms_tb+ms_tb_r1+2;
+ms_tb_r2=2^6; // toolbar row 2
+ms_tb_patchange=ms_tb+ms_tb_r2+0;
+ms_tb_patcopy=ms_tb+ms_tb_r2+1;
+ms_tb_chain=ms_tb+ms_tb_r2+2;
+ms_tb_r3=2^7; // toolbar row 3
+ms_tb_button=ms_tb+ms_tb_r3+0;
+ms_tb_notelen=ms_tb+ms_tb_r3+1;
+ms_tb_swing=ms_tb+ms_tb_r3+2;
+ms_tb_button_noundo=ms_tb+ms_tb_r3+3;
+ms_el=2^11; // envelope lane area
+ms_el_divider=ms_el+0;
+ms_el_envdraw=ms_el+1;
+ms_el_enverase=ms_el+2;
+ms_el_ctrlchange=ms_el+3;
+ms_preview=2^12; // preview note or piano key 
+
+ms_sub_drawfreehand=0; // substate for ms_noteerase and ms_notedraw. 0=off, 1=on
+
+ms_sub_channelchange=0; // substate for ms_rowtranpose and ms_el_ctrlchange
+
+// Toolbar element highlight states
+hl_state=0;
+hl_pattern=2^4; // Lowest 4 bits indicate the pattern number to highlight
+hl_mode=32;
+hl_playbeforestart=33;
+hl_startpos=34;
+hl_endpos=35;
+hl_notelen=36;
+hl_swing=37;
+last_hl_state=0;
+
+lastpreviewsel=-1;
+gfx_clear=-1;
+ext_noinit=1;
+noteonstate=0;
+want_preview=-1;
+last_preview=-1;
+want_preview_nt=-1;
+last_preview_nt=-1;
+want_previewoff=0;
+defaultvelo=100;
+lastvelo=defaultvelo;
+notelist_base = 0;
+velolist_base     = 1*16*32*128; //64k
+new_velolist_base = 2*16*32*128; //2*64k
+velobarwidth = 3;
+ticks = 0;
+tpb = 128; // ticks per beat
+pianow=3*8+8;
+chw = 0; //MIDI channel column width
+pkw = pianow+chw; // piano key area width (pianokeys or note_names + MIDI channel column )
+tbrh = 18; // toolbar row height
+tbh = 3*tbrh+1; // toolbar height
+el_divh = 6; // envelope lane divider height
+recalc_elh = 1; // recalculate envelope lane height
+lbasenote = -1;
+lnumnotes = -1;
+rateadj = 1;
+lrateadj = -1;
+lhl = 0;
+lmode = -1;
+notetranspose = 3*16*32*128; //3*64k
+notrans = notetranspose+max_numnotes;
+listlength_pat = notrans+max_numnotes;
+memset(listlength_pat, listlength, npatterns); //initialize all patterns to same length
+listlength_all=listlength*npatterns;
+rowchannel = listlength_pat+npatterns;
+memset(rowchannel, 0, max_numnotes); // initialize all rows to MIDI channel 0
+zerochan = rowchannel+max_numnotes;
+steps_per_beat=4;
+steps_per_beat_pat=zerochan+max_numnotes;
+memset(steps_per_beat_pat, steps_per_beat, npatterns); //initialize all patterns to same steps_per_beat
+numccs=4;
+cc_type=steps_per_beat_pat+npatterns;
+cc_chan=cc_type+numccs;
+cc_to_adjust=0; // Currently highlighted envelope active for editing
+refresh_cc_controls=1; // force refresh at init
+sd_playstate=cc_chan+numccs;// state of subdivided notes on each playing note row (2 subsequent values per row: sdnum and sdena)
+want_noteoff_nt = 0;
+ldraglen = -1;
+start_beatpos = 0;
+end_beatpos = -99; // if end_beatpos <= start_beatpos, then play infinitely
+recmask = 0xFFFFFFFF;
+notelen_p = 100;
+defnotelen = tpb;
+swing_p = 0;
+swing = 0;
+rate = 1.0;
+notetie_base = 4*16*32*128; //4*64k
+notetie=notetie_base;
+ltiestate=0;
+refresh_tb=1;
+busp=24; //toolbar button spacing (pixels)
+mouse_on_button=0;
+serz_data_ver=6; // Version of data format used in state saving in @serialize 
+serz_data_ver_running=serz_data_ver;
+midi_trigger=0;
+trig_note_start=36;
+pat_trigger_pending=0;
+pat_trigger_note=0;
+pattrans_trigger_pending=0;
+pattrans_trigger_note=0;
+has_notes=0; // flags indicating patterns that have notes. 0=empty pattern, 1=has notes. bit0 = pat0, bit1 = pat1, ...
+chain_beats=listlength/steps_per_beat;
+ts_num_l=4;
+ts_denom_l=4;
+
+sparebuf = 1024*1024; //for notes
+sparebuf2 = 2*1024*1024; //for velocities
+sparebuf_tie = sparebuf+1024*npatterns; // for note ties
+sparebuf_cc = sparebuf_tie+1024*npatterns; // for CCs
+
+cclist_base = 5*16*32*128; //5*64k 
+cclist=cclist_base;
+
+start_adj_orig_list = 6*16*32*128; //6*64k
+
+buf_offset = 7*16*32*128; //7*64k
+buf_msg1   = buf_offset+1024;
+buf_msg23  = buf_msg1+1024;
+
+nn = 8*16*32*128; //8*64k
+nn[0] = strcpy(500, "C");
+nn[1] = strcpy(501, "C");
+nn[2] = strcpy(502, "D");
+nn[3] = strcpy(503, "D");
+nn[4] = strcpy(504, "E");
+nn[5] = strcpy(505, "F");
+nn[6] = strcpy(506, "F");
+nn[7] = strcpy(507, "G");
+nn[8] = strcpy(508, "G");
+nn[9] = strcpy(509, "A");
+nn[10] = strcpy(510, "A");
+nn[11] = strcpy(511, "B");
+#name_str="";
+notename_digit=0;
+
+notenames=nn+128;
+nn_filename=1000; // string slot for notename file name
+lnotenames_file=-1;
+max_notename_length=4; //Number of characters in note name. This controls the notename field width in GUI. 
+
+max_subdivs=8;
+// // Sub division list lengths for each row in each pattern
+// sdlist_len = 10*16*32*128; //9*64k
+
+// Note Sub division list (contains velocities and start offsets for subdivided notes)
+sdlist = 9*16*32*128; //10*64k (reserve 8 64k blocks)
+//max_subdivs*max_seqlength*max_numnotes*npatterns=8*64k
+
+sdlist_p=0; // sdlist location of current pattern
+
+tb_pianokey_end=10*(7*4+5*3+2)+5*4+3*3+1;
+
+// colors
+c_grid_r = 41/256;
+c_grid_g = 61/256;
+c_grid_b = 104/256;
+c_grid_a = 1.0;
+
+c_barline_r = 51/256;
+c_barline_g = 76/256;
+c_barline_b = 127/256;
+c_barline_a = 1.0;
+
+c_hl_r = 0.2;
+c_hl_g = 0.4;
+c_hl_b = 1.0;
+c_hl_a = 0.4;
+
+
+// Set note velocity value to bits (7:0)
+function setVelo(note, velo)
+(
+  velolist[note] &= 0xFFFFFF80; //clear old
+  velolist[note] += velo; //set new
+);
+
+// Get note velocity value from bits (7:0)
+function getVelo(note)
+(
+  velolist[note] & 0x7F;
+);
+
+// Set note start offset to bits (15:8)
+function setStart(note, start)
+(
+  velolist[note] &= 0xFFFF00FF; //clear old
+  velolist[note] += (start << 8); //set new
+);
+
+// Get note start value from bits (15:8)
+function getStart(note)
+(
+  (velolist[note] & 0x0000FF00) >> 8;
+);
+
+// Set number of subdivs to bits (19:16)
+function setSubdivNum(note, num)
+(
+  velolist[note] &= 0xFFF0FFFF; //clear old
+  velolist[note] += (num << 16); //set new
+);
+
+// Get number of subdivs from bits (19:16)
+function getSubdivNum(note)
+(
+  (velolist[note] & 0x000F0000) >> 16;
+);
+
+function setSubdivVelo(row, step, sd_pos, velo)
+(
+  sdlist[sdlist_p+row*max_seqlength*max_subdivs+step*max_subdivs+sd_pos] &= 0xFFFFFF80; //clear old
+  sdlist[sdlist_p+row*max_seqlength*max_subdivs+step*max_subdivs+sd_pos] += velo;
+);
+
+function getSubdivVelo(row, step, sd_pos)
+(
+  sdlist[sdlist_p+row*max_seqlength*max_subdivs+step*max_subdivs+sd_pos] & 0x7F;
+);
+
+// Set subdiv notelist indicating which subdiv steps are enabled
+function setSubdivNotelist(row, step, notes)
+(
+  sdlist[sdlist_p+row*max_seqlength*max_subdivs+step*max_subdivs] &= 0xFF00FFFF; //clear old
+  sdlist[sdlist_p+row*max_seqlength*max_subdivs+step*max_subdivs] += (notes << 16); //set new
+  
+);
+
+// Get subdiv notelist indicating which subdiv steps are enabled
+function getSubdivNotelist(row, step)
+(
+  (sdlist[sdlist_p+row*max_seqlength*max_subdivs+step*max_subdivs] & 0x00FF0000) >> 16;
+);
+
+// Get CC value from source's bit field indicated by ccpos
+function getCc(source, ccpos) local(val)
+(
+  val = 0;
+  ccpos == 0 ? val = source & 0xFF;
+  ccpos == 1 ? val = (source & 0x0000FF00) >> 8;
+  ccpos == 2 ? val = (source & 0x00FF0000) >> 16;
+  ccpos == 3 ? (
+    source & 0x80000000 ? ( // bit 31 = 1
+      val = ((source & 0x7F000000) >> 24) + 0x80;
+    ) : (
+      val = (source & 0x7F000000) >> 24;
+    );
+  );
+  val;
+);
+
+// Set CC value val to target's bit field indicated by ccpos
+function setCc(target, ccpos, val)
+(
+  ccpos == 0 ? (target &= 0xFFFFFF00; target += val;);
+  ccpos == 1 ? (target &= 0xFFFF00FF; target += val * 2^8;);
+  ccpos == 2 ? (target &= 0xFF00FFFF; target += val * 2^16;);
+  ccpos == 3 ? (target &= 0x00FFFFFF; target += val * 2^24;);
+  target;
+);
+
+// Is the value within valid MIDI value range (7bit)?
+function is_midi_val(value) 
+(
+  valid = 0;
+  value >= 0 && value < 128 ? valid = 1;
+  valid;
+);
+
+// Truncate to valid MIDI value range (7bit).
+function trunc_midi_val(value) 
+(
+  value < 0 ? (
+    value = 0;
+  ) : (
+    value > 127 ? value = 127;
+  );
+  value;
+);
+
+function scale_velobarwidth(seqlen) local(width, gfx_w_l)
+(
+  width = 2;
+  gfx_w == 0 ? gfx_w_l=400+pkw : gfx_w_l=gfx_w;
+  seqlen/(gfx_w_l/(400+pkw)) > 65 ? width = 1;
+  seqlen/(gfx_w_l/(400+pkw)) < 42 ? width = 3;
+  width; // return scaled width
+);
+
+// Update flags indicating patterns that are not empty
+function update_has_notes() local(p, step, note_found, notelist, cclist)
+(
+  has_notes=0;
+  notelist=notelist_base;
+  cclist=cclist_base;
+  p=0;
+  loop(npatterns,
+    note_found=0;
+    step=0;
+    while(step < listlength_pat[p] && !note_found ? (
+        notelist[step] != 0 ? note_found=1;
+        cclist[step] != 0 ? note_found=1;
+        step+=1;
+      );
+    );
+    note_found ? has_notes+=2^p;
+    notelist+=listlength_pat[p];
+    cclist+=listlength_pat[p];
+    p+=1;
+  );
+);
+
+// Change pattern
+function change_pattern(new_p) local(i)
+(
+  new_p<0 ? new_p=0 : new_p>=npatterns ? new_p=npatterns-1;
+  p=new_p;
+  notelist=0;
+  velolist=velolist_base;
+  i=0;
+  loop(p,
+    notelist+=listlength_pat[i];
+    velolist+=max_numnotes*listlength_pat[i];
+    i+=1;
+  );
+  notetie=notetie_base+notelist;
+  cclist=cclist_base+notelist;
+  notelist=notelist_base+notelist;
+  
+  listlength=listlength_pat[p];
+  velobarwidth = scale_velobarwidth(listlength);
+  steps_per_beat = steps_per_beat_pat[p];
+  rateadj = steps_per_beat * rate;
+  update_has_notes();
+  refresh_tb=1;
+  ltiestate = 0; // clear all note ties
+  sdlist_p=p*max_numnotes*max_seqlength*max_subdivs;
+);
+
+// Update chain beats
+function update_chain_beats() local(i_pat)
+(
+  chain_beats=listlength_pat[0]/steps_per_beat_pat[0];
+  i_pat=1;
+  loop(chain,
+    chain_beats+=listlength_pat[i_pat]/steps_per_beat_pat[i_pat];
+    i_pat+=1;
+  );
+);
+
+// Change sequence length
+function change_seqlen(newsz) local(ip, y, pstart, pstartv, pstart_n, pstartv_n, new_listlength_all)
+(
+  newsz >= 1 && listlength_pat[p] != newsz ? (
+    
+    new_listlength_all=listlength_all-listlength_pat[p]+newsz;
+    
+    newsz < listlength_pat[p] ? ( // decrease size
+    
+      pstart=0; // old pattern start offset for notes
+      pstartv=0; // old pattern start offset for velocities
+      pstart_n=0; // new pattern start offset for notes
+      pstartv_n=0; // new pattern start offset for velocities
+      ip=0; // loop index iterating over patterns
+      loop(npatterns,
+        memcpy(sparebuf + ip*1024, pstart, listlength_pat[ip]); // save a copy of the full quality notelist
+        memcpy(sparebuf_tie + ip*1024, notetie_base+pstart, listlength_pat[ip]); // save a copy of the full quality notetielist 
+        memcpy(sparebuf_cc + ip*1024, cclist_base+pstart, listlength_pat[ip]); // save a copy of the full quality notetielist 
+        y=0;
+        loop(max_numnotes,
+          memcpy(sparebuf2 + ip*max_numnotes*max_seqlength+y*max_seqlength, velolist_base+pstartv+y*listlength_pat[ip], listlength_pat[ip]); // save a copy of the full quality
+          y+=1;
+        );
+
+        ip < p ? (
+          memcpy(new_velolist_base+pstartv_n, velolist_base+pstartv, max_numnotes*listlength_pat[ip]);
+          pstart_n+=listlength_pat[ip];
+          pstartv_n+=max_numnotes*listlength_pat[ip];
+        ) : ip == p ? (
+          memcpy(pstart_n, pstart, newsz);
+          memcpy(notetie_base+pstart_n, notetie_base+pstart, newsz);
+          memcpy(cclist_base+pstart_n, cclist_base+pstart, newsz);
+          y=0;
+          loop(max_numnotes,
+            memcpy(new_velolist_base+pstartv_n+y*newsz, velolist_base+pstartv+y*listlength_pat[ip], newsz);
+            y+=1;
+          );
+          pstart_n+=newsz;
+          pstartv_n+=max_numnotes*newsz;
+        ) : (
+          memcpy(pstart_n, pstart, listlength_pat[ip]);
+          memcpy(notetie_base+pstart_n, notetie_base+pstart, listlength_pat[ip]);
+          memcpy(cclist_base+pstart_n, cclist_base+pstart, listlength_pat[ip]);
+          memcpy(new_velolist_base+pstartv_n, velolist_base+pstartv, max_numnotes*listlength_pat[ip]);
+          pstart_n+=listlength_pat[ip]; 
+          pstartv_n+=max_numnotes*listlength_pat[ip];          
+        );
+        
+        pstart+=listlength_pat[ip];
+        pstartv+=max_numnotes*listlength_pat[ip];
+        ip+=1;
+      ); 
+      
+    ) : ( // increase size
+    
+      pstart=listlength_all; // old pattern start offset for notes
+      pstartv=max_numnotes*listlength_all; // old pattern start offset for velocities
+      pstart_n=new_listlength_all; // new pattern start offset for notes
+      pstartv_n=max_numnotes*new_listlength_all; // new pattern start offset for velocities
+      
+      ip=npatterns-1; // loop index iterating over patterns in reverse order
+      loop(npatterns,      
+        pstart-=listlength_pat[ip];
+        pstartv-=max_numnotes*listlength_pat[ip];
+        
+        ip < p ? (
+          pstart_n-=listlength_pat[ip];
+          pstartv_n-=max_numnotes*listlength_pat[ip];
+          memcpy(new_velolist_base+pstartv_n, velolist_base+pstartv, max_numnotes*listlength_pat[ip]);
+        ) : ip == p ? (
+          pstart_n-=newsz;
+          pstartv_n-=max_numnotes*newsz;
+          y=0;
+          loop(max_numnotes,
+            memcpy(new_velolist_base+pstartv_n+y*newsz, velolist_base+pstartv+y*listlength_pat[ip], listlength_pat[ip]);
+            memcpy(new_velolist_base+pstartv_n+y*newsz+listlength_pat[ip], sparebuf2+ip*max_numnotes*max_seqlength+y*max_seqlength+listlength_pat[ip], newsz-listlength_pat[ip]);
+            y+=1;
+          );
+          memcpy(cclist_base+pstart_n, cclist_base+pstart, listlength_pat[ip]);
+          memcpy(cclist_base+pstart_n+listlength_pat[ip], sparebuf_cc+ip*1024+listlength_pat[ip], newsz-listlength_pat[ip]);
+          memcpy(notetie_base+pstart_n, notetie_base+pstart, listlength_pat[ip]);
+          memcpy(notetie_base+pstart_n+listlength_pat[ip], sparebuf_tie+ip*1024+listlength_pat[ip], newsz-listlength_pat[ip]);
+          memcpy(pstart_n, pstart, listlength_pat[ip]);
+          memcpy(pstart_n+listlength_pat[ip], sparebuf+ip*1024+listlength_pat[ip], newsz-listlength_pat[ip]);
+        ) : (
+          pstart_n-=listlength_pat[ip]; 
+          pstartv_n-=max_numnotes*listlength_pat[ip]; 
+          memcpy(new_velolist_base+pstartv_n, velolist_base+pstartv, max_numnotes*listlength_pat[ip]);
+          memcpy(cclist_base+pstart_n, cclist_base+pstart, listlength_pat[ip]);
+          memcpy(notetie_base+pstart_n, notetie_base+pstart, listlength_pat[ip]);
+          memcpy(pstart_n, pstart, listlength_pat[ip]);
+        );
+        ip-=1;
+      );
+    );   
+    
+    listlength_pat[p] = newsz;
+    temp = new_velolist_base;
+    new_velolist_base = velolist_base;
+    velolist_base = temp;
+    
+    listlength = newsz; // Update current sequence length
+    listlength_all = new_listlength_all;
+    //change_pattern(p);
+  
+    velolist=velolist_base;
+    ip=0;
+    loop(p,
+      velolist+=max_numnotes*listlength_pat[ip];
+      ip+=1;
+    );
+    
+    velobarwidth = scale_velobarwidth(listlength);
+    
+    p <= chain ? update_chain_beats();
+
+  );
+);
+
+@slider
+
+
+basenote=slider2|0; 
+
+new_p=slider1|0;
+new_p!=p ? change_pattern(new_p);
+
+numnotes=slider4|0;
+
+rate=slider5;
+
+notelen_p = slider6|0;
+defnotelen = (tpb*(notelen_p/100))|0;
+
+mode = slider7|0; //0= piano roll, 1 = drum map
+mode == 0 ? (
+  chw=0;
+  pianow=3*8+8;
+) : (
+  chw = 2*8+8;
+  pianow=max_notename_length*8+8;
+);
+pkw=chw+pianow;
+
+swing_p = slider8|0;
+swing = ((tpb/2)*(swing_p/100))|0;
+
+prev_p==p ? ( // not changing pattern
+  newsz=slider3|0;
+  change_seqlen(newsz);
+  steps_per_beat=slider9|0;
+  steps_per_beat_pat[p]=steps_per_beat;
+  rateadj = steps_per_beat * rate;
+  p <= chain ? update_chain_beats();
+);
+
+midi_trigger=slider10|0;
+trig_note_start=slider11|0;
+
+chain=slider12|0;
+
+elh_percent=slider13;
+
+cc_to_adjust=slider14|0;
+
+cc_type[0]=slider20|0;
+cc_type[1]=slider21|0;
+cc_type[2]=slider22|0;
+cc_type[3]=slider23|0;
+
+cc_chan[0]=slider30|0;
+cc_chan[1]=slider31|0;
+cc_chan[2]=slider32|0;
+cc_chan[3]=slider33|0;
+
+start_beatpos=slider40;
+play_before_start=slider41|0;
+end_beatpos=slider42;
+
+notenames_file=slider15|0;
+
+@serialize
+// Write:
+// collect properties of active notes -> runlength encode -> encode to saveable -> serialize
+//
+// Read:
+// unserialize -> decode from saveable -> runlength decode -> expand note properties
+//
+
+runl_flags=5*1024*1024;
+
+function enc_to_saveable(target, source, length) local(i, i_t, s)
+(
+  i=0;
+  i_t=0;
+  loop(length,
+    s = source[i];
+    s < 0 ? ( // negative source value
+      target[i_t] = 0x200000; // add flag to bit 21 indicating negative value
+      s = abs(s); // store absolute value
+    ) : (
+      target[i_t] = 0;
+    );
+    s > 0xFFFFF ? (//using more than 20 bits -> split
+      target[i_t] += (s & 0xFFFFF) + 0x100000; // copy bits (19:0) and add flag to bit 20
+      i_t += 1;
+      s & 0x80000000 ? ( // bit 31 = 1
+        target[i_t] = ((s & 0x7FFFFFFF) >> 20) + 0x800; // copy bits (31:20)
+      ) : (
+        target[i_t] = ((s & 0x7FFFFFFF) >> 20); // copy bits (31:20)
+      );
+    ) : (
+      runl_flags[i] ? (
+        target[i_t] = s + 2^23; //bit 23 flags a run length. It is safe to do because length of run is always < 2^23 and > 0.
+      ) : (
+        target[i_t] += s;
+      );
+    );
+    i += 1;
+    i_t += 1;
+  );
+  i_t; // return length of target
+);
+
+function dec_from_saveable(target, source, length) local(i, i_t, s)
+(
+  memset(runl_flags, 0, length); //clear run length flags
+  i=0;
+  i_t=0;
+  loop(length,
+    s = source[i];
+    s_neg = s & 0x200000; // extract negative value flag
+    s_neg ? s -= 0x200000; //clear negative value flag
+    s & 0x100000 ? ( // split data flag
+      s &= 0xFFFFF; // extract bits (19:0)
+      i+=1;
+      s += source[i] * 2^20; // extract bits (31:20)
+      target[i_t] = s;
+    ) : (
+      s & 0x800000 ? ( // run length flag
+        runl_flags[i_t] = 1; // copy run length flag 
+        target[i_t] = s & 0xFFFFF; // remove flag and copy source data to target
+      ):(
+        target[i_t] = s; // copy to target
+      );
+    );
+    s_neg ? target[i_t]=-target[i_t]; // negate target data if source data was flagged negative
+    i += 1;
+    i_t += 1;
+  );
+  i_t; // return length of target
+);
+
+
+// Run length encoder
+function runl_enc(target, source, length) local(i, i_t, s, run, prev_s, rl)
+(
+  memset(runl_flags, 0, length); //clear run length flags
+  i_t=0;
+  rl=1;
+  run=0;
+  prev_s=source[0];
+  i=1;
+  loop(length-1,
+    s = source[i];
+    s==prev_s ? (
+      run=1;
+      rl+=1; 
+    ) : (
+      run ? ( //end of run
+        run=0;
+        target[i_t]=rl; //store run length
+        rl=1;
+        runl_flags[i_t]=1; // flag run length position
+        i_t += 1;
+        target[i_t]=prev_s; // store data to be repeated
+      ) : ( //there was no run active
+        target[i_t]=prev_s; // store previous source data
+      );
+      i_t += 1;
+    );
+    prev_s=s;
+    i+=1;
+  );
+  // End of source data
+  run ? ( // Data ends in a run
+    target[i_t]=rl; //store run length
+    runl_flags[i_t]=1; // flag run length position
+    i_t += 1;
+    target[i_t]=prev_s; // store data to be repeated
+  ) : ( //no run in the end
+    target[i_t]=prev_s; // store previous source data
+  );
+  i_t + 1; // return length of target
+);
+
+// Run length decoder
+function runl_dec(target, source, length) local(i, i_t)
+(
+  i=0;
+  i_t=0;
+  while(
+    runl_flags[i] ? ( // Current source data is a run length
+      memset(target+i_t, source[i+1], source[i]); // Fill target with next source data. Fill length = run length. 
+      i_t+=source[i];
+      i+=1;
+    ) : (
+      target[i_t]=source[i];
+      i_t+=1;
+    );
+    i+=1;
+    i < length;
+  );
+  i_t; // return length of target
+);
+
+savedata=3*1024*1024;
+savedata2=4*1024*1024;
+
+serialread= (file_avail(0) >= 0);
+
+serilen=0;
+
+!serialread ?(
+  memcpy(savedata, notelist_base, listlength_all);
+  serilen += (listlength_all);
+  memcpy(savedata+serilen, notetie_base, listlength_all);
+  serilen += (listlength_all);
+  memcpy(savedata+serilen, cclist_base, listlength_all);
+  serilen += (listlength_all);
+  memcpy(savedata+serilen, notetranspose, max_numnotes);
+  serilen += max_numnotes;
+  memcpy(savedata+serilen, rowchannel, max_numnotes);
+  serilen += max_numnotes;
+  memcpy(savedata+serilen, listlength_pat, npatterns);
+  serilen += npatterns;
+  memcpy(savedata+serilen, steps_per_beat_pat, npatterns);
+  serilen += npatterns;
+  pat = 0;
+  pstart = notelist_base;
+  pstartv = velolist_base;
+  pstartsd = sdlist;
+  loop ( npatterns,
+    step = 0;
+    loop ( listlength_pat[pat],
+      stepnotes = pstart[step];
+      stepnotes!=0 ? ( // has notes in current step
+        row = 0;
+        while (
+          (stepnotes&1) ? ( // note on current row
+            velo_save = pstartv[row*listlength_pat[pat]+step];
+            savedata[serilen] = velo_save;
+            serilen += 1;
+            (velo_save & 0x000F0000) ? ( // has subdivs
+              subdivnotelist_save=((pstartsd[row*max_seqlength*max_subdivs+step*max_subdivs] & 0x00FF0000) >> 16);
+              savedata[serilen] = subdivnotelist_save;
+              serilen += 1;
+              sdpos_save=0;
+              while (
+                (subdivnotelist_save&1) ? ( // save only active subdiv notes
+                  savedata[serilen] = pstartsd[row*max_seqlength*max_subdivs+step*max_subdivs+sdpos_save];
+                  serilen += 1;
+                );
+                subdivnotelist_save *= 0.5;
+                sdpos_save += 1;
+                subdivnotelist_save>=1;
+              );
+            );
+          );
+          stepnotes *= 0.5;
+          row +=1;
+          stepnotes>=1;
+        );
+      );
+      step += 1;
+    );
+    pstart += listlength_pat[pat];
+    pstartv += listlength_pat[pat]*max_numnotes;
+    pstartsd += max_numnotes*max_seqlength*max_subdivs;
+    pat += 1;
+  );
+  
+  serilen = runl_enc(savedata2, savedata, serilen);
+  serilen = enc_to_saveable(savedata, savedata2, serilen);
+  
+);
+
+file_var(0,listlength);
+file_var(0,serilen);
+file_mem(0,savedata,serilen);
+serz_data_ver_running=serz_data_ver; // Save current version.
+file_var(0,serz_data_ver);
+file_var(0,listlength_all);
+file_var(0,lastvelo);
+
+serialread ?(
+
+  serz_data_ver > 0 ? (
+    serilen = dec_from_saveable(savedata2, savedata, serilen);
+    serilen = runl_dec(savedata, savedata2, serilen);
+  );
+  serz_data_ver < 2 ? (
+    listlength_all = listlength*npatterns;
+  );
+  serz_data_ver < 4 ? (
+    chain=0;
+  );
+  
+  // clear spare buffers and noteties first
+  memset(sparebuf, 0, npatterns*1024);
+  memset(sparebuf2, 0, npatterns*max_numnotes*max_seqlength);
+  memset(sparebuf_tie, 0, npatterns*1024);
+  memset(sparebuf_cc, 0, npatterns*1024);
+  
+  // clear subdivs
+  memset(sdlist, 0, npatterns*max_numnotes*max_seqlength*max_subdivs);
+  
+  i_srz = 0;
+  memcpy(notelist_base, savedata, listlength_all);
+  i_srz += listlength_all;
+  memcpy(notetie_base, savedata+i_srz, listlength_all);
+  i_srz += listlength_all;
+  serz_data_ver < 5 ? (
+    memset(cclist_base, 0, listlength_all); // set all CCs to same zero
+  ) : (
+    memcpy(cclist_base, savedata+i_srz, listlength_all); // read CCs from saved data
+    i_srz += listlength_all;
+  );
+  memcpy(notetranspose, savedata+i_srz, max_numnotes);
+  i_srz += max_numnotes;
+  serz_data_ver < 3 ? (
+    memset(rowchannel, 0, max_numnotes); // set all rowchannels to same zero
+  ) : (
+    memcpy(rowchannel, savedata+i_srz, max_numnotes);
+    i_srz += max_numnotes;
+  );
+  serz_data_ver < 2 ? (
+    memset(listlength_pat, listlength, npatterns); // set all patterns to same length
+  ) : (
+    memcpy(listlength_pat, savedata+i_srz, npatterns); // read pattern lengths from saved data
+    i_srz += npatterns;
+  );
+  serz_data_ver < 4 ? (
+    memset(steps_per_beat_pat, slider9|0, npatterns); // set all patterns to same steps_per_beat
+  ) : (
+    memcpy(steps_per_beat_pat, savedata+i_srz, npatterns); // read steps_per_beat from saved data
+    i_srz += npatterns;
+  );
+  pat = 0;
+  pstart = notelist_base;
+  pstartv = velolist_base;
+  pstartsd = sdlist;
+  loop ( npatterns,
+    step = 0;
+    memset(pstartv, 0, max_numnotes*listlength_pat[pat]); //initialize all velocities of pat to 0
+    loop ( listlength_pat[pat],
+      stepnotes = pstart[step];
+      stepnotes!=0 ? (
+        row = 0;
+        while (
+          (stepnotes&1) ? (
+            velo_save = savedata[i_srz];
+            i_srz += 1;
+            pstartv[row*listlength_pat[pat]+step] = velo_save;
+            serz_data_ver >= 6 ? ( // read subdivs from savedata
+              (velo_save & 0x000F0000) ? ( // has subdivs
+                subdivnotelist_save = savedata[i_srz];
+                i_srz += 1;
+                subdivnotelist_save_orig = subdivnotelist_save;
+                sdpos_save=0;
+                while (
+                  (subdivnotelist_save&1) ? ( // restore active subdiv notes
+                    pstartsd[row*max_seqlength*max_subdivs+step*max_subdivs+sdpos_save] = savedata[i_srz];
+                    i_srz += 1;
+                  );
+                  subdivnotelist_save *= 0.5;
+                  sdpos_save += 1;
+                  subdivnotelist_save>=1;
+                );
+                // set subdivnotelist
+                pstartsd[row*max_seqlength*max_subdivs+step*max_subdivs] &= 0xFF00FFFF; //clear old
+                pstartsd[row*max_seqlength*max_subdivs+step*max_subdivs] += (subdivnotelist_save_orig << 16); //set new
+              );
+            );
+          );
+          stepnotes *= 0.5;
+          row += 1;
+          stepnotes>=1;
+        );
+      );
+      step += 1;
+    );
+    pstart += listlength_pat[pat];
+    pstartv += listlength_pat[pat]*max_numnotes;
+    pstartsd += max_numnotes*max_seqlength*max_subdivs;
+    pat += 1;
+  );
+  recalc_elh = 1; // recalculate envelope lane height
+  lbasenote = -1; // Force graphics redraw
+  lnotenames_file = -1; // Force notenames reload
+  change_pattern(slider1|0);
+  update_chain_beats();
+);
+
+serz_data_ver = serz_data_ver_running; // Return current version back if it was changed when reading old file
+
+@block
+
+ts_num_l=ts_num;
+ts_denom_l=ts_denom;
+  
+function all_playing_notes_off()
+(
+  npos=0;
+  noneed=noteonstate;
+  noteonstate=0;
+  while(
+    (noneed&1) ? (
+      midisend(cursplpos,0x80+chan[npos],npos+basenote+trans[npos]); 
+    );
+    npos+=1;
+    noneed*=0.5;
+    noneed >= 1;
+  );
+);
+
+prev_p!=p ? (
+  prev_p=p;
+  sliderchange(slider3=listlength);
+  sliderchange(slider9=steps_per_beat);
+);
+ 
+
+mode == 1 ? (
+  trans=notetranspose;
+  chan=rowchannel;
+):( 
+  trans=notrans;
+  chan=zerochan;
+);
+
+want_previewoff && last_preview >=0 ? (
+  midisend(0,0x80+chan[last_preview],last_preview+basenote+trans[last_preview]);
+  last_preview=-1;
+);
+want_previewoff=0;
+
+want_previewoff_nt && last_preview_nt >=0 ? (
+  midisend(0,0x80+preview_nt_chan,last_preview_nt+basenote+trans[last_preview_nt]);
+  last_preview_nt=-1;
+);
+want_previewoff_nt=0;
+
+want_noteoff_nt ? (
+  is_midi_val(prev_nt) ? midisend(0,0x80+preview_nt_chan,prev_nt);
+);
+want_noteoff_nt=0;
+
+want_preview >=0 ?
+(
+  is_midi_val(note_to_send = want_preview+basenote+trans[want_preview]) ? (
+    midisend(0,0x90+chan[want_preview],note_to_send+previewvelo*256);
+    last_preview=want_preview;
+  );
+  want_preview=-1;
+);
+
+want_preview_nt >=0 ?
+(
+  is_midi_val(note_to_send = want_preview_nt+basenote+trans[want_preview_nt]) ? (
+    preview_nt_chan=chan[want_preview_nt];
+    midisend(0,0x90+preview_nt_chan,note_to_send+lastvelo*256);
+    last_preview_nt=want_preview_nt;
+  );
+  want_preview_nt=-1;
+);
+
+chain > 0 && beatpos == listlength-1 && pat_trigger_pending == 0? (
+  p < chain ? (
+    pat_trigger_num=p+1;
+    pat_trigger_pending=1;
+  ) : p==chain ? (
+    pat_trigger_num=0;
+    pat_trigger_pending=1;
+  );
+);
+
+i_buf=0;
+pat_triggered=0;
+cur_note_trigger=0;
+while (
+  midirecv(offset,msg1,msg23) ? (
+    midi_trigger > 0  ? ( // trigger enabled 
+      s = msg1&0xF0;
+      n=msg23&0x7F;        
+      vel=(msg23/256)|0;
+      s==0x90 && vel > 0 ? ( // Note-On event
+        n >= trig_note_start && n < trig_note_start+npatterns ? ( // Note within pattern change trigger range
+          !pat_triggered ? ( // Not yet triggered pattern
+            pat_trigger_num=n-trig_note_start;
+            pat_trigger_pending=1;
+            pat_triggered=1;
+            midi_trigger > 2 ? ( // trigger resync enabled
+              beat_position >= -100 && beat_position <= 9999 ? (
+                start_beatpos = beat_position; // set start beat position to current beat_position
+                midi_trigger > 4 ? ( // trigger resync qunatizing enabled
+                  start_beatpos_float = start_beatpos;
+                  start_beatpos = start_beatpos_float|0;
+                  start_beatpos_float - start_beatpos > 0.5 ? start_beatpos+=1;
+                );
+              );
+              sliderchange(slider40=start_beatpos);
+              refresh_tb=1;
+            );
+          );
+          cur_note_trigger=1; // Always flag cur_note_trigger, even when already triggered, to keep trigger notes silent.
+        ) : midi_trigger==2 || midi_trigger==4 || midi_trigger==6 ? ( // Transpose enabled
+          n != basenote ? (
+            pattrans_trigger_pending=1;
+            pattrans_trigger_note=n;
+          );
+          cur_note_trigger=1; // Always flag cur_note_trigger to keep trigger notes silent.
+        );
+      ) : (s==0x90 && vel == 0) || s==0x80 ? ( // Note-off event
+        n >= trig_note_start && n < trig_note_start+npatterns ? ( // Note within pattern change trigger range
+          cur_note_trigger=1; // Always flag cur_note_trigger, even when already triggered, to keep trigger notes silent.
+        ) : midi_trigger==2 || midi_trigger==4 || midi_trigger==6 ? ( // Transpose enabled
+          cur_note_trigger=1; // Always flag cur_note_trigger to keep trigger notes silent.
+        );
+      );
+    );
+    !cur_note_trigger ? ( // This note was not triggering pattern change
+      buf_offset[i_buf]=offset;
+      buf_msg1[i_buf]=msg1;
+      buf_msg23[i_buf]=msg23;
+      i_buf+=1;
+    );
+    cur_note_trigger=0;
+    loop_to_start=1; // just to keep while loop repeating
+  );
+);
+
+
+beat_position >= start_beatpos ? (
+  curbeatpos = beat_position - start_beatpos;
+) : (
+  chain > 0 && p <= chain ? (
+    pat_beats=chain_beats / rate;
+  ) : (
+    pat_beats=listlength/steps_per_beat / rate;
+  );
+  curbeatpos = beat_position - (start_beatpos - pat_beats * ceil((start_beatpos - beat_position)/pat_beats));
+);
+
+cursplpos=0;
+dbeatpos = (tempo * 4.0 / (60.0 * ts_denom * srate));
+
+beat_position_int=beat_position;
+
+loop((play_state&1) ? samplesblock : 1,
+  
+  play_state_i=play_state;
+  (!play_before_start && beat_position_int < start_beatpos) || (end_beatpos > start_beatpos && beat_position_int >= end_beatpos) ? (
+    play_state_i&=0xFFFE; // set bit 0 to 0. Prevents playback.
+  );
+  
+  chain > 0 && p <= chain ? (
+    chains_passed_full=floor(curbeatpos/(chain_beats / rate));
+    beats_remaining=curbeatpos-((curbeatpos/(chain_beats / rate))|0)*(chain_beats / rate);
+    chain_preceding_beats=0;
+    chain_pat_beats = listlength_pat[0]/steps_per_beat_pat[0] / rate;
+    i_cp=0;
+    beats_remaining >= chain_pat_beats ? (
+      while(
+        chain_preceding_beats+=chain_pat_beats;
+        i_cp+=1;
+        chain_pat_beats = listlength_pat[i_cp]/steps_per_beat_pat[i_cp] / rate;
+        chain_preceding_beats+chain_pat_beats < beats_remaining;
+      );
+    );
+    !pat_trigger_pending && i_cp != p && (play_state_i&1) ? (
+      pat_trigger_num=i_cp;
+      pat_trigger_pending=1;
+    );
+    curbeatpos_c=curbeatpos-chains_passed_full*(chain_beats / rate)-chain_preceding_beats;
+    curbeatpos_c < 0 ? ( // Position outside current pattern. Produces unpredictable behaviour. May happen if a pattern in chain contains incomplete beat(s).
+      curbeatpos_c=0;
+      debug_hits+=1;
+    );
+    beatpos=(play_state_i&1) ? (curbeatpos_c * rateadj)%listlength : -100;
+    tickpos=(play_state_i&1) ? (curbeatpos_c * rateadj * tpb)%(listlength * tpb) : -100;
+  ) : (
+    beatpos=(play_state_i&1) ? (curbeatpos * rateadj)%listlength : -100;
+    tickpos=(play_state_i&1) ? (curbeatpos * rateadj * tpb)%(listlength * tpb) : -100;
+  );
+  
+  tickpos != ltickpos && (beatpos == lbeatpos) && (play_state_i&1) ? (
+    npos=0;
+    noneed=noteonstate;
+    a = swingstate;
+    ltiestate_t=ltiestate;
+    swing > 0 ? (defnotelen+swing < tpb ? notelen_swinged=defnotelen+swing : notelen_swinged=tpb;);
+    while(
+      sdnum=getSubdivNum(npos*listlength+beatpos);
+      sdnum == 0 ? ( // not subdiv
+        start_offset = getStart(npos*listlength+beatpos);
+        swing == 0 ? (defnotelen+start_offset < tpb ? notelen_offseted=defnotelen+start_offset : notelen_offseted=tpb;);
+        (noneed&1) && (
+        (swing > 0 && ((swing_beat && notelen_swinged == ticks) || (!swing_beat && defnotelen == ticks)))
+        ||(swing == 0 && notelen_offseted == ticks)) && !(ltiestate_t&1) ? (
+          midisend(cursplpos,0x80+chan[npos],npos+basenote+trans[npos]); 
+          noteonstate &= (0xFFFFFFFF ~ (1 << npos));
+        );
+        ((swing_beat && swing > 0 && swing == ticks) || (swing == 0 && getStart(npos*listlength+beatpos) == ticks)) && (a&1) ? (
+          is_midi_val(note_to_send = npos+basenote+trans[npos]) ? (
+            !(ltiestate_t&1) ? ( // send new note only when there is no tie from previous note
+              midisend(cursplpos,0x90+chan[npos],note_to_send + getVelo(npos*listlength+beatpos)*256);
+            ) : (
+              ltiestate-=2^npos; // clear old tiestate
+            );
+            noteonstate+=2^npos;
+            (swingtiestate & 2^npos) && (beatpos < listlength-1) ? ltiestate+=2^npos; // Set tie state if tie enabled and not last note of sequence
+          );
+        );
+      ) : ( // subdiv note
+        ticks > 0 && sd_playstate[2*npos] ? (
+          swing_beat ? (
+            sd_ticks=((tpb-swing) / (sd_playstate[2*npos]+1))|0;
+          ) : (
+            sd_ticks=(tpb / (sd_playstate[2*npos]+1))|0;
+          );
+          (!swing_beat && (ticks % sd_ticks) == 0) || (swing_beat && ticks >= swing && ((ticks-swing) % sd_ticks) == 0 ) ? (
+            !swing_beat ? (
+              sdpos=(ticks/sd_ticks)|0;
+            ) : (
+              sdpos=((ticks-swing)/sd_ticks)|0;
+            );
+            (sd_playstate[2*npos+1] >> (sdpos-1))&1 ? (// previous sd step was enabled
+              midisend(cursplpos,0x80+chan[npos],npos+basenote+trans[npos]); // note-off previous subdiv note
+            );
+            (sd_playstate[2*npos+1] >> (sdpos))&1 ? (// current sd step is enabled
+              playvelo=getSubdivVelo(npos, beatpos, sdpos);
+              midisend(cursplpos,0x90+chan[npos],npos+basenote+trans[npos] + playvelo*256); // note-on subdiv note
+            );
+            sdpos==sd_playstate[2*npos] ? sd_playstate[2*npos]=0;
+          );
+        );
+      );
+      npos+=1;
+      noneed*=0.5;
+      ltiestate_t*=0.5;
+      (a*=0.5) >=1 || noneed >= 1;
+    );
+    ticks+=1;
+    ltickpos=tickpos;
+  );
+  beatpos != lbeatpos || !(play_state_i&1) ? (
+  
+    pat_trigger_pending ? (
+      pat_trigger_pending=0;
+      change_pattern(pat_trigger_num);
+      sliderchange(slider1=p);
+      sliderchange(slider3=listlength);      
+    );
+    pattrans_trigger_pending ? (
+      pattrans_trigger_pending=0;
+      all_playing_notes_off();
+      basenote=pattrans_trigger_note;
+      sliderchange(slider2=basenote);
+      refresh_tb=1;
+      ltiestate = 0; // clear all note ties
+    );
+    
+    // Send CC
+    (play_state_i&1) ? (
+      i_blk=0;
+      ccvalues = cclist[beatpos];
+      loop(numccs,
+        val = getCc(ccvalues, i_blk);
+        val & 0x80 && (cc_type[i_blk] < 127)? ( // event enabled and not special type
+          midisend(cursplpos, 0xB0 + cc_chan[i_blk], cc_type[i_blk] | ((val&0x7F) << 8));
+        );
+        i_blk+=1;
+      );
+    );
+    
+    (play_state_i&1) ? (
+      a = notelist[beatpos];
+      // Step probability
+      rand_a_play=1;
+      cc_type[0] == 127 ? (
+        val = getCc(cclist[beatpos], 0);
+        (val&0x80) && (rand(127) > val&0x7F) ? rand_a_play=0;
+      );
+    ) : a = 0;
+    
+    a &= recmask;
+    !(play_state_i&1) ? (
+      ltiestate = 0; // clear all note ties if transport is stopped
+      memset(sd_playstate, 0, max_numnotes*2); // clear all subdiv states
+    );
+    npos=0;
+    swing_beat = !((beatpos-1) % 2);
+    noneed=noteonstate;
+    noteonstate=0;
+    tiestate=0;
+    swingtiestate=0;
+    swingstate=0;
+    ticks = 0;
+    while(
+      (noneed&1) && !(ltiestate&1) ? (
+         midisend(cursplpos,0x80+chan[npos],npos+basenote+trans[npos]); // send note off
+      );
+      (a&1) && (rand_a_play || chan[npos]!=cc_chan[0] || (ltiestate&1))? (
+        sdnum=getSubdivNum(npos*listlength+beatpos);
+        //(swing_beat && swing > 0 && sdnum == 0) || (swing == 0 && getStart(npos*listlength+beatpos) > 0) ? ( 
+
+        sdnum == 0 ? ( // not subdiv
+          (swing_beat && swing > 0) || (swing == 0 && getStart(npos*listlength+beatpos) > 0) ? ( 
+            swingstate+=2^npos; // flag a swung or start offseted note to be played later
+            (notetie[beatpos] & 2^npos) ? swingtiestate+=2^npos;
+            (ltiestate&1) ? tiestate+=2^npos; // keep the tiestate
+          ) : ( //normal non-swung note playback
+
+            playvelo=getVelo(npos*listlength+beatpos);
+            is_midi_val(note_to_send = npos+basenote+trans[npos]) ? (
+              !(ltiestate&1) ? ( // send new note only when there is no tie from previous note
+                midisend(cursplpos,0x90+chan[npos],note_to_send + playvelo*256); // send note on
+              );
+              noteonstate+=2^npos;
+              (notetie[beatpos] & 2^npos) && (beatpos < listlength-1) ? tiestate+=2^npos; // Set tie state if tie enabled and not last note of sequence
+            );
+
+          );
+          
+        ) : ( // subdiv note
+
+          sd_playstate[2*npos]=sdnum;
+          sd_playstate[2*npos+1]=getSubdivNotelist(npos, beatpos); // sd note enable bits
+          (swing_beat && swing > 0) ? ( 
+            swingstate+=2^npos; // flag a swung note to be played later
+          ) : (
+            sd_playstate[2*npos+1]&1 ? (// first sd step is enabled
+              playvelo=getSubdivVelo(npos, beatpos, 0);
+              midisend(cursplpos,0x90+chan[npos],npos+basenote+trans[npos] + playvelo*256); // note-on subdiv note
+            );
+            noteonstate+=2^npos;    
+          );
+        );
+        
+        
+        
+      );
+      npos+=1;
+      noneed*=0.5;
+      ltiestate*=0.5;
+      (a*=0.5) >=1 || noneed >= 1;
+    );
+    lbeatpos=beatpos;
+    recmask = 0xFFFFFFFF;
+    ltiestate=tiestate;
+  );
+  cursplpos += 1;
+  curbeatpos += dbeatpos;
+  beat_position_int+=dbeatpos;
+);
+
+midi_buf_len=i_buf;
+i_buf=0;
+loop(midi_buf_len,
+  offset=buf_offset[i_buf];
+  msg1=buf_msg1[i_buf];
+  msg23=buf_msg23[i_buf];
+  s = msg1&0xF0;
+  n=msg23&0x7F;        
+  npos=n-basenote;
+  (play_state_i==5) ? ( // Recording
+    vel=(msg23/256)|0;
+    s==0x90 && vel > 0 ? ( // Note-On  
+      (npos >= 0 && npos < numnotes) ? (
+        mask = 2^npos;
+        ticks > (tpb/2) ? ( // Quantize to nearest beatpos 
+          bp = (beatpos+1) % listlength; 
+          chain > 0 && p <= chain && bp == 0 ? (
+            chain_rec_to_next = 1;
+          );
+        ) : ( 
+          bp = beatpos; 
+        ); 
+        chain_rec_to_next ? ( // record note to next pattern in chain
+          rec_p = p+1 % chain;
+          rec_p == 0 ? (
+            rec_p_notelist=notelist_base;
+            rec_p_velolist=velolist_base;
+          ) : (
+            rec_p_notelist=notelist+listlength;
+            rec_p_velolist=velolist+listlength*max_numnotes;
+          );
+          nlm=(rec_p_notelist[bp] & mask);
+          nlm==0 ? ( 
+            rec_p_notelist[bp]+=mask; // Record new note
+          );
+          // Overwrite velocity
+          rec_velpos=npos*listlength_pat[rec_p]+bp;
+          rec_p_velolist[rec_velpos] &= 0xFFFFFF80; //clear old velocity
+          rec_p_velolist[rec_velpos] += vel; //set new velocity
+        ) : (
+          nlm=(notelist[bp] & mask);
+          nlm==0 ? ( 
+            notelist[bp]+=mask; // Record new note
+          );
+          setVelo(npos*listlength+bp, vel); // Overwrite velocity
+        );
+        recmask -= mask;
+        chain_rec_to_next = 0;
+      );
+    );
+  );
+  // Transpose notes (Only in in Drum map mode)
+  (s == 0x90 || s == 0x80) && npos >= 0 && npos < numnotes ? ( // note-on or note-off, and within visible grid
+    is_midi_val(note_to_send = npos+basenote+trans[npos]) ? (
+      msg23 = msg23-n+note_to_send; // transpose note
+      msg1 = (msg1&0xF0) + chan[npos]; // remap MIDI channel
+      midisend(offset,msg1,msg23);
+    );
+  ) : ( // received note is not within visible grid, or some other event received. -> send unmodified
+    midisend(offset,msg1,msg23);
+  );
+  i_buf+=1;
+);
+
+
+@sample
+
+@gfx 400+pkw 320+tbh
+
+recalc_elh || lgfx_h != gfx_h? (
+  recalc_elh=0;
+  elh=(gfx_h - tbh) * elh_percent|0;
+  elh < el_divh ? elh = el_divh; //keep lane divider always visible
+  grid_bottom=gfx_h - elh;
+  refresh_pianokeys=1;
+  refresh_cc_controls=1;
+);
+  
+function draw_button(x, y)
+(
+  gfx_r=gfx_g=gfx_b=0.7;gfx_a=1;
+  gfx_x=x+2;gfx_y=y+1;
+  gfx_rectto(gfx_x+busp-2,y+tbrh-1);
+);
+
+function draw_button_highlight(x, y)
+(
+  gfx_r=c_hl_r; gfx_g=c_hl_g; gfx_b=c_hl_b; gfx_a=c_hl_a;
+  gfx_x=x+2;gfx_y=y+1;
+  gfx_rectto(gfx_x+busp-2,y+tbrh-1);
+);
+
+function draw_pat_button(patnum, y, hl)
+(
+  // Draw pattern button background
+  chain > 0 && chain >= patnum ? (
+    gfx_r=0.6; gfx_g=0.9; gfx_b=0.6;gfx_a=1;
+  ) : (
+    gfx_r=gfx_g=gfx_b=0.7;gfx_a=1;
+  );
+  gfx_x=patnum*busp+2;gfx_y=y+1;
+  gfx_rectto(gfx_x+busp-2, y+tbrh-1);
+  
+  //Draw chain link
+  chain >patnum ? (
+    gfx_r=0; gfx_g=0.7; gfx_b=0 ;gfx_a=1;
+    gfx_y=y+tbrh/2-3;
+    gfx_rectto(gfx_x+2,gfx_y+6);
+  );
+  
+  // Draw pattern button number
+  patnum == p ? (
+    number_c=1.0;
+  ) : (2^patnum)&has_notes ? (
+    number_c=0.3;
+  ) : (
+    number_c=0.55;
+  );
+  gfx_r=gfx_g=gfx_b=number_c;
+  gfx_x=patnum*busp+5; gfx_y=(y+tbrh/2-4)|0;
+  patnum < 10 ? gfx_x+=4; // shift single digit number right by half digit width
+  gfx_drawnumber(patnum, 0);
+  
+  hl ? draw_button_highlight(patnum*busp,y);
+);
+
+function draw_mode_button(x,y,hl)
+(
+  draw_button(x,y);
+  gfx_r=gfx_g=gfx_b=0.3;gfx_a=1;
+  gfx_x=x+4; gfx_y=y+5;
+  mode == 0 ? (
+    gfx_printf("PR");
+  ) : (
+    gfx_printf("DM");
+  );
+  hl ? draw_button_highlight(x,y);
+);
+
+function draw_startmode_button(x,y,hl)
+(
+  draw_button(x,y);
+  gfx_r=gfx_g=gfx_b=0.3;gfx_a=1;
+  gfx_x=x+4; gfx_y=y+5;
+  play_before_start == 0 ? (
+    gfx_drawchar($' ');
+    gfx_x-=3;
+    gfx_drawchar($'|');
+    gfx_x-=2;
+    gfx_drawchar($'>');
+  ) : (
+    gfx_drawchar($'>');
+    gfx_x-=3;
+    gfx_drawchar($'|');
+    gfx_x-=2;
+    gfx_drawchar($'>');
+  );
+  hl ? draw_button_highlight(x,y);
+);
+
+function draw_position_display(x, y, hl, value)
+(
+  // Draw edges
+  gfx_r=gfx_g=gfx_b=0.7;gfx_a=1;
+  gfx_x=x+2;gfx_y=y+1;
+  gfx_lineto(gfx_x+(busp*2-2-1), gfx_y, 0);
+  gfx_lineto(gfx_x, gfx_y+(tbrh-2-1), 0);
+  gfx_lineto(gfx_x-(busp*2-2-1), gfx_y, 0);
+  gfx_lineto(gfx_x, gfx_y-(tbrh-2-1), 0);
+  
+  // Draw value
+  gfx_r=gfx_g=gfx_b=0.5;gfx_a=1;
+  gfx_x=x+6; gfx_y=y+5;
+  value < 0 && abs(value) >= 100 ? (
+    gfx_printf(" --- ");
+  ) : value < 0 && abs(value) >= 10 ? (
+    gfx_drawnumber(value,1);
+  ) : value < 0 ? (
+    gfx_drawnumber(value,2);
+  ) : value < 10 ? (
+    gfx_drawnumber(value,3);
+  ) : value < 100 ? (
+    gfx_drawnumber(value,2);
+  ) : value < 1000 ? (
+    gfx_drawnumber(value,1);
+  ) : (
+    gfx_x+=4;
+    gfx_drawnumber(value,0);
+  );
+  hl ? (
+    gfx_r=c_hl_r; gfx_g=c_hl_g; gfx_b=c_hl_b; gfx_a=c_hl_a;
+    gfx_x=x+2;gfx_y=y+1;
+    gfx_rectto(gfx_x+(busp*2-2),gfx_y+(tbrh-2));
+  );
+);
+
+function draw_slider(x,y,pos)
+(
+  // Draw edges
+  gfx_r=gfx_g=gfx_b=0.7;gfx_a=1;
+  gfx_x=x+2;gfx_y=y+1;
+  gfx_lineto(gfx_x+(busp*6-2-1), gfx_y, 0);
+  gfx_lineto(gfx_x, gfx_y+(tbrh-2-1), 0);
+  gfx_lineto(gfx_x-(busp*6-2-1), gfx_y, 0);
+  gfx_lineto(gfx_x, gfx_y-(tbrh-2-1), 0);
+  
+  // Draw horizontal control bar
+  gfx_r=gfx_g=gfx_b=0.7;gfx_a=0.5;
+  gfx_x=x+2;gfx_y=y+1;
+  gfx_rectto(gfx_x+(busp*6-2-1)*pos, gfx_y+(tbrh-2-1));  
+);
+
+function draw_slider_highlight(x, y)
+(
+  gfx_r=c_hl_r; gfx_g=c_hl_g; gfx_b=c_hl_b; gfx_a=c_hl_a;
+  gfx_x=x+2;gfx_y=y+1;
+  gfx_rectto(gfx_x+(busp*6-2), gfx_y+(tbrh-2));
+);
+
+function draw_notelen_slider(x, y, hl)
+(
+  gfx_r=gfx_g=gfx_b=0.5;gfx_a=1;
+  gfx_x=x+8; gfx_y=y+5;
+  gfx_printf("Note Length");
+  gfx_x=x+108;
+  gfx_drawnumber(notelen_p,0);
+  gfx_drawchar($'%');
+  draw_slider(x,y,notelen_p/100);
+  hl ? draw_slider_highlight(x,y);
+);
+
+function draw_swing_slider(x, y, hl)
+(
+  gfx_r=gfx_g=gfx_b=0.5;gfx_a=1;
+  gfx_x=x+8; gfx_y=y+5;
+  gfx_printf("Swing");
+  gfx_x=x+108;
+  gfx_drawnumber(swing_p,0);
+  gfx_drawchar($'%');
+  draw_slider(x,y,swing_p/100);
+  hl ? draw_slider_highlight(x,y);
+);
+
+function draw_velo_display(x,y,hl)
+(
+  // Draw edges
+  gfx_r=gfx_g=gfx_b=0.7;gfx_a=1;
+  gfx_x=x+2;gfx_y=y+1;
+  gfx_lineto(gfx_x+(busp*2-2-1), gfx_y, 0);
+  gfx_lineto(gfx_x, gfx_y+(tbrh-2-1), 0);
+  gfx_lineto(gfx_x-(busp*2-2-1), gfx_y, 0);
+  gfx_lineto(gfx_x, gfx_y-(tbrh-2-1), 0);
+  
+  // Draw label:
+  gfx_r=gfx_g=gfx_b=0.5;gfx_a=1;
+  gfx_y=y+5;
+  gfx_x=x+6;
+  gfx_printf("V:");
+  
+  // Draw value
+  lastvelo < 10 ? (
+    gfx_x=x+22+2*8;
+  ) : lastvelo < 100 ? (
+    gfx_x=x+22+8;
+  ) : (
+    gfx_x=x+22;
+  );
+  gfx_drawnumber(lastvelo,0);
+  hl ? (
+    gfx_r=c_hl_r; gfx_g=c_hl_g; gfx_b=c_hl_b; gfx_a=c_hl_a;
+    gfx_x=x+2;gfx_y=y+1;
+    gfx_rectto(gfx_x+(busp*2-2-1),gfx_y+(tbrh-2-1));
+  );
+);
+
+function isSharp(note) local(octavestart)
+(
+  octavestart = note % 12; 
+  octavestart == 1 || octavestart == 3 || octavestart == 6 || octavestart == 8 || octavestart == 10 ? (
+    1;
+  ) : (
+    0;
+  );
+);
+
+function getNotename(note, default_names)
+( 
+  notenames[note]==0 || default_names ? ( // empty notename -> use default note names
+    #name_str=nn[note % 12];
+    isSharp(note) ? (
+      #name_str+="#";
+    ) : (
+      #name_str+=" ";
+    );
+    notename_digit=floor((note-12)/12 + octave_offset);  
+    strcat(#name_str, sprintf(#, "%{notename_digit}d"));
+  ) : ( // use notename extracted from file
+    #name_str=notenames[note];
+  );
+);
+
+function draw_trigstart_display(x,y,hl)
+(
+  // Draw edges
+  gfx_r=gfx_g=gfx_b=0.7;gfx_a=1;
+  gfx_x=x+2;gfx_y=y+1;
+  gfx_lineto(gfx_x+(busp*4-2-1), gfx_y, 0);
+  gfx_lineto(gfx_x, gfx_y+(tbrh-2-1), 0);
+  gfx_lineto(gfx_x-(busp*4-2-1), gfx_y, 0);
+  gfx_lineto(gfx_x, gfx_y-(tbrh-2-1), 0);
+  
+  // Print label and value
+  gfx_r=gfx_g=gfx_b=0.5;gfx_a=1;
+  gfx_y=y+5;
+  gfx_x=x+6;
+  gfx_printf("Trig: ");
+  gfx_printf(getNotename(trig_note_start, 1));
+  
+  hl ? (
+    gfx_r=c_hl_r; gfx_g=c_hl_g; gfx_b=c_hl_b; gfx_a=c_hl_a;
+    gfx_x=x+2;gfx_y=y+1;
+    gfx_rectto(gfx_x+(busp*2-2-1),gfx_y+(tbrh-2-1));
+  );
+);
+
+function draw_drum_note(note) local(notepos, nt, trans, half_rh, scaled_tr, offset, name)
+(
+  notepos = numnotes-1-note;
+  nt = basenote+note+notetranspose[note];
+  name=#;
+  name=getNotename(nt, 0);
+  // Erase previous text by drawing black text over
+  gfx_r=gfx_g=gfx_b=0; gfx_a=1;
+  gfx_x=chw+4.0; gfx_y=tbh+notepos*row_height+row_height/2-3;
+  gfx_printf(name); 
+  gfx_x=4.0;
+  rowchannel[note]+1 < 10 ? gfx_x=gfx_x+3.0;
+  gfx_drawnumber(rowchannel[note]+1, 0);
+  
+  gfx_r=gfx_g=0; gfx_b=0.5 ;gfx_a=1;
+  gfx_x=2.0; gfx_y=tbh+notepos*row_height+1;
+  gfx_rectto(chw-3, gfx_y+row_height-2);
+  !isSharp(basenote+note) ? ( // draw faint white key background
+    gfx_r=gfx_g=gfx_b=0.12 ;gfx_a=1;
+    gfx_x=chw; gfx_y=tbh+notepos*row_height+1;
+    gfx_rectto(pkw-3, gfx_y+row_height-2);
+  );
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+  gfx_x=4.0; gfx_y=tbh+notepos*row_height+row_height/2-3;
+  rowchannel[note]+1 < 10 ? gfx_x=gfx_x+3.0;
+  gfx_drawnumber(rowchannel[note]+1, 0);
+  gfx_x=chw+4.0;
+  
+  gfx_r=gfx_g=gfx_b=1;
+  notenames[nt]==0 ? gfx_a=0.3 : gfx_a=0.6; 
+  gfx_printf(name);
+  
+  //Draw transpose indicator
+  trans = notetranspose[note];
+  trans != 0 ? (     
+    half_rh = row_height/2|0;
+    gfx_r=1.0; gfx_g=0.0; gfx_b=0.0; gfx_a=0.8;
+    gfx_x=chw+0.0; gfx_y=tbh+(notepos*row_height+half_rh)|0;
+    
+    scaled_tr = trans/8;
+    offset = (half_rh-1)*scaled_tr;
+    offset > 0 && offset < 1 ? offset=1;
+    offset < 0 && offset > -1 ? offset=-1;
+    offset=offset|0;
+    offset > half_rh-1 ? offset = half_rh-1;
+    offset < (-half_rh)+1 ? offset = (-half_rh)+1;
+    gfx_rectto(gfx_x+3, gfx_y - offset);
+  );
+);
+
+function draw_tb_pianokeys(x, y) local(note, w, gap, in_range, in_trig_range, )
+( 
+  gfx_x=x+2;gfx_y=y+1;
+  w_scale=-1;
+  while( 
+    w_scale+=1;
+    gfx_w-128 > 483+w_scale*128;
+  );
+  
+  note=0;
+  loop(128,
+    note >= basenote && note < basenote+numnotes ? in_range=1 : in_range=0;
+    note >= trig_note_start && note < trig_note_start+npatterns ? in_trig_range=1 : in_trig_range=0;
+    isSharp(note) ? (
+      gfx_r=gfx_g=gfx_b=0.3;gfx_a=1; 
+      in_range ? (gfx_r=gfx_g=gfx_b=0.5; gfx_r*=0.5; gfx_b*=0.5;);
+      in_trig_range ? (!in_range ? gfx_r=gfx_g=gfx_b=0.5; gfx_g*=0.5; gfx_b*=0.5;);
+      w=3;
+      gap=0;
+    ) : (
+      gfx_r=gfx_g=gfx_b=1.0;gfx_a=1; 
+      in_range ? (gfx_r*=0.5;gfx_b*=0.5;);
+      in_trig_range ? (gfx_g*=0.5;gfx_b*=0.5;);
+      w=4;
+      !isSharp(note+1) ? gap=1 : gap=0;
+    );
+    gfx_rectto(gfx_x+w+w_scale,gfx_y+tbrh-2);
+    gfx_x+=gap; gfx_y=y+1;
+    note+=1;
+  );
+  tb_pianokey_end=10*(7*4+5*3+12*w_scale+2)+5*4+3*3+8*w_scale+1;
+);
+
+function clear_pattern(pat) local(i, notelist, velolist, notetie, cclist)
+(
+  notelist=0;
+  velolist=velolist_base;
+  i=0;
+  loop(pat,
+    notelist+=listlength_pat[i];
+    velolist+=max_numnotes*listlength_pat[i];
+    i+=1;
+  );
+  notetie=notetie_base+notelist;
+  cclist=cclist_base+notelist;
+  notelist=notelist_base+notelist;
+  memset(notelist, 0, listlength_pat[pat]);
+  memset(notetie, 0, listlength_pat[pat]);
+  memset(cclist, 0, listlength_pat[pat]);
+  memset(velolist, 0, listlength_pat[pat]*max_numnotes);
+  memset(sparebuf + pat*1024, 0, max_seqlength);
+  memset(sparebuf_tie + pat*1024, 0, max_seqlength);
+  memset(sparebuf_cc + pat*1024, 0, max_seqlength);
+  memset(sparebuf2 + pat*max_numnotes*max_seqlength, 0, max_numnotes*max_seqlength);
+);
+
+function draw_pianokeys() local(notepos, octavestart)
+(
+  // Erase old keys
+  gfx_r=gfx_g=gfx_b=gfx_x=0; gfx_y=tbh-1; gfx_a=1;
+  gfx_rectto(pkw,grid_bottom);
+  
+  // Draw new keys
+  notepos=0;
+  loop(numnotes,
+    octavestart = (basenote+(numnotes-1-notepos)) % 12;
+    // Draw piano keys
+    row_height >= 2 ? (
+      mode == 0 && !(octavestart == 1 || octavestart == 3 || octavestart == 6 || octavestart == 8 || octavestart == 10) ? (
+        gfx_r=gfx_g=gfx_b=1;gfx_a=1;
+        gfx_x=2.0; gfx_y=tbh+notepos*row_height+1;
+        gfx_rectto(pkw-3, gfx_y+row_height-2);
+      );
+    );
+    // Draw note names
+    row_height >= 4 ? (
+      mode == 0 ? (
+        octavestart == 0 ? (
+          gfx_r=0.0; gfx_g=0.0; gfx_b=0.0; gfx_a=0.6;
+          gfx_x=chw+4.0; gfx_y=tbh+notepos*row_height+row_height/2-3;
+          gfx_drawchar($'C');
+          gfx_drawnumber(((basenote+(numnotes-1-notepos)) / 12)-1+octave_offset,0);
+        );
+      ) : (
+        draw_drum_note(numnotes-1-notepos);
+      );
+    );
+    notepos+=1;
+  );
+);
+
+function getEnvColor(env)
+(
+  env == 0 ? (use_r=0.2; use_g=0.3; use_b=1.0 );
+  env == 1 ? (use_r=0.2; use_g=0.6; use_b=0.2 );
+  env == 2 ? (use_r=1.0; use_g=0.5; use_b=0.0 );
+  env == 3 ? (use_r=0.6; use_g=0.2; use_b=0.6 );
+);
+
+function setEnvColor(env)
+(
+  env == cc_to_adjust ? (
+    getEnvColor(env);
+    use_a=1;
+  ):(
+    use_r=0.3; use_g=0.3; use_b=0.3; use_a=0.5; 
+  );
+);
+
+function setCcControlColor(env)
+(
+  getEnvColor(env);
+  use_a=1;
+  env != cc_to_adjust ? ( 
+    use_r*=0.3; use_g*=0.3; use_b*=0.3;
+  );
+);
+
+function draw_cc_controls() local(cc_control_top, cc_control_height, ccpos)
+(
+  cc_control_top=grid_bottom+el_divh;
+  
+  // Erase old cc controls
+  gfx_r=gfx_g=gfx_b=gfx_x=0; gfx_y=cc_control_top; gfx_a=1;
+  gfx_rectto(pkw,gfx_h);
+  
+  cc_control_height=(elh-el_divh)/numccs;
+  // Draw new cc controls
+  cc_control_height >= 2 ? (
+    ccpos=0;
+    loop(numccs,
+      setCcControlColor(ccpos);
+      mode == 1 ? (
+        gfx_r=use_r; gfx_g=use_g; gfx_b=use_b; gfx_a=use_a;
+        //gfx_r=gfx_g=0; gfx_b=0.5 ;gfx_a=1;
+        gfx_x=2.0; gfx_y=cc_control_top+ccpos*cc_control_height+1;
+        gfx_rectto(chw-3, gfx_y+cc_control_height-2);
+        gfx_r=1.0; gfx_g=1.0; gfx_b=1.0;
+        ccpos == cc_to_adjust ? gfx_a=0.6 : gfx_a=0.3;
+        gfx_x=4.0; gfx_y=cc_control_top+ccpos*cc_control_height+cc_control_height/2-3;
+        cc_chan[ccpos]+1 < 10 ? gfx_x=gfx_x+3.0;
+        gfx_drawnumber(cc_chan[ccpos]+1, 0);
+      );
+      gfx_r=use_r; gfx_g=use_g; gfx_b=use_b; gfx_a=use_a;
+      //gfx_r=gfx_g=0; gfx_b=0.5; gfx_a=1;
+      gfx_x=chw; gfx_y=cc_control_top+ccpos*cc_control_height+1;
+      gfx_rectto(pkw-3, gfx_y+cc_control_height-2);
+      gfx_r=1.0; gfx_g=1.0; gfx_b=1.0; 
+      ccpos == cc_to_adjust ? gfx_a=0.6 : gfx_a=0.3;
+      gfx_x=chw+4.0; gfx_y=cc_control_top+ccpos*cc_control_height+cc_control_height/2-3; 
+      elh >=32 ? (
+        cc_type[ccpos] == 1 ? (
+          gfx_printf("Mod");
+        ) : cc_type[ccpos] == 7 ? (
+          gfx_printf("Vol");
+        ) : cc_type[ccpos] == 10 ? (
+          gfx_printf("Pan");
+        ) : cc_type[ccpos] == 11 ? (
+          gfx_printf("Exp");
+        ) : cc_type[ccpos] == 64 ? (
+          gfx_printf("HPd");
+        ) : cc_type[ccpos] == 127 && ccpos==0 ? (
+          gfx_printf("Prb");
+        ) : (
+          cc_type[ccpos] < 10 ? gfx_x=gfx_x+3.0;
+          gfx_drawnumber(cc_type[ccpos], 0);
+        );
+      );
+
+      ccpos+=1;
+    );
+  );
+);
+
+function draw_velobar(x, y, velo, note_w, note_h) local(tip_y, barwidth) // x, y is the bottom left corner of bar
+(
+  tip_y = 0.95*row_height*velo/128;
+  tip_y < 1.0 ? tip_y = 1.0;
+  tip_y > note_h ? tip_y = note_h;
+  tip_y=tip_y|0;
+  gfx_r=1.0; gfx_g=1.0; gfx_b=1.0; gfx_a=0.55;
+  velobarwidth > note_w ? barwidth = note_w : barwidth = velobarwidth;
+  gfx_x=x; gfx_y=y; 
+  gfx_rectto(gfx_x + barwidth, gfx_y - tip_y);
+);
+
+function veloadjust_row(y, x, sd_x, veloadj) local(mask, i, sd_nl, sd_i, newvelo)
+(
+  lastnote_changed_x=x;
+  mask = 2^y;
+  i=0;
+  loop(listlength,
+    (notelist[i] & mask) ? (
+      getSubdivNum(y*listlength+i) ? ( // subdiv note
+        sd_nl = getSubdivNotelist(y, i);
+        sd_nl ? ( // has enabled subdiv notes
+          sd_i=0;
+          loop(max_subdivs,
+            sd_nl&(2^sd_i) ? (
+              newvelo = getSubdivVelo(y, i, sd_i) + veloadj;
+              newvelo < 1 ? newvelo=1;
+              newvelo > 127 ? newvelo=127;
+              setSubdivVelo(y, i, sd_i, newvelo); // Edit velocity
+              i == x && sd_i == sd_x ? (lastnote_changed_velo = newvelo; sd_editval_show=1;);
+            );
+            sd_i+=1;
+          );
+        );
+      ) : ( // not subdiv
+        newvelo = getVelo(y*listlength+i) + veloadj;
+        newvelo < 1 ? newvelo=1;
+        newvelo > 127 ? newvelo=127;
+        setVelo(y*listlength+i, newvelo);
+        i == x ? lastnote_changed_velo = newvelo;
+      );
+    );
+    i+=1;
+  );
+);
+            
+row_height = (grid_bottom-tbh) / numnotes;
+
+lgfx_w != gfx_w || lgfx_h != gfx_h || llistlength != listlength || lnumnotes != numnotes || lbasenote != basenote || lrateadj != rateadj || lmode != mode ? (
+    
+  lgfx_w = gfx_w; lgfx_h = gfx_h;
+  llistlength = listlength;
+  lnumnotes = numnotes;
+  lbasenote = basenote;
+  lrateadj = rateadj;
+  lmode = mode;
+  gfx_r=gfx_g=gfx_b=gfx_x=0; gfx_y=tbh; gfx_a=1;
+  gfx_rectto(gfx_w,gfx_h);
+  
+  draw_pianokeys();
+  draw_cc_controls();
+  
+  velobarwidth = scale_velobarwidth(listlength);
+  
+  // Precalc values for bar line drawing
+  nbars = listlength/rateadj/4/(ts_num_l/ts_denom_l);
+  barlen = (gfx_w - pkw)/nbars;
+
+  // Precalc note square width
+  note_w = (gfx_w - pkw)/listlength;
+);
+
+lnotenames_file != notenames_file && mode==1 ? (
+  lnotenames_file=notenames_file;
+  
+  memset(notenames, 0, 128); // clear old note names
+  max_notename_length=4; // reset to default
+  notename_str = #;
+  nn_filename = #;
+  // handle = file_open("seqbaby_data/GM Kit.txt");
+  strcpy_fromslider(nn_filename, slider15);
+  !((handle = file_open(nn_filename)) < 0) ? ( // file_open successful
+    nn_name=1; // collect note names to string slots starting from slot 1, slot 0 is always empty string
+    notename_name = #;
+    while(
+      str_len = file_string(handle,notename_str);
+      match("%-3{notename_note}d\t%{notename_name}s",notename_str) ? (
+        notename_note >= 0 && notename_note <= 127 ? (
+          strncpy(nn_name, notename_name, strlen(notename_name)-2);
+          notenames[notename_note]=nn_name;
+          strlen(nn_name) > max_notename_length ? max_notename_length = strlen(nn_name);
+          nn_name+=1;         
+        );
+      );
+      str_len > 0;
+    );
+    file_close(handle);
+  );
+  pianow=max_notename_length*8+8;
+  pkw=chw+pianow;
+  barlen = (gfx_w - pkw)/nbars; // Update barlen for bar line drawing
+  note_w = (gfx_w - pkw)/listlength; // Update note square width
+  draw_pianokeys();
+  draw_cc_controls();
+);
+
+refresh_pianokeys ? (
+  refresh_pianokeys=0;
+  draw_pianokeys();
+);
+
+y_from_top=((mouse_y-tbh) / (grid_bottom-tbh))*numnotes;
+y = numnotes - 1 - (y_from_top|0);
+y_acc = numnotes - y_from_top;
+mouse_y < tbh ? y+=1;
+
+((mouse_y >= tbh && mouse_y < grid_bottom) || mstate&ms_grid || mstate&ms_pk) && !(mstate&ms_tb) && !(mstate&ms_el)? ( // Mouse below toolbar and above env lane or clicking/dragging in progress
+
+  // Highlight current piano key
+  (y != lhl && mouse_x >= 0 && mouse_x < gfx_w && mouse_y >= tbh && mouse_y < grid_bottom) && (mstate == 0 || ms_sub_drawfreehand || mstate == ms_preview) ? (
+    // Remove previous highlight
+    ypos = (numnotes-1-lhl)*row_height;
+    octavestart = (basenote+lhl) % 12;
+    mode == 0 && (octavestart == 0 || octavestart == 2 || octavestart == 4 || octavestart == 5 || octavestart == 7 || octavestart == 9 || octavestart == 11) ? (   
+      gfx_r=gfx_g=gfx_b=1;gfx_a=1; // white key
+      gfx_x=2.0; gfx_y=tbh+ypos+1;
+      gfx_rectto(pkw-3, gfx_y+row_height-2);
+    ) : (
+      gfx_r=gfx_g=gfx_b=0;gfx_a=1; // black key
+      gfx_x=0.0; gfx_y=tbh+ypos+1;
+      gfx_rectto(pkw-3, gfx_y+row_height-2);
+    );
+    mode == 0 && octavestart == 0 ? (
+      gfx_r=0.0; gfx_g=0.0; gfx_b=0.0; gfx_a=0.6;
+      gfx_x=chw+4.0; gfx_y=tbh+ypos+row_height/2-3;
+      gfx_drawchar($'C');
+      gfx_drawnumber(((basenote+lhl) / 12)-1+octave_offset,0);
+    );
+    mode == 1 ? (
+      draw_drum_note(lhl);
+    );
+    
+    lhl = y;
+    
+    // Draw new highlight
+    ypos = (numnotes-1-y)*row_height;
+    gfx_r=c_hl_r; gfx_g=c_hl_g; gfx_b=c_hl_b; gfx_a=c_hl_a;
+    gfx_x=2.0; gfx_y=tbh+ypos+1;
+    gfx_rectto(pkw-3, gfx_y+row_height-2);
+  );
+
+  // Right click
+  (mouse_cap==2) ? ( 
+    x = (((mouse_x - pkw)/(gfx_w - pkw))*listlength)|0;
+    y >= 0 && y < numnotes ? (
+      mstate==0 || mstate==ms_preview ? ( // Click / Button down or dragging
+        mstate==0 ? (
+          last_x=last_y=last_sd_x=-1;
+        );
+        mstate=ms_preview;
+     
+        x >= 0 && x < listlength ? (
+          sd_edit_num = getSubdivNum(y*listlength+x);
+          sd_edit_num ? ( // subdiv note
+            sd_edit_nl = getSubdivNotelist(y, x);
+            sd_x = ((sd_edit_num+1)*((mouse_x - pkw) - x*note_w)/note_w)|0;
+            sd_edit_nl&(2^sd_x) && (last_x != x || last_sd_x != sd_x || last_y != y ) ? (
+              new_note_at_mousepos=1;
+            ) : (
+              new_note_at_mousepos=0;
+            );
+          ) : (notelist[x] & 2^y) && (last_x != x || last_y != y) ? ( // not subdiv
+            new_note_at_mousepos=1;
+          ) : (
+            new_note_at_mousepos=0;
+          );
+        );
+
+        x >= 0 && x < listlength && new_note_at_mousepos ? 
+        (
+          previewvelo=lastvelo;
+          sd_edit_num ? ( // subdiv note
+              previewvelo = getSubdivVelo(y, x, sd_x);
+              lastvelo=previewvelo;
+          ) : ( // not subdiv
+            previewvelo=getVelo(y*listlength+x);
+            lastvelo=previewvelo;
+          );
+          lastpreviewsel>=0 ? want_previewoff=1;
+          want_preview=lastpreviewsel=y; 
+        ) : y != lastpreviewsel ? (
+          previewvelo=lastvelo;
+          lastpreviewsel>=0 ? want_previewoff=1;
+          want_preview=lastpreviewsel=y; 
+        );
+        last_x = x;
+        last_y = y;
+        last_sd_x = sd_x;
+      );
+      
+    );
+    
+  ):(
+    want_previewoff=1;
+    lastpreviewsel=-1;
+  );
+
+  (mouse_x > pkw || mstate == ms_startoffsetedit || mstate == ms_startoffseteditrow) && mstate != ms_rowtranpose ? (
+    // Left click or Shift + Ctrl + Alt + Left click
+    (mouse_cap==1) || (mouse_cap==(1|4|8|16)) ? ( 
+        x_acc=((mouse_x - pkw)/(gfx_w - pkw))*listlength;
+        x = x_acc|0;
+        x >= 0 && x < listlength && y >= 0 && y < numnotes ? (
+          mstate==0 ? (
+            ylock = y;
+            mask = 2^y;
+            sd_edit_num = getSubdivNum(ylock*listlength+x);
+            
+            sd_edit_num ? ( // subdiv note
+              sd_edit_nl = getSubdivNotelist(ylock, x);
+              sd_x = ((sd_edit_num+1)*((mouse_x - pkw) - x*note_w)/note_w)|0;
+              mstate=sd_edit_nl&(2^sd_x) ? ms_noteerase : ms_notedraw;
+              mstate==ms_notedraw ? ( // Draw note
+                setSubdivNotelist(ylock, x, sd_edit_nl+2^sd_x);
+                setSubdivVelo(ylock, x, sd_x, lastvelo);
+              ); 
+              mstate==ms_noteerase ? ( // Erase note
+                setSubdivNotelist(ylock, x, sd_edit_nl-2^sd_x);
+              );
+              
+            ) : ( // not subdiv
+              nlm=(notelist[x] & mask);
+              mstate=nlm ? ms_noteerase : ms_notedraw;
+              mstate==ms_noteerase ? ( // Erase note
+                notelist[x]-=mask; 
+                (notetie[x] & mask) ? notetie[x]-=mask; // Erase tie
+                x > 0 && (notetie[x-1] & mask) ? notetie[x-1]-=mask; // Erase tie from previous 
+                setStart(y*listlength+x, 0); //Reset start offset of the erased note to 0 
+              );
+              mstate==ms_notedraw ? ( // Draw note
+                notelist[x]+=mask; 
+                setVelo(y*listlength+x, lastvelo);
+              ); 
+            );
+
+            (mouse_cap!=1) ? ms_sub_drawfreehand=1;
+            
+          ) : (         
+            lcnt = max(abs(last_x-x),abs(last_y-y))|0;
+            lcnt > 0 ? (
+              dx = (x_acc-last_x_acc)/lcnt;
+              dy = (y_acc-last_y_acc)/lcnt;
+              //y_step = (abs(dy) > abs(dx));
+            );
+            lcnt >= 1 ? (
+              loop(lcnt,
+                last_x_prev=last_x_acc|0; 
+                last_x_acc += dx;
+                last_x_int=last_x_acc|0;
+                ms_sub_drawfreehand ? (
+                  last_y_acc += dy;
+                  last_y_int = last_y_acc|0;
+                ) : (
+                  last_y_int = ylock ;
+                );
+                
+                
+                last_x_int != last_x_prev ? ( // Fast drawing over to note on left or right -> need draw subdivs in prev note
+                  sd_edit_num_prev = getSubdivNum(last_y_int*listlength+last_x_prev);
+                  
+                  sd_edit_num_prev ? ( // previous was subdiv note
+                    last_sd_x=sd_x;
+                    dx < 0 && last_sd_x > 0 ? (
+                      lcnt_sd = last_sd_x;
+                      dx_sd = -1;
+                    ) : dx > 0 && last_sd_x < sd_edit_num_prev ? (
+                      lcnt_sd = sd_edit_num_prev-last_sd_x;
+                      dx_sd = 1;
+                    );
+                    
+                    lcnt_sd >= 1 ? (
+                      loop(lcnt_sd,
+                        last_sd_x += dx_sd;
+                        sd_edit_nl = getSubdivNotelist(last_y_int, last_x_prev);
+                        mstate==ms_noteerase ? (
+                          (sd_edit_nl&(2^last_sd_x)) ? (
+                            setSubdivNotelist(last_y_int, last_x_prev, sd_edit_nl-2^last_sd_x);
+                          );
+                        );
+                        mstate==ms_notedraw ? ( // Draw note
+                          !(sd_edit_nl&(2^last_sd_x)) ? (
+                            setSubdivNotelist(last_y_int, last_x_prev, sd_edit_nl+2^last_sd_x);
+                            setSubdivVelo(last_y_int, last_x_prev, last_sd_x, lastvelo);
+                          );
+                        );
+                      );
+                    );
+                  );
+                );
+                
+                sd_edit_num = getSubdivNum(last_y_int*listlength+last_x_int);
+                
+                sd_edit_num ? ( // subdiv note
+                  last_x_int != last_x_prev ? (
+                    dx < 0 ? sd_x=sd_edit_num+1 : sd_x=-1;
+                  );
+                                   
+                ) : ( // not subdiv
+                  mask = 2^last_y_int;
+                  nlm=(notelist[last_x_int] & mask);
+                  mstate==ms_noteerase && nlm ? (
+                    notelist[last_x_int]-=mask; // Erase note
+                    (notetie[last_x_int] & mask) ? notetie[last_x_int]-=mask; // Erase tie
+                    last_x_int > 0 && (notetie[last_x_int-1] & mask) ? notetie[last_x_int-1]-=mask; // Erase tie from previous
+                    setStart(last_y_int*listlength+(last_x_int), 0); //Reset start offset of the erased note to 0 
+                  );
+                  mstate==ms_notedraw && !nlm ? ( // Draw note
+                    notelist[last_x_int]+=mask; 
+                    setVelo(last_y_int*listlength+(last_x_int), lastvelo);
+                  );
+                );
+              );
+            ) : ( // lcnt == 0. Within same note  
+              sd_edit_num = getSubdivNum(ylock*listlength+x);
+              sd_edit_num ? ( // subdiv note
+                sd_x = ((sd_edit_num+1)*((mouse_x - pkw) - x*note_w)/note_w)|0;
+                lcnt_sd = abs(last_sd_x-sd_x)|0;
+                lcnt_sd > 0 ? (
+                  dx_sd = (sd_x-last_sd_x)/lcnt_sd;
+                  //dy = (y-last_y)/lcnt_sd;
+                );
+                lcnt_sd >= 1 ? (
+                  loop(lcnt_sd,
+                    last_sd_x += dx_sd;
+                    //last_y += dy;
+                    ms_sub_drawfreehand==0 ? last_y_int=ylock;
+                    last_x_int=(last_x|0);
+                    sd_edit_nl = getSubdivNotelist(last_y_int, last_x_int);
+                    mstate==ms_noteerase ? (
+                      (sd_edit_nl&(2^last_sd_x)) ? (
+                        setSubdivNotelist(last_y_int, last_x_int, sd_edit_nl-2^last_sd_x);
+                      );
+                    );
+                    mstate==ms_notedraw ? ( // Draw note
+                      !(sd_edit_nl&(2^last_sd_x)) ? (
+                        setSubdivNotelist(last_y_int, last_x_int, sd_edit_nl+2^last_sd_x);
+                        setSubdivVelo(last_y_int, last_x_int, last_sd_x, lastvelo);
+                      );
+                    );
+                  );
+                );
+              );
+            );
+          );
+          last_x = x;
+          last_x_acc = x_acc;
+          last_y = y; 
+          last_y_acc = y_acc;
+          last_sd_x = sd_x;
+        );
+    ) : ms_sub_drawfreehand=0;
+
+    // Ctrl + Left click
+    (mouse_cap==(1|4)) ? ( 
+        x = (((mouse_x - pkw)/(gfx_w - pkw))*listlength)|0;
+        x >= 0 && x < listlength ? (
+          velo = (((grid_bottom - mouse_y)-y*row_height) / row_height)*127|0;
+          mstate==0 ? ( // clicking
+            sd_editval_show=0;
+            ylock = y;
+            mask = 2^y;
+            sd_edit_num = getSubdivNum(ylock*listlength+x);
+            sd_edit_num ? ( // subdiv note
+              sd_edit_nl = getSubdivNotelist(ylock, x);
+              sd_x = ((sd_edit_num+1)*((mouse_x - pkw) - x*note_w)/note_w)|0;
+              mstate=sd_edit_nl&(2^sd_x) ? ms_veloedit;
+              mstate==ms_veloedit ? ( 
+                setSubdivVelo(ylock, x, sd_x, velo); // Edit velocity
+                lastvelo=velo;
+                sd_editval_show=1;
+              ); 
+            ) : ( // not subdiv
+              nlm=(notelist[x] & mask);
+              mstate = nlm ? ms_veloedit;
+              nlm ? (
+                setVelo(y*listlength+x, velo); // Edit velocity
+                lastvelo=velo;
+              );
+            );
+            lastnote_changed_x=x;
+            
+          ) : ( // dragging
+            sd_editval_show=0;
+            y < ylock ? velo = 1;
+            y > ylock ? velo = 127;
+            lcnt = max(abs(last_x-x),abs(last_y-y))|0;
+            lcnt > 0 ? (
+              dx = (x-last_x)/lcnt;
+              dy = (y-last_y)/lcnt;
+              dmoy = (mouse_y - last_mo_y)/lcnt;
+            );
+            lcnt >= 1 ? (
+              loop(lcnt,
+                last_x_prev=last_x|0; 
+                last_x += dx;
+                last_y += dy;
+                last_mo_y += dmoy;
+                last_x_int=(last_x|0);
+                
+                last_x_int != last_x_prev ? (
+                  sd_edit_num_prev = getSubdivNum(ylock*listlength+last_x_prev);
+                  
+                  sd_edit_num_prev ? ( // previous was subdiv note
+                    last_sd_x=sd_x;
+                    dx < 0 && last_sd_x > 0 ? (
+                      lcnt_sd = last_sd_x;
+                      dx_sd = -1;
+                    ) : dx > 0 && last_sd_x < sd_edit_num_prev ? (
+                      lcnt_sd = sd_edit_num_prev-last_sd_x;
+                      dx_sd = 1;
+                    );
+                    
+                    lcnt_sd >= 1 ? (
+                      loop(lcnt_sd,
+                        last_sd_x += dx_sd;
+                        sd_edit_nl = getSubdivNotelist(ylock, last_x_prev);
+                        (sd_edit_nl&(2^last_sd_x)) ? (
+                          last_y > ylock ? ( 
+                            velo = 127;  
+                          ) : last_y < ylock ? (
+                            velo = 1;
+                          ) : (
+                            velo = (((grid_bottom - last_mo_y)-last_y*row_height) / row_height)*127|0;
+                          );
+                          setSubdivVelo(ylock, last_x_prev, last_sd_x, velo);
+                        );
+                      );
+                    );
+                  );
+                );
+                
+                sd_edit_num = getSubdivNum(ylock*listlength+last_x_int);
+                sd_edit_num ? ( // subdiv note
+                  last_x_int != last_x_prev ? (
+                    dx < 0 ? sd_x=sd_edit_num+1 : sd_x=-1;
+                  );
+                                   
+                ) : ( // not subdiv
+                  mask = 2^(ylock|0);
+                  nlm=(notelist[last_x|0] & mask);
+                  last_y > ylock ? ( 
+                    velo = 127;  
+                  ) : last_y < ylock ? (
+                    velo = 1;
+                  ) : (
+                    velo = (((grid_bottom - last_mo_y)-last_y*row_height) / row_height)*127|0;
+                  );
+                  nlm ? (lastnote_changed_x=last_x|0; setVelo(ylock*listlength+lastnote_changed_x, velo); lastvelo=velo;);  
+                );
+              );
+
+            ) : ( // lcnt == 0. Within same note  
+              sd_edit_num = getSubdivNum(ylock*listlength+x);
+              sd_edit_num ? ( // subdiv note
+                sd_x = ((sd_edit_num+1)*((mouse_x - pkw) - x*note_w)/note_w)|0;
+                lcnt_sd = abs(last_sd_x-sd_x)|0;
+                lcnt_sd > 0 ? (
+                  dx_sd = (sd_x-last_sd_x)/lcnt_sd;
+                  dmoy = (mouse_y - last_mo_y)/lcnt_sd;
+                );
+                lcnt_sd >= 1 ? (
+                  loop(lcnt_sd,
+                    last_sd_x += dx_sd;
+                    last_mo_y += dmoy;
+                    last_x_int=(last_x|0);
+                    sd_edit_nl = getSubdivNotelist(ylock, last_x_int);
+                    (sd_edit_nl&(2^last_sd_x)) ? (
+                      last_y > ylock ? ( 
+                        velo = 127;  
+                      ) : last_y < ylock ? (
+                        velo = 1;
+                      ) : (
+                        velo = (((grid_bottom - last_mo_y)-last_y*row_height) / row_height)*127|0;
+                      );
+                      setSubdivVelo(ylock, last_x_int, last_sd_x, velo);
+                      lastnote_changed_x=last_x_int;
+                      lastvelo=velo;
+                      sd_editval_show=1;
+                    );
+                    
+                  );
+                ) : ( // lcnt_sd == 0. Adjusting single subdiv note velocity
+                  sd_edit_nl = getSubdivNotelist(ylock, last_x);
+                  (sd_edit_nl&(2^sd_x)) ? (
+                    last_y > ylock ? ( 
+                      velo = 127;  
+                    ) : last_y < ylock ? (
+                      velo = 1;
+                    );
+                    setSubdivVelo(ylock, last_x, sd_x, velo);
+                    lastnote_changed_x=last_x;
+                    lastvelo=velo;
+                    sd_editval_show=1;
+                  );
+                );
+              ) : ( // not subdiv
+                last_y > ylock ? ( 
+                  velo = 127;  
+                ) : last_y < ylock ? (
+                  velo = 1;
+                );
+                nlm ? (lastnote_changed_x=x; setVelo(ylock*listlength+lastnote_changed_x, velo); lastvelo=velo;);
+              );
+            );
+          );
+          last_x = x;
+          last_y = y; 
+          last_sd_x = sd_x;
+          last_mo_y = mouse_y;
+        );
+    );
+
+    // Ctrl + Alt + Left click
+    (mouse_cap==(1|4|16)) ? ( 
+        x = (((mouse_x - pkw)/(gfx_w - pkw))*listlength)|0;
+        x >= 0 && x < listlength ? (
+          velo = (((grid_bottom - mouse_y)-y*row_height) / row_height)*127|0;
+          mstate==0 ? ( // clicking
+            ylock = y;
+            mask = 2^y;
+            sd_edit_num = getSubdivNum(ylock*listlength+x);
+            sd_edit_num ? ( // subdiv note
+              sd_edit_nl = getSubdivNotelist(ylock, x);
+              sd_x = ((sd_edit_num+1)*((mouse_x - pkw) - x*note_w)/note_w)|0;
+              sd_edit_nl&(2^sd_x) ? (
+                mstate=ms_veloeditrow;
+                veloadj = velo - getSubdivVelo(y, x, sd_x);
+              );
+            ) : ( // not subdiv
+              nlm=(notelist[x] & mask);
+              nlm ? (
+                mstate = ms_veloeditrow;
+                veloadj = velo - getVelo(y*listlength+x);
+              );
+            );
+            ms_veloeditrow ? (
+              veloadjust_row(y, x, sd_x, veloadj);
+              lastvelo=velo;
+            );
+              
+          ) : ( // dragging
+            y < ylock ? velo = 1;
+            y > ylock ? velo = 127;
+            veloadj_ena = 0;
+            sd_edit_num = getSubdivNum(ylock*listlength+x);
+            sd_edit_num ? ( // subdiv note
+              sd_edit_nl = getSubdivNotelist(ylock, x);
+              sd_x = ((sd_edit_num+1)*((mouse_x - pkw) - x*note_w)/note_w)|0;
+              sd_edit_nl&(2^sd_x) ? (
+                veloadj = velo - getSubdivVelo(ylock, x, sd_x);
+                veloadj_ena = 1;
+              );
+            ) : ( // not subdiv
+              nlm=(notelist[x] & 2^ylock);
+              nlm ? (
+                veloadj = velo - getVelo(ylock*listlength+x);
+                veloadj_ena = 1;
+              );
+            );
+            veloadj_ena ? (
+              veloadjust_row(ylock, x, sd_x, veloadj);
+              lastvelo=velo;
+            );
+          ); 
+        );
+    );
+    
+    // Shift + Left click
+    mouse_cap==(1|8) ? ( 
+      x = (((mouse_x - pkw)/(gfx_w - pkw))*listlength)|0;
+      mstate==0 ? (
+        x >= 0 && x < listlength ? (
+          sd_edit_num = getSubdivNum(y*listlength+x);
+          !sd_edit_num ? ( // not subdiv note
+            ylock = y;
+            xlock = x;
+            mask = 2^y;
+            nlm=(notelist[x] & mask);
+            mstate = nlm ? ms_startoffsetedit;
+            morig = mouse_x;
+            start_adj_orig = getStart(ylock*listlength+x);
+            lastnote_changed_x=x;
+          );
+        );
+      ) : (
+        draglen=((mouse_x - morig))|0;
+        ldraglen != draglen ? (
+          ldraglen = draglen;
+          nlm ? (
+            new_start = start_adj_orig+draglen;
+            new_start < 0 ? new_start = 0;
+            new_start > tpb ? new_start = tpb;
+            setStart(ylock*listlength+xlock, new_start);
+          );
+        );
+      );
+    );
+
+    // Shift + Alt + Left click
+    mouse_cap==(1|8|16) ? ( 
+      x = (((mouse_x - pkw)/(gfx_w - pkw))*listlength)|0;
+      mstate==0 ? (
+        x >= 0 && x < listlength ? (
+          sd_edit_num = getSubdivNum(y*listlength+x);
+          !sd_edit_num ? ( // not subdiv note
+            ylock = y;
+            xlock = x;
+            mask = 2^y;
+            nlm=(notelist[x] & mask);
+            mstate = nlm ? ms_startoffseteditrow;
+            morig = mouse_x;
+            i=0;
+            loop(listlength,
+              start_adj_orig_list[i] = getStart(ylock*listlength+i);
+              i == x ? start_adj_all_value = start_adj_orig_list[i];
+              i+=1;
+            );
+            lastnote_changed_x=x;
+          );
+        );
+      ) : (
+        draglen=((mouse_x - morig))|0;
+        ldraglen != draglen ? (
+          ldraglen = draglen;
+          mask = 2^ylock;
+          nlm ? (
+            i=0;
+            loop(listlength,
+              (notelist[i] & mask) && !getSubdivNum(ylock*listlength+i) ? (
+                new_start = start_adj_orig_list[i]+draglen;
+                new_start < 0 ? new_start = 0;
+                new_start > tpb ? new_start = tpb;
+                setStart(ylock*listlength+i, new_start);
+                i == xlock ? start_adj_all_value = new_start;
+              );
+              i+=1;
+            );
+          );
+        );
+      );
+    );
+    
+    // Alt + Left click
+    (mouse_cap==1|16) ? ( 
+        x = (((mouse_x - pkw)/(gfx_w - pkw))*listlength)|0;
+        x >= 0 && x < listlength && y >= 0 && y < numnotes ? (
+          mstate==0 ? ( // Click mouse button down
+            sd_edit_num = getSubdivNum(y*listlength+x);
+            !sd_edit_num ? ( // not subdiv note
+              tie_erase=0;
+              ylock = y;
+              mask = 2^y;
+              nlm=(notelist[x] & mask); // nlm != 0 if note exists in clicked location
+              mstate = nlm ? ms_notetie;
+              nlm ? (
+                (notetie[x] & mask) ? (
+                  notetie[x]-=mask; // Erase note tie
+                  tie_erase=1;
+                ) : (
+                  x < listlength-1 && !getSubdivNum(y*listlength+x+1) ? ( // Don't add tie to the last note of sequence or before subdiv
+                    notetie[x]+=mask; // Add note tie
+                    !(notelist[x+1] & mask) ? ( // No note in next square
+                      notelist[x+1]+=mask; // Add note to next square
+                      setVelo(y*listlength+x+1, getVelo(y*listlength+x)); // using same velocity
+                    ); 
+                  );
+                );
+              );
+            );
+          ) : ( // Keeping mouse button down / dragging
+            lcnt = abs(last_x-x)|0;
+            lcnt > 0 ? (
+              dx = (x-last_x)/lcnt;
+            );
+            lcnt >= 1 ? loop(lcnt,
+              last_x += dx;
+              mask = 2^(ylock|0);
+              last_x_int=(last_x|0);
+              nlm=(notelist[last_x_int] & mask);
+              nlm && !getSubdivNum(ylock*listlength+last_x_int) ? ( //Drag started on top of note and is currently on top of note and not on top of subdiv
+                !(notetie[last_x_int] & mask) ? ( // No note tie in current note
+                  !tie_erase ? ( // Drag was started by adding tie, so we continue adding ties
+                    last_x_int < listlength-1 && !getSubdivNum(ylock*listlength+last_x_int+1) ? ( // Don't add tie to the last note of sequence or before subdiv
+                      notetie[last_x_int]+=mask; // Add note tie
+                      !(notelist[last_x_int+1] & mask) ? ( // No note in next square
+                        notelist[last_x_int+1]+=mask; // Add note to next square
+                        setVelo(ylock*listlength+last_x_int+1, getVelo(ylock*listlength+last_x_int)); // using same velocity
+                      );
+                    );
+                  );
+                ) : ( // Note tie already exists in current note
+                  tie_erase ? ( // Drag was started by erasing tie, so we continue erasing ties
+                    notetie[last_x_int]-=mask; // Erase note tie
+                  );
+                );        
+              );
+            );
+          );
+          last_x = x;
+        );
+    ); // Mouse button released
+    
+    // Shift + Right click
+    mouse_cap==(2|8) ? ( 
+      x = (((mouse_x - pkw)/(gfx_w - pkw))*listlength)|0;
+      mstate==0 ? (
+        x >= 0 && x < listlength ? (
+          ylock = y;
+          xlock = x;
+          mask = 2^y;
+          nlm=(notelist[x] & mask);
+          nlm_orig=nlm;
+          mstate = ms_subdivnum;
+          morig = mouse_y;
+          sd_orig = getSubdivNum(ylock*listlength+x);
+          draglen=ldraglen=0;
+          note_enabled_for_sd=0;
+          sd_set_to_disabled=0;
+        );
+      ) : (
+        draglen=((morig - mouse_y)/10)|0;
+        ldraglen != draglen ? (
+          ldraglen = draglen;
+          mask=2^ylock;
+          sd_new = sd_orig+draglen;
+          sd_new < 0 ? sd_new = 0;
+          sd_new > 7 ? sd_new = 7;
+          !nlm && sd_new > 0 ? (notelist[xlock]+=mask; nlm=(notelist[xlock] & mask); note_enabled_for_sd=1; );
+          setSubdivNum(ylock*listlength+xlock, sd_new);
+          nlm_orig && (sd_orig == 0 || sd_set_to_disabled) && sd_new > 0 ? (
+            setSubdivVelo(ylock, xlock, 0, getVelo(ylock*listlength+xlock));
+            setSubdivNotelist(ylock, xlock, 1);
+            sd_set_to_disabled=0;
+            (notetie[xlock] & mask) ? notetie[xlock]-=mask; // Erase tie from current 
+            xlock > 0 && (notetie[xlock-1] & mask) ? notetie[xlock-1]-=mask; // Erase tie from previous 
+          );
+          sd_new == 0 ? (
+            getSubdivNotelist(ylock, xlock)&1 ? (
+              setVelo(ylock*listlength+xlock, getSubdivVelo(ylock, xlock, 0));
+              setSubdivNotelist(ylock, xlock, 0);
+              sd_set_to_disabled=1;
+            ) : (
+              (sd_orig || note_enabled_for_sd) && !sd_set_to_disabled ? (
+                nlm ? (notelist[xlock]-=mask; nlm=0;);
+              );
+            );
+          );
+        );
+      );
+    );
+    
+  ) : !(mstate&ms_grid) ? ( // Mouse within piano roll keys
+
+    // Left click
+    (mouse_cap==(1) && mode == 1) ? ( 
+        mstate==0 ? ( // Click / Button down
+          mstate=ms_rowtranpose;
+          mouse_x < chw ? ms_sub_channelchange=1;
+          nt_note=y;
+          mstart = mouse_y;
+          nt_trans_start = notetranspose[nt_note];
+          nt_channel_start = rowchannel[nt_note];
+        ) : ( // Drag
+          draglen=((mstart - mouse_y)/10)|0;
+
+          ldraglen != draglen ? (
+            ldraglen = draglen;
+            prev_nt = basenote+nt_note+notetranspose[nt_note];
+            want_noteoff_nt=1;
+            ms_sub_channelchange ? ( // Change row MIDI channel
+              new_chan = nt_channel_start + draglen;
+              new_chan < 0 ? new_chan = 16 - (new_chan % 16) : new_chan = new_chan % 16;
+              rowchannel[nt_note]= new_chan;
+            ) : ( // Change row transpose
+              is_midi_val(basenote+nt_note+nt_trans_start+draglen) ? (
+                notetranspose[nt_note]=nt_trans_start + draglen;
+              );
+            );
+            want_preview_nt = nt_note;
+          
+            // Clear old note name
+            ypos = tbh+(numnotes-1-nt_note)*row_height;
+            gfx_r=gfx_g=gfx_b=0;gfx_a=1;
+            gfx_x=0.0; gfx_y=ypos;
+            gfx_rectto(pkw+8, ypos+row_height); // +8 because negative octave numbers will overlap with note squares     
+            // Update note name
+            draw_drum_note(nt_note);
+            // Draw new highlight
+            draglen == 0 ? (
+              gfx_r=c_hl_r; gfx_g=c_hl_g; gfx_b=c_hl_b; gfx_a=c_hl_a;
+            ) : (
+              gfx_r=1.0; gfx_g=0.0; gfx_b=0.0; gfx_a=0.4;
+            );
+            gfx_x=2.0; gfx_y=ypos+1;
+            gfx_rectto(pkw-3, ypos+row_height-1);
+          );
+          
+      );
+    ) : (
+      want_previewoff_nt=1;
+      ms_sub_channelchange=0;
+    );
+    
+    // Shift + Left click on piano roll keys
+    (mouse_cap==(1|8)) ? (
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_duplseq;
+        listlength*2 <= max_seqlength ? (
+          change_seqlen(listlength*2);
+          sliderchange(slider3=listlength);
+          memcpy(notelist+listlength/2, notelist, listlength/2); // Duplicate notes
+          memcpy(notetie+listlength/2, notetie, listlength/2); // Duplicate notetie
+          // Duplicate other note properties (velocity, start offset, subdivided notes)
+          y=0;
+          loop(max_numnotes,
+            memcpy(velolist+y*listlength+listlength/2, velolist+y*listlength, listlength/2);
+            memcpy(sdlist+sdlist_p+y*max_seqlength*max_subdivs+(listlength/2)*max_subdivs, sdlist+sdlist_p+y*max_seqlength*max_subdivs, (listlength/2)*max_subdivs);
+            y+=1;
+          );
+          memcpy(cclist+listlength/2, cclist, listlength/2); // Duplicate envelopes
+        );
+      );
+    );
+    
+    // Ctrl + Alt + Right click on piano roll keys
+    (mouse_cap==(2|4|16)) ? (
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_doublespbpreservepos;
+        listlength*2 <= max_seqlength && steps_per_beat*2 <= max_steps_per_beat ? (
+          change_seqlen(listlength*2);
+          sliderchange(slider3=listlength);
+          steps_per_beat=steps_per_beat*2;
+          sliderchange(slider9=steps_per_beat);
+          steps_per_beat_pat[p]=steps_per_beat;
+          rateadj = steps_per_beat * rate;
+          p <= chain ? update_chain_beats();
+          x=listlength/2-1;
+          loop(listlength/2-1,
+            notelist[2*x]=notelist[x]; notelist[x]=0; // Move notes
+            notelist[2*x+1]=0;
+            notetie[2*x]=notetie[x]; notetie[x]=0; // Move noteties
+            notetie[2*x+1]=0;
+            // Move other note properties (velocity, start offset, subdivided notes)
+            y=0;
+            loop(max_numnotes,
+              velolist[y*listlength+2*x]=velolist[y*listlength+x]; velolist[y*listlength+x]=0;
+              velolist[y*listlength+2*x+1]=0;
+              memcpy(sdlist+sdlist_p+y*max_seqlength*max_subdivs+2*x*max_subdivs, sdlist+sdlist_p+y*max_seqlength*max_subdivs+x*max_subdivs, max_subdivs);
+              memset(sdlist+sdlist_p+y*max_seqlength*max_subdivs+x*max_subdivs, 0, max_subdivs);
+              memset(sdlist+sdlist_p+y*max_seqlength*max_subdivs+2*x*max_subdivs+1, 0, max_subdivs);
+              y+=1;
+            );
+            cclist[2*x]=cclist[x]; cclist[x]=0; // Move envelopes
+            cclist[2*x+1]=0;
+            x-=1;
+          );
+        );
+      );
+    );
+    
+    // Ctrl + Alt + Left click on piano roll keys
+    (mouse_cap==(1|4|16)) ? (
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_halvespbpreservepos;
+        half_listlength=(listlength/2)|0;
+        half_steps_per_beat=(steps_per_beat/2)|0;
+        half_listlength >= 4 && half_steps_per_beat >= 1 ? (
+          x=1;
+          loop(half_listlength-1,
+            notelist[x]=notelist[2*x]; // Move notes
+            notetie[x]=notetie[2*x]; // Move noteties
+            // Move other note properties (velocity, start offset, subdivided notes)
+            y=0;
+            loop(max_numnotes,
+              velolist[y*listlength+x]=velolist[y*listlength+2*x];
+              memcpy(sdlist+sdlist_p+y*max_seqlength*max_subdivs+x*max_subdivs, sdlist+sdlist_p+y*max_seqlength*max_subdivs+2*x*max_subdivs, max_subdivs);
+              y+=1;
+            );
+            cclist[x]=cclist[2*x]; // Move envelopes
+            x+=1;
+          );
+          // Clear the second half that will be outside sequence length
+          memset(notelist+half_listlength, 0, listlength-half_listlength);
+          memset(notetie+half_listlength, 0, listlength-half_listlength);
+          y=0;
+          loop(max_numnotes,
+            memset(velolist+y*listlength+half_listlength, 0, listlength-half_listlength);
+            memset(sdlist+sdlist_p+y*max_seqlength*max_subdivs+half_listlength*max_subdivs, 0, (listlength-half_listlength)*max_subdivs);
+            y+=1;
+          );
+          memset(cclist+half_listlength, 0, listlength-half_listlength);
+          change_seqlen(half_listlength);
+          sliderchange(slider3=listlength);
+          steps_per_beat=half_steps_per_beat;
+          sliderchange(slider9=steps_per_beat);
+          steps_per_beat_pat[p]=steps_per_beat;
+          rateadj = steps_per_beat * rate;
+          p <= chain ? update_chain_beats();
+        );
+      );
+    );
+    
+    // Ctrl + Left click on piano roll keys
+    (mouse_cap==(1|4)) ? (
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_halvespb;
+        half_steps_per_beat=(steps_per_beat/2)|0;
+        half_steps_per_beat >= 1 ? (
+          steps_per_beat=half_steps_per_beat;
+          sliderchange(slider9=steps_per_beat);
+          steps_per_beat_pat[p]=steps_per_beat;
+          rateadj = steps_per_beat * rate;
+          p <= chain ? update_chain_beats();
+        );
+      );
+    );
+
+    // Ctrl + Right click on piano roll keys
+    (mouse_cap==(2|4)) ? (
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_doublespb;
+        steps_per_beat*2 <= max_steps_per_beat ? (
+          steps_per_beat=steps_per_beat*2;
+          sliderchange(slider9=steps_per_beat);
+          steps_per_beat_pat[p]=steps_per_beat;
+          rateadj = steps_per_beat * rate;
+          p <= chain ? update_chain_beats();
+        );
+      );
+    );
+    
+    // Shift + Left click on piano roll keys
+    (mouse_cap==(1|8)) ? (
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_duplseq;
+        listlength*2 <= max_seqlength ? (
+          change_seqlen(listlength*2);
+          sliderchange(slider3=listlength);
+          memcpy(notelist+listlength/2, notelist, listlength/2); // Duplicate notes
+          memcpy(notetie+listlength/2, notetie, listlength/2); // Duplicate notetie
+          // Duplicate other note properties (velocity, start offset, subdivided notes)
+          y=0;
+          loop(max_numnotes,
+            memcpy(velolist+y*listlength+listlength/2, velolist+y*listlength, listlength/2);
+            memcpy(sdlist+sdlist_p+y*max_seqlength*max_subdivs+(listlength/2)*max_subdivs, sdlist+sdlist_p+y*max_seqlength*max_subdivs, (listlength/2)*max_subdivs);
+            y+=1;
+          );
+          memcpy(cclist+listlength/2, cclist, listlength/2); // Duplicate envelopes
+        );
+      );
+    );
+  );
+
+) : (mouse_y > tbrh && mouse_y < 2*tbrh && mouse_x > 0 && mstate==0) || (mstate&ms_tb_r2) ? ( // Mouse on pattern buttons
+ 
+  button = (mouse_x / busp)|0;
+   
+  buttton >= 0 && button <= 15 ? (
+    hl_state=hl_pattern+button;
+  ) : (
+    hl_state=0;
+  );
+  
+  // Left click
+  (mouse_cap==1) ? (
+    mstate==0 ? ( // Click / Button down
+      mstate=ms_tb_patchange;
+      button < npatterns ? (
+        change_pattern(button); // Change active pattern
+        sliderchange(slider1=p);
+        sliderchange(slider3=listlength);
+      );
+    );
+  );
+  
+  // Ctrl + Left click
+  (mouse_cap==1|4) ? (
+    mstate==0 ? ( // Click / Button down
+      mstate=ms_tb_patcopy;
+      button < npatterns && button != p ? (
+        source_p = p;
+        source_length = listlength;
+        s_sdlist = sdlist_p;
+        steps_per_beat_pat[button]=steps_per_beat_pat[source_p]; // set steps_per_beat of the target pattern
+        change_pattern(button); // Change active pattern to clicked 
+        listlength != source_length ?(
+          change_seqlen(source_length);
+        );
+        p <= chain ? update_chain_beats();
+        s_notelist=0;
+        s_velolist=velolist_base;
+        i=0;
+        loop(source_p,
+          s_notelist+=listlength_pat[i];
+          s_velolist+=max_numnotes*listlength_pat[i];
+          i+=1;
+        );
+        s_notetie=notetie_base+s_notelist;
+        s_cclist=cclist_base+s_notelist;
+        s_notelist=notelist_base+s_notelist;
+        // Copy content from source pattern to the target pattern 
+        memcpy(notelist, s_notelist, listlength);
+        memcpy(notetie, s_notetie, listlength);
+        memcpy(cclist, s_cclist, listlength);
+        memcpy(velolist, s_velolist, listlength*max_numnotes);
+        memcpy(sdlist+sdlist_p, sdlist+s_sdlist, max_seqlength*max_numnotes*max_subdivs);
+        memcpy(sparebuf + p*1024, sparebuf + source_p*1024, max_seqlength);
+        memcpy(sparebuf_tie + p*1024, sparebuf_tie + source_p*1024, max_seqlength);
+        memcpy(sparebuf2 + p*max_numnotes*max_seqlength, sparebuf2 + source_p*max_numnotes*max_seqlength, max_numnotes*max_seqlength);
+        sliderchange(slider1=p);
+        sliderchange(slider3=listlength);
+        sliderchange(slider9=steps_per_beat);
+        
+      );
+    );
+  );
+  
+  // Alt + Left click
+  (mouse_cap==1|16) ? (
+    mstate==0 ? ( // Click / Button down
+      mstate=ms_tb_chain;
+      button < npatterns ? (
+        chain=button;
+        sliderchange(slider12=chain);
+        refresh_tb=1;
+        update_chain_beats();
+      );
+    );
+  );
+  
+  // Ctrl + Right click
+  (mouse_cap==2|4) ? (
+    mstate==0 ? ( // Click / Button down
+      mstate=ms_tb_patclear;
+      button < npatterns ? (
+        clear_pattern(button);
+        update_has_notes();
+        refresh_tb=1;
+      );
+    );
+  );
+) : (mouse_y > 2*tbrh && mouse_y < 3*tbrh && mouse_x > 0 && mstate==0) || (mstate&ms_tb_r3) ? ( // Mouse on third toolbar row
+
+  button = (mouse_x / busp)|0;
+  
+  button == 0 ? (
+    // Left click Mode button
+    (mouse_cap==1) ? (
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_tb_button_noundo;
+        mode = !mode; // toggle Mode state
+        mode == 0 ? (
+          chw=0;
+          pianow=3*8+8;
+        ) : (
+          chw = 2*8+8;
+          pianow=max_notename_length*8+8;
+        );
+        pkw=chw+pianow;
+        sliderchange(slider7=mode);
+        refresh_tb=1;
+      );
+    );
+    mstate==0 ? hl_state=hl_mode;
+  ) : button == 1 ? (
+    // Left click play_before_start button
+    (mouse_cap==1) ? (
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_tb_button_noundo;
+        play_before_start = !play_before_start; // toggle play_before_start state
+        sliderchange(slider41=play_before_start);
+        refresh_tb=1;
+      );
+    );
+    mstate==0 ? hl_state=hl_playbeforestart;
+  ) : button == 2 || button == 3 ? (
+    // Left click Start beat position display
+    (mouse_cap==1) || (mouse_cap==2) ? (
+      mstate==0 ? ( // Click / Button down
+        ((mouse_cap==1) && beat_position != start_beatpos)||((mouse_cap==2) && start_beatpos != 0) ? (
+          mstate=ms_tb_button;
+          (mouse_cap==1) ? (
+            beat_position >= -99 && beat_position <= 9999 ? (
+              start_beatpos = beat_position; // set start beat position to current beat_position
+            );
+          ) : start_beatpos = 0; // reset to default
+          sliderchange(slider40=start_beatpos);
+          refresh_tb=1;
+        ) : (
+          mstate=ms_tb_button_noundo;
+        );
+      );
+    );
+    mstate==0 ? hl_state=hl_startpos;
+  ) : button == 4 || button == 5 ? (
+    // Left click Start beat position display
+    (mouse_cap==1) || (mouse_cap==2) ? (
+      mstate==0 ? ( // Click / Button down
+        ((mouse_cap==1) && beat_position != end_beatpos)||((mouse_cap==2) && end_beatpos != -99) ? (
+          mstate=ms_tb_button;
+          (mouse_cap==1) ? (
+            beat_position >= -99 && beat_position <= 9999 ? (
+              beat_position <= start_beatpos ? (
+                end_beatpos = -99; // -99 means "end position disabled" or play infinitely
+              ) : (
+                end_beatpos = beat_position; // set start beat position to current beat_position
+              );
+            );
+          ) : end_beatpos = -99; // reset to default
+          sliderchange(slider42=end_beatpos);
+          refresh_tb=1;
+        ) : (
+          mstate=ms_tb_button_noundo;
+        );
+      );
+    );
+    mstate==0 ? hl_state=hl_endpos;
+  ); 
+  
+  (button >= 6 && button <= 11 && mstate==0) || mstate==ms_tb_notelen ? (
+    // Left click Note length slider
+    (mouse_cap==1) ? (
+      zeropos=busp*6+1;
+      x=(100*((mouse_x-zeropos)/(busp*12-2-zeropos)))|0;
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_tb_notelen;
+        notelen_p=x;
+        defnotelen = (tpb*(notelen_p/100))|0;
+        sliderchange(slider6=notelen_p);
+        refresh_tb=1;
+      ) : (
+        x < 0 ? x=0;
+        x > 100 ? x=100;
+        notelen_p=x;
+        defnotelen = (tpb*(notelen_p/100))|0;
+        sliderchange(slider6=notelen_p);
+        refresh_tb=1;
+      );
+    );
+    mstate==0 ? hl_state=hl_notelen;
+  );
+  
+  (button >= 12 && button <= 17 && mstate==0) || mstate==ms_tb_swing ? (
+    // Left click Swing slider
+    (mouse_cap==1) ? (
+      zeropos=busp*12+1;
+      x=(100*((mouse_x-zeropos)/(busp*18-2-zeropos)))|0;
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_tb_swing;
+        swing_p=x;
+        swing = ((tpb/2)*(swing_p/100))|0;
+        sliderchange(slider8=swing_p);
+        refresh_tb=1;
+      ) : (
+        x < 0 ? x=0;
+        x > 100 ? x=100;
+        swing_p=x;
+        swing = ((tpb/2)*(swing_p/100))|0;
+        sliderchange(slider8=swing_p);
+        refresh_tb=1;
+      );
+    );
+    mstate==0 ? hl_state=hl_swing;
+  );
+
+) : (mouse_y > 0 && mouse_y < tbrh && mouse_x > 0 && mstate==0) || (mstate&ms_tb_r1) ? ( // Mouse on first toolbar row 
+  x=(128*(mouse_x / tb_pianokey_end))|0;
+  (x >= basenote && x <= basenote+numnotes && mstate==0) || mstate==ms_tb_pianokey_base || mstate==ms_tb_pianokey_numnotes? (
+    (mouse_cap==1) ? ( // Left click toolbar pianokeys on grid note range
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_tb_pianokey_base;
+        last_x=x;
+      ) : (
+        x != last_x ? (
+          new_note=basenote+(x - last_x);
+          new_note >= 0 && new_note <= 127 ? last_x=x;
+          new_note < 0 ? new_note=0;
+          new_note > 127 ? new_note=127;
+          basenote=new_note;
+          sliderchange(slider2=basenote);
+          refresh_tb=1;
+        );
+      );
+    );
+    (mouse_cap==2) ? ( // Right click toolbar pianokeys on grid note range
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_tb_pianokey_numnotes;
+        last_x=x;
+      ) : (
+        x != last_x ? (
+          new_note=numnotes+(x - last_x);
+          new_note >= 1 && new_note <= 32 ? last_x=x;
+          new_note < 1 ? new_note=1;
+          new_note > 32 ? new_note=32;
+          numnotes=new_note;
+          sliderchange(slider4=numnotes);
+          refresh_tb=1;
+        );
+      );
+    );
+  ) : (x >= trig_note_start && x <= trig_note_start+numnotes && mstate==0) || mstate==ms_tb_pianokey_trig ? (
+    // Left click toolbar pianokeys on trigger note range
+    (mouse_cap==1) ? ( 
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_tb_pianokey_trig;
+        last_x=x;
+      ) : (
+        x != last_x ? (
+          new_note=trig_note_start+(x - last_x);
+          new_note >= 0 && new_note <= 127 ? last_x=x;
+          new_note < 0 ? new_note=0;
+          new_note > 127 ? new_note=127;
+          trig_note_start=new_note;
+          sliderchange(slider11=trig_note_start);
+          refresh_tb=1;
+        );
+      );
+    );
+  );
+) : (mouse_y > grid_bottom && mouse_y < gfx_h && mouse_x > 0 && mstate==0) || (mstate&ms_el) ? ( // Mouse on envelope lane
+
+  ((mouse_y < grid_bottom+el_divh && mstate==0) || mstate==ms_el_divider) ? (
+    // Left click
+    (mouse_cap==1) ? (
+      mstate==0 ? ( // Click / Button down
+        mstate=ms_el_divider;
+        morig = mouse_y;
+        dmouse_y = morig-grid_bottom;
+        
+      ) : (
+        mouse_y != morig ? (
+          (mouse_y-dmouse_y > tbh) ? (
+            (mouse_y+(el_divh-dmouse_y) <= gfx_h) ? (
+              elh_percent = (gfx_h-tbh-(mouse_y-tbh-dmouse_y))/(gfx_h-tbh);
+            ) : (
+              elh_percent = 0; // hit to bottom
+            );
+          ) : (
+            elh_percent = 1; // hit to top
+          );
+          sliderchange(slider13=elh_percent);
+          recalc_elh=1;
+        );
+      );
+    );
+  );
+  
+  ((mouse_x > pkw && mouse_y >= grid_bottom+el_divh && mstate==0) || mstate==ms_el_envdraw || mstate==ms_el_enverase) ? (
+    // Left click
+    (mouse_cap==1) ? (
+      x = (((mouse_x - pkw)/(gfx_w - pkw))*listlength)|0;
+      x >= 0 && x < listlength ? (
+        envval = ((gfx_h - mouse_y) / env_max_h)*127|0;
+        mstate==0 ? ( // Click / Button down
+          mstate=ms_el_envdraw;
+          cclist[x]=setCc(cclist[x], cc_to_adjust, envval | 0x80);
+          lastenv_changed_x=x;
+        ) : (
+          lcnt = abs(last_x-x)|0;
+          lcnt > 0 ? (
+            dx = (x-last_x)/lcnt;
+            dmoy = (mouse_y - last_mo_y)/lcnt;
+          );
+          lcnt >= 1 ? loop(lcnt,
+            last_x += dx;
+            last_mo_y += dmoy;
+            envval = ((gfx_h - last_mo_y) / env_max_h)*127|0;
+            envval > 127 ? envval=127;
+            envval < 0 ? envval=0;
+            cclist[last_x|0]=setCc(cclist[last_x|0], cc_to_adjust, envval | 0x80);
+            lastenv_changed_x=last_x|0;
+          ) : (
+            envval > 127 ? envval=127;
+            envval < 0 ? envval=0;
+            cclist[x]=setCc(cclist[x], cc_to_adjust, envval | 0x80);
+            lastenv_changed_x=x;
+          );
+        );
+        last_x = x;
+        last_mo_y = mouse_y;  
+      );
+    );
+    
+    // Right click
+    (mouse_cap==2) ? (
+      x = (((mouse_x - pkw)/(gfx_w - pkw))*listlength)|0;
+      x >= 0 && x < listlength ? (
+        mstate==0 ? ( // Click / Button down
+          mstate=ms_el_enverase;
+          cclist[x]=setCc(cclist[x], cc_to_adjust, 0);
+        ) : (
+          lcnt = abs(last_x-x)|0;
+          lcnt > 0 ? (
+            dx = (x-last_x)/lcnt;
+          );
+          lcnt >= 1 ? loop(lcnt,
+            last_x += dx;
+            cclist[last_x|0]=setCc(cclist[last_x|0], cc_to_adjust, 0);
+          ) : (
+            cclist[x]=setCc(cclist[x], cc_to_adjust, 0);
+          );
+        );
+        last_x = x;
+      );
+    );
+  );
+  
+  (mouse_x < pkw && mouse_y >= grid_bottom+el_divh && mstate==0) || mstate==ms_el_ctrlchange ? (
+    // Left click
+    (mouse_cap==1) ? ( 
+      y = (((mouse_y - grid_bottom - el_divh) / (elh - el_divh))*numccs )|0;
+      mstate==0 ? ( // Click / Button down
+        mstate = ms_el_ctrlchange;
+        mouse_x < chw ? ms_sub_channelchange=1;
+        cc_to_adjust=y;
+        sliderchange(slider14=cc_to_adjust);
+        mstart = mouse_y;
+        cc_type_start = cc_type[cc_to_adjust];
+        cc_chan_start = cc_chan[cc_to_adjust];
+        draw_cc_controls();
+      ) : ( // Drag
+        draglen=((mstart - mouse_y)/10)|0;
+        ldraglen != draglen ? (
+          ldraglen = draglen;
+          ms_sub_channelchange==0 ? (
+            new_cc = cc_type_start + draglen;
+            new_cc < 0 ? new_cc = 128 - (new_cc % 128) : new_cc = new_cc % 128;
+            cc_type[cc_to_adjust]=new_cc;
+            cc_to_adjust == 0 ? sliderchange(slider20=cc_type[cc_to_adjust]);
+            cc_to_adjust == 1 ? sliderchange(slider21=cc_type[cc_to_adjust]);
+            cc_to_adjust == 2 ? sliderchange(slider22=cc_type[cc_to_adjust]);
+            cc_to_adjust == 3 ? sliderchange(slider23=cc_type[cc_to_adjust]);
+          ) : (
+            new_cc = cc_chan_start + draglen;
+            new_cc < 0 ? new_cc = 16 - (new_cc % 16) : new_cc = new_cc % 16;
+            cc_chan[cc_to_adjust]=new_cc;
+            cc_to_adjust == 0 ? sliderchange(slider30=cc_chan[cc_to_adjust]);
+            cc_to_adjust == 1 ? sliderchange(slider31=cc_chan[cc_to_adjust]);
+            cc_to_adjust == 2 ? sliderchange(slider32=cc_chan[cc_to_adjust]);
+            cc_to_adjust == 3 ? sliderchange(slider33=cc_chan[cc_to_adjust]);
+          );
+          draw_cc_controls();
+        ); 
+      );
+    ) : (
+      ms_sub_channelchange=0; 
+    );
+  );
+  
+);
+
+!(mouse_cap&3) ? (
+  mstate ? (
+    mstate != ms_el_divider && mstate != ms_preview && mstate != ms_tb_button_noundo ? (
+      sliderchange(-1); // create undo point
+    );
+    mstate=0; // Clear all mouse states
+    sd_editval_show=0;
+  );
+); 
+
+(mouse_y < tbrh || mouse_y > 3*tbrh || mouse_x < 0 || ( mouse_x > 16*busp && (mouse_y > tbrh && mouse_y < 2*tbrh) ) || mouse_x > 18*busp ) && !(mstate&ms_tb) ? hl_state=0; // Clear toolbar highlights
+
+// Erase everything within note matrix
+gfx_r=gfx_g=gfx_b=0; gfx_a=1.0;
+gfx_x=pkw; gfx_y=tbh; gfx_rectto(gfx_w,grid_bottom);
+
+// Erase everything within envelope lane
+gfx_x=pkw-1; // -1 to erase also the leftmost pixels of event dots
+gfx_y=gfx_h - elh+el_divh; gfx_rectto(gfx_w,gfx_h);
+
+refresh_cc_controls ? (
+  draw_cc_controls();
+  refresh_cc_controls=0;
+);
+
+// Draw octave lines
+ly=tbh;
+notepos=0;
+loop(numnotes,
+  ly += row_height;
+  octavestart = (basenote+(numnotes-1-notepos)) % 12;
+  octavestart == 0 ? (
+    gfx_r=c_grid_r; gfx_g=c_grid_g; gfx_b=c_grid_b; gfx_a=c_grid_a;
+    gfx_x=0.0; gfx_y=ly;
+    gfx_lineto(gfx_w,gfx_y,0);
+  );
+  notepos+=1;
+);
+
+// Draw bar lines  
+xpos=pkw;
+bar=1;
+loop(nbars,
+  xpos+=barlen;
+  gfx_r=c_barline_r; gfx_g=c_barline_g; gfx_b=c_barline_b; gfx_a=c_barline_a;
+  gfx_x=xpos+1; gfx_y=tbh;
+  gfx_lineto(gfx_x,gfx_h,0);
+  bar+=1;
+);
+
+ly=tbh;
+notepos=0;
+loop(numnotes,
+
+  ty=(tbh+((notepos+1)*(grid_bottom-tbh))/(numnotes))|0;
+
+  lx=pkw;
+  xpos=0;
+  mask = 2^(numnotes-1-notepos);
+  cidx=(p & 7);
+
+  use_r=(cidx&1) ? 0.6 : 0.2;
+  use_g=(cidx&2) ? 0.6 : 0.2;
+  use_b=(cidx&4) ? 0.2 : 0.6;
+  cidx==3  ? use_r*=2;
+  cidx==4 ? use_g*=2;
+
+  loop(listlength,
+    tx = (((xpos+1)*(gfx_w - pkw))/listlength)+pkw|0;
+
+    sel=(notelist[xpos]&mask);
+
+    // Draw square
+    gfx_r=use_r; gfx_g=use_g; gfx_b=use_b; gfx_a=1;
+   
+    (xpos % steps_per_beat) == 0 ? ( gfx_g=gfx_r; gfx_r=gfx_b; gfx_b=use_g;);
+
+    lbeatpos == xpos ? ( gfx_r=gfx_g=gfx_b=sel?0.8:0.4; ) :
+        !sel ? (gfx_r*=0.55; gfx_g*=0.55; gfx_b*=0.55; );
+    
+    curnote=(numnotes-1-notepos)*listlength+xpos;
+    num_sd = getSubdivNum(curnote);
+    num_sd ? (
+      sd_ena = getSubdivNotelist((numnotes-1-notepos), xpos);
+      sd_r=gfx_r;sd_g=gfx_g;sd_b=gfx_b;
+      sd = 0;
+      lx_sd=lx;
+      loop(num_sd+1,
+        tx_sd = (((sd+1)*(tx-lx))/(num_sd+1))+lx|0;
+        (sd_ena >> sd)&1 ? ( // enabled sd step 
+          gfx_r=sd_r; gfx_g=sd_g; gfx_b=sd_b;
+        ) : ( // disabled sd step
+          gfx_r=sd_r*0.55; gfx_g=sd_g*0.55; gfx_b=sd_b*0.55; 
+        );
+        gfx_x=lx_sd ;gfx_y=ly; gfx_rectto(tx_sd,ty);
+        lx_sd=tx_sd+1;
+        sd += 1;
+      );
+    ) : (
+      gfx_x=lx; gfx_y=ly; gfx_rectto(tx,ty);
+    );
+    
+    // lbeatpos == xpos && notepos == numnotes-1 ? (
+      // gfx_r=0.5; gfx_g=0.7; gfx_b=1; gfx_a=0.2;
+      // gfx_x=lx; gfx_y=tbh; gfx_rectto(tx,grid_bottom);
+    // );
+    
+    notetie[xpos]&mask ? (
+      // Draw note tie
+      gfx_x=tx; gfx_y=ly; gfx_rectto(tx+2,ty);
+    );
+    
+    sel && !(notetie[xpos-1]&mask) ? ( //Note exists and is not tied to previous note.
+      // Draw velocity bar
+      num_sd ? (
+        sd = 0;
+        lx_sd=lx;
+        loop(num_sd+1,
+          tx_sd = (((sd+1)*(tx-lx))/(num_sd+1))+lx|0;
+          (sd_ena&1) ? (
+            draw_velobar(lx_sd, ty, getSubdivVelo((numnotes-1-notepos), xpos, sd), tx_sd-lx_sd, ty-ly);
+          );
+          sd_ena *= 0.5;
+          lx_sd=tx_sd+1;
+          sd += 1;
+        );
+      ) : (
+        draw_velobar(lx+(tx-lx-velobarwidth)*(getStart(curnote)/tpb), ty, getVelo(curnote), tx-lx, ty-ly);
+      );
+    );
+
+    lx=tx+2;
+    xpos+=1;
+  );  
+
+  ly=ty+2;
+  notepos+=1;
+);
+(mstate == ms_veloedit || mstate == ms_veloeditrow || mstate == ms_startoffsetedit || mstate == ms_startoffseteditrow)&& ((nlm && sd_edit_num==0) || sd_editval_show)? (
+  // Draw velocity or start offset value
+  gfx_r=1.0; gfx_g=1.0; gfx_b=1.0; gfx_a=1.0;
+  gfx_x=(((lastnote_changed_x)*(gfx_w - pkw))/listlength)+6+pkw|0; 
+  gfx_y=tbh+(numnotes-1-ylock)*row_height-10;
+  gfx_y < tbh+1 ? gfx_y = tbh+1;
+  mstate == ms_veloedit ? (
+    sd_edit_num ? gfx_x+=sd_x*note_w/(sd_edit_num+1);
+    gfx_drawnumber(velo,0);
+  ) : mstate == ms_veloeditrow ? (
+    sd_edit_num ? gfx_x+=sd_x*note_w/(sd_edit_num+1);
+    gfx_drawnumber(lastnote_changed_velo,0);
+  ) : mstate == ms_startoffsetedit ?(
+    gfx_drawnumber(new_start,0);
+  ) : (
+    gfx_drawnumber(start_adj_all_value,0);
+  );
+);
+
+
+// Draw CC envelopes
+
+env_max_h=gfx_h-grid_bottom-el_divh-1;
+env_half_h=(env_max_h/2)|0;
+
+// Draw step colors to envelope background
+lx=pkw;
+xpos=0;
+loop(listlength,
+  tx = (((xpos+1)*(gfx_w - pkw))/listlength)+pkw|0;
+  gfx_r=use_r; gfx_g=use_g; gfx_b=use_b; gfx_a=1;
+  (xpos % steps_per_beat) == 0 ? ( gfx_g=gfx_r; gfx_r=gfx_b; gfx_b=use_g;);
+  lbeatpos == xpos ? ( gfx_r=gfx_g=gfx_b=0.4) : (gfx_r*=0.55; gfx_g*=0.55; gfx_b*=0.55; );
+  gfx_x=lx; gfx_y=gfx_h; gfx_rectto(tx,gfx_h-env_max_h);
+  lx=tx+2;
+  xpos+=1;
+);
+  
+// Draw envelope
+tx = (gfx_w - pkw)/listlength;
+i=(cc_to_adjust+1) % numccs; // make sure that active envelope is drawn last
+loop(numccs,
+  gfx_x=pkw;gfx_y=gfx_h;
+  x_int=gfx_x;
+  x_float=gfx_x+tx;
+  x_int_prev=x_int;
+  x_int=x_float|0;
+  cc_step=0;
+  // Find first and last enabled event
+  event_enabled=0;
+  first_event=0;
+  last_event=0;
+  loop(listlength,
+    val=getCc(cclist[cc_step], i);
+    val & 0x80 ? ( // Enabled event
+      !event_enabled ? (
+        first_event=cc_step;
+        event_enabled=1;
+      );
+      last_event=cc_step;
+    );
+    cc_step+=1;
+  );
+  event_enabled ? ( // At least one enabled event found in this pattern
+    setEnvColor(i);
+    cc_step=0;
+    loop(listlength,
+      val=getCc(cclist[cc_step], i);
+      gfx_x=x_int_prev; gfx_y_mem=gfx_y;
+      val & 0x80 ? ( // event enabled
+        event_enabled=1;
+        val_y=gfx_h-((val&0x7F)/128*env_max_h);
+        i == cc_to_adjust ? (
+          gfx_r=use_r; gfx_g=use_g; gfx_b=use_b; gfx_a=c_hl_a;
+          cc_type[i]==10 ? gfx_y=gfx_h - env_half_h : gfx_y=gfx_h; // Draw Pan (CC 10) using bipolar env
+          gfx_rectto(x_int,val_y); // Fill
+        );
+        gfx_x=x_int_prev; gfx_y=gfx_y_mem;
+        gfx_r=use_r; gfx_g=use_g; gfx_b=use_b; gfx_a=use_a;
+        cc_step > 0 ? gfx_lineto(gfx_x,val_y,0) : gfx_y=val_y; // Vertical line
+        i == cc_to_adjust ? (
+          gfx_x-=1; gfx_y-=1;
+          gfx_rectto(gfx_x+4,gfx_y+4); // Event dot
+          gfx_x-=3; gfx_y-=3;
+        );
+        gfx_lineto(x_int,gfx_y,0); // Horizontal line
+      ):(
+        cc_step < first_event ? (
+          val_y=gfx_h-((getCc(cclist[last_event], i)&0x7F)/128*env_max_h);
+        );
+        i == cc_to_adjust ? (
+          gfx_r=use_r; gfx_g=use_g; gfx_b=use_b; gfx_a=c_hl_a;
+          cc_type[i]==10 ? gfx_y=gfx_h - env_half_h : gfx_y=gfx_h;
+          gfx_rectto(x_int,val_y); // Fill
+        );
+        gfx_r=use_r; gfx_g=use_g; gfx_b=use_b; gfx_a=use_a;
+        gfx_x=x_int_prev; gfx_y=val_y;
+        gfx_lineto(x_int,gfx_y,0); // Horizontal line
+      );
+      x_float+=tx;
+      x_int_prev=x_int;
+      x_int=x_float|0;
+      cc_step+=1;
+    );
+  );
+  i=(i+1) % numccs;;
+);
+
+// Draw envelope lane divider
+gfx_r=gfx_g=gfx_b=0.9;gfx_a=1; // top edge
+gfx_x=0; gfx_y=gfx_h - elh;
+gfx_lineto(gfx_w,gfx_y,0);
+gfx_r=gfx_g=gfx_b=0.7; // center
+gfx_x=0; gfx_y+=1;
+gfx_rectto(gfx_w,gfx_y+el_divh-2);
+gfx_r=gfx_g=gfx_b=0.5; //bottom edge
+gfx_x=0;
+gfx_lineto(gfx_w,gfx_y,0);
+
+mstate == ms_el_envdraw ? (
+  // Draw envelope value
+  gfx_r=1.0; gfx_g=1.0; gfx_b=1.0; gfx_a=1.0;
+  gfx_x=(((lastenv_changed_x)*(gfx_w - pkw))/listlength)+6+pkw|0; 
+  gfx_y=gfx_h - envval/128*env_max_h - 8;
+  gfx_y < grid_bottom+el_divh+1 ? gfx_y+=10;
+  gfx_drawnumber(envval,0);
+);
+
+// Draw toolbar
+refresh_tb || lgfx_w_tb != gfx_w || lgfx_h_tb != gfx_h || last_hl_state!=hl_state ? (
+  refresh_tb=0;
+  lgfx_w_tb=gfx_w;
+  lgfx_h_tb=gfx_h;
+  last_hl_state=hl_state;
+  // Clear toolbar
+  gfx_r=gfx_g=gfx_b=gfx_x=gfx_y=0; gfx_a=1;
+  gfx_rectto(gfx_w,tbh);
+
+  // Draw pattern buttons
+  pat=0;
+  loop(npatterns,   
+    draw_pat_button(pat, tbrh, ((hl_state&hl_pattern)&&((hl_state&0xF)==pat)));
+    pat+=1;
+  );
+  
+  draw_trigstart_display(busp*16, tbrh, 0);
+  draw_mode_button(busp*0, 2*tbrh, hl_state==hl_mode);
+  draw_startmode_button(busp*1, 2*tbrh, hl_state==hl_playbeforestart);
+  draw_position_display(busp*2, 2*tbrh, hl_state==hl_startpos, start_beatpos);
+  draw_position_display(busp*4, 2*tbrh, hl_state==hl_endpos, end_beatpos == -99 ? -100 : end_beatpos);
+  draw_notelen_slider(busp*6, 2*tbrh, hl_state==hl_notelen);
+  draw_swing_slider(busp*12, 2*tbrh, hl_state==hl_swing);
+  
+  draw_tb_pianokeys(busp*0, 0);
+);
+
+// Draw default velocity value
+gfx_r=gfx_g=gfx_b=gfx_x=gfx_y=0; gfx_a=1;
+gfx_x=busp*18; gfx_y=2*tbrh;
+gfx_rectto(gfx_x+(busp*2-2-1),gfx_y+(tbrh-4-1));
+draw_velo_display(busp*18,2*tbrh,0);

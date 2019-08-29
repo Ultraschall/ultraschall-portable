@@ -1,0 +1,60 @@
+// (C) 2007, Michael Gruhn.
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:Channel Time Delayer
+desc:Channel Time Delayer [LOSER]
+//tags: stereo delay
+//author: LOSER
+
+slider1:0<-100,100,1>Delay L (ms)
+slider2:0<-100,100,1>Delay R (ms)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@slider
+slider1 >= 0 && slider2 >= 0 ?
+(
+  buflL = floor(slider1 / 1000 * srate) ;
+  buflR = floor(slider2 / 1000 * srate) + buflL+1;
+
+):(
+
+  slider1 <= slider2 ?
+  (
+    buflL = 0 ;
+    buflR = floor((slider2-slider1) / 1000 * srate) + buflL+1;
+  ):(
+    buflL = floor((slider1-slider2) / 1000 * srate) ;
+    buflR = buflL+1;
+  );
+
+  pdc_delay = floor(min( -min(slider1,slider2)/1000 * srate,500000));
+  pdc_bot_ch=0; pdc_top_ch=2;
+
+);
+
+@sample
+bufLpos[0] = spl0 ;
+bufLpos = bufLpos + 1 ;
+bufLpos >= buflL ? bufLpos = 0;
+
+bufRpos[0] = spl1 ;
+bufRpos = bufRpos + 1 ;
+bufRpos >= buflR ? bufRpos = buflL+1;
+
+spl0 = bufLpos[0] ; 
+spl1 = bufRpos[0] ;

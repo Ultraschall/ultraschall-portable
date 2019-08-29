@@ -1,0 +1,54 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc:4-Tap Phaser
+//tags: guitar modulation filter
+//author: Cockos
+
+slider1:0.5<0,10>Rate (Hz)
+slider2:440<40,20000>Range Min (Hz)
+slider3:1600<40,20000>Range Max (Hz)
+slider4:-3<-120,-1,1>Feedback (dB)
+slider5:0<-120,12,1>Wet Mix (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+
+@slider
+feedback=2 ^ (slider4/6);
+lfoPhase=0;
+wetmix =2 ^ (slider5/6);
+dmin=slider2 * 2 / srate;
+dmax=slider3 * 2 / srate;
+dsc=abs(dmax-dmin) * 0.5;
+dmin=min(dmin,dmax);
+lfoInc = 2 * $pi * slider1 / srate;
+
+@sample
+
+d = dmin + dsc * (sin(lfoPhase) + 1);
+lfoPhase += lfoInc;
+lfoPhase >= 2*$pi ? lfoPhase -= 2*$pi;
+
+coef=(1-d)/(1+d);
+
+x1=spl0 + ly4 * feedback;
+ly1 = coef * (ly1 + x1) - lx1;  lx1 = x1;
+ly2 = coef * (ly2 + ly1) - lx2; lx2 = ly1;
+ly3 = coef * (ly3 + ly2) - lx3; lx3 = ly2;
+ly4 = coef * (ly4 + ly3) - lx4; lx4 = ly3;
+spl0 += ly4*wetmix;
+
+
+// right channel, can comment this out if you
+// want mono for 2x the speed :)
+rx=spl1 + ry4 * feedback;
+ry1 = coef * (ry1 + rx) - rx1;  rx1 = rx;
+ry2 = coef * (ry2 + ry1) - rx2; rx2 = ry1;
+ry3 = coef * (ry3 + ry2) - rx3; rx3 = ry2;
+ry4 = coef * (ry4 + ry3) - rx4; rx4 = ry3;
+spl1 += ry4*wetmix;

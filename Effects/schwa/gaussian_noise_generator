@@ -1,0 +1,157 @@
+desc:Gaussian Noise Generator
+//tags: analysis generator synthesis
+//author: Schwa
+
+// Generator choices are listed in rough order of fanciness and cost.
+
+slider1:-18<-120,6,0.1>Noise dB (RMS)
+slider2:1<0,1,0.01>Wet Mix
+slider3:0<0,3,1{Central Limit Approximation,Box-Muller,Ziggurat (not implemented yet),Inverse Transform}>Gaussian Generator
+slider4:0<-1,1>Noise Mean (should be ~0)
+slider5:0<0,2>Noise Standard Deviation (should be ~1)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+
+AMP_DB = 20.0 / log(10);
+
+CENTRAL_LIMIT = 0;
+BOX_MULLER = 1;
+ZIGGURAT = 2;
+INV_TRANSFORM = 3;
+
+@slider
+
+noise_level = exp(slider1 / AMP_DB);
+
+(slider3 == CENTRAL_LIMIT) ? (
+  N_DEV = 12;
+)
+:
+(slider3 == INV_TRANSFORM) ? (
+   A1 = -39.69683028665376;
+   A2 =  220.9460984245205;
+   A3 = -275.9285104469687;
+   A4 =  138.3577518672690;
+   A5 = -30.66479806614716;
+   A6 =  2.506628277459239;
+
+   B1 = -54.47609879822406;
+   B2 =  161.5858368580409;
+   B3 = -155.6989798598866;
+   B4 =  66.80131188771972;
+   B5 = -13.28068155288572;
+
+   C1 = -0.007784894002430293;
+   C2 = -0.3223964580411365;
+   C3 = -2.400758277161838;
+   C4 = -2.549732539343734;
+   C5 =  4.374664141464968;
+   C6 =  2.938163982698783;
+
+   D1 =  0.007784695709041462;
+   D2 =  0.3224671290700398;
+   D3 =  2.445134137142996;
+   D4 =  3.754408661907416;
+
+   P_LO = 0.02425;
+   P_HI = 1.0 - P_LO;
+);
+
+i = sum = sum2 = 0;
+
+@sample
+
+z0 = z1 = 0;
+
+(slider3 == CENTRAL_LIMIT) ? (
+
+  // Quick & dirty.  
+  loop (N_DEV, 
+    z0 += rand(1);
+    z1 += rand(1);
+  );
+  z0 -= N_DEV / 2.0;
+  z1 -= N_DEV / 2.0;
+)
+:
+(slider3 == BOX_MULLER) ? (
+
+  // Conveniently a stereo twofer.
+  w = 0;
+  while (
+    z0 = 2.0 * rand(1) - 1.0;
+    z1 = 2.0 * rand(1) - 1.0;
+    w = z0 * z0 + z1 * z1;
+    w >= 1.0;
+  );
+  w = sqrt(-2.0 * log(w) / w);
+  z0 *= w;
+  z1 *= w;
+)
+:
+(slider3 == INV_TRANSFORM) ? (
+
+   r0 = rand(1);
+   r1 = rand(1);
+
+   (r0 < P_LO) ? (
+     q = sqrt(-2.0 * log(r0));
+     z0 = ((((C1 * q + C2) * q + C3) * q + C4) * q + C5) * q + C6;
+     z0 /= (((D1 * q + D2) * q + D3) * q + D4) * q + 1.0;
+   )
+   :
+   (r0 < P_HI) ? (
+     q = r0 - 0.5;
+     r = q * q;
+     z0 = (((((A1 * r + A2) * r + A3) * r + A4) * r + A5) * r + A6) * q;
+     z0 /= ((((B1 * r + B2) * r + B3) * r + B4) * r + B5) * r + 1.0;
+   )
+   :
+   (
+     q = sqrt(-2.0 * log(1.0 - r0));
+     z0 = -(((((C1 * q + C2) * q + C3) * q + C4) * q + C5) * q + C6);
+     z0 /= (((D1 * q + D2) * q + D3) * q + D4) * q + 1.0;
+   );
+
+   (r1 < P_LO) ? (
+     q = sqrt(-2.0 * log(r1));
+     z1 = ((((C1 * q + C2) * q + C3) * q + C4) * q + C5) * q + C6;
+     z1 /= (((D1 * q + D2) * q + D3) * q + D4) * q + 1.0;
+   )
+   :
+   (r1 < P_HI) ? (
+     q = r1 - 0.5;
+     r = q * q;
+     z1 = (((((A1 * r + A2) * r + A3) * r + A4) * r + A5) * r + A6) * q;
+     z1 /= ((((B1 * r + B2) * r + B3) * r + B4) * r + B5) * r + 1.0;
+   )
+   :
+   (
+     q = sqrt(-2.0 * log(1.0 - r0));
+     z1 = -(((((C1 * q + C2) * q + C3) * q + C4) * q + C5) * q + C6);
+     z1 /= (((D1 * q + D2) * q + D3) * q + D4) * q + 1.0;
+   );
+);
+
+spl0 = spl0 * (1.0 - slider2) + z0 * noise_level * slider2;
+spl1 = spl1 * (1.0 - slider2) + z1 * noise_level * slider2;
+
+sum += z0;
+sum2 += z0 * z0;
+
+i += 1;
+(i == srate) ? (
+  mean = sum / srate;
+  stdev = sqrt(sum2 / srate - mean * mean);
+  slider4 = mean;
+  slider5 = stdev;
+  sliderchange(2^4 + 2^5);
+  i = sum = sum2 = 0;
+);
+
+

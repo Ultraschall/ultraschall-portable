@@ -1,0 +1,118 @@
+// Copyright 2006, Thomas Scott Stillwell
+// All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of Thomas Scott Stillwell may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+desc:3x3 EQ
+desc:3x3 EQ [Stillwell]
+//tags: equalizer saturation
+//author: Stillwell
+
+slider1:0<0,100,0.1>Low Drive (%)
+slider2:0<-12,12,0.1>Low Gain (dB)
+slider3:0<0,100,0.1>Mid Drive (%)
+slider4:0<-12,12,0.1>Mid Gain (dB)
+slider5:0<0,100,0.1>High Drive (%)
+slider6:0<-12,12,0.1>High Gain (dB)
+slider7:240<60,680,1>Low-Mid Freq (Hz)
+slider8:2400<720,12000,10>Mid-High Freq (Hz)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  log2db = 8.6858896380650365530225783783321; // 20 / ln(10)
+  db2log = 0.11512925464970228420089957273422; // ln(10) / 20 
+  pi = 3.1415926535;
+  halfpi = pi / 2;
+  halfpiscaled = halfpi * 1.41254;
+
+@slider
+
+  mixl=slider1 / 100;
+  mixm=slider3 / 100;
+  mixh=slider5 / 100;
+  al = min(slider7,srate) / srate;
+  ah = max( min(slider8,srate) / srate , al );
+  mixl1 = 1 - mixl;
+  mixm1 = 1 - mixm;
+  mixh1 = 1 - mixh;
+  gainl = exp(slider2 * db2log);
+  gainm = exp(slider4 * db2log);
+  gainh = exp(slider6 * db2log);
+  mixlg = mixl * gainl;
+  mixmg = mixm * gainm;
+  mixhg = mixh * gainh;
+  mixlg1 = mixl1 * gainl;
+  mixmg1 = mixm1 * gainm;
+  mixhg1 = mixh1 * gainh;
+
+
+@sample
+
+  dry0 = spl0;
+  dry1 = spl1;
+
+  lf1h=lfh; 
+  lfh=dry0 + lfh - ah*lf1h;
+  high_l=dry0-lfh*ah;
+
+  lf1l=lfl;
+  lfl=dry0 + lfl - al*lf1l; 
+  low_l=lfl*al;
+
+  mid_l = dry0 - low_l - high_l;
+
+  rf1h=rfh; 
+  rfh=dry1 + rfh - ah*rf1h;
+  high_r=dry1-rfh*ah;
+
+  rf1l=rfl;
+  rfl=dry1 + rfl - al*rf1l; 
+  low_r=rfl*al;
+
+  mid_r = dry1 - low_r - high_r;
+
+  wet0_l = mixlg * sin(low_l * halfpiscaled);
+  wet0_m = mixmg * sin(mid_l * halfpiscaled);
+  wet0_h = mixhg * sin(high_l * halfpiscaled);
+  wet0 = (wet0_l + wet0_m + wet0_h);
+
+  dry0_l = low_l * mixlg1;
+  dry0_m = mid_l * mixmg1;
+  dry0_h = high_l * mixhg1;
+  dry0 = (dry0_l + dry0_m + dry0_h);
+
+  wet1_l = mixlg * sin(low_r * halfpiscaled);
+  wet1_m = mixmg * sin(mid_r * halfpiscaled);
+  wet1_h = mixhg * sin(high_r * halfpiscaled);
+  wet1 = (wet1_l + wet1_m + wet1_h);
+
+  dry1_l = low_r * mixlg1;
+  dry1_m = mid_r * mixmg1;
+  dry1_h = high_r * mixhg1;
+  dry1 = (dry1_l + dry1_m + dry1_h);
+
+  spl0 = dry0 + wet0;
+  spl1 = dry1 + wet1;

@@ -1,0 +1,56 @@
+desc:Volume/Pan Smoother
+//tags: utility gain stereo
+//author: Cockos
+
+slider1:0<-60,12,0.1>Volume (dB)
+slider2:0<-100,100,0.1>Pan
+slider3:0<-6,6,0.5>Pan Law (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+
+AMP_dB = 8.68588963806504;
+src_vol = tgt_vol = exp(slider1/AMP_DB);
+src_pan = tgt_pan = 0.01*slider2;
+
+@slider
+
+tgt_vol = exp(slider1/AMP_DB);
+tgt_pan = 0.01*slider2;
+panlaw = exp(slider3/AMP_DB);
+pancomp = (panlaw > 1.0 ? 1.0/panlaw : panlaw);
+
+@block
+
+d_vol = (tgt_vol-src_vol)/samplesblock;
+d_pan = (tgt_pan-src_pan)/samplesblock;
+tvol = src_vol;
+tpan = src_pan;
+src_vol = tgt_vol;
+src_pan = tgt_pan;
+
+@sample
+
+tvol += d_vol;
+tpan += d_pan;
+
+adj = tvol;
+
+panlaw != 1.0 ? (
+  panlaw > 1.0 ? adj *= panlaw;
+  panatt = abs(tpan);
+  adj *= pancomp+(1.0-pancomp)*(2.0/(2.0-panatt)-1.0);  
+);
+
+adj0 = adj1 = adj;
+tpan < 0.0 ? adj1 *= 1.0+tpan;
+tpan > 0.0 ? adj0 *= 1.0-tpan;
+
+spl0 *= adj0;
+spl1 *= adj1;
+
+

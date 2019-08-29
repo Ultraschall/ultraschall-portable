@@ -1,0 +1,71 @@
+// This effect Copyright (C) 2004 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: MDCT Shifter
+//tags: processing pitch mangler
+//author: Cockos
+
+slider1:128<32,512,153.6>Bands
+slider2:4<-512,512,1>Band Shift (neg=down, pos=up)
+
+in_pin:input 
+out_pin:output (mono)
+out_pin:output (mono)
+
+@slider
+slider1=2 ^ (0|(0.5+log10(slider1)/log10(2)))|0; 
+slider1=min(512,max(slider1,32));
+fftsize!=slider1*2 ? (fftsize=slider1*2; bufpos=bi1=0; bi2=fftsize*2; halfsize=fftsize*0.5);
+slider2=min(slider1,max(slider2,-slider1)); 
+
+@sample
+// bi2 was the previously transformed buffer, and by the time it
+// is bi2 we only touch the second half (the first was replaced when
+// it was bi1)
+
+// bi1 is the most recently transformed buffer, we only touch the first
+// half, because the second will be used for the next overlap
+
+
+t=bi1+bufpos;
+p0=t[0];
+t[0]=spl0;
+
+t=bi2+halfsize+bufpos;
+p1=t[0];
+t[0]=spl0;
+
+spl0 = p0 + p1; // our mdct handles windowing, so we just add
+
+bufpos+=1;
+
+bufpos >= halfsize ? 
+(
+  // swap bi1 and bi2
+  t=bi1; bi1=bi2; bi2=t;
+  // we hit our FFT size here
+
+  mdct(bi1,fftsize);
+
+  slider2 > 0 ? 
+  (
+       bufpos=bi1+halfsize;
+       loop(halfsize-slider2,
+          bufpos[0]=bufpos[-slider2];
+          bufpos-=1;
+       );
+       loop(slider2,bufpos[0]=0; bufpos-=1;)
+  ) : (
+       bufpos=bi1;
+       loop(halfsize+slider2,
+           bufpos[0]=bufpos[-slider2];
+           bufpos+=1;
+        );
+       loop(-slider2,bufpos[0]=0; bufpos+=1)
+  );
+     
+  imdct(bi1,fftsize);
+  bufpos=0;
+);
+
+spl1=spl0;
