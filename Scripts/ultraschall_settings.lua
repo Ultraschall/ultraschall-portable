@@ -45,6 +45,8 @@ end
 ------------------------------------------------------
 function set_values()
 
+  device_count = 1
+
   for i = 1, #GUI["elms"] , 2 do  -- Anzahl der Einträge ist immer doppelt so hoch durch die Info-Buttons pro Eintrag
 
     if GUI["elms"][i]["type"] == "Checklist" then
@@ -53,11 +55,25 @@ function set_values()
       newvalue = tostring(GUI["elms"][i]["retval"])
     end
     
-    if newvalue ~= ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"value") then
+    if GUI["elms"][i]["sectionname"] == "ultraschall_devices" then
+      device_name = ultraschall.EnumerateUSExternalState_key("ultraschall_devices", device_count)
+      stored_value = ultraschall.GetUSExternalState("ultraschall_devices", device_name )
+      device_count = device_count + 1
+
+    else 
+      stored_value = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"value")
+    end
+
+    if newvalue ~= stored_value then
       -- print (newvalue)
       -- print("change")
-      update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "value", newvalue , true)
-
+      if GUI["elms"][i]["sectionname"] == "ultraschall_devices" then
+        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue , true)
+      
+      else
+        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "value", newvalue , true)
+      
+      end
       -- Ausnahme: für Slider wird auch noch die Position geschrieben (könnte man prinzipiell auch berechnen lassen)
 
       if GUI["elms"][i]["type"] == "Sldr" then
@@ -98,7 +114,7 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
-GUI.w, GUI.h = 680, 415
+GUI.w, GUI.h = 800, 600
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -116,8 +132,12 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 GUI.elms = {
   
 --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
-  logo             = GUI.Pic:new(          240,  10,   0,  0,    1,   script_path.."us_small.png"),
-  label            = GUI.Lbl:new(          313, 110,                  "Settings",          0),
+  logo             = GUI.Pic:new(          100,  10,   0,  0,    1,   script_path.."us_small.png"),
+  devices          = GUI.Pic:new(          500,  12,   0,  0,    1,   script_path.."us_devices.png"),
+  label_settings   = GUI.Lbl:new(          173, 115,                  "Settings:",          0),
+  label_interfaces = GUI.Lbl:new(          566, 115,                  "Interfaces:",          0),
+  label_table      = GUI.Lbl:new(          450, 186,                  "Local Monitoring                                           Delete",          0),
+
   -- checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
   -- checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
   
@@ -148,7 +168,6 @@ for i = 1, section_count , 1 do
   if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
 
     position = 150 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position")) * 30) -- Feintuning notwendig
-    key_count = ultraschall.CountUSExternalState_key(sectionName)
     settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype")
     
     if settings_Type == "checkbox" then
@@ -156,7 +175,7 @@ for i = 1, section_count , 1 do
       table.insert(GUI.elms, id)      
     
       -- Info-Button
-      info = GUI.Btn:new(400, position, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
+      info = GUI.Btn:new(350, position, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
       table.insert(GUI.elms, info)
     
     elseif settings_Type == "slider" then
@@ -165,21 +184,55 @@ for i = 1, section_count , 1 do
       table.insert(GUI.elms, id)
     
       -- Info-Button
-      info = GUI.Btn:new(400, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
+      info = GUI.Btn:new(350, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
       table.insert(GUI.elms, info)
 
     end
   end
 end
 
+
+
+retval, desc = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+-- print(desc)
+ultraschall.SetUSExternalState("ultraschall_devices", desc, "1" , true)
+
+
+
+-- Baue die rechte Seite mit den Audio-Interfaces
+
+
+sectionName = "ultraschall_devices"
+key_count = ultraschall.CountUSExternalState_key(sectionName)
+for i = 1, key_count , 1 do
+  position = 177 + (i * 30)
+  device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i)
+
+
+      id = GUI.Checklist:new(440, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name)), sectionName)
+      table.insert(GUI.elms, id)   
+
+
+  -- Delete-Button
+  info = GUI.Btn:new(738, position, 20, 20,         " X", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
+  table.insert(GUI.elms, info)
+
+end
+
+
+
 GUI.func = set_values
 GUI.freq = 1 -- Aufruf jede Sekunde
    
+
+
+
+
 -- Open Settings Screen, when it hasn't been opened yet
     if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
     else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
 
-    if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time. 
+    if windowcounter<10 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time. 
                             -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
       GUI.Init()
       GUI.Main()
