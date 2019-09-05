@@ -26,6 +26,19 @@
  
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+
+------------------------------------
+-- Blacklist für Devices, von denen wir wissen, dass sie kein lokales Monitoring bieten. 
+-- Könnte perspektivich in eine separate .ini Datei ausgelagert werden.
+------------------------------------
+
+devices_blacklist = {}
+
+devices_blacklist['CoreAudio Built-in Microph']=1
+-- devices_blacklist['CoreAudio H6']=1
+
+
+
 ------------------------------------------------------
 -- Open a URL in a browser - OS agnostic
 ------------------------------------------------------
@@ -98,6 +111,73 @@ function show_menu(str)
   return selectedMenu
 
 end
+
+
+function remove_device(device_name)
+
+  -- val = table.remove (GUI["elms"], device_number)
+  -- val = table.remove (GUI["elms"], device_number)   -- der X-Button liegt im Table hinter der Checkbox. Durch das erste Löschen rutscht er an dieselbe Posiiton vor.
+  clear_devices()
+  ultraschall.SetUSExternalState("ultraschall_devices", device_name, "2" , true)
+  print (device_name)
+  show_devices()
+
+end
+
+function clear_devices()
+
+  for i = GUI.counter+1, #GUI["elms"] , 1 do
+    
+    val = table.remove (GUI["elms"], GUI.counter+1)
+    print (i)
+
+  end
+
+end
+
+
+function show_devices()
+
+  sectionName = "ultraschall_devices"
+  key_count = ultraschall.CountUSExternalState_key(sectionName)
+  -- j = #GUI["elms"]+1
+  position = 177
+
+  for i = 1, key_count , 1 do
+    -- if i ~= 1 then j = j+2 end
+    
+    device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i)
+
+    print (tonumber(ultraschall.GetUSExternalState(sectionName,device_name)))
+    
+    if tonumber(ultraschall.GetUSExternalState(sectionName,device_name)) ~= 2 then
+
+      position = position+30
+
+    --  print (device_name)
+
+      if devices_blacklist[device_name] == 1 then
+
+        id = GUI.Lbl:new(          480, position+7,                  device_name,          0)
+
+      else
+
+        id = GUI.Checklist:new(440, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name)), sectionName)
+      end
+
+      table.insert(GUI.elms, id)   
+
+      if actual_device_name ~= device_name then -- kein Delete-Button beim gerade aktiven Gerät
+
+      -- Delete-Button
+        button_id = (#GUI["elms"])
+        delete = GUI.Btn:new(738, position, 20, 20,         " X", remove_device, device_name)
+        table.insert(GUI.elms, delete)
+      end
+    end
+  end
+end
+
 
 
 ------------------------------------------------------
@@ -192,34 +272,20 @@ for i = 1, section_count , 1 do
 end
 
 
+GUI.counter = #GUI.elms -- Anzahl der Elemente vor der Devices-Sektion
 
-retval, desc = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 -- print(desc)
-ultraschall.SetUSExternalState("ultraschall_devices", desc, "1" , true)
+ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1" , true)
 
 
 
 -- Baue die rechte Seite mit den Audio-Interfaces
 
 
-sectionName = "ultraschall_devices"
-key_count = ultraschall.CountUSExternalState_key(sectionName)
-for i = 1, key_count , 1 do
-  position = 177 + (i * 30)
-  device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i)
 
 
-      id = GUI.Checklist:new(440, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name)), sectionName)
-      table.insert(GUI.elms, id)   
-
-
-  -- Delete-Button
-  info = GUI.Btn:new(738, position, 20, 20,         " X", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
-  table.insert(GUI.elms, info)
-
-end
-
-
+show_devices()
 
 GUI.func = set_values
 GUI.freq = 1 -- Aufruf jede Sekunde
