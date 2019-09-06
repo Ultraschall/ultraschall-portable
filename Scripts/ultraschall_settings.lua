@@ -41,6 +41,7 @@ devices_blacklist['CoreAudio Built-in Microph']=1
 ------------------------------------------------------
 -- Open a URL in a browser - OS agnostic
 ------------------------------------------------------
+
 function open_url(url)
   
   local OS=reaper.GetOS()
@@ -55,6 +56,7 @@ end
 ------------------------------------------------------
 --  Setting new Values to ultraschall.ini
 ------------------------------------------------------
+
 function set_values()
 
   for i = 1, #GUI["elms"] , 1 do  -- Anzahl der Einträge ist immer doppelt so hoch durch die Info-Buttons pro Eintrag
@@ -81,8 +83,7 @@ function set_values()
     end
 
     if newvalue ~= stored_value then
-      -- print (newvalue)
-      -- print("change")
+      
       if GUI["elms"][i]["sectionname"] == "ultraschall_devices" and stored_value ~= 2 then
         
         update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue , true)
@@ -97,19 +98,16 @@ function set_values()
       if GUI["elms"][i]["type"] == "Sldr" then
         update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "actualstep", tostring(GUI["elms"][i]["curstep"]) , true)
       end
-
     end
-
     end
   end
-
 end
 
 
+------------------------------------------------------
+--  Show the GUI menu item. Wird verwendet, um Info-Texte hinter den Buttins anzuzeigen.
+------------------------------------------------------
 
-------------------------------------------------------
---  Show the GUI menu item
-------------------------------------------------------
 function show_menu(str)
     
   gfx.x, gfx.y = GUI.mouse.x+20, GUI.mouse.y-10
@@ -119,10 +117,12 @@ function show_menu(str)
 end
 
 
+------------------------------------------------------
+--  Schaltet einen Device-Eintrag in der ultraschall.ini auf ausgeblendet (Wert 2)
+------------------------------------------------------
+
 function remove_device(device_name)
 
-  -- val = table.remove (GUI["elms"], device_number)
-  -- val = table.remove (GUI["elms"], device_number)   -- der X-Button liegt im Table hinter der Checkbox. Durch das erste Löschen rutscht er an dieselbe Posiiton vor.
   clear_devices()
   ultraschall.SetUSExternalState("ultraschall_devices", device_name, "2" , true)
   show_devices()
@@ -130,40 +130,38 @@ function remove_device(device_name)
 end
 
 
+------------------------------------------------------
+--  Schaltet einen Device-Eintrag in der ultraschall.ini auf ausgeblendet (Wert 2)
+------------------------------------------------------
 
 function clear_devices()
 
   for i = GUI.counter+1, #GUI["elms"] , 1 do
     
     val = table.remove (GUI["elms"], GUI.counter+1)
-    -- print (i)
 
   end
-
 end
 
+
+------------------------------------------------------
+--  Baut die Liste der bisher verwendeten/bekannten Devices auf. Alleinige Quelle ist die ultraschall.ini
+------------------------------------------------------
 
 function show_devices()
 
   sectionName = "ultraschall_devices"
   key_count = ultraschall.CountUSExternalState_key(sectionName)
-  -- j = #GUI["elms"]+1
   position = 177
 
   for i = 1, key_count , 1 do
-    -- if i ~= 1 then j = j+2 end
-    
     device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i)
-
-    -- print (tonumber(ultraschall.GetUSExternalState(sectionName,device_name)))
     
-    if tonumber(ultraschall.GetUSExternalState(sectionName,device_name)) ~= 2 then
+    if tonumber(ultraschall.GetUSExternalState(sectionName,device_name)) ~= 2 then  -- Device ist nicht ausgeblendet
 
-      position = position+30
+      position = position+30  -- Y-position des Eintrags
 
-    --  print (device_name)
-
-      if devices_blacklist[device_name] == 1 then
+      if devices_blacklist[device_name] == 1 then -- das Gerät kann bekanntermaßen kein local monitoring
 
         id = GUI.Lbl:new(          480, position+7,                  device_name,          0)
 
@@ -180,8 +178,8 @@ function show_devices()
         button_id = (#GUI["elms"])
         delete = GUI.Btn:new(738, position+3, 20, 20,         " X", remove_device, device_name)
         table.insert(GUI.elms, delete)
-      else
 
+      else
         label_active = GUI.Lbl:new( 731, position+6,                  "active",          0)
         table.insert(GUI.elms, label_active)
 
@@ -189,7 +187,6 @@ function show_devices()
     end
   end
 end
-
 
 
 ------------------------------------------------------
@@ -206,7 +203,7 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
-GUI.w, GUI.h = 800, 600
+GUI.w, GUI.h = 800, 600   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -221,6 +218,11 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
   -- body
   ---- GUI Elements ----
   
+
+------------------------------------------------------
+--  Aufbau der nicht interkativen GUI-Elemente wie Logos etc.
+------------------------------------------------------
+
 GUI.elms = {
   
 --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
@@ -238,7 +240,6 @@ GUI.elms = {
 }
 
 
-
 ---- Put all of your own functions and whatever here ----
 
 
@@ -246,10 +247,12 @@ GUI.elms = {
 -- initialise the settings - coming from the ultraschall.ini file
 -----------------------------------------------------------------
 
-
 section_count = ultraschall.CountUSExternalState_sec()
 
--- Gehe alle Sektionen der ultraschall.ini durch
+------------------------------------------------------
+-- Gehe alle Sektionen der ultraschall.ini durch und baut die normalen Settings auf.
+-- Kann perspektivisch in eine Funktion ausgelagert werden
+------------------------------------------------------
 
 for i = 1, section_count , 1 do
   
@@ -284,34 +287,36 @@ for i = 1, section_count , 1 do
 end
 
 
-GUI.counter = #GUI.elms -- Anzahl der Elemente vor der Devices-Sektion
+
+------------------------------------------------------
+--  Anzahl der Elemente vor der Devices-Sektion
+------------------------------------------------------
+
+GUI.counter = #GUI.elms 
+
+------------------------------------------------------
+--  Das gerade aktive Device wird immer noch einmal aktualisiert/überschrieben.
+--  So werden unsichtbar geschaltete Einträge wieder sichtbar.
+------------------------------------------------------
 
 retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
--- print(actual_device_name)
 ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1" , true)
 
 
+show_devices()        -- Baue die rechte Seite mit den Audio-Interfaces
 
--- Baue die rechte Seite mit den Audio-Interfaces
-
-
-
-
-show_devices()
-
-GUI.func = set_values
-GUI.freq = 1 -- Aufruf jede Sekunde
+GUI.func = set_values -- Dauerschleife
+GUI.freq = 1          -- Aufruf jede Sekunde
    
 
 
-
-
 -- Open Settings Screen, when it hasn't been opened yet
-    if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
-    else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
 
-    if windowcounter<10 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time. 
-                            -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
-      GUI.Init()
-      GUI.Main()
-    end
+if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
+else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
+
+if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time. 
+                        -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
+  GUI.Init()
+  GUI.Main()
+end
