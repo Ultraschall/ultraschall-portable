@@ -33,7 +33,6 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 ------------------------------------
 
 devices_blacklist = {}
-
 devices_blacklist['CoreAudio Built-in Microph']=1
 -- devices_blacklist['CoreAudio H6']=1
 
@@ -58,9 +57,13 @@ end
 ------------------------------------------------------
 function set_values()
 
-  device_count = 1
+  for i = 1, #GUI["elms"] , 1 do  -- Anzahl der Einträge ist immer doppelt so hoch durch die Info-Buttons pro Eintrag
 
-  for i = 1, #GUI["elms"] , 2 do  -- Anzahl der Einträge ist immer doppelt so hoch durch die Info-Buttons pro Eintrag
+      -- Buttons und Label werden übersprungen
+
+    if (GUI["elms"][i]["type"]) == "Checklist" or (GUI["elms"][i]["type"]) == "Sldr" then
+
+      -- hole den aktuellen Wert der Checkbox aus der GUI:
 
     if GUI["elms"][i]["type"] == "Checklist" then
       newvalue = tostring(GUI["elms"][i]["retval"][1])
@@ -69,9 +72,9 @@ function set_values()
     end
     
     if GUI["elms"][i]["sectionname"] == "ultraschall_devices" then
-      device_name = ultraschall.EnumerateUSExternalState_key("ultraschall_devices", device_count)
+      device_name = GUI["elms"][i]["optarray"][1]
       stored_value = ultraschall.GetUSExternalState("ultraschall_devices", device_name )
-      device_count = device_count + 1
+      -- print (device_name.."-"..newvalue.."-"..stored_value)
 
     else 
       stored_value = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"value")
@@ -80,13 +83,15 @@ function set_values()
     if newvalue ~= stored_value then
       -- print (newvalue)
       -- print("change")
-      if GUI["elms"][i]["sectionname"] == "ultraschall_devices" then
+      if GUI["elms"][i]["sectionname"] == "ultraschall_devices" and stored_value ~= 2 then
+        
         update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue , true)
       
       else
         update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "value", newvalue , true)
       
       end
+      
       -- Ausnahme: für Slider wird auch noch die Position geschrieben (könnte man prinzipiell auch berechnen lassen)
 
       if GUI["elms"][i]["type"] == "Sldr" then
@@ -95,6 +100,7 @@ function set_values()
 
     end
 
+    end
   end
 
 end
@@ -119,17 +125,18 @@ function remove_device(device_name)
   -- val = table.remove (GUI["elms"], device_number)   -- der X-Button liegt im Table hinter der Checkbox. Durch das erste Löschen rutscht er an dieselbe Posiiton vor.
   clear_devices()
   ultraschall.SetUSExternalState("ultraschall_devices", device_name, "2" , true)
-  print (device_name)
   show_devices()
 
 end
+
+
 
 function clear_devices()
 
   for i = GUI.counter+1, #GUI["elms"] , 1 do
     
     val = table.remove (GUI["elms"], GUI.counter+1)
-    print (i)
+    -- print (i)
 
   end
 
@@ -148,7 +155,7 @@ function show_devices()
     
     device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i)
 
-    print (tonumber(ultraschall.GetUSExternalState(sectionName,device_name)))
+    -- print (tonumber(ultraschall.GetUSExternalState(sectionName,device_name)))
     
     if tonumber(ultraschall.GetUSExternalState(sectionName,device_name)) ~= 2 then
 
@@ -171,8 +178,13 @@ function show_devices()
 
       -- Delete-Button
         button_id = (#GUI["elms"])
-        delete = GUI.Btn:new(738, position, 20, 20,         " X", remove_device, device_name)
+        delete = GUI.Btn:new(738, position+3, 20, 20,         " X", remove_device, device_name)
         table.insert(GUI.elms, delete)
+      else
+
+        label_active = GUI.Lbl:new( 731, position+6,                  "active",          0)
+        table.insert(GUI.elms, label_active)
+
       end
     end
   end
@@ -275,7 +287,7 @@ end
 GUI.counter = #GUI.elms -- Anzahl der Elemente vor der Devices-Sektion
 
 retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
--- print(desc)
+-- print(actual_device_name)
 ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1" , true)
 
 
