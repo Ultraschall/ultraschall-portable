@@ -82,7 +82,7 @@ function set_values()
       stored_value = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"value")
     end
 
-    if newvalue ~= stored_value then
+    if newvalue ~= stored_value then  -- wurde eine Schalter/Slider umgelegt?
       
       if GUI["elms"][i]["sectionname"] == "ultraschall_devices" and stored_value ~= 2 then
         
