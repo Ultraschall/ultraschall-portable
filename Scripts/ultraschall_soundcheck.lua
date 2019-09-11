@@ -34,12 +34,14 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function soundcheck_samplerate()
 
-  print("noch da")
+  retval, actual_samplerate = reaper.GetAudioDeviceInfo("SRATE", "")
+  -- print("noch da")
   for i=1, reaper.CountTracks(0) do
 
-    if ultraschall.IsTrackStudioLink(i) then  -- es gibt mindestens eine StudioLink Spur
+    if ultraschall.IsTrackStudioLink(i) and actual_samplerate == "48000" then  -- es gibt mindestens eine StudioLink Spur und Samplerate steht nicht auf 48000
 
-      retval, actual_samplerate = reaper.GetAudioDeviceInfo("SRATE", "")
+      return_value = ultraschall.MB("Your samplerate is set to "..actual_samplerate.." please set to 48000", "WARNING - Ultraschall Soundcheck", 2, "Abbrechen", "Abschalten", "OK")
+
       print(actual_samplerate)
       break
 
