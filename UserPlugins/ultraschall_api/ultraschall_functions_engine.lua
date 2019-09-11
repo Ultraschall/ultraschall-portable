@@ -1752,6 +1752,8 @@ function ultraschall.RGB2Grayscale(red,green,blue)
   <functioncall>integer graycolor = ultraschall.RGB2Grayscale(integer red, integer green, integer blue)</functioncall>
   <description>
     converts rgb to a grayscale value. Works native on Mac as well on Windows, no color conversion needed.
+    
+    returns nil in case of an error
   </description>
   <parameters>
     integer red - red-value between 0 and 255.
@@ -1762,7 +1764,7 @@ function ultraschall.RGB2Grayscale(red,green,blue)
     integer graycolor  - the gray color-value, generated from red,blue and green.
   </retvals>
   <chapter_context>
-    API-Helper functions
+    Color Management
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -1774,9 +1776,9 @@ function ultraschall.RGB2Grayscale(red,green,blue)
   if math.type(green)~="integer" then ultraschall.AddErrorMessage("RGB2Grayscale","green".."only integer is allowed", -2) return nil end
   if math.type(blue)~="integer" then ultraschall.AddErrorMessage("RGB2Grayscale","blue".."only integer is allowed", -3) return nil end
 
-  if red<0 or red>255 then ultraschall.AddErrorMessage("RGB2Grayscale","red", "must be between 0 and 255", -4) return -1 end
-  if green<0 or green>255 then ultraschall.AddErrorMessage("RGB2Grayscale","green", "must be between 0 and 255", -5) return -1 end
-  if blue<0 or blue>255 then ultraschall.AddErrorMessage("RGB2Grayscale","blue", "must be between 0 and 255", -6) return -1 end
+  if red<0 or red>255 then ultraschall.AddErrorMessage("RGB2Grayscale","red", "must be between 0 and 255", -4) return nil end
+  if green<0 or green>255 then ultraschall.AddErrorMessage("RGB2Grayscale","green", "must be between 0 and 255", -5) return nil end
+  if blue<0 or blue>255 then ultraschall.AddErrorMessage("RGB2Grayscale","blue", "must be between 0 and 255", -6) return nil end
 
   -- do the legend of the grayscale and return it's resulting colorvalue
   local gray=red+green+blue
@@ -1784,6 +1786,7 @@ function ultraschall.RGB2Grayscale(red,green,blue)
   local gray_color=reaper.ColorToNative(gray,gray,gray)
   return ultraschall.RoundNumber(gray_color)
 end
+
 
 function ultraschall.IsItemInTrack(tracknumber, itemIDX)
 --[[
@@ -1798,7 +1801,7 @@ function ultraschall.IsItemInTrack(tracknumber, itemIDX)
   <description>
     checks, whether a given item is part of the track tracknumber
     
-    returns true, if the itemIDX is part of track tracknumber, false if not, -1 if no such itemIDX or Tracknumber available
+    returns true, if the itemIDX is part of track tracknumber, false if not, nil if no such itemIDX or Tracknumber available
   </description>
   <retvals>
     boolean retval - true, if item is in track, false if item isn't in track
@@ -1819,8 +1822,8 @@ function ultraschall.IsItemInTrack(tracknumber, itemIDX)
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("IsItemInTrack","tracknumber", "only integer is allowed", -1) return nil end
   if math.type(itemIDX)~="integer" then ultraschall.AddErrorMessage("IsItemInTrack","itemIDX", "only integer is allowed", -2) return nil end
   
-  if tracknumber>reaper.CountTracks(0) or tracknumber<0 then ultraschall.AddErrorMessage("IsItemInTrack","tracknumber", "no such track in this project", -3) return -1 end
-  if itemIDX>reaper.CountMediaItems(0)-1 or itemIDX<0 then ultraschall.AddErrorMessage("IsItemInTrack","itemIDX", "no such item in this project", -4) return -1 end
+  if tracknumber>reaper.CountTracks(0) or tracknumber<0 then ultraschall.AddErrorMessage("IsItemInTrack","tracknumber", "no such track in this project", -3) return nil end
+  if itemIDX>reaper.CountMediaItems(0)-1 or itemIDX<0 then ultraschall.AddErrorMessage("IsItemInTrack","itemIDX", "no such item in this project", -4) return nil end
   
   -- Get the tracks and items
   local MediaTrack=reaper.GetTrack(0, tracknumber-1) 
@@ -1993,7 +1996,7 @@ function ultraschall.CountUSExternalState_sec()
     integer section_count  - the number of section in the ultraschall.ini
   </retvals>
   <chapter_context>
-    Configuration-Files Management
+    Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
@@ -2008,13 +2011,13 @@ function ultraschall.CountUSExternalState_sec()
   -- count external-states
   local count=0
   for line in io.lines(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini") do
-    local check=line:match(".*=.*")
+    --local check=line:match(".*=.*")
+    check=line:match("%[.*.%]")
     if check~=nil then check="" count=count+1 end
   end
   return count
 end
 
---A=ultraschall.CountUSExternalState_sec()
 
 function ultraschall.CountUSExternalState_key(section)
 --count number of keys in the section in ultraschall.ini
@@ -2029,6 +2032,8 @@ function ultraschall.CountUSExternalState_key(section)
   <functioncall>integer key_count = ultraschall.CountUSExternalState_key(string section)</functioncall>
   <description>
     returns the number of keys in the given [section] in ultraschall.ini
+    
+    returns -1 in case of an error
   </description>
   <retvals>
     integer key_count  - the number of keys within an ultraschall.ini-section
@@ -2037,7 +2042,7 @@ function ultraschall.CountUSExternalState_key(section)
     string section - the section of the ultraschall.ini, of which you want the number of keys.
   </parameters>
   <chapter_context>
-    Configuration-Files Management
+    Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
@@ -2046,7 +2051,7 @@ function ultraschall.CountUSExternalState_key(section)
 </US_DocBloc>
 --]]
   -- check parameter and existence of ultraschall.ini
-  if type(section)~="string" then ultraschall.AddErrorMessage("CountUSExternalState_key","section", "only string allowed", -1) return false end
+  if type(section)~="string" then ultraschall.AddErrorMessage("CountUSExternalState_key","section", "only string allowed", -1) return -1 end
   if reaper.file_exists(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")==false then ultraschall.AddErrorMessage("CountUSExternalState_key","", "ultraschall.ini does not exist", -2) return -1 end
 
   -- prepare variables
@@ -2091,7 +2096,7 @@ function ultraschall.EnumerateUSExternalState_sec(number)
     integer number - the number of section, whose name you want to know
   </parameters>
   <chapter_context>
-    Configuration-Files Management
+    Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
@@ -2100,8 +2105,8 @@ function ultraschall.EnumerateUSExternalState_sec(number)
 </US_DocBloc>
 --]]
   -- check parameter and existence of ultraschall.ini
-  if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "number", "only integer allowed", -1) return false end
-  if reaper.file_exists(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")==false then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "", "ultraschall.ini does not exist", -2) return -1 end
+  if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "number", "only integer allowed", -1) return nil end
+  if reaper.file_exists(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")==false then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "", "ultraschall.ini does not exist", -2) return nil end
 
   if number<=0 then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","number", "no negative number allowed", -3) return nil end
   if number>ultraschall.CountUSExternalState_sec() then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","number", "only "..ultraschall.CountUSExternalState_sec().." sections available", -4) return nil end
@@ -2129,7 +2134,7 @@ function ultraschall.EnumerateUSExternalState_key(section, number)
   </requires>
   <functioncall>string key_name = ultraschall.EnumerateUSExternalState_key(string section, integer number)</functioncall>
   <description>
-    returns name of a numberth key within a section in ultraschall%.ini or nil if invalid or not existing
+    returns name of a numberth key within a section in ultraschall.ini or nil if invalid or not existing
   </description>
   <retvals>
     string key_name  - the name ob the numberth key in ultraschall.ini.
@@ -2139,7 +2144,7 @@ function ultraschall.EnumerateUSExternalState_key(section, number)
     integer number - the number of the key, whose name you want to know; 1 for the first one
   </parameters>
   <chapter_context>
-    Configuration-Files Management
+    Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
@@ -2148,8 +2153,8 @@ function ultraschall.EnumerateUSExternalState_key(section, number)
 </US_DocBloc>
 --]]
   -- check parameter
-  if type(section)~="string" then ultraschall.AddErrorMessage("EnumerateUSExternalState_key", "section", "only string allowed", -1) return false end
-  if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateUSExternalState_key", "number", "only integer allowed", -2) return false end
+  if type(section)~="string" then ultraschall.AddErrorMessage("EnumerateUSExternalState_key", "section", "only string allowed", -1) return nil end
+  if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateUSExternalState_key", "number", "only integer allowed", -2) return nil end
 
   -- prepare variables
   local count=0
@@ -2169,6 +2174,8 @@ function ultraschall.EnumerateUSExternalState_key(section, number)
   end
   return nil
 end
+
+
 
 --------------------------
 ---- Get Track States ----
@@ -8278,14 +8285,14 @@ function ultraschall.ToggleStateAction(section, actioncommand_id, state)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.ToggleStateAction(integer section, string actioncommand_id, integer state)</functioncall>
+  <functioncall>integer retval = ultraschall.ToggleStateAction(integer section, string actioncommand_id, integer state)</functioncall>
   <description>
     Toggles state of an action using the actioncommand_id(instead of the CommandID-number)
     
     returns current state of the action after toggling or -1 in case of error.
   </description>
   <retvals>
-    boolean retval  - state if the action, after it has been toggled
+    integer retval  - state if the action, after it has been toggled
   </retvals>
   <parameters>
     integer section - the section of the action(see ShowActionlist-dialog)
@@ -8370,14 +8377,14 @@ function ultraschall.ToggleStateButton(section, actioncommand_id, state)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.ToggleStateButton(integer section, string actioncommand_id, integer state)</functioncall>
+  <functioncall>integer retval = ultraschall.ToggleStateButton(integer section, string actioncommand_id, integer state)</functioncall>
   <description>
     Toggles state and refreshes the button of an actioncommand_id
     
     returns false in case of error
   </description>
   <retvals>
-    boolean retval  - state of the State-Button, after toggling
+    integer retval  - true, toggling worked; false, toggling didn't work
   </retvals>
   <parameters>
     integer section - the section of the action(see ShowActionlist-dialog)
@@ -8685,7 +8692,7 @@ function ultraschall.SetMarkerByIndex(idx, searchisrgn, shown_number, pos, rgnen
   <description>
     Sets the values of a certain marker/region. The numbering of idx is either only for the markers or for regions, depending on what you set with parameter searchisrgn.
     
-    returns nil in case of an error
+    returns false in case of an error
   </description>
   <retvals>
     boolean retval - true, setting the marker/region was successful; false, setting of the marker/region was unsuccessful.
@@ -8710,14 +8717,14 @@ function ultraschall.SetMarkerByIndex(idx, searchisrgn, shown_number, pos, rgnen
 </US_DocBloc>
 --]]
   -- check parameters
-  if math.type(idx)~="integer" then ultraschall.AddErrorMessage("SetMarkerByIndex", "idx", "must be an integer", -1) return -1 end
-  if type(searchisrgn)~="boolean" then ultraschall.AddErrorMessage("SetMarkerByIndex", "searchisrgn", "must be boolean", -2) return -1 end
-  if math.type(shown_number)~="integer" then ultraschall.AddErrorMessage("SetMarkerByIndex", "shown_number", "must be an integer", -3) return -1 end
-  if type(pos)~="number" then ultraschall.AddErrorMessage("SetMarkerByIndex", "pos", "must be a number", -4) return -1 end
-  if type(rgnend)~="number" then ultraschall.AddErrorMessage("SetMarkerByIndex", "rgnend", "must be a number", -5) return -1 end
-  if type(name)~="string" then ultraschall.AddErrorMessage("SetMarkerByIndex", "name", "must be a string", -5) return -1 end
-  if math.type(color)~="integer" then ultraschall.AddErrorMessage("SetMarkerByIndex", "color", "must be an integer", -6) return -1 end
-  if math.type(flags)~="integer" then ultraschall.AddErrorMessage("SetMarkerByIndex", "flags", "must be an integer", -7) return -1 end
+  if math.type(idx)~="integer" then ultraschall.AddErrorMessage("SetMarkerByIndex", "idx", "must be an integer", -1) return false end
+  if type(searchisrgn)~="boolean" then ultraschall.AddErrorMessage("SetMarkerByIndex", "searchisrgn", "must be boolean", -2) return false end
+  if math.type(shown_number)~="integer" then ultraschall.AddErrorMessage("SetMarkerByIndex", "shown_number", "must be an integer", -3) return false end
+  if type(pos)~="number" then ultraschall.AddErrorMessage("SetMarkerByIndex", "pos", "must be a number", -4) return false end
+  if type(rgnend)~="number" then ultraschall.AddErrorMessage("SetMarkerByIndex", "rgnend", "must be a number", -5) return false end
+  if type(name)~="string" then ultraschall.AddErrorMessage("SetMarkerByIndex", "name", "must be a string", -5) return false end
+  if math.type(color)~="integer" then ultraschall.AddErrorMessage("SetMarkerByIndex", "color", "must be an integer", -6) return false end
+  if math.type(flags)~="integer" then ultraschall.AddErrorMessage("SetMarkerByIndex", "flags", "must be an integer", -7) return false end
 
   -- prepare variable
   local markercount=0
@@ -8749,8 +8756,8 @@ function ultraschall.SetMarkerByIndex(idx, searchisrgn, shown_number, pos, rgnen
   end
   
   -- if no such marker/region has been found
-  if searchisrgn==true then ultraschall.AddErrorMessage("SetMarkerByIndex", "idx", "no such region", -8) return nil end
-  if searchisrgn==false then ultraschall.AddErrorMessage("SetMarkerByIndex", "idx", "no such marker", -9) return nil end
+  if searchisrgn==true then ultraschall.AddErrorMessage("SetMarkerByIndex", "idx", "no such region", -8) return false end
+  if searchisrgn==false then ultraschall.AddErrorMessage("SetMarkerByIndex", "idx", "no such marker", -9) return false end
   return false
 end
 
@@ -9470,6 +9477,8 @@ function ultraschall.DeleteNormalMarker(number)
     Deletes a Normal-Marker. Returns true if successful and false if not(i.e. marker doesn't exist) Use <a href="#EnumerateNormalMarkers">ultraschall.EnumerateNormalMarkers</a> to get the correct number.
     
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
+    
+    returns -1 in case of an error
   </description>
   <parameters>
     integer number - number of a normal marker
@@ -9487,7 +9496,7 @@ function ultraschall.DeleteNormalMarker(number)
 </US_DocBloc>
 --]]
   -- check parameters
-  if math.type(number)~="integer" then ultraschall.AddErrorMessage("DeleteNormalMarker", "number", "must be a number", -1) return -1 end
+  if math.type(number)~="integer" then ultraschall.AddErrorMessage("DeleteNormalMarker", "number", "must be a number", -1) return false end
 
   -- prepare variables
   local c,nummarkers,b=reaper.CountProjectMarkers(0)
@@ -9544,7 +9553,7 @@ function ultraschall.DeleteEditMarker(number)
 </US_DocBloc>
 --]]
   -- check parameters
-  if math.type(number)~="integer" then ultraschall.AddErrorMessage("DeleteEditMarker", "edit_index", "must be integer", -1) return -1 end
+  if math.type(number)~="integer" then ultraschall.AddErrorMessage("DeleteEditMarker", "edit_index", "must be integer", -1) return false end
   
   -- prepare variables
   number=number-1
@@ -9568,6 +9577,7 @@ function ultraschall.DeleteEditMarker(number)
   else ultraschall.AddErrorMessage("DeleteEditMarker", "edit_index", "no such _Edit-marker found", -2) return false
   end
 end
+
 
 function ultraschall.SecondsToTime(pos)
 --[[
@@ -10267,7 +10277,7 @@ function ultraschall.ReadValueFromFile(filename_with_path, value)
   if type(filename_with_path) ~= "string" then ultraschall.AddErrorMessage("ReadValueFromFile", "filename_with_path", "must be a string", -1) return nil end
   if value==nil then value="" end
   if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("ReadValueFromFile", "filename_with_path", "file "..filename_with_path.." does not exist", -2) return nil end
-  if ultraschall.IsValidMatchingPattern(value)==false then ultraschall.AddErrorMessage("ReadValueFromFile", "value", "malformed pattern", -3) return -1 end
+  if ultraschall.IsValidMatchingPattern(value)==false then ultraschall.AddErrorMessage("ReadValueFromFile", "value", "malformed pattern", -3) return nil end
 
   -- prepare variables
   local contents=""
@@ -10306,6 +10316,7 @@ function ultraschall.ReadValueFromFile(filename_with_path, value)
   --string contents, string linenumbers, integer numberoflines
   return contents,linenumbers:sub(1,-2), number_of_lines, countlines
 end
+
 
 
 function ultraschall.ReadLinerangeFromFile(filename_with_path, firstlinenumber, lastlinenumber)
@@ -10446,7 +10457,7 @@ function ultraschall.MakeCopyOfFile_Binary(input_filename_with_path, output_file
   
   if reaper.file_exists(input_filename_with_path)==true then
     local fileread=io.open(input_filename_with_path,"rb")
-    if fileread==nil then ultraschall.AddErrorMessage("MakeCopyOfFile_Binary", "input_filename_with_path", "could not read file "..input_filename_with_path..", probably due another application accessing it.", -5) return nil end
+    if fileread==nil then ultraschall.AddErrorMessage("MakeCopyOfFile_Binary", "input_filename_with_path", "could not read file "..input_filename_with_path..", probably due another application accessing it.", -5) return false end
     local file=io.open(output_filename_with_path,"wb")
     if file==nil then ultraschall.AddErrorMessage("MakeCopyOfFile_Binary", "output_filename_with_path", "can't create file "..output_filename_with_path, -3) return false end
     file:write(fileread:read("*a"))
@@ -10472,6 +10483,8 @@ function ultraschall.ReadBinaryFileUntilPattern(input_filename_with_path, patter
     
     Pattern can also contain patterns for pattern matching. Refer the LUA-docs for pattern matching.
     i.e. characters like ^$()%.[]*+-? must be escaped with a %, means: %[%]%(%) etc
+    
+    returns false in case of an error
   </description>
   <retvals>
     integer length - the length of the returned data
@@ -10494,11 +10507,11 @@ function ultraschall.ReadBinaryFileUntilPattern(input_filename_with_path, patter
   local temp2
   if type(input_filename_with_path)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "input_filename_with_path", "must be a string", -1) return false end
   if type(pattern)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "pattern", "must be a string", -2) return false end
-  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "pattern", "malformed pattern", -3) return -1 end
+  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "pattern", "malformed pattern", -3) return false end
   
   if reaper.file_exists(input_filename_with_path)==true then
     local fileread=io.open(input_filename_with_path,"rb")
-    if fileread==nil then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "input_filename_with_path", "could not read file "..input_filename_with_path..", probably due another application accessing it.", -6) return nil end
+    if fileread==nil then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "input_filename_with_path", "could not read file "..input_filename_with_path..", probably due another application accessing it.", -6) return false end
     temp=fileread:read("*a")
     temp2=temp:match("(.-"..pattern..")")
     if temp2==nil then fileread:close() ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "pattern", "pattern not found in file", -4) return false end
@@ -10524,6 +10537,8 @@ function ultraschall.ReadBinaryFileFromPattern(input_filename_with_path, pattern
     
     The pattern can also contain patterns for pattern matching. Refer the LUA-docs for pattern matching.
     i.e. characters like ^$()%.[]*+-? must be escaped with a %, means: %[%]%(%) etc
+    
+    returns false in case of an error
   </description>
   <retvals>
     integer length - the length of the returned data
@@ -10546,11 +10561,11 @@ function ultraschall.ReadBinaryFileFromPattern(input_filename_with_path, pattern
   local temp2
   if type(input_filename_with_path)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "input_filename_with_path", "must be a string", -1) return false end
   if type(pattern)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "pattern", "must be a string", -2) return false end
-  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "pattern", "malformed pattern", -3) return -1 end
+  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "pattern", "malformed pattern", -3) return false end
   
   if reaper.file_exists(input_filename_with_path)==true then
     local fileread=io.open(input_filename_with_path,"rb")
-    if fileread==nil then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "input_filename_with_path", "could not read file "..input_filename_with_path..", probably due another application accessing it.", -6) return nil end
+    if fileread==nil then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "input_filename_with_path", "could not read file "..input_filename_with_path..", probably due another application accessing it.", -6) return false end
     temp=fileread:read("*a")
     temp2=temp:match("("..pattern..".*)")
     if temp2==nil then fileread:close() ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "pattern", "pattern not found in file", -4) return false end
@@ -10591,8 +10606,8 @@ function ultraschall.CountLinesInFile(filename_with_path)
 </US_DocBloc>
 ]]
   -- check parameters  
-  if type(filename_with_path) ~= "string" then ultraschall.AddErrorMessage("CountLinesInFile", "filename_with_path", "must be a string", -1) return nil end
-  if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("CountLinesInFile", "filename_with_path", "no such file "..filename_with_path, -2) return nil end
+  if type(filename_with_path) ~= "string" then ultraschall.AddErrorMessage("CountLinesInFile", "filename_with_path", "must be a string", -1) return -1 end
+  if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("CountLinesInFile", "filename_with_path", "no such file "..filename_with_path, -2) return -1 end
 
   -- prepare variable
   local b=0
@@ -10604,6 +10619,7 @@ function ultraschall.CountLinesInFile(filename_with_path)
   
   return b
 end
+
 
 function ultraschall.SetIniFileExternalState(section, key, value, ini_filename_with_path)
 --[[
@@ -10640,7 +10656,7 @@ function ultraschall.SetIniFileExternalState(section, key, value, ini_filename_w
   if type(key)~="string" then ultraschall.AddErrorMessage("SetIniFileExternalState", "key", "must be a string.", -2) return false end
   if type(value)~="string" then ultraschall.AddErrorMessage("SetIniFileExternalState", "value", "must be a string.", -3) return false end
   if type(ini_filename_with_path)~="string" then ultraschall.AddErrorMessage("SetIniFileExternalState", "ini_filename_with_path", "must be a string.", -4) return false end
-  if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("SetIniFileExternalState", "ini_filename_with_path", "file can't be accessed.", -5) end
+  if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("SetIniFileExternalState", "ini_filename_with_path", "file can't be accessed.", -5) return false end
   if section:match(".*%=.*") then ultraschall.AddErrorMessage("SetIniFileExternalState", "section", "= is not allowed in section", -6) return false end
   if key:match(".*%=.*") then ultraschall.AddErrorMessage("SetIniFileExternalState", "key", "= is not allowed in key.", -7) return false end
 
@@ -10721,12 +10737,12 @@ function ultraschall.CountIniFileExternalState_sec(ini_filename_with_path)
   <tags>configurationmanagement, count, sections, ini-files</tags>
 </US_DocBloc>
 ]]
-  
   if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("CountIniFileExternalState_sec", "ini_filename_with_path", "File does not exist.", -1) return -1 end
   local count=0
   
   for line in io.lines(ini_filename_with_path) do
-    local check=line:match(".*=.*")
+    --local check=line:match(".*=.*")
+    check=line:match("%[.*.%]")
     if check~=nil then check="" count=count+1 end
   end
   return count
@@ -10824,7 +10840,8 @@ function ultraschall.EnumerateIniFileExternalState_sec(number_of_section, ini_fi
   
   local count=0
   for line in io.lines(ini_filename_with_path) do
-    local check=line:match(".*=.*")
+    --local check=line:match(".*=.*")
+    check=line:match("%[.*.%]")
     if check==nil then count=count+1 end
     if count==number_of_section then return line:sub(2,-2) end
   end
@@ -11101,11 +11118,11 @@ function ultraschall.EnumerateSectionsByPattern(pattern, id, ini_filename_with_p
   <tags>configurationmanagement, enumerate, section, pattern, get, ini-files</tags>
 </US_DocBloc>
 ]]
-  if type(pattern)~="string" then ultraschall.AddErrorMessage("EnumerateSectionsByPattern", "pattern", "must be a string", -1) return -1 end
-  if ini_filename_with_path==nil then ultraschall.AddErrorMessage("EnumerateSectionsByPattern", "ini_filename_with_path", "must be a string", -2) return -1 end
-  if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("EnumerateSectionsByPattern", "ini_filename_with_path", "file does not exist", -3) return -1 end
-  if math.type(id)~="integer" then ultraschall.AddErrorMessage("EnumerateSectionsByPattern", "id", "must be an integer", -4) return -1 end
-  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("EnumerateSectionsByPattern", "pattern", "malformed pattern", -5) return -1 end
+  if type(pattern)~="string" then ultraschall.AddErrorMessage("EnumerateSectionsByPattern", "pattern", "must be a string", -1) return end
+  if ini_filename_with_path==nil then ultraschall.AddErrorMessage("EnumerateSectionsByPattern", "ini_filename_with_path", "must be a string", -2) return end
+  if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("EnumerateSectionsByPattern", "ini_filename_with_path", "file does not exist", -3) return end
+  if math.type(id)~="integer" then ultraschall.AddErrorMessage("EnumerateSectionsByPattern", "id", "must be an integer", -4) return end
+  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("EnumerateSectionsByPattern", "pattern", "malformed pattern", -5) return end
   
   local count=0
   for line in io.lines(ini_filename_with_path) do
@@ -11114,8 +11131,6 @@ function ultraschall.EnumerateSectionsByPattern(pattern, id, ini_filename_with_p
   end
   return nil
 end
-
---A,AA=ultraschall.EnumerateSectionsByPattern("hu",2,"c:\\test.ini")
 
 function ultraschall.EnumerateKeysByPattern(pattern, section, id, ini_filename_with_path)
 --[[
@@ -11157,11 +11172,11 @@ function ultraschall.EnumerateKeysByPattern(pattern, section, id, ini_filename_w
   <tags>configurationmanagement, ini-files, enumerate, section, key, pattern, get</tags>
 </US_DocBloc>
 ]]
-  if type(pattern)~="string" then ultraschall.AddErrorMessage("EnumerateKeysByPattern", "pattern", "must be a string", -1) return -1 end
-  if ini_filename_with_path==nil then ultraschall.AddErrorMessage("EnumerateKeysByPattern", "ini_filename_with_path", "must be a string", -2) return -1 end
-  if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("EnumerateKeysByPattern", "ini_filename_with_path", "file does not exist", -3) return -1 end
-  if math.type(id)~="integer" then ultraschall.AddErrorMessage("EnumerateKeysByPattern", "id", "must be an integer", -4) return -1 end
-  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("EnumerateKeysByPattern", "pattern", "malformed pattern", -5) return -1 end
+  if type(pattern)~="string" then ultraschall.AddErrorMessage("EnumerateKeysByPattern", "pattern", "must be a string", -1) return end
+  if ini_filename_with_path==nil then ultraschall.AddErrorMessage("EnumerateKeysByPattern", "ini_filename_with_path", "must be a string", -2) return end
+  if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("EnumerateKeysByPattern", "ini_filename_with_path", "file does not exist", -3) return end
+  if math.type(id)~="integer" then ultraschall.AddErrorMessage("EnumerateKeysByPattern", "id", "must be an integer", -4) return end
+  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("EnumerateKeysByPattern", "pattern", "malformed pattern", -5) return end
   
   local count=0
   local tiff=0
@@ -11174,8 +11189,6 @@ function ultraschall.EnumerateKeysByPattern(pattern, section, id, ini_filename_w
     end
   end
 end
-
---A=ultraschall.EnumerateKeysByPattern("l","hula",3,"c:\\test.ini")
 
 function ultraschall.EnumerateValuesByPattern(pattern, section, id, ini_filename_with_path)
 --[[
@@ -11218,11 +11231,11 @@ function ultraschall.EnumerateValuesByPattern(pattern, section, id, ini_filename
   <tags>configurationmanagement, ini-files, enumerate, section, key, value, pattern, get</tags>
 </US_DocBloc>
 ]]
-  if type(pattern)~="string" then ultraschall.AddErrorMessage("EnumerateValuesByPattern", "pattern", "must be a string", -1) return -1 end
-  if ini_filename_with_path==nil then ultraschall.AddErrorMessage("EnumerateValuesByPattern", "ini_filename_with_path", "must be a string", -2) return -1 end
-  if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("EnumerateValuesByPattern", "ini_filename_with_path", "file does not exist", -3) return -1 end
-  if math.type(id)~="integer" then ultraschall.AddErrorMessage("EnumerateValuesByPattern", "id", "must be an integer", -4) return -1 end
-  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("EnumerateValuesByPattern", "pattern", "malformed pattern", -5) return -1 end
+  if type(pattern)~="string" then ultraschall.AddErrorMessage("EnumerateValuesByPattern", "pattern", "must be a string", -1) return end
+  if ini_filename_with_path==nil then ultraschall.AddErrorMessage("EnumerateValuesByPattern", "ini_filename_with_path", "must be a string", -2) return end
+  if reaper.file_exists(ini_filename_with_path)==false then ultraschall.AddErrorMessage("EnumerateValuesByPattern", "ini_filename_with_path", "file does not exist", -3) return end
+  if math.type(id)~="integer" then ultraschall.AddErrorMessage("EnumerateValuesByPattern", "id", "must be an integer", -4) return end
+  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("EnumerateValuesByPattern", "pattern", "malformed pattern", -5) return end
   
   local count=0
   local tiff=0
@@ -12094,6 +12107,8 @@ function ultraschall.EnumerateEditRegion(number)
   <functioncall>integer retval, number position, number endposition, string title, integer rgnindexnumber = ultraschall.EnumerateEditRegion(integer number)</functioncall>
   <description>
     Returns the values of an edit-region.
+    
+    returns -1 in case of an error
   </description>
   <retvals>
     integer retval - the overall marker-index-number of all markers in the project, -1 in case of error
@@ -12114,7 +12129,7 @@ function ultraschall.EnumerateEditRegion(number)
   <tags>markermanagement, navigation, get, enumerate, edit region, edit, region</tags>
 </US_DocBloc>
 ]]   
-  if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateEditRegion","number", "must be an integer", -1) return false end
+  if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateEditRegion","number", "must be an integer", -1) return -1 end
   
   local c,nummarkers,b=reaper.CountProjectMarkers(0)
   number=tonumber(number)-1
@@ -12134,6 +12149,7 @@ function ultraschall.EnumerateEditRegion(number)
   else return -1
   end
 end
+
 
 function ultraschall.CountEditRegions()
 --[[
@@ -13028,7 +13044,6 @@ function ultraschall.SetKBIniKeys(filename_with_path, KeyType, KeyNote, ActionCo
   return true, found
 end
 
-
 function ultraschall.DeleteKBIniActions(filename_with_path, idx)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -13061,9 +13076,9 @@ function ultraschall.DeleteKBIniActions(filename_with_path, idx)
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, delete, action, actions</tags>
 </US_DocBloc>
 ]]  
-  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("DeleteKBIniActions", "filename_with_path", "must be a string", -1) return -1 end
-  if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("DeleteKBIniActions", "filename_with_path", "file does not exist", -2) return -1 end
-  if math.type(idx)~="integer" then ultraschall.AddErrorMessage("DeleteKBIniActions", "idx", "must be an integer", -3) return -1 end
+  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("DeleteKBIniActions", "filename_with_path", "must be a string", -1) return false end
+  if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("DeleteKBIniActions", "filename_with_path", "file does not exist", -2) return false end
+  if math.type(idx)~="integer" then ultraschall.AddErrorMessage("DeleteKBIniActions", "idx", "must be an integer", -3) return false end
   
   local count=0
   local linecount=0
@@ -13085,8 +13100,6 @@ function ultraschall.DeleteKBIniActions(filename_with_path, idx)
     return false
   end
 end
-
---A=ultraschall.DeleteKBIniActions("c:\\test.txt",1)
 
 function ultraschall.DeleteKBIniScripts(filename_with_path, idx)
 --[[
@@ -13120,9 +13133,9 @@ function ultraschall.DeleteKBIniScripts(filename_with_path, idx)
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, delete, script, scripts</tags>
 </US_DocBloc>
 ]]
-  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("DeleteKBIniScripts", "filename_with_path", "must be a string", -1) return -1 end
-  if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("DeleteKBIniScripts", "filename_with_path", "file does not exist", -2) return -1 end
-  if math.type(idx)~="integer" then ultraschall.AddErrorMessage("DeleteKBIniScripts", "idx", "must be an integer", -3) return -1 end
+  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("DeleteKBIniScripts", "filename_with_path", "must be a string", -1) return false end
+  if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("DeleteKBIniScripts", "filename_with_path", "file does not exist", -2) return false end
+  if math.type(idx)~="integer" then ultraschall.AddErrorMessage("DeleteKBIniScripts", "idx", "must be an integer", -3) return false end
   
   local count=0
   local linecount=0
@@ -13145,7 +13158,7 @@ function ultraschall.DeleteKBIniScripts(filename_with_path, idx)
   end
 end
 
---A=ultraschall.DeleteKBIniScripts("c:\\test.txt",1)
+
 
 function ultraschall.DeleteKBIniKeys(filename_with_path, idx)
 --[[
@@ -15497,7 +15510,7 @@ function ultraschall.GetProject_DefPitchMode(projectfilename_with_path, ProjectS
     -          131118 - 3ms window, 1ms fade
     -          131119 - 3ms window, 1ms fade
     -      
-    -      Ã©lastique 2.2.8 Pro:
+    -      élastique 2.2.8 Pro:
     -          393216 - Normal
     -          393217 - Preserve Formants (Lowest Pitches)
     -          393218 - Preserve Formants (Lower Pitches)
@@ -15531,19 +15544,19 @@ function ultraschall.GetProject_DefPitchMode(projectfilename_with_path, ProjectS
     -          393246 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
     -          393247 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
     -      
-    -      Ã©lastique 2.2.8 Efficient:
+    -      élastique 2.2.8 Efficient:
     -          458752 - Normal
     -          458753 - Mid/Side
     -          458754 - Synchronized: Normal
     -          458755 - Synchronized: Mid/Side
     -      
-    -      Ã©lastique 2.2.8 Soloist:
+    -      élastique 2.2.8 Soloist:
     -          524288 - Monophonic
     -          524289 - Monophonic [Mid/Side]
     -          524290 - Speech
     -          524291 - Speech [Mid/Side]
     -      
-    -      Ã©lastique 3.3.0 Pro:
+    -      élastique 3.3.0 Pro:
     -          589824 - Normal
     -          589825 - Preserve Formants (Lowest Pitches)
     -          589826 - Preserve Formants (Lower Pitches)
@@ -15577,13 +15590,13 @@ function ultraschall.GetProject_DefPitchMode(projectfilename_with_path, ProjectS
     -          589854 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
     -          589855 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
     -      
-    -      Ã©lastique 3.3.0 Efficient:
+    -      élastique 3.3.0 Efficient:
     -          655360 - Normal
     -          655361 - Mid/Side
     -          655362 - Synchronized: Normal
     -          655363 - Synchronized: Mid/Side
     -      
-    -      Ã©lastique 3.3.0 Soloist:
+    -      élastique 3.3.0 Soloist:
     -          720896 - Monophonic
     -          720897 - Monophonic [Mid/Side]
     -          720898 - Speech
@@ -17837,7 +17850,7 @@ function ultraschall.SetProject_GroupOverride(projectfilename_with_path, group_o
     Returns -1 in case of error.
   </description>
   <parameters>
-    string projectfilename_with_path, optional string ProjectStateChunk - the filename of the projectfile; nil to use Parameter ProjectStateChunk instead
+    string projectfilename_with_path - the filename of the projectfile; nil to use Parameter ProjectStateChunk instead
     integer group_override1 - the group-override state
     integer group_override2 - the group-override state
     integer group_override3 - the group-override state
@@ -19888,7 +19901,7 @@ function ultraschall.SetProject_DefPitchMode(projectfilename_with_path, def_pitc
     -          131118 - 3ms window, 1ms fade
     -          131119 - 3ms window, 1ms fade
     -      
-    -      Ã©lastique 2.2.8 Pro:
+    -      élastique 2.2.8 Pro:
     -          393216 - Normal
     -          393217 - Preserve Formants (Lowest Pitches)
     -          393218 - Preserve Formants (Lower Pitches)
@@ -19922,19 +19935,19 @@ function ultraschall.SetProject_DefPitchMode(projectfilename_with_path, def_pitc
     -          393246 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
     -          393247 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
     -      
-    -      Ã©lastique 2.2.8 Efficient:
+    -      élastique 2.2.8 Efficient:
     -          458752 - Normal
     -          458753 - Mid/Side
     -          458754 - Synchronized: Normal
     -          458755 - Synchronized: Mid/Side
     -      
-    -      Ã©lastique 2.2.8 Soloist:
+    -      élastique 2.2.8 Soloist:
     -          524288 - Monophonic
     -          524289 - Monophonic [Mid/Side]
     -          524290 - Speech
     -          524291 - Speech [Mid/Side]
     -      
-    -      Ã©lastique 3.3.0 Pro:
+    -      élastique 3.3.0 Pro:
     -          589824 - Normal
     -          589825 - Preserve Formants (Lowest Pitches)
     -          589826 - Preserve Formants (Lower Pitches)
@@ -19968,13 +19981,13 @@ function ultraschall.SetProject_DefPitchMode(projectfilename_with_path, def_pitc
     -          589854 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
     -          589855 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
     -      
-    -      Ã©lastique 3.3.0 Efficient:
+    -      élastique 3.3.0 Efficient:
     -          655360 - Normal
     -          655361 - Mid/Side
     -          655362 - Synchronized: Normal
     -          655363 - Synchronized: Mid/Side
     -      
-    -      Ã©lastique 3.3.0 Soloist:
+    -      élastique 3.3.0 Soloist:
     -          720896 - Monophonic
     -          720897 - Monophonic [Mid/Side]
     -          720898 - Speech
@@ -22149,11 +22162,11 @@ function ultraschall.SplitMediaItems_Position(position, trackstring, crossfade)
   <tags>mediaitemmanagement, tracks, media, item, split, edit, crossfade</tags>
 </US_DocBloc>
 ]]
-  if type(position)~="number" then ultraschall.AddErrorMessage("SplitMediaItems_Position","position", "must be a number", -1) return -1 end
-  if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("SplitMediaItems_Position","trackstring", "must be valid trackstring", -2) return -1 end
+  if type(position)~="number" then ultraschall.AddErrorMessage("SplitMediaItems_Position","position", "must be a number", -1) return false end
+  if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("SplitMediaItems_Position","trackstring", "must be valid trackstring", -2) return false end
 
   local A,trackstring,AA,AAA=ultraschall.RemoveDuplicateTracksInTrackstring(trackstring)
-  if trackstring==-1 or trackstring=="" then ultraschall.AddErrorMessage("SplitMediaItems_Position","trackstring", "must be valid trackstring", -2) return -1 end
+  if trackstring==-1 or trackstring=="" then ultraschall.AddErrorMessage("SplitMediaItems_Position","trackstring", "must be valid trackstring", -2) return false end
 
   local FadeOut, MediaItem, oldfade, oldlength
   local ReturnMediaItemArray={}
@@ -22187,6 +22200,7 @@ function ultraschall.SplitMediaItems_Position(position, trackstring, crossfade)
   end
   return true, ReturnMediaItemArray
 end
+
 
 function ultraschall.SplitItemsAtPositionFromArray(position, MediaItemArray, crossfade)
 --[[
@@ -22678,7 +22692,7 @@ function ultraschall.MoveMediaItemsBetween_To(startposition, endposition, newpos
   return true
 end
 
---A=ultraschall.MoveMediaItemsBetween_To(1, 3, 100, "Ã¶", false)
+--A=ultraschall.MoveMediaItemsBetween_To(1, 3, 100, "ö", false)
 
 
 
@@ -23367,7 +23381,7 @@ function ultraschall.InsertMediaItemArray(position, MediaItemArray, trackstring)
   while MediaItemArray[count]~=nil do
     local ItemStart_temp=reaper.GetMediaItemInfo_Value(MediaItemArray[count], "D_POSITION")
     local MediaTrack=reaper.GetMediaItem_Track(MediaItemArray[count])
-    --nur einfÃ¼gen, wenn mediaitem aus nem Track stammt, der in trackstring vorkommt
+    --nur einfügen, wenn mediaitem aus nem Track stammt, der in trackstring vorkommt
     i=1
     while individual_values[i]~=nil do
       if reaper.GetTrack(0,individual_values[i]-1)==reaper.GetMediaItem_Track(MediaItemArray[count]) then 
@@ -24775,7 +24789,7 @@ function ultraschall.GetItemPlayRate(MediaItem, statechunk)
     -          131118 - 3ms window, 1ms fade
     -          131119 - 3ms window, 1ms fade
     -      
-    -      Ã©lastique 2.2.8 Pro:
+    -      élastique 2.2.8 Pro:
     -          393216 - Normal
     -          393217 - Preserve Formants (Lowest Pitches)
     -          393218 - Preserve Formants (Lower Pitches)
@@ -24809,19 +24823,19 @@ function ultraschall.GetItemPlayRate(MediaItem, statechunk)
     -          393246 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
     -          393247 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
     -      
-    -      Ã©lastique 2.2.8 Efficient:
+    -      élastique 2.2.8 Efficient:
     -          458752 - Normal
     -          458753 - Mid/Side
     -          458754 - Synchronized: Normal
     -          458755 - Synchronized: Mid/Side
     -      
-    -      Ã©lastique 2.2.8 Soloist:
+    -      élastique 2.2.8 Soloist:
     -          524288 - Monophonic
     -          524289 - Monophonic [Mid/Side]
     -          524290 - Speech
     -          524291 - Speech [Mid/Side]
     -      
-    -      Ã©lastique 3.3.0 Pro:
+    -      élastique 3.3.0 Pro:
     -          589824 - Normal
     -          589825 - Preserve Formants (Lowest Pitches)
     -          589826 - Preserve Formants (Lower Pitches)
@@ -24855,13 +24869,13 @@ function ultraschall.GetItemPlayRate(MediaItem, statechunk)
     -          589854 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
     -          589855 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
     -      
-    -      Ã©lastique 3.3.0 Efficient:
+    -      élastique 3.3.0 Efficient:
     -          655360 - Normal
     -          655361 - Mid/Side
     -          655362 - Synchronized: Normal
     -          655363 - Synchronized: Mid/Side
     -      
-    -      Ã©lastique 3.3.0 Soloist:
+    -      élastique 3.3.0 Soloist:
     -          720896 - Monophonic
     -          720897 - Monophonic [Mid/Side]
     -          720898 - Speech
@@ -26758,7 +26772,7 @@ function ultraschall.SetItemUSTrackNumber_StateChunk(statechunk, tracknumber)
 </US_DocBloc>
 ]]
   if ultraschall.IsValidItemStateChunk(statechunk)==false then ultraschall.AddErrorMessage("SetItemUSTrackNumber_StateChunk","MediaItemStateChunk", "must be a valid MediaItemStateChunk.", -1) return -1 end
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("SetItemUSTrackNumber_StateChunk","tracknumber", "must be an integer.", -2) end
+  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("SetItemUSTrackNumber_StateChunk","tracknumber", "must be an integer.", -2) return -1 end
   if tracknumber<1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("SetItemUSTrackNumber_StateChunk","tracknumber", "no such track.", -3) return -1 end
   if statechunk:match("ULTRASCHALL_TRACKNUMBER") then 
     statechunk="<ITEM\n"..statechunk:match(".-ULTRASCHALL_TRACKNUMBER.-%c(.*)")
@@ -26803,9 +26817,9 @@ function ultraschall.SetItemPosition(MediaItem, position, statechunk)
   -- check parameters
   local _tudelu
   if reaper.ValidatePtr2(0, MediaItem, "MediaItem*")==true then _tudelu, statechunk=reaper.GetItemStateChunk(MediaItem, "", false) 
-  elseif ultraschall.IsValidItemStateChunk(statechunk)==false then ultraschall.AddErrorMessage("SetItemPosition", "statechunk", "Must be a valid statechunk.", -1) return nil
+  elseif ultraschall.IsValidItemStateChunk(statechunk)==false then ultraschall.AddErrorMessage("SetItemPosition", "statechunk", "Must be a valid statechunk.", -1) return -1
   end
-  if type(position)~="number" then ultraschall.AddErrorMessage("SetItemPosition", "position", "Must be a number.", -2) return nil end  
+  if type(position)~="number" then ultraschall.AddErrorMessage("SetItemPosition", "position", "Must be a number.", -2) return -1 end  
   if position<0 then ultraschall.AddErrorMessage("SetItemPosition", "position", "Must bigger than or equal 0.", -3) return -1 end
   
   -- do the magic
@@ -26817,7 +26831,6 @@ function ultraschall.SetItemPosition(MediaItem, position, statechunk)
   -- return
   return statechunk
 end
-
 
 function ultraschall.SetItemLength(MediaItem, length, statechunk)
 --[[
@@ -26854,10 +26867,10 @@ function ultraschall.SetItemLength(MediaItem, length, statechunk)
   -- check parameters
   local _tudelu
   if reaper.ValidatePtr2(0, MediaItem, "MediaItem*")==true then _tudelu, statechunk=reaper.GetItemStateChunk(MediaItem, "", false) 
-  elseif ultraschall.IsValidItemStateChunk(statechunk)==false then ultraschall.AddErrorMessage("SetItemLength", "statechunk", "Must be a valid statechunk.", -1) return nil
+  elseif ultraschall.IsValidItemStateChunk(statechunk)==false then ultraschall.AddErrorMessage("SetItemLength", "statechunk", "Must be a valid statechunk.", -1) return -1
   end
 --  reaper.MB(type(length),length,0)
-  if type(length)~="number" then ultraschall.AddErrorMessage("SetItemLength", "length", "Must be a number.", -2) return nil end  
+  if type(length)~="number" then ultraschall.AddErrorMessage("SetItemLength", "length", "Must be a number.", -2) return -1 end  
   if length<0 then ultraschall.AddErrorMessage("SetItemLength", "length", "Must bigger than or equal 0.", -3) return -1 end
   
   -- do the magic
@@ -27050,7 +27063,6 @@ function ultraschall.RippleInsert_MediaItemStateChunks(position, MediaItemStateC
   <tags>mediaitemmanagement, tracks, media, item, insert, ripple</tags>
 </US_DocBloc>
 ]]
-
   if type(position)~="number" then ultraschall.AddErrorMessage("RippleInsert_MediaItemStateChunks", "position", "must be a number", -1) return -1 end
   if ultraschall.IsValidMediaItemStateChunkArray(MediaItemStateChunkArray)==false then ultraschall.AddErrorMessage("RippleInsert_MediaItemStateChunks", "MediaItemStateChunkArray", "must be a valid MediaItemStateChunkArray", -2) return -1 end
   if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("RippleInsert_MediaItemStateChunks", "trackstring", "must be a valid trackstring", -3) return -1 end
@@ -27094,7 +27106,7 @@ function ultraschall.RippleInsert_MediaItemStateChunks(position, MediaItemStateC
       for a=1,AAA do
         if tonumber(AA[a])==i+1 then
           local MediaTrack=reaper.GetTrack(0,i)
-          retval = ultraschall.MoveTrackEnvelopePointsBy(position, reaper.GetProjectLength()+(ItemEnd-ItemStart), ItemEnd-ItemStart, MediaTrack, true) 
+          local retval = ultraschall.MoveTrackEnvelopePointsBy(position, reaper.GetProjectLength()+(ItemEnd-ItemStart), ItemEnd-ItemStart, MediaTrack, true) 
         end
       end
     end
@@ -27122,9 +27134,6 @@ function ultraschall.RippleInsert_MediaItemStateChunks(position, MediaItemStateC
   end
   return NumberOfItems, NewMediaItemArray, position+ItemEnd
 end
-
---A,B,C,D,E=ultraschall.GetAllMediaItemsBetween(1,20,"1,2,3",false)
---ultraschall.RippleInsert_MediaItemStateChunks(l,C,"1,2,3",true, true)
 
 function ultraschall.IsTrackObjectTracknumber(MediaTrack, tracknumber)
 --[[
@@ -29063,7 +29072,7 @@ function ultraschall.GetProject_GetRegion(projectfilenamewithpath, idx)
     integer regioncolor - the colorvalue of the region
   </retvals>
   <chapter_context>
-    Project-Files
+    Project-Management
     RPP-Files Get
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
@@ -29071,7 +29080,7 @@ function ultraschall.GetProject_GetRegion(projectfilenamewithpath, idx)
   <tags>projectfiles, rpp, state, get, region, shown number, name, color, position</tags>
 </US_DocBloc>
 ]]
-  if projectfilenamewithpath==nil or type(projectfilenamewithpath)~="string" then ultraschall.AddErrorMessage("GetProject_GetRegion", "projectfilename_with_path", "Must be a string", -5)  return -1 end
+  if projectfilenamewithpath==nil or type(projectfilenamewithpath)~="string" then ultraschall.AddErrorMessage("GetProject_GetRegion", "projectfilename_with_path", "Must be a string", -5)  return false end
   if reaper.file_exists(projectfilenamewithpath)==false then ultraschall.AddErrorMessage("GetProject_GetRegion", "projectfilenamewithpath", "Projectfile does not exist", -1)  return false end
   idx=tonumber(idx)
   if idx==nil then ultraschall.AddErrorMessage("GetProject_GetRegion", "idx", "No valid value given. Only integer numbers are allowed.", -2)  return false end
@@ -29251,7 +29260,6 @@ function ultraschall.AddMediaItemStateChunk_To_TrackStateChunk(trackstatechunk, 
 end
 
 
-
 function ultraschall.RemoveMediaItem_TrackStateChunk(trackstatechunk, idx)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -29265,7 +29273,7 @@ function ultraschall.RemoveMediaItem_TrackStateChunk(trackstatechunk, idx)
   <description>
     Deletes the idx'th item from trackstatechunk and returns this altered trackstatechunk.
     
-    returns nil in case of error
+    returns false in case of error
   </description>
   <parameters>
     string trackstatechunk - a trackstatechunk, as returned by reaper's api function reaper.GetTrackStateChunk
@@ -29307,7 +29315,6 @@ function ultraschall.RemoveMediaItem_TrackStateChunk(trackstatechunk, idx)
   return true, begin..temptrackstatechunk
 end
 
-
 function ultraschall.RemoveMediaItemByIGUID_TrackStateChunk(trackstatechunk, IGUID)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -29321,7 +29328,7 @@ function ultraschall.RemoveMediaItemByIGUID_TrackStateChunk(trackstatechunk, IGU
   <description>
     Deletes the item with the iguid IGUID from trackstatechunk and returns this altered trackstatechunk.
     
-    returns nil in case of error
+    returns false in case of error
   </description>
   <parameters>
     string trackstatechunk - a trackstatechunk, as returned by reaper's api function reaper.GetTrackStateChunk
@@ -29359,6 +29366,7 @@ function ultraschall.RemoveMediaItemByIGUID_TrackStateChunk(trackstatechunk, IGU
   return true, begin..temptrackstatechunk..dada
 end
 
+
 function ultraschall.RemoveMediaItemByGUID_TrackStateChunk(trackstatechunk, GUID)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -29372,7 +29380,7 @@ function ultraschall.RemoveMediaItemByGUID_TrackStateChunk(trackstatechunk, GUID
   <description>
     Deletes the item with the guid GUID from trackstatechunk and returns this altered trackstatechunk.
     
-    returns nil in case of error
+    returns false in case of error
   </description>
   <parameters>
     string trackstatechunk - a trackstatechunk, as returned by reaper's api function reaper.GetTrackStateChunk
@@ -29530,7 +29538,7 @@ function ultraschall.SetMediaItemStateChunk_in_TrackStateChunk(trackstatechunk, 
   <description>
     Overwrites the idx'th item from trackstatechunk with mediaitemstatechunk and returns this altered trackstatechunk.
     
-    returns nil in case of error
+    returns false in case of error
   </description>
   <parameters>
     string trackstatechunk - a trackstatechunk, as returned by reaper's api function reaper.GetTrackStateChunk
@@ -30846,7 +30854,7 @@ function ultraschall.GetLengthOfFile(filename_with_path)
   <tags>filemanagement,file,length,bytes,count</tags>
 </US_DocBloc>
 ]]
-  if filename_with_path==nil then ultraschall.AddErrorMessage("GetLengthOfFile", "filename_with_path", "nil not allowed as filename", -1) return false end
+  if filename_with_path==nil then ultraschall.AddErrorMessage("GetLengthOfFile", "filename_with_path", "nil not allowed as filename", -1) return -1 end
   local numberofbytes
   if reaper.file_exists(filename_with_path)==true then
     local fileread=io.open(filename_with_path,"rb")
@@ -30858,8 +30866,6 @@ function ultraschall.GetLengthOfFile(filename_with_path)
   end
   return numberofbytes  
 end
-
---A=ultraschall.GetLengthOfFile("hui")
 
 
 function ultraschall.SecondsToTimeString_hh_mm_ss_mss(time)
@@ -32021,7 +32027,7 @@ function ultraschall.GetItemSpectralConfig(itemidx, MediaItemStateChunk)
     returns the item-spectral-config, which is the fft-size of the spectral view for this item.
     set itemidx to -1 to use the optional parameter MediaItemStateChunk to alter a MediaItemStateChunk instead of an item directly.
     
-    returns -1 in case of error or if no spectral-config exists(e.g. when no spectral-edit is applied to this item)
+    returns -1 in case of error or nil if no spectral-config exists(e.g. when no spectral-edit is applied to this item)
   </description>
   <parameters>
     integer itemidx - the number of the item, with 1 for the first item, 2 for the second, etc.; -1, to use the parameter MediaItemStateChunk
@@ -32042,7 +32048,7 @@ function ultraschall.GetItemSpectralConfig(itemidx, MediaItemStateChunk)
   -- check parameters
   if math.type(itemidx)~="integer" then ultraschall.AddErrorMessage("GetItemSpectralConfig","itemidx", "only integer allowed", -1) return -1 end
   if itemidx~=-1 and itemidx<1 or itemidx>reaper.CountMediaItems(0) then ultraschall.AddErrorMessage("GetItemSpectralConfig","itemidx", "no such item exists", -2) return -1 end
-  if itemidx==-1 and tostring(MediaItemStateChunk):match("<ITEM.*>")==nil then ultraschall.AddErrorMessage("GetItemSpectralConfig","MediaItemStateChunk", "must be a valid MediaItemStateChunk", -5) return false end
+  if itemidx==-1 and tostring(MediaItemStateChunk):match("<ITEM.*>")==nil then ultraschall.AddErrorMessage("GetItemSpectralConfig","MediaItemStateChunk", "must be a valid MediaItemStateChunk", -5) return -1 end
 
   -- get statechunk, if necessary(itemidx~=-1)
   local _retval
@@ -33113,7 +33119,7 @@ function ultraschall.GetItemSpectralVisibilityState(itemidx, MediaItemStateChunk
   -- check parameters
   if math.type(itemidx)~="integer" then ultraschall.AddErrorMessage("GetItemSpectralVisibilityState","itemidx", "only integer allowed", -1) return -1 end
   if itemidx~=-1 and itemidx<1 or itemidx>reaper.CountMediaItems(0) then ultraschall.AddErrorMessage("GetItemSpectralVisibilityState","itemidx", "no such item exists", -2) return -1 end
-  if itemidx==-1 and tostring(MediaItemStateChunk):match("<ITEM.*>")==nil then ultraschall.AddErrorMessage("GetItemSpectralVisibilityState","MediaItemStateChunk", "must be a valid MediaItemStateChunk", -5) return false end
+  if itemidx==-1 and tostring(MediaItemStateChunk):match("<ITEM.*>")==nil then ultraschall.AddErrorMessage("GetItemSpectralVisibilityState","MediaItemStateChunk", "must be a valid MediaItemStateChunk", -5) return -1 end
 
   -- get statechunk, if necessary(itemidx~=-1)
   local _retval
@@ -33128,9 +33134,7 @@ function ultraschall.GetItemSpectralVisibilityState(itemidx, MediaItemStateChunk
   return tonumber(retval)
 end
 
---L=ultraschall.GetItemSpectralVisibilityState(-1, "<ITEM\nSPECTROGRAM 1\n>")
 
---L,LL,LLL=ultraschall.GetAllEntriesFromTable(ultraschall)
 
 
 
@@ -33977,7 +33981,7 @@ function ultraschall.SetIntConfigVar_Bitfield(configvar, set_to, ...)
   local count=1
   while Parameters[count]~=nil do
     -- check the bit-parameters
-    if math.log(Parameters[count],2)~=math.floor(math.log(Parameters[count],2)) then ultraschall.AddErrorMessage("SetIntConfigVar_Bitfield","bit", "Bit_"..count.."="..Parameters[count].." isn't a valid bitvalue!", -4) return nil end
+    if math.log(Parameters[count],2)~=math.floor(math.log(Parameters[count],2)) then ultraschall.AddErrorMessage("SetIntConfigVar_Bitfield","bit", "Bit_"..count.."="..Parameters[count].." isn't a valid bitvalue!", -4) return false end
     count=count+1
   end
   
@@ -34002,7 +34006,6 @@ function ultraschall.SetIntConfigVar_Bitfield(configvar, set_to, ...)
   end
   return reaper.SNM_SetIntConfigVar(configvar, integer_bitfield), integer_bitfield
 end
-
 
 
 function ultraschall.CountMarkersAndRegions()
@@ -34315,7 +34318,7 @@ function ultraschall.CompareStringWithAsciiValues(string,...)
     Bytevalues can be either decimal and hexadecimal.
     -1, if you want to skip checking of a specific position in string.
     
-    Returns -1 in case of error
+    Returns false in case of error
   </description>
   <parameters>
     string string - the string to check against the bytevalues
@@ -34334,7 +34337,7 @@ function ultraschall.CompareStringWithAsciiValues(string,...)
   <tags>helper functions, check, compare, string, byte, bytevalues</tags>
 </US_DocBloc>
 --]]
-  if type(string)~="string" then ultraschall.AddErrorMessage("CompareStringWithAsciiValues","string", "Must be a string!", -1) return -1 end  
+  if type(string)~="string" then ultraschall.AddErrorMessage("CompareStringWithAsciiValues","string", "Must be a string!", -1) return false end  
   local length, Table=ultraschall.ConvertStringToAscii_Array(string)
   local AsciiValues={...}
   local NumEntries=ultraschall.CountEntriesInTable_Main(AsciiValues)
@@ -34349,7 +34352,6 @@ function ultraschall.CompareStringWithAsciiValues(string,...)
   return retval, count
 end
 
---LLCOOLJ,LLCOOL2=ultraschall.CompareStringWithAsciivalues("ACCDENLIGHTENE",65,-1,-1,-1,-1)
 
 
 function ultraschall.CheckForValidFileFormats(filename_with_path)
@@ -37212,12 +37214,11 @@ function ultraschall.GetMediaItemTake(MediaItem, TakeNr)
 ]]
   if reaper.ValidatePtr2(0, MediaItem, "MediaItem*")==false then ultraschall.AddErrorMessage("GetMediaItemTake", "MediaItem", "must be a valid MediaItem-object", -1) return nil end
   if math.type(TakeNr)~="integer" then ultraschall.AddErrorMessage("GetMediaItemTake", "TakeNr", "must be an integer", -2) return nil end
-  if TakeNr<0 or TakeNr>reaper.CountTakes(MediaItem) then ultraschall.AddErrorMessage("GetMediaItemTake", "TakeNr", "No such take in MediaItem", -3) return -1 end
+  if TakeNr<0 or TakeNr>reaper.CountTakes(MediaItem) then ultraschall.AddErrorMessage("GetMediaItemTake", "TakeNr", "No such take in MediaItem", -3) return nil end
   
   if TakeNr==0 then return reaper.GetActiveTake(MediaItem), reaper.CountTakes(MediaItem)
   else return reaper.GetMediaItemTake(MediaItem, TakeNr-1), reaper.CountTakes(MediaItem) end
 end
-
 
 
 function ultraschall.ReturnTableAsIndividualValues(Table)
@@ -39511,7 +39512,7 @@ function ultraschall.ChangeColorContrast(r, g, b, Minimum_r, Maximum_r, Minimum_
     The lower you set Minimum/Maximum, the darker it becomes; the higher, the brighter it becomes.
     The farther away Minimum is from Maximum, the stronger the contrast becomes; the closer Minimum is to Maximum, the weaker the contrast becomes.
     
-    If you only set Minimum_r and Maximum_r, then these values will be applied to g and b too.
+    If you only set Minimum\_r and Maximum\_r, then these values will be applied to g and b too.
     
     If you omit/set to nil a Maximum-value; it's default value will be 255.
     
@@ -39979,19 +39980,17 @@ function ultraschall.GetScriptFilenameFromActionCommandID(action_command_id)
   <tags>filemanagement, get, scriptfilename, actioncommandid</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.type(action_command_id)~="string" then ultraschall.AddErrorMessage("GetScriptFilenameFromActionCommandID", "action_command_id", "must be a string", -1) return end
-  if ultraschall.CheckActionCommandIDFormat2(action_command_id)==false then ultraschall.AddErrorMessage("GetScriptFilenameFromActionCommandID", "action_command_id", "no such action-command-id", -2) return end
+  if ultraschall.type(action_command_id)~="string" then ultraschall.AddErrorMessage("GetScriptFilenameFromActionCommandID", "action_command_id", "must be a string", -1) return false end
+  if ultraschall.CheckActionCommandIDFormat2(action_command_id)==false then ultraschall.AddErrorMessage("GetScriptFilenameFromActionCommandID", "action_command_id", "no such action-command-id", -2) return false end
   local kb_ini_path = ultraschall.GetKBIniFilepath()
   local kb_ini_file = ultraschall.ReadFullFile(kb_ini_path)
   if action_command_id:sub(1,1)=="_" then action_command_id=action_command_id:sub(2,-1) end
   local L=kb_ini_file:match("( "..action_command_id..".-)\n")
-  if L==nil then ultraschall.AddErrorMessage("GetScriptFilenameFromActionCommandID", "action_command_id", "no such action_command_id associated to a script", -1) return end
+  if L==nil then ultraschall.AddErrorMessage("GetScriptFilenameFromActionCommandID", "action_command_id", "no such action_command_id associated to a script", -1) return false end
   L=L:match(".*%s(.*)")
   if L:sub(1,2)==".." then return reaper.GetResourcePath().."/"..L end
   return L
 end
-
-
 
 function ultraschall.GetProject_CountAutomationItems(projectfilename_with_path, ProjectStateChunk)
 --[[
@@ -40026,13 +40025,13 @@ function ultraschall.GetProject_CountAutomationItems(projectfilename_with_path, 
 </US_DocBloc>
 ]]
   -- check parameters and prepare variable ProjectStateChunk
-  if projectfilename_with_path~=nil and type(projectfilename_with_path)~="string" then ultraschall.AddErrorMessage("GetProject_CountAutomationItems","projectfilename_with_path", "Must be a string or nil(the latter when using parameter ProjectStateChunk)!", -1) return nil end
-  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_CountAutomationItems","ProjectStateChunk", "No valid ProjectStateChunk!", -2) return nil end
+  if projectfilename_with_path~=nil and type(projectfilename_with_path)~="string" then ultraschall.AddErrorMessage("GetProject_CountAutomationItems","projectfilename_with_path", "Must be a string or nil(the latter when using parameter ProjectStateChunk)!", -1) return -1 end
+  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_CountAutomationItems","ProjectStateChunk", "No valid ProjectStateChunk!", -2) return -1 end
   if projectfilename_with_path~=nil then
     if reaper.file_exists(projectfilename_with_path)==true then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path, false)
-    else ultraschall.AddErrorMessage("GetProject_CountAutomationItems","projectfilename_with_path", "File does not exist!", -3) return nil
+    else ultraschall.AddErrorMessage("GetProject_CountAutomationItems","projectfilename_with_path", "File does not exist!", -3) return -1
     end
-    if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_CountAutomationItems", "projectfilename_with_path", "No valid RPP-Projectfile!", -4) return nil end
+    if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_CountAutomationItems", "projectfilename_with_path", "No valid RPP-Projectfile!", -4) return -1 end
   end
   
   local count=0
@@ -40042,7 +40041,6 @@ function ultraschall.GetProject_CountAutomationItems(projectfilename_with_path, 
   end
   return count
 end
-
 
 
 function ultraschall.GetProject_AutomationItemStateChunk(projectfilename_with_path, idx, ProjectStateChunk)
@@ -41004,7 +41002,7 @@ function ultraschall.GetProject_CountMasterHWOuts(projectfilename_with_path, Pro
     integer count_of_hwouts - the number of available hwouts in an rpp-project or ProjectStateChunk
   </retvals>
   <chapter_context>
-    Project-Files
+    Project-Management
     RPP-Files Get
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
@@ -41013,11 +41011,11 @@ function ultraschall.GetProject_CountMasterHWOuts(projectfilename_with_path, Pro
 </US_DocBloc>
 ]]
   -- check parameters and prepare variable ProjectStateChunk
-  if projectfilename_with_path~=nil and type(projectfilename_with_path)~="string" then ultraschall.AddErrorMessage("GetProject_CountMasterHWOuts","projectfilename_with_path", "Must be a string or nil(the latter when using parameter ProjectStateChunk)!", -1) return 0 end
-  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_CountMasterHWOuts","ProjectStateChunk", "No valid ProjectStateChunk!", -2) return 0 end
+  if projectfilename_with_path~=nil and type(projectfilename_with_path)~="string" then ultraschall.AddErrorMessage("GetProject_CountMasterHWOuts","projectfilename_with_path", "Must be a string or nil(the latter when using parameter ProjectStateChunk)!", -1) return nil end
+  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_CountMasterHWOuts","ProjectStateChunk", "No valid ProjectStateChunk!", -2) return nil end
   if projectfilename_with_path~=nil then
     if reaper.file_exists(projectfilename_with_path)==true then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path, false)
-    else ultraschall.AddErrorMessage("GetProject_CountMasterHWOuts","projectfilename_with_path", "File does not exist!", -3) return 0
+    else ultraschall.AddErrorMessage("GetProject_CountMasterHWOuts","projectfilename_with_path", "File does not exist!", -3) return nil
     end
     if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_CountMasterHWOuts", "projectfilename_with_path", "No valid RPP-Projectfile!", -4) return nil end
   end
@@ -41370,8 +41368,8 @@ function ultraschall.GetProject_MasterGroupFlagsState(projectfilename_with_path,
     optional string ProjectStateChunk - a statechunk of a project, usually the contents of a rpp-project-file
   </parameters>
   <chapter_context>
-    Track Management
-    Get Track States
+    Project-Management
+    RPP-Files Get
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -41379,13 +41377,13 @@ function ultraschall.GetProject_MasterGroupFlagsState(projectfilename_with_path,
 </US_DocBloc>
 --]]
   -- check parameters and prepare variable ProjectStateChunk
-  if projectfilename_with_path~=nil and type(projectfilename_with_path)~="string" then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsState","projectfilename_with_path", "Must be a string or nil(the latter when using parameter ProjectStateChunk)!", -1) return nil end
-  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsState","ProjectStateChunk", "No valid ProjectStateChunk!", -2) return nil end
+  if projectfilename_with_path~=nil and type(projectfilename_with_path)~="string" then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsState","projectfilename_with_path", "Must be a string or nil(the latter when using parameter ProjectStateChunk)!", -1) return -1 end
+  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsState","ProjectStateChunk", "No valid ProjectStateChunk!", -2) return -1 end
   if projectfilename_with_path~=nil then
     if reaper.file_exists(projectfilename_with_path)==true then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path, false)
-    else ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsState","projectfilename_with_path", "File does not exist!", -3) return nil
+    else ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsState","projectfilename_with_path", "File does not exist!", -3) return -1
     end
-    if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsState", "projectfilename_with_path", "No valid RPP-Projectfile!", -4) return nil end
+    if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsState", "projectfilename_with_path", "No valid RPP-Projectfile!", -4) return -1 end
   end
 
   local Project_TrackGroupFlags=ProjectStateChunk:match("MASTER_GROUP_FLAGS.-%c") 
@@ -41404,9 +41402,6 @@ function ultraschall.GetProject_MasterGroupFlagsState(projectfilename_with_path,
   
   return retval, Tracktable
 end
-
---A,A1=ultraschall.GetProject_MasterGroupFlagsState("c:\\automitem\\automitem.RPP", A)
-
 
 function ultraschall.GetProject_MasterGroupFlagsHighState(projectfilename_with_path, ProjectStateChunk)
 --[[
@@ -41512,8 +41507,8 @@ function ultraschall.GetProject_MasterGroupFlagsHighState(projectfilename_with_p
     optional string ProjectStateChunk - a statechunk of a project, usually the contents of a rpp-project-file
   </parameters>
   <chapter_context>
-    Track Management
-    Get Track States
+    Project-Management
+    RPP-Files Get
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -41521,13 +41516,13 @@ function ultraschall.GetProject_MasterGroupFlagsHighState(projectfilename_with_p
 </US_DocBloc>
 --]]
   -- check parameters and prepare variable ProjectStateChunk
-  if projectfilename_with_path~=nil and type(projectfilename_with_path)~="string" then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsHighState","projectfilename_with_path", "Must be a string or nil(the latter when using parameter ProjectStateChunk)!", -1) return nil end
-  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsHighState","ProjectStateChunk", "No valid ProjectStateChunk!", -2) return nil end
+  if projectfilename_with_path~=nil and type(projectfilename_with_path)~="string" then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsHighState","projectfilename_with_path", "Must be a string or nil(the latter when using parameter ProjectStateChunk)!", -1) return -1 end
+  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsHighState","ProjectStateChunk", "No valid ProjectStateChunk!", -2) return -1 end
   if projectfilename_with_path~=nil then
     if reaper.file_exists(projectfilename_with_path)==true then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path, false)
-    else ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsHighState","projectfilename_with_path", "File does not exist!", -3) return nil
+    else ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsHighState","projectfilename_with_path", "File does not exist!", -3) return -1
     end
-    if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsHighState", "projectfilename_with_path", "No valid RPP-Projectfile!", -4) return nil end
+    if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_MasterGroupFlagsHighState", "projectfilename_with_path", "No valid RPP-Projectfile!", -4) return -1 end
   end
 
   local Project_TrackGroupFlags=ProjectStateChunk:match("MASTER_GROUP_FLAGS_HIGH.-%c") 
@@ -41546,9 +41541,6 @@ function ultraschall.GetProject_MasterGroupFlagsHighState(projectfilename_with_p
   
   return retval, Tracktable
 end
-
---A,A1=ultraschall.GetProject_MasterGroupFlagsHighState("c:\\automitem\\automitem.RPP", A)
-
 
 function ultraschall.GetProject_GroupDisabled(projectfilename_with_path, ProjectStateChunk)
 --[[
@@ -44557,8 +44549,8 @@ function ultraschall.SetScriptReturnvalues(script_identifier, ...)
   return true
 end
 
---ultraschall.SetScriptReturnvalues("EmpfÃ¤nger", 9,222,3,4,5,6,7,8,9,10)
---A,B,C,D,E=ultraschall.GetScriptReturnvalues("EmpfÃ¤nger", true)
+--ultraschall.SetScriptReturnvalues("Empf?er", 9,222,3,4,5,6,7,8,9,10)
+--A,B,C,D,E=ultraschall.GetScriptReturnvalues("Empf?er", true)
 
 --ultraschall.ScriptIdentifier="HalloWelt5"
 --ultraschall.SetScriptReturnvalues("HalloWelt5", 9,222,3,4,5,6,7,8,9,10)
@@ -44905,7 +44897,7 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  return "4.00","20th of July 2019", "Beta 2.76", 400.0276,  "\"The Police - Walking on the Moon\"", ultraschall.hotfixdate
+  return "4.00","23rd of August 2019", "Beta 2.761", 400.02761,  "\"Coldplay - Fix You\"", ultraschall.hotfixdate
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -49427,14 +49419,17 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
   caption_names[17]=nil
 
   -- fill up empty default-values, so the passed parameters are 16 in count  
+  local default_retvals2={}
   for i=1, 16 do
     if default_retvals[i]==nil then
-      default_retvals[i]=""
+      default_retvals2[i]=""
+    else
+      default_retvals2[i]=default_retvals[i]
     end
   end
-  default_retvals[17]=nil
+  default_retvals2[17]=nil
 
-  local numentries, concatenated_table = ultraschall.ConcatIntegerIndexedTables(caption_names, default_retvals)
+  local numentries, concatenated_table = ultraschall.ConcatIntegerIndexedTables(caption_names, default_retvals2)
   
   local temptitle="Tudelu"..reaper.genGuid()
   
@@ -49794,14 +49789,14 @@ function ultraschall.GetVideoHWND()
     due API-limitations on Mac and Linux: if more than one window called "Video Window" is opened, it will return -1
     I hope to find a workaround for that problem at some point...
     
-    returns nil if the Video Window is closed
+    returns nil if the Video Window is closed or can't be determined
   </description>
   <retvals>
     HWND hwnd - the window-handler of the Video Window
   </retvals>
   <chapter_context>
     User Interface
-    Window Management
+    Reaper-Windowhandler
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -49823,11 +49818,12 @@ function ultraschall.GetVideoHWND()
       return hwnd_array[1]
     else
       ultraschall.AddErrorMessage("GetVideoHWND", "", "more than one window called Video Window opened. Can't determine the right one...sorry", -1)
-      return -1
+      return nil
     end
   end
   return nil
 end
+
 --gfx.init(reaper.JS_Localize("Video Window", "common"))
 --A=ultraschall.GetVideoHWND()
 
@@ -51015,9 +51011,7 @@ function ultraschall.MKVOL2DB(mkvol_value)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Converts an MKVOL-value into a dB-value.
     
-    MKVOL-values are used by the routing-functions for HWOut/AUXSendReceive, specifically for their volume-value.
-    
-    These can't be converted using Reaper's own DB2SLIDER or SLIDER2DB, so this function should help you.
+    MKVOL-values are used by the routing-functions for HWOut/AUXSendReceive, specifically for their volume-value as these can't be converted using Reaper's own DB2SLIDER or SLIDER2DB, so this function should help you.
     
     This function is an adapted one from the function provided in Plugins/reaper\_www\_root/main.js
     
@@ -51060,9 +51054,7 @@ function ultraschall.DB2MKVOL(db_value)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Converts an dB-value into a MKVOL-value.
     
-    MKVOL-values are used by the routing-functions for HWOut/AUXSendReceive, specifically for their volume-value.
-    
-    These can't be converted using Reaper's own DB2SLIDER or SLIDER2DB, so this function should help you.
+    MKVOL-values are used by the routing-functions for HWOut/AUXSendReceive, specifically for their volume-value as these can't be converted using Reaper's own DB2SLIDER or SLIDER2DB, so this function should help you.
     
     See [MKVOL2DB](#MKVOL2DB) to convert a MKVOL-value into it's dB-representation
     
@@ -52821,8 +52813,8 @@ function ultraschall.ConvertIntegerIntoString2(Size, ...)
   <tags>helper functions, convert, integer, string</tags>
 </US_DocBloc>
 ]]
-  if math.type(Size)~="integer" then ultraschall.AddErrorMessage("ConvertIntegerIntoString2", "Size", "must be an integer", -1) return -1 end
-  if Size<1 or Size>4 then ultraschall.AddErrorMessage("ConvertIntegerIntoString2", "Size", "must be between 1(for 8 bit) and 4(for 32 bit)", -2) return -1 end
+  if math.type(Size)~="integer" then ultraschall.AddErrorMessage("ConvertIntegerIntoString2", "Size", "must be an integer", -1) return nil end
+  if Size<1 or Size>4 then ultraschall.AddErrorMessage("ConvertIntegerIntoString2", "Size", "must be between 1(for 8 bit) and 4(for 32 bit)", -2) return nil end
   local Table={...}
   local String=""
   local count=1
@@ -52838,7 +52830,6 @@ function ultraschall.ConvertIntegerIntoString2(Size, ...)
   end
   return String
 end
-
 --A=ultraschall.ConvertIntegerIntoString(3, 1752132965,65)
 --B=A:len()
 
@@ -54506,7 +54497,7 @@ function ultraschall.GetRenderCFG_Settings_WebMVideo(rendercfg)
     <description>
       Returns the settings stored in a render-cfg-string for WEBM_Video.
       
-      You can get this from the current RENDER\_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+      You can get this from the current RENDER_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
       
       Returns -1 in case of an error
     </description>
@@ -54623,7 +54614,7 @@ function ultraschall.GetRenderCFG_Settings_AVI_Video(rendercfg)
     <description>
       Returns the settings stored in a render-cfg-string for AVI_Video.
       
-      You can get this from the current RENDER\_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+      You can get this from the current RENDER_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
       
       Returns -1 in case of an error
     </description>
@@ -55206,7 +55197,7 @@ function ultraschall.GetRenderCFG_Settings_MP4Mac_Video(rendercfg)
       Returns the settings stored in a render-cfg-string for MP4 for Mac_Video(stream optimised and non-stream optimised).
       This is Mac-OS only!
       
-      You can get this from the current RENDER\_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+      You can get this from the current RENDER_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
       
       Returns -1 in case of an error
     </description>
@@ -55266,7 +55257,7 @@ function ultraschall.GetRenderCFG_Settings_MOVMac_Video(rendercfg)
       Returns the settings stored in a render-cfg-string for MOV for Mac_Video.
       This is MacOS-only.
       
-      You can get this from the current RENDER\_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+      You can get this from the current RENDER_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
       
       Returns -1 in case of an error
     </description>
@@ -55338,7 +55329,7 @@ function ultraschall.GetRenderCFG_Settings_M4AMac(rendercfg)
       Returns the settings stored in a render-cfg-string for M4A for Mac_Video(even though this stores only audio-files).
       This is MacOS-only.
       
-      You can get this from the current RENDER\_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+      You can get this from the current RENDER_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
       
       Returns -1 in case of an error
     </description>
@@ -56320,6 +56311,8 @@ function ultraschall.GetParmModulationChunk_FXStateChunk(FXStateChunk, fxid, id)
     Returns a parameter-modulation-chunk from an FXStateChunk
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
     
+    It's the <PROGRAMENV entry
+    
     Returns nil in case of an error
   </description>
   <retvals>
@@ -56473,7 +56466,7 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
             RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? &1, custom time bounds; &2, entire project; &4, time selection; &8, all project regions; &16, selected media items; &32, selected project regions
             RenderTable["TailMS"] - the amount of milliseconds of the tail
             
-    Returns nil in case of an error
+    Returns false in case of an error
   </description>
   <retvals>
     boolean retval - true, setting the render-settings was successful; false, it wasn't successful
@@ -56617,7 +56610,7 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
             RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? &1, custom time bounds; &2, entire project; &4, time selection; &8, all project regions; &16, selected media items; &32, selected project regions
             RenderTable["TailMS"] - the amount of milliseconds of the tail
             
-    Returns nil in case of an error
+    Returns false in case of an error
   </description>
   <retvals>
     boolean retval - true, setting the render-settings was successful; false, it wasn't successful
@@ -57380,14 +57373,13 @@ function ultraschall.LoadFunctionFromExtState(section, key)
   <tags>helper functions, load, function, extstate</tags>
 </US_DocBloc>
 ]]
-  if type(section)~="string" then ultraschall.AddErrorMessage("LoadFunctionFromExtState", "section", "must be a string", -1) return end
-  if type(key)~="string" then ultraschall.AddErrorMessage("LoadFunctionFromExtState", "key", "must be a string", -2) return end
+  if type(section)~="string" then ultraschall.AddErrorMessage("LoadFunctionFromExtState", "section", "must be a string", -1) return false end
+  if type(key)~="string" then ultraschall.AddErrorMessage("LoadFunctionFromExtState", "key", "must be a string", -2) return false end
   local DumpBase64 = reaper.GetExtState(section, key)
-  if DumpBase64=="" or DumpBase64:match("LuaFunc:")==nil then ultraschall.AddErrorMessage("LoadFunctionFromExtState", "", "no function stored in extstate", -3) return end
+  if DumpBase64=="" or DumpBase64:match("LuaFunc:")==nil then ultraschall.AddErrorMessage("LoadFunctionFromExtState", "", "no function stored in extstate", -3) return false end
   local Dump = ultraschall.Base64_Decoder(DumpBase64:sub(9,-1))
   return load(Dump)
 end
-
 --ultraschall.StoreFunctionInExtState("test", "test", print2, true)
 --KAKKALAKKA=ultraschall.LoadFunctionFromExtState("test", "test22")
 --KAKKALAKKA("789".."hhi")
@@ -57716,7 +57708,7 @@ function ultraschall.SetArmState_Envelope(TrackEnvelope, state, EnvelopeStateChu
 ]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("SetArmState_Envelope", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return false end
   if math.type(state)~="integer" then ultraschall.AddErrorMessage("SetArmState_Envelope", "state", "Must be an integer, either 1 or 0", -2) return false end
-  if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("SetArmState_Envelope", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -3) return end
+  if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("SetArmState_Envelope", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -3) return false end
   if TrackEnvelope~=nil then
     local retval, str = reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
     return reaper.SetEnvelopeStateChunk(TrackEnvelope, string.gsub(str, "ARM %d*%c", "ARM "..state.."\n"), false)
@@ -58210,7 +58202,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
      RenderTable["TailMS"] - the amount of milliseconds of the tail; always 0, as this isn't stored in render-presets
      
      
-     Returns false in case of an error
+     Returns nil in case of an error
    </description>
    <parameters>
      string Bounds_Name - the name of the Bounds-render-preset you want to get
@@ -58871,7 +58863,7 @@ function ultraschall.GetParmLFOLearn_MediaTrack(MediaTrack, fxid, id)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns a parameter-lfo-learn-setting from a MediaTrack
     
-    It is the PARMLEARN-entry
+    It is the LFOLEARN-entry
     
     Returns nil in case of an error
   </description>
@@ -60024,7 +60016,7 @@ function ultraschall.RenderProject_Regions(projectfilename_with_path, renderfile
     end
   end
   
-  --print2("HÃ¤h?", renderfilename_with_path)
+  --print2("H?", renderfilename_with_path)
 
   if addregionname==true then 
     if addregionnameseparator==nil then addregionnameseparator="" end
@@ -60349,7 +60341,7 @@ function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x,
     Lua=5.3
   </requires>
   <functioncall>MediaItem MediaItem, MediaItem_Take MediaItem_Take, MediaItem MediaItem_unlocked, boolean Item_moved, number StartDiffTime, number EndDiffTime, number LengthDiffTime, number OffsetDiffTime = ultraschall.get_action_context_MediaItemDiff(optional boolean exlude_mousecursorsize, optional integer x, optional integer y)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the currently clicked MediaItem, Take as well as the difference of position, end, length and startoffset since last time calling this function.
     Good for implementing ripple-drag/editing-functions, whose position depends on changes in the currently clicked MediaItem.
     Repeatedly call this (e.g. in a defer-cycle) to get all changes made, during dragging position, length or offset of the MediaItem underneath mousecursor.
@@ -60902,6 +60894,8 @@ function ultraschall.DeleteParmAlias_FXStateChunk(FXStateChunk, fxid, id)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Deletes a ParmAlias-entry from an FXStateChunk.
     
+    It's the PARMALIAS-entry
+    
     returns false in case of an error
   </description>
   <retvals>
@@ -60967,6 +60961,8 @@ function ultraschall.DeleteParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id)
   <functioncall>boolean retval, string alteredFXStateChunk = ultraschall.DeleteParmLFOLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Deletes a ParmLFO-Learn-entry from an FXStateChunk.
+    
+    It's the LFOLEARN-entry
     
     returns false in case of an error
   </description>
@@ -61034,6 +61030,8 @@ function ultraschall.SetParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id, midi_n
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets an already existing ParmLFO-Learn-entry of an FX-plugin from an FXStateChunk.
     
+    It's the LFOLEARN-entry
+    
     returns false in case of an error
   </description>
   <retvals>
@@ -61092,7 +61090,9 @@ function ultraschall.SetParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id, midi_n
   
   if osc_message~=nil and midi_note~=0 then ultraschall.AddErrorMessage("SetParmLFOLearn_FXStateChunk", "midi_note", "must be set to 0, when using parameter osc_message", -7) return false end
   if osc_message==nil then osc_message="" end
-    
+  
+  if checkboxflags&8==0 then checkboxflags=checkboxflags+8 end
+  
   local count=0
   local FX, UseFX2, start, stop, UseFX
   for k in string.gmatch(FXStateChunk, "    BYPASS.-WAK.-\n") do
@@ -61136,6 +61136,8 @@ function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets an already existing Parm-Learn-entry of an FX-plugin from an FXStateChunk.
     
+    It's the PARMLEARN-entry
+    
     returns false in case of an error
   </description>
   <retvals>
@@ -61173,7 +61175,7 @@ function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note
                           -    3, Soft takeover (absolute mode only)+enable only when track or item is selected
                           -    4, enable only when effect configuration is focused
                           -    20, enable only when effect configuration is visible 
-    optional string osc_message - the osc-message, that triggers the ParmLFOLearn, only when midi_note is set to 0!
+    optional string osc_message - the osc-message, that triggers the ParmLearn, only when midi_note is set to 0!
   </parameters>
   <chapter_context>
     FX-Management
@@ -61194,7 +61196,9 @@ function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note
   
   if osc_message~=nil and midi_note~=0 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "midi_note", "must be set to 0, when using parameter osc_message", -7) return false end
   if osc_message==nil then osc_message="" end
-    
+  
+  if checkboxflags&8==8 then checkboxflags=checkboxflags-8 end
+  
   local count=0
   local FX, UseFX2, start, stop, UseFX
   for k in string.gmatch(FXStateChunk, "    BYPASS.-WAK.-\n") do
@@ -61235,6 +61239,8 @@ function ultraschall.SetParmAlias_FXStateChunk(FXStateChunk, fxid, id, parmalias
   <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmAlias_FXStateChunk(string FXStateChunk, integer fxid, integer id, string parmalias)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets an already existing Parm-Learn-entry of an FX-plugin from an FXStateChunk.
+    
+    It's the PARMALIAS-entry
     
     returns false in case of an error
   </description>
@@ -61325,7 +61331,7 @@ function ultraschall.SetFXStateChunk(StateChunk, FXStateChunk, TakeFXChain_id)
 ]]
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetFXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return false end
   if ultraschall.IsValidTrackStateChunk(StateChunk)==false and ultraschall.IsValidMediaItemStateChunk(StateChunk)==false then ultraschall.AddErrorMessage("SetFXStateChunk", "StateChunk", "no valid Track/ItemStateChunk", -1) return false end
-  if TakeFXChain_id~=nil and math.type(TakeFXChain_id)~="integer" then ultraschall.AddErrorMessage("SetFXStateChunk", "TakeFXChain_id", "must be an integer", -3) return end
+  if TakeFXChain_id~=nil and math.type(TakeFXChain_id)~="integer" then ultraschall.AddErrorMessage("SetFXStateChunk", "TakeFXChain_id", "must be an integer", -3) return false end
   if TakeFXChain_id==nil then TakeFXChain_id=1 end
   local OldFXStateChunk=ultraschall.GetFXStateChunk(StateChunk, TakeFXChain_id)
   OldFXStateChunk=string.gsub(OldFXStateChunk, "\n%s*", "\n")  
@@ -61405,6 +61411,8 @@ function ultraschall.AddParmLFOLearn_FXStateChunk(FXStateChunk, fxid, parmidx, p
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Adds a new Parm-LFOLearn-entry to an FX-plugin from an FXStateChunk.
     
+    It's the LFOLEARN-entry
+    
     returns false in case of an error
   </description>
   <retvals>
@@ -61464,7 +61472,9 @@ function ultraschall.AddParmLFOLearn_FXStateChunk(FXStateChunk, fxid, parmidx, p
   if type(parmname)~="string" then ultraschall.AddErrorMessage("AddParmLFOLearn_FXStateChunk", "parmname", "must be a string, either \"\" or byp or wet", -8) return false 
   elseif parmname~="" then parmname=":"..parmname
   end
-    
+  
+  if checkboxflags&8==0 then checkboxflags=checkboxflags+8 end
+  
   if osc_message~=nil and midi_note~=0 then ultraschall.AddErrorMessage("AddParmLFOLearn_FXStateChunk", "midi_note", "must be set to 0, when using parameter osc_message", -9) return false end
   if osc_message==nil then osc_message="" end
   
@@ -61504,6 +61514,8 @@ function ultraschall.AddParmLearn_FXStateChunk(FXStateChunk, fxid, parmidx, parm
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Adds a new Parm-Learn-entry to an FX-plugin from an FXStateChunk.
     
+    It's the PARMLEARN-entry
+    
     returns false in case of an error
   </description>
   <retvals>
@@ -61542,7 +61554,7 @@ function ultraschall.AddParmLearn_FXStateChunk(FXStateChunk, fxid, parmidx, parm
                           -    3, Soft takeover (absolute mode only)+enable only when track or item is selected
                           -    4, enable only when effect configuration is focused
                           -    20, enable only when effect configuration is visible 
-    optional string osc_message - the osc-message, that triggers the ParmLFOLearn, only when midi_note is set to 0!
+    optional string osc_message - the osc-message, that triggers the ParmLearn, only when midi_note is set to 0!
   </parameters>
   <chapter_context>
     FX-Management
@@ -61563,6 +61575,8 @@ function ultraschall.AddParmLearn_FXStateChunk(FXStateChunk, fxid, parmidx, parm
   if type(parmname)~="string" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk", "parmname", "must be a string, either \"\" or byp or wet", -8) return false 
   elseif parmname~="" then parmname=":"..parmname
   end
+  
+  if checkboxflags&8==8 then checkboxflags=checkboxflags-8 end
     
   if osc_message~=nil and midi_note~=0 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk", "midi_note", "must be set to 0, when using parameter osc_message", -9) return false end
   if osc_message==nil then osc_message="" end
@@ -61601,6 +61615,8 @@ function ultraschall.AddParmAlias_FXStateChunk(FXStateChunk, fxid, parmidx, parm
   <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.AddParmAlias_FXStateChunk(string FXStateChunk, integer fxid, string parmalias)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Adds a new Parm-Alias-entry to an FX-plugin from an FXStateChunk.
+    
+    It's the PARMALIAS-entry
     
     returns false in case of an error
   </description>
@@ -61662,7 +61678,9 @@ function ultraschall.CountParmAlias_FXStateChunk(FXStateChunk, fxid)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Counts already existing Parm-Alias-entries of an FX-plugin from an FXStateChunk.
     
-    returns false in case of an error
+    It's the PARMALIAS-entry
+    
+    returns -1 in case of an error
   </description>
   <retvals>
     integer count - the number of ParmAliases found
@@ -61680,8 +61698,8 @@ function ultraschall.CountParmAlias_FXStateChunk(FXStateChunk, fxid)
   <tags>fx management, count, parm, aliasname</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("CountParmAlias_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return false end
-  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("CountParmAlias_FXStateChunk", "fxid", "must be an integer", -2) return false end
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("CountParmAlias_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return -1 end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("CountParmAlias_FXStateChunk", "fxid", "must be an integer", -2) return -1 end
     
   local count=0
   local FX, UseFX2, start, stop, UseFX
@@ -61698,7 +61716,7 @@ function ultraschall.CountParmAlias_FXStateChunk(FXStateChunk, fxid)
   end  
   return count
 end
---]]
+
 
 function ultraschall.CountParmLearn_FXStateChunk(FXStateChunk, fxid)
 --[[
@@ -61713,7 +61731,9 @@ function ultraschall.CountParmLearn_FXStateChunk(FXStateChunk, fxid)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Counts already existing Parm-Learn-entries of an FX-plugin from an FXStateChunk.
     
-    returns false in case of an error
+    It's the PARMLEARN-entry
+    
+    returns -1 in case of an error
   </description>
   <retvals>
     integer count - the number of ParmLearn-entried found
@@ -61731,8 +61751,8 @@ function ultraschall.CountParmLearn_FXStateChunk(FXStateChunk, fxid)
   <tags>fx management, count, parm, learn</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("CountParmLearn_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return false end
-  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("CountParmLearn_FXStateChunk", "fxid", "must be an integer", -2) return false end
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("CountParmLearn_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return -1 end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("CountParmLearn_FXStateChunk", "fxid", "must be an integer", -2) return -1 end
     
   local count=0
   local FX, UseFX2, start, stop, UseFX
@@ -61763,7 +61783,9 @@ function ultraschall.CountParmLFOLearn_FXStateChunk(FXStateChunk, fxid)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Counts already existing Parm-LFOLearn-entries of an FX-plugin from an FXStateChunk.
     
-    returns false in case of an error
+    It's the LFOLEARN-entry
+    
+    returns -1 in case of an error
   </description>
   <retvals>
     integer count - the number of LFOLearn-entried found
@@ -61781,8 +61803,8 @@ function ultraschall.CountParmLFOLearn_FXStateChunk(FXStateChunk, fxid)
   <tags>fx management, count, parm, lfo, learn</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("CountParmLFOLearn_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return false end
-  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("CountParmLFOLearn_FXStateChunk", "fxid", "must be an integer", -2) return false end
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("CountParmLFOLearn_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return -1 end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("CountParmLFOLearn_FXStateChunk", "fxid", "must be an integer", -2) return -1 end
     
   local count=0
   local FX, UseFX2, start, stop, UseFX
@@ -62041,6 +62063,463 @@ end
 
 --ultraschall.AutoDetectVSTPluginsFolder()
 
+function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetProjectStateChunk</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.975
+      SWS=2.10.0.1
+      JS=0.972
+      Lua=5.3
+    </requires>
+    <functioncall>string ProjectStateChunk = ultraschall.GetProjectStateChunk(optional string projectfilename_with_path, optional boolean keepqrender)</functioncall>
+    <description>
+      Gets the ProjectStateChunk of the current active project or a projectfile.
+      
+      Important: when calling it too often in a row, this might fail and result in a timeout-error. 
+      I tried to circumvent this, but best practice is to wait 2-3 seconds inbetween calling this function.
+      This function also eats up a lot of resources, so be sparse with it in general!
+      
+      returns nil if getting the ProjectStateChunk took too long
+    </description>
+    <retvals>
+      string ProjectStateChunk - the ProjectStateChunk of the current project; nil, if getting the ProjectStateChunk took too long
+    </retvals>
+    <parameters>
+      optional string projectfilename_with_path - the filename of an rpp-projectfile, that you want to load as ProjectStateChunk; nil, to get the ProjectStateChunk from the currently active project
+      optional boolean keepqrender - true, keeps the QUEUED_RENDER_OUTFILE and QUEUED_RENDER_ORIGINAL_FILENAME entries in the ProjectStateChunk, if existing; false or nil, remove them
+    </parameters>
+    <chapter_context>
+      Project-Files
+      Helper functions
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>projectmanagement, get, projectstatechunk</tags>
+  </US_DocBloc>
+  ]]  
+    
+  -- This function puts the current project into the render-queue and reads it from there.
+  -- For that, 
+  --    1) it gets all files in the render-queue
+  --    2) it adds the current project to the renderqueue
+  --    3) it waits, until Reaper has added the file to the renderqueue, reads it and deletes the file afterwards
+  -- It also deals with edge-case-stuff to avoid render-dialogs/warnings popping up.
+  --
+  -- In Lua, this has an issue, as sometimes the filelist with EnumerateFiles isn't updated in ReaScript.
+  -- Why that is is mysterious. I hope, it can be curcumvented in C++
 
+
+  -- if a filename is given, read the file and check, whether it's a valid ProjectStateChunk. 
+  -- If yes, return it. Otherwise error.
+  local ProjectStateChunk
+  if projectfilename_with_path~=nil then 
+    ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path)
+    if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProjectStateChunk", "projectfilename_with_path", "must be a valid ReaProject or nil", -1) return nil end
+    return ProjectStateChunk
+  end
+  
+  if ultraschall.LastProjectStateChunk_Time+3>=reaper.time_precise() then
+    local i=0
+    while l==nil do
+      i=i+1
+      if i==10000000
+      then break end
+    end
+  end
+  
+  ultraschall.LastProjectStateChunk_Time=reaper.time_precise()
+  
+  -- get the currently focused hwnd; will be restored after function is done
+  -- this is due Reaper changing the focused hwnd, when adding projects to the render-queue
+  local oldfocushwnd = reaper.JS_Window_GetFocus()
+      
+  -- turn off renderqdelay temporarily, as otherwise this could display a render-queue-delay dialog
+  -- old setting will be restored later
+  local qretval, qlength = ultraschall.GetRender_QueueDelay()
+  local retval = ultraschall.SetRender_QueueDelay(false, qlength)
+      
+  -- turn on auto-increment filename temporarily, to avoid the "filename already exists"-dialog popping up
+  -- old setting will be restored later
+  local old_autoincrement = ultraschall.GetRender_AutoIncrementFilename()
+  ultraschall.SetRender_AutoIncrementFilename(true)  
+  
+  -- get all filenames currently in the render-queue
+  local oldbounds, oldstartpos, oldendpos, prep_changes, files, files2, filecount, filecount2    
+  filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."\\QueuedRenders")
+      
+  -- if Projectlength=0 or CountofTracks==0, set render-settings for empty projects(workaround for that edgecase)
+  -- old settings will be restored later
+  if reaper.CountTracks()==0 or reaper.GetProjectLength()==0 then
+    -- get old settings
+    oldbounds   =reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", 0, false)
+    oldstartpos =reaper.GetSetProjectInfo(0, "RENDER_STARTPOS", 0, false)
+    oldendpos   =reaper.GetSetProjectInfo(0, "RENDER_ENDPOS", 1, false)  
+       
+    -- set useful defaults that'll make adding the project to the render-queue possible always
+    reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", 0, true)
+    reaper.GetSetProjectInfo(0, "RENDER_STARTPOS", 0, true)
+    reaper.GetSetProjectInfo(0, "RENDER_ENDPOS", 1, true)
+    
+    -- set prep_changes to true, so we know, we need to reset these settings, later
+    prep_changes=true
+  end
+      
+  -- add current project to render-queue
+  reaper.Main_OnCommand(41823,0)
+     
+  -- wait, until Reaper has added the project to the render-queue and get it's filename
+  -- 
+  -- there's a timeout, to avoid hanging scripts, as ReaScript doesn't always update it's filename-lists
+  -- gettable using reaper.EnumerateFiles(which I'm using in GetAllFilenamesInPath)
+  --
+  -- other workarounds, using ls/dir in console is too slow and has possible problems with filenames 
+  -- containing Unicode
+  local i=0
+  while l==nil do
+    i=i+1
+    filecount2, files2 = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."\\QueuedRenders")
+    if filecount2~=filecount then 
+      break 
+    end
+    if i==100000--00
+      then ultraschall.AddErrorMessage("GetProjectStateChunk", "", "timeout: Getting the ProjectStateChunk took too long for some reasons, please report this as bug to me and include the projectfile with which this happened!", -2) return end
+  end
+  local duplicate_count, duplicate_array, originalscount_array1, originals_array1, originalscount_array2, originals_array2 = ultraschall.GetDuplicatesFromArrays(files, files2)
+
+   -- read found render-queued-project and delete it
+  local ProjectStateChunk=ultraschall.ReadFullFile(originals_array2[1])
+  os.remove(originals_array2[1])
+  
+  -- reset temporarily changed settings in the current project, as well as in the ProjectStateChunk itself
+  if prep_changes==true then
+    reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", oldbounds, true)
+    reaper.GetSetProjectInfo(0, "RENDER_STARTPOS", oldstartpos, true)
+    reaper.GetSetProjectInfo(0, "RENDER_ENDPOS", oldendpos, true)
+    retval, ProjectStateChunk = ultraschall.SetProject_RenderRange(nil, math.floor(oldbounds), math.floor(oldstartpos), math.floor(oldendpos), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILFLAG", 0, false)), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILMS", 0, false)), ProjectStateChunk)
+  end
+      
+  -- remove QUEUED_RENDER_ORIGINAL_FILENAME and QUEUED_RENDER_OUTFILE-entries, if keepqrender==true
+  if keepqrender~=true then
+    ProjectStateChunk=string.gsub(ProjectStateChunk, "  QUEUED_RENDER_OUTFILE .-%c", "")
+    ProjectStateChunk=string.gsub(ProjectStateChunk, "  QUEUED_RENDER_ORIGINAL_FILENAME .-%c", "")
+  end
+      
+  -- reset old auto-increment-checkbox-state
+  ultraschall.SetRender_AutoIncrementFilename(old_autoincrement)
+      
+  -- reset old hwnd-focus-state 
+  reaper.JS_Window_SetFocus(oldfocushwnd)
+  
+  -- restore old render-qdelay-setting
+  retval = ultraschall.SetRender_QueueDelay(qretval, qlength)
+  
+  -- return the final ProjectStateChunk
+  return ProjectStateChunk
+end
+
+
+function ultraschall.IsSplitAtPosition(trackstring, position)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>IsSplitAtPosition</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.IsSplitAtPosition(string trackstring, number position)</functioncall>
+  <description>
+    returns, if theres at least one split, MediaItemend or MediaItemstart at position within the tracks given in trackstring.
+     
+    returns false in case of an error
+  </description>
+  <parameters>
+    string trackstring - the tracknumbers, within to search for, as comma separated string. Starting 1 for the first track.
+    number position - the position, at which to check for.
+  </parameters>
+  <retvals>
+    boolean retval - true, there's a split/mediaitemend/mediaitemstart at position; false, it isn't
+  </retvals>
+  <chapter_context>
+    MediaItem Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>mediaitem management, get, split, at position, seconds, mediaitem, mediaitemstart, mediaitemend</tags>
+</US_DocBloc>
+--]]
+  if type(trackstring)~="string" then ultraschall.AddErrorMessage("IsSplitAtPosition", "trackstring", "must be a valid trackstring", -1) return false end
+  if type(position)~="number" then ultraschall.AddErrorMessage("IsSplitAtPosition", "number", "must be a number", -2) return false end
+  local valid, count, individual_tracknumbers = ultraschall.IsValidTrackString(trackstring)
+            
+  if valid==false then ultraschall.AddErrorMessage("IsSplitAtPosition", "trackstring", "no valid trackstring", -3) return false end
+  local count2, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(position-1, position+1, trackstring, false)
+  position=ultraschall.LimitFractionOfFloat(position, 9, true)
+  for i=1, count2 do
+    local pos=ultraschall.LimitFractionOfFloat(reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_POSITION"), 9, true)
+    local len=ultraschall.LimitFractionOfFloat(reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_LENGTH"), 9, true)
+    if pos==position then return true end
+  end
+  return false
+end
+
+function ultraschall.ConvertYCoordsMac2Win(ycoord, height)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertYCoordsMac2Win</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer conv_ycoord = ultraschall.ConvertYCoordsMac2Win(integer ycoord, optional integer height)</functioncall>
+  <description>
+    Converts the y-coordinate between Windows/Linux and MacOS-based systems.
+    
+    Note: MacOS y-coordinates begin at the bottom of the screen, while Windows and Linux y-coordinates begin at the top.
+    With this function, you can convert between these two coordinate-systems
+    
+    returns nil in case of error
+  </description>
+  <parameters>
+    integer ycoord - the y-coordinate to convert in pixels
+    optional integer height - the height of the screen in pixels, which is the base for the conversion; nil, uses current screenheight
+  </parameters>
+  <retvals>
+    integer conv_ycoord - the converted coordinate in pixels
+  </retvals>
+  <chapter_context>
+    User Interface
+    Miscellaneous
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>user interface, convert, coordinate, mac, windows, linux, y</tags>
+</US_DocBloc>
+--]]
+  if math.type(ycoord)~="integer" then ultraschall.AddErrorMessage("ConvertYCoordsMac2Win", "ycoord", "must be an integer", -1) return end
+  if ycoord<0 then ultraschall.AddErrorMessage("ConvertYCoordsMac2Win", "ycoord", "must be bigger than 0", -2) return end
+  local A,B,C,D
+  if height==nil then A,B,C,height=reaper.my_getViewport(0,0,0,0,0,0,0,0,true) end
+  return (ycoord-height)*-1
+end
+
+function ultraschall.FindPatternsInString(SourceString, pattern, sort_after_finding)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>FindPatternsInString</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>integer count_found_items, array found_items = ultraschall.FindPatternsInString(string SourceString, string pattern, boolean sort_after_finding)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Finds all occurrences of matching-patterns in a string. You can sort them optionally.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer count_found_items - the number of found items in the string; -1, in case of an error
+    array found_items - all occurrences found in the string as an array
+  </retvals>
+  <parameters>
+    string SourceString - the source-string to search for all occurences
+    string pattern - the matching-pattern, with which to search for in the string
+    boolean sort_after_finding - true, sorts the entries; false, doesn't sort the entries
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+    Data Analysis
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, find, patterns, string</tags>
+</US_DocBloc>
+--]]
+  if type(SourceString)~="string" then ultraschall.AddErrorMessage("FindPatternsInString", "SourceString", "must be a string", -1) return -1 end
+  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("FindPatternsInString", "pattern", "not a valid matching-pattern", -2) return -1 end
+  if type(sort_after_finding)~="boolean" then ultraschall.AddErrorMessage("FindPatternsInString", "sort_after_finding", "must be a boolean", -3) return -1 end
+  local String={}
+  local counter=1
+  for k in string.gmatch(SourceString, pattern) do
+    String[counter]=k
+    counter=counter+1
+  end
+  
+  if sort_after_finding==true then table.sort(String) end
+  
+  local String2=""
+  for i=1, counter-1 do
+    String2=String2..String[i].."\n"
+  end
+  return counter-1, String, String2
+end
+
+function ultraschall.IsWithinTimeRange(time, start, stop)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>IsWithinTimeRange</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.IsWithinTimeRange(number time, number start, number stop)</functioncall>
+  <description>
+    returns if time is between(including) start and stop.
+     
+    returns false in case of an error
+  </description>
+  <parameters>
+    number time - the time in seconds, to check for
+    number start - the starttime in seconds, within to check for
+    number stop - the endtime in seconds, within to check for
+  </parameters>
+  <retvals>
+    boolean retval - true, time is between start and stop; false, it isn't
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, check, is between, start, stop, seconds, time</tags>
+</US_DocBloc>
+--]]
+  time=ultraschall.LimitFractionOfFloat(tonumber(time),5,true)
+  start=ultraschall.LimitFractionOfFloat(tonumber(start),5,true)
+  stop=ultraschall.LimitFractionOfFloat(tonumber(stop),5,true)
+  if time==nil or start==nil or stop==nil then return false end
+  if time>=start and time<=stop then return true else return false end
+end
+
+function ultraschall.GetMediaExplorerHWND()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetMediaExplorerHWND</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>HWND hwnd = ultraschall.GetMediaExplorerHWND()</functioncall>
+  <description>
+    returns the HWND of the Media Explorer, if the window is opened.
+    
+    returns nil if Media Explorer is closed
+  </description>
+  <retvals>
+    HWND hwnd - the window-handler of the Media Explorer
+  </retvals>
+  <chapter_context>
+    User Interface
+    Reaper-Windowhandler
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>user interface, window, media explorer, hwnd, get</tags>
+</US_DocBloc>
+--]]
+
+  local translation=reaper.JS_Localize("Media Explorer", "common")
+  local auto_play=reaper.JS_Localize("Auto play", "explorer_DLG_101")
+  local vol=reaper.JS_Localize("vol", "explorer_DLG_101")
+  local navigate_backwards=reaper.JS_Localize("Navigate backwards", "access")
+
+  
+  --count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find("Render to File", false)
+  local count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find(translation, true)
+  if count_hwnds==0 then return nil
+  else
+    for i=count_hwnds, 1, -1 do
+      if ultraschall.HasHWNDChildWindowNames(hwnd_array[i], 
+                                            auto_play.."\0"..
+                                            vol.."\0"..
+                                            navigate_backwards)==true then return hwnd_array[i] end
+    end
+  end
+  return nil
+end 
+
+--A=ultraschall.GetMediaExplorerHWND()
+
+
+function ultraschall.UpdateMediaExplorer()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>UpdateMediaExplorer</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.UpdateMediaExplorer()</functioncall>
+  <description>
+    updates the listview of the Media Explorer.
+    
+    returns false if Media Explorer is closed
+  </description>
+  <retvals>
+    boolean retval - true, could update the listview of the Media Explorer; false, couldn't update the listview
+  </retvals>
+  <chapter_context>
+    User Interface
+    Reaper-Windowhandler
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>user interface, window, media explorer, hwnd, update, listview</tags>
+</US_DocBloc>
+--]]
+  local HWND=ultraschall.GetMediaExplorerHWND()
+  if ultraschall.IsValidHWND(HWND)==false then ultraschall.AddErrorMessage("UpdateMediaExplorer", "", "Can't get MediaExplorer-HWND. Is it opened?", -1) return false end
+  return reaper.JS_Window_OnCommand(HWND, 40018)
+end
+
+--ultraschall.UpdateMediaExplorer()
+
+
+function ultraschall.MediaExplorer_OnCommand(actioncommandid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MediaExplorer_OnCommand</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.MediaExplorer_OnCommand(integer actioncommandid)</functioncall>
+  <description>
+    runs a Media Explorer-associated action.
+    Note: Can only run Reaper's native actions currently(all actions having a number as actioncommandid), not scripts!
+    
+    returns false if Media Explorer is closed
+  </description>
+  <retvals>
+    boolean retval - true, could update run the action in the Media Explorer; false, couldn't run it
+  </retvals>
+  <chapter_context>
+    User Interface
+    Reaper-Windowhandler
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>user interface, window, media explorer, hwnd, oncommand, run, command</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.CheckActionCommandIDFormat2(actioncommandid)==false then ultraschall.AddErrorMessage("MediaExplorer_OnCommand", "actioncommandid", "not a valid action-command-id", -1) return false end
+  local HWND=ultraschall.GetMediaExplorerHWND()
+  if ultraschall.IsValidHWND(HWND)==false then ultraschall.AddErrorMessage("MediaExplorer_OnCommand", "", "Can't get MediaExplorer-HWND. Is it opened?", -2) return false end
+  local Actioncommandid=reaper.NamedCommandLookup(actioncommandid)
+  return reaper.JS_Window_OnCommand(HWND, tonumber(Actioncommandid))
+end
 
 ultraschall.ShowLastErrorMessage()

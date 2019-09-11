@@ -1,7 +1,4 @@
 <TODO>
-    For 4.00beta2.76:
-        - TODO: Doc: Concepts: Localize
-
     For 4.00beta2.77
         - TODO!! Localize: can we detect, which language-file is currently installed and which language it holds, to decide, which language to use?
         - TODO!! concepts-documentation, autoupdate the download-link on Introduction_002_How_to_Use-chapter
@@ -224,6 +221,133 @@ TODO!! buggy function
 
 </TODO>
 ## Ultraschall Framework - Changelog
+
+### 4.00 Beta 2.761: - "Coldplay - Fix You" - 23rd of September 2019
+
+Has now 985 functions with 8 new ones!
+
+**IMPORTANT!: This is a massive critical bugfix release. About 60 functions returned wrong returnvalues in case of an error.  
+If you use any of the functions listed in _Changes from Beta 2.76 to Beta 2.761_, you should check, if your scripts still work.  
+This is totally my fault, as I had some of them wrong to begin with.  
+My apologies for any inconvenience.... :/**  
+
+  **New in this release:**
+  
+  - **Critical Bugfixes**  
+  In case of errors, many functions returned wrong returnvalues or had faulty returnvalues stated in the docs. All of them are fixed now.  
+  Please check, if your scripts use any of the functions listed in Changes for more details.  
+  Hope this is the last time, stuff like that happened...
+  
+  - **GetProjectStateChunk**  
+  gets a full StateChunk of the current project(finally working!)  
+  Now you can get all states of your project!  
+  
+  - **MediaExplorer**  
+  Get the HWND(GetMediaExplorerHWND), update the listview(UpdateMediaExplorer) and run an action, associated with the MediaExplorer-section(MediaExplorer\_OnCommand).
+  
+  - **ConvertYCoordsMac2Win**  
+  Y-coordinates on Mac are different from the ones in Windows/Linux, meaning, pixel 0 is at the bottom, while Windows/Linux start on top.  
+  This function converts the y-coordinates between these two coordinate-systems.  
+  
+  - **New version of Config-Vars-displayer-script**
+  Shows changed with doubles without a problem now, is faster, uses the config-var-docs included with the API to get the currently accepted config-vars.
+  I also improved the layout a bit.
+  
+###New features in 4.00beta2.761
+   - Helper functions: FindPatternsInString - finds all occurrences of a matching-pattern in a string
+   - Helper functions: IsWithinTimeRange - returns, if a time is within a start and endtime, takes care of the precision-problem time-positions in Lua have
+   - ProjectManagement: GetProjectStateChunk - returns the ProjectStateChunk of the current project(finally working!)
+   - Scripts: ultraschall\_developertool\_Display-Altered-Config-Vars.lua - new version, which solves the faulty-displaying-of-double-issue, faster and improved layout. Uses now ConfigVars-Docfile to read the currently supported ConfigVars.
+   - Trackmanagement: IsSplitAtPosition - returns, if a split/mediaitemend/mediaitemstart exists at a certain position, within certain tracks
+   - User Interface: ConvertYCoordsMac2Win - converts y-coordinates between Windows/Linux and Mac related coordinatesystems
+   - User Interface: GetMediaExplorerHWND - gets the HWND-windowhandler of the Media Explorer
+   - User Interface: UpdateMediaExplorer - updates the listview of the Media Explorer
+   - User Interface: MediaExplorer\_OnCommand - runs an Media Explorer action(just like Reaper's Main\_OnCommand and Midi\_OnCommand-functions); runs no scripts yet, only native/extension actions
+
+###Changes from Beta 2.76 to Beta 2.761
+
+   - Automation Items: GetProject_CountAutomationItems - didn't return the right retval in case of an error -> fixed
+   - ColorManagement: RGB2Grayscale - didn't return the right retval in case of an error -> fixed 
+   - Configuration Files: CountIniFileExternalState_sec - did count keys instead of sections -> fixed(thanks to rstockm)
+   - Configuration Files: CountUSExternalState_sec - did count keys instead of sections -> fixed(thanks to rstockm)
+   - Configuration Files: CountUSExternalState_key - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: DeleteKBIniActions - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: DeleteKBIniScripts - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: DeleteKBIniKeys - didn't return the right retval in case of an error -> fixed 
+   - Configuration Files: EnumerateIniFileExternalState_sec - did enumerate keys instead of sections -> fixed(thanks to rstockm)
+   - Configuration Files: EnumerateKeysByPattern - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: EnumerateSectionsByPattern - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: EnumerateUSExternalState_sec - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: EnumerateUSExternalState_key - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: EnumerateValuesByPattern - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: SetIniFileExternalState - didn't return the right retval in case of an error -> fixed 
+   - Docs: Api-docs - went through all of them and removed MarkDown-issues, though I should do something on this MarkDown-issue. It's a drag...
+   - Docs: Doc-Engine - had wrong parameters and retvals in numerous functions...fixed(ooops)
+   - Docs: Doc-Engine: Docs_ConvertPlainTextToHTML - was missing html-codes in the description due me encoding it wrong
+   - Docs: GetRenderingToFileHWND - had parameters described, that don't exist -> fixed
+   - Docs: Reaper Internals - updated to Reaper 5.982, JSextension 0.990 added configvars from developer-releases
+   - Docs: Reaper: GetTrackSendInfo_Value - fixed Markdown-formatting-problems
+   - Docs: Reaper: print-functions - all print-functions, like sprint, fprint, gfx.printf, etc include now formatting information in the description.
+   - Docs: Reaper: SetTrackSendInfo_Value - fixed Markdown-formatting-problems
+   - EnvelopeManagement: SetArmState_Envelope - didn't return the right retval in case of an error -> fixed 
+   - FileManagement: CountLinesInFile - didn't return the right retval in case of an error -> fixed
+   - FileManagement: GetLengthOfFile - didn't return the right retval in case of an error -> fixed
+   - FileManagement: MakeCopyOfFile_Binary - didn't return the right retval in case of an error -> fixed
+   - FileManagement: ReadValueFromFile - didn't return the right retval in case of an error -> fixed
+   - FileManagement: ReadBinaryFileUntilPattern - didn't return the right retval in case of an error -> fixed
+   - FileManagement: ReadBinaryFileFromPattern - didn't return the right retval in case of an error -> fixed
+   - FXManagement: AddParmLFOLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a LFOLEARN entry to become PARMLEARN(thanks to Justin and Schwa for helping me with that)
+   - FXManagement: AddParmLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a PARMLEARN entry to become LFOLEARN(thanks to Justin and Schwa for helping me with that)
+   - FXManagement: AddParmAlias_FXStateChunk - enhanced doc-description
+   - FXManagement: CountParmAlias_FXStateChunk - returns now -1 in case of an errorenhanced doc-description
+   - FXManagement: CountParmLearn_FXStateChunk - returns now -1 in case of an error; enhanced doc-description
+   - FXManagement: CountParmLFOLearn_FXStateChunk - returns now -1 in case of an error; enhanced doc-description
+   - FXManagement: DeleteParmAlias_FXStateChunk - enhanced doc-description
+   - FXManagement: DeleteParmLFOLearn_FXStateChunk - enhanced doc-description
+   - FXManagement: GetParmModulationChunk_FXStateChunk - enhanced doc-description
+   - FXManagement: GetParmLFOLearn_MediaTrack - enhanced doc-description
+   - FXManagement: GetFXStateChunk - had layoutproblem, when the passed StateChunk was taken from a ProjectStateChunk -> fixed(thanks to lossius)
+   - FXManagement: SetFXStateChunk - didn't return the right retval in case of an error -> fixed
+   - FXManagement: SetParmLFOLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a LFOLEARN entry to become PARMLEARN(thanks to Justin and Schwa for helping me with that)
+   - FXManagement: SetParmLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a PARMLEARN entry to become LFOLEARN(thanks to Justin and Schwa for helping me with that)
+   - FXManagement: SetParmAlias_FXStateChunk - enhanced doc-description
+   - Helper Functions: CompareStringWithAsciiValues - returned -1 in case of an error, although boolean should be returned -> fixed
+   - Helper Functions: ConvertIntegerIntoString2 - didn't return the right retval in case of an error -> fixed
+   - Helper Functions: GetScriptFilenameFromActionCommandID - didn't return the right retval in case of an error -> fixed
+   - Helper Functions: GetUserInputs - did change the tables passed as default-retvals -> fixed now
+   - Helper Functions: IsItemInTrack - changed error-retval to nil; didn't return the right retval in case of an error -> fixed
+   - Helper Functions: LoadFunctionFromExtState - didn't return the right retval in case of an error -> fixed
+   - Helper Functions: SetIntConfigVar_Bitfield - didn't return the right retval in case of an error -> fixed
+   - Helper Functions: ToggleStateAction - wrongly stated to return boolean instead of integer in the docs -> fixed
+   - Helper Functions: ToggleStateButton - wrong retval-description in the docs -> fixed
+   - Marker Management: DeleteNormalMarker - returned wrong retval in case of an error -> fixed
+   - Marker Management: DeleteEditMarker - returned wrong retval in case of an error -> fixed
+   - Marker Management: EnumerateEditRegion - returned wrong retval in case of an error -> fixed
+   - Marker Management: SetMarkerByIndex - returned wrong retval in case of an error -> fixed
+   - MediaItem Management: GetItemSpectralConfig - didn't return the right retval in case of an error -> fixed
+   - MediaItem Management: GetItemSpectralVisibilityState - didn't return the right retval in case of an error -> fixed
+   - MediaItem Management: GetMediaItemTake - didn't return the right retval in case of an error -> fixed
+   - MediaItem Management: RippleInsert_MediaItemStateChunks - had inner variable exposed
+   - MediaItem Management: SetItemLength - didn't return the right retval in case of an error -> fixed
+   - MediaItem Management: SetItemPosition - didn't return the right retval in case of an error -> fixed
+   - MediaItem Management: SetItemUSTrackNumber_StateChunk - didn't return in some errorcases, potentially resulting in a Lua-error -> fixed
+   - MediaItem Management: SplitMediaItems_Position - didn't return the right retval in case of an error -> fixed 
+   - Project Management: GetProject_GetRegion - returned wrong retval in case of an error -> fixed
+   - Project Management: GetProject_CountMasterHWOuts - returned wrong retval in case of an error -> fixed
+   - Project Management: GetProject_MasterGroupFlagsState - returned wrong retval in case of an error -> fixed
+   - Project Management: GetProject_MasterGroupFlagsHighState - returned wrong retval in case of an error -> fixed
+   - Rendering: ApplyRenderTable_Project - stated nil as retval in case of an error, though it is false -> fixed
+   - Rendering: ApplyRenderTable_ProjectFile - stated nil as retval in case of an error, though it is false -> fixed
+   - Rendering: GetRenderPreset_RenderTable - stated false as retval in case of an error, though it is nil -> fixed
+   - Track Management: RemoveMediaItem_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - Track Management: RemoveMediaItemByIGUID_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - Track Management: RemoveMediaItemByGUID_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - Track Management: SetMediaItemStateChunk_in_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - User Interface: GetVideoHWND - returned wrong retval in case of an error -> fixed
+   - Video: VID_Pixels2VideoUIStateCoords - returned wrong retval in case of an error -> fixed
+   - Video: VID_VideoUIStateCoords2Pixels - returned wrong retval in case of an error -> fixed
+
+---
 
 ### 4.00 Beta 2.76: - "The Police - Walking on the Moon" - 20th of July 2019
 
