@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 5.982
+            ## ReaScript API as of Reaper 5.983
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -4689,7 +4689,7 @@
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
         <chapter_context>
-            Audio Management
+            AudioMidi Devicemanagement
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
@@ -10783,12 +10783,21 @@
         <functioncall prog_lang="lua">reaper.Main_openProject(string name)</functioncall>
         <functioncall prog_lang="python">RPR_Main_openProject(String name)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=5.983
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            opens a project. will prompt the user to save, etc.
-            if you pass a .RTrackTemplate file then it adds that to the project instead.
+            opens a project. 
+            
+            will prompt the user to save unless name is prefixed with 'noprompt:'. 
+                example: "noprompt:projectfile.rpp"
+                 
+            If name is prefixed with 'template:', project file will be loaded as a template.
+                example: "template:projectfile.rpp"
+            
+            You can combine both: "template:noprompt:projectfile.rpp"
+            
+            If passed a .RTrackTemplate file, adds the template to the existing project.
         </description>
         <parameters>
             string name - the path and filename of the project/template you want to open

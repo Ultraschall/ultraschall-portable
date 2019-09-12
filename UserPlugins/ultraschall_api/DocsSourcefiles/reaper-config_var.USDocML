@@ -241,6 +241,7 @@
            >2002876005, WAV  
            >2004250731, WavPack lossless compressor  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked..  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -785,7 +786,7 @@
           For other settings, as set in Preferences -> Media Item Defaults, see [loopnewitems](#loopnewitems), [splitautoxfade](#splitautoxfade), [autoxfade](#autoxfade), [deffadeshape](#deffadeshape), [defxfadeshape](#defxfadeshape),   
                                                        [deffadelen](#deffadelen), [defsplitxfadelen](#defsplitxfadelen)  
           
-          Stored in reaper.ini under the same name in the section REAPER, but not, when changed through the Options-menu!  
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked..  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -797,10 +798,10 @@
       <slug>bouncecfg</slug>  
       <title>bouncecfg</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown, but seems to be for storing bounce-settings  
+          Contains the bounce-outputfile-settings, but seems not to be updated after having set it once, only in the reaper.ini
           it is an integer  
             
-            
+          Stored in reaper.ini under the same name in the section REAPER, when bounce-cfg-settings have been changed
       </description>  
       <chapter_context>  
          Config Variables  
@@ -2949,9 +2950,10 @@
       <slug>defstretchmode</slug>  
       <title>defstretchmode</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown  
+          unknown 
           It is an integer  
-            
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -3223,6 +3225,7 @@
       </description>  
       <chapter_context>  
          Config Variables  
+         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -3244,6 +3247,7 @@
       </description>  
       <chapter_context>  
          Config Variables  
+         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -3252,15 +3256,12 @@
       <slug>disk_rdblksex</slug>  
       <title>disk_rdblksex</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown, has probably something to do with disk read blocks  
+          Read Buffers-inputbox, as set in Preferences -> Buffering -> Advanced Disk I/O options...-button -> Disk reads-area
           It is an integer-bitfield  
           
-           >&1=0, unknown  
-           >&1=1, unknown  
+           >2-2147483647; number of buffers; default is 3
            
-           >&2=0, unknown  
-           >&2=1, unknown  
-            
+          Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -5070,6 +5071,7 @@
            >0, Loop is off  
            >1, Loop is on  
            
+           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -5309,7 +5311,8 @@
             >> 1 1, L-R  
                
           Does not update state of the mute/solo-buttons or in the Track Manager, though it changes the state of mute/solo itself!  
-            
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -5455,9 +5458,12 @@
       <slug>maxspeakgain</slug>  
       <title>maxspeakgain</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown  
+          The maximum shown peak-gain of the shown peaks in MediaItems  
           It is a double-float  
             
+            >values, who change the gain range from -180(negative gain) to 3(positive gain, possibly higher?)
+            >0, seems to be no gain
+            >default is 64.0
       </description>  
       <chapter_context>  
          Config Variables  
@@ -5493,9 +5499,12 @@
       <slug>metronome_flags</slug>  
       <title>metronome_flags</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown  
+          The Metronome through Monitor FX-menuentry, as set in Metronome and Pre-roll-settings-dialog(Action: 40363) -> I/O-Button
           It is an integer  
-            
+          
+            >0, menu is unchecked; 1, menu is checked
+          
+          Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -5606,7 +5615,7 @@
       <slug>midieditor</slug>  
       <title>midieditor</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Several editor-settings, as set in Preferences -> MIDI Editor as well as in the menu of MIDI Editor -> Contents -> Behavior for "open items in built-in MIDI Editor"  
+          Several editor-settings, as set in Preferences -> MIDI Editor as well as in the menu of MIDI Editor -> Contents -> Behavior for "open items in built-in MIDI Editor" and some actions 
           It is an integer-bitfield  
           
            >&1 and &2, One MIDI editor per  
@@ -5637,8 +5646,8 @@
            >&256=0, Only MIDI items on the same track as the active item are editable(on) - checked  
            >&256=1, Only MIDI items on the same track as the active item are editable(off) - unchecked  
            
-           >&512=0, Selection is linked to editability(on) - checked  
-           >&512=1, Selection is linked to editability(off) - unchecked  
+           >&512=0, Selection is linked to editability(also MIDI-Editor-action 40891)(on) - checked  
+           >&512=1, Selection is linked to editability(also MIDI-Editor-action 40891)(off) - unchecked  
            
            >&1024=0, Media item selection is linked to visibility(on) - checked  
            >&1024=1, Media item selection is linked to visibility(off) - unchecked  
@@ -5665,8 +5674,13 @@
       <slug>midiins</slug>  
       <title>midiins</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown  
+          The number of MIDI-inserts currently available, as set in Preferences -> MIDI Devices -> MIDI inputs to make available -> contextmenu -> Enable Input/Input ID
+          Seems to be set like [midiins_cs](#midiins_cs), with the only difference being, that you need to check the "Enable input"-menuentry.
           It is an integer  
+          
+          >0(no MIDI-input) and higher
+          
+          Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -5678,9 +5692,13 @@
       <slug>midiins_cs</slug>  
       <title>midiins_cs</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown  
+          The number of MIDI-inputs for CC-control messages currently available, as set in Preferences -> MIDI Devices -> MIDI inputs to make available -> contextmenu
+          Seems to be set like [midiins](#midiins), with the only difference being, that you need to check the "Enable input for control messages"-menuentry.
           It is an integer  
-            
+          
+          >0(no MIDI-input for CC-control messages) and higher
+          
+          Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -5897,7 +5915,7 @@
       <slug>midivu</slug>  
       <title>midivu</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Several editor-settings, as set in Preferences -> MIDI Editor, Preferences -> Track Control Panels section VU meters, as well as in Options of the MIDI Editor itself  
+          Several editor-settings, as set in Preferences -> MIDI Editor, Preferences -> Track Control Panels section VU meters, as well as in Options of the MIDI Editor itself and some actions.
           It is an integer-bitfield  
           
            >&1=0, Show MIDI velocity on track VU(Preferences -> Track Control Panels, section VU meters)(on) - checked  
@@ -5923,6 +5941,12 @@
            
            >&8192=0, Display 14-bit MSB/LSB CC data as a single entry in event list/properties(MIDI Editor -> Options)(on) - checked  
            >&8192=1, Display 14-bit MSB/LSB CC data as a single entry in event list/properties(MIDI Editor -> Options)(off) - unchecked  
+            
+           >&16384=0, Options: Enable extending parent media item when editing MIDI notes (if parent item is exactly the length of the MIDI content)(MIDIEditor-action: 40817) - off
+           >&16384=1, Options: Enable extending parent media item when editing MIDI notes (if parent item is exactly the length of the MIDI content)(MIDIEditor-action: 40817) - on
+            
+           >&32768=0, Show tooltips in MIDI track list-contextmenu-entry in MIDI-Editor track list - checked
+           >&32768=1, Show tooltips in MIDI track list-contextmenu-entry in MIDI-Editor track list - unchecked
             
           For other MIDI editor-settings, see [midieditor](#midieditor), [rbn](#rbn), [midiccdensity](#midiccdensity), [mididefcolormap](#mididefcolormap)  
           For other settings in Preferences -> Track Control Panels, see [slidermaxv](#slidermaxv), [sliderminv](#sliderminv), [groupdispmode](#groupdispmode), [tcpalign](#tcpalign), [tinttcp](#tinttcp), [nometers](#nometers), [resetvuplay](#resetvuplay), [vuclipstick](#vuclipstick),   
@@ -6048,6 +6072,7 @@
            
           For other mixer-context-menu-settings, see [showctinmix](#showctinmix), [mixerflag](#mixerflag) and [mixeruiflag](#mixeruiflag)  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -6059,8 +6084,10 @@
       <slug>mousemovemod</slug>  
       <title>mousemovemod</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown  
-          It is an integer  
+          unknown, influenced, when [scnameedit](#scnameedit) is changed by Reaper.
+          It is a double  
+            
+            >either 0(scnameedit=0) or 2.1219957909653e-314(scnameedit=1)
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7095,6 +7122,7 @@
            
                     
           Stored in reaper.ini under the same name in the section REAPER.  
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
            
       </description>  
       <chapter_context>  
@@ -7508,7 +7536,8 @@
           
            >0, item grouping enabled  
            >1, item grouping disabled  
-            
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7526,6 +7555,7 @@
            >0, don't select whole group, when selecting one item(off) - unchecked  
            >1, select whole group, when selecting one item(on) - checked  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7569,6 +7599,7 @@
           
            >2 to 64; in steps of two(2, 4, 6, 8, 10, etc)  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7588,7 +7619,7 @@
           To set other Master VU settings, see [mvu_rmssize](#mvu_rmssize), [mvu_rmsoffs2](#mvu_rmsoffs2), [mvu_rmsgain](#mvu_rmsgain), [mvu_rmsred](#mvu_rmsred), [mvu_rmsmode](#mvu_rmsmode)  
             
                     
-          Stored in reaper.ini under the same name in the section REAPER.  
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
       </description>  
       <chapter_context>  
@@ -7684,8 +7715,13 @@
       <slug>projmeasoffsruler</slug>  
       <title>projmeasoffsruler</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          undocumented  
+          Base ruler markings off this measure-checkbox, as set in Project Settings -> Project Settings
+          It is an integer
             
+          >0, checkbox unchecked
+          >1, checkbox checked
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7701,7 +7737,8 @@
           Only integer allowed.  
           
              >0 to 2147483647; higher values lead to negative values  
-            
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7717,6 +7754,8 @@
           It's a double float.  
           Negative values are allowed  
             
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7747,7 +7786,8 @@
            >&16=1, Count in before recording enabled  
            
           To set preroll-settings, see [preroll](#preroll)  
-            
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7763,7 +7803,8 @@
           Only integer allowed.  
           
           >0 to 2147483647; higher values lead to negative values  
-            
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7780,6 +7821,7 @@
           
           >0 to 2147483647; higher values lead to negative values  
            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7796,6 +7838,8 @@
           It is a double-float.  
           
            >5e-051 to 1.9905358527675; 0.5 for 0dB  
+           
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7814,6 +7858,7 @@
           
            >5e-051 to 1.9905358527675; 0.5 for 0dB  
            
+         Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7827,7 +7872,8 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           unknown  
           It is an integer  
-            
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7846,6 +7892,7 @@
             
           For other Peaks Display Settings, see [showpeaks](#showpeaks), [specpeak_alpha](#specpeak_alpha)  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7929,6 +7976,7 @@
            >0, the box isn't checked(no adding)  
            >1, the box is checked(add the rendered files to the project)  
            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7948,7 +7996,9 @@
            
            >&2=0, Noise shaping isn't checked  
            >&2=1, Noise shaping is checked  
-            
+          
+
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7969,6 +8019,8 @@
            >3, Online Render(Idle)  
            >4, Offline Render(Idle)  
             
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7981,11 +8033,14 @@
       <title>projrendernch</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Rendering-SampleRate, as set in the Options-section of the Render to File-dialog  
+          Although the name seems to indicate number of channels, it is actually samplerate.
           It's an integer  
           
            >0, project default setting  
            >everything else, the render-samplerate in Hz  
             
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7997,9 +8052,13 @@
       <slug>projrenderqdelay</slug>  
       <title>projrenderqdelay</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown
+          The render-queue-delay-inputbox, which holds the length of the render-queue-delay in seconds, as set in the Render to File-dialog.
+          This is for new projects.
           It is an integer
             
+            >0-2147483648 in seconds
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -8016,7 +8075,8 @@
           
            >0, dont use sample rate - unchecked  
            >1, use sample rate - checked  
-            
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -8058,6 +8118,7 @@
       <title>projrendersrate</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The number of Channels to be rendered, as set in the Channels-dropdownlist in the Options-section of the Render to File-Dialog.  
+          Although the name indicates sample-rate, this stores the number of channels instead!
           It's an integer  
           
            >1, Mono  
@@ -8068,6 +8129,7 @@
            >...  
            >64, 64 Channels  
            
+           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -8088,6 +8150,8 @@
            >8, Region render matrix  
            >32, Selected media items  
             
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -8106,6 +8170,7 @@
            >1, Ripple edit per track  
            >2, Ripple edit all tracks  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -8159,6 +8224,7 @@
            >&4096=0, Item stretch markers(off) - unchecked  
            >&4096=1, Item stretch markers(on) - checked  
            
+         Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -8563,6 +8629,7 @@
            
           For other lane-relevant settings, see [takelanes](#takelanes), [autoxfade](#autoxfade)  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -8586,6 +8653,7 @@
            >5, Hours:Minutes:Seconds:Frames  
            >8, Absolute Frames  
            
+         Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -8609,6 +8677,7 @@
            >5, Hours:Minutes:Seconds:Frames  
            >8, Absolute Frames  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -8645,6 +8714,7 @@
            >0, track grouping is disabled  
            >1, track grouping is enabled  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -8779,6 +8849,7 @@
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
       </description>  
       <chapter_context>  
@@ -8797,6 +8868,7 @@
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
       </description>  
       <chapter_context>  
@@ -9042,14 +9114,14 @@
           The Reascript-settings as set in Preferences -> ReaScript  
           It's an integer-bitfield  
           
-           >&1=0, Enable Python for use with ReaScript -> unchecked  
-           >&1=1, Enable Python for use with ReaScript -> checked  
+           >&1=0, Enable Python for use with ReaScript - unchecked  
+           >&1=1, Enable Python for use with ReaScript - checked  
             
-           >&2=0, Clear Reascript console on ShowConsoleMsg("") -> checked  
-           >&2=1, Clear Reascript console on ShowConsoleMsg("") -> unchecked  
+           >&2=0, Clear Reascript console on ShowConsoleMsg("") - checked  
+           >&2=1, Clear Reascript console on ShowConsoleMsg("") - unchecked  
            
-           >&4=0, Clear Console before running any ReaScript -> unchecked  
-           >&4=1, Clear Console before running any ReaScript -> checked  
+           >&4=0, Clear Console before running any ReaScript - unchecked  
+           >&4=1, Clear Console before running any ReaScript - checked  
            
           For the Reascript-timeout-setting, see [reascripttimeout](#reascripttimeout)  
             
@@ -9159,6 +9231,8 @@
            >2002876005, WAV  
            >2004250731, WavPack lossless compressor  
             
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked, but with more settings.
       </description>  
       <chapter_context>  
          Config Variables  
@@ -9407,6 +9481,7 @@
            >2002876005, WAV  
            >2004250731, WavPack lossless compressor  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked, but with more settings.
       </description>  
       <chapter_context>  
          Config Variables  
@@ -9493,6 +9568,7 @@
           
            >0 to 2147483647; in milliseconds  
            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.
       </description>  
       <chapter_context>  
          Config Variables  
@@ -9586,8 +9662,8 @@
            >&1=0, Ignore tempo change notifications from master-radiobutton selected  
            >&1=1, Build tempo map automatically as master plays-radiobutton selected  
            
-           >&2=0, Send loop point/repeat change requests to master -> unchecked  
-           >&2=1, Send loop point/repeat change requests to master -> checked  
+           >&2=0, Send loop point/repeat change requests to master - unchecked  
+           >&2=1, Send loop point/repeat change requests to master - checked  
             
           For the "Play project n audio blocks early (usually 0)"-inputbox, see [rewireslavedelay](#rewireslavedelay).  
           For other ReWire-settings, see [userewire](#userewire) and [runallonstop](#runallonstop)  
@@ -9614,6 +9690,7 @@
           For the checkboxes in the ReWire-Slave-Settings-dialog, see [rewireslave](#rewireslave).  
           For other ReWire-settings, see [userewire](#userewire) and [runallonstop](#runallonstop)  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.
       </description>  
       <chapter_context>  
          Config Variables  
@@ -9880,8 +9957,8 @@
            >&2=0, Save undo history (RPP-UNDO)(if enabled in general prefs)(off) - unchecked  
            >&2=1, Save undo history (RPP-UNDO)(if enabled in general prefs)(on) - checked  
             
-           >&4=0, Allow load of undo history -> checked  
-           >&4=1, Allow load of undo history -> unchecked  
+           >&4=0, Allow load of undo history - checked  
+           >&4=1, Allow load of undo history - unchecked  
            
            >&8=0, Keep undo histories(Preferences -> Project - autosave settings)(off) - unchecked  
            >&8=1, Keep undo histories(Preferences -> Project - autosave settings)(on) - checked  
@@ -9923,6 +10000,7 @@
       <title>scnameedit</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Several settings, as set in Preferences -> Mouse Modifiers  
+          When Reaper sets this variable, this influences [mousemovemod](#mousemovemod) as well!
           It is an integer  
           
            >0, Edit track names on single click (otherwise doubleclick required)(off) - unchecked  
@@ -9946,7 +10024,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Use all MIDI inputs-checkbox, as set Scale Finder located in View -> Scale Finder as well as in   
             Preferences -> Mouse Modifiers(only MIDI CC event and MIDI CC lane-Modifiers) and in MIDI Editor -> Options -> Velocity editing lane and  
-            in MIDI Editor -> Options -> CC events in multiple media items  
+            in MIDI Editor -> Options -> CC events in multiple media items.
           It is an integer-bitfield  
           
            >&1=0, unknown  
@@ -9964,6 +10042,9 @@
            >&16=0, Draw and edit on all tracks(MIDI Editor -> Options -> CC events in multiple media items)  
            >&16=1, Edit on all tracks(MIDI Editor -> Options -> CC events in multiple media items)  
            
+           >&32=0, Edit CC-Events on all tracks(Tracklist in MIDI-Editor) ->unchecked
+           >&32=1, Edit CC-Events on all tracks(Tracklist in MIDI-Editor) ->checked
+           
            >&64=0, Edit previous note within current grid division(MIDI Editor -> Options -> Velocity editing lane)  
            >&64=1, Edit only when mouse is over velocity bar(MIDI Editor -> Options -> Velocity editing lane)  
             
@@ -9980,9 +10061,12 @@
       <slug>scoreminnotelen</slug>  
       <title>scoreminnotelen</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown  
+          The minimum length of a note, in the notation-view of the MIDI-Editor.
           It is an integer  
             
+            >4, one full note; lower than 4 are fractions of a note
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.
       </description>  
       <chapter_context>  
          Config Variables  
@@ -9996,6 +10080,8 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           unknown  
           It is an integer  
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.
       </description>  
       <chapter_context>  
          Config Variables  
@@ -10356,6 +10442,7 @@
            >0, don't show master track - unchecked  
            >1, show master track - checked  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.
       </description>  
       <chapter_context>  
          Config Variables  
@@ -11522,9 +11609,11 @@
       <slug>uiscale</slug>  
       <title>uiscale</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Seems to be the ui-scale-setting, as set in Preferences -> General -> Advanced UI/system tweaks-button, but isn't updated when the option is changed, unlike it's reaper.ini-entry.  
-          It is an integer  
+          Changed by Reaper, when mouse-clicking on MediaItems, TrackEnvelopes and Automation Items
+          It is a double  
            
+           >either  
+           >-1.#QNAN(unclicked) or anything else(currently clicked)
            
       </description>  
       <chapter_context>  
@@ -11636,11 +11725,11 @@
           The checkboxes in the Direct-X (DX)-section, as set in Preferences -> ReWire/DX  
           It is an integer-bitfield.  
           
-           >&1=0, Enable DX plug-ins -> unchecked  
-           >&1=1, Enable DX plug-ins -> checked  
+           >&1=0, Enable DX plug-ins - unchecked  
+           >&1=1, Enable DX plug-ins - checked  
            
-           >&2=0, Scan DX plug-ins on startup (not required) -> unchecked  
-           >&2=1, Scan DX plug-ins on startup (not required) -> checked  
+           >&2=0, Scan DX plug-ins on startup (not required) - unchecked  
+           >&2=1, Scan DX plug-ins on startup (not required) - checked  
            
           For Disable DX-plug-ins scanning, see [disabledxscan](#disabledxscan)  
             
@@ -11686,20 +11775,20 @@
           The Reqire-section-settings, as set in Preferences -> ReWire/DX  
           It is an integer-bitfield  
           
-           >&1=0, ReWire mixer support (act as ReWire mixer, show ReWire devices in plug-in browser) -> unchecked  
-           >&1=1, ReWire mixer support (act as ReWire mixer, show ReWire devices in plug-in browser) -> checked  
+           >&1=0, ReWire mixer support (act as ReWire mixer, show ReWire devices in plug-in browser) - unchecked  
+           >&1=1, ReWire mixer support (act as ReWire mixer, show ReWire devices in plug-in browser) - checked  
             
-           >&2=0, Auto-open panels when opening ReWire devices -> checked  
-           >&2=1, Auto-open panels when opening ReWire devices -> unchecked  
+           >&2=0, Auto-open panels when opening ReWire devices - checked  
+           >&2=1, Auto-open panels when opening ReWire devices - unchecked  
            
-           >&4=0, Check for ReWire mixer/device on startup (and automatically enter slave mode if present) -> unchecked  
-           >&4=1, Check for ReWire mixer/device on startup (and automatically enter slave mode if present) -> checked  
+           >&4=0, Check for ReWire mixer/device on startup (and automatically enter slave mode if present) - unchecked  
+           >&4=1, Check for ReWire mixer/device on startup (and automatically enter slave mode if present) - checked  
            
            >&8=0, unknown  
            >&8=1, unknown  
            
-           >&16=0, Use alternative configuration file (reaper-rewire.ini) when in slave mode -> checked  
-           >&16=1, Use alternative configuration file (reaper-rewire.ini) when in slave mode -> unchecked  
+           >&16=0, Use alternative configuration file (reaper-rewire.ini) when in slave mode - checked  
+           >&16=1, Use alternative configuration file (reaper-rewire.ini) when in slave mode - unchecked  
            
           For Run FX on stop when ReWire devices are active-checkbox, see [runallonstop](#runallonstop).  
           For other ReWire-settings set behind the Button for "Rewire slave project settings"-dialog, see [rewireslave](#rewireslave) and [rewireslavedelay](#rewireslavedelay).  
@@ -11720,8 +11809,8 @@
           The "Automatically check for new versions of REAPER on startup"-checkbox in the "Startup Settings"-section as set in Preferences -> General.  
           Is an integer.  
           
-           >0, don't check for new versions -> unchecked  
-           >1, check for new versions -> checked  
+           >0, don't check for new versions - unchecked  
+           >1, check for new versions - checked  
            
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -12185,6 +12274,7 @@
            
           For the current horizontal-zoom-factor, see [zoom](#zoom)  
             
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.
       </description>  
       <chapter_context>  
          Config Variables  
@@ -12252,6 +12342,7 @@
       </description>  
       <chapter_context>  
          Config Variables  
+         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -12264,18 +12355,19 @@
           It is the context-menu from within the wiring-diagram  
           It is an integer-bitfield  
           
-           >&1=0, only show send wires on track mouseover -> unchecked   
-           >&1=1, only show send wires on track mouseover -> checked   
+           >&1=0, only show send wires on track mouseover - unchecked   
+           >&1=1, only show send wires on track mouseover - checked   
             
-           >&16=0, show routing controls when creating send/hardware output -> unchecked   
-           >&16=1, show routing controls when creating send/hardware output -> checked   
+           >&16=0, show routing controls when creating send/hardware output - unchecked   
+           >&16=1, show routing controls when creating send/hardware output - checked   
             
-           >&16=0, only show hardware output/input wires on track mouseover -> unchecked   
-           >&16=1, only show hardware output/input wires on track mouseover -> checked   
+           >&16=0, only show hardware output/input wires on track mouseover - unchecked   
+           >&16=1, only show hardware output/input wires on track mouseover - checked   
            
       </description>  
       <chapter_context>  
          Config Variables  
+         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -12518,6 +12610,7 @@
            
           For the current vertical zoom-factor, see [vzoom2](#vzoom2)  
            
+         Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.
       </description>  
       <chapter_context>  
          Config Variables  
@@ -12586,8 +12679,8 @@
             
       </description>  
       <chapter_context>  
-         Config Variables  
          Reaper Ini-Only
+         reaper_video
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -12607,8 +12700,8 @@
             - 3, 4 threads
       </description>  
       <chapter_context>  
-         Config Variables  
          Reaper Ini-Only
+         reaper_video
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -12629,8 +12722,8 @@
             
       </description>  
       <chapter_context>  
-         Config Variables  
          Reaper Ini-Only
+         reaper_video
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -12654,8 +12747,8 @@
             &4=1, Send MIDI CC control messages [BB xx vv] when mouse dragging in video window - checked
       </description>  
       <chapter_context>  
-         Config Variables  
          Reaper Ini-Only
+         reaper_video
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -12675,8 +12768,8 @@
                 0.100, 0.250, 0.500, 1.000(default), 1.500, 2.000
       </description>  
       <chapter_context>  
-         Config Variables  
          Reaper Ini-Only
+         reaper_video
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -12697,8 +12790,8 @@
                 3, All media and FX are not cached
       </description>  
       <chapter_context>  
-         Config Variables  
          Reaper Ini-Only
+         reaper_video
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -12716,10 +12809,30 @@
 
       </description>  
       <chapter_context>  
-         Config Variables  
          Reaper Ini-Only
+         reaper_video
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
-    
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>REAPER->pspage_last</slug>  
+      <title>REAPER->pspage_last</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+            The last selected tab in the Project Settings-Dialog. 
+
+            It is an integer
+                
+               >0, Project Settings-tab
+               >1, Media-tab
+               >2, Video-tab
+               >3, Advanced-tab
+               >4, Notes-tab
+      </description>  
+      <chapter_context>  
+         Reaper Ini-Only
+         REAPER
+      </chapter_context>  
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
 </USDocML>  

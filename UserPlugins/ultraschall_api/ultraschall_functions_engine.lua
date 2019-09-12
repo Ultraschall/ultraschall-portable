@@ -327,6 +327,53 @@ function ultraschall.SplitStringAtLineFeedToArray(unsplitstring)
     Splits the string unsplitstring at linefeed/tabs/control characters and puts each of these splitpieces into an array, each splitpiece one array-entry.
     The linefeeds will not(!) be returned in the array's entries.
     Returns the number of entries in the array, as well as the array itself
+    If there are no control characters or linefeeds in the string, the array will have only one entry with unsplitstring in it.
+  
+  returns -1 in case of failure
+  </description>
+  <parameters>
+    string unsplitstring - the string, that shall be split at LineFeed/Tabs/Control Characters. Nil is not allowed.
+  </parameters>
+  <retvals>
+    integer count - number of entries in the split_string-array
+    array split_string - an array with all the individual "postsplit"-pieces of the string
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Data Manipulation
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>string, split, linefeed, tabs, control characters, array</tags>
+</US_DocBloc>
+]]
+  local array={}
+  if unsplitstring==nil then ultraschall.AddErrorMessage("SplitStringAtLineFeedToArray", "unsplitstring", "nil is not allowed as value", -1) return -1 end
+  unsplitstring=string.gsub (unsplitstring, "\r", "")
+  unsplitstring=unsplitstring.."\n"
+  local count=0
+  for k in string.gmatch(unsplitstring, "(.-)\n") do
+    count=count+1
+    array[count]=k
+  end
+  if count==0 then return 1, {unsplitstring} end
+  return count, array
+end
+
+function ultraschall.SplitStringAtLineFeedToArray(unsplitstring)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SplitStringAtLineFeedToArray</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer count, array split_string = ultraschall.SplitStringAtLineFeedToArray(string unsplitstring)</functioncall>
+  <description>
+    Splits the string unsplitstring at linefeed/tabs/control characters and puts each of these splitpieces into an array, each splitpiece one array-entry.
+    The linefeeds will not(!) be returned in the array's entries.
+    Returns the number of entries in the array, as well as the array itself
     If there are no controlcharacters or linefeeds in the string, the array will have only one entry with unsplitstring in it.
     returns -1 in case of failure
   </description>
@@ -876,9 +923,11 @@ function ultraschall.GetProject_Tabs()
   return CountProj, ProjTabList
 end
 
+-- Project ChangeCheck Initialisation
 ultraschall.tempCount, ultraschall.tempProjects = ultraschall.GetProject_Tabs()
 if ultraschall.ProjectList==nil then 
-  ultraschall.ProjectList=Projects ultraschall.ProjectCount=ultraschall.tempCount
+  ultraschall.ProjectList=ultraschall.tempProjects 
+  ultraschall.ProjectCount=ultraschall.tempCount
 end
 
 --[[
@@ -2105,8 +2154,8 @@ function ultraschall.EnumerateUSExternalState_sec(number)
 </US_DocBloc>
 --]]
   -- check parameter and existence of ultraschall.ini
-  if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "number", "only integer allowed", -1) return nil end
-  if reaper.file_exists(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")==false then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "", "ultraschall.ini does not exist", -2) return nil end
+  if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "number", "only integer allowed", -1) return false end
+  if reaper.file_exists(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")==false then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "", "ultraschall.ini does not exist", -2) return -1 end
 
   if number<=0 then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","number", "no negative number allowed", -3) return nil end
   if number>ultraschall.CountUSExternalState_sec() then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","number", "only "..ultraschall.CountUSExternalState_sec().." sections available", -4) return nil end
@@ -2114,11 +2163,11 @@ function ultraschall.EnumerateUSExternalState_sec(number)
   -- look for and return the requested line
   local count=0
   for line in io.lines(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini") do
-    check=line:match("%[.-%]")
+    local check=line:match("%[(.-)%]")
     if check~=nil then count=count+1 end
-    if count==number then return line end
+    if count==number then return check end
   end
-end
+end 
 
 --A=ultraschall.EnumerateUSExternalState_sec(10)
 
@@ -10742,11 +10791,12 @@ function ultraschall.CountIniFileExternalState_sec(ini_filename_with_path)
   
   for line in io.lines(ini_filename_with_path) do
     --local check=line:match(".*=.*")
-    check=line:match("%[.*.%]")
+    local check=line:match("%[.*.%]")
     if check~=nil then check="" count=count+1 end
   end
   return count
 end
+
 
 function ultraschall.CountIniFileExternalState_key(section, ini_filename_with_path)
 --[[
@@ -10841,8 +10891,8 @@ function ultraschall.EnumerateIniFileExternalState_sec(number_of_section, ini_fi
   local count=0
   for line in io.lines(ini_filename_with_path) do
     --local check=line:match(".*=.*")
-    check=line:match("%[.*.%]")
-    if check==nil then count=count+1 end
+    local check=line:match("%[(.*).%]")
+    if check~=nil then count=count+1 end
     if count==number_of_section then return line:sub(2,-2) end
   end
 end
@@ -34855,7 +34905,7 @@ function ultraschall.CheckForChangedProjectTabs(update)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, integer countReorderedProj, array reorderedProj, integer countNewProj, array newProj, integer countClosedProj, array closedProj = ultraschall.CheckForChangedProjectTabs(boolean update)</functioncall>
+  <functioncall>boolean retval, integer countReorderedProj, array reorderedProj, integer countNewProj, array newProj, integer countClosedProj, array closedProj, integer countRenamedProjects, array RenamesProjects = ultraschall.CheckForChangedProjectTabs(boolean update)</functioncall>
   <description>
     Returns if projecttabs have been changed due reordering, new projects or closed projects, since last calling this function.
     Set update=true to update Ultraschall's internal project-monitoring-list or it will only return the changes since starting the API in this script or since the last time you used this function with parameter update set to true!
@@ -34870,13 +34920,15 @@ function ultraschall.CheckForChangedProjectTabs(update)
     array newProj - the new projects as ReaProjects
     integer countClosedProj - the number of closed projects
     array closedProj - the closed projects as ReaProjects
+    integer countRenamedProjects - the number of projects, who got renamed by either saving under a new filename or loading of another project
+    array RenamesProjects - the renamed projects, by loading a new project or saving the project under another filename
   </retvals>
   <parameters>
     boolean update - true, update Ultraschall's internal projecttab-monitoring-list to the current state of all tabs
                    - false, don't update the internal projecttab-monitoring-list, so it will keep the "old" project-tab-state as checking-reference
   </parameters>
   <chapter_context>
-    Project-Files
+    Project-Management
     Helper functions
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
@@ -34884,7 +34936,7 @@ function ultraschall.CheckForChangedProjectTabs(update)
   <tags>helperfunctions, projectfiles, check, projecttab, change, order, new, closed, close</tags>
 </US_DocBloc>
 ]]
-  if type(update)~="boolean" then ultraschall.AddErrorMessage("CheckForChangedProjectTabs","update", "Must be a boolean!", -1) return false, -1 end
+  if type(update)~="boolean" then ultraschall.AddErrorMessage("CheckForChangedProjectTabs", "update", "Must be a boolean!", -1) return false, -1 end
   local Count, Projects = ultraschall.GetProject_Tabs()
 
   if ultraschall.ProjectList==nil then 
@@ -34916,7 +34968,7 @@ function ultraschall.CheckForChangedProjectTabs(update)
   for i=1, Count do
     for a=1, ultraschall.ProjectCount do
       if ultraschall.ProjectList[a][1]==Projects[i][1] then 
-        found=true         
+        found=true
         break
       end
     end
@@ -34935,7 +34987,7 @@ function ultraschall.CheckForChangedProjectTabs(update)
   for i=1, ultraschall.ProjectCount do
     for a=1, Count do
       if ultraschall.ProjectList[i][1]==Projects[a][1] then 
-        found=true         
+        found=true
         break
       end
     end
@@ -34945,10 +34997,22 @@ function ultraschall.CheckForChangedProjectTabs(update)
     end
     found=false
   end
-      
+  
+  -- check for changed projectnames(due saving, loading, etc)
+  local ProjectNames={}
+  local Projectnames_count=0
+  local found=false
+  
+  for i=1, ultraschall.ProjectCount do
+    if ultraschall.IsValidReaProject(ultraschall.ProjectList[i][1])==true and ultraschall.ProjectList[i][2]~=ultraschall.GetProjectFilename(ultraschall.ProjectList[i][1]) then
+      Projectnames_count=Projectnames_count+1
+      ProjectNames[Projectnames_count]=ultraschall.ProjectList[i][1]
+    end
+  end
+  
   if update==true then ultraschall.ProjectList=Projects ultraschall.ProjectCount=Count end
-  if ordercount>0 or newprojcount>0 or closedprojcount>0 then     
-    return true, ordercount, OrderRetValProj, newprojcount, NewRetValProj, closedprojcount, ClosedRetValProj
+  if ordercount>0 or newprojcount>0 or closedprojcount>0 or Projectnames_count>0 then
+    return true, ordercount, OrderRetValProj, newprojcount, NewRetValProj, closedprojcount, ClosedRetValProj, Projectnames_count, ProjectNames
   end
   return false
 end
@@ -44897,7 +44961,7 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  return "4.00","23rd of August 2019", "Beta 2.761", 400.02761,  "\"Coldplay - Fix You\"", ultraschall.hotfixdate
+  return "4.00","12th of September 2019", "Beta 2.762", 400.02762,  "\"The Beatles - Only a Northern Song\"", ultraschall.hotfixdate
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -46951,7 +47015,7 @@ end
 
 --O=ultraschall.GetScriptIdentifier()
 
-function ultraschall.GetDeferIdentifier(deferinstance)
+function ultraschall.GetDeferIdentifier(deferinstance, scriptidentifier)
   --[[
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>GetDeferIdentifier</slug>
@@ -46960,11 +47024,12 @@ function ultraschall.GetDeferIdentifier(deferinstance)
       Reaper=5.965
       Lua=5.3
     </requires>
-    <functioncall>string defer_identifier = ultraschall.GetDeferIdentifier(integer deferinstance)</functioncall>
+    <functioncall>string defer_identifier = ultraschall.GetDeferIdentifier(integer deferinstance, optional string scriptidentifier)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       returns the identifier for a specific ultraschall-defer-function.
       
-      This can be used to stop this defer-loop from the in- and outside of the script.
+      This defer-indentifier can be used to stop this defer-loop from the in- and outside of the script.
+      Be aware: This returns the defer-identifier even if the defer-loop in question isn't running currently!
       
       returns nil in case of an error.
     </description>
@@ -46975,6 +47040,7 @@ function ultraschall.GetDeferIdentifier(deferinstance)
     </retvals>
     <parameters>
       integer deferinstance - the defer-instance, whose identifier you want; 1 to 20
+      optional string scriptidentifier - you can pass a script-identifier for a specific scriptinstance to get the defer-identifiers of that script-instance; nil, to get the defer-identifiers of the current scriptinstance
     </parameter>
     <chapter_context>
       Defer-Management
@@ -46986,11 +47052,22 @@ function ultraschall.GetDeferIdentifier(deferinstance)
   ]]
   if math.type(deferinstance)~="integer" then ultraschall.AddErrorMessage("GetDeferIdentifier", "deferinstance", "must be an integer", -1) return nil end
   if deferinstance<1 or deferinstance>20 then ultraschall.AddErrorMessage("GetDeferIdentifier", "deferinstance", "must be between 1 and 20", -2) return nil end
+  if scriptidentifier~=nil and type(scriptidentifier)~="string" then
+    ultraschall.AddErrorMessage("GetDeferIdentifier", "scriptidentifier", "must be a string", -3) 
+    return nil
+  end
+  if scriptidentifier~=nil and scriptidentifier:match("ScriptIdentifier:.-%-%{........%-....%-....%-....%-............%}%....")==nil then 
+    ultraschall.AddErrorMessage("GetDeferIdentifier", "scriptidentifier", "must be a valid Scriptidentifier", -4) 
+    return nil 
+  end
   if deferinstance<10 then zero="0" else zero="" end
-  return ultraschall.GetScriptIdentifier()..".defer_script"..zero..deferinstance
+  if scriptidentifier~=nil then 
+    return scriptidentifier..".defer_script"..zero..deferinstance
+  else
+    return ultraschall.GetScriptIdentifier()..".defer_script"..zero..deferinstance
+  end
 end
 
---A=ultraschall.GetDeferIdentifier(2)
 
 --reaper.CF_SetClipboard(A)
 
@@ -62521,5 +62598,115 @@ function ultraschall.MediaExplorer_OnCommand(actioncommandid)
   local Actioncommandid=reaper.NamedCommandLookup(actioncommandid)
   return reaper.JS_Window_OnCommand(HWND, tonumber(Actioncommandid))
 end
+
+function ultraschall.GetDeferRunState(deferinstance, scriptidentifier)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetDeferRunState</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>string defer_identifier = ultraschall.GetDeferRunState(integer deferinstance, optional string scriptidentifier)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns the run-state of a Ultraschall-defer-loop in a specific scriptinstance
+      
+      returns nil in case of an error.
+    </description>
+    <retvals>
+      string defer_identifier - a specific and unique defer-identifier for this script-instance, of the format:
+                               - ScriptIdentifier: scriptfilename-guid.ext.deferXX
+                               - where XX is the defer-function-number. XX is between 1 and 20
+    </retvals>
+    <parameters>
+      integer deferinstance - the defer-instance, whose identifier you want; 1 to 20
+      optional string scriptidentifier - a script-identifier of a specific script-instance; nil, for the current script-instance
+    </parameter>
+    <chapter_context>
+      Defer-Management
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>defermanagement, get, defer, runstate, defer_identifier</tags>
+  </US_DocBloc>
+  ]]
+  if math.type(deferinstance)~="integer" then ultraschall.AddErrorMessage("GetDeferRunState", "deferinstance", "must be an integer", -1) return nil end
+  if deferinstance<1 or deferinstance>20 then ultraschall.AddErrorMessage("GetDeferRunState", "deferinstance", "must be between 1 and 20", -2) return nil end
+  if scriptidentifier~=nil and type(scriptidentifier)~="string" then
+    ultraschall.AddErrorMessage("GetDeferRunState", "scriptidentifier", "must be a string", -3) 
+    return nil
+  end
+  if scriptidentifier~=nil and scriptidentifier:match("ScriptIdentifier:.-%-%{........%-....%-....%-....%-............%}%....")==nil then 
+    ultraschall.AddErrorMessage("GetDeferRunState", "scriptidentifier", "must be a valid Scriptidentifier", -4) 
+    return nil 
+  end
+  if deferinstance<10 then zero="0" else zero="" end
+  if scriptidentifier~=nil then 
+    if reaper.GetExtState("ultraschall", scriptidentifier..".defer_script"..zero..deferinstance) == "running" then
+      return true
+    else
+      return false
+    end
+  else
+    if reaper.GetExtState("ultraschall", ultraschall.GetScriptIdentifier()..".defer_script"..zero..deferinstance) == "running" then
+      return true
+    else
+      return false
+    end
+  end
+end
+
+function ultraschall.DeleteUSExternalState(section, key)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>DeleteUSExternalState</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.982
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.DeleteUSExternalState(string section, string key)</functioncall>
+  <description>
+    Deletes an external state from the ultraschall.ini
+    
+    Returns false in case of error.
+  </description>
+  <parameters>
+    string section - the section, in which the to be deleted-key is located
+    string key - the key to delete
+  </parameters>
+  <retvals>
+    boolean retval - false in case of error; true in case of success
+  </retvals>
+  <chapter_context>
+    Ultraschall Specific
+    Ultraschall.ini
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>configurationmanagement, delete, section, key</tags>
+</US_DocBloc>
+]]  
+  if type(section)~="string" then ultraschall.AddErrorMessage("DeleteUSExternalState", "section", "must be a string", -1) return false end
+  if type(key)~="string" then ultraschall.AddErrorMessage("DeleteUSExternalState", "key", "must be a string", -2) return false end
+  local A,B,C=ultraschall.ReadFullFile(reaper.GetResourcePath().."/ultraschall.ini")
+  if A==nil then ultraschall.AddErrorMessage("DeleteUSExternalState", "", "no ultraschall.ini present", -3) return false end
+  A="\n"..A.."["
+  local Start, Part, EndOf = A:match("()\n(%["..section.."%]\n.-)()\n%[")
+  if Part==nil then ultraschall.AddErrorMessage("DeleteUSExternalState", "section", "no such section "..section.." in ultraschall.ini", -4) return false end
+  local Part=Part.."\n"
+  local Part2=string.gsub(Part, key.."=.-\n", "")
+  if Part2==Part then ultraschall.AddErrorMessage("DeleteUSExternalState", "key", "no such key in section "..section.." in ultraschall.ini", -5) return false end
+  local A2=A:sub(2,Start)..Part2:sub(1,-2)..A:sub(EndOf, -2)
+  if A2~=A then
+    local O=ultraschall.WriteValueToFile(reaper.GetResourcePath().."/ultraschall.ini", A2)
+    if O==-1 then ultraschall.AddErrorMessage("DeleteUSExternalState", "", "nothing deleted", -6) return false end
+  else
+    return false
+  end
+end
+
+
 
 ultraschall.ShowLastErrorMessage()
