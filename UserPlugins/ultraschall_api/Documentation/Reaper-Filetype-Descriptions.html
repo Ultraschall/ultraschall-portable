@@ -673,6 +673,7 @@ Files can be described in the reaper-configzip-info, but will be imported/export
     Every file entry starts with <i>SHA (SHA-1-HashValueofFile) "[Directory\]Filename.extension"</i>. <br>The hashvalue MUST be a valid SHA-1-Hashvalue of the file within ReaperConfigZip, or else, it will be ignored by Reaper-Import. The hash seems to be to help Reaper finding out, if a file that exists, has changed(replace) or not(No change).<br>
     Every entry as well as the end of the FLAGS-entries(after wwwroot), ends with the Hex-value 00. Seems to work with a simple SPACE as well, though.<br>
     The reaper-configzip-info file seems to work with only the FLAG - section. But prefer to include the <i>SHA (SHA-1-HashValueofFile) "[Directory\]Filename.extension"</i>, as this is standard behavior of Reaper.<p>
+    Important: If you want to create a ReaperConfigZip-file, accepted by Reaper, you must zip using the option "do not add directory entries" or Reaper will show error-messages during import. This is because the importer can create files+their paths but not an empty directory.
 
 
                 </div>

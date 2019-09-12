@@ -55,7 +55,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.76 - "The Police - Walking on the Moon" - 20th of July 2019 - Build: 40302</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.762 - "The Beatles - Only a Northern Song" - 12th of September 2019 - Build: 40377</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -142,7 +142,8 @@ Ultraschall API functions
 </tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Defer Loops</b></td></tr><tr><td><a href="#DeferScripts_001_Introduction">DeferScripts: Introduction to Ultraschall's Defer-functions</a></td>
 <td><a href="#DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API">DeferScripts: Special Defer-loops in the Ultraschall-API</a></td>
 <td><a href="#DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside">DeferScripts: Stopping Defer-loops from in- and outside of scripts</a></td>
-</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Localize Scripts</b></td></tr><tr><td><a href="#Localize_001_Introduction">Localize Scripts: Introduction</a></td>
+<td><a href="#DeferScripts_004_Working_with_Defer_Identifiers">DeferScripts: Working with DeferIdentifiers</a></td>
+</tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Localize Scripts</b></td></tr><tr><td><a href="#Localize_001_Introduction">Localize Scripts: Introduction</a></td>
 <td><a href="#Localize_002_LangPack_Fileformat">Localize Scripts: Language-pack-fileformat</a></td>
 <td><a href="#Localize_003_Localize_Functions">Localize Scripts: Functions</a></td>
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Helper Functions</b></td></tr><tr><td><a href="#Helper_Functions_001_Introduction">Helper_Functions: Introduction</a></td>
@@ -265,11 +266,9 @@ Hotfixes are available at <a href="http://ultraschall.fm/api">ultraschall.fm/api
 Just download the ultraschall_hotfixes.lua and put it into UserPlugins/ultraschall_api-folder.<br />
 The chance is high, that there is already an ultraschall_hotfixes.lua-file in the folder. You can safely overwrite it.<br />
 Voila, you have added the most recent bugfixes.</p>
-<pre><code>   To get the bugs back, just delete the ultraschall_hotfixes.lua.
-   
-   All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
-   
-   Check again from time to time to get the latest hotfixes.</code></pre>
+<p>To get the bugs back, just delete the ultraschall_hotfixes.lua.</p>
+<p>All fixes in ultraschall_hotfixes.lua will be part of the next full version of the Ultraschall-API.</p>
+<p>Check again from time to time to get the latest hotfixes.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_004_Bugreporting_FeatureRequests"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_004_Bugreporting_FeatureRequests">^</a> <u>Introduction: Bugreporting and Feature Requests</u></h4></div><p><p>If you find any bugs or itches and want to report them, I suggest you the following procedure:</p>
@@ -3514,6 +3513,43 @@ So, if you have two defer-loops, where the second defer-loop shall control, if t
 Run the function, that shall be deferred(and has one of Defer1 to Defer20 inside of it) and stop it using StopDeferCycle.</p>
 <p>If for some reason you didn't get the defer_identifier, no problem: use <a href="US_Api_Functions.html#GetDeferIdentifier">GetDeferIdentifier</a> to get it for a specific Ultraschall-Defer-function in your script.</p>
 
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="DeferScripts_004_Working_with_Defer_Identifiers"></a>
+<div style="font-size:100%"><h4><a href="#DeferScripts_004_Working_with_Defer_Identifiers">^</a> <u>DeferScripts: Working with DeferIdentifiers</u></h4></div><p><p>You may remember from the previous chapters, that I mentioned briefly a so called defer-identifier, which can be used for several things, e.g. <a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a>.<br />
+Well, there are more things you can do with it, like getting the current runstate of a Ultraschall-defer-cycle in a script.</p>
+<p>First, let's get the defer-identifiers:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#GetDeferIdentifier">GetDeferIdentifier</a></strong></p>
+</blockquote>
+<pre><code>        string defer_identifier = ultraschall.GetDeferIdentifier(integer deferinstance, optional string scriptidentifier)
+    </code></pre>
+<blockquote>
+<p>This function returns the defer-identifier of a specific defer-instance from a specific scriptinstance.<br />
+Let's imagine the following example:<br />
+You have Defer1 and Defer2 running in your script. To get their DeferIdentifiers, with which you can stop them, you just need to use:</p>
+</blockquote>
+<pre><code>        defer1_identifier = ultraschall.GetDeferIdentifier(1)
+        defer2_identifier = ultraschall.GetDeferIdentifier(2)</code></pre>
+<blockquote>
+<p>Now imagine, you have Defer1 and Defer2-defer-loops running in another script. You have the ScriptIdentifier for that script-instance and would love to have these defer-identifiers. You just do it this way:</p>
+</blockquote>
+<pre><code>        defer1_identifier = ultraschall.GetDeferIdentifier(1, ScriptIdentifier)
+        defer2_identifier = ultraschall.GetDeferIdentifier(2, ScriptIdentifier)</code></pre>
+<blockquote>
+<p>With these two variables, you can stop the Defer1 and Defer2-defer-loops in the other scriptinstance. One possible source for such a ScriptIdentifier would be using the function <a href="US_Api_Functions.html#Main_OnCommandByFilename">Main_OnCommandByFilename</a>.</p>
+</blockquote>
+<p>Second, let's get the runstate of Ultraschall-defer-loops:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#GetDeferRunState">GetDeferRunState</a></strong></p>
+</blockquote>
+<pre><code>        string defer_identifier = ultraschall.GetDeferRunState(integer deferinstance, optional string scriptidentifier)
+        </code></pre>
+<blockquote>
+<p>This basically works the same way as GetDeferIdentifier: pass over the defer-instance(1 to 20) and it will return true, if that specific defer-loop is running and false if not.<br />
+To get the runstates of other running script-instances, you can pass a second parameter scriptidentifier, which holds the scriptidentifier of that scriptinstance.<br />
+That way, you can monitor, if Ultraschall-defer-loops are still running or not.</p>
+</blockquote>
+<p>I have more ideas, what you can do with the defer-identifier, but they will be part of the future...</p>
+
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Localize_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Localize_001_Introduction">^</a> <u>Localize Scripts: Introduction</u></h4></div><p><p>Reaper has (among thousands of others) one great thing: Localization. That means, you can translate the whole software into many languages.<br />
 Unfortunately, this isn't possible for scripts, or better: Not that easy.</p>
@@ -3902,4 +3938,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.76 - 96 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.762 - 97 chapters available</td></table><br><hr></div></body></html>

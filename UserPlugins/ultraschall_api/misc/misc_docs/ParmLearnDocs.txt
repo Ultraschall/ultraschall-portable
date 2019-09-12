@@ -4,7 +4,6 @@ compiled by Meo Mespotine 07.05.2019
 Thanks to Anton9 for helping me with that :)
 
 
-
 Assignment of MIDI and OSC-commands to Parameter-Learn:
 
 PARMLEARN  integer parmidx:optional string parametername   integer midi_note  integer checkboxflags  optional string osc_message
@@ -45,6 +44,7 @@ parameters:
                               2, Soft takeover (absolute mode only)
                               3, Soft takeover (absolute mode only)+enable only when track or item is selected
                               4, enable only when effect configuration is focused
+                              8, MUST NOT BE SET, or this entry will be changed into LFOLEARN instead!
                               20, enable only when effect configuration is visible
                               
      optional string string osc_message - the message of the osc-controller; only when midi_note is set to 0
@@ -243,6 +243,7 @@ LFOLearn:
                               2, Soft takeover (absolute mode only)
                               3, Soft takeover (absolute mode only)+enable only when track or item is selected
                               4, enable only when effect configuration is focused
+                              8, MUST BE SET, or this entry will be changed into PARMLEARN instead!
                               20, enable only when effect configuration is visible
                               
      optional string string osc_message - the message of the osc-controller; only when midi_note is set to 0

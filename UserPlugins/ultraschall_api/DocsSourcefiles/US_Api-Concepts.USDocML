@@ -163,16 +163,16 @@
             So I added a way to deal with that.
             
             Hotfixes  
-                   Hotfixes are available at [ultraschall.fm/api](http://ultraschall.fm/api). They provide fixes for functions and bugs that came across after a release, but no new functions.  
-                   Just download the ultraschall\_hotfixes.lua and put it into UserPlugins/ultraschall\_api-folder.  
-                   The chance is high, that there is already an ultraschall\_hotfixes.lua-file in the folder. You can safely overwrite it.  
-                   Voila, you have added the most recent bugfixes.  
+               Hotfixes are available at [ultraschall.fm/api](http://ultraschall.fm/api). They provide fixes for functions and bugs that came across after a release, but no new functions.  
+               Just download the ultraschall\_hotfixes.lua and put it into UserPlugins/ultraschall\_api-folder.  
+               The chance is high, that there is already an ultraschall\_hotfixes.lua-file in the folder. You can safely overwrite it.  
+               Voila, you have added the most recent bugfixes.  
                    
-                   To get the bugs back, just delete the ultraschall_hotfixes.lua.
+               To get the bugs back, just delete the ultraschall_hotfixes.lua.
                    
-                   All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
+               All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
                    
-                   Check again from time to time to get the latest hotfixes.
+               Check again from time to time to get the latest hotfixes.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
@@ -4781,10 +4781,61 @@
             Defer Loops
         </chapter_context>
         <previous_chapter>DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API</previous_chapter>
-        <next_chapter>Localize_001_Introduction</next_chapter>
+        <next_chapter>DeferScripts_004_Working_with_Defer_Identifiers</next_chapter>
         <tags>defer, stop, defer loops, inside scripts, outside scripts</tags>
     </US_DocBloc>
     
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>DeferScripts_004_Working_with_Defer_Identifiers</slug>
+        <title>DeferScripts: Working with DeferIdentifiers</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            You may remember from the previous chapters, that I mentioned briefly a so called defer-identifier, which can be used for several things, e.g. [StopDeferCycle](usdocml://StopDeferCycle).  
+            Well, there are more things you can do with it, like getting the current runstate of a Ultraschall-defer-cycle in a script.  
+            
+            First, let's get the defer-identifiers:
+            
+            >**[GetDeferIdentifier](usdocml://GetDeferIdentifier)**
+            
+                        string defer_identifier = ultraschall.GetDeferIdentifier(integer deferinstance, optional string scriptidentifier)
+                    
+            >This function returns the defer-identifier of a specific defer-instance from a specific scriptinstance.  
+            >Let's imagine the following example:  
+            >You have Defer1 and Defer2 running in your script. To get their DeferIdentifiers, with which you can stop them, you just need to use:
+            
+                        defer1_identifier = ultraschall.GetDeferIdentifier(1)
+                        defer2_identifier = ultraschall.GetDeferIdentifier(2)
+            
+            >Now imagine, you have Defer1 and Defer2-defer-loops running in another script. You have the ScriptIdentifier for that script-instance and would love to have these defer-identifiers. You just do it this way:
+                        
+                        defer1_identifier = ultraschall.GetDeferIdentifier(1, ScriptIdentifier)
+                        defer2_identifier = ultraschall.GetDeferIdentifier(2, ScriptIdentifier)
+            
+            >With these two variables, you can stop the Defer1 and Defer2-defer-loops in the other scriptinstance.
+            >One possible source for such a ScriptIdentifier would be using the function [Main_OnCommandByFilename](usdocml://Main_OnCommandByFilename).
+            
+            Second, let's get the runstate of Ultraschall-defer-loops:
+            
+            >**[GetDeferRunState](usdocml://GetDeferRunState)**
+            
+                        string defer_identifier = ultraschall.GetDeferRunState(integer deferinstance, optional string scriptidentifier)
+                        
+            >This basically works the same way as GetDeferIdentifier: pass over the defer-instance(1 to 20) and it will return true, if that specific defer-loop is running and false if not.  
+            >To get the runstates of other running script-instances, you can pass a second parameter scriptidentifier, which holds the scriptidentifier of that scriptinstance.  
+            >That way, you can monitor, if Ultraschall-defer-loops are still running or not.  
+            
+            I have more ideas, what you can do with the defer-identifier, but they will be part of the future...
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document></source_document>
+        </chapter_context>
+        <chapter_context>
+            Defer Loops
+        </chapter_context>
+        <previous_chapter>DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside</previous_chapter>
+        <next_chapter>Localize_001_Introduction</next_chapter>
+        <tags>defer, stop, defer loops, inside scripts, outside scripts, defer_identifier</tags>
+    </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Localize_001_Introduction</slug>
@@ -4808,10 +4859,11 @@
         <chapter_context>
             Localize Scripts
         </chapter_context>
-        <previous_chapter>DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside</previous_chapter>
+        <previous_chapter>DeferScripts_004_Working_with_Defer_Identifiers</previous_chapter>
         <next_chapter>Localize_002_LangPack_Fileformat</next_chapter>
         <tags>localize, uslangpack</tags>
     </US_DocBloc>
+
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Localize_002_LangPack_Fileformat</slug>

@@ -91,6 +91,8 @@ function ultraschall.VID_VideoUIStateCoords2Pixels(uistate_x, uistate_y, videowi
     converts the ui_state-coordinates of the Video-Processor into pixel-coordinates within the Video Window
     
     You should add x and y-position of the Video-Processor-window, to get the actual screen-coordinates.
+    
+    returns nil in case of an error
   </description>
   <retvals>
     integer x_coordinate - the converted x-coordinate
@@ -111,10 +113,10 @@ function ultraschall.VID_VideoUIStateCoords2Pixels(uistate_x, uistate_y, videowi
   <tags>user interface, window, coordinates, pixel, ui_get_state, video-processor, convert</tags>
 </US_DocBloc>
 --]]
-  if type(uistate_x)~="number" or (uistate_x<0 or uistate_x>1) then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "uistate_x", "must be a number between 0 and 1", -1) return -1 end
-  if type(uistate_y)~="number" or (uistate_y<0 or uistate_y>1) then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "uistate_y", "must be a number between 0 and 1", -2) return -1 end
-  if math.type(videowindow_width)~="integer" or videowindow_width<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "videowindow_width", "must be an integer>0", -3) return -1 end
-  if math.type(videowindow_height)~="integer" or videowindow_height<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "videowindow_height", "must be an integer>0", -4) return -1 end
+  if type(uistate_x)~="number" or (uistate_x<0 or uistate_x>1) then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "uistate_x", "must be a number between 0 and 1", -1) return end
+  if type(uistate_y)~="number" or (uistate_y<0 or uistate_y>1) then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "uistate_y", "must be a number between 0 and 1", -2) return end
+  if math.type(videowindow_width)~="integer" or videowindow_width<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "videowindow_width", "must be an integer>0", -3) return end
+  if math.type(videowindow_height)~="integer" or videowindow_height<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "videowindow_height", "must be an integer>0", -4) return end
   
   return uistate_x*videowindow_width, uistate_y*videowindow_height
 end
@@ -133,6 +135,8 @@ function ultraschall.VID_Pixels2VideoUIStateCoords(x, y, videowindow_width, vide
     converts the ui_state-coordinates of the Video-Processor into pixel-coordinates within the Video Window
     
     You should add x and y-position of the Video-Processor-window, to get the actual screen-coordinates.
+    
+    returns nil in case of an error
   </description>
   <retvals>
     number x_coordinate - the converted x-coordinate, that reflects the values within the video-processor function ui_get_state
@@ -153,10 +157,10 @@ function ultraschall.VID_Pixels2VideoUIStateCoords(x, y, videowindow_width, vide
   <tags>user interface, window, coordinates, pixel, ui_get_state, video-processor, convert</tags>
 </US_DocBloc>
 --]]
-  if math.type(x)~="integer" or x<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "x", "must be an integer>0", -1) return -1 end
-  if math.type(y)~="integer" or y<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "y", "must be an integer>0", -2) return -1 end
-  if math.type(videowindow_width)~="integer" or videowindow_width<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "videowindow_width", "must be an integer>0", -3) return -1 end
-  if math.type(videowindow_height)~="integer" or videowindow_height<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "videowindow_height", "must be an integer>0", -4) return -1 end
+  if math.type(x)~="integer" or x<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "x", "must be an integer>0", -1) return end
+  if math.type(y)~="integer" or y<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "y", "must be an integer>0", -2) return end
+  if math.type(videowindow_width)~="integer" or videowindow_width<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "videowindow_width", "must be an integer>0", -3) return end
+  if math.type(videowindow_height)~="integer" or videowindow_height<0 then ultraschall.AddErrorMessage("VID_VideoUIStateCoords2Pixels", "videowindow_height", "must be an integer>0", -4) return end
   
   return x/videowindow_width, x/videowindow_height
 end

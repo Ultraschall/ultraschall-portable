@@ -1,0 +1,2 @@
+chcp 65001
+ "c:\Program Files (x86)\Pandoc\pandoc.exe" -f markdown_strict -t html C:/Ultraschall-Hackversion_3.2_US_beta_2_762/UserPlugins/ultraschall_api//temp/temporary.md -o C:/Ultraschall-Hackversion_3.2_US_beta_2_762/UserPlugins/ultraschall_api//temp/temporary.html

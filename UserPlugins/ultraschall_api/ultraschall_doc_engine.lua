@@ -62,7 +62,7 @@ function ultraschall.Docs_ConvertPlainTextToHTML(text)
   <description>
     Converts a plaintext into HTML.
     
-    Converts newlines to <br>, Double Spaces to &nbsp;&nbsp; and Tabs to &nbsp;&nbsp;&nbsp;&nbsp;
+    Converts newlines to &lt;br&gt;, Double Spaces to &amp;nbsp;&amp;nbsp; and Tabs to &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
     returns nil in case of an error
   </description>
   <retvals>

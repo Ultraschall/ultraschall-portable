@@ -40,6 +40,143 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.00 Beta 2.762: - "The Beatles - Only a Northern Song" - 12th of September 2019</h3>
+<p>Has now 987 functions with 2 new ones!</p>
+<h4>New features in 4.00beta2.762</h4>
+<ul>
+<li>Defer Management: GetDeferRunState - gets the current runstate of a ultraschall-defer-loop in the current or a specific scriptinstance</li>
+<li>Ultraschall: DeleteUSExternalState - deletes an extstate from the ultraschall.ini</li>
+</ul>
+<h4>Changes from Beta 2.761 to Beta 2.762</h4>
+<ul>
+<li>Configuration Files: CountIniFileExternalState_sec - had inner variable exposed -&gt; fixed</li>
+<li>Configuration Files: EnumerateIniFileExternalState_sec - did return keys instead of sections -&gt; fixed</li>
+<li>Docs: Reaper Internals - updated to Reaper 5.983, JS-extension 0.991</li>
+<li>Defer Management: GetDeferIdentifier - you can optionally pass a script-identifier now, to get the defer-identifier of another scriptinstance(used to support only the current script instance)</li>
+<li>Helper Functions: SplitStringAtLineFeedToArray - didn't always return the last entry of the passed string -&gt; fixed (thanks to Aurelien?)</li>
+<li>Project Management: CheckForChangedProjectTabs - checks now as well, if projectfilenames have changed, by either loading a project or saving a project under a new filename</li>
+<li>Project Management: ProjectTabs-check - initialization had a bug, which could cause CheckForChangedProjectTabs to fail at times -&gt; fixed</li>
+<li>Ultraschall: EnumerateUSExternalState_sec - had problems, when ultraschall.ini was stored with CR+LF-lineendings -&gt; fixed (thanks to rstockm)</li>
+<li>User Interface: MB - couldn't start background-script due temp-folder missing -&gt; fixed</li>
+</ul>
+<h3>4.00 Beta 2.761: - "Coldplay - Fix You" - 23rd of September 2019</h3>
+<p>Has now 985 functions with 8 new ones!</p>
+<p><strong>IMPORTANT!: This is a massive critical bugfix release. About 60 functions returned wrong returnvalues in case of an error.<br />
+If you use any of the functions listed in <em>Changes from Beta 2.76 to Beta 2.761</em>, you should check, if your scripts still work.<br />
+This is totally my fault, as I had some of them wrong to begin with.<br />
+My apologies for any inconvenience.... :/</strong></p>
+<p><strong>New in this release:</strong></p>
+<ul>
+<li><p><strong>Critical Bugfixes</strong><br />
+In case of errors, many functions returned wrong returnvalues or had faulty returnvalues stated in the docs. All of them are fixed now.<br />
+Please check, if your scripts use any of the functions listed in Changes for more details.<br />
+Hope this is the last time, stuff like that happened...</p></li>
+<li><p><strong>GetProjectStateChunk</strong><br />
+gets a full StateChunk of the current project(finally working!)<br />
+Now you can get all states of your project!</p></li>
+<li><p><strong>MediaExplorer</strong><br />
+Get the HWND(GetMediaExplorerHWND), update the listview(UpdateMediaExplorer) and run an action, associated with the MediaExplorer-section(MediaExplorer_OnCommand).</p></li>
+<li><p><strong>ConvertYCoordsMac2Win</strong><br />
+Y-coordinates on Mac are different from the ones in Windows/Linux, meaning, pixel 0 is at the bottom, while Windows/Linux start on top.<br />
+This function converts the y-coordinates between these two coordinate-systems.</p></li>
+<li><p><strong>New version of Config-Vars-displayer-script</strong> Shows changed with doubles without a problem now, is faster, uses the config-var-docs included with the API to get the currently accepted config-vars. I also improved the layout a bit.</p></li>
+</ul>
+<h3>New features in 4.00beta2.761</h3>
+<ul>
+<li>Helper functions: FindPatternsInString - finds all occurrences of a matching-pattern in a string</li>
+<li>Helper functions: IsWithinTimeRange - returns, if a time is within a start and endtime, takes care of the precision-problem time-positions in Lua have</li>
+<li>ProjectManagement: GetProjectStateChunk - returns the ProjectStateChunk of the current project(finally working!)</li>
+<li>Scripts: ultraschall_developertool_Display-Altered-Config-Vars.lua - new version, which solves the faulty-displaying-of-double-issue, faster and improved layout. Uses now ConfigVars-Docfile to read the currently supported ConfigVars.</li>
+<li>Trackmanagement: IsSplitAtPosition - returns, if a split/mediaitemend/mediaitemstart exists at a certain position, within certain tracks</li>
+<li>User Interface: ConvertYCoordsMac2Win - converts y-coordinates between Windows/Linux and Mac related coordinatesystems</li>
+<li>User Interface: GetMediaExplorerHWND - gets the HWND-windowhandler of the Media Explorer</li>
+<li>User Interface: UpdateMediaExplorer - updates the listview of the Media Explorer</li>
+<li>User Interface: MediaExplorer_OnCommand - runs an Media Explorer action(just like Reaper's Main_OnCommand and Midi_OnCommand-functions); runs no scripts yet, only native/extension actions</li>
+</ul>
+<h3>Changes from Beta 2.76 to Beta 2.761</h3>
+<ul>
+<li>Automation Items: GetProject_CountAutomationItems - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>ColorManagement: RGB2Grayscale - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Configuration Files: CountIniFileExternalState_sec - did count keys instead of sections -&gt; fixed(thanks to rstockm)</li>
+<li>Configuration Files: CountUSExternalState_sec - did count keys instead of sections -&gt; fixed(thanks to rstockm)</li>
+<li>Configuration Files: CountUSExternalState_key - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Configuration Files: DeleteKBIniActions - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Configuration Files: DeleteKBIniScripts - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Configuration Files: DeleteKBIniKeys - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Configuration Files: EnumerateIniFileExternalState_sec - did enumerate keys instead of sections -&gt; fixed(thanks to rstockm)</li>
+<li>Configuration Files: EnumerateKeysByPattern - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Configuration Files: EnumerateSectionsByPattern - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Configuration Files: EnumerateUSExternalState_sec - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Configuration Files: EnumerateUSExternalState_key - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Configuration Files: EnumerateValuesByPattern - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Configuration Files: SetIniFileExternalState - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Docs: Api-docs - went through all of them and removed MarkDown-issues, though I should do something on this MarkDown-issue. It's a drag...</li>
+<li>Docs: Doc-Engine - had wrong parameters and retvals in numerous functions...fixed(ooops)</li>
+<li>Docs: Doc-Engine: Docs_ConvertPlainTextToHTML - was missing html-codes in the description due me encoding it wrong</li>
+<li>Docs: GetRenderingToFileHWND - had parameters described, that don't exist -&gt; fixed</li>
+<li>Docs: Reaper Internals - updated to Reaper 5.982, JSextension 0.990 added configvars from developer-releases</li>
+<li>Docs: Reaper: GetTrackSendInfo_Value - fixed Markdown-formatting-problems</li>
+<li>Docs: Reaper: print-functions - all print-functions, like sprint, fprint, gfx.printf, etc include now formatting information in the description.</li>
+<li>Docs: Reaper: SetTrackSendInfo_Value - fixed Markdown-formatting-problems</li>
+<li>EnvelopeManagement: SetArmState_Envelope - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>FileManagement: CountLinesInFile - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>FileManagement: GetLengthOfFile - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>FileManagement: MakeCopyOfFile_Binary - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>FileManagement: ReadValueFromFile - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>FileManagement: ReadBinaryFileUntilPattern - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>FileManagement: ReadBinaryFileFromPattern - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>FXManagement: AddParmLFOLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a LFOLEARN entry to become PARMLEARN(thanks to Justin and Schwa for helping me with that)</li>
+<li>FXManagement: AddParmLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a PARMLEARN entry to become LFOLEARN(thanks to Justin and Schwa for helping me with that)</li>
+<li>FXManagement: AddParmAlias_FXStateChunk - enhanced doc-description</li>
+<li>FXManagement: CountParmAlias_FXStateChunk - returns now -1 in case of an errorenhanced doc-description</li>
+<li>FXManagement: CountParmLearn_FXStateChunk - returns now -1 in case of an error; enhanced doc-description</li>
+<li>FXManagement: CountParmLFOLearn_FXStateChunk - returns now -1 in case of an error; enhanced doc-description</li>
+<li>FXManagement: DeleteParmAlias_FXStateChunk - enhanced doc-description</li>
+<li>FXManagement: DeleteParmLFOLearn_FXStateChunk - enhanced doc-description</li>
+<li>FXManagement: GetParmModulationChunk_FXStateChunk - enhanced doc-description</li>
+<li>FXManagement: GetParmLFOLearn_MediaTrack - enhanced doc-description</li>
+<li>FXManagement: GetFXStateChunk - had layoutproblem, when the passed StateChunk was taken from a ProjectStateChunk -&gt; fixed(thanks to lossius)</li>
+<li>FXManagement: SetFXStateChunk - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>FXManagement: SetParmLFOLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a LFOLEARN entry to become PARMLEARN(thanks to Justin and Schwa for helping me with that)</li>
+<li>FXManagement: SetParmLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a PARMLEARN entry to become LFOLEARN(thanks to Justin and Schwa for helping me with that)</li>
+<li>FXManagement: SetParmAlias_FXStateChunk - enhanced doc-description</li>
+<li>Helper Functions: CompareStringWithAsciiValues - returned -1 in case of an error, although boolean should be returned -&gt; fixed</li>
+<li>Helper Functions: ConvertIntegerIntoString2 - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Helper Functions: GetScriptFilenameFromActionCommandID - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Helper Functions: GetUserInputs - did change the tables passed as default-retvals -&gt; fixed now</li>
+<li>Helper Functions: IsItemInTrack - changed error-retval to nil; didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Helper Functions: LoadFunctionFromExtState - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Helper Functions: SetIntConfigVar_Bitfield - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Helper Functions: ToggleStateAction - wrongly stated to return boolean instead of integer in the docs -&gt; fixed</li>
+<li>Helper Functions: ToggleStateButton - wrong retval-description in the docs -&gt; fixed</li>
+<li>Marker Management: DeleteNormalMarker - returned wrong retval in case of an error -&gt; fixed</li>
+<li>Marker Management: DeleteEditMarker - returned wrong retval in case of an error -&gt; fixed</li>
+<li>Marker Management: EnumerateEditRegion - returned wrong retval in case of an error -&gt; fixed</li>
+<li>Marker Management: SetMarkerByIndex - returned wrong retval in case of an error -&gt; fixed</li>
+<li>MediaItem Management: GetItemSpectralConfig - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>MediaItem Management: GetItemSpectralVisibilityState - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>MediaItem Management: GetMediaItemTake - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>MediaItem Management: RippleInsert_MediaItemStateChunks - had inner variable exposed</li>
+<li>MediaItem Management: SetItemLength - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>MediaItem Management: SetItemPosition - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>MediaItem Management: SetItemUSTrackNumber_StateChunk - didn't return in some errorcases, potentially resulting in a Lua-error -&gt; fixed</li>
+<li>MediaItem Management: SplitMediaItems_Position - didn't return the right retval in case of an error -&gt; fixed</li>
+<li>Project Management: GetProject_GetRegion - returned wrong retval in case of an error -&gt; fixed</li>
+<li>Project Management: GetProject_CountMasterHWOuts - returned wrong retval in case of an error -&gt; fixed</li>
+<li>Project Management: GetProject_MasterGroupFlagsState - returned wrong retval in case of an error -&gt; fixed</li>
+<li>Project Management: GetProject_MasterGroupFlagsHighState - returned wrong retval in case of an error -&gt; fixed</li>
+<li>Rendering: ApplyRenderTable_Project - stated nil as retval in case of an error, though it is false -&gt; fixed</li>
+<li>Rendering: ApplyRenderTable_ProjectFile - stated nil as retval in case of an error, though it is false -&gt; fixed</li>
+<li>Rendering: GetRenderPreset_RenderTable - stated false as retval in case of an error, though it is nil -&gt; fixed</li>
+<li>Track Management: RemoveMediaItem_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -&gt; fixed</li>
+<li>Track Management: RemoveMediaItemByIGUID_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -&gt; fixed</li>
+<li>Track Management: RemoveMediaItemByGUID_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -&gt; fixed</li>
+<li>Track Management: SetMediaItemStateChunk<em>in</em>TrackStateChunk - docs incorrectly stated nil as retval in case of an error -&gt; fixed</li>
+<li>User Interface: GetVideoHWND - returned wrong retval in case of an error -&gt; fixed</li>
+<li>Video: VID_Pixels2VideoUIStateCoords - returned wrong retval in case of an error -&gt; fixed</li>
+<li>Video: VID_VideoUIStateCoords2Pixels - returned wrong retval in case of an error -&gt; fixed</li>
+</ul>
+<hr />
 <h3>4.00 Beta 2.76: - "The Police - Walking on the Moon" - 20th of July 2019</h3>
 <p>Has now 977 functions with 42 new ones!</p>
 <p><strong>New in this release:</strong></p>
