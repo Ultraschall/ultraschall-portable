@@ -105,4 +105,8 @@ end
 
 -- soundcheck_samplerate_action ()
 
+print(ultraschall.GetApiVersion())
+
+return_value2 = ultraschall.MB("Your samplerate is set to please set to 48000b", "WARNING - Ultraschall Soundcheck",3, "gut", "ach", "blafasel")
+
 soundcheck_main()
