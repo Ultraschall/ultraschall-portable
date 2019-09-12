@@ -32,6 +32,8 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- muss 48 KHz sein wenn mindestens eine StudioLink Spur im Projekt ist
 ---------------------------------------------------------------
 
+
+
 function soundcheck_samplerate()
 
   retval, actual_samplerate = reaper.GetAudioDeviceInfo("SRATE", "")
@@ -40,14 +42,32 @@ function soundcheck_samplerate()
 
     if ultraschall.IsTrackStudioLink(i) and actual_samplerate == "48000" then  -- es gibt mindestens eine StudioLink Spur und Samplerate steht nicht auf 48000
 
-      return_value = ultraschall.MB("Your samplerate is set to "..actual_samplerate.." please set to 48000", "WARNING - Ultraschall Soundcheck", 2, "Abbrechen", "Abschalten", "OK")
+      if tonumber(reaper.GetExtState ("soundcheck_timer", "samplerate"))+120 < reaper.time_precise() then
 
-      print(actual_samplerate)
-      break
-
+        soundcheck_samplerate_action()
+        -- print(actual_samplerate)
+        break
+      end
     end
   end
   retval, defer2_identifier = ultraschall.Defer2(soundcheck_samplerate, 2, 3)
+end
+
+
+function soundcheck_samplerate_action()
+
+  return_value = ultraschall.MB("Your samplerate is set to please set to 48000", "WARNING - Ultraschall Soundcheck",3, "gut", "ach nein", "blafasel")
+
+  if return_value == 3 then
+    reaper.SetExtState("soundcheck_timer", "samplerate", tostring(reaper.time_precise()), false)
+    reaper.Main_OnCommand(reaper.NamedCommandLookup("_Ultraschall_Settings"),0) -- öffne Ultraschall Settings
+
+  elseif return_value == 2 then
+    reaper.SetExtState("soundcheck_timer", "samplerate", tostring(reaper.time_precise()), false)
+    reaper.Main_OnCommand(40099,0) -- öffne Audio device Settings
+
+  end
+
 end
 
 
@@ -68,6 +88,10 @@ function soundcheck_samplerate_controller()
   end
 end
 
+
+
+
+
 --------------------
 
 function soundcheck_main()
@@ -78,5 +102,7 @@ function soundcheck_main()
   retval, defer1_identifier = ultraschall.Defer1(soundcheck_main, 2, 1)
 
 end
+
+-- soundcheck_samplerate_action ()
 
 soundcheck_main()
