@@ -5591,6 +5591,47 @@
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>midiccenv</slug>  
+      <title>midiccenv</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The Default shape for CC segments-dropdownlist, as set in Preferences -> MIDI Editor
+          It is an integer  
+                    
+           >0, Square
+           >1, Linear
+           >2, Slow start/end
+           >3, Fast start
+           >4, Fast end
+           >5, Bezier
+           
+          Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>  
+         Config Variables  
+         Pre-Releases
+      </chapter_context>  
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>midiccinterp</slug>  
+      <title>midiccinterp</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The Playback interpolation-inputbox, as set in Preferences -> MIDI Editor
+          It is an integer  
+                    
+           >0 to 2147483647 in ppq
+           
+          Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>  
+         Config Variables  
+         Pre-Releases
+      </chapter_context>  
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>midicctouchtimeout</slug>  

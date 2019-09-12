@@ -106,7 +106,7 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall\_api4.00\_beta2.762.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.762.zip).  
+            1. Just download the zip-file of the current version from [ultraschall\_api4.00\_beta2.76.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.76.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.
@@ -163,16 +163,16 @@
             So I added a way to deal with that.
             
             Hotfixes  
-                   Hotfixes are available at [ultraschall.fm/api](http://ultraschall.fm/api). They provide fixes for functions and bugs that came across after a release, but no new functions.  
-                   Just download the ultraschall\_hotfixes.lua and put it into UserPlugins/ultraschall\_api-folder.  
-                   The chance is high, that there is already an ultraschall\_hotfixes.lua-file in the folder. You can safely overwrite it.  
-                   Voila, you have added the most recent bugfixes.  
+               Hotfixes are available at [ultraschall.fm/api](http://ultraschall.fm/api). They provide fixes for functions and bugs that came across after a release, but no new functions.  
+               Just download the ultraschall\_hotfixes.lua and put it into UserPlugins/ultraschall\_api-folder.  
+               The chance is high, that there is already an ultraschall\_hotfixes.lua-file in the folder. You can safely overwrite it.  
+               Voila, you have added the most recent bugfixes.  
                    
-                   To get the bugs back, just delete the ultraschall_hotfixes.lua.
+               To get the bugs back, just delete the ultraschall_hotfixes.lua.
                    
-                   All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
+               All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
                    
-                   Check again from time to time to get the latest hotfixes.
+               Check again from time to time to get the latest hotfixes.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
@@ -4863,6 +4863,7 @@
         <next_chapter>Localize_002_LangPack_Fileformat</next_chapter>
         <tags>localize, uslangpack</tags>
     </US_DocBloc>
+
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Localize_002_LangPack_Fileformat</slug>

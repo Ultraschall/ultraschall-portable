@@ -27011,7 +27011,7 @@
         <functioncall prog_lang="python">(void retval, String title, String className, Int x, Int y, Int w, Int h, String styleOptional, void ownerHWNDOptional) = JS_Window_Create(title, className, x, y, w, h, styleOptional, ownerHWNDOptional)</functioncall>
         <requires>
             Reaper=5.982
-            JS=0.990
+            JS=0.991
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -27019,9 +27019,11 @@
 
             style: An optional parameter that overrides the default style. The string may include any combination of standard window styles, such as "POPUP" for a frameless window, or "CAPTION,SIZEBOX,SYSMENU" for a standard framed window.
 
-            On Linux and macOS, "MAXIMIZE" has not yet been implmented, and the remaining styles may appear slightly different from their WindowsOS counterparts.
+            On Linux and macOS, "MAXIMIZE" has not yet been implemented, and the remaining styles may appear slightly different from their WindowsOS counterparts.
 
             ownerHWND: Optional parameter, only available on WindowsOS. Usually either the REAPER main window or another script window, and useful for ensuring that the created window automatically closes when the owner is closed.
+            
+            NOTE: On Linux and macOS, the window contents are only updated \*between\* defer cycles, so the window cannot be animated by for/while loops within a single defer cycle.
         </description>
         <retvals>
             identifier retval, optional string style
@@ -28012,7 +28014,7 @@
         <functioncall prog_lang="python">JS_Window_Move(void windowHWND, Int left, Int top)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.991
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -28022,8 +28024,8 @@
            
             \* For a child window, they are relative to the upper-left corner of the parent window's client area.
 
+            \* Equivalent to calling [JS\_Window\_SetPosition](#JS_Window_SetPosition) with NOSIZE, NOZORDER, NOACTIVATE and NOOWNERZORDER flags set.
         </description>
-
         <parameters>
            identifier windowHWND - 
            integer left - 
@@ -28110,14 +28112,15 @@
         <functioncall prog_lang="python">JS_Window_Resize(void windowHWND, Int width, Int height)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.991
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Changes the dimensions of the specified window, keeping the top left corner position constant.
            
             \* If resizing script GUIs, call gfx.update() after resizing.
-
+            
+            \* Equivalent to calling JS_Window_SetPosition with NOMOVE, NOZORDER, NOACTIVATE and NOOWNERZORDER flags set.
         </description>
 
         <parameters>
@@ -28298,26 +28301,35 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_SetPosition</slug>
         <title>JS_Window_SetPosition(JS)</title>
-        <functioncall prog_lang="cpp">void JS_Window_SetPosition(void* windowHWND, int left, int top, int width, int height)</functioncall>
-        <functioncall prog_lang="eel">extension_api("JS_Window_SetPosition", void* windowHWND, int left, int top, int width, int height)</functioncall>
-        <functioncall prog_lang="lua">reaper.JS_Window_SetPosition(identifier windowHWND, integer left, integer top, integer width, integer height)</functioncall>
-        <functioncall prog_lang="python">JS_Window_SetPosition(void windowHWND, Int left, Int top, Int width, Int height)</functioncall>
+        <functioncall prog_lang="cpp">bool JS_Window_SetPosition(void* windowHWND, int left, int top, int width, int height, char* ZOrderOptional, char* flagsOptional)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_Window_SetPosition", void* windowHWND, int left, int top, int width, int height, optional #ZOrder, optional #flags)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, optional string ZOrder, optional string flags = reaper.JS_Window_SetPosition(identifier windowHWND, integer left, integer top, integer width, integer height, optional string ZOrder, optional string flags)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, void windowHWND, Int left, Int top, Int width, Int height, String ZOrderOptional, String flagsOptional) = JS_Window_SetPosition(windowHWND, left, top, width, height, ZOrderOptional, flagsOptional)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.991
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Sets the window position and size.
+            Interface to the Win32/swell function SetWindowPos, with which window position, size, Z-order and visibility can be set, and new frame styles can be applied.
 
+            ZOrder and flags are optional parameters. If no arguments are supplied, the window will simply be moved and resized, as if the NOACTIVATE, NOZORDER, NOOWNERZORDER flags were set.
+            \* ZOrder: "BOTTOM", "TOPMOST", "NOTOPMOST", "TOP" or a window HWND converted to a string, for example by the Lua function tostring.
+            \* flags: Any combination of the standard flags, of which "NOMOVE", "NOSIZE", "NOZORDER", "NOACTIVATE", "SHOWWINDOW", "FRAMECHANGED" and "NOCOPYBITS" should be valid cross-platform.
         </description>
-
+        <retvals>
+           boolean retval - 
+           optional string ZOrder - 
+           optional string flags - 
+        </retvals>
         <parameters>
            identifier windowHWND - 
            integer left - 
            integer top - 
            integer width - 
            integer height - 
+           optional string ZOrder - 
+           optional string flags - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -28356,6 +28368,41 @@
            identifier windowHWND - 
            string scrollbar - 
            integer position - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
+      <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_SetStyle</slug>
+        <title>JS_Window_SetStyle(JS)</title>
+        <functioncall prog_lang="cpp">bool JS_Window_SetStyle(void* windowHWND, char* style)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_Window_SetStyle", void* windowHWND, #style)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string style = reaper.JS_Window_SetStyle(identifier windowHWND, string style)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, void windowHWND, String style) = JS_Window_SetStyle(windowHWND, style)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=0.991
+            Lua=5.3
+        </requires>
+        <description>
+            Sets and applies a window style.
+
+            style may include any combination of standard window styles, such as "POPUP" for a frameless window, or "CAPTION,SIZEBOX,SYSMENU" for a standard framed window.
+
+            On Linux and macOS, "MAXIMIZE" has not yet been implmented, and the remaining styles may appear slightly different from their WindowsOS counterparts.
+        </description>
+        <retvals>
+           boolean retval - 
+           string style - 
+        </retvals>
+        <parameters>
+           identifier windowHWND - 
+           string style - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -28405,15 +28452,18 @@
         <functioncall prog_lang="python">Boolean JS_Window_SetZOrder(void windowHWND, String ZOrder, void insertAfterHWND)</functioncall>
         <requires>
             Reaper=5.982
-            JS=0.990
+            JS=0.991
             Lua=5.3
         </requires>
         <description>
             Sets the window Z order.
+            * Equivalent to calling JS_Window_SetPos with flags NOMOVE | NOSIZE.
+            * Not all the Z orders have been implemented in Linux yet.
 
             Parameters:
-            * ZOrder: "BOTTOM", "TOPMOST", "NOTOPMOST", "TOP" or "INSERT_AFTER".
-            * InsertAfterHWND: If ZOrder is INSERT_AFTER, insertAfterHWND must be a handle to the window behind which windowHWND will be placed in the Z order; otherwise, insertAfterHWND is ignored and can be left out (or it can simply be set to the same value as windowHWND).
+            * ZOrder: "BOTTOM", "TOPMOST", "NOTOPMOST", "TOP", or a window HWND converted to a string, for example by the Lua function tostring.
+
+            * InsertAfterHWND: For compatibility with older versions, this parameter is still available, and is optional. If ZOrder is "INSERTAFTER", insertAfterHWND must be a handle to the window behind which windowHWND will be placed in the Z order, equivalent to setting ZOrder to this HWND; otherwise, insertAfterHWND is ignored and can be left out (or it can simply be set to the same value as windowHWND).
         </description>
         <retvals>
            boolean  - 
@@ -28440,14 +28490,14 @@
         <functioncall prog_lang="python">JS_Window_Show(void windowHWND, String state)</functioncall>
         <requires>
             Reaper=5.982
-            JS=0.990
+            JS=0.991
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Sets the specified window's show state.
 
             Parameters:
-            * state: One of the following options: "SHOW", "SHOWNA", "SHOWMINIMIZED", "HIDE", "SHOWNOACTIVATE", "NORMAL", "SHOWNORMAL", "SHOWMAXIMIZED", "SHOWDEFAULT" or "RESTORE". 
+            \* state: One of the following options: "SHOW", "SHOWNA" (or "SHOWNOACTIVATE"), "SHOWMINIMIZED", "HIDE", "NORMAL", "SHOWNORMAL", "SHOWMAXIMIZED", "SHOWDEFAULT" or "RESTORE".
             
             On Linux and macOS, only the first four options are fully implemented.
 
@@ -29010,13 +29060,13 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>Xen_StartSourcePreview</slug>
         <title>Xen_StartSourcePreview(JS)</title>
-        <functioncall prog_lang="cpp">int Xen_StartSourcePreview(PCM_source* source, double gain, bool loop)</functioncall>
-        <functioncall prog_lang="eel">int extension_api("Xen_StartSourcePreview", PCM_source source, gain, bool loop)</functioncall>
-        <functioncall prog_lang="lua">integer id = reaper.Xen_StartSourcePreview(PCM_source source, number gain, boolean loop)</functioncall>
-        <functioncall prog_lang="python">Int Xen_StartSourcePreview(PCM_source source, Float gain, Boolean loop)</functioncall>
+        <functioncall prog_lang="cpp">int Xen_StartSourcePreview(PCM_source* source, double gain, bool loop, int* outputchanindexInOptional)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("Xen_StartSourcePreview", PCM_source source, gain, bool loop, optional int outputchanindexIn)</functioncall>
+        <functioncall prog_lang="lua">integer reaper.Xen_StartSourcePreview(PCM_source source, number gain, boolean loop, optional number outputchanindexIn)</functioncall>
+        <functioncall prog_lang="python">(Int retval, PCM_source source, Float gain, Boolean loop, Int outputchanindexInOptional) = Xen_StartSourcePreview(source, gain, loop, outputchanindexInOptional)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.986
+            JS=0.991
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -29035,6 +29085,7 @@
            PCM_source source - a PCM_source-created using a mediafile/item 
            number gain - the volume of the previewed pcm_source
            boolean loop - true, loop the PCM_source; false, play only once
+           optional number outputchanindexIn - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
