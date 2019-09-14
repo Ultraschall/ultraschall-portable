@@ -27,10 +27,78 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 
+
+-- Defer1: Soundcheck Daemon
+-- Defer2: Samplerate
+-- Defer3: Unsaved
+
+
 ---------------------------------------------------------------
+-- Soundcheck Unsaved
+-- Wenn ein Recording gestartet wird wird geprüft, ob das Projekt schon gespeichert wurde
+---------------------------------------------------------------
+
+
+
+function soundcheck_unsaved()
+
+
+    -- print(reaper.GetPlayStateEx(0))
+    --print(reaper.IsProjectDirty(0))
+
+    if reaper.IsProjectDirty(0) and reaper.GetPlayStateEx(0) > 4 then -- das Projekt wurde noch nicht gespeichertund es läuft oder pausiert ein recording
+
+      if tonumber(reaper.GetExtState ("soundcheck_timer", "unsaved"))+120 < reaper.time_precise() then
+        soundcheck_unsaved_action()
+
+      end
+    end
+
+    retval, defer3_identifier = ultraschall.Defer3(soundcheck_unsaved, 2, 3)
+  end
+
+
+function soundcheck_unsaved_action()
+
+  -- print("noch da")
+   return_value = ultraschall.MB("Your project has not been saved yet. It is strongly advised to save it before starting a recording.", "WARNING - Ultraschall Soundcheck",3, "Save as", "Ignore", "Settings")
+
+  if return_value == 3 then
+    reaper.SetExtState("soundcheck_timer", "unsaved", tostring(reaper.time_precise()), false)
+    reaper.Main_OnCommand(reaper.NamedCommandLookup("_Ultraschall_Settings"),0) -- öffne Ultraschall Settings
+
+  elseif return_value == 2 then
+    reaper.SetExtState("soundcheck_timer", "unsaved", tostring(reaper.time_precise()), false)
+    reaper.Main_OnCommand(40022,0) -- öffne den Speichern unter Dialog
+
+  end
+
+end
+
+
+function soundcheck_unsaved_controller()
+
+  if ultraschall.GetUSExternalState("ultraschall_settings_unsaved", "value") == "0" then
+    -- Soundcheck ist in den Settings deaktiviert
+
+    if reaper.GetExtState("ultraschall", ultraschall.ScriptIdentifier..".defer_script03") == "running" then
+      retval = ultraschall.StopDeferCycle(defer3_identifier)
+    end
+
+  else  -- Soundcheck ist in den Settings aktiviert
+
+    if reaper.GetExtState("ultraschall", ultraschall.ScriptIdentifier..".defer_script03") ~= "running" then
+      soundcheck_unsaved()
+    end
+  end
+end
+
+
+
+-------------------------------------------------------------------------------------
 -- Soundcheck Samplerate
 -- muss 48 KHz sein wenn mindestens eine StudioLink Spur im Projekt ist
----------------------------------------------------------------
+-------------------------------------------------------------------------------------
 
 
 
@@ -89,15 +157,12 @@ function soundcheck_samplerate_controller()
 end
 
 
-
-
-
 --------------------
 
 function soundcheck_main()
 
   soundcheck_samplerate_controller()
-
+  soundcheck_unsaved_controller()
 
   retval, defer1_identifier = ultraschall.Defer1(soundcheck_main, 2, 1)
 
@@ -105,8 +170,16 @@ end
 
 -- soundcheck_samplerate_action ()
 
-print(ultraschall.GetApiVersion())
 
-return_value2 = ultraschall.MB("Your samplerate is set to please set to 48000b", "WARNING - Ultraschall Soundcheck",3, "gut", "ach", "blafasel")
+-- initialise variables
+
+reaper.SetExtState("soundcheck_timer", "samplerate", "0", false)
+reaper.SetExtState("soundcheck_timer", "unsaved", "0", false)
+
+
+-- print(ultraschall.GetApiVersion())
+-- print(reaper.IsProjectDirty(0))
+
+-- return_value2 = ultraschall.MB("Your samplerate is set to please set to 48000b", "WARNING - Ultraschall Soundcheck",3, "gut", "ach", "blafasel")
 
 soundcheck_main()
