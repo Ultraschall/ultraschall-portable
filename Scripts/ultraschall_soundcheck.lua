@@ -108,7 +108,7 @@ function soundcheck_samplerate()
   -- print("noch da")
   for i=1, reaper.CountTracks(0) do
 
-    if ultraschall.IsTrackStudioLink(i) and actual_samplerate == "48000" then  -- es gibt mindestens eine StudioLink Spur und Samplerate steht nicht auf 48000
+    if (ultraschall.IsTrackStudioLink(i) or ultraschall.IsTrackStudioLinkOnAir(0)) and actual_samplerate == "48000" then  -- es gibt mindestens eine StudioLink Spur und Samplerate steht nicht auf 48000
 
       if tonumber(reaper.GetExtState ("soundcheck_timer", "samplerate"))+120 < reaper.time_precise() then
 
@@ -179,6 +179,10 @@ reaper.SetExtState("soundcheck_timer", "unsaved", "0", false)
 
 -- print(ultraschall.GetApiVersion())
 -- print(reaper.IsProjectDirty(0))
+
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+retval = ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/Tudelu.txt", "Dingodongo")
+ultraschall.ShowLastErrorMessage()
 
 -- return_value2 = ultraschall.MB("Your samplerate is set to please set to 48000b", "WARNING - Ultraschall Soundcheck",3, "gut", "ach", "blafasel")
 
