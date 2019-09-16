@@ -24,23 +24,14 @@
 ################################################################################
 ]]
 
+oldnotes=reaper.GetSetProjectNotes(0, false, "")
+oldnotes=string.gsub(oldnotes, "\n", "\b")
 
---retval, result = reaper.GetUserInputs("Edit ID3 Podcast Metadata", 6, "Title:,Artist:,Podcast:,Year:,Genre:,Comment:,extrawidth=300, separator=\b", reaper.GetSetProjectNotes(0, false, ""))
+retval, result = reaper.GetUserInputs("Edit ID3 Podcast Metadata", 6, "Title:,Artist:,Podcast:,Year:,Genre:,Comment:,extrawidth=300, separator=\b", oldnotes)
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+result=string.gsub(result, "\b", "\n")
 
--- get current notes and split them at linefeed
-Acount, split_string = ultraschall.SplitStringAtLineFeedToArray(reaper.GetSetProjectNotes(0, false, ""))
-
--- Get Userinputs for metadata
-retval, number_of_inputfields, returnvalues = ultraschall.GetUserInputs("Edit ID3 Podcast Metadata", {"Title:", "Artist:", "Podcast:", "Year:", "Genre:", "Comment:"}, split_string, 300)
-
--- if user has entered values and hit OK, put them into Project Notes
-if retval==true then
-  result=""
-  for i=1, number_of_inputfields do
-    result=result..returnvalues[i].."\n"
-  end
-  notes = reaper.GetSetProjectNotes(0, true, result:sub(1,-2)) -- write new notes
+if retval == true then  
+  notes = reaper.GetSetProjectNotes(0, true, result) -- write new notes
 end
 
