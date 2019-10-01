@@ -9,9 +9,11 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 ---- Action->ShowActionList Dialog.                     ----
 ------------------------------------------------------------
 
-MuteFile1=ultraschall.Script_Path.."UltraschallTemplates"..ultraschall.Separator.."Ultraschall_NameMute_template.lua"
-MuteFile2=ultraschall.Script_Path.."UltraschallTemplates"..ultraschall.Separator.."Ultraschall_NameMuteToggle_template.lua"
-MuteFile3=ultraschall.Script_Path.."UltraschallTemplates"..ultraschall.Separator.."Ultraschall_NameUnMute_template.lua"
+MuteFile1=ultraschall.Api_Path.."/Scripts/UltraschallTemplates"..ultraschall.Separator.."Ultraschall_NameMute_template.lua"
+MuteFile2=ultraschall.Api_Path.."/Scripts/UltraschallTemplates"..ultraschall.Separator.."Ultraschall_NameMuteToggle_template.lua"
+MuteFile3=ultraschall.Api_Path.."/Scripts/UltraschallTemplates"..ultraschall.Separator.."Ultraschall_NameUnMute_template.lua"
+
+OO=reaper.file_exists(MuteFile1)
 
 L,LL=reaper.GetUserInputs("Create New MuteButton For A Trackname", 1, "Trackname for new MuteButton","")
 
@@ -30,7 +32,10 @@ LuaLL=LuaLL:sub(2,-2)
       reaper.MB("Name already exists! Please choose another one.", "Failure", 0) return -1 
 end
 --]]
+
 contents, linenumbers, numberoflines = ultraschall.ReadValueFromFile(MuteFile1, "Trackname=")
+linenumbers=linenumbers..","
+linenumbers=tonumber(linenumbers:match("(.-),"))
 contents, correctnumberoflines = ultraschall.ReadLinerangeFromFile(MuteFile1, 1, linenumbers-1) 
 contents2, correctnumberoflines2 = ultraschall.ReadLinerangeFromFile(MuteFile1, linenumbers+1, ultraschall.CountLinesInFile(MuteFile1)+1) 
 contents3=contents.."\nTrackname=\""..LuaLL.."\"\n"..contents2
@@ -39,6 +44,8 @@ retval = ultraschall.WriteValueToFile(ultraschall.Script_Path.."ultraschall_Trac
 
 
 contents, linenumbers, numberoflines = ultraschall.ReadValueFromFile(MuteFile2, "Trackname=")
+linenumbers=linenumbers..","
+linenumbers=tonumber(linenumbers:match("(.-),"))
 contents, correctnumberoflines = ultraschall.ReadLinerangeFromFile(MuteFile2, 1, linenumbers-1) 
 contents2, correctnumberoflines2 = ultraschall.ReadLinerangeFromFile(MuteFile2, linenumbers+1, ultraschall.CountLinesInFile(MuteFile2)+1)
 contents3=contents.."\nTrackname=\""..LuaLL.."\"\n"..contents2
@@ -48,6 +55,8 @@ retval = ultraschall.WriteValueToFile(ultraschall.Script_Path.."ultraschall_Trac
 --reaper.MB("","",0)
 
 contents, linenumbers, numberoflines = ultraschall.ReadValueFromFile(MuteFile3, "Trackname=")
+linenumbers=linenumbers..","
+linenumbers=tonumber(linenumbers:match("(.-),"))
 contents, correctnumberoflines = ultraschall.ReadLinerangeFromFile(MuteFile3, 1, linenumbers-1) 
 contents2, correctnumberoflines2 = ultraschall.ReadLinerangeFromFile(MuteFile3, linenumbers+1, ultraschall.CountLinesInFile(MuteFile3)+1) 
 contents3=contents.."\nTrackname=\""..LuaLL.."\"\n"..contents2

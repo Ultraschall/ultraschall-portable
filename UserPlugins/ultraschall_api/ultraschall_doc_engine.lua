@@ -477,7 +477,7 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
   local language=String:match("spok_lang=\"(.-)\"")
   if language==nil then language="" end
   
-  local Chapters=String:match("<chapter_context.->.-\n(.-)</chapter_context>")
+  local Chapters=String:match("<chapter_context.->.-\n(.-)\n.-</chapter_context>")
   local count, split_string = ultraschall.SplitStringAtLineFeedToArray(Chapters)
   for i=1, count do
     split_string[i]=split_string[i]:match("%s*(.*)")
@@ -821,6 +821,7 @@ function ultraschall.Docs_GetUSDocBloc_Requires(String)
 ]]
   if type(String)~="string" then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_Requires", "String", "must be a string", -1) return nil end
   local requires=String:match("<requires>.-\n(.*)</requires>")
+  if requires==nil then return 0, {}, {} end
   requires=string.gsub("\n"..requires, "\n%s*", "\n"):sub(2,-1)
   local count, split_string = ultraschall.SplitStringAtLineFeedToArray(requires)
   local split_string2={}

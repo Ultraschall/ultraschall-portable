@@ -1,9 +1,11 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
 Tempfile=ultraschall.Api_Path.."/temp/temporary"
 --ConversionToolMD2HTML="c:\\Program Files (x86)\\Pandoc\\pandoc.exe -f markdown -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
 ConversionToolMD2HTML="chcp 65001\n\r \"c:\\Program Files (x86)\\Pandoc\\pandoc.exe\" -f markdown_strict -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
 
 Infilename=ultraschall.Api_Path.."/ultraschall_functions_engine.lua"
+Infilename_render=ultraschall.Api_Path.."/Modules/ultraschall_functions_Render_Module.lua"
 Infilename2=ultraschall.Api_Path.."/ultraschall_functions_engine_beta.lua"
 Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Functions.html"
 
@@ -15,7 +17,21 @@ _temp,scriptfilename=ultraschall.GetPath(scriptfilename)
 
 func_done_count, vars_done_count=progresscounter(false)
 
+--print2(func_done_count)
+
 --if L==nil then return end
+
+
+local String=ultraschall.ReadFullFile(Infilename, false)
+
+filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Modules/")
+for i=1, filecount do
+  String=String..ultraschall.ReadFullFile(files[i], false).."\n"
+end
+
+if ultraschall.US_BetaFunctions=="ON" then
+    String=String.."\n"..ultraschall.ReadFullFile(Infilename2, false)
+end
 
 local FunctionList2=""
 
@@ -446,12 +462,6 @@ function ultraschall.ColorateDatatypes(String)
   return String:sub(2,-2)
 end
 
-local String=ultraschall.ReadFullFile(Infilename, false)
-
---if String:match("180")~=nil then reaper.MB(String:match("....180."),"Schon?",0) end
-if ultraschall.US_BetaFunctions=="ON" then
-    String=String.."\n"..ultraschall.ReadFullFile(Infilename2, false)
-end
 
 Ccount, C=ultraschall.SplitUSDocBlocs(String)
 
@@ -618,7 +628,7 @@ function contentindex()
   for i=1, count2 do
     chapter=HeaderList[i]:match("(.-\n)")
     slugs=HeaderList[i]:match("\n(.*)\n")
-    A2, AA2, AAA2 = ultraschall.SplitStringAtLineFeedToArray(slugs.."\n")
+    A2, AA2, AAA2 = ultraschall.SplitStringAtLineFeedToArray(slugs)
     table.sort(AA2)
     slugs=""
     for i=1, A2 do
