@@ -53,4 +53,4 @@ stopafter=1200
             2147483600 is maximum value
             
 title=Titlesequence  
-            text for the title-card
+            text for the title-card, newlines will be ignored, after reload!

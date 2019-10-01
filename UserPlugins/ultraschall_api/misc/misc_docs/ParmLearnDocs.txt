@@ -4,6 +4,7 @@ compiled by Meo Mespotine 07.05.2019
 Thanks to Anton9 for helping me with that :)
 
 
+
 Assignment of MIDI and OSC-commands to Parameter-Learn:
 
 PARMLEARN  integer parmidx:optional string parametername   integer midi_note  integer checkboxflags  optional string osc_message

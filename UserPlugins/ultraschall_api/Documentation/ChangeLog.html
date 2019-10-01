@@ -40,26 +40,146 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
-<h3>4.00 Beta 2.762: - "The Beatles - Only a Northern Song" - 12th of September 2019</h3>
-<p>Has now 987 functions with 2 new ones!</p>
-<h4>New features in 4.00beta2.762</h4>
+<h3>4.00 Beta 2.77: - "Monkeys with Tools - Call the planet doctor" - 1st of October 2019</h3>
+<p>Has now 1029 functions with 44 new ones! Yes, I crossed the thousand!</p>
+<p><strong>New in this release:</strong></p>
 <ul>
-<li>Defer Management: GetDeferRunState - gets the current runstate of a ultraschall-defer-loop in the current or a specific scriptinstance</li>
-<li>Ultraschall: DeleteUSExternalState - deletes an extstate from the ultraschall.ini</li>
+<li><p><strong>Event Manager</strong><br />
+Killer Feature Time and long requested by many of you!<br />
+The EventManager allows you to run actions, when certain states occur/statechanges occur.<br />
+That way you can automatize running actions under certain circumstances without having to run your own defer-script for that.<br />
+Kudos to @fernsehmuell, who was essential in the initial designs of it!</p></li>
+<li><p><strong>ShowXXXInputMenu</strong><br />
+Shows different Context-menus, like TrackInput, TrackPanel, TrackArea, TrackRouting, Ruler, MediaItem, Track/TakeEnvelope,<br />
+EnvelopePoint, EnvelopePoint for Automation Items, AutomationItems-contextmenu.<br />
+Reaper's own function ShowPopupMenu is quite difficult to use, so I made some, who make it easier.</p></li>
+<li><p><strong>RunLuaSourceCode</strong><br />
+Runs Luacode directly without having to create a script for it.</p></li>
+<li><p><strong>Main_OnCommand_LuaCode</strong><br />
+Runs Luacode as child-script directly without having to create a script for it.</p></li>
+<li><p><strong>GetTimeByMouseXPosition</strong><br />
+returns projecttime at x-screenposition, which can be nice for mouse-editing-specific actions.</p></li>
+<li><p><strong>ReplacePatternInString</strong><br />
+Like Lua's string.gsub(), this replaces a pattern within a string with a replacement string, but you can choose,<br />
+which one shall be replaced. And unlike string.gsub() only that one will be replaced, not the occurences after that.</p></li>
+<li><p><strong>GetItem_ClickState and GetTrackEnvelope_ClickState</strong><br />
+Return, if a MediaItem/EnvelopePoint is currently clicked and hovered by the mouse. Could be used for some nice and handy things.</p></li>
+<li><p><strong>GetAllActions</strong><br />
+Sped up and returns now more attributes, like action-type(script, native, custom, extension), termination-state of scripts, consolidate-state for custom actions.</p></li>
+<li><p><strong>ConvertFunction_FromBase64String and ConvertFunction_ToBase64String</strong><br />
+Convert a Lua-function to/from a BASE64-string. That way, you can exchange functions via extstates. Convert to Base64-string, put the string into an extstate,<br />
+read the string from the extstate and convert it back to a function.</p></li>
+<li><p><strong>Bugfixes and optimzations</strong><br />
+Optimized and bugfixed tons of other stuff, thanks to many bugreports and a lot of feedback from many of you.<br />
+Big thanks for that :)</p></li>
 </ul>
-<h4>Changes from Beta 2.761 to Beta 2.762</h4>
+<h4>New features in 4.00beta2.77</h4>
 <ul>
+<li>Defer Management: GetDeferRunState - gets the current runstate of a ultraschall-defer-loop in the current or a specific scriptinstance(requested by rstockm)</li>
+<li>Docs: EventManager - added concepts docs for detailed description, on how to use and code the EventManager</li>
+<li>Envelope Management: GetTrackEnvelope_ClickState - returns the currently clicked TrackEnvelope-Point</li>
+<li>Error Messaging System: SuppressErrorMessages - suppresses and unsuppresses error-messages of the error messaging system</li>
+<li>EventManager: EventManager_AddEvent - registers a new event to the EvenManager-checkingqueue</li>
+<li>EventManager: EventManager_AddStartupEvent - adds an event into the ini-file of the EventManager, to be registered at startup of the ini-file</li>
+<li>EventManager: EventManager_CountRegisteredEvents - counts the number of registered events</li>
+<li>EventManager: EventManager_CountStartupEvents - counts the number of currently available startup-events for the EventManager</li>
+<li>EventManager: EventManager_EnumerateEvents - returns attributes of specific registered events</li>
+<li>EventManager: EventManager_EnumerateEvents2 - enumerates attributes of an event by EventIdentifier</li>
+<li>EventManager: EventManager_EnumerateStartupEvents - enumerates attributes of a startup-event</li>
+<li>EventManager: EventManager_EnumerateStartupEvents2 - enumerates attributes of a startup-event by an EventIdentifier</li>
+<li>EventManager: EventManager_IsValidEventIdentifier - checks, if an EventIdentifier is a valid and currently registered one</li>
+<li>EventManager: EventManager_PauseEvent - pauses a registered event in the EventManager</li>
+<li>EventManager: EventManager_RemoveAllEvents_Script - removes all events, registered by a script with a certain ScriptIdentifier</li>
+<li>EventManager: EventManager_RemoveEvent - removes an event from the EvenManager-checkingqueue</li>
+<li>EventManager: EventManager_RemoveStartupEvent - removes a registered-at-startup-event for the EventManager by EventIdentifier</li>
+<li>EventManager: EventManager_RemoveStartupEvent2 - removes a registered-at-startup-event for the EventManager</li>
+<li>EventManager: EventManager_ResumeEvent - resumes a paused and registered event in the EventManager</li>
+<li>EventManager: EventManager_SetEvent - sets an already existing event in the EvenManager-checkingqueue</li>
+<li>EventManager: EventManager_SetStartupEvent - sets an event in the ini-file of the EventManager, which will be registered at startup of the ini-file</li>
+<li>EventManager: EventManager_Start - starts the EventManager</li>
+<li>EventManager: EventManager_Stop - removes all events registered by the current script/a specific ScriptIdentifier; stops the EventManager, if all scripts who have registered events have used this function</li>
+<li>EventManager: Ultraschall_EventManager.lua - the backgroundscript for the EventManager</li>
+<li>Helper Functions: ConvertFunction_FromBase64String - loads a function from a BASE64-string</li>
+<li>Helper Functions: ConvertFunction_ToBase64String - converts a function into a BASE64-string</li>
+<li>Helper functions: Main_OnCommand_LuaCode - runs Luacode in a temporary new script, without the need to create it first</li>
+<li>Helper functions: ReplacePatternInString - replaces a certain occurence(and only that one) of a pattern in a string with a replacement</li>
+<li>Helper functions: RunLuaSourceCode - runs Lua-code directly from a string<br />
+</li>
+<li>MediaItem Management: GetItem_ClickState - returns the currently clicked MediaItem</li>
+<li>MediaItem Management: GetItem_HighestRecCounter - returns the highest reccounter in the current project</li>
+<li>MediaItem Management: GetItem_Number - returns the itemnumber of a MediaItem within a project(requested by XRaym)</li>
+<li>Project Management: GetProjectFilename - returns the filename of a currently opened project</li>
+<li>Project Management: SetProject_GlobalAuto - sets global automation override-state a projectfile or a ProjectStateChunk</li>
+<li>Project Management: SetProject_Lock - sets locked-state of a projectfile or a ProjectStateChunk</li>
+<li>Project Management: SetProject_MasterAutomode - sets automation-mode of the mastertrack in a projectfile or a ProjectStateChunk</li>
+<li>Project Management: SetProject_Playrate - sets playrate-state of a projectfile or a ProjectStateChunk</li>
+<li>Project Management: SetProject_MasterSel - sets selection-state of the master-track in a projectfile or a ProjectStateChunk</li>
+<li>Project Management: SetProject_Tempo - sets the tempo settings(bpm, beat, denominator) a projectfile or a ProjectStateChunk</li>
+<li>Ultraschall: DeleteUSExternalState - deletes an extstate from the ultraschall.ini(requested by rstockm)</li>
+<li>User Interface: GetTimeByMouseXPosition - returns projecttime at x-screenposition</li>
+<li>User Interface: ShowTrackInputMenu - shows a TrackInput-contextmenu</li>
+<li>User Interface: ShowTrackPanelMenu - shows a TrackPanel-contextmenu</li>
+<li>User Interface: ShowTrackAreaMenu - shows a TrackArea-contextmenu</li>
+<li>User Interface: ShowTrackRoutingMenu - shows a TrackRouting-contextmenu</li>
+<li>User Interface: ShowRulerMenu - shows a Ruler-contextmenu</li>
+<li>User Interface: ShowMediaItemMenu - shows a MediaItem-contextmenu</li>
+<li>User Interface: ShowEnvelopeMenu - shows a Track/TakeEnvelope-contextmenu</li>
+<li>User Interface: ShowEnvelopePointMenu - shows an EnvelopePoint-contextmenu</li>
+<li>User Interface: ShowEnvelopePointMenu_AutomationItem - shows an EnvelopePoint-contextmenu for Automation Items</li>
+<li>User Interface: ShowAutomationItemMenu - shows an AutomationItems-contextmenu</li>
+</ul>
+<h4>Changes from Beta 2.761 to Beta 2.77</h4>
+<ul>
+<li>Actions: GetAllActions - sped up by magnitudes; returns now actiontype, consolidate-state, termination-state of actions as well; supports now section 1(invisible custom actions)</li>
+<li>API: functions - moved all functions into modules for future modular-concept</li>
 <li>Configuration Files: CountIniFileExternalState_sec - had inner variable exposed -&gt; fixed</li>
 <li>Configuration Files: EnumerateIniFileExternalState_sec - did return keys instead of sections -&gt; fixed</li>
-<li>Docs: Reaper Internals - updated to Reaper 5.983, JS-extension 0.991</li>
+<li>Configuration Files: GetKBIniKeys - enhanced description for osc</li>
+<li>Configuration Files: SetKBIniKeys - enhanced description for osc</li>
+<li>Docs: Reaper Internals - updated to Reaper 5.983 and JS-extension 0.992</li>
+<li>DocEngine: Docs_GetUSDocBloc_ChapterContext - returned an additional empty non-existant chapter -&gt; fixed</li>
+<li>DocEngine: Docs_GetUSDocBloc_Requires - could produce a Lua-error -&gt; fixed</li>
 <li>Defer Management: GetDeferIdentifier - you can optionally pass a script-identifier now, to get the defer-identifier of another scriptinstance(used to support only the current script instance)</li>
-<li>Helper Functions: SplitStringAtLineFeedToArray - didn't always return the last entry of the passed string -&gt; fixed (thanks to Aurelien?)</li>
-<li>Project Management: CheckForChangedProjectTabs - checks now as well, if projectfilenames have changed, by either loading a project or saving a project under a new filename</li>
+<li>Helper Functions: IsValidMatchingPattern - moved to docs-index API-Helper functions -&gt; Data Manipulation</li>
+<li>Helper Functions: SecondsToTime - moved to docs-index API-Helper functions -&gt; Data Manipulation</li>
+<li>Helper Functions: SecondsToTimeString_hh_mm_ss_mss - moved to docs-index API-Helper functions -&gt; Data Manipulation</li>
+<li>Helper Functions: SplitStringAtLineFeedToArray - didn't always return the last entry of the passed string -&gt; fixed (thanks to Aurelien)</li>
+<li>Helper Functions: TimeStringToSeconds_hh_mm_ss_mss - moved to docs-index API-Helper functions -&gt; Data Manipulation</li>
+<li>Helper Functions: TimeToSeconds - moved to docs-index API-Helper functions -&gt; Data Manipulation</li>
+<li>HWND: GetActionsHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetBatchFileItemConverterHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetConsolidateTracksHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetExportProjectMIDIHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetPreferencesHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetProjectDirectoryCleanupHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetProjectSettingsHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetRenderQueueHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetRenderToFileHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetRenderingToFileHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetSaveLiveOutputToDiskHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>HWND: GetVideoHWND - moved to docs-index User Interface -&gt; Reaper-Windowhandler</li>
+<li>Media Explorer: MediaExplorer_OnCommand - moved function in docs to index Media Explorer</li>
+<li>Media Explorer: UpdateMediaExplorer - moved function in docs to index Media Explorer</li>
+<li>Project Management: CheckForChangedProjectTabs - checks now as well, if projectfilenames have changed, by either loading a project or saving a project under a new filename(requested by lexaproductions)</li>
+<li>Project Management: GetProject_GlobalAuto - added description for global-automation-override_state</li>
+<li>Project Management: GetProject_MasterGroupFlagsState - moved to correct docsindex Project Management</li>
 <li>Project Management: ProjectTabs-check - initialization had a bug, which could cause CheckForChangedProjectTabs to fail at times -&gt; fixed</li>
+<li>Project Management: SetProject_MasterGroupFlagsState - moved to correct docsindex Project Management</li>
+<li>SpectralEdit: AddItemSpectralEdit - parameter end_pos was actually length -&gt; fixed (thanks to XRaym)</li>
+<li>SpectralEdit: GetItemSpectralEdit - retval end_pos was actually length -&gt; fixed (thanks to XRaym)</li>
+<li>SpectralEdit: SetItemSpectralEdit - parameter end_pos was actually length -&gt; fixed (thanks to XRaym)</li>
 <li>Ultraschall: EnumerateUSExternalState_sec - had problems, when ultraschall.ini was stored with CR+LF-lineendings -&gt; fixed (thanks to rstockm)</li>
-<li>User Interface: MB - couldn't start background-script due temp-folder missing -&gt; fixed</li>
+<li>Ultraschall: IsTrackSoundboard - sped up execution by removing useless loop(thanks rstockm)</li>
+<li>Ultraschall: IsTrackStudioLink - sped up execution by removing useless loop(thanks rstockm)</li>
+<li>Ultraschall: IsTrackStudioLinkOnAir - sped up execution by removing useless loop; didn't work correctly on Mac -&gt; fixed(thanks rstockm)</li>
+<li>Ultraschall: moved ultraschall.ini-related functions to Ultraschall Specific-index in the docs</li>
+<li>User Interface: GetReaperWindowPosition_Left - deprecated</li>
+<li>User Interface: GetReaperWindowPosition_Right - deprecated</li>
+<li>User Interface: GetUserInputs - only working on Windows, currently. Working on fixing it.</li>
+<li>User Interface: MB - only working on Windows, currently. Working on fixing it.</li>
 </ul>
-<h3>4.00 Beta 2.761: - "Coldplay - Fix You" - 23rd of September 2019</h3>
+<hr />
+<h3>4.00 Beta 2.761: - "Coldplay - Fix You" - 23rd of August 2019</h3>
 <p>Has now 985 functions with 8 new ones!</p>
 <p><strong>IMPORTANT!: This is a massive critical bugfix release. About 60 functions returned wrong returnvalues in case of an error.<br />
 If you use any of the functions listed in <em>Changes from Beta 2.76 to Beta 2.761</em>, you should check, if your scripts still work.<br />
@@ -79,7 +199,8 @@ Get the HWND(GetMediaExplorerHWND), update the listview(UpdateMediaExplorer) and
 <li><p><strong>ConvertYCoordsMac2Win</strong><br />
 Y-coordinates on Mac are different from the ones in Windows/Linux, meaning, pixel 0 is at the bottom, while Windows/Linux start on top.<br />
 This function converts the y-coordinates between these two coordinate-systems.</p></li>
-<li><p><strong>New version of Config-Vars-displayer-script</strong> Shows changed with doubles without a problem now, is faster, uses the config-var-docs included with the API to get the currently accepted config-vars. I also improved the layout a bit.</p></li>
+<li><p><strong>New version of Config-Vars-displayer-script</strong><br />
+Shows changes with doubles without a problem now, is faster, uses the config-var-docs included with the API to get the currently accepted config-vars. I also improved the layout a bit.</p></li>
 </ul>
 <h3>New features in 4.00beta2.761</h3>
 <ul>

@@ -83,8 +83,7 @@
            >[aot](#aot), [cueitems](#cueitems), [itemtexthide](#itemtexthide), [psmaxv](#psmaxv), [psminv](#psminv), [templateditcursor](#templateditcursor)  
   
          the following variables are available in pre-releases of Reaper only  
-         
-           >[bouncecfg](#bouncecfg), [defstretchmode](#defstretchmode), [wiring_options](#wiring_options)
+           >[disk_peaks_mmapkb](#disk_peaks_mmapkb), [disk_peaks_ramkb](#disk_peaks_ramkb), [maxplayoffsrate](#maxplayoffsrate), [midiccenv](#midiccenv), [midiccinterp](#midiccinterp), [windowflags](#windowflags), [wiring_options](#wiring_options)
       </description>  
       <chapter_context>  
          An Introduction  
@@ -5338,6 +5337,30 @@
       </description>  
       <chapter_context>  
          Config Variables  
+      </chapter_context>  
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>maxplayoffsrate</slug>  
+      <title>maxplayoffsrate</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Max MIDI playback speed when applying negative track playback offset-inputbox, as set in Preferences -> Playback  
+          It is a double  
+          
+           >0 to 99999999999999; higher values are possible
+           
+          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+                                            [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
+                                            [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
+                    
+          Only available in pre-releases, yet!
+                    
+          Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>  
+         Config Variables  
+         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  

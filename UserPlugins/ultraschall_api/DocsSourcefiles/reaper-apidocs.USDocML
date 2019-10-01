@@ -55,7 +55,7 @@
 
               By default, all functions listed in this file are loaded. This means that an older version
               of REAPER may not succeed in loading, and also it may bloat your plug-in. If you wish to only load
-              needed functions, #define REAPERAPI\_MINIMAL and various #define REAPERAPI\_WANT_<functionname> lines
+              needed functions, #define REAPERAPI\_MINIMAL and various #define REAPERAPI\_WANT_&lt;functionname&gt; lines
               before including this file. You must put these definitions where REAPERAPI\_IMPLEMENT is defined
               and you can optionally put them elsewhere (to detect needed REAPERAPI\_WANT\_xxx lines at compile-
               time rather than link-time).
@@ -7214,7 +7214,7 @@
         <retvals>
             string buf - the returned path
         </retvals>
-        <parmeters>
+        <parameters>
             string buf - a string-buffer needed by the function, just give "" in Lua
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -27632,13 +27632,13 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_GetTitle</slug>
         <title>JS_Window_GetTitle(JS)</title>
-        <functioncall prog_lang="cpp">void JS_Window_GetTitle(void* windowHWND, char* buf, int buf_sz)</functioncall>
-        <functioncall prog_lang="eel">extension_api("JS_Window_GetTitle", void* windowHWND, #buf)</functioncall>
-        <functioncall prog_lang="lua">string buf = reaper.JS_Window_GetTitle(identifier windowHWND, string buf)</functioncall>
-        <functioncall prog_lang="python">(void windowHWND, String buf, Int buf_sz) = JS_Window_GetTitle(windowHWND, buf, buf_sz)</functioncall>
+        <functioncall prog_lang="cpp">void JS_Window_GetTitle(void* windowHWND, char* titleOut, int titleOut_sz)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_Window_GetTitle", void* windowHWND, #title)</functioncall>
+        <functioncall prog_lang="lua">string title = reaper.JS_Window_GetTitle(identifier windowHWND)</functioncall>
+        <functioncall prog_lang="python">(void windowHWND, String titleOut, Int titleOut_sz) = JS_Window_GetTitle(windowHWND, titleOut, titleOut_sz)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.992
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -27646,11 +27646,10 @@
 
         </description>
         <retvals>
-           string buf   - 
+           string title - the title of the window
         </retvals>
         <parameters>
-           identifier windowHWND - 
-           string buf - 
+           identifier windowHWND - the hwnd of the window, whose title you want to retrieve
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -40663,4 +40662,4 @@
         <tags>reapack, process, queue, refresh ui</tags>
     </US_DocBloc>    
 
-</USDocBloc>>
+</USDocBloc>
