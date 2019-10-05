@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 5.978
+            ## ReaScript API as of Reaper 5.983
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -30,57 +30,9 @@
         <tags>documentation, introduction, reascript</tags>
     </US_DocBloc>
 
-
-    <US_DocBloc version="1.0" prog_lang="*" spok_lang="en">
-        <slug>3.Datatypes_used_in_this_document</slug>
-        <title>3 Datatypes used in this document</title>
-        <description markup_type="markdown" markup_version="1.0.1" indent="default">
-                ### Datatypes used in this document
-                
-                boolean - accepts only true or false as values
-                optional boolean - a boolean, that can be given, but is not required
-                number - can be integer, double or a floating-point-number
-                optional number - a number, that can be given, but is not required
-                integer - only integer numbers allowed
-                reaper.array - a special array, that Reaper provides
-                string - a string of characters/text
-                optional string - a string, that can be given, but is not required
-
-                AudioAccessor - Audio Accessor object for a track or a media-item
-                BR\_Envelope \(BR\) - an envelope-object, created from a track or take-envelope
-                HWND - a window
-                IReaperControlSurface - a ControlSurface, e.g. OSC-devices
-                joystick\_device - a joystick-device
-                KbdSectionInfo - Keyboard Section Info, 
-                -        0, Main
-                -        100, Main (alt recording)
-                -        32060, MIDI Editor
-                -        32061, MIDI Event List Editor
-                -        32062, MIDI Inline Editor
-                -        32063, Media Explorer
-                PCM\_source - the audiosource of a MediaItem
-                ReaProject - a project within Reaper; 0 for current open project\(-tab\); in [EnumProjects](#EnumProjects), it is an object, not a number!
-                RprMidiTake \(FNG\) - ReaperMidiTake as object
-                RprMidiNote \(FNG}) - RprMidiNote as object
-                MediaTrack - a Reaper-Track as object
-                MediaItem - a Reaper-MediaItem like audio,video, Midi, etc as object
-                MediaItem\_Take - a take within a MediaItem as object
-                TrackEnvelope - an envelope of a track as object
-                WDL\_FastString\(S&M\) - a different kind of a string, made into a Reaper-object
-                
-                deviceHDC - get it using function [JS\_GDI_GetWindowDC](#JS_GDI_GetWindowDC)
-        </description>
-        <target_document>ReaperApiFunctionsReference</target_document>
-        <source_document>reaper_plugin.h</source_document>
-        <chapter_context>
-            API-Documentation
-        </chapter_context>
-        <tags>documentation, introduction, eel</tags>
-    </US_DocBloc>
-
     <US_DocBloc version="1.0" prog_lang="cpp" spok_lang="en">
         <slug>2.1.cpp_desc</slug>
-        <title>2.1 CPP Description</title>
+        <title>2.1 CPP Api-Description</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             ### Usage of the Reaper Api in C++
             Note: the C++ pure virtual interfaces used require the MSVC-compatible C++ ABI on Win32.  Sorry, mingw users.
@@ -103,7 +55,7 @@
 
               By default, all functions listed in this file are loaded. This means that an older version
               of REAPER may not succeed in loading, and also it may bloat your plug-in. If you wish to only load
-              needed functions, #define REAPERAPI\_MINIMAL and various #define REAPERAPI\_WANT_<functionname> lines
+              needed functions, #define REAPERAPI\_MINIMAL and various #define REAPERAPI\_WANT_&lt;functionname&gt; lines
               before including this file. You must put these definitions where REAPERAPI\_IMPLEMENT is defined
               and you can optionally put them elsewhere (to detect needed REAPERAPI\_WANT\_xxx lines at compile-
               time rather than link-time).
@@ -119,7 +71,7 @@
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>2.2.eel_desc</slug>
-        <title>2.2 EEL Description</title>
+        <title>2.2 EEL Api-Description</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             ### ReaScript/EEL API
             
@@ -152,10 +104,8 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="python">
-        <slug>
-        2.3.python_desc
-        </slug>
-        <title>2.3 Python Description</title>
+        <slug>2.3.python_desc</slug>
+        <title>2.3 Python Api-Description</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             ### ReaScript/Python API            
 
@@ -197,7 +147,7 @@
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="lua">
         <slug>2.4.lua_desc</slug>
-        <title>2.4 Lua Description</title>
+        <title>2.4 Lua Api-Description</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             ### ReaScript/Lua API
 
@@ -225,6 +175,53 @@
             API-Documentation
         </chapter_context>
         <tags>documentation, introduction, lua</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" prog_lang="*" spok_lang="en">
+        <slug>3.Datatypes_used_in_this_document</slug>
+        <title>3 Datatypes used in this document</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+                ### Datatypes used in this document
+                
+                boolean - accepts only true or false as values
+                optional boolean - a boolean, that can be given, but is not required
+                number - can be integer, double or a floating-point-number
+                optional number - a number, that can be given, but is not required
+                integer - only integer numbers allowed
+                reaper.array - a special array, that Reaper provides
+                string - a string of characters/text
+                optional string - a string, that can be given, but is not required
+
+                AudioAccessor - Audio Accessor object for a track or a media-item
+                BR\_Envelope \(BR\) - an envelope-object, created from a track or take-envelope
+                HWND - a window
+                IReaperControlSurface - a ControlSurface, e.g. OSC-devices
+                joystick\_device - a joystick-device
+                KbdSectionInfo - Keyboard Section Info, 
+                -        0, Main
+                -        100, Main (alt recording)
+                -        32060, MIDI Editor
+                -        32061, MIDI Event List Editor
+                -        32062, MIDI Inline Editor
+                -        32063, Media Explorer
+                PCM\_source - the audiosource of a MediaItem
+                ReaProject - a project within Reaper; 0 for current open project\(-tab\); in [EnumProjects](#EnumProjects), it is an object, not a number!
+                RprMidiTake \(FNG\) - ReaperMidiTake as object
+                RprMidiNote \(FNG\) - RprMidiNote as object
+                MediaTrack - a Reaper-Track as object
+                MediaItem - a Reaper-MediaItem like audio,video, Midi, etc as object
+                MediaItem\_Take - a take within a MediaItem as object
+                TrackEnvelope - an envelope of a track as object
+                WDL\_FastString\(S&M\) - a different kind of a string, made into a Reaper-object
+                
+                deviceHDC - get it using function [JS\_GDI_GetWindowDC](#JS_GDI_GetWindowDC)
+        </description>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document>reaper_plugin.h</source_document>
+        <chapter_context>
+            API-Documentation
+        </chapter_context>
+        <tags>documentation, introduction, eel</tags>
     </US_DocBloc>
 
 
@@ -422,8 +419,8 @@
             ReaProject proj - the project in which to add the TempoTimesigMarker, 0 for the current project; can also be a ReaProject-object, as returned by [EnumProjects](#EnumProjects)
             number timepos - the position in seconds
             number bpm - the speed in bpm
-            integer timesig_num - timesignature number : timesig_num/timesig_denom, e.g. 3/4
-            integer timesig_denom - timesignature denominator : timesig_num/timesig_denom, e.g. 3/4
+            integer timesig_num - timesignature number : timesig\_num/timesig\_denom, e.g. 3/4
+            integer timesig_denom - timesignature denominator : timesig\_num/timesig\_denom, e.g. 3/4
             boolean lineartempochange - true, linear tempo change, false not
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -2178,8 +2175,10 @@
             Scroll arrangeview relative to it's current view-settings.
         </description>
         <parameters>
-            integer xdir - scroll horizontally(timeline) through the project. Negative values toward the beginning, positive toward the end. The higher the values, the farther the movement.
-            integer ydir - scroll vertically(tracks) through the project. Negative values toward the top, positive toward the bottom. The higher the values, the farther the movement.
+            integer xdir - scroll horizontally(timeline) through the project. 
+                         - Negative values toward the beginning, positive toward the end. The higher the values, the farther the movement.
+            integer ydir - scroll vertically(tracks) through the project. 
+                         - Negative values toward the top, positive toward the bottom. The higher the values, the farther the movement.
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -2271,7 +2270,8 @@
         <parameters>
             MediaTrack trackid - the MediaTrackObject, whose volume-value you want to change
             integer send_index - the index-number of the send-track. 0 for the first, 2 for the second, etc
-            number volume - the volume-level of the receive; 0, -inf; 1, 0dB; 4, ca +12 db; higher values are possible, though fader will not reflect them. but higher values will still be applied.
+            number volume - the volume-level of the receive; 0, -inf; 1, 0dB; 4, ca +12 db; 
+                          - higher values are possible, though fader will not reflect them. but higher values will still be applied.
             boolean relative - false, set volume to new value; true, alter volume by new value
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -3704,10 +3704,13 @@
             Returns the values of a given marker or region idx.
         </description>
         <retvals>
-            integer retval - number of marker beginning with 1 for the first marker; ignore the order of first,second,etc creation of markers but counts from position 00:00:00 to end of project. So if you created a marker at position 00:00:00 and move the first created marker to the end of the timeline, it will be the last one, NOT the first one in the retval!
+            integer retval - number of marker beginning with 1 for the first marker
+                           - ignore the order of first,second,etc creation of markers but counts from position 00:00:00 to end of project. So if you created a marker at position 00:00:00 and move the first created marker to the end of the timeline, 
+                           - it will be the last one, NOT the first one in the retval!
             boolean isgrn - is the marker a region?
             number pos - the time-position in seconds with 12 digits precision (1.123456789012)
-            number rgnend - if it's a region, the position of the end of the region in seconds with 12 digits precision(123.123456789012); if it's just a marker it's 0.0
+            number rgnend - if it's a region, the position of the end of the region in seconds with 12 digits precision(123.123456789012); 
+                          - if it's just a marker it's 0.0
             string name - name of the marker
             integer markrgnindexnumber - marker/region index number. 
                                        - Note: the numbering of markers and regions is independent. If you have one region and one marker, 
@@ -3739,7 +3742,9 @@
             Returns the values of a given marker or region idx from a given project proj.
         </description>
         <retvals>
-            integer retval - number of marker beginning with 1 for the first marker; ignore the order of first,second,etc creation of markers but counts from position 00:00:00 to end of project. So if you created a marker at position 00:00:00 and move the first created marker to the end of the timeline, it will be the last one, NOT the first one in the retval!
+            integer retval - number of marker beginning with 1 for the first marker
+                           - ignore the order of first,second,etc creation of markers but counts from position 00:00:00 to end of project. 
+                           - So if you created a marker at position 00:00:00 and move the first created marker to the end of the timeline, it will be the last one, NOT the first one in the retval!
             boolean isgrn - is the marker a region?
             number pos - the time-position in seconds with 12 digits precision (1.123456789012)
             number rgnend - if it's a region, the end of the region in seconds with 12 digits precision(123.123456789012); if just marker it's 0.0
@@ -3749,7 +3754,9 @@
                                        - both share the number 1, even though you have 2 in your project(one marker and one region).
         </retvals>
         <parameters markup_type="markdown" markup_version="1.0.1">
-            ReaProject proj - Projectnumber. 0, current project; 1 to x the first(1) to the last project(x) (in tabs for example); can also be a ReaProject-object, as returned by [EnumProjects](#EnumProjects)
+            ReaProject proj - Projectnumber. 0, current project; 
+                            - 1 to x the first(1) to the last project(x) (in tabs for example); 
+                            - can also be a ReaProject-object, as returned by [EnumProjects](#EnumProjects)
             integer idx - the number of the marker, beginning with 0 for the first marker
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -3775,7 +3782,11 @@
             Returns the values of a given marker or region idx from a given project proj.
         </description>
         <retvals>
-            integer retval - number of marker beginning with 1 for the first marker; ignore the order of first,second,etc creation of markers but counts from position 00:00:00 to end of project. So if you created a marker at position 00:00:00 and move the first created marker to the end of the timeline, it will be the last one, NOT the first one in the retval!
+            integer retval - number of marker beginning with 1 for the first marker; 
+                           - ignore the order of first,second,etc creation of markers but counts from 
+                           - position 00:00:00 to end of project. 
+                           - So if you created a marker at position 00:00:00 and move the first created marker 
+                           - to the end of the timeline, it will be the last one, NOT the first one in the retval!
             boolean isgrn - is the marker a region?
             number pos - the time-position in seconds with 12 digits precision (1.123456789012)
             number rgnend - if it's a region, the end of the region in seconds with 12 digits precision(123.123456789012); if just marker it's 0.0
@@ -3800,12 +3811,12 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>EnumProjects</slug>
         <title>EnumProjects</title>
-        <functioncall prog_lang="cpp">ReaProject* EnumProjects(int idx, char* projfn, int projfn_sz)</functioncall>
-        <functioncall prog_lang="eel">ReaProject EnumProjects(int idx, #projfn)</functioncall>
-        <functioncall prog_lang="lua">ReaProject retval, string projfn = reaper.EnumProjects(integer idx, string projfn)</functioncall>
-        <functioncall prog_lang="python">(ReaProject retval, Int idx, String projfn, Int projfn_sz) = RPR_EnumProjects(idx, projfn, projfn_sz)</functioncall>
+        <functioncall prog_lang="cpp">ReaProject* EnumProjects(int idx, char* projfnOutOptional, int projfnOutOptional_sz)</functioncall>
+        <functioncall prog_lang="eel">ReaProject EnumProjects(int idx, optional #projfn)</functioncall>
+        <functioncall prog_lang="lua">ReaProject retval, optional string projfn = reaper.EnumProjects(integer idx)</functioncall>
+        <functioncall prog_lang="python">(ReaProject retval, Int idx, String projfnOutOptional, Int projfnOutOptional_sz) = RPR_EnumProjects(idx, projfnOutOptional, projfnOutOptional_sz)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=5.982
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
@@ -3816,11 +3827,10 @@
         </description>
         <retvals>
             ReaProject retval - a ReaProject-object of the project you requested
-            string projfn - the path+filename.rpp of the project. returns "" if no filename exists
+            optional string projfn - the path+filename.rpp of the project. returns nil if no filename exists
         </retvals>
         <parameters>
             integer idx - -1 for current project; 0 and higher for the projects; 0x40000000 for currently rendering project, if any.
-            string projfn - unknown
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -4255,7 +4265,7 @@
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Creates a timestring and formats it as hh:mm:ss.sss. See [format_timestr_pos](#format_timestr_pos), [format_timestr_len](#format_timestr_len).
+            Creates a timestring and formats it as hh:mm:ss.sss. See [format\_timestr_pos](#format_timestr_pos), [format\_timestr_len](#format_timestr_len).
         </description>
         <retvals>
             string buf - the formatted timestring
@@ -4589,21 +4599,21 @@
             Get a block of samples from the audio accessor. Samples are extracted immediately pre-FX, and returned interleaved (first sample of first channel, first sample of second channel...). Returns 0 if no audio, 1 if audio, -1 on error. See [CreateTakeAudioAccessor](#CreateTakeAudioAccessor), [CreateTrackAudioAccessor](#CreateTrackAudioAccessor), [DestroyAudioAccessor](#DestroyAudioAccessor), [AudioAccessorStateChanged](#AudioAccessorStateChanged), [GetAudioAccessorStartTime](#GetAudioAccessorStartTime), [GetAudioAccessorEndTime](#GetAudioAccessorEndTime).
 
             This function has special handling in Python, and only returns two objects, the API function return value, and the sample buffer. Example usage:
-
-                    tr = RPR_GetTrack(0, 0)
-                    aa = RPR_CreateTrackAudioAccessor(tr)
-                    buf = list([0]*2*1024) # 2 channels, 1024 samples each, initialized to zero
-                    pos = 0.0
-                    (ret, buf) = GetAudioAccessorSamples(aa, 44100, 2, pos, 1024, buf)
-                    # buf now holds the first 2*1024 audio samples from the track.
-                    # typically GetAudioAccessorSamples() would be called within a loop, increasing pos each time.
+                        
+                        tr = RPR\_GetTrack(0, 0)
+                        aa = RPR\_CreateTrackAudioAccessor(tr)
+                        buf = list([0]\*2\*1024) \# 2 channels, 1024 samples each, initialized to zero
+                        pos = 0.0
+                        (ret, buf) = GetAudioAccessorSamples(aa, 44100, 2, pos, 1024, buf)
+                        \# buf now holds the first 2\*1024 audio samples from the track.
+                        \# typically GetAudioAccessorSamples() would be called within a loop, increasing pos each time.
                     
         </description>
         <retvals>
             integer - 
         </retvals>
         <parameters>
-            AudioAcessor accessor - 
+            AudioAccessor accessor - 
             integer samplerate - 
             integer numchannels - 
             number starttime_sec - 
@@ -4679,7 +4689,7 @@
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
         <chapter_context>
-            Audio Management
+            AudioMidi Devicemanagement
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
@@ -4909,6 +4919,44 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>GetEnvelopeInfo_Value</slug>
+        <title>GetEnvelopeInfo_Value</title>
+        <functioncall prog_lang="cpp">double GetEnvelopeInfo_Value(TrackEnvelope* tr, const char* parmname)</functioncall>
+        <functioncall prog_lang="eel">double GetEnvelopeInfo_Value(TrackEnvelope tr, "parmname")</functioncall>
+        <functioncall prog_lang="lua">number retval = reaper.GetEnvelopeInfo_Value(TrackEnvelope tr, string parmname)</functioncall>
+        <functioncall prog_lang="python">Float RPR_GetEnvelopeInfo_Value(TrackEnvelope tr, String parmname)</functioncall>
+        <requires>
+            Reaper=5.982
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Gets an envelope numerical-value attribute:
+                I_TCPY : int *, Y offset of envelope relative to parent track (may be separate lane or overlap with track contents)
+                I_TCPH : int *, visible height of envelope
+                I_TCPY_USED : int *, Y offset of envelope relative to parent track, exclusive of padding
+                I_TCPH_USED : int *, visible height of envelope, exclusive of padding
+                P_TRACK : MediaTrack *, parent track pointer (if any)
+                P_ITEM : MediaItem *, parent item pointer (if any)
+                P_TAKE : MediaItem_Take *, parent take pointer (if any)
+        </description>
+        <retvals>
+            number retval - the returned value of the attribute
+        </retvals>
+        <parameters>
+            TrackEnvelope tr - the TrackEnvelope, of which you want to retrieve the attribute-value
+            string parmname - the attribute, whose value you want; 
+                            - can be I_TCPY, I_TCPH, I_TCPY_USED, I_TCPH_USED, P_TRACK, P_ITEM, P_TAKE
+                            - see description for more details
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            Envelope Management
+        </chapter_context>
+        <tags>envelope management, get, attribute, value, height, offset, track</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>GetEnvelopeName</slug>
         <title>GetEnvelopeName</title>
         <functioncall prog_lang="cpp">bool GetEnvelopeName(TrackEnvelope* env, char* bufOut, int bufOut_sz)</functioncall>
@@ -5116,13 +5164,11 @@
         <functioncall prog_lang="lua">boolean retval, string str = reaper.GetEnvelopeStateChunk(TrackEnvelope env, string str, boolean isundo)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, TrackEnvelope env, String strNeedBig, Int strNeedBig_sz, Boolean isundoOptional) = RPR_GetEnvelopeStateChunk(env, strNeedBig, strNeedBig_sz, isundoOptional)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=5.982
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Gets the RPPXML state of an envelope.
-            
-            This function has a limitation: if a returned statechunk. Use [SNM_GetSetObjectState](#SNM_GetSetObjectState) instead in that case.
         </description>
         <retvals>
             boolean retval - true, if it's successful; false, if unsuccessful
@@ -5485,13 +5531,11 @@
         <functioncall prog_lang="lua">boolean retval, string str = reaper.GetItemStateChunk(MediaItem item, string str, boolean isundo)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, MediaItem item, String strNeedBig, Int strNeedBig_sz, Boolean isundoOptional) = RPR_GetItemStateChunk(item, strNeedBig, strNeedBig_sz, isundoOptional)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=5.982
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Gets the RPPXML state of an item, returns true if successful. Undo flag is a performance/caching hint.
-            
-            This function has a limitation: if a returned statechunk. Use [SNM_GetSetObjectState](#SNM_GetSetObjectState) instead in that case.
         </description>
         <retvals>
             boolean retval - true, getting statechunk was successful
@@ -5914,7 +5958,8 @@
                         -  B_LOOPSRC : bool * to loop source
                         -  B_ALLTAKESPLAY : bool * to all takes play
                         -  B_UISEL : bool * to ui selected
-                        -  C_BEATATTACHMODE : char * to one char of beat attached mode, -1=def, 0=time, 1=allbeats, 2=beatsosonly
+                        -  C_BEATATTACHMODE : char * to one char of beat attached mode, 
+                        -                     -1=def, 0=time, 1=allbeats, 2=beatsosonly
                         -  C_LOCK : char * to one char of lock flags (&amp;1 is locked, currently)
                         -  D_VOL : double * of item volume (volume bar)
                         -  D_POSITION : double * of item position (seconds)
@@ -5931,7 +5976,8 @@
                         -  I_GROUPID : int * to group ID (0 = no group)
                         -  I_LASTY : int * to last y position in track (readonly)
                         -  I_LASTH : int * to last height in track (readonly)
-                        -  I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used (though will store the color anyway).
+                        -  I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). 
+                        -                          If you do not |0x100000, then it will not be used (though will store the color anyway).
                         -  I_CURTAKE : int * to active take
                         -  IP_ITEMNUMBER : int, item number within the track (read-only, returns the item number directly)
                         -  F_FREEMODE_Y : float * to free mode y position (0..1)
@@ -6398,7 +6444,7 @@
         <functioncall prog_lang="lua">number retval = reaper.GetMediaTrackInfo_Value(MediaTrack tr, string parmname)</functioncall>
         <functioncall prog_lang="python">Float RPR_GetMediaTrackInfo_Value(MediaTrack tr, String parmname)</functioncall>
         <requires>
-            Reaper=5.974
+            Reaper=5.982
             Lua=5.3
         </requires>
         <description prog_lang="*">
@@ -6416,7 +6462,9 @@
             I_AUTOMODE : int * : track automation mode (0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
             I_NCHAN : int * : number of track channels, must be 2-64, even
             I_SELECTED : int * : track selected? 0 or 1
-            I_WNDH : int * : current TCP window height (Read-only)
+            I_WNDH : int * : current TCP window height including envelopes (Read-only)
+            I_TCPH : int * : current TCP window height not including envelopes (Read-only)
+            I_TCPY : int * : current TCP window Y position relative to top of arrange view (Read-only)
             I_FOLDERDEPTH : int * : folder depth change (0=normal, 1=track is a folder parent, -1=track is the last in the innermost folder, -2=track is the last in the innermost and next-innermost folders, etc
             I_FOLDERCOMPACT : int * : folder compacting (only valid on folders), 0=normal, 1=small, 2=tiny children
             I_MIDIHWOUT : int * : track midi hardware output index (&gt;0 for disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31))
@@ -7166,7 +7214,7 @@
         <retvals>
             string buf - the returned path
         </retvals>
-        <parmeters>
+        <parameters>
             string buf - a string-buffer needed by the function, just give "" in Lua
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -9349,17 +9397,17 @@
             category is &lt;0 for receives, 0=sends, &gt;0 for hardware outputs
             parameter names:
             
-                B\_MUTE : bool *
-                B\_PHASE : bool *, true to flip phase
-                B\_MONO : bool *
-                D\_VOL : double *, 1.0 = +0dB etc
-                D\_PAN : double *, -1..+1
-                D\_PANLAW : double *,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
-                I\_SENDMODE : int *, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
-                I\_AUTOMODE : int * : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
-                I\_SRCCHAN : int *, index,&amp;1024=mono, -1 for none
-                I\_DSTCHAN : int *, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
-                I\_MIDIFLAGS : int *, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanP_DESTTRACK : read only, returns MediaTrack *, destination track, only applies for sends/recvs
+                B\_MUTE : bool \*
+                B\_PHASE : bool \*, true to flip phase
+                B\_MONO : bool \*
+                D\_VOL : double \*, 1.0 = +0dB etc
+                D\_PAN : double \*, -1..+1
+                D\_PANLAW : double \*,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
+                I\_SENDMODE : int \*, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
+                I\_AUTOMODE : int \* : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
+                I\_SRCCHAN : int \*, index,&amp;1024=mono, -1 for none
+                I\_DSTCHAN : int \*, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
+                I\_MIDIFLAGS : int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanP_DESTTRACK : read only, returns MediaTrack *, destination track, only applies for sends/recvs
                 P\_SRCTRACK : read only, returns MediaTrack *, source track, only applies for sends/recvs
                 P\_ENV:&lt;envchunkname : read only, returns TrackEnvelope *. To get a specific TrackEnvelope, call with :&lt;VOLENV, :&lt;PANENV, etc appended.
                 
@@ -9522,13 +9570,11 @@
         <functioncall prog_lang="lua">boolean retval, string str = reaper.GetTrackStateChunk(MediaTrack track, string str, boolean isundo)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, MediaTrack track, String strNeedBig, Int strNeedBig_sz, Boolean isundoOptional) = RPR_GetTrackStateChunk(track, strNeedBig, strNeedBig_sz, isundoOptional)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=5.982
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Gets the RPPXML state of a track, returns true if successful. Undo flag is a performance/caching hint.
-            
-            This function has a limitation: if a returned statechunk. Use [SNM_GetSetObjectState](#SNM_GetSetObjectState) instead in that case.
         </description>
         <retvals>
              retval - 
@@ -9715,7 +9761,7 @@
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Opens a window with input-fields to get values from the user.
-            If a caption begins with *, for example "*password", the edit field will not display the input text.
+            If a caption begins with \*, for example "\*password", the edit field will not display the input text.
             Maximum fields is 16. Values are returned as a comma/custom separator-separated string. 
             Returns false if the user canceled the dialog. 
             
@@ -10737,12 +10783,21 @@
         <functioncall prog_lang="lua">reaper.Main_openProject(string name)</functioncall>
         <functioncall prog_lang="python">RPR_Main_openProject(String name)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=5.983
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            opens a project. will prompt the user to save, etc.
-            if you pass a .RTrackTemplate file then it adds that to the project instead.
+            opens a project. 
+            
+            will prompt the user to save unless name is prefixed with 'noprompt:'. 
+                example: "noprompt:projectfile.rpp"
+                 
+            If name is prefixed with 'template:', project file will be loaded as a template.
+                example: "template:projectfile.rpp"
+            
+            You can combine both: "template:noprompt:projectfile.rpp"
+            
+            If passed a .RTrackTemplate file, adds the template to the existing project.
         </description>
         <parameters>
             string name - the path and filename of the project/template you want to open
@@ -12302,7 +12357,19 @@
             Get settings from a MIDI editor. setting_desc can be:
                 snap\_enabled: returns 0 or 1
                 active\_note\_row: returns 0-127
-                last\_clicked\_cc\_lane: returns 0-127=CC, 0x100|(0-31)=14-bit CC, 0x200=velocity, 0x201=pitch, 0x202=program, 0x203=channel pressure, 0x204=bank/program select, 0x205=text, 0x206=sysex, 0x207=off velocity, 0x208=notation events, 0x210=media item lane
+                last\_clicked\_cc\_lane: 
+                    returns 0-127=CC, 
+                            0x100|(0-31)=14-bit CC, 
+                            0x200=velocity, 
+                            0x201=pitch, 
+                            0x202=program, 
+                            0x203=channel pressure, 
+                            0x204=bank/program select, 
+                            0x205=text, 
+                            0x206=sysex, 
+                            0x207=off velocity, 
+                            0x208=notation events, 
+                            0x210=media item lane
                 default\_note\_vel: returns 0-127
                 default\_note\_chan: returns 0-15
                 default\_note\_len: returns default length in MIDI ticks
@@ -12338,14 +12405,15 @@
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Get settings from a MIDI editor. setting_desc can be:
+            Get settings from a MIDI editor. setting\_desc can be:
             last\_clicked\_cc\_lane: returns text description ("velocity", "pitch", etc)
             scale: returns the scale record, for example "102034050607" for a major scale
-            if setting_desc is unsupported, the function returns false.
-            See [MIDIEditor_GetActive](#MIDIEditor_GetActive), [MIDIEditor_GetSetting_int](#MIDIEditor_GetSetting_int)
+            if setting\_desc is unsupported, the function returns false.
+        
+            See [MIDIEditor\_GetActive](#MIDIEditor_GetActive), [MIDIEditor\_GetSetting_int](#MIDIEditor_GetSetting_int)
         </description>
         <retvals>
-             retval - 
+            retval - 
             buf - 
         </retvals>
         <parameters>
@@ -12460,9 +12528,9 @@
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Set settings for a MIDI editor. setting_desc can be:
-            active_note_row: 0-127
-            See [MIDIEditor_GetSetting_int](#MIDIEditor_GetSetting_int)
+            Set settings for a MIDI editor. setting\_desc can be:
+            active\_note\_row: 0-127
+            See [MIDIEditor\_GetSetting_int](#MIDIEditor_GetSetting_int)
         </description>
         <retvals>
             boolean retval - 
@@ -13057,7 +13125,7 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">         
-        
+               
         </description>
         <retvals>
             number - 
@@ -13085,14 +13153,28 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            
+            enumerates the available PCM-sink-formats, which means, the output-formats available in Reaper
         </description>
         <retvals>
-             retval - 
-            descstr - 
+           integer retval - a number, which represents the PCM-sink-format
+           string descstr - the PCM-sink-format
+                    - 0 - WAV
+                    - 1 - AIFF
+                    - 2 - Audio CD Image (CUE/BIN format)
+                    - 3 - DDP
+                    - 4 - FLAC
+                    - 5 - MP3 (encoder by LAME project)
+                    - 6 - OGG Vorbis
+                    - 7 - OGG Opus
+                    - 8 - Video (ffmpeg/libav encoder)
+                    - 9 - Video (GIF)
+                    - 10 - Video (LCF)
+                    - 11 - WavPack lossless compressor
+                    - maybe others as well?
+
         </retvals>
         <parameters>
-            idx - 
+           integer idx - the index of the sink-format, beginning with 0
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -14467,7 +14549,7 @@
         <functioncall prog_lang="lua">boolean = reaper.SetMediaTrackInfo_Value(MediaTrack tr, string parmname, number newvalue)</functioncall>
         <functioncall prog_lang="python">Boolean RPR_SetMediaTrackInfo_Value(MediaTrack tr, String parmname, Float newvalue)</functioncall>
         <requires>
-            Reaper=5.974
+            Reaper=5.982
             Lua=5.3
         </requires>
         <description prog_lang="*">
@@ -14485,7 +14567,9 @@
             I_AUTOMODE : int * : track automation mode (0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
             I_NCHAN : int * : number of track channels, must be 2-64, even
             I_SELECTED : int * : track selected? 0 or 1
-            I_WNDH : int * : current TCP window height (Read-only)
+            I_WNDH : int * : current TCP window height including envelopes (Read-only)
+            I_TCPH : int * : current TCP window height not including envelopes (Read-only)
+            I_TCPY : int * : current TCP window Y position relative to top of arrange view (Read-only)
             I_FOLDERDEPTH : int * : folder depth change (0=normal, 1=track is a folder parent, -1=track is the last in the innermost folder, -2=track is the last in the innermost and next-innermost folders, etc
             I_FOLDERCOMPACT : int * : folder compacting (only valid on folders), 0=normal, 1=small, 2=tiny children
             I_MIDIHWOUT : int * : track midi hardware output index (&gt;0 for disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31))
@@ -15255,17 +15339,17 @@
             category is &lt;0 for receives, 0=sends, &gt;0 for hardware outputs
             parameter names:
 
-                B\_MUTE : bool *
-                B\_PHASE : bool *, true to flip phase
-                B\_MONO : bool *
-                D\_VOL : double *, 1.0 = +0dB etc
-                D\_PAN : double *, -1..+1
-                D\_PANLAW : double *,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
-                I\_SENDMODE : int *, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
-                I\_AUTOMODE : int * : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
-                I\_SRCCHAN : int *, index,&amp;1024=mono, -1 for none
-                I\_DSTCHAN : int *, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
-                I\_MIDIFLAGS : int *, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanSee <a href="#CreateTrackSend">CreateTrackSend</a>, <a href="#RemoveTrackSend">RemoveTrackSend</a>, <a href="#GetTrackNumSends">GetTrackNumSends</a>.
+                B\_MUTE : bool \*
+                B\_PHASE : bool \*, true to flip phase
+                B\_MONO : bool \*
+                D\_VOL : double \*, 1.0 = +0dB etc
+                D\_PAN : double \*, -1..+1
+                D\_PANLAW : double \*,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
+                I\_SENDMODE : int \*, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
+                I\_AUTOMODE : int \* : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
+                I\_SRCCHAN : int \*, index,&amp;1024=mono, -1 for none
+                I\_DSTCHAN : int \*, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
+                I\_MIDIFLAGS : int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanSee <a href="#CreateTrackSend">CreateTrackSend</a>, <a href="#RemoveTrackSend">RemoveTrackSend</a>, <a href="#GetTrackNumSends">GetTrackNumSends</a>.
 
 
             See [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
@@ -19526,7 +19610,7 @@
                        - 8, loop selection, markers, regions, extensions
                        - 16, freeze state
                        - 32, non-FX envelopes only
-                       - 64, FX envelopes, implied by UNDO_STATE_FX too
+                       - 64, FX envelopes, implied by UNDO\_STATE\_FX too
                        - 128, contents of automation items -- not position, length, rate etc of automation items, which is part of envelope state
                        - 256, ARA state
         </parameters>
@@ -19762,12 +19846,6 @@
         <parameters>
             pointer - a pointer to the object to check for. In Lua or Python, you just give the object to check as this parameter.
             ctypename - the type of project to check for(given as a pointer)
-                -ReaProject*
-                -MediaTrack* 
-                -MediaItem*
-                -MediaItem_Take*
-                -TrackEnvelope*
-                -PCM_source*
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -19798,12 +19876,6 @@
             proj - the project-number. 0 for the current project. Can also be a ReaProject-object, as returned by [EnumProjects](#EnumProjects)
             pointer - a pointer to the object to check for. In Lua or Python, you just give the object to check as this parameter.
             ctypename - the type of project to check for(given as a pointer)
-                -ReaProject*
-                -MediaTrack* 
-                -MediaItem*
-                -MediaItem_Take*
-                -TrackEnvelope*
-                -PCM_source*
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -20163,14 +20235,14 @@
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            \[BR\] Free envelope object allocated with [BR_EnvAlloc](#BR_EnvAlloc) and commit changes if needed. Returns true if changes were committed successfully. Note that when envelope object wasn't modified nothing will get committed even if commit = true - in that case function returns false.
+            \[BR\] Free envelope object allocated with [BR\_EnvAlloc](#BR_EnvAlloc) and commit changes if needed. Returns true if changes were committed successfully. Note that when envelope object wasn't modified nothing will get committed even if commit = true - in that case function returns false.
         </description>
         <retvals>
             boolean - true, committing was successful; false, committing was unsuccessful or no committing was necessary
         </retvals>
         <parameters>
             envelope - the BR_Envelope-object that you want to commit and be freed
-            commit - true, commit changes when freeing the BR_Envelope-object; false, don't commit changes when freeing the BR_Envelope-object
+            commit - true, commit changes when freeing the BR\_Envelope-object; false, don't commit changes when freeing the BR\_Envelope-object
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -20731,7 +20803,7 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            \[BR\] Get media track freeze count (if track isn't frozen at all, returns 0).
+            [BR] Get media track freeze count (if track isn't frozen at all, returns 0).
         </description>
         <retvals>
             integer - 
@@ -21900,7 +21972,7 @@
             
             If you have multiple sections in that file with the same name, only the first one will be used, the rest will be ignored by Reaper.
             If you have multiple keys with the same name within a section, only the first one will be used, the rest will be ignored by Reaper.
-            You can get the paths using [GetExePath](#GetExePath) for the Reaper-application-folder, [GetResourcePath](#GetResourcePath) for the ressources-folder or get_ini_file for the path+filename of the Reaper.ini-file.
+            You can get the paths using [GetExePath](#GetExePath) for the Reaper-application-folder, [GetResourcePath](#GetResourcePath) for the ressources-folder or get\_ini\_file for the path+filename of the Reaper.ini-file.
         </description>
         <retvals>
             retval - number of characters of the value
@@ -22641,7 +22713,7 @@
         </retvals>
         <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
             string varname - the name of the config-variable to be read; not case sensitive
-                    - see [Reaper_Config_Variables.html](Reaper_Config_Variables.html) for valid config-vars
+                    - see [Reaper Config Variables](Reaper_Config_Variables.html) for valid config-vars
             number errvalue - the errorvalue that will be returned, if varname isn't a valid one
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -22854,7 +22926,7 @@
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             \[S&amp;M\] Gets or sets a take source state. Returns false if failed. Use takeidx=-1 to get/alter the active take.
-            Note: this function does not use a MediaItem_Take\* param in order to manage empty takes (i.e. takes with MediaItem_Take\*==NULL), see [SNM_GetSetSourceState2](#SNM_GetSetSourceState2).
+            Note: this function does not use a MediaItem\_Take\* param in order to manage empty takes (i.e. takes with MediaItem\_Take\*==NULL), see [SNM\_GetSetSourceState2](#SNM_GetSetSourceState2).
         </description>
         <retvals>
             boolean - 
@@ -23414,9 +23486,9 @@
 
             Notes:
 
-            * Re-drawing can also be induced by JS_Window_InvalidateRect.
-            * This function should not be applied directly to top-level windows, but rather to child windows.
-            * Some classes of UI elements, particularly buttons, do not take kindly to being composited, and may crash REAPER.
+            \* Re-drawing can also be induced by [JS\_Window\_InvalidateRect](#JS_Window_InvalidateRect).
+            \* This function should not be applied directly to top-level windows, but rather to child windows.
+            \* Some classes of UI elements, particularly buttons, do not take kindly to being composited, and may crash REAPER.
 
             Returns:
             1 if successful, otherwise -1 = windowHWND is not window, -3 = Could not obtain the original window process, -4 = sysBitmap is not a LICE bitmap, -5 = sysBitmap is not a system bitmap, -6 = Could not obtain the window HDC.
@@ -23554,7 +23626,7 @@
 
             mode: Optional parameter. "SRCCOPY" by default, or specify "ALPHA" to enable per-pixel alpha blending.
 
-            WARNING: On WindowsOS, GDI_Blit does not perform alpha multiplication of the source bitmap. For proper color rendering, a seperate pre-multiplication step is therefore required, using either LICE_Blit or LICE_ProcessRect.
+            WARNING: On WindowsOS, GDI\_Blit does not perform alpha multiplication of the source bitmap. For proper color rendering, a seperate pre-multiplication step is therefore required, using either LICE\_Blit or LICE\_ProcessRect.
         </description>
         <parameters>
            identifier destHDC - 
@@ -23619,11 +23691,11 @@
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Parameters:
            
-            * weight: 0 - 1000, with 0 = auto, 400 = normal and 700 = bold.
+            \* weight: 0 - 1000, with 0 = auto, 400 = normal and 700 = bold.
            
-            * angle: the angle, in tenths of degrees, between the text and the x-axis of the device.
+            \* angle: the angle, in tenths of degrees, between the text and the x-axis of the device.
            
-            * fontName: If empty string "", uses first font that matches the other specified attributes.
+            \* fontName: If empty string "", uses first font that matches the other specified attributes.
            
            
            
@@ -23722,7 +23794,7 @@
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Parameters:
            
-            * align: Combination of: "TOP", "VCENTER", "LEFT", "HCENTER", "RIGHT", "BOTTOM", "WORDBREAK", "SINGLELINE", "NOCLIP", "CALCRECT", "NOPREFIX" or "ELLIPSIS"
+            \* align: Combination of: "TOP", "VCENTER", "LEFT", "HCENTER", "RIGHT", "BOTTOM", "WORDBREAK", "SINGLELINE", "NOCLIP", "CALCRECT", "NOPREFIX" or "ELLIPSIS"
 
         </description>
         <retvals>
@@ -24484,10 +24556,10 @@
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Standard LICE modes: "COPY" (default if empty string), "MASK", "ADD", "DODGE", "MUL", "OVERLAY" or "HSVADJ", any of which may be combined with "ALPHA" to enable per-pixel alpha blending.
 
-            In addition to the standard LICE modes, LICE_Blit also offers:
-            * "CHANCOPY_XTOY", with X and Y any of the four channels, A, R, G or B. (CHANCOPY_ATOA is similar to MASK mode.)
-            * "BLUR"
-            * "ALPHAMUL", which overwrites the destination with a per-pixel alpha-multiplied copy of the source. (Similar to first clearing the destination with 0x00000000 and then blitting with "COPY,ALPHA".)
+            In addition to the standard LICE modes, LICE\_Blit also offers:
+            \* "CHANCOPY\_XTOY", with X and Y any of the four channels, A, R, G or B. (CHANCOPY\_ATOA is similar to MASK mode.)
+            \* "BLUR"
+            \* "ALPHAMUL", which overwrites the destination with a per-pixel alpha-multiplied copy of the source. (Similar to first clearing the destination with 0x00000000 and then blitting with "COPY,ALPHA".)
         </description>
         <parameters>
            identifier destBitmap - 
@@ -25222,13 +25294,13 @@
             operand: a color in 0xAARRGGBB format.
 
             modes:
-            * "XOR", "OR" or "AND".
-            * "SET_XYZ", with XYZ any combination of A, R, G, and B: copies the specified channels from operand to the bitmap. (Useful for setting the alpha values of a bitmap.)
-            * "ALPHAMUL": Performs alpha pre-multiplication on each pixel in the rect. operand is ignored in this mode. (On WindowsOS, GDI_Blit does not perform alpha multiplication on the fly, and a separate alpha pre-multiplication step is therefore required.)
+            \* "XOR", "OR" or "AND".
+            \* "SET\_XYZ", with XYZ any combination of A, R, G, and B: copies the specified channels from operand to the bitmap. (Useful for setting the alpha values of a bitmap.)
+            \* "ALPHAMUL": Performs alpha pre-multiplication on each pixel in the rect. operand is ignored in this mode. (On WindowsOS, GDI\_Blit does not perform alpha multiplication on the fly, and a separate alpha pre-multiplication step is therefore required.)
 
             NOTE:
-            LICE_Blit and LICE_ScaledBlit are also useful for processing bitmap colors. For example, to multiply all channel values by 1.5:
-            reaper.JS_LICE_Blit(bitmap, x, y, bitmap, x, y, w, h, 0.5, "ADD").
+            LICE\_Blit and LICE\_ScaledBlit are also useful for processing bitmap colors. For example, to multiply all channel values by 1.5:
+            reaper.JS\_LICE\_Blit(bitmap, x, y, bitmap, x, y, w, h, 0.5, "ADD").
         </description>
         <parameters>
            identifier bitmap - 
@@ -25581,6 +25653,34 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_ListView_EnsureVisible</slug>
+        <title>JS_ListView_EnsureVisible(JS)</title>
+        <functioncall prog_lang="cpp">void JS_ListView_EnsureVisible(void* listviewHWND, int index, bool partialOK)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_ListView_EnsureVisible", void* listviewHWND, int index, bool partialOK)</functioncall>
+        <functioncall prog_lang="lua">reaper.JS_ListView_EnsureVisible(identifier listviewHWND, integer index, boolean partialOK)</functioncall>
+        <functioncall prog_lang="python">JS_ListView_EnsureVisible(void listviewHWND, Int index, Boolean partialOK)</functioncall>
+        <requires>
+            Reaper=5.982
+            JS=0.990
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+        
+        </description>
+        <parameters>
+           identifier listviewHWND - 
+           integer index - 
+           boolean partialOK - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Localize</slug>
         <title>JS_Localize(JS)</title>
         <functioncall prog_lang="cpp">void JS_Localize(const char* USEnglish, const char* LangPackSection, char* translationOut, int translationOut_sz)</functioncall>
@@ -25596,10 +25696,10 @@
             Returns the translation of the given US English text, according to the currently loaded Language Pack.
 
             Parameters:
-            * LangPackSection: Language Packs are divided into sections such as "common" or "DLG_102".
-            * In Lua, by default, text of up to 1024 chars can be returned. To increase (or reduce) the default buffer size, a string and size can be included as optional 3rd and 4th arguments.
+            \* LangPackSection: Language Packs are divided into sections such as "common" or "DLG\_102".
+            \* In Lua, by default, text of up to 1024 chars can be returned. To increase (or reduce) the default buffer size, a string and size can be included as optional 3rd and 4th arguments.
 
-            Example: reaper.JS_Localize("Actions", "common", "", 20)
+            Example: reaper.JS\_Localize("Actions", "common", "", 20)
         </description>
         <parameters>
            string USEnglish - the original english string
@@ -25632,9 +25732,9 @@
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Returns the addresses of all open MIDI windows (whether docked or not).
            
-            * The addresses are stored in the provided reaper.array.
+            \* The addresses are stored in the provided reaper.array.
            
-            * Each address can be converted to a REAPER object (HWND) by the function JS_Window_HandleFromAddress.
+            \* Each address can be converted to a REAPER object (HWND) by the function JS\_Window\_HandleFromAddress.
 
         </description>
 
@@ -25664,9 +25764,9 @@
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Returns a list of HWNDs of all open MIDI windows (whether docked or not).
            
-            * The list is formatted as a comma-separated (and terminated) string of hexadecimal values.
+            \* The list is formatted as a comma-separated (and terminated) string of hexadecimal values.
            
-            * Each value is an address that can be converted to a HWND by the function JS_Window_HandleFromAddress.
+            \* Each value is an address that can be converted to a HWND by the function JS\_Window\_HandleFromAddress.
 
         </description>
         <retvals>
@@ -25727,7 +25827,7 @@
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Frees memory that was previously allocated by JS_Mem_Alloc.
+            Frees memory that was previously allocated by JS\_Mem\_Alloc.
         </description>
         <retvals>
            identifier - 
@@ -25821,7 +25921,7 @@
            
            Parameters:
            
-            * flags, state: The parameter and the return value both use the same format as gfx.mouse_cap. I.e., to get the states of the left mouse button and the ctrl key, use flags = 0b00000101.
+            \* flags, state: The parameter and the return value both use the same format as gfx.mouse_cap. I.e., to get the states of the left mouse button and the ctrl key, use flags = 0b00000101.
             
             use -1 as flags to retrieve the states of all mouse-buttons and modifier
 
@@ -26066,13 +26166,15 @@
         <functioncall prog_lang="python">(Float cutoffTime, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetDown(cutoffTime, stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
         <requires>
             Reaper=5.965
-            JS=0.986
+            JS=0.993
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Returns a 255-byte array that specifies which virtual keys, from 0x01 to 0xFF, have sent KEYDOWN messages since cutoffTime.
 
-            Note: Mouse buttons and modifier keys are not (currently) reliably detected, and JS_Mouse_GetState can be used instead.
+            Notes:
+            * Mouse buttons and modifier keys are not (currently) reliably detected, and JS\_Mouse\_GetState can be used instead.
+            * Auto-repeated KEYDOWN messages are ignored.
         </description>
         <retvals>
            string state - 
@@ -26147,7 +26249,7 @@
         <functioncall prog_lang="python">(Boolean retval, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetState(stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
         <requires>
             Reaper=5.965
-            JS=0.986
+            JS=0.993
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -26158,7 +26260,9 @@
             If cutoffTime is negative, it is relative to the current time.
 
             Notes:
-            * Mouse buttons and modifier keys are not (currently) reliably detected, and [JS_Mouse_GetState](#JS_Mouse_GetState) can be used instead.
+            Notes:
+            * Mouse buttons and modifier keys are not (currently) reliably detected, and JS\_Mouse\_GetState can be used instead.
+            * Auto-repeated KEYDOWN messages are ignored.
         </description>
         <retvals>
            boolean retval - 
@@ -26187,7 +26291,7 @@
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Return a 255-byte array that specifies which virtual keys, from 0x01 to 0xFF, have sent KEYUP messages since cutoffTime.
 
-            Note: Mouse buttons and modifier keys are not (currently) reliably detected, and [JS_Mouse_GetState](#JS_Mouse_GetState) can be used instead.
+            Note: Mouse buttons and modifier keys are not (currently) reliably detected, and [JS\_Mouse\_GetState](#JS_Mouse_GetState) can be used instead.
         </description>
         <retvals>
            string state - 
@@ -26903,6 +27007,50 @@
     </US_DocBloc>
   
     <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_Create</slug>
+        <title>JS_Window_Create(JS)</title>
+        <functioncall prog_lang="cpp">void* JS_Window_Create(const char* title, const char* className, int x, int y, int w, int h, char* styleOptional, void* ownerHWNDOptional)</functioncall>
+        <functioncall prog_lang="eel">void* extension_api("JS_Window_Create", "title", "className", int x, int y, int w, int h, optional #style, void* ownerHWND)</functioncall>
+        <functioncall prog_lang="lua">identifier retval, optional string style = reaper.JS_Window_Create(string title, string className, integer x, integer y, integer w, integer h, optional string style, identifier ownerHWND)</functioncall>
+        <functioncall prog_lang="python">(void retval, String title, String className, Int x, Int y, Int w, Int h, String styleOptional, void ownerHWNDOptional) = JS_Window_Create(title, className, x, y, w, h, styleOptional, ownerHWNDOptional)</functioncall>
+        <requires>
+            Reaper=5.982
+            JS=0.991
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Creates a modeless window with WS\_OVERLAPPEDWINDOW style and only rudimentary features. Scripts can paint into the window using GDI or LICE/Composite functions (and JS\_Window\_InvalidateRect to trigger re-painting).
+
+            style: An optional parameter that overrides the default style. The string may include any combination of standard window styles, such as "POPUP" for a frameless window, or "CAPTION,SIZEBOX,SYSMENU" for a standard framed window.
+
+            On Linux and macOS, "MAXIMIZE" has not yet been implemented, and the remaining styles may appear slightly different from their WindowsOS counterparts.
+
+            ownerHWND: Optional parameter, only available on WindowsOS. Usually either the REAPER main window or another script window, and useful for ensuring that the created window automatically closes when the owner is closed.
+            
+            NOTE: On Linux and macOS, the window contents are only updated \*between\* defer cycles, so the window cannot be animated by for/while loops within a single defer cycle.
+        </description>
+        <retvals>
+            identifier retval, optional string style
+        </retvals>
+        <parameters>
+           string title - 
+           string className - 
+           integer x - 
+           integer y - 
+           integer w - 
+           integer h - 
+           optional string style - 
+           identifier ownerHWND - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
+    <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_Destroy</slug>
         <title>JS_Window_Destroy(JS)</title>
         <functioncall prog_lang="cpp">void JS_Window_Destroy(void* windowHWND)</functioncall>
@@ -26973,12 +27121,12 @@
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Returns a HWND to a window whose title matches the specified string.
-            * Unlike the Win32 function FindWindow, this function searches top-level as well as child windows, so that the target window can be found irrespective of docked state.
-            * In addition, the function can optionally match substrings of the title.
-            * Matching is not case sensitive.
+            \* Unlike the Win32 function FindWindow, this function searches top-level as well as child windows, so that the target window can be found irrespective of docked state.
+            \* In addition, the function can optionally match substrings of the title.
+            \* Matching is not case sensitive.
 
             Parameters:
-            * exact: Match entire title, or match substring of title.
+            \* exact: Match entire title, or match substring of title.
         </description>
         <retvals>
            identifier  - the identifier of the found window, or nil
@@ -27003,16 +27151,16 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_FindChild(identifier parentHWND, string title, boolean exact)</functioncall>
         <functioncall prog_lang="python">void  JS_Window_FindChild(void parentHWND, String title, Boolean exact)</functioncall>
         <requires>
-            Reaper=5.95
-            JS=0.951
+            Reaper=5.982
+            JS=0.990
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-           Returns a HWND to the child window whose title matches the specified string.
+           Returns a HWND to a child window whose title matches the specified string.
            
            Parameters:
            
-            * exact: Match entire title exactly, or match substring of title.
+            \* exact: Match entire title length, or match substring of title. In both cases, matching is not case sensitive.
 
         </description>
         <retvals>
@@ -27086,8 +27234,8 @@
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Returns a handle to a child window whose class and title match the specified strings.
 
-            Parameters: * childWindow: The function searches child windows, beginning with the window *after* the specified child window. If childHWND is equal to parentHWND, the search begins with the first child window of parentHWND.
-            * title: An empty string, "", will match all windows. (Search is not case sensitive.)
+            Parameters: \* childWindow: The function searches child windows, beginning with the window *after* the specified child window. If childHWND is equal to parentHWND, the search begins with the first child window of parentHWND.
+            \* title: An empty string, "", will match all windows. (Search is not case sensitive.)
         </description>
         <parameters>
            identifier parentHWND - the parent hwnd of the child-window to find
@@ -27122,7 +27270,7 @@
             Returns a HWND to a top-level window whose title matches the specified string.
 
             Parameters:
-            * exact: Match entire title length, or match substring of title. In both cases, matching is not case sensitive.
+            \* exact: Match entire title length, or match substring of title. In both cases, matching is not case sensitive.
         </description>
         <parameters>
            string title - the title of the top-level window to find
@@ -27456,13 +27604,13 @@
            
            Parameters:
            
-            * scrollbar: "v" (or "SB\_VERT", or "VERT") for vertical scroll, "h" (or "SB\_HORZ" or "HORZ") for horizontal.
+            \* scrollbar: "v" (or "SB\_VERT", or "VERT") for vertical scroll, "h" (or "SB\_HORZ" or "HORZ") for horizontal.
            
            
            
            Returns:
            
-            * Leftmost or topmost visible pixel position, as well as the visible page size, the range minimum and maximum, and scroll box tracking position.
+            \* Leftmost or topmost visible pixel position, as well as the visible page size, the range minimum and maximum, and scroll box tracking position.
 
         </description>
         <retvals>
@@ -27488,13 +27636,13 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_GetTitle</slug>
         <title>JS_Window_GetTitle(JS)</title>
-        <functioncall prog_lang="cpp">void JS_Window_GetTitle(void* windowHWND, char* buf, int buf_sz)</functioncall>
-        <functioncall prog_lang="eel">extension_api("JS_Window_GetTitle", void* windowHWND, #buf)</functioncall>
-        <functioncall prog_lang="lua">string buf = reaper.JS_Window_GetTitle(identifier windowHWND, string buf)</functioncall>
-        <functioncall prog_lang="python">(void windowHWND, String buf, Int buf_sz) = JS_Window_GetTitle(windowHWND, buf, buf_sz)</functioncall>
+        <functioncall prog_lang="cpp">void JS_Window_GetTitle(void* windowHWND, char* titleOut, int titleOut_sz)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_Window_GetTitle", void* windowHWND, #title)</functioncall>
+        <functioncall prog_lang="lua">string title = reaper.JS_Window_GetTitle(identifier windowHWND)</functioncall>
+        <functioncall prog_lang="python">(void windowHWND, String titleOut, Int titleOut_sz) = JS_Window_GetTitle(windowHWND, titleOut, titleOut_sz)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.992
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -27502,11 +27650,10 @@
 
         </description>
         <retvals>
-           string buf   - 
+           string title - the title of the window
         </retvals>
         <parameters>
-           identifier windowHWND - 
-           string buf - 
+           identifier windowHWND - the hwnd of the window, whose title you want to retrieve
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -27737,9 +27884,9 @@
             Finds all child windows of the specified parent.
 
             Returns:
-            * retval: The number of windows found; negative if an error occurred.
-            * list: A comma-separated string of hexadecimal values.
-            Each value is an address that can be converted to a HWND by the function JS_Window_HandleFromAddress.
+            \* retval: The number of windows found; negative if an error occurred.
+            \* list: A comma-separated string of hexadecimal values.
+            Each value is an address that can be converted to a HWND by the function JS\_Window\_HandleFromAddress.
         </description>
         <retvals>
             integer retval - 
@@ -27772,8 +27919,8 @@
             Finds all top-level windows.
 
             Returns:
-            * retval: The number of windows found; negative if an error occurred.
-            * list: A comma-separated string of hexadecimal values. Each value is an address that can be converted to a HWND by the function JS_Window_HandleFromAddress.
+            \* retval: The number of windows found; negative if an error occurred.
+            \* list: A comma-separated string of hexadecimal values. Each value is an address that can be converted to a HWND by the function JS\_Window\_HandleFromAddress.
         </description>
         <retvals>
            integer retval - 
@@ -27803,11 +27950,11 @@
             Finds all windows (whether top-level or child) whose titles match the specified string.
 
             Returns:
-            * retval: The number of windows found; negative if an error occurred.
-            * list: A comma-separated string of hexadecimal values. Each value is an address that can be converted to a HWND by the function JS_Window_HandleFromAddress.
+            \* retval: The number of windows found; negative if an error occurred.
+            \* list: A comma-separated string of hexadecimal values. Each value is an address that can be converted to a HWND by the function JS\_Window\_HandleFromAddress.
 
             Parameters:
-            * exact: Match entire title exactly, or match substring of title.
+            \* exact: Match entire title exactly, or match substring of title.
         </description>
         <retvals>
             integer retval - 
@@ -27870,18 +28017,19 @@
         <functioncall prog_lang="python">JS_Window_Move(void windowHWND, Int left, Int top)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.993
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Changes the position of the specified window, keeping its size constant.
-           
-            * For a top-level window, the position is relative to the upper-left corner of the screen.
-           
-            * For a child window, they are relative to the upper-left corner of the parent window's client area.
 
+            NOTES:
+            * For top-level windows, position is relative to the primary display.
+            * On Windows and Linux, position is calculated as the coordinates of the upper left corner of the window, relative to upper left corner of the primary display, and the positive Y-axis points downward.
+            * On macOS, position is calculated as the coordinates of the bottom left corner of the window, relative to bottom left corner of the display, and the positive Y-axis points upward.
+            * For a child window, on all platforms, position is relative to the upper-left corner of the parent window's client area.
+            * Equivalent to calling [JS\_Window\_SetPosition](#JS_Window_SetPosition) with NOSIZE, NOZORDER, NOACTIVATE and NOOWNERZORDER flags set.
         </description>
-
         <parameters>
            identifier windowHWND - 
            integer left - 
@@ -27968,14 +28116,15 @@
         <functioncall prog_lang="python">JS_Window_Resize(void windowHWND, Int width, Int height)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.993
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Changes the dimensions of the specified window, keeping the top left corner position constant.
            
             * If resizing script GUIs, call gfx.update() after resizing.
-
+            
+            * Equivalent to calling [JS\_Window\_SetPosition](#JS_Window_SetPosition) with NOMOVE, NOZORDER, NOACTIVATE and NOOWNERZORDER flags set.
         </description>
 
         <parameters>
@@ -28081,6 +28230,39 @@
     </US_DocBloc>
   
     <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_SetLong</slug>
+        <title>JS_Window_SetLong(JS)</title>
+        <functioncall prog_lang="cpp">void JS_Window_SetLong(void* windowHWND, const char* info, double value, double* retvalOut)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_Window_SetLong", void* windowHWND, "info", value, &retval)</functioncall>
+        <functioncall prog_lang="lua">number retval = reaper.JS_Window_SetLong(identifier windowHWND, string info, number value)</functioncall>
+        <functioncall prog_lang="python">(void windowHWND, String info, Float value, Float retvalOut) = JS_Window_SetLong(windowHWND, info, value, retvalOut)</functioncall>
+        <requires>
+            Reaper=5.982
+            JS=0.990
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Similar to the Win32 function SetWindowLongPtr. 
+
+            info: "USERDATA", "WNDPROC", "DLGPROC", "ID", "EXSTYLE" or "STYLE", and only on WindowOS, "INSTANCE" and "PARENT".
+        </description>
+        <retvals>
+            number retval - 
+        </retvals>
+        <parameters>
+           identifier windowHWND - 
+           string info - 
+           number value - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
+    <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_SetOpacity</slug>
         <title>JS_Window_SetOpacity(JS)</title>
         <functioncall prog_lang="cpp">bool JS_Window_SetOpacity(void* windowHWND, const char* mode, double value)</functioncall>
@@ -28088,21 +28270,21 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Window_SetOpacity(identifier windowHWND, string mode, number value)</functioncall>
         <functioncall prog_lang="python">Boolean JS_Window_SetOpacity(void windowHWND, String mode, Float value)</functioncall>
         <requires>
-            Reaper=5.95
-            JS=0.988
+            Reaper=5.982
+            JS=0.990
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Sets the window opacity.
 
-            Parameters:
-            mode: either "ALPHA" or "COLOR". 
-            value: If ALPHA, the specified value may range from zero to one, and will apply to the entire window. 
-            If COLOR, value specifies a 0xRRGGBB color, and all pixels in this color will be made transparent. (All mouse clicks over transparent pixels will pass through, too).
+            Parameters:  
+            mode: either "ALPHA" or "COLOR".  
+            value: If ALPHA, the specified value may range from zero to one, and will apply to the entire window, frame included.  
+            If COLOR, value specifies a 0xRRGGBB color, and all pixels of this color will be made transparent. (All mouse clicks over transparent pixels will pass through, too).  
+            
+            WARNING: COLOR mode is only available in Windows, not Linux or macOS.
 
-            WARNINGS:
-            This function does not yet work properly on macOS.
-            COLOR mode is only available in Windows, not Linux or macOS.
+            Transparency can only be applied to top-level windows. If windowHWND refers to a child window, the entire top-level window that contains windowHWND will be made transparent.  
         </description>
         <retvals>
            boolean  - 
@@ -28123,26 +28305,35 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_SetPosition</slug>
         <title>JS_Window_SetPosition(JS)</title>
-        <functioncall prog_lang="cpp">void JS_Window_SetPosition(void* windowHWND, int left, int top, int width, int height)</functioncall>
-        <functioncall prog_lang="eel">extension_api("JS_Window_SetPosition", void* windowHWND, int left, int top, int width, int height)</functioncall>
-        <functioncall prog_lang="lua">reaper.JS_Window_SetPosition(identifier windowHWND, integer left, integer top, integer width, integer height)</functioncall>
-        <functioncall prog_lang="python">JS_Window_SetPosition(void windowHWND, Int left, Int top, Int width, Int height)</functioncall>
+        <functioncall prog_lang="cpp">bool JS_Window_SetPosition(void* windowHWND, int left, int top, int width, int height, char* ZOrderOptional, char* flagsOptional)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_Window_SetPosition", void* windowHWND, int left, int top, int width, int height, optional #ZOrder, optional #flags)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, optional string ZOrder, optional string flags = reaper.JS_Window_SetPosition(identifier windowHWND, integer left, integer top, integer width, integer height, optional string ZOrder, optional string flags)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, void windowHWND, Int left, Int top, Int width, Int height, String ZOrderOptional, String flagsOptional) = JS_Window_SetPosition(windowHWND, left, top, width, height, ZOrderOptional, flagsOptional)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.991
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Sets the window position and size.
+            Interface to the Win32/swell function SetWindowPos, with which window position, size, Z-order and visibility can be set, and new frame styles can be applied.
 
+            ZOrder and flags are optional parameters. If no arguments are supplied, the window will simply be moved and resized, as if the NOACTIVATE, NOZORDER, NOOWNERZORDER flags were set.
+            \* ZOrder: "BOTTOM", "TOPMOST", "NOTOPMOST", "TOP" or a window HWND converted to a string, for example by the Lua function tostring.
+            \* flags: Any combination of the standard flags, of which "NOMOVE", "NOSIZE", "NOZORDER", "NOACTIVATE", "SHOWWINDOW", "FRAMECHANGED" and "NOCOPYBITS" should be valid cross-platform.
         </description>
-
+        <retvals>
+           boolean retval - 
+           optional string ZOrder - 
+           optional string flags - 
+        </retvals>
         <parameters>
            identifier windowHWND - 
            integer left - 
            integer top - 
            integer width - 
            integer height - 
+           optional string ZOrder - 
+           optional string flags - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -28181,6 +28372,41 @@
            identifier windowHWND - 
            string scrollbar - 
            integer position - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
+      <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_SetStyle</slug>
+        <title>JS_Window_SetStyle(JS)</title>
+        <functioncall prog_lang="cpp">bool JS_Window_SetStyle(void* windowHWND, char* style)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_Window_SetStyle", void* windowHWND, #style)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string style = reaper.JS_Window_SetStyle(identifier windowHWND, string style)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, void windowHWND, String style) = JS_Window_SetStyle(windowHWND, style)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=0.991
+            Lua=5.3
+        </requires>
+        <description>
+            Sets and applies a window style.
+
+            style may include any combination of standard window styles, such as "POPUP" for a frameless window, or "CAPTION,SIZEBOX,SYSMENU" for a standard framed window.
+
+            On Linux and macOS, "MAXIMIZE" has not yet been implmented, and the remaining styles may appear slightly different from their WindowsOS counterparts.
+        </description>
+        <retvals>
+           boolean retval - 
+           string style - 
+        </retvals>
+        <parameters>
+           identifier windowHWND - 
+           string style - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -28229,16 +28455,19 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Window_SetZOrder(identifier windowHWND, string ZOrder, identifier insertAfterHWND)</functioncall>
         <functioncall prog_lang="python">Boolean JS_Window_SetZOrder(void windowHWND, String ZOrder, void insertAfterHWND)</functioncall>
         <requires>
-            Reaper=5.95
-            JS=0.988
+            Reaper=5.982
+            JS=0.991
             Lua=5.3
         </requires>
         <description>
             Sets the window Z order.
+            * Equivalent to calling JS_Window_SetPos with flags NOMOVE | NOSIZE.
+            * Not all the Z orders have been implemented in Linux yet.
 
             Parameters:
-            * ZOrder: "BOTTOM", "TOPMOST", "NOTOPMOST", "TOP" or "INSERT_AFTER".
-            * InsertAfterHWND: If ZOrder is INSERT_AFTER, insertAfterHWND must be a handle to the window to precede windowHWND in the Z order; otherwise, insertAfterHWND is ignored (in which case it can be set to the same value as windowHWND).
+            * ZOrder: "BOTTOM", "TOPMOST", "NOTOPMOST", "TOP", or a window HWND converted to a string, for example by the Lua function tostring.
+
+            * InsertAfterHWND: For compatibility with older versions, this parameter is still available, and is optional. If ZOrder is "INSERTAFTER", insertAfterHWND must be a handle to the window behind which windowHWND will be placed in the Z order, equivalent to setting ZOrder to this HWND; otherwise, insertAfterHWND is ignored and can be left out (or it can simply be set to the same value as windowHWND).
         </description>
         <retvals>
            boolean  - 
@@ -28264,21 +28493,19 @@
         <functioncall prog_lang="lua">reaper.JS_Window_Show(identifier windowHWND, string state)</functioncall>
         <functioncall prog_lang="python">JS_Window_Show(void windowHWND, String state)</functioncall>
         <requires>
-            Reaper=5.95
-            JS=0.951
+            Reaper=5.982
+            JS=0.991
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Sets the specified window's show state.
-           
-           
-           
-           Parameters:
-           
-            * state: Either "SHOW", "SHOWNA", "SHOWMINIMIZED",  or "HIDE".
+
+            Parameters:
+            \* state: One of the following options: "SHOW", "SHOWNA" (or "SHOWNOACTIVATE"), "SHOWMINIMIZED", "HIDE", "NORMAL", "SHOWNORMAL", "SHOWMAXIMIZED", "SHOWDEFAULT" or "RESTORE".
+            
+            On Linux and macOS, only the first four options are fully implemented.
 
         </description>
-
         <parameters>
            identifier windowHWND - 
            string state - 
@@ -28837,13 +29064,13 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>Xen_StartSourcePreview</slug>
         <title>Xen_StartSourcePreview(JS)</title>
-        <functioncall prog_lang="cpp">int Xen_StartSourcePreview(PCM_source* source, double gain, bool loop)</functioncall>
-        <functioncall prog_lang="eel">int extension_api("Xen_StartSourcePreview", PCM_source source, gain, bool loop)</functioncall>
-        <functioncall prog_lang="lua">integer id = reaper.Xen_StartSourcePreview(PCM_source source, number gain, boolean loop)</functioncall>
-        <functioncall prog_lang="python">Int Xen_StartSourcePreview(PCM_source source, Float gain, Boolean loop)</functioncall>
+        <functioncall prog_lang="cpp">int Xen_StartSourcePreview(PCM_source* source, double gain, bool loop, int* outputchanindexInOptional)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("Xen_StartSourcePreview", PCM_source source, gain, bool loop, optional int outputchanindexIn)</functioncall>
+        <functioncall prog_lang="lua">integer reaper.Xen_StartSourcePreview(PCM_source source, number gain, boolean loop, optional number outputchanindexIn)</functioncall>
+        <functioncall prog_lang="python">(Int retval, PCM_source source, Float gain, Boolean loop, Int outputchanindexInOptional) = Xen_StartSourcePreview(source, gain, loop, outputchanindexInOptional)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.986
+            JS=0.991
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -28862,6 +29089,7 @@
            PCM_source source - a PCM_source-created using a mediafile/item 
            number gain - the volume of the previewed pcm_source
            boolean loop - true, loop the PCM_source; false, play only once
+           optional number outputchanindexIn - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -31470,6 +31698,32 @@
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1">
             Formats a string and writes it to file fp. For more information on format specifiers, see [sprintf()](#eel_sprintf). Returns bytes written to file.
+
+                * %% = %
+                * %s = string from parameter
+                * %d = parameter as integer
+                * %i = parameter as integer
+                * %u = parameter as unsigned integer
+                * %x = parameter as hex (lowercase) integer
+                * %X = parameter as hex (uppercase) integer
+                * %c = parameter as character
+                * %f = parameter as floating point
+                * %e = parameter as floating point (scientific notation, lowercase)
+                * %E = parameter as floating point (scientific notation, uppercase)
+                * %g = parameter as floating point (shortest representation, lowercase)
+                * %G = parameter as floating point (shortest representation, uppercase)
+
+            Many standard C printf() modifiers can be used, including:
+
+                * %.10s = string, but only print up to 10 characters
+                * %-10s = string, left justified to 10 characters
+                * %10s = string, right justified to 10 characters
+                * %+f = floating point, always show sign
+                * %.4f = floating point, minimum of 4 digits after decimal point
+                * %10d = integer, minimum of 10 digits (space padded)
+                * %010f = integer, minimum of 10 digits (zero padded)
+
+            Values for format specifiers can be specified as additional parameters to fprintf, or within {} in the format specifier (such as %{varname}d, in that case a global variable is always used).
         </description>
         <parameters>
             fp - 
@@ -31607,6 +31861,8 @@
             Returns true if a new value has been updated.
             val will be set to a relative or absolute value depending on mode (=0: absolute mode, >0: relative modes). resolution=127 for 7-bit resolution, =16383 for 14-bit resolution.
             Notes: sectionID, and cmdID will be set to -1 if the script is not part of the action list. mode, resolution and val will be set to -1 if the script was not triggered via MIDI/OSC.
+            
+            For relative mode bindings, calling get_action_context() will return the accumulated relative value in decoded form (not 65 or 63, but +1/-1 etc), and clear the internal state. So if you call it multiple times, the first one will return the accumulated value, and the second will always return 0.
         </description>
         <parameters>
             #filename - 
@@ -31652,6 +31908,7 @@
                     16: Alt key
                     32: Windows key
                     64: middle mouse button
+                Note: Mousebuttons will be returned after gfx_init(), the other keyboard-modifier only when using gfx_getchar()!
         </description>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -31965,12 +32222,12 @@
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Draws a string at gfx\_x, gfx\_y, and updates gfx\_x/gfx\_y so that subsequent draws will occur in a similar place.
 
-            * If flags, right ,bottom passed in:
-            * flags&amp;1: center horizontally
-            * flags&amp;2: right justify
-            * flags&amp;4: center vertically
-            * flags&amp;8: bottom justify
-            * flags&amp;256: ignore right/bottom, otherwise text is clipped to (gfx\_x, gfx\_y, right, bottom)
+            \* If flags, right ,bottom passed in:
+            \* flags&amp;1: center horizontally
+            \* flags&amp;2: right justify
+            \* flags&amp;4: center vertically
+            \* flags&amp;8: bottom justify
+            \* flags&amp;256: ignore right/bottom, otherwise text is clipped to (gfx\_x, gfx\_y, right, bottom)
         </description>
         <parameters>
             "str" - 
@@ -32000,12 +32257,12 @@
 
             Modified and special keys can also be returned, including:
 
-                * Ctrl/Cmd+A..Ctrl+Z as 1..26
-                * Ctrl/Cmd+Alt+A..Z as 257..282
-                * Alt+A..Z as 'A'+256..'Z'+256
-                * 27 for ESC
-                * 13 for Enter
-                * ' ' for space
+                \* Ctrl/Cmd+A..Ctrl+Z as 1..26
+                \* Ctrl/Cmd+Alt+A..Z as 257..282
+                \* Alt+A..Z as 'A'+256..'Z'+256
+                \* 27 for ESC
+                \* 13 for Enter
+                \* ' ' for space
         </description>
         <parameters>
             char - 
@@ -32301,6 +32558,32 @@
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Formats and draws a string at gfx\_x, gfx\_y, and updates gfx\_x/gfx\_y accordingly (the latter only if the formatted string contains newline). For more information on format strings, see [sprintf()](#eel_sprintf)
+            
+                * %% = %
+                * %s = string from parameter
+                * %d = parameter as integer
+                * %i = parameter as integer
+                * %u = parameter as unsigned integer
+                * %x = parameter as hex (lowercase) integer
+                * %X = parameter as hex (uppercase) integer
+                * %c = parameter as character
+                * %f = parameter as floating point
+                * %e = parameter as floating point (scientific notation, lowercase)
+                * %E = parameter as floating point (scientific notation, uppercase)
+                * %g = parameter as floating point (shortest representation, lowercase)
+                * %G = parameter as floating point (shortest representation, uppercase)
+
+            Many standard C printf() modifiers can be used, including:
+
+                * %.10s = string, but only print up to 10 characters
+                * %-10s = string, left justified to 10 characters
+                * %10s = string, right justified to 10 characters
+                * %+f = floating point, always show sign
+                * %.4f = floating point, minimum of 4 digits after decimal point
+                * %10d = integer, minimum of 10 digits (space padded)
+                * %010f = integer, minimum of 10 digits (zero padded)
+
+            Values for format specifiers can be specified as additional parameters to gfx_printf, or within {} in the format specifier (such as %{varname}d, in that case a global variable is always used).
         </description>
         <parameters>
             "format" - 
@@ -33035,6 +33318,32 @@
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Output formatted string to system-specific destination, see [sprintf\(\)](#eel_sprintf) for more information
+            
+                * %% = %
+                * %s = string from parameter
+                * %d = parameter as integer
+                * %i = parameter as integer
+                * %u = parameter as unsigned integer
+                * %x = parameter as hex (lowercase) integer
+                * %X = parameter as hex (uppercase) integer
+                * %c = parameter as character
+                * %f = parameter as floating point
+                * %e = parameter as floating point (scientific notation, lowercase)
+                * %E = parameter as floating point (scientific notation, uppercase)
+                * %g = parameter as floating point (shortest representation, lowercase)
+                * %G = parameter as floating point (shortest representation, uppercase)
+
+            Many standard C printf() modifiers can be used, including:
+
+                * %.10s = string, but only print up to 10 characters
+                * %-10s = string, left justified to 10 characters
+                * %10s = string, right justified to 10 characters
+                * %+f = floating point, always show sign
+                * %.4f = floating point, minimum of 4 digits after decimal point
+                * %10d = integer, minimum of 10 digits (space padded)
+                * %010f = integer, minimum of 10 digits (zero padded)
+
+            Values for format specifiers can be specified as additional parameters to printf, or within {} in the format specifier (such as %{varname}d, in that case a global variable is always used).
         </description>
         <parameters>
             "format" - 
@@ -33363,20 +33672,20 @@
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Returns the data at byte-offset offset of str. If offset is negative, position is relative to end of string.type defaults to signed char, but can be specified to read raw binary data in other formats (note the single quotes, these are single/multi-byte characters):
 
-                * 'c' - signed char
-                * 'cu' - unsigned char
-                * 's' - signed short
-                * 'S' - signed short, big endian
-                * 'su' - unsigned short
-                * 'Su' - unsigned short, big endian
-                * 'i' - signed int
-                * 'I' - signed int, big endian
-                * 'iu' - unsigned int
-                * 'Iu' - unsigned int, big endian
-                * 'f' - float
-                * 'F' - float, big endian
-                * 'd' - double
-                * 'D' - double, big endian
+                \* 'c' - signed char
+                \* 'cu' - unsigned char
+                \* 's' - signed short
+                \* 'S' - signed short, big endian
+                \* 'su' - unsigned short
+                \* 'Su' - unsigned short, big endian
+                \* 'i' - signed int
+                \* 'I' - signed int, big endian
+                \* 'iu' - unsigned int
+                \* 'Iu' - unsigned int, big endian
+                \* 'f' - float
+                \* 'F' - float, big endian
+                \* 'd' - double
+                \* 'D' - double, big endian
         </description>
         <parameters>
             "str" - 
@@ -34015,6 +34324,8 @@
         </requires>
         <description indent="default">
             Returns contextual information about the script, typically MIDI/OSC input values.val will be set to a relative or absolute value depending on mode (=0: absolute mode, &gt;0: relative modes). resolution=127 for 7-bit resolution, =16383 for 14-bit resolution.Notes: sectionID, and cmdID will be set to -1 if the script is not part of the action list. mode, resolution and val will be set to -1 if the script was not triggered via MIDI/OSC.
+            
+            For relative mode bindings, calling get_action_context() will return the accumulated relative value in decoded form (not 65 or 63, but +1/-1 etc), and clear the internal state. So if you call it multiple times, the first one will return the accumulated value, and the second will always return 0.
         </description>
         <retvals>
             boolean is_new_value - 
@@ -34062,6 +34373,7 @@
                 16: Alt key
                 32: Windows key
                 64: middle mouse button
+            Note: Mousebuttons will be returned after gfx.init(), the other keyboard-modifier only when using gfx.getchar()!
         </description>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -34833,6 +35145,32 @@
         </requires>
         <description indent="default">
             Formats and draws a string at gfx.x, gfx.y, and updates gfx.x/gfx.y accordingly (the latter only if the formatted string contains newline). For more information on format strings, see sprintf()
+            
+                * %% = %
+                * %s = string from parameter
+                * %d = parameter as integer
+                * %i = parameter as integer
+                * %u = parameter as unsigned integer
+                * %x = parameter as hex (lowercase) integer
+                * %X = parameter as hex (uppercase) integer
+                * %c = parameter as character
+                * %f = parameter as floating point
+                * %e = parameter as floating point (scientific notation, lowercase)
+                * %E = parameter as floating point (scientific notation, uppercase)
+                * %g = parameter as floating point (shortest representation, lowercase)
+                * %G = parameter as floating point (shortest representation, uppercase)
+
+            Many standard C printf() modifiers can be used, including:
+
+                * %.10s = string, but only print up to 10 characters
+                * %-10s = string, left justified to 10 characters
+                * %10s = string, right justified to 10 characters
+                * %+f = floating point, always show sign
+                * %.4f = floating point, minimum of 4 digits after decimal point
+                * %10d = integer, minimum of 10 digits (space padded)
+                * %010f = integer, minimum of 10 digits (zero padded)
+
+            Values for format specifiers can be specified as additional parameters to gfx.printf, or within {} in the format specifier (such as %{varname}d, in that case a global variable is always used).
         </description>
         <retvals>
             
@@ -40335,4 +40673,4 @@
         <tags>reapack, process, queue, refresh ui</tags>
     </US_DocBloc>    
 
-</USDocBloc>>
+</USDocBloc>

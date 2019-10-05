@@ -576,7 +576,7 @@ function contentindex()
   for i=1, count2 do
     chapter=HeaderList[i]:match("(.-\n)")
     slugs=HeaderList[i]:match("\n(.*)\n")
-    A2, AA2, AAA2 = ultraschall.SplitStringAtLineFeedToArray(slugs.."\n")
+    A2, AA2, AAA2 = ultraschall.SplitStringAtLineFeedToArray(slugs)
     table.sort(AA2)
     slugs=""
     for i=1, A2 do

@@ -55,7 +55,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.76 - "The Police - Walking on the Moon" - 20th of July 2019 - Build: 40302</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.77 - "Monkeys with Tools - Call the planet doctor" -  - Build: 40675</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -142,9 +142,17 @@ Ultraschall API functions
 </tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Defer Loops</b></td></tr><tr><td><a href="#DeferScripts_001_Introduction">DeferScripts: Introduction to Ultraschall's Defer-functions</a></td>
 <td><a href="#DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API">DeferScripts: Special Defer-loops in the Ultraschall-API</a></td>
 <td><a href="#DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside">DeferScripts: Stopping Defer-loops from in- and outside of scripts</a></td>
-</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Localize Scripts</b></td></tr><tr><td><a href="#Localize_001_Introduction">Localize Scripts: Introduction</a></td>
+<td><a href="#DeferScripts_004_Working_with_Defer_Identifiers">DeferScripts: Working with DeferIdentifiers</a></td>
+</tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Localize Scripts</b></td></tr><tr><td><a href="#Localize_001_Introduction">Localize Scripts: Introduction</a></td>
 <td><a href="#Localize_002_LangPack_Fileformat">Localize Scripts: Language-pack-fileformat</a></td>
 <td><a href="#Localize_003_Localize_Functions">Localize Scripts: Functions</a></td>
+</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>EventManager</b></td></tr><tr><td><a href="#EventManager_AddingEvents">EventManager: Adding events</a></td>
+<td><a href="#EventManager_BasicWorkflow">EventManager: Basic workflow</a></td>
+<td><a href="#EventManager_EventCheck_Function_For_Transitioning_Events">EventManager: Creating Events for transition-events</a></td>
+<td><a href="#EventManager_EventCheck_Function_For_True_False_Events">EventManager: the eventcheck-function for true/false-events</a></td>
+</tr><tr><td><a href="#EventManager_Introduction">EventManager: Introduction</a></td>
+<td><a href="#EventManager_StartupEvents">EventManager: Working with startup events</a></td>
+<td><a href="#EventManager_WhichEventsCanBeChecked">EventManager: Which events can be checked?</a></td>
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Helper Functions</b></td></tr><tr><td><a href="#Helper_Functions_001_Introduction">Helper_Functions: Introduction</a></td>
 <td><a href="#Helper_Functions_002_ClipboardManagement">Helper_Functions: Clipboard Management</a></td>
 <td><a href="#Helper_Functions_003_Data_Manipulation">Helper_Functions: Data Manipulation</a></td>
@@ -154,9 +162,10 @@ Ultraschall API functions
 </tr><p></table><hr><a id="Introduction_001_Api"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_001_Api">^</a> <u>Introduction to the Ultraschall API</u></h4></div><p><p>The Ultraschall-Extension is intended to be an extension for the DAW Reaper, that enhances it with podcast functionalities. Most DAWs are intended to be used by musicians, for music, but podcasters have their own needs to be fulfilled. In fact, in some places their needs differ from the needs of a musician heavily. Ultraschall is intended to optimise the Reaper's workflows, by reworking them with functionalities for the special needs of podcasters.</p>
 <p>The Ultraschall-Framework itself is intended to include a set of Lua-functions, that help creating such functionalities. By giving programmers helper functions to get access to each and every corner of Reaper. That way, extending Ultraschall and Reaper is more comfortable to do.</p>
-<p>This API was to be used within Ultraschall only, but quickly evolved into a huge 900+ function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:</p>
+<p>This API was to be used within Ultraschall only, but quickly evolved into a huge 1000+ function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:</p>
 <ul>
 <li><a href="#Rendering_001_Introduction">Rendering</a> - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to <a href="US_Api_Functions.html#RenderProject">RenderProject</a> or <a href="US_Api_Functions.html#RenderProject_Regions">RenderProject_Regions</a></li>
+<li><a href="#EventManager_Introduction">EventManager</a> - run actions when certain events happen. You can fully customize that the way you want and need.</li>
 <li><a href="#Navigation_001_Introduction">Navigation, Follow and Arrangeview-Manipulation</a> - get/set cursors, zoom, autoscroll-management, scroll, etc</li>
 <li><a href="#Arrangeview_Snapshots_001_Introduction">ArrangeView-Snapshots</a> - you can save, retrieve snapshots of the arrangeview, including position, zoomstates to quickly jump through parts of your project</li>
 <li><a href="#Trackstate_Management_001_Introduction">Trackstates</a> - you can access and set all(!) track-states available</li>
@@ -193,7 +202,7 @@ Ultraschall API functions
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_002_How_to_Use"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_002_How_to_Use">^</a> <u>How to use the Ultraschall API</u></h4></div><p><p>Using the Ultraschall-API is quite easy.</p>
-<p>First make sure, you use the right versions of Reaper and SWS: <a href="https://www.reaper.fm">Reaper 5.977</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 0.986.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
+<p>First make sure, you use the right versions of Reaper and SWS: <a href="https://www.reaper.fm">Reaper 5.980</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 0.986.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
 <p>To install the Ultraschall-API, just follow the following steps:</p>
 <p><strong>Installation via ReaPack</strong>:</p>
 <p>The easiest way is to install the Ultraschall-API using ReaPack. ReaPack is a package-manager for extensions and helper-stuff for Reaper, which allows you to easily install and update content done by the Reaper community. Many Scripts, Themes, JSFX-FX, etc are available through that.</p>
@@ -227,7 +236,7 @@ For more information on ReaPack and it's usage, refer <a href="https://reapack.c
 <p><strong>Manual Installation</strong>:</p>
 <p>If you can't or don't want to install ReaPack, you can also install it manually.</p>
 <ol>
-<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.76.zip">ultraschall_api4.00_beta2.76.zip</a>.<br />
+<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.77.zip">ultraschall_api4.00_beta2.77.zip</a>.<br />
 </li>
 <li>Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -&gt; Show REAPER resource path in explorer/finder...".<br />
 The folder UserPlugins should contain the folder ultraschall_api and the files ultraschall_api_readme.txt and ultraschall_api.lua after this step.<br />
@@ -265,11 +274,9 @@ Hotfixes are available at <a href="http://ultraschall.fm/api">ultraschall.fm/api
 Just download the ultraschall_hotfixes.lua and put it into UserPlugins/ultraschall_api-folder.<br />
 The chance is high, that there is already an ultraschall_hotfixes.lua-file in the folder. You can safely overwrite it.<br />
 Voila, you have added the most recent bugfixes.</p>
-<pre><code>   To get the bugs back, just delete the ultraschall_hotfixes.lua.
-   
-   All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
-   
-   Check again from time to time to get the latest hotfixes.</code></pre>
+<p>To get the bugs back, just delete the ultraschall_hotfixes.lua.</p>
+<p>All fixes in ultraschall_hotfixes.lua will be part of the next full version of the Ultraschall-API.</p>
+<p>Check again from time to time to get the latest hotfixes.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_004_Bugreporting_FeatureRequests"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_004_Bugreporting_FeatureRequests">^</a> <u>Introduction: Bugreporting and Feature Requests</u></h4></div><p><p>If you find any bugs or itches and want to report them, I suggest you the following procedure:</p>
@@ -3514,6 +3521,43 @@ So, if you have two defer-loops, where the second defer-loop shall control, if t
 Run the function, that shall be deferred(and has one of Defer1 to Defer20 inside of it) and stop it using StopDeferCycle.</p>
 <p>If for some reason you didn't get the defer_identifier, no problem: use <a href="US_Api_Functions.html#GetDeferIdentifier">GetDeferIdentifier</a> to get it for a specific Ultraschall-Defer-function in your script.</p>
 
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="DeferScripts_004_Working_with_Defer_Identifiers"></a>
+<div style="font-size:100%"><h4><a href="#DeferScripts_004_Working_with_Defer_Identifiers">^</a> <u>DeferScripts: Working with DeferIdentifiers</u></h4></div><p><p>You may remember from the previous chapters, that I mentioned briefly a so called defer-identifier, which can be used for several things, e.g. <a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a>.<br />
+Well, there are more things you can do with it, like getting the current runstate of a Ultraschall-defer-cycle in a script.</p>
+<p>First, let's get the defer-identifiers:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#GetDeferIdentifier">GetDeferIdentifier</a></strong></p>
+</blockquote>
+<pre><code>        string defer_identifier = ultraschall.GetDeferIdentifier(integer deferinstance, optional string scriptidentifier)
+    </code></pre>
+<blockquote>
+<p>This function returns the defer-identifier of a specific defer-instance from a specific scriptinstance.<br />
+Let's imagine the following example:<br />
+You have Defer1 and Defer2 running in your script. To get their DeferIdentifiers, with which you can stop them, you just need to use:</p>
+</blockquote>
+<pre><code>        defer1_identifier = ultraschall.GetDeferIdentifier(1)
+        defer2_identifier = ultraschall.GetDeferIdentifier(2)</code></pre>
+<blockquote>
+<p>Now imagine, you have Defer1 and Defer2-defer-loops running in another script. You have the ScriptIdentifier for that script-instance and would love to have these defer-identifiers. You just do it this way:</p>
+</blockquote>
+<pre><code>        defer1_identifier = ultraschall.GetDeferIdentifier(1, ScriptIdentifier)
+        defer2_identifier = ultraschall.GetDeferIdentifier(2, ScriptIdentifier)</code></pre>
+<blockquote>
+<p>With these two variables, you can stop the Defer1 and Defer2-defer-loops in the other scriptinstance. One possible source for such a ScriptIdentifier would be using the function <a href="US_Api_Functions.html#Main_OnCommandByFilename">Main_OnCommandByFilename</a>.</p>
+</blockquote>
+<p>Second, let's get the runstate of Ultraschall-defer-loops:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#GetDeferRunState">GetDeferRunState</a></strong></p>
+</blockquote>
+<pre><code>        string defer_identifier = ultraschall.GetDeferRunState(integer deferinstance, optional string scriptidentifier)
+        </code></pre>
+<blockquote>
+<p>This basically works the same way as GetDeferIdentifier: pass over the defer-instance(1 to 20) and it will return true, if that specific defer-loop is running and false if not.<br />
+To get the runstates of other running script-instances, you can pass a second parameter scriptidentifier, which holds the scriptidentifier of that scriptinstance.<br />
+That way, you can monitor, if Ultraschall-defer-loops are still running or not.</p>
+</blockquote>
+<p>I have more ideas, what you can do with the defer-identifier, but they will be part of the future...</p>
+
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Localize_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Localize_001_Introduction">^</a> <u>Localize Scripts: Introduction</u></h4></div><p><p>Reaper has (among thousands of others) one great thing: Localization. That means, you can translate the whole software into many languages.<br />
 Unfortunately, this isn't possible for scripts, or better: Not that easy.</p>
@@ -3645,6 +3689,218 @@ If for one reason or another, no translation can be done(no loaded translationfi
 <p>For convenience, you can use Localize without ultraschall. at the beginning.</p>
 </blockquote>
 <p>This should make having your scripts localized an easy and convenient task.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_Introduction"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_Introduction">^</a> <u>EventManager: Introduction</u></h4></div><p><p>Sometimes you run into the situation, where you want to run one or more actions when certain events happen.</p>
+<p>For instance, you want to output a warning when trying to start recording and project-playrate is set to higher than 1.x, maybe even stop recording immediately in that case.<br />
+This could be done, if you build custom actions for that case, but: if you have dozens of scripts dealing with recording-situations, you would need to update all of them or build custom actions for all of them, just to include this warning.<br />
+And if you want to temporarily remove this warning, you are doomed.</p>
+<p>Wouldn't it be nice, if there's something, that you can feed with actions, that shall be run under certain conditions?<br />
+Something, that reacts to certain events automatically, like playrate greater than 1.0 and recording-state is set to recording?<br />
+And wouldn't it be nice, if you could decide, whether this check shall be run or paused the way you want it?</p>
+<p>Wouldn't it be nice to have an EventManager in Reaper, that deals with all that stuff?</p>
+<p>Behold! It's here!</p>
+<p>The Ultraschall-Api-EventManager came to do all of that for you.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_BasicWorkflow"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_BasicWorkflow">^</a> <u>EventManager: Basic workflow</u></h4></div><p><p>The basic workflow to use the EventManager is quite simple:</p>
+<ol>
+<li><p>Write a checkingfunction, that returns true, if the event occured and false, if not. (No global variables are allowed!) This function can safely use Ultraschall-API-functions.</p></li>
+<li><p>Start the EventManager with <a href="US_Api_Functions.html#EventManager_Start">ultraschall.EventManager_Start()</a></p></li>
+<li><p>Add the new event to the Ultraschall-Api-EventManager using <a href="US_Api_Functions.html#EventManager_AddEvent">ultraschall.EventManager_AddEvent()</a>, which returns an EventIdentifier-string.</p></li>
+</ol>
+<p>Voila, the EventManager checks for your event.</p>
+<p>The EventIdentifier returned by EventManager_AddEvent is like a unique name for your event, until the event gets removed again from the EventManager.<br />
+And this EventIdentifier can be used, if you want to</p>
+<ul>
+<li>enumerate the attributes of your event: <a href="US_Api_Functions.html#EventManager_EnumerateEvents2">EventManager_EnumerateEvents2()</a><br />
+</li>
+<li>pause the checking for the event: <a href="US_Api_Functions.html#EventManager_PauseEvent">EventManager_PauseEvent()</a><br />
+</li>
+<li>or resume the checking for the event: <a href="US_Api_Functions.html#EventManager_ResumeEvent">EventManager_ResumeEvent()</a><br />
+</li>
+<li>set the attributes of the event: <a href="US_Api_Functions.html#EventManager_SetEvent">EventManager_SetEvent()</a><br />
+</li>
+<li>remove the event from the EventManager again: <a href="US_Api_Functions.html#Eventmanager_RemoveEvent">Eventmanager_RemoveEvent()</a></li>
+</ul>
+<p>So you can influence and alter the event, after you've added it to the EventManager, just using the EventIdentifier. In addition to that, you can</p>
+<ul>
+<li>count all currently registered events: <a href="US_Api_Functions.html#EventManager_CountRegisteredEvents">EventManager_CountRegisteredEvents</a><br />
+</li>
+<li>enumerate all currently registered events by number: <a href="US_Api_Functions.html#EventManager_EnumerateEvents2">EventManager_EnumerateEvents2</a><br />
+</li>
+<li>remove all events registered by a certain script: <a href="US_Api_Functions.html#Eventmanager_RemoveAllEvents_Script">Eventmanager_RemoveAllEvents_Script</a></li>
+</ul>
+<p>And if you want to remove all Events your script has registered to the EventManager, use <a href="US_Api_Functions.html#EventManager_Stop">ultraschall.EventManager_Stop()</a>.<br />
+This function allows you to stop all events registered by a different script, using the ScriptIdentifier of that script or even stop all of them when setting parameter force=true.</p>
+<p>With that, you can populate the EventManager without a problem.<br />
+Now, let's go into more detail, what "events" means, how to build a proper statecheck-function and how to add events at startup of the EventManager.</p>
+<p>Let's start with the states, who can be checked.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_WhichEventsCanBeChecked"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_WhichEventsCanBeChecked">^</a> <u>EventManager: Which events can be checked?</u></h4></div><p><p>Basically there are two types of events you can check for:</p>
+<ol>
+<li><p>True/False events, like "Is the mute-button of the master-track muted(true) or not(false)</p></li>
+<li><p>Transitioning, from &gt; to events, like "Does the playstate change from Play to PlayPause?"</p></li>
+</ol>
+<p>The True/False events are the easiest to check for. All you need to do is write a checking-function, that returns true, if the condition is met(e.g. mastertrack is muted) or false if the condition is not met(e.g. mastertrack is NOT muted).<br />
+So everytime something is true, the EventManager runs the actions associated with this event; if it's false, it will not run the actions.<br />
+This kind of event is usually the best, if there are only two possible conditions who could be met, like "button is pressed" and "button is unpressed".</p>
+<p>The Transitioning, from &gt; to events are a little bit more difficult to code(but not that much).</p>
+<p>First you need to find out the event-transition you want to check for. Then you write a function, which returns true, if the transition has happened or false, if not. For that, you need to keep track of the oldstate and the newstate. You are not allowed to use global variables for keeping track of that, but eventcheck-functions get their own userspace to store their information(will explain how that works in the next chapter).<br />
+This kind of event is usually the best, if there are more than two conditions who could be met and you want to run actions only when transitioning between two specific conditions.<br />
+Like the playstate, who could be stop, play, playpause, rec, recpause. If you want to only run the actions when play changes from play to playpause, but not if play changes to stop, transitioning-events are the way to go.</p>
+<p>Now I'll explain to you, how to write a proper eventcheck-function, as you need to take some things into consideration for that.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_EventCheck_Function_For_True_False_Events"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_EventCheck_Function_For_True_False_Events">^</a> <u>EventManager: the eventcheck-function for true/false-events</u></h4></div><p><p>The eventcheck-function for true/false-events can be made quite simply.<br />
+Let's take the aforementioned example, if the mastertrack is muted or not.</p>
+<pre><code>        function IsMasterTrackMuted()
+           -- get the current mute-state of the master-track
+           local mutestate=reaper.GetMasterMuteSoloFlags()&amp;1 
+           
+           -- return false, if mutestate==0, else return true.
+           if mutestate==0 then 
+             return false
+           else
+             return true
+           end
+        end</code></pre>
+<p>This would be fully sufficient as the check-function for such true/false-events and fully accepted by the EventManager.<br />
+Note, how I made the needed variable mutestate local by adding local before it. This is important to do!</p>
+<p>Another important thing to do is: make the eventcheck-function as simple and fast as possible. Try to avoid resourceintensive operations like heavy patternmatching and such stuff. The longer your eventcheck-function needs to execute, the more laggy the EventManager becomes!</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_EventCheck_Function_For_Transitioning_Events"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_EventCheck_Function_For_Transitioning_Events">^</a> <u>EventManager: Creating Events for transition-events</u></h4></div><p><p>The eventcheck-function for transition-events is a little more difficult to do.</p>
+<p>Let's take the other example, where I would do a eventcheck-function, which checks if playstate transitions from play to playpause.<br />
+For that, we need to store the old playstate. Usually, we would do that into a global variable, but as global variables are forbidden in the EventManager, I've added something else into the EventManager: UserSpaces.</p>
+<p>UserSpaces are tables, that I pass to your eventcheck-function as first parameter. This table can be populated in any way you want.<br />
+Let's take an example of that:</p>
+<pre><code>        function StoreTimeIntoUserSpace(userspace)
+            -- get the current time from the system
+            local current_time=os.time()
+            
+            -- if the time has changed, since last time calling this function, return true
+            -- the old time is stored into the userspace-table:
+            --      userspace[&quot;previous_time&quot;]
+            -- which is, what we use for comparisions in the following if-statement
+            if current_time~=userspace[&quot;previous_time&quot;] then
+                userspace[&quot;previous_time&quot;]=os.time()
+                return true
+            else
+                return false
+            end
+        end</code></pre>
+<p>This function stores the old time of your system into userspace["previous_time"], which can be accessed again the next time this function is called.<br />
+Note, that the table we use is passed as first parameter by the EventManager. That means, even if you don't use it, you'll get the UserSpace to store things into it. you can treat it, as any other table you are used to.</p>
+<p>Now, let's build up our eventcheck-function for the transition-check between play and playpause.</p>
+<pre><code>        function TransitionPlayToPlaypause(userspace)
+          -- get the current playstate
+          local current_playstate=reaper.GetPlayState()
+          
+          -- if the current playstate==2(playpause) and the old playstate==1(play) then 
+          -- update old_playstate in the userspace and return true
+          -- in any other case, only update old_playstate in the userspace and return false
+          if current_playstate==2 and userspace[&quot;old_playstate&quot;]==1 then
+            userspace[&quot;old_playstate&quot;]=current_playstate
+            return true
+          else
+            userspace[&quot;old_playstate&quot;]=current_playstate
+            return false
+          end
+        end</code></pre>
+<p>This function only returns true, when playstate changes from play to playpause, in all other cases it will return false.<br />
+You can modify it even further. The function above returns true only once, when changing from play to playpause, but you can make it return true, until the playstate changes again.<br />
+Feel free to modify and experiment with the code.</p>
+<p>To test such transitioning-functions, you can build a simple test-environment, like the following code:</p>
+<pre><code>        UserSpace={} -- create a temporary userspace-table, we use to check, if the function is working correctly
+        
+        -- our eventcheck-function
+        function TransitionPlayToPlaypause(userspace)
+          -- get the current playstate
+          local current_playstate=reaper.GetPlayState()
+          
+          -- if the current playstate==2(playpause) and the old playstate==1(play) then 
+          -- update old_playstate in the userspace and return true
+          -- in any other case, only update old_playstate in the userspace and return false
+          if current_playstate==2 and userspace[&quot;old_playstate&quot;]==1 then
+            userspace[&quot;old_playstate&quot;]=current_playstate
+            return true
+          else
+            userspace[&quot;old_playstate&quot;]=current_playstate
+            return false
+          end
+        end
+
+        -- A defer-loop, which runs the function time and again;
+        -- if you run this code in the ReaScript-IDE, you can see in the variable-watchlist, how the
+        -- variable &quot;eventcheck_returnvalue&quot; holds true(for a short period of time), every time you switch from play to playpause,
+        -- in any other case, &quot;eventcheck_returnvalue&quot; only holds false
+        function main()
+          eventcheck_returnvalue=TransitionPlayToPlaypause(UserSpace)
+          reaper.defer(main)
+        end
+        
+        main()</code></pre>
+<p>This allows you to check for quite complex and individual events in any way you want.</p>
+<p>Note here as well, how I made the variable current_playstate in the eventcheck-function "TransitionPlayToPlaypause" local, as this is important here as well!</p>
+<p>And for transition-events, we have the same performance-related mantra: make the eventcheck-function as simple and fast as possible. Try to avoid resourceintensive operations like heavy patternmatching and such stuff. The longer your eventcheck-function needs to execute, the more laggy the EventManager becomes!</p>
+<p>Now, that we have our eventcheck-function, we can add a new event to the EventManager.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_AddingEvents"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_AddingEvents">^</a> <u>EventManager: Adding events</u></h4></div><p><p>Now, as we have the play to playpause eventcheck-function, we should try to make something with it.<br />
+So, let's add a marker, everytime we change from play to playpause.<br />
+Before we start, we need to get the ActionCommandID of the action, we would love to run in these cases.<br />
+In our case, we use:</p>
+<pre><code>        40157 - Markers: Insert marker at current position</code></pre>
+<p>from the main-section: 0</p>
+<p>Now, we need to start the EventManager:</p>
+<pre><code>        ultraschall.EventManager_Start()</code></pre>
+<p>Now let's add the new event, with the following attributes set:</p>
+<pre><code>        EventIdentifier = ultraschall.EventManager_AddEvent(
+                              &quot;Insert Marker When Play -&gt; PlayPause&quot;, -- a descriptive name for the event
+                              0,                                      -- how often to check within a second; 0, means as often as possible 
+                              0,                                      -- how long to check for it in seconds; 0, means forever
+                              true,                                   -- shall the actions be run as long as the eventcheck-function 
+                                                                      --       returns true(false) or not(true)
+                              false,                                  -- shall the event be paused(true) or checked for right away(true)
+                              TransitionPlayToPlaypause,              -- the eventcheck-functionname, 
+                              {&quot;40157, 0&quot;}                            -- a table, which hold all actions and their corresponding sections
+                                                                      --       in this case action 40157 from section 0
+                                                                      --       note: both must be written as string &quot;40157, 0&quot;
+                                                                      --             if you want to add numerous actions, you can write them like
+                                                                      --             {&quot;40157, 0&quot;, &quot;40171,0&quot;}, which would add a marker and open 
+                                                                      --                                      the input-markername-dialog
+                              )</code></pre>
+<p>This function returns now an EventIdentifier, which(as previously mentioned) can be used to set, pause, resume, remove the event again from the EventManager.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_StartupEvents"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_StartupEvents">^</a> <u>EventManager: Working with startup events</u></h4></div><p><p>Adding events is great, but wouldn't it be awesome, if I could automatically add certain event to the EventManager as soon as I start it, without having to run dozens of event-adding-scripts?</p>
+<p>Yes it would be, so I added startup-events, who do this exact thing: being started and checked right away, as soon as you start the eventmanager.<br />
+So if you have a __startup.lua in your scripts-folder, which loads the Ultraschall-API and run the function</p>
+<pre><code>ultraschall.EventManager_Start()</code></pre>
+<p>they are loaded at Reaper startup-time.</p>
+<p>EventManager-startup-events are added into ResourcesFolder/UserPlugins/ultraschall<em>api/IniFiles/EventManager</em>Startup.ini</p>
+<p>You can populate the startup-events the same way, as events into a running EventManager.<br />
+That means, all rules for regular events also apply here, but you don't need to run the EventManager for adding startup-events.</p>
+<ul>
+<li><a href="US_Api_Functions.html#EventManager_AddStartupEvent">EventManager_AddStartupEvent</a> - adds a new startup-event; works like the regular EventManager_AddEvent-function<br />
+</li>
+<li><a href="US_Api_Functions.html#EventManager_SetStartupEvent">EventManager_SetStartupEvent</a> - sets an already added startup-event; works like the regular EventManager_SetEvent-function<br />
+</li>
+<li><a href="US_Api_Functions.html#EventManager_EnumerateStartupEvents2">EventManager_EnumerateStartupEvents2</a> - enumerates a startup-event by its EventIdentifier; works like the regular EventManager_EnumerateEvents2-function<br />
+</li>
+<li><a href="US_Api_Functions.html#EventManager_RemoveStartupEvent2">EventManager_RemoveStartupEvent2</a> - removes a startup-event by its EventIdentifier; works like the regular EventManager_RemoveEvent2-function</li>
+</ul>
+<p>And if you need more general functions for that as well:</p>
+<ul>
+<li><a href="US_Api_Functions.html#EventManager_EnumerateStartupEvents">EventManager_EnumerateStartupEvents</a> - enumerates the startup-events by number(1 for the first, etc); works like the regular EventManager_EnumerateEvents-function<br />
+</li>
+<li><a href="US_Api_Functions.html#EventManager_RemoveStartupEvent">EventManager_RemoveStartupEvent</a> - removes a startup-event by number(1 for the first, etc)<br />
+</li>
+<li><a href="US_Api_Functions.html#EventManager_CountStartupEvents">EventManager_CountStartupEvents</a> - counts all startup-events; works like the regular EventManager_CountRegisteredEvents-function</li>
+</ul>
+<p>With that in your pocket, you have a lot of possibilities to control your full event-based workflows.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Helper_Functions_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Helper_Functions_001_Introduction">^</a> <u>Helper_Functions: Introduction</u></h4></div><p><p>Beside all the concepts you just read about, I also added tons of functions and things to the API, that are helpful in one way or another in your everyday coding.<br />
@@ -3803,7 +4059,7 @@ It will return a boolean(true for success), the current undo-message and alle th
 </li>
 <li><a href="US_Api_Functions.html#StartTime">StartTime</a> - the start-time of the current instance of the Ultraschall-API, which is usually the starting time of your script<br />
 </li>
-<li><a href="US_Api_Functions.html#Api_InstallPath">Api_InstallPath</a> - the installation-path of the Ultraschall-API, in which the ultraschall<em>api.lua and the ultraschall</em>api-folder lie<br />
+<li><a href="US_Api_Functions.html#Api_InstallPath">Api_InstallPath</a> - the installation-path of the Ultraschall-API, in which the ultraschall_api.lua and the ultraschall_api-folder lie<br />
 </li>
 <li><a href="US_Api_Functions.html#Api_Path">Api_Path</a> - the path to the ultraschall_api-folder</li>
 </ul>
@@ -3902,4 +4158,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.76 - 96 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.77 - 104 chapters available</td></table><br><hr></div></body></html>

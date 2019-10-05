@@ -42,6 +42,9 @@ if reaper.JS_ReaScriptAPI_Version==nil or reaper.JS_ReaScriptAPI_Version()<0.986
 
 if type(ultraschall)~="table" then ultraschall={} end
 
+--local reaper=reaper
+--local ultraschall={}--ultraschall
+
 ultraschall.temp, ultraschall.Script_Context=reaper.get_action_context()
 
 
