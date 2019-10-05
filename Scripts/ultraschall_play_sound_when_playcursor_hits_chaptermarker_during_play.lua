@@ -34,7 +34,7 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 Filename=ultraschall.GetUSExternalState("ultraschall_Tims_Ping_Feature", "pingfilename")
-if reaper.file_exists(Filename)==false then Filename=reaper.GetResourcePath().."/Scripts/Sounds/Tims-Default-Ping2.flac" end
+if reaper.file_exists(Filename)==false then Filename=reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/Tims-Default-Ping2.flac" end
 volume=tonumber(ultraschall.GetUSExternalState("ultraschall_Tims_Ping_Feature", "volume"))
 if volume==nil then volume=1 end
 
