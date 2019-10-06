@@ -1,155 +1,51 @@
 <TODO>
-    For 4.00beta2.76:
-        - TODO: Doc: Concepts: Localize
+    For 4.00beta2.78
 
-    For 4.00beta2.77
-        - TODO!! Localize: can we detect, which language-file is currently installed and which language it holds, to decide, which language to use?
+Additions:
+   - LiceCap: SetLiceCapExe - sets the LiceCap-executable, which shall be used by Reaper
+   - LiceCap: SetupLiceCap - sets up the LiceCap-executable settings of the currently chosen LiceCap-executable in Reaper
+   - Project Management: SaveProjectAs - saves the current project under a new filename
+
+        - TODO!! XML-versions of the USDOCML-docsfiles
+        - TODO!! in the eventmanager-script: 
+            - Set sollte es möglich machen Sachen optional zu ändern: pass nil and keep old setting
+            - EventManager_SetEvent muss es ermöglichen, dass man Parameter auf nil setzen kann, die man nicht ändern will(Ausnahme: ActionList-table)!
+            - CheckEveryXSeconds: mach Wert 0 zu permanent und negative Werte zu EveryXDeferCycle-Werten für mehr Kontrolle darüber(letzteres Kür)
+            - CheckForXSeconds: mach Wert 0 zu dauerhaft und evtl negative Werte für Anzahl Defer-Cycles, die gecheckt werden soll(letzteres Kür)
+            
+        - TODO!! index of config-vars is only one level
         - TODO!! concepts-documentation, autoupdate the download-link on Introduction_002_How_to_Use-chapter
         - TODO!! XML-generator has problems with spaces and & in filenames; use this to overcome this:
                       tempfile=files_array[i]
                       tempfile2=string.gsub(tempfile, "&", "%%26")
                       tempfile2=string.gsub(tempfile2, " ", "%%20")
                       Notes: really tempfile2(!)? And, do I need to exchange only on source or also on target-file?
-        - TODO!! Default-Color-Theme-Colortables and loading ColorTable from Theme-functions
-                Originally Posted by mespotine  View Post
-                A second action focusing on only random-strong colors would be useful, I think. Should be scriptable as well though.
-
-                Regarding default color-values, IIRC they are stored in the .ReaperTheme-files, with the currently used stored in reaper.ini as well.
-                So how would one reset color palette in reaper without losing theme config otherwise? just colors.
-         - TODO!! GetUserInputs 
-                - set length of caption-textfields and move inputboxes accordingly, as well as the width of the DialogWindow AND
-                  position it correctly centered
-                - Captions ending with \n shall be the full width of the window(for full readability of the caption), where the 
-                  associated inputbox is moved into the next line,which means, that all lines must be moved downwards properly 
-                  and height must be adjusted accordingly
-                - additional parameters, x,y, to set a position of the GetUserInput-window
-                - maybe auto_size, using caption length and input-box-default-value length to get the desired widths(needs GetLength of Text working somehow, using
-                  JS-extension-plugin)
+                      
         - TODO!! reaper.GetLastTouchedFX, reaper.GetFocusedFX - high word/low word-management is too difficult, make new functions of them
-        - TODO!! SetProjectZeug fertig machen
-        - TODO!! Add/Set/DeleteModulation
-        - TODO!! ultraschall.RenderProject_Loops()
-        - TODO!! Monitor the rendering to file-dialog for queue-renders, to get the rendered filenames, using a background script, if possible at all
-        - TODO!! ChildScripts: Run code directly
-                    Folgende Idee:
-                    Ich füge 100 dummy-scripte in Reaper hinzu, die Folgendes in etwa tun(an Beispiel von Skript 1):
-                        MyGuid=reaper.GetExtState("ultraschall", "DummyScript001_Guid")
-                        RunScript=reaper.GetExtState("ultraschall", "DummyScript001_Scriptfile")
-                        
-                        reaper.SetExtState("ultraschall", "DummyScript001_Guid", "", false)
-                        reaper.SetExtState("ultraschall", "DummyScript001_Scriptfile", "", false)
-                        
-                        
-                        dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-                        ultraschall.ScriptIdentifier="BlaBlascriptidentifier"..guid..".luasomething"
-                            
-                        
-                        dofile(RunScript)
-                        
-                   Das Skript kann ich nun per ExtStates befüllen mit den notwendigen Sachen(Guid und Scriptfile), die es braucht um zu laufen und es starten.
-                   In Skriptfile kann ich nun den Code packen, der ausgeführt werden soll, per WriteValueToFile.
-                   Wichtig ist dabei: ich muss, bevor ich ein ChildSkript nutzen kann, checken, ob reaper.GetExtState("ultraschall", "DummyScriptXXX_Guid")=="" ist, sonst muss ich XXX solange höherzählen und checken, bis ich einen freies Skript finde.
-                   Das dient dazu zu verhindern, dass ein Skript doppelt befüllt wird, noch bevor es gestartet werden kann(RaceCondition oder DiningPhilosophers).
-                   
-                   Eventuell: Solche Skripte müssen davon ausgehen, dass sie in Skripts gestartet wurden, sonst finden sie relative-filenamen als Dateien nicht mehr
-                   Eventuell: Muss ich get_action_context mir hacken, damit es das gerunnte Skript anzeigt? Dunno.
-                   
-                   Wichtig: Die US-API muss dann beim initialisiern checken, ob sie schon gestartet wurde und dann das Initialisieren skippen, sonst kanns sein, dass man in diesen ChildSkripten die US-API doppelt reinholt.
-                   Wichtig: Ich muss es irgendwie schaffen, dass die Dummy-Skripte in der kb.ini als Run another instance geführt werden, sonst poppt dieser dumme Dialog auf.
+        - TODO!!  - Get/SetProject-functions for
         
-                   Vielleicht kann ich das auch nutzen, um Skripte allgemein zu starten, aber nur dann, wenn ich das "Wo bin ich"-Relative, Absolute-Pfadproblem vorher löse. Sonst geht das Skript davon aus im Ursprungsverzeichnis zu liegen, nicht in Scripts.
-                   Dunno, wie wichtig das ist zu machen, oder ob das nicht eigentlich egal ist, weil die Standardverzeichnisse von denen Skripte ausgehen ohnehin nur die von Reaper sind(check that plz)
-    For 4.00beta2.8:
-        TODO!! Multipass-rendering
-                    When you want to render out a "wet"-loop, that needs reverb or something, you would need to render this loop three times:
-                            one to start up all reverbs, two for the actual loop and three for the "loop aftermath"
-                    After that, you need to edit this rendered file down to the middle part by hand, which is tedious.
-                    If there's a rendering-function could do that automatically, it would be cool.
-                        Load the project(if not the current one)
-                        Copy the tracks with the to be looped items/timeselection into an empty project, which must hold all rendering-settings(looped-time-selection probably)
-                        duplicate it so the items are now three times after each other
-                        Render it out and include the rendered file into the current project(maybe as stems?)
-                        edit it down to the original loop
-                        Render that out into a new file
-                        Delete the temp-rendered-files
-                        close the projects and return the filename
-      
-      TODO!! GetTrackPanLaw_Boost(tracknumber, sendidx, setstate)
-                    setstate=true -> don't insert it
-                    setstate=false -> insert it AFTER the AUXRECV with idx "sendidx"
-                    
-                    only possible using TrackStateChunks, so no speedup possible
-      TODO!! Statechunk-Docs, when Reaper 5.974 or later is released:   + Item notes: optionally display image notes in full height mode
-                                                                         new Item/AI-items/Track/Take-extstates from pre-releases
-                                                                         AUXRECV is missing in the statechunk-docs, maybe other routing-stuff as well?
-                                                                                    funfact - -1:U entry is pan_law, go into a routing-setting and rightclick the pan-slider of a receive to get this dialog
-                                                                         AUXRECV_WITHOUT_PANLAW_BOOST - if existing after a AUXRECV, pan_law has the Gain compensation (boost pans)-checkbox set
-                                                                                                        go into a routing-setting and rightclick the pan-slider of a receive to get this dialog
-      TODO!! Doccreation: - retvals and parameters don't convert MD2HTML in functions-engine-docconverter
-      TODO!!  - issue with parameters/retvals in USDocML-files: nil-error, when a retval/parameter entry is only 
-                <retvals>
-                    -
-                </retvals> 
-                also has an issue, when an empty line occurs, between numerous - It ends interpretation at that point.
-                like that:
-                   -
-                   
-                   -
-      Maybe rewrite Doccreation from scratch with proper css.
-           
-           
-      TODO!! Lua-eigene Funktionen in die ultraschall-Table übernehmen, wie type, tostring, tonumber, etc. Dies könnten vom user überschrieben werden und dann
-             produziert die API Fehler.
-      TODO!! Toggle/Set-Mute-state-functions, add autoarm mute-track-parameter
-                Needs first functions for activating Envelopes, but they don't exist, until they are displayed.
-                I might have to add non-activated envelopes by adding env-statechunks into TrackStateChunks.
-      TODO!!  - Planned Chapter Marker-functions! insert/set/delete/enumerate/export/import
-      TODO!!  - totype(value, string type), converts a value to type and returns it, if impossible, returns nil; includes string, boolean, integer, float, hex, oct, base64, etc
-      TODO!!  - SetStateChunk-functions: how to check for ProjectStateChunk/TrackStateChunk/ItemStateChunk/EnvStateChunk, when new parameters are added to the function?
-                                         something with ... ? Otherwise, new added parameters will break old scripts...
-      TODO!!  - import/export Bonus-script-packs-functions(for importing and registering additional bonus scripts)
-      TODO!!  - Add3rdParty-Script-support/functions-support
-      TODO!!  - AddUltraschallScripts() AddUltraschall3rdPartyScripts() add all 3rd party-scripts from the 3rd-party-US-folder
-            also add scripts to do that, that will be registered into the ActionList together with the ShowUSApiHelp-script as well
-            Note: Should be a script, rather than a function. Easier to handle.
-      TODO!!  - Import3rdPartyScripts(string filelist, integer script_target, boolean add)
-              copies files from filelist into script_target
-              script_target - 0, scripts-folder
-                            - 1, ultraschall-3rd-party-scripts-folder
-                            --1, don't copy files
-              boolean add - true, add the scripts to the actionlist; false, remove them from the action-list
-      TODO!!  - create HTML-docs from all files in the functions-department of Ultraschall/3rd-party-functions
-      TODO!!  - Show$ContextMenu() - ShowPopupMenu is too complicated to use. Create proper useable functions to address that
-      TODO!!  - GFX: virtual screenbuffers(create/remove/blit)
-                - probably useless and tow slow
-      TODO!!  - ultraschall.gfx_getkey(integer buffer), allows pipe-ing of UserInput directly into a textbuffer. The textbuffer acts like a invisible textbox, which can be shown using drawstr or something
-                                                        must support arrow, bspc, enter, return, copynpaste as well
-
-      TODO!!  - functions to setup the LICECAP-settings, before running it; a function to run LiceCap
-            set filename with .gif or .lcf to set the default filetype used!
-      TODO!!  - functions for native-colorstuff like, gradients, hue
-            as well as the same functions for a colorarray, which has a number of colors inside of it, that can be contrasted, gradiented, etc
-            they shall support gfx.init-color-values as output(boolean gfx.init-colorvalues (0 to 1)
-            Already started with ColorTables for Colorpicker(!!!!)
-      TODO!!  - GetAllTakesFromMediaItem - returns an array with all takes from an item, objects as well as info_values
-      TODO!!  - Get/SetProjectBay-functions
-      TODO!!  - Envelope-StateChunk-functions
-      TODO!!  - Get/SetProject-functions for
-                    RENDER_QUEUE-stuff
-                   
-                   as well as
+                  StateChunks:
                   - SetProject_AutomationItemStateChunk - gets an automation-item from a project/ProjectStateChunk
                   - SetProject_ProjectBay - gets the projectbay from a project/ProjectStateChunk
                   - SetProject_Metronome - gets the statechunk for all metronome-settings from a project/ProjectStateChunk
                   - SetProject_MasterPlayspeed - gets the statechunk for all master-playspeed-settings from a project/ProjectStateChunk
                   - SetProject_Tempo - gets the statechunk for all tempo-settings from a project/ProjectStateChunk
                   - SetProject_Extensions - gets the statechunk for all extension-settings from a project/ProjectStateChunk
-                  - SetProject_Lock - gets the individual lock-settings from a project/ProjectStateChunk
-                  - SetProject_GlobalAuto - returns the global automation override-settings of an rpp-file or ProjectStateChunk
-                  - SetProject_Tempo - returns the tempo-settings of an rpp-file or a ProjectStateChunk
-                  - SetProject_Playrate 
-                  - SetProject_MasterAutomode
-                  - SetProject_MasterSel
+                  - SetProject_MasterHWVolEnvStateChunk
+                  - SetProject_MasterFXListStateChunk - 
+                  - SetProject_MasterDualPanEnvStateChunk - 
+                  - SetProject_MasterDualPanEnv2StateChunk - 
+                  - SetProject_MasterDualPanEnvLStateChunk - 
+                  - SetProject_MasterDualPanEnvL2StateChunk - 
+                  - SetProject_MasterVolEnvStateChunk - 
+                  - SetProject_MasterVolEnv2StateChunk - 
+                  - SetProject_MasterVolEnv3StateChunk - 
+                  - SetProject_MasterHWPanEnvStateChunk - 
+                  - SetProject_MasterPanMode_Ex - 
+                  - SetProject_TempoEnv_ExStateChunk
+                  
+                  States:
+                  -  RENDER_QUEUE-stuff
                   - SetProject_MasterFXByp
                   - SetProject_MasterMuteSolo
                   - SetProject_MasterNChans
@@ -166,37 +62,105 @@
                   - SetProject_MasterGroupFlagsHighState - 
                   - SetProject_GroupDisabled - 
                   
-                  - SetProject_MasterHWVolEnvStateChunk
-                  - SetProject_MasterFXListStateChunk - 
-                  - SetProject_MasterDualPanEnvStateChunk - 
-                  - SetProject_MasterDualPanEnv2StateChunk - 
-                  - SetProject_MasterDualPanEnvLStateChunk - 
-                  - SetProject_MasterDualPanEnvL2StateChunk - 
-                  - SetProject_MasterVolEnvStateChunk - 
-                  - SetProject_MasterVolEnv2StateChunk - 
-                  - SetProject_MasterVolEnv3StateChunk - 
-                  - SetProject_MasterHWPanEnvStateChunk - 
-                  - SetProject_MasterPanMode_Ex - 
-                  - SetProject_TempoEnv_ExStateChunk
-                  
                - IsValid-check functions for
                     - AutomationItems, ProjectBay, Metronome, MasterPlayspeed, Tempo, Extensions, MasterHWVolEnv, MasterFXList, MasterDualPanEnv
                       MasterDualPanEnv2, MasterDualPanEnvL, MasterDualPanEnvL2, MasterVolEnv, MasterVolEnv2, MasterVolEnv3, MasterHWPanEnv, TempoEnv_Ex   
+        - TODO!! Add/Set/DeleteModulation
+        - TODO!! ultraschall.RenderProject_Loops()
+                Multipass-rendering
+                    When you want to render out a "wet"-loop, that needs reverb or something, you would need to render this loop three times:
+                            one to start up all reverbs, two for the actual loop and three for the "loop aftermath"
+                    After that, you need to edit this rendered file down to the middle part by hand, which is tedious.
+                    If there's a rendering-function could do that automatically, it would be cool.
+                        Load the project(if not the current one)
+                        Copy the tracks with the to be looped items/timeselection into an empty project, which must hold all rendering-settings(looped-time-selection probably)
+                        duplicate it so the items are now three times after each other
+                        Render it out and include the rendered file into the current project(maybe as stems?)
+                        edit it down to the original loop
+                        Render that out into a new file
+                        Delete the temp-rendered-files
+                        close the projects and return the filename
+
+
+    For 4.00beta2.8:
+         - TODO!! MB and GetUserInputs not working on Mac due unknown bug. 
+                 Can't find ID of the buttons anymore. Changes in Reaper in recent versions?
+         - TODO!! GetUserInputs - count doesn't match, if fewer inputboxes are filled than do exist.
+                        tested with 9 Inputboxes, 6 Captionboxes. There's somewhere a mismatch...
+                        Is this fixed? Can't reproduce anymore.
+         - TODO!! GetUserInputs 
+                - set length of caption-textfields and move inputboxes accordingly, as well as the width of the DialogWindow AND
+                  position it correctly centered
+                - Captions ending with \n shall be the full width of the window(for full readability of the caption), where the 
+                  associated inputbox is moved into the next line,which means, that all lines must be moved downwards properly 
+                  and height must be adjusted accordingly
+                - additional parameters, x,y, to set a position of the GetUserInput-window
+                - maybe auto_size, using caption length and input-box-default-value length to get the desired widths(needs GetLength of Text working somehow, using
+                  JS-extension-plugin)
+    - TODO!! Monitor the rendering to file-dialog for queue-renders, to get the rendered filenames, using a background script, if possible at all
+      TODO!! Default-Color-Theme-Colortables and loading ColorTable from Theme-functions
+              Originally Posted by mespotine  View Post
+              A second action focusing on only random-strong colors would be useful, I think. Should be scriptable as well though.
+
+              Regarding default color-values, IIRC they are stored in the .ReaperTheme-files, with the currently used stored in reaper.ini as well.
+              So how would one reset color palette in reaper without losing theme config otherwise? just colors.
+              needs more research
+      TODO!! Localize: can we detect, which language-file is currently installed and which language it holds, to decide, which language to use?
+                Nope...needs more research
+      TODO!! GetTrackPanLaw_Boost(tracknumber, sendidx, setstate)
+                    setstate=true -> don't insert it
+                    setstate=false -> insert it AFTER the AUXRECV with idx "sendidx"
+                    
+                    only possible using TrackStateChunks, so no speedup possible
+      TODO!! Statechunk-Docs, when Reaper 5.974 or later is released:   + Item notes: optionally display image notes in full height mode
+                                                                         new Item/AI-items/Track/Take-extstates from pre-releases
+                                                                         AUXRECV is missing in the statechunk-docs, maybe other routing-stuff as well?
+                                                                                    funfact - -1:U entry is pan_law, go into a routing-setting and rightclick the pan-slider of a receive to get this dialog
+                                                                         AUXRECV_WITHOUT_PANLAW_BOOST - if existing after a AUXRECV, pan_law has the Gain compensation (boost pans)-checkbox set
+                                                                                                        go into a routing-setting and rightclick the pan-slider of a receive to get this dialog
+      TODO!! Rewrite Doccreation from scratch with proper css.
+      TODO!! Lua-eigene Funktionen in die ultraschall-Table übernehmen, wie type, tostring, tonumber, etc. Dies könnten vom user überschrieben werden und dann
+             produziert die API Fehler.
+      TODO!! Toggle/Set-Mute-state-functions, add autoarm mute-track-parameter
+                Needs first functions for activating Envelopes, but they don't exist, until they are displayed.
+                I might have to add non-activated envelopes by adding env-statechunks into TrackStateChunks.
+      TODO!!  - totype(value, string type), converts a value to type and returns it, if impossible, returns nil; includes string, boolean, integer, float, hex, oct, base64, etc
+      TODO!!  - SetStateChunk-functions: how to check for ProjectStateChunk/TrackStateChunk/ItemStateChunk/EnvStateChunk, when new parameters are added to the function?
+                                         something with ... ? Otherwise, new added parameters will break old scripts...
+      TODO!!  - import/export Bonus-script-packs-functions(for importing and registering additional bonus scripts)
+      TODO!!  - Add3rdParty-Script-support/functions-support
+      TODO!!  - AddUltraschallScripts() AddUltraschall3rdPartyScripts() add all 3rd party-scripts from the 3rd-party-US-folder
+            also add scripts to do that, that will be registered into the ActionList together with the ShowUSApiHelp-script as well
+            Note: Should be a script, rather than a function. Easier to handle.
+      TODO!!  - Import3rdPartyScripts(string filelist, integer script_target, boolean add)
+              copies files from filelist into script_target
+              script_target - 0, scripts-folder
+                            - 1, ultraschall-3rd-party-scripts-folder
+                            --1, don't copy files
+              boolean add - true, add the scripts to the actionlist; false, remove them from the action-list
+      TODO!!  - create HTML-docs from all files in the functions-department of Ultraschall/3rd-party-functions
+      TODO!!  - GFX: virtual screenbuffers(create/remove/blit)
+                - probably useless and tow slow
+      TODO!!  - ultraschall.gfx_getkey(integer buffer), allows pipe-ing of UserInput directly into a textbuffer. The textbuffer acts like a invisible textbox, which can be shown using drawstr or something
+                                                        must support arrow, bspc, enter, return, copynpaste as well
+
+      TODO!!  - functions to setup the LICECAP-settings, before running it; a function to run LiceCap
+            set filename with .gif or .lcf to set the default filetype used!
+      TODO!!  - functions for native-colorstuff like, gradients, hue
+            as well as the same functions for a colorarray, which has a number of colors inside of it, that can be contrasted, gradiented, etc
+            they shall support gfx.init-color-values as output(boolean gfx.init-colorvalues (0 to 1)
+            Already started with ColorTables for Colorpicker(!!!!)
+      TODO!!  - GetAllTakesFromMediaItem - returns an array with all takes from an item, objects as well as info_values
+      TODO!!  - Get/SetProjectBay-functions
+      TODO!!  - Envelope-StateChunk-functions
+
     For 4.00Beta 2.9:
         registering of defer-using-running scripts into an extstate ultraschall->running_script_instance->
             All ultraschall-API-using scripts will be registered into running_script_instance automatically, when using defer.
             We will also define an atexit-function for unregistering from the running-script-instance-register, as there can be multiple atexit-functions(up to 1024).
             That way, we can have monitoring of running scripts.
             Should allow monitoring of Defer1 to Defer10-running-states as well. Maybe they need to be set at the beginning as well? Or is it waste of resources?(probably the latter, we can assume, if it's not set "running", that defer-instance is not used and set to stopped.            
-        
-        TODO!! Event-System, as defined on the Congress
-            -- too difficult to use, needs a better way to deal with it...
-            maybe by passing functions to the event-manager:
-                You write a function, which in a very efficient/ressourcefriendly way returns "true" under certain conditions.
-                You pass it to the eventmanager and tell it to run script/action xyz, maybe with parameters like returned returnvalues by the passed function.
-                
-                Needs more research, though much easier and more flexible than my previous attempt.
-                
+
         TODO!!  - Mix-Snapshots, who store/retrieve the current/a former mix
 
       TODO!! SaveProjectAs(ReaProject project, newfilename, relative_sourcefilenames, ProjectStateChunk)
@@ -219,11 +183,284 @@
 
 TODO!! buggy function
         the line "reaper.JS_WindowMessage_Send(Textfield, "WM_SETFONT", styles[style] ,0,0,0)" seems to be the problem due WM_SETFONT
-
-
-
 </TODO>
+
 ## Ultraschall Framework - Changelog
+
+### 4.00 Beta 2.77: - "Monkeys with Tools - Call the planet doctor" - 1st of October 2019
+
+Has now 1029 functions with 44 new ones! Yes, I crossed the thousand!  
+
+  **New in this release:**
+  
+  - **Event Manager**  
+  Killer Feature Time and long requested by many of you!  
+  The EventManager allows you to run actions, when certain states occur/statechanges occur.  
+  That way you can automatize running actions under certain circumstances without having to run your own defer-script for that.  
+  Kudos to @fernsehmuell, who was essential in the initial designs of it!
+  
+  - **ShowXXXInputMenu**  
+  Shows different Context-menus, like TrackInput, TrackPanel, TrackArea, TrackRouting, Ruler, MediaItem, Track/TakeEnvelope,  
+  EnvelopePoint, EnvelopePoint for Automation Items, AutomationItems-contextmenu.  
+  Reaper's own function ShowPopupMenu is quite difficult to use, so I made some, who make it easier.  
+
+  - **RunLuaSourceCode**  
+  Runs Luacode directly without having to create a script for it.  
+ 
+  - **Main\_OnCommand\_LuaCode**  
+  Runs Luacode as child-script directly without having to create a script for it.  
+  
+  - **GetTimeByMouseXPosition**  
+  returns projecttime at x-screenposition, which can be nice for mouse-editing-specific actions.  
+  
+  - **ReplacePatternInString**  
+  Like Lua's string.gsub(), this replaces a pattern within a string with a replacement string, but you can choose,  
+  which one shall be replaced. And unlike string.gsub() only that one will be replaced, not the occurences after that.  
+
+  - **GetItem\_ClickState and GetTrackEnvelope\_ClickState**  
+  Return, if a MediaItem/EnvelopePoint is currently clicked and hovered by the mouse. Could be used for some nice and handy things.
+
+  - **GetAllActions**  
+  Sped up and returns now more attributes, like action-type(script, native, custom, extension), termination-state of scripts, consolidate-state for custom actions.
+
+  - **ConvertFunction\_FromBase64String and ConvertFunction\_ToBase64String**  
+  Convert a Lua-function to/from a BASE64-string. That way, you can exchange functions via extstates. Convert to Base64-string, put the string into an extstate,  
+  read the string from the extstate and convert it back to a function.  
+
+  - **Bugfixes and optimzations**  
+  Optimized and bugfixed tons of other stuff, thanks to many bugreports and a lot of feedback from many of you.  
+  Big thanks for that :)  
+  
+#### New features in 4.00beta2.77
+   - Defer Management: GetDeferRunState - gets the current runstate of a ultraschall-defer-loop in the current or a specific scriptinstance(requested by rstockm)
+   - Docs: EventManager - added concepts docs for detailed description, on how to use and code the EventManager
+   - Envelope Management: GetTrackEnvelope_ClickState - returns the currently clicked TrackEnvelope-Point
+   - Error Messaging System: SuppressErrorMessages - suppresses and unsuppresses error-messages of the error messaging system
+   - EventManager: EventManager\_AddEvent - registers a new event to the EvenManager-checkingqueue
+   - EventManager: EventManager\_AddStartupEvent - adds an event into the ini-file of the EventManager, to be registered at startup of the ini-file
+   - EventManager: EventManager\_CountRegisteredEvents - counts the number of registered events
+   - EventManager: EventManager\_CountStartupEvents - counts the number of currently available startup-events for the EventManager
+   - EventManager: EventManager\_EnumerateEvents - returns attributes of specific registered events
+   - EventManager: EventManager\_EnumerateEvents2 - enumerates attributes of an event by EventIdentifier
+   - EventManager: EventManager\_EnumerateStartupEvents - enumerates attributes of a startup-event
+   - EventManager: EventManager\_EnumerateStartupEvents2 - enumerates attributes of a startup-event by an EventIdentifier
+   - EventManager: EventManager\_IsValidEventIdentifier - checks, if an EventIdentifier is a valid and currently registered one
+   - EventManager: EventManager\_PauseEvent - pauses a registered event in the EventManager
+   - EventManager: EventManager\_RemoveAllEvents\_Script - removes all events, registered by a script with a certain ScriptIdentifier
+   - EventManager: EventManager\_RemoveEvent - removes an event from the EvenManager-checkingqueue
+   - EventManager: EventManager\_RemoveStartupEvent - removes a registered-at-startup-event for the EventManager by EventIdentifier
+   - EventManager: EventManager\_RemoveStartupEvent2 - removes a registered-at-startup-event for the EventManager
+   - EventManager: EventManager\_ResumeEvent - resumes a paused and registered event in the EventManager
+   - EventManager: EventManager\_SetEvent - sets an already existing event in the EvenManager-checkingqueue
+   - EventManager: EventManager\_SetStartupEvent - sets an event in the ini-file of the EventManager, which will be registered at startup of the ini-file
+   - EventManager: EventManager\_Start - starts the EventManager
+   - EventManager: EventManager\_Stop - removes all events registered by the current script/a specific ScriptIdentifier; stops the EventManager, if all scripts who have registered events have used this function
+   - EventManager: Ultraschall\_EventManager.lua - the backgroundscript for the EventManager
+   - Helper Functions: ConvertFunction\_FromBase64String - loads a function from a BASE64-string
+   - Helper Functions: ConvertFunction\_ToBase64String - converts a function into a BASE64-string
+   - Helper functions: Main\_OnCommand\_LuaCode - runs Luacode in a temporary new script, without the need to create it first
+   - Helper functions: ReplacePatternInString - replaces a certain occurence(and only that one) of a pattern in a string with a replacement
+   - Helper functions: RunLuaSourceCode - runs Lua-code directly from a string   
+   - MediaItem Management: GetItem_ClickState - returns the currently clicked MediaItem
+   - MediaItem Management: GetItem_HighestRecCounter - returns the highest reccounter in the current project
+   - MediaItem Management: GetItem_Number - returns the itemnumber of a MediaItem within a project(requested by XRaym)
+   - Project Management: GetProjectFilename - returns the filename of a currently opened project
+   - Project Management: SetProject\_GlobalAuto - sets global automation override-state a projectfile or a ProjectStateChunk
+   - Project Management: SetProject\_Lock - sets locked-state of a projectfile or a ProjectStateChunk
+   - Project Management: SetProject\_MasterAutomode - sets automation-mode of the mastertrack in a projectfile or a ProjectStateChunk
+   - Project Management: SetProject\_Playrate - sets playrate-state of a projectfile or a ProjectStateChunk
+   - Project Management: SetProject\_MasterSel - sets selection-state of the master-track in a projectfile or a ProjectStateChunk
+   - Project Management: SetProject\_Tempo - sets the tempo settings(bpm, beat, denominator) a projectfile or a ProjectStateChunk
+   - Ultraschall: DeleteUSExternalState - deletes an extstate from the ultraschall.ini(requested by rstockm)
+   - User Interface: GetTimeByMouseXPosition - returns projecttime at x-screenposition
+   - User Interface: ShowTrackInputMenu - shows a TrackInput-contextmenu
+   - User Interface: ShowTrackPanelMenu - shows a TrackPanel-contextmenu
+   - User Interface: ShowTrackAreaMenu - shows a TrackArea-contextmenu
+   - User Interface: ShowTrackRoutingMenu - shows a TrackRouting-contextmenu
+   - User Interface: ShowRulerMenu - shows a Ruler-contextmenu
+   - User Interface: ShowMediaItemMenu - shows a MediaItem-contextmenu
+   - User Interface: ShowEnvelopeMenu - shows a Track/TakeEnvelope-contextmenu
+   - User Interface: ShowEnvelopePointMenu - shows an EnvelopePoint-contextmenu
+   - User Interface: ShowEnvelopePointMenu_AutomationItem - shows an EnvelopePoint-contextmenu for Automation Items
+   - User Interface: ShowAutomationItemMenu - shows an AutomationItems-contextmenu
+   
+#### Changes from Beta 2.761 to Beta 2.77
+   - Actions: GetAllActions - sped up by magnitudes; returns now actiontype, consolidate-state, termination-state of actions as well; supports now section 1(invisible custom actions)
+   - API: functions - moved all functions into modules for future modular-concept
+   - Configuration Files: CountIniFileExternalState_sec - had inner variable exposed -> fixed
+   - Configuration Files: EnumerateIniFileExternalState_sec - did return keys instead of sections -> fixed
+   - Configuration Files: GetKBIniKeys - enhanced description for osc
+   - Configuration Files: SetKBIniKeys - enhanced description for osc
+   - Docs: Reaper Internals - updated to Reaper 5.983 and JS-extension 0.992
+   - DocEngine: Docs\_GetUSDocBloc\_ChapterContext - returned an additional empty non-existant chapter -> fixed
+   - DocEngine: Docs\_GetUSDocBloc\_Requires - could produce a Lua-error -> fixed
+   - Defer Management: GetDeferIdentifier - you can optionally pass a script-identifier now, to get the defer-identifier of another scriptinstance(used to support only the current script instance)
+   - Helper Functions: IsValidMatchingPattern - moved to docs-index API-Helper functions -> Data Manipulation
+   - Helper Functions: SecondsToTime - moved to docs-index API-Helper functions -> Data Manipulation
+   - Helper Functions: SecondsToTimeString\_hh\_mm\_ss\_mss - moved to docs-index API-Helper functions -> Data Manipulation
+   - Helper Functions: SplitStringAtLineFeedToArray - didn't always return the last entry of the passed string -> fixed (thanks to Aurelien)
+   - Helper Functions: TimeStringToSeconds\_hh\_mm\_ss\_mss - moved to docs-index API-Helper functions -> Data Manipulation
+   - Helper Functions: TimeToSeconds - moved to docs-index API-Helper functions -> Data Manipulation
+   - HWND: GetActionsHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetBatchFileItemConverterHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetConsolidateTracksHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetExportProjectMIDIHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetPreferencesHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetProjectDirectoryCleanupHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetProjectSettingsHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetRenderQueueHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetRenderToFileHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetRenderingToFileHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetSaveLiveOutputToDiskHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - HWND: GetVideoHWND - moved to docs-index User Interface -> Reaper-Windowhandler
+   - Media Explorer: MediaExplorer_OnCommand - moved function in docs to index Media Explorer
+   - Media Explorer: UpdateMediaExplorer - moved function in docs to index Media Explorer
+   - Project Management: CheckForChangedProjectTabs - checks now as well, if projectfilenames have changed, by either loading a project or saving a project under a new filename(requested by lexaproductions)
+   - Project Management: GetProject\_GlobalAuto - added description for global-automation-override_state
+   - Project Management: GetProject\_MasterGroupFlagsState - moved to correct docsindex Project Management
+   - Project Management: ProjectTabs-check - initialization had a bug, which could cause CheckForChangedProjectTabs to fail at times -> fixed
+   - Project Management: SetProject\_MasterGroupFlagsState - moved to correct docsindex Project Management
+   - SpectralEdit: AddItemSpectralEdit - parameter end_pos was actually length -> fixed (thanks to XRaym)
+   - SpectralEdit: GetItemSpectralEdit - retval end_pos was actually length -> fixed (thanks to XRaym)
+   - SpectralEdit: SetItemSpectralEdit - parameter end_pos was actually length -> fixed (thanks to XRaym)
+   - Ultraschall: EnumerateUSExternalState_sec - had problems, when ultraschall.ini was stored with CR+LF-lineendings -> fixed (thanks to rstockm)
+   - Ultraschall: IsTrackSoundboard - sped up execution by removing useless loop(thanks rstockm)
+   - Ultraschall: IsTrackStudioLink - sped up execution by removing useless loop(thanks rstockm)
+   - Ultraschall: IsTrackStudioLinkOnAir - sped up execution by removing useless loop; didn't work correctly on Mac -> fixed(thanks rstockm)
+   - Ultraschall: moved ultraschall.ini-related functions to Ultraschall Specific-index in the docs
+   - User Interface: GetReaperWindowPosition_Left - deprecated
+   - User Interface: GetReaperWindowPosition_Right - deprecated
+   - User Interface: GetUserInputs - only working on Windows, currently. Working on fixing it.
+   - User Interface: MB - only working on Windows, currently. Working on fixing it.
+   
+   ---
+
+### 4.00 Beta 2.761: - "Coldplay - Fix You" - 23rd of August 2019
+
+Has now 985 functions with 8 new ones!
+
+**IMPORTANT!: This is a massive critical bugfix release. About 60 functions returned wrong returnvalues in case of an error.  
+If you use any of the functions listed in _Changes from Beta 2.76 to Beta 2.761_, you should check, if your scripts still work.  
+This is totally my fault, as I had some of them wrong to begin with.  
+My apologies for any inconvenience.... :/**  
+
+  **New in this release:**
+  
+  - **Critical Bugfixes**  
+  In case of errors, many functions returned wrong returnvalues or had faulty returnvalues stated in the docs. All of them are fixed now.  
+  Please check, if your scripts use any of the functions listed in Changes for more details.  
+  Hope this is the last time, stuff like that happened...
+  
+  - **GetProjectStateChunk**  
+  gets a full StateChunk of the current project(finally working!)  
+  Now you can get all states of your project!  
+  
+  - **MediaExplorer**  
+  Get the HWND(GetMediaExplorerHWND), update the listview(UpdateMediaExplorer) and run an action, associated with the MediaExplorer-section(MediaExplorer\_OnCommand).
+  
+  - **ConvertYCoordsMac2Win**  
+  Y-coordinates on Mac are different from the ones in Windows/Linux, meaning, pixel 0 is at the bottom, while Windows/Linux start on top.  
+  This function converts the y-coordinates between these two coordinate-systems.  
+  
+  - **New version of Config-Vars-displayer-script**  
+  Shows changes with doubles without a problem now, is faster, uses the config-var-docs included with the API to get the currently accepted config-vars.
+  I also improved the layout a bit.
+  
+###New features in 4.00beta2.761
+   - Helper functions: FindPatternsInString - finds all occurrences of a matching-pattern in a string
+   - Helper functions: IsWithinTimeRange - returns, if a time is within a start and endtime, takes care of the precision-problem time-positions in Lua have
+   - ProjectManagement: GetProjectStateChunk - returns the ProjectStateChunk of the current project(finally working!)
+   - Scripts: ultraschall\_developertool\_Display-Altered-Config-Vars.lua - new version, which solves the faulty-displaying-of-double-issue, faster and improved layout. Uses now ConfigVars-Docfile to read the currently supported ConfigVars.
+   - Trackmanagement: IsSplitAtPosition - returns, if a split/mediaitemend/mediaitemstart exists at a certain position, within certain tracks
+   - User Interface: ConvertYCoordsMac2Win - converts y-coordinates between Windows/Linux and Mac related coordinatesystems
+   - User Interface: GetMediaExplorerHWND - gets the HWND-windowhandler of the Media Explorer
+   - User Interface: UpdateMediaExplorer - updates the listview of the Media Explorer
+   - User Interface: MediaExplorer\_OnCommand - runs an Media Explorer action(just like Reaper's Main\_OnCommand and Midi\_OnCommand-functions); runs no scripts yet, only native/extension actions
+
+###Changes from Beta 2.76 to Beta 2.761
+
+   - Automation Items: GetProject_CountAutomationItems - didn't return the right retval in case of an error -> fixed
+   - ColorManagement: RGB2Grayscale - didn't return the right retval in case of an error -> fixed 
+   - Configuration Files: CountIniFileExternalState_sec - did count keys instead of sections -> fixed(thanks to rstockm)
+   - Configuration Files: CountUSExternalState_sec - did count keys instead of sections -> fixed(thanks to rstockm)
+   - Configuration Files: CountUSExternalState_key - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: DeleteKBIniActions - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: DeleteKBIniScripts - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: DeleteKBIniKeys - didn't return the right retval in case of an error -> fixed 
+   - Configuration Files: EnumerateIniFileExternalState_sec - did enumerate keys instead of sections -> fixed(thanks to rstockm)
+   - Configuration Files: EnumerateKeysByPattern - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: EnumerateSectionsByPattern - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: EnumerateUSExternalState_sec - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: EnumerateUSExternalState_key - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: EnumerateValuesByPattern - didn't return the right retval in case of an error -> fixed
+   - Configuration Files: SetIniFileExternalState - didn't return the right retval in case of an error -> fixed 
+   - Docs: Api-docs - went through all of them and removed MarkDown-issues, though I should do something on this MarkDown-issue. It's a drag...
+   - Docs: Doc-Engine - had wrong parameters and retvals in numerous functions...fixed(ooops)
+   - Docs: Doc-Engine: Docs_ConvertPlainTextToHTML - was missing html-codes in the description due me encoding it wrong
+   - Docs: GetRenderingToFileHWND - had parameters described, that don't exist -> fixed
+   - Docs: Reaper Internals - updated to Reaper 5.982, JSextension 0.990 added configvars from developer-releases
+   - Docs: Reaper: GetTrackSendInfo_Value - fixed Markdown-formatting-problems
+   - Docs: Reaper: print-functions - all print-functions, like sprint, fprint, gfx.printf, etc include now formatting information in the description.
+   - Docs: Reaper: SetTrackSendInfo_Value - fixed Markdown-formatting-problems
+   - EnvelopeManagement: SetArmState_Envelope - didn't return the right retval in case of an error -> fixed 
+   - FileManagement: CountLinesInFile - didn't return the right retval in case of an error -> fixed
+   - FileManagement: GetLengthOfFile - didn't return the right retval in case of an error -> fixed
+   - FileManagement: MakeCopyOfFile_Binary - didn't return the right retval in case of an error -> fixed
+   - FileManagement: ReadValueFromFile - didn't return the right retval in case of an error -> fixed
+   - FileManagement: ReadBinaryFileUntilPattern - didn't return the right retval in case of an error -> fixed
+   - FileManagement: ReadBinaryFileFromPattern - didn't return the right retval in case of an error -> fixed
+   - FXManagement: AddParmLFOLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a LFOLEARN entry to become PARMLEARN(thanks to Justin and Schwa for helping me with that)
+   - FXManagement: AddParmLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a PARMLEARN entry to become LFOLEARN(thanks to Justin and Schwa for helping me with that)
+   - FXManagement: AddParmAlias_FXStateChunk - enhanced doc-description
+   - FXManagement: CountParmAlias_FXStateChunk - returns now -1 in case of an errorenhanced doc-description
+   - FXManagement: CountParmLearn_FXStateChunk - returns now -1 in case of an error; enhanced doc-description
+   - FXManagement: CountParmLFOLearn_FXStateChunk - returns now -1 in case of an error; enhanced doc-description
+   - FXManagement: DeleteParmAlias_FXStateChunk - enhanced doc-description
+   - FXManagement: DeleteParmLFOLearn_FXStateChunk - enhanced doc-description
+   - FXManagement: GetParmModulationChunk_FXStateChunk - enhanced doc-description
+   - FXManagement: GetParmLFOLearn_MediaTrack - enhanced doc-description
+   - FXManagement: GetFXStateChunk - had layoutproblem, when the passed StateChunk was taken from a ProjectStateChunk -> fixed(thanks to lossius)
+   - FXManagement: SetFXStateChunk - didn't return the right retval in case of an error -> fixed
+   - FXManagement: SetParmLFOLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a LFOLEARN entry to become PARMLEARN(thanks to Justin and Schwa for helping me with that)
+   - FXManagement: SetParmLearn_FXStateChunk - enhanced doc-description; fixed bug that could cause a PARMLEARN entry to become LFOLEARN(thanks to Justin and Schwa for helping me with that)
+   - FXManagement: SetParmAlias_FXStateChunk - enhanced doc-description
+   - Helper Functions: CompareStringWithAsciiValues - returned -1 in case of an error, although boolean should be returned -> fixed
+   - Helper Functions: ConvertIntegerIntoString2 - didn't return the right retval in case of an error -> fixed
+   - Helper Functions: GetScriptFilenameFromActionCommandID - didn't return the right retval in case of an error -> fixed
+   - Helper Functions: GetUserInputs - did change the tables passed as default-retvals -> fixed now
+   - Helper Functions: IsItemInTrack - changed error-retval to nil; didn't return the right retval in case of an error -> fixed
+   - Helper Functions: LoadFunctionFromExtState - didn't return the right retval in case of an error -> fixed
+   - Helper Functions: SetIntConfigVar_Bitfield - didn't return the right retval in case of an error -> fixed
+   - Helper Functions: ToggleStateAction - wrongly stated to return boolean instead of integer in the docs -> fixed
+   - Helper Functions: ToggleStateButton - wrong retval-description in the docs -> fixed
+   - Marker Management: DeleteNormalMarker - returned wrong retval in case of an error -> fixed
+   - Marker Management: DeleteEditMarker - returned wrong retval in case of an error -> fixed
+   - Marker Management: EnumerateEditRegion - returned wrong retval in case of an error -> fixed
+   - Marker Management: SetMarkerByIndex - returned wrong retval in case of an error -> fixed
+   - MediaItem Management: GetItemSpectralConfig - didn't return the right retval in case of an error -> fixed
+   - MediaItem Management: GetItemSpectralVisibilityState - didn't return the right retval in case of an error -> fixed
+   - MediaItem Management: GetMediaItemTake - didn't return the right retval in case of an error -> fixed
+   - MediaItem Management: RippleInsert_MediaItemStateChunks - had inner variable exposed
+   - MediaItem Management: SetItemLength - didn't return the right retval in case of an error -> fixed
+   - MediaItem Management: SetItemPosition - didn't return the right retval in case of an error -> fixed
+   - MediaItem Management: SetItemUSTrackNumber_StateChunk - didn't return in some errorcases, potentially resulting in a Lua-error -> fixed
+   - MediaItem Management: SplitMediaItems_Position - didn't return the right retval in case of an error -> fixed 
+   - Project Management: GetProject_GetRegion - returned wrong retval in case of an error -> fixed
+   - Project Management: GetProject_CountMasterHWOuts - returned wrong retval in case of an error -> fixed
+   - Project Management: GetProject_MasterGroupFlagsState - returned wrong retval in case of an error -> fixed
+   - Project Management: GetProject_MasterGroupFlagsHighState - returned wrong retval in case of an error -> fixed
+   - Rendering: ApplyRenderTable_Project - stated nil as retval in case of an error, though it is false -> fixed
+   - Rendering: ApplyRenderTable_ProjectFile - stated nil as retval in case of an error, though it is false -> fixed
+   - Rendering: GetRenderPreset_RenderTable - stated false as retval in case of an error, though it is nil -> fixed
+   - Track Management: RemoveMediaItem_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - Track Management: RemoveMediaItemByIGUID_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - Track Management: RemoveMediaItemByGUID_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - Track Management: SetMediaItemStateChunk_in_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - User Interface: GetVideoHWND - returned wrong retval in case of an error -> fixed
+   - Video: VID_Pixels2VideoUIStateCoords - returned wrong retval in case of an error -> fixed
+   - Video: VID_VideoUIStateCoords2Pixels - returned wrong retval in case of an error -> fixed
+
+---
 
 ### 4.00 Beta 2.76: - "The Police - Walking on the Moon" - 20th of July 2019
 
