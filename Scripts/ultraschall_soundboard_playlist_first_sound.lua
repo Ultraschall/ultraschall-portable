@@ -30,6 +30,7 @@
 
 --reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", -1)
 retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
+if Position=="" then Position=0 end
 if tonumber(Position)==-1 then Position=0 end
 
 --reaper.MB("Do you want to play the first sound in the Soundboard

@@ -24,16 +24,17 @@
   ################################################################################
   --]]
 
--- starts playing of the sounds in the SoundBoard index by index forwards
+-- returns playlist to first sound in the SoundBoard index by index backwards
 -- track, which holds Soundboard, must be recarmed and recinput must be set to MIDI or VirtualMidiKeyboard
+
 
 --reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", -1)
 retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
 if Position=="" then Position=0 end
-if tonumber(Position)>24 then P=1 return end
+if tonumber(Position)==-1 then Position=0 end
 
+--reaper.MB("Do you want to play the first sound in the Soundboard
 reaper.StuffMIDIMessage(0, 144,72+Position,0)
-reaper.StuffMIDIMessage(0, 144,72+Position+1,1)
+--reaper.StuffMIDIMessage(0, 144,72,1)
 
-if tonumber(Position)+1>24 then Position=24 end
-reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", Position+1)
+
