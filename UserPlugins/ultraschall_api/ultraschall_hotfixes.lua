@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-# 
+#
 # Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,9 +20,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-# 
+#
 ################################################################################
-]] 
+]]
 
 -- This is the file for hotfixes of buggy functions.
 
@@ -32,14 +32,14 @@
 --      c) comment, what you've changed(this is for me to find out, what you did)
 --      d) add information to the <US_DocBloc>-bloc of the function. So if the information in the
 --         <US_DocBloc> isn't correct anymore after your changes, rewrite it to fit better with your fixes
---      e) add as an additional comment in the function your name and a link to something you do(the latter, if you want), 
+--      e) add as an additional comment in the function your name and a link to something you do(the latter, if you want),
 --         so I can credit you and your contribution properly
 --      f) submit the file as PullRequest via Github: https://github.com/Ultraschall/Ultraschall-Api-for-Reaper.git (preferred !)
 --         or send it via lspmp3@yahoo.de(only if you can't do it otherwise!)
 --
 -- As soon as these functions are in here, they can be used the usual way through the API. They overwrite the older buggy-ones.
 --
--- These fixes, once I merged them into the master-branch, will become part of the current version of the Ultraschall-API, 
+-- These fixes, once I merged them into the master-branch, will become part of the current version of the Ultraschall-API,
 -- until the next version will be released. The next version will has them in the proper places added.
 -- That way, you can help making it more stable without being dependent on me, while I'm busy working on new features.
 --
@@ -91,9 +91,9 @@ function ultraschall.EventManager_DebugMode(toggle)
   <functioncall>ultraschall.EventManager_DebugMode(boolean toggle)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Starts Debugmode of the EventManager, which returns additional internal states.
-    
+
     Allows you to get the last checkfunction-states, see [EventManager\_DebugMode\_LastCheckFunctionStates](#EventManager_DebugMode_LastCheckFunctionStates).
-    
+
     Note: Debugmode is not for productive usecases, as it costs resources. Please turn it off again, after you've finished debugging.
   </description>
   <parameters>
@@ -124,7 +124,7 @@ function ultraschall.EventManager_DebugMode_LastCheckFunctionStates()
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns the last checkstates of all checkfunctions currently registered with the EventManager.
     Needs Debugmode turned on. See [EventManager\_DebugMode](#EventManager_DebugMode).
-    
+
     returns -1, if debugmode is off
   </description>
   <retvals>
@@ -198,7 +198,7 @@ function ultraschall.EventManager_GetPausedState2(EventIdentifier)
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       returns, if a certain event, currently registered in the EventManager, is paused(true) or not(false).
       State is requested by EventIdentifier.
-      
+
       returns nil in case of an error
     </description>
     <retval>
@@ -214,7 +214,7 @@ function ultraschall.EventManager_GetPausedState2(EventIdentifier)
     <source_document>ultraschall_functions_engine.lua</source_document>
     <tags>eventmanager, get, paused, state, eventidentifier</tags>
   </US_DocBloc>
-  ]]  
+  ]]
   if type(EventIdentifier)~="string" then ultraschall.AddErrorMessage("EventManager_GetPausedState2", "EventIdentifier", "must be a string", -1) return end
   local isvalid, inuse = ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
   if isvalid==false then ultraschall.AddErrorMessage("EventManager_GetPausedState2", "EventIdentifier", "not a valid EventIdentifier", -2) return end
@@ -242,7 +242,7 @@ function ultraschall.EventManager_GetPausedState(id)
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       returns, is a certain event, currently registered in the EventManager, is paused(true) or not(false)
       State is requested by number-id, with 1 for the first event, 2 for the second, etc.
-      
+
       returns nil in case of an error
     </description>
     <retval>
@@ -258,7 +258,7 @@ function ultraschall.EventManager_GetPausedState(id)
     <source_document>ultraschall_functions_engine.lua</source_document>
     <tags>eventmanager, get, paused, state, id, count</tags>
   </US_DocBloc>
-  ]]  
+  ]]
   if math.type(id)~="integer" then ultraschall.AddErrorMessage("EventManager_GetPausedState", "id", "must be an integer", -1) return end
   if id<1 then ultraschall.AddErrorMessage("EventManager_GetPausedState", "id", "must be greater than 0", -2) return end
   local A=reaper.GetExtState("ultraschall_eventmanager", "state")
@@ -285,7 +285,7 @@ function ultraschall.EventManager_GetLastCheckfunctionState(id)
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       returns the last state the eventcheck-function returned the last time it was called; of a certein registered event in the EventManager.
       State is requested by number-id, with 1 for the first event, 2 for the second, etc.
-      
+
       returns nil in case of an error; nil and time, if the EventCheck-function didn't return a boolean
     </description>
     <retval>
@@ -302,7 +302,7 @@ function ultraschall.EventManager_GetLastCheckfunctionState(id)
     <source_document>ultraschall_functions_engine.lua</source_document>
     <tags>eventmanager, get, eventcheck function, state, id, count</tags>
   </US_DocBloc>
-  ]]  
+  ]]
   if math.type(id)~="integer" then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "id", "must be an integer", -1) return end
   if id<1 then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "id", "must be greater than 0", -2) return end
   if id>ultraschall.EventManager_CountRegisteredEvents() then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "id", "no such event registered", -3) return end
@@ -325,9 +325,9 @@ function ultraschall.EventManager_GetRegisteredEventID(EventIdentifier)
     <functioncall>integer id = ultraschall.EventManager_GetRegisteredEventID(string EventIdentifier)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       returns the id of a registered event, meaning 1, if it's the first event, 2 if it's the second, etc
-      
+
       It is the position within all events currently registered within the EventManager.
-      
+
       returns nil in case of an error
     </description>
     <retval>
@@ -343,7 +343,7 @@ function ultraschall.EventManager_GetRegisteredEventID(EventIdentifier)
     <source_document>ultraschall_functions_engine.lua</source_document>
     <tags>eventmanager, get, id, event, eventidentifier</tags>
   </US_DocBloc>
-  ]]  
+  ]]
   if type(EventIdentifier)~="string" then ultraschall.AddErrorMessage("EventManager_GetRegisteredEventID", "EventIdentifier", "must be a string", -1) return end
   local isvalid, inuse = ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
   if isvalid==false then ultraschall.AddErrorMessage("EventManager_GetRegisteredEventID", "EventIdentifier", "not a valid EventIdentifier", -2) return end
@@ -367,7 +367,7 @@ function ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       returns the last state the eventcheck-function returned the last time it was called; of a certein registered event in the EventManager.
       State is requested by EventIdentifier
-      
+
       returns nil in case of an error; nil and time, if the EventCheck-function didn't return a boolean
     </description>
     <retval>
@@ -384,7 +384,7 @@ function ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
     <source_document>ultraschall_functions_engine.lua</source_document>
     <tags>eventmanager, get, eventcheck function, state, eventidentifier, count</tags>
   </US_DocBloc>
-  ]]  
+  ]]
   if type(EventIdentifier)~="string" then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "EventIdentifier", "must be a string", -1) return end
   local isvalid, inuse = ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
   if isvalid==false then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "EventIdentifier", "not a valid EventIdentifier", -2) return end
@@ -396,5 +396,6 @@ function ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
   local A1=toboolean(A:match("(.-)\n"))
   local A2=tonumber(A:match(".-\n(.*)"))
   if A1==nil then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "", "EventCheckFunction returned invalid returnvalue: "..A:match("(.-)\n").."\nMust be either true or false!", -4) end
-  
+
   return A1, A2
+end
