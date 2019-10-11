@@ -33,10 +33,17 @@ print (count_of_registered_events)
 
 -- eventIdentifier = ultraschall.EventManager_EnumerateEvents(1)
 
+for i=1, count_of_registered_events do
 
-EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(1)
+  EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
 
-reaper.ShowConsoleMsg("hallo")
+  last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState(i)
 
-print (tostring(EventIdentifier))
--- ultraschall.EventManager_PauseEvent(EventIdentifier)
+  print (i..":"..EventName)
+  print (last_state)
+  print (last_statechange_precise_time)
+
+end
+
+
+  -- ultraschall.EventManager_PauseEvent(EventIdentifier)

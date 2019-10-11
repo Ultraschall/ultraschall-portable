@@ -56,7 +56,7 @@ start_id = start_id..",0"
 
 EventIdentifier = ultraschall.EventManager_AddEvent(
     "Check for unsaved project", -- a descriptive name for the event
-            50,                                      -- how often to check within a second; 0, means as often as possible
+            1,                                      -- how often to check within a second; 0, means as often as possible
             0,                                      -- how long to check for it in seconds; 0, means forever
             false,                                   -- shall the actions be run as long as the eventcheck-function
                                                     --       returns true(false) or not(true)
