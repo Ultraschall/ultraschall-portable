@@ -79,7 +79,7 @@ function set_values()
       -- print (device_name.."-"..newvalue.."-"..stored_value)
 
     else
-      stored_value = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"value")
+      stored_value = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"Value")
     end
 
     if newvalue ~= stored_value then  -- wurde eine Schalter/Slider umgelegt?
@@ -89,7 +89,7 @@ function set_values()
         update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue , true)
 
       else
-        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "value", newvalue , true)
+        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "Value", newvalue , true)
 
       end
 
@@ -266,7 +266,7 @@ for i = 1, section_count , 1 do
     settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype")
 
     if settings_Type == "checkbox" then
-      id = GUI.Checklist:new(20, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"value")), sectionName)
+      id = GUI.Checklist:new(20, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value")), sectionName)
       table.insert(GUI.elms, id)
 
       -- Info-Button
@@ -275,7 +275,7 @@ for i = 1, section_count , 1 do
 
     elseif settings_Type == "slider" then
       position = position+8
-      id = GUI.Sldr:new(30, position, 100, ultraschall.GetUSExternalState(sectionName,"name"), ultraschall.GetUSExternalState(sectionName,"minimum"), ultraschall.GetUSExternalState(sectionName,"maximum"), ultraschall.GetUSExternalState(sectionName,"steps"), ultraschall.GetUSExternalState(sectionName,"value"), ultraschall.GetUSExternalState(sectionName,"actualstep"), sectionName)
+      id = GUI.Sldr:new(30, position, 100, ultraschall.GetUSExternalState(sectionName,"name"), ultraschall.GetUSExternalState(sectionName,"minimum"), ultraschall.GetUSExternalState(sectionName,"maximum"), ultraschall.GetUSExternalState(sectionName,"steps"), ultraschall.GetUSExternalState(sectionName,"Value"), ultraschall.GetUSExternalState(sectionName,"actualstep"), sectionName)
       table.insert(GUI.elms, id)
 
       -- Info-Button
@@ -283,6 +283,27 @@ for i = 1, section_count , 1 do
       table.insert(GUI.elms, info)
 
     end
+  end
+end
+
+-- Soundcheck Settings
+
+position_old = position +120
+
+for i = 1, section_count , 1 do
+
+  sectionName = ultraschall.EnumerateUSExternalState_sec(i)
+  if sectionName and string.find(sectionName, "ultraschall_soundcheck", 1) then
+
+    position = position_old + (tonumber(ultraschall.GetUSExternalState(sectionName,"Position")) * 30) -- Feintuning notwendig
+
+    id = GUI.Checklist:new(20, position, 240, 30,         "", "Soundcheck: "..ultraschall.GetUSExternalState(sectionName,"EventNameDisplay"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value")), sectionName)
+    table.insert(GUI.elms, id)
+
+    -- Info-Button
+    info = GUI.Btn:new(350, position, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"Description"))
+    table.insert(GUI.elms, info)
+
   end
 end
 

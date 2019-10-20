@@ -57,6 +57,12 @@ function show_menu(str)
 end
 
 
+function run_action(commandID)
+
+  reaper.Main_OnCommand(commandID,0)
+
+end
+
 ------------------------------------------------------
 --  End of functions
 ------------------------------------------------------
@@ -127,7 +133,6 @@ function buildGui()
   -- Kann perspektivisch in eine Funktion ausgelagert werden
   ------------------------------------------------------
 
-
   position = 160
   for i = 1, event_count do
 
@@ -144,7 +149,9 @@ function buildGui()
 
     -- Name
 
-    id = GUI.Lbl:new(20, position, EventName, 0)
+    EventNameDisplay = ultraschall.GetUSExternalState(EventName, "EventNameDisplay")
+
+    id = GUI.Lbl:new(20, position, EventNameDisplay, 0)
     table.insert(GUI.elms, id)
 
     -- State
@@ -175,8 +182,22 @@ function buildGui()
 
     end
 
-        -- Info-Button
 
+
+
+        -- Action-Button
+    Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label")
+    Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action")
+    if Button1Label and Button1Action and last_state_string ~= "OK" then
+
+      -- print("huhu")
+
+      -- command_id = tostring(reaper.NamedCommandLookup(Button1Action))
+      -- reaper.Main_OnCommand(start_id,0)   --Show Soundcheck Screen
+
+      button2 = GUI.Btn:new(550, position-5, 140, 20,         Button1Label, run_action, Button1Action)
+      table.insert(GUI.elms, button2)
+    end
 
 
 

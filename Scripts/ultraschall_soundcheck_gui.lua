@@ -29,7 +29,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 
 count_of_registered_events = ultraschall.EventManager_CountRegisteredEvents()
-print (count_of_registered_events)
+-- print (count_of_registered_events)
 
 -- eventIdentifier = ultraschall.EventManager_EnumerateEvents(1)
 
@@ -39,9 +39,9 @@ for i=1, count_of_registered_events do
 
   last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState(i)
 
-  print (i..":"..EventName)
-  print (last_state)
-  print (last_statechange_precise_time)
+  -- print (i..":"..EventName)
+  -- print (last_state)
+  -- print (last_statechange_precise_time)
 
 end
 

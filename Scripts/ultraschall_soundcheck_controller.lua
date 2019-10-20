@@ -30,45 +30,19 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 function SoundcheckUnsaved(userspace)
 
 
-    -- print(reaper.GetPlayStateEx(0))
-    --print(reaper.IsProjectDirty(0))
+  -- print(reaper.GetPlayStateEx(0))
+  --print(reaper.IsProjectDirty(0))
 
-    if reaper.IsProjectDirty(0) and reaper.GetPlayStateEx(0) > 4 then -- das Projekt wurde noch nicht gespeichertund es läuft oder pausiert ein recording
-      return true
-    else
-      return false
-      -- if tonumber(reaper.GetExtState ("soundcheck_timer", "unsaved"))+120 < reaper.time_precise() then
-      --        soundcheck_unsaved_action()
+  if reaper.GetProjectName(0, "") == "" and ultraschall.CreateTrackString_ArmedTracks() ~= "" then -- das Projekt wurde noch nicht gespeichert und es wurden tracks zur Aufnahme scharf geschaltet
+    return true
+  else
+    return false
+    -- if tonumber(reaper.GetExtState ("soundcheck_timer", "unsaved"))+120 < reaper.time_precise() then
+    --        soundcheck_unsaved_action()
 
-    end
-
-
-    -- retval, defer3_identifier = ultraschall.Defer3(soundcheck_unsaved, 2, 3)
   end
 
-
-ultraschall.EventManager_Start()
-
-
-start_id = tostring(reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui"))
-start_id = start_id..",0"
--- print (start_id)
-
-EventIdentifier = ultraschall.EventManager_AddEvent(
-    "Check for unsaved project", -- a descriptive name for the event
-            1,                                      -- how often to check within a second; 0, means as often as possible
-            0,                                      -- how long to check for it in seconds; 0, means forever
-            false,                                   -- shall the actions be run as long as the eventcheck-function
-                                                    --       returns true(false) or not(true)
-            false,                                  -- shall the event be paused(true) or checked for right away(true)
-            SoundcheckUnsaved,              -- the eventcheck-functionname,
-            {start_id}                            -- a table, which hold all actions and their corresponding sections
-                                                    --       in this case action 40157 from section 0
-                                                    --       note: both must be written as string "40157, 0"
-                                                    --             if you want to add numerous actions, you can write them like
-                                                    --             {"40157, 0", "40171,0"}, which would add a marker and open
-                                                    --                                      the input-markername-dialog
-                              )
+end
 
 
 function TransitionRecordToStop(userspace)
@@ -91,37 +65,51 @@ end
 
 
 
-
- EventIdentifier = ultraschall.EventManager_AddEvent(
-    "Insert Marker When Play -> PlayPause", -- a descriptive name for the event
-            1,                                      -- how often to check within a second; 0, means as often as possible
-            0,                                      -- how long to check for it in seconds; 0, means forever
-            false,                                   -- shall the actions be run as long as the eventcheck-function
-                                                    --       returns true(false) or not(true)
-            false,                                  -- shall the event be paused(true) or checked for right away(true)
-            TransitionRecordToStop,              -- the eventcheck-functionname,
-            {start_id}                            -- a table, which hold all actions and their corresponding sections
-                                                    --       in this case action 40157 from section 0
-                                                    --       note: both must be written as string "40157, 0"
-                                                    --             if you want to add numerous actions, you can write them like
-                                                    --             {"40157, 0", "40171,0"}, which would add a marker and open
-                                                    --                                      the input-markername-dialog
-                              )
+ultraschall.EventManager_Start()
 
 
 
- EventIdentifier = ultraschall.EventManager_AddEvent(
-  "Nur ein Test", -- a descriptive name for the event
-          1,                                      -- how often to check within a second; 0, means as often as possible
-          0,                                      -- how long to check for it in seconds; 0, means forever
-          false,                                   -- shall the actions be run as long as the eventcheck-function
-                                                  --       returns true(false) or not(true)
-          false,                                  -- shall the event be paused(true) or checked for right away(true)
-          TransitionRecordToStop,              -- the eventcheck-functionname,
-          {start_id}                            -- a table, which hold all actions and their corresponding sections
-                                                  --       in this case action 40157 from section 0
-                                                  --       note: both must be written as string "40157, 0"
-                                                  --             if you want to add numerous actions, you can write them like
-                                                  --             {"40157, 0", "40171,0"}, which would add a marker and open
-                                                  --                                      the input-markername-dialog
-                            )
+start_id = tostring(reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui"))
+start_id = start_id..",0"
+-- print (start_id)
+
+section_count = ultraschall.CountUSExternalState_sec()
+
+for i = 1, section_count , 1 do
+
+  sectionName = ultraschall.EnumerateUSExternalState_sec(i)
+
+  -- Suche die Sections der ultraschall.ini heraus, die in der Soundcheck-GUI angezeigt werden sollen
+
+  if sectionName and string.find(sectionName, "ultraschall_soundcheck", 1) then
+
+    EventName =         sectionName
+    CheckAllXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckAllXSeconds"))
+    CheckForXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckForXSeconds"))
+    StartActionsOnceDuringTrue = toboolean(ultraschall.GetUSExternalState(sectionName,"StartActionsOnceDuringTrue"))
+    EventPaused =       toboolean(ultraschall.GetUSExternalState(sectionName,"EventPaused"))
+    CheckFunction =     _G[ultraschall.GetUSExternalState(sectionName,"CheckFunction")]
+
+
+    EventIdentifier = ultraschall.EventManager_AddEvent(
+      EventName, -- a descriptive name for the event
+      CheckAllXSeconds,                                      -- how often to check within a second; 0, means as often as possible
+      CheckForXSeconds,                                      -- how long to check for it in seconds; 0, means forever
+      StartActionsOnceDuringTrue,                                   -- shall the actions be run as long as the eventcheck-function
+                                                      --       returns true(false) or not(true)
+      EventPaused,                                  -- shall the event be paused(true) or checked for right away(true)
+      CheckFunction,              -- the eventcheck-functionname,
+      {start_id}                            -- a table, which hold all actions and their corresponding sections
+                                                      --       in this case action 40157 from section 0
+                                                      --       note: both must be written as string "40157, 0"
+                                                      --             if you want to add numerous actions, you can write them like
+                                                      --             {"40157, 0", "40171,0"}, which would add a marker and open
+                                                      --                                      the input-markername-dialog
+    )
+
+
+  end
+
+end
+
+-- string event_identifier = ultraschall.EventManager_AddEvent(string EventName, integer CheckAllXSeconds, integer CheckForXSeconds, boolean StartActionsOnceDuringTrue, boolean EventPaused, function CheckFunction, table Actions)
