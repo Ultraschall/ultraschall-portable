@@ -59,7 +59,8 @@ end
 
 function run_action(commandID)
 
-  reaper.Main_OnCommand(commandID,0)
+  CommandNumber = reaper.NamedCommandLookup(commandID)
+  reaper.Main_OnCommand(CommandNumber,0)
 
 end
 
@@ -104,12 +105,12 @@ function buildGui()
   GUI.elms = {
 
   --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
-    logo             = GUI.Pic:new(          300,  10,   0,  0,    1,   script_path.."us_small.png"),
+
 
     label_interfaces = GUI.Lbl:new(          360, 110,                  "Soundcheck",          0),
-    label_table      = GUI.Lbl:new(          20, 150,                  "Check                                                                Status                                    Actions",          0),
-    line1            = GUI.Line:new(0, 171, 800, 171, "txt_muted"),
-    line2            = GUI.Line:new(0, 170, 800, 170, "elm_outline"),
+    label_table      = GUI.Lbl:new(          20, 210,                  "Check                                                                Status                                    Actions",          0),
+    line1            = GUI.Line:new(0, 231, 800, 231, "txt_muted"),
+    line2            = GUI.Line:new(0, 230, 800, 230, "elm_outline"),
 
     -- checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
     -- checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
@@ -133,7 +134,9 @@ function buildGui()
   -- Kann perspektivisch in eine Funktion ausgelagert werden
   ------------------------------------------------------
 
-  position = 160
+  position = 220
+  warningCount = 0
+
   for i = 1, event_count do
 
     -- Suche die Sections der ultraschall.ini heraus, die in der Settings-GUI angezeigt werden sollen
@@ -147,6 +150,9 @@ function buildGui()
 
     last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState(i)
 
+    if last_state == true then
+      warningCount = warningCount +1
+    end
     -- Name
 
     EventNameDisplay = ultraschall.GetUSExternalState(EventName, "EventNameDisplay")
@@ -203,6 +209,54 @@ function buildGui()
 
   -- print("----")
   end
+
+  if warningCount > 0 then
+
+    if warningCount == 1 then
+      countText = "warning"
+    else
+      countText = "warnings"
+    end
+
+    warningtext1 = "Soundcheck found "..warningCount.." "..countText.."."
+    warningtext2 = "Please check the warnings below and use the action buttons to solve the issues."
+    warning1 = GUI.Lbl:new(302, 130, warningtext1, 0)
+    table.insert(GUI.elms, warning1)
+    warning2 = GUI.Lbl:new(148, 150, warningtext2, 0)
+    table.insert(GUI.elms, warning2)
+
+
+  else
+
+    warningtext1 = "found no problems at all."
+    warningtext2 = "Good job!"
+    warning1 = GUI.Lbl:new(320, 130, warningtext1, 0)
+    table.insert(GUI.elms, warning1)
+    warning2 = GUI.Lbl:new(368, 150, warningtext2, 0)
+    table.insert(GUI.elms, warning2)
+
+  end
+
+
+
+
+
+
+
+  if warningCount == 0 then
+    logo_img = "us_small_ok.png"
+  elseif warningCount > 4 then
+    logo_img = "us_small_warnings_5.png"
+  else
+    logo_img = "us_small_warnings_"..warningCount..".png"
+  end
+
+
+  logo = GUI.Pic:new(          300,  10,   0,  0,    1,   script_path..logo_img)
+  table.insert(GUI.elms, logo)
+
+
+
 
 end
 
