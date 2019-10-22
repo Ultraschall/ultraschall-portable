@@ -108,9 +108,9 @@ function buildGui()
 
 
     label_interfaces = GUI.Lbl:new(          360, 110,                  "Soundcheck",          0),
-    label_table      = GUI.Lbl:new(          20, 210,                  "Check                                                                Status                                    Actions",          0),
-    line1            = GUI.Line:new(0, 231, 800, 231, "txt_muted"),
-    line2            = GUI.Line:new(0, 230, 800, 230, "elm_outline"),
+    label_table      = GUI.Lbl:new(          20, 250,                  "Check                                                                 Status                     Actions",          0),
+    line1            = GUI.Line:new(0, 271, 800, 271, "txt_muted"),
+    line2            = GUI.Line:new(0, 270, 800, 270, "elm_outline"),
 
     -- checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
     -- checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
@@ -134,7 +134,7 @@ function buildGui()
   -- Kann perspektivisch in eine Funktion ausgelagert werden
   ------------------------------------------------------
 
-  position = 220
+  position = 260
   warningCount = 0
 
   for i = 1, event_count do
@@ -179,11 +179,11 @@ function buildGui()
     -- Buttons
 
     if EventPaused == true then
-      button1 = GUI.Btn:new(450, position-5, 80, 20,         " retry", ultraschall.EventManager_ResumeEvent, EventIdentifier)
+      button1 = GUI.Btn:new(470, position-5, 80, 20,         " Retry", ultraschall.EventManager_ResumeEvent, EventIdentifier)
       table.insert(GUI.elms, button1)
 
     elseif last_state == true then
-      button1 = GUI.Btn:new(450, position-5, 80, 20,         " ignore", ultraschall.EventManager_PauseEvent, EventIdentifier)
+      button1 = GUI.Btn:new(470, position-5, 80, 20,         " Ignore", ultraschall.EventManager_PauseEvent, EventIdentifier)
       table.insert(GUI.elms, button1)
 
     end
@@ -194,14 +194,17 @@ function buildGui()
         -- Action-Button
     Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label")
     Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action")
-    if Button1Label and Button1Action and last_state_string ~= "OK" then
+    DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning")
 
-      -- print("huhu")
+    if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
+
+      info_button = GUI.Btn:new(440, position-5, 20, 20,         " ?", show_menu, DescriptionWarning)
+      table.insert(GUI.elms, info_button)
 
       -- command_id = tostring(reaper.NamedCommandLookup(Button1Action))
       -- reaper.Main_OnCommand(start_id,0)   --Show Soundcheck Screen
 
-      button2 = GUI.Btn:new(550, position-5, 140, 20,         Button1Label, run_action, Button1Action)
+      button2 = GUI.Btn:new(560, position-5, 140, 20,         Button1Label, run_action, Button1Action)
       table.insert(GUI.elms, button2)
     end
 
@@ -218,12 +221,19 @@ function buildGui()
       countText = "warnings"
     end
 
-    warningtext1 = "Soundcheck found "..warningCount.." "..countText.."."
-    warningtext2 = "Please check the warnings below and use the action buttons to solve the issues."
-    warning1 = GUI.Lbl:new(302, 130, warningtext1, 0)
+    warningtext1 = "found "..warningCount.." "..countText.."."
+    warningtext2 = "Please check the warnings below. You may ignore a warning for this session"
+    warningtext3 = "or use the action buttons to solve the issues."
+    warningtext4 = "Visit the settings to disable warnings permanently."
+
+    warning1 = GUI.Lbl:new(347, 130, warningtext1, 0)
     table.insert(GUI.elms, warning1)
-    warning2 = GUI.Lbl:new(148, 150, warningtext2, 0)
+    warning2 = GUI.Lbl:new(148, 170, warningtext2, 0)
     table.insert(GUI.elms, warning2)
+    warning3 = GUI.Lbl:new(256, 190, warningtext3, 0)
+    table.insert(GUI.elms, warning3)
+    warning4 = GUI.Lbl:new(241, 210, warningtext4, 0)
+    table.insert(GUI.elms, warning4)
 
 
   else
