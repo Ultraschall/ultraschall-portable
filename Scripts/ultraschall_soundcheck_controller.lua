@@ -45,6 +45,23 @@ function SoundcheckUnsaved(userspace)
 end
 
 
+function SoundcheckSamplerate(userspace)
+
+  local retval, actual_samplerate = reaper.GetAudioDeviceInfo("SRATE", "")
+  local i = 0
+
+  for i=1, reaper.CountTracks(0) do
+
+    if (ultraschall.IsTrackStudioLink(i) or ultraschall.IsTrackStudioLinkOnAir(0)) and actual_samplerate ~= "48000" then  -- es gibt mindestens eine StudioLink Spur und Samplerate steht nicht auf 48000
+      -- print(actual_samplerate.."."..i)
+      return true
+    end
+
+  end
+  return false
+end
+
+
 function TransitionRecordToStop(userspace)
   -- get the current playstate
   local current_playstate=reaper.GetPlayState()
