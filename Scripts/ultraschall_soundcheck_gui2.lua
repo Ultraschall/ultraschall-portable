@@ -69,6 +69,14 @@ end
 ------------------------------------------------------
 
 
+------------------------------------------------------
+--  Setze Variablen
+------------------------------------------------------
+
+event_count = ultraschall.EventManager_CountRegisteredEvents()
+WindowHeight = 260 + (event_count*30) + 70
+
+
 -- Grab all of the functions and classes from our GUI library
 
 local info = debug.getinfo(1,'S');
@@ -78,7 +86,7 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Soundcheck"
-GUI.w, GUI.h = 800, 600   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 800, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -120,6 +128,16 @@ function buildGui()
   }
 
 
+
+  -----------------------------------------------------------------
+  -- Settings-Button
+  -----------------------------------------------------------------
+
+  button_settings = GUI.Btn:new(700, WindowHeight-35, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
+  table.insert(GUI.elms, button_settings)
+
+
+
   ---- Put all of your own functions and whatever here ----
 
 
@@ -127,12 +145,12 @@ function buildGui()
   -- initialise the events - coming from the EventManager
   -----------------------------------------------------------------
 
-  event_count = ultraschall.EventManager_CountRegisteredEvents()
 
   ------------------------------------------------------
   -- Gehe alle Sektionen der ultraschall.ini durch und baut die normalen Settings auf.
   -- Kann perspektivisch in eine Funktion ausgelagert werden
   ------------------------------------------------------
+
 
   position = 260
   warningCount = 0
