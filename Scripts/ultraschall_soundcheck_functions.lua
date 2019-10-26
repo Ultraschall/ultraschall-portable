@@ -80,15 +80,18 @@ end
 
 function SetSoundcheck(EventName)
 
-  sectionName = EventName
-  CheckAllXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckAllXSeconds"))
-  CheckForXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckForXSeconds"))
-  StartActionsOnceDuringTrue = toboolean(ultraschall.GetUSExternalState(sectionName,"StartActionsOnceDuringTrue"))
-  EventPaused =       toboolean(ultraschall.GetUSExternalState(sectionName,"EventPaused"))
-  CheckFunction =     _G[ultraschall.GetUSExternalState(sectionName,"CheckFunction")]
 
+  local sectionName = EventName
+  local CheckAllXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckAllXSeconds"))
+  local CheckForXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckForXSeconds"))
+  local StartActionsOnceDuringTrue = toboolean(ultraschall.GetUSExternalState(sectionName,"StartActionsOnceDuringTrue"))
+  local EventPaused =       toboolean(ultraschall.GetUSExternalState(sectionName,"EventPaused"))
+  local CheckFunction =     _G[ultraschall.GetUSExternalState(sectionName,"CheckFunction")]
 
-  EventIdentifier = ultraschall.EventManager_AddEvent(
+  local start_id = tostring(reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui"))
+  local start_id = start_id..",0"
+
+  local EventIdentifier = ultraschall.EventManager_AddEvent(
     EventName, -- a descriptive name for the event
     CheckAllXSeconds,                                      -- how often to check within a second; 0, means as often as possible
     CheckForXSeconds,                                      -- how long to check for it in seconds; 0, means forever
@@ -104,6 +107,8 @@ function SetSoundcheck(EventName)
                                                     --                                      the input-markername-dialog
   )
 
-  update = ultraschall.SetUSExternalState(sectionName, "EventIdentifier", EventIdentifier , true)
+  ultraschall.ShowLastErrorMessage()
+
+  local update = ultraschall.SetUSExternalState(sectionName, "EventIdentifier", EventIdentifier , true)
 
 end

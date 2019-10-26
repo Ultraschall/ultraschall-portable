@@ -25,6 +25,7 @@
 ]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+dofile(reaper.GetResourcePath().."/Scripts/ultraschall_soundcheck_functions.lua")
 
 
 ------------------------------------
@@ -81,8 +82,7 @@ function SwitchEvent(EventIdentifier, newvalue, sectionName)
 
   elseif newvalue == "1" then -- add the event
 
-    ultraschall.EventManager_Stop(true)
-    run_action("_Ultraschall_Soundcheck_Controller")
+    SetSoundcheck(sectionName)
 
   end
 end

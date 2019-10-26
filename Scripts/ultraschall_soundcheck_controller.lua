@@ -31,8 +31,6 @@ dofile(reaper.GetResourcePath().."/Scripts/ultraschall_soundcheck_functions.lua"
 
 ultraschall.EventManager_Start()
 
-start_id = tostring(reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui"))
-start_id = start_id..",0"
 -- print (start_id)
 
 section_count = ultraschall.CountUSExternalState_sec()
