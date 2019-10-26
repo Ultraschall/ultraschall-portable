@@ -108,6 +108,8 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 
 function buildGui()
 
+  local event_count = ultraschall.EventManager_CountRegisteredEvents()
+
   GUI.elms = {}
 
   GUI.elms = {
@@ -135,11 +137,6 @@ function buildGui()
 
   button_settings = GUI.Btn:new(700, WindowHeight-35, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
   table.insert(GUI.elms, button_settings)
-
-
-
-  ---- Put all of your own functions and whatever here ----
-
 
   -----------------------------------------------------------------
   -- initialise the events - coming from the EventManager
@@ -191,8 +188,8 @@ function buildGui()
       state_color = "txt_green"
     end
 
-    id = GUI.Lbl:new(320, position, last_state_string, 0, state_color)
-    table.insert(GUI.elms, id)
+    status = GUI.Lbl:new(320, position, last_state_string, 0, state_color)
+    table.insert(GUI.elms, status)
 
     -- Buttons
 

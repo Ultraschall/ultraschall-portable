@@ -53,6 +53,41 @@ function open_url(url)
 end
 
 
+
+function run_action(commandID)
+
+  CommandNumber = reaper.NamedCommandLookup(commandID)
+  reaper.Main_OnCommand(CommandNumber,0)
+
+end
+
+
+
+---------------
+
+
+
+---------------
+
+------------------------------------------------------
+-- Switch State of an event in the Soundcheck
+------------------------------------------------------
+
+function SwitchEvent(EventIdentifier, newvalue, sectionName)
+
+  if newvalue == "0" then -- remove the event
+
+    ultraschall.EventManager_RemoveEvent(EventIdentifier)
+
+  elseif newvalue == "1" then -- add the event
+
+    ultraschall.EventManager_Stop(true)
+    run_action("_Ultraschall_Soundcheck_Controller")
+
+  end
+end
+
+
 ------------------------------------------------------
 --  Setting new Values to ultraschall.ini
 ------------------------------------------------------
@@ -67,38 +102,46 @@ function set_values()
 
       -- hole den aktuellen Wert der Checkbox aus der GUI:
 
-    if GUI["elms"][i]["type"] == "Checklist" then
-      newvalue = tostring(GUI["elms"][i]["retval"][1])
-    elseif GUI["elms"][i]["type"] == "Sldr" then
-      newvalue = tostring(GUI["elms"][i]["retval"])
-    end
+      if GUI["elms"][i]["type"] == "Checklist" then
+        newvalue = tostring(GUI["elms"][i]["retval"][1])
+      elseif GUI["elms"][i]["type"] == "Sldr" then
+        newvalue = tostring(GUI["elms"][i]["retval"])
+      end
 
-    if GUI["elms"][i]["sectionname"] == "ultraschall_devices" then
-      device_name = GUI["elms"][i]["optarray"][1]
-      stored_value = ultraschall.GetUSExternalState("ultraschall_devices", device_name )
-      -- print (device_name.."-"..newvalue.."-"..stored_value)
-
-    else
-      stored_value = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"Value")
-    end
-
-    if newvalue ~= stored_value then  -- wurde eine Schalter/Slider umgelegt?
-
-      if GUI["elms"][i]["sectionname"] == "ultraschall_devices" and stored_value ~= 2 then
-
-        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue , true)
+      if GUI["elms"][i]["sectionname"] == "ultraschall_devices" then
+        device_name = GUI["elms"][i]["optarray"][1]
+        stored_value = ultraschall.GetUSExternalState("ultraschall_devices", device_name )
+        -- print (device_name.."-"..newvalue.."-"..stored_value)
 
       else
-        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "Value", newvalue , true)
-
+        stored_value = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"Value")
       end
 
-      -- Ausnahme: für Slider wird auch noch die Position geschrieben (könnte man prinzipiell auch berechnen lassen)
+      if newvalue ~= stored_value then  -- wurde eine Schalter/Slider umgelegt?
 
-      if GUI["elms"][i]["type"] == "Sldr" then
-        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "actualstep", tostring(GUI["elms"][i]["curstep"]) , true)
+        if GUI["elms"][i]["sectionname"] == "ultraschall_devices" and stored_value ~= 2 then
+
+          update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue , true)
+
+        else
+          update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "Value", newvalue , true)
+
+          EventIdentifier = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"EventIdentifier")
+
+          if EventIdentifier ~= "" then   -- der Eintrag ist ein gerade laufender Soundcheck-Event
+
+            SwitchEvent(EventIdentifier, newvalue, GUI["elms"][i]["sectionname"])
+
+          end
+
+        end
+
+        -- Ausnahme: für Slider wird auch noch die Position geschrieben (könnte man prinzipiell auch berechnen lassen)
+
+        if GUI["elms"][i]["type"] == "Sldr" then
+          update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "actualstep", tostring(GUI["elms"][i]["curstep"]) , true)
+        end
       end
-    end
     end
   end
 end
