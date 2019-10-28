@@ -107,7 +107,7 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall\_api4.00\_beta2.77.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.77.zip).  
+            1. Just download the zip-file of the current version from [ultraschall\_api4.00\_beta2.78.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.78.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.
@@ -203,7 +203,8 @@
             Bugreports that contain only a "it doesn't work" and "I expected it to work" will be ignored gracefully ;)
 
             If you have feature-requests, we have open ears. Keep in mind, not everything you find a good idea actually is one. So we may or may not take on your idea, change and rework it into a way, that benefits all, not just your particular use-case. When in doubt, just try it!
-            Keep also in mind: there are limitations. Some cool features we all would love to have, simply aren't implementable. Que sera, sera...
+            Keep also in mind: there are limitations. Some cool features we all would love to have, simply aren't implementable.  
+            Que sera, sera...
 
             For your comments just send a mail at: lspmp3@yahoo.de(for framework-related stuff only!!) or go to sendegate.de into the Ultraschall-section.
 
@@ -254,9 +255,9 @@
             
             If you want to donate to our project, head over to [ultraschall.fm/danke](http://www.ultraschall.fm/danke).
             
-            Kudos to lokasenna, who suggested some cool things, that made some functions much faster and sparkled new ones. Cheers!
-            MakeCopyOfTable-function adapted from Tyler Neylon's (twitter.com/tylerneylon) function, found at [Stack Overflow](https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value/26367080#26367080)
-            Thanks to him for allowing me to use it :)
+            Kudos to lokasenna, who suggested some cool things, that made some functions much faster and sparkled new ones. Cheers!  
+            MakeCopyOfTable-function adapted from Tyler Neylon's (twitter.com/tylerneylon) function, found at [Stack Overflow](https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value/26367080#26367080)  
+            Thanks to him for allowing me to use it :)  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
@@ -703,19 +704,19 @@
             However, sometimes you want to have one function to check them all, and all these functions do not include Ultraschall-API-specific datatypes, so I added some stuff for that.  
             
             1. [type](usdocml://type)  
-                   works like Lua's own type-function, but checks for Reaper's own datatypes as well, like:  
+               works like Lua's own type-function, but checks for Reaper's own datatypes as well, like:  
                    
                            Lua: nil, number: integer, number: float, boolean, string, function, table, thread, userdata,  
                            Reaper: ReaProject, MediaItem, MediaItem_Take, MediaTrack, TrackEnvelope, AudioAccessor, joystick_device, PCM_source  
                            userdata: will be shown, if object isn't of any known type  
                         
-                   to get of which type a variable is, just use  
+               to get of which type a variable is, just use  
      
                             datatype_of_variable = ultraschall.type(variable)
                
-                   where the return-value datatype\_of\_variable will hold a string describing the type of the variable.  
+               where the return-value datatype\_of\_variable will hold a string describing the type of the variable.  
                    
-                   Due some API-restrictions, SWS-specific datatypes are not (yet) supported.  
+               Due some API-restrictions, SWS-specific datatypes are not (yet) supported.  
                
             2. Ultraschall-API specific or other Reaper-datatypes  
                 To check for Ultraschall-API specific or other Reaper-datatypes, you can use the following functions:  

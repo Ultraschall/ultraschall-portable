@@ -1347,6 +1347,1135 @@ end
 --reaper.Main_SaveProject(0, true)
 --ultraschall.SaveProjectAs("Fix it all of that HUUUIII", true, 0, true)
 
+function ultraschall.Defer(func, deferidentifier, mode, timer_counter)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>Defer</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      runs a custom-defer-cycle, which can be individualized.
+      
+      You can set, how often this defer-cycle shall be run(every x defer-cycle or every x seconds) and even stop the defer-cycle from in- and outside of the script, using the defer\_identifier you have given.
+      
+      Important: make the deferidentifier as unique as possible(using guids or similar stuff) to avoid naming conflicts with other defer-cycles using the same identifier.
+      
+      To stop such a defer-cycle, use [StopDeferCycle](#StopDeferCycle)
+      
+      returns false in case of an error (e.g. already 1024 defer-cycles are running in the current script-instance)
+    </description>
+    <parameters>
+      function func - the function, you would love to defer to
+      string deferidentifier - an identifier, under which you can access this defer-cycle; make it unique using guids in the name, to avoid name-conflicts!
+      optional integer mode - 0 or nil, just run as regular defer-cycle
+                            - 1, run the defer-cycle only every timer_counter-cycle
+                            - 2, run the defer-cycle only every timer_counter-seconds
+      optional number timer_counter - the timer for the defer-cycle
+                                    -   mode=1: 1 and higher, the next defer-cycle that shall be used by function func. Use 1 for every cycle, 2 for every second cycle.
+                                    -               30 cycles are approximately 1 second.
+                                    -   mode=2: 0 and higher, the amount of seconds to wait, until the function func is run the next time.
+    </parameters>
+    <retvals>
+      boolean retval - true, running this defer-cycle was successful; false, it wasn't successful
+    </retvals>
+    <chapter_context>
+      Defer-Management
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>defermanagement, defer, timer, defer-cycles, wait, seconds, defer-identifier</tags>
+  </US_DocBloc>
+  ]]  
+  if type(deferidentifier)~="string" then ultraschall.AddErrorMessage("Defer", "deferidentifier", "must be a string", -4) return false end
+  if deferidentifier:len()==0 then ultraschall.AddErrorMessage("Defer", "deferidentifier", "must be a string with at least one character", -5) return false end
+  
+  if reaper.GetExtState("ultraschall-defer", deferidentifier)~="running" then
+    function cleanupdefer()
+        reaper.DeleteExtState("ultraschall-defer", deferidentifier, false)
+        reaper.DeleteExtState("ultraschall-defer", deferidentifier.."-ScriptIdentifier", false)    
+        reaper.DeleteExtState("ultraschall-defer", deferidentifier.."-LastCallTime", false)
+    end
+    reaper.atexit(cleanupdefer)
+  end
+  
+  local defertimer
+  if type(func)~="function" then 
+    ultraschall.AddErrorMessage("Defer", "func", "must be a function", -1)
+    return false 
+  end
+  if mode~=0 and mode~=nil and timer_counter==nil then 
+    ultraschall.AddErrorMessage("Defer", "timer_counter", "must be a number, when mode is 1 or 2", -2)
+    return false 
+  end
+  if mode~=nil then 
+    reaper.SetExtState("ultraschall-defer", deferidentifier, "running", false)
+    reaper.SetExtState("ultraschall-defer", deferidentifier.."-ScriptIdentifier", ultraschall.ScriptIdentifier, false)
+    reaper.SetExtState("ultraschall-defer", deferidentifier.."-LastCallTime", reaper.time_precise(), false)
+    if mode==1 then defertimer=timer_counter end
+    if mode==2 then defertimer=timer_counter+reaper.time_precise() 
+  end
+  elseif mode==nil then
+    mode=0
+    reaper.SetExtState("ultraschall-defer", deferidentifier, "running", false)
+    reaper.SetExtState("ultraschall-defer", deferidentifier.."-ScriptIdentifier", reaper.time_precise()..ultraschall.ScriptIdentifier, false)
+    reaper.SetExtState("ultraschall-defer", deferidentifier.."-LastCallTime", reaper.time_precise(), false)
+  end
+  
+  
+  local function internaldefer()
+    -- nested defer-function, who does the whole defer-management.
+    if (mode==0 or mode==nil) and reaper.GetExtState("ultraschall-defer", deferidentifier)=="running" then 
+      -- regular defer
+      return reaper.defer(func)
+    elseif mode==1 and reaper.GetExtState("ultraschall-defer", deferidentifier)=="running" then
+      -- only defer every nth defer-cycle
+      defertimer=defertimer-1
+      if defertimer>0 then reaper.defer(internaldefer) else return reaper.defer(func) end
+    elseif mode==2 and reaper.GetExtState("ultraschall-defer", deferidentifier)=="running" then
+      -- only defer every nth second
+      if defertimer>reaper.time_precise() then reaper.defer(internaldefer) else defertimer=reaper.time_precise()+timer_counter return reaper.defer(func) end
+    elseif reaper.GetExtState("ultraschall-defer", deferidentifier)~="running" then
+      -- stop defer-cycle, if requested from the outside
+      return true
+    else 
+      -- no such mode available
+      ultraschall.AddErrorMessage("Defer", "mode", "no such mode, must be between 0 and 2 or nil", -3)
+      return false
+    end
+  end
+  return internaldefer()
+end
+
+function ultraschall.Soundboard_StopAllSounds()
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_StopAllSounds</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_StopAllSounds()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Stops all sounds currently playing in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, stop all sounds</tags>
+  </US_DocBloc>
+  ]]  
+  for i=0, 23 do
+    reaper.StuffMIDIMessage(0, 144,72+i,0)
+  end
+end
+
+function ultraschall.Soundboard_TogglePlayPause(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_TogglePlayPause</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_TogglePlayPause(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Toggles between Play and Pause of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, play, pause, toggle</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_TogglePlayPause", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_TogglePlayPause", "playerindex", "must be between 1 and 24", -2) return false end
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=24+playerindex-1
+  local Velocity=1  
+      
+  reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end
+
+--ultraschall.Soundboard_TogglePlayPause(1)
+
+function ultraschall.Soundboard_TogglePlayStop(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_TogglePlayStop</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_TogglePlayStop(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Toggles between Play and Stop of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, play, stop, toggle</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_TogglePlayStop", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_TogglePlayStop", "playerindex", "must be between 1 and 24", -2) return false end
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=playerindex-1
+  local Velocity=1  
+    
+    reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end
+
+--ultraschall.Soundboard_TogglePlayStop(1)
+
+function ultraschall.Soundboard_Play(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_Play</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_Play(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Starts playing of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, play</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_Play", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_Play", "playerindex", "must be between 1 and 24", -2) return false end    
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=72+playerindex-1
+  local Velocity=1  
+    
+  reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end
+
+--ultraschall.Soundboard_Play(1)
+
+function ultraschall.Soundboard_Stop(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_Stop</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_Stop(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Stops playing of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, stop</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_Stop", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_Stop", "playerindex", "must be between 1 and 24", -2) return false end    
+  local mode=0            -- set to virtual keyboard of Reaper
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=72+playerindex-1
+  local Velocity=0
+    
+  reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end
+
+--ultraschall.Soundboard_Stop(1)
+
+function ultraschall.Soundboard_TogglePlay_FadeOutStop(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_TogglePlay_FadeOutStop</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_TogglePlay_FadeOutStop(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Toggles between Play and FadeOut with Stop of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, fadeout, play, stop</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_TogglePlay_FadeOutStop", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_TogglePlay_FadeOutStop", "playerindex", "must be between 1 and 24", -2) return false end    
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=48+playerindex-1
+  local Velocity=1
+    
+  reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end
+
+--ultraschall.Soundboard_Play_FadeOutStop(1)
+
+function ultraschall.Soundboard_PlayList_CurrentIndex()
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_PlayList_CurrentIndex</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>integer current_playlist_position = ultraschall.Soundboard_PlayList_CurrentIndex()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Returns the position within the playlist of the Ultraschall Soundboard.
+      
+      Playlist means, the player within all players of the Ultraschall-Soundboard.
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+      
+      For other playlist-related functions, see also [SoundBoard_PlayList_SetIndex](#SoundBoard_PlayList_SetIndex), [SoundBoard_PlayList_Next](#SoundBoard_PlayList_Next) and [SoundBoard_PlayList_Previous](#SoundBoard_PlayList_Previous)      
+    </description>
+    <retvals>
+      integer current_playlist_position - the position in the playlist
+    </retvals>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, playlist, current position</tags>
+  </US_DocBloc>
+  ]]  
+  local retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
+  if tonumber(Position)==-1 then Position=0 end
+  return tonumber(math.tointeger(Position))
+end
+
+--A=ultraschall.Soundboard_PlayList_CurrentIndex()
+
+function ultraschall.Soundboard_PlayList_SetIndex(playerindex, play, stop_all_others)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_PlayList_SetIndex</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_PlayList_SetIndex(integer playerindex, optional boolean play, optional boolean stop_all_others)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      sets a new playerindex within the playlist of the Ultraschall-Soundboard.
+      
+      You can optionally start the player and stop all others currently playing.
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+      
+      For other playlist-related functions, see also [Soundboard_PlayList_CurrentIndex](#Soundboard_PlayList_CurrentIndex), [SoundBoard_PlayList_Next](#SoundBoard_PlayList_Next) and [SoundBoard_PlayList_Previous](#SoundBoard_PlayList_Previous) 
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+      optional boolean play - true, start playing of this player immediately; nil or false, don't start playing
+      optional boolean stop_all_others - true, stop all other players currently playing; nil or false, don't stop anything
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, playlist, set, playerindex, play, stop all others</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_PlayList_SetIndex", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_PlayList_SetIndex", "playerindex", "must be between 1 and 24", -2) return false end
+  local retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
+  local retval = reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", playerindex-1)
+  if tonumber(Position)==-1 then Position=0 end
+  if stop_all_others==true then
+    ultraschall.Soundboard_StopAllSounds()
+  end
+  if play==true then 
+    ultraschall.Soundboard_Play(playerindex)
+  end
+  return tonumber(math.tointeger(Position))
+end
+
+--A=ultraschall.Soundboard_PlayList_SetIndex(9, true, true)
+--A1=ultraschall.Soundboard_PlayList_CurrentIndex()
+
+function ultraschall.Soundboard_PlayList_Next()
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_PlayList_Next</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_PlayList_Next()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Stops current player and starts the next player within the playlist of the Ultraschall-Soundboard.
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    
+      For other playlist-related functions, see also [Soundboard_PlayList_CurrentIndex](#Soundboard_PlayList_CurrentIndex), [SoundBoard_PlayList_SetIndex](#SoundBoard_PlayList_SetIndex) and [SoundBoard_PlayList_Previous](#SoundBoard_PlayList_Previous)      
+    </description>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, playlist, next, playerindex, play</tags>
+  </US_DocBloc>
+  ]]  
+  local retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
+  if tonumber(Position)>24 then P=1 return end
+  
+  reaper.StuffMIDIMessage(0, 144,72+Position,0)
+  reaper.StuffMIDIMessage(0, 144,72+Position+1,1)
+  
+  if tonumber(Position)+1>24 then Position=24 end
+  reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", Position+1)
+end
+
+--ultraschall.Soundboard_PlayList_Next()
+
+function ultraschall.Soundboard_PlayList_Previous()
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_PlayList_Previous</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_PlayList_Previous()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Stops current player and starts the previous player within the playlist of the Ultraschall-Soundboard.
+      
+      When the previous would be before the first, it will not do anything.
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+      
+      For other playlist-related functions, see also [Soundboard_PlayList_CurrentIndex](#Soundboard_PlayList_CurrentIndex), [SoundBoard_PlayList_SetIndex](#SoundBoard_PlayList_SetIndex) and [SoundBoard_PlayList_Next](#SoundBoard_PlayList_Next).
+    </description>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, playlist, next, playerindex, play</tags>
+  </US_DocBloc>
+  ]]  
+  local retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
+  if tonumber(Position)==-1 then return end
+  
+  reaper.StuffMIDIMessage(0, 144,72+Position,0)
+  reaper.StuffMIDIMessage(0, 144,72+Position-1,1)
+  
+  reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", Position-1) 
+end
+
+--ultraschall.Soundboard_PlayList_Previous()
+
+function ultraschall.MIDI_SendMidiNote(Channel, Note, Velocity, Mode)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDI_SendMidiNote</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.MIDI_SendMidiNote(integer Channel, integer Note, integer Velocity, optional integer Mode)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Sends a MIDI-note to a specific channel with a specific velocity.
+    </description>
+    <parameters>
+      integer Channel - the channel, to which the Midi-note shall be sent; 1-16
+      integer Note - the note to be played; 0-127
+      integer Velocity - the velocity of the note; 0-255
+      optional integer Mode - 0 for VKB
+                            - 1 for control (actions map etc)
+                            - 2 for VKB-on-current-channel
+                            - 16 for external MIDI device 0, 17 for external MIDI device 1, etc
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>midi management, send, note</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(Channel)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Channel", "must be an integer", -1) return nil end
+  if Channel>16 or Channel<1 then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Channel", "must be between 1 and 16", -2) return  end
+  
+  if math.type(Note)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Note", "must be an integer", -3) return nil end
+  if Note>127 or Note<0 then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Note", "must be between 0 and 127", -4) return  end
+  
+  if math.type(Velocity)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Velocity", "must be an integer", -5) return nil end
+  if Velocity>255 or Velocity<0 then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Velocity", "must be between 0 and 255", -6) return  end
+  
+  if Mode~=nil and math.type(Mode)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Mode", "must be an integer", -7) return nil end  
+  
+  local MIDIModifier=144+Channel-1
+  if Mode==nil then Mode=0 end
+  
+  reaper.StuffMIDIMessage(Mode, MIDIModifier, Note, Velocity)
+end
+
+function ultraschall.MIDI_SendMidiCC(Channel, Note, Velocity, Mode)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDI_SendMidiCC</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.MIDI_SendMidiCC(integer Channel, integer Note, integer Velocity, optional integer Mode)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Sends a MIDI-CC-message to a specific channel with a specific velocity.
+    </description>
+    <parameters>
+      integer Channel - the channel, to which the Midi-note shall be sent; 1-16
+      integer Note - the note to be played; 0-127
+      integer Velocity - the velocity of the note; 0-255
+      optional integer Mode - 0 for VKB
+                            - 1 for control (actions map etc)
+                            - 2 for VKB-on-current-channel
+                            - 16 for external MIDI device 0, 17 for external MIDI device 1, etc
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>midi management, send, cc</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(Channel)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Channel", "must be an integer", -1) return nil end
+  if Channel>16 or Channel<1 then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Channel", "must be between 1 and 16", -2) return  end
+  
+  if math.type(Note)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Note", "must be an integer", -3) return nil end
+  if Note>127 or Note<0 then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Note", "must be between 0 and 127", -4) return  end
+  
+  if math.type(Velocity)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Velocity", "must be an integer", -5) return nil end
+  if Velocity>255 or Velocity<0 then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Velocity", "must be between 0 and 255", -6) return  end
+  
+  if Mode~=nil and math.type(Mode)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Mode", "must be an integer", -7) return nil end  
+  
+  local MIDIModifier=176+Channel-1
+  if Mode==nil then Mode=0 end
+  
+  reaper.StuffMIDIMessage(Mode, MIDIModifier, Note, Velocity)
+end
+
+function ultraschall.MIDI_SendMidiPC(Channel, Note, Velocity, Mode)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDI_SendMidiPC</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.MIDI_SendMidiPC(integer Channel, integer Note, integer Velocity, optional integer Mode)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Sends a MIDI-PC-message to a specific channel with a specific velocity.
+    </description>
+    <parameters>
+      integer Channel - the channel, to which the Midi-note shall be sent; 1-16
+      integer Note - the note to be played; 0-127
+      integer Velocity - the velocity of the note; 0-255
+      optional integer Mode - 0 for VKB
+                            - 1 for control (actions map etc)
+                            - 2 for VKB-on-current-channel
+                            - 16 for external MIDI device 0, 17 for external MIDI device 1, etc
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>midi management, send, pc</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(Channel)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Channel", "must be an integer", -1) return nil end
+  if Channel>16 or Channel<1 then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Channel", "must be between 1 and 16", -2) return  end
+  
+  if math.type(Note)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Note", "must be an integer", -3) return nil end
+  if Note>127 or Note<0 then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Note", "must be between 0 and 127", -4) return  end
+  
+  if math.type(Velocity)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Velocity", "must be an integer", -5) return nil end
+  if Velocity>255 or Velocity<0 then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Velocity", "must be between 0 and 255", -6) return  end
+  
+  if Mode~=nil and math.type(Mode)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Mode", "must be an integer", -7) return nil end  
+  
+  local MIDIModifier=192+Channel-1
+  if Mode==nil then Mode=0 end
+  
+  reaper.StuffMIDIMessage(Mode, MIDIModifier, Note, Velocity)
+end
+
+function ultraschall.MIDI_SendMidiPitch(Channel, Pitch, Mode)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDI_SendMidiPitch</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.MIDI_SendMidiPitch(integer Channel, integer Pitch, optional integer Mode)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Sends a MIDI-Pitch-message to a specific channel with a specific velocity.
+    </description>
+    <parameters>
+      integer Channel - the channel, to which the Midi-pitch shall be sent; 1-16
+      integer Pitch - the pitchbend of the note; 0-127
+      optional integer Mode - 0 for VKB
+                            - 1 for control (actions map etc)
+                            - 2 for VKB-on-current-channel
+                            - 16 for external MIDI device 0, 17 for external MIDI device 1, etc
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>midi management, send, pitch, bend</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(Channel)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Channel", "must be an integer", -1) return nil end
+  if Channel>16 or Channel<1 then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Channel", "must be between 1 and 16", -2) return  end
+  
+  if math.type(Pitch)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Pitch", "must be an integer", -5) return nil end
+  if Pitch>127 or Pitch<0 then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Pitch", "must be between 0 and 127", -6) return  end
+  
+  if Mode~=nil and math.type(Mode)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Mode", "must be an integer", -7) return nil end  
+  
+  local MIDIModifier=224+Channel-1
+  if Mode==nil then Mode=0 end
+  
+  reaper.StuffMIDIMessage(Mode, MIDIModifier, 0, Pitch)
+end
+
+function ultraschall.EventManager_GetPausedState2(EventIdentifier)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>EventManager_GetPausedState2</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>boolean paused_state = ultraschall.EventManager_GetPausedState2(string EventIdentifier)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns, if a certain event, currently registered in the EventManager, is paused(true) or not(false).
+      State is requested by EventIdentifier.
+      
+      returns nil in case of an error
+    </description>
+    <retval>
+      boolean paused_state - true, event is currently paused; false, event isn't paused currently; nil, an error occured
+    </retval>
+    <parameters>
+      string EventIdentifier - the identifier of the registered event, whose pause state you want to retrieve
+    </parameters>
+    <chapter_context>
+      Event Manager
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>eventmanager, get, paused, state, eventidentifier</tags>
+  </US_DocBloc>
+  ]]  
+  if type(EventIdentifier)~="string" then ultraschall.AddErrorMessage("EventManager_GetPausedState2", "EventIdentifier", "must be a string", -1) return end
+  local isvalid, inuse = ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
+  if isvalid==false then ultraschall.AddErrorMessage("EventManager_GetPausedState2", "EventIdentifier", "not a valid EventIdentifier", -2) return end
+  if inuse==false then ultraschall.AddErrorMessage("EventManager_GetPausedState2", "EventIdentifier", "not a registered EventIdentifier", -3) return end
+  EventIdentifier=string.gsub(EventIdentifier, "%-", "%%-")
+  local A=reaper.GetExtState("ultraschall_eventmanager", "state")
+  local B=A:match("Event #:.-EventIdentifier: "..EventIdentifier.."\n.-EventPaused: (.-)\n.-EndEvent")
+  if B==nil then ultraschall.AddErrorMessage("EventManager_GetPausedState2", "EventIdentifier", "not a registered EventIdentifier", -4) return end
+  return toboolean(B)
+end
+
+
+--OLOL=ultraschall.EventManager_GetPausedState2("Ultraschall_Eventidentifier: {7C1D6F4A-A745-4DBF-9428-B67DB3BDB953}")
+
+function ultraschall.EventManager_GetPausedState(id)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>EventManager_GetPausedState</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>boolean paused_state = ultraschall.EventManager_GetPausedState(integer id)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns, if a certain event, currently registered in the EventManager, is paused(true) or not(false)
+      State is requested by number-id, with 1 for the first event, 2 for the second, etc.
+      
+      returns nil in case of an error
+    </description>
+    <retval>
+      boolean paused_state - true, event is currently paused; false, event isn't paused currently; nil, an error occured
+    </retval>
+    <parameters>
+      integer id - the id of the event, whose paused-state you want to retrieve; 1, the first event; 2, the second event, etc
+    </parameters>
+    <chapter_context>
+      Event Manager
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>eventmanager, get, paused, state, id, count</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(id)~="integer" then ultraschall.AddErrorMessage("EventManager_GetPausedState", "id", "must be an integer", -1) return end
+  if id<1 then ultraschall.AddErrorMessage("EventManager_GetPausedState", "id", "must be greater than 0", -2) return end
+  local A=reaper.GetExtState("ultraschall_eventmanager", "state")
+  local count=0
+  for k in string.gmatch(A, "Event #:.-EventPaused: (.-)\n.-EndEvent") do
+    count=count+1
+    if count==id then return toboolean(k) end
+  end
+  ultraschall.AddErrorMessage("EventManager_GetPausedState", "id", "no such event registered", -3)
+end
+
+--AA=ultraschall.EventManager_GetPausedState(5)
+
+function ultraschall.EventManager_GetEventIdentifier(id)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>EventManager_GetEventIdentifier</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>string event_identifier = ultraschall.EventManager_GetEventIdentifier(integer id)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns the EventIdentifier of a registered event, by id
+      event is requested by number-id, with 1 for the first event, 2 for the second, etc.
+      
+      returns nil in case of an error
+    </description>
+    <retval>
+      string event_identifier - the EventIdentifier of the requested event
+    </retval>
+    <parameters>
+      integer id - the id of the event, whose EventIdenrifier you want to retrieve; 1, the first event; 2, the second event, etc
+    </parameters>
+    <chapter_context>
+      Event Manager
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>eventmanager, get, eventidentifier, id, count</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(id)~="integer" then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "id", "must be an integer", -1) return end
+  if id<1 then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "id", "must be greater than 0", -2) return end
+  if id>ultraschall.EventManager_CountRegisteredEvents() then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "id", "no such event registered", -3) return end
+  local A=reaper.GetExtState("ultraschall_eventmanager", "checkfunction_returnstate"..id)
+  local A1=A:match(".*\n(.*)")
+  if A1==nil then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "", "EventCheckFunction returned invalid returnvalue: "..A:match("(.-)\n").."\nMust be either true or false!", -4) end
+  return A1, A2
+end
+
+function ultraschall.EventManager_GetLastCheckfunctionState(id)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>EventManager_GetLastCheckfunctionState</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>boolean check_state, number last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState(integer id)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns the last state the eventcheck-function returned the last time it was called; of a certain registered event in the EventManager.
+      State is requested by number-id, with 1 for the first event, 2 for the second, etc.
+      
+      returns nil in case of an error; nil and time, if the EventCheck-function didn't return a boolean
+    </description>
+    <retval>
+      boolean check_state - true, eventcheck-function returned true; false, eventcheck-function returned false; nil, an error occured
+      number last_statechange_precise_time - the last time the state had been changed from true to false or false to true; the time is like the one returned by reaper.time_precise()
+    </retval>
+    <parameters>
+      integer id - the id of the event, whose eventcheckfunction-retval you want to retrieve; 1, the first event; 2, the second event, etc
+    </parameters>
+    <chapter_context>
+      Event Manager
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>eventmanager, get, eventcheck function, state, id, count</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(id)~="integer" then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "id", "must be an integer", -1) return end
+  if id<1 then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "id", "must be greater than 0", -2) return end
+  if id>ultraschall.EventManager_CountRegisteredEvents() then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "id", "no such event registered", -3) return end
+  local A=reaper.GetExtState("ultraschall_eventmanager", "checkfunction_returnstate"..id)
+  local A1=toboolean(A:match("(.-)\n"))
+  A2=tonumber(A:match(".-\n(.-)\n"))
+  if A1==nil then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState", "", "EventCheckFunction returned invalid returnvalue: "..A:match("(.-)\n").."\nMust be either true or false!", -4) end
+  return A1, A2
+end
+
+function ultraschall.EventManager_GetRegisteredEventID(EventIdentifier)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>EventManager_GetRegisteredEventID</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>integer id = ultraschall.EventManager_GetRegisteredEventID(string EventIdentifier)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns the id of a registered event, meaning 1, if it's the first event, 2 if it's the second, etc
+      
+      It is the position within all events currently registered within the EventManager.
+      
+      returns nil in case of an error
+    </description>
+    <retval>
+      integer id - the id of the event; 1, for the first; 2, for the second, etc
+    </retval>
+    <parameters>
+      string EventIdentifier - the EventIdentifier of the event, whose id you want to retrieve
+    </parameters>
+    <chapter_context>
+      Event Manager
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>eventmanager, get, id, event, eventidentifier</tags>
+  </US_DocBloc>
+  ]]  
+  if type(EventIdentifier)~="string" then ultraschall.AddErrorMessage("EventManager_GetRegisteredEventID", "EventIdentifier", "must be a string", -1) return end
+  local isvalid, inuse = ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
+  if isvalid==false then ultraschall.AddErrorMessage("EventManager_GetRegisteredEventID", "EventIdentifier", "not a valid EventIdentifier", -2) return end
+  if inuse==false then ultraschall.AddErrorMessage("EventManager_GetRegisteredEventID", "EventIdentifier", "not a registered EventIdentifier", -3) return end
+  EventIdentifier=string.gsub(EventIdentifier, "%-", "%%-")
+  return tonumber(reaper.GetExtState("ultraschall_eventmanager", "state"):match(".*Event #:(.-)\n.-EventIdentifier: "..EventIdentifier.."\n.-EndEvent"))
+end
+
+--AA=ultraschall.EventManager_GetRegisteredEventID("Ultraschall_Eventidentifier: {D0679278-6A20-4BA6-98C5-10576207BE28}")
+
+function ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>EventManager_GetLastCheckfunctionState2</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>boolean check_state, number last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(string EventIdentifier)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns the last state the eventcheck-function returned the last time it was called; of a certain registered event in the EventManager.
+      State is requested by EventIdentifier
+      
+      returns nil in case of an error; nil and time, if the EventCheck-function didn't return a boolean
+    </description>
+    <retval>
+      boolean check_state - true, eventcheck-function returned true; false, eventcheck-function returned false; nil, an error occured
+      number last_statechange_precise_time - the last time the state had been changed from true to false or false to true; the time is like the one returned by reaper.time_precise()
+    </retval>
+    <parameters>
+      string EventIdentifier - the EventIdentifier of the event, whose last checkfunction-state you want to retrieve
+    </parameters>
+    <chapter_context>
+      Event Manager
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>eventmanager, get, eventcheck function, state, eventidentifier</tags>
+  </US_DocBloc>
+  ]]  
+  if type(EventIdentifier)~="string" then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "EventIdentifier", "must be a string", -1) return end
+  local isvalid, inuse = ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
+  if isvalid==false then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "EventIdentifier", "not a valid EventIdentifier", -2) return end
+  if inuse==false then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "EventIdentifier", "not a registered EventIdentifier", -3) return end
+  EventIdentifier=string.gsub(EventIdentifier, "%-", "%%-")
+  local id=tonumber(reaper.GetExtState("ultraschall_eventmanager", "state"):match(".*Event #:(.-)\n.-EventIdentifier: "..EventIdentifier.."\n.-EndEvent"))
+
+  local A=reaper.GetExtState("ultraschall_eventmanager", "checkfunction_returnstate"..id)
+  local A1=toboolean(A:match("(.-)\n"))
+  local A2=tonumber(A:match(".-\n(.-)\n"))
+  if A1==nil then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "", "EventCheckFunction returned invalid returnvalue: "..A:match("(.-)\n").."\nMust be either true or false!", -4) end
+  
+  return A1, A2
+end
+
+--print(reaper.GetExtState("ultraschall_eventmanager", "state"))
+
+function ultraschall.EventManager_DebugMode(toggle)
+--[[
+</US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>EventManager_DebugMode</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.982
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.EventManager_DebugMode(boolean toggle)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Starts Debugmode of the EventManager, which returns additional internal states.
+    
+    Allows you to get the last checkfunction-states, see [EventManager\_DebugMode\_LastCheckFunctionStates](#EventManager_DebugMode_LastCheckFunctionStates).
+    
+    Note: Debugmode is not for productive usecases, as it costs resources. Please turn it off again, after you've finished debugging.
+  </description>
+  <parameters>
+    boolean toggle - true, turn debugmode on; false, turn debugmode off
+  </parameters>
+  <chapter_context>
+    Event Manager
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>event manager, toggle, debug, debugmode</tags>
+<//US_DocBloc>
+--]]
+  if toggle==true then toggle="doit" else toggle="stopit" end
+  reaper.SetExtState("ultraschall_eventmanager", "debugmode", toggle, false)
+end
+
+function ultraschall.EventManager_DebugMode_LastCheckFunctionStates()
+--[[
+</US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>EventManager_DebugMode_LastCheckFunctionStates</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.982
+    Lua=5.3
+  </requires>
+  <functioncall>integer count_of_events, table checkstates = ultraschall.EventManager_DebugMode_LastCheckFunctionStates()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the last checkstates of all checkfunctions currently registered with the EventManager.
+    Needs Debugmode turned on. See [EventManager\_DebugMode](#EventManager_DebugMode).
+    
+    returns -1, if debugmode is off
+  </description>
+  <retvals>
+    integer count_of_events - the number of events currently available
+    table checkstates - a table with all true/false-checkstates of the last defer-cycle; if it contains anything else than true/false, then the checkfunction returns the wrong returnvalue -> Go fix it!
+  </retvals>
+  <chapter_context>
+    Event Manager
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>event manager, get, eventcheckfunction, checkstate, debug, debugmode</tags>
+<//US_DocBloc>
+--]]
+  local A=reaper.GetExtState("ultraschall_eventmanager", "checkstates")
+  local Table={}
+  local count=0
+  for k in string.gmatch(A, "(.-)\n") do
+    --print(A)
+    count=count+1
+    local a=k:match(".-: (.*)")
+    Table[count]={toboolean(b)}
+  end
+  return count, Table
+end
+
+function ultraschall.ConvertFunction_ToHexString(to_convert_function, debug)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertFunction_ToHexString</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>string HEX_functionstring = ultraschall.ConvertFunction_ToHexString(function to_convert_function, boolean debug)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Converts a function into a HEX-string.
+    
+    To load a function from a HEX-string, use [ConvertFunction_FromHexString](#ConvertFunction_FromHexString)
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string HEX_functionstring - the function, stored as HEX-string
+  </retvals>
+  <parameters>
+    function to_convert_function - the function, that you want to convert
+    boolean debug - true, store debug-information as well; false, only store function
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, convert, function, hexstring</tags>
+</US_DocBloc>
+]]
+  if type(to_convert_function)~="function" then ultraschall.AddErrorMessage("ConvertFunction_ToHexString", "to_convert_function", "must be a function", -1) return end
+  
+  local Dump=string.dump (to_convert_function, debug)
+  local HexDump = ultraschall.ConvertAscii2Hex(Dump)
+  
+  return HexDump,Dump
+end
+
+--A,A1=ultraschall.ConvertFunction_ToHexString(print, true)
+
+
+function ultraschall.ConvertFunction_FromHexString(HEX_functionstring)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertFunction_FromHexString</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>function function = ultraschall.ConvertFunction_FromHexString(string HEX_functionstring)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Loads a function from a HEX-string.
+    
+    To convert a function into a HEX-string, use [ConvertFunction_ToHexString](#ConvertFunction_ToHexString)
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    function func - the loaded function
+  </retvals>
+  <parameters>
+    string HEX_functionstring - the function, stored as HEX-string
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, load, function, hexstring</tags>
+</US_DocBloc>
+]]
+  if type(HEX_functionstring)~="string" then ultraschall.AddErrorMessage("ConvertFunction_FromHexString", "HEX_functionstring", "must be a string", -1) return end
+
+  local Dump = ultraschall.ConvertHex2Ascii(HEX_functionstring)
+  if Dump==nil then ultraschall.AddErrorMessage("ConvertFunction_FromHexString", "HEX_functionstring", "no valid HEX-string", -2) return false end
+  local function2=load(Dump)
+  if type(function2)~="function" then ultraschall.AddErrorMessage("ConvertFunction_FromHexString", "HEX_functionstring", "no function found", -3) return end
+  return function2,Dump
+end
+
+--B,B2=ultraschall.ConvertFunction_FromHexString(A)
+
+
+function ultraschall.TransientDetection_Set(Sensitivity, Threshold, ZeroCrossings)
+  -- needs to take care of faulty parametervalues AND of correct value-entering into an already opened
+  -- 41208 - Transient detection sensitivity/threshold: Adjust... - dialog
+  reaper.SNM_SetDoubleConfigVar("transientsensitivity", Sensitivity) -- 0.0 to 1.0
+  reaper.SNM_SetDoubleConfigVar("transientthreshold", Threshold) -- -60 to 0
+  local val=reaper.SNM_GetIntConfigVar("tabtotransflag", -999)
+  if val&2==2 and ZeroCrossings==false then
+    reaper.SNM_SetIntConfigVar("tabtotransflag", val-2)
+  elseif val&2==0 and ZeroCrossings==true then
+    reaper.SNM_SetIntConfigVar("tabtotransflag", val+2)
+  end
+end
+
+--ultraschall.TransientDetection_Set(0.1, -9, false)
 
 
 ultraschall.ShowLastErrorMessage()

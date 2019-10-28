@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-#
+# 
 # Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
-#
+# 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-#
+# 
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-#
+# 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-#
+# 
 ################################################################################
 ]]
 
@@ -30,25 +30,25 @@
 ---    Helper functions Module    ---
 -------------------------------------
 
-if type(ultraschall)~="table" then
+if type(ultraschall)~="table" then 
   -- update buildnumber and add ultraschall as a table, when programming within this file
   local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "HelperFunctions-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000
-  else
-    string=tonumber(string)
+  if string=="" then string=10000 
+  else 
+    string=tonumber(string) 
     string=string+1
   end
-  if string2=="" then string2=10000
-  else
+  if string2=="" then string2=10000 
+  else 
     string2=tonumber(string2)
     string2=string2+1
-  end
+  end 
   reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  ultraschall={}
-
+  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
+  ultraschall={} 
+  
   ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
 end
 
@@ -63,8 +63,8 @@ function print2(...)
   </requires>
   <functioncall>print2(parameter_1 to parameter_n)</functioncall>
   <description>
-    replaces Lua's own print-function.
-
+    replaces Lua's own print-function. 
+    
     Converts all parametes given into string using tostring() and displays them as a MessageBox, separated by two spaces.
   </description>
   <parameters>
@@ -102,7 +102,7 @@ function print_alt(...)
   <functioncall>print_alt(parameter_1 to parameter_n)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     replaces Lua's own print-function, that is quite useless in Reaper.
-
+    
     like [print](#print), but separates the entries by a two spaced, not a newline
   </description>
   <parameters>
@@ -141,7 +141,7 @@ function print(...)
   <functioncall>print(parameter_1 to parameter_n)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     replaces Lua's own print-function, that is quite useless in Reaper.
-
+    
     Converts all parametes given into string using tostring() and displays them in the ReaScript-console, separated by a newline and ending with a newline.
   </description>
   <parameters>
@@ -181,7 +181,7 @@ function ultraschall.SplitStringAtLineFeedToArray(unsplitstring)
     The linefeeds will not(!) be returned in the array's entries.
     Returns the number of entries in the array, as well as the array itself
     If there are no control characters or linefeeds in the string, the array will have only one entry with unsplitstring in it.
-
+  
   returns -1 in case of failure
   </description>
   <parameters>
@@ -226,7 +226,7 @@ function ultraschall.CountCharacterInString(checkstring, character)
   <functioncall>integer count, array positions = ultraschall.CountCharacterInString(string checkstring, string character)</functioncall>
   <description>
     Counts, how often character appears in checkstring and returns the count, as well as a array an with the position-numbers.
-
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -307,7 +307,7 @@ function ultraschall.CSV2IndividualLinesAsArray(csv_line,separator)
   <functioncall>integer count, array individual_values = ultraschall.CSV2IndividualLinesAsArray(string csv_line, optional string separator)</functioncall>
   <description>
     convert a csv-string to an array of the individual values. If separator cannot be found, it'll return the original string
-
+    
     returns nil in case or error
   </description>
   <retvals>
@@ -360,7 +360,7 @@ function ultraschall.RoundNumber(num)
   <functioncall>integer retval = ultraschall.RoundNumber(number num)</functioncall>
   <description>
     returns a rounded value of the parameter number. %.5 and higher rounds up, lower than %.5 round down.
-
+    
     returns nil in case of an error
   </description>
   <retvals>
@@ -378,9 +378,9 @@ function ultraschall.RoundNumber(num)
   <tags>number, rounding</tags>
 </US_DocBloc>
 --]]
-    -- check parameters
+    -- check parameters  
     if type(num)~="number" then ultraschall.AddErrorMessage("RoundNumber","number", "only a number allowed", -1) return nil end
-
+    
     -- do the math
     return num % 1 >= 0.5 and math.ceil(num) or math.floor(num)
 end
@@ -397,8 +397,8 @@ function ultraschall.GetPartialString(str,sep1,sep2)
   <functioncall>string partial_string = ultraschall.GetPartialString(string str, string sep1, string sep2)</functioncall>
   <description>
     returns the part of a filename-string between sep1 and sep2
-
-    returns nil if it doesn't work, no sep1 or sep2 exist
+    
+    returns nil if it doesn't work, no sep1 or sep2 exist 
   </description>
   <retvals>
     string partial_string  - the partial string between sep1 and sep2
@@ -427,14 +427,14 @@ function ultraschall.GetPartialString(str,sep1,sep2)
   if sep2=="%" then sep2="%%" end
   if sep1=="." then sep1="%." end
   if sep2=="." then sep2="%." end
-
-  -- do the pattern matching
+  
+  -- do the pattern matching  
   local result=str:match(sep1.."(.*)"..sep2)
-
+    
   if result==nil then ultraschall.AddErrorMessage("GetPartialString","", "separator not found", -4) return nil end
   return result
 end
-
+  
 function ultraschall.RunCommand(actioncommand_id)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -447,7 +447,7 @@ function ultraschall.RunCommand(actioncommand_id)
   <functioncall>integer retval = ultraschall.RunCommand(string actioncommand_id)  </functioncall>
   <description>
     runs a command by its ActionCommandID(instead of the CommandID-number)
-
+    
     returns -1 in case of error
   </description>
   <retvals>
@@ -466,7 +466,7 @@ function ultraschall.RunCommand(actioncommand_id)
 --]]
   -- check parameter
   if ultraschall.CheckActionCommandIDFormat(actioncommand_id)==false then ultraschall.AddErrorMessage("RunCommand", "actioncommand_id", "must be a command-number or start with an _underscore", -1) return -1 end
-
+  
   -- run the command
   local command_id = reaper.NamedCommandLookup(actioncommand_id)
   reaper.Main_OnCommand(command_id,0)
@@ -503,7 +503,7 @@ function ultraschall.Notes2CSV()
   for line in notes:gmatch"[^\n]*" do
     csv = csv .. "," .. line --escapeCSV(line)
   end
-
+    
   local retval= string.sub(csv, 2) -- remove first ","
   return retval
 end
@@ -521,7 +521,7 @@ function ultraschall.CSV2Line(csv_line)
   <functioncall>string values = ultraschall.CSV2Line(string csv_line)</functioncall>
   <description>
     converts a string of csv-values into a string with all values and without the ,-separators
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -539,7 +539,7 @@ string csv_line - the csv-line, values separated by commas
 --]]
   -- check parameter
   if type(csv_line)~="string" then ultraschall.AddErrorMessage("CSV2Line","csv_line", "only string is allowed", -1) return nil end
-
+  
   -- do the magic
   if tonumber(csv_line)~=nil then return tostring(csv_line) end
   return string.gsub(csv_line, ",", "")
@@ -558,7 +558,7 @@ function ultraschall.IsItemInTrack(tracknumber, itemIDX)
   <functioncall>boolean retval = ultraschall.IsItemInTrack(integer tracknumber, integer itemIDX)</functioncall>
   <description>
     checks, whether a given item is part of the track tracknumber
-
+    
     returns true, if the itemIDX is part of track tracknumber, false if not, nil if no such itemIDX or Tracknumber available
   </description>
   <retvals>
@@ -579,19 +579,19 @@ function ultraschall.IsItemInTrack(tracknumber, itemIDX)
   -- check parameters
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("IsItemInTrack","tracknumber", "only integer is allowed", -1) return nil end
   if math.type(itemIDX)~="integer" then ultraschall.AddErrorMessage("IsItemInTrack","itemIDX", "only integer is allowed", -2) return nil end
-
+  
   if tracknumber>reaper.CountTracks(0) or tracknumber<0 then ultraschall.AddErrorMessage("IsItemInTrack","tracknumber", "no such track in this project", -3) return nil end
   if itemIDX>reaper.CountMediaItems(0)-1 or itemIDX<0 then ultraschall.AddErrorMessage("IsItemInTrack","itemIDX", "no such item in this project", -4) return nil end
-
+  
   -- Get the tracks and items
-  local MediaTrack=reaper.GetTrack(0, tracknumber-1)
+  local MediaTrack=reaper.GetTrack(0, tracknumber-1) 
   local MediaItem=reaper.GetMediaItem(0, itemIDX)
   local MediaTrack2=reaper.GetMediaItem_Track(MediaItem)
-
+  
   -- check and return
-  if MediaTrack==MediaTrack2 then return true
+  if MediaTrack==MediaTrack2 then return true 
   else return false
-  end
+  end  
 end
 
 function ultraschall.CheckActionCommandIDFormat(aid)
@@ -606,9 +606,9 @@ function ultraschall.CheckActionCommandIDFormat(aid)
   <functioncall>boolean retval = ultraschall.CheckActionCommandIDFormat(action_command_id)</functioncall>
   <description>
     Checks, whether an action command id is a valid commandid(which is a number) or a valid _action_command_id (which is a string with an _underscore in the beginning).
-
+    
     Does not check, whether this action_command_id is a useable one, only if it's "syntax" is correct!
-
+    
     returns falsein case of an error
   </description>
   <retvals>
@@ -627,7 +627,7 @@ function ultraschall.CheckActionCommandIDFormat(aid)
 --]]
   -- check parameter
   if math.type(aid)~="integer" and type(aid)~="string" then ultraschall.AddErrorMessage("CheckActionCommandIDFormat", "action_command_id", "must be an integer or a string", -1) return false end
-
+  
   if type(aid)=="number" and tonumber(aid)==math.floor(tonumber(aid)) and tonumber(aid)<=65535 and tonumber(aid)>=0 then return true -- is it a valid number?
   elseif type(aid)=="string" and aid:sub(1,1)=="_" and aid:len()>1 then return true -- is it a valid string, formatted right=
   else return false -- if neither, return false
@@ -646,9 +646,9 @@ function ultraschall.CheckActionCommandIDFormat2(aid)
   <functioncall>boolean retval = ultraschall.CheckActionCommandIDFormat2(action_command_id)</functioncall>
   <description>
     Checks, whether an action command id is a valid commandid(which is a number) or a valid _action_command_id (which is a string with an _underscore in the beginning).
-
+    
     Unlike CheckActionCommandIDFormat, this checks whether an action-command-id-string is an actual registered one(case sensitive!).
-
+    
     returns false in case of an error
   </description>
   <retvals>
@@ -667,7 +667,7 @@ function ultraschall.CheckActionCommandIDFormat2(aid)
 --]]
   -- check parameter
   if math.type(aid)~="integer" and type(aid)~="string" then ultraschall.AddErrorMessage("CheckActionCommandIDFormat2", "action_command_id", "must be an integer or a string", -1) return false end
-
+  
   if type(aid)=="number" and tonumber(aid)==math.floor(tonumber(aid)) and tonumber(aid)<=65535 and tonumber(aid)>=0 then return true -- is it a valid number?
   elseif type(aid)=="string" and aid:sub(1,1)=="_" and aid:len()>1 and reaper.NamedCommandLookup(tostring(aid))~=0 then return true -- is it a valid string, formatted right=
   else return false -- if neither, return false
@@ -687,7 +687,7 @@ function ultraschall.ToggleStateAction(section, actioncommand_id, state)
   <functioncall>integer retval = ultraschall.ToggleStateAction(integer section, string actioncommand_id, integer state)</functioncall>
   <description>
     Toggles state of an action using the actioncommand_id(instead of the CommandID-number)
-
+    
     returns current state of the action after toggling or -1 in case of error.
   </description>
   <retvals>
@@ -716,7 +716,7 @@ function ultraschall.ToggleStateAction(section, actioncommand_id, state)
   if actioncommand_id==nil then ultraschall.AddErrorMessage("ToggleStateAction", "action_command_id", "must be a number or a string", -1) return -1 end
   if math.type(state)~="integer" then ultraschall.AddErrorMessage("ToggleStateAction", "state", "must be an integer", -2) return -1 end
   if math.type(section)~="integer" then ultraschall.AddErrorMessage("ToggleStateAction", "section", "must be an integer", -3) return -1 end
-
+  
   -- do the toggling
   local command_id = reaper.NamedCommandLookup(actioncommand_id)
   reaper.SetToggleCommandState(section, command_id, state)
@@ -736,7 +736,7 @@ function ultraschall.RefreshToolbar_Action(section, actioncommand_id)
   <functioncall>ultraschall.RefreshToolbar_Action(integer section, string actioncommand_id)</functioncall>
   <description>
     Refreshes a toolbarbutton with an ActionCommandID(instead of the CommandID-number)
-
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -747,7 +747,7 @@ function ultraschall.RefreshToolbar_Action(section, actioncommand_id)
                             -32061 - MIDI Event List Editor
                             -32062 - MIDI Inline Editor
                             -32063 - Media Explorer
-    string actioncommand_id - ActionCommandID of the action, associated with the toolbarbutton
+    string actioncommand_id - ActionCommandID of the action, associated with the toolbarbutton 
   </parameters>
   <chapter_context>
     API-Helper functions
@@ -760,7 +760,7 @@ function ultraschall.RefreshToolbar_Action(section, actioncommand_id)
   -- check parameters
   if actioncommand_id==nil then ultraschall.AddErrorMessage("RefreshToolbar_Action", "action_command_id", "must be a number or a string", -1) return -1 end
   if math.type(section)~="integer" then ultraschall.AddErrorMessage("RefreshToolbar_Action", "section", "must be an integer", -2) return -1 end
-
+  
   -- do the refreshing
   local command_id = reaper.NamedCommandLookup(actioncommand_id)
   reaper.RefreshToolbar2(0, command_id)
@@ -779,7 +779,7 @@ function ultraschall.ToggleStateButton(section, actioncommand_id, state)
   <functioncall>boolean retval = ultraschall.ToggleStateButton(integer section, string actioncommand_id, integer state)</functioncall>
   <description>
     Toggles state and refreshes the button of an actioncommand_id
-
+    
     returns false in case of error
   </description>
   <retvals>
@@ -828,7 +828,7 @@ function ultraschall.SecondsToTime(pos)
   <functioncall>string time_string = ultraschall.SecondsToTime(number pos)</functioncall>
   <description>
     converts timeposition in seconds(pos) to a timestring (h)hh:mm:ss.mss
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -849,7 +849,7 @@ function ultraschall.SecondsToTime(pos)
   -- check parameter
   if type(pos)~="number" then ultraschall.AddErrorMessage("SecondsToTime","pos", "only numbers allowed", -1) return nil end
   if pos>359999999999998175 then ultraschall.AddErrorMessage("SecondsToTime","pos", "out of range, maximum value is 359999999999998175", -2) return nil end
-
+  
   -- prepare variables
   local hours=0
   local minutes=0
@@ -860,17 +860,17 @@ function ultraschall.SecondsToTime(pos)
   local tempo2=0
   local trailinghour=""
   local trailingminute=""
-  local trailingsecond=""
+  local trailingsecond="" 
   local trailingmilli=""
-
+  
   -- create time-string
   if pos>=3600 then temp=tostring(pos/3600) hours=tonumber(temp:match("%d*")) pos=pos-(3600*hours) end -- get hours
   if pos>=60 then temp=tostring(pos/60) minutes=tonumber(temp:match("(%d*)")) pos=pos-(60*minutes) end -- get minutes
-
+  
   -- seconds
   temp=tostring(pos)
   seconds=pos
-
+  
   -- milliseconds
   tempo=tostring(seconds)
   tempo2=tempo:match("%.%d*")
@@ -879,7 +879,7 @@ function ultraschall.SecondsToTime(pos)
   if milliseconds:len()==2 then milliseconds=milliseconds.."0" end
   if milliseconds:len()==1 then milliseconds=milliseconds.."00" end
   if seconds==nil then seconds=0.0 end
-
+  
   -- get trailing hours/minutes/seconds
   if hours<10 then trailinghour="0" else trailinghour="" end
   if minutes<10 then trailingminute="0" else trailingminute="" end
@@ -887,7 +887,7 @@ function ultraschall.SecondsToTime(pos)
   seconds=tostring(seconds)
   seconds=seconds:match("%d*.")
   if seconds:sub(-1,-1)=="." then seconds=seconds:sub(1,-2) end
-
+  
   -- return created time-string
   return trailinghour..hours..":"..trailingminute..minutes..":"..trailingsecond..seconds.."."..milliseconds
 end
@@ -906,13 +906,13 @@ function ultraschall.TimeToSeconds(timestring)
   <description>
     converts a timestring days:hours:minutes:seconds.milliseconds to timeposition in seconds
     it is ok, to have only some of the last ones given, so i.e. excluding days and hours is ok. Though excluding values inbetween does not work!
-
+     
     A single integer in timestring will be seen as seconds.
     To only specifiy milliseconds in particular, start the number with a .
     all other values are separated by :
-
+    
     returns -1 in case of error, timestring is a nil or if you try to add an additional value, added before days
-
+    
     does not check for valid timeranges, so 61 minutes is possible to give, even if hours are present in the string
   </description>
   <retvals>
@@ -949,8 +949,8 @@ function ultraschall.TimeToSeconds(timestring)
   if milliseconds=="0" then milliseconds=".0 " end
   if milliseconds==0 then milliseconds=".0 " end
   if milliseconds=="." then milliseconds=0 end
-
-  -- get seconds
+    
+  -- get seconds  
   if timestring:match("%.%d*")~=nil then timestring=timestring:match("(.*)%.") end
   if tonumber(timestring)~=nil then seconds=tonumber(timestring)
   elseif timestring==nil then seconds=0
@@ -985,9 +985,9 @@ function ultraschall.TimeToSeconds(timestring)
     day=tonumber(timestring:match(".*:(.*)"))
   end
   if day==nil then ultraschall.AddErrorMessage("TimeToSeconds","timestring", "invalid day", -6) return -1 end
-
+  
   if timestring~=nil then timestring=timestring:match("(.*):") end
-
+    
   if timestring~=nil then ultraschall.AddErrorMessage("TimeToSeconds","timestring", "invalid timestring, must be of format: \"days:hours:minutes:seconds.milliseconds\". You can omit the first ones, but never the last one!", -7) return -1 end
 
   -- check, if the found values are numbers
@@ -1003,7 +1003,7 @@ function ultraschall.TimeToSeconds(timestring)
   if minute==nil then minute=0 end
   if seconds==nil then seconds=0 end
   if milliseconds==nil then milliseconds=0 end
-
+    
   -- return time
   return (day*86400)+(hour*3600)+(minute*60)+seconds+milliseconds
 end
@@ -1022,7 +1022,7 @@ function ultraschall.SecondsToTimeString_hh_mm_ss_mss(time)
   <description>
     Converts the parameter time into a timestring of the format hh:mm:ss.mss
     Valid timeranges are from 0 to 359999.99 seconds(about 99 hours).
-
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -1069,7 +1069,7 @@ function ultraschall.TimeStringToSeconds_hh_mm_ss_mss(timestring)
   <description>
     Converts the parameter timestring of the format hh:mm:ss.mss into seconds
     The timestring must follow strictly this format, or the function returns -1 as result.
-
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -1136,26 +1136,26 @@ function ultraschall.CountPatternInString(sourcestring, searchstring, non_case_s
   if type(sourcestring)~="string" then ultraschall.AddErrorMessage("CountPatternInString", "sourcestring", "must be a string", -1) return -1 end
   if type(searchstring)~="string" then ultraschall.AddErrorMessage("CountPatternInString", "searchstring", "must be a string", -2) return -1 end
   if type(non_case_sensitive)~="boolean" then ultraschall.AddErrorMessage("CountPatternInString", "non_case_sensitive", "must be a boolean", -3) return -1 end
-
+  
   -- prepare variables
   local Position={}
-  local count=1
-
+  local count=1  
+  
   -- if case-sensitivity doesn't matter, make the strings lowercase
-  if non_case_sensitive==true then
-    sourcestring=sourcestring:lower()
-    searchstring=searchstring:lower()
+  if non_case_sensitive==true then 
+    sourcestring=sourcestring:lower() 
+    searchstring=searchstring:lower() 
   end
-
+    
   -- now do the searching and create a table with all appearance-positions
   while sourcestring:match(searchstring)~=nil do
     Position[count]=sourcestring:match(".*()"..searchstring)
     sourcestring=sourcestring:sub(1,Position[count]-1)
-    count=count+1
+    count=count+1  
   end
   -- sort it
   table.sort(Position)
-
+  
   -- return number of appearances and the position-table
   return count-1, Position
 end
@@ -1177,9 +1177,9 @@ function toboolean(value)
     Converts the string "value" to a boolean, if applicable; means: if it contains either true or false in it.
     If it contains both or other characters(except spaces or tabs), it will not convert.
     Works basially like Lua's own tostring() or tonumber()-functions.
-
+    
     Returns nil, if conversion isn't possible.
-
+    
     Note: Unlike other ultraschall-api-functions, toboolean() has no ultraschall. in it's functionname!
   </description>
   <parameters>
@@ -1196,13 +1196,12 @@ function toboolean(value)
   <tags>helper functions, string, convert, boolean</tags>
 </US_DocBloc>
 --]]
-
     if type(value)=="boolean" then return value end
     if value==nil then ultraschall.AddErrorMessage("toboolean","value", "must contain either true or false, nothing else. Spaces and tabs are allowed.", -1) return end
     local value=value:lower()
     local truth=value:match("^\t*%s*()true\t*%s*$")
     local falseness=value:match("^\t*%s*()false\t*%s*$")
-
+    
     if tonumber(truth)==nil and tonumber(falseness)~=nil then
       return false
     elseif tonumber(truth)~=nil and tonumber(falseness)==nil then
@@ -1222,7 +1221,7 @@ function ultraschall.OpenURL(url)
   <functioncall>integer retval = ultraschall.OpenURL(string url)</functioncall>
   <description>
     Opens the URI with the standard-browser installed in your system.
-
+    
     returns -1 in case of an error
   </description>
 <retval>
@@ -1265,7 +1264,7 @@ function ultraschall.CountEntriesInTable_Main(the_table)
     Counts the number of entries in an indexed table.
     Will only count the entries from the main-table, not it's subtables. If you want to know the number of subtables, this function returns a table that includes all subtables found in the main-table,
     as well as the number of found subtables.
-
+    
     Returns -1 if table isn't a valid table
   </description>
   <parameters>
@@ -1312,7 +1311,7 @@ function ultraschall.CompareArrays(Array, CompareArray2)
   <description>
     Compares Array using parameter CompareArray2 and returns an array with all entries in CompareArray2, that are not in Array.
     The comparable arrays must be indexed by integer-numbers.
-
+    
     Returns nil in case of an error
   </description>
   <parameters>
@@ -1347,7 +1346,7 @@ function ultraschall.CompareArrays(Array, CompareArray2)
       y=CompareArray2[a]
       if x==y then check=true end
     end
-    if check==false then Array3[count3]=y count3=count3+1 end
+    if check==false then Array3[count3]=y count3=count3+1 end 
   end
 
   return Array3, count3-1
@@ -1382,7 +1381,7 @@ function ultraschall.GetOS()
   -- prepare variables
   local retval=reaper.GetOS()
   local os, bits
-
+  
   -- check for os and bits and return it
   if retval:match("Win")~=nil then os="Win" end
   if retval:match("OSX")~=nil then os="Mac" end
@@ -1420,9 +1419,9 @@ function ultraschall.IsOS_Windows()
   -- prepare variables
   local retval=reaper.GetOS()
   local os, bits
-
+  
   -- check for os and bits
-  if retval:match("Win")~=nil then os=true
+  if retval:match("Win")~=nil then os=true 
   else
     os=false
   end
@@ -1462,9 +1461,9 @@ function ultraschall.IsOS_Mac()
   -- prepare variables
   local retval=reaper.GetOS()
   local os, bits
-
+  
   -- check for os and bits
-  if retval:match("OSX")~=nil then os=true
+  if retval:match("OSX")~=nil then os=true 
   else
     os=false
   end
@@ -1502,9 +1501,9 @@ function ultraschall.IsOS_Other()
   -- prepare variables
   local retval=reaper.GetOS()
   local os, bits
-
+  
   -- check for os and bits
-  if retval:match("Other")~=nil then os=true
+  if retval:match("Other")~=nil then os=true 
   else
     os=false
   end
@@ -1554,7 +1553,7 @@ function ultraschall.GetReaperAppVersion()
   local beta=reaper.GetAppVersion():match("%.%d*(.-)/")
   return majvers, subvers, bits, OS, portable, beta
 end
-
+ 
 
 --A,B,C,D,E,F=ultraschall.GetReaperAppVersion()
 --A,B,C,D,E,F,G=ultraschall.GetReaperAppVersion()
@@ -1571,7 +1570,7 @@ function ultraschall.LimitFractionOfFloat(number, length_of_fraction, roundit)
   <functioncall>number altered_number = ultraschall.LimitFractionOfFloat(number number, integer length_of_fraction, boolean roundit)</functioncall>
   <description>
     limits the fraction of a float-number to a specific length of fraction(digits). You can also choose to round the value or not.
-
+    
     returns nil in case of error
   </description>
   <parameters>
@@ -1600,15 +1599,15 @@ function ultraschall.LimitFractionOfFloat(number, length_of_fraction, roundit)
   int, fraction=tostring(number):match("(.-)%.(.*)")
 
   adder=0
-  if fraction:len()>length_of_fraction then
+  if fraction:len()>length_of_fraction then 
     fraction2=fraction:sub(1,length_of_fraction)
     if roundit==true and tonumber(fraction:sub(length_of_fraction+1, length_of_fraction+1))>5 then adder=1 end
     adder=adder/(10^(length_of_fraction))
-  else
+  else 
     fraction2=fraction
   end
-
-
+  
+  
   return tonumber(int.."."..(fraction2))+adder
 end
 
@@ -1628,15 +1627,15 @@ function ultraschall.GetAllEntriesFromTable(table)
   <functioncall>integer count, table foundtypes, table returned_table = ultraschall.GetAllEntriesFromTable(table table)</functioncall>
   <description>
     Gets an iterable version of table. Good for analysing unknown tables.
-
+    
     Returns the number of entries, a table(array) with the datatypes of each entry and the table with all it's entries in the same order as in the foundtypes-table.
-
+    
     This doesn't treat table recursivley, means: each "Subtable" within the table is treated as one entry of the type "table". That means, that these tables must be analysed themselves in an extra step!
     A[1]=1
     A[2][1]=2
     A[2][2]=3.4
     will return two(!) entries, the first being of type "integer", the second being of type "table". Next step would be to run use this function to analyse A[2] as well, which would result in two entries: the first being of type "integer" and the second of type "float", etc.
-
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -1662,14 +1661,14 @@ function ultraschall.GetAllEntriesFromTable(table)
 --]]
   -- check parameters
   if type(table)~="table" then ultraschall.AddErrorMessage("GetAllEntriesFromTable", "table", "must be a table", -1) return -1 end
-
+  
   -- prepare variables
   local table2={}
   local table3={}
   local count=1
-
+  
   -- get all table-entries(parts of the code from the Lua5.3-Reference-Manual)
-  for i,v in pairs(table) do
+  for i,v in pairs(table) do 
     table2[count]={}
     table2[count][1]=i
     table2[count][2]=v
@@ -1678,7 +1677,7 @@ function ultraschall.GetAllEntriesFromTable(table)
     end
     count=count+1
   end
-
+  
   -- return found entries
   return count-1, table3, table2
 end
@@ -1698,7 +1697,7 @@ function ultraschall.APIExists(functionname)
   <functioncall>boolean retval = ultraschall.APIExists(string functionname)</functioncall>
   <description>
     returns true, if a certain function/variable exists in ultraschall.
-
+    
     returns false if nothing has been found
   </description>
   <parameters>
@@ -1733,11 +1732,11 @@ function ultraschall.IsValidGuid(guid, strict)
   <functioncall>boolean retval = ultraschall.IsValidGuid(string guid, boolean strict)</functioncall>
   <description>
     Checks, if guid is a valid guid. Can also be used for strings, that contain a guid somewhere in them(strict=false)
-
+    
     A valid guid is a string that follows the following pattern:
     {........-....-....-....-............}
     where . is a hexadecimal value(0-F)
-
+    
     Returns false in case of error
   </description>
   <parameters>
@@ -1781,7 +1780,7 @@ function ultraschall.SetGuidExtState(guid, key, value, savelocation, overwrite, 
     A valid guid is a string that follows the following pattern:
     {........-....-....-....-............}
     where . is a hexadecimal value(0-F)
-
+    
     Returns -1 in case of error
   </description>
   <parameters>
@@ -1811,11 +1810,11 @@ function ultraschall.SetGuidExtState(guid, key, value, savelocation, overwrite, 
   if math.type(savelocation)~="integer" then ultraschall.AddErrorMessage("SetGuidExtState","savelocation", "must be an integer", -5) return -1 end
   if tonumber(savelocation)~=0 and tonumber(savelocation)~=1 then ultraschall.AddErrorMessage("SetGuidExtState","savelocation", "only allowed 0 for project-extstate, 1 for global extension state", -6) return -1 end
   if savelocation==1 and type(persist)~="boolean" then ultraschall.AddErrorMessage("SetGuidExtState","persist", "must be a boolean", -7) return -1 end
-
-  if savelocation==0 then
+  
+  if savelocation==0 then 
     if overwrite==false and reaper.GetProjExtState(0, guid, key)>0 then ultraschall.AddErrorMessage("SetGuidExtState","extension-state", "already exist", -8) return -1 end
-    return reaper.SetProjExtState(0, guid, key, value)
-  elseif savelocation==1 then
+    return reaper.SetProjExtState(0, guid, key, value) 
+  elseif savelocation==1 then 
     if overwrite==false and reaper.HasExtState(guid, key)==true then ultraschall.AddErrorMessage("SetGuidExtState","extension-state", "already exist", -9) return -1 end
     return 1, reaper.SetExtState(guid, key, value, persist)
   else ultraschall.AddErrorMessage("SetGuidExtState","savelocation", "no such location", -9) return -1
@@ -1835,7 +1834,7 @@ function ultraschall.SetBitfield(integer_bitfield, set_to, ...)
   <functioncall>integer new_integer_bitfield = ultraschall.SetBitfield(integer integer_bitfield, boolean set_to, integer bit_1, integer bit_2, ... integer bit_n)</functioncall>
   <description>
     Alters an integer-bitfield.
-
+    
     Returns nil in case of error, like invalid bit-values
   </description>
   <parameters>
@@ -1865,22 +1864,22 @@ function ultraschall.SetBitfield(integer_bitfield, set_to, ...)
     if math.log(Parameters[count],2)~=math.floor(math.log(Parameters[count],2)) then ultraschall.AddErrorMessage("SetBitfield","bit", "Bit_"..count.."="..Parameters[count].." isn't a valid bitvalue!", -3) return nil end
     count=count+1
   end
-
+  
   -- Now let's set or unset the bitvalues
   count=1
   while Parameters[count]~=nil do
-    if set_to==true and integer_bitfield&Parameters[count]==0 then
+    if set_to==true and integer_bitfield&Parameters[count]==0 then 
       -- setting the bits
-      integer_bitfield=integer_bitfield+Parameters[count]
-    elseif set_to==false and integer_bitfield&Parameters[count]~=0 then
+      integer_bitfield=integer_bitfield+Parameters[count] 
+    elseif set_to==false and integer_bitfield&Parameters[count]~=0 then 
       -- unsetting the bits
       integer_bitfield=integer_bitfield-Parameters[count]
     elseif set_to==nil then
       -- toggling the bits
-      if integer_bitfield&Parameters[count]==0 then
-        integer_bitfield=integer_bitfield+Parameters[count]
-      elseif integer_bitfield&Parameters[count]~=0 then
-        integer_bitfield=integer_bitfield-Parameters[count]
+      if integer_bitfield&Parameters[count]==0 then 
+        integer_bitfield=integer_bitfield+Parameters[count] 
+      elseif integer_bitfield&Parameters[count]~=0 then 
+        integer_bitfield=integer_bitfield-Parameters[count] 
       end
     end
     count=count+1
@@ -1928,7 +1927,7 @@ function ultraschall.SetIntConfigVar_Bitfield(configvar, set_to, ...)
   <functioncall>boolean retval, integer new_integer_bitfield = ultraschall.SetIntConfigVar_Bitfield(string configvar, boolean set_to, integer bit_1, integer bit_2, ... integer bit_n)</functioncall>
   <description>
     Alters an integer-bitfield stored by a ConfigVariable.
-
+    
     Returns false in case of error, like invalid bit-values, etc
   </description>
   <parameters>
@@ -1952,7 +1951,7 @@ function ultraschall.SetIntConfigVar_Bitfield(configvar, set_to, ...)
   local integer_bitfield2=reaper.SNM_GetIntConfigVar(configvar, -23)
   if type(configvar)~="string" then ultraschall.AddErrorMessage("SetIntConfigVar_Bitfield","configvar", "Must be a string!", -1) return false end
   if integer_bitfield==-22 and integer_bitfield2==-23 then ultraschall.AddErrorMessage("SetIntConfigVar_Bitfield","configvar", "No valid config-variable!", -2) return false end
-
+  
   -- check parameters
   if set_to~=nil and type(set_to)~="boolean" then ultraschall.AddErrorMessage("SetIntConfigVar_Bitfield","set_to", "Must be a boolean!", -3) return false end
   local Parameters={...}
@@ -1962,22 +1961,22 @@ function ultraschall.SetIntConfigVar_Bitfield(configvar, set_to, ...)
     if math.log(Parameters[count],2)~=math.floor(math.log(Parameters[count],2)) then ultraschall.AddErrorMessage("SetIntConfigVar_Bitfield","bit", "Bit_"..count.."="..Parameters[count].." isn't a valid bitvalue!", -4) return false end
     count=count+1
   end
-
+  
   -- Now let's set or unset the bitvalues
   count=1
   while Parameters[count]~=nil do
-    if set_to==true and integer_bitfield&Parameters[count]==0 then
+    if set_to==true and integer_bitfield&Parameters[count]==0 then 
       -- setting the bits
-      integer_bitfield=integer_bitfield+Parameters[count]
-    elseif set_to==false and integer_bitfield&Parameters[count]~=0 then
+      integer_bitfield=integer_bitfield+Parameters[count] 
+    elseif set_to==false and integer_bitfield&Parameters[count]~=0 then 
       -- unsetting the bits
       integer_bitfield=integer_bitfield-Parameters[count]
     elseif set_to==nil then
       -- toggling the bits
-      if integer_bitfield&Parameters[count]==0 then
-        integer_bitfield=integer_bitfield+Parameters[count]
-      elseif integer_bitfield&Parameters[count]~=0 then
-        integer_bitfield=integer_bitfield-Parameters[count]
+      if integer_bitfield&Parameters[count]==0 then 
+        integer_bitfield=integer_bitfield+Parameters[count] 
+      elseif integer_bitfield&Parameters[count]~=0 then 
+        integer_bitfield=integer_bitfield-Parameters[count] 
       end
     end
     count=count+1
@@ -1998,9 +1997,9 @@ function ultraschall.MakeCopyOfTable(table, seen, recursive) --copy an array
   <functioncall>table table_copy = ultraschall.MakeCopyOfTable(table table)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Creates a true copy of a table(not only references).
-
+    
     adapted from Tyler Neylon's function, found at [Stack Overflow](https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value/26367080#26367080)
-
+    
     Returns nil if table isn't a valid table
   </description>
   <parameters>
@@ -2023,8 +2022,8 @@ function ultraschall.MakeCopyOfTable(table, seen, recursive) --copy an array
   local seen_temp = seen or {}
   local res = setmetatable({}, getmetatable(table))
   seen_temp[table] = res
-  for key, value in pairs(table) do
-    res[ultraschall.MakeCopyOfTable(key, seen_temp, true)] = ultraschall.MakeCopyOfTable(value, seen_temp, true)
+  for key, value in pairs(table) do 
+    res[ultraschall.MakeCopyOfTable(key, seen_temp, true)] = ultraschall.MakeCopyOfTable(value, seen_temp, true) 
   end
   return res
 end
@@ -2041,7 +2040,7 @@ function ultraschall.ConvertStringToAscii_Array(string)
   <functioncall>integer length, table byte_array = ultraschall.ConvertStringToAscii_Array(string string)</functioncall>
   <description>
     Converts a string into it's individual characters and numerical-representation as a table and after that returns its number of table-entries and the table.
-
+    
     Returns -1 if string isn't a valid string
   </description>
   <parameters>
@@ -2089,7 +2088,7 @@ function ultraschall.CompareStringWithAsciiValues(string,...)
     Compares a string with a number of byte-values(like ASCII-values).
     Bytevalues can be either decimal and hexadecimal.
     -1, if you want to skip checking of a specific position in string.
-
+    
     Returns false in case of error
   </description>
   <parameters>
@@ -2109,14 +2108,14 @@ function ultraschall.CompareStringWithAsciiValues(string,...)
   <tags>helper functions, check, compare, string, byte, bytevalues</tags>
 </US_DocBloc>
 --]]
-  if type(string)~="string" then ultraschall.AddErrorMessage("CompareStringWithAsciiValues","string", "Must be a string!", -1) return false end
+  if type(string)~="string" then ultraschall.AddErrorMessage("CompareStringWithAsciiValues","string", "Must be a string!", -1) return false end  
   local length, Table=ultraschall.ConvertStringToAscii_Array(string)
   local AsciiValues={...}
   local NumEntries=ultraschall.CountEntriesInTable_Main(AsciiValues)
-  local count=1
+  local count=1  
   local retval=true
   while AsciiValues[count]~=nil do
-    if AsciiValues[count]==-1 then
+    if AsciiValues[count]==-1 then 
     elseif Table[count][2]~=AsciiValues[count] then retval=false break end
     count=count+1
   end
@@ -2168,7 +2167,7 @@ function ultraschall.CountLinesInString(String)
   <functioncall>integer number_of_lines = ultraschall.CountLinesInString(string String)</functioncall>
   <description>
     Counts the lines in a string. It counts them by counting \n-newlines(not carriage returns!)
-
+    
     Returns -1 in case of an error
   </description>
   <parameters>
@@ -2210,7 +2209,7 @@ function ultraschall.ReturnTypeOfReaperObject(object)
   </description>
   <retvals>
     string objecttype - the type of the parameter of object
-                      - the following types can be returned:
+                      - the following types can be returned: 
                       - ReaProject, MediaTrack, MediaItem, MediaItem_Take, TrackEnvelope, PCM_source, None
   </retvals>
   <parameters>
@@ -2251,7 +2250,7 @@ function ultraschall.IsObjectValidReaperObject(object)
   <retvals>
     boolean retval - true, if it's a valid Reaper-object; false, if not
     string objecttype - the type of the parameter of object
-                      - the following types can be returned:
+                      - the following types can be returned: 
                       - ReaProject, MediaTrack, MediaItem, MediaItem_Take, TrackEnvelope, PCM_source, None
   </retvals>
   <parameters>
@@ -2293,7 +2292,7 @@ function ultraschall.KeepTableEntriesOfType(worktable, keeptype)
   <functioncall>table alteredtable = ultraschall.KeepTableEntriesOfType(table worktable, string keeptype)</functioncall>
   <description>
     Removes all entries from worktable, that are not of the datatype as given by keeptype.
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -2316,12 +2315,12 @@ function ultraschall.KeepTableEntriesOfType(worktable, keeptype)
   -- check parameters
   if type(worktable)~="table" then ultraschall.AddErrorMessage("KeepTableEntriesOfType","worktable", "Must be a table!", -1) return end
   if type(keeptype)~="string" then ultraschall.AddErrorMessage("KeepTableEntriesOfType","keeptype", "Must be a string!", -2) return end
-
+  
   -- prepare variable
   local NewTable={}
-
+  
   -- throw out all entries, that are not of type keeptype
-  for k,v in pairs(worktable) do
+  for k,v in pairs(worktable) do 
     if type(v)==keeptype or math.type(v)==keeptype then
       NewTable[k]=v
     elseif ultraschall.ReturnTypeOfReaperObject(v)~=ultraschall.ReturnTypeOfReaperObject(keeptype) then
@@ -2344,7 +2343,7 @@ function ultraschall.RemoveTableEntriesOfType(worktable, removetype)
   <functioncall>table alteredtable = ultraschall.RemoveTableEntriesOfType(table worktable, string removetype)</functioncall>
   <description>
     Removes all entries from worktable, that are of the datatype as given by removetype.
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -2367,12 +2366,12 @@ function ultraschall.RemoveTableEntriesOfType(worktable, removetype)
   -- check parameters
   if type(worktable)~="table" then ultraschall.AddErrorMessage("RemoveTableEntriesOfType","worktable", "Must be a table!", -1) return end
   if type(removetype)~="string" then ultraschall.AddErrorMessage("RemoveTableEntriesOfType","removetype", "Must be a string!", -2) return end
-
+  
   -- prepare variables
   local NewTable={}
-
+  
   -- remove table-entries, that are of type removetype
-  for k,v in pairs(worktable) do
+  for k,v in pairs(worktable) do 
     if type(v)==removetype or math.type(v)==removetype or ultraschall.ReturnTypeOfReaperObject(v)==ultraschall.ReturnTypeOfReaperObject(removetype) then
       NewTable[k]=v
     end
@@ -2392,10 +2391,10 @@ function ultraschall.IsItemInTrack3(MediaItem, trackstring)
   <functioncall>boolean retval = ultraschall.IsItemInTrack3(MediaItem MediaItem, string trackstring)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Checks, whether a MediaItem is in any of the tracks, given by trackstring.
-
+    
     see [IsItemInTrack](#IsItemInTrack) to use itemidx instead of the MediaItem-object.
     see [IsItemInTrack2](#IsItemInTrack2) to check against only one track.
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -2418,7 +2417,7 @@ function ultraschall.IsItemInTrack3(MediaItem, trackstring)
   if type(trackstring)~="string" then ultraschall.AddErrorMessage("IsItemInTrack3","trackstring", "Must be a string!", -1) return end
   if reaper.ValidatePtr2(0, MediaItem, "MediaItem*")==false then ultraschall.AddErrorMessage("IsItemInTrack3","MediaItem", "Must be a MediaItem!", -2) return end
   local retval, count, individual_values=ultraschall.IsValidTrackString(trackstring)
-
+  
   -- check, if item is in any of the tracks in trackstring
   for i=1, count do
     if individual_values[i]==ultraschall.GetParentTrack_MediaItem(MediaItem) then return true end
@@ -2442,7 +2441,7 @@ function ultraschall.AddIntToChar(char, int)
   <description>
     Adds/subtracts int to/from the numeric representation of character. It will return the new character.
     It will not(!) include "overflows" into the adding/subtraction. That said, if you want to add a value resulting in a character above ASCII-code 255, it will fail!
-
+    
     Returns nil in case of an error
   </description>
   <retvals>
@@ -2488,9 +2487,9 @@ function ultraschall.MakeFunctionUndoable(Func, UndoMessage, Flag, ...)
     Run the function Func and create an undopoint for this function. You can also give an UndoMessage and a flag for Reaper to use.
     All parameters needed by Func follow after parameter Flag, as if it would be the normal parameters.
     This should make creating undo-points much much easier...
-
+    
     Note: Reaper will use the undo-point only for functions, who do "undo"-able things. If you don't have something of that kind(no creating a track or something), Reaper will not create an undo-point.
-
+    
     Returns false in case of an error
   </description>
   <retvals>
@@ -2553,8 +2552,8 @@ function ultraschall.ReturnTableAsIndividualValues(Table)
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>helper functions, table, return, values, indexed</tags>
 </US_DocBloc>
-]]
-
+]]  
+  
   if type(Table)~="table" then Table={} end
   return Table[1], Table[2], Table[3], Table[4], Table[5], Table[6], Table[7], Table[8], Table[9], Table[10],
          Table[11], Table[12], Table[13], Table[14], Table[15], Table[16], Table[17], Table[18], Table[19], Table[20],
@@ -2581,12 +2580,12 @@ function ultraschall.type(object)
   <description>
     Returns the type of the object.
     Supported types are Lua's own datatypes as well as Reaper's own datatypes.
-
+    
     Due API-limitations, SWS-specific datatypes are not supported in this function!
   </description>
   <retvals>
     string type_of_object - the type of the object; the following are valid:
-                          - nil, number: integer, number: float, boolean, string, function, table, thread, userdata,
+                          - nil, number: integer, number: float, boolean, string, function, table, thread, userdata, 
                           - ReaProject, MediaItem, MediaItem_Take, MediaTrack, TrackEnvelope, AudioAccessor, joystick_device, PCM_source
                           - userdata will be shown, if object isn't of any known type
     optional boolean isnumber - true, if object is a number(either integer or number)
@@ -2618,13 +2617,13 @@ function ultraschall.type(object)
   elseif pcall(reaper.AudioAccessorValidateState, object)==true then return "AudioAccessor"
   elseif pcall(reaper.joystick_getaxis,object, 0)==true then return "joystick_device"
   elseif pcall(reaper.GetMediaSourceFileName,object, "")==true then return "PCM_source"
-
+  
 -- SWS-related types: need more research, as they seem to be identical to MediaTrack and maybe other types
 -- probably should get their own type-function
 --  elseif pcall(reaper.FNG_CountMidiNotes,object)==true then return "RprMidiTake"
 --  elseif pcall(reaper.FNG_GetMidiNoteIntProperty,object,"")==true then return "RprMidiNote"
 --  elseif pcall(reaper.BR_EnvCountPoints, object)==true then return "BR_Envelope"
---
+--  
 
   elseif type(object)=="userdata" then return "userdata"
   end
@@ -2642,7 +2641,7 @@ function ultraschall.ConcatIntegerIndexedTables(table1, table2)
   <functioncall>integer numentries, array concatenated_table = ultraschall.ConcatIntegerIndexedTables(array table1, array table2)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Concatenates the entries of two tables into one table. The entries of each table must be indexed by integers
-
+    
     The new table still has the same references as the old table, means: if you remove the old tables/entries in the old tables, the concatenated table/accompanying entries will loose elements.
     To get a "true"-concatenated copy, you should first create new copies of the tables, using [MakeCopyOfTable](#MakeCopyOfTable).
   </description>
@@ -2694,7 +2693,7 @@ function ultraschall.ReverseTable(the_table)
   <description>
     reversed the order of the entries of a table, means, the last entry will become the first, the first become the last, etc.
     The table must be indexed by integers.
-
+    
     Returns nil if table isn't a valid table
   </description>
   <parameters>
@@ -2740,9 +2739,9 @@ function ultraschall.GetDuplicatesFromArrays(array1, array2)
   <functioncall>integer duplicate_count, array duplicate_array, integer originalscount_array1, array originals_array1, integer originalscount_array2, array originals_array2  = ultraschall.GetDuplicatesFromArrays(array array1, array array2)</functioncall>
   <description>
     Returns the duplicates and the originals(entries only in one of the arrays) of two arrays. It will also return the number of entries.
-
+    
     This works only on arrays with integer-indexed entries; index must start with index 1!
-
+    
     returns -1 in case of an error
   </description>
   <parameters>
@@ -2777,10 +2776,10 @@ function ultraschall.GetDuplicatesFromArrays(array1, array2)
   local orgcount1=0
   local orgcount2=0
   local found=false
-
+  
   for i=1, count2 do
     for a=1, count1 do
-      if array2[i]==array1[a] then
+      if array2[i]==array1[a] then 
         dupcount=dupcount+1
         duplicates[dupcount]=array2[i]
         found=true
@@ -2792,14 +2791,14 @@ function ultraschall.GetDuplicatesFromArrays(array1, array2)
 
   for i=1, count1 do
     for a=1, count2 do
-      if array1[i]==array2[a] then
+      if array1[i]==array2[a] then 
         found=true
       end
     end
     if found==false then orgcount1=orgcount1+1 originals1[orgcount1]=array1[i] end
     found=false
   end
-
+  
   return dupcount, duplicates, orgcount1, originals1, orgcount2, originals2
 end
 
@@ -2819,7 +2818,7 @@ function ultraschall.GetScriptFilenameFromActionCommandID(action_command_id)
   <description>
     returns the filename with path of a script, associated to a ReaScript.
     Command-ID-numbers do not work!
-
+                            
     returns false in case of an error
   </description>
   <parameters>
@@ -2863,12 +2862,12 @@ function ultraschall.CombineBytesToInteger(bitoffset, ...)
   <description>
     Combines the Byte-values Byte_1 to Byte_n into one integer.
     That means, if you give 4 values, it will return a 32bit-integer(4*8Bits).
-
-    Negative values will use the maximum possible value of that byte minus the bits.
+    
+    Negative values will use the maximum possible value of that byte minus the bits. 
     In Byte_1, -2 will be 255-1=254, in Byte 2, -2 will be 65280-256=65024.
-
+    
     Use bitoffset to define, from which bit on you want to combine the values.
-
+    
     Returns -1 in case of an error
   </description>
   <parameters>
@@ -2903,7 +2902,7 @@ function ultraschall.CombineBytesToInteger(bitoffset, ...)
     if F[count]&2~=0 then c=c+(2^(bitcount+1)) end
     if F[count]&4~=0 then c=c+(2^(bitcount+2)) end
     if F[count]&8~=0 then c=c+(2^(bitcount+3)) end
-
+    
     if F[count]&16~=0 then c=c+(2^(bitcount+4)) end
     if F[count]&32~=0 then c=c+(2^(bitcount+5)) end
     if F[count]&64~=0 then c=c+(2^(bitcount+6)) end
@@ -2928,7 +2927,7 @@ function ultraschall.SplitIntegerIntoBytes(integervalue)
   <functioncall>integer Byte1, integer Byte2, integer Byte3, integer Byte4 = ultraschall.SplitIntegerIntoBytes(integer integervalue)</functioncall>
   <description>
     Splits a 32-bit-integer-value into four bytes.
-
+    
     Returns -1 in case of an error
   </description>
   <parameters>
@@ -2962,7 +2961,7 @@ function ultraschall.SplitIntegerIntoBytes(integervalue)
   for bitcount=0, 31 do
     count=count+1
     if count==9 then count=1 entry=entry+1 end -- vars[entry]=0 end
-    if integervalue&(math.floor(2^bitcount))~=0 then
+    if integervalue&(math.floor(2^bitcount))~=0 then       
       vars[entry]=math.floor(vars[entry]+(2^(count-1)))
     end
   end
@@ -2993,7 +2992,7 @@ function ultraschall.GetReaperScriptPath()
   <tags>helper functions, reaper, get, scriptpath</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.DirectoryExists(reaper.GetResourcePath(), "Scripts")==true then
+  if ultraschall.DirectoryExists(reaper.GetResourcePath(), "Scripts")==true then 
   return reaper.GetResourcePath()..ultraschall.Separator.."Scripts"
   else return "" end
 end
@@ -3025,7 +3024,7 @@ function ultraschall.GetReaperColorThemesPath()
   <tags>helper functions, reaper, get, colorthemepath</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.DirectoryExists(reaper.GetResourcePath(), "ColorThemes")==true then
+  if ultraschall.DirectoryExists(reaper.GetResourcePath(), "ColorThemes")==true then 
   return reaper.GetResourcePath()..ultraschall.Separator.."ColorThemes"
   else return "" end
 end
@@ -3056,7 +3055,7 @@ function ultraschall.GetReaperJSFXPath()
   <tags>helper functions, reaper, get, jsfxpath</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.DirectoryExists(reaper.GetResourcePath(), "Effects")==true then
+  if ultraschall.DirectoryExists(reaper.GetResourcePath(), "Effects")==true then 
   return reaper.GetResourcePath()..ultraschall.Separator.."Effects"
   else return "" end
 end
@@ -3108,7 +3107,7 @@ function ultraschall.CycleTable(the_table, offset)
   <description>
     Cycles the entries by offset. Offset can be positive(cycle forward) or negative(cycle negative). The number also tells the function, by how many entries the table shall be cycled, with 1 for one entry, 2 for 2 entries, etc.
     Entries "falling out" of one side(top or bottom) of the table will be readded on the other side.
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -3156,7 +3155,7 @@ function ultraschall.SplitStringAtNULLBytes(splitstring)
   <functioncall>integer count, array split_strings = ultraschall.SplitStringAtNULLBytes(string splitstring)</functioncall>
   <description>
     Splits splitstring into individual string at NULL-Bytes.
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -3181,20 +3180,20 @@ function ultraschall.SplitStringAtNULLBytes(splitstring)
   local count=0
   local strings={}
   local temp, offset
-
+  
   -- let's split the string
   while splitstring~=nil do
     -- find the next string-part
-    temp,offset=splitstring:match("(.-)()\0")
-    if temp~=nil then
+    temp,offset=splitstring:match("(.-)()\0")    
+    if temp~=nil then 
       -- if the next found string isn't nil, then add it fo strings-array and count+1
-      count=count+1
+      count=count+1 
       strings[count]=temp
       splitstring=splitstring:sub(offset+1,-1)
       --reaper.MB(splitstring:len(),"",0)
-    else
+    else 
       -- if temp is nil, the string is probably finished splitting
-      break
+      break 
     end
   end
   return count, strings
@@ -3213,7 +3212,7 @@ function ultraschall.RunBackgroundHelperFeatures(switch_on)
   </requires>
   <functioncall>ultraschall.RunBackgroundHelperFeatures(boolean switch_on)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Starts background-scripts supplied with the Ultraschall-API, like:
+    Starts background-scripts supplied with the Ultraschall-API, like:  
 
       - a script for getting the last edit-cursor-position before the current one -> [GetLastCursorPosition()](#GetLastCursorPosition)
       - a script for getting the last playstate before the current one -> [GetLastPlayState()](#GetLastPlayState)
@@ -3262,11 +3261,11 @@ function ultraschall.Main_OnCommandByFilename(filename, ...)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Runs a command by a filename. It internally registers the file temporarily as command, runs it and unregisters it again.
     This is especially helpful, when you want to run a command for sure without possible command-id-number-problems.
-
+    
     It returns a unique script-identifier for this script, which can be used to communicate with this script-instance.
     The started script gets its script-identifier using [GetScriptIdentifier](#GetScriptIdentifier).
     You can use this script-identifier e.g. as extstate.
-
+    
     Returns false in case of an error
   </description>
   <retvals>
@@ -3289,11 +3288,11 @@ function ultraschall.Main_OnCommandByFilename(filename, ...)
   -- check parameters
   if type(filename)~="string" then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "Must be a string.", -1) return false end
   if reaper.file_exists(filename)==false then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "File does not exist.", -2) return false end
-
-  -- create temporary copy of the scriptfile, with a guid in its name
+  
+  -- create temporary copy of the scriptfile, with a guid in its name  
   local filename2
   if filename:sub(-4,-1)==".lua" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".lua"
-  elseif filename:sub(-4,-1)==".eel" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".eel"
+  elseif filename:sub(-4,-1)==".eel" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".eel" 
   elseif filename2==nil and filename:sub(-3,-1)==".py" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".py" end
 
   if filename2==filename then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "No valid script, must be either Lua, Python or EEL-script and end with such an extension.", -4) return false end
@@ -3304,7 +3303,7 @@ function ultraschall.Main_OnCommandByFilename(filename, ...)
   local OO=ultraschall.MakeCopyOfFile(filename, filename2)
   if OO==false then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "Couldn't create a temporary copy of the script.", -4) return false end
 
-  -- register, run and unregister the temporary scriptfile
+  -- register, run and unregister the temporary scriptfile  
   local commandid=reaper.AddRemoveReaScript(true, 0, filename2, true)
   if commandid==0 then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "Couldn't register filename. Is it a valid ReaScript?.", -3) return false end
   ultraschall.SetScriptParameters(string.gsub("ScriptIdentifier:"..filename2, "\\", "/"), ...)
@@ -3312,10 +3311,10 @@ function ultraschall.Main_OnCommandByFilename(filename, ...)
 
   reaper.Main_OnCommand(commandid, 0)
   local commandid2=reaper.AddRemoveReaScript(false, 0, filename2, true)
-
+  
   -- delete the temporary scriptfile
   os.remove(filename2)
-
+  
   -- return true and the script-identifier of the started script
   return true, string.gsub("ScriptIdentifier:"..filename2, "\\", "/")
 end
@@ -3341,11 +3340,11 @@ function ultraschall.MIDI_OnCommandByFilename(filename, MIDIEditor_HWND, ...)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Runs a command by a filename in the MIDI-editor-context. It internally registers the file temporarily as command, runs it and unregisters it again.
     This is especially helpful, when you want to run a command for sure without possible command-id-number-problems.
-
+    
     It returns a unique script-identifier for this script, which can be used to communicate with this script-instance.
     The started script gets its script-identifier using [GetScriptIdentifier](#GetScriptIdentifier).
     You can use this script-identifier e.g. as extstate.
-
+    
     Returns false in case of an error
   </description>
   <retvals>
@@ -3372,41 +3371,41 @@ function ultraschall.MIDI_OnCommandByFilename(filename, MIDIEditor_HWND, ...)
   if MIDIEditor_HWND~=nil then
     if pcall(reaper.JS_Window_GetTitle, MIDIEditor_HWND, "")==false then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "MIDIEditor_HWND", "Not a valid HWND.", -3) return false end
     if pcall(reaper.JS_Window_GetTitle(MIDIEditor_HWND, ""):match("MIDI"))==false then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "MIDIEditor_HWND", "Not a valid MIDI-Editor-HWND.", -4) return false end
-  end
+  end  
 
   -- create temporary scriptcopy with a guid in its filename
   local filename2
   if filename:sub(-4,-1)==".lua" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".lua"
-  elseif filename:sub(-4,-1)==".eel" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".eel"
+  elseif filename:sub(-4,-1)==".eel" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".eel" 
   elseif filename2==nil and filename:sub(-3,-1)==".py" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".py" end
 
   if filename2==filename then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "filename", "No valid script, must be either Lua, Python or EEL-script and end with such an extension.", -4) return false end
 
   local OO=ultraschall.MakeCopyOfFile(filename, filename2)
   if OO==false then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "filename", "Couldn't create a temporary copy of the script.", -4) return false end
-
+  
   -- register and run the temporary-scriptfile
   local commandid =reaper.AddRemoveReaScript(true, 32060, filename2, true)
   local commandid2=reaper.AddRemoveReaScript(true, 32061, filename2, true)
   local commandid3=reaper.AddRemoveReaScript(true, 32062, filename2, true)
   if commandid==0 then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "filename", "Couldn't register filename. Is it a valid ReaScript?.", -5) return false end
-  if MIDIEditor_HWND==nil then
+  if MIDIEditor_HWND==nil then 
     ultraschall.SetScriptParameters(string.gsub("ScriptIdentifier:"..filename2, "\\", "/"), ...)
     local A2=reaper.MIDIEditor_LastFocused_OnCommand(commandid, true)
     if A2==false then A2=reaper.MIDIEditor_LastFocused_OnCommand(commandid, false) end
-    if A2==false then
-      ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "MIDIEditor_HWND", "No last focused MIDI-Editor open.", -6)
+    if A2==false then 
+      ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "MIDIEditor_HWND", "No last focused MIDI-Editor open.", -6) 
       ultraschall.GetScriptParameters(string.gsub("ScriptIdentifier:"..filename2, "\\", "/"), true)
-      return false
+      return false 
     end
   end
   local L=reaper.MIDIEditor_OnCommand(MIDIEditor_HWND, commandid)
-
+  
   -- unregister the temporary-scriptfile
   local commandid_2=reaper.AddRemoveReaScript(false, 32060, filename2, true)
   local commandid_3=reaper.AddRemoveReaScript(false, 32061, filename2, true)
   local commandid_4=reaper.AddRemoveReaScript(false, 32062, filename2, true)
-
+  
   -- delete the temporary scriptfile and return true and the script-identifier for the started script
   os.remove(filename2)
   return true, string.gsub("ScriptIdentifier:"..filename2, "\\", "/")
@@ -3433,7 +3432,7 @@ function ultraschall.GetScriptParameters(script_identifier, remove)
     string caller_script_identifier - the scriptidentifier of the script, that set the parameters
   </retvals>
   <parameters>
-    optional string script_identifier - the script-identifier, whose parameters you want to retrieve;
+    optional string script_identifier - the script-identifier, whose parameters you want to retrieve; 
                              - use nil, to get the parameters stored for the current script
     optional boolean remove - true or nil, remove the stored parameter-extstates; false, keep them for later retrieval
   </parameters>
@@ -3447,8 +3446,8 @@ function ultraschall.GetScriptParameters(script_identifier, remove)
 </US_DocBloc>
 ]]
   if script_identifier==nil or type(script_identifier)~="string" then script_identifier=ultraschall.ScriptIdentifier end
-
-
+  
+  
   local counter=1
   local parms={}
   --while reaper.GetExtState(script_identifier, "parm_"..counter)~="" do
@@ -3460,7 +3459,7 @@ function ultraschall.GetScriptParameters(script_identifier, remove)
     counter=counter+1
   end
   local caller_script=reaper.GetExtState(script_identifier, "parm_0")
-
+  
   if remove==true or remove==nil then reaper.DeleteExtState(script_identifier, "parm_0", false) end
   return counter-1, parms, caller_script
 end
@@ -3484,7 +3483,7 @@ function ultraschall.SetScriptParameters(script_identifier, ...)
     string script_identifier - the script_identifier, whose parameters have been set
   </retvals>
   <parameters>
-    string script_identifier - the script-identifier, whose parameters you want to retrieve;
+    string script_identifier - the script-identifier, whose parameters you want to retrieve; 
                              - use nil, to set the parameters stored for the current script
     string ... - the parameters you want to set; there can be more than one, but they must be strings
   </parameters>
@@ -3498,9 +3497,9 @@ function ultraschall.SetScriptParameters(script_identifier, ...)
 </US_DocBloc>
 ]]
   if script_identifier==nil or type(script_identifier)~="string" then script_identifier=ultraschall.ScriptIdentifier end
-
-
-  local parms={...}
+  
+  
+  local parms={...}  
   local counter=1
   reaper.SetExtState(script_identifier, "parm_0", ultraschall.ScriptIdentifier, false)
 
@@ -3529,9 +3528,9 @@ function ultraschall.GetScriptReturnvalues(script_identifier, remove)
   <functioncall>integer num_params, array retvals = ultraschall.GetScriptReturnvalues(sender_script_identifier, optional boolean remove)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Gets the return-values which a specific sender_script_identifier sent to the current script.
-
+    
     If you have started numerous child-scripts and want to know, which child-script sent you return-values, see [GetScriptReturnvalues_Sender](#GetScriptReturnvalues_Sender)
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -3562,14 +3561,14 @@ function ultraschall.GetScriptReturnvalues(script_identifier, remove)
     if remove==true or remove==nil then
       reaper.DeleteExtState(ultraschall.ScriptIdentifier, script_identifier.."_retval_"..counter, false)
       local retval_identifier = reaper.GetExtState(script_identifier, "retval_sender_identifier")
-      retval_identifier = string.gsub(retval_identifier, script_identifier.."\n", "")
+      retval_identifier = string.gsub(retval_identifier, script_identifier.."\n", "")      
       if retval_identifier:match(ultraschall.ScriptIdentifier)==nil then
         reaper.SetExtState(script_identifier, "retval_sender_identifier", retval_identifier, false)
       end
     end
     counter=counter+1
   end
-
+  
   return counter-1, retvals
 end
 
@@ -3586,14 +3585,14 @@ function ultraschall.SetScriptReturnvalues(script_identifier, ...)
   <functioncall>boolean retval = ultraschall.SetScriptReturnvalues(string script_identifier, string ...)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Send return-values back to the script, that has a specific script_identifier.
-
+    
     returns false in case of an error
   </description>
   <retvals>
     boolean retval - true, storing was successful; false, there was an error
   </retvals>
   <parameters>
-    string script_identifier - the script-identifier of the script-instance, to where you want to send the returnvalues
+    string script_identifier - the script-identifier of the script-instance, to where you want to send the returnvalues 
     string ... - the returnvalues you want to set; there can be more than one, but they must be strings
   </parameters>
   <chapter_context>
@@ -3613,7 +3612,7 @@ function ultraschall.SetScriptReturnvalues(script_identifier, ...)
   if retval_identifier:match(ultraschall.ScriptIdentifier)==nil then
     reaper.SetExtState(script_identifier, "retval_sender_identifier", retval_identifier..ultraschall.ScriptIdentifier.."\n", false)
   end
-
+  
   while retvals[counter]~=nil do
     reaper.SetExtState(script_identifier, ultraschall.ScriptIdentifier.."_retval_"..counter, tostring(retvals[counter]), false)
     counter=counter+1
@@ -3680,9 +3679,9 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
   </requires>
   <functioncall>string encoded_string = ultraschall.Base64_Encoder(string source_string, optional integer base64_type, optional integer remove_newlines, optional integer remove_tabs)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Converts a string into a Base64-Encoded string.
+    Converts a string into a Base64-Encoded string. 
     Currently, only standard Base64-encoding is supported.
-
+    
     Returns nil in case of an error
   </description>
   <retvals>
@@ -3709,39 +3708,39 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
   -- Not to myself:
   -- When you do the decoder, you need to take care, that the bitorder must be changed first, before creating the final-decoded characters
   -- that means: reverse the process of the "tear apart the source-string into bits"-code-passage
-
+  
   -- check parameters and prepare variables
   if type(source_string)~="string" then ultraschall.AddErrorMessage("Base64_Encoder", "source_string", "must be a string", -1) return nil end
   if remove_newlines~=nil and math.type(remove_newlines)~="integer" then ultraschall.AddErrorMessage("Base64_Encoder", "remove_newlines", "must be an integer", -2) return nil end
   if remove_tabs~=nil and math.type(remove_tabs)~="integer" then ultraschall.AddErrorMessage("Base64_Encoder", "remove_tabs", "must be an integer", -3) return nil end
   if base64_type~=nil and math.type(base64_type)~="integer" then ultraschall.AddErrorMessage("Base64_Encoder", "base64_type", "must be an integer", -4) return nil end
-
-  local tempstring={}
+  
+  tempstring={}
   local a=1
   local temp
-
+  
   -- this is probably the future space for more base64-encoding-schemes
   local base64_string="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-
+    
   -- if source_string is multiline, get rid of \r and replace \t and \n with a single whitespace
   if remove_newlines==1 then
     source_string=string.gsub(source_string, "\n", "")
     source_string=string.gsub(source_string, "\r", "")
   elseif remove_newlines==2 then
     source_string=string.gsub(source_string, "\n", " ")
-    source_string=string.gsub(source_string, "\r", "")
+    source_string=string.gsub(source_string, "\r", "")  
   end
 
   if remove_tabs==1 then
     source_string=string.gsub(source_string, "\t", "")
-  elseif remove_tabs==2 then
+  elseif remove_tabs==2 then 
     source_string=string.gsub(source_string, "\t", " ")
   end
-
-
+  
+  
   -- tear apart the source-string into bits
   -- bitorder of bytes will be reversed for the later parts of the conversion!
-  for i=1, source_string:len()-1 do
+  for i=1, source_string:len() do
     temp=string.byte(source_string:sub(i,i))
     temp=temp
     if temp&1==0 then tempstring[a+7]=0 else tempstring[a+7]=1 end
@@ -3754,11 +3753,11 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
     if temp&128==0 then tempstring[a]=0 else tempstring[a]=1 end
     a=a+8
   end
-
+  
   -- now do the encoding
   local encoded_string=""
   local temp2=0
-
+  
   -- take six bits and make a single integer-value off of it
   -- after that, use this integer to know, which place in the base64_string must
   -- be read and included into the final string "encoded_string"
@@ -3773,15 +3772,15 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
     encoded_string=encoded_string..base64_string:sub(temp2+1,temp2+1)
   end
 
-  -- if the number of characters in the encoded_string isn't exactly divideable
+  -- if the number of characters in the encoded_string isn't exactly divideable 
   -- by 3, add = to fill up missing bytes
-  if encoded_string:len()%3==2 then encoded_string=encoded_string.."=="
-  elseif encoded_string:len()%3==1 then encoded_string=encoded_string.."="
+--  OOO=encoded_string:len()%4
+  if encoded_string:len()%4==2 then encoded_string=encoded_string.."=="
+  elseif encoded_string:len()%2==1 then encoded_string=encoded_string.."="
   end
-
+  
   return encoded_string
 end
-
 
 --A=ultraschall.Base64_Encoder("Man is", 9, 9, 9)
 
@@ -3796,9 +3795,9 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
   </requires>
   <functioncall>string decoded_string = ultraschall.Base64_Decoder(string source_string, optional integer base64_type)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Converts a Base64-encoded string into a normal string.
+    Converts a Base64-encoded string into a normal string. 
     Currently, only standard Base64-encoding is supported.
-
+    
     Returns nil in case of an error
   </description>
   <retvals>
@@ -3820,17 +3819,17 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
 ]]
   if type(source_string)~="string" then ultraschall.AddErrorMessage("Base64_Decoder", "source_string", "must be a string", -1) return nil end
   if base64_type~=nil and math.type(base64_type)~="integer" then ultraschall.AddErrorMessage("Base64_Decoder", "base64_type", "must be an integer", -2) return nil end
-
-  -- this is probably the place for other types of base64-decoding-stuff
+  
+  -- this is probably the place for other types of base64-decoding-stuff  
   local base64_string="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-
-
+  
+  
   -- remove =
   source_string=string.gsub(source_string,"=","")
 
   local L=source_string:match("[^"..base64_string.."]")
   if L~=nil then ultraschall.AddErrorMessage("Base64_Decoder", "source_string", "no valid Base64-string: invalid characters", -3) return nil end
-
+  
   -- split the string into bits
   local bitarray={}
   local count=1
@@ -3845,7 +3844,7 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
     if temp&1~=0 then bitarray[count+5]=1 else bitarray[count+5]=0 end
     count=count+6
   end
-
+  
   -- combine the bits into the original bytes and put them into decoded_string
   local decoded_string=""
   local temp2=0
@@ -3916,9 +3915,9 @@ function ultraschall.StateChunkLayouter(statechunk)
     ..&gt;
     &gt;
     </code></pre>
-
+    
     This function will not check, if you've passed a valid statechunk!
-
+    
     returns nil in case of an error
   </description>
   <parameters>
@@ -3937,7 +3936,7 @@ function ultraschall.StateChunkLayouter(statechunk)
 </US_DocBloc>
 ]]
 
-  if type(statechunk)~="string" then ultraschall.AddErrorMessage("StateChunkLayouter","statechunk", "must be a string", -1) return nil end
+  if type(statechunk)~="string" then ultraschall.AddErrorMessage("StateChunkLayouter","statechunk", "must be a string", -1) return nil end  
   local num_tabs=0
   local newsc=""
   for k in string.gmatch(statechunk, "(.-\n)") do
@@ -3965,7 +3964,7 @@ function ultraschall.ReverseEndianess_Byte(byte)
   <description>
     reverses the endianess of a byte and returns this as value.
     The parameter byte must be between 0 and 255!
-
+    
     returns nil in case of an error
   </description>
   <parameters>
@@ -3985,7 +3984,7 @@ function ultraschall.ReverseEndianess_Byte(byte)
 ]]
   if math.type(byte)~="integer" then ultraschall.AddErrorMessage("ReverseEndianess_Byte", "byte", "must be an integer", -1) return end
   if byte<0 or byte>255 then ultraschall.AddErrorMessage("ReverseEndianess_Byte", "byte", "must be between 0 and 255", -2) return end
-
+  
   local newbyte=0
   if byte&1~=0 then newbyte=newbyte+128 end
   if byte&2~=0 then newbyte=newbyte+64 end
@@ -4012,7 +4011,7 @@ function ultraschall.ConvertIntegerIntoString(integervalue)
   <description>
     Splits an integer into its individual bytes and converts them into a string-representation.
     Only 32bit-integers are supported.
-
+    
     Returns nil in case of an error.
   </description>
   <parameters>
@@ -4051,7 +4050,7 @@ function ultraschall.ConvertIntegerToBits(integer)
   <functioncall>string bitvals_csv, table bitvalues = ultraschall.ConvertIntegerToBits(integer integer)</functioncall>
   <description>
     converts an integer-value(up to 64 bits) into it's individual bits and returns it as comma-separated csv-string as well as a table with 64 entries.
-
+    
     returns nil in case of an error
   </description>
   <parameters>
@@ -4093,12 +4092,12 @@ function ultraschall.ConvertBitsToInteger(bitvalues)
   <functioncall>integer integervalue = ultraschall.ConvertBitsToInteger(table bitvalues)</functioncall>
   <description>
     converts a table with all bitvalues into it's integer-representation.
-    each table-entry holds either a 1 or a 0;
-      with index 1 being the first (for 1),
+    each table-entry holds either a 1 or a 0; 
+      with index 1 being the first (for 1), 
       index 2 for the second (for 2),
       index 3 for the third (for 4),
       index 4 for the fourth(for 8), etc
-
+    
     returns nil in case of an error
   </description>
   <parameters>
@@ -4131,7 +4130,7 @@ end
 
 --A=ultraschall.ConvertBitsToInteger({1,1,0,0,0,1})
 
-function ultraschall.GetSetIntConfigVar(varname, set, ...)
+function ultraschall.GetSetIntConfigVar(varname, set, ...)  
   --[[
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>GetSetIntConfigVar</slug>
@@ -4144,11 +4143,11 @@ function ultraschall.GetSetIntConfigVar(varname, set, ...)
     <functioncall>boolean retval, integer config_var_value = ultraschall.GetSetIntConfigVar(string varname, boolean set, optional boolean bit1, ..., optional boolean bit32)</functioncall>
     <description>
       Gets/Sets an integer-bitfield of an integer-configvariable.
-
+      
       Pass to it a varname, if it shall be set or gotten from and up to 32 parameters who specify, if that bit shall be set(true) or not(false) or the currently set value shall be used(nil)
-
+      
       See <a href="Reaper_Config_Variables.html">Reaper_Config_Variables.html</a> for more details on config-variables in Reaper.
-
+      
       returns false in case of an error
     </description>
     <parameters>
@@ -4171,7 +4170,7 @@ function ultraschall.GetSetIntConfigVar(varname, set, ...)
     <tags>helper functions, get, set, configvar, integer, bit, bitfield</tags>
   </US_DocBloc>
   ]]
-
+  
   -- check parameters
   local oldval=reaper.SNM_GetIntConfigVar(varname,-99)
   local oldval2=reaper.SNM_GetIntConfigVar(varname,-98)
@@ -4180,15 +4179,15 @@ function ultraschall.GetSetIntConfigVar(varname, set, ...)
   if oldval~=oldval2 then ultraschall.AddErrorMessage("GetSetIntConfigVar", "varname", "no such config-variable", -2) return false end
   if type(set)~="boolean" then ultraschall.AddErrorMessage("GetSetIntConfigVar", "set", "must be a boolean", -3) return false end
   local newval=0
-
+  
   -- if setting config-variable is set to true, create that new value
   -- and set it
   if set==true then
     for i=0, 32 do
       -- if one of the parameters isn't nil or boolean, return with false, leaving the configvar untouched
       if parms[i]~=nil and parms[i]~=true and parms[i]~=false then ultraschall.AddErrorMessage("GetSetIntConfigVar", "bit"..i, "must be either a boolean or nil(to keep currently set value)", -4) return false end
-    end
-
+    end    
+    
     for i=32, 1, -1 do
       -- create the newval
       -- if parameter is set to nil, use the specifiv bit-value from the original config-var-value
@@ -4196,7 +4195,7 @@ function ultraschall.GetSetIntConfigVar(varname, set, ...)
       if parms[i]==true then newval=newval+1
       elseif parms[i]==nil and oldval&2^i~=0 then newval=newval+1 end
     end
-
+    
     return reaper.SNM_SetIntConfigVar(varname, newval), math.floor(newval)
   else
     return true, math.floor(oldval)
@@ -4223,9 +4222,9 @@ function ultraschall.GetScriptIdentifier()
       The Ultraschall-API gives any script, that uses the API, a unique identifier generated when the script is run.
       This identifier can be used to communicate with this script. If you start numerous instances of a script, it will create for each instance
       its own script-identifier, so you can be sure, that you communicate with the right instance.
-
+      
       The identifier is of the format "ScriptIdentifier:scriptfilename-{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}.ext", where the {}-part is a guid and ext either .lua .py or .eel
-
+      
       [Defer1](#Defer1) to [Defer20](#Defer20) make use of this to stop a running defer-loop from the outside of a deferred-script.
     </description>
     <retvals>
@@ -4260,7 +4259,7 @@ function ultraschall.ReplacePartOfString(originalstring, insertstring, offset, l
   <functioncall>string replaced_string = ultraschall.ReplacePartOfString(string originalstring, string insertstring, integer offset, optional integer length)</functioncall>
   <description>
     replaces a part of a string with a second string
-
+    
     Returns nil in case of an error
   </description>
   <retvals>
@@ -4287,13 +4286,13 @@ function ultraschall.ReplacePartOfString(originalstring, insertstring, offset, l
   if math.type(offset)~="integer" then ultraschall.AddErrorMessage("ReplacePartOfString", "offset", "must be an integer", -3) return nil end
   if length==nil then length=0 end
   if math.type(length)~="integer" then ultraschall.AddErrorMessage("ReplacePartOfString", "length", "must be an integer", -4) return nil end
-
+  
   local start=originalstring:sub(1,offset)
   local endof=originalstring:sub(offset+length+1,-1)
-
+  
 --  num_integers, individual_integers = ultraschall.ConvertStringToIntegers(originalstring,1)
 --  num_integers, individual_integers2 = ultraschall.ConvertStringToIntegers(start..insertstring..endof,1)
-
+  
   return start..insertstring..endof
 end
 
@@ -4311,10 +4310,10 @@ function ultraschall.SearchStringInString(fullstring, searchstring, searchnested
   </requires>
   <functioncall>integer count, array posarray = ultraschall.SearchStringInString(string fullstring, string searchstring)</functioncall>
   <description>
-    Searches for the string searchstring in fullstring.
-
+    Searches for the string searchstring in fullstring. 
+    
     Keep in mind: Umlauts may produce multibyte-values. Therefore, the returned offsets might be confusing.
-
+    
     returns -1 in case of error, 0 if string wasn't found
   </description>
   <parameters>
@@ -4345,7 +4344,7 @@ function ultraschall.SearchStringInString(fullstring, searchstring, searchnested
   local posstring={}
 
   local temp, TEMPO2, temp3
-
+  
   while fullstring~=nil do
     temp,TEMPO2,temp3=fullstring:match(".*()("..searchstring..")()")
     if temp==nil then break end
@@ -4376,7 +4375,7 @@ function print3(...)
   <functioncall>print(parameter_1 to parameter_n)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     like [print](#print), but puts the parameters into the clipboard.
-
+    
     Converts all parametes given into string using tostring() and puts them into the clipboard, with each parameter separated by two spaces.
     Unlike print and print2, this does NOT end with a newline!
   </description>
@@ -4415,13 +4414,13 @@ function ultraschall.MKVOL2DB(mkvol_value)
   <functioncall>number db_value = ultraschall.MKVOL2DB(number mkvol_value)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Converts an MKVOL-value into a dB-value.
-
+    
     MKVOL-values are used by the routing-functions for HWOut/AUXSendReceive, specifically for their volume-value as these can't be converted using Reaper's own DB2SLIDER or SLIDER2DB, so this function should help you.
-
+    
     This function is an adapted one from the function provided in Plugins/reaper\_www\_root/main.js
-
+    
     See [DB2MKVOL](#DB2MKVOL) to convert a dB-value into it's MKVOL-representation
-
+    
     returns nil in case of an error
   </description>
   <retvals>
@@ -4458,11 +4457,11 @@ function ultraschall.DB2MKVOL(db_value)
   <functioncall>number mkvol_value = ultraschall.DB2MKVOL(number db_value)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Converts an dB-value into a MKVOL-value.
-
+    
     MKVOL-values are used by the routing-functions for HWOut/AUXSendReceive, specifically for their volume-value as these can't be converted using Reaper's own DB2SLIDER or SLIDER2DB, so this function should help you.
-
+    
     See [MKVOL2DB](#MKVOL2DB) to convert a MKVOL-value into it's dB-representation
-
+    
     returns nil in case of an error
   </description>
   <retvals>
@@ -4501,13 +4500,13 @@ function ultraschall.ConvertIntegerIntoString2(Size, ...)
   <description>
     Splits numerous integers into its individual bytes and converts them into a string-representation.
     Maximum 32bit-integers are supported.
-
+    
     Returns nil in case of an error.
   </description>
   <parameters>
     integer Size - the maximum size of the integer to convert, 1(8 bit) to 4(32 bit)
     integer integervalue_1 - the first integer value to convert from
-    ... -
+    ... - 
     integer integervalue_n - the last integer value to convert from
   </parameters>
   <retvals>
@@ -4555,7 +4554,7 @@ function ultraschall.ConvertStringToIntegers(String, Size)
   <functioncall>integer num_integers, array individual_integers = ultraschall.ConvertStringToIntegers(string String, integer Size)</functioncall>
   <description>
     Converts a string into its integer-representation. Allows you to set the size of the integers between 1 Byte and 8 Bytes(64 bits).
-
+    
     Returns -1 in case of an error.
   </description>
   <parameters>
@@ -4580,35 +4579,35 @@ function ultraschall.ConvertStringToIntegers(String, Size)
   if Size<1 or Size>8 then ultraschall.AddErrorMessage("ConvertStringToIntegers", "Size", "must be between 1(for 8 bit) and 8(for 64 bit)", -3) return -1 end
   local Table={}
   for i=1, String:len(), Size do
-    if Size==1 then
+    if Size==1 then 
       Table[i]=string.byte(String:sub(i,i))
     elseif Size==2 then
-      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)),
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
                                                  string.byte(String:sub(i+1,i+1)))
     elseif Size==3 then
-      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)),
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
                                                  string.byte(String:sub(i+1,i+1)),
                                                  string.byte(String:sub(i+2,i+2)))
     elseif Size==4 then
-      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)),
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
                                                  string.byte(String:sub(i+1,i+1)),
                                                  string.byte(String:sub(i+2,i+2)),
                                                  string.byte(String:sub(i+3,i+3)))
     elseif Size==5 then
-      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)),
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
                                                  string.byte(String:sub(i+1,i+1)),
                                                  string.byte(String:sub(i+2,i+2)),
                                                  string.byte(String:sub(i+3,i+3)),
                                                  string.byte(String:sub(i+4,i+4)))
     elseif Size==6 then
-      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)),
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
                                                  string.byte(String:sub(i+1,i+1)),
                                                  string.byte(String:sub(i+2,i+2)),
                                                  string.byte(String:sub(i+3,i+3)),
                                                  string.byte(String:sub(i+4,i+4)),
                                                  string.byte(String:sub(i+5,i+5)))
     elseif Size==7 then
-      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)),
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
                                                  string.byte(String:sub(i+1,i+1)),
                                                  string.byte(String:sub(i+2,i+2)),
                                                  string.byte(String:sub(i+3,i+3)),
@@ -4617,7 +4616,7 @@ function ultraschall.ConvertStringToIntegers(String, Size)
                                                  string.byte(String:sub(i+6,i+6))
                                                  )
     elseif Size==8 then
-      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)),
+      Table[i]=ultraschall.CombineBytesToInteger(0,string.byte(String:sub(i,i)), 
                                                  string.byte(String:sub(i+1,i+1)),
                                                  string.byte(String:sub(i+2,i+2)),
                                                  string.byte(String:sub(i+3,i+3)),
@@ -4628,7 +4627,7 @@ function ultraschall.ConvertStringToIntegers(String, Size)
 
     end
   end
-
+  
   return String:len(), Table
 end
 
@@ -4645,9 +4644,9 @@ function print_update(...)
   <functioncall>print_update(parameter_1 to parameter_n)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     replaces Lua's own print-function, that is quite useless in Reaper.
-
+    
     Converts all parametes given into string using tostring() and displays them in the ReaScript-console, separated by two spaces, ending with a newline.
-
+    
     This is like [print](#print), but clears console everytime before displaying the values. Good for status-display, that shall not scroll.
   </description>
   <parameters>
@@ -4682,11 +4681,11 @@ function ultraschall.SetScriptIdentifier_Description(description)
       The Ultraschall-API gives any script, that uses the API, a unique identifier generated when the script is run.
       This identifier can be used to communicate with this script. If you start numerous instances of a script, it will create for each instance
       its own script-identifier, so you can be sure, that you communicate with the right instance.
-
+      
       With this function, you can set its description, that is less cryptic than the ScriptIdentifier itself.
-
+      
       You can get it using [GetScriptIdentifier_Description](#GetScriptIdentifier_Description).
-
+      
       returns -1 in case of an error
     </description>
     <retvals>
@@ -4722,9 +4721,9 @@ function ultraschall.GetScriptIdentifier_Description()
       The Ultraschall-API gives any script, that uses the API, a unique identifier generated when the script is run.
       This identifier can be used to communicate with this script. If you start numerous instances of a script, it will create for each instance
       its own script-identifier, so you can be sure, that you communicate with the right instance.
-
+      
       With this function, you can get its description, that is less cryptic than the ScriptIdentifier itself.
-
+      
       You can set it using [SetScriptIdentifier_Description](#SetScriptIdentifier_Description).
     </description>
     <retvals>
@@ -4756,12 +4755,12 @@ function ultraschall.SetScriptIdentifier_Title(title)
       The Ultraschall-API gives any script, that uses the API, a unique identifier generated when the script is run.
       This identifier can be used to communicate with this script. If you start numerous instances of a script, it will create for each instance
       its own script-identifier, so you can be sure, that you communicate with the right instance.
-
+      
       With this function, you can set its title, that is less cryptic than the ScriptIdentifier itself.
       No \n-newlines, \r-carriag returns or \0-nullbytes are allowed and will be removed
-
+      
       You can get it using [GetScriptIdentifier_Title](#GetScriptIdentifier_Title).
-
+      
       returns -1 in case of an error
     </description>
     <retvals>
@@ -4783,7 +4782,7 @@ function ultraschall.SetScriptIdentifier_Title(title)
   title=string.gsub(title, "\0", "")
   title=string.gsub(title, "\n", "")
   title=string.gsub(title, "\r", "")
-
+  
   ultraschall.ScriptIdentifier_Title=title
 end
 
@@ -4801,11 +4800,11 @@ function ultraschall.GetScriptIdentifier_Title()
       The Ultraschall-API gives any script, that uses the API, a unique identifier generated when the script is run.
       This identifier can be used to communicate with this script. If you start numerous instances of a script, it will create for each instance
       its own script-identifier, so you can be sure, that you communicate with the right instance.
-
+      
       With this function, you can get its description, that is less cryptic than the ScriptIdentifier itself.
-
+      
       Default is the script's filename.
-
+      
       You can set it using [SetScriptIdentifier_Title](#SetScriptIdentifier_Title).
     </description>
     <retvals>
@@ -4868,11 +4867,11 @@ function ultraschall.PrintProgressBar(show, length, maximumvalue, currentvalue, 
       Calculate a simple progressbar, which can be optionally displayed in the ReaScript console; Will clear the console before displaying the next updated progressbar.
 
       Will update it only, if the current-value of last time this function got called is different from the current one or toptext or bottomtext changed.
-
+      
       You can also use the returnvalues to draw your own progressbar, e.g. in a gfx.init-window
 
       If you need to calculate a new progressbar, after the former got to 100%, it is wise to call [ResetProgressBar](#ResetProgressBar), or it might not update the first time you call this function.
-
+      
       Returns false in case of an error
     </description>
     <retvals>
@@ -4907,12 +4906,12 @@ function ultraschall.PrintProgressBar(show, length, maximumvalue, currentvalue, 
   if math.type(currentvalue)~="integer" then ultraschall.AddErrorMessage("PrintProgressBar", "currentvalue", "must be an integer", -4) return false end
   if currentvalue<0 then ultraschall.AddErrorMessage("PrintProgressBar", "currentvalue", "must be 0 at least", -11) return false end
   if currentvalue>maximumvalue then ultraschall.AddErrorMessage("PrintProgressBar", "currentvalue", "must be smaller or equal than maximumvalue", -5) return false end
-  if type(percentage)~="boolean" then ultraschall.AddErrorMessage("PrintProgressBar", "percentage", "must be a boolean", -6) return false end
-  if math.type(offset)~="integer" then ultraschall.AddErrorMessage("PrintProgressBar", "offset", "must be an integer", -7) return false end
+  if type(percentage)~="boolean" then ultraschall.AddErrorMessage("PrintProgressBar", "percentage", "must be a boolean", -6) return false end  
+  if math.type(offset)~="integer" then ultraschall.AddErrorMessage("PrintProgressBar", "offset", "must be an integer", -7) return false end  
   if offset<0 then ultraschall.AddErrorMessage("PrintProgressBar", "offset", "must be 0 or bigger", -8) return false end
-  if toptext~=nil and type(toptext)~="string" then ultraschall.AddErrorMessage("PrintProgressBar", "toptext", "must be a string", -9) return false end
-  if bottomtext~=nil and type(bottomtext)~="string" then ultraschall.AddErrorMessage("PrintProgressBar", "bottomtext", "must be a string", -10) return false end
-  if remaining_time~=nil and type(remaining_time)~="string" then ultraschall.AddErrorMessage("PrintProgressBar", "remaining_time", "must be a string", -11) return false end
+  if toptext~=nil and type(toptext)~="string" then ultraschall.AddErrorMessage("PrintProgressBar", "toptext", "must be a string", -9) return false end  
+  if bottomtext~=nil and type(bottomtext)~="string" then ultraschall.AddErrorMessage("PrintProgressBar", "bottomtext", "must be a string", -10) return false end  
+  if remaining_time~=nil and type(remaining_time)~="string" then ultraschall.AddErrorMessage("PrintProgressBar", "remaining_time", "must be a string", -11) return false end  
 
   local ProgressString, status, String_offset, String_progress, String_unprogress, Percentage
     -- remaining time-calculator
@@ -4924,14 +4923,14 @@ function ultraschall.PrintProgressBar(show, length, maximumvalue, currentvalue, 
       ultraschall.progressbar_startcurvalue=currentvalue
     end
     ultraschall.progressbar_cur_time=reaper.time_precise()
-
+    
     local temptime=ultraschall.progressbar_cur_time-ultraschall.progressbar_starttime
     local tempmaxtime=(temptime/(currentvalue))*maximumvalue
     local tempremainingtime=tempmaxtime-temptime
     tempremainingtime=reaper.format_timestr(tempremainingtime, ""):match("(.-)%.")
     remaining_time=remaining_time..tempremainingtime
-  end
-  if ultraschall.progressbar_lastupdate~=math.ceil(currentvalue) or
+  end  
+  if ultraschall.progressbar_lastupdate~=math.ceil(currentvalue) or 
     ultraschall.lasttoptext~=progressbar_toptext or
     ultraschall.progressbar_lastbottomtext~=bottomtext then
     reaper.ClearConsole()
@@ -4949,7 +4948,7 @@ function ultraschall.PrintProgressBar(show, length, maximumvalue, currentvalue, 
       end
     end
     status=math.ceil((length/maximumvalue)*currentvalue)
-
+    
     ProgressString=String_progress:sub(0,status)..String_unprogress:sub(status+1,-1)
     if percentage==true then
       Percentage=tostring(math.ceil((100/maximumvalue)*currentvalue)).." %"
@@ -4992,9 +4991,9 @@ function ultraschall.StoreFunctionInExtState(section, key, functioncall, debug)
   <functioncall>boolean retval = ultraschall.StoreFunctionInExtState(string section, string key, function func, boolean debug)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Stores a function into an extstate. You can store it's debug-information as well.
-
+    
     To load the function again, use [LoadFunctionFromExtState](#LoadFunctionFromExtState)
-
+    
     Returns false in case of an error
   </description>
   <retvals>
@@ -5037,9 +5036,9 @@ function ultraschall.LoadFunctionFromExtState(section, key)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Loads a function from an extstate, if it has been stored in there before.
     The extstate must contain a valid function. If something else is stored, the loaded "function" might crash Lua!
-
+    
     To store the function, use [StoreFunctionInExtState](#StoreFunctionInExtState)
-
+    
     Returns false in case of an error
   </description>
   <retvals>
@@ -5080,18 +5079,20 @@ function ultraschall.ConvertHex2Ascii(hexstring)
     Lua=5.3
   </requires>
   <functioncall>string ascii_string = ultraschall.ConvertHex2Ascii(string hexstring)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     converts a hexstring into an ascii-string.
 
-    Will convert 2 hexvalues into one byte.
-
+    Will combine two hexvalues into one byte, until the whole string is converted.
+    
+    See [ConvertAscii2Hex](#ConvertAscii2Hex) to convert a string into its HEX-representation.
+    
     Returns nil in case of an error
   </description>
   <retvals>
     string ascii_string - the converted string
   </retvals>
   <parameters>
-    string hexstring - the original string with only hexadecimal numbers
+    string hexstring - the original string with only hexadecimal numbers 
   </parameters>
   <chapter_context>
     API-Helper functions
@@ -5126,13 +5127,15 @@ function ultraschall.ConvertAscii2Hex(orgstring)
     Lua=5.3
   </requires>
   <functioncall>string hexstring = ultraschall.ConvertAscii2Hex(string ascii_string)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     converts an ascii-string into a hexstring.
-
+    
+    See [ConvertHex2Ascii](#ConvertHex2Ascii) to convert a HEX-string into its normal string-representation.
+    
     Returns nil in case of an error
   </description>
   <retvals>
-    string hexstring - the original string with only hexadecimal numbers
+    string hexstring - the original string with only hexadecimal numbers 
   </retvals>
   <parameters>
     string ascii_string - the converted string
@@ -5151,7 +5154,7 @@ function ultraschall.ConvertAscii2Hex(orgstring)
   local temp
   for i=1, orgstring:len() do
     temp=string.format('%X', string.byte(orgstring:sub(i,i)))
-    if temp:len()==1 then temp="0"..temp end
+    if temp:len()==1 then temp="0"..temp end    
     String=String..temp
   end
   return String
@@ -5175,11 +5178,11 @@ function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x,
     Returns the currently clicked MediaItem, Take as well as the difference of position, end, length and startoffset since last time calling this function.
     Good for implementing ripple-drag/editing-functions, whose position depends on changes in the currently clicked MediaItem.
     Repeatedly call this (e.g. in a defer-cycle) to get all changes made, during dragging position, length or offset of the MediaItem underneath mousecursor.
-
-    This function takes into account the size of the start/end-drag-mousecursor, that means: if mouse-position is within 3 pixels before start/after end of the item, it will get the correct MediaItem.
+    
+    This function takes into account the size of the start/end-drag-mousecursor, that means: if mouse-position is within 3 pixels before start/after end of the item, it will get the correct MediaItem. 
     This is a workaround, as the mouse-cursor changes to dragging and can still affect the MediaItem, even though the mouse at this position isn't above a MediaItem anymore.
     To be more strict, set exlude_mousecursorsize to true. That means, it will only detect MediaItems directly beneath the mousecursor. If the mouse isn't above a MediaItem, this function will ignore it, even if the mouse could still affect the MediaItem.
-    If you don't understand, what that means: simply omit exlude_mousecursorsize, which should work in almost all use-cases. If it doesn't work as you want, try setting it to true and see, whether it works now.
+    If you don't understand, what that means: simply omit exlude_mousecursorsize, which should work in almost all use-cases. If it doesn't work as you want, try setting it to true and see, whether it works now.    
   </description>
   <retvals>
     MediaItem MediaItem - the MediaItem at the current mouse-position; nil if not found
@@ -5237,7 +5240,7 @@ function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x,
     MediaItem, MediaItem_Take = reaper.GetItemFromPoint(x-3, y, true)
     MediaItem_unlocked = reaper.GetItemFromPoint(x-3, y, false)
   end
-
+  
   -- crossfade-stuff
   -- example-values for crossfade-parts
   -- Item left: 811 -> 817 , Item right: 818 -> 825
@@ -5252,7 +5255,7 @@ function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x,
   --        if the items are adjacent but not if they overlap
   --        also need to take into account, what if zoomed out heavily, where items might be only
   --        a few pixels wide
-
+  
   if MediaItem~=nil then
     ItemNumber = reaper.GetMediaItemInfo_Value(MediaItem, "IP_ITEMNUMBER")
     ItemTrack  = reaper.GetMediaItemInfo_Value(MediaItem, "P_TRACK")
@@ -5263,7 +5266,7 @@ function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x,
     end
   end
   --]]
-
+  
   if ultraschall.get_action_context_MediaItem_old~=MediaItem then
     StartDiffTime=0
     EndDiffTime=0
@@ -5276,26 +5279,26 @@ function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x,
       ultraschall.get_action_context_MediaItem_Offset=reaper.GetMediaItemTakeInfo_Value(MediaItem_Take, "D_STARTOFFS")
     end
   else
-    if MediaItem~=nil then
+    if MediaItem~=nil then      
       StartDiffTime=ultraschall.get_action_context_MediaItem_Start
       EndDiffTime=ultraschall.get_action_context_MediaItem_End
       LengthDiffTime=ultraschall.get_action_context_MediaItem_Length
       OffsetDiffTime=ultraschall.get_action_context_MediaItem_Offset
-
+      
       ultraschall.get_action_context_MediaItem_Start=reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION")
       ultraschall.get_action_context_MediaItem_End=reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")+reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION")
       ultraschall.get_action_context_MediaItem_Length=reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
       ultraschall.get_action_context_MediaItem_Offset=reaper.GetMediaItemTakeInfo_Value(MediaItem_Take, "D_STARTOFFS")
-
+      
       Item_moved=(ultraschall.get_action_context_MediaItem_Start~=StartDiffTime
               and ultraschall.get_action_context_MediaItem_End~=EndDiffTime)
-
+              
       StartDiffTime=ultraschall.get_action_context_MediaItem_Start-StartDiffTime
       EndDiffTime=ultraschall.get_action_context_MediaItem_End-EndDiffTime
       LengthDiffTime=ultraschall.get_action_context_MediaItem_Length-LengthDiffTime
       OffsetDiffTime=ultraschall.get_action_context_MediaItem_Offset-OffsetDiffTime
-
-    end
+      
+    end    
   end
   ultraschall.get_action_context_MediaItem_old=MediaItem
 
@@ -5318,21 +5321,21 @@ function ultraschall.GetAllActions(section)
   <functioncall>integer number_of_actions, table actiontable = ultraschall.GetAllActions(integer section)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns all actions and accompanying attributes from a specific section as a handy table
-
+    
     The table is of the following format:
 
-            actiontable[index]["commandid"]       - the command-id-number of the action
-            actiontable[index]["actioncommandid"] - the action-command-id-string of the action, if it's a named command(usually scripts or extensions), otherwise empty string
-            actiontable[index]["name"]            - the name of command
-            actiontable[index]["scriptfilename"]  - the filename+path of a command, that is a ReaScript, otherwise empty string
-            actiontable[index]["termination"]     - the termination-state of the action
-                                                      -1  - not available
-                                                      4   - Dialogwindow appears(Terminate, New Instance, Abort), if another instance of a given script is started, that's already running
-                                                      260 - always Terminate All(!) Instances, if you try to run another instance of a script, that's already running. When no instance is running, it simply starts the script.
-                                                      516 - always start a New Instance of the script, that's already running
-            actiontable[index]["consolidate"]     - the consolidate-state of custom actions; 1 consolidate undo points, 2 show in Actions-Menu, 3 consolidate undo points AND show in Actions Menu; -1, if not available
-            actiontable[index]["actiontype"]      - the type of the action; "native action", "extension action", "custom action", "script"
-
+            actiontable[index]["commandid"]       - the command-id-number of the action  
+            actiontable[index]["actioncommandid"] - the action-command-id-string of the action, if it's a named command(usually scripts or extensions), otherwise empty string  
+            actiontable[index]["name"]            - the name of command  
+            actiontable[index]["scriptfilename"]  - the filename+path of a command, that is a ReaScript, otherwise empty string  
+            actiontable[index]["termination"]     - the termination-state of the action  
+                                                      -1  - not available  
+                                                      4   - Dialogwindow appears(Terminate, New Instance, Abort), if another instance of a given script is started, that's already running  
+                                                      260 - always Terminate All(!) Instances, if you try to run another instance of a script, that's already running. When no instance is running, it simply starts the script.  
+                                                      516 - always start a New Instance of the script, that's already running  
+            actiontable[index]["consolidate"]     - the consolidate-state of custom actions; 1 consolidate undo points, 2 show in Actions-Menu, 3 consolidate undo points AND show in Actions Menu; -1, if not available  
+            actiontable[index]["actiontype"]      - the type of the action; "native action", "extension action", "custom action", "script"  
+     
     returns -1 in case of an error.
   </description>
   <retvals>
@@ -5358,8 +5361,8 @@ function ultraschall.GetAllActions(section)
 </US_DocBloc>
 --]]
   if section~=0 and section~=1 and section~=100 and section~=32060 and section~=32061 and section~=32062 and section~=32063 then
-    ultraschall.AddErrorMessage("GetAllActions", "section", "no valid section, must be a number for one of the following sections: Main=0, Main (alt recording)=100, MIDI Editor=32060, MIDI Event List Editor=32061, MIDI Inline Editor=32062, Media Explorer=32063", -1)
-    return -1
+    ultraschall.AddErrorMessage("GetAllActions", "section", "no valid section, must be a number for one of the following sections: Main=0, Main (alt recording)=100, MIDI Editor=32060, MIDI Event List Editor=32061, MIDI Inline Editor=32062, Media Explorer=32063", -1) 
+    return -1 
   end
 
   local A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-kb.ini") -- read the kb.ini-file
@@ -5373,7 +5376,7 @@ function ultraschall.GetAllActions(section)
       ATable[Acount]["Consolidate"] = tonumber(k:match("... (%d-) "))
       ATable[Acount]["AID"] = k:match("... .- .- (.-) ")
       ATable[Acount]["AID"]=string.gsub(ATable[Acount]["AID"], "\"", "")
-
+  
       if k:sub(1,3)=="SCR" then
         ATable[Acount]["Scriptfilename"]=k:match(".- \".-\" (.*)")
         ATable[Acount]["Scriptfilename"]=string.gsub(ATable[Acount]["Scriptfilename"], "\"", "")
@@ -5382,7 +5385,7 @@ function ultraschall.GetAllActions(section)
       end
     end
   end
-
+  
   local Table={}
   local counter=0
 
@@ -5393,13 +5396,13 @@ function ultraschall.GetAllActions(section)
     if retval==0 then break end
     counter=counter+1
 --    if reaper.ReverseNamedCommandLookup(retval)~=nil and name:find("SWS") then -- debugline
-
+    
     -- add action to table
     Table[counter]={}
     Table[counter]["commandid"]=retval
     Table[counter]["name"]=name
     Table[counter]["actioncommandid"]=reaper.ReverseNamedCommandLookup(retval)
-
+    
     if name:sub(1,8)=="Script: " then
       for i=1, Acount do
         if Table[counter]["actioncommandid"]==ATable[i]["AID"] then
@@ -5430,7 +5433,7 @@ function ultraschall.GetAllActions(section)
       Table[counter]["termination"]=-1
       Table[counter]["actiontype"]="native action"
     end
-
+    
 --    end -- debugline
   end
 
@@ -5452,7 +5455,7 @@ function ultraschall.IsWithinTimeRange(time, start, stop)
   <functioncall>boolean retval = ultraschall.IsWithinTimeRange(number time, number start, number stop)</functioncall>
   <description>
     returns if time is between(including) start and stop.
-
+     
     returns false in case of an error
   </description>
   <parameters>
@@ -5492,7 +5495,7 @@ function ultraschall.MediaExplorer_OnCommand(actioncommandid)
   <description>
     runs a Media Explorer-associated action.
     Note: Can only run Reaper's native actions currently(all actions having a number as actioncommandid), not scripts!
-
+    
     returns false if Media Explorer is closed
   </description>
   <retvals>
@@ -5526,7 +5529,7 @@ function ultraschall.UpdateMediaExplorer()
   <functioncall>boolean retval = ultraschall.UpdateMediaExplorer()</functioncall>
   <description>
     updates the listview of the Media Explorer.
-
+    
     returns false if Media Explorer is closed
   </description>
   <retvals>
@@ -5557,7 +5560,7 @@ function ultraschall.FindPatternsInString(SourceString, pattern, sort_after_find
   <functioncall>integer count_found_items, array found_items = ultraschall.FindPatternsInString(string SourceString, string pattern, boolean sort_after_finding)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Finds all occurrences of matching-patterns in a string. You can sort them optionally.
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -5587,9 +5590,9 @@ function ultraschall.FindPatternsInString(SourceString, pattern, sort_after_find
     String[counter]=k
     counter=counter+1
   end
-
+  
   if sort_after_finding==true then table.sort(String) end
-
+  
   local String2=""
   for i=1, counter-1 do
     String2=String2..String[i].."\n"
@@ -5611,26 +5614,26 @@ function ultraschall.RunLuaSourceCode(code)
   <functioncall>boolean retval = ultraschall.RunLuaSourceCode(string code)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     runs the Lua-code stored in the parameter code
-
+    
     Does not check for validity and syntaxerrors in the code!
-
+    
     You can also add new callable functions that way. Just put function-declarations in the parameter code.
-
+    
     For instance from the following code:
-
+    
       code=function main()
              reaper.MB("I'm only run, when my parent function main is called", "", 0)
            end
-
+           
            reaper.MB("I'm run immediately", "", 0)"
-
-    when called by
-
+    
+    when called by 
+    
         ultraschall.RunLuaSourceCode(code)
-
+    
     only the line reaper.MB("I'm run immediately", "", 0) will be run immediately.
     If you want to run the function main as well, you need to explicitly call it with main()
-
+    
     returns false in case of an error; nil, in case of an syntax/lua-error in the code itself
   </description>
   <parameters>
@@ -5668,11 +5671,11 @@ function ultraschall.Main_OnCommand_LuaCode(Code, ...)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Runs LuaCode as new temporary script-instance. It internally registers the code as a file temporarily as command, runs it and unregisters it again.
     This is especially helpful, when you want to run a command for sure without possible command-id-number-problems.
-
+    
     It returns a unique script-identifier for this script, which can be used to communicate with this script-instance.
     The started script gets its script-identifier using [GetScriptIdentifier](#GetScriptIdentifier).
     You can use this script-identifier e.g. as extstate.
-
+    
     Returns false in case of an error
   </description>
   <retvals>
@@ -5716,9 +5719,9 @@ function ultraschall.ReplacePatternInString(OriginalString, pattern, replacestri
   <functioncall>string altered_string, boolean replaced = ultraschall.ReplacePatternInString(string OriginalString, string pattern, string replacestring, integer index)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Replaces the index'th occurrence of pattern in OriginalString with replacepattern.
-
+    
     Unlike string.gsub, this replaces only the selected pattern!
-
+    
     returns nil, false in case of an error
   </description>
   <parameters>
@@ -5740,14 +5743,14 @@ function ultraschall.ReplacePatternInString(OriginalString, pattern, replacestri
   <tags>helper functions, replace, pattern in string, index, occurrence</tags>
 </US_DocBloc>
 --]]
-  if type(OriginalString)~="string" then ultraschall.AddErrorMessage("ReplacePatternInString", "OriginalString", "must be a string", -1) return nil, false end
-  if type(pattern)~="string" then ultraschall.AddErrorMessage("ReplacePatternInString", "pattern", "must be a string", -2) return nil, false end
+  if type(OriginalString)~="string" then ultraschall.AddErrorMessage("ReplacePatternInString", "OriginalString", "must be a string", -1) return nil, false end  
+  if type(pattern)~="string" then ultraschall.AddErrorMessage("ReplacePatternInString", "pattern", "must be a string", -2) return nil, false end  
   if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("ReplacePatternInString", "pattern", "must be a valid Lua-matching-pattern", -3) return nil, false end
-  if type(replacestring)~="string" then ultraschall.AddErrorMessage("ReplacePatternInString", "replacestring", "must be a string", -4) return nil, false end
-  if math.type(index)~="integer" then ultraschall.AddErrorMessage("ReplacePatternInString", "index", "must be an integer", -5) return nil, false end
+  if type(replacestring)~="string" then ultraschall.AddErrorMessage("ReplacePatternInString", "replacestring", "must be a string", -4) return nil, false end  
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("ReplacePatternInString", "index", "must be an integer", -5) return nil, false end  
   local OriginalString2=OriginalString
   local LEN=0
-  for i=1, index do
+  for i=1, index do 
     local Offset1, Offset2=OriginalString2:match("()"..pattern.."()")
     if Offset1==nil or Offset2==nil then return OriginalString, false end
     if i<index then
@@ -5758,7 +5761,7 @@ function ultraschall.ReplacePatternInString(OriginalString, pattern, replacestri
       OriginalString2=OriginalString2:sub(Offset1,-1)
     end
   end
-
+  
   return OriginalString:sub(1,LEN)..string.gsub(OriginalString2, pattern, replacestring, 1), true
 end
 
@@ -5775,9 +5778,9 @@ function ultraschall.ConvertFunction_ToBase64String(to_convert_function, debug)
   <functioncall>string BASE64_functionstring = ultraschall.ConvertFunction_ToBase64String(function to_convert_function, boolean debug)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Converts a function into a BASE64-string.
-
+    
     To load a function from a BASE64-string, use [ConvertFunction_FromBase64String](#ConvertFunction_FromBase64String)
-
+    
     Returns nil in case of an error
   </description>
   <retvals>
@@ -5796,10 +5799,10 @@ function ultraschall.ConvertFunction_ToBase64String(to_convert_function, debug)
 </US_DocBloc>
 ]]
   if type(to_convert_function)~="function" then ultraschall.AddErrorMessage("ConvertFunction_ToBase64String", "to_convert_function", "must be a function", -1) return end
-
+  
   local Dump=string.dump (to_convert_function, debug)
   local DumpBase64 = ultraschall.Base64_Encoder(Dump)
-
+  
   return DumpBase64
 end
 
@@ -5815,9 +5818,9 @@ function ultraschall.ConvertFunction_FromBase64String(BASE64_functionstring)
   <functioncall>function function = ultraschall.ConvertFunction_FromBase64String(string BASE64_functionstring)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Loads a function from a BASE64-string.
-
+    
     To convert a function into a BASE64-string, use [ConvertFunction_ToBase64String](#ConvertFunction_ToBase64String)
-
+    
     Returns nil in case of an error
   </description>
   <retvals>

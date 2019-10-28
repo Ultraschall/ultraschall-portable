@@ -19,7 +19,7 @@
             
             The IDE in Reaper has some limitations, as every line must not exceed 4095 characters, or they will be split when the script is loaded the next time.
             
-            The base-directory for ReaScript can be read from the reaper.ini -> [REAPER] -> lastcwd=
+            The base-directory for files created from ReaScript can be read from the reaper.ini -> [REAPER] -> lastcwd=
             That means, if you create a new file without giving it a path, it will be created in the path set in lastcwd.
         </description>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -496,7 +496,7 @@
         <slug>APIExists</slug>
         <title>APIExists</title>
         <functioncall prog_lang="cpp">bool APIExists(const char* function_name)</functioncall>
-        <functioncall prog_lang="eel">bool APIExists("function_name")</functioncall>
+        <functioncall prog_lang="eel">bool APIExists(function_name")</functioncall>
         <functioncall prog_lang="lua">boolean = reaper.APIExists(string function_name)</functioncall>
         <functioncall prog_lang="python">Boolean RPR_APIExists(String function_name)</functioncall>
         <requires>
@@ -3053,7 +3053,7 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            Delete a range of envelope points. autoitem_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc.<br><br>
+            Delete a range of envelope points. autoitem_idx=-1 for the underlying envelope, 0 for the first automation item on the envelope, etc.
         </description>
         <retvals>
             boolean - true, if deleting was successful; false, if not
@@ -5764,8 +5764,8 @@
         </description>
         <retvals>
             integer master_visibility - state of visibility of the master-track
-                    &1 - 1, master track visible in tcp; 0, master track invisible in mixer
-                    &2 - 2, master track invisible in mixer; 0, master track visible in mixer
+                                      - &1 - 1, master track visible in tcp; 0, master track invisible in mixer
+                                      - &2 - 2, master track invisible in mixer; 0, master track visible in mixer
         </retvals>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -6007,7 +6007,7 @@
             Get the number of takes in a MediaItem-object.
         </description>
         <retvals>
-            integer itemnumtakes- the number of takes within the MediaItem-object
+            integer itemnumtakes - the number of takes within the MediaItem-object
         </retvals>
         <parameters>
             MediaItem item - the MediaItem-object, whose number of takes you want to know.
@@ -6868,7 +6868,7 @@
             Get the parent MediaTrack, if a MediaTrack is a track of a foldered track.
         </description>
         <retvals>
-            MediaTrack parenttrack- the returned parent MediaTrack of a foldered MediaTrack
+            MediaTrack parenttrack - the returned parent MediaTrack of a foldered MediaTrack
         </retvals>
         <parameters>
             MediaTrack track - the MediaTrack in a folder, whose parent MediaTrack you want
@@ -8048,7 +8048,7 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            Get or set the arrange view grid division. 0.25=quarter note, 1.0/3.0=half note triplet, etc. swingmode can be 1 for swing enabled, swingamt is -1..1. swingmode can be 3 for measure-grid. Returns grid configuration flags<br><br>
+            Get or set the arrange view grid division. 0.25=quarter note, 1.0/3.0=half note triplet, etc. swingmode can be 1 for swing enabled, swingamt is -1..1. swingmode can be 3 for measure-grid. Returns grid configuration flags
         </description>
         <retvals>
             retval - 
@@ -8126,7 +8126,7 @@
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Get or set project information.
 
-            RECORD\_PATH: recording directory -- may be blank or a relative path, to get the effective path see [GetProjectPathEx](#GetProjectPathEx)<br>
+            RECORD\_PATH: recording directory -- may be blank or a relative path, to get the effective path see [GetProjectPathEx](#GetProjectPathEx)
             RENDER\_FILE: render directory
             RENDER\_PATTERN: render file name (may contain wildcards)
             RENDER\_FORMAT: base64-encoded sink configuration (see project files, etc). Callers can also pass a simple 4-byte string (non-base64-encoded), to use default settings for that sink type.
@@ -8752,7 +8752,7 @@
         <parameters>
             section_id - the section, in which the action lies
                         -0, Main
-                        -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+                        -100, Main (alt recording)
                         -32060, MIDI Editor
                         -32061, MIDI Event List Editor
                         -32062, MIDI Inline Editor
@@ -13001,6 +13001,8 @@
         </requires>
         <description prog_lang="*">
             Send an OSC message directly to REAPER. The value argument may be NULL. The message will be matched against the default OSC patterns. Only supported if control surface support was enabled when installing REAPER.
+            
+            This is not broadcast outside of Reaper, so you can't control devices, plugins, etc with it!
         </description>
         <parameters>
             string message - 
@@ -13566,7 +13568,7 @@
         <parameters>
             section_id - the section, in which the action lies
                         0, Main
-                        100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+                        100, Main (alt recording)
                         32060, MIDI Editor
                         32061, MIDI Event List Editor
                         32062, MIDI Inline Editor
@@ -15349,7 +15351,7 @@
                 I\_AUTOMODE : int \* : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
                 I\_SRCCHAN : int \*, index,&amp;1024=mono, -1 for none
                 I\_DSTCHAN : int \*, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
-                I\_MIDIFLAGS : int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanSee <a href="#CreateTrackSend">CreateTrackSend</a>, <a href="#RemoveTrackSend">RemoveTrackSend</a>, <a href="#GetTrackNumSends">GetTrackNumSends</a>.
+                I\_MIDIFLAGS : int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanSee [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
 
 
             See [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
@@ -15798,9 +15800,9 @@
         </description>
         <parameters>
             mode - 
-            msg1 - 
-            msg2 - 
-            msg3 - 
+            msg1 - modifier
+            msg2 - note/keyname
+            msg3 - velocity
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -21062,23 +21064,23 @@
             \[BR\] Get mouse cursor context. Each parameter returns information in a form of string as specified in the table below.
 
             To get more info on stuff that was found under mouse cursor see [BR\_GetMouseCursorContext\_Envelope](#BR_GetMouseCursorContext_Envelope), [BR\_GetMouseCursorContext\_Item](#BR_GetMouseCursorContext_Item), [BR\_GetMouseCursorContext\_MIDI](#BR_GetMouseCursorContext_MIDI), [BR\_GetMouseCursorContext\_Position](#BR_GetMouseCursorContext_Position), [BR\_GetMouseCursorContext\_Take](#BR_GetMouseCursorContext_Take), [BR\_GetMouseCursorContext\_Track](#BR_GetMouseCursorContext_Track)
-            <table border="2">
-            <tr><th style="width:100px">Window</th><th style="width:100px">Segment</th><th style="width:300px">Details</th></tr>
-            <tr><th rowspan="1" align = "center">unknown</th><td>""</td><td>""</td></tr>
-            <tr><th rowspan="4" align = "center">ruler</th><td>region\_lane </td><td>""</td></tr>
+            <table border='2'>
+            <tr><th style='width:100px'>Window</th><th style='width:100px'>Segment</th><th style='width:300px'>Details</th></tr>
+            <tr><th rowspan='1' align = 'center'>unknown</th><td>""</td><td>""</td></tr>
+            <tr><th rowspan='4' align = 'center'>ruler</th><td>region\_lane </td><td>""</td></tr>
             <tr><td>marker\_lane </td><td>""</td></tr>
             <tr><td>tempo\_lane </td><td>""</td></tr>
             <tr><td>timeline</td><td>""</td></tr>
-            <tr><th rowspan="1" align = "center">transport</th><td>""</td><td>""</td></tr>
-            <tr><th rowspan="3" align = "center">tcp </th><td>track</td><td>""</td></tr>
+            <tr><th rowspan='1' align = 'center'>transport</th><td>""</td><td>""</td></tr>
+            <tr><th rowspan='3' align = 'center'>tcp </th><td>track</td><td>""</td></tr>
             <tr><td>envelope</td><td>""</td></tr>
             <tr><td>empty</td><td>""</td></tr>
-            <tr><th rowspan="2" align = "center">mcp </th><td>track</td><td>""</td></tr>
+            <tr><th rowspan='2' align = 'center'>mcp </th><td>track</td><td>""</td></tr>
             <tr><td>empty</td><td>""</td></tr>
-            <tr><th rowspan="3" align = "center">arrange</th><td>track</td><td>empty,item, item\_stretch\_marker,env\_point, env\_segment </td></tr>
+            <tr><th rowspan='3' align = 'center'>arrange</th><td>track</td><td>empty,item, item\_stretch\_marker,env\_point, env\_segment </td></tr>
             <tr><td>envelope</td><td>empty, env\_point, env\_segment</td></tr>
             <tr><td>empty</td><td>""</td></tr>
-            <tr><th rowspan="5" align = "center">midi\_editor </th><td>unknown</td><td>""</td></tr>
+            <tr><th rowspan='5' align = 'center'>midi\_editor </th><td>unknown</td><td>""</td></tr>
             <tr><td>ruler</td><td>""</td></tr>
             <tr><td>piano</td><td>""</td></tr>
             <tr><td>notes</td><td>""</td></tr>
@@ -25993,7 +25995,7 @@
             If true, the file will be re-loaded and a new handle will be returned.
            
             If successful, returns a handle to the cursor, which can be used in [JS\_Mouse\_SetCursor](#JS_Mouse_SetCursor).
-            forceNewLoad is an optional boolean parameter:<br>
+            forceNewLoad is an optional boolean parameter:
         </description>
         <retvals>
            identifier  - 
@@ -26166,13 +26168,15 @@
         <functioncall prog_lang="python">(Float cutoffTime, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetDown(cutoffTime, stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
         <requires>
             Reaper=5.965
-            JS=0.986
+            JS=0.993
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Returns a 255-byte array that specifies which virtual keys, from 0x01 to 0xFF, have sent KEYDOWN messages since cutoffTime.
 
-            Note: Mouse buttons and modifier keys are not (currently) reliably detected, and JS\_Mouse\_GetState can be used instead.
+            Notes:
+            * Mouse buttons and modifier keys are not (currently) reliably detected, and JS\_Mouse\_GetState can be used instead.
+            * Auto-repeated KEYDOWN messages are ignored.
         </description>
         <retvals>
            string state - 
@@ -26247,7 +26251,7 @@
         <functioncall prog_lang="python">(Boolean retval, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetState(stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
         <requires>
             Reaper=5.965
-            JS=0.986
+            JS=0.993
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -26258,7 +26262,9 @@
             If cutoffTime is negative, it is relative to the current time.
 
             Notes:
-            \* Mouse buttons and modifier keys are not (currently) reliably detected, and [JS\_Mouse\_GetState](#JS_Mouse_GetState) can be used instead.
+            Notes:
+            * Mouse buttons and modifier keys are not (currently) reliably detected, and JS\_Mouse\_GetState can be used instead.
+            * Auto-repeated KEYDOWN messages are ignored.
         </description>
         <retvals>
            boolean retval - 
@@ -27026,7 +27032,8 @@
             NOTE: On Linux and macOS, the window contents are only updated \*between\* defer cycles, so the window cannot be animated by for/while loops within a single defer cycle.
         </description>
         <retvals>
-            identifier retval, optional string style
+            identifier retval - 
+            optional string style - 
         </retvals>
         <parameters>
            string title - 
@@ -28013,17 +28020,18 @@
         <functioncall prog_lang="python">JS_Window_Move(void windowHWND, Int left, Int top)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.991
+            JS=0.993
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Changes the position of the specified window, keeping its size constant.
-           
-            \* For a top-level window, the position is relative to the upper-left corner of the screen.
-           
-            \* For a child window, they are relative to the upper-left corner of the parent window's client area.
 
-            \* Equivalent to calling [JS\_Window\_SetPosition](#JS_Window_SetPosition) with NOSIZE, NOZORDER, NOACTIVATE and NOOWNERZORDER flags set.
+            NOTES:
+            * For top-level windows, position is relative to the primary display.
+            * On Windows and Linux, position is calculated as the coordinates of the upper left corner of the window, relative to upper left corner of the primary display, and the positive Y-axis points downward.
+            * On macOS, position is calculated as the coordinates of the bottom left corner of the window, relative to bottom left corner of the display, and the positive Y-axis points upward.
+            * For a child window, on all platforms, position is relative to the upper-left corner of the parent window's client area.
+            * Equivalent to calling [JS\_Window\_SetPosition](#JS_Window_SetPosition) with NOSIZE, NOZORDER, NOACTIVATE and NOOWNERZORDER flags set.
         </description>
         <parameters>
            identifier windowHWND - 
@@ -28111,15 +28119,15 @@
         <functioncall prog_lang="python">JS_Window_Resize(void windowHWND, Int width, Int height)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.991
+            JS=0.993
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Changes the dimensions of the specified window, keeping the top left corner position constant.
            
-            \* If resizing script GUIs, call gfx.update() after resizing.
+            * If resizing script GUIs, call gfx.update() after resizing.
             
-            \* Equivalent to calling JS_Window_SetPosition with NOMOVE, NOZORDER, NOACTIVATE and NOOWNERZORDER flags set.
+            * Equivalent to calling [JS\_Window\_SetPosition](#JS_Window_SetPosition) with NOMOVE, NOZORDER, NOACTIVATE and NOOWNERZORDER flags set.
         </description>
 
         <parameters>
@@ -31276,7 +31284,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_atexit</slug>
         <title>atexit</title>
-        <functioncall prog_lang="eel">atexit("code")</functioncall>
+        <functioncall prog_lang="eel">atexit(code)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -31284,7 +31292,7 @@
             Adds code to be executed when the script finishes or is ended by the user. Typically used to clean up after the user terminates defer() or runloop() code.
         </description>
         <parameters>
-            "code" - 
+            code - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -31384,7 +31392,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_eval</slug>
         <title>eval</title>
-        <functioncall prog_lang="eel">eval("code")</functioncall>
+        <functioncall prog_lang="eel">eval(code)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -31392,7 +31400,7 @@
             Executes code passed in. Code can use functions, but functions created in code can't be used elsewhere.
         </description>
         <parameters>
-            "code" -
+            code -
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -31426,7 +31434,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_extension_api</slug>
         <title>extension_api</title>
-        <functioncall prog_lang="eel">extension_api("function_name"[,...])</functioncall>
+        <functioncall prog_lang="eel">extension_api(function_name[,...])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -31434,7 +31442,7 @@
             Used to call functions exported by extension plugins. The first parameter must be the exported function name, then its own parameters (as if the function was called directly).
         </description>
         <parameters>
-            "funtionname" - 
+            functionname - 
             ... - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -31665,7 +31673,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_fopen</slug>
         <title>fopen</title>
-        <functioncall prog_lang="eel">fopen("fn","mode")</functioncall>
+        <functioncall prog_lang="eel">fopen(fn,mode)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -31673,8 +31681,8 @@
             Opens a file "fn" with mode "mode". For read, use "r" or "rb", write "w" or "wb". Returns a positive integer on success.
         </description>
         <parameters>
-            "fn" - 
-            "mode" - 
+            fn - 
+            mode - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -31687,7 +31695,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_fprintf</slug>
         <title>fprintf</title>
-        <functioncall prog_lang="eel">fprintf(fp,"format"[,...])</functioncall>
+        <functioncall prog_lang="eel">fprintf(fp,format[,...])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -31722,7 +31730,7 @@
         </description>
         <parameters>
             fp - 
-            "format" - 
+            format - 
             [...] - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -31856,6 +31864,8 @@
             Returns true if a new value has been updated.
             val will be set to a relative or absolute value depending on mode (=0: absolute mode, >0: relative modes). resolution=127 for 7-bit resolution, =16383 for 14-bit resolution.
             Notes: sectionID, and cmdID will be set to -1 if the script is not part of the action list. mode, resolution and val will be set to -1 if the script was not triggered via MIDI/OSC.
+            
+            For relative mode bindings, calling get_action_context() will return the accumulated relative value in decoded form (not 65 or 63, but +1/-1 etc), and clear the internal state. So if you call it multiple times, the first one will return the accumulated value, and the second will always return 0.
         </description>
         <parameters>
             #filename - 
@@ -31901,6 +31911,7 @@
                     16: Alt key
                     32: Windows key
                     64: middle mouse button
+                Note: Mousebuttons will be returned after gfx_init(), the other keyboard-modifier only when using gfx_getchar()!
         </description>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -32207,7 +32218,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_gfx_drawstr</slug>
         <title>gfx_drawstr</title>
-        <functioncall prog_lang="eel">gfx_drawstr("str"[,flags,right,bottom])</functioncall>
+        <functioncall prog_lang="eel">gfx_drawstr(str[,flags,right,bottom])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -32222,7 +32233,7 @@
             \* flags&amp;256: ignore right/bottom, otherwise text is clipped to (gfx\_x, gfx\_y, right, bottom)
         </description>
         <parameters>
-            "str" - 
+            str - 
             flags - 
             right - 
             bottom - 
@@ -32375,7 +32386,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_gfx_init</slug>
         <title>gfx_init</title>
-        <functioncall prog_lang="eel">gfx_init("name"[,width,height,dockstate,xpos,ypos])</functioncall>
+        <functioncall prog_lang="eel">gfx_init(name[,width,height,dockstate,xpos,ypos])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -32444,7 +32455,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_gfx_loadimg</slug>
         <title>gfx_loadimg</title>
-        <functioncall prog_lang="eel">gfx_loadimg(image,"filename")</functioncall>
+        <functioncall prog_lang="eel">gfx_loadimg(image,filename)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -32453,7 +32464,7 @@
         </description>
         <parameters>
             image - 
-            "filename" - 
+            filename - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -32489,7 +32500,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_gfx_measurestr</slug>
         <title>gfx_measurestr</title>
-        <functioncall prog_lang="eel">gfx_measurestr("str",&amp;w,&amp;h)</functioncall>
+        <functioncall prog_lang="eel">gfx_measurestr(str,&amp;w,&amp;h)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -32497,7 +32508,7 @@
             Measures the drawing dimensions of a string with the current font (as set by gfx_setfont). 
         </description>
         <parameters>
-            "str" - 
+            str - 
             w - 
             h - 
         </parameters>
@@ -32544,7 +32555,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_gfx_printf</slug>
         <title>gfx_printf</title>
-        <functioncall prog_lang="eel">gfx_printf("format"[, ...])</functioncall>
+        <functioncall prog_lang="eel">gfx_printf(format[, ...])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -32578,7 +32589,7 @@
             Values for format specifiers can be specified as additional parameters to gfx_printf, or within {} in the format specifier (such as %{varname}d, in that case a global variable is always used).
         </description>
         <parameters>
-            "format" - 
+            format - 
             ... - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -32784,7 +32795,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_gfx_setfont</slug>
         <title>gfx_setfont</title>
-        <functioncall prog_lang="eel">gfx_setfont(idx[,"fontface", sz, flags])</functioncall>
+        <functioncall prog_lang="eel">gfx_setfont(idx[,fontface, sz, flags])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -32796,7 +32807,7 @@
         <parameters>
             idx - the font-id; idx=0 for default bitmapped font, no configuration is possible for this font.
                 - idx=1..16 for a configurable font
-            "fontface" - the name of the font, like "arial"
+            fontface - the name of the font, like "arial"
             sz - the size of the font (8-100)
             flags - flags, how to render the text; values are repeating every 256 numbers
                   - a multibyte character, which can include 'i' for italics, 'u' for underline, or 'b' for bold. 
@@ -32866,7 +32877,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_gfx_showmenu</slug>
         <title>gfx_showmenu</title>
-        <functioncall prog_lang="eel">gfx_showmenu("str")</functioncall>
+        <functioncall prog_lang="eel">gfx_showmenu(str)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -32886,7 +32897,7 @@
             gfx_showmenu("first item, followed by separator||!second item, checked|>third item which spawns a submenu|#first item in submenu, grayed out|<second and last item in submenu|fourth item in top menu")
         </description>
         <parameters>
-            "str" - 
+            str - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -33103,7 +33114,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_match</slug>
         <title>match</title>
-        <functioncall prog_lang="eel">match("needle","haystack"[, ...])</functioncall>
+        <functioncall prog_lang="eel">match(needle,haystack[, ...])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33132,8 +33143,8 @@
             See also sprintf() for other notes, including specifying direct variable references via {}.
         </description>
         <parameters>
-            "needle" - 
-            "haystack" - 
+            needle - 
+            haystack - 
             ... - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -33147,7 +33158,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_matchi</slug>
         <title>matchi</title>
-        <functioncall prog_lang="eel">matchi("needle","haystack"[, ...])</functioncall>
+        <functioncall prog_lang="eel">matchi(needle,haystack[, ...])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33155,8 +33166,8 @@
             Case-insensitive version of [match()](#eel_matchi).
         </description>
         <parameters>
-            "needle" - 
-            "haystack" - 
+            needle - 
+            haystack - 
             ... - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -33304,7 +33315,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_printf</slug>
         <title>printf</title>
-        <functioncall prog_lang="eel">printf("format"[, ...])</functioncall>
+        <functioncall prog_lang="eel">printf(format[, ...])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33338,7 +33349,7 @@
             Values for format specifiers can be specified as additional parameters to printf, or within {} in the format specifier (such as %{varname}d, in that case a global variable is always used).
         </description>
         <parameters>
-            "format" - 
+            format - 
             ... - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -33373,7 +33384,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_runloop</slug>
         <title>runloop</title>
-        <functioncall prog_lang="eel">runloop("code")</functioncall>
+        <functioncall prog_lang="eel">runloop(code)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33383,7 +33394,7 @@
             Note that no undo point will be automatically created when the script finishes, unless you create it explicitly.
         </description>
         <parameters>
-            "code" - 
+            code - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -33459,7 +33470,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_sprintf</slug>
         <title>sprintf</title>
-        <functioncall prog_lang="eel">sprintf(#dest,"format"[, ...])</functioncall>
+        <functioncall prog_lang="eel">sprintf(#dest,format[, ...])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33494,7 +33505,7 @@
         </description>
         <parameters>
             #dest - 
-            "format" - 
+            format - 
             ... - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -33657,7 +33668,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_str_getchar</slug>
         <title>str_getchar</title>
-        <functioncall prog_lang="eel">str_getchar("str",offset[,type])</functioncall>
+        <functioncall prog_lang="eel">str_getchar(str,offset[,type])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33680,7 +33691,7 @@
                 \* 'D' - double, big endian
         </description>
         <parameters>
-            "str" - 
+            str - 
             offset - 
             type - 
         </parameters>
@@ -33695,7 +33706,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_str_insert</slug>
         <title>str_insert</title>
-        <functioncall prog_lang="eel">str_insert(#str,"srcstr",pos)</functioncall>
+        <functioncall prog_lang="eel">str_insert(#str,srcstr,pos)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33704,7 +33715,7 @@
         </description>
         <parameters>
             #str - 
-            "srcstr" - 
+            srcstr - 
             pos - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -33764,7 +33775,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_strcat</slug>
         <title>strcat</title>
-        <functioncall prog_lang="eel">strcat(#str,"srcstr")</functioncall>
+        <functioncall prog_lang="eel">strcat(#str,srcstr)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33773,7 +33784,7 @@
         </description>
         <parameters>
             #str - 
-            "srcstr" - 
+            srcstr - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -33786,7 +33797,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_strcmp</slug>
         <title>strcmp</title>
-        <functioncall prog_lang="eel">strcmp("str","str2")</functioncall>
+        <functioncall prog_lang="eel">strcmp(str,str2)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33794,8 +33805,8 @@
             Compares strings, returning 0 if equal
         </description>
         <parameters>
-            "str" - 
-            "str2 - 
+            str - 
+            str2 - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -33808,7 +33819,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_strcpy</slug>
         <title>strcpy</title>
-        <functioncall prog_lang="eel">strcpy(#str,"srcstr")</functioncall>
+        <functioncall prog_lang="eel">strcpy(#str,srcstr)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33817,7 +33828,7 @@
         </description>
         <parameters>
             #str - 
-            "srcstr" - 
+            srcstr - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -33830,7 +33841,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_strcpy_from</slug>
         <title>strcpy_from</title>
-        <functioncall prog_lang="eel">strcpy_from(#str,"srcstr",offset)</functioncall>
+        <functioncall prog_lang="eel">strcpy_from(#str,srcstr,offset)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33839,7 +33850,7 @@
         </description>
         <parameters>
             #str - 
-            "srcstr" - 
+            srcstr - 
             offset - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -33853,7 +33864,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_strcpy_substr</slug>
         <title>strcpy_substr</title>
-        <functioncall prog_lang="eel">strcpy_substr(#str,"srcstr",offs,ml))</functioncall>
+        <functioncall prog_lang="eel">strcpy_substr(#str,srcstr,offs,ml))</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33862,7 +33873,7 @@
         </description>
         <parameters>
             #str - 
-            "srcstr" - 
+            srcstr - 
             offs - 
             ml - 
         </parameters>
@@ -33877,7 +33888,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_stricmp</slug>
         <title>stricmp</title>
-        <functioncall prog_lang="eel">stricmp("str","str2")</functioncall>
+        <functioncall prog_lang="eel">stricmp(str,str2)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33885,8 +33896,8 @@
             Compares strings ignoring case, returning 0 if equal.
         </description>
         <parameters>
-            "str" - 
-            "str2" - 
+            str - 
+            str2 - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -33899,7 +33910,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_strlen</slug>
         <title>strlen</title>
-        <functioncall prog_lang="eel">strlen("str")</functioncall>
+        <functioncall prog_lang="eel">strlen(str)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33907,7 +33918,7 @@
             Returns the length of the string passed as a parameter.
         </description>
         <parameters>
-            "str" - 
+            str - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -33920,7 +33931,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_strncat</slug>
         <title>strncat</title>
-        <functioncall prog_lang="eel">strncat(#str,"srcstr",maxlen)</functioncall>
+        <functioncall prog_lang="eel">strncat(#str,srcstr,maxlen)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33929,7 +33940,7 @@
         </description>
         <parameters>
             #str - 
-            "srcstr" - 
+            srcstr - 
             maxlen - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -33943,7 +33954,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_strncmp</slug>
         <title>strncmp</title>
-        <functioncall prog_lang="eel">strncmp("str","str2",maxlen)</functioncall>
+        <functioncall prog_lang="eel">strncmp(str,str2,maxlen)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33951,8 +33962,8 @@
             Compares strings giving up after maxlen characters, returning 0 if equal.
         </description>
         <parameters>
-            "str" - 
-            "str2" - 
+            str - 
+            str2 - 
             maxlen - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -33966,7 +33977,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_strncpy</slug>
         <title>strncpy</title>
-        <functioncall prog_lang="eel">strncpy(#str,"srcstr",maxlen)</functioncall>
+        <functioncall prog_lang="eel">strncpy(#str,srcstr,maxlen)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -33975,7 +33986,7 @@
         </description>
         <parameters>
             #str - 
-            "srcstr" - 
+            srcstr - 
             maxlen - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -33989,13 +34000,18 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_strnicmp</slug>
         <title>strnicmp</title>
-        <functioncall prog_lang="eel">strnicmp("str","str2",maxlen)</functioncall>
+        <functioncall prog_lang="eel">strnicmp(str,str2,maxlen)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
         <description indent="default">
             Compares strings giving up after maxlen characters, ignoring case, returning 0 if equal.
         </description>
+        <parameters>
+            str - 
+            str2 - 
+            maxlen - 
+        </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
         <chapter_context>
@@ -34049,7 +34065,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_tcp_connect</slug>
         <title>tcp_connect</title>
-        <functioncall prog_lang="eel">tcp_connect("address",port[,block])</functioncall>
+        <functioncall prog_lang="eel">tcp_connect(address,port[,block])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -34057,7 +34073,7 @@
             Create a new TCP connection to address:port. If block is specified and 0, connection will be made nonblocking. Returns TCP connection ID greater than 0 on success.
         </description>
         <parameters>
-            "address" - 
+            address - 
             port - 
             block - 
         </parameters>
@@ -34072,7 +34088,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_tcp_listen</slug>
         <title>tcp_listen</title>
-        <functioncall prog_lang="eel">tcp_listen(port[,"interface",#ip_out])</functioncall>
+        <functioncall prog_lang="eel">tcp_listen(port[,interface,#ip_out])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -34081,7 +34097,7 @@
         </description>
         <parameters>
             port - 
-            "interface" - 
+            interface - 
             #ip_out - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -34139,7 +34155,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_tcp_send</slug>
         <title>tcp_send</title>
-        <functioncall prog_lang="eel">tcp_send(connection,"str"[,len])</functioncall>
+        <functioncall prog_lang="eel">tcp_send(connection,str[,len])</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -34148,7 +34164,7 @@
         </description>
         <parameters>
             connection - 
-            "str" - 
+            str - 
             len - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -34316,6 +34332,8 @@
         </requires>
         <description indent="default">
             Returns contextual information about the script, typically MIDI/OSC input values.val will be set to a relative or absolute value depending on mode (=0: absolute mode, &gt;0: relative modes). resolution=127 for 7-bit resolution, =16383 for 14-bit resolution.Notes: sectionID, and cmdID will be set to -1 if the script is not part of the action list. mode, resolution and val will be set to -1 if the script was not triggered via MIDI/OSC.
+            
+            For relative mode bindings, calling get_action_context() will return the accumulated relative value in decoded form (not 65 or 63, but +1/-1 etc), and clear the internal state. So if you call it multiple times, the first one will return the accumulated value, and the second will always return 0.
         </description>
         <retvals>
             boolean is_new_value - 
@@ -34363,6 +34381,7 @@
                 16: Alt key
                 32: Windows key
                 64: middle mouse button
+            Note: Mousebuttons will be returned after gfx.init(), the other keyboard-modifier only when using gfx.getchar()!
         </description>
         <target_document>ReaperApiFunctionsReference</target_document>
         <source_document></source_document>
@@ -34762,7 +34781,7 @@
                         A=gfx.getchar() -- first byte
                         B=gfx.getchar() -- second byte
                         
-                        if A==261 and B==128 then reaper.MB("You typed the Euro-symbol.", "Message", 0) end -- typed character is the Euro-currency-symbol: €
+                        if A==261 and B==128 then reaper.MB("You typed the Euro-symbol.", "Message", 0) end -- typed character is the Euro-currency-symbol.
                                                 
         </description>
         <retvals>
@@ -34943,7 +34962,7 @@
             number retval - 1.0, if window is opened
         </retvals>
         <parameters>
-            string "name" - the name of the window, which will be shown in the title of the window
+            string name - the name of the window, which will be shown in the title of the window
             optional integer width - the width of the window; minmum is 50
             optional integer height - the height of the window; minimum is 16
             optional integer dockstate - &1=0, undocked; &1=1, docked
@@ -35127,7 +35146,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="lua">
         <slug>lua_gfx.printf</slug>
         <title>gfx.printf</title>
-        <functioncall prog_lang="lua">gfx.printf("format"[, ...])</functioncall>
+        <functioncall prog_lang="lua">gfx.printf(format[, ...])</functioncall>
         <requires>
             Reaper=5.62
             Lua=5.3
@@ -35161,11 +35180,8 @@
 
             Values for format specifiers can be specified as additional parameters to gfx.printf, or within {} in the format specifier (such as %{varname}d, in that case a global variable is always used).
         </description>
-        <retvals>
-            
-        </retvals>
         <parameters>
-            "format" - 
+            format - 
             ... - 
         </parameters>
         <target_document>ReaperApiFunctionsReference</target_document>
@@ -35374,7 +35390,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="lua">
         <slug>lua_gfx.setfont</slug>
         <title>gfx.setfont</title>
-        <functioncall prog_lang="lua">gfx.setfont(integer idx,optional string "fontface", optional integer sz, optional integer flags)</functioncall>
+        <functioncall prog_lang="lua">gfx.setfont(integer idx,optional string fontface, optional integer sz, optional integer flags)</functioncall>
         <requires>
             Reaper=5.62
             Lua=5.3
@@ -35387,7 +35403,7 @@
         <parameters>
             integer idx - the font-id; idx=0 for default bitmapped font, no configuration is possible for this font.
                 - idx=1..16 for a configurable font
-            optional string "fontface" - the name of the font, like "arial"
+            optional string fontface - the name of the font, like "arial"
             optional integer sz - the size of the font (8-100)
             optional integer flags - flags, how to render the text; up to 4 flags can be passed at the same time
                   - a multibyte character, which can include 'i' for italics, 'u' for underline, or 'b' for bold. 
@@ -36342,7 +36358,7 @@
         <parameters>
             section - the section, in which the action lies
                     -0, Main
-                    -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+                    -100, Main (alt recording)
                     -32060, MIDI Editor
                     -32061, MIDI Event List Editor
                     -32062, MIDI Inline Editor
@@ -36471,12 +36487,12 @@
             See [CountActionShortcuts](#CountActionShortcuts), [GetActionShortcutDesc](#GetActionShortcutDesc), [DoActionShortcutDialog](#DoActionShortcutDialog).
         </description>
         <retvals>
-            bool -
+            bool - 
         </retvals>
         <parameters>
             section - the section, to which this action belongs to
                         -0, Main
-                    -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+                    -100, Main (alt recording)
                     -32060, MIDI Editor
                     -32061, MIDI Event List Editor
                     -32062, MIDI Inline Editor
@@ -36667,7 +36683,7 @@
         <parameters>
             section - the section of the action
                         -0, Main
-                    -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+                    -100, Main (alt recording)
                     -32060, MIDI Editor
                     -32061, MIDI Event List Editor
                     -32062, MIDI Inline Editor
@@ -37192,7 +37208,7 @@
         <parameters>
             section - the section, in which the action appears in
             -0, Main
-            -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+            -100, Main (alt recording)
             -32060, MIDI Editor
             -32061, MIDI Event List Editor
             -32062, MIDI Inline Editor
@@ -37320,7 +37336,7 @@
         <parameters>
             section - the section, in which the action exists
             -0, Main
-            -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+            -100, Main (alt recording)
             -32060, MIDI Editor
             -32061, MIDI Event List Editor
             -32062, MIDI Inline Editor
@@ -37382,7 +37398,7 @@
             s - 
             section - the section, in which the action exists
             -0, Main
-            -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+            -100, Main (alt recording)
             -32060, MIDI Editor
             -32061, MIDI Event List Editor
             -32062, MIDI Inline Editor
@@ -37414,7 +37430,7 @@
             cmd - 
             section - the section, in which the action exists
             -0, Main
-            -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+            -100, Main (alt recording)
             -32060, MIDI Editor
             -32061, MIDI Event List Editor
             -32062, MIDI Inline Editor
@@ -37498,7 +37514,7 @@
             menu - 
             section - the section, in which the action exists
             -0, Main
-            -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+            -100, Main (alt recording)
             -32060, MIDI Editor
             -32061, MIDI Event List Editor
             -32062, MIDI Inline Editor
@@ -37530,7 +37546,7 @@
             evt - 
             section - the section, in which the action exists
             -0, Main
-            -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+            -100, Main (alt recording)
             -32060, MIDI Editor
             -32061, MIDI Event List Editor
             -32062, MIDI Inline Editor
@@ -37563,7 +37579,7 @@
             menu - 
             section - the section, in which the action exists
             -0, Main
-            -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+            -100, Main (alt recording)
             -32060, MIDI Editor
             -32061, MIDI Event List Editor
             -32062, MIDI Inline Editor
@@ -37594,7 +37610,7 @@
         <parameters>
             section - the section, in which the action exists
             -0, Main
-            -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+            -100, Main (alt recording)
             -32060, MIDI Editor
             -32061, MIDI Event List Editor
             -32062, MIDI Inline Editor
@@ -37634,7 +37650,7 @@
             msg - 
             section - the section, in which the action exists
             -0, Main
-            -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+            -100, Main (alt recording)
             -32060, MIDI Editor
             -32061, MIDI Event List Editor
             -32062, MIDI Inline Editor
@@ -38553,7 +38569,7 @@
             void -
         </retvals>
         <parameters>
-            dest- 
+            dest - 
             cx - 
             cy -
             r -
@@ -38648,7 +38664,7 @@
             void -
         </retvals>
         <parameters>
-            dest- 
+            dest - 
             x1a - 
             x1b - 
             y1 - 
@@ -39928,7 +39944,7 @@
         <parameters>
             section - the section, in which the action exists
                 -0, Main
-                -100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+                -100, Main (alt recording)
                 -32060, MIDI Editor
                 -32061, MIDI Event List Editor
                 -32062, MIDI Inline Editor

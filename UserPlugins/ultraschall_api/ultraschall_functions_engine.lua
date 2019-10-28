@@ -108,15 +108,15 @@ function ultraschall.GetApiVersion()
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>string version, string date, string beta, number versionnumber, string tagline = ultraschall.GetApiVersion()</functioncall>
+  <functioncall>number versionnumber, string version, string date, string beta, string tagline = ultraschall.GetApiVersion()</functioncall>
   <description>
     returns the version, release-date and if it's a beta-version plus the currently installed hotfix
   </description>
   <retvals>
+    number versionnumber - a number, that you can use for comparisons like, "if requestedversion>versionnumber then"
     string version - the current Api-version
     string date - the release date of this api-version
     string beta - if it's a beta version, this is the beta-version-number
-    number versionnumber - a number, that you can use for comparisons like, "if requestedversion>versionnumber then"
     string tagline - the tagline of the current release
     string hotfix_date - the release-date of the currently installed hotfix ($ResourceFolder/ultraschall_api/ultraschall_hotfixes.lua)
   </retvals>
@@ -128,7 +128,7 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  return "4.00","", "Beta 2.77", 400.0277,  "\"Monkeys with Tools - Call the planet doctor\"", ultraschall.hotfixdate
+  return 400.0278, "4.00","20th of October 2019", "Beta 2.78",  "\"The Roger Webb Sound - Moon Bird\"", ultraschall.hotfixdate
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -770,7 +770,31 @@ function ultraschall.ShowLastErrorMessage()
   end
 end
 
-
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SLEM</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>SLEM()</functioncall>
+  <description>
+    Displays the last error message in a messagebox, if existing and unread.
+    
+    Like ultraschall.ShowLastErrorMessage() but this is easier to type.
+    Note: written without ultraschall. in the beginning!
+  </description>
+  <chapter_context>
+    Developer
+    Error Handling
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>developer, error, show, message</tags>
+</US_DocBloc>
+--]]
+SLEM=ultraschall.ShowLastErrorMessage
 
 function ultraschall.ApiFunctionTest()
   ultraschall.functions_works="on"

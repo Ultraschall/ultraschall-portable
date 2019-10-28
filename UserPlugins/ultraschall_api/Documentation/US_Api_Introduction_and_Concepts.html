@@ -55,7 +55,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.77 - "Monkeys with Tools - Call the planet doctor" -  - Build: 40673</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.78 - "The Roger Webb Sound - Moon Bird" - 20th of October 2019 - Build: 40836</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -236,7 +236,7 @@ For more information on ReaPack and it's usage, refer <a href="https://reapack.c
 <p><strong>Manual Installation</strong>:</p>
 <p>If you can't or don't want to install ReaPack, you can also install it manually.</p>
 <ol>
-<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.77.zip">ultraschall_api4.00_beta2.77.zip</a>.<br />
+<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.78.zip">ultraschall_api4.00_beta2.78.zip</a>.<br />
 </li>
 <li>Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -&gt; Show REAPER resource path in explorer/finder...".<br />
 The folder UserPlugins should contain the folder ultraschall_api and the files ultraschall_api_readme.txt and ultraschall_api.lua after this step.<br />
@@ -289,7 +289,8 @@ eMail: lspmp3@yahoo.de(for framework-related stuff only!!)<br />
 Sendegate: <a href="http://www.sendegate.de">sendegate.de</a> into the Ultraschall-section.</p></li>
 </ol>
 <p>Bugreports that contain only a "it doesn't work" and "I expected it to work" will be ignored gracefully ;)</p>
-<p>If you have feature-requests, we have open ears. Keep in mind, not everything you find a good idea actually is one. So we may or may not take on your idea, change and rework it into a way, that benefits all, not just your particular use-case. When in doubt, just try it! Keep also in mind: there are limitations. Some cool features we all would love to have, simply aren't implementable. Que sera, sera...</p>
+<p>If you have feature-requests, we have open ears. Keep in mind, not everything you find a good idea actually is one. So we may or may not take on your idea, change and rework it into a way, that benefits all, not just your particular use-case. When in doubt, just try it! Keep also in mind: there are limitations. Some cool features we all would love to have, simply aren't implementable.<br />
+Que sera, sera...</p>
 <p>For your comments just send a mail at: lspmp3@yahoo.de(for framework-related stuff only!!) or go to sendegate.de into the Ultraschall-section.</p>
 <p>PS: If you know how to implement impossible things or do things better than the current implementation, you are welcome to donate your improved codes. :)</p>
 
@@ -302,7 +303,9 @@ Sendegate: <a href="http://www.sendegate.de">sendegate.de</a> into the Ultrascha
 <p>The SWS-logo has been taken from the SWS-extension-project, which can be found at <a href="http://www.sws-extension.org">sws-extension.org</a></p>
 <p>Ultraschall-API written by Meo Mespotine <a href="http://www.mespotine.de">mespotine.de</a> with contributions from <a href="https://twitter.com/fernsehmuell">Udo Sauer</a> and <a href="https://twitter.com/rstockm">Ralf Stockmann</a></p>
 <p>If you want to donate to our project, head over to <a href="http://www.ultraschall.fm/danke">ultraschall.fm/danke</a>.</p>
-<p>Kudos to lokasenna, who suggested some cool things, that made some functions much faster and sparkled new ones. Cheers! MakeCopyOfTable-function adapted from Tyler Neylon's (twitter.com/tylerneylon) function, found at <a href="https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value/26367080#26367080">Stack Overflow</a> Thanks to him for allowing me to use it :)</p>
+<p>Kudos to lokasenna, who suggested some cool things, that made some functions much faster and sparkled new ones. Cheers!<br />
+MakeCopyOfTable-function adapted from Tyler Neylon's (twitter.com/tylerneylon) function, found at <a href="https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value/26367080#26367080">Stack Overflow</a><br />
+Thanks to him for allowing me to use it :)</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_001_Introduction">^</a> <u>Datatypes: Introduction</u></h4></div><p><p>Parameters and returnvalues are usually of specific types. Let's look at the following function:</p>
@@ -591,15 +594,11 @@ Lua provides ways of checking for valid datatypes(type() and math.type()) as wel
 works like Lua's own type-function, but checks for Reaper's own datatypes as well, like:</p>
 <pre><code>        Lua: nil, number: integer, number: float, boolean, string, function, table, thread, userdata,  
         Reaper: ReaProject, MediaItem, MediaItem_Take, MediaTrack, TrackEnvelope, AudioAccessor, joystick_device, PCM_source  
-        userdata: will be shown, if object isn&#39;t of any known type  
-
-to get of which type a variable is, just use  
-
-         datatype_of_variable = ultraschall.type(variable)
-
-where the return-value datatype\_of\_variable will hold a string describing the type of the variable.  
-
-Due some API-restrictions, SWS-specific datatypes are not (yet) supported.  </code></pre></li>
+        userdata: will be shown, if object isn&#39;t of any known type  </code></pre>
+<p>to get of which type a variable is, just use</p>
+<pre><code>         datatype_of_variable = ultraschall.type(variable)</code></pre>
+<p>where the return-value datatype_of_variable will hold a string describing the type of the variable.</p>
+<p>Due some API-restrictions, SWS-specific datatypes are not (yet) supported.</p></li>
 <li><p>Ultraschall-API specific or other Reaper-datatypes<br />
 To check for Ultraschall-API specific or other Reaper-datatypes, you can use the following functions:</p>
 <p>Ultraschall-API-specific:</p>
@@ -4158,4 +4157,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.77 - 104 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.78 - 104 chapters available</td></table><br><hr></div></body></html>
