@@ -250,17 +250,17 @@ function buildGui()
     end
 
     warningtext1 = "found "..warningCount.." "..countText.."."
-    warningtext2 = "Please check the warnings below. You may ignore a warning for this session"
-    warningtext3 = "or use the action buttons to solve the issues."
+    warningtext2 = "Please check the warnings below. Use the ?-button to get some advice."
+    warningtext3 = "You may ignore a warning for this session or use the action buttons to solve the issues."
     warningtext4 = "Visit the settings to disable warnings permanently."
 
-    warning1 = GUI.Lbl:new(347, 130, warningtext1, 0)
+    warning1 = GUI.Lbl:new(347, 128, warningtext1, 0)
     table.insert(GUI.elms, warning1)
-    warning2 = GUI.Lbl:new(148, 170, warningtext2, 0)
+    warning2 = GUI.Lbl:new(158, 168, warningtext2, 0)
     table.insert(GUI.elms, warning2)
-    warning3 = GUI.Lbl:new(256, 190, warningtext3, 0)
+    warning3 = GUI.Lbl:new(106, 188, warningtext3, 0)
     table.insert(GUI.elms, warning3)
-    warning4 = GUI.Lbl:new(241, 210, warningtext4, 0)
+    warning4 = GUI.Lbl:new(236, 208, warningtext4, 0)
     table.insert(GUI.elms, warning4)
 
 
