@@ -1600,18 +1600,18 @@ function Btn:draw()
     local dist = GUI.shadow_dist
     GUI.color("shadow")
     for i = 1, dist do
-      GUI.roundrect(x - i, y - i, w, h, 8, 1, 1)
-      GUI.roundrect(x + i, y + i, w, h, 8, 1, 1)
+      GUI.roundrect(x - i, y - i, w, h, 4, 1, 1)
+      GUI.roundrect(x + i, y + i, w, h, 4, 1, 1)
     end
     GUI.color("shadow")
-    GUI.roundrect(x , y - 2 , w, h, 8, 1, 1)
+    GUI.roundrect(x , y - 2 , w, h, 4, 1, 1)
     GUI.color("elm_highlight")
-    GUI.roundrect(x , y - 1 , w, h, 8, 1, 1)
+    GUI.roundrect(x , y - 1 , w, h, 4, 1, 1)
   end
 
   -- Draw the button
   GUI.color("elm_frame")
-  GUI.roundrect(x + 2 * state, y + 2 * state, w, h, 8, 1, 1)
+  GUI.roundrect(x + 2 * state, y + 2 * state, w, h, 4, 1, 1)
 
 
   -- Draw the caption
