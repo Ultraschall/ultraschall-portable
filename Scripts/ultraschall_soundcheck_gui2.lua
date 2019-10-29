@@ -59,7 +59,7 @@ end
 
 function run_action(commandID)
 
-  CommandNumber = reaper.NamedCommandLookup(commandID)
+  local CommandNumber = reaper.NamedCommandLookup(commandID)
   reaper.Main_OnCommand(CommandNumber,0)
 
 end
@@ -118,7 +118,7 @@ function buildGui()
 
 
     label_interfaces = GUI.Lbl:new(          360, 110,                  "Soundcheck",          0),
-    label_table      = GUI.Lbl:new(          20, 250,                  "Check                                                                 Status                     Actions",          0),
+    label_table      = GUI.Lbl:new(          20, 250,                  "Check                                                         Status                        Actions",          0),
     line1            = GUI.Line:new(0, 271, 800, 271, "txt_muted"),
     line2            = GUI.Line:new(0, 270, 800, 270, "elm_outline"),
 
@@ -163,7 +163,9 @@ function buildGui()
 
     EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
 
-    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState(i)
+    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+
+    -- print(i.."-"..EventName.."-"..EventIdentifier.."-"..tostring(last_state))
 
     if last_state == true then
       warningCount = warningCount +1
@@ -188,17 +190,17 @@ function buildGui()
       state_color = "txt_green"
     end
 
-    status = GUI.Lbl:new(320, position, last_state_string, 0, state_color)
+    status = GUI.Lbl:new(288, position, last_state_string, 0, state_color)
     table.insert(GUI.elms, status)
 
     -- Buttons
 
     if EventPaused == true then
-      button1 = GUI.Btn:new(470, position-5, 80, 20,         " Retry", ultraschall.EventManager_ResumeEvent, EventIdentifier)
+      button1 = GUI.Btn:new(421, position-5, 60, 20,         " Retry", ultraschall.EventManager_ResumeEvent, EventIdentifier)
       table.insert(GUI.elms, button1)
 
     elseif last_state == true then
-      button1 = GUI.Btn:new(470, position-5, 80, 20,         " Ignore", ultraschall.EventManager_PauseEvent, EventIdentifier)
+      button1 = GUI.Btn:new(421, position-5, 60, 20,         " Ignore", ultraschall.EventManager_PauseEvent, EventIdentifier)
       table.insert(GUI.elms, button1)
 
     end
@@ -213,15 +215,26 @@ function buildGui()
 
     if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
 
-      info_button = GUI.Btn:new(440, position-5, 20, 20,         " ?", show_menu, DescriptionWarning)
+      info_button = GUI.Btn:new(365, position-5, 20, 20,         " ?", show_menu, DescriptionWarning)
       table.insert(GUI.elms, info_button)
 
       -- command_id = tostring(reaper.NamedCommandLookup(Button1Action))
       -- reaper.Main_OnCommand(start_id,0)   --Show Soundcheck Screen
 
-      button2 = GUI.Btn:new(560, position-5, 140, 20,         Button1Label, run_action, Button1Action)
+      button2 = GUI.Btn:new(490, position-5, 144, 20,         Button1Label, run_action, Button1Action)
       table.insert(GUI.elms, button2)
     end
+
+    Button2Label = ultraschall.GetUSExternalState(EventName, "Button2Label")
+    Button2Action = ultraschall.GetUSExternalState(EventName, "Button2Action")
+
+    if Button2Label ~= "" and Button2Action and last_state_string ~= "OK" then -- es gibt Probleme
+
+      button3 = GUI.Btn:new(643, position-5, 144, 20,         Button2Label, run_action, Button2Action)
+      table.insert(GUI.elms, button3)
+    end
+
+
 
 
 

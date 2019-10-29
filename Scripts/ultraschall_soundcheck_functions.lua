@@ -69,7 +69,7 @@ function SoundcheckTransitionRecordToStop(userspace)
 
 
   if current_playstate==0 and userspace["old_playstate"]==5 then -- 0 = Stop, 5 = recording
-    userspace["old_playstate"]=current_playstate
+    -- userspace["old_playstate"]=current_playstate
     return true
   else
     userspace["old_playstate"]=current_playstate
