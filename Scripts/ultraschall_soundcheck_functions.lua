@@ -42,6 +42,20 @@ function SoundcheckUnsaved(userspace)
 end
 
 
+function SoundcheckMic(userspace)
+
+  retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+
+  if actual_device_name == "CoreAudio Built-in Microph" and ultraschall.CreateTrackString_ArmedTracks() ~= "" then -- Das interne Mic ist ausgewählt und eine Spur zur Aufnahme scharf geschaltet
+    return true
+  else
+    return false
+
+  end
+
+end
+
+
 function SoundcheckSamplerate(userspace)
 
   local retval, actual_samplerate = reaper.GetAudioDeviceInfo("SRATE", "")
