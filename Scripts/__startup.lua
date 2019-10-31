@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-# 
+#
 # Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,10 +20,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-# 
+#
 ################################################################################
 ]]
- 
+
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 
@@ -45,25 +45,25 @@ view = ultraschall.GetUSExternalState("ultraschall_gui", "view")
 sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
 mouse = ultraschall.GetUSExternalState("ultraschall_mouse", "state")
 first_start = ultraschall.GetUSExternalState("ultraschall_start", "firststart")
-startscreen = ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
+startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value")
 follow = ultraschall.GetUSExternalState("ultraschall_follow", "state")
 
   follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
 
-if theme_version ~= tostring(theme_version_now) then 
-  error_msg = "Your ULTRASCHALL THEME is out of date. \n\nULTRASCHALL wil NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/" 
+if theme_version ~= tostring(theme_version_now) then
+  error_msg = "Your ULTRASCHALL THEME is out of date. \n\nULTRASCHALL wil NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/"
 end
 
 if plugin_version ~= theme_version then -- different versions of theme and plugin isntalled
-  error_msg = "There is a configuration mismatch between the ULTRASCHALL THEME ("..theme_version..") and PLUGIN ("..plugin_version..").\n\nULTRASCHALL will NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/" 
+  error_msg = "There is a configuration mismatch between the ULTRASCHALL THEME ("..theme_version..") and PLUGIN ("..plugin_version..").\n\nULTRASCHALL will NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/"
 end
 
-if plugin_version == "" then 
-  error_msg = "The ULTRASCHALL PLUGIN was not properly installed.\n\nULTRASCHALL wil NOT work properly until you fix this.\n\nPlease check the installation guide on http://ultraschall.fm/install/" 
+if plugin_version == "" then
+  error_msg = "The ULTRASCHALL PLUGIN was not properly installed.\n\nULTRASCHALL wil NOT work properly until you fix this.\n\nPlease check the installation guide on http://ultraschall.fm/install/"
 end
 
-if theme_version == "" then 
-  error_msg = "There are parts of the ULTRASCHALL THEME missing.\n\nULTRASCHALL wil NOT work properly until you fix this.\n\nPlease check the installation guide on http://ultraschall.fm/install/" 
+if theme_version == "" then
+  error_msg = "There are parts of the ULTRASCHALL THEME missing.\n\nULTRASCHALL wil NOT work properly until you fix this.\n\nPlease check the installation guide on http://ultraschall.fm/install/"
 end
 
 
@@ -75,7 +75,7 @@ if error_msg then
 
 elseif first_start == "true" or startscreen == "1" or startscreen == "-1" then
   start_id = reaper.NamedCommandLookup("_Ultraschall_StartScreen")
-  reaper.Main_OnCommand(start_id,0)   --Show Startscreen    
+  reaper.Main_OnCommand(start_id,0)   --Show Startscreen
 end
 
 if sec=="-1" then sec=0 end
@@ -117,7 +117,7 @@ end
 -- set OnAir button off
 
 on_air_button_id = reaper.NamedCommandLookup("_Ultraschall_OnAir")
-reaper.SetToggleCommandState(sec, on_air_button_id, 0) 
+reaper.SetToggleCommandState(sec, on_air_button_id, 0)
 
 --------------------------
 -- Restore opened/closed Windows
@@ -139,14 +139,14 @@ reaper.SetExtState("Ultraschall_Windows","Ultraschall 3",0.0, true)
 m = reaper.GetMasterTrack(0)                                                  --streaming is always on the master track
 os = reaper.GetOS()
 
-if string.match(os, "OSX") then 
+if string.match(os, "OSX") then
   fx_slot = reaper.TrackFX_GetByName(m, "ITSR: StudioLinkOnAir", 0)      --get the slot of the StudioLink effect. If there is none: initiate one.
 else  -- Windows
   fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)      --get the slot of the StudioLink effect. If there is none: initiate one.
 end
 reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
 
--- is the ReaperThemeZip loaded? Only then (probably on first start) reload the ReaperTheme to get the colors working 
+-- is the ReaperThemeZip loaded? Only then (probably on first start) reload the ReaperTheme to get the colors working
 
 -- curtheme = reaper.GetLastColorThemeFile()
 -- if string.find(curtheme, "ReaperThemeZip", 1) then
@@ -169,5 +169,3 @@ reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
 if first_start == "true" or first_start == "-1" then
   ultraschall.SetUSExternalState("ultraschall_start", "firststart", "false", true)  -- there will be only one first start
 end
-
-
