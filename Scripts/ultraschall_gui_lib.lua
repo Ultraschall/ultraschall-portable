@@ -1611,7 +1611,7 @@ function Btn:draw()
 
   -- Draw the button
   GUI.color("elm_frame")
-  GUI.roundrect(x + 2 * state, y + 2 * state, w, h, 4, 1, 1)
+  GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 4, 1, 1)
 
 
   -- Draw the caption
@@ -1620,8 +1620,8 @@ function Btn:draw()
 
 
   local str_w, str_h = gfx.measurestr(self.caption)
-  gfx.x = x + 2 * state + ((w - str_w) / 2) - 2
-  gfx.y = y + 2 * state + ((h - str_h) / 2) - 2
+  gfx.x = x + 1 * state + ((w - str_w) / 2) - 2
+  gfx.y = y + 1 * state + ((h - str_h) / 2) - 2
   gfx.y = gfx.y + 3
   gfx.drawstr(self.caption)
 
