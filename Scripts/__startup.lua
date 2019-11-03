@@ -161,6 +161,26 @@ reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
 
 
 --------------------------
+-- Reset Windows counter
+--------------------------
+
+-- beim Start von Ultraschall werden alle Fenster-Counter auf 0 gesetzt
+
+inipath = reaper.GetResourcePath().."/reaper-extstate.ini"
+keyscount = ultraschall.CountIniFileExternalState_key("Ultraschall_Windows", inipath)
+
+for i = 1, keyscount, 1 do
+  keyname = ultraschall.EnumerateIniFileExternalState_key("Ultraschall_Windows", i, inipath)
+  length, keyvalue = ultraschall.GetIniFileExternalState("Ultraschall_Windows", keyname, inipath)
+
+  if tonumber(keyvalue) > 0 then
+    retval = ultraschall.SetIniFileExternalState("Ultraschall_Windows", keyname, "0.0", inipath)
+
+  end
+end
+
+
+--------------------------
 -- First start actions
 --------------------------
 
