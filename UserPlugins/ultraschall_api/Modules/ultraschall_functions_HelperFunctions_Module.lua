@@ -5848,3 +5848,88 @@ end
 
 
 --ultraschall.UpdateMediaExplorer()
+
+function ultraschall.ConvertFunction_ToHexString(to_convert_function, debug)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertFunction_ToHexString</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>string HEX_functionstring = ultraschall.ConvertFunction_ToHexString(function to_convert_function, boolean debug)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Converts a function into a HEX-string.
+    
+    To load a function from a HEX-string, use [ConvertFunction_FromHexString](#ConvertFunction_FromHexString)
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string HEX_functionstring - the function, stored as HEX-string
+  </retvals>
+  <parameters>
+    function to_convert_function - the function, that you want to convert
+    boolean debug - true, store debug-information as well; false, only store function
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, convert, function, hexstring</tags>
+</US_DocBloc>
+]]
+  if type(to_convert_function)~="function" then ultraschall.AddErrorMessage("ConvertFunction_ToHexString", "to_convert_function", "must be a function", -1) return end
+  
+  local Dump=string.dump (to_convert_function, debug)
+  local HexDump = ultraschall.ConvertAscii2Hex(Dump)
+  
+  return HexDump,Dump
+end
+
+--A,A1=ultraschall.ConvertFunction_ToHexString(print, true)
+
+
+function ultraschall.ConvertFunction_FromHexString(HEX_functionstring)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertFunction_FromHexString</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>function function = ultraschall.ConvertFunction_FromHexString(string HEX_functionstring)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Loads a function from a HEX-string.
+    
+    To convert a function into a HEX-string, use [ConvertFunction_ToHexString](#ConvertFunction_ToHexString)
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    function func - the loaded function
+  </retvals>
+  <parameters>
+    string HEX_functionstring - the function, stored as HEX-string
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, load, function, hexstring</tags>
+</US_DocBloc>
+]]
+  if type(HEX_functionstring)~="string" then ultraschall.AddErrorMessage("ConvertFunction_FromHexString", "HEX_functionstring", "must be a string", -1) return end
+
+  local Dump = ultraschall.ConvertHex2Ascii(HEX_functionstring)
+  if Dump==nil then ultraschall.AddErrorMessage("ConvertFunction_FromHexString", "HEX_functionstring", "no valid HEX-string", -2) return false end
+  local function2=load(Dump)
+  if type(function2)~="function" then ultraschall.AddErrorMessage("ConvertFunction_FromHexString", "HEX_functionstring", "no function found", -3) return end
+  return function2,Dump
+end
+
+--B,B2=ultraschall.ConvertFunction_FromHexString(A)

@@ -58,7 +58,7 @@ ultraschall.EventManager_Start()
 --        this event adds a marker at playposition every time, you change from play to playpause
 EventIdentifier = ultraschall.EventManager_AddEvent(
     "Insert Marker When Play -> PlayPause", -- a descriptive name for the event
-            0,                                      -- how often to check within a second; 0, means as often as possible 
+            0,                                      -- how often to check in seconds; 0, means as often as possible 
             0,                                      -- how long to check for it in seconds; 0, means forever
             true,                                   -- shall the actions be run as long as the eventcheck-function 
                                                     --       returns true(false) or not(true)
