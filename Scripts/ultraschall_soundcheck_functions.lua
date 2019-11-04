@@ -76,14 +76,9 @@ end
 function SoundcheckTransitionRecordToStop(userspace)
   -- get the current playstate
   local current_playstate=reaper.GetPlayState()
+  local retval, editing_started = reaper.GetProjExtState(0, "Editing", "started")
 
-  -- if current_playstate == nil then current_playstate = 0 end
-
-  -- print(current_playstate)
-
-
-  if current_playstate==0 and userspace["old_playstate"]==5 then -- 0 = Stop, 5 = recording
-    -- userspace["old_playstate"]=current_playstate
+  if current_playstate==0 and userspace["old_playstate"]==5 and editing_started ~= "1" then -- 0 = Stop, 5 = recording
     return true
   else
     userspace["old_playstate"]=current_playstate

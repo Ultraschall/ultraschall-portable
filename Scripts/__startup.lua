@@ -179,6 +179,12 @@ for i = 1, keyscount, 1 do
   end
 end
 
+--------------------------
+-- Start Soundcheck
+--------------------------
+
+cmd=reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Controller")
+reaper.Main_OnCommand(cmd,0)
 
 --------------------------
 -- First start actions
