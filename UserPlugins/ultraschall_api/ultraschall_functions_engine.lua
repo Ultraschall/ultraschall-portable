@@ -108,15 +108,15 @@ function ultraschall.GetApiVersion()
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>string version, string date, string beta, number versionnumber, string tagline = ultraschall.GetApiVersion()</functioncall>
+  <functioncall>number versionnumber, string version, string date, string beta, string tagline = ultraschall.GetApiVersion()</functioncall>
   <description>
     returns the version, release-date and if it's a beta-version plus the currently installed hotfix
   </description>
   <retvals>
+    number versionnumber - a number, that you can use for comparisons like, "if requestedversion>versionnumber then"
     string version - the current Api-version
     string date - the release date of this api-version
     string beta - if it's a beta version, this is the beta-version-number
-    number versionnumber - a number, that you can use for comparisons like, "if requestedversion>versionnumber then"
     string tagline - the tagline of the current release
     string hotfix_date - the release-date of the currently installed hotfix ($ResourceFolder/ultraschall_api/ultraschall_hotfixes.lua)
   </retvals>
@@ -128,7 +128,7 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  return "4.00","", "Beta 2.77", 400.0277,  "\"Monkeys with Tools - Call the planet doctor\"", ultraschall.hotfixdate
+  return 400.0278, "4.00","5th of November 2019", "Beta 2.78",  "\"Tchaikovski - Overture 1812\"", ultraschall.hotfixdate
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -770,7 +770,31 @@ function ultraschall.ShowLastErrorMessage()
   end
 end
 
-
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SLEM</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>SLEM()</functioncall>
+  <description>
+    Displays the last error message in a messagebox, if existing and unread.
+    
+    Like ultraschall.ShowLastErrorMessage() but this is easier to type.
+    Note: written without ultraschall. in the beginning!
+  </description>
+  <chapter_context>
+    Developer
+    Error Handling
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>developer, error, show, message</tags>
+</US_DocBloc>
+--]]
+SLEM=ultraschall.ShowLastErrorMessage
 
 function ultraschall.ApiFunctionTest()
   ultraschall.functions_works="on"
@@ -1269,7 +1293,71 @@ end
 
 ultraschall.OperationHoHoHo()
 
-
+function PingMe(message, outputtarget)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>PingMe</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.95
+    Lua=5.3
+  </requires>
+  <functioncall>string pingmessage = PingMe(optional string message, integer outputtarget)</functioncall>
+  <description>
+    Shows the current script and line of script-execution, optionally with a message.
+    
+    This is for debugging-purposes. For instance, if you want to know, if an if-statement is working as you expect it, just add
+    PingMe() into that if-statement.
+    It will show a message including linenumbers, when the if-statement is going through.
+    
+    You can also choose, whether to output the message into ReaConsole, Messagebox or clipboard(including culminating options)
+  </description>
+  <retvals>
+    string pingmessage - returns the pingmessage
+  </retvals>
+  <parameters>
+    optional string message - an optional message shown
+    optional integer outputtarget - 0, don't show a message
+                                  - 1, output the pingme-message into ReaScript-console
+                                  - 2 or nil, show a messagebox
+                                  - 3, output it into the clipboard
+                                  - 4, add it to the end of the contents of the clipboard
+                                  - 5, add it to the beginning of the contents of the clipboard
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, debug, display message, traceback, linenumber, ping</tags>
+</US_DocBloc>
+]] 
+  if message==nil then message="" end
+  if type(message)~="string" and type(message)~="boolean" and type(message)~="number" then message=ultraschall.type(message)..": "..tostring(message) end
+  message=tostring(message)
+  local A,B
+  A=debug.traceback()
+  B=A
+  B=string.gsub(B, "(\n%s*)", "\n\nScript: ")
+  B=string.gsub(B, "(.*PingMe%'\n)", "")
+  B=string.gsub(B, "%.lua:", "\nlinenumber: ")
+    
+  if outputtarget==0 then
+  elseif outputtarget==1 then
+    print(message.."\n"..B)
+  elseif outputtarget==3 then
+    print3(message.."\n"..B)
+  elseif outputtarget==4 then
+    local clipboard_string = ultraschall.GetStringFromClipboard_SWS()
+    print3(clipboard_string.."\n"..message.."\n"..B)
+  elseif outputtarget==5 then
+    local clipboard_string = ultraschall.GetStringFromClipboard_SWS()
+    print3(message.."\n"..B.."\n"..clipboard_string)
+  else
+    print2(message.."\n"..B)
+  end
+  return message.."\n"..B
+end
 
 
 

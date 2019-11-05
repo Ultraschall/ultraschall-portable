@@ -4295,9 +4295,10 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     reaper.PreventUIRefresh(1) -- reenable refreshing of the user interface 
     
     -- let's get the filenames of the rendered files
+    local Filearray={}
     if aborted~=true then
-      local Filearray={}
       for i=1, Count do
+        --print2(MediaItemStateChunkArray[i]:match("%<SOURCE.-FILE \"(.-)\""))
         Filearray[i]=MediaItemStateChunkArray[i]:match("%<SOURCE.-FILE \"(.-)\"")
       end
     end
@@ -4404,6 +4405,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     -- get the individual filenames of all the rendered files
     local Filearray={}
     for i=1, count do
+    
       Filearray[i]=MediaItemStateChunkArray[i]:match("%<SOURCE.-FILE \"(.-)\"")
     end
     
@@ -4415,6 +4417,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     os.remove(tempfilename)
     reaper.SelectProjectInstance(curProj)
     if aborted == true then ultraschall.AddErrorMessage("RenderProject_RenderTable", "", "rendering aborted", -2) return -1 end
+    
     return count, MediaItemStateChunkArray, Filearray
   end
 end

@@ -346,9 +346,6 @@ function ultraschall.ClearRoutingSnapshot(snapshot_nr)
 end
 
 
------------------------
----- Render Export ----
------------------------
 
 
 function ultraschall.RippleDragSection_StartOffset(position,trackstring)
@@ -809,7 +806,7 @@ end
 --A,B=ultraschall.GetTrackPositions()
 
 function ultraschall.GetAllTrackHeights()
-  -- can't calculate the dependency between zoom and trackheigt... :/
+  -- can't calculate the dependency between zoom and trackheight... :/
   HH=reaper.SNM_GetIntConfigVar("defvzoom", -999)
   Heights={}
   for i=0, reaper.CountTracks(0) do
@@ -837,6 +834,7 @@ H=ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender)
 --]]
 
 function ultraschall.GetFXStateChunk(StateChunk, TakeFXChain_id)
+-- Why is this still in here?
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetFXStateChunk</slug>
@@ -891,6 +889,7 @@ end
 
 
 function ultraschall.GetItem_ClickState()
+-- how to get the connection to clicked item, when mouse moves away from the item while retaining click(moving underneath the item for dragging)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetItem_ClickState</slug>
@@ -936,6 +935,7 @@ function ultraschall.GetItem_ClickState()
 end
 
 function ultraschall.GetTrackEnvelope_ClickState()
+-- how to get the connection to clicked envelopepoint, when mouse moves away from the item while retaining click(moving underneath the item for dragging)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTrackEnvelope_ClickState</slug>
@@ -988,6 +988,7 @@ end
 
 
 function ultraschall.SetLiceCapExe(PathToLiceCapExecutable)
+-- works on Mac too?
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetLiceCapExe</slug>
@@ -1029,6 +1030,7 @@ end
 --O=ultraschall.SetLiceCapExe("c:\\Program Files (x86)\\LICEcap\\LiceCap.exe")
 
 function ultraschall.SetupLiceCap(output_filename, title, titlems, x, y, right, bottom, fps, gifloopcount, stopafter, prefs)
+-- works on Mac too?
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetupLiceCap</slug>
@@ -1118,6 +1120,8 @@ end
 
 
 function ultraschall.StartLiceCap(autorun)
+-- doesn't work, as I can't click the run and save-buttons
+-- maybe I need to add that to the LiceCap-codebase myself...somehow
   reaper.Main_OnCommand(41298, 0)  
   O=0
   while reaper.JS_Window_Find("LICEcap v", false)==nil do
@@ -1346,6 +1350,26 @@ end
 
 --reaper.Main_SaveProject(0, true)
 --ultraschall.SaveProjectAs("Fix it all of that HUUUIII", true, 0, true)
+
+
+function ultraschall.TransientDetection_Set(Sensitivity, Threshold, ZeroCrossings)
+  -- needs to take care of faulty parametervalues AND of correct value-entering into an already opened
+  -- 41208 - Transient detection sensitivity/threshold: Adjust... - dialog
+  reaper.SNM_SetDoubleConfigVar("transientsensitivity", Sensitivity) -- 0.0 to 1.0
+  reaper.SNM_SetDoubleConfigVar("transientthreshold", Threshold) -- -60 to 0
+  local val=reaper.SNM_GetIntConfigVar("tabtotransflag", -999)
+  if val&2==2 and ZeroCrossings==false then
+    reaper.SNM_SetIntConfigVar("tabtotransflag", val-2)
+  elseif val&2==0 and ZeroCrossings==true then
+    reaper.SNM_SetIntConfigVar("tabtotransflag", val+2)
+  end
+end
+
+--ultraschall.TransientDetection_Set(0.1, -9, false)
+
+
+-- These seem to work:
+
 
 
 

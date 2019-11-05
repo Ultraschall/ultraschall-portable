@@ -49,7 +49,7 @@ if type(ultraschall)~="table" then
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 end
 
-function ultraschall.Docs_ConvertPlainTextToHTML(text)
+function ultraschall.Docs_ConvertPlainTextToHTML(text, nobsp)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Docs_ConvertPlainTextToHTML</slug>
@@ -81,14 +81,24 @@ function ultraschall.Docs_ConvertPlainTextToHTML(text)
 ]]
   if type(text)~="string" then ultraschall.AddErrorMessage("Docs_ConvertPlainTextToHTML", "text", "must be a string", -1) return nil end
   text=string.gsub(text, "\r", "")
-  text=string.gsub(text, "\n", "<br>")
-  text=string.gsub(text, "  ", "&nbsp;&nbsp;")
-  text=string.gsub(text, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
+  text=string.gsub(text, "\n", "<br/>\n")
+  if nobsp~=true then
+    text=string.gsub(text, "  ", "&nbsp;&nbsp;")
+    text=string.gsub(text, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
+  end
   return text
 end
 
 --print2(ultraschall.ConvertPlainTextToHTML("Lalaleilelo\tlalel\n\nlululeilelalila  lala la"))
 
+function ultraschall.ConvertTextToXMLCompatibility(text)
+    --text=string.gsub(text, "%-", "%%-")
+    text=string.gsub(text, "%&", "&amp;")
+    text=string.gsub(text, "\"", "&quot;")
+    text=string.gsub(text, "<", "&lt;")
+    text=string.gsub(text, ">", "&gt;")
+  return text
+end
 
 function ultraschall.ConvertMarkdownToHTML(text, version)
   text=string.gsub(text, "usdocml://", "US_Api_Functions.html#") -- this line is a hack, just supporting functions-reference!
@@ -110,7 +120,7 @@ function ultraschall.ConvertMarkdownToHTML(text, version)
 end
 
 
-function ultraschall.Docs_RemoveIndent(String, indenttype)
+function ultraschall.Docs_RemoveIndent(String, indenttype, i)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Docs_RemoveIndent</slug>
@@ -152,13 +162,13 @@ function ultraschall.Docs_RemoveIndent(String, indenttype)
   <tags>doc engine, indent, unindent, text, usdocbloc</tags>
 </US_DocBloc>
 ]]
-  if type(String)~="string" then ultraschall.AddErrorMessage("Docs_RemoveIndent", "String", "must be a string", -1) return nil end
+  if type(String)~="string" then ultraschall.AddErrorMessage("Docs_RemoveIndent", "String", "must be a string"..i, -1) return nil end
   if type(indenttype)~="string" then ultraschall.AddErrorMessage("Docs_RemoveIndent", "indenttype", "must be a string", -2) return nil end
   if indenttype=="as_typed" then return String end
   if indenttype=="minus_starts_line" then return string.gsub("\n"..String, "\n.-%-", "\n"):sub(2,-1) end
   if indenttype=="preceding_spaces" then  return string.gsub("\n"..String, "\n%s*", "\n"):sub(2,-1) end
   if indenttype=="default" then 
-    local Length=String:match("(%s*)")
+    Length=String:match("(%s*)")
     if Length==nil then Length="" end
     return string.gsub("\n"..String, "\n"..Length, "\n"):sub(2,-1)
   end
@@ -285,7 +295,7 @@ function ultraschall.Docs_GetUSDocBloc_Title(String, index)
 end
 
 
-function ultraschall.Docs_GetUSDocBloc_Description(String, unindent_description, index)
+function ultraschall.Docs_GetUSDocBloc_Description(String, unindent_description, index, i)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Docs_GetUSDocBloc_Description</slug>
@@ -343,9 +353,9 @@ function ultraschall.Docs_GetUSDocBloc_Description(String, unindent_description,
   
   if found~=true then return end
   
-  local Description=String:match("<description.->(.-)\n%s*</description>")
-  local markup_type=Description:match("markup_type=\"(.-)\"")
-  local markup_version=Description:match("markup_version=\"(.-)\"")
+  local Description=String:match("<description.->.-\n(.-)\n%s*</description>")
+  local markup_type=String:match("markup_type=\"(.-)\"")
+  local markup_version=String:match("markup_version=\"(.-)\"")
   local indent=String:match("indent=\"(.-)\"")
   local language=String:match("spok_lang=\"(.-)\"")
   local prog_language=String:match("prog_lang=\"(.-)\"")
@@ -355,7 +365,8 @@ function ultraschall.Docs_GetUSDocBloc_Description(String, unindent_description,
   if markup_type==nil then markup_type="plaintext" end
   if markup_version==nil then markup_version="" end
   if unindent_description~=false then 
-    Description=ultraschall.Docs_RemoveIndent(Description, indent)
+    --if i=="GetSetTrackSendInfo_String" then print2(Description) end
+    Description=ultraschall.Docs_RemoveIndent(Description, indent, i)
   end
   return Description, markup_type, markup_version, indent, language, prog_language
 end
@@ -617,6 +628,8 @@ function ultraschall.Docs_GetUSDocBloc_Params(String, unindent_description, inde
       Parmcount=Parmcount+1
       Params[Parmcount]={}
       Params[Parmcount][1], Params[Parmcount][2]=split_string[i]:match("(.-)%-(.*)")
+      Params[Parmcount][1]=Params[Parmcount][1].."\0"
+      Params[Parmcount][1]=Params[Parmcount][1]:match("(.*) %s*\0")
     else
       Params[Parmcount][2]=Params[Parmcount][2].."\n"..split_string[i]:sub(2,-1)
     end
@@ -715,6 +728,8 @@ function ultraschall.Docs_GetUSDocBloc_Retvals(String, unindent_description, ind
       Parmcount=Parmcount+1
       Params[Parmcount]={}
       Params[Parmcount][1], Params[Parmcount][2]=split_string[i]:match("(.-)%-(.*)")
+      Params[Parmcount][1]=Params[Parmcount][1].."\0"
+      Params[Parmcount][1]=Params[Parmcount][1]:match("(.*) %s*\0")
     else
       Params[Parmcount][2]=Params[Parmcount][2].."\n"..split_string[i]:sub(2,-1)
     end

@@ -3715,7 +3715,7 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
   if remove_tabs~=nil and math.type(remove_tabs)~="integer" then ultraschall.AddErrorMessage("Base64_Encoder", "remove_tabs", "must be an integer", -3) return nil end
   if base64_type~=nil and math.type(base64_type)~="integer" then ultraschall.AddErrorMessage("Base64_Encoder", "base64_type", "must be an integer", -4) return nil end
   
-  local tempstring={}
+  tempstring={}
   local a=1
   local temp
   
@@ -3740,7 +3740,7 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
   
   -- tear apart the source-string into bits
   -- bitorder of bytes will be reversed for the later parts of the conversion!
-  for i=1, source_string:len()-1 do
+  for i=1, source_string:len() do
     temp=string.byte(source_string:sub(i,i))
     temp=temp
     if temp&1==0 then tempstring[a+7]=0 else tempstring[a+7]=1 end
@@ -3774,13 +3774,13 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
 
   -- if the number of characters in the encoded_string isn't exactly divideable 
   -- by 3, add = to fill up missing bytes
-  if encoded_string:len()%3==2 then encoded_string=encoded_string.."=="
-  elseif encoded_string:len()%3==1 then encoded_string=encoded_string.."="
+--  OOO=encoded_string:len()%4
+  if encoded_string:len()%4==2 then encoded_string=encoded_string.."=="
+  elseif encoded_string:len()%2==1 then encoded_string=encoded_string.."="
   end
   
   return encoded_string
 end
-
 
 --A=ultraschall.Base64_Encoder("Man is", 9, 9, 9)
 
@@ -5079,10 +5079,12 @@ function ultraschall.ConvertHex2Ascii(hexstring)
     Lua=5.3
   </requires>
   <functioncall>string ascii_string = ultraschall.ConvertHex2Ascii(string hexstring)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     converts a hexstring into an ascii-string.
 
-    Will convert 2 hexvalues into one byte.
+    Will combine two hexvalues into one byte, until the whole string is converted.
+    
+    See [ConvertAscii2Hex](#ConvertAscii2Hex) to convert a string into its HEX-representation.
     
     Returns nil in case of an error
   </description>
@@ -5125,8 +5127,10 @@ function ultraschall.ConvertAscii2Hex(orgstring)
     Lua=5.3
   </requires>
   <functioncall>string hexstring = ultraschall.ConvertAscii2Hex(string ascii_string)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     converts an ascii-string into a hexstring.
+    
+    See [ConvertHex2Ascii](#ConvertHex2Ascii) to convert a HEX-string into its normal string-representation.
     
     Returns nil in case of an error
   </description>
@@ -5844,3 +5848,88 @@ end
 
 
 --ultraschall.UpdateMediaExplorer()
+
+function ultraschall.ConvertFunction_ToHexString(to_convert_function, debug)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertFunction_ToHexString</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>string HEX_functionstring = ultraschall.ConvertFunction_ToHexString(function to_convert_function, boolean debug)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Converts a function into a HEX-string.
+    
+    To load a function from a HEX-string, use [ConvertFunction_FromHexString](#ConvertFunction_FromHexString)
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string HEX_functionstring - the function, stored as HEX-string
+  </retvals>
+  <parameters>
+    function to_convert_function - the function, that you want to convert
+    boolean debug - true, store debug-information as well; false, only store function
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, convert, function, hexstring</tags>
+</US_DocBloc>
+]]
+  if type(to_convert_function)~="function" then ultraschall.AddErrorMessage("ConvertFunction_ToHexString", "to_convert_function", "must be a function", -1) return end
+  
+  local Dump=string.dump (to_convert_function, debug)
+  local HexDump = ultraschall.ConvertAscii2Hex(Dump)
+  
+  return HexDump,Dump
+end
+
+--A,A1=ultraschall.ConvertFunction_ToHexString(print, true)
+
+
+function ultraschall.ConvertFunction_FromHexString(HEX_functionstring)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertFunction_FromHexString</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>function function = ultraschall.ConvertFunction_FromHexString(string HEX_functionstring)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Loads a function from a HEX-string.
+    
+    To convert a function into a HEX-string, use [ConvertFunction_ToHexString](#ConvertFunction_ToHexString)
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    function func - the loaded function
+  </retvals>
+  <parameters>
+    string HEX_functionstring - the function, stored as HEX-string
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, load, function, hexstring</tags>
+</US_DocBloc>
+]]
+  if type(HEX_functionstring)~="string" then ultraschall.AddErrorMessage("ConvertFunction_FromHexString", "HEX_functionstring", "must be a string", -1) return end
+
+  local Dump = ultraschall.ConvertHex2Ascii(HEX_functionstring)
+  if Dump==nil then ultraschall.AddErrorMessage("ConvertFunction_FromHexString", "HEX_functionstring", "no valid HEX-string", -2) return false end
+  local function2=load(Dump)
+  if type(function2)~="function" then ultraschall.AddErrorMessage("ConvertFunction_FromHexString", "HEX_functionstring", "no function found", -3) return end
+  return function2,Dump
+end
+
+--B,B2=ultraschall.ConvertFunction_FromHexString(A)

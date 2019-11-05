@@ -493,7 +493,7 @@ end
 --A,B=ultraschall.GetAllMainSendStates2()
 
 
-function ultraschall.SetUSExternalState(section, key, value)
+function ultraschall.SetUSExternalState(section, key, value, filename)
 -- stores value into ultraschall.ini
 -- returns true if successful, false if unsuccessful
 --[[
@@ -504,7 +504,7 @@ function ultraschall.SetUSExternalState(section, key, value)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.SetUSExternalState(string section, string key, string value)</functioncall>
+  <functioncall>boolean retval = ultraschall.SetUSExternalState(string section, string key, string value, optional string filename)</functioncall>
   <description>
     stores values into ultraschall.ini. Returns true if successful, false if unsuccessful.
     
@@ -517,6 +517,8 @@ function ultraschall.SetUSExternalState(section, key, value)
     string section - section within the ini-file
     string key - key within the section
     string value - the value itself
+    optional string filename - set this to a filename, if you don't want to use ultraschall.ini; it will be stored into the resource-path of Reaper, so no path needed
+                             - nil, uses ultraschall.ini
   </parameters>
   <chapter_context>
     Ultraschall Specific
@@ -531,14 +533,15 @@ function ultraschall.SetUSExternalState(section, key, value)
   section=tostring(section)
   key=tostring(key)
   value=tostring(value)  
-  
+  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("SetUSExternalState","filename", "must be either a string or nil(for ultraschall.ini)", -3) return false end
+  if filename==nil then filename="ultraschall.ini" end
   if section:match(".*(%=).*")=="=" then ultraschall.AddErrorMessage("SetUSExternalState","section", "no = allowed in section", -4) return false end
 
   -- set value
-  return ultraschall.SetIniFileValue(section, key, value, reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")
+  return ultraschall.SetIniFileValue(section, key, value, reaper.GetResourcePath().."/"..filename)
 end
 
-function ultraschall.GetUSExternalState(section, key)
+function ultraschall.GetUSExternalState(section, key, filename)
 -- gets a value from ultraschall.ini
 -- returns length of entry(integer) and the entry itself(string)
 --[[
@@ -549,7 +552,7 @@ function ultraschall.GetUSExternalState(section, key)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>string value = ultraschall.GetUSExternalState(string section, string key)</functioncall>
+  <functioncall>string value = ultraschall.GetUSExternalState(string section, string key, optional string filename)</functioncall>
   <description>
     gets a value from ultraschall.ini. 
     
@@ -561,6 +564,8 @@ function ultraschall.GetUSExternalState(section, key)
   <parameters>
     string section - the section of the ultraschall.ini.
     string key - the key of which you want it's value.
+    optional string filename - set this to a filename, if you don't want to use ultraschall.ini; it will be stored into the resource-path of Reaper, so no path needed
+                             - nil, uses ultraschall.ini
   </parameters>
   <chapter_context>
     Ultraschall Specific
@@ -571,18 +576,21 @@ function ultraschall.GetUSExternalState(section, key)
   <tags>configurationmanagement, value, get</tags>
 </US_DocBloc>
 --]]
+  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("GetUSExternalState","filename", "must be either a string or nil(for ultraschall.ini)", -3) return false end
+  if filename==nil then filename="ultraschall.ini" end
+  
   -- check parameters
   if type(section)~="string" then ultraschall.AddErrorMessage("GetUSExternalState","section", "only string allowed", -1) return "" end
   if type(key)~="string" then ultraschall.AddErrorMessage("GetUSExternalState","key", "only string allowed", -2) return "" end
- 
+  
   -- get value
-  local A, B = ultraschall.GetIniFileValue(section, key, "", reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")
+  local A, B = ultraschall.GetIniFileValue(section, key, "", reaper.GetResourcePath().."/"..filename)
   return B
 end
 
 --A,AA=ultraschall.GetUSExternalState("ultraschall_clock","docked")
 
-function ultraschall.CountUSExternalState_sec()
+function ultraschall.CountUSExternalState_sec(filename)
 --count number of sections in the ultraschall.ini
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -592,12 +600,14 @@ function ultraschall.CountUSExternalState_sec()
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer section_count = ultraschall.CountUSExternalState_sec()</functioncall>
+  <functioncall>integer section_count = ultraschall.CountUSExternalState_sec(optional filename)</functioncall>
   <description>
     returns the number of [sections] in the ultraschall.ini
   </description>
   <retvals>
     integer section_count  - the number of section in the ultraschall.ini
+    optional string filename - set this to a filename, if you don't want to use ultraschall.ini; it will be stored into the resource-path of Reaper, so no path needed
+                             - nil, uses ultraschall.ini
   </retvals>
   <chapter_context>
     Ultraschall Specific
@@ -607,14 +617,17 @@ function ultraschall.CountUSExternalState_sec()
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>configurationmanagement, count, section</tags>
 </US_DocBloc>
-
 --]]
-  -- check existence of ultraschall.ini
-  if reaper.file_exists(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")==false then ultraschall.AddErrorMessage("CountUSExternalState_sec","", "ultraschall.ini does not exist", -1) return -1 end
+
+  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("CountUSExternalState_sec","filename", "must be either a string or nil(for ultraschall.ini)", -3) return false end
+  if filename==nil then filename="ultraschall.ini" end
+  
+  -- check existence of ultraschall.ini/ini-filename
+  if reaper.file_exists(reaper.GetResourcePath().."/"..filename)==false then ultraschall.AddErrorMessage("CountUSExternalState_sec","", filename.." does not exist", -1) return -1 end
   
   -- count external-states
   local count=0
-  for line in io.lines(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini") do
+  for line in io.lines(reaper.GetResourcePath().."/"..filename) do
     --local check=line:match(".*=.*")
     local check=line:match("%[.*.%]")
     if check~=nil then check="" count=count+1 end
@@ -624,7 +637,7 @@ end
 
 --A=ultraschall.CountUSExternalState_sec()
 
-function ultraschall.CountUSExternalState_key(section)
+function ultraschall.CountUSExternalState_key(section, filename)
 --count number of keys in the section in ultraschall.ini
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -634,7 +647,7 @@ function ultraschall.CountUSExternalState_key(section)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer key_count = ultraschall.CountUSExternalState_key(string section)</functioncall>
+  <functioncall>integer key_count = ultraschall.CountUSExternalState_key(string section, optional string filename)</functioncall>
   <description>
     returns the number of keys in the given [section] in ultraschall.ini
     
@@ -645,6 +658,8 @@ function ultraschall.CountUSExternalState_key(section)
   </retvals>
   <parameters>
     string section - the section of the ultraschall.ini, of which you want the number of keys.
+    optional string filename - set this to a filename, if you don't want to use ultraschall.ini; it will be stored into the resource-path of Reaper, so no path needed
+                             - nil, uses ultraschall.ini
   </parameters>
   <chapter_context>
     Ultraschall Specific
@@ -657,14 +672,18 @@ function ultraschall.CountUSExternalState_key(section)
 --]]
   -- check parameter and existence of ultraschall.ini
   if type(section)~="string" then ultraschall.AddErrorMessage("CountUSExternalState_key","section", "only string allowed", -1) return -1 end
-  if reaper.file_exists(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")==false then ultraschall.AddErrorMessage("CountUSExternalState_key","", "ultraschall.ini does not exist", -2) return -1 end
+  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("CountUSExternalState_key","filename", "must be either a string or nil(for ultraschall.ini)", -3) return false end
+  if filename==nil then filename="ultraschall.ini" end
+  
+  -- check existence of ultraschall.ini/ini-filename
+  if reaper.file_exists(reaper.GetResourcePath().."/"..filename)==false then ultraschall.AddErrorMessage("CountUSExternalState_key","", filename.." does not exist", -1) return -1 end
 
   -- prepare variables
   local count=0
   local startcount=0
   
   -- count keys
-  for line in io.lines(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini") do
+  for line in io.lines(reaper.GetResourcePath().."/"..filename) do
    local check=line:match("%[.*.%]")
     if startcount==1 and line:match(".*=.*") then
       count=count+1
@@ -680,7 +699,7 @@ end
 
 --A=ultraschall.CountUSExternalState_key("view")
 
-function ultraschall.EnumerateUSExternalState_sec(number)
+function ultraschall.EnumerateUSExternalState_sec(number, filename)
 -- returns name of the numberth section in ultraschall.ini or nil, if invalid
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -690,12 +709,14 @@ function ultraschall.EnumerateUSExternalState_sec(number)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>string section_name = ultraschall.EnumerateUSExternalState_sec(integer number)</functioncall>
+  <functioncall>string section_name = ultraschall.EnumerateUSExternalState_sec(integer number, optional string filename)</functioncall>
   <description>
     returns name of the numberth section in ultraschall.ini or nil if invalid
   </description>
   <retvals>
     string section_name  - the name of the numberth section within ultraschall.ini
+    optional string filename - set this to a filename, if you don't want to use ultraschall.ini; it will be stored into the resource-path of Reaper, so no path needed
+                             - nil, uses ultraschall.ini
   </retvals>
   <parameters>
     integer number - the number of section, whose name you want to know
@@ -711,14 +732,16 @@ function ultraschall.EnumerateUSExternalState_sec(number)
 --]]
   -- check parameter and existence of ultraschall.ini
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "number", "only integer allowed", -1) return false end
-  if reaper.file_exists(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")==false then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "", "ultraschall.ini does not exist", -2) return -1 end
+  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","filename", "must be either a string or nil(for ultraschall.ini)", -5) return false end
+  if filename==nil then filename="ultraschall.ini" end
+  if reaper.file_exists(reaper.GetResourcePath().."/"..filename)==false then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "", filename.." does not exist", -2) return -1 end
 
   if number<=0 then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","number", "no negative number allowed", -3) return nil end
-  if number>ultraschall.CountUSExternalState_sec() then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","number", "only "..ultraschall.CountUSExternalState_sec().." sections available", -4) return nil end
+  if number>ultraschall.CountUSExternalState_sec(filename) then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","number", "only "..ultraschall.CountUSExternalState_sec(filename).." sections available", -4) return nil end
 
   -- look for and return the requested line
   local count=0
-  for line in io.lines(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini") do
+  for line in io.lines(reaper.GetResourcePath().."/"..filename) do
     local check=line:match("%[(.-)%]")
     if check~=nil then count=count+1 end
     if count==number then return check end
@@ -726,7 +749,7 @@ function ultraschall.EnumerateUSExternalState_sec(number)
 end 
 --A=ultraschall.EnumerateUSExternalState_sec(10)
 
-function ultraschall.EnumerateUSExternalState_key(section, number)
+function ultraschall.EnumerateUSExternalState_key(section, number, filename)
 -- returns name of a numberth key within a section in ultraschall.ini or nil if invalid or not existing
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -736,7 +759,7 @@ function ultraschall.EnumerateUSExternalState_key(section, number)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>string key_name = ultraschall.EnumerateUSExternalState_key(string section, integer number)</functioncall>
+  <functioncall>string key_name = ultraschall.EnumerateUSExternalState_key(string section, integer number, optional string filename)</functioncall>
   <description>
     returns name of a numberth key within a section in ultraschall.ini or nil if invalid or not existing
   </description>
@@ -746,6 +769,8 @@ function ultraschall.EnumerateUSExternalState_key(section, number)
   <parameters>
     string section - the section within ultraschall.ini, where the key is stored.
     integer number - the number of the key, whose name you want to know; 1 for the first one
+    optional string filename - set this to a filename, if you don't want to use ultraschall.ini; it will be stored into the resource-path of Reaper, so no path needed
+                             - nil, uses ultraschall.ini
   </parameters>
   <chapter_context>
     Ultraschall Specific
@@ -759,13 +784,16 @@ function ultraschall.EnumerateUSExternalState_key(section, number)
   -- check parameter
   if type(section)~="string" then ultraschall.AddErrorMessage("EnumerateUSExternalState_key", "section", "only string allowed", -1) return nil end
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateUSExternalState_key", "number", "only integer allowed", -2) return nil end
-
+  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec","filename", "must be either a string or nil(for ultraschall.ini)", -3) return false end
+  if filename==nil then filename="ultraschall.ini" end
+  if reaper.file_exists(reaper.GetResourcePath().."/"..filename)==false then ultraschall.AddErrorMessage("EnumerateUSExternalState_sec", "", filename.." does not exist", -4) return -1 end
+  
   -- prepare variables
   local count=0
   local startcount=0
   
   -- find and return the proper line
-  for line in io.lines(reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini") do
+  for line in io.lines(reaper.GetResourcePath().."/"..filename) do
     local check=line:match("%[.*.%]")
     if startcount==1 and line:match(".*=.*") then
       count=count+1
@@ -779,7 +807,7 @@ function ultraschall.EnumerateUSExternalState_key(section, number)
   return nil
 end
 
-function ultraschall.DeleteUSExternalState(section, key)
+function ultraschall.DeleteUSExternalState(section, key, filename)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>DeleteUSExternalState</slug>
@@ -788,7 +816,7 @@ function ultraschall.DeleteUSExternalState(section, key)
     Reaper=5.982
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.DeleteUSExternalState(string section, string key)</functioncall>
+  <functioncall>boolean retval = ultraschall.DeleteUSExternalState(string section, string key, optional string filename)</functioncall>
   <description>
     Deletes an external state from the ultraschall.ini
     
@@ -797,6 +825,8 @@ function ultraschall.DeleteUSExternalState(section, key)
   <parameters>
     string section - the section, in which the to be deleted-key is located
     string key - the key to delete
+    optional string filename - set this to a filename, if you don't want to use ultraschall.ini; it will be stored into the resource-path of Reaper, so no path needed
+                             - nil, uses ultraschall.ini
   </parameters>
   <retvals>
     boolean retval - false in case of error; true in case of success
@@ -812,22 +842,436 @@ function ultraschall.DeleteUSExternalState(section, key)
 ]]  
   if type(section)~="string" then ultraschall.AddErrorMessage("DeleteUSExternalState", "section", "must be a string", -1) return false end
   if type(key)~="string" then ultraschall.AddErrorMessage("DeleteUSExternalState", "key", "must be a string", -2) return false end
-  local A,B,C=ultraschall.ReadFullFile(reaper.GetResourcePath().."/ultraschall.ini")
-  if A==nil then ultraschall.AddErrorMessage("DeleteUSExternalState", "", "no ultraschall.ini present", -3) return false end
-  A="\n"..A.."["
+  
+  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("DeleteUSExternalState","filename", "must be either a string or nil(for ultraschall.ini)", -7) return false end
+  if filename==nil then filename="ultraschall.ini" end
+  if reaper.file_exists(reaper.GetResourcePath().."/"..filename)==false then ultraschall.AddErrorMessage("DeleteUSExternalState", "", filename.." does not exist", -8) return -1 end
+  
+  local A,B,C=ultraschall.ReadFullFile(reaper.GetResourcePath().."/"..filename)
+  if A==nil then ultraschall.AddErrorMessage("DeleteUSExternalState", "", "no "..filename.." present", -3) return false end
+  A="\n"..A.."\n["
   local Start, Part, EndOf = A:match("()\n(%["..section.."%]\n.-)()\n%[")
-  if Part==nil then ultraschall.AddErrorMessage("DeleteUSExternalState", "section", "no such section "..section.." in ultraschall.ini", -4) return false end
+  if Part==nil then ultraschall.AddErrorMessage("DeleteUSExternalState", "section", "no such section "..section.." in "..filename, -4) return false end
   local Part=Part.."\n"
   local Part2=string.gsub(Part, key.."=.-\n", "")
-  if Part2==Part then ultraschall.AddErrorMessage("DeleteUSExternalState", "key", "no such key in section "..section.." in ultraschall.ini", -5) return false end
+  if Part2==Part then ultraschall.AddErrorMessage("DeleteUSExternalState", "key", "no such key in section "..section.." in "..filename, -5) return false end
   local A2=A:sub(2,Start)..Part2:sub(1,-2)..A:sub(EndOf, -2)
   if A2~=A then
-    local O=ultraschall.WriteValueToFile(reaper.GetResourcePath().."/ultraschall.ini", A2)
+    local O=ultraschall.WriteValueToFile(reaper.GetResourcePath().."/"..filename, A2)
     if O==-1 then ultraschall.AddErrorMessage("DeleteUSExternalState", "", "nothing deleted", -6) return false end
   else
     return false
   end
 end
-
 --A1=ultraschall.DeleteUSExternalState("hulubuluberg","3")
+
+function ultraschall.Soundboard_StopAllSounds()
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_StopAllSounds</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_StopAllSounds()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Stops all sounds currently playing in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, stop all sounds</tags>
+  </US_DocBloc>
+  ]]  
+  for i=0, 23 do
+    reaper.StuffMIDIMessage(0, 144,72+i,0)
+  end
+end
+
+function ultraschall.Soundboard_TogglePlayPause(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_TogglePlayPause</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_TogglePlayPause(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Toggles between Play and Pause of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, play, pause, toggle</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_TogglePlayPause", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_TogglePlayPause", "playerindex", "must be between 1 and 24", -2) return false end
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=24+playerindex-1
+  local Velocity=1  
+      
+  reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end
+
+--ultraschall.Soundboard_TogglePlayPause(1)
+
+function ultraschall.Soundboard_TogglePlayStop(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_TogglePlayStop</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_TogglePlayStop(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Toggles between Play and Stop of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, play, stop, toggle</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_TogglePlayStop", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_TogglePlayStop", "playerindex", "must be between 1 and 24", -2) return false end
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=playerindex-1
+  local Velocity=1  
+    
+    reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end
+
+--ultraschall.Soundboard_TogglePlayStop(1)
+
+function ultraschall.Soundboard_Play(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_Play</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_Play(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Starts playing of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, play</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_Play", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_Play", "playerindex", "must be between 1 and 24", -2) return false end    
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=72+playerindex-1
+  local Velocity=1  
+    
+  reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end
+
+--ultraschall.Soundboard_Play(1)
+
+function ultraschall.Soundboard_Stop(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_Stop</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_Stop(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Stops playing of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, stop</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_Stop", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_Stop", "playerindex", "must be between 1 and 24", -2) return false end    
+  local mode=0            -- set to virtual keyboard of Reaper
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=72+playerindex-1
+  local Velocity=0
+    
+  reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end
+
+--ultraschall.Soundboard_Stop(1)
+
+function ultraschall.Soundboard_TogglePlay_FadeOutStop(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_TogglePlay_FadeOutStop</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_TogglePlay_FadeOutStop(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Toggles between Play and FadeOut with Stop of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, fadeout, play, stop</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_TogglePlay_FadeOutStop", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_TogglePlay_FadeOutStop", "playerindex", "must be between 1 and 24", -2) return false end    
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=48+playerindex-1
+  local Velocity=1
+    
+  reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end
+
+--ultraschall.Soundboard_Play_FadeOutStop(1)
+
+function ultraschall.Soundboard_PlayList_CurrentIndex()
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_PlayList_CurrentIndex</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>integer current_playlist_position = ultraschall.Soundboard_PlayList_CurrentIndex()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Returns the position within the playlist of the Ultraschall Soundboard.
+      
+      Playlist means, the player within all players of the Ultraschall-Soundboard.
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+      
+      For other playlist-related functions, see also [SoundBoard\_PlayList\_SetIndex](#SoundBoard_PlayList_SetIndex), [SoundBoard\_PlayList\_Next](#SoundBoard_PlayList_Next) and [SoundBoard\_PlayList\_Previous](#SoundBoard_PlayList_Previous)      
+    </description>
+    <retvals>
+      integer current_playlist_position - the position in the playlist
+    </retvals>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, playlist, current position</tags>
+  </US_DocBloc>
+  ]]  
+  local retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
+  if tonumber(Position)==-1 then Position=0 end
+  return tonumber(math.tointeger(Position))
+end
+
+--A=ultraschall.Soundboard_PlayList_CurrentIndex()
+
+function ultraschall.Soundboard_PlayList_SetIndex(playerindex, play, stop_all_others)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_PlayList_SetIndex</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_PlayList_SetIndex(integer playerindex, optional boolean play, optional boolean stop_all_others)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      sets a new playerindex within the playlist of the Ultraschall-Soundboard.
+      
+      You can optionally start the player and stop all others currently playing.
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+      
+      For other playlist-related functions, see also [Soundboard\_PlayList\_CurrentIndex](#Soundboard_PlayList_CurrentIndex), [SoundBoard\_PlayList\_Next](#SoundBoard_PlayList_Next) and [SoundBoard\_PlayList\_Previous](#SoundBoard_PlayList_Previous) 
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+      optional boolean play - true, start playing of this player immediately; nil or false, don't start playing
+      optional boolean stop_all_others - true, stop all other players currently playing; nil or false, don't stop anything
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, playlist, set, playerindex, play, stop all others</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("SoundBoard_PlayList_SetIndex", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("SoundBoard_PlayList_SetIndex", "playerindex", "must be between 1 and 24", -2) return false end
+  local retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
+  local retval = reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", playerindex-1)
+  if tonumber(Position)==-1 then Position=0 end
+  if stop_all_others==true then
+    ultraschall.Soundboard_StopAllSounds()
+  end
+  if play==true then 
+    ultraschall.Soundboard_Play(playerindex)
+  end
+  return tonumber(math.tointeger(Position))
+end
+
+--A=ultraschall.Soundboard_PlayList_SetIndex(9, true, true)
+--A1=ultraschall.Soundboard_PlayList_CurrentIndex()
+
+function ultraschall.Soundboard_PlayList_Next()
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_PlayList_Next</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_PlayList_Next()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Stops current player and starts the next player within the playlist of the Ultraschall-Soundboard.
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    
+      For other playlist-related functions, see also [Soundboard\_PlayList\_CurrentIndex](#Soundboard_PlayList_CurrentIndex), [SoundBoard\_PlayList\_SetIndex](#SoundBoard_PlayList_SetIndex) and [SoundBoard\_PlayList\_Previous](#SoundBoard_PlayList_Previous)      
+    </description>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, playlist, next, playerindex, play</tags>
+  </US_DocBloc>
+  ]]  
+  local retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
+  if tonumber(Position)>24 then P=1 return end
+  
+  reaper.StuffMIDIMessage(0, 144,72+Position,0)
+  reaper.StuffMIDIMessage(0, 144,72+Position+1,1)
+  
+  if tonumber(Position)+1>24 then Position=24 end
+  reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", Position+1)
+end
+
+--ultraschall.Soundboard_PlayList_Next()
+
+function ultraschall.Soundboard_PlayList_Previous()
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SoundBoard_PlayList_Previous</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_PlayList_Previous()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Stops current player and starts the previous player within the playlist of the Ultraschall-Soundboard.
+      
+      When the previous would be before the first, it will not do anything.
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+      
+      For other playlist-related functions, see also [Soundboard\_PlayList\_CurrentIndex](#Soundboard_PlayList_CurrentIndex), [SoundBoard\_PlayList\_SetIndex](#SoundBoard_PlayList_SetIndex) and [SoundBoard\_PlayList\_Next](#SoundBoard_PlayList_Next).
+    </description>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, playlist, next, playerindex, play</tags>
+  </US_DocBloc>
+  ]]  
+  local retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
+  if tonumber(Position)==-1 then return end
+  
+  reaper.StuffMIDIMessage(0, 144,72+Position,0)
+  reaper.StuffMIDIMessage(0, 144,72+Position-1,1)
+  
+  reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", Position-1) 
+end
+
+--ultraschall.Soundboard_PlayList_Previous()
 
