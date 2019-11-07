@@ -41,6 +41,30 @@ function SoundcheckUnsaved(userspace)
 
 end
 
+function SoundcheckOverdub(userspace)
+
+  local length = reaper.GetProjectLength(0)
+  local play = reaper.GetPlayPosition()
+  local cursor = reaper.GetCursorPosition()
+  local retval, overdub_started = reaper.GetProjExtState(0, "Overdub", "started")
+
+  if cursor >= length and overdub_started == "1" then
+    reaper.SetProjExtState(0, "Overdub", "started", "0")
+    return false
+
+  elseif overdub_started == "1" or (play < length and reaper.GetPlayState() == 5) then
+
+      reaper.SetProjExtState(0, "Overdub", "started", "1")
+      return true
+
+  else
+    return false
+  end
+  -- print(length)
+
+end
+
+
 
 function SoundcheckMic(userspace)
 
@@ -96,8 +120,9 @@ function SetSoundcheck(EventName)
   local StartActionsOnceDuringTrue = toboolean(ultraschall.GetUSExternalState(sectionName,"StartActionsOnceDuringTrue"))
   local EventPaused =       toboolean(ultraschall.GetUSExternalState(sectionName,"EventPaused"))
   local CheckFunction =     _G[ultraschall.GetUSExternalState(sectionName,"CheckFunction")]
+  local StartFunction =     ultraschall.GetUSExternalState(sectionName,"StartFunction")
 
-  local start_id = tostring(reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui"))
+  local start_id = tostring(reaper.NamedCommandLookup(StartFunction))
   local start_id = start_id..",0"
 
   local EventIdentifier = ultraschall.EventManager_AddEvent(
