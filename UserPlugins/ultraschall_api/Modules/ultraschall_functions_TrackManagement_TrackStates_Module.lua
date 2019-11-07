@@ -5108,50 +5108,6 @@ function ultraschall.SetTrackSelection_TrackStateChunk(selection_state, TrackSta
 end
 
 
-function ultraschall.AnyTrackMute(master)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>AnyTrackMute</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.979
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval = ultraschall.AnyTrackMute()</functioncall>
-  <description>
-    returns true, if any track is muted, otherwise returns false.
-  </description>
-  <parameters>
-    boolean master - true, include the master-track as well; false, don't include master-track
-  </parameters>
-  <retvals>
-    boolean retval - true, if any track is muted; false, if not
-  </retvals>
-  <chapter_context>
-    Track Management
-    Get Track States
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>trackmanagement, is, track, master, mute</tags>
-</US_DocBloc>
-]]
-  local retval, mute
-  
-  if master==true then
-    retval, mute = reaper.GetTrackUIMute(reaper.GetMasterTrack(0))
-    if mute==true then return true end
-  end
-  
-  for i=0, reaper.CountTracks(0)-1 do
-    retval, mute = reaper.GetTrackUIMute(reaper.GetTrack(0,i))
-    if mute==true then return true end
-  end
-  return false
-end
-
---A=ultraschall.AnyTrackMute()
-
 function ultraschall.SetAllTracksSelected(selected)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">

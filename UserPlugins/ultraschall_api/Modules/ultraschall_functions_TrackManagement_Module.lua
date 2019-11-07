@@ -1539,3 +1539,294 @@ function ultraschall.DeleteTracks_TrackString(trackstring)
 end
 
 
+function ultraschall.AnyTrackMute(master)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AnyTrackMute</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.979
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AnyTrackMute(optional boolean master)</functioncall>
+  <description>
+    returns true, if any track is muted, otherwise returns false.
+  </description>
+  <parameters>
+    optional boolean master - true, include the master-track as well; false, don't include master-track
+  </parameters>
+  <retvals>
+    boolean retval - true, if any track is muted; false, if not
+  </retvals>
+  <chapter_context>
+    Track Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>trackmanagement, is, track, master, mute</tags>
+</US_DocBloc>
+]]
+  local retval, mute
+  
+  if master==true then
+    retval, mute = reaper.GetTrackUIMute(reaper.GetMasterTrack(0))
+    if mute==true then return true end
+  end
+  
+  for i=0, reaper.CountTracks(0)-1 do
+    retval, mute = reaper.GetTrackUIMute(reaper.GetTrack(0,i))
+    if mute==true then return true end
+  end
+  return false
+end
+
+--A=ultraschall.AnyTrackMute()
+
+function ultraschall.AnyTrackRecarmed()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AnyTrackRecarmed</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AnyTrackRecarmed()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns true, if any track is recarmed.
+  </description>
+  <retvals>
+    boolean retval - true, at least one track is recarmed; false, no track is recarmed
+  </retvals>
+  <chapter_context>
+    Track Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, get, any track, recarmed</tags>
+</US_DocBloc>
+]]
+  for i=0, reaper.CountTracks(0)-1 do
+    if reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0,i), "I_RECARM")~=0 then return true end
+  end
+  return false
+end
+
+function ultraschall.AnyTrackPhased()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AnyTrackPhased</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AnyTrackPhased()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns true, if any track has phase-invert activated.
+  </description>
+  <retvals>
+    boolean retval - true, at least one track has an activated phase-invert; false, no track is phase-inverted
+  </retvals>
+  <chapter_context>
+    Track Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, get, anytrack, phase</tags>
+</US_DocBloc>
+]]
+  for i=0, reaper.CountTracks(0)-1 do
+    if reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0,i), "B_PHASE")~=0 then return true end
+  end
+  return false
+end
+
+--A=ultraschall.AnyTrackPhased()
+
+function ultraschall.AnyTrackRecMonitored()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AnyTrackRecMonitored</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AnyTrackRecMonitored()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns true, if any track has monitoring of recinput activated.
+  </description>
+  <retvals>
+    boolean retval - true, at least one track has an activated rec-monitoring; false, no track is rec-monitored
+  </retvals>
+  <chapter_context>
+    Track Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, get, anytrack, recmonitor</tags>
+</US_DocBloc>
+]]
+  for i=0, reaper.CountTracks(0)-1 do
+    if reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0,i), "I_RECMON")~=0 then return true end
+  end
+  return false
+end
+
+--A=ultraschall.AnyTrackRecMonitored()
+
+function ultraschall.AnyTrackHiddenTCP(master)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AnyTrackHiddenTCP</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AnyTrackHiddenTCP(optional boolean master)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns true, if any track is hidden in Track Control Panel.
+  </description>
+  <parameters>
+    optional boolean master - true, include the master-track; false, don't include the master-track
+  </parameters>
+  <retvals>
+    boolean retval - true, at least one track is hidden in TCP; false, no track is hidden
+  </retvals>
+  <chapter_context>
+    Track Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, get, anytrack, hidden, tcp, master</tags>
+</US_DocBloc>
+]]
+  if master==true then
+    if reaper.SNM_GetIntConfigVar("showmaintrack", -99)==0 then return true end
+  end
+  for i=0, reaper.CountTracks(0)-1 do
+    if reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0,i), "B_SHOWINTCP")==0 then return true end
+  end
+  return false
+end
+
+--A=ultraschall.AnyTrackHiddenTCP()
+
+function ultraschall.AnyTrackHiddenMCP(master)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AnyTrackHiddenMCP</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    SWS=2.9.7
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AnyTrackHiddenMCP(optional boolean master)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns true, if any track is hidden in Mixer Control Panel.
+  </description>
+  <parameters>
+    optional boolean master - true, include the master-track; false, don't include the master-track
+  </parameters>
+  <retvals>
+    boolean retval - true, at least one track is hidden in MCP; false, no track is hidden
+  </retvals>
+  <chapter_context>
+    Track Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, get, anytrack, hidden, mcp, master</tags>
+</US_DocBloc>
+]]
+  if master==true then
+    if reaper.SNM_GetIntConfigVar("mixrowflags", -99)&256==256 then return true end
+  end
+  for i=0, reaper.CountTracks(0)-1 do
+    if reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0,i), "B_SHOWINMIXER")==0 then return true end
+  end
+  return false
+end
+
+--A=ultraschall.AnyTrackHiddenMCP(true)
+
+function ultraschall.AnyTrackFreeItemPositioningMode()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AnyTrackFreeItemPositioningMode</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AnyTrackFreeItemPositioningMode()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns true, if any track has free item positioning mode(freemode) activated.
+  </description>
+  <retvals>
+    boolean retval - true, at least one track has freemode activated; false, no track has freemode-activated
+  </retvals>
+  <chapter_context>
+    Track Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, get, anytrack, freemode, free item positioning mode</tags>
+</US_DocBloc>
+]]
+  for i=0, reaper.CountTracks(0)-1 do
+    if reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0,i), "B_FREEMODE")~=0 then return true end
+  end
+  return false
+end
+
+--A=ultraschall.AnyTrackFreeItemPositioningMode()
+
+function ultraschall.AnyTrackFXBypass(master)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AnyTrackFXBypass</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AnyTrackFXBypass(optional boolean master)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns true, if any track has fx-bypass activated.
+  </description>
+  <parameters>
+    optional boolean master - true, include the master-track; false, don't include the master-track
+  </parameters>
+  <retvals>
+    boolean retval - true, at least one track has fx bypass activated; false, no track has fx-bypass activated
+  </retvals>
+  <chapter_context>
+    Track Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, get, anytrack, fx bypass</tags>
+</US_DocBloc>
+]]
+  if master==true then
+    if reaper.GetMediaTrackInfo_Value(reaper.GetMasterTrack(0), "I_FXEN")==0 then return true end
+  end
+  for i=0, reaper.CountTracks(0)-1 do
+    if reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0,i), "I_FXEN")==0 then return true end
+  end
+  return false
+end
+
+--A=ultraschall.AnyTrackFXBypass(true)

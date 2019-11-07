@@ -83,7 +83,7 @@
            >[aot](#aot), [cueitems](#cueitems), [itemtexthide](#itemtexthide), [psmaxv](#psmaxv), [psminv](#psminv), [templateditcursor](#templateditcursor)  
   
          the following variables are available in pre-releases of Reaper only  
-           >[disk_peaks_mmapkb](#disk_peaks_mmapkb), [disk_peaks_ramkb](#disk_peaks_ramkb), [maxplayoffsrate](#maxplayoffsrate), [midiccenv](#midiccenv), [midiccinterp](#midiccinterp), [windowflags](#windowflags), [wiring_options](#wiring_options)
+           >[bpminfnimport](#bpminfnimport), [disk_peaks_mmapkb](#disk_peaks_mmapkb), [disk_peaks_ramkb](#disk_peaks_ramkb), [maxplayoffsrate](#maxplayoffsrate), [midiccenv](#midiccenv), [midiccinterp](#midiccinterp), [windowflags](#windowflags), [wiring_options](#wiring_options)
       </description>  
       <chapter_context>  
          An Introduction  
@@ -794,21 +794,6 @@
     </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
-      <slug>bouncecfg</slug>  
-      <title>bouncecfg</title>  
-      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Contains the bounce-outputfile-settings, but seems not to be updated after having set it once, only in the reaper.ini
-          it is an integer  
-            
-          Stored in reaper.ini under the same name in the section REAPER, when bounce-cfg-settings have been changed
-      </description>  
-      <chapter_context>  
-         Config Variables  
-      </chapter_context>  
-      <target_document>Reaper_Config_Variables</target_document>  
-    </US_DocBloc>  
-  
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>bigwndframes</slug>  
       <title>bigwndframes</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
@@ -824,6 +809,38 @@
       </description>  
       <chapter_context>  
          Config Variables  
+      </chapter_context>  
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>bouncecfg</slug>  
+      <title>bouncecfg</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Contains the bounce-outputfile-settings, but seems not to be updated after having set it once, only in the reaper.ini
+          It is an integer  
+            
+          Stored in reaper.ini under the same name in the section REAPER, when bounce-cfg-settings have been changed
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>bpminfnimport</slug>  
+      <title>bpminfnimport</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          unknown
+          only available in pre-releases, yet
+          It is an integer
+            
+          Unknown, if it's stored in reaper.ini as well...
+      </description>  
+      <chapter_context>  
+         Config Variables  
+         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  

@@ -24,7 +24,7 @@
   ################################################################################
   --]]
 
--- Event Manager - 1.15
+-- Event Manager - 1.2
 -- Meo Mespotine
 --
 -- Issues: Api functions don't recognize registered EventIdentifiers who weren't processed yet by the EventManager.
@@ -92,12 +92,13 @@ CountOfEvents=0
 function DebugDummy()
 end
 
-function DebugRun(current_state, eventnumber)
-  if eventnumber==1 then
-    reaper.SetExtState("ultraschall_eventmanager", "checkstates", "", false)
+function DebugRun(eventnumber)
+  UserSpaces=EventTable[eventnumber]["UserSpace"]
+  local UserSpace=""
+  for k,v in pairs(UserSpaces) do
+    UserSpace=UserSpace.."index:"..tostring(k).."\ndatatype:"..ultraschall.type(v).."\nvalue:"..string.gsub(string.gsub(tostring(v),"\\n","\\\\n"),"\n","\\n").."\n\n"
   end
-  local A=reaper.GetExtState("ultraschall_eventmanager", "checkstates")
-  reaper.SetExtState("ultraschall_eventmanager", "checkstates", A..eventnumber..": "..tostring(current_state).."\n", false)
+  if UserSpace~=nil then reaper.SetExtState("ultraschall_eventmanager", "UserSpaces_"..eventnumber, UserSpace, false) end
 end
 
 Debug=DebugDummy
@@ -514,7 +515,7 @@ function main()
         end
       if doit==true then
         state_retval, current_state=pcall(EventTable[i]["Function"], EventTable[i]["UserSpace"])
-        Debug(current_state,i)
+        Debug(i)
         CheckAndSetRetvalOfCheckFunction(i, current_state)
         if state_retval==false then 
           PauseEvent(i)

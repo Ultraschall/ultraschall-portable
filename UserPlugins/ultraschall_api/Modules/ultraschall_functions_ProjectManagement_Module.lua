@@ -327,7 +327,7 @@ end
 
 ultraschall.LastProjectStateChunk_Time=reaper.time_precise()
 
-function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender)
+function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender, temp, temp, temp, temp, temp, waittime)
   --[[
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>GetProjectStateChunk</slug>
@@ -433,7 +433,9 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
       
   -- add current project to render-queue
   reaper.Main_OnCommand(41823,0)
-     
+  
+  if tonumber(waittime)==nil then waittime=100000 end
+  
   -- wait, until Reaper has added the project to the render-queue and get it's filename
   -- 
   -- there's a timeout, to avoid hanging scripts, as ReaScript doesn't always update it's filename-lists
@@ -448,7 +450,7 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
     if filecount2~=filecount then 
       break 
     end
-    if i==100000--00
+    if i==waittime--00
       then ultraschall.AddErrorMessage("GetProjectStateChunk", "", "timeout: Getting the ProjectStateChunk took too long for some reasons, please report this as bug to me and include the projectfile with which this happened!", -2) return end
   end
   local duplicate_count, duplicate_array, originalscount_array1, originals_array1, originalscount_array2, originals_array2 = ultraschall.GetDuplicatesFromArrays(files, files2)

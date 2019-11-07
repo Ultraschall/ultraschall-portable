@@ -27017,7 +27017,7 @@
         <functioncall prog_lang="python">(void retval, String title, String className, Int x, Int y, Int w, Int h, String styleOptional, void ownerHWNDOptional) = JS_Window_Create(title, className, x, y, w, h, styleOptional, ownerHWNDOptional)</functioncall>
         <requires>
             Reaper=5.982
-            JS=0.991
+            JS=0.995
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -27026,6 +27026,8 @@
             style: An optional parameter that overrides the default style. The string may include any combination of standard window styles, such as "POPUP" for a frameless window, or "CAPTION,SIZEBOX,SYSMENU" for a standard framed window.
 
             On Linux and macOS, "MAXIMIZE" has not yet been implemented, and the remaining styles may appear slightly different from their WindowsOS counterparts.
+
+            className: On Windows, only standard ANSI characters are supported.
 
             ownerHWND: Optional parameter, only available on WindowsOS. Usually either the REAPER main window or another script window, and useful for ensuring that the created window automatically closes when the owner is closed.
             
