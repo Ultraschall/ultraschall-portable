@@ -45,7 +45,7 @@ view = ultraschall.GetUSExternalState("ultraschall_gui", "view")
 sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
 mouse = ultraschall.GetUSExternalState("ultraschall_mouse", "state")
 first_start = ultraschall.GetUSExternalState("ultraschall_start", "firststart")
-startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value")
+startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value","ultraschall-settings.ini")
 follow = ultraschall.GetUSExternalState("ultraschall_follow", "state")
 
   follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")

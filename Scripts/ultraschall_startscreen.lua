@@ -84,11 +84,11 @@ function check_values()
 
   local startscreen
 
-  startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value")
+  startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value","ultraschall-settings.ini")
   if tostring(GUI.Val("checkers")[1]) == "1"  and (startscreen == "0" or startscreen=="-1") then      -- ckeckbox is activated
-    ultraschall.SetUSExternalState("ultraschall_settings_startsceen", "Value", "1", true)
+    ultraschall.SetUSExternalState("ultraschall_settings_startsceen", "Value", "1", "ultraschall-settings.ini")
   elseif tostring(GUI.Val("checkers")[1]) == "0" and startscreen == "1" then    -- ckeckbox is deactivated
-    ultraschall.SetUSExternalState("ultraschall_settings_startsceen", "Value", "0", true)
+    ultraschall.SetUSExternalState("ultraschall_settings_startsceen", "Value", "0", "ultraschall-settings.ini")
   end
 
 end
@@ -143,7 +143,7 @@ GUI.elms = {
   label2           = GUI.Lbl:new(          135, 220,                  "Visit the Podcast menu to explore the user interface and features.", 0),
   label3           = GUI.Lbl:new(          210, 240,                  "Use Project templates for a quick setup.",                           0),
   label4           = GUI.Lbl:new(          265, 290,                  "If you need assistance:",                                            0),
-  checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4, tonumber(ultraschall.GetUSExternalState("ultraschall_settings_startsceen","Value")), "ultraschall_settings_startsceen"),
+  checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4, tonumber(ultraschall.GetUSExternalState("ultraschall_settings_startsceen","Value","ultraschall-settings.ini")), "ultraschall_settings_startsceen"),
   tutorials        = GUI.Btn:new(           30, 320, 190, 40,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/"),
   twitter          = GUI.Btn:new(          242, 320, 190, 40,         "Twitter",                                                            open_url, "https://twitter.com/ultraschall_fm"),
   forum            = GUI.Btn:new(          455, 320, 190, 40,         "Userforum",                                                          open_url, "https://sendegate.de/c/ultraschall"),
