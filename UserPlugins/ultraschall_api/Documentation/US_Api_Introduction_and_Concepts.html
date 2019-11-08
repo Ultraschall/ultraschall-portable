@@ -55,7 +55,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.77 - "Monkeys with Tools - Call the planet doctor" -  - Build: 40673</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.78 - "Tchaikovski - Overture 1812" - 5th of November 2019 - Build: 40869</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -146,12 +146,15 @@ Ultraschall API functions
 </tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Localize Scripts</b></td></tr><tr><td><a href="#Localize_001_Introduction">Localize Scripts: Introduction</a></td>
 <td><a href="#Localize_002_LangPack_Fileformat">Localize Scripts: Language-pack-fileformat</a></td>
 <td><a href="#Localize_003_Localize_Functions">Localize Scripts: Functions</a></td>
-</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>EventManager</b></td></tr><tr><td><a href="#EventManager_AddingEvents">EventManager: Adding events</a></td>
+</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>EventManager</b></td></tr><tr><td><a href="#EventManager_001_Introduction">EventManager: Introduction</a></td>
+<td><a href="#EventManager_AddingEvents">EventManager: Adding events</a></td>
+<td><a href="#EventManager_AlterRetrieve">EventManager: Alter Events and retrieve settings</a></td>
 <td><a href="#EventManager_BasicWorkflow">EventManager: Basic workflow</a></td>
+</tr><tr><td><a href="#EventManager_Debugging">EventManager: Debugging Events</a></td>
 <td><a href="#EventManager_EventCheck_Function_For_Transitioning_Events">EventManager: Creating Events for transition-events</a></td>
 <td><a href="#EventManager_EventCheck_Function_For_True_False_Events">EventManager: the eventcheck-function for true/false-events</a></td>
-</tr><tr><td><a href="#EventManager_Introduction">EventManager: Introduction</a></td>
 <td><a href="#EventManager_StartupEvents">EventManager: Working with startup events</a></td>
+</tr><tr><td><a href="#EventManager_The_Basic_Concept">EventManager: The Basic Concept</a></td>
 <td><a href="#EventManager_WhichEventsCanBeChecked">EventManager: Which events can be checked?</a></td>
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Helper Functions</b></td></tr><tr><td><a href="#Helper_Functions_001_Introduction">Helper_Functions: Introduction</a></td>
 <td><a href="#Helper_Functions_002_ClipboardManagement">Helper_Functions: Clipboard Management</a></td>
@@ -165,7 +168,7 @@ Ultraschall API functions
 <p>This API was to be used within Ultraschall only, but quickly evolved into a huge 1000+ function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:</p>
 <ul>
 <li><a href="#Rendering_001_Introduction">Rendering</a> - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to <a href="US_Api_Functions.html#RenderProject">RenderProject</a> or <a href="US_Api_Functions.html#RenderProject_Regions">RenderProject_Regions</a></li>
-<li><a href="#EventManager_Introduction">EventManager</a> - run actions when certain events happen. You can fully customize that the way you want and need.</li>
+<li><a href="#EventManager_001_Introduction">EventManager</a> - run actions when certain events happen. You can fully customize that the way you want and need.</li>
 <li><a href="#Navigation_001_Introduction">Navigation, Follow and Arrangeview-Manipulation</a> - get/set cursors, zoom, autoscroll-management, scroll, etc</li>
 <li><a href="#Arrangeview_Snapshots_001_Introduction">ArrangeView-Snapshots</a> - you can save, retrieve snapshots of the arrangeview, including position, zoomstates to quickly jump through parts of your project</li>
 <li><a href="#Trackstate_Management_001_Introduction">Trackstates</a> - you can access and set all(!) track-states available</li>
@@ -236,7 +239,7 @@ For more information on ReaPack and it's usage, refer <a href="https://reapack.c
 <p><strong>Manual Installation</strong>:</p>
 <p>If you can't or don't want to install ReaPack, you can also install it manually.</p>
 <ol>
-<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.77.zip">ultraschall_api4.00_beta2.77.zip</a>.<br />
+<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.78.zip">ultraschall_api4.00_beta2.78.zip</a>.<br />
 </li>
 <li>Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -&gt; Show REAPER resource path in explorer/finder...".<br />
 The folder UserPlugins should contain the folder ultraschall_api and the files ultraschall_api_readme.txt and ultraschall_api.lua after this step.<br />
@@ -289,7 +292,8 @@ eMail: lspmp3@yahoo.de(for framework-related stuff only!!)<br />
 Sendegate: <a href="http://www.sendegate.de">sendegate.de</a> into the Ultraschall-section.</p></li>
 </ol>
 <p>Bugreports that contain only a "it doesn't work" and "I expected it to work" will be ignored gracefully ;)</p>
-<p>If you have feature-requests, we have open ears. Keep in mind, not everything you find a good idea actually is one. So we may or may not take on your idea, change and rework it into a way, that benefits all, not just your particular use-case. When in doubt, just try it! Keep also in mind: there are limitations. Some cool features we all would love to have, simply aren't implementable. Que sera, sera...</p>
+<p>If you have feature-requests, we have open ears. Keep in mind, not everything you find a good idea actually is one. So we may or may not take on your idea, change and rework it into a way, that benefits all, not just your particular use-case. When in doubt, just try it! Keep also in mind: there are limitations. Some cool features we all would love to have, simply aren't implementable.<br />
+Que sera, sera...</p>
 <p>For your comments just send a mail at: lspmp3@yahoo.de(for framework-related stuff only!!) or go to sendegate.de into the Ultraschall-section.</p>
 <p>PS: If you know how to implement impossible things or do things better than the current implementation, you are welcome to donate your improved codes. :)</p>
 
@@ -302,7 +306,9 @@ Sendegate: <a href="http://www.sendegate.de">sendegate.de</a> into the Ultrascha
 <p>The SWS-logo has been taken from the SWS-extension-project, which can be found at <a href="http://www.sws-extension.org">sws-extension.org</a></p>
 <p>Ultraschall-API written by Meo Mespotine <a href="http://www.mespotine.de">mespotine.de</a> with contributions from <a href="https://twitter.com/fernsehmuell">Udo Sauer</a> and <a href="https://twitter.com/rstockm">Ralf Stockmann</a></p>
 <p>If you want to donate to our project, head over to <a href="http://www.ultraschall.fm/danke">ultraschall.fm/danke</a>.</p>
-<p>Kudos to lokasenna, who suggested some cool things, that made some functions much faster and sparkled new ones. Cheers! MakeCopyOfTable-function adapted from Tyler Neylon's (twitter.com/tylerneylon) function, found at <a href="https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value/26367080#26367080">Stack Overflow</a> Thanks to him for allowing me to use it :)</p>
+<p>Kudos to lokasenna, who suggested some cool things, that made some functions much faster and sparkled new ones. Cheers!<br />
+MakeCopyOfTable-function adapted from Tyler Neylon's (twitter.com/tylerneylon) function, found at <a href="https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value/26367080#26367080">Stack Overflow</a><br />
+Thanks to him for allowing me to use it :)</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_001_Introduction">^</a> <u>Datatypes: Introduction</u></h4></div><p><p>Parameters and returnvalues are usually of specific types. Let's look at the following function:</p>
@@ -591,15 +597,11 @@ Lua provides ways of checking for valid datatypes(type() and math.type()) as wel
 works like Lua's own type-function, but checks for Reaper's own datatypes as well, like:</p>
 <pre><code>        Lua: nil, number: integer, number: float, boolean, string, function, table, thread, userdata,  
         Reaper: ReaProject, MediaItem, MediaItem_Take, MediaTrack, TrackEnvelope, AudioAccessor, joystick_device, PCM_source  
-        userdata: will be shown, if object isn&#39;t of any known type  
-
-to get of which type a variable is, just use  
-
-         datatype_of_variable = ultraschall.type(variable)
-
-where the return-value datatype\_of\_variable will hold a string describing the type of the variable.  
-
-Due some API-restrictions, SWS-specific datatypes are not (yet) supported.  </code></pre></li>
+        userdata: will be shown, if object isn&#39;t of any known type  </code></pre>
+<p>to get of which type a variable is, just use</p>
+<pre><code>         datatype_of_variable = ultraschall.type(variable)</code></pre>
+<p>where the return-value datatype_of_variable will hold a string describing the type of the variable.</p>
+<p>Due some API-restrictions, SWS-specific datatypes are not (yet) supported.</p></li>
 <li><p>Ultraschall-API specific or other Reaper-datatypes<br />
 To check for Ultraschall-API specific or other Reaper-datatypes, you can use the following functions:</p>
 <p>Ultraschall-API-specific:</p>
@@ -3690,8 +3692,8 @@ If for one reason or another, no translation can be done(no loaded translationfi
 </blockquote>
 <p>This should make having your scripts localized an easy and convenient task.</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_Introduction"></a>
-<div style="font-size:100%"><h4><a href="#EventManager_Introduction">^</a> <u>EventManager: Introduction</u></h4></div><p><p>Sometimes you run into the situation, where you want to run one or more actions when certain events happen.</p>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_001_Introduction"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_001_Introduction">^</a> <u>EventManager: Introduction</u></h4></div><p><p>Sometimes you run into the situation, where you want to run one or more actions when certain events happen.</p>
 <p>For instance, you want to output a warning when trying to start recording and project-playrate is set to higher than 1.x, maybe even stop recording immediately in that case.<br />
 This could be done, if you build custom actions for that case, but: if you have dozens of scripts dealing with recording-situations, you would need to update all of them or build custom actions for all of them, just to include this warning.<br />
 And if you want to temporarily remove this warning, you are doomed.</p>
@@ -3702,6 +3704,25 @@ And wouldn't it be nice, if you could decide, whether this check shall be run or
 <p>Behold! It's here!</p>
 <p>The Ultraschall-Api-EventManager came to do all of that for you.</p>
 
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_The_Basic_Concept"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_The_Basic_Concept">^</a> <u>EventManager: The Basic Concept</u></h4></div><p><p>The EventManager is a script I wrote. It runs in the background, after you've started it.<br />
+You can add events to it, which contain</p>
+<ol>
+<li>an eventcheck-function, which returns true if the event happens, otherwise false<br />
+</li>
+<li>the attributes, how long and how often the event shall be checked for<br />
+</li>
+<li>a list of actions who are run, if the event occurred, which means, the eventcheck-function from 1 returns true</li>
+</ol>
+<p>The eventcheck-function is one, that you write. That's right, you write a function that'll check, if the event has occured. That way, you have full control on how the event shall be checked.</p>
+<p>The attributes include things like, how often to check(every x seconds), how long to check for(for x seconds, then stop checking), if the event shall be paused or run right away, and a name which you can give the event, so you know, what its about. You can also set, if the actionlist shall be run as long as the eventcheck-function returns true(again and again) or only once when the returned state of the check-function goes from false to true(once).</p>
+<p>The list of actions is also common to you: you pass over the sections and the accompanying action-command-ids to the eventmanager, as you can find them in the action-list.</p>
+<p>Now, if you've passed them over, the EventManager registers it within itself and does the checking. And if the event occurs, it runs the actions from the actionlist in the order that you've passed them. And it does it all automatically for you in the background.</p>
+<p>But, what if you've added an event and you change your mind later on how the attributes shall be set, or if you want to change the list of actions to run? Don't panic: you can alter them again after the fact.</p>
+<p>And if you don't want to add them all the time manually, you can even add the events as startup-events. That means, you can add events, who are added to the EventManager immediately after the EventManager has been started. So all you need in that case is simply starting the EventManager once, and it will check for the events, you've added as startup events right away.</p>
+<p>That's all nice and such, but: how to actually do it?</p>
+<p>Read on, my dear.</p>
+
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_BasicWorkflow"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_BasicWorkflow">^</a> <u>EventManager: Basic workflow</u></h4></div><p><p>The basic workflow to use the EventManager is quite simple:</p>
 <ol>
@@ -3710,16 +3731,21 @@ And wouldn't it be nice, if you could decide, whether this check shall be run or
 <li><p>Add the new event to the Ultraschall-Api-EventManager using <a href="US_Api_Functions.html#EventManager_AddEvent">ultraschall.EventManager_AddEvent()</a>, which returns an EventIdentifier-string.</p></li>
 </ol>
 <p>Voila, the EventManager checks for your event.</p>
+<p>And if at some point you need to stop the EventManager, just use <a href="US_Api_Functions.html#EventManager_Stop">EventManager_Stop</a>:</p>
+<pre><code>        ultraschall.EventManager_Stop()</code></pre>
 <p>The EventIdentifier returned by EventManager_AddEvent is like a unique name for your event, until the event gets removed again from the EventManager.<br />
-And this EventIdentifier can be used, if you want to</p>
+And this EventIdentifier can be used, if you want, to</p>
 <ul>
 <li>enumerate the attributes of your event: <a href="US_Api_Functions.html#EventManager_EnumerateEvents2">EventManager_EnumerateEvents2()</a><br />
 </li>
 <li>pause the checking for the event: <a href="US_Api_Functions.html#EventManager_PauseEvent">EventManager_PauseEvent()</a><br />
 </li>
+<li>get the paused state of the event: <a href="US_Api_Functions.html#EventManager_GetPausedState">EventManager_GetPausedState</a></li>
 <li>or resume the checking for the event: <a href="US_Api_Functions.html#EventManager_ResumeEvent">EventManager_ResumeEvent()</a><br />
 </li>
 <li>set the attributes of the event: <a href="US_Api_Functions.html#EventManager_SetEvent">EventManager_SetEvent()</a><br />
+</li>
+<li>get the last returned state of the checkingfunction of this event: <a href="US_Api_Functions.html#EventManager_GetLastCheckfunctionState">EventManager_GetLastCheckfunctionState</a><br />
 </li>
 <li>remove the event from the EventManager again: <a href="US_Api_Functions.html#Eventmanager_RemoveEvent">Eventmanager_RemoveEvent()</a></li>
 </ul>
@@ -3740,7 +3766,7 @@ Now, let's go into more detail, what "events" means, how to build a proper state
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_WhichEventsCanBeChecked"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_WhichEventsCanBeChecked">^</a> <u>EventManager: Which events can be checked?</u></h4></div><p><p>Basically there are two types of events you can check for:</p>
 <ol>
-<li><p>True/False events, like "Is the mute-button of the master-track muted(true) or not(false)</p></li>
+<li><p>True/False events, like "Is the mute-button of the master-track muted(true) or not(false)?"</p></li>
 <li><p>Transitioning, from &gt; to events, like "Does the playstate change from Play to PlayPause?"</p></li>
 </ol>
 <p>The True/False events are the easiest to check for. All you need to do is write a checking-function, that returns true, if the condition is met(e.g. mastertrack is muted) or false if the condition is not met(e.g. mastertrack is NOT muted).<br />
@@ -3749,7 +3775,7 @@ This kind of event is usually the best, if there are only two possible condition
 <p>The Transitioning, from &gt; to events are a little bit more difficult to code(but not that much).</p>
 <p>First you need to find out the event-transition you want to check for. Then you write a function, which returns true, if the transition has happened or false, if not. For that, you need to keep track of the oldstate and the newstate. You are not allowed to use global variables for keeping track of that, but eventcheck-functions get their own userspace to store their information(will explain how that works in the next chapter).<br />
 This kind of event is usually the best, if there are more than two conditions who could be met and you want to run actions only when transitioning between two specific conditions.<br />
-Like the playstate, who could be stop, play, playpause, rec, recpause. If you want to only run the actions when play changes from play to playpause, but not if play changes to stop, transitioning-events are the way to go.</p>
+Like the playstate, who could be stop, play, playpause, rec, recpause. If you want to only run the actions when play changes from play to playpause, but not if play changes from play to stop, transitioning-events are the way to go.</p>
 <p>Now I'll explain to you, how to write a proper eventcheck-function, as you need to take some things into consideration for that.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_EventCheck_Function_For_True_False_Events"></a>
@@ -3757,6 +3783,7 @@ Like the playstate, who could be stop, play, playpause, rec, recpause. If you wa
 Let's take the aforementioned example, if the mastertrack is muted or not.</p>
 <pre><code>        function IsMasterTrackMuted()
            -- get the current mute-state of the master-track
+           -- always make needed variables local !
            local mutestate=reaper.GetMasterMuteSoloFlags()&amp;1 
            
            -- return false, if mutestate==0, else return true.
@@ -3766,13 +3793,13 @@ Let's take the aforementioned example, if the mastertrack is muted or not.</p>
              return true
            end
         end</code></pre>
-<p>This would be fully sufficient as the check-function for such true/false-events and fully accepted by the EventManager.<br />
-Note, how I made the needed variable mutestate local by adding local before it. This is important to do!</p>
+<p>This would be fully sufficient as the check-function for such true/false-events and would be fully accepted by the EventManager.<br />
+Note, how I made the needed variable mutestate local by adding local before it. This is important to do, as you may risk to overwrite internal structures of the EventManager otherwise!</p>
 <p>Another important thing to do is: make the eventcheck-function as simple and fast as possible. Try to avoid resourceintensive operations like heavy patternmatching and such stuff. The longer your eventcheck-function needs to execute, the more laggy the EventManager becomes!</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_EventCheck_Function_For_Transitioning_Events"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_EventCheck_Function_For_Transitioning_Events">^</a> <u>EventManager: Creating Events for transition-events</u></h4></div><p><p>The eventcheck-function for transition-events is a little more difficult to do.</p>
-<p>Let's take the other example, where I would do a eventcheck-function, which checks if playstate transitions from play to playpause.<br />
+<p>Let's take the other example, where I would do a eventcheck-function, which checks if playstate transitions from play to playpause happen.<br />
 For that, we need to store the old playstate. Usually, we would do that into a global variable, but as global variables are forbidden in the EventManager, I've added something else into the EventManager: UserSpaces.</p>
 <p>UserSpaces are tables, that I pass to your eventcheck-function as first parameter. This table can be populated in any way you want.<br />
 Let's take an example of that:</p>
@@ -3792,8 +3819,8 @@ Let's take an example of that:</p>
             end
         end</code></pre>
 <p>This function stores the old time of your system into userspace["previous_time"], which can be accessed again the next time this function is called.<br />
-Note, that the table we use is passed as first parameter by the EventManager. That means, even if you don't use it, you'll get the UserSpace to store things into it. you can treat it, as any other table you are used to.</p>
-<p>Now, let's build up our eventcheck-function for the transition-check between play and playpause.</p>
+Note, that the table we use is passed as first parameter by the EventManager. That means, even if you don't use it, you'll get the UserSpace to store things into it. You can treat it, as any other table you are used to.</p>
+<p>Ok, let's return to our intended check-function for the transition-check between play and playpause.</p>
 <pre><code>        function TransitionPlayToPlaypause(userspace)
           -- get the current playstate
           local current_playstate=reaper.GetPlayState()
@@ -3842,7 +3869,7 @@ Feel free to modify and experiment with the code.</p>
         end
         
         main()</code></pre>
-<p>This allows you to check for quite complex and individual events in any way you want.</p>
+<p>This allows you to check for quite complex and individual events in any way you want. (See <a href="#EventManager_Debugging">EventManager_Debugging</a> for more debugging and testing strategies).</p>
 <p>Note here as well, how I made the variable current_playstate in the eventcheck-function "TransitionPlayToPlaypause" local, as this is important here as well!</p>
 <p>And for transition-events, we have the same performance-related mantra: make the eventcheck-function as simple and fast as possible. Try to avoid resourceintensive operations like heavy patternmatching and such stuff. The longer your eventcheck-function needs to execute, the more laggy the EventManager becomes!</p>
 <p>Now, that we have our eventcheck-function, we can add a new event to the EventManager.</p>
@@ -3859,7 +3886,7 @@ In our case, we use:</p>
 <p>Now let's add the new event, with the following attributes set:</p>
 <pre><code>        EventIdentifier = ultraschall.EventManager_AddEvent(
                               &quot;Insert Marker When Play -&gt; PlayPause&quot;, -- a descriptive name for the event
-                              0,                                      -- how often to check within a second; 0, means as often as possible 
+                              0,                                      -- how often to check in seconds; 0, means as often as possible 
                               0,                                      -- how long to check for it in seconds; 0, means forever
                               true,                                   -- shall the actions be run as long as the eventcheck-function 
                                                                       --       returns true(false) or not(true)
@@ -3873,6 +3900,136 @@ In our case, we use:</p>
                                                                       --                                      the input-markername-dialog
                               )</code></pre>
 <p>This function returns now an EventIdentifier, which(as previously mentioned) can be used to set, pause, resume, remove the event again from the EventManager.</p>
+<p>The full example-code looks like this:</p>
+<pre><code>        dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+
+        -- First: Write a check-function, which must return either 
+        -- true(condition has been met) or false(condition hasn&#39;t been met)
+        -- If you need to store information for the next time the checkfunction 
+        -- is called, use the userspace-table, which is passed as first parameter.
+
+        function TransitionPlayToPlaypause(userspace)
+          -- get the current playstate
+          local current_playstate=reaper.GetPlayState()
+          
+          -- if the current playstate==2(playpause) and the old playstate==1(play) then 
+          -- update old_playstate in the userspace and return true
+          -- in any other case, only update old_playstate in the userspace and return false
+          if current_playstate==2 and userspace[&quot;old_playstate&quot;]==1 then
+            userspace[&quot;old_playstate&quot;]=current_playstate
+            return true
+          else
+            userspace[&quot;old_playstate&quot;]=current_playstate
+            return false
+          end
+        end
+
+        -- Second: start the EventManager
+        ultraschall.EventManager_Start()
+
+        -- Third: add a new event to the EventManager
+        --        this event adds a marker at playposition every time, you change from play to playpause
+        EventIdentifier = ultraschall.EventManager_AddEvent(
+            &quot;Insert Marker When Play -&gt; PlayPause&quot;, -- a descriptive name for the event
+            0,                                      -- how often to check in seconds; 0, means as often as possible 
+            0,                                      -- how long to check for it in seconds; 0, means forever
+            true,                                   -- shall the actions be run as long as the eventcheck-function 
+                                                    --       returns true(false) or not(true)
+            false,                                  -- shall the event be paused(true) or checked for right away(true)
+            TransitionPlayToPlaypause,              -- the eventcheck-functionname, 
+            {&quot;40157, 0&quot;,                            -- a table, which hold all actions and their corresponding sections
+             &quot;40171, 0&quot;}                            --       in this case action 40157 from section 0 and 40171 from section 0
+                                                    --       note: both must be written as string &quot;40157, 0&quot;
+                                                    --             if you want to add numerous actions, you can write them like
+                                                    --             {  &quot;40157, 0&quot;, &quot;40171,0&quot;}, which would add a marker and open 
+                                                    --                                        the input-markername-dialog
+                                                    --             
+                                                    --       ActionCommandIDs with an underscore at the beginning are allowed.
+                                                    --       like: _SWS_AWSELGROUPIFGROUP or _RS1234567890, etc
+        )</code></pre>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_AlterRetrieve"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_AlterRetrieve">^</a> <u>EventManager: Alter Events and retrieve settings</u></h4></div><p><p>Now we've added a new event. But what about altering it? Well, this is as easy as adding an event.<br />
+So let's assume, you want to alter how often to check from 0(all the time) to 3(every third second) and you want to change the name from "Insert Marker When Play -&gt; PlayPause" to "Barracuda".<br />
+You can do it like this:</p>
+<pre><code>        EventIdentifier = ultraschall.EventManager_SetEvent(
+                        EventIdentifier,                        -- the identifier of the Event, that you want to alter
+                        &quot;Barracuda&quot;,                            -- a descriptive name for the event
+                        3,                                      -- how often to check in seconds; 0, means as often as possible 
+                        0,                                      -- how long to check for it in seconds; 0, means forever
+                        true,                                   -- shall the actions be run as long as the eventcheck-function 
+                                                                --       returns true(false) or not(true)
+                        false,                                  -- shall the event be paused(true) or checked for right away(true)
+                        TransitionPlayToPlaypause,              -- the eventcheck-functionname, 
+                        {&quot;40157, 0&quot;,                            -- a table, which hold all actions and their corresponding sections
+                         &quot;40171, 0&quot;}                            --       in this case action 40157 from section 0 and 40171 from section 0
+                                                                --       note: both must be written as string &quot;40157, 0&quot;
+                                                                --             if you want to add numerous actions, you can write them like
+                                                                --             {  &quot;40157, 0&quot;, &quot;40171,0&quot;}, which would add a marker and open 
+                                                                --                                        the input-markername-dialog
+                                                                --             
+                                                                --       ActionCommandIDs with an underscore at the beginning are allowed.
+                                                                --       like: _SWS_AWSELGROUPIFGROUP or _RS1234567890, etc
+                    )
+        </code></pre>
+<p>This works basically as the AddEvent-function. The only difference is, that you need to pass as first parameter the identifier of the event, so the EventManager knows, which event shall be altered.</p>
+<p>To get the EventIdentifiers, you can either store them somewhere or retrieve them using <a href="US_Api_Functions.html#EventManager_GetEventIdentifier">EventManager_GetEventIdentifier</a>, <a href="US_Api_Functions.html#EventManager_EnumerateEvents">EventManager_EnumerateEvents</a>.</p>
+<pre><code>            EventIdentifier = ultraschall.EventManager_GetEventIdentifier(1)
+    </code></pre>
+<p>This returns the EventIdentifier of the first registered event in the EventManager.</p>
+<p>I already mentioned, that you can pause events as well. That means, they are not checked for, while they are paused. I included the functions <a href="US_Api_Functions.html#EventManager_PauseEvent">EventManager_PauseEvent</a> and <a href="US_Api_Functions.html#EventManager_ResumeEvent">EventManager_ResumeEvent</a></p>
+<pre><code>            retval = ultraschall.EventManager_PauseEvent(EventIdentifier)
+    </code></pre>
+<p>pauses the event, which has the EventIdentifier and</p>
+<pre><code>            retval = ultraschall.EventManager_ResumeEvent(EventIdentifier)
+    </code></pre>
+<p>resumes the event, which has the EventIdentifier.</p>
+<p>There are even more things, like:</p>
+<ul>
+<li><a href="US_Api_Functions.html#EventManager_GetPausedState">EventManager_GetPausedState</a> and <a href="US_Api_Functions.html#EventManager_GetPausedState2">EventManager_GetPausedState2</a> - returns the current pause-state of an event<br />
+</li>
+<li><a href="US_Api_Functions.html#EventManager_CountRegisteredEvents">EventManager_CountRegisteredEvents</a> - returns the number of currently registered events<br />
+</li>
+<li><a href="US_Api_Functions.html#EventManager_EnumerateEvents">EventManager_EnumerateEvents</a> and <a href="US_Api_Functions.html#EventManager_EnumerateEvents2">EventManager_EnumerateEvents2</a> - returns the attributes of an event<br />
+</li>
+<li><a href="US_Api_Functions.html#EventManager_GetLastCheckfunctionState">EventManager_GetLastCheckfunctionState</a> and <a href="US_Api_Functions.html#EventManager_GetLastCheckfunctionState2">EventManager_GetLastCheckfunctionState2</a> - returns the last returnvalue of the checkfunction of an event<br />
+</li>
+<li><a href="US_Api_Functions.html#Eventmanager_RemoveEvent">EventManager_RemoveEvent</a> - removes an event from the EventManager<br />
+</li>
+<li><a href="US_Api_Functions.html#Eventmanager_RemoveAllEvents_Script">Eventmanager_RemoveAllEvents_Script</a> - removes all events a certain script(with a certain ScriptIdentifier) has added to the EventManager.<br />
+</li>
+<li><a href="US_Api_Functions.html#EventManager_GetRegisteredEventID">EventManager_GetRegisteredEventID</a> - returns the id of an event, requested by the Eventidentifier. Needed by functions in DebugMode.</li>
+</ul>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_Debugging"></a>
+<div style="font-size:100%"><h4><a href="#EventManager_Debugging">^</a> <u>EventManager: Debugging Events</u></h4></div><p><p>Ok, now you know, how to add, get and set the events in the EventManager. But sometimes, especially during development, this isn't enough. In fact, you want to have full insight in what's going on with your event.</p>
+<p>Does the eventcheck-function return the right returnvalues?</p>
+<p>Does the userspace contain the right values?</p>
+<p>For such debugging purposes, I've added some additional nice things.</p>
+<p><strong>Returnvalues of Eventcheck-functions</strong></p>
+<p>To monitor the currently returned value of the eventcheck-function, just use <a href="US_Api_Functions.html#EventManager_GetLastCheckfunctionState">EventManager_GetLastCheckfunctionState</a> and <a href="US_Api_Functions.html#EventManager_GetLastCheckfunctionState2">EventManager_GetLastCheckfunctionState2</a></p>
+<pre><code>            boolean check_state, number last_statechange_precise_time = 
+                            ultraschall.EventManager_GetLastCheckfunctionState(integer id)
+    </code></pre>
+<p>returns the returned value of the checkfunction of an event by id. That means, 1 for the first registered event, 2 for the second, etc.</p>
+<pre><code>            boolean check_state, number last_statechange_precise_time = 
+                            ultraschall.EventManager_GetLastCheckfunctionState2(string EventIdentifier)
+    </code></pre>
+<p>just like EventManager_GetLastCheckfunctionState, but you need to pass the EventIdentifier of the event as parameter.</p>
+<p><strong>DebugMode</strong></p>
+<p>This gives you even more access to internal states of the EventManager, like the UserSpace of an eventcheck-function. However, this mode is resourceintensive and intended for debugging only. So you should keep it deactivated for productive use of the event!</p>
+<p>First, you need to turn on the DebugMode:</p>
+<pre><code>            ultraschall.EventManager_DebugMode(true)
+    </code></pre>
+<p>After that, you can get the current contents of the userspace a certain checkfunction of an event uses:</p>
+<pre><code>            userspace_count, userspace_table = 
+                                    ultraschall.EventManager_DebugMode_UserSpace(1)
+    </code></pre>
+<p>This returns the contents of the userspace as a handy table. Please note, that userdata-objects, like MediaItems, MediaTracks, etc are just returned as strings! With that, you should be able to see, whether the userspace contains the values you expect.</p>
+<p>If you're finished with debugging, you should turn off the DebugMode again:</p>
+<pre><code>            ultraschall.EventManager_DebugMode(true)
+    </code></pre>
+<p>This should give you a lot power to make your events working.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_StartupEvents"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_StartupEvents">^</a> <u>EventManager: Working with startup events</u></h4></div><p><p>Adding events is great, but wouldn't it be awesome, if I could automatically add certain event to the EventManager as soon as I start it, without having to run dozens of event-adding-scripts?</p>
@@ -4158,4 +4315,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.77 - 104 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.78 - 107 chapters available</td></table><br><hr></div></body></html>

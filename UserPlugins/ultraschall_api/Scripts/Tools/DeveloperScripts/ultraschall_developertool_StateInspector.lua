@@ -24,7 +24,7 @@
 ################################################################################
 ]]
 
--- Ultraschall State-Inspector 2.1.2 [Ultraschall-Developer Tools] 14.1.2019
+-- Ultraschall State-Inspector 2.2 [Ultraschall-Developer Tools] 24.10.2019
 --
 -- This Inspector monitors toggle-command-states or external-states of your choice.
 -- It's good for checking, if some toggling of states or changing of external-states
@@ -40,7 +40,7 @@ Aa,Ab,Ac,Ad,Ae=reaper.get_action_context()
 Path=Ab:match("(.*\\)")
 if Path==nil then Path=Ab:match("(.*/)") end
 
-version="2.1.2 - 14. 01. 2019"
+version="2.2 - 24. 10. 2019"
 
 gfx.init("Ultraschall State Inspector "..version, 560, 520)
 
@@ -486,6 +486,18 @@ function ShowStates()
         gfx.x=row3
         gfx.drawstr(reaper.GetExtState(states[i][2],states[i][3]).."\n")
         states[i][5]=tostring(reaper.GetExtState(states[i][2],states[i][3]))
+      elseif states[i][1]=="gmem" then
+        gfx.drawstr(i)
+        gfx.set(0.3,0.3,0.8)
+        gfx.line(gfx.x,gfx.y+font_height,row3,gfx.y+font_height)
+        gfx.set(1,1,0)
+        gfx.x=row2
+        gfx.drawstr(" | GMEM ["..states[i][2].."] -> index:"..states[i][3]..": ")
+        gfx.set(1,1,1)
+        if gfx.x>row3 then row3=gfx.x+50 end
+        gfx.x=row3
+        reaper.gmem_attach(states[i][2])
+        gfx.drawstr(reaper.gmem_read(states[i][3]))
       elseif states[i][1]=="projextstate" then
         gfx.drawstr(i)
         gfx.set(0.3,0.3,0.3)
@@ -1509,6 +1521,20 @@ function AddToggleCommand()
   altered="(altered)"
 end
 
+function AddGMEMState()
+  retval, retvals_csv = reaper.GetUserInputs("Give Me New GMEM State", 2, "GMEM-shared name:,index,separator=\n", "")
+  if retval==false then return end
+--  if retvals_csv:sub(1,1)~="_" and tonumber(retvals_csv:match("(.-),"))==nil then retvals_csv="_"..retvals_csv end
+  if retvals_csv:match("\n(.*)")=="" then return end
+  counter=counter+1
+  states[counter]={}
+  states[counter][1]="gmem"
+  states[counter][2]=retvals_csv:match("(.-)\n")
+  states[counter][3]=tonumber(retvals_csv:match("\n(.*)"))
+  --Pudel=tonumber(retvals_csv:match("\n(.*)"))
+  altered="(altered)"
+end
+
 function AddExternalState()
   retval, retvals_csv = reaper.GetUserInputs("Give Me New ExternalState", 2, "Section:,Key:", "", "")
   if retval==false then return end
@@ -1588,6 +1614,7 @@ Use the menu or one of the command-letters to open a dialog, where you can enter
           in the add-dialog. Use $res$ for the resource-folder of 
           Reaper or leave empty to open a open-file-dialog after 
           hitting OK.
+"G"   - will add a gmem-state
 "Shift+A" - adds all key-value-stores from a chosen ini-file at once(e.g reaper.ini)
 In the Menu - you can also add Reaper's own states, ordered by category
 
@@ -1860,6 +1887,7 @@ function main()
   if gfx.getchar()~=-1 then
     if shortcuts=="on" then 
       if A==116.0 then AddToggleCommand() end
+      if A==103.0 then AddGMEMState() end
       if A==6 then SearchWindow() end
       if A==26163.0 and gfx.mouse_cap&16==0 then SearchForward() end
       if A==26163.0 and timer<reaper.time_precise() and gfx.mouse_cap&16==16 then timer=reaper.time_precise()+0.1 SearchBackward() end
@@ -1963,7 +1991,7 @@ function main()
         Inverse_Rectangle(33,2,58,15, 1, 1, 1, 0.3, 0.3, 0.3, true)
         gfx.update()
         gfx.x=33 gfx.y=18
-        AddStatesMenu=gfx.showmenu("Add Action/Script|Add Toggle Command  T|Add External State   E|Add Ultraschall External State  U|Add Any External State  A|Add Project External State  P|Add All States from Ini-File  Shift+A|>Add Reaper State|"..ReaperMenuString)
+        AddStatesMenu=gfx.showmenu("Add Action/Script|Add Toggle Command  T|Add External State   E|Add Ultraschall External State  U|Add Any External State  A|Add Project External State  P|Add All States from Ini-File  Shift+A|Add GMEM-State G|>Add Reaper State|"..ReaperMenuString)
     elseif gfx.mouse_x>33 and gfx.mouse_x<60+33 and gfx.mouse_y>0 and gfx.mouse_y<15 then
         Inverse_Rectangle(33,2,58,15, 1, 1, 1, 0.3, 0.3, 0.3, false)
     end    
@@ -1974,7 +2002,8 @@ function main()
     if AddStatesMenu==5 then AddAnyExternalState() AddStatesMenu=0 end
     if AddStatesMenu==6 then AddProjExternalState() AddStatesMenu=0 end
     if AddStatesMenu==7 then AddAllStatesFromIniFile() AddStatesMenu=0 end
-    if AddStatesMenu>=8 then AddReaperStates(ReturnReaperMenuEntry(AddStatesMenu-1, ReaperMenu)) t,t2=ReturnReaperMenuEntry(AddStatesMenu, ReaperMenu) AddStatesMenu=0 end
+    if AddStatesMenu==8 then AddGMEMState() AddStatesMenu=0 end
+    if AddStatesMenu>=9 then AddReaperStates(ReturnReaperMenuEntry(AddStatesMenu-2, ReaperMenu)) t,t2=ReturnReaperMenuEntry(AddStatesMenu, ReaperMenu) AddStatesMenu=0 end
 
     --Edit List Menu
    if gfx.mouse_x>93 and gfx.mouse_x<93+47 and gfx.mouse_y>0 and gfx.mouse_y<15 and gfx.mouse_cap==1 then

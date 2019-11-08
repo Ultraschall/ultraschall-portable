@@ -189,3 +189,191 @@ end
 --MediaItem=reaper.GetMediaItem(0,0)
 --ultraschall.OpenItemInMidiEditor(MediaItem)
 
+function ultraschall.MIDI_SendMidiNote(Channel, Note, Velocity, Mode)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDI_SendMidiNote</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.MIDI_SendMidiNote(integer Channel, integer Note, integer Velocity, optional integer Mode)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Sends a MIDI-note to a specific channel with a specific velocity.
+    </description>
+    <parameters>
+      integer Channel - the channel, to which the Midi-note shall be sent; 1-16
+      integer Note - the note to be played; 0-127
+      integer Velocity - the velocity of the note; 0-255
+      optional integer Mode - 0 for VKB
+                            - 1 for control (actions map etc)
+                            - 2 for VKB-on-current-channel
+                            - 16 for external MIDI device 0, 17 for external MIDI device 1, etc
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>midi management, send, note</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(Channel)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Channel", "must be an integer", -1) return nil end
+  if Channel>16 or Channel<1 then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Channel", "must be between 1 and 16", -2) return  end
+  
+  if math.type(Note)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Note", "must be an integer", -3) return nil end
+  if Note>127 or Note<0 then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Note", "must be between 0 and 127", -4) return  end
+  
+  if math.type(Velocity)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Velocity", "must be an integer", -5) return nil end
+  if Velocity>255 or Velocity<0 then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Velocity", "must be between 0 and 255", -6) return  end
+  
+  if Mode~=nil and math.type(Mode)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiNote", "Mode", "must be an integer", -7) return nil end  
+  
+  local MIDIModifier=144+Channel-1
+  if Mode==nil then Mode=0 end
+  
+  reaper.StuffMIDIMessage(Mode, MIDIModifier, Note, Velocity)
+end
+
+function ultraschall.MIDI_SendMidiCC(Channel, Note, Velocity, Mode)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDI_SendMidiCC</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.MIDI_SendMidiCC(integer Channel, integer Note, integer Velocity, optional integer Mode)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Sends a MIDI-CC-message to a specific channel with a specific velocity.
+    </description>
+    <parameters>
+      integer Channel - the channel, to which the Midi-note shall be sent; 1-16
+      integer Note - the note to be played; 0-127
+      integer Velocity - the velocity of the note; 0-255
+      optional integer Mode - 0 for VKB
+                            - 1 for control (actions map etc)
+                            - 2 for VKB-on-current-channel
+                            - 16 for external MIDI device 0, 17 for external MIDI device 1, etc
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>midi management, send, cc</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(Channel)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Channel", "must be an integer", -1) return nil end
+  if Channel>16 or Channel<1 then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Channel", "must be between 1 and 16", -2) return  end
+  
+  if math.type(Note)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Note", "must be an integer", -3) return nil end
+  if Note>127 or Note<0 then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Note", "must be between 0 and 127", -4) return  end
+  
+  if math.type(Velocity)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Velocity", "must be an integer", -5) return nil end
+  if Velocity>255 or Velocity<0 then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Velocity", "must be between 0 and 255", -6) return  end
+  
+  if Mode~=nil and math.type(Mode)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiCC", "Mode", "must be an integer", -7) return nil end  
+  
+  local MIDIModifier=176+Channel-1
+  if Mode==nil then Mode=0 end
+  
+  reaper.StuffMIDIMessage(Mode, MIDIModifier, Note, Velocity)
+end
+
+function ultraschall.MIDI_SendMidiPC(Channel, Note, Velocity, Mode)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDI_SendMidiPC</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.MIDI_SendMidiPC(integer Channel, integer Note, integer Velocity, optional integer Mode)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Sends a MIDI-PC-message to a specific channel with a specific velocity.
+    </description>
+    <parameters>
+      integer Channel - the channel, to which the Midi-note shall be sent; 1-16
+      integer Note - the note to be played; 0-127
+      integer Velocity - the velocity of the note; 0-255
+      optional integer Mode - 0 for VKB
+                            - 1 for control (actions map etc)
+                            - 2 for VKB-on-current-channel
+                            - 16 for external MIDI device 0, 17 for external MIDI device 1, etc
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>midi management, send, pc</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(Channel)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Channel", "must be an integer", -1) return nil end
+  if Channel>16 or Channel<1 then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Channel", "must be between 1 and 16", -2) return  end
+  
+  if math.type(Note)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Note", "must be an integer", -3) return nil end
+  if Note>127 or Note<0 then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Note", "must be between 0 and 127", -4) return  end
+  
+  if math.type(Velocity)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Velocity", "must be an integer", -5) return nil end
+  if Velocity>255 or Velocity<0 then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Velocity", "must be between 0 and 255", -6) return  end
+  
+  if Mode~=nil and math.type(Mode)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Mode", "must be an integer", -7) return nil end  
+  
+  local MIDIModifier=192+Channel-1
+  if Mode==nil then Mode=0 end
+  
+  reaper.StuffMIDIMessage(Mode, MIDIModifier, Note, Velocity)
+end
+
+function ultraschall.MIDI_SendMidiPitch(Channel, Pitch, Mode)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>MIDI_SendMidiPitch</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.MIDI_SendMidiPitch(integer Channel, integer Pitch, optional integer Mode)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Sends a MIDI-Pitch-message to a specific channel with a specific velocity.
+    </description>
+    <parameters>
+      integer Channel - the channel, to which the Midi-pitch shall be sent; 1-16
+      integer Pitch - the pitchbend of the note; 0-127
+      optional integer Mode - 0 for VKB
+                            - 1 for control (actions map etc)
+                            - 2 for VKB-on-current-channel
+                            - 16 for external MIDI device 0, 17 for external MIDI device 1, etc
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>midi management, send, pitch, bend</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(Channel)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Channel", "must be an integer", -1) return nil end
+  if Channel>16 or Channel<1 then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Channel", "must be between 1 and 16", -2) return  end
+  
+  if math.type(Pitch)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Pitch", "must be an integer", -5) return nil end
+  if Pitch>127 or Pitch<0 then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Pitch", "must be between 0 and 127", -6) return  end
+  
+  if Mode~=nil and math.type(Mode)~="integer" then ultraschall.AddErrorMessage("MIDI_SendMidiPC", "Mode", "must be an integer", -7) return nil end  
+  
+  local MIDIModifier=224+Channel-1
+  if Mode==nil then Mode=0 end
+  
+  reaper.StuffMIDIMessage(Mode, MIDIModifier, 0, Pitch)
+end
+
