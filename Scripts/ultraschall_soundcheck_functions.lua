@@ -115,12 +115,12 @@ function SetSoundcheck(EventName)
 
 
   local sectionName = EventName
-  local CheckAllXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckAllXSeconds"))
-  local CheckForXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckForXSeconds"))
-  local StartActionsOnceDuringTrue = toboolean(ultraschall.GetUSExternalState(sectionName,"StartActionsOnceDuringTrue"))
-  local EventPaused =       toboolean(ultraschall.GetUSExternalState(sectionName,"EventPaused"))
-  local CheckFunction =     _G[ultraschall.GetUSExternalState(sectionName,"CheckFunction")]
-  local StartFunction =     ultraschall.GetUSExternalState(sectionName,"StartFunction")
+  local CheckAllXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckAllXSeconds","ultraschall-settings.ini"))
+  local CheckForXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckForXSeconds","ultraschall-settings.ini"))
+  local StartActionsOnceDuringTrue = toboolean(ultraschall.GetUSExternalState(sectionName,"StartActionsOnceDuringTrue","ultraschall-settings.ini"))
+  local EventPaused =       toboolean(ultraschall.GetUSExternalState(sectionName,"EventPaused","ultraschall-settings.ini"))
+  local CheckFunction =     _G[ultraschall.GetUSExternalState(sectionName,"CheckFunction","ultraschall-settings.ini")]
+  local StartFunction =     ultraschall.GetUSExternalState(sectionName,"StartFunction","ultraschall-settings.ini")
 
   local start_id = tostring(reaper.NamedCommandLookup(StartFunction))
   local start_id = start_id..",0"
@@ -143,6 +143,6 @@ function SetSoundcheck(EventName)
 
   ultraschall.ShowLastErrorMessage()
 
-  local update = ultraschall.SetUSExternalState(sectionName, "EventIdentifier", EventIdentifier , true)
+  local update = ultraschall.SetUSExternalState(sectionName, "EventIdentifier", EventIdentifier,"ultraschall-settings.ini")
 
 end

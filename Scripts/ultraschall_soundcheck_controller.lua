@@ -33,15 +33,15 @@ ultraschall.EventManager_Start()
 
 -- print (start_id)
 
-section_count = ultraschall.CountUSExternalState_sec()
+section_count = ultraschall.CountUSExternalState_sec("ultraschall-settings.ini")
 
 for i = 1, section_count , 1 do
 
-  sectionName = ultraschall.EnumerateUSExternalState_sec(i)
+  sectionName = ultraschall.EnumerateUSExternalState_sec(i,"ultraschall-settings.ini")
 
   -- Suche die Sections der ultraschall.ini heraus, die in der Soundcheck-GUI angezeigt werden sollen
 
-  if sectionName and string.find(sectionName, "ultraschall_soundcheck", 1) and ultraschall.GetUSExternalState(sectionName,"Value") ~= "0" then
+  if sectionName and string.find(sectionName, "ultraschall_soundcheck", 1) and ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini") ~= "0" then
 
     SetSoundcheck(sectionName)
 

@@ -193,5 +193,5 @@ reaper.Main_OnCommand(cmd,0)
 -- not really needed right now, but maybe in coming releases
 
 if first_start == "true" or first_start == "-1" then
-  ultraschall.SetUSExternalState("ultraschall_start", "firststart", "false", true)  -- there will be only one first start
+  ultraschall.SetUSExternalState("ultraschall_start", "firststart", "false")  -- there will be only one first start
 end

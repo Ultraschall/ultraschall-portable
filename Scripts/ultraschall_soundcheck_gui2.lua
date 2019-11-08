@@ -172,7 +172,7 @@ function buildGui()
     end
     -- Name
 
-    EventNameDisplay = ultraschall.GetUSExternalState(EventName, "EventNameDisplay")
+    EventNameDisplay = ultraschall.GetUSExternalState(EventName, "EventNameDisplay","ultraschall-settings.ini")
 
     id = GUI.Lbl:new(20, position, EventNameDisplay, 0)
     table.insert(GUI.elms, id)
@@ -209,9 +209,9 @@ function buildGui()
 
 
         -- Action-Button
-    Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label")
-    Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action")
-    DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning")
+    Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label","ultraschall-settings.ini")
+    Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action","ultraschall-settings.ini")
+    DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-settings.ini")
 
     if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
 
@@ -225,8 +225,8 @@ function buildGui()
       table.insert(GUI.elms, button2)
     end
 
-    Button2Label = ultraschall.GetUSExternalState(EventName, "Button2Label")
-    Button2Action = ultraschall.GetUSExternalState(EventName, "Button2Action")
+    Button2Label = ultraschall.GetUSExternalState(EventName, "Button2Label","ultraschall-settings.ini")
+    Button2Action = ultraschall.GetUSExternalState(EventName, "Button2Action","ultraschall-settings.ini")
 
     if Button2Label ~= "" and Button2Action and last_state_string ~= "OK" then -- es gibt Probleme
 
@@ -309,7 +309,7 @@ GUI.freq = 1          -- Aufruf jede Sekunde
 if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
 else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
 
-if windowcounter<10 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
+if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
                         -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
 
   buildGui()
