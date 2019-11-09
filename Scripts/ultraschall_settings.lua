@@ -54,7 +54,6 @@ function open_url(url)
 end
 
 
-
 function run_action(commandID)
 
   CommandNumber = reaper.NamedCommandLookup(commandID)
@@ -62,13 +61,6 @@ function run_action(commandID)
 
 end
 
-
-
----------------
-
-
-
----------------
 
 ------------------------------------------------------
 -- Switch State of an event in the Soundcheck
@@ -246,7 +238,7 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
-GUI.w, GUI.h = 800, 600   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 800, 530   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -313,7 +305,7 @@ for i = 1, section_count , 1 do
       table.insert(GUI.elms, id)
 
       -- Info-Button
-      info = GUI.Btn:new(350, position, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
+      info = GUI.Btn:new(350, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
       table.insert(GUI.elms, info)
 
     elseif settings_Type == "slider" then
@@ -344,7 +336,7 @@ for i = 1, section_count , 1 do
     table.insert(GUI.elms, id)
 
     -- Info-Button
-    info = GUI.Btn:new(350, position, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"Description","ultraschall-settings.ini"))
+    info = GUI.Btn:new(350, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"Description","ultraschall-settings.ini"))
     table.insert(GUI.elms, info)
 
   end
