@@ -212,14 +212,11 @@ function buildGui()
     Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label","ultraschall-settings.ini")
     Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action","ultraschall-settings.ini")
     DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-settings.ini")
+    Description = ultraschall.GetUSExternalState(EventName, "Description","ultraschall-settings.ini")
+
 
     if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
 
-      info_button = GUI.Btn:new(365, position-5, 20, 20,         " ?", show_menu, DescriptionWarning)
-      table.insert(GUI.elms, info_button)
-
-      -- command_id = tostring(reaper.NamedCommandLookup(Button1Action))
-      -- reaper.Main_OnCommand(start_id,0)   --Show Soundcheck Screen
 
       button2 = GUI.Btn:new(490, position-5, 144, 20,         Button1Label, run_action, Button1Action)
       table.insert(GUI.elms, button2)
@@ -234,7 +231,13 @@ function buildGui()
       table.insert(GUI.elms, button3)
     end
 
-
+    if last_state_string ~= "OK" then -- es gibt Probleme
+      info_button = GUI.Btn:new(365, position-5, 20, 20,         " ?", show_menu, DescriptionWarning)
+      table.insert(GUI.elms, info_button)
+    else -- normaler Info-Text
+      info_button = GUI.Btn:new(365, position-5, 20, 20,         " ?", show_menu, Description)
+      table.insert(GUI.elms, info_button)
+    end
 
 
 
