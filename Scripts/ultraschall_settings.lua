@@ -102,7 +102,7 @@ function set_values()
 
       if GUI["elms"][i]["sectionname"] == "ultraschall_devices" then
         device_name = GUI["elms"][i]["optarray"][1]
-        stored_value = ultraschall.GetUSExternalState("ultraschall_devices", device_name)
+        stored_value = ultraschall.GetUSExternalState("ultraschall_devices", device_name, "ultraschall-settings.ini")
         -- print (device_name.."-"..newvalue.."-"..stored_value)
 
       else
@@ -113,7 +113,7 @@ function set_values()
 
         if GUI["elms"][i]["sectionname"] == "ultraschall_devices" and stored_value ~= 2 then
 
-          update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue)
+          update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue, "ultraschall-settings.ini")
 
         else
           update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "Value", newvalue, "ultraschall-settings.ini")
@@ -159,7 +159,7 @@ end
 function remove_device(device_name)
 
   clear_devices()
-  ultraschall.SetUSExternalState("ultraschall_devices", device_name, "2")
+  ultraschall.SetUSExternalState("ultraschall_devices", device_name, "2", "ultraschall-settings.ini")
   show_devices()
 
 end
@@ -186,13 +186,13 @@ end
 function show_devices()
 
   sectionName = "ultraschall_devices"
-  key_count = ultraschall.CountUSExternalState_key(sectionName)
+  key_count = ultraschall.CountUSExternalState_key(sectionName, "ultraschall-settings.ini")
   position = 177
 
   for i = 1, key_count , 1 do
-    device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i)
+    device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i,"ultraschall-settings.ini")
 
-    if tonumber(ultraschall.GetUSExternalState(sectionName,device_name)) ~= 2 then  -- Device ist nicht ausgeblendet
+    if tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")) ~= 2 then  -- Device ist nicht ausgeblendet
 
       position = position+30  -- Y-position des Eintrags
 
@@ -202,7 +202,7 @@ function show_devices()
 
       else
 
-        id = GUI.Checklist:new(440, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name)), sectionName)
+        id = GUI.Checklist:new(440, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")), sectionName)
       end
 
       table.insert(GUI.elms, id)
@@ -356,7 +356,7 @@ GUI.counter = #GUI.elms
 ------------------------------------------------------
 
 retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
-ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1")
+ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1", "ultraschall-settings.ini")
 
 
 show_devices()        -- Baue die rechte Seite mit den Audio-Interfaces
