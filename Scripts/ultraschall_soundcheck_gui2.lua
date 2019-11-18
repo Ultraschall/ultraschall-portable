@@ -74,7 +74,7 @@ end
 ------------------------------------------------------
 
 event_count = ultraschall.EventManager_CountRegisteredEvents()
-WindowHeight = 260 + (event_count*30) + 70
+WindowHeight = 260 + (event_count*30) +30
 
 
 -- Grab all of the functions and classes from our GUI library
@@ -135,7 +135,7 @@ function buildGui()
   -- Settings-Button
   -----------------------------------------------------------------
 
-  button_settings = GUI.Btn:new(700, WindowHeight-35, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
+  button_settings = GUI.Btn:new(700, 245, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
   table.insert(GUI.elms, button_settings)
 
   -----------------------------------------------------------------
@@ -196,11 +196,11 @@ function buildGui()
     -- Buttons
 
     if EventPaused == true then
-      button1 = GUI.Btn:new(421, position-5, 60, 20,         " Retry", ultraschall.EventManager_ResumeEvent, EventIdentifier)
+      button1 = GUI.Btn:new(401, position-4, 80, 20,         " Re-Check", ultraschall.EventManager_ResumeEvent, EventIdentifier)
       table.insert(GUI.elms, button1)
 
     elseif last_state == true then
-      button1 = GUI.Btn:new(421, position-5, 60, 20,         " Ignore", ultraschall.EventManager_PauseEvent, EventIdentifier)
+      button1 = GUI.Btn:new(401, position-4, 80, 20,         " Ignore", ultraschall.EventManager_PauseEvent, EventIdentifier)
       table.insert(GUI.elms, button1)
 
     end
@@ -218,7 +218,7 @@ function buildGui()
     if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
 
 
-      button2 = GUI.Btn:new(490, position-5, 144, 20,         Button1Label, run_action, Button1Action)
+      button2 = GUI.Btn:new(490, position-4, 144, 20,         Button1Label, run_action, Button1Action)
       table.insert(GUI.elms, button2)
     end
 
@@ -227,15 +227,15 @@ function buildGui()
 
     if Button2Label ~= "" and Button2Action and last_state_string ~= "OK" then -- es gibt Probleme
 
-      button3 = GUI.Btn:new(643, position-5, 144, 20,         Button2Label, run_action, Button2Action)
+      button3 = GUI.Btn:new(643, position-4, 144, 20,         Button2Label, run_action, Button2Action)
       table.insert(GUI.elms, button3)
     end
 
     if last_state_string ~= "OK" then -- es gibt Probleme
-      info_button = GUI.Btn:new(365, position-5, 20, 20,         " ?", show_menu, DescriptionWarning)
+      info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, DescriptionWarning)
       table.insert(GUI.elms, info_button)
     else -- normaler Info-Text
-      info_button = GUI.Btn:new(365, position-5, 20, 20,         " ?", show_menu, Description)
+      info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, Description)
       table.insert(GUI.elms, info_button)
     end
 
