@@ -180,6 +180,35 @@ for i = 1, keyscount, 1 do
 end
 
 --------------------------
+-- Check for internal Microphone
+--------------------------
+
+if string.sub(reaper.GetOS(),1,3) == "OSX"  then
+
+  handle1 = io.popen("system_profiler SPAudioDataType -xml | xmllint --xpath '/plist[@version=\"1.0\"]/array/dict/array[2]/dict/array/dict[1]//string[1]/text()' -")
+  handle2 = io.popen("system_profiler SPAudioDataType -xml | xmllint --xpath '/plist[@version=\"1.0\"]/array/dict/array[2]/dict/array/dict[1]//key[2]/text()' -")
+
+  result1 = handle1:read("*a")
+  result2 = handle2:read("*a")
+
+  handle1:close()
+  handle2:close()
+
+  -- print(result1)
+  -- print(result2)
+
+
+  if (result1=="Built-in Input" or result1=="Built-in Microphone") and result2=="coreaudio_default_audio_input_device" then
+    reaper.SetExtState("ultraschall_mic", "internal", "true", false)
+    -- print("Micro")
+  else
+    reaper.SetExtState("ultraschall_mic", "internal", "false", false)
+    -- print("nix")
+  end
+end
+
+
+--------------------------
 -- Start Soundcheck
 --------------------------
 

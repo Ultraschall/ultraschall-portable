@@ -70,14 +70,22 @@ function SoundcheckMic(userspace)
 
   retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 
-  if actual_device_name == "CoreAudio Built-in Microph" and ultraschall.CreateTrackString_ArmedTracks() ~= "" then -- Das interne Mic ist ausgewählt und eine Spur zur Aufnahme scharf geschaltet
-    return true
+  if ultraschall.CreateTrackString_ArmedTracks() ~= "" then -- teste nur, wenn eine Spur zur Aufnahme aktiviert wurde
+
+    if actual_device_name == "CoreAudio Built-in Microph" then -- Das interne Mic ist ausgewählt
+      return true
+    elseif actual_device_name == "CoreAudio Default" and reaper.GetExtState("ultraschall_mic", "internal") == "true" then -- Das Standard-Device war beim Start ausgewählt und es ist auf das interne Micro geschaltet gewesen
+      return true
+    else
+      return false
+    end
+
   else
     return false
-
   end
 
 end
+
 
 
 function SoundcheckSamplerate(userspace)
