@@ -10,35 +10,35 @@ end
 function ultraschall.ToggleScrollingDuringPlayback(scrolling_switch, move_editcursor, goto_playcursor)
   -- integer scrolling_switch - 1-on, 0-off
   -- boolean move_editcursor - when scrolling stops, shall the editcursor be moved to current position of the playcursor(true) or not(false)
-  -- boolean goto_playcursor - shall the view be moved to the playcursor(true) or not(false)? 
+  -- boolean goto_playcursor - shall the view be moved to the playcursor(true) or not(false)?
   -- changes, if necessary, the state of the actions 41817, 40036 and 40262
     local scroll_continuous=reaper.GetToggleCommandState(41817)
     local scroll_auto_play=reaper.GetToggleCommandState(40036)
     local scroll_auto_rec=reaper.GetToggleCommandState(40262)
     local editcursor=reaper.GetCursorPosition()
     local playcursor=reaper.GetPlayPosition()
-  
+
     if move_editcursor==true then
       reaper.SetEditCurPos(playcursor, true, false)
     else
       reaper.SetEditCurPos(editcursor, false, false)
     end
-  
+
     if scrolling_switch~=scroll_continuous then
       reaper.Main_OnCommand(41817,0) -- continuous scroll
     end
-  
+
     if scrolling_switch~=scroll_auto_play then
       reaper.Main_OnCommand(40036,0) -- autoscroll during play
     end
-  
+
     if scrolling_switch~=scroll_auto_rec then
       reaper.Main_OnCommand(40262,0) -- autoscroll during rec
     end
-  
+
     if goto_playcursor~=false then
       reaper.Main_OnCommand(40150,0) -- go to playcursor
-    end  
+    end
   end
 
 
@@ -56,12 +56,12 @@ function ultraschall.GetAllTrackEnvelopes()
   local FirstEnvelopeTrackNumber=-1
   local FirstEnvelopeMaster=-1
   local trackcount=1
-  
+
   for i=0, reaper.CountTracks(0)-1 do
     local MediaTrack=reaper.GetTrack(0,i)
     TrackEnvelopeArray[i+1]={}
     TrackEnvelopeArray[i+1][1]={}
-    
+
     for a=0, reaper.CountTrackEnvelopes(MediaTrack)-1 do
       TrackEnvelopeArray[i+1][1][a]=reaper.GetTrackEnvelope(MediaTrack, a)
       if FirstEnvelopeTrackNumber==-1 then FirstEnvelopeTrackNumber=i+1 end
@@ -78,14 +78,14 @@ function ultraschall.GetAllTrackEnvelopes()
   end
   TrackEnvelopeArray[0][0]=reaper.CountTrackEnvelopes(MediaTrack)-1
 
-  
+
   return TrackEnvelopeArray, reaper.CountTracks(0), FirstEnvelopeTrackNumber, FirstEnvelopeMaster
 end
 
 function ultraschall.RenumerateMarkers(colorvalue, startingnumber)
--- renumerates the shown number of markers(no regions!) that have 
+-- renumerates the shown number of markers(no regions!) that have
 -- color "colorvalue", beginning with "startingnumber"
--- 
+--
 -- returns -1 in case of error
 -- Parameters:
 --    colorvalue - the colorvalue the marker must have
@@ -110,15 +110,15 @@ end
 function ultraschall.TimeToSeconds(timestring)
 -- converts a timestring days:hours:minutes:seconds.milliseconds to timeposition in seconds
 -- it is ok, to have only some of them given, so excluding hours or days is ok.
--- 
+--
 -- a single integer will be seen as seconds.
 -- to specifiy milliseconds in particular, start the number with a .
 -- all other values are seperated by :
 --
--- returns -1 in case of error, timestring is a nil  or if you try to add an 
+-- returns -1 in case of error, timestring is a nil  or if you try to add an
 -- additional value, added before days
 --
--- does not check for valid timeranges, so 61 minutes is possible to give, even if 
+-- does not check for valid timeranges, so 61 minutes is possible to give, even if
 -- hours are present in the string
   local hour=0
   local milliseconds=0
@@ -136,7 +136,7 @@ function ultraschall.TimeToSeconds(timestring)
   if milliseconds=="0" then milliseconds=".0 " end
   if milliseconds==0 then milliseconds=".0 " end
   if milliseconds=="." then milliseconds=0 end
-    
+
   if timestring:match("%.%d*")~=nil then timestring=timestring:match("(.*)%.") end
   if tonumber(timestring)~=nil then seconds=tonumber(timestring)
   elseif timestring==nil then seconds=0
@@ -168,9 +168,9 @@ function ultraschall.TimeToSeconds(timestring)
     day=tonumber(timestring:match(".*:(.*)"))
   end
   if day==nil then return -1 end
-  
+
   if timestring~=nil then timestring=timestring:match("(.*):") end
-    
+
   if timestring~=nil then return -1 end
 
 --reaper.MB(seconds,"",0)
@@ -181,13 +181,13 @@ function ultraschall.TimeToSeconds(timestring)
   if seconds~=nil and tonumber(seconds)==nil then return -1 end
   if milliseconds~=nil and tonumber(milliseconds)==nil then return -1 end
 
-  
+
   if day==nil then day=0 end
   if hour==nil then hour=0 end
   if minute==nil then minute=0 end
   if seconds==nil then seconds=0 end
   if milliseconds==nil then milliseconds=0 end
-    
+
   time=(day*86400)+(hour*3600)+(minute*60)+seconds+milliseconds
   if time<0 then return -1 end
   return time
@@ -209,7 +209,7 @@ function ultraschall.TimeStringToSeconds_hh_mm_ss_mss(timestring)
 end
 
 function ultraschall.GetStringFromClipboard_SWS()
--- gets a big string from clipboard, using the 
+-- gets a big string from clipboard, using the
 -- CF_GetClipboardBig-function from SWS
 -- and deals with all aspects necessary, that
 -- surround using it.
@@ -243,7 +243,7 @@ function ultraschall.ParseMarkerString(markerstring, strict)
   markertable[1]={}
   markertable[2]={}
   markertable[3]={}
-  
+
   while markerstring~=nil do
     markertable[1][counter]=markerstring:match("(.-)%s")
       if strict~=true then
@@ -258,7 +258,7 @@ function ultraschall.ParseMarkerString(markerstring, strict)
       markertable[2][counter]=-1
       markertable[3][counter]=markerstring:match("(.-)\n")
       if markertable[3][counter]==nil then markertable[3][counter]=markerstring:match(".*") end
-    else  
+    else
       markertable[3][counter]=markerstring:match("%s(.-)\n")
       if markertable[3][counter]==nil then markertable[3][counter]=markerstring:match("%s(.*)") end
     end
@@ -289,7 +289,7 @@ function ultraschall.GetUSExternalState(section, key)
 -- returns length of entry(integer) and the entry itself(string)
 
   return reaper.BR_Win32_GetPrivateProfileString(section, key, -1, reaper.GetResourcePath()..ultraschall.Separator.."ultraschall.ini")
-end 
+end
 
 function ultraschall.CountNormalMarkers_NumGap()
 -- returns number of normal markers in the project
@@ -307,7 +307,7 @@ function ultraschall.CountNormalMarkers_NumGap()
   end
 
   return count+1
-end  
+end
 
 function Msg(val)
   reaper.ShowConsoleMsg(tostring(val).."\n")
@@ -316,12 +316,12 @@ end
 function runcommand(cmd)     -- run a command by its name
 
   start_id = reaper.NamedCommandLookup(cmd)
-  reaper.Main_OnCommand(start_id,0) 
+  reaper.Main_OnCommand(start_id,0)
 
 end
 
 function GetPath(str,sep)
- 
+
     return str:match("(.*"..sep..")")
 
 end
@@ -329,7 +329,7 @@ end
 function ultraschall.ConvertColor(r,g,b)
 
     return reaper.ColorToNative(r,g,b)|0x1000000
-  
+
 end
 
 function ConsolidateFollowState()
@@ -345,8 +345,8 @@ function ConsolidateFollowState()
   if followstate2 ~= followstate3 then -- set both states to the same value
     reaper.Main_OnCommand(41817, 0) -- Toggle continuous scrolling
   end
-  
-  ultraschall.SetUSExternalState("ultraschall_follow", "state", followstate, true)
+
+  ultraschall.SetUSExternalState("ultraschall_follow", "state", followstate)
   reaper.SetExtState("ultraschall_follow", "state2", followstate, false)
 
   return followstate
