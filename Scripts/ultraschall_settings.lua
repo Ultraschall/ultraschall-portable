@@ -25,6 +25,7 @@
 ]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+dofile(reaper.GetResourcePath().."/Scripts/ultraschall_soundcheck_functions.lua")
 
 
 ------------------------------------
@@ -53,6 +54,32 @@ function open_url(url)
 end
 
 
+function run_action(commandID)
+
+  CommandNumber = reaper.NamedCommandLookup(commandID)
+  reaper.Main_OnCommand(CommandNumber,0)
+
+end
+
+
+------------------------------------------------------
+-- Switch State of an event in the Soundcheck
+------------------------------------------------------
+
+function SwitchEvent(EventIdentifier, newvalue, sectionName)
+
+  if newvalue == "0" then -- remove the event
+
+    ultraschall.EventManager_RemoveEvent(EventIdentifier)
+
+  elseif newvalue == "1" then -- add the event
+
+    SetSoundcheck(sectionName)
+
+  end
+end
+
+
 ------------------------------------------------------
 --  Setting new Values to ultraschall.ini
 ------------------------------------------------------
@@ -67,38 +94,46 @@ function set_values()
 
       -- hole den aktuellen Wert der Checkbox aus der GUI:
 
-    if GUI["elms"][i]["type"] == "Checklist" then
-      newvalue = tostring(GUI["elms"][i]["retval"][1])
-    elseif GUI["elms"][i]["type"] == "Sldr" then
-      newvalue = tostring(GUI["elms"][i]["retval"])
-    end
+      if GUI["elms"][i]["type"] == "Checklist" then
+        newvalue = tostring(GUI["elms"][i]["retval"][1])
+      elseif GUI["elms"][i]["type"] == "Sldr" then
+        newvalue = tostring(GUI["elms"][i]["retval"])
+      end
 
-    if GUI["elms"][i]["sectionname"] == "ultraschall_devices" then
-      device_name = GUI["elms"][i]["optarray"][1]
-      stored_value = ultraschall.GetUSExternalState("ultraschall_devices", device_name )
-      -- print (device_name.."-"..newvalue.."-"..stored_value)
-
-    else
-      stored_value = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"value")
-    end
-
-    if newvalue ~= stored_value then  -- wurde eine Schalter/Slider umgelegt?
-
-      if GUI["elms"][i]["sectionname"] == "ultraschall_devices" and stored_value ~= 2 then
-
-        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue , true)
+      if GUI["elms"][i]["sectionname"] == "ultraschall_devices" then
+        device_name = GUI["elms"][i]["optarray"][1]
+        stored_value = ultraschall.GetUSExternalState("ultraschall_devices", device_name, "ultraschall-settings.ini")
+        -- print (device_name.."-"..newvalue.."-"..stored_value)
 
       else
-        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "value", newvalue , true)
-
+        stored_value = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"Value", "ultraschall-settings.ini")
       end
 
-      -- Ausnahme: für Slider wird auch noch die Position geschrieben (könnte man prinzipiell auch berechnen lassen)
+      if newvalue ~= stored_value then  -- wurde eine Schalter/Slider umgelegt?
 
-      if GUI["elms"][i]["type"] == "Sldr" then
-        update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "actualstep", tostring(GUI["elms"][i]["curstep"]) , true)
+        if GUI["elms"][i]["sectionname"] == "ultraschall_devices" and stored_value ~= 2 then
+
+          update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue, "ultraschall-settings.ini")
+
+        else
+          update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "Value", newvalue, "ultraschall-settings.ini")
+
+          EventIdentifier = ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"EventIdentifier", "ultraschall-settings.ini")
+
+          if EventIdentifier ~= "" then   -- der Eintrag ist ein gerade laufender Soundcheck-Event
+
+            SwitchEvent(EventIdentifier, newvalue, GUI["elms"][i]["sectionname"])
+
+          end
+
+        end
+
+        -- Ausnahme: für Slider wird auch noch die Position geschrieben (könnte man prinzipiell auch berechnen lassen)
+
+        if GUI["elms"][i]["type"] == "Sldr" then
+          update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "actualstep", tostring(GUI["elms"][i]["curstep"]),"ultraschall-settings.ini")
+        end
       end
-    end
     end
   end
 end
@@ -124,7 +159,7 @@ end
 function remove_device(device_name)
 
   clear_devices()
-  ultraschall.SetUSExternalState("ultraschall_devices", device_name, "2" , true)
+  ultraschall.SetUSExternalState("ultraschall_devices", device_name, "2", "ultraschall-settings.ini")
   show_devices()
 
 end
@@ -151,13 +186,13 @@ end
 function show_devices()
 
   sectionName = "ultraschall_devices"
-  key_count = ultraschall.CountUSExternalState_key(sectionName)
+  key_count = ultraschall.CountUSExternalState_key(sectionName, "ultraschall-settings.ini")
   position = 177
 
   for i = 1, key_count , 1 do
-    device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i)
+    device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i,"ultraschall-settings.ini")
 
-    if tonumber(ultraschall.GetUSExternalState(sectionName,device_name)) ~= 2 then  -- Device ist nicht ausgeblendet
+    if tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")) ~= 2 then  -- Device ist nicht ausgeblendet
 
       position = position+30  -- Y-position des Eintrags
 
@@ -167,7 +202,7 @@ function show_devices()
 
       else
 
-        id = GUI.Checklist:new(440, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name)), sectionName)
+        id = GUI.Checklist:new(440, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")), sectionName)
       end
 
       table.insert(GUI.elms, id)
@@ -203,7 +238,7 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
-GUI.w, GUI.h = 800, 600   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 800, 530   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -244,10 +279,10 @@ GUI.elms = {
 
 
 -----------------------------------------------------------------
--- initialise the settings - coming from the ultraschall.ini file
+-- initialise the settings - coming from the ultraschall-settings.ini file
 -----------------------------------------------------------------
 
-section_count = ultraschall.CountUSExternalState_sec()
+section_count = ultraschall.CountUSExternalState_sec("ultraschall-settings.ini")
 
 ------------------------------------------------------
 -- Gehe alle Sektionen der ultraschall.ini durch und baut die normalen Settings auf.
@@ -256,33 +291,54 @@ section_count = ultraschall.CountUSExternalState_sec()
 
 for i = 1, section_count , 1 do
 
-  sectionName = ultraschall.EnumerateUSExternalState_sec(i)
+  sectionName = ultraschall.EnumerateUSExternalState_sec(i, "ultraschall-settings.ini")
 
-  -- Suche die Sections der ultraschall.ini heraus, die in der Settings-GUI angezeigt werden sollen
+  -- Suche die Sections der ultraschall-settings.ini heraus, die in der Settings-GUI angezeigt werden sollen
 
   if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
 
-    position = 150 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position")) * 30) -- Feintuning notwendig
-    settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype")
+    position = 150 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 30) -- Feintuning notwendig
+    settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
 
     if settings_Type == "checkbox" then
-      id = GUI.Checklist:new(20, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"value")), sectionName)
+      id = GUI.Checklist:new(20, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini")), sectionName)
       table.insert(GUI.elms, id)
 
       -- Info-Button
-      info = GUI.Btn:new(350, position, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
+      info = GUI.Btn:new(350, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
       table.insert(GUI.elms, info)
 
     elseif settings_Type == "slider" then
       position = position+8
-      id = GUI.Sldr:new(30, position, 100, ultraschall.GetUSExternalState(sectionName,"name"), ultraschall.GetUSExternalState(sectionName,"minimum"), ultraschall.GetUSExternalState(sectionName,"maximum"), ultraschall.GetUSExternalState(sectionName,"steps"), ultraschall.GetUSExternalState(sectionName,"value"), ultraschall.GetUSExternalState(sectionName,"actualstep"), sectionName)
+      id = GUI.Sldr:new(30, position, 100, ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"minimum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"maximum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"steps","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"actualstep","ultraschall-settings.ini"), sectionName)
       table.insert(GUI.elms, id)
 
       -- Info-Button
-      info = GUI.Btn:new(350, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description"))
+      info = GUI.Btn:new(350, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
       table.insert(GUI.elms, info)
 
     end
+  end
+end
+
+-- Soundcheck Settings
+
+position_old = position +120
+
+for i = 1, section_count , 1 do
+
+  sectionName = ultraschall.EnumerateUSExternalState_sec(i,"ultraschall-settings.ini")
+  if sectionName and string.find(sectionName, "ultraschall_soundcheck", 1) then
+
+    position = position_old + (tonumber(ultraschall.GetUSExternalState(sectionName,"Position","ultraschall-settings.ini")) * 30) -- Feintuning notwendig
+
+    id = GUI.Checklist:new(20, position, 240, 30,         "", "Soundcheck: "..ultraschall.GetUSExternalState(sectionName,"EventNameDisplay","ultraschall-settings.ini"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini")), sectionName)
+    table.insert(GUI.elms, id)
+
+    -- Info-Button
+    info = GUI.Btn:new(350, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"Description","ultraschall-settings.ini"))
+    table.insert(GUI.elms, info)
+
   end
 end
 
@@ -300,7 +356,7 @@ GUI.counter = #GUI.elms
 ------------------------------------------------------
 
 retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
-ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1" , true)
+ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1", "ultraschall-settings.ini")
 
 
 show_devices()        -- Baue die rechte Seite mit den Audio-Interfaces

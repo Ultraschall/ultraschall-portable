@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -12,7 +12,7 @@
 #
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# s
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,25 +24,14 @@
 ################################################################################
 ]]
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-zoomfactor=reaper.GetHZoomLevel() -- get current zoom-level
-ZoomedInLevelDef=400              -- set this to the "zoom in"-level, you want to have
-                                  -- 0.007(max zoom out) to 1000000(max zoom in) is valid,
-                                  -- 400 is recommended
-Zoomstate=ultraschall.GetUSExternalState("view","zoom_toggle_state")
-ZoomedInLevel=ultraschall.GetUSExternalState("view","zoomin_level")
-ZoomedInLevel=tonumber(ZoomedInLevel)
-if ZoomedInLevel==-1 or ZoomedInLevel==nil then
-  ZoomedInLevel=ZoomedInLevelDef
-end
+-- Open Soundcheck Screen, when it hasn't been opened yet
 
-if Zoomstate=="false" or zoomfactor~=ZoomedInLevel then
-   ultraschall.SetUSExternalState("view","zoom_toggle_state","true")
-   ultraschall.SetUSExternalState("view","old_zoomfactor",zoomfactor)
-   reaper.adjustZoom(ZoomedInLevel, 1, true, 0)
-else
-  ultraschall.SetUSExternalState("view","zoom_toggle_state","false")
-  oldzoomfactor=ultraschall.GetUSExternalState("view","old_zoomfactor")
-  reaper.adjustZoom(tonumber(oldzoomfactor), 1, true, 0)
+if reaper.GetExtState("Ultraschall_Windows", "Ultraschall Soundcheck") == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
+else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", "Ultraschall Soundcheck")) end -- get number of opened windows
+
+if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
+                        -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
+  start_id = tostring(reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Gui2"))
+  reaper.Main_OnCommand(start_id,0)   --Show Soundcheck Screen
 end

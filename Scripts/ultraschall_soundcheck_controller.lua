@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -12,7 +12,7 @@
 #
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# s
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,25 +24,29 @@
 ################################################################################
 ]]
 
+
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+dofile(reaper.GetResourcePath().."/Scripts/ultraschall_soundcheck_functions.lua")
 
-zoomfactor=reaper.GetHZoomLevel() -- get current zoom-level
-ZoomedInLevelDef=400              -- set this to the "zoom in"-level, you want to have
-                                  -- 0.007(max zoom out) to 1000000(max zoom in) is valid,
-                                  -- 400 is recommended
-Zoomstate=ultraschall.GetUSExternalState("view","zoom_toggle_state")
-ZoomedInLevel=ultraschall.GetUSExternalState("view","zoomin_level")
-ZoomedInLevel=tonumber(ZoomedInLevel)
-if ZoomedInLevel==-1 or ZoomedInLevel==nil then
-  ZoomedInLevel=ZoomedInLevelDef
+
+ultraschall.EventManager_Start()
+
+-- print (start_id)
+
+section_count = ultraschall.CountUSExternalState_sec("ultraschall-settings.ini")
+
+for i = 1, section_count , 1 do
+
+  sectionName = ultraschall.EnumerateUSExternalState_sec(i,"ultraschall-settings.ini")
+
+  -- Suche die Sections der ultraschall.ini heraus, die in der Soundcheck-GUI angezeigt werden sollen
+
+  if sectionName and string.find(sectionName, "ultraschall_soundcheck", 1) and ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini") ~= "0" then
+
+    SetSoundcheck(sectionName)
+
+  end
+
 end
 
-if Zoomstate=="false" or zoomfactor~=ZoomedInLevel then
-   ultraschall.SetUSExternalState("view","zoom_toggle_state","true")
-   ultraschall.SetUSExternalState("view","old_zoomfactor",zoomfactor)
-   reaper.adjustZoom(ZoomedInLevel, 1, true, 0)
-else
-  ultraschall.SetUSExternalState("view","zoom_toggle_state","false")
-  oldzoomfactor=ultraschall.GetUSExternalState("view","old_zoomfactor")
-  reaper.adjustZoom(tonumber(oldzoomfactor), 1, true, 0)
-end
+-- string event_identifier = ultraschall.EventManager_AddEvent(string EventName, integer CheckAllXSeconds, integer CheckForXSeconds, boolean StartActionsOnceDuringTrue, boolean EventPaused, function CheckFunction, table Actions)
