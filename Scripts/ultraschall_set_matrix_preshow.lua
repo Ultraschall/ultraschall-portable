@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-# 
+#
 # Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-# 
+#
 ################################################################################
 ]]
 
@@ -43,7 +43,7 @@ function buildRoutingMatrix ()
 --	 print(serialize(AllMainSends))
 
   for i=1, number_of_tracks do
-  	
+
   	tracktype = ultraschall.GetTypeOfTrack(i)
 
     if tracktype == "StudioLink" then	-- Behandlung der StudioLink Spuren
@@ -51,7 +51,7 @@ function buildRoutingMatrix ()
     	retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- StudioLink-Spuren gehen immer auf den MainHardwareOut Zurück
 
     	for j=1, number_of_tracks do
-  
+
     		if ultraschall.GetTypeOfTrack(j) ~= "StudioLink" then
 
 					-- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
@@ -66,7 +66,7 @@ function buildRoutingMatrix ()
       retval = ultraschall.AddTrackHWOut(i, 0, 0, 0.5, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
 
     	for j=1, number_of_tracks do
-        
+
     		if ultraschall.GetTypeOfTrack(j) ~= "SoundBoard" then -- jeder Track der nicht Soundboard ist schickt sein Signal auf den 3/4 Kanal des Soundboards
 
 					-- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
@@ -76,7 +76,7 @@ function buildRoutingMatrix ()
     		end
     	end
     end
-  end	
+  end
 
   retval = ultraschall.ApplyAllMainSendStates(AllMainSends)	-- setze alle Sends zum Master
 
@@ -87,22 +87,22 @@ end
 
 retval = ultraschall.ClearRoutingMatrix(true, true, true, true, false)
 
-if reaper.CountTracks(0) > 0 then 
-  buildRoutingMatrix () 
+if reaper.CountTracks(0) > 0 then
+  buildRoutingMatrix ()
 end
 
 ultraschall.SetUSExternalState("ultraschall_magicrouting", "step", "preshow")
 
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
-state = reaper.GetToggleCommandStateEx(sec, cmd)                           
+state = reaper.GetToggleCommandStateEx(sec, cmd)
 
-ID_1 = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Preshow") -- Setup Button
-ID_2 = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Recording") -- Record Button
-ID_3 = reaper.NamedCommandLookup("_Ultraschall_Set_Matrix_Editing") -- Edit Button
+ID_1 = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Preshow") -- Setup Button
+ID_2 = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Recording") -- Record Button
+ID_3 = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Editing") -- Edit Button
 
-if state <= 0 then                                                                  
+if state <= 0 then
   reaper.SetToggleCommandState(sec, cmd, 1)
-end  
+end
 
 reaper.SetToggleCommandState(sec, ID_2, 0)
 reaper.SetToggleCommandState(sec, ID_3, 0)
@@ -114,4 +114,3 @@ reaper.RefreshToolbar2(sec, cmd)
 -- report for the top 10 functions, sorted by execution time
 -- local r = profile.report('time', 10)
 -- print(r)
-
