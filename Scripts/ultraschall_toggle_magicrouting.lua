@@ -43,6 +43,11 @@ defer_identifier = "hallo"
 
 local function triggersoundcheck()
 
+	-- prüft, ob eine Aktualisierung der Matrix notwendig ist. Dies ist der Fall wenn entweder
+	-- A) Der MagicRouting Button gerade frisch gedrückt wurde (einmaliger Check) oder sich
+	-- B) die Anzahl an Tracks im Projekt geändert hat
+
+
 	local needsTrigger = false
 
 	local currentCountTracks = reaper.CountTracks(0)
@@ -52,16 +57,16 @@ local function triggersoundcheck()
 	-- local retval, deviceInfo = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 	-- print (deviceInfo)
 
-	if currentCountTracks == 0 then
+	if currentCountTracks == 0 then -- es gibt keine Tracks also kein Bedarf
 		reaper.SetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks", "0")
 		return needsTrigger
 
 	elseif override == "on" then  -- automatic was just started by pressing button
 		needsTrigger = true
-		reaper.SetProjExtState(0, "ultraschall_soundcheck", "override", "off")
+		reaper.SetProjExtState(0, "ultraschall_soundcheck", "override", "off") -- einmal Neuaufbau der Matrix reicht
 		return needsTrigger
 
-	elseif currentCountTracks ~= tonumber(lastCountTracks) then
+	elseif currentCountTracks ~= tonumber(lastCountTracks) then -- es gibt mindestens eine neue Spur oder Spuren 	wurden gelöscht
 		needsTrigger = true
 		reaper.SetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks", currentCountTracks)
 		return needsTrigger
@@ -75,9 +80,6 @@ end
 
 
 local function checkrouting()
-
-	 	-- currentchange = reaper.GetProjectStateChangeCount(0)
-	 	-- if currentchange > lastchange + 1 then
 
 	if triggersoundcheck() then -- wird ein Update der Matrix wirklich benötigt?
 
@@ -98,7 +100,6 @@ local function checkrouting()
 
   return defer_identifier
 end
-
 
 
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()

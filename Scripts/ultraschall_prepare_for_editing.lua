@@ -101,6 +101,13 @@ reaper.Main_OnCommand(40297,0) -- unselect all tracks
 reaper.SetProjExtState(0, "Editing", "started", "1")
 
 -----------------------------
+-- Set Routing
+-----------------------------
+
+commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Editing")
+reaper.Main_OnCommand(commandid,0)         -- update Matrix
+
+-----------------------------
 -- Display Info
 -----------------------------
 
@@ -108,7 +115,7 @@ reaper.SetProjExtState(0, "Editing", "started", "1")
 
 
 
-txt = "- Automation mode of all tracks is set to trim/read\n- All tracks and envelopes are disarmed for recording\n- All sends to StudioLink tracks (if existent) have been removed\n- All StudioLink FX (if existent) have been removed\n- All Soundboard FX (if existent) have been removed\n- Studio Link OnAir Streaming (if active) has been stopped\n- All sends to Master have been enabled\n\nYou may proceed editing your project!"
+txt = "- Automation mode of all tracks is set to trim/read\n- All tracks and envelopes are disarmed for recording\n- All sends to StudioLink tracks (if existent) have been removed\n- All StudioLink FX (if existent) have been removed\n- All Soundboard FX (if existent) have been removed\n- Studio Link OnAir Streaming (if active) has been stopped\n- All sends to Master have been enabled\n- Routing is set to editing stage\n\nYou may proceed editing your project!"
 title = "OK! Your project is now ready for editing:"
 result = reaper.ShowMessageBox( txt, title, 0 )
 
