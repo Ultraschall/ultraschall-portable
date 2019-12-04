@@ -24,51 +24,39 @@
 ################################################################################
 ]]
 
-
-
--- local profile = require(reaper.GetResourcePath().."/Scripts/profile")
--- consider "Lua" functions only
--- profile.hookall("Lua")
-
--- execute code that will be profiled
-
-
-
-
 -- little helpers
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 
 defer_identifier = "hallo"
 
-local function triggersoundcheck()
+local function triggermagicrouting()
 
 	-- prüft, ob eine Aktualisierung der Matrix notwendig ist. Dies ist der Fall wenn entweder
 	-- A) Der MagicRouting Button gerade frisch gedrückt wurde (einmaliger Check) oder sich
 	-- B) die Anzahl an Tracks im Projekt geändert hat
 
-
 	local needsTrigger = false
 
 	local currentCountTracks = reaper.CountTracks(0)
-	local retval, lastCountTracks = reaper.GetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks")
-	local retval, override = reaper.GetProjExtState(0, "ultraschall_soundcheck", "override")
+	local retval, lastCountTracks = reaper.GetProjExtState(0, "ultraschall_magicrouting", "lastCountTracks")
+	local retval, override = reaper.GetProjExtState(0, "ultraschall_magicrouting", "override")
 
 	-- local retval, deviceInfo = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 	-- print (deviceInfo)
 
 	if currentCountTracks == 0 then -- es gibt keine Tracks also kein Bedarf
-		reaper.SetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks", "0")
+		reaper.SetProjExtState(0, "ultraschall_magicrouting", "lastCountTracks", "0")
 		return needsTrigger
 
 	elseif override == "on" then  -- automatic was just started by pressing button
 		needsTrigger = true
-		reaper.SetProjExtState(0, "ultraschall_soundcheck", "override", "off") -- einmal Neuaufbau der Matrix reicht
+		reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "off") -- einmal Neuaufbau der Matrix reicht
 		return needsTrigger
 
 	elseif currentCountTracks ~= tonumber(lastCountTracks) then -- es gibt mindestens eine neue Spur oder Spuren 	wurden gelöscht
 		needsTrigger = true
-		reaper.SetProjExtState(0, "ultraschall_soundcheck", "lastCountTracks", currentCountTracks)
+		reaper.SetProjExtState(0, "ultraschall_magicrouting", "lastCountTracks", currentCountTracks)
 		return needsTrigger
 
 	else
@@ -79,52 +67,99 @@ local function triggersoundcheck()
 end
 
 
+--[[
+
+local function getactualstep()
+	--
+	local actualstep = "recording" -- default
+	local length = reaper.GetProjectLength(0)
+	local playstate = reaper.GetPlayState()
+	local editing = reaper.GetProjExtState(0, "Editing", "started")
+
+
+	if playstate == 5 or playstate == 6 then  -- Recording oder Paused Recording
+	actualstep = "recording"
+
+	elseif length == 0 then     -- Preshow
+		actualstep = "preshow"
+
+	elseif editing == "1" then  -- Editing
+		actualstep = "editing"
+	end
+
+	return actualstep
+
+end
+
+
+local function checkforchangedstep()
+	changedstep = false
+
+	local retval, laststep = reaper.GetProjExtState(0, "ultraschall_magicrouting", "laststep")
+	local actualstep = getactualstep()
+
+	if laststep ~= actualstep then -- der state hat sich verändert
+
+		print ("alt:"..laststep.." neu:"..actualstep)
+		reaper.SetProjExtState(0, "ultraschall_magicrouting", "laststep", actualstep)	-- neuer Wert wird alter Wert
+		ultraschall.SetUSExternalState("ultraschall_magicrouting", "step", actualstep)
+
+		changedstep = true
+	end
+
+	return changedstep
+
+end
+
+]]
+
+
 local function checkrouting()
 
-	if triggersoundcheck() then -- wird ein Update der Matrix wirklich benötigt?
+	if triggermagicrouting() then -- wird ein Update der Matrix wirklich benötigt?
 
-			 	step = ultraschall.GetUSExternalState("ultraschall_magicrouting", "step")
+		local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
 
-			 	if step == "preshow" then
-			 		commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Preshow")
-			 	elseif step == "recording" then
-					commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Recording")
-			 	else -- editing
-					commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Editing")
-				end
+		if step == "preshow" then
+			commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Preshow")
+		elseif step == "editing" then -- editing
+			commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Editing")
+		else -- recording
+			commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Recording")
+		end
 
-			 	reaper.Main_OnCommand(commandid,0)         -- update Matrix
+		reaper.Main_OnCommand(commandid,0)         -- update Matrix
+
 	end
 
   retval, defer_identifier = ultraschall.Defer1(checkrouting, 2, 1)
+	return defer_identifier
 
-  return defer_identifier
 end
 
 
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
 state = reaper.GetToggleCommandStateEx(sec, cmd)
 
--- profile.start()
-
 
 if state ~= 1 then
 	-- Magicrouting on
 	reaper.SetToggleCommandState(sec, cmd, 1)
-	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 1)
+	reaper.SetProjExtState(0, "ultraschall_magicrouting", "state", 1)	--
 
-	reaper.SetProjExtState(0, "ultraschall_soundcheck", "override", "on")	-- automation was started so trigger at least one Soundcheck
+
+	reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	-- automation was started so trigger at least one magicrouting
 
   defer_identifier = checkrouting()
-  reaper.SetProjExtState(0, "ultraschall_soundcheck", "defer_identifier", defer_identifier)
+  reaper.SetProjExtState(0, "ultraschall_magicrouting", "defer_identifier", defer_identifier)
 
 
 else
 	-- Magicrouting off
 	reaper.SetToggleCommandState(sec, cmd, 0)
-	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 0)
+	reaper.SetProjExtState(0, "ultraschall_magicrouting", "state", 0)	--
 	-- reaper.ShowConsoleMsg("Stop".."\n")
 
-	retval, stop_defer_identifier = reaper.GetProjExtState(0, "ultraschall_soundcheck", "defer_identifier")
+	retval, stop_defer_identifier = reaper.GetProjExtState(0, "ultraschall_magicrouting", "defer_identifier")
 	retval = ultraschall.StopDeferCycle(stop_defer_identifier)
 end

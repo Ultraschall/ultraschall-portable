@@ -91,7 +91,7 @@ if reaper.CountTracks(0) > 0 then
   buildRoutingMatrix ()
 end
 
-ultraschall.SetUSExternalState("ultraschall_magicrouting", "step", "preshow")
+reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "preshow")
 
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
 state = reaper.GetToggleCommandStateEx(sec, cmd)

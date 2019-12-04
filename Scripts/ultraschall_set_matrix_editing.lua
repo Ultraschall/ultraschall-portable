@@ -46,7 +46,8 @@ end
 retval = ultraschall.ClearRoutingMatrix(true, true, true, true, false)
 retval = ultraschall.AddTrackHWOut(0, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
 buildRoutingMatrix ()
-ultraschall.SetUSExternalState("ultraschall_magicrouting", "step", "editing")
+
+reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "editing")
 
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
 state = reaper.GetToggleCommandStateEx(sec, cmd)

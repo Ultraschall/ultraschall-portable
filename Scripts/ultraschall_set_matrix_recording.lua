@@ -78,7 +78,8 @@ end
 
 retval = ultraschall.ClearRoutingMatrix(true, true, true, true, false)
 buildRoutingMatrix ()
-ultraschall.SetUSExternalState("ultraschall_magicrouting", "step", "recording")
+
+reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "recording")
 
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
 state = reaper.GetToggleCommandStateEx(sec, cmd)
