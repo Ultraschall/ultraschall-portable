@@ -45,13 +45,13 @@ local function triggermagicrouting()
 	-- local retval, deviceInfo = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 	-- print (deviceInfo)
 
-	if currentCountTracks == 0 then -- es gibt keine Tracks also kein Bedarf
-		reaper.SetProjExtState(0, "ultraschall_magicrouting", "lastCountTracks", "0")
-		return needsTrigger
-
-	elseif override == "on" then  -- automatic was just started by pressing button
+	if override == "on" then  -- automatic was just started by pressing button
 		needsTrigger = true
 		reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "off") -- einmal Neuaufbau der Matrix reicht
+		return needsTrigger
+
+	elseif currentCountTracks == 0 then -- es gibt keine Tracks also kein Bedarf
+		reaper.SetProjExtState(0, "ultraschall_magicrouting", "lastCountTracks", "0")
 		return needsTrigger
 
 	elseif currentCountTracks ~= tonumber(lastCountTracks) then -- es gibt mindestens eine neue Spur oder Spuren 	wurden gelöscht
@@ -67,54 +67,11 @@ local function triggermagicrouting()
 end
 
 
---[[
-
-local function getactualstep()
-	--
-	local actualstep = "recording" -- default
-	local length = reaper.GetProjectLength(0)
-	local playstate = reaper.GetPlayState()
-	local editing = reaper.GetProjExtState(0, "Editing", "started")
-
-
-	if playstate == 5 or playstate == 6 then  -- Recording oder Paused Recording
-	actualstep = "recording"
-
-	elseif length == 0 then     -- Preshow
-		actualstep = "preshow"
-
-	elseif editing == "1" then  -- Editing
-		actualstep = "editing"
-	end
-
-	return actualstep
-
-end
-
-
-local function checkforchangedstep()
-	changedstep = false
-
-	local retval, laststep = reaper.GetProjExtState(0, "ultraschall_magicrouting", "laststep")
-	local actualstep = getactualstep()
-
-	if laststep ~= actualstep then -- der state hat sich verändert
-
-		print ("alt:"..laststep.." neu:"..actualstep)
-		reaper.SetProjExtState(0, "ultraschall_magicrouting", "laststep", actualstep)	-- neuer Wert wird alter Wert
-		ultraschall.SetUSExternalState("ultraschall_magicrouting", "step", actualstep)
-
-		changedstep = true
-	end
-
-	return changedstep
-
-end
-
-]]
-
-
 local function checkrouting()
+
+	local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
+
+
 
 	if triggermagicrouting() then -- wird ein Update der Matrix wirklich benötigt?
 
@@ -126,8 +83,9 @@ local function checkrouting()
 			commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Editing")
 		else -- recording
 			commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Recording")
-		end
 
+		end
+		-- print ("step: "..step)
 		reaper.Main_OnCommand(commandid,0)         -- update Matrix
 
 	end
@@ -140,12 +98,12 @@ end
 
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
 state = reaper.GetToggleCommandStateEx(sec, cmd)
-
+-- print ("Buttonstate: "..state)
 
 if state ~= 1 then
 	-- Magicrouting on
 	reaper.SetToggleCommandState(sec, cmd, 1)
-	reaper.SetProjExtState(0, "ultraschall_magicrouting", "state", 1)	--
+	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 1)
 
 
 	reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	-- automation was started so trigger at least one magicrouting
@@ -157,7 +115,7 @@ if state ~= 1 then
 else
 	-- Magicrouting off
 	reaper.SetToggleCommandState(sec, cmd, 0)
-	reaper.SetProjExtState(0, "ultraschall_magicrouting", "state", 0)	--
+	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 0)
 	-- reaper.ShowConsoleMsg("Stop".."\n")
 
 	retval, stop_defer_identifier = reaper.GetProjExtState(0, "ultraschall_magicrouting", "defer_identifier")
