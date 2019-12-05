@@ -59,7 +59,8 @@ function buildRoutingMatrix ()
     			setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, 1, 0, 0, 0, 0, 0, 0, -1, 0, 0, false)
     			-- print(i.j)
     		end
-    	end
+			end
+
     elseif tracktype == "SoundBoard" then	-- Behandlung der Soundboard Spuren
 
 			AllMainSends[i]["MainSendOn"] = 1 -- Bei der Preshow sendet nur das Soundboard auf den Main
@@ -75,7 +76,16 @@ function buildRoutingMatrix ()
     			-- print(i.j)
     		end
     	end
-    end
+
+		else -- normaler, lokaler Track
+
+			retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+
+			if tonumber(ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-settings.ini")) == 0 then  -- Audio-Device kann kein lokales Monitoring
+				retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- sendet auch auf den HWOut in den Kopfhörer
+			end
+
+		end
   end
 
   retval = ultraschall.ApplyAllMainSendStates(AllMainSends)	-- setze alle Sends zum Master

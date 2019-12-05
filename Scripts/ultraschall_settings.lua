@@ -24,6 +24,20 @@
 ################################################################################
 ]]
 
+---------------
+-- States der ultraschall_devices in der ultraschall-settings.ini:
+-- 0 = eingeblendet, kann/soll kein lokales Monitoring
+-- 1 = eingeblendet, kann/soll lokales Monitoring
+-- 2 = ausgeblendet, kann/soll lokales Monitoring
+-- 3 = ausgebelndet, kann/soll kein lokales Monitoring
+--
+-- ToDos
+--
+-- Lautstärke Soundboard zu Monitoring während der preshow
+--
+----------------
+
+
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 dofile(reaper.GetResourcePath().."/Scripts/ultraschall_soundcheck_functions.lua")
 
@@ -111,7 +125,7 @@ function set_values()
 
       if newvalue ~= stored_value then  -- wurde eine Schalter/Slider umgelegt?
 
-        if GUI["elms"][i]["sectionname"] == "ultraschall_devices" and stored_value ~= 2 then
+        if GUI["elms"][i]["sectionname"] == "ultraschall_devices" and (stored_value ~= 2 and stored_value ~= 3) then
 
           update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], device_name, newvalue, "ultraschall-settings.ini")
 
@@ -158,8 +172,15 @@ end
 
 function remove_device(device_name)
 
+
   clear_devices()
-  ultraschall.SetUSExternalState("ultraschall_devices", device_name, "2", "ultraschall-settings.ini")
+  local device_state = ultraschall.GetUSExternalState("ultraschall_devices",device_name,"ultraschall-settings.ini")
+
+  if device_state == "0" then -- Device kann/soll kein lokales Monitoring
+    ultraschall.SetUSExternalState("ultraschall_devices", device_name, "3", "ultraschall-settings.ini")
+  else -- lokales Monitoring möglich
+    ultraschall.SetUSExternalState("ultraschall_devices", device_name, "2", "ultraschall-settings.ini")
+  end
   show_devices()
 
 end
@@ -192,7 +213,9 @@ function show_devices()
   for i = 1, key_count , 1 do
     device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i,"ultraschall-settings.ini")
 
-    if tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")) ~= 2 then  -- Device ist nicht ausgeblendet
+    stored_device_state = tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini"))
+
+    if stored_device_state ~= 2 and stored_device_state ~= 3  then  -- Device ist nicht ausgeblendet
 
       position = position+30  -- Y-position des Eintrags
 
@@ -356,7 +379,14 @@ GUI.counter = #GUI.elms
 ------------------------------------------------------
 
 retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
-ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1", "ultraschall-settings.ini")
+
+stored_device_state = ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-settings.ini")
+
+if stored_device_state == "3" or stored_device_state == "0" then
+  ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "0", "ultraschall-settings.ini")
+else
+  ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1", "ultraschall-settings.ini")
+end
 
 
 show_devices()        -- Baue die rechte Seite mit den Audio-Interfaces
