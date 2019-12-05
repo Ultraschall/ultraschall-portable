@@ -49,8 +49,8 @@ dofile(reaper.GetResourcePath().."/Scripts/ultraschall_soundcheck_functions.lua"
 
 devices_blacklist = {}
 devices_blacklist['CoreAudio Built-in Microph']=1
--- devices_blacklist['CoreAudio H6']=1
-
+devices_blacklist['CoreAudio Mic96K + Anlage']=1
+devices_blacklist['CoreAudio Mic96K']=1
 
 
 ------------------------------------------------------
