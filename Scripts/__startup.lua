@@ -159,6 +159,12 @@ reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
   reaper.SetExtState("ultraschall_follow", "state2", follow, false)
   reaper.Main_OnCommand(follow_reset_cmdid,0)
 
+-- start Tims Ping-Feature
+  if ultraschall.GetUSExternalState("ultraschall_tims_chapterping", "togglestate")~="off" then
+    tims_ping_feature=reaper.NamedCommandLookup("_Ultraschall_Tims_Ping_Feature_Toggle")
+    reaper.Main_OnCommand(tims_ping_feature,0)
+  end
+  
 
 --------------------------
 -- First start actions

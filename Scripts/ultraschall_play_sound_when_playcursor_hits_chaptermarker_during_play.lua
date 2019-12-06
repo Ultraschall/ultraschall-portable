@@ -59,7 +59,18 @@ function main()
     newPosition=reaper.GetCursorPosition()
   end
   oldPosition=newPosition
-  reaper.defer(main)
+  if reaper.HasExtState("ultraschall_tims_chapterping", "togglestate")==false then return else reaper.defer(main) end
 end
 
-main()
+
+function atexit()
+  reaper.DeleteExtState("ultraschall_tims_chapterping", "togglestate", false)
+end
+
+
+if reaper.HasExtState("ultraschall_tims_chapterping", "togglestate")==false then
+  reaper.SetExtState("ultraschall_tims_chapterping", "togglestate", "running", false)
+  reaper.atexit(atexit)
+  main()
+end
+
