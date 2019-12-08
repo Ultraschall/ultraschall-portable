@@ -155,9 +155,11 @@ reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
 -- end
 
 -- start Followmode-reset-backgroundscript
-  follow_reset_cmdid=reaper.NamedCommandLookup("_Ultraschall_Toggle_Reset")
-  reaper.SetExtState("ultraschall_follow", "state2", follow, false)
-  reaper.Main_OnCommand(follow_reset_cmdid,0)
+  if ultraschall.GetUSExternalState("ultraschall_follow", "AutoFollowOff")~="off" then
+    follow_reset_cmdid=reaper.NamedCommandLookup("_Ultraschall_Toggle_Reset")
+    reaper.SetExtState("ultraschall_follow", "state2", follow, false)
+    reaper.Main_OnCommand(follow_reset_cmdid,0)
+  end
 
 
 --------------------------

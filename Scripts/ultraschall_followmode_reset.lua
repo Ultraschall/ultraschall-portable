@@ -61,6 +61,7 @@ function main()
     -- here is, where the magic happens.
     
     -- check only, when Playstate isn't stopped or paused and followmode is on
+    
     if reaper.GetPlayState()~=0  
        and reaper.GetPlayState()&2~=2  -- comment, if you want to trigger AutoFollowOff during pause
        and reaper.GetExtState("follow", "skip")~="true" -- buggy line?
@@ -122,7 +123,17 @@ function main()
       reaper.SetExtState("follow", "skip", "false", false) --reset skip-state      -- buggy line?
     end
   current_time=reaper.time_precise()
-  reaper.defer(waiter)
+  if reaper.HasExtState("ultraschall_follow", "autofollowoff")==false then return else reaper.defer(waiter) end
 end
 
-main()
+function atexit()
+  reaper.DeleteExtState("ultraschall_follow", "autofollowoff", false)
+end
+
+
+if reaper.HasExtState("ultraschall_follow", "autofollowoff")==false then
+  reaper.SetExtState("ultraschall_follow", "autofollowoff", "running", false)
+  reaper.atexit(atexit)
+  main()
+end
+
