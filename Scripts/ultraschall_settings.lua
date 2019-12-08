@@ -206,6 +206,7 @@ end
 
 function show_devices()
 
+  retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "") -- gerade aktives device
   sectionName = "ultraschall_devices"
   key_count = ultraschall.CountUSExternalState_key(sectionName, "ultraschall-settings.ini")
   position = 177
