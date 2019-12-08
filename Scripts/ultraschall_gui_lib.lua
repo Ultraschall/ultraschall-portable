@@ -979,7 +979,7 @@ function Sldr:draw()
 
   local str_w, str_h = gfx.measurestr(self.caption)
 
-  gfx.x = x + 110
+  gfx.x = x - 188
   gfx.y = y - 2
 
   gfx.drawstr(self.caption)
@@ -991,10 +991,12 @@ function Sldr:draw()
   GUI.font(4)
 
   local str_w, str_h = gfx.measurestr(self.retval)
-  gfx.x = x + 200
+  gfx.x = x - 35
   gfx.y = y -2
 
-  gfx.drawstr(self.retval)
+  value_truncated = string.format("%." .. (1 or 0) .. "f", self.retval)
+
+  gfx.drawstr(value_truncated)
 
 end
 

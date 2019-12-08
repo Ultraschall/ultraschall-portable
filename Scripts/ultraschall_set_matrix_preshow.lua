@@ -64,7 +64,10 @@ function buildRoutingMatrix ()
     elseif tracktype == "SoundBoard" then	-- Behandlung der Soundboard Spuren
 
 			AllMainSends[i]["MainSendOn"] = 1 -- Bei der Preshow sendet nur das Soundboard auf den Main
-      retval = ultraschall.AddTrackHWOut(i, 0, 0, 0.5, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
+
+			soundbed_mix = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preshow_mix", "Value" ,"ultraschall-settings.ini")) -- wie hoch soll der ANteil des Soundbards während der Preshow im Monitormix sein
+
+      retval = ultraschall.AddTrackHWOut(i, 0, 0, soundbed_mix, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
 
     	for j=1, number_of_tracks do
 
