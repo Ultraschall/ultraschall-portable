@@ -30,6 +30,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- local serialize = require (reaper.GetResourcePath().."/Scripts/ser")
 
 
+
 function buildRoutingMatrix ()
 
 	local AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates()
@@ -44,14 +45,14 @@ function buildRoutingMatrix ()
   	tracktype = ultraschall.GetTypeOfTrack(i)
     if tracktype == "StudioLink" then	-- Behandlung der StudioLink Spuren
 
-    	retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- StudioLink-Spuren gehen immer auf den MainHardwareOut Zurück
+			retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- StudioLink-Spuren gehen immer auf den MainHardwareOut Zurück
 
     	for j=1, number_of_tracks do
     		if ultraschall.GetTypeOfTrack(j) ~= "StudioLink" then
 
 					-- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
 
-    			setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, 1, 0, 0, 0, 0, 0, 0, -1, 0, 0, false)
+					setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, 1, 0, 0, 0, 0, 0, 0, -1, 0, 0, false)
     			-- print(i.j)
     		end
     	end
