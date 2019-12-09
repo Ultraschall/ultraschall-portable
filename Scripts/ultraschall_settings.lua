@@ -147,6 +147,10 @@ function set_values()
         if GUI["elms"][i]["type"] == "Sldr" then
           update = ultraschall.SetUSExternalState(GUI["elms"][i]["sectionname"], "actualstep", tostring(GUI["elms"][i]["curstep"]),"ultraschall-settings.ini")
         end
+
+        if GUI["elms"][i]["sectionname"] == "ultraschall_settings_soundboard_ducking" then
+          reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	-- Soundboard ducking wurde aktiviert/deaktibiert also Routing Matrix neu aufbauen
+        end
       end
     end
   end
