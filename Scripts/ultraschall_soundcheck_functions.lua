@@ -119,6 +119,46 @@ function SoundcheckTransitionRecordToStop(userspace)
 end
 
 
+function SoundcheckChangedInterface(userspace)
+  -- get the current Interface
+  local retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+
+  if actual_device_name ~= userspace["old_device_name"] then -- Device wurde gewechselt
+
+    local known_device_status = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-settings.ini")
+
+    if known_device_status == "" then
+
+      return true
+
+    else
+
+      if known_device_status == "2" then -- Device ist bekannt, aber ausgeblendet und kann lokales monitoring
+        new_status = "1"
+      elseif known_device_status == "3" then -- Device ist bekannt, aber ausgeblendet und kann kein lokales monitoring
+        new_status = "0"
+      else
+        new_status = known_device_status
+      end
+
+      local update = ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, new_status ,"ultraschall-settings.ini")
+
+      reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	--Routing-Matrix neu aufbauen
+
+      userspace["old_device_name"] = actual_device_name
+
+      return false
+
+    end
+
+  else -- Device ist gleich geblieben
+    return false
+  end
+
+end
+
+
+
 function SetSoundcheck(EventName)
 
 
