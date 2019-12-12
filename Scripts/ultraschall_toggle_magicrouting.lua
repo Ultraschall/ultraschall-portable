@@ -69,10 +69,6 @@ end
 
 local function checkrouting()
 
-	local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
-
-
-
 	if triggermagicrouting() then -- wird ein Update der Matrix wirklich benötigt?
 
 		local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
