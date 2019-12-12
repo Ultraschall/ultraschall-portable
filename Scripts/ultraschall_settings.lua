@@ -29,7 +29,7 @@
 -- 0 = eingeblendet, kann/soll kein lokales Monitoring
 -- 1 = eingeblendet, kann/soll lokales Monitoring
 -- 2 = ausgeblendet, kann/soll lokales Monitoring
--- 3 = ausgebelndet, kann/soll kein lokales Monitoring
+-- 3 = ausgeblendet, kann/soll kein lokales Monitoring
 --
 -- ToDos
 --
@@ -267,7 +267,7 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
-GUI.w, GUI.h = 800, 560   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 800, 590   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen

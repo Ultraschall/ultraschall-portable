@@ -119,6 +119,44 @@ function SoundcheckTransitionRecordToStop(userspace)
 end
 
 
+function SoundcheckBsize(userspace)
+
+  local retval, actual_bsize = reaper.GetAudioDeviceInfo("BSIZE", "")
+  local retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+  local actual_device_type = tonumber(ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name ,"ultraschall-settings.ini"))
+  local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
+
+  if tonumber(actual_bsize) > 128 and (step == "preshow" or step == "recording") and (actual_device_type == 0 or actual_device_type == 3) then
+
+
+
+  -- Latenz zu hoch
+    -- Aufnahme oder Preshow
+    -- aktuelles Device kein lokales Monitoring
+    -- Größer als 128
+
+    return true
+
+  elseif tonumber(actual_bsize) < 128 and (actual_device_type == 1 or actual_device_type == 2) then
+
+    -- Kleiner als 128
+    -- aktuelles Device hat lokales Monitoring
+
+    return true
+
+  elseif tonumber(actual_bsize) < 32 then
+
+    return true
+
+  -- Latenz zu niedrig
+
+  else
+    return false
+  end
+
+end
+
+
 function SoundcheckChangedInterface(userspace)
   -- get the current Interface
   local retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
