@@ -126,14 +126,13 @@ function SoundcheckBsize(userspace)
   local actual_device_type = tonumber(ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name ,"ultraschall-settings.ini"))
   local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
 
-  if tonumber(actual_bsize) > 128 and (step == "preshow" or step == "recording") and (actual_device_type == 0 or actual_device_type == 3) then
-
-
+  if ultraschall.CreateTrackString_ArmedTracks() ~= "" and tonumber(actual_bsize) > 128 and (step == "preshow" or step == "recording") and (actual_device_type == 0 or actual_device_type == 3) then
 
   -- Latenz zu hoch
     -- Aufnahme oder Preshow
     -- aktuelles Device kein lokales Monitoring
     -- Größer als 128
+    -- mindestens ein Track ist für Aufnahme aktiviert
 
     return true
 
