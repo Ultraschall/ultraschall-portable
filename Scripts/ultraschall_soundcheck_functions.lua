@@ -69,8 +69,14 @@ end
 function SoundcheckMic(userspace)
 
   retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+  armed = ultraschall.CreateTrackString_ArmedTracks()
+  number = reaper.Master_GetPlayRate(0)
 
-  if ultraschall.CreateTrackString_ArmedTracks() ~= "" then -- teste nur, wenn eine Spur zur Aufnahme aktiviert wurde
+  if number ~= 1 and armed ~= "" then
+    reaper.Main_OnCommand(40521,0) -- setze Playrate auf 1 vor Aufnahme
+  end
+
+  if armed ~= "" then -- teste nur, wenn eine Spur zur Aufnahme aktiviert wurde
 
     if actual_device_name == "CoreAudio Built-in Microph" then -- Das interne Mic ist ausgewählt
       return true
