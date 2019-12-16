@@ -394,6 +394,16 @@ else
   ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1", "ultraschall-settings.ini")
 end
 
+------------------------------------------------------
+--  Info-Button für Devices
+------------------------------------------------------
+
+devicetext = "This column shows all audio interfaces you ever connected.|You can delete obsolete devices.|If you can plug a headphone to your audio interface, it supports Local Monitoring.|If you can not connect a headphone direct into your audio interface, make shure to|uncheck the Local Monitoring box to get the audio routing right."
+
+
+info_device = GUI.Btn:new(568, 182, 20, 20,         " ?", show_menu, devicetext)
+table.insert(GUI.elms, info_device)
+
 
 show_devices()        -- Baue die rechte Seite mit den Audio-Interfaces
 
