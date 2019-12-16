@@ -69,8 +69,14 @@ end
 function SoundcheckMic(userspace)
 
   retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+  armed = ultraschall.CreateTrackString_ArmedTracks()
+  number = reaper.Master_GetPlayRate(0)
 
-  if ultraschall.CreateTrackString_ArmedTracks() ~= "" then -- teste nur, wenn eine Spur zur Aufnahme aktiviert wurde
+  if number ~= 1 and armed ~= "" then
+    reaper.Main_OnCommand(40521,0) -- setze Playrate auf 1 vor Aufnahme
+  end
+
+  if armed ~= "" then -- teste nur, wenn eine Spur zur Aufnahme aktiviert wurde
 
     if actual_device_name == "CoreAudio Built-in Microph" then -- Das interne Mic ist ausgewählt
       return true
@@ -117,6 +123,83 @@ function SoundcheckTransitionRecordToStop(userspace)
     return false
   end
 end
+
+
+function SoundcheckBsize(userspace)
+
+  local retval, actual_bsize = reaper.GetAudioDeviceInfo("BSIZE", "")
+  local retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+  local actual_device_type = tonumber(ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name ,"ultraschall-settings.ini"))
+  local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
+
+  if ultraschall.CreateTrackString_ArmedTracks() ~= "" and tonumber(actual_bsize) > 128 and (step == "preshow" or step == "recording") and (actual_device_type == 0 or actual_device_type == 3) then
+
+  -- Latenz zu hoch
+    -- Aufnahme oder Preshow
+    -- aktuelles Device kein lokales Monitoring
+    -- Größer als 128
+    -- mindestens ein Track ist für Aufnahme aktiviert
+
+    return true
+
+  elseif tonumber(actual_bsize) < 128 and (actual_device_type == 1 or actual_device_type == 2) then
+
+    -- Kleiner als 128
+    -- aktuelles Device hat lokales Monitoring
+
+    return true
+
+  elseif tonumber(actual_bsize) < 32 then
+
+    return true
+
+  -- Latenz zu niedrig
+
+  else
+    return false
+  end
+
+end
+
+
+function SoundcheckChangedInterface(userspace)
+  -- get the current Interface
+  local retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+
+  if actual_device_name ~= userspace["old_device_name"] then -- Device wurde gewechselt
+
+    local known_device_status = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-settings.ini")
+
+    if known_device_status == "" then
+
+      return true
+
+    else
+
+      if known_device_status == "2" then -- Device ist bekannt, aber ausgeblendet und kann lokales monitoring
+        new_status = "1"
+      elseif known_device_status == "3" then -- Device ist bekannt, aber ausgeblendet und kann kein lokales monitoring
+        new_status = "0"
+      else
+        new_status = known_device_status
+      end
+
+      local update = ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, new_status ,"ultraschall-settings.ini")
+
+      reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	--Routing-Matrix neu aufbauen
+
+      userspace["old_device_name"] = actual_device_name
+
+      return false
+
+    end
+
+  else -- Device ist gleich geblieben
+    return false
+  end
+
+end
+
 
 
 function SetSoundcheck(EventName)

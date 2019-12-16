@@ -47,8 +47,8 @@ mouse = ultraschall.GetUSExternalState("ultraschall_mouse", "state")
 first_start = ultraschall.GetUSExternalState("ultraschall_start", "firststart")
 startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value","ultraschall-settings.ini")
 follow = ultraschall.GetUSExternalState("ultraschall_follow", "state")
-
-  follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+magicrouting_state = ultraschall.GetUSExternalState("ultraschall_magicrouting", "state")
 
 if theme_version ~= tostring(theme_version_now) then
   error_msg = "Your ULTRASCHALL THEME is out of date. \n\nULTRASCHALL wil NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/"
@@ -214,6 +214,20 @@ end
 
 cmd=reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Controller")
 reaper.Main_OnCommand(cmd,0)
+
+
+--------------------------
+-- Start Magicrouting
+--------------------------
+
+if (magicrouting_state == "1" or magicrouting_state == nil) then
+
+  cmd=reaper.NamedCommandLookup("_Ultraschall_Toggle_Magicrouting")
+  reaper.Main_OnCommand(cmd,0)
+
+end
+
+
 
 --------------------------
 -- First start actions
