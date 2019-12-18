@@ -227,6 +227,16 @@ if (magicrouting_state == "1" or magicrouting_state == nil) then
 
 end
 
+--------------------------
+-- Start Tims Chapter Ping
+--------------------------
+
+if ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping", "Value" ,"ultraschall-settings.ini") == "1" then
+
+  cmd=reaper.NamedCommandLookup("_Ultraschall_Tims_Ping_Feature")
+  reaper.Main_OnCommand(cmd,0)
+
+end
 
 
 --------------------------
