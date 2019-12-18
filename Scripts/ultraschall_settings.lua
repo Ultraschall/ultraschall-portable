@@ -152,6 +152,19 @@ function set_values()
           reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	-- Soundboard ducking wurde aktiviert/deaktibiert also Routing Matrix neu aufbauen
         end
 
+        ---------------
+        -- Start Action
+        ---------------
+
+        if newvalue == "1" and ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"StartFunction", "ultraschall-settings.ini") ~= "" then
+          -- ein Setting wurde aktiviert, das auch eine Start-Action hat
+
+          cmd=reaper.NamedCommandLookup(ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"StartFunction", "ultraschall-settings.ini"))
+          reaper.Main_OnCommand(cmd,0)
+          -- führe die StartAction aus
+
+        end
+
       end
     end
   end
