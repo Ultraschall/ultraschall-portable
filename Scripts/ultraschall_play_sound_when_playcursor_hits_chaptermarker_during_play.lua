@@ -33,11 +33,9 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-Filename=ultraschall.GetUSExternalState("ultraschall_Tims_Ping_Feature", "pingfilename")
-
-if reaper.file_exists(Filename)==false then
-  Filename=reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/Tims-Default-Ping2.flac"
-end
+Filename_ok = reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/ok.flac"
+Filename_edit = reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/edit.flac"
+Filename_empty = reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/empty.flac"
 
 volume=tonumber(ultraschall.GetUSExternalState("ultraschall_Tims_Ping_Feature", "volume"))
 
@@ -61,16 +59,14 @@ function main()
 
       if ultraschall.IsMarkerNormal(allmarkersarray[1][2]) == true then
         if allmarkersarray[1][1] == "" then
-          print ("leer")
+          Filename = Filename_empty
         else
-          print ("Name")
+          Filename = Filename_ok
         end
 
       else
-          print ("edit")
+          Filename = Filename_edit
       end
-
-
 
       --ultraschall.PreviewMediaFile(Filename, 1, false)
       PCM_Source=reaper.PCM_Source_CreateFromFile(Filename)
