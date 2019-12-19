@@ -58,10 +58,25 @@ function main()
     end
     number_of_all_markers, allmarkersarray = ultraschall.GetAllMarkersBetween(oldPosition, newPosition)
     if number_of_all_markers>0 then
+
+      if ultraschall.IsMarkerNormal(allmarkersarray[1][2]) == true then
+        if allmarkersarray[1][1] == "" then
+          print ("leer")
+        else
+          print ("Name")
+        end
+
+      else
+          print ("edit")
+      end
+
+
+
       --ultraschall.PreviewMediaFile(Filename, 1, false)
       PCM_Source=reaper.PCM_Source_CreateFromFile(Filename)
       P=reaper.Xen_StartSourcePreview(PCM_Source, volume, false)
     end
+
   else
     newPosition=reaper.GetCursorPosition()
   end
