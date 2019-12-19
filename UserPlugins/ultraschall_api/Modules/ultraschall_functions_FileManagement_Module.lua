@@ -1581,3 +1581,157 @@ end
 
 --A,B,C,D=ultraschall.GetAllRecursiveFilesAndSubdirectories("L:\\")
 
+function ultraschall.SaveSubtitles_SRT(subtitle_filename_with_path, subtitle_table)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SaveSubtitles_SRT</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.99
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.SaveSubtitles_SRT(string subtitle_filename_with_path, table subtitle_table)</functioncall>
+  <description>
+    saves the subtitles from the subtitle-table.
+    
+    The subtitles-table is expected to be of the following format:
+    
+        subtitle_table[subtitle_index]["start"]   = starttime in seconds
+        subtitle_table[subtitle_index]["end"]     = endtime in seconds
+        subtitle_table[subtitle_index]["caption"] = the caption, which shall be shown from start to end-time
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    string guid - the guid of the marker/region of the marker with a specific index
+  </retvals>
+  <parameters>
+    string subtitle_filename_with_path - the filename of the subtitle-file, into which you want to store the subtitles
+    table Table - the subtitle-table, which holds all captions and the start- and endtimes of displaying the caption
+  </parameters>
+  <chapter_context>
+    File Management
+    Write Files
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>file management, save, write, subtitles, srt, subrip, export</tags>
+</US_DocBloc>
+--]]
+  if type(subtitle_filename_with_path)~="string" then ultraschall.AddErrorMessage("SaveSubtitles_SRT", "subtitle_filename_with_path", "must be a string", -1) return -1 end
+  if type(subtitle_table)~="table" then ultraschall.AddErrorMessage("SaveSubtitles_SRT", "subtitle_table", "must be a table", -2) return -1 end
+  local String=""
+  local i=1
+  while type(subtitle_table[i])=="table" do
+    if subtitle_table[i]["start"]==nil 
+    or subtitle_table[i]["end"]==nil 
+    or subtitle_table[i]["caption"]==nil then
+      ultraschall.AddErrorMessage("SaveSubtitles_SRT", "subtitle_table", "entry "..i.." is missing information!", -3)
+      return -1
+    end
+    String=String..i.."\n"..
+    string.gsub(ultraschall.SecondsToTimeString_hh_mm_ss_mss(subtitle_table[i]["start"]),"%.",",").." --> "..
+    string.gsub(ultraschall.SecondsToTimeString_hh_mm_ss_mss(subtitle_table[i]["end"]),"%.",",").."\n"..
+    subtitle_table[i]["caption"].."\n\n"
+    i=i+1
+  end
+  if String~="" then
+    return ultraschall.WriteValueToFile(subtitle_filename_with_path, String:sub(1,-3))
+  else
+    ultraschall.AddErrorMessage("SaveSubtitles_SRT", "subtitle_table", "no subtitles available", -4)
+    return -1
+  end
+end
+
+function ultraschall.ReadSubtitles_SRT(filename_with_path)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ReadSubtitles_SRT</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>integer Captions_Counter, table Captions = ultraschall.ReadSubtitles_SRT(string filename_with_path)</functioncall>
+  <description>
+    parses an srt-subtitle-file and returns its contents as table
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer Captions_Counter - the number of captions in the file
+    table Captions - the Captions as a table of the format:
+                   -    Captions[index]["start"]= the starttime of this caption in seconds
+                   -    Captions[index]["end"]= the endtime of this caption in seconds
+                   -    Captions[index]["caption"]= the caption itself
+  </retvals>
+  <parameters>
+    string filename_with_path - the filename with path of the subrip srt-file
+  </parameters>
+  <chapter_context>
+    File Management
+    Read Files
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>filemanagement, read, file, srt, subrip, subtitle, import</tags>
+</US_DocBloc>
+--]]
+  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("ReadSubtitles_SRT", "filename_with_path", "must be a string", -1) return end
+  if reaper.file_exists(filename_with_path)=="false" then ultraschall.AddErrorMessage("ReadSubtitles_SRT", "filename_with_path", "must be a string", -2) return end
+  local A, Type, Offset, Kind, Language, Subs, Subs_Counter, i, line
+  line=0
+  
+  Subs={}
+  Subs_Counter=0
+  A=ultraschall.ReadFullFile(filename_with_path)
+  i=0
+  local caption=""
+  if A:match("(.-)\n"):len()>0 then A="\n"..A line=-1 else line=0 end
+  A=A.."\n"
+  
+  for k in string.gmatch(A, "(.-)\n") do
+    line=line+1
+
+    if i==3 and k~="" then
+      -- get the captions
+      caption=caption..k.."\n"
+    elseif i==3 and k=="" then
+      -- put the captions into the Subs-table
+      if caption=="" then caption="" end
+      Subs[Subs_Counter]["caption"]=caption:sub(1,-2)
+      caption=""
+      i=0
+    end
+    if i==2 and k:match("%-%-%>")~=nil then 
+      -- get the start and endtime
+      Subs[Subs_Counter]["start"], Subs[Subs_Counter]["end"] = k:match("(.-) --> (.*)")
+      if Subs[Subs_Counter]["start"]==nil or Subs[Subs_Counter]["end"]==nil then ultraschall.AddErrorMessage("ReadSubtitles_SRT", "filename_with_path", "can't parse the time in line: "..line, -3) return end
+      Subs[Subs_Counter]["start"]=reaper.parse_timestr(Subs[Subs_Counter]["start"])
+      Subs[Subs_Counter]["end"]=reaper.parse_timestr(Subs[Subs_Counter]["end"])
+      i=3
+    elseif i==2 then 
+      -- if the time is not the expected start and endtime, stop with an error-message
+      ultraschall.AddErrorMessage("ReadSubtitles_SRT", "filename_with_path", "can't parse the time in line: "..line, -4) 
+      return
+    end
+    if i==1 and tonumber(k)==nil then 
+      -- if the caption-index isn't there, we have a faulty srt, so stop with an error-message
+      ultraschall.AddErrorMessage("ReadSubtitles_SRT", "filename_with_path", "can't parse the caption-index in line: "..line, -5) 
+      return 
+    elseif i==1 and tonumber(k)~=nil then
+      i=2
+    end
+    if i==0 and k=="" then 
+      -- if an empty line occurs, add a new entry to sub-table, into which we put the next caption
+      i=1
+      Subs_Counter=Subs_Counter+1
+      Subs[Subs_Counter]={}
+    end
+  end
+  
+  Subs[Subs_Counter]["caption"]=caption:sub(1,-2)
+  if Subs[Subs_Counter]["start"]==nil then Subs[Subs_Counter]=nil Subs_Counter=Subs_Counter-1 end
+  return Subs_Counter, Subs
+end
+

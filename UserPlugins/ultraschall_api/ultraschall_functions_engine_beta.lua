@@ -1368,6 +1368,81 @@ end
 --ultraschall.TransientDetection_Set(0.1, -9, false)
 
 
+
+function ultraschall.ReadSubtitles_VTT(filename_with_path)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ReadSubtitles_VTT</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>string Kind, string Language, integer Captions_Counter, table Captions = ultraschall.ReadSubtitles_VTT(string filename_with_path)</functioncall>
+  <description>
+    parses a webvtt-subtitle-file and returns its contents as table
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string Kind - the type of the webvtt-file, like: captions
+    string Language - the language of the webvtt-file
+    integer Captions_Counter - the number of captions in the file
+    table Captions - the Captions as a table of the format:
+                   -    Captions[index]["start"]= the starttime of this caption in seconds
+                   -    Captions[index]["end"]= the endtime of this caption in seconds
+                   -    Captions[index]["caption"]= the caption itself
+  </retvals>
+  <parameters>
+    string filename_with_path - the filename with path of the webvtt-file
+  </parameters>
+  <chapter_context>
+    File Management
+    Read Files
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>filemanagement, read, file, webvtt, subtitle, import</tags>
+</US_DocBloc>
+--]]
+  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("ReadSubtitles_VTT", "filename_with_path", "must be a string", -1) return end
+  if reaper.file_exists(filename_with_path)=="false" then ultraschall.AddErrorMessage("ReadSubtitles_VTT", "filename_with_path", "must be a string", -2) return end
+  local A, Type, Offset, Kind, Language, Subs, Subs_Counter, i
+  Subs={}
+  Subs_Counter=0
+  A=ultraschall.ReadFullFile(filename_with_path)
+  Type, Offset=A:match("(.-)\n()")
+  if Type~="WEBVTT" then ultraschall.AddErrorMessage("ReadSubtitles_VTT", "filename_with_path", "not a webvtt-file", -3) return end
+  A=A:sub(Offset,-1)
+  Kind, Offset=A:match(".-: (.-)\n()")
+  A=A:sub(Offset,-1)
+  Language, Offset=A:match(".-: (.-)\n()")
+  A=A:sub(Offset,-1)
+  
+  i=0
+  for k in string.gmatch(A, "(.-)\n") do
+    i=i+1
+    if i==2 then 
+      Subs_Counter=Subs_Counter+1
+      Subs[Subs_Counter]={} 
+      Subs[Subs_Counter]["start"], Subs[Subs_Counter]["end"] = k:match("(.-) --> (.*)")
+      if Subs[Subs_Counter]["start"]==nil or Subs[Subs_Counter]["end"]==nil then ultraschall.AddErrorMessage("ReadSubtitles_VTT", "filename_with_path", "can't parse the file; probably invalid", -3) return end
+      Subs[Subs_Counter]["start"]=reaper.parse_timestr(Subs[Subs_Counter]["start"])
+      Subs[Subs_Counter]["end"]=reaper.parse_timestr(Subs[Subs_Counter]["end"])
+    elseif i==3 then 
+      Subs[Subs_Counter]["caption"]=k
+      if Subs[Subs_Counter]["caption"]==nil then ultraschall.AddErrorMessage("ReadSubtitles_VTT", "filename_with_path", "can't parse the file; probably invalid", -4) return end
+    end
+    if i==3 then i=0 end
+  end
+  
+  
+  return Kind, Language, Subs_Counter, Subs
+end
+
+
+--A,B,C,D,E=ultraschall.ReadSubtitles_VTT("c:\\test.vtt")
+
 -- These seem to work:
 
 

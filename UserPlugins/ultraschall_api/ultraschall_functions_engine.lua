@@ -94,6 +94,87 @@ ultraschall.Api_Path=script_path
 ultraschall.Api_Path=string.gsub(ultraschall.Api_Path,"\\","/")
 ultraschall.Api_InstallPath=reaper.GetResourcePath().."/UserPlugins/"
 
+function ultraschall.CountProjectTabs()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CountProjectTabs</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_projecttabs = ultraschall.CountProjectTabs()</functioncall>
+  <description>
+    Counts the number of opened project tabs.
+  </description>
+  <retvals>
+    integer number_of_projecttabs - the number of projecttabs currently opened
+  </retvals>
+  <chapter_context>
+    Project-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunctions, projectfiles, count, projecttab</tags>
+</US_DocBloc>
+]]
+  local ProjCount=-1
+  local Aretval="t"
+  local Aprojfn=""
+  while Aretval~=nil do
+    Aretval, Aprojfn = reaper.EnumProjects(ProjCount+1, "")
+    if Aretval~=nil then ProjCount=ProjCount+1
+    else break
+    end
+  end
+  return ProjCount+1
+end
+
+
+function ultraschall.GetProject_Tabs()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetProject_Tabs</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_projecttabs, array projecttablist = ultraschall.GetProject_Tabs()</functioncall>
+  <description>
+    Returns the ReaProject-objects, as well as the filenames of all opened project-tabs.
+  </description>
+  <retvals>
+    integer number_of_projecttabs - the number of projecttabs currently opened
+    array projecttablist - an array, that holds all ReaProjects as well as the projectfilenames
+                         - projecttablist[idx][1] = ReaProject
+                         - projecttablist[idx][2] = projectfilename with path
+  </retvals>
+  <chapter_context>
+    Project-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunctions, projectfiles, count, projecttab, project, filename</tags>
+</US_DocBloc>
+]]
+  local ProjTabList={}
+  local CountProj=ultraschall.CountProjectTabs()
+  for i=1, CountProj do
+    ProjTabList[i]={}
+    ProjTabList[i][1], ProjTabList[i][2] = reaper.EnumProjects(i-1, "")
+  end  
+  return CountProj, ProjTabList
+end
+
+-- Project ChangeCheck Initialisation
+ultraschall.tempCount, ultraschall.tempProjects = ultraschall.GetProject_Tabs()
+if ultraschall.ProjectList==nil then 
+  ultraschall.ProjectList=ultraschall.tempProjects 
+  ultraschall.ProjectCount=ultraschall.tempCount
+end
 
 function ultraschall.GetEnvelopeStateChunk(TrackEnvelope, str, isundo, usesws)
   return reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
@@ -128,7 +209,7 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  return 400.0278, "4.00","5th of November 2019", "Beta 2.78",  "\"Tchaikovski - Overture 1812\"", ultraschall.hotfixdate
+  return 400.0279, "4.00","", "Beta 2.79",  "\"Yes - Owner of a lonely heart\"", ultraschall.hotfixdate
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -1361,6 +1442,422 @@ end
 
 
 
+function print2(...)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>print2</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>print2(parameter_1 to parameter_n)</functioncall>
+  <description>
+    replaces Lua's own print-function. 
+    
+    Converts all parametes given into string using tostring() and displays them as a MessageBox, separated by two spaces.
+  </description>
+  <parameters>
+    parameter_1 to parameter_n - the parameters, that you want to have printed out
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunctions, print, messagebox</tags>
+</US_DocBloc>
+]]
+
+  local string=""
+  local count=1
+  local temp={...}
+  while temp[count]~=nil or temp[count+1]~=nil do
+   string=string.."  "..tostring(temp[count])
+    count=count+1
+  end
+  reaper.MB(string:sub(3,-1),"Print",0)
+end
+
+
+function print_alt(...)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>print_alt</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>print_alt(parameter_1 to parameter_n)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    replaces Lua's own print-function, that is quite useless in Reaper.
+    
+    like [print](#print), but separates the entries by a two spaced, not a newline
+  </description>
+  <parameters>
+    parameter_1 to parameter_n - the parameters, that you want to have printed out
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunctions, print, console</tags>
+</US_DocBloc>
+]]
+
+  local string=""
+  local count=1
+  local temp={...}
+  while temp[count]~=nil do
+    string=string.."  "..tostring(temp[count])
+    count=count+1
+  end
+  if string:sub(-1,-1)=="\n" then string=string:sub(1,-2) end
+  reaper.ShowConsoleMsg(string:sub(3,-1).."\n","Print",0)
+end
+
+
+function print(...)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>print</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>print(parameter_1 to parameter_n)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    replaces Lua's own print-function, that is quite useless in Reaper.
+    
+    Converts all parametes given into string using tostring() and displays them in the ReaScript-console, separated by a newline and ending with a newline.
+  </description>
+  <parameters>
+    parameter_1 to parameter_n - the parameters, that you want to have printed out
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunctions, print, console</tags>
+</US_DocBloc>
+]]
+  local string=""
+  local count=1
+  local temp={...}
+  while temp[count]~=nil do
+    string=string.."\n"..tostring(temp[count])
+    count=count+1
+  end
+  if string:sub(-1,-1)=="\n" then string=string:sub(1,-2) end
+  reaper.ShowConsoleMsg(string:sub(2,-1).."\n","Print",0)
+end
+
+
+function toboolean(value)
+    -- converts a value to boolean, or returns nil, if not convertible
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>toboolean</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = toboolean(string value)</functioncall>
+  <description>
+    Converts the string "value" to a boolean, if applicable; means: if it contains either true or false in it.
+    If it contains both or other characters(except spaces or tabs), it will not convert.
+    Works basially like Lua's own tostring() or tonumber()-functions.
+    
+    Returns nil, if conversion isn't possible.
+    
+    Note: Unlike other ultraschall-api-functions, toboolean() has no ultraschall. in it's functionname!
+  </description>
+  <parameters>
+    string value - the value to be converted to a boolean. True and false can be upper-, lower and camelcase.
+  </parameters>
+  <retvals>
+    boolean retval - true or false, depending on the input variable value
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, convert, boolean</tags>
+</US_DocBloc>
+--]]
+    if type(value)=="boolean" then return value end
+    if value==nil then ultraschall.AddErrorMessage("toboolean","value", "must contain either true or false, nothing else. Spaces and tabs are allowed.", -1) return end
+    local value=value:lower()
+    local truth=value:match("^\t*%s*()true\t*%s*$")
+    local falseness=value:match("^\t*%s*()false\t*%s*$")
+    
+    if tonumber(truth)==nil and tonumber(falseness)~=nil then
+      return false
+    elseif tonumber(truth)~=nil and tonumber(falseness)==nil then
+      return true
+    end
+end
+
+function print3(...)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>print3</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    SWS=2.9.7
+    Lua=5.3
+  </requires>
+  <functioncall>print(parameter_1 to parameter_n)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    like [print](#print), but puts the parameters into the clipboard.
+    
+    Converts all parametes given into string using tostring() and puts them into the clipboard, with each parameter separated by two spaces.
+    Unlike print and print2, this does NOT end with a newline!
+  </description>
+  <parameters>
+    parameter_1 to parameter_n - the parameters, that you want to have put into the clipboard
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunctions, print, clipboard</tags>
+</US_DocBloc>
+]]
+  local Table={...}
+  local Stringer=""
+  local count=1
+  while Table[count]~=nil do
+    Stringer=Stringer..tostring(Table[count]).." "
+    count=count+1
+  end
+  reaper.CF_SetClipboard(Stringer:sub(1,-2))
+end
+
+--print3()
+
+function print_update(...)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>print_update</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>print_update(parameter_1 to parameter_n)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    replaces Lua's own print-function, that is quite useless in Reaper.
+    
+    Converts all parametes given into string using tostring() and displays them in the ReaScript-console, separated by two spaces, ending with a newline.
+    
+    This is like [print](#print), but clears console everytime before displaying the values. Good for status-display, that shall not scroll.
+  </description>
+  <parameters>
+    parameter_1 to parameter_n - the parameters, that you want to have printed out
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunctions, print, clear, update, console</tags>
+</US_DocBloc>
+]]
+
+  reaper.ClearConsole()
+  print(...)
+end
+
+function ultraschall.CheckActionCommandIDFormat(aid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CheckActionCommandIDFormat</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.CheckActionCommandIDFormat(action_command_id)</functioncall>
+  <description>
+    Checks, whether an action command id is a valid commandid(which is a number) or a valid _action_command_id (which is a string with an _underscore in the beginning).
+    
+    Does not check, whether this action_command_id is a useable one, only if it's "syntax" is correct!
+    
+    returns falsein case of an error
+  </description>
+  <retvals>
+    boolean retval  - true, valid action_command_id; false, not a valid action_command_id
+  </retvals>
+  <parameters>
+    actioncommand_id - the ActionCommandID you want to check; either a number or an action_command_id with an underscore at the beginning
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>command, commandid, actioncommandid, check, validity</tags>
+</US_DocBloc>
+--]]
+  -- check parameter
+  if math.type(aid)~="integer" and type(aid)~="string" then ultraschall.AddErrorMessage("CheckActionCommandIDFormat", "action_command_id", "must be an integer or a string", -1) return false end
+  
+  if type(aid)=="number" and tonumber(aid)==math.floor(tonumber(aid)) and tonumber(aid)<=65535 and tonumber(aid)>=0 then return true -- is it a valid number?
+  elseif type(aid)=="string" and aid:sub(1,1)=="_" and aid:len()>1 then return true -- is it a valid string, formatted right=
+  else return false -- if neither, return false
+  end
+end
+
+
+function ultraschall.RunCommand(actioncommand_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RunCommand</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.RunCommand(string actioncommand_id)  </functioncall>
+  <description>
+    runs a command by its ActionCommandID(instead of the CommandID-number)
+    
+    returns -1 in case of error
+  </description>
+  <retvals>
+    integer retval - -1, in case of error
+  </retvals>
+  <parameters>
+    string actioncommand_id - the ActionCommandID of the Command/Script/Action you want to run; must be either a number or the ActionCommandID beginning with an underscore _
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>command,commandid,actioncommandid,action,run</tags>
+</US_DocBloc>
+--]]
+--reaper.MB("Hui","",0)
+  -- check parameter
+  if ultraschall.CheckActionCommandIDFormat(actioncommand_id)==false then ultraschall.AddErrorMessage("RunCommand", "actioncommand_id", "must be a command-number or start with an _underscore", -1) return -1 end
+--reaper.MB("Hui2","",0)  
+  -- run the command
+  local command_id = reaper.NamedCommandLookup(actioncommand_id)
+  --reaper.MB("Hui3","",0)  
+  reaper.Main_OnCommand(command_id,0)
+  --reaper.MB("Hui4","",0)  
+end
+
+runcommand=ultraschall.RunCommand
+
+
+
+function ultraschall.ConvertStringToBits(message)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertStringToBits</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_bits, array bitarray = ultraschall.ConvertStringToBits(string message)</functioncall>
+  <description>
+    converts a string into its bit-representation and returns that as a handy table
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer number_of_bits - the number of bits in the string, -1, in case of an error
+    array bitarray - the individual bits as a handy table
+  </retvals>
+  <parameters>
+    string message - the string, which you want to convert into its bit representation
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+    Data Manipulation
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, convert, string, to bits</tags>
+</US_DocBloc>
+--]]
+  if type(message)~="string" then ultraschall.AddErrorMessage("ConvertStringToBits", "message", "must be a string", -1) return -1 end
+  local Bitarray={}
+  local Bitarray_counter=0
+  for i=1, message:len() do
+    local Q=string.byte(message:sub(i,i))
+    for i=1, 8 do
+      Bitarray_counter=Bitarray_counter+1
+      Bitarray[Bitarray_counter]=Q&1
+      Q=Q>>1
+    end
+  end
+  return Bitarray_counter, Bitarray
+end
+
+function ultraschall.ConvertBitsToString(bitarray)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertBitsToString</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>string message = ultraschall.ConvertBitsToString(array bitarray)</functioncall>
+  <description>
+    converts a table of bit-representation into a string
+    
+    Every entry in the table must be either 0 or 1. If there are too few bits to fill up a byte, the missing bits will be seen as trailing 0-bits.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string message - the converted bits as string-representation
+  </retvals>
+  <parameters>
+    array bitarray - the individual bits in a table, which will be converted into a string-representation
+                   - each entry in the table must be either 0 or 1; missing bits at the end(usually nil) will be seen as 0
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+    Data Manipulation
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, convert, to string, bits</tags>
+</US_DocBloc>
+--]]
+  local bitcounter=0
+  local Result=""
+  local byte
+  for i=1, #bitarray, 8 do
+    byte=0
+    if bitarray[bitcounter+1]==1 then byte=byte+1 elseif bitarray[bitcounter+1]==0 then elseif bitarray[bitcounter+1]==nil then else ultraschall.AddErrorMessage("ConvertBitsToString", "bitarray entry "..bitcounter+1, "must be 1, 0 or nil(for padding zeros)", -2) return end
+    if bitarray[bitcounter+2]==1 then byte=byte+2 elseif bitarray[bitcounter+2]==0 then elseif bitarray[bitcounter+2]==nil then else ultraschall.AddErrorMessage("ConvertBitsToString", "bitarray entry "..bitcounter+2, "must be 1, 0 or nil(for padding zeros)", -2) return end
+    if bitarray[bitcounter+3]==1 then byte=byte+4 elseif bitarray[bitcounter+3]==0 then elseif bitarray[bitcounter+3]==nil then else ultraschall.AddErrorMessage("ConvertBitsToString", "bitarray entry "..bitcounter+3, "must be 1, 0 or nil(for padding zeros)", -2) return end
+    if bitarray[bitcounter+4]==1 then byte=byte+8 elseif bitarray[bitcounter+4]==0 then elseif bitarray[bitcounter+4]==nil then else ultraschall.AddErrorMessage("ConvertBitsToString", "bitarray entry "..bitcounter+4, "must be 1, 0 or nil(for padding zeros)", -2) return end
+    if bitarray[bitcounter+5]==1 then byte=byte+16 elseif bitarray[bitcounter+5]==0 then elseif bitarray[bitcounter+5]==nil then else ultraschall.AddErrorMessage("ConvertBitsToString", "bitarray entry "..bitcounter+5, "must be 1, 0 or nil(for padding zeros)", -2) return end
+    if bitarray[bitcounter+6]==1 then byte=byte+32 elseif bitarray[bitcounter+6]==0 then elseif bitarray[bitcounter+6]==nil then else ultraschall.AddErrorMessage("ConvertBitsToString", "bitarray entry "..bitcounter+6, "must be 1, 0 or nil(for padding zeros)", -2) return end
+    if bitarray[bitcounter+7]==1 then byte=byte+64 elseif bitarray[bitcounter+7]==0 then elseif bitarray[bitcounter+7]==nil then else ultraschall.AddErrorMessage("ConvertBitsToString", "bitarray entry "..bitcounter+7, "must be 1, 0 or nil(for padding zeros)", -2) return end
+    if bitarray[bitcounter+8]==1 then byte=byte+128 elseif bitarray[bitcounter+8]==0 then elseif bitarray[bitcounter+8]==nil then else ultraschall.AddErrorMessage("ConvertBitsToString", "bitarray entry "..bitcounter+8, "must be 1, 0 or nil(for padding zeros)", -2) return end
+    bitcounter=bitcounter+8
+    Result=Result..string.char(byte)
+  end
+  return Result
+end
 
 
 
@@ -1377,15 +1874,7 @@ end
 
 
 
-
-
-
-
-
-
-
-
-
+--[[
 dofile(script_path .. "Modules/ultraschall_functions_AudioManagement_Module.lua")
 dofile(script_path .. "Modules/ultraschall_functions_AutomationItems_Module.lua")
 dofile(script_path .. "Modules/ultraschall_functions_Clipboard_Module.lua")
@@ -1415,5 +1904,9 @@ dofile(script_path .. "Modules/ultraschall_functions_TrackManagement_Module.lua"
 dofile(script_path .. "Modules/ultraschall_functions_TrackManagement_Routing_Module.lua")
 dofile(script_path .. "Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua")
 dofile(script_path .. "Modules/ultraschall_functions_Ultraschall_Module.lua")
+--]]
 
+
+
+dofile(script_path.."ultraschall_ModulatorLoad3000.lua")
 ultraschall.ShowLastErrorMessage()
