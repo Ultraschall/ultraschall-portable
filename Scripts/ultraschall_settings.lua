@@ -152,6 +152,19 @@ function set_values()
           reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	-- Soundboard ducking wurde aktiviert/deaktibiert also Routing Matrix neu aufbauen
         end
 
+        ---------------
+        -- Start Action
+        ---------------
+
+        if newvalue ~= "0" and ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"StartFunction", "ultraschall-settings.ini") ~= "" then
+          -- ein Setting wurde aktiviert, das auch eine Start-Action hat
+
+          cmd=reaper.NamedCommandLookup(ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"StartFunction", "ultraschall-settings.ini"))
+          reaper.Main_OnCommand(cmd,0)
+          -- führe die StartAction aus
+
+        end
+
       end
     end
   end
@@ -267,7 +280,7 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
-GUI.w, GUI.h = 800, 590   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 800, 635   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -352,7 +365,7 @@ end
 
 -- Soundcheck Settings
 
-position_old = position +120
+position_old = position +165
 
 for i = 1, section_count , 1 do
 
