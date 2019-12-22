@@ -82,8 +82,8 @@ function Init()
   for i=1,7 do txt_line[i]={} end -- create 2d array for 4 lines of text
   txt_line[2]={y=0.0, size=0.28}    -- current date
   txt_line[1]={y=0.10 , size=0.28}   -- current time
-  txt_line[3]={y=0.20, size=0.27}  -- current playstate
-  txt_line[4]={y=0.27, size=0.6}  -- current position
+  txt_line[3]={y=0.17, size=0.27}  -- current playstate
+  txt_line[4]={y=0.24, size=0.75}  -- current position
   
   txt_line[7]={y=0.52, size=0.20}     -- time-selection-text
   txt_line[8]={y=0.58, size=0.25}  -- time-selection
@@ -156,13 +156,15 @@ function Init()
   uc_menu={} for i=1,10 do uc_menu[i]={} end --create 2d array for 6 menu entries
 --reaper.ShowMessageBox("lalala",tostring(preset),0)
 
-  uc_menu[1]={text="Show Realtime", checked= (preset&1==1)}
-  uc_menu[2]={text="Show Timecode", checked= (preset&2==2)}
-  uc_menu[3]={text="Show Date"    , checked= (preset&4==4)}
+  uc_menu[1]={text="Show Date"    , checked= (preset&4==4)}
+  uc_menu[2]={text="Show Realtime", checked= (preset&1==1)}
+  uc_menu[3]={text="Show Timecode", checked= (preset&2==2)}
+  
   uc_menu[4]={text="Show Remaining Projecttime"    , checked= (preset&8==8)}
-  uc_menu[5]={text="Show Remaining Time until next Marker/Region/Projectend", checked= (preset&16==16)}
-  uc_menu[6]={text="Show Time-Selection"    , checked= (preset&32==32)}
-  uc_menu[7]={text="Show Project Length"    , checked= (preset&64==64)}
+  uc_menu[5]={text="Show Time-Selection"    , checked= (preset&32==32)}
+  uc_menu[6]={text="Show Project Length"    , checked= (preset&64==64)}
+  uc_menu[7]={text="Show Remaining Time until next Marker/Region/Projectend", checked= (preset&16==16)}
+  
   uc_menu[8]={text="", checked=false} -- separator
   uc_menu[9]={text="Dock Ultraclock window to Docker", checked=docked}
   uc_menu[10]={text="Close Window",checked=false}
@@ -319,26 +321,28 @@ function drawClock()
   
   --write text
   -- Date
-  if uc_menu[3].checked then
+  if uc_menu[1].checked then
     date=os.date("%d.%m.%Y")
   else
     date=""
   end
   
   -- RealTime
-  if uc_menu[1].checked then
+  if uc_menu[2].checked then
     time=os.date("%H:%M:%S")
   else
     time=""
   end
   
-  if date~="" and time~="" then
+  if date~="" then
     WriteAlignedText(date.."    ",0xb3b3b3, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,2) -- print realtime hh:mm:ss
+  end
+  if time~="" then
     WriteAlignedText(time.."    ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
   end
   
   -- Projecttime and Play/RecState
-  if uc_menu[2].checked then
+  if uc_menu[3].checked then
     if uc_menu[4].checked==true and reaper.GetProjectLength()<get_position() then plus="+" else plus="" end
     checkpos=pos:match("(.-):")
     if checkpos:len()==1 then addzero="0" else addzero="" end
@@ -347,7 +351,7 @@ function drawClock()
   end
 
   -- Time Selection    
-  if uc_menu[6].checked then
+  if uc_menu[5].checked then
     start, end_loop = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
     length=end_loop-start
     if length > 0 then
@@ -363,13 +367,13 @@ function drawClock()
   end
   
   -- Project Length
-  if uc_menu[7].checked then
+  if uc_menu[6].checked then
     WriteAlignedText("Project Length:",0xb6b6bb, clockfont_bold, txt_line[9].size * fsize, txt_line[9].y*height+border,0) -- print date
     WriteAlignedText(reaper.format_timestr_len(reaper.GetProjectLength(),"", 0,5):match("(.*):"),0xb6b6bb, clockfont_bold, txt_line[10].size * fsize, txt_line[10].y*height+border,0) -- print date
   end
   
   -- Next/Previous Marker/Region
-  if uc_menu[5].checked then
+  if uc_menu[7].checked then
     prevtime, prevelm, nexttime, nextelm = get_position(2)
     
     prevelm=string.gsub(prevelm,"Marker:","M:")
