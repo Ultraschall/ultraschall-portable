@@ -132,6 +132,10 @@ function SoundcheckBsize(userspace)
   local actual_device_type = tonumber(ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name ,"ultraschall-settings.ini"))
   local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
 
+  if actual_device_name == "" then -- überhaupt kein Device aktiv - vermutlich während des Renderns
+    return false
+  end
+
   if ultraschall.CreateTrackString_ArmedTracks() ~= "" and tonumber(actual_bsize) > 128 and (step == "preshow" or step == "recording") and (actual_device_type == 0 or actual_device_type == 3) then
 
   -- Latenz zu hoch
@@ -166,7 +170,7 @@ function SoundcheckChangedInterface(userspace)
   -- get the current Interface
   local retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 
-  if actual_device_name ~= userspace["old_device_name"] then -- Device wurde gewechselt
+  if actual_device_name ~= userspace["old_device_name"] and actual_device_name ~= "" then -- Device wurde gewechselt und es wird nicht gerendert
 
     local known_device_status = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-settings.ini")
 
