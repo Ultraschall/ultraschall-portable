@@ -154,11 +154,6 @@ reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
   reaper.OpenColorThemeFile(themeadress)
 -- end
 
--- start Followmode-reset-backgroundscript
-  follow_reset_cmdid=reaper.NamedCommandLookup("_Ultraschall_Toggle_Reset")
-  reaper.SetExtState("ultraschall_follow", "state2", follow, false)
-  reaper.Main_OnCommand(follow_reset_cmdid,0)
-
 
 --------------------------
 -- Reset Windows counter
@@ -237,6 +232,19 @@ if ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping", "Val
   reaper.Main_OnCommand(cmd,0)
 
 end
+
+--------------------------
+-- Start Followmode-reset-backgroundscript
+--------------------------
+
+if ultraschall.GetUSExternalState("ultraschall_settings_followmode_auto", "Value" ,"ultraschall-settings.ini") == "1" then
+
+  cmd=reaper.NamedCommandLookup("_Ultraschall_Toggle_Reset")
+  reaper.Main_OnCommand(cmd,0)
+
+end
+
+
 
 
 --------------------------
