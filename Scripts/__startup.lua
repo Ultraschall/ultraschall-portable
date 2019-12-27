@@ -27,6 +27,15 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 
+--------------------------
+-- Start Ultraschall Messaging
+--------------------------
+
+cmd=reaper.NamedCommandLookup("_Ultraschall_Messaging")
+reaper.Main_OnCommand(cmd,0)
+
+
+
 theme_version_now = 20180114 -- version of this theme
 
 -- reaper.SetExtState("ultraschall_versions", "theme", theme_version_now, true)
