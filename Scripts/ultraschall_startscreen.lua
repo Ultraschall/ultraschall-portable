@@ -139,7 +139,7 @@ GUI.elms = {
 
 --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
   logo             = GUI.Pic:new(          240,  10,   0,  0,    1,   script_path.."us.png"),
-  label            = GUI.Lbl:new(          165, 160,                  "Ultraschall 3.2 - Aicher - was successfully installed.",          0),
+  label            = GUI.Lbl:new(          180, 160,                  "Ultraschall 4 - Aicher - was successfully installed.",          0),
   label2           = GUI.Lbl:new(          135, 220,                  "Visit the Podcast menu to explore the user interface and features.", 0),
   label3           = GUI.Lbl:new(          210, 240,                  "Use Project templates for a quick setup.",                           0),
   label4           = GUI.Lbl:new(          265, 290,                  "If you need assistance:",                                            0),
