@@ -240,6 +240,8 @@ wet.parmchg.val += wet.parmchg.dval;
 dry.parmchg.val += dry.parmchg.dval;
 
 @gfx 400 400
+small_mode = gfx_w < 200 || gfx_h < 200;
+
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
 
 function view.zoom(xpos,ypos, amt) local(newsz) instance(zoom pan_x pan_y)
@@ -255,9 +257,11 @@ function view.zoom(xpos,ypos, amt) local(newsz) instance(zoom pan_x pan_y)
   pan_y = min(1,max(-1,(pan_y-ypos)*newsz + ypos));
 );
 
-sz=min(gfx_w-60,gfx_h-gfx_texth-8)|0;
-left = ((gfx_w - 60-sz)*0.5)|0;
-top = ((gfx_h-gfx_texth-8-sz)*0.5)|0;
+pad_x = small_mode?0:60;
+pad_y = small_mode?0:(gfx_texth+8);
+sz=min(gfx_w-pad_x,gfx_h-pad_y)|0;
+left = ((gfx_w - pad_x - sz)*0.5)|0;
+top = ((gfx_h - pad_y - sz)*0.5)|0;
 
 sz = (sz*view.zoom)|0;
 left-= (view.pan_x*sz)|0;
@@ -301,7 +305,7 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap ? (
   gridsz = sz/ndiv;
   dbsc = (db_bottom-db_top)/ndiv;
   lx = -1000;
-  loop(ndiv,
+  small_mode || loop(ndiv,
     j = i*gridsz;
     gfx_x = left + j;
     top+j < gfx_h-gfx_texth-4 ? gfx_line(left,top+j,right,top+j);
@@ -326,12 +330,13 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap ? (
     gfx_y < gfx_h-gfx_texth*2-4 ? gfx_printf("%+ddB",floor(db_top + i*dbsc + 0.5));
   );
   
-  sprintf(#topstr,"%+ddB",db_top);
-  gfx_measurestr(#topstr,gfx_x,0);
-  gfx_x=right -4 - gfx_x; 
-  gfx_y = min(bottom + 2,gfx_h-gfx_texth-2);
-  gfx_drawstr(#topstr); 
-  
+  small_mode || (
+    sprintf(#topstr,"%+ddB",db_top);
+    gfx_measurestr(#topstr,gfx_x,0);
+    gfx_x=right -4 - gfx_x; 
+    gfx_y = min(bottom + 2,gfx_h-gfx_texth-2);
+    gfx_drawstr(#topstr); 
+  );  
   gfx_line(left,bottom,right,top);
   gfx_a=1;
   gfx_x=gfx_y=2;
@@ -418,14 +423,14 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap ? (
       ui.capmode == 3 ? gfx_drawstr("erase") :
       ui.capmode == 2 ? gfx_drawstr("smooth") :
       ui.capmode == 1 ? gfx_drawstr("pencil") :
-      ui.capmode == 0 ? (
+      ui.capmode == 0 && !small_mode ? (
         ui.want_curve ? gfx_drawstr("adjust curve") :
         gfx_printf("line [%s to adjust curve, %s to commit]",#altkey,#ctrlkey);
       );
     );
   ) : (
     divstr=gfx_w>=470 ? "   " : "\n";
-    gfx_printf("pencil: %s%s"
+    small_mode || gfx_printf("pencil: %s%s"
                "smooth: shift%s"
                "erase: %s%s"
                "pan/zoom: right",

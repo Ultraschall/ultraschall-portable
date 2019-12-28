@@ -47,7 +47,7 @@ abs(recpos[]=spl0+spl1) > minvol ? update=1;
 recpos = ((recpos+1) >= histsize ? 0 : (recpos+1));
 
 @gfx 640 400
-
+small_mode = gfx_w<200 || gfx_h < 50;
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
 
 function draw_button(xp, yp, str) 
@@ -123,7 +123,11 @@ function cycle_slider(x, y, z, dx)
          old_w=0;
        ) : (
          cap_mode = cap_drag = cap_timer = 0;
-         phase_button.hit_button(mouse_x,mouse_y,-1) ? (
+         small_mode ? (
+          cap_last_x = mouse_x;
+          cap_last_y = mouse_y;
+          cap_mode=1; // floor
+         ) : phase_button.hit_button(mouse_x,mouse_y,-1) ? (
            slider3=!slider3;
            slider_automate(slider3);
            old_w = 0;
@@ -176,6 +180,33 @@ function cycle_slider(x, y, z, dx)
 );
 
 cap_mode && cap_timer < 12 ? cap_timer += 1;
+
+(mouse_cap==0 && last_mouse_cap==2) ? (
+  gfx_x=mouse_x;
+  gfx_y=mouse_y;
+  i=0;
+  sprintf(#menustr,">FFT size",#menustr);
+  loop(12,
+    sprintf(#menustr,"%s|%s%d",#menustr,(slider1|0)==i ?"!":"", 16<<i);
+    i+=1;
+  );
+  sprintf(#menustr,"%s|<",#menustr);
+  
+  sprintf(#menustr,"%s|>Window|%sRectangular|%sHamming|%sBlackman-Harris|%sBlackman|<",
+    #menustr,slider4==0?"!":"",slider4==1?"!":"", slider4==2?"!":"", slider4==3?"!":"");
+    
+  sprintf(#menustr,"%s|%sShow phase",#menustr,slider3>.5?"!":"");
+    
+ ret = gfx_showmenu(#menustr);
+  ret > 0 ? (
+    (ret-=1) < 12 ? (slider1 = ret; ):
+    (ret-=12) < 4 ? (slider4 = ret; ):
+    (ret-=4) == 0 ? (slider3 = !slider3; old_w=0;);
+    
+  );
+  update=1;
+);
+
 last_mouse_cap = mouse_cap;
 
 // only update if new fft data is there or if the size changed
@@ -195,7 +226,7 @@ gfx_a=0.5;
 gv=1;
 cnt=100;
 gfx_y=-100;
-while(
+small_mode||while(
   y=20-log(gv)*sc;
   y> gfx_y ? (
     gfx_line(0,y,gfx_w,y,0);
@@ -219,7 +250,7 @@ wsc=gfx_w/log(1+400);
 f=20;
 gfx_x+=4;
 lx=gfx_x;
-while(
+small_mode||while(
   tx = log(1.0+(f/srate*2.0)*400)*wsc;
   dotext = tx > gfx_x && f!=40 && f!=4000 && f != 15000 &&
      (f<400 || f >= 1000 || f == 500) && (f<6000 || f>=10000);
@@ -233,25 +264,33 @@ while(
   f < srate*0.5;
 );
 
+small_mode ? ( 
+  gfx_set(1,1,1,0.25);
+  gfx_x=0;
+  gfx_y=2;
+  gfx_printf("FFT %d\n%ddB f",16<<slider1,slider2);
+) : (
 fft_button.draw_button(gfx_w, 0, sprintf(#,"%s%d",gfx_w<400?"":"FFT: ",16<<slider1));
-window_button.draw_button(gfx_x-8, 0, 
-  (slider4|0)==1 ? "hamming" :  
-  (slider4|0)==2 ? "blackman-harris" :
-  (slider4|0)==3 ? "blackman" :
-  "rectangular"); 
-sprintf(#floorstr,"%s%.1fdB",gfx_w<420?"":"floor: ",slider2);
-sprintf(#intstr,"%s: %dms",gfx_w<420 ? "int" : "integrate", slider5|0);
-sprintf(#slopestr,"%s%.1fdB/oct",gfx_w<420?"":"slope: ",floor(slider6*10+0.5)/10);
-rowpos = gfx_w<700?gfx_texth+8:0;
-rowpos > 0 ? (
-  phase_button.draw_button(gfx_x-8,0, slider3?"phase on" : "phase off");
-  gfx_x=gfx_w;
-) : gfx_x-=8;
 
-floor_button.draw_button(gfx_x,rowpos,#floorstr);
-slope_button.draw_button(gfx_x-8,rowpos, #slopestr);
-integrate_button.draw_button(gfx_x-8,rowpos, #intstr);
-rowpos <= 0 ? phase_button.draw_button(gfx_x-8,rowpos, slider3?"phase on" : "phase off");
+  window_button.draw_button(gfx_x-8, 0, 
+    (slider4|0)==1 ? "hamming" :  
+    (slider4|0)==2 ? "blackman-harris" :
+    (slider4|0)==3 ? "blackman" :
+    "rectangular"); 
+  sprintf(#floorstr,"%s%.1fdB",gfx_w<420?"":"floor: ",slider2);
+  sprintf(#intstr,"%s: %dms",gfx_w<420 ? "int" : "integrate", slider5|0);
+  sprintf(#slopestr,"%s%.1fdB/oct",gfx_w<420?"":"slope: ",floor(slider6*10+0.5)/10);
+  rowpos = gfx_w<700?gfx_texth+8:0;
+  rowpos > 0 ? (
+    phase_button.draw_button(gfx_x-8,0, slider3?"phase on" : "phase off");
+    gfx_x=gfx_w;
+  ) : gfx_x-=8;
+  
+  floor_button.draw_button(gfx_x,rowpos,#floorstr);
+  slope_button.draw_button(gfx_x-8,rowpos, #slopestr);
+  integrate_button.draw_button(gfx_x-8,rowpos, #intstr);
+  rowpos <= 0 ? phase_button.draw_button(gfx_x-8,rowpos, slider3?"phase on" : "phase off");
+);
 
 update ? (
   update=0;

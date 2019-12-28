@@ -131,7 +131,24 @@ suml += sqr(abs(spl0));
 sumr += sqr(abs(spl1));
 );
 
-@gfx 425 454
+@gfx 425 520
+
+
+// override drawing functions for graphical window scaling
+gsc = min(gfx_w/425,gfx_h/520); igsc = 1.0/gsc;
+gxo = max(0,  gfx_w/2 - gfx_h*425/520/2);
+function gfx_lineto(x,y,aa) ( gfx_x*=gsc; gfx_y*=gsc; gfx_x+=gxo; gfx_lineto(x*gsc+gxo,y*gsc,aa); gfx_x-=gxo; gfx_x*=igsc; gfx_y*=igsc; );
+function gfx_rectto(x,y)(gfx_x*=gsc; gfx_y*=gsc; gfx_x+=gxo; gsc>.5 ? gfx_rectto(x*gsc+gxo,y*gsc); gfx_x-=gxo;  gfx_x*=igsc; gfx_y*=igsc;);
+function gfx_drawnumber(y,x) (
+  gsc>.5 ? (
+    gsc<.7 && x>1 ? x=1;
+    gfx_x*=gsc; gfx_y*=gsc; gfx_x+=gxo; gfx_drawnumber(y,x); gfx_x-=gxo;  gfx_x*=igsc; gfx_y*=igsc; 
+  );
+);
+function gfx_drawchar(x) ( gfx_x*=gsc; gfx_y*=gsc; gfx_x+=gxo; gsc>.5 ? gfx_drawchar(x); gfx_x-=gxo; gfx_x*=igsc; gfx_y*=igsc; );
+
+
+
 //**************************************************************** left
 //red scale
 gfx_r =  gfx_a = 1;
