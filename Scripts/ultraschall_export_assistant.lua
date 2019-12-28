@@ -124,9 +124,9 @@ if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
 		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3\nRender your Podcast to a MP3 File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image:\nFound.\n\n\n\n\nFinalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!", 0),
 		label2          = GUI.Lbl:new(          30,  120+y_offset,               "1.\n\n\n\n2.\n\n\n\n3.\n\n\n\n4.\n\n\n\n\n\n5.", 0),
 		label3          = GUI.Lbl:new(          30,  70+y_offset,               "Follow these simple steps:", 0),
-		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultraschall_Render_Check"),
+		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultrschall_Render_Check"),
 		chapters           = GUI.Btn:new(          430, 185+y_offset, 190, 40,      "View Chapters", runcommand, "_SWSMARKERLIST1"),
-		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit ID3V2 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
+		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit MP3 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
 		-- image                = GUI.Btn:new(          430, 315+y_offset, 190, 40,      "Open Project Folder", runcommand, "_Ultraschall_Open_Project_Folder"),
 		finalize           = GUI.Btn:new(          430, 412+y_offset, 190, 40,      "Finalize MP3!", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"),
 	}
@@ -142,7 +142,7 @@ if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
 		label3          = GUI.Lbl:new(          30,  70+y_offset,               "Follow these simple steps:", 0),
 		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultraschall_Render_Check"),
 		chapters           = GUI.Btn:new(          430, 185+y_offset, 190, 40,      "View Chapters", runcommand, "_SWSMARKERLIST1"),
-		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit ID3V2 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
+		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit MP3 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
 		image                = GUI.Btn:new(          430, 315+y_offset, 190, 40,      "Open Project Folder", runcommand, "_Ultraschall_Open_Project_Folder"),
 		finalize           = GUI.Btn:new(          430, 412+y_offset, 190, 40,      "Finalize MP3!", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"),
 	}
@@ -160,11 +160,11 @@ else -- macOS
 		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3/ m4a\nRender your Podcast to a MP3/ m4a File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image:\nFound.\n\n\n\n\nFinalize MP3/ m4a\nHit the button and select your MP3/ m4a to finalize it\nwith metadata, chapters and episode image!", 0),
 		label2          = GUI.Lbl:new(          30,  120+y_offset,               "1.\n\n\n\n2.\n\n\n\n3.\n\n\n\n4.\n\n\n\n\n\n5.", 0),
 		label3          = GUI.Lbl:new(          30,  70+y_offset,               "Follow these simple steps:", 0),
-		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3/ m4a", runcommand, "_Ultraschall_Render_Check"),
+		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultraschall_Render_Check"),
 		chapters           = GUI.Btn:new(          430, 185+y_offset, 190, 40,      "View Chapters", runcommand, "_SWSMARKERLIST1"),
-		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit ID3V2 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
+		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit MP3 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
 		-- image                = GUI.Btn:new(          430, 315+y_offset, 190, 40,      "Open Project Folder", runcommand, "_Ultraschall_Open_Project_Folder"),
-		finalize           = GUI.Btn:new(          430, 412+y_offset, 190, 40,      "Finalize MP3/ m4a!", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"),
+		finalize           = GUI.Btn:new(          430, 412+y_offset, 190, 40,      "Finalize MP3", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"),
 	}
 
 	else
@@ -176,11 +176,11 @@ else -- macOS
 		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3/ m4a\nRender your Podcast to a MP3/ m4a File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image\nJust put a square .jpg, .jpeg or .png image with the\nname 'cover.xyz' OR with the same name as your\nproject file (.RPP) in the project folder.\n\n\nFinalize MP3/ m4a\nHit the button and select your MP3/ m4a to finalize it\nwith metadata, chapters and episode image!", 0),
 		label2          = GUI.Lbl:new(          30,  120+y_offset,               "1.\n\n\n\n2.\n\n\n\n3.\n\n\n\n4.\n\n\n\n\n\n5.", 0),
 		label3          = GUI.Lbl:new(          30,  70+y_offset,               "Follow these simple steps:", 0),
-		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3/ m4a", runcommand, "_Ultraschall_Render_Check"),
+		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultraschall_Render_Check"),
 		chapters           = GUI.Btn:new(          430, 185+y_offset, 190, 40,      "View Chapters", runcommand, "_SWSMARKERLIST1"),
-		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit ID3V2 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
+		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit MP3 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
 		image                = GUI.Btn:new(          430, 315+y_offset, 190, 40,      "Open Project Folder", runcommand, "_Ultraschall_Open_Project_Folder"),
-		finalize           = GUI.Btn:new(          430, 412+y_offset, 190, 40,      "Finalize MP3/ m4a!", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"),
+		finalize           = GUI.Btn:new(          430, 412+y_offset, 190, 40,      "Finalize MP3", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"),
 	}
 
 	end
