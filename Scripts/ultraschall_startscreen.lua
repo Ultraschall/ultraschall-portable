@@ -118,7 +118,7 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
 ---- Window settings and user functions ----
 
-GUI.name = "Ultraschall 3"
+GUI.name = "Ultraschall 4"
 GUI.w, GUI.h = 680, 415
 
 ------------------------------------------------------
