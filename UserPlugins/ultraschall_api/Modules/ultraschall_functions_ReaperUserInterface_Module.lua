@@ -268,7 +268,7 @@ function ultraschall.IsValidArrangeviewSnapshot(slot)
      reaper.GetProjExtState(0,"Ultraschall", "ArrangeViewSnapShot_"..slot.."_description")~=0 or
      reaper.GetProjExtState(0,"Ultraschall", "ArrangeViewSnapShot_"..slot.."_hzoom")~=0 or
      reaper.GetProjExtState(0,"Ultraschall", "ArrangeViewSnapShot_"..slot.."_vzoom")~=0 or
-     reaper.GetProjExtState(0, "Ultraschall", "ArrangeViewSnapShot_"..slot.."_vscroll")~="" then
+     reaper.GetProjExtState(0, "Ultraschall", "ArrangeViewSnapShot_"..slot.."_vscroll")~=0 then
      return true
   else
     return false
@@ -320,7 +320,7 @@ function ultraschall.RetrieveArrangeviewSnapshot(slot)
 
   -- prepare variables
   slot=tostring(slot)
-  local _l, start, ende, description, vzoom, hzoom
+  local _l, start, ende, description, vzoom, hzoom, vscroll
   
   -- get information from arrangeview-snapshot-slot and return it, if existing
   if reaper.GetProjExtState(0,"Ultraschall", "ArrangeViewSnapShot_"..slot.."_start")~=0 or
@@ -447,11 +447,11 @@ function ultraschall.DeleteArrangeviewSnapshot(slot)
   <description>
     Deletes an ArrangeviewSnapshot-slot.
     
-    Returns -1 if the slot is unset.
+    Returns -1 if the slot is unset or slot is an invalid value.
   </description>
   <parameters>
     integer slot - the slot for arrangeview-snapshot
-    </parameters>            
+  </parameters>            
   <retvals>
     integer retval - -1 in case of an error; 0 in case of success
   </retvals>
@@ -464,7 +464,15 @@ function ultraschall.DeleteArrangeviewSnapshot(slot)
   <tags>userinterface, delete, arrangeview, snapshot, startposition, endposition, verticalzoom</tags>
 </US_DocBloc>
 --]]
-  return ultraschall.DeleteProjExtState_Section("Ultraschall", "ArrangeViewSnapShot_"..slot)
+  if math.type(slot)~="integer" then ultraschall.AddErrorMessage("DeleteArrangeviewSnapshot","slot", "Must be an integer!", -1) return -1 end
+
+  reaper.SetProjExtState(0, "Ultraschall", "ArrangeViewSnapShot_"..slot.."_start","","")
+  reaper.SetProjExtState(0, "Ultraschall", "ArrangeViewSnapShot_"..slot.."_end","","")
+  reaper.SetProjExtState(0, "Ultraschall", "ArrangeViewSnapShot_"..slot.."_description","","")
+  reaper.SetProjExtState(0, "Ultraschall", "ArrangeViewSnapShot_"..slot.."_hzoom","","")
+  reaper.SetProjExtState(0, "Ultraschall", "ArrangeViewSnapShot_"..slot.."_vzoom","","")
+  reaper.SetProjExtState(0, "Ultraschall", "ArrangeViewSnapShot_"..slot.."_vscroll","","")
+  return 1
 end
 
 

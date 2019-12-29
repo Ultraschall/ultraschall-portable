@@ -24,7 +24,7 @@
   ################################################################################
   --]]
 
--- written by Meo Mespotine mespotine.de 20th of August 2019
+-- written by Meo Mespotine mespotine.de 26th of November 2019
 -- for the ultraschall.fm-project
 
 -- requires Reaper 5.982 and SWS 2.9.10.1, JS-extension 0.986 and Ultraschall-API 4.00 beta 2.761 installed
@@ -49,6 +49,9 @@ A=reaper.GetAppVersion()
 B=tonumber(A:match("(.-)/"))
 if B==nil then
   B=tonumber(A:match("(.-)+"))
+end
+if B==nil then
+  B=tonumber(A:match("(.-%.%d*)"))
 end
 
 if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==false 

@@ -1620,11 +1620,16 @@ function Btn:draw()
   GUI.color("txt")
   GUI.font(4)
 
+  if reaper.GetOS() == "OSX64" then
+    btn_offset = 3
+  else
+    btn_offset = 1
+  end
 
   local str_w, str_h = gfx.measurestr(self.caption)
   gfx.x = x + 1 * state + ((w - str_w) / 2) - 2
   gfx.y = y + 1 * state + ((h - str_h) / 2) - 2
-  gfx.y = gfx.y + 3
+  gfx.y = gfx.y + btn_offset
   gfx.drawstr(self.caption)
 
 end

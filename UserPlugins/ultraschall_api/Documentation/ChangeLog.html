@@ -40,6 +40,63 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.00 Beta 2.79: - "Yes - Owner of a lonely heart"</h3>
+<p>Has now 1082 functions, with 12 new ones</p>
+<p><strong>New in this release:</strong></p>
+<p>NOTE: There are some new features, who make use of Reaper v6-features. Please update soon, as Reaper 6 will be a requirement soon!</p>
+<ul>
+<li><p><strong>Speedup when loading US-API</strong><br />
+I made a modules-system, which speeds up loading and initalization as well as memory-use of the Ultraschall-API by magnitudes.<br />
+This approach loads only the functions needed by your script(used to load all functions in earlier versions).<br />
+The loading is now about 86% faster and memoryuse if 56% less.<br />
+And what do you need to do to make use of the modules approach?<br />
+Well, nothing. The Ultraschall-API does it for you! (requested by many, so hope, this helps you a lot).</p></li>
+<li><p><strong>Marker/Region Extstates</strong><br />
+Reaper 6.02 added some new features, which gives a unique guid for a marker. This again, helped me adding a feature I wanted to have for a long time: Marker/Region Extstates. They work like regular ProjectExtStates, but have the benefit, that they allow saving additional key-value stores associated with a certain marker/region.<br />
+And even if you change the whole order of the markers, the extstates will still be attached to the marker of your choice.<br />
+Possible usecase: storing the render-format-settings as region-extstates for region-rendering or simply adding additional metadata to markers/regions, that are needed but would spam the markertitle shown in the arrangeview.<br />
+Experiment with it, you'll quickly get the idea and ideas for practical usecases!</p></li>
+<li><p><strong>Blitting an image centered</strong><br />
+Sometimes, you want to blit an image into gfx-windows centered. Problem is: it's not easy to do. Until now, as I added the function GFX_BlitImageCentered, which does exactly that.<br />
+That means, you can pass to the function the position of the center of the image and change rotate/scale. This makes zooming in and out of images much more easier, as they stay at their position.</p></li>
+<li><p><strong>Subtitles SRT-import/export</strong><br />
+You can import and export now SRT-files for subtitles. This should allow you to use regions as subtitle-feature.</p></li>
+<li><p><strong>ConvertStringToBits and ConvertBitsToString</strong><br />
+This can be helpful, if you have a string, which represents a binary-number: Just convert it with this function and voila, you can work with the bits themselves.<br />
+And if you need to do it the other direction, use ConvertBitsToString. That way, you can work easily on a bitlevel, if fiddling with bitshifting is too difficult for you.</p></li>
+<li><p><strong>Bugfixes with ArrangeViewSnapShots, Markers</strong><br />
+Should now work like a charm.</p></li>
+</ul>
+<h4>New features in 4.00beta2.79</h4>
+<ul>
+<li>API: loadspeed - sped up loading speed by 86%, as API will now only load functions, actually needed, not all of them; memory need is reduced by about 56%.</li>
+<li>Docs: Reaper Internals - updated to Reaper 6.02</li>
+<li>ExtStateManagement: GetMarkerExtState - gets an extstate from a specific marker/region</li>
+<li>ExtStateManagement: SetMarkerExtState - sets an extstate for a specific marker/region</li>
+<li>GFX: GFX_BlitImageCentered - blits an image centered at a given position, to make "zooming"-effects easy to produce</li>
+<li>Helper Functions: ConvertBitsToString - converts a table with bits(entries with 0 or 1) into its string-representation</li>
+<li>Helper Functions: ConvertStringToBits - converts a string into its bit-representation</li>
+<li>Markermanagement: GetMarkerIDFromGuid - get the markerid from a guid</li>
+<li>Markermanagement: GetGuidFromMarkerID - get the guid from a marker</li>
+<li>Scrubbing: Scrubbing_MoveCursor_GetToggleState - gets the current toggle-state for when scrubbing using an action/surface</li>
+<li>Scrubbing: Scrubbing_MoveCursor_Toggle - toggles the state for when scrubbing using an action/surface</li>
+<li>Subtitles: ReadSubtitles_SRT - imports a SubRip-srt-subtitlefile</li>
+<li>Subtitles: SaveSubtitles_SRT - export a SubRip-srt-subtitlefile</li>
+</ul>
+<h4>Changes from Beta 2.78 to Beta 2.79</h4>
+<ul>
+<li>API: Reapack-API-xml-generator.lua - didn't correctly create zip-archive of the API stored in GitHub -&gt; fixed</li>
+<li>ArrangeView Snapshots: DeleteArrangeviewSnapshot - deleted all Arrangeview-Snapshots instead of the slot-one and didn't check for valid value for parameter slot -&gt; fixed</li>
+<li>ArrangeView Snapshots: IsValidArrangeviewSnapshot - regression, didn't return false, if no snapshot was available in a certain slot -&gt; fixed</li>
+<li>ArrangeView Snapshots: RetrieveArrangeviewSnapshot - had inner variable exposed -&gt; fixed</li>
+<li>ConfigurationManagement: CountValuesByPattern - didn't count at all(for some reason), errors in docs -&gt; fixed(thanks to reapero)</li>
+<li>Developer: ultraschall_developertool_Display-Altered-Config-Vars.lua - didn't work with rc-pre-releases of Reaper -&gt; fixed</li>
+<li>Marker Management: AddCustomRegion - was expecting length, although declared as regionend in the docs -&gt; fixed</li>
+<li>Marker Management: MoveRegionsBy - still had debug-code in it, which could display messageboxes and overwrite global variables -&gt; fixed (sorry for that)</li>
+<li>Marker Management: SetCustomRegion - had docs of AddCustomRegion -&gt; fixed</li>
+<li>Project Management: GetProject_MarkersAndRegions - supports now guids of markers and regions, as introduced in Reaper 6.02</li>
+</ul>
+<hr />
 <h3>4.00 Beta 2.78: - "Tchaikovski - Overture 1812" - 5th of November 2019</h3>
 <p>Has now 1070 functions, with 41 new ones</p>
 <p><strong>New in this release:</strong></p>

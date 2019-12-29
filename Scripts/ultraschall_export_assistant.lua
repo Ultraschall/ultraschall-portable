@@ -157,7 +157,7 @@ else -- macOS
 
 	--     name          = element type          x      y    w    h     caption               ...other params...
 		logo               = GUI.Pic:new(               484,280, 80, 80, img_ratio, img_adress, runcommand, "_Ultraschall_Open_Project_Folder"),
-		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3/ m4a\nRender your Podcast to a MP3/ m4a File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image:\nFound.\n\n\n\n\nFinalize MP3/ m4a\nHit the button and select your MP3/ m4a to finalize it\nwith metadata, chapters and episode image!", 0),
+		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3\nRender your Podcast to a MP3 File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image:\nFound.\n\n\n\n\nFinalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!", 0),
 		label2          = GUI.Lbl:new(          30,  120+y_offset,               "1.\n\n\n\n2.\n\n\n\n3.\n\n\n\n4.\n\n\n\n\n\n5.", 0),
 		label3          = GUI.Lbl:new(          30,  70+y_offset,               "Follow these simple steps:", 0),
 		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultraschall_Render_Check"),
@@ -173,7 +173,7 @@ else -- macOS
 
 	--     name          = element type          x      y    w    h     caption               ...other params...
 		-- logo               = GUI.Pic:new(               374,178, 0, 0, img_ratio, img_adress),
-		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3/ m4a\nRender your Podcast to a MP3/ m4a File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image\nJust put a square .jpg, .jpeg or .png image with the\nname 'cover.xyz' OR with the same name as your\nproject file (.RPP) in the project folder.\n\n\nFinalize MP3/ m4a\nHit the button and select your MP3/ m4a to finalize it\nwith metadata, chapters and episode image!", 0),
+		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3\nRender your Podcast to a MP3 File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image\nJust put a square .jpg, .jpeg or .png image with the\nname 'cover.xyz' OR with the same name as your\nproject file (.RPP) in the project folder.\n\n\nFinalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!", 0),
 		label2          = GUI.Lbl:new(          30,  120+y_offset,               "1.\n\n\n\n2.\n\n\n\n3.\n\n\n\n4.\n\n\n\n\n\n5.", 0),
 		label3          = GUI.Lbl:new(          30,  70+y_offset,               "Follow these simple steps:", 0),
 		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultraschall_Render_Check"),
