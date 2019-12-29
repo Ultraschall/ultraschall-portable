@@ -43,7 +43,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 A2=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/DocsSourcefiles/reaper-config_var.USDocML")
 if A2==nil then A2="" end
 
-A2=""
+--A2=""
 
 orgvars={}
 Acount=1

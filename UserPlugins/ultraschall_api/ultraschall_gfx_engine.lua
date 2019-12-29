@@ -871,3 +871,71 @@ end
                         
 --A=ultraschall.GFX_SetFont(1, "Arial", 20, "usijv")
 --gfx.drawstr("huioh")
+
+function ultraschall.GFX_BlitImageCentered(image, x, y, scale, rotate, ...)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_BlitImageCentered</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.99
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.GFX_BlitImageCentered(integer image, integer x, integer y, number scale, number rotate, optional number srcx, optional number srcy, optional number srcw, optional number srch, optional integer destx, optional integer desty, optional integer destw, optional integer desth, optional integer rotxoffs, optional integer rotyoffs)</functioncall>
+  <description>
+    Blits a centered image at the position given by parameter x and y. That means, the center of the image will be at x and y.
+    
+    All the rest basically works like the regular gfx.blit-function.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, blitting was successful; false, blitting was unsuccessful
+  </retvals>
+  <parameters>
+    integer source - the source-image/framebuffer to blit; -1 to 1023; -1 for the currently displayed framebuffer.
+    integer x - the x-position of the center of the image
+    integer y - the y-position of the center of the image
+    number scale - the scale-factor; 1, for normal size; smaller or bigger than 1 make image smaller or bigger
+                    - has no effect, when destx, desty, destw, desth are given
+    number rotation - the rotation-factor; 0 to 6.28; 3.14 for 180 degrees.
+    optional number srcx - the x-coordinate-offset in the source-image
+    optional number srcy - the y-coordinate-offset in the source-image
+    optional number srcw - the width-offset in the source-image
+    optional number srch - the height-offset in the source-image
+    optional integer destx - the x-coordinate of the blitting destination
+    optional integer desty - the y-coordinate of the blitting destination
+    optional integer destw - the width of the blitting destination; may lead to stretched images
+    optional integer desth - the height of the blitting destination; may lead to stretched images
+    optional number rotxoffs - influences rotation
+    optional number rotyoffs - influences rotation
+  </parameters>
+  <chapter_context>
+    Blitting
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, blit, centered, rotate, scale</tags>
+</US_DocBloc>
+--]]
+  if math.type(image)~="integer" then ultraschall.AddErrorMessage("GFX_BlitImageCentered", "image", "must be an integer", -1) return false end
+  if image<-1 or image>1023 then ultraschall.AddErrorMessage("GFX_BlitImageCentered", "image", "must be between -1 and 1023", -2) return false end
+  if math.type(x)~="integer" then ultraschall.AddErrorMessage("GFX_BlitImageCentered", "x", "must be an integer", -3) return false end
+  if math.type(y)~="integer" then ultraschall.AddErrorMessage("GFX_BlitImageCentered", "y", "must be an integer", -4) return false end
+  if type(scale)~="number" then ultraschall.AddErrorMessage("GFX_BlitImageCentered", "scale", "must be a number between 0 and higher", -5) return false end
+  if type(rotate)~="number" then ultraschall.AddErrorMessage("GFX_BlitImageCentered", "rotate", "must be a number", -6) return false end
+  local params={...}
+  for i=1, #params do
+    if type(params[i])~="number" then ultraschall.AddErrorMessage("GFX_BlitImageCentered", "parameter "..i+5, "must be a number or an integer", -7) return false end
+  end
+  local oldx=gfx.x
+  local oldy=gfx.y
+  local X,Y=gfx.getimgdim(image)
+  gfx.x=x-((X*scale)/2)
+  gfx.y=y-((Y*scale)/2)
+  gfx.blit(image, scale, rotate, table.unpack(params))
+  gfx.x=oldx
+  gfx.y=oldy
+  return true
+end
+

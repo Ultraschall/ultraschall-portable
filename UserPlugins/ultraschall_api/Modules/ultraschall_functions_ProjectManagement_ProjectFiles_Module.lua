@@ -8659,7 +8659,7 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
   <slug>GetProject_MarkersAndRegions</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.40
+    Reaper=6.02
     Lua=5.3
   </requires>
   <functioncall>integer markerregioncount, integer NumMarker, integer Numregions, array Markertable = ultraschall.GetProject_MarkersAndRegions(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -8682,6 +8682,7 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
                       - markertable[id][4]=string name   - the name of the marker/region
                       - markertable[id][5]=integer markrgnindexnumber - the shown number of the region/marker
                       - markertable[id][6]=integer color - the color-value of the marker
+                      - markertable[id][7]=string guid - the guid of the marker
   </retvals>
   <chapter_context>
     Project-Management
@@ -8689,7 +8690,7 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
   </chapter_context>
   <target_document>US_Api_Documentation</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>projectfiles, rpp, state, get, marker, regions</tags>
+  <tags>projectfiles, rpp, state, get, marker, regions, guid</tags>
 </US_DocBloc>
 ]]
 
@@ -8716,10 +8717,11 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
     Marker, Offset=Markerlist:match("(MARKER.-\n)()")
     if Offset~=nil then Markerlist=Markerlist:sub(Offset,-1) end
     if Marker==nil then break end
+    Marker=Marker:sub(1,-2).." "
     MarkerCount=MarkerCount+1
 
-    local shownnumber, position, name, isrgn, color, unknown, unknown2=Marker:match("MARKER (.-) (.-) \"(.-)\" (.-) (.-) (.-) (.*)")
-    if name==nil then shownnumber, position, name, isrgn, color, unknown, unknown2=Marker:match("MARKER (.-) (.-) (.-) (.-) (.-) (.-) (.*)") end
+    local shownnumber, position, name, isrgn, color, unknown, unknown2, guid = Marker:match("MARKER (.-) (.-) \"(.-)\" (.-) (.-) (.-) (.-) (.-) ")
+    if name==nil then shownnumber, position, name, isrgn, color, unknown, unknown2, guid = Marker:match("MARKER (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) ") end
     if isrgn=="1" then 
       endposition, Markerlist=Markerlist:match("MARKER .- (.-) .-(MARKER.*)") 
     else 
@@ -8740,6 +8742,7 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
     MarkerArray[MarkerCount][4]=name
     MarkerArray[MarkerCount][5]=tonumber(shownnumber)
     MarkerArray[MarkerCount][6]=tonumber(color)
+    MarkerArray[MarkerCount][7]=guid
   end
   return MarkerCount, NumMarker, NumRegions, MarkerArray
 end

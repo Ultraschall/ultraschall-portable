@@ -1280,3 +1280,68 @@ end
 --A=ultraschall.SetLoopState(0)
 
 
+function ultraschall.Scrubbing_MoveCursor_GetToggleState()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Scrubbing_MoveCursor_GetToggleState</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>boolean state = ultraschall.Scrubbing_MoveCursor_GetToggleState()</functioncall>
+  <description>
+    Returns, if scrub is toggled on/off, for when moving editcursor via action or control surface, as set in Preferences -> Playback.
+  </description>
+  <retvals>
+    boolean retval - true, scrub is on; false, scrub is off
+  </retvals>
+  <chapter_context>
+    Navigation
+    Scrubbing
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>navigation, get, scrub, when moving editcursor, action, surface</tags>
+</US_DocBloc>
+--]]
+  if reaper.SNM_GetIntConfigVar("scrubmode", -9)&1==0 then return false else return true end
+end
+
+function ultraschall.Scrubbing_MoveCursor_Toggle(toggle)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Scrubbing_MoveCursor_Toggle</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>boolean state, optional integer new_scrubmode = ultraschall.Scrubbing_MoveCursor_Toggle(boolean toggle)</functioncall>
+  <description>
+    Toggles scrub on/off, for when moving editcursor via action or control surface, as set in Preferences -> Playback.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, toggling was successful; false, toggling was unsuccessful
+    optional integer new_scrubmode - this is the new value of the configvariable scrubmode, which is altered by this function
+  </retvals>
+  <parameters>
+    boolean toggle - true, toggles scrubbing on; false, toggles scrubbing off
+  </parameters>
+  <chapter_context>
+    Navigation
+    Scrubbing
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>navigation, scrub, toggle, when moving editcursor, action, surface</tags>
+</US_DocBloc>
+--]]
+  if type(toggle)~="boolean" then ultraschall.AddErrorMessage("Scrubbing_MoveCursor_Toggle", "toggle", "must be a boolean", -1) return false end
+  return ultraschall.GetSetIntConfigVar("scrubmode", true, toggle)
+end
+

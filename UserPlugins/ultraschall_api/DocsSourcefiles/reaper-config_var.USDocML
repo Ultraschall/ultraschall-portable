@@ -3,7 +3,7 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 5.982 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.01 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -83,7 +83,7 @@
            >[aot](#aot), [cueitems](#cueitems), [itemtexthide](#itemtexthide), [psmaxv](#psmaxv), [psminv](#psminv), [templateditcursor](#templateditcursor)  
   
          the following variables are available in pre-releases of Reaper only  
-           >[bpminfnimport](#bpminfnimport), [disk_peaks_mmapkb](#disk_peaks_mmapkb), [disk_peaks_ramkb](#disk_peaks_ramkb), [maxplayoffsrate](#maxplayoffsrate), [midiccenv](#midiccenv), [midiccinterp](#midiccinterp), [windowflags](#windowflags), [wiring_options](#wiring_options)
+           >none currently
       </description>  
       <chapter_context>  
          An Introduction  
@@ -833,14 +833,12 @@
       <title>bpminfnimport</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           unknown
-          only available in pre-releases, yet
-          It is an integer
+          It is a double
             
           Unknown, if it's stored in reaper.ini as well...
       </description>  
       <chapter_context>  
          Config Variables  
-         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -3228,7 +3226,6 @@
       <slug>disk_peaks_mmapkb</slug>  
       <title>disk_peaks_mmapkb</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          only available in pre-releases of Reaper, yet  
           The Fully-buffer peak files smaller than-inputbox as set in Preferences -> Buffering -> Advanced Disk I/O Settings  
           It is an integer  
           
@@ -3241,7 +3238,6 @@
       </description>  
       <chapter_context>  
          Config Variables  
-         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -3250,7 +3246,6 @@
       <slug>disk_peaks_ramkb</slug>  
       <title>disk_peaks_ramkb</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          only available in pre-releases of Reaper, yet  
           The Fully-buffer peak files smaller than-inputbox as set in Preferences -> Buffering -> Advanced Disk I/O Settings  
           It is an integer  
           
@@ -3263,7 +3258,6 @@
       </description>  
       <chapter_context>  
          Config Variables  
-         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -3437,7 +3431,6 @@
            >&32=1, Show recording volume name(on), checked  
             
            set in Preferences -> Buffering -> Advanced Disk I/O Settings!  
-           in pre-releases only  
            >&64=1 - Periodially close excess file handles(experimental)-checkbox unchecked  
            >&64=1 - Periodially close excess file handles(experimental)-checkbox checked  
            
@@ -5371,13 +5364,10 @@
                                             [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
-          Only available in pre-releases, yet!
-                    
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>  
          Config Variables  
-         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -5650,7 +5640,6 @@
       </description>  
       <chapter_context>  
          Config Variables  
-         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -5668,7 +5657,6 @@
       </description>  
       <chapter_context>  
          Config Variables  
-         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -12410,7 +12398,6 @@
       <slug>windowflags</slug>  
       <title>windowflags</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          only available in pre-releases of Reaper, yet  
           It is the Modal window positioning-dropdownlist, as set in Preferences -> General -> Advanced UI/system tweaks  
           It is an integer
           
@@ -12423,7 +12410,6 @@
       </description>  
       <chapter_context>  
          Config Variables  
-         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
@@ -12432,7 +12418,6 @@
       <slug>wiring_options</slug>  
       <title>wiring_options</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          only available in pre-releases of Reaper, yet  
           It is the context-menu from within the wiring-diagram  
           It is an integer-bitfield  
           
@@ -12448,7 +12433,6 @@
       </description>  
       <chapter_context>  
          Config Variables  
-         Pre-Releases
       </chapter_context>  
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  

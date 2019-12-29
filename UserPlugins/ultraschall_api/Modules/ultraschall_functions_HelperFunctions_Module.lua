@@ -52,119 +52,7 @@ if type(ultraschall)~="table" then
   ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
 end
 
-function print2(...)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>print2</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.965
-    Lua=5.3
-  </requires>
-  <functioncall>print2(parameter_1 to parameter_n)</functioncall>
-  <description>
-    replaces Lua's own print-function. 
-    
-    Converts all parametes given into string using tostring() and displays them as a MessageBox, separated by two spaces.
-  </description>
-  <parameters>
-    parameter_1 to parameter_n - the parameters, that you want to have printed out
-  </parameters>
-  <chapter_context>
-    API-Helper functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>helperfunctions, print, messagebox</tags>
-</US_DocBloc>
-]]
 
-  local string=""
-  local count=1
-  local temp={...}
-  while temp[count]~=nil or temp[count+1]~=nil do
-   string=string.."  "..tostring(temp[count])
-    count=count+1
-  end
-  reaper.MB(string:sub(3,-1),"Print",0)
-end
-
-
-function print_alt(...)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>print_alt</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.965
-    Lua=5.3
-  </requires>
-  <functioncall>print_alt(parameter_1 to parameter_n)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    replaces Lua's own print-function, that is quite useless in Reaper.
-    
-    like [print](#print), but separates the entries by a two spaced, not a newline
-  </description>
-  <parameters>
-    parameter_1 to parameter_n - the parameters, that you want to have printed out
-  </parameters>
-  <chapter_context>
-    API-Helper functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>helperfunctions, print, console</tags>
-</US_DocBloc>
-]]
-
-  local string=""
-  local count=1
-  local temp={...}
-  while temp[count]~=nil do
-    string=string.."  "..tostring(temp[count])
-    count=count+1
-  end
-  if string:sub(-1,-1)=="\n" then string=string:sub(1,-2) end
-  reaper.ShowConsoleMsg(string:sub(3,-1).."\n","Print",0)
-end
-
-
-function print(...)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>print</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.965
-    Lua=5.3
-  </requires>
-  <functioncall>print(parameter_1 to parameter_n)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    replaces Lua's own print-function, that is quite useless in Reaper.
-    
-    Converts all parametes given into string using tostring() and displays them in the ReaScript-console, separated by a newline and ending with a newline.
-  </description>
-  <parameters>
-    parameter_1 to parameter_n - the parameters, that you want to have printed out
-  </parameters>
-  <chapter_context>
-    API-Helper functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>helperfunctions, print, console</tags>
-</US_DocBloc>
-]]
-  local string=""
-  local count=1
-  local temp={...}
-  while temp[count]~=nil do
-    string=string.."\n"..tostring(temp[count])
-    count=count+1
-  end
-  if string:sub(-1,-1)=="\n" then string=string:sub(1,-2) end
-  reaper.ShowConsoleMsg(string:sub(2,-1).."\n","Print",0)
-end
 
 function ultraschall.SplitStringAtLineFeedToArray(unsplitstring)
 --[[
@@ -435,42 +323,7 @@ function ultraschall.GetPartialString(str,sep1,sep2)
   return result
 end
   
-function ultraschall.RunCommand(actioncommand_id)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>RunCommand</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.40
-    Lua=5.3
-  </requires>
-  <functioncall>integer retval = ultraschall.RunCommand(string actioncommand_id)  </functioncall>
-  <description>
-    runs a command by its ActionCommandID(instead of the CommandID-number)
-    
-    returns -1 in case of error
-  </description>
-  <retvals>
-    integer retval - -1, in case of error
-  </retvals>
-  <parameters>
-    string actioncommand_id - the ActionCommandID of the Command/Script/Action you want to run; must be either a number or the ActionCommandID beginning with an underscore _
-  </parameters>
-  <chapter_context>
-    API-Helper functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>command,commandid,actioncommandid,action,run</tags>
-</US_DocBloc>
---]]
-  -- check parameter
-  if ultraschall.CheckActionCommandIDFormat(actioncommand_id)==false then ultraschall.AddErrorMessage("RunCommand", "actioncommand_id", "must be a command-number or start with an _underscore", -1) return -1 end
-  
-  -- run the command
-  local command_id = reaper.NamedCommandLookup(actioncommand_id)
-  reaper.Main_OnCommand(command_id,0)
-end
+
 
 function ultraschall.Notes2CSV()
 --[[
@@ -1162,52 +1015,6 @@ end
 
 --A,AA=ultraschall.CountPatternInString("HulaLLHulaLHulaHula,HULA,HuLahUlA", "Hula", false)
 
-function toboolean(value)
-    -- converts a value to boolean, or returns nil, if not convertible
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>toboolean</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.40
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval = toboolean(string value)</functioncall>
-  <description>
-    Converts the string "value" to a boolean, if applicable; means: if it contains either true or false in it.
-    If it contains both or other characters(except spaces or tabs), it will not convert.
-    Works basially like Lua's own tostring() or tonumber()-functions.
-    
-    Returns nil, if conversion isn't possible.
-    
-    Note: Unlike other ultraschall-api-functions, toboolean() has no ultraschall. in it's functionname!
-  </description>
-  <parameters>
-    string value - the value to be converted to a boolean. True and false can be upper-, lower and camelcase.
-  </parameters>
-  <retvals>
-    boolean retval - true or false, depending on the input variable value
-  </retvals>
-  <chapter_context>
-    API-Helper functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>helper functions, string, convert, boolean</tags>
-</US_DocBloc>
---]]
-    if type(value)=="boolean" then return value end
-    if value==nil then ultraschall.AddErrorMessage("toboolean","value", "must contain either true or false, nothing else. Spaces and tabs are allowed.", -1) return end
-    local value=value:lower()
-    local truth=value:match("^\t*%s*()true\t*%s*$")
-    local falseness=value:match("^\t*%s*()false\t*%s*$")
-    
-    if tonumber(truth)==nil and tonumber(falseness)~=nil then
-      return false
-    elseif tonumber(truth)~=nil and tonumber(falseness)==nil then
-      return true
-    end
-end
 
 function ultraschall.OpenURL(url)
 --[[
@@ -4362,45 +4169,6 @@ end
 
 
 
-function print3(...)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>print3</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.965
-    SWS=2.9.7
-    Lua=5.3
-  </requires>
-  <functioncall>print(parameter_1 to parameter_n)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    like [print](#print), but puts the parameters into the clipboard.
-    
-    Converts all parametes given into string using tostring() and puts them into the clipboard, with each parameter separated by two spaces.
-    Unlike print and print2, this does NOT end with a newline!
-  </description>
-  <parameters>
-    parameter_1 to parameter_n - the parameters, that you want to have put into the clipboard
-  </parameters>
-  <chapter_context>
-    API-Helper functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>helperfunctions, print, clipboard</tags>
-</US_DocBloc>
-]]
-  local Table={...}
-  local Stringer=""
-  local count=1
-  while Table[count]~=nil do
-    Stringer=Stringer..tostring(Table[count]).." "
-    count=count+1
-  end
-  reaper.CF_SetClipboard(Stringer:sub(1,-2))
-end
-
---print3()
 
 function ultraschall.MKVOL2DB(mkvol_value)
 --[[
@@ -4482,10 +4250,6 @@ function ultraschall.DB2MKVOL(db_value)
   if type(db_value)~="number" then ultraschall.AddErrorMessage("DB2MKVOL", "db_value", "must be a number" ,-1) return nil end
   return math.exp(db_value/8.68588963806)
 end
-
-
-runcommand=ultraschall.RunCommand
-
 
 function ultraschall.ConvertIntegerIntoString2(Size, ...)
 --[[
@@ -4630,42 +4394,6 @@ function ultraschall.ConvertStringToIntegers(String, Size)
   
   return String:len(), Table
 end
-
-
-function print_update(...)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>print_update</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.965
-    Lua=5.3
-  </requires>
-  <functioncall>print_update(parameter_1 to parameter_n)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    replaces Lua's own print-function, that is quite useless in Reaper.
-    
-    Converts all parametes given into string using tostring() and displays them in the ReaScript-console, separated by two spaces, ending with a newline.
-    
-    This is like [print](#print), but clears console everytime before displaying the values. Good for status-display, that shall not scroll.
-  </description>
-  <parameters>
-    parameter_1 to parameter_n - the parameters, that you want to have printed out
-  </parameters>
-  <chapter_context>
-    API-Helper functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>helperfunctions, print, clear, update, console</tags>
-</US_DocBloc>
-]]
-
-  reaper.ClearConsole()
-  print(...)
-end
-
-
 
 function ultraschall.SetScriptIdentifier_Description(description)
   --[[
@@ -5600,7 +5328,7 @@ function ultraschall.FindPatternsInString(SourceString, pattern, sort_after_find
   return counter-1, String, String2
 end
 
---O,P,Q = ultraschall.FindPatternsInString(A, "<slug>(.-)</slug>", false)
+--O,P,Q = ultraschall.FindPatternsInString(A, "<>(.-)</sl>", false)
 
 function ultraschall.RunLuaSourceCode(code)
 --[[
