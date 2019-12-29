@@ -30,7 +30,7 @@
 --MediaItem, MediaItem_Take = reaper.GetItemFromPoint(x,y, true)
 if MediaItem_Take==nil or reaper.IsMediaItemSelected(MediaItem)~=true then  
   MediaItem = reaper.GetSelectedMediaItem(0,0)
-  MediaItem_Take = reaper.GetActiveTake(MediaItem)
+  if MediaItem ~= nil then MediaItem_Take = reaper.GetActiveTake(MediaItem) end
 end
 if MediaItem_Take==nil then reaper.MB("No Item selected", "Error", 0) return end
 PCM_source=reaper.GetMediaItemTake_Source(MediaItem_Take)
