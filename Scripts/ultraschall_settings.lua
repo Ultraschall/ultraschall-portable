@@ -149,7 +149,7 @@ function set_values()
         end
 
         if GUI["elms"][i]["sectionname"] == "ultraschall_settings_soundboard_ducking" or GUI["elms"][i]["sectionname"] == "ultraschall_devices" then
-          reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	-- Soundboard ducking wurde aktiviert/deaktibiert also Routing Matrix neu aufbauen
+          reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")  -- Soundboard ducking wurde aktiviert/deaktibiert also Routing Matrix neu aufbauen
         end
 
         ---------------
@@ -435,3 +435,9 @@ if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed 
   GUI.Init()
   GUI.Main()
 end
+
+function atexit()
+  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+end
+
+reaper.atexit(atexit)
