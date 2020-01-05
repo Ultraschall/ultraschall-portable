@@ -30,6 +30,7 @@
 ---      EventManager Module      ---
 -------------------------------------
 
+
 if type(ultraschall)~="table" then 
   -- update buildnumber and add ultraschall as a table, when programming within this file
   local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
@@ -377,13 +378,13 @@ end
 function ultraschall.EventManager_RemoveEvent(EventIdentifier)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>Eventmanager_RemoveEvent</slug>
+  <slug>EventManager_RemoveEvent</slug>
   <requires>
     Ultraschall=4.00
     Reaper=5.982
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.Eventmanager_RemoveEvent(string event_identifier)</functioncall>
+  <functioncall>boolean retval = ultraschall.EventManager_RemoveEvent(string event_identifier)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Removes a new event to the Ultraschall Event Manager-checking-queue.
     
@@ -403,9 +404,9 @@ function ultraschall.EventManager_RemoveEvent(EventIdentifier)
   <tags>event manager, remove, event</tags>
 </US_DocBloc>
 --]]
-  if reaper.GetExtState("ultraschall_eventmanager", "state")=="" then ultraschall.AddErrorMessage("Eventmanager_RemoveEvent", "", "Eventmanager not started yet", -1) return false end
+  if reaper.GetExtState("ultraschall_eventmanager", "state")=="" then ultraschall.AddErrorMessage("EventManager_RemoveEvent", "", "Eventmanager not started yet", -1) return false end
   local A,B=ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
-  if B==false then ultraschall.AddErrorMessage("Eventmanager_RemoveEvent", "EventIdentifier", "must be a valid and used EventIdentifier", -2) return false end
+  if B==false then ultraschall.AddErrorMessage("EventManager_RemoveEvent", "EventIdentifier", "must be a valid and used EventIdentifier", -2) return false end
   local OldRemoves=reaper.GetExtState("ultraschall_eventmanager", "eventremove")
   reaper.SetExtState("ultraschall_eventmanager", "eventremove", OldRemoves..EventIdentifier.."\n", false)
   return true
@@ -414,13 +415,13 @@ end
 function ultraschall.EventManager_RemoveAllEvents_Script(ScriptIdentifier)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>Eventmanager_RemoveAllEvents_Script</slug>
+  <slug>EventManager_RemoveAllEvents_Script</slug>
   <requires>
     Ultraschall=4.00
     Reaper=5.982
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.Eventmanager_RemoveAllEvents_Script(string ScriptIdentifier)</functioncall>
+  <functioncall>boolean retval = ultraschall.EventManager_RemoveAllEvents_Script(string ScriptIdentifier)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Removes all registered events from a script with a certain ScriptIdentifier in the Ultraschall Event Manager-checking-queue.
     
@@ -440,15 +441,14 @@ function ultraschall.EventManager_RemoveAllEvents_Script(ScriptIdentifier)
   <tags>event manager, remove, all events, scriptidentifier, event</tags>
 </US_DocBloc>
 --]]
-  if reaper.GetExtState("ultraschall_eventmanager", "state")=="" then ultraschall.AddErrorMessage("Eventmanager_RemoveAllEvents_Script", "", "Eventmanager not started yet", -1) return false end
-  if ScriptIdentifier~=nil and type(ScriptIdentifier)~="string" then ultraschall.AddErrorMessage("Eventmanager_RemoveAllEvents_Script", "ScriptIdentifier", "must be a string", -2) return false end
+  if reaper.GetExtState("ultraschall_eventmanager", "state")=="" then ultraschall.AddErrorMessage("EventManager_RemoveAllEvents_Script", "", "Eventmanager not started yet", -1) return false end
+  if ScriptIdentifier~=nil and type(ScriptIdentifier)~="string" then ultraschall.AddErrorMessage("EventManager_RemoveAllEvents_Script", "ScriptIdentifier", "must be a string", -2) return false end
   if ScriptIdentifier==nil then ScriptIdentifier=ultraschall.ScriptIdentifier end
-  if ScriptIdentifier:match("ScriptIdentifier:.-%-%{........%-....%-....%-....%-............%}%..*")==nil then ultraschall.AddErrorMessage("Eventmanager_RemoveAllEvents_Script", "ScriptIdentifier", "must be a valid ScriptIdentifier", -3) return false end
+  if ScriptIdentifier:match("ScriptIdentifier:.-%-%{........%-....%-....%-....%-............%}%..*")==nil then ultraschall.AddErrorMessage("EventManager_RemoveAllEvents_Script", "ScriptIdentifier", "must be a valid ScriptIdentifier", -3) return false end
   local OldRemoves=reaper.GetExtState("ultraschall_eventmanager", "eventremove")
   reaper.SetExtState("ultraschall_eventmanager", "eventremove_scriptidentifier", OldRemoves..ScriptIdentifier.."\n", false)
   return true
 end
-
 
 function ultraschall.EventManager_SetEvent(EventIdentifier, EventName, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, Actions)
 --[[
@@ -1646,7 +1646,7 @@ function ultraschall.EventManager_DebugMode_UserSpace(index)
   <tags>event manager, toggle, debug, debugmode, userspace</tags>
 </US_DocBloc>
 --]]
-  
+  if math.type(index)~="integer" then return end
   local Value=reaper.GetExtState("ultraschall_eventmanager", "UserSpaces_"..index)
   local count=0
   local count2=1
