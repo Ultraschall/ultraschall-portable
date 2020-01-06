@@ -29,7 +29,8 @@ function ultraschall.LM(name)
   dofile(ultraschall.Api_Path.."/Modules/"..ultraschall.Modules_List[name])
 end
 
-ultraschall.Modules_List={"ultraschall_functions_AudioManagement_Module.lua",
+ultraschall.Modules_List={
+"ultraschall_functions_AudioManagement_Module.lua",
 "ultraschall_functions_AutomationItems_Module.lua",
 "ultraschall_functions_Clipboard_Module.lua",
 "ultraschall_functions_Color_Module.lua",
@@ -586,13 +587,13 @@ else
     ultraschall.LM(9)
     return ultraschall.EventManager_IsValidEventIdentifier(table.unpack({...}))
   end
-  function ultraschall.Eventmanager_RemoveEvent(...)
+  function ultraschall.EventManager_RemoveEvent(...)
     ultraschall.LM(9)
-    return ultraschall.Eventmanager_RemoveEvent(table.unpack({...}))
+    return ultraschall.EventManager_RemoveEvent(table.unpack({...}))
   end
-  function ultraschall.Eventmanager_RemoveAllEvents_Script(...)
+  function ultraschall.EventManager_RemoveAllEvents_Script(...)
     ultraschall.LM(9)
-    return ultraschall.Eventmanager_RemoveAllEvents_Script(table.unpack({...}))
+    return ultraschall.EventManager_RemoveAllEvents_Script(table.unpack({...}))
   end
   function ultraschall.EventManager_SetEvent(...)
     ultraschall.LM(9)
@@ -4179,4 +4180,4 @@ else
     return ultraschall.SoundBoard_PlayList_Previous(table.unpack({...}))
   end
 end
-collectgarbage("collect")
+--collectgarbage("collect")

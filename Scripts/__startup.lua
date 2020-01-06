@@ -136,7 +136,9 @@ reaper.SetToggleCommandState(sec, on_air_button_id, 0)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Routing Snapshots",0.0, true)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Export Assistant",0.0, true)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Color Picker",0.0, true)
-reaper.SetExtState("Ultraschall_Windows","Ultraschall 3",0.0, true)
+reaper.SetExtState("Ultraschall_Windows","Ultraschall Soundcheck",0.0, true)
+reaper.SetExtState("Ultraschall_Windows","Ultraschall Settings",0.0, true)
+
 
 
 --------------------------
