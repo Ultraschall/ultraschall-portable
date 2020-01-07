@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-# 
+#
 # Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-# 
+#
 ################################################################################
 ]]
 
@@ -32,12 +32,12 @@ end
 function runcommand(cmd)  -- run a command by its name
 
   start_id = reaper.NamedCommandLookup(cmd)
-  reaper.Main_OnCommand(start_id,0) 
+  reaper.Main_OnCommand(start_id,0)
 
 end
 
 function GetPath(str,sep)
- 
+
     return str:match("(.*"..sep..")")
 
 end
@@ -68,13 +68,13 @@ function clearSnapshot(slot)
 
 reaper.SetToggleCommandState(0, ButtonID[slot], 0)
  reaper.RefreshToolbar2(0, ButtonID[slot])
-  
+
   buildTable()
 
 end
 
 function switchButtons(slot)
-  
+
   ButtonID = {}
   ButtonID[1] = reaper.NamedCommandLookup("_Ultraschall_Snapshot_1") -- Preshow
   ButtonID[2] = reaper.NamedCommandLookup("_Ultraschall_Snapshot_2") -- Recording
@@ -85,7 +85,7 @@ function switchButtons(slot)
   reaper.SetToggleCommandState(0, ButtonID[2], 0)
   reaper.SetToggleCommandState(0, ButtonID[3], 0)
   reaper.SetToggleCommandState(0, ButtonID[4], 0)
-  reaper.SetToggleCommandState(0, ButtonID[slot], 1)  -- yes, this feels clumsy. Any beter ideas? 
+  reaper.SetToggleCommandState(0, ButtonID[slot], 1)  -- yes, this feels clumsy. Any beter ideas?
 
 end
 
@@ -105,17 +105,22 @@ function buildTable()
 
   img_adress = reaper.GetResourcePath().."/ColorThemes/Ultraschall_2/routing_snapshots.png"
 
+  Label = {"Preshow","Recording","Aftershow","Editing"}
+
+
   GUI.elms = {
-  
---     name          = element type          x      y    w    h     caption               ...other params...  
+
+--     name          = element type          x      y    w    h     caption               ...other params...
   label           = GUI.Lbl:new(          23,  50+y_offset,  "Use routing snapshots to manage different recording situations.", 0),
   label2       = GUI.Lbl:new(      23,  75+y_offset,  "These snapshots save and recall all information of the", 0),
-  label3          = GUI.Lbl:new(          55,  130+y_offset,  "Preshow\n\n\n\nRecording\n\n\n\nAftershow\n\n\n\nEditing", 0),
   routingbutton   = GUI.Btn:new(          375, 41, 130, 22,    " Routing Matrix", runcommand, 40251),
 
 }
 
   for i = 1,4 do
+
+    GUI.elms[i+1]      = GUI.Lbl:new(          55, 36+(i*64),        Label[i], 0)
+
 
     if reaper.GetProjExtState(0, "snapshots", i) == 0 then
       GUI.elms[i+5]    = GUI.Subpic:new(    20,  30+(i*64), 25, 25, 1, img_adress, 2, 3+((i-1)*30))
@@ -150,12 +155,12 @@ function Main(slot)
 
   retval, valOutNeedBig=reaper.GetProjExtState(0, "snapshots", slot)
   if retval == 1 then  -- there is already a routing snapshot, so just recall
-  
+
     setRoutingInfo(valOutNeedBig)
     switchButtons(slot)
-  
+
   else        -- there is no snapshot, so open the interface
-    
+
     local info = debug.getinfo(1,'S');
     script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
     GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
@@ -180,39 +185,34 @@ function Main(slot)
       ---- Main loop ----
 
     --[[
-      
+
       If you want to run a function during the update loop, use the variable GUI.func prior to
       starting GUI.Main() loop:
-      
+
       GUI.func = my_function
       GUI.freq = 5     <-- How often in seconds to run the function, so we can avoid clogging up the CPU.
                 - Will run once a second if no value is given.
                 - Integers only, 0 will run every time.
-      
+
       GUI.Init()
       GUI.Main()
-      
+
     ]]--
 
-  
+
   -- Open Snapshot-Editor-window only, when it hasn't been opened yet
-  if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already). 
+  if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).
                                                                                     -- If yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
   else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
-  
-  if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time. 
+
+  if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
                           -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
     GUI.Init()
     GUI.Main()
   end
-  
+
   end
 
-  function atexit()
-    reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
-  end
-  
-  reaper.atexit(atexit)
 end
 
 
@@ -226,7 +226,7 @@ end
 function GetTrackReceives(track) -- returns all lines starting with AUXRECV of TrackStateChunk in <track>
   local TrackStateChunk=""
   local TrackReceives=""
-  local child=""  
+  local child=""
   retval, TrackStateChunk= reaper.GetTrackStateChunk(track, "")
   for line in TrackStateChunk:gmatch("[^\r\n]+") do
     if string.sub(line,1,1)=="<" then
@@ -253,7 +253,7 @@ function GetTrackReceivesGUID(track) -- returns all lines starting with AUXRECV 
   local new_line=""
   local GUID=""
   local TrackReceives=GetTrackReceives(track)
-  
+
   for line in TrackReceives:gmatch("[^\r\n]+") do
     last=""
     new_line=""
@@ -314,7 +314,7 @@ function SetTrackReceivesGUID(track, auxrecvGUID_list) -- write AUXRECV lines wi
   local ignore=0
   local new_line=""
 
-  for tracknum=0,reaper.GetNumTracks()-1 do 
+  for tracknum=0,reaper.GetNumTracks()-1 do
     GUID_table[tracknum]=reaper.GetTrackGUID(reaper.GetTrack(0,tracknum))
   end
 
@@ -435,7 +435,7 @@ end
 
 function setHardwareSends(track, HardwareSends) -- write lines with HWOUT to TrackStateChunk, replacing the old ones.
   local retval=0
-  local TrackStateChunk="" 
+  local TrackStateChunk=""
   local new_TrackStateChunk=""
   local line=""
   local insert=""
@@ -479,7 +479,7 @@ function getRoutingInfo() -- returns all AUXRECV, HWOUT, VOLPAN and MAINSEND lin
     end
     MainSends=getMainSends(track)
     TrackReceivesGUID=GetTrackReceivesGUID(track)
-    HardwareSends=getHardwareSends(track)    
+    HardwareSends=getHardwareSends(track)
     if MainSends~="" then RoutingInfo=RoutingInfo.."\n"..MainSends end
     if HardwareSends~="" then RoutingInfo=RoutingInfo.."\n"..HardwareSends end
     if TrackReceivesGUID~="" then RoutingInfo=RoutingInfo.."\n"..TrackReceivesGUID end
@@ -496,7 +496,7 @@ end
 
 function setRoutingInfo(RoutingInfo) -- write all AUXRECV, HWOUT, VOLPAN and MAINSEND lines to all tracks (including master)
   if RoutingInfo==NIL then return false end
-  RoutingInfo=RoutingInfo.."\n{end}" -- add fake GUID to the end, to write the last block 
+  RoutingInfo=RoutingInfo.."\n{end}" -- add fake GUID to the end, to write the last block
   local GUID=""
   local auxrecvGUID_list=""
   local MainSends=""
@@ -550,7 +550,7 @@ function setRoutingInfo(RoutingInfo) -- write all AUXRECV, HWOUT, VOLPAN and MAI
         end
       end
     end
-  end  
+  end
 end
 
 function GUIDToTrack(GUID) -- returns the track with matching GUID, or false.
@@ -612,4 +612,3 @@ function ClearHardwareSends(track) -- remove all HWOUT enries inside <track> of 
   end
   return reaper.SetTrackStateChunk(track, new_TrackStateChunk)
 end
-
