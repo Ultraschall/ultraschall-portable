@@ -1,17 +1,17 @@
 ;################################################################################
-;# 
+;#
 ;# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
-;# 
+;#
 ;# Permission is hereby granted, free of charge, to any person obtaining a copy
 ;# of this software and associated documentation files (the "Software"), to deal
 ;# in the Software without restriction, including without limitation the rights
 ;# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 ;# copies of the Software, and to permit persons to whom the Software is
 ;# furnished to do so, subject to the following conditions:
-;# 
+;#
 ;# The above copyright notice and this permission notice shall be included in
 ;# all copies or substantial portions of the Software.
-;# 
+;#
 ;# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 ;# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +19,7 @@
 ;# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 ;# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;# THE SOFTWARE.
-;# 
+;#
 ;################################################################################
 
 ;
@@ -28,7 +28,7 @@
 
 	;use_png ;not necessary
 	;version 5 ;Reaper 5 theme ;enables use of png automatically but doesn't use the ColorPicker-Track-colors for items, only the item-bg-images themselves!
-use_pngs 1 
+use_pngs 1
 		;tcp_showborders 0 ;deprecated
 		;mcp_showborders 0 ;deprecated
 tcp_vupeakwidth 2 ;width of the "current peak"-indicatorline in track-control-panel's-VU
@@ -69,52 +69,12 @@ set tcp.folder h<32 [0] [382 86 18 14 1 1 1 1] ; Folder-Cycle-Button position
 
 front mcp.pan.label tcp.io tcp.fxin ;?
 
-	;set tcp_yanchor w<360 w<211 h<117 h<95 h<73 h<51 [0 41] [0 30] [0 19] [0 8] trackpanmode>=4 [0 -3] [0 8] h<73 h<51 [0 41] [0 30] [0 19] h<73 h<51 [0 41] [0 30] trackpanmode>=4 [0 19] [0 30] ;?
-	;set tcp_yanchor ?tcp_fxparms w<211 h>=125 [0 8] . h>=90 [0 8] . ;?
-	;set tcp.meter + tcp_yanchor w<211 h<51 [0] [342 26 29 9 1 y_align 1 y_align] h>4 [286 4 42 9 1 y_align 1 y_align] [286 -42 42 4 1 0 1 0] ;?
-	;set tcp.meter.readout.color h>23 [255 255 255 140 255 255 255 200] [0 0 0 0 0 0 0 0] ;?
-	;set tcp.meter.vu.div [1] ;?
-	;set tcp.fx + tcp_yanchor w<211 h<73 [0] [338 44 24 18 1 y_align 1 y_align] h<51 [0] [338 22 24 18 1 y_align 1 y_align] ;?
-	;set tcp.fxbyp tcp.fx{x}>0 + [tcp.fx tcp.fx 13 18 1 y_align 1 y_align] [tcp.fx{w}] [0] ;?
-	;set tcp.recarm.fullmargin + tcp_yanchor [7 0 18 18 0 y_align 0 y_align] ;?
-	;set tcp.recarm + reverse_margin tcp.recarm.fullmargin ;?
-	;set tcp_label_fullmargin + tcp_yanchor w<211 [25 0 285 17 0 y_align 1 y_align] w<270 [25 0 229 17 0 y_align 1 y_align] w<360 [25 0 193 17 0 y_align 1 y_align] [25 0 75 17 0 y_align 0.5 y_align] ;?
-	;set tcp.label + + reverse_margin tcp_label_fullmargin margin_to_width ;?
-	;set tcp.label.color [210 10 10] ;?
-
-;	set tcp.io + tcp_yanchor w<211 [310 0 22 18 1 y_align 1 y_align] w<270 [254 0 22 18 1 y_align 1 y_align] w<360 [218 0 58 18 1 y_align 1 y_align] [100 0 58 18 0.5 y_align 0.5 y_align] ; unused additional definition below
-;	set tcp.mute + tcp_yanchor [338 0 17 18 1 y_align 1 y_align] ; Kann raus
-;	set tcp.solo + tcp_yanchor [358 0 17 18 1 y_align 1 y_align] ; Kann raus
-;	set tcp.volume + tcp_yanchor w<211 h<51 [0] [7 23 322 16 0 y_align 1 y_align] w<270 h<51 [0] [7 23 266 16 0 y_align 1 y_align] w<360 h<51 [0] [7 23 241 16 0 y_align 1 y_align] [164 0 84 18 0.5 y_align 1 y_align] ;Kann raus
-;	set tcp.volume.label tcp.volume{x}>0 + [tcp.volume{w}] w<211 [tcp.volume tcp.volume 3 tcp.volume tcp.volume{rs} y_align tcp.volume{rs} y_align] w<270 [tcp.volume tcp.volume 3 tcp.volume tcp.volume{rs} y_align tcp.volume{rs} y_align] [tcp.volume tcp.volume 28 tcp.volume tcp.volume{rs} y_align tcp.volume{rs} y_align] ;Kann raus
-;	set tcp.volume.label.color [215 215 215] ;Kann raus
-;	set tcp.volume.label.margin [1 1 3 0 1] ;Kann raus
-;	set tcp.phase + tcp_yanchor w<211 h<95 [0] [63 66 15 16 0 y_align 0 y_align] w<270 h<73 [0] [28 45 15 16 0 y_align 0 y_align] w<360 h<73 [0] [55 45 15 16 0 y_align 0 y_align] h<51 [0] [55 23 15 16 0 y_align 0 y_align] ;Kann raus
-;	set tcp.recmon + tcp_yanchor w<211 h<95 [0] [338 66 15 16 1 y_align 1 y_align] w<360 h<73 [0] [338 45 15 16 1 y_align 1 y_align] h<51 [0] [239 23 15 16 1 y_align 1 y_align] ;Kann raus
-;	set tcp.recmode + tcp_yanchor w<211 h<95 [0] [352 66 23 16 1 y_align 1 y_align] w<360 h<73 [0] [352 45 23 16 1 y_align 1 y_align] h<51 [0] [253 23 23 16 1 y_align 1 y_align] ;Kann raus
-;	set tcp.recinput + tcp_yanchor w<211 h<73 [0] [28 45 304 16 0 y_align 1 y_align] w<270 h<73 [0] [49 45 227 16 0 y_align 1 y_align] w<360 h<73 [0] [76 45 200 16 0 y_align 1 y_align] h<51 [0] [76 23 157 16 0 y_align 1 y_align] ;Kann raus
-;	set tcp.recinput.color [221 224 224] ;Kann raus
-;	set tcp.recinput.margin [4 0 16 0] ;Kann raus
-;	set tcp.env + tcp_yanchor w<270 h<73 [0] [7 45 15 16 0 y_align 0 y_align] w<360 h<73 [0] [7 45 42 16 0 y_align 0 y_align] h<51 [0] [7 23 42 16 0 y_align 0 y_align] ;Kann raus
-;	set tcp.fxin ?recarm tcp.io{w}==58 + tcp_yanchor w<211 [0] w<270 [254 0 36 18 1 y_align 1 y_align] w<360 [218 0 36 18 1 y_align 1 y_align] [100 0 36 18 0.5 y_align 0.5 y_align] [0] [0] ; Kann raus
-;	set tcp.io ?recarm tcp.io{w}==58 + [36] [tcp.io tcp.io 22 18 tcp.io tcp.io tcp.io tcp.io] ; Kann raus
-;	set tcp.pan + tcp_yanchor w<211 h<95 [0] [6 65 18 18 0 y_align 0 y_align] h<51 [0] [281 22 18 18 1 y_align 1 y_align] ;Kann raus
-;	set tcp.pan.color [242 42 42 191 255 0 0 0] ; Kann raus
-;	set tcp.pan.label tcp.pan{x}>0 + [tcp.pan{w} 1] [tcp.pan tcp.pan 32 16 tcp.pan y_align tcp.pan y_align] [0] ;Kann raus
-;	set tcp.pan.label.color [240 243 243] ;Kann raus
-;	set tcp.pan.label.margin [0 0 3 0 1] ;Kann raus
-	;set tcp.width trackpanmode>=4 + tcp_yanchor w<211 h<117 [0] [6 86 18 18 0 y_align 0 y_align]  h<73 [0] [281 44 18 18 1 y_align 1 y_align] [0] ;?
-	;set tcp.width.color [42 42 42 225 0 0 0 255] ;? vermutlich kann raus
-	;set tcp.width.label trackpanmode>=4 tcp.width{x}>0 + [tcp.width{w} 1] [tcp.width tcp.width 32 16 tcp.width y_align tcp.width y_align] [0] [0] ;? vermutlich kann raus
-	;set tcp.width.label.color [240 243 243] ;? vermutlich kann raus
-	;set tcp.width.label.margin [0 0 3 0 1] ;? vermutlich kann raus
-	;set tcp.fxparm w<360 w<211 trackpanmode>=4 [7 118 368 -24 0 0 1 1] [7 97 368 -3 0 0 1 1] [7 76 368 18 0 0 1 1] trackpanmode>=4 [7 76 368 18 0 0 1 1] [7 54 368 40 0 0 1 1] ;?
-
-	;set tcp.toosmall [100 10 10 10 0 0 0 0] ;?
 
 
 ;Ultraschall Layout for the TCP, using the TCP-theme graphics from the theme-folder "black-tcp"
-Layout "Ultraschall 2" "black-tcp"
+
+Layout "Ultraschall 2 TCP" "black-tcp"
+
 ; The following setup the TCP-elements used in the Ultraschall-Theme
 
 	set tcp_yanchor [0 40] ;! top position-anchor of all tcp-elements
@@ -131,7 +91,7 @@ Layout "Ultraschall 2" "black-tcp"
 	set tcp.trackidx [382 41 18 18 1 0.5 1 0.5] ;! Track number position
 	set tcp.trackidx.margin [0 0 0 0 0.5] ;! Track number transform
 	set tcp.trackidx.color ?recarm [220 26 0] [155 155 155] ;! if Rec is armed, draw trackIDx in color 260 26 0, else 155 155 155
-	
+
 ; The following Track-elements are set to invisible. Only normal tracks, not the master track!
 
 	set tcp.volume ?1 [0]
@@ -150,10 +110,71 @@ Layout "Ultraschall 2" "black-tcp"
 	set tcp.recmode ?1 [1]
 	set tcp.fxin ?1 [0]
 
+; ultraschall_____________________________________________________________________________________________________
+
+EndLayout ; end of "Ultraschall 2"-specific-TCP-layout
+
+
+Layout "Ultraschall 2 TCP Retina" "200"
+
+set scale 2
+
+set tcp.size [418 100 160] ; !
+set tcp.foldercomp [382 0 36 38 1 0 1 0] ; Folder-Cycle-Button
+set tcp.folder h<32 [0] [382 65 38 28 1 1 1 1] ; Folder-Cycle-Button position
+set tcp.margin +:maxfolderdepth:1 [13 0 0 0] ; ! Track Buttons general - position incl folder-tracks
+set tcp.margin +:folderdepth:1 [-26 0 0 0] ; ! Track Buttons only in folders - position
+
+
+; The following setup the TCP-elements used in the Ultraschall-Theme
+
+	set tcp_yanchor [0 30] ;! top position-anchor of all tcp-elements
+	set tcp.recarm.fullmargin + tcp_yanchor [14 -2 40 40 0 y_align 0 y_align] ;! More RecArm Button placement
+	set tcp.recarm + reverse_margin tcp.recarm.fullmargin ;! More RecArm Button placement
+	set tcp_label_fullmargin + tcp_yanchor w<211 [52 0 349 36 0 y_align 1 y_align] [54 0 50 36 0 y_align 1 y_align] ;! Track-label placement
+	set tcp.label + + reverse_margin tcp_label_fullmargin margin_to_width ;! More Track-label placement
+	set tcp.label.font [6]
+	set tcp.meter + tcp_yanchor w<211 [0]  [108 4 120 28 1 y_align 1 y_align] ;! VU-Meter placement
+	set tcp.label.color ?1 [180 180 180 100 250 250 250 200] ;! Color of Track-labels
+	set tcp.mute + tcp_yanchor w<211 [0] [255 0 48 38 1 y_align 1 y_align] ;! Mute Button Placement
+	set tcp.solo + tcp_yanchor w<211 [0] [314 0 48 38 1 y_align 1 y_align] ;! Solo Button Placement
+	set tcp.label.margin [6 6 12 6] ;! Trackname-Label position
+	set tcp.trackidx [382 30 36 36 1 0.5 1 0.5] ;! Track number position
+	set tcp.trackidx.font [6]
+	set tcp.trackidx.margin [0 0 0 0 0.5] ;! Track number transform
+	set tcp.trackidx.color ?recarm [220 26 0] [155 155 155] ;! if Rec is armed, draw trackIDx in color 260 26 0, else 155 155 155
+
+; The following Track-elements are set to invisible. Only normal tracks, not the master track!
+
+	; set tcp.label ?1 [0]
+	set tcp.meter.readout.color [0] ;! No text in Vu-Meter
+	set tcp.volume ?1 [0]
+	set tcp.recinput ?1 [0]
+	set tcp.volume.label ?1 [0]
+	set tcp.io ?1 [0]
+	set tcp.phase ?1 [0]
+	set tcp.pan ?1 [0]
+	set tcp.pan.label ?1 [0]
+	set tcp.width ?1 [0]
+	set tcp.width.label ?1 [0]
+	set tcp.env ?1 [0]
+	set tcp.recmon ?1 [0]
+	set tcp.fx ?1 [0]
+	set tcp.fxbyp ?1 [0]
+	set tcp.recmode ?1 [1]
+	set tcp.fxin ?1 [0]
 
 ; ultraschall_____________________________________________________________________________________________________
 
-EndLayout ; end of "Ultraschall 2"-specific-TCP-layout 
+EndLayout ; end of "Ultraschall 2 TCP Retina"-specific-TCP-layout
+
+
+
+
+
+
+
+
 
 
 ; The following are global-settings for the Master Track in the TCP
@@ -223,7 +244,7 @@ clear master.mcp.*
 	;front master.mcp.volume.label ;?
 
 
-	;set master.mcp.extmixer [0] ;? eventuell kann raus, da von Ultraschall 2-Layout auch geändert
+	;set master.mcp.extmixer [0] ;? eventuell kann raus, da von Ultraschall 2-Layout auch geï¿½ndert
 
 	;set master.mcp.fx mcp.fx
 	;set master.mcp.fxbyp mcp.fxbyp
@@ -270,15 +291,15 @@ Layout "Ultraschall 2" "ultraschall_master"
 ;basic settings
 	set master.mcp.extmixer.mode h<1500 [1] [0] ;! Master Track in MCP as extended mixer when higher than 500px
 	set master.mcp.size [72 319] ;!size of the Master Track in MCP
-	
+
 ;Track Labels settings
 	set master.mcp.label [0 300 70 18 0 1 0 1]
 	set master.mcp.label.margin [2 0 2 0 0.5]
 	set master.mcp.label.color [160 160 160]
 
 ;General Buttons settings
-	
-	set master.mcp.mute + big_space h<med{x} [0] [9 28 24 19 0 0 0 0]	
+
+	set master.mcp.mute + big_space h<med{x} [0] [9 28 24 19 0 0 0 0]
 	set master.mcp.solo + big_space h<med{x} [0] [38 28 24 19 0 0 0 0]
 	set master.mcp.io h<big{x} [0] [17 50 39 15 0 0 0 0]
 	set master.mcp.env h<big{x} [0] [27 6 17 14 0 0 0 0]
@@ -317,7 +338,7 @@ EndLayout ; end of "Ultraschall 2" settings for Master-track in MCP
 
 
 ;Ultraschall-specific Mixer settings for Mixer Control Panel(MCP); all tracks EXCEPT master
-Layout "Ultraschall 2" "ultraschall" 
+Layout "Ultraschall 2" "ultraschall"
 
 	clear mcp.* ;!
 	set mcp.size [64 319] ;!
@@ -325,9 +346,9 @@ Layout "Ultraschall 2" "ultraschall"
 	front mcp.volume.label ;?
 	set med [300] ;!
 	set big [500] ;!
-	set big_space h<big{x} [0 0] [0 56] 
+	set big_space h<big{x} [0 0] [0 56]
 	set mcp_bottom_anchor h<med{x} [7 273] [7 43]
-	
+
 	;set mcp.folder folderstate<0 [73 60 13 11 0 0 1 0] [73 60 13 11 0 0 1 0] ;?
 	;set mcp.folder [73 60 13 11 0 1 1 0] ;?
 
@@ -352,7 +373,7 @@ Layout "Ultraschall 2" "ultraschall"
 	set mcp.fxbyp  + big_space h<med{x} [34 4 24 19 0 0 0 0] [34 76 24 19 0 0 0 0]
 	set mcp.env h<big{x} [0] [11 113 17 14 0 0 0 0]
 
-;Volume Fader/Label settings	
+;Volume Fader/Label settings
 	set mcp.volume  h<med{x} [7 20 19 253 0 0 0 1] h<big{x} [7 170 19 100 0 0 0 1] [7 220 19 50 0 0 0 1]
 	set mcp.volume.label [27 271 32 22 0 1 0 1]
 	set mcp.volume.label.color [121 121 121]
@@ -376,7 +397,7 @@ Layout "Ultraschall 2" "ultraschall"
 	set mcp.recmode + mcp_bottom_anchor h<med{x} [0] [28 16 23 22 0 1 0 1]
 	set mcp.recmode ?1 [1]
 
-;Extended Mixer settings	
+;Extended Mixer settings
 	set mcp.extmixer.mode [1]
 	set mcp.extmixer [0]
 
@@ -393,21 +414,9 @@ EndLayout ; end of "Ultraschall 2" settings for tracks(except mastertrack) in Mi
 
 
 
-
-
 ;
 ; >> TRANSPORT - Settings
 ;
-
-	;clear trans.*
-
-	;front set trans.status set trans.rate
-
-	;set trans.size [1041 85]
-	;set trans.size.minmax [540 40 2048 200]
-	;set trans.size.dockedheight [43]
-	;set trans.margin [230 2 2 2]
-
 
 
 Layout "Ultraschall 2 Trans"
@@ -416,57 +425,40 @@ Layout "Ultraschall 2 Trans"
 
 clear trans.*
 
+set scale 1
+
 front trans.rate.fader
 
 ;Transport settings
-set trans_offset [50]
-set trans.size [1041 85]
-set trans.size.minmax [540 40 2048 200]
-set trans.size.dockedheight [43]
-set trans.margin [230 2 2 2]
+set trans_offset * scale [50]
+set trans.size * scale [1041 85]
+set trans.size.minmax * scale [540 40 2048 200]
+set trans.size.dockedheight * scale [43]
+set trans.margin * scale [230 2 2 2]
 
-	;set trans.bpm.tap ?1 [0]
-	;set trans.bpm.edit ?1 [0]
-	;set trans.automode ?1 [0]
-	;set trans.curtimesig ?1 [0]
-	;set trans.repeat ?1 [0]
-
-;Selection-display off
-	;set trans.sel  [752 10 180 20 ] 
-	;set trans.sel.margin [5 0 0 0]
-	;set trans.sel.color [230 230 230]
 set trans.sel ?1 [0]
 
 ;Time/Beats display
-set trans.status + trans_offset [394 5 244 31 0.5 0 0.5 0]
-set trans.status.color  ?recarm [227 115 115]
-set trans.status.margin [-60 3 30 4]
-set trans.status.font [8]
+set trans.status  * scale + trans_offset [394 5 244 31 0.5 0 0.5 0]
+set trans.status.color  ?recarm * scale [227 115 115]
+set trans.status.margin * scale [-60 3 30 4]
+set trans.status.font * scale [8]
 
 ;Rec/Play/Button/Rew/Ffwd/etc-Buttons
-set trans.rew + trans_offset [150 5 36 36 0.5 0 0.5 0]
-set trans.stop + trans_offset [185 5 36 36 0.5 0 0.5 0]
-set trans.play + trans_offset [220 5 36 36 0.5 0 0.5 0]
-set trans.pause + trans_offset [255 5 36 36 0.5 0 0.5 0]
-set trans.fwd + trans_offset [290 5 36 36 0.5 0 0.5 0]
-set trans.repeat + trans_offset [325 5 36 36 0.5 0 0.5 0]
-set trans.rec + trans_offset [360 5 36 36 0.5 0 0.5 0]
-
-	; set trans.rate ?trans_flags&2 + + + + + [trans.bpm.tap{x}] [trans.bpm.tap{w}] [trans.curtimesig{w}] [trans_border{x}] ?trans_flags&4 [trans_border{x}] [0] h>84 [0 1 200 17 0 0 0.1 0] w<300 [0 1 60 17 0 0 0.5 0] w>1400 [0 1 205 17 0 0 0 0] [600 1 100 17 0 0 0.5 0] [0]
-	; set trans.rate.fader  + trans_offset ?trans_flags&2 w<300 h<85 [trans.rate 19 16 16 0 0 0 0] [trans.rate 18 trans.rate 17 0 0 trans.rate 0] [trans.rate 18 trans.rate 17 0 0 trans.rate 0] [0]
+set trans.rew * scale + trans_offset [150 5 36 36 0.5 0 0.5 0]
+set trans.stop * scale + trans_offset [185 5 36 36 0.5 0 0.5 0]
+set trans.play * scale + trans_offset [220 5 36 36 0.5 0 0.5 0]
+set trans.pause * scale + trans_offset [255 5 36 36 0.5 0 0.5 0]
+set trans.fwd * scale + trans_offset [290 5 36 36 0.5 0 0.5 0]
+set trans.repeat * scale + trans_offset [325 5 36 36 0.5 0 0.5 0]
+set trans.rec * scale + trans_offset [360 5 36 36 0.5 0 0.5 0]
 
 ;Playrate Fader settings
-set trans.rate w<600 [0] ?trans_flags&2 [889 13 64 13 1 0 1 0]
-set trans.rate.margin [6 1 5 1]
+set trans.rate w<600 [0] ?trans_flags&2 * scale [889 13 64 13 1 0 1 0]
+set trans.rate.margin * scale [6 1 5 1]
 set trans.rate.color [150 150 150 100 155 155 155 1]
-set trans.rate.font [8]
-set trans.rate.fader w<600 [0] ?trans_flags&2 [949 9 80 18 1 0 1 0]
-
-	; set trans.rate [890 4 100 19 1 0 1 0]
-	; set trans.rate.margin [10]
-	; set trans.rate.fader [trans.rate 23 trans.rate 17 trans.rate 0 trans.rate 0]
-	; set trans.rate.color [203 0 0 0 200 200 20 250]
-	; set trans.rate.fader.color [203 0 0]
+set trans.rate.font * scale [8]
+set trans.rate.fader w<600 [0] ?trans_flags&2 * scale [949 9 80 18 1 0 1 0]
 
 ; ultraschall _______________
 
@@ -474,9 +466,55 @@ EndLayout ; end of "Ultraschall 2 Trans"
 
 
 
+Layout "Ultraschall 2 Trans Retina" "200"
+
+; ultraschall _______________
+
+clear trans.*
+
+set scale 2
+
+front trans.rate.fader
+
+;Transport settings
+set trans_offset [63]
+set trans.size * scale [1041 85]
+set trans.size.minmax * scale [540 40 2048 200]
+set trans.size.dockedheight * scale [43]
+set trans.margin * scale [230 2 2 2]
+
+set trans.sel ?1 [0]
+
+;Time/Beats display
+set trans.status  * scale + trans_offset [394 5 244 31 0.25 0 0.25 0]
+set trans.status.color  ?recarm * scale [227 115 115]
+set trans.status.margin * scale [-60 3 30 4]
+set trans.status.font [8]
+
+;Rec/Play/Button/Rew/Ffwd/etc-Buttons
+set trans.rew * scale + trans_offset [150 5 36 36 0.25 0 0.25 0]
+set trans.stop * scale + trans_offset [185 5 36 36 0.25 0 0.25 0]
+set trans.play * scale + trans_offset [220 5 36 36 0.25 0 0.25 0]
+set trans.pause * scale + trans_offset [255 5 36 36 0.25 0 0.25 0]
+set trans.fwd * scale + trans_offset [290 5 36 36 0.25 0 0.25 0]
+set trans.repeat * scale + trans_offset [325 5 36 36 0.25 0 0.25 0]
+set trans.rec * scale + trans_offset [360 5 36 36 0.25 0 0.25 0]
+
+;Playrate Fader settings
+set trans.rate w<600 [0] ?trans_flags&2 * scale [889 13 64 13 0.5 0 0.5 0]
+set trans.rate.margin * scale [6 1 5 1]
+set trans.rate.color [150 150 150 100 155 155 155 1]
+set trans.rate.font [7]
+set trans.rate.fader w<600 [0] ?trans_flags&2 * scale [949 9 80 18 0.5 0 0.5 0]
+
+EndLayout ; end of "Ultraschall 2 Trans Retina"
 
 
+;			requested	scale >	use
 
+layout_dpi_translate	'Ultraschall 2 Trans'		1.74	'Ultraschall 2 Trans Retina'
+layout_dpi_translate	'Ultraschall 2 TCP'		1.74	'Ultraschall 2 TCP Retina'
+misc_dpi_translate 174 200
 
 
 ;Ultraschall layout for Notes; using theme-images from image-folder "black-tcp"
@@ -488,4 +526,3 @@ set tcp.size [400 100 160]
 set tcp_label_fullmargin + tcp_yanchor w<211 [25 0 307 17 0 y_align 1 y_align] w<360 [25 0 251 17 0 y_align 1 y_align] [25 0 78 17 0 y_align 0.5 y_align]
 set tcp.label + + reverse_margin tcp_label_fullmargin
 EndLayout ; end of "Ultraschall 2 Notes"
-
