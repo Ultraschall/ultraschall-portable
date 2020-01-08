@@ -73,7 +73,7 @@ front mcp.pan.label tcp.io tcp.fxin ;?
 
 ;Ultraschall Layout for the TCP, using the TCP-theme graphics from the theme-folder "black-tcp"
 
-Layout "Ultraschall 2 TCP" "black-tcp"
+Layout "Ultraschall 2" "black-tcp"
 
 ; The following setup the TCP-elements used in the Ultraschall-Theme
 
@@ -115,7 +115,7 @@ Layout "Ultraschall 2 TCP" "black-tcp"
 EndLayout ; end of "Ultraschall 2"-specific-TCP-layout
 
 
-Layout "Ultraschall 2 TCP Retina" "200"
+Layout "Ultraschall 2 Retina" "200"
 
 set scale 2
 
@@ -513,7 +513,7 @@ EndLayout ; end of "Ultraschall 2 Trans Retina"
 ;			requested	scale >	use
 
 layout_dpi_translate	'Ultraschall 2 Trans'		1.74	'Ultraschall 2 Trans Retina'
-layout_dpi_translate	'Ultraschall 2 TCP'		1.74	'Ultraschall 2 TCP Retina'
+layout_dpi_translate	'Ultraschall 2'		1.74	'Ultraschall 2 Retina'
 misc_dpi_translate 174 200
 
 
