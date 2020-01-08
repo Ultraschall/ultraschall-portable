@@ -50,6 +50,13 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/ultraschall_ultraclock_wheel_unclicked.png") -- the zahnradbutton itself
+zahnradbutton_x, zahnradbutton_y=gfx.getimgdim(1000) -- dimensions of the zahnradbutton
+zahnradscale=0.4      -- drawing-scale of the zahnradbutton
+zahnradbutton_posx=10 -- x-position of the zahnradbutton
+zahnradbutton_posy=1  -- y-position of the zahnradbutton
+
+
 function copy(obj, seen) 
   --copy an array
   if type(obj) ~= 'table' then return obj end
@@ -159,14 +166,14 @@ function InitGFX()
   reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
 end
 
-function showmenu()
+function showmenu(trigger)
   local menu_string=""
   local i=1
   for i=1,#uc_menu do
     if uc_menu[i].checked==true then menu_string=menu_string.."!" end
     menu_string=menu_string..uc_menu[i].text.."|"
   end
-  gfx.x, gfx.y= gfx.mouse_x, gfx.mouse_y
+  if trigger==nil then gfx.x, gfx.y= gfx.mouse_x, gfx.mouse_y else gfx.x=zahnradbutton_posx+10 gfx.y=zahnradbutton_posx+10 end
   local ret=gfx.showmenu(menu_string)
   local ret2=ret
   
@@ -241,6 +248,9 @@ function formattimestr(pos)
 end
 
 function drawClock()
+  gfx.x=zahnradbutton_posx
+  gfx.y=zahnradbutton_posy
+  gfx.blit(zahnradbutton_unclicked, zahnradscale, 0)
   if uc_menu[3].checked then -- get Timecode/Status
     playstate=reaper.GetPlayState()
     if reaper.GetSetRepeat(-1)==1 then repeat_txt=" (REPEAT)" else repeat_txt="" end
@@ -373,8 +383,16 @@ end
 function MainLoop()
   if reaper.time_precise() > lasttime+refresh or gfx.w~=lastw or gfx.h~=lasth then drawClock()  end
   
-  if gfx.mouse_cap & 2 ==2 then --right mouseclick
-    local ret=showmenu()
+  if gfx.mouse_cap & 2 ==2 then
+    Triggered=true
+  elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_x>=zahnradbutton_posx and gfx.mouse_x<=zahnradbutton_posx+(zahnradbutton_x*zahnradscale) and gfx.mouse_y>=zahnradbutton_posy and gfx.mouse_y<zahnradbutton_posy+(zahnradbutton_y*zahnradscale) then --right mouseclick
+    Triggered=true
+    menuposition=1
+  end
+  if Triggered==true then
+    Triggered=nil
+    local ret=showmenu(menuposition)
+    menuposition=nil
 
     if ret==8 then -- /undock
       dock_state=gfx.dock(-1)
