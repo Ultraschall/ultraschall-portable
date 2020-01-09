@@ -50,9 +50,15 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/ultraschall_ultraclock_wheel_unclicked.png") -- the zahnradbutton itself
+if retina==true then
+  zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_Retina.png") -- the zahnradbutton itself
+  zahnradbutton_clicked=gfx.loadimg(1001, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_active_Retina.png") -- the zahnradbutton itself
+else
+  zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings.png") -- the zahnradbutton itself
+  zahnradbutton_clicked=gfx.loadimg(1001, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_active.png") -- the zahnradbutton itself
+end
 zahnradbutton_x, zahnradbutton_y=gfx.getimgdim(1000) -- dimensions of the zahnradbutton
-zahnradscale=0.4      -- drawing-scale of the zahnradbutton
+zahnradscale=.9      -- drawing-scale of the zahnradbutton
 zahnradbutton_posx=10 -- x-position of the zahnradbutton
 zahnradbutton_posy=1  -- y-position of the zahnradbutton
 
@@ -382,15 +388,8 @@ end
 
 function MainLoop()
   if reaper.time_precise() > lasttime+refresh or gfx.w~=lastw or gfx.h~=lasth then drawClock()  end
-  
-  if gfx.mouse_cap & 2 ==2 then
-    Triggered=true
-  elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_x>=zahnradbutton_posx and gfx.mouse_x<=zahnradbutton_posx+(zahnradbutton_x*zahnradscale) and gfx.mouse_y>=zahnradbutton_posy and gfx.mouse_y<zahnradbutton_posy+(zahnradbutton_y*zahnradscale) then --right mouseclick
-    Triggered=true
-    menuposition=1
-  end
+
   if Triggered==true then
-    Triggered=nil
     local ret=showmenu(menuposition)
     menuposition=nil
 
@@ -404,6 +403,20 @@ function MainLoop()
 
     AAA2=ultraschall.SetUSExternalState("ultraschall_clock", "docked", is_docked)  --save state docked    
     ultraschall.ShowErrorMessagesInReascriptConsole()
+  end
+  
+  if Triggered==nil then
+    if gfx.mouse_cap & 2 == 2 then
+      Triggered=true
+    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_x>=zahnradbutton_posx and gfx.mouse_x<=zahnradbutton_posx+(zahnradbutton_x*zahnradscale) and gfx.mouse_y>=zahnradbutton_posy and gfx.mouse_y<zahnradbutton_posy+(zahnradbutton_y*zahnradscale) then --right mouseclick
+      Triggered=true
+      menuposition=1
+      gfx.x=zahnradbutton_posx
+      gfx.y=zahnradbutton_posy
+      gfx.blit(zahnradbutton_clicked, zahnradscale, 0)
+    end
+  else
+    Triggered=nil
   end
   
   view = ultraschall.GetUSExternalState("ultraschall_gui", "view") -- get the actual view
