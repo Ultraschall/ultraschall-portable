@@ -47,10 +47,11 @@
 --        improvement compared to earlier version, due new features in Reaper's API
 -- * various bugfixes
  
+gfx.ext_retina=1
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-if retina==true then
+if gfx.ext_retina==1 then
   zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_Retina.png") -- the zahnradbutton itself
   zahnradbutton_clicked=gfx.loadimg(1001, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_active_Retina.png") -- the zahnradbutton itself
 else
