@@ -25,6 +25,9 @@
 ]]
  
 -- Ultraschall 4.0 - Changelog - Meo Mespotine 
+-- * Retina/HiDPI support(requires Ultraschall 4.0 Theme installed or a theme with a line:
+--    "layout_dpi_translate  'Ultraschall 2 TCP'    1.74  'Ultraschall 2 TCP Retina'"
+--   included, so the clock automatically knows, if your device is Retina/HiDPI-ready.)
 -- * Date moved to the right
 -- * WriteCenteredText() renamed to WriteAlignedText() has now more options that align text to right or left as well
 --    Parameters:
@@ -45,10 +48,36 @@
 -- * Show Time-selection start/end/length added
 -- * when Clock has keyboard-focus, set keyboard-context to Arrange View, so keystrokes work
 --        improvement compared to earlier version, due new features in Reaper's API
+-- * includes now a visible settings-button which shows the same menu, as rightclick, but gives a better clue, THAT there are settings
 -- * various bugfixes
- 
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+-- Retina Management
+-- Get DPI
+retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
+
+if dpi=="512" then
+  gfx.ext_retina=1
+else
+  gfx.ext_retina=0
+end
+
+
+-- Choose the right graphics and scaling and position of the settings-button
+if gfx.ext_retina==1 then
+  zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_Retina.png") -- the zahnradbutton itself
+  zahnradbutton_clicked=gfx.loadimg(1001, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_active_Retina.png") -- the zahnradbutton itself
+else
+  zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings.png") -- the zahnradbutton itself
+  zahnradbutton_clicked=gfx.loadimg(1001, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_active.png") -- the zahnradbutton itself
+end
+
+zahnradbutton_x, zahnradbutton_y=gfx.getimgdim(1000) -- get the dimensions of the zahnradbutton
+zahnradscale=.9       -- drawing-scale of the zahnradbutton
+zahnradbutton_posx=10 -- x-position of the zahnradbutton
+zahnradbutton_posy=1  -- y-position of the zahnradbutton
+
 
 function copy(obj, seen) 
   --copy an array
@@ -159,14 +188,14 @@ function InitGFX()
   reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
 end
 
-function showmenu()
+function showmenu(trigger)
   local menu_string=""
   local i=1
   for i=1,#uc_menu do
     if uc_menu[i].checked==true then menu_string=menu_string.."!" end
     menu_string=menu_string..uc_menu[i].text.."|"
   end
-  gfx.x, gfx.y= gfx.mouse_x, gfx.mouse_y
+  if trigger==nil then gfx.x, gfx.y= gfx.mouse_x, gfx.mouse_y else gfx.x=zahnradbutton_posx+10 gfx.y=zahnradbutton_posx+10 end
   local ret=gfx.showmenu(menu_string)
   local ret2=ret
   
@@ -241,6 +270,9 @@ function formattimestr(pos)
 end
 
 function drawClock()
+  gfx.x=zahnradbutton_posx
+  gfx.y=zahnradbutton_posy
+  gfx.blit(zahnradbutton_unclicked, zahnradscale, 0)
   if uc_menu[3].checked then -- get Timecode/Status
     playstate=reaper.GetPlayState()
     if reaper.GetSetRepeat(-1)==1 then repeat_txt=" (REPEAT)" else repeat_txt="" end
@@ -372,9 +404,10 @@ end
 
 function MainLoop()
   if reaper.time_precise() > lasttime+refresh or gfx.w~=lastw or gfx.h~=lasth then drawClock()  end
-  
-  if gfx.mouse_cap & 2 ==2 then --right mouseclick
-    local ret=showmenu()
+
+  if Triggered==true then
+    local ret=showmenu(menuposition)
+    menuposition=nil
 
     if ret==8 then -- /undock
       dock_state=gfx.dock(-1)
@@ -386,6 +419,20 @@ function MainLoop()
 
     AAA2=ultraschall.SetUSExternalState("ultraschall_clock", "docked", is_docked)  --save state docked    
     ultraschall.ShowErrorMessagesInReascriptConsole()
+  end
+  
+  if Triggered==nil then
+    if gfx.mouse_cap & 2 == 2 then
+      Triggered=true
+    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_x>=zahnradbutton_posx and gfx.mouse_x<=zahnradbutton_posx+(zahnradbutton_x*zahnradscale) and gfx.mouse_y>=zahnradbutton_posy and gfx.mouse_y<zahnradbutton_posy+(zahnradbutton_y*zahnradscale) then --right mouseclick
+      Triggered=true
+      menuposition=1
+      gfx.x=zahnradbutton_posx
+      gfx.y=zahnradbutton_posy
+      gfx.blit(zahnradbutton_clicked, zahnradscale, 0)
+    end
+  else
+    Triggered=nil
   end
   
   view = ultraschall.GetUSExternalState("ultraschall_gui", "view") -- get the actual view
