@@ -110,7 +110,7 @@ Layout "Ultraschall 2" "black-tcp"
 	set tcp.recmode ?1 [1]
 	set tcp.fxin ?1 [0]
 
-; ultraschall_____________________________________________________________________________________________________
+; ___________________
 
 EndLayout ; end of "Ultraschall 2"-specific-TCP-layout
 
@@ -164,7 +164,7 @@ set tcp.margin +:folderdepth:1 [-26 0 0 0] ; ! Track Buttons only in folders - p
 	set tcp.recmode ?1 [1]
 	set tcp.fxin ?1 [0]
 
-; ultraschall_____________________________________________________________________________________________________
+; ___________________
 
 EndLayout ; end of "Ultraschall 2 TCP Retina"-specific-TCP-layout
 
@@ -234,48 +234,13 @@ set envcp.value + envcp.yanchor [259 19 56 20 1 0.5 1 0.5] ;! Value of Fader
 set envcp.value.margin [0 0 0 0 1] ;! Position of Value
 set envcp.value.color [160 160 160] ;! Color of Value
 
+; ultraschall________________________________________________________________________________________________________________________
 
 ;
 ; >> M C P - Settings
 ;
 ; Global settings for Master Track in Mixer-Panel-Control (MCP)
 clear master.mcp.*
-	;set master.mcp.size [121 319] ;?
-	;front master.mcp.volume.label ;?
-
-
-	;set master.mcp.extmixer [0] ;? eventuell kann raus, da von Ultraschall 2-Layout auch ge�ndert
-
-	;set master.mcp.fx mcp.fx
-	;set master.mcp.fxbyp mcp.fxbyp
-	;set master.mcp.io [30 3 39 16 0 0 0 0]
-	;set master.mcp.mono [8 52 41 16 0 0 0 0]
-	;set master.mcp.label [30 22 48 10 0 0 0 0]
-	;set master.mcp.label.margin [0 0 0 0 0]
-	;set master.mcp.label.color mcp.label.color
-	;set master.mcp_column_anchor [96 79] ;?
-	;set master.mcp.mute + master.mcp_column_anchor [0 0 17 18 0 0 0 0]
-	;set master.mcp.solo + master.mcp_column_anchor [0 21 17 18 0 0 0 0]
-	;set master.mcp.env + master.mcp_column_anchor [0 42 17 26 0 0 0 0]
-	;set master.mcp.volume h>273 [10 91 17 219 0 0 0 1] [10 80 17 230 0 0 0 1]
-	;set master.mcp.volume.label h>273 [8 79 82 14 0 0 0 0] [8 79 82 3 0 0 0 0]
-	;set master.mcp.volume.label.color h>273 mcp.volume.label.color [83 83 83]
-	;set master.mcp.volume.label.margin [1 5 0 0 0.5]
-	;set master.mcp.meter h>273 [30 97 57 210 0 0 0 1] [30 86 57 221 0 0 0 1]
-	;set master.mcp.meter.vu.div [6]
-	;set master.mcp.meter.vu.rmsdiv [6]
-	;set master.mcp.meter.readout.color [255 255 255 220 255 150 150 255]
-	;set master.mcp.meter.rmsreadout.color [255 255 150 200]
-	;set master.mcp.meter.scale.color.unlit.top [255 255 255 100 0 0 0 255]
-	;set master.mcp.meter.scale.color.unlit.bottom [255 255 255 50 0 0 0 255]
-	;set master.mcp.meter.scale.color.lit.top [255 255 255 255 0 0 0 150]
-	;set master.mcp.meter.scale.color.lit.bottom [255 255 255 255 0 0 0 150]
-	;set master.mcp.pan + [48 -20] mcp.pan
-	;set master.mcp.pan.color mcp.pan.color
-	;set master.mcp.pan.label [79 52 34 16 0 0 0 0]
-	;set master.mcp.pan.label.color mcp.pan.label.color
-	;set master.mcp.pan.label.margin mcp.pan.label.margin
-	; set master.mcp.menubutton [96 261 24 40 0 1 0 1]
 
 
 
@@ -337,10 +302,15 @@ Layout "Ultraschall 2" "ultraschall_master"
 EndLayout ; end of "Ultraschall 2" settings for Master-track in MCP
 
 
+; ultraschall______________________________________________________________________________________________________________
+
+
 ;Ultraschall-specific Mixer settings for Mixer Control Panel(MCP); all tracks EXCEPT master
 Layout "Ultraschall 2" "ultraschall"
 
 	clear mcp.* ;!
+
+
 	set mcp.size [64 319] ;!
 
 	front mcp.volume.label ;?
@@ -413,8 +383,116 @@ Layout "Ultraschall 2" "ultraschall"
 EndLayout ; end of "Ultraschall 2" settings for tracks(except mastertrack) in MixerControPanel
 
 
+; ultraschall_____________________________________________________________________________________________________
 
 ;
+
+
+
+;Ultraschall-specific Mixer settings for Mixer Control Panel(MCP); all tracks EXCEPT master
+Layout "Ultraschall 2 Retina" "200"
+
+	clear mcp.* ;!
+
+	set scale 2
+
+	set mcp.size [128 319] ;!
+
+	front mcp.volume.label ;?
+	set med * scale [300] ;!
+	set big * scale [500] ;!
+	set big_space h<big{x} [0 0]  [0 112]
+	set mcp_bottom_anchor h<med{x} [7 273] [7 43]
+
+	;set mcp.folder folderstate<0 [73 60 13 11 0 0 1 0] [73 60 13 11 0 0 1 0] ;?
+	;set mcp.folder [73 60 13 11 0 1 1 0] ;?
+
+;Track Label settings
+	set mcp.label [0 280 149 36 0 1 0 1] ;!
+	set mcp.label.margin [-20 0 4 0 0.5]
+	set mcp.label.color [160 160 160]
+	set mcp.label.font [6]
+
+;Track Number settings
+	set mcp.trackidx h<med{x} [0] [-6 6 140 38 0 0 0 0]
+	set mcp.trackidx.margin [0 6 0 10 0.5]
+	set mcp.trackidx.color ?recarm [220 26 0] [140 140 140]
+	set mcp.trackidx.font [6]
+
+;General Buttons settings
+	set mcp.io h<big{x} [0] [11 76 39 31 0 0 0 0]
+	set mcp.phase ?1 [0]
+	set mcp.phase ?1 [0]
+	set mcp.fxin ?1 [0]
+	set mcp.mute + big_space h<med{x} [0] [10 202 48 38 0 0 0 0]
+	set mcp.solo + big_space h<med{x} [0] [68 202 48 38 0 0 0 0]
+	set mcp.fx * scale + big_space h<med{x} [5 4 24 19 0 0 0 0] [5 76 24 19 0 0 0 0]
+	set mcp.fxbyp * scale + big_space h<med{x} [34 4 24 19 0 0 0 0] [34 76 24 19 0 0 0 0]
+	set mcp.env h<big{x} [0] [11 113 17 14 0 0 0 0]
+
+;Volume Fader/Label settings
+	set mcp.volume  h<med{x} [7 20 19 253 0 0 0 1] h<big{x} [14 340 38 -100 0 0 0 1] [7 220 19 50 0 0 0 1]
+
+  ;set mcp.volume  h<med{x} [7 20 19 253 0 0 0 1] h<big{x} [7 170 19 100 0 0 0 1] [7 220 19 50 0 0 0 1]
+
+	set mcp.volume.label [54 224 64 44 0 1 0 1]
+	set mcp.volume.label.color [121 121 121]
+	set mcp.volume.label.margin [8 2 2 2 0]
+	set mcp.volume.label.font [6]
+
+;Pan Button/Label settings
+	set mcp.pan * scale h<med{x} [0] trackpanmode>=4 [12 24 26 26 -10 -10 -10 -10] [19 22 26 26 -10 -10 -10 -10]
+	set mcp.pan.fadermode [1]
+	set mcp.pan.margin * scale [10 10 10 10]
+	set mcp.pan.color [155 155 155]
+	set mcp.pan.label h<med{x} [0] trackpanmode>=4 [41 105 70 16 0 0 0 0] [41 105 70 16 0 0 0 0]
+	set mcp.pan.label.color [180 180 180 0 0 0 0 0]
+	set mcp.pan.label.margin trackpanmode>=4 [0 0 68 0 0.5] [-14 0 4 0 0.5]
+	set mcp.pan.label.font [6]
+
+;Recording Buttons settings
+	set mcp.recmon h<big{x} [0] [33 113 17 14 0 0 0 0]
+	set mcp.recarm [8 225 46 44 0 1 0 1]
+	set mcp.recinput  + big_space h<med{x} [0] [10 252 106 34 0 0 0 0]
+
+; set mcp.recinput  + big_space h<med{x} [0] [5 126 53 17 0 0 0 0]
+
+	set mcp.recinput.color [160 160 160]
+	set mcp.recinput.margin  [5 1 36 0]
+	set mcp.recinput.font [6]
+	set mcp.recmode + mcp_bottom_anchor h<med{x} [0] [28 16 23 22 0 1 0 1]
+	set mcp.recmode ?1 [1]
+
+;Extended Mixer settings
+	set mcp.extmixer.mode [1]
+	set mcp.extmixer [0]
+
+;VU Meter settings
+	set mcp.meter h<med{x} [26 28 30 260 0 0 0 1] h<big{x} [52 306 60 -90 0 0 0 1]  [26 206 30 61 0 0 0 1]
+
+; set mcp.meter h<med{x} [26 28 30 260 0 0 0 1] h<big{x} [26 153 30 114 0 0 0 1]  [26 206 30 61 0 0 0 1]
+
+	set mcp.meter.readout.color [160 160 160 200 50 0 0 255]
+	set mcp.meter.rmsreadout.color [255 255 150 200]
+	set mcp.meter.scale.color.unlit.top [110 110 110 50 0 0 0 255]
+	set mcp.meter.scale.color.unlit.bottom [50 50 50 100 0 0 0 255]
+	set mcp.meter.scale.color.lit.top [255 255 255 255 0 0 0 150]
+	set mcp.meter.scale.color.lit.bottom [200 200 200 255 0 0 0 150]
+
+EndLayout ; end of "Ultraschall 2" settings for tracks(except mastertrack) in MixerControPanel
+
+
+; ultraschall_____________________________________________________________________________________________________
+
+;
+
+
+
+
+
+
+
+
 ; >> TRANSPORT - Settings
 ;
 
