@@ -25,6 +25,9 @@
 ]]
  
 -- Ultraschall 4.0 - Changelog - Meo Mespotine 
+-- * Retina/HiDPI support(requires Ultraschall 4.0 Theme installed or a theme with a line:
+--    "layout_dpi_translate  'Ultraschall 2 TCP'    1.74  'Ultraschall 2 TCP Retina'"
+--   included, so the clock automatically knows, if your device is Retina/HiDPI-ready.)
 -- * Date moved to the right
 -- * WriteCenteredText() renamed to WriteAlignedText() has now more options that align text to right or left as well
 --    Parameters:
@@ -45,19 +48,23 @@
 -- * Show Time-selection start/end/length added
 -- * when Clock has keyboard-focus, set keyboard-context to Arrange View, so keystrokes work
 --        improvement compared to earlier version, due new features in Reaper's API
+-- * includes now a visible settings-button which shows the same menu, as rightclick, but gives a better clue, THAT there are settings
 -- * various bugfixes
 
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+-- Retina Management
+-- Get DPI
 retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
 
 if dpi=="512" then
- gfx.ext_retina=1
+  gfx.ext_retina=1
 else
   gfx.ext_retina=0
 end
 
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-
+-- Choose the right graphics and scaling and position of the settings-button
 if gfx.ext_retina==1 then
   zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_Retina.png") -- the zahnradbutton itself
   zahnradbutton_clicked=gfx.loadimg(1001, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_active_Retina.png") -- the zahnradbutton itself
@@ -65,8 +72,9 @@ else
   zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings.png") -- the zahnradbutton itself
   zahnradbutton_clicked=gfx.loadimg(1001, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_active.png") -- the zahnradbutton itself
 end
-zahnradbutton_x, zahnradbutton_y=gfx.getimgdim(1000) -- dimensions of the zahnradbutton
-zahnradscale=.9      -- drawing-scale of the zahnradbutton
+
+zahnradbutton_x, zahnradbutton_y=gfx.getimgdim(1000) -- get the dimensions of the zahnradbutton
+zahnradscale=.9       -- drawing-scale of the zahnradbutton
 zahnradbutton_posx=10 -- x-position of the zahnradbutton
 zahnradbutton_posy=1  -- y-position of the zahnradbutton
 
