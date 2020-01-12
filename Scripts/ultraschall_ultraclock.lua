@@ -46,8 +46,15 @@
 -- * when Clock has keyboard-focus, set keyboard-context to Arrange View, so keystrokes work
 --        improvement compared to earlier version, due new features in Reaper's API
 -- * various bugfixes
- 
-gfx.ext_retina=1
+
+retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
+
+if dpi=="512" then
+ gfx.ext_retina=1
+else
+  gfx.ext_retina=0
+end
+
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
