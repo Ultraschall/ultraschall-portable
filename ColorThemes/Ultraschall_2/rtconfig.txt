@@ -404,9 +404,6 @@ Layout "Ultraschall 2 Retina" "200"
 	set big_space h<big{x} [0 0]  [0 112]
 	set mcp_bottom_anchor h<med{x} [7 273] [7 43]
 
-	;set mcp.folder folderstate<0 [73 60 13 11 0 0 1 0] [73 60 13 11 0 0 1 0] ;?
-	;set mcp.folder [73 60 13 11 0 1 1 0] ;?
-
 ;Track Label settings
 	set mcp.label [0 280 149 36 0 1 0 1] ;!
 	set mcp.label.margin [-20 0 4 0 0.5]
@@ -420,18 +417,18 @@ Layout "Ultraschall 2 Retina" "200"
 	set mcp.trackidx.font [6]
 
 ;General Buttons settings
-	set mcp.io h<big{x} [0] [11 76 39 31 0 0 0 0]
+	set mcp.io h<big{x} [0] * scale [11 76 39 31 0 0 0 0]
 	set mcp.phase ?1 [0]
 	set mcp.phase ?1 [0]
 	set mcp.fxin ?1 [0]
 	set mcp.mute + big_space h<med{x} [0] [10 202 48 38 0 0 0 0]
 	set mcp.solo + big_space h<med{x} [0] [68 202 48 38 0 0 0 0]
-	set mcp.fx * scale + big_space h<med{x} [5 4 24 19 0 0 0 0] [5 76 24 19 0 0 0 0]
-	set mcp.fxbyp * scale + big_space h<med{x} [34 4 24 19 0 0 0 0] [34 76 24 19 0 0 0 0]
-	set mcp.env h<big{x} [0] [11 113 17 14 0 0 0 0]
+	set mcp.fx + big_space h<med{x} [10 8 48 38 0 0 0 0] [10 152 48 38 0 0 0 0]
+	set mcp.fxbyp + big_space h<med{x} [68 8 48 38 0 0 0 0] [68 152 48 38 0 0 0 0]
+	set mcp.env h<big{x} [0] * scale [11 113 17 14 0 0 0 0]
 
 ;Volume Fader/Label settings
-	set mcp.volume  h<med{x} [7 20 19 253 0 0 0 1] h<big{x} [14 340 38 -100 0 0 0 1] [7 220 19 50 0 0 0 1]
+	set mcp.volume  h<med{x} [14 80 38 140 0 0 0 1] h<big{x} [14 320 38 -100 0 0 0 1] [14 480 38 -260 0 0 0 1]
 
   ;set mcp.volume  h<med{x} [7 20 19 253 0 0 0 1] h<big{x} [7 170 19 100 0 0 0 1] [7 220 19 50 0 0 0 1]
 
@@ -451,7 +448,7 @@ Layout "Ultraschall 2 Retina" "200"
 	set mcp.pan.label.font [6]
 
 ;Recording Buttons settings
-	set mcp.recmon h<big{x} [0] [33 113 17 14 0 0 0 0]
+	set mcp.recmon h<big{x} [0] * scale [33 113 17 14 0 0 0 0]
 	set mcp.recarm [8 225 46 44 0 1 0 1]
 	set mcp.recinput  + big_space h<med{x} [0] [10 252 106 34 0 0 0 0]
 
@@ -468,9 +465,9 @@ Layout "Ultraschall 2 Retina" "200"
 	set mcp.extmixer [0]
 
 ;VU Meter settings
-	set mcp.meter h<med{x} [26 28 30 260 0 0 0 1] h<big{x} [52 306 60 -90 0 0 0 1]  [26 206 30 61 0 0 0 1]
+	set mcp.meter h<med{x} [52 56 60 168 0 0 0 1] h<big{x} [52 306 60 -90 0 0 0 1]  [52 436 60 -220 0 0 0 1]
 
-; set mcp.meter h<med{x} [26 28 30 260 0 0 0 1] h<big{x} [26 153 30 114 0 0 0 1]  [26 206 30 61 0 0 0 1]
+; set mcp.meter h<med{x} [26 28 30 200 0 0 0 1] h<big{x} [26 153 30 114 0 0 0 1]  [26 206 30 61 0 0 0 1]
 
 	set mcp.meter.readout.color [160 160 160 200 50 0 0 255]
 	set mcp.meter.rmsreadout.color [255 255 150 200]
