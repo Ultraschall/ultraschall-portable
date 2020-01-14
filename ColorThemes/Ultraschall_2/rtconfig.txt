@@ -350,17 +350,22 @@ set scale 2
 
 ;Volume Fader/Label settings
 	; set master.mcp.volume  h<med{x} [7 20 19 260 0 0 0 1] h<big{x} [7 50 19 230 0 0 0 1] [7 120 19 160 0 0 0 1]
-	set master.mcp.volume  h<med{x} [7 20 19 260 0 0 0 1] h<big{x} [14 50 38 460 0 0 0 1] [7 120 19 160 0 0 0 1]
+
+	set master.mcp.volume  h<med{x} [7 20 19 260 0 0 0 1] h<big{x} [14 140 38 100 0 0 0 1] [7 120 19 160 0 0 0 1]
+
 
 
 	; set master.mcp.volume.label [5 271 61 22 0 1 0 1]
 	set master.mcp.volume.label [12 234 122 44 0 1 0 1]
+
+
+
 	set master.mcp.volume.label.font [6]
 	set master.mcp.volume.label.color [121 121 121]
-	set master.mcp.volume.label.margin * scale [21 2 2 2 0]
+	set master.mcp.volume.label.margin * scale [16 2 2 2 0]
 
 ;VU-Meter settings
-	set master.mcp.meter h<med{x} [26 29 37 238 0 0 0 1] h<big{x} [34 110 96 122 0 0 0 1]  [26 127 37 140 0 0 0 1]
+	set master.mcp.meter h<med{x} [26 29 37 238 0 0 0 1] h<big{x} [54 110 74 122 0 0 0 1]  [26 127 37 140 0 0 0 1]
 	; set master.mcp.meter h<med{x} [26 29 37 238 0 0 0 1] h<big{x} [26 58 37 210 0 0 0 1]  [26 127 37 140 0 0 0 1]
 	set master.mcp.meter.vu.div [12]
 	set master.mcp.meter.vu.rmsdiv [12, 30]
