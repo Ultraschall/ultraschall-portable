@@ -234,6 +234,9 @@ set envcp.value + envcp.yanchor [259 19 56 20 1 0.5 1 0.5] ;! Value of Fader
 set envcp.value.margin [0 0 0 0 1] ;! Position of Value
 set envcp.value.color [160 160 160] ;! Color of Value
 
+
+
+
 ; ultraschall________________________________________________________________________________________________________________________
 
 ;
@@ -242,9 +245,9 @@ set envcp.value.color [160 160 160] ;! Color of Value
 ; Global settings for Master Track in Mixer-Panel-Control (MCP)
 clear master.mcp.*
 
-
-
 ;Mixer-settings for Mixer Control Panel(MCP), using the theme graphics from theme-folder "ultraschall_master"
+
+
 Layout "Ultraschall 2" "ultraschall_master"
 
 ;variables
@@ -300,6 +303,79 @@ Layout "Ultraschall 2" "ultraschall_master"
 	set master.mcp.meter.scale.color.lit.bottom [200 200 200 255 0 0 0 150]
 
 EndLayout ; end of "Ultraschall 2" settings for Master-track in MCP
+
+
+Layout "Ultraschall 2 Retina" "200"
+
+set scale 2
+
+;variables
+	set med * scale [300]
+	set big * scale [500]
+	set big_space h<big{x} [0 0] * scale [0 70]
+	set mcp_bottom_anchor h<med{x} [7 273] [7 43]
+
+;basic settings
+	set master.mcp.extmixer.mode h<1500 [1] [0] ;! Master Track in MCP as extended mixer when higher than 500px
+	set master.mcp.size [144 319] ;!size of the Master Track in MCP
+  ; set master.mcp.size [72 319] ;!size of the Master Track in MCP
+
+;Track Labels settings
+	 ; set master.mcp.label [0 300 70 18 0 1 0 1]
+	 ; set master.mcp.label.margin [2 0 2 0 0.5]
+
+	 set master.mcp.label [0 280 140 36 0 1 0 1]
+	 set master.mcp.label.margin [2 0 2 0 0.5]
+	 set master.mcp.label.font [6]
+
+	set master.mcp.label.color [160 160 160]
+
+;General Buttons settings
+
+	set master.mcp.mute + big_space h<med{x} [0] * scale [9 28 24 19 0 0 0 0]
+	set master.mcp.solo + big_space h<med{x} [0] * scale [38 28 24 19 0 0 0 0]
+	set master.mcp.io h<big{x} [0] * scale [17 50 39 15 0 0 0 0]
+	set master.mcp.env h<big{x} [0] * scale [27 6 17 14 0 0 0 0]
+	set master.mcp.fx  + big_space h<big{x} * scale [9 4 24 19 0 0 0 0] * scale [9 4 24 19 0 0 0 0]
+	set master.mcp.fxbyp  + big_space h<big{x} * scale [38 4 24 19 0 0 0 0] * scale [38 4 24 19 0 0 0 0]
+
+;Pan Button/Label settings
+	set master.mcp.pan h<big{x} [0] trackpanmode>=4 [11 24 26 26 -10 -10 -10 -10] [23 22 26 26 -10 -10 -10 -10]
+	set master.mcp.pan.fadermode [1]
+	set master.mcp.pan.margin [10 10 10 10]
+	set master.mcp.pan.color [155 155 155]
+	set master.mcp.pan.label h<big{x} [0] trackpanmode>=4 [0 49 70 16 0 0 0 0] [0 49 70 16 0 0 0 0]
+	set master.mcp.pan.label.color [157 157 157 0 0 0 0 0]
+	set master.mcp.pan.label.margin trackpanmode>=4 [2 0 34 0 0.5] [2 0 2 0 0.5]
+
+;Volume Fader/Label settings
+	; set master.mcp.volume  h<med{x} [7 20 19 260 0 0 0 1] h<big{x} [7 50 19 230 0 0 0 1] [7 120 19 160 0 0 0 1]
+	set master.mcp.volume  h<med{x} [7 20 19 260 0 0 0 1] h<big{x} [14 50 38 460 0 0 0 1] [7 120 19 160 0 0 0 1]
+
+
+	; set master.mcp.volume.label [5 271 61 22 0 1 0 1]
+	set master.mcp.volume.label [12 234 122 44 0 1 0 1]
+	set master.mcp.volume.label.font [6]
+	set master.mcp.volume.label.color [121 121 121]
+	set master.mcp.volume.label.margin * scale [21 2 2 2 0]
+
+;VU-Meter settings
+	set master.mcp.meter h<med{x} [26 29 37 238 0 0 0 1] h<big{x} [34 110 96 122 0 0 0 1]  [26 127 37 140 0 0 0 1]
+	; set master.mcp.meter h<med{x} [26 29 37 238 0 0 0 1] h<big{x} [26 58 37 210 0 0 0 1]  [26 127 37 140 0 0 0 1]
+	set master.mcp.meter.vu.div [12]
+	set master.mcp.meter.vu.rmsdiv [12, 30]
+	set master.mcp.meter.scale.color.unlit.top [255 255 255 80 0 0 0 255]
+	set master.mcp.meter.scale.color.unlit.bottom [255 255 255 20 0 0 0 255]
+	;set master.mcp.meter.readout.color [160 160 160 200 50 0 0 255]
+	set master.mcp.meter.readout.color [0]
+	;set master.mcp.meter.rmsreadout.color [250 250 250 200 50 0 0 255]
+	set master.mcp.meter.rmsreadout.color [0]
+	set master.mcp.meter.scale.color.lit.top [255 255 255 255 0 0 0 150]
+	set master.mcp.meter.scale.color.lit.bottom [200 200 200 255 0 0 0 150]
+
+EndLayout ; end of "Ultraschall 2" settings for Master-track in MCP
+
+
 
 
 ; ultraschall______________________________________________________________________________________________________________
