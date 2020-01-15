@@ -58,6 +58,13 @@ GUI.elms = {
 local GUI = {}
 
 
+retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
+if dpi == "512" then
+  dpi_scale = 2
+  gfx.ext_retina = 1
+else
+  dpi_scale = 1
+end
 
 
 --[[  Font and color presets
@@ -75,10 +82,10 @@ local GUI = {}
 ]]--
 
 if reaper.GetOS()=="OSX32" or reaper.GetOS()=="OSX64" then
-  font_size = 14
+  font_size = 14 * dpi_scale
   font_face = "Helvetica"
 else
-  font_size = 16
+  font_size = 16 * dpi_scale
   font_face = "Arial"
 end
 
@@ -527,7 +534,11 @@ function ColorPic:new(x, y, w, h, t)
   local colorpicker = {}
   colorpicker.type = "ColorPic"
   colorpicker.table = t
-  colorpicker.x, colorpicker.y, colorpicker.w, colorpicker.h = x, y, w, h
+  colorpicker.x, colorpicker.y, colorpicker.w, colorpicker.h = x * dpi_scale
+  , y * dpi_scale
+  , w * dpi_scale
+  , h * dpi_scale
+
   colorpicker.num = 20
   colorpicker.state = 0
 
@@ -546,12 +557,20 @@ function ColorPic:draw()
   for i=0, self.num-1, 1  do
     r, g, b = reaper.ColorFromNative(table[i])
     gfx.set(r/255, g/255, b/255, 1)
-    GUI.roundrect(x + offset*44, y, 40, 30, 2, 1, 1)
+    GUI.roundrect(x + offset*44 * dpi_scale
+    , y, 40 * dpi_scale
+    , 30 * dpi_scale
+    , 2 * dpi_scale
+    , 1 * dpi_scale
+    , 1 * dpi_scale
+  )
     if offset == 3 then
       offset = 0
-      y = y + 34
+      y = y + 34 * dpi_scale
+
     else
       offset = offset + 1
+
     end
   end
 end
@@ -620,6 +639,10 @@ function ColorPic:ontype() end
 GUI.ColorPic = ColorPic
 
 
+function file_exists(name)
+  local f=io.open(name,"r")
+  if f~=nil then io.close(f) return true else return false end
+end
 
   ---- Element classes ----
 
@@ -644,10 +667,22 @@ function Pic:new(x, y, w, h, zoom, source, func, ... )
   local picture = {}
   picture.type = "Pic"
 
-  picture.x, picture.y = x, y
-  picture.w, picture.h = w, h
-  picture.zoom = zoom
-  picture.source = source
+  picture.x, picture.y = x * dpi_scale, y * dpi_scale
+  picture.w, picture.h = w * dpi_scale, h * dpi_scale
+
+  local cap = source:match("(.+)%..+")
+  retina_img = cap.."_x2"..".png"
+
+  if dpi_scale == 2 and file_exists(retina_img) then
+    picture.zoom = zoom
+    picture.source = retina_img
+  else
+    picture.zoom = zoom * dpi_scale
+    picture.source = source
+  end
+
+
+
   picture.func = func
   picture.params = {...}
 
@@ -714,10 +749,11 @@ function Subpic:new(x, y, w, h, zoom, source, offset_x, offset_y, ... )
   local picture = {}
   picture.type = "Subpic"
 
-  picture.x, picture.y = x, y
-  picture.w, picture.h = w, h
-  picture.offset_x, picture.offset_y = offset_x, offset_y
-  picture.zoom = zoom
+  picture.x, picture.y = x , y  * dpi_scale
+  picture.w, picture.h = w , h
+  picture.offset_x, picture.offset_y = offset_x
+  , offset_y
+  picture.zoom = zoom * dpi_scale
   picture.source = source
   picture.params = {...}
 
@@ -770,9 +806,9 @@ function Line:new(x, y, x2, y2, color)
 
   local drawline = {}
   drawline.type = "Line"
-  drawline.x, drawline.y = x, y
-  drawline.x2, drawline.y2 = x2, y2
-  drawline.w, drawline.h = 1, 1
+  drawline.x, drawline.y = x * dpi_scale, y * dpi_scale
+  drawline.x2, drawline.y2 = x2 * dpi_scale, y2 * dpi_scale
+  drawline.w, drawline.h = 1 * dpi_scale, 1 * dpi_scale
   drawline.color = color or "txt"
 
   setmetatable(drawline, self)
@@ -815,7 +851,7 @@ function Lbl:new(x, y, caption, shadow, color)
   local label = {}
   label.type = "Lbl"
   label.color = color or "txt"
-  label.x, label.y = x, y
+  label.x, label.y = x * dpi_scale, y * dpi_scale
 
   -- Placeholders for these values, since we don't need them
   -- but some functions will throw a fit if they aren't there
@@ -894,7 +930,11 @@ function Sldr:new(x, y, w, caption, min, max, steps, value, actualstep, sectionN
   local sldr = {}
   sldr.type = "Sldr"
 
-  sldr.x, sldr.y, sldr.w, sldr.h = x, y, w, 8
+  sldr.x, sldr.y, sldr.w, sldr.h = x * dpi_scale
+  , y * dpi_scale
+  , w * dpi_scale
+  , 8 * dpi_scale
+
 
   sldr.caption = caption
   sldr.sectionname = sectionName
@@ -927,7 +967,8 @@ function Sldr:draw()
   local offset = 0
 
   -- Size of the handle
-  local radius = 8
+  local radius = 8 * dpi_scale
+
 
 
   -- Draw track
@@ -938,7 +979,9 @@ function Sldr:draw()
 
 
   -- limit everything to be drawn within the square part of the track
-  x, w = x + 4, w - 8
+  x, w = x + 4 * dpi_scale
+  , w - 8 * dpi_scale
+
 
   local inc = w / steps
 
@@ -979,8 +1022,8 @@ function Sldr:draw()
 
   local str_w, str_h = gfx.measurestr(self.caption)
 
-  gfx.x = x - 188
-  gfx.y = y - 2
+  gfx.x = x - 188 * dpi_scale
+  gfx.y = y - 2 * dpi_scale
 
   gfx.drawstr(self.caption)
 
@@ -991,8 +1034,8 @@ function Sldr:draw()
   GUI.font(4)
 
   local str_w, str_h = gfx.measurestr(self.retval)
-  gfx.x = x - 35
-  gfx.y = y -2
+  gfx.x = x - 35 * dpi_scale
+  gfx.y = y -2 * dpi_scale
 
   value_truncated = string.format("%." .. (1 or 0) .. "f", self.retval)
 
@@ -1415,7 +1458,11 @@ function Checklist:new(x, y, w, h, caption, opts, pad, value, sectionName)
   chk.type = "Checklist"
   chk.sectionname = sectionName
 
-  chk.x, chk.y, chk.w, chk.h = x, y, w, h
+  chk.x, chk.y, chk.w, chk.h = x * dpi_scale
+  , y * dpi_scale
+  , w * dpi_scale
+  , h * dpi_scale
+
 
   chk.caption = caption
 
@@ -1465,7 +1512,7 @@ function Checklist:draw()
   local str_w, str_h = gfx.measurestr(self.caption)
   self.capheight = str_h
   gfx.x = x + (w - str_w) / 2
-  gfx.y = y
+  gfx.y = y * dpi_scale
   GUI.shadow(self.caption)
 
 
@@ -1473,7 +1520,8 @@ function Checklist:draw()
   GUI.color("txt")
   local optheight = (h - str_h - 2 * pad) / self.numopts
   local cur_y = y + str_h + pad
-  local size = 20
+  local size = 20 * dpi_scale
+
   GUI.font(3)
 
   for i = 1, self.numopts do
@@ -1482,6 +1530,10 @@ function Checklist:draw()
     -- Draw the option frame
     GUI.color("elm_frame")
     gfx.rect(x + size / 2, cur_y + (optheight - size) / 2, size, size, 0)
+
+    if dpi_scale == 2 then -- etwas dickere Kästen für Retina
+      gfx.rect((x + size / 2) -1 , (cur_y + (optheight - size) / 2) -1, size+2, size+2, 0)
+    end
 
     -- Fill in if selected
     -- modifiziert von boolean zu number (0/1) da sonst Typen-Fledermausland beim Speichern in .ini
@@ -1573,7 +1625,11 @@ function Btn:new(x, y, w, h, caption, func, ...)
   local btn = {}
   btn.type = "Btn"
 
-  btn.x, btn.y, btn.w, btn.h = x, y, w, h
+  btn.x, btn.y, btn.w, btn.h = x * dpi_scale
+  , y * dpi_scale
+  , w * dpi_scale
+  , h * dpi_scale
+
 
   btn.caption = caption
 
@@ -1602,18 +1658,35 @@ function Btn:draw()
     local dist = GUI.shadow_dist
     GUI.color("shadow")
     for i = 1, dist do
-      GUI.roundrect(x - i, y - i, w, h, 4, 1, 1)
-      GUI.roundrect(x + i, y + i, w, h, 4, 1, 1)
+      GUI.roundrect(x - i, y - i, w, h, 4 * dpi_scale
+      , 1 * dpi_scale
+      , 1 * dpi_scale
+    )
+      GUI.roundrect(x + i, y + i, w, h, 4 * dpi_scale
+      , 1 * dpi_scale
+      , 1 * dpi_scale
+    )
     end
     GUI.color("shadow")
-    GUI.roundrect(x , y - 2 , w, h, 4, 1, 1)
+    GUI.roundrect(x , y - 2 * dpi_scale
+    , w, h, 4 * dpi_scale
+    , 1 * dpi_scale
+    , 1 * dpi_scale
+  )
     GUI.color("elm_highlight")
-    GUI.roundrect(x , y - 1 , w, h, 4, 1, 1)
+    GUI.roundrect(x , y - 1 * dpi_scale
+    , w, h, 4 * dpi_scale
+    , 1 * dpi_scale
+    , 1 * dpi_scale
+  )
   end
 
   -- Draw the button
   GUI.color("elm_frame")
-  GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 4, 1, 1)
+  GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 4 * dpi_scale
+  , 1 * dpi_scale
+  , 1 * dpi_scale
+)
 
 
   -- Draw the caption
@@ -1621,14 +1694,18 @@ function Btn:draw()
   GUI.font(4)
 
   if reaper.GetOS() == "OSX64" then
-    btn_offset = 3
+    btn_offset = 3 * dpi_scale
+
   else
-    btn_offset = 1
+    btn_offset = 1 * dpi_scale
+
   end
 
   local str_w, str_h = gfx.measurestr(self.caption)
-  gfx.x = x + 1 * state + ((w - str_w) / 2) - 2
-  gfx.y = y + 1 * state + ((h - str_h) / 2) - 2
+  gfx.x = x + 1 * state + ((w - str_w) / 2) - 2 * dpi_scale
+
+  gfx.y = y + 1 * state + ((h - str_h) / 2) - 2 * dpi_scale
+
   gfx.y = gfx.y + btn_offset
   gfx.drawstr(self.caption)
 
