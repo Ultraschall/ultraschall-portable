@@ -37,11 +37,11 @@ def RPR_ValidatePtr(p,t):
   return f(c_uint64(p),rpr_packsc(t))
 
 def rpr_packsc(v):
-  return c_char_p(str(v).encode())
+  return c_char_p(str(v).encode("UTF-8"))
 
 def rpr_packs(v):
   MAX_STRBUF=4*1024*1024
-  return create_string_buffer(str(v).encode(),MAX_STRBUF)
+  return create_string_buffer(str(v).encode("UTF-8"),MAX_STRBUF)
 
 def rpr_unpacks(v):
   return str(v.value.decode())
@@ -157,6 +157,19 @@ def RPR_Audio_Quit():
   a=_ft['Audio_Quit']
   f=CFUNCTYPE(None)(a)
   f()
+
+def RPR_AudioAccessorStateChanged(p0):
+  a=_ft['AudioAccessorStateChanged']
+  f=CFUNCTYPE(c_byte,c_uint64)(a)
+  t=(rpr_packp('AudioAccessor*',p0),)
+  r=f(t[0])
+  return r
+
+def RPR_AudioAccessorUpdate(p0):
+  a=_ft['AudioAccessorUpdate']
+  f=CFUNCTYPE(None,c_uint64)(a)
+  t=(rpr_packp('AudioAccessor*',p0),)
+  f(t[0])
 
 def RPR_AudioAccessorValidateState(p0):
   a=_ft['AudioAccessorValidateState']
@@ -668,6 +681,13 @@ def RPR_DB2SLIDER(p0):
   r=f(t[0])
   return r
 
+def RPR_DeleteEnvelopePointEx(p0,p1,p2):
+  a=_ft['DeleteEnvelopePointEx']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int,c_int)(a)
+  t=(rpr_packp('TrackEnvelope*',p0),c_int(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
 def RPR_DeleteEnvelopePointRange(p0,p1,p2):
   a=_ft['DeleteEnvelopePointRange']
   f=CFUNCTYPE(c_byte,c_uint64,c_double,c_double)(a)
@@ -740,6 +760,13 @@ def RPR_Dock_UpdateDockID(p0,p1):
   f=CFUNCTYPE(None,c_char_p,c_int)(a)
   t=(rpr_packsc(p0),c_int(p1))
   f(t[0],t[1])
+
+def RPR_DockGetPosition(p0):
+  a=_ft['DockGetPosition']
+  f=CFUNCTYPE(c_int,c_int)(a)
+  t=(c_int(p0),)
+  r=f(t[0])
+  return r
 
 def RPR_DockIsChildOfDock(p0,p1):
   a=_ft['DockIsChildOfDock']
@@ -970,6 +997,13 @@ def RPR_genGuid(p0):
   t=(rpr_packp('GUID*',p0),)
   f(t[0])
 
+def RPR_get_config_var_string(p0,p1,p2):
+  a=_ft['get_config_var_string']
+  f=CFUNCTYPE(c_byte,c_char_p,c_char_p,c_int)(a)
+  t=(rpr_packsc(p0),rpr_packs(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return (r,p0,rpr_unpacks(t[1]),p2)
+
 def RPR_get_ini_file():
   a=_ft['get_ini_file']
   f=CFUNCTYPE(c_char_p)(a)
@@ -1081,6 +1115,13 @@ def RPR_GetDisplayedMediaItemColor2(p0,p1):
   a=_ft['GetDisplayedMediaItemColor2']
   f=CFUNCTYPE(c_int,c_uint64,c_uint64)(a)
   t=(rpr_packp('MediaItem*',p0),rpr_packp('MediaItem_Take*',p1))
+  r=f(t[0],t[1])
+  return r
+
+def RPR_GetEnvelopeInfo_Value(p0,p1):
+  a=_ft['GetEnvelopeInfo_Value']
+  f=CFUNCTYPE(c_double,c_uint64,c_char_p)(a)
+  t=(rpr_packp('TrackEnvelope*',p0),rpr_packsc(p1))
   r=f(t[0],t[1])
   return r
 
@@ -1199,6 +1240,13 @@ def RPR_GetItemEditingTime2(p0,p1):
   t=(rpr_packp('PCM_source**',p0),c_int(p1))
   r=f(t[0],byref(t[1]))
   return (r,p0,int(t[1].value))
+
+def RPR_GetItemFromPoint(p0,p1,p2,p3):
+  a=_ft['GetItemFromPoint']
+  f=CFUNCTYPE(c_uint64,c_int,c_int,c_byte,c_uint64)(a)
+  t=(c_int(p0),c_int(p1),c_byte(p2),rpr_packp('MediaItem_Take**',p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return rpr_unpackp('MediaItem*',r)
 
 def RPR_GetItemProjectContext(p0):
   a=_ft['GetItemProjectContext']
@@ -1692,6 +1740,20 @@ def RPR_GetSetAutomationItemInfo(p0,p1,p2,p3,p4):
   r=f(t[0],t[1],t[2],t[3],t[4])
   return r
 
+def RPR_GetSetAutomationItemInfo_String(p0,p1,p2,p3,p4):
+  a=_ft['GetSetAutomationItemInfo_String']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int,c_char_p,c_char_p,c_byte)(a)
+  t=(rpr_packp('TrackEnvelope*',p0),c_int(p1),rpr_packsc(p2),rpr_packs(p3),c_byte(p4))
+  r=f(t[0],t[1],t[2],t[3],t[4])
+  return (r,p0,p1,p2,rpr_unpacks(t[3]),p4)
+
+def RPR_GetSetEnvelopeInfo_String(p0,p1,p2,p3):
+  a=_ft['GetSetEnvelopeInfo_String']
+  f=CFUNCTYPE(c_byte,c_uint64,c_char_p,c_char_p,c_byte)(a)
+  t=(rpr_packp('TrackEnvelope*',p0),rpr_packsc(p1),rpr_packs(p2),c_byte(p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return (r,p0,p1,rpr_unpacks(t[2]),p3)
+
 def RPR_GetSetEnvelopeState(p0,p1,p2):
   a=_ft['GetSetEnvelopeState']
   f=CFUNCTYPE(c_byte,c_uint64,c_char_p,c_int)(a)
@@ -1755,6 +1817,20 @@ def RPR_GetSetProjectGrid(p0,p1,p2,p3,p4):
   r=f(t[0],t[1],byref(t[2]),byref(t[3]),byref(t[4]))
   return (r,p0,p1,float(t[2].value),int(t[3].value),float(t[4].value))
 
+def RPR_GetSetProjectInfo(p0,p1,p2,p3):
+  a=_ft['GetSetProjectInfo']
+  f=CFUNCTYPE(c_double,c_uint64,c_char_p,c_double,c_byte)(a)
+  t=(rpr_packp('ReaProject*',p0),rpr_packsc(p1),c_double(p2),c_byte(p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return r
+
+def RPR_GetSetProjectInfo_String(p0,p1,p2,p3):
+  a=_ft['GetSetProjectInfo_String']
+  f=CFUNCTYPE(c_byte,c_uint64,c_char_p,c_char_p,c_byte)(a)
+  t=(rpr_packp('ReaProject*',p0),rpr_packsc(p1),rpr_packs(p2),c_byte(p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return (r,p0,p1,rpr_unpacks(t[2]),p3)
+
 def RPR_GetSetProjectNotes(p0,p1,p2,p3):
   a=_ft['GetSetProjectNotes']
   f=CFUNCTYPE(None,c_uint64,c_byte,c_char_p,c_int)(a)
@@ -1789,6 +1865,13 @@ def RPR_GetSetTrackGroupMembershipHigh(p0,p1,p2,p3):
   t=(rpr_packp('MediaTrack*',p0),rpr_packsc(p1),c_int(p2),c_int(p3))
   r=f(t[0],t[1],t[2],t[3])
   return r
+
+def RPR_GetSetTrackSendInfo_String(p0,p1,p2,p3,p4,p5):
+  a=_ft['GetSetTrackSendInfo_String']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int,c_int,c_char_p,c_char_p,c_byte)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),c_int(p2),rpr_packsc(p3),rpr_packs(p4),c_byte(p5))
+  r=f(t[0],t[1],t[2],t[3],t[4],t[5])
+  return (r,p0,p1,p2,p3,rpr_unpacks(t[4]),p5)
 
 def RPR_GetSetTrackState(p0,p1,p2):
   a=_ft['GetSetTrackState']
@@ -1949,6 +2032,13 @@ def RPR_GetTrackEnvelopeByName(p0,p1):
   t=(rpr_packp('MediaTrack*',p0),rpr_packsc(p1))
   r=f(t[0],t[1])
   return rpr_unpackp('TrackEnvelope*',r)
+
+def RPR_GetTrackFromPoint(p0,p1,p2):
+  a=_ft['GetTrackFromPoint']
+  f=CFUNCTYPE(c_uint64,c_int,c_int,c_void_p)(a)
+  t=(c_int(p0),c_int(p1),c_int(p2))
+  r=f(t[0],t[1],byref(t[2]))
+  return (rpr_unpackp('MediaTrack*',r),p0,p1,int(t[2].value))
 
 def RPR_GetTrackGUID(p0):
   a=_ft['GetTrackGUID']
@@ -2455,6 +2545,12 @@ def RPR_MIDI_DeleteTextSysexEvt(p0,p1):
   r=f(t[0],t[1])
   return r
 
+def RPR_MIDI_DisableSort(p0):
+  a=_ft['MIDI_DisableSort']
+  f=CFUNCTYPE(None,c_uint64)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),)
+  f(t[0])
+
 def RPR_MIDI_EnumSelCC(p0,p1):
   a=_ft['MIDI_EnumSelCC']
   f=CFUNCTYPE(c_int,c_uint64,c_int)(a)
@@ -2496,6 +2592,13 @@ def RPR_MIDI_GetCC(p0,p1,p2,p3,p4,p5,p6,p7,p8):
   t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),c_byte(p2),c_byte(p3),c_double(p4),c_int(p5),c_int(p6),c_int(p7),c_int(p8))
   r=f(t[0],t[1],byref(t[2]),byref(t[3]),byref(t[4]),byref(t[5]),byref(t[6]),byref(t[7]),byref(t[8]))
   return (r,p0,p1,int(t[2].value),int(t[3].value),float(t[4].value),int(t[5].value),int(t[6].value),int(t[7].value),int(t[8].value))
+
+def RPR_MIDI_GetCCShape(p0,p1,p2,p3):
+  a=_ft['MIDI_GetCCShape']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int,c_void_p,c_void_p)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),c_int(p2),c_double(p3))
+  r=f(t[0],t[1],byref(t[2]),byref(t[3]))
+  return (r,p0,p1,int(t[2].value),float(t[3].value))
 
 def RPR_MIDI_GetEvt(p0,p1,p2,p3,p4,p5,p6):
   a=_ft['MIDI_GetEvt']
@@ -2641,6 +2744,13 @@ def RPR_MIDI_SetCC(p0,p1,p2,p3,p4,p5,p6,p7,p8,p9):
   r=f(t[0],t[1],byref(t[2]),byref(t[3]),byref(t[4]),byref(t[5]),byref(t[6]),byref(t[7]),byref(t[8]),byref(t[9]))
   return (r,p0,p1,int(t[2].value),int(t[3].value),float(t[4].value),int(t[5].value),int(t[6].value),int(t[7].value),int(t[8].value),int(t[9].value))
 
+def RPR_MIDI_SetCCShape(p0,p1,p2,p3,p4):
+  a=_ft['MIDI_SetCCShape']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int,c_int,c_double,c_void_p)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),c_int(p2),c_double(p3),c_byte(p4))
+  r=f(t[0],t[1],t[2],t[3],byref(t[4]))
+  return (r,p0,p1,p2,p3,int(t[4].value))
+
 def RPR_MIDI_SetEvt(p0,p1,p2,p3,p4,p5,p6,p7):
   a=_ft['MIDI_SetEvt']
   f=CFUNCTYPE(c_byte,c_uint64,c_int,c_void_p,c_void_p,c_void_p,c_char_p,c_int,c_void_p)(a)
@@ -2721,6 +2831,13 @@ def RPR_MIDIEditor_OnCommand(p0,p1):
   f=CFUNCTYPE(c_byte,c_uint64,c_int)(a)
   t=(rpr_packp('HWND',p0),c_int(p1))
   r=f(t[0],t[1])
+  return r
+
+def RPR_MIDIEditor_SetSetting_int(p0,p1,p2):
+  a=_ft['MIDIEditor_SetSetting_int']
+  f=CFUNCTYPE(c_byte,c_uint64,c_char_p,c_int)(a)
+  t=(rpr_packp('HWND',p0),rpr_packsc(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
   return r
 
 def RPR_mkpanstr(p0,p1):
@@ -2943,6 +3060,13 @@ def RPR_RecursiveCreateDirectory(p0,p1):
   f=CFUNCTYPE(c_int,c_char_p,c_int)(a)
   t=(rpr_packsc(p0),c_int(p1))
   r=f(t[0],t[1])
+  return r
+
+def RPR_reduce_open_files(p0):
+  a=_ft['reduce_open_files']
+  f=CFUNCTYPE(c_int,c_int)(a)
+  t=(c_int(p0),)
+  r=f(t[0])
   return r
 
 def RPR_RefreshToolbar(p0):
@@ -3700,6 +3824,39 @@ def RPR_TakeIsMIDI(p0):
   f=CFUNCTYPE(c_byte,c_uint64)(a)
   t=(rpr_packp('MediaItem_Take*',p0),)
   r=f(t[0])
+  return r
+
+def RPR_ThemeLayout_GetLayout(p0,p1,p2,p3):
+  a=_ft['ThemeLayout_GetLayout']
+  f=CFUNCTYPE(c_byte,c_char_p,c_int,c_char_p,c_int)(a)
+  t=(rpr_packsc(p0),c_int(p1),rpr_packs(p2),c_int(p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return (r,p0,p1,rpr_unpacks(t[2]),p3)
+
+def RPR_ThemeLayout_GetParameter(p0,p1,p2,p3,p4,p5):
+  a=_ft['ThemeLayout_GetParameter']
+  f=CFUNCTYPE(c_char_p,c_int,c_uint64,c_void_p,c_void_p,c_void_p,c_void_p)(a)
+  t=(c_int(p0),rpr_packp('char**',p1),c_int(p2),c_int(p3),c_int(p4),c_int(p5))
+  r=f(t[0],t[1],byref(t[2]),byref(t[3]),byref(t[4]),byref(t[5]))
+  return (str(r.decode()),p0,p1,int(t[2].value),int(t[3].value),int(t[4].value),int(t[5].value))
+
+def RPR_ThemeLayout_RefreshAll():
+  a=_ft['ThemeLayout_RefreshAll']
+  f=CFUNCTYPE(None)(a)
+  f()
+
+def RPR_ThemeLayout_SetLayout(p0,p1):
+  a=_ft['ThemeLayout_SetLayout']
+  f=CFUNCTYPE(c_byte,c_char_p,c_char_p)(a)
+  t=(rpr_packsc(p0),rpr_packsc(p1))
+  r=f(t[0],t[1])
+  return r
+
+def RPR_ThemeLayout_SetParameter(p0,p1,p2):
+  a=_ft['ThemeLayout_SetParameter']
+  f=CFUNCTYPE(c_byte,c_int,c_int,c_byte)(a)
+  t=(c_int(p0),c_int(p1),c_byte(p2))
+  r=f(t[0],t[1],t[2])
   return r
 
 def RPR_time_precise():

@@ -24,7 +24,10 @@
 ################################################################################
 ]]
  
--- Ultraschall 3.2 - Changelog - Meo Mespotine 
+-- Ultraschall 4.0 - Changelog - Meo Mespotine 
+-- * Retina/HiDPI support(requires Ultraschall 4.0 Theme installed or a theme with a line:
+--    "layout_dpi_translate  'Ultraschall 2 TCP'    1.74  'Ultraschall 2 TCP Retina'"
+--   included, so the clock automatically knows, if your device is Retina/HiDPI-ready.)
 -- * Date moved to the right
 -- * WriteCenteredText() renamed to WriteAlignedText() has now more options that align text to right or left as well
 --    Parameters:
@@ -45,12 +48,36 @@
 -- * Show Time-selection start/end/length added
 -- * when Clock has keyboard-focus, set keyboard-context to Arrange View, so keystrokes work
 --        improvement compared to earlier version, due new features in Reaper's API
+-- * includes now a visible settings-button which shows the same menu, as rightclick, but gives a better clue, THAT there are settings
 -- * various bugfixes
- 
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
---Ultraschall ultraclock alpha 0.9
+-- Retina Management
+-- Get DPI
+retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
+
+if dpi=="512" then
+  gfx.ext_retina=1
+else
+  gfx.ext_retina=0
+end
+
+
+-- Choose the right graphics and scaling and position of the settings-button
+if gfx.ext_retina==1 then
+  zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_Retina.png") -- the zahnradbutton itself
+  zahnradbutton_clicked=gfx.loadimg(1001, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_active_Retina.png") -- the zahnradbutton itself
+else
+  zahnradbutton_unclicked=gfx.loadimg(1000, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings.png") -- the zahnradbutton itself
+  zahnradbutton_clicked=gfx.loadimg(1001, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Ultraclock/Settings_active.png") -- the zahnradbutton itself
+end
+
+zahnradbutton_x, zahnradbutton_y=gfx.getimgdim(1000) -- get the dimensions of the zahnradbutton
+zahnradscale=.9       -- drawing-scale of the zahnradbutton
+zahnradbutton_posx=10 -- x-position of the zahnradbutton
+zahnradbutton_posy=1  -- y-position of the zahnradbutton
+
 
 function copy(obj, seen) 
   --copy an array
@@ -76,38 +103,23 @@ function Init()
   -- the parameters are: y = the relative y-position of the line.
   --                     size = the relative font-size
   -- these parameters will be fitted to the current size of the UltraClock automatically
+  --
+  -- Important: y-position>1 might be displayed outside of the window!
   txt_line={} 
   for i=1,7 do txt_line[i]={} end -- create 2d array for 4 lines of text
-  txt_line[2]={y=0.0, size=0.25}    -- current date
-  txt_line[1]={y=0.1 , size=0.8}   -- current time
-  txt_line[3]={y=0.38, size=0.27}  -- current playstate
-  txt_line[4]={y=0.47, size=0.6}  -- current position
+  txt_line[2]={y=0.0, size=0.28}    -- current date
+  txt_line[1]={y=0.10 , size=0.28}   -- current time
+  txt_line[3]={y=0.17, size=0.27}  -- current playstate
+  txt_line[4]={y=0.24, size=0.75}  -- current position
   
- txt_line[7]={y=0.69, size=0.15}     -- time-selection-text
- txt_line[8]={y=0.75, size=0.25}  -- time-selection
+  txt_line[7]={y=0.52, size=0.20}     -- time-selection-text
+  txt_line[8]={y=0.58, size=0.25}  -- time-selection
  
- txt_line[9]={y=0.86, size=0.15}  -- project-length-text
- txt_line[10]={y=0.91, size=0.25} -- project-length
+  txt_line[9]={y=0.685, size=0.20}  -- project-length-text
+  txt_line[10]={y=0.745, size=0.25} -- project-length
  
- txt_line[5]={y=1.01, size=0.15}  -- markernames
- txt_line[6]={y=1.07, size=0.25}   -- marker positions  
- 
- 
- --[[
-  0.62 0.67 
-  0.76 0.81
-  0.90 0.95
-  
-  txt_line[7]={y=0.76, size=0.15}     -- time-selection-text
-  txt_line[8]={y=0.81, size=0.22}  -- time-selection
-  
-  txt_line[9]={y=0.90, size=0.15}  -- project-length-text
-  txt_line[10]={y=0.95, size=0.22} -- project-length
-  
-  txt_line[5]={y=0.62, size=0.15}  -- markernames
-  txt_line[6]={y=0.67, size=0.2}   -- marker positions  
-  --]]
-  
+  txt_line[5]={y=0.845, size=0.20}  -- markernames
+  txt_line[6]={y=0.91, size=0.25}   -- marker positions  
 
   txt_line_preset={} for i=1,7 do txt_line_preset[i]=copy(txt_line) end --copy STD Setting to all presets
 
@@ -152,15 +164,16 @@ function Init()
   
   --INIT Menu Items
   uc_menu={} for i=1,10 do uc_menu[i]={} end --create 2d array for 6 menu entries
---reaper.ShowMessageBox("lalala",tostring(preset),0)
 
-  uc_menu[1]={text="Show Realtime", checked= (preset&1==1)}
-  uc_menu[2]={text="Show Timecode", checked= (preset&2==2)}
-  uc_menu[3]={text="Show Date"    , checked= (preset&4==4)}
+  uc_menu[1]={text="Show Date"    , checked= (preset&1==1)}
+  uc_menu[2]={text="Show Realtime", checked= (preset&2==2)}
+  uc_menu[3]={text="Show Timecode", checked= (preset&4==4)}
+  
   uc_menu[4]={text="Show Remaining Projecttime"    , checked= (preset&8==8)}
-  uc_menu[5]={text="Show Remaining Time until next Marker/Region/Projectend", checked= (preset&16==16)}
-  uc_menu[6]={text="Show Time-Selection"    , checked= (preset&32==32)}
-  uc_menu[7]={text="Show Project Length"    , checked= (preset&64==64)}
+  uc_menu[5]={text="Show Time-Selection"    , checked= (preset&16==16)}
+  uc_menu[6]={text="Show Project Length"    , checked= (preset&32==32)}
+  uc_menu[7]={text="Show Remaining Time until next Marker/Region/Projectend", checked= (preset&64==64)}
+  
   uc_menu[8]={text="", checked=false} -- separator
   uc_menu[9]={text="Dock Ultraclock window to Docker", checked=docked}
   uc_menu[10]={text="Close Window",checked=false}
@@ -175,15 +188,14 @@ function InitGFX()
   reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
 end
 
-function showmenu()
+function showmenu(trigger)
   local menu_string=""
   local i=1
   for i=1,#uc_menu do
     if uc_menu[i].checked==true then menu_string=menu_string.."!" end
     menu_string=menu_string..uc_menu[i].text.."|"
-    --print_alt(i,uc_menu[i].text,uc_menu[i].checked)
   end
-  gfx.x, gfx.y= gfx.mouse_x, gfx.mouse_y
+  if trigger==nil then gfx.x, gfx.y= gfx.mouse_x, gfx.mouse_y else gfx.x=zahnradbutton_posx+10 gfx.y=zahnradbutton_posx+10 end
   local ret=gfx.showmenu(menu_string)
   local ret2=ret
   
@@ -258,7 +270,10 @@ function formattimestr(pos)
 end
 
 function drawClock()
-  if uc_menu[2].checked then -- get Timecode/Status
+  gfx.x=zahnradbutton_posx
+  gfx.y=zahnradbutton_posy
+  gfx.blit(zahnradbutton_unclicked, zahnradscale, 0)
+  if uc_menu[3].checked then -- get Timecode/Status
     playstate=reaper.GetPlayState()
     if reaper.GetSetRepeat(-1)==1 then repeat_txt=" (REPEAT)" else repeat_txt="" end
     if playstate == 1 then
@@ -274,7 +289,6 @@ function drawClock()
     end
     A=uc_menu[5].checked
     if uc_menu[4].checked==true then pos=get_position(1)//1 
---      uc_menu[2].checked=false
     else 
       pos=get_position()//1 
     end
@@ -295,12 +309,10 @@ function drawClock()
   end
   
   preset=0
---    reaper.ClearConsole()
   for i=1, 8 do 
     if uc_menu[i].checked then 
       preset=preset+2^(i-1) 
     end 
---    reaper.ShowConsoleMsg(i..": "..preset.." "..tostring(uc_menu[i].checked).."\n")
   end
   if preset~=oldpreset then
     AAA=ultraschall.SetUSExternalState("ultraschall_clock", "preset", preset)     --save state preset
@@ -308,29 +320,65 @@ function drawClock()
   
   oldpreset=preset
   
-  
   if preset==0 or preset==8.0 then
-    --print_update(preset)
     WriteAlignedText("all displays are turned off :-(",0xbbbbbb, clockfont_bold, fsize/4,-1)
   end
---  txt_line=copy(txt_line_preset[preset])
   
   --write text
+  -- Date
   if uc_menu[1].checked then
-    WriteAlignedText(os.date("%H:%M:%S"),0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border) -- print realtime hh:mm:ss
+    date=os.date("%d.%m.%Y")
+  else
+    date=""
   end
   
-  if uc_menu[3].checked then
-    WriteAlignedText("   "..os.date("%d.%m.%Y").."   ",0xb3b3b3, clockfont_bold, txt_line[2].size * fsize ,txt_line[2].y*height+border, 2) -- print date
-  end
-  
+  -- RealTime
   if uc_menu[2].checked then
+    time=os.date("%H:%M:%S")
+  else
+    time=""
+  end
+  
+  if date~="" then
+    WriteAlignedText(date.."    ",0xb3b3b3, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,2) -- print realtime hh:mm:ss
+  end
+  if time~="" then
+    WriteAlignedText(time.."    ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
+  end
+  
+  -- Projecttime and Play/RecState
+  if uc_menu[3].checked then
     if uc_menu[4].checked==true and reaper.GetProjectLength()<get_position() then plus="+" else plus="" end
-    WriteAlignedText(status,txt_color, clockfont_bold, txt_line[3].size * fsize ,txt_line[3].y*height+border) -- print Status (Pause/Play...)
-    WriteAlignedText(plus..pos, txt_color, clockfont_bold, txt_line[4].size * fsize,txt_line[4].y*height+border) --print timecode in h:mm:ss format
+    checkpos=pos:match("(.-):")
+    if checkpos:len()==1 then addzero="0" else addzero="" end
+    WriteAlignedText(""..status,txt_color, clockfont_bold, txt_line[3].size * fsize ,txt_line[3].y*height+border) -- print Status (Pause/Play...)
+    WriteAlignedText(plus..addzero..pos, txt_color, clockfont_bold, txt_line[4].size * fsize,txt_line[4].y*height+border) --print timecode in h:mm:ss format
   end
 
+  -- Time Selection    
   if uc_menu[5].checked then
+    start, end_loop = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
+    length=end_loop-start
+    if length > 0 then
+      WriteAlignedText("Time Selection:",0xdddd00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
+      start=reaper.format_timestr_len(start, "", 0, 5):match("(.*):")
+      end_loop=reaper.format_timestr_len(end_loop, "", 0, 5):match("(.*):")
+      length=reaper.format_timestr_len(length, "", 0, 5):match("(.*):")
+      WriteAlignedText(start.." < (".. length..") > "..end_loop,0xdddd44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
+    else
+      WriteAlignedText("Time Selection:",0xaaaa00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
+      WriteAlignedText("-:--:-- < (".. "0:00:00"..") > -:--:--",0xaaaa44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
+    end
+  end
+  
+  -- Project Length
+  if uc_menu[6].checked then
+    WriteAlignedText("Project Length:",0xb6b6bb, clockfont_bold, txt_line[9].size * fsize, txt_line[9].y*height+border,0) -- print date
+    WriteAlignedText(reaper.format_timestr_len(reaper.GetProjectLength(),"", 0,5):match("(.*):"),0xb6b6bb, clockfont_bold, txt_line[10].size * fsize, txt_line[10].y*height+border,0) -- print date
+  end
+  
+  -- Next/Previous Marker/Region
+  if uc_menu[7].checked then
     prevtime, prevelm, nexttime, nextelm = get_position(2)
     
     prevelm=string.gsub(prevelm,"Marker:","M:")
@@ -346,48 +394,45 @@ function drawClock()
     string.gsub(prevelm,"Region_beg:","Reg: ")
     string.gsub(prevelm,"Region_end:","Reg: ")
     WriteAlignedText(prevtime.." < Marker > "..nexttime,0xb6b6bb, clockfont_bold, txt_line[6].size * fsize ,txt_line[6].y*height+border,0) -- print date
-  end
-    
-  if uc_menu[6].checked then
-    start, end_loop = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
-    length=end_loop-start
-    if length > 0 then
-      WriteAlignedText("Time Selection:",0xdddd00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
-      start=reaper.format_timestr_len(start, "", 0, 5):match("(.*):")
-      end_loop=reaper.format_timestr_len(end_loop, "", 0, 5):match("(.*):")
-      length=reaper.format_timestr_len(length, "", 0, 5):match("(.*):")
-      WriteAlignedText(start.." < (".. length..") > "..end_loop,0xdddd44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
-    end
-  end
-  
-  if uc_menu[7].checked then
-    WriteAlignedText("Project Length:",0xb6b6bb, clockfont_bold, txt_line[9].size * fsize, txt_line[9].y*height+border,0) -- print date
-    WriteAlignedText(reaper.format_timestr_len(reaper.GetProjectLength(),"", 0,5):match("(.*):"),0xb6b6bb, clockfont_bold, txt_line[10].size * fsize, txt_line[10].y*height+border,0) -- print date
-  end
-  
+  end  
   gfx.update()
   lasttime=reaper.time_precise()
+  gfx.set(0.4,0.4,0.4,0.8)
+  gfx.set(1)
 end
 
 
 function MainLoop()
   if reaper.time_precise() > lasttime+refresh or gfx.w~=lastw or gfx.h~=lasth then drawClock()  end
-  
-  if gfx.mouse_cap & 2 ==2 then --right mousecklick
-    local ret=showmenu()
+
+  if Triggered==true then
+    local ret=showmenu(menuposition)
+    menuposition=nil
 
     if ret==8 then -- /undock
       dock_state=gfx.dock(-1)
       if  dock_state & 1 == 1 then gfx.dock(dock_state -1) else gfx.dock(dock_state+1) end
     elseif ret==9 then exit_clock()
     end
-  --if type(ret)=="number" then print_update(ret) end
     
     if gfx.dock(-1)&1==1 then is_docked="true" else is_docked="false" end
-    --reaper.ClearConsole()
 
     AAA2=ultraschall.SetUSExternalState("ultraschall_clock", "docked", is_docked)  --save state docked    
     ultraschall.ShowErrorMessagesInReascriptConsole()
+  end
+  
+  if Triggered==nil then
+    if gfx.mouse_cap & 2 == 2 then
+      Triggered=true
+    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_x>=zahnradbutton_posx and gfx.mouse_x<=zahnradbutton_posx+(zahnradbutton_x*zahnradscale) and gfx.mouse_y>=zahnradbutton_posy and gfx.mouse_y<zahnradbutton_posy+(zahnradbutton_y*zahnradscale) then --right mouseclick
+      Triggered=true
+      menuposition=1
+      gfx.x=zahnradbutton_posx
+      gfx.y=zahnradbutton_posy
+      gfx.blit(zahnradbutton_clicked, zahnradscale, 0)
+    end
+  else
+    Triggered=nil
   end
   
   view = ultraschall.GetUSExternalState("ultraschall_gui", "view") -- get the actual view
@@ -401,16 +446,11 @@ function MainLoop()
     end
     gfx.update()
     
---    reaper.ShowConsoleMsg(preset.."HUH\n")
-  --print_update(preset)
     reaper.defer(MainLoop)
   end
 end
 
 function exit_clock()
---   if gfx.dock(-1)&1==1 then is_docked="true" else is_docked="false" end
---   ultraschall.SetUSExternalState("ultraschall_clock", "preset", preset)     --save state preset
---   ultraschall.SetUSExternalState("ultraschall_clock", "docked", is_docked)  --save state docked
   gfx.quit()
 end
 

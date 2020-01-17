@@ -61,9 +61,9 @@ end
 
 if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
     ultraschall.Separator = "\\"
-  else
+else
     ultraschall.Separator = "/"
-  end
+end
 
 local info = debug.getinfo(1,'S');
 --ultraschall.Script_Path = info.source:match[[^@?(.*[\/])[^\/]-$]]

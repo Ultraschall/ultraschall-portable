@@ -19,7 +19,7 @@ IMPORTANT:  This REAPER® ("Software") End User License Agreement ("EULA") is a l
 
 1.5  Subject to the terms and conditions of this Agreement, you are granted a limited non-exclusive license to use the Software on one (1) computer any given time.  This License is not a sale of the Software or any other copy.  Cockos retains title and ownership of the Software and documentation, including all intellectual property rights.  No title to the intellectual property in the Software is transferred to you.  You will not acquire any rights to the Software except as expressly set forth herein.
 
-1.6  Said purchased license shall apply to the current version of REAPER® and any future versions of REAPER® up through and including version 6.99.  
+1.6  Said purchased license shall apply to the current version of REAPER® and any future versions of REAPER® up through and including version 7.99.  
 
 1.7  Cockos reserves the right within its sole discretion to modify the terms of its license for all future versions of REAPER®.
 

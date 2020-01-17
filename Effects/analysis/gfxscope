@@ -35,6 +35,7 @@ g_hold<0 ? (
 );
 
 @gfx 640 400
+small_mode = gfx_w<200 || gfx_h<100;
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
 
 gfx_getchar(); // request mouse_cap to be set even when mouse button not down
@@ -111,9 +112,9 @@ function cycle_slider(x, y, z, dx)
      ) : (
       cap_mode = cap_drag = cap_timer = 0;     
       length_button.hit_button(mouse_x,mouse_y,2)||
-      vzoom_button.hit_button(mouse_x,mouse_y,1)||
+      (!small_mode && vzoom_button.hit_button(mouse_x,mouse_y,1))||
       hold_button.hit_button(mouse_x,mouse_y,3)||
-      retrig_button.hit_button(mouse_x,mouse_y,4);
+      (!small_mode && retrig_button.hit_button(mouse_x,mouse_y,4));
       
       cap_mode == 3 ? g_hold_needadj=1;
       
@@ -198,9 +199,9 @@ function format_time_msec(a) (
 function format_time_msec_hz(b)(
   b > 1 ? 
     b > 250 ? 
-      sprintf(#,"%.02fs",b*0.001 + 0.005) : 
-    sprintf(#,"%d Hz",1000/b+0.5) : 
-  sprintf(#,"%.1f kHz",1/b + 0.05); 
+      sprintf(#,small_mode ? "%.1fs":"%.02fs",b*0.001 + 0.005) : 
+    sprintf(#,small_mode ? "%dHz":"%d Hz",1000/b+0.5) : 
+  sprintf(#,small_mode?"%.1fk":"%.1f kHz",1/b + 0.05); 
 ); 
 
 mouse_wheel ? (
@@ -272,7 +273,7 @@ need_view_update || view_maxdb != view_maxdb_last || old_w != gfx_w || old_h!=gf
 
   // draw vert grid
   v=gfx_w - 72*gfx_ext_retina;
-  while(
+  small_mode || while(
     gfx_a=0.25;
     gfx_line(v,gfx_texth+8,v,gfx_h);
     a = view_msec - view_msec * v / gfx_w;
@@ -451,16 +452,26 @@ viewadv < 1 ? (
   );
 );
 
-hold_button.draw_button(gfx_w,0, g_hold>=0 ? sprintf(#,"hold: -%d samples",g_hold+0.5) : "hold");
+gfx_x=gfx_w+8;
+hold_button.draw_button(gfx_x-8,small_mode ? (gfx_h-gfx_texth-4):0, 
+  g_hold>=0 ? sprintf(#,small_mode?"h: -%d":"hold: -%d samples",g_hold+0.5) : "hold");
 
-length_button.draw_button(gfx_x-8, 0, sprintf(#,"length: %s",  format_time_msec_hz(view_msec)) );
+small_mode? (gfx_x = gfx_w+8 );
+length_button.draw_button(gfx_x-8, 0, sprintf(#,"%s%s", small_mode?"":"length: ", format_time_msec_hz(view_msec)) );
 
-vzoom_button.draw_button(gfx_x-8, 0, sprintf(#,"range: %+.1fdB",view_maxdb));
+small_mode ? (
+  gfx_x=0;
+  gfx_y=2;
+  gfx_set(1,1,1,.25);
+  gfx_printf("%+.0f",view_maxdb);
+  gfx_a=1;
+) : (
+  vzoom_button.draw_button(gfx_x-8, 0, sprintf(#,"range: %+.1fdB",view_maxdb));
 
-retrig_button.draw_button(gfx_x-8, 0, sprintf(#,"retrig: %s",(view_retrig|0)==1?"any" : 
+retrig_button.draw_button(gfx_x-8,0, sprintf(#,"retrig: %s",(view_retrig|0)==1?"any" : 
   (view_retrig|0)==2?"ascend":
   (view_retrig|0)==3?"descend":
   "instant"));
- 
+); 
 
 );

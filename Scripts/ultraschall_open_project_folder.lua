@@ -6,7 +6,7 @@
  * Author URI: http://extremraym.com
  * Repository: GitHub > X-Raym > EEL Scripts for Cockos REAPER
  * Repository URI: https://github.com/X-Raym/REAPER-EEL-Scripts
- * File URl: 
+ * File URl:
  * Licence: GPL v3
  * Forum Thread: Scripts: Various
  * Forum Thread URI: http://forum.cockos.com/showthread.php?p=1622146
@@ -21,7 +21,7 @@
 	+ Initial Release
 --]]
 
- 
+
 --------------------------------------------------------
 -- DEBUG
 -- -----
@@ -69,19 +69,19 @@ function IsProjectSaved()
 
 	retval, project_path_name = reaper.EnumProjects(-1, "")
 	if project_path_name ~= "" then
-		
+
 		dir = GetPath(project_path_name, separator)
 		--msg(name)
 		name = string.sub(project_path_name, string.len(dir) + 1)
 		name = string.sub(name, 1, -5)
 
 		name = name:gsub(dir, "")
-		
+
 		--msg(name)
 		project_saved = true
 		return project_saved
 	else
-		display = reaper.ShowMessageBox("You need to save the project to execute this script.", "File Export", 1)
+		display = reaper.ShowMessageBox("You need to save the project to execute this script.", "Project Folder", 1)
 
 		if display == 1 then
 

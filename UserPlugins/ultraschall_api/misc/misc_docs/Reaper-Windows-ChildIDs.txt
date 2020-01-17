@@ -1700,3 +1700,72 @@ ChildIDs:
     1637  Slider1                                                       -   REAPERhfader
     
 
+>Media Item Properties
+   -1     Position:                         -   Static
+    1     OK                                -   Button
+    2     Cancel                            -   Button
+    3     Nudge/Set...                      -   Button
+    4     Take FX...                        -   Button
+    1000  Item-timebase-dropdownlist        -   ComboBox
+    1001  Item mix behavior-dropdownlist    -   ComboBox
+    1002  Active take-dropdownlist          -   ComboBox
+    1004  Take pitchshift/stretchmode-dropdownlist  -   ComboBox
+    1007  Position-inputfield               -   Edit
+    1008  Length-inputfield                 -   Edit
+    1009  Snap-offset-inputfield            -   Edit
+    1010  Fade in-inputbox                  -   Edit
+    1011  Fade out-inputbox                 -   Edit
+    1012  Start in source-inputfield        -   Edit
+    1013  Pitch adjust-inputfield           -   Edit
+    1014  Playback-rate-inputfield          -   Edit
+    1015  Fade in Curve-inputfield          -   Edit
+    1016  Fade out Curve-inputfield         -   Edit
+    1022  Section-start-inputfield          -   Edit
+    1023  Section-length-inputfield         -   Edit
+    1031  time                              -   Button
+    1032  beats                             -   Button
+    1033  HMSF                              -   Button
+    1037  Take name-inputfield              -   Edit
+    1042  &Loop source                      -   Button
+    1043  &Mute                             -   Button
+    1044  Lock                              -   Button
+    1045  Play all ta&kes                   -   Button
+    1046  Slider1                           -   REAPERhfader
+    1047  Slider1                           -   REAPERhpanfader
+    1048  0.00dB                            -   Static
+    1056                                    -   Button
+    1057                                    -   Button
+    1058  Normal                            -   Button
+    1059  No autofades                      -   Button
+    1060  &Invert phase                     -   Button
+    1061  Preserve pitc&h when changing rate  -   Button
+    1062  Section:                          -   Button
+    1063  Reverse                           -   Button
+    1065                                    -   Button
+    1104  &Normalize                        -   Button
+    1105  Take envelopes..                  -   Button
+    1144  Apply                             -   Button
+    1151  Take media source-RESAMPLED-textbox  -   Edit
+    1240  Start in source:                  -   Static
+    1241  &Take name:                       -   Static
+    1250  Playback rate:                    -   Static
+    1654  Pitch adjust (semitones):         -   Static
+    1656  Take properties                   -   Button
+    1657  Take pitch shift/time stretch mode   -   Button
+    1658  Take media source:  RESAMPLED     -   Button
+    1659  center                            -   Static
+    1660  Volume/pan:                       -   Static
+    1661  Channel mode:                     -   Static
+    1664  Take Media Source-Fade-inputbox   -   Edit
+    1665  Fade:                             -   Static
+    1666  ms                                -   Static
+    1667  Length:                           -   Static
+    1668  &Properties...                    -   Button
+    1669  &Choose new file...               -   Button
+    1670  &Rename file...                   -   Button
+    1671  Stretch markers: fade size-inputfield  -   Edit
+    1672                                    -   Button
+    1673  ms  Mode:                         -   Static
+    1674  Active take:                      -   Static
+    1710  Project default                   -   ComboBox
+    1800  Stretch markers: fade size:       -   Static

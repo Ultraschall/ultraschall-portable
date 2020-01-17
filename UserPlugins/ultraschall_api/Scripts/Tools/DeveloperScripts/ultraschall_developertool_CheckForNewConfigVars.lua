@@ -1,3 +1,29 @@
+  --[[
+  ################################################################################
+  # 
+  # Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+  # 
+  # Permission is hereby granted, free of charge, to any person obtaining a copy
+  # of this software and associated documentation files (the "Software"), to deal
+  # in the Software without restriction, including without limitation the rights
+  # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  # copies of the Software, and to permit persons to whom the Software is
+  # furnished to do so, subject to the following conditions:
+  # 
+  # The above copyright notice and this permission notice shall be included in
+  # all copies or substantial portions of the Software.
+  # 
+  # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  # THE SOFTWARE.
+  # 
+  ################################################################################
+  --]]
+
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- This checks, whether any line in a string, stored in clipboard, is a valid config-var
 -- after that, it will put a string into clipboard with all found strings.
@@ -17,6 +43,8 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 A2=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/DocsSourcefiles/reaper-config_var.USDocML")
 if A2==nil then A2="" end
 
+--A2=""
+
 orgvars={}
 Acount=1
 
@@ -34,8 +62,34 @@ end
 
 local Clipboard_string = ultraschall.GetStringFromClipboard_SWS()
 
-Clipboard_string=Clipboard_string.."\n "
 
+-- read strings from Reaper.exe
+-- unfortunately too slow.. :/
+--[[
+A = ultraschall.ReadFullFile(reaper.GetExePath().."/reaper.exe", true):lower()
+
+--if OL==nil then return end
+
+Clipboard_string=""
+
+--for D in string.gmatch(A, "([%w%d%p_]+)()") do
+for D in string.gmatch(A, "([%l_]+)") do
+  if D:len()>1 then
+    Clipboard_string=Clipboard_string..D.."\n"
+  end
+end
+
+--print3(Clipboard_string)
+
+if OL==nil then return end
+--]]
+
+
+Clipboard_string=Clipboard_string.."\n "
+--print3(Clipboard_string)
+--if LLLLL==nil then return end
+
+-- let's check the strings
 
 ints={}
 local integers=""
@@ -141,7 +195,9 @@ end
 
 Stringsstring="Strings:\n"
 for i=1, Stringscount do
-  Stringsstring=Stringsstring..Strings[i].."\n"
+  if Strings[i]~=nil then
+    Stringsstring=Stringsstring..Strings[i].."\n"
+  end
 end
 
 print3(Intstring.."\n"..Doublestring.."\n"..Stringsstring)

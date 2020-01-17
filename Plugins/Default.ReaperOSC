@@ -253,6 +253,7 @@ SCRUB r/scrub
 PLAY_RATE n/playrate f/playrate/raw r/playrate/rotary s/playrate/str
 TEMPO n/tempo f/tempo/raw r/tempo/rotary s/tempo/str
 
+# writing a marker or region time may change its index -- you should use the *ID_ versions below if needed
 MARKER_NAME s/marker/@/name
 MARKER_NUMBER s/marker/@/number/str
 MARKER_TIME f/marker/@/time
@@ -267,6 +268,16 @@ LAST_REGION_NAME s/lastregion/name
 LAST_REGION_NUMBER s/lastregion/number/str
 LAST_REGION_TIME f/lastregion/time
 LAST_REGION_LENGTH f/lastregion/length
+
+
+# these are write-only, ID is the "NUMBER" field from above -- if not found, creates the marker/region
+MARKERID_NAME s/marker_id/@/name
+MARKERID_TIME f/marker_id/@/time
+MARKERID_NUMBER i/marker_id/@/number
+REGIONID_NAME s/region_id/@/name
+REGIONID_TIME f/region_id/@/time
+REGIONID_LENGTH f/region_id/@/length
+REGIONID_NUMBER i/region_id/@/number
 
 LOOP_START_TIME f/loop/start/time
 LOOP_END_TIME f/loop/end/time
