@@ -31,7 +31,7 @@
 -- only negative-values allowed!
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-preroll = ultraschall.GetUSExternalState("Ultraschall_Jump_To_ItemEdge", "PrerollTime_Right")
+preroll = tonumber(ultraschall.GetUSExternalState("Ultraschall_Jump_To_ItemEdge", "PrerollTime_Right"))
 lastposition=reaper.GetExtState("ultraschall", "nextitemedge_lastposition")
 if lastposition=="" then lastposition=-200 end
 

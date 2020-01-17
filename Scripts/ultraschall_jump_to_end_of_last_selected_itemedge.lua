@@ -25,7 +25,7 @@
 --]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-preroll = ultraschall.GetUSExternalState("Ultraschall_Jump_To_Selected_ItemEdge", "SelItem_PrerollTime_End")
+preroll = tonumber(ultraschall.GetUSExternalState("Ultraschall_Jump_To_Selected_ItemEdge", "SelItem_PrerollTime_End"))
 if preroll=="" then preroll=0 end
 
 -- right

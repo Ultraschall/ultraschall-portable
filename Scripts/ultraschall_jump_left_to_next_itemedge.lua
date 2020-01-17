@@ -51,7 +51,7 @@ function ultraschall.IsSplitAtPosition(trackstring, position)
 end
 
 -- get current settings and selected tracks
-preroll = ultraschall.GetUSExternalState("Ultraschall_Jump_To_ItemEdge", "PrerollTime_Left")
+preroll = tonumber(ultraschall.GetUSExternalState("Ultraschall_Jump_To_ItemEdge", "PrerollTime_Left"))
 if preroll=="" then preroll=-1 end
 
 trackstring= ultraschall.CreateTrackString_SelectedTracks()
@@ -73,9 +73,11 @@ else
     -- if current editcursor-position is already at a split-position/mediaitemedge, within the selected tracks, 
     -- just jump backwards by the amount of pre-roll
     reaper.SetEditCurPos(reaper.GetCursorPosition()+preroll, true, true)
+--    print(preroll)
   else  
     elementposition_prev, elementtype_prev, number_prev, elementposition_next, elementtype_next, number_next = ultraschall.GetClosestGoToPoints(trackstring, reaper.GetCursorPosition()-0.001, true, false, false)
     reaper.SetEditCurPos(elementposition_prev+preroll, true, true)
+--    print("oh")
   end
 end
 
