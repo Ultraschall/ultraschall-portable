@@ -41,6 +41,7 @@ function SoundcheckUnsaved(userspace)
 
 end
 
+
 function SoundcheckOverdub(userspace)
 
   local length = reaper.GetProjectLength(0)
@@ -52,15 +53,32 @@ function SoundcheckOverdub(userspace)
     reaper.SetProjExtState(0, "Overdub", "started", "0")
     return false
 
-  elseif overdub_started == "1" or (play < length and reaper.GetPlayState() == 5) then
+  elseif play < length and reaper.GetPlayState() == 5 then
 
-      reaper.SetProjExtState(0, "Overdub", "started", "1")
-      return true
+    local itemcount = reaper.CountMediaItems(0)
+    if itemcount == 0 then
+      return false --ist die erste Aufnahme überhaupt, kann also nicht überlappen
+    end
+
+    for i = 0, itemcount-1 do -- gehe alle Items durch ob es irgnedwo ein Ende gibt, das hinter der aktuellen Aufnahmeposition steht
+      local MediaItem = reaper.GetMediaItem(0, i)
+      local end_position = reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION") + reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
+      if play < end_position then
+        reaper.SetProjExtState(0, "Overdub", "started", "1")
+        return true
+      end
+    end
+
+    return false -- war wohl nur eine Kapitelmarke etc.
+
+  elseif overdub_started == "1" then
+
+      return true -- Problem besteht weiterhin
 
   else
+
     return false
   end
-  -- print(length)
 
 end
 
