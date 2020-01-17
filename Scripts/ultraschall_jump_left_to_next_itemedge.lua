@@ -25,7 +25,7 @@
 --]]
 
 -- move cursor left to previous edge.
--- You can set the pre-roll-offset in the ultraschall.ini -> [Ultraschall_Jump_To_ItemEdge] -> PrerollTime_left
+-- You can set the pre-roll-offset in the ultraschall.ini -> [Ultraschall_Jump_To_ItemEdge] -> PrerollTime_Left
 -- default is one second before the previous splitedge; only negative values allowed
 --
 -- if playstate==stopped or stopped, the editcursor is at a splitposition and preroll~=0 then it jumps only left by the amount 
@@ -51,7 +51,7 @@ function ultraschall.IsSplitAtPosition(trackstring, position)
 end
 
 -- get current settings and selected tracks
-preroll = ultraschall.GetUSExternalState("Ultraschall_Jump_To_ItemEdge", "PrerollTime_left")
+preroll = ultraschall.GetUSExternalState("Ultraschall_Jump_To_ItemEdge", "PrerollTime_Left")
 if preroll=="" then preroll=-1 end
 
 trackstring= ultraschall.CreateTrackString_SelectedTracks()
