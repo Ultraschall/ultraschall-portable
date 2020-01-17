@@ -50,7 +50,7 @@ function AddMuteEnvelopePoint_IfNecessary(startsel, endsel)
     
     if retval==false and Envelope~=nil then
       envIDX, envVal, envPosition = ultraschall.GetPreviousMuteState(i, endsel)
-      reaper.InsertEnvelopePoint(Envelope, endsel, envVal, 1, 0, false, false)
+      if envIDX~=-1 then reaper.InsertEnvelopePoint(Envelope, endsel, envVal, 1, 0, false, false) end
     end
   end
 end

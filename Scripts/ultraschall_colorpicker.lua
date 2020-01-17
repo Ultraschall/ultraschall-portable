@@ -140,3 +140,11 @@ GUI.elms = {
       GUI.Init()
       GUI.Main()
     end
+    
+function atexit()
+  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+end
+
+reaper.atexit(atexit)
+
+

@@ -68,18 +68,18 @@ recpos >= histsize ? recpos=0;
 @gfx 640 400
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
 
-
 old_w != gfx_w || old_h!=gfx_h? (
-cur_xpos=0;
-old_w=gfx_w; old_h=gfx_h;
-
-gfx_r=gfx_g=gfx_b=0; gfx_a=1;
-gfx_x=gfx_y=0;
-gfx_rectto(gfx_w,gfx_h);
-need_button_refs=1;
+  small_mode = gfx_w<200 || gfx_h<200;
+  cur_xpos=0;
+  old_w=gfx_w; old_h=gfx_h;
+  
+  gfx_r=gfx_g=gfx_b=0; gfx_a=1;
+  gfx_x=gfx_y=0;
+  gfx_rectto(gfx_w,gfx_h);
+  need_button_refs=1;
 );
 
-use_h = gfx_h-gfx_texth - 4;
+use_h = small_mode ? gfx_h : (gfx_h-gfx_texth - 4);
 
 function calc_color(mv, col*) globals(over24)
 (
@@ -136,64 +136,95 @@ globals(cap_mode, cap_last_x, cap_last_y)
 );
 
 
-(mouse_cap & 1) ? (
-   !(last_mouse_cap & 1) ? (
-       cap_mode=0;
-       scroll_button.hit_button(mouse_x,mouse_y,-1) ? (
-         slider5=!slider5;
-         sliderchange(slider5);
-         need_button_refs=1;
-       ) : (
-         gate_button.hit_button(mouse_x,mouse_y,1)||
-         curve_button.hit_button(mouse_x,mouse_y,2) ||
-         fft_button.hit_button(mouse_x,mouse_y,3) ||
-         rate_button.hit_button(mouse_x,mouse_y,5) ||
-         window_button.hit_button(mouse_x,mouse_y,4);
-       );
-    );
-    cap_mode == 1  && cap_last_y != mouse_y ? (
-      slider3 = min(max(slider3 + 0.1 * (cap_last_y-mouse_y),-180),6.0);
-      minvol=10^(slider3/20*2);
-      cap_last_y=mouse_y;
+(mouse_cap & 1) && !small_mode ? (
+  !(last_mouse_cap & 1) ? (
+    cap_mode=0;
+    scroll_button.hit_button(mouse_x,mouse_y,-1) ? (
+      slider5=!slider5;
+      sliderchange(slider5);
       need_button_refs=1;
-      slider_automate(slider3);
-    );
-    cap_mode == 2  && cap_last_y != mouse_y ? (
-      slider4 = min(max(slider4 + 0.005 * (cap_last_y-mouse_y),0.0),10.0);
-      cap_last_y=mouse_y;
-      islogmode = slider4>0.0;
-      g_logscale=pow(10.0,(slider4<1 ? slider4: slider4*4.0-3.0));
-      need_button_refs=1;
-      slider_automate(slider4);
-    );
-    cap_mode == 3 && cap_last_y != mouse_y ? (
-      slider1 = min(max(slider1 + (cap_last_y-mouse_y)*.1,0.0),11.0);
-      fftsize=2^((slider1|0)+4);
-      
-      cap_last_y=mouse_y;
-      need_button_refs=1;
-      slider_automate(slider1);
-    );
-    cap_mode == 4 && cap_last_y != mouse_y ? (
-      slider2 = min(max(slider2 + (cap_last_y-mouse_y)*.01,0.0),3.0);
-      
-      cap_last_y=mouse_y;
-      need_button_refs=1;
-      slider_automate(slider2);
-    );
-    cap_mode == 5 && cap_last_y != mouse_y ? (
-      slider6 = min(max(slider6 + (cap_last_y-mouse_y)*.1,1.0),40.0)|0;
-      pixels_per_frame = slider6;
-      
-      cap_last_y=mouse_y;
-      need_button_refs=1;
-      slider_automate(slider6);
+    ) : (
+      gate_button.hit_button(mouse_x,mouse_y,1)||
+      curve_button.hit_button(mouse_x,mouse_y,2) ||
+      fft_button.hit_button(mouse_x,mouse_y,3) ||
+      rate_button.hit_button(mouse_x,mouse_y,5) ||
+      window_button.hit_button(mouse_x,mouse_y,4);
     );
   );
+  cap_mode == 1  && cap_last_y != mouse_y ? (
+    slider3 = min(max(slider3 + 0.1 * (cap_last_y-mouse_y),-180),6.0);
+    minvol=10^(slider3/20*2);
+    cap_last_y=mouse_y;
+    need_button_refs=1;
+    slider_automate(slider3);
+  );
+  cap_mode == 2  && cap_last_y != mouse_y ? (
+    slider4 = min(max(slider4 + 0.005 * (cap_last_y-mouse_y),0.0),10.0);
+    cap_last_y=mouse_y;
+    islogmode = slider4>0.0;
+    g_logscale=pow(10.0,(slider4<1 ? slider4: slider4*4.0-3.0));
+    need_button_refs=1;
+    slider_automate(slider4);
+  );
+  cap_mode == 3 && cap_last_y != mouse_y ? (
+    slider1 = min(max(slider1 + (cap_last_y-mouse_y)*.1,0.0),11.0);
+    fftsize=2^((slider1|0)+4);
+    
+    cap_last_y=mouse_y;
+    need_button_refs=1;
+    slider_automate(slider1);
+  );
+  cap_mode == 4 && cap_last_y != mouse_y ? (
+    slider2 = min(max(slider2 + (cap_last_y-mouse_y)*.01,0.0),3.0);
+    
+    cap_last_y=mouse_y;
+    need_button_refs=1;
+    slider_automate(slider2);
+  );
+  cap_mode == 5 && cap_last_y != mouse_y ? (
+    slider6 = min(max(slider6 + (cap_last_y-mouse_y)*.1,1.0),40.0)|0;
+    pixels_per_frame = slider6;
 
+    cap_last_y=mouse_y;
+    need_button_refs=1;
+    slider_automate(slider6);
+  );
+);
+(mouse_cap == 0 && last_mouse_cap == 2) ? (
+  gfx_x=mouse_x;
+  gfx_y=mouse_y;
+  sprintf(#menustr,"%sScroll",slider5?"!":"");
+  i=0;
+  sprintf(#menustr,"%s|>FFT size",#menustr);
+  loop(12,
+    sprintf(#menustr,"%s|%s%d",#menustr,(slider1|0)==i ?"!":"", 16<<i);
+    i+=1;
+  );
+  sprintf(#menustr,"%s|<",#menustr);
+  
+  sprintf(#menustr,"%s|>Window|%sRectangular|%sHamming|%sBlackman-Harris|%sBlackman|<",
+    #menustr,slider2==0?"!":"",slider2==1?"!":"", slider2==2?"!":"", slider2==3?"!":"");
+    
+  sprintf(#menustr,"%s|>Rate",#menustr);
+  i=1;
+  loop(8,
+    sprintf(#menustr,"%s|%s%d",#menustr,(slider6|0)==i ?"!":"", i);
+    i+=1;
+  );
+  sprintf(#menustr,"%s|<",#menustr);
+
+  ret = gfx_showmenu(#menustr);
+  ret > 0 ? (
+    ret == 1 ? (slider5=!slider5) :
+    (ret-=2) < 12 ? (slider1 = ret; ):
+    (ret-=12) < 4 ? (slider2 = ret; ):
+    (ret-=4) < 8 ? (pixels_per_frame = slider6 = ret+1; );
+  );
+  need_button_refs=1;
+);
 last_mouse_cap = mouse_cap;
 
-need_button_refs ? (
+need_button_refs && !small_mode ? (
   need_button_refs=0;
   gfx_a=1;
   gfx_r=gfx_g=gfx_b=0;

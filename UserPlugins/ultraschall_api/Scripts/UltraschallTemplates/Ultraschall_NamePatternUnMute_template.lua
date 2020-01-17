@@ -25,6 +25,9 @@
 ]] 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+Trackname=
+
+
 ------------------------------------------------------------------------------------------------------------------------
 ---- Turns Mute off in the Mute-Envelope of Tracks with "Trackname" somewhere in their Trackname at Cursor-Position ----
 ------------------------------------------------------------------------------------------------------------------------

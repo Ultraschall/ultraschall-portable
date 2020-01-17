@@ -1,9 +1,37 @@
+  --[[
+  ################################################################################
+  # 
+  # Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+  # 
+  # Permission is hereby granted, free of charge, to any person obtaining a copy
+  # of this software and associated documentation files (the "Software"), to deal
+  # in the Software without restriction, including without limitation the rights
+  # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  # copies of the Software, and to permit persons to whom the Software is
+  # furnished to do so, subject to the following conditions:
+  # 
+  # The above copyright notice and this permission notice shall be included in
+  # all copies or substantial portions of the Software.
+  # 
+  # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  # THE SOFTWARE.
+  # 
+  ################################################################################
+  --]]
+
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
 Tempfile=ultraschall.Api_Path.."/temp/temporary"
 --ConversionToolMD2HTML="c:\\Program Files (x86)\\Pandoc\\pandoc.exe -f markdown -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
 ConversionToolMD2HTML="chcp 65001\n\r \"c:\\Program Files (x86)\\Pandoc\\pandoc.exe\" -f markdown_strict -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
 
 Infilename=ultraschall.Api_Path.."/ultraschall_functions_engine.lua"
+Infilename_render=ultraschall.Api_Path.."/Modules/ultraschall_functions_Render_Module.lua"
 Infilename2=ultraschall.Api_Path.."/ultraschall_functions_engine_beta.lua"
 Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Functions.html"
 
@@ -15,13 +43,27 @@ _temp,scriptfilename=ultraschall.GetPath(scriptfilename)
 
 func_done_count, vars_done_count=progresscounter(false)
 
+--print2(func_done_count)
+
 --if L==nil then return end
+
+
+local String=ultraschall.ReadFullFile(Infilename, false)
+
+filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Modules/")
+for i=1, filecount do
+  String=String..ultraschall.ReadFullFile(files[i], false).."\n"
+end
+
+if ultraschall.US_BetaFunctions=="ON" then
+    String=String.."\n"..ultraschall.ReadFullFile(Infilename2, false)
+end
 
 local FunctionList2=""
 
 temp, build=reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."/IniFiles/ultraschall_api.ini")
 
-version,date,beta,D,Tagline,F,G=ultraschall.GetApiVersion()
+D,version,date,beta,Tagline,F,G=ultraschall.GetApiVersion()
 
 function ultraschall.SplitUSDocBlocs(String)
   local Table={}
@@ -446,12 +488,6 @@ function ultraschall.ColorateDatatypes(String)
   return String:sub(2,-2)
 end
 
-local String=ultraschall.ReadFullFile(Infilename, false)
-
---if String:match("180")~=nil then reaper.MB(String:match("....180."),"Schon?",0) end
-if ultraschall.US_BetaFunctions=="ON" then
-    String=String.."\n"..ultraschall.ReadFullFile(Infilename2, false)
-end
 
 Ccount, C=ultraschall.SplitUSDocBlocs(String)
 
@@ -618,7 +654,7 @@ function contentindex()
   for i=1, count2 do
     chapter=HeaderList[i]:match("(.-\n)")
     slugs=HeaderList[i]:match("\n(.*)\n")
-    A2, AA2, AAA2 = ultraschall.SplitStringAtLineFeedToArray(slugs.."\n")
+    A2, AA2, AAA2 = ultraschall.SplitStringAtLineFeedToArray(slugs)
     table.sort(AA2)
     slugs=""
     for i=1, A2 do
