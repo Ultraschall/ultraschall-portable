@@ -579,6 +579,9 @@ end
 
 function ColorPic:onmousedown()
   -- If the button was released on the button, run func
+  GUI.mouse.x = GUI.mouse.x / dpi_scale
+  GUI.mouse.y = GUI.mouse.y / dpi_scale
+
   if IsInside(self, GUI.mouse.x, GUI.mouse.y) then
     col = (GUI.mouse.x+20) / 44 - 1
     col = GUI.round(col)
