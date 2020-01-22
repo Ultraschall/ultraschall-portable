@@ -44,39 +44,52 @@ end
 
 function SoundcheckOverdub(userspace)
 
+  if reaper.GetPlayState() ~= 5 then
+    userspace["skip_overdub_check"] = 0 -- stoppen der Aufnahme führt dazu, dass beim nächsten Recording der Check wieder durchgeführt wird
+    -- return false
+  end
+
+  if userspace["skip_overdub_check"] == 1 then
+    return false
+  end
+
   local length = reaper.GetProjectLength(0)
   local play = reaper.GetPlayPosition()
   local cursor = reaper.GetCursorPosition()
-  local retval, overdub_started = reaper.GetProjExtState(0, "Overdub", "started")
 
-  if cursor >= length and overdub_started == "1" then
-    reaper.SetProjExtState(0, "Overdub", "started", "0")
+  if cursor >= length then -- alles in Ordnung, muss für diese Aufnahme nicht weiter geprüft werden.
+    userspace["skip_overdub_check"] = 1
+    userspace["overdub_warning"] = 0
     return false
 
-  elseif play < length and reaper.GetPlayState() == 5 then
+  elseif play < length and reaper.GetPlayState() == 5 then -- es gibt Elemente, die hinter dem Rec-Cursor stehen und eine Aufnahme läuft
 
     local itemcount = reaper.CountMediaItems(0)
     if itemcount == 0 then
+      userspace["skip_overdub_check"] = 1
+      userspace["overdub_warning"] = 0
       return false --ist die erste Aufnahme überhaupt, kann also nicht überlappen
     end
 
     for i = 0, itemcount-1 do -- gehe alle Items durch ob es irgnedwo ein Ende gibt, das hinter der aktuellen Aufnahmeposition steht
       local MediaItem = reaper.GetMediaItem(0, i)
       local end_position = reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION") + reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
-      if play < end_position then
-        reaper.SetProjExtState(0, "Overdub", "started", "1")
+      if play < end_position then -- es ist wirklich ein overdub
+        userspace["overdub_warning"] = 1
+        userspace["skip_overdub_check"] = 0 -- auch weiter prüfen
         return true
       end
     end
 
+    userspace["skip_overdub_check"] = 1
+    userspace["overdub_warning"] = 0
     return false -- war wohl nur eine Kapitelmarke etc.
 
-  elseif overdub_started == "1" then
-
-      return true -- Problem besteht weiterhin
+  elseif userspace["overdub_warning"] == 1 then
+    userspace["skip_overdub_check"] = 0
+    return true
 
   else
-
     return false
   end
 
