@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 6.01
+            ## ReaScript API as of Reaper 6.03
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -26694,12 +26694,13 @@
         <functioncall prog_lang="python">Int  JS_WindowMessage_PassThrough(void windowHWND, String message, Boolean passThrough)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=0.998
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Changes the passthrough setting of a message type that is already being intercepted.
 
+            Returns 1 if successful, 0 if the message type is not yet being intercepted, or -2 if the argument could not be parsed.
         </description>
         <retvals>
            integer  - 
@@ -26785,11 +26786,13 @@
         <functioncall prog_lang="python">Boolean JS_WindowMessage_Post(void windowHWND, String message, Float wParam, Int wParamHighWord, Float lParam, Int lParamHighWord)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.986
+            JS=0.998
             Lua=5.3
         </requires>
         <description>
-            Posts a message in the message queue associated with the thread that created the specified window, and returns without waiting.
+            If the specified window and message type are not currently being intercepted by a script, this function will post the message in the message queue of the specified window, and return without waiting.
+
+            If the window and message type are currently being intercepted, the message will be sent directly to the original window process, similar to WindowMessage_Send, thereby skipping any intercepts.
 
             Parameters:
             * message: String containing a single message name, such as "WM_SETCURSOR", or in hexadecimal format, "0x0020".
@@ -26800,7 +26803,6 @@
             Notes:
             * For more information about parameter values, refer to documentation for the Win32 C++ function PostMessage.
             * Messages should only be sent to windows that were created from the main thread.
-            * The message will be sent directly to the window, skipping interception by scripts.
             * Useful for simulating mouse clicks and calling mouse modifier actions from scripts.
         </description>
         <retvals>
@@ -26920,24 +26922,22 @@
         <functioncall prog_lang="python">Int JS_WindowMessage_Send(void windowHWND, String message, Float wParam, Int wParamHighWord, Float lParam, Int lParamHighWord)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.986
+            JS=0.998
             Lua=5.3
         </requires>
         <description>
-           Sends a message to the specified window, and returns after the message has been processed.
+           Sends a message to the specified window by calling the window process directly, and only returns after the message has been processed. Any intercepts of the message by scripts will be skipped, and the message can therefore not be blocked.
 
-            Parameters:
-            * message: String containing a single message name, such as "WM_SETCURSOR", or in hexadecimal format, "0x0020".
-            (For a list of WM_ and CB_ message types that are valid cross-platform, refer to swell-types.h. Only these will be recognized by WM_ or CB_ name.)
-            * wParam, wParamHigh, lParam and lParamHigh: Low and high 16-bit WORDs of the WPARAM and LPARAM parameters.
-            (Most window messages encode separate information into the two WORDs. However, for those rare cases in which the entire WPARAM and LPARAM must be used to post a large pointer, the script can store this address in wParam or lParam, and keep wParamHigh and lParamHigh zero.)
+           Parameters:
+           * message: String containing a single message name, such as "WM_SETCURSOR", or in hexadecimal format, "0x0020".
+           (For a list of WM_ and CB_ message types that are valid cross-platform, refer to swell-types.h. Only these will be recognized by WM_ or CB_ name.)
+           * wParam, wParamHigh, lParam and lParamHigh: Low and high 16-bit WORDs of the WPARAM and LPARAM parameters.
+           (Most window messages encode separate information into the two WORDs. However, for those rare cases in which the entire WPARAM and LPARAM must be used to post a large pointer, the script can store this address in wParam or lParam, and keep wParamHigh and lParamHigh zero.)
 
-            Notes:
-            * For more information about parameter and return values, refer to documentation for the Win32 C++ function SendMessage.
-            * Messages should only be sent to windows that were created from the main thread.
-            * The message will be sent directly to the window, skipping interception by scripts.
-            * Useful for simulating mouse clicks and calling mouse modifier actions from scripts.
-
+           Notes:
+           * For more information about parameter and return values, refer to documentation for the Win32 C++ function SendMessage.
+           * Messages should only be sent to windows that were created from the main thread.
+           * Useful for simulating mouse clicks and calling mouse modifier actions from scripts.
         </description>
         <retvals>
            integer  - 
@@ -28479,6 +28479,37 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_SetParent</slug>
+        <title>JS_Window_SetParent(JS)</title>
+        <functioncall prog_lang="cpp">void* JS_Window_SetParent(void* childHWND, void* parentHWND)</functioncall>
+        <functioncall prog_lang="eel">void* extension_api("JS_Window_SetParent", void* childHWND, void* parentHWND)</functioncall>
+        <functioncall prog_lang="lua">identifier reaper.JS_Window_SetParent(identifier childHWND, identifier parentHWND)</functioncall>
+        <functioncall prog_lang="python">void JS_Window_SetParent(void childHWND, void parentHWND)</functioncall>
+        <requires>
+            Reaper=5.982
+            JS=0.998
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            If successful, returns a handle to the previous parent window.
+        </description>
+        <retvals>
+           identifier Identifier  - 
+        </retvals>
+        <parameters>
+           identifier childHWND - 
+           identifier parentHWND - 
+        </parameters>
+        <target_document>ReaperApiFunctionsReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
   
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_SetPosition</slug>
@@ -32949,6 +32980,8 @@
             Use idx to get a specific filename, that has been dropped into the gfx_init()-window.
             
             Does NOT support mediaitems/takes or other Reaper-objects!
+            
+            It MUST be called BEFORE calling gfx_update, as gfx_update flushes the filelist accessible with gfx_getdropfile.
         </description>
         <retvals>
             integer retval - 0, if droppped-filename with indexnumber idx doesn't exist; 1, if it exists; hints, if you already read all dropped filenames.
@@ -34992,6 +35025,8 @@
             Use idx to get a specific filename, that has been dropped into the gfx.init()-window.
             
             Does NOT support mediaitems/takes or other Reaper-objects!
+            
+            It MUST be called BEFORE calling gfx.update, as gfx.update flushes the filelist accessible with gfx.getdropfile.
         </description>
         <retvals>
             integer retval - 0, if droppped-filename with indexnumber idx doesn't exist; 1, if it exists; hints, if you already reached the last filename dropped.
@@ -36983,9 +37018,9 @@
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
-        <slug>// GetIconThemePointerForDPI</slug>
+        <slug>GetIconThemePointerForDPI</slug>
         <title>GetIconThemePointerForDPI</title>
-        <functioncall prog_lang="cpp">  void* (*GetIconThemePointerForDPI)(const char* name, int dpisc);</functioncall>
+        <functioncall prog_lang="cpp">void* (*GetIconThemePointerForDPI)(const char* name, int dpisc);</functioncall>
         <requires>
             Reaper=6.02
         </requires>

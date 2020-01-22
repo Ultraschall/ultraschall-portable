@@ -34,7 +34,7 @@ SourceDir=reaper.GetResourcePath().."/UserPlugins/"--"c:/Ultraschall-Hackversion
 
 retval, Version = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", SourceDir.."/ultraschall_api/IniFiles/ultraschall_api.ini")
 
-if ultraschall.US_BetaFunctions=="ON" then
+if ultraschall.US_BetaFunctions==true then
   BetaRelease="(Ultraschall-API pre-release-version: Build "..Version.." from "..os.date()..")"
 else
   BetaRelease=""
