@@ -183,6 +183,13 @@ function InitGFX()
   gfx.clear=0x333333 --background color
   gfx.init("Ultraclock",width,height,false) --create window
   if docked then d=1 else d=0 end
+
+-- Ralf: Das könnte das Problem sein, dass er versucht in Dock4 zu docken.
+--       Stattdessen dockt er 
+--          im Setup-View in den rechten Docker, wo die ProjectBay im Storyboard Modus ist.
+--          im Edit-View im TopDocker über der Maintoolbar
+--          im Storyboardmodus im gleichen Docker, wie die ProjectBay
+--       Der ist vielleicht im Screenset nicht vorgesehen?
   gfx.dock( d + 256*4) -- dock it do docker 4 (&1=docked)
   gfx.update()
   reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
@@ -435,17 +442,17 @@ function MainLoop()
     Triggered=nil
   end
   
-  view = ultraschall.GetUSExternalState("ultraschall_gui", "view") -- get the actual view
+--  view = ultraschall.GetUSExternalState("ultraschall_gui", "view") -- get the actual view
 
   --loop if GUI is NOT closed and VIEW is Recording
-  if gfx.getchar() ~= -1 and (view=="record" or gfx.dock(-1)&1==0) then 
+  KeyVegas=gfx.getchar()
+  if KeyVegas~=-1 then 
     lastw, lasth=gfx.w, gfx.h
     clock_focus_state=gfx.getchar(65536)&2
     if clock_focus_state~=0 then     
       reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work 
     end
     gfx.update()
-    
     reaper.defer(MainLoop)
   end
 end
