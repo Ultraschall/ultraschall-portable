@@ -62,7 +62,7 @@ function SoundcheckOverdub(userspace)
     userspace["overdub_warning"] = 0
     return false
 
-  elseif play < length and reaper.GetPlayState() == 5 then -- es gibt Elemente, die hinter dem Rec-Cursor stehen und eine Aufnahme läuft
+  elseif (play < length and reaper.GetPlayState() == 5) or userspace["overdub_warning"] == 1 then -- es gibt Elemente, die hinter dem Rec-Cursor stehen und eine Aufnahme läuft
 
     local itemcount = reaper.CountMediaItems(0)
     if itemcount == 0 then
@@ -94,8 +94,6 @@ function SoundcheckOverdub(userspace)
   end
 
 end
-
-
 
 function SoundcheckMic(userspace)
 
