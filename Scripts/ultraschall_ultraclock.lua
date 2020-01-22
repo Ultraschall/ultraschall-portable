@@ -112,14 +112,14 @@ function Init()
   txt_line[3]={y=0.17, size=0.27}  -- current playstate
   txt_line[4]={y=0.24, size=0.75}  -- current position
   
-  txt_line[7]={y=0.52, size=0.20}     -- time-selection-text
+  txt_line[7]={y=0.515, size=0.20}     -- time-selection-text
   txt_line[8]={y=0.58, size=0.25}  -- time-selection
  
-  txt_line[9]={y=0.685, size=0.20}  -- project-length-text
+  txt_line[9]={y=0.68, size=0.20}  -- project-length-text
   txt_line[10]={y=0.745, size=0.25} -- project-length
  
   txt_line[5]={y=0.845, size=0.20}  -- markernames
-  txt_line[6]={y=0.91, size=0.25}   -- marker positions  
+  txt_line[6]={y=0.915, size=0.25}   -- marker positions  
 
   txt_line_preset={} for i=1,7 do txt_line_preset[i]=copy(txt_line) end --copy STD Setting to all presets
 
@@ -360,20 +360,20 @@ function drawClock()
     start, end_loop = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
     length=end_loop-start
     if length > 0 then
-      WriteAlignedText("Time Selection:",0xdddd00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
+      WriteAlignedText("Time Selection",0xdddd00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
       start=reaper.format_timestr_len(start, "", 0, 5):match("(.*):")
       end_loop=reaper.format_timestr_len(end_loop, "", 0, 5):match("(.*):")
       length=reaper.format_timestr_len(length, "", 0, 5):match("(.*):")
       WriteAlignedText(start.." < (".. length..") > "..end_loop,0xdddd44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
     else
-      WriteAlignedText("Time Selection:",0xaaaa00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
+      WriteAlignedText("Time Selection",0xaaaa00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
       WriteAlignedText("-:--:-- < (".. "0:00:00"..") > -:--:--",0xaaaa44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
     end
   end
   
   -- Project Length
   if uc_menu[6].checked then
-    WriteAlignedText("Project Length:",0xb6b6bb, clockfont_bold, txt_line[9].size * fsize, txt_line[9].y*height+border,0) -- print date
+    WriteAlignedText("Project Duration",0xb6b6bb, clockfont_bold, txt_line[9].size * fsize, txt_line[9].y*height+border,0) -- print date
     WriteAlignedText(reaper.format_timestr_len(reaper.GetProjectLength(),"", 0,5):match("(.*):"),0xb6b6bb, clockfont_bold, txt_line[10].size * fsize, txt_line[10].y*height+border,0) -- print date
   end
   
