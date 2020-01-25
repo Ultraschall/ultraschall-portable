@@ -24,11 +24,16 @@ reaper.atexit(atexit)
 
 gfx.init("Moonlander", 1000, 600)
 
-gfx.setfont(1,"arial",20,0)
-gfx.setfont(2,"Times",80,98)
-gfx.setfont(3,"arial",20,73)
-gfx.setfont(4,"arial",15,0)
-gfx.setfont(5,"arial",15,0)
+scale=1
+if not string.match( reaper.GetOS(), "Win") then
+  scale = math.floor(1 * 0.8)
+end
+
+gfx.setfont(1,"arial",math.floor(20*scale),0)
+gfx.setfont(2,"Times",math.floor(80*scale),98)
+gfx.setfont(3,"arial",math.floor(20*scale),73)
+gfx.setfont(4,"arial",math.floor(15*scale),0)
+gfx.setfont(5,"arial",math.floor(15*scale),0)
 
   PCM_sourcebgm1=reaper.PCM_Source_CreateFromFile(Path.."/moonlander/svoe.mp3")
   PCM_source2bgm=reaper.Xen_StartSourcePreview(PCM_sourcebgm1, 0.2, false)
