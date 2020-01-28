@@ -45,10 +45,11 @@ function GetPreviousTimeMarker()
         if Time~=nil and Date~=nil then return Time, Date,C end      
       end
   end 
-  return "00:00:00", "09.02.2020", 0
+  return "--:--:--", "--.--.----", 0
 end
 
 --A,B,C=
+
 
 function CreateDateTime(time)
   local D=os.date("*t",time)
@@ -89,28 +90,32 @@ function main()
 
     if reaper.GetPlayState()==0 then position=reaper.GetCursorPosition() else position=reaper.GetPlayPosition() end
     Offset, Dater, Pos=GetPreviousTimeMarker()
-    Offset_Seconds=reaper.parse_timestr(Offset)
-    if Pos~=nil then
-      Times=(Offset_Seconds-Pos+position)
-      Time=(Offset_Seconds-Pos+position)
-      
-      D=math.floor(((Time/24)/60)/60)
-      Time=math.floor(Time-(D*86400))
-      Time=reaper.format_timestr_pos(Time,"",5)
-      if Time:match(".(.)")==":" then Time="0"..Time:match("(.*)%:") end
-      
-      D=ConvertTimeToTable(Dater,Offset)
-      L=os.time(D)
-      M=L+position-Pos
-      P=CreateDateTime(math.ceil(M))
-      
-      Finaltime="Day:        "..P:match("(.-)%s").." \nTime(24h):  "..P:match("%s(.*)")
-      LLL=Finaltime:match("Time%(24h%): (.*)"):len()
-      if Finaltime:match("Time%(24h%): (.*)"):len()==11 then 
-        Finaltime=Finaltime:match("(.*)%:")
+    if Offset~="--:--:--" then
+      Offset_Seconds=reaper.parse_timestr(Offset)
+      if Pos~=nil then
+        Times=(Offset_Seconds-Pos+position)
+        Time=(Offset_Seconds-Pos+position)
+        
+        D=math.floor(((Time/24)/60)/60)
+        Time=math.floor(Time-(D*86400))
+        Time=reaper.format_timestr_pos(Time,"",5)
+        if Time:match(".(.)")==":" then Time="0"..Time:match("(.*)%:") end
+        
+        D=ConvertTimeToTable(Dater,Offset)
+        L=os.time(D)
+        M=L+position-Pos
+        P=CreateDateTime(math.ceil(M))
+        
+        Finaltime="Day:        "..P:match("(.-)%s").." \nTime(24h):  "..P:match("%s(.*)")
+        LLL=Finaltime:match("Time%(24h%): (.*)"):len()
+        if Finaltime:match("Time%(24h%): (.*)"):len()==11 then 
+          Finaltime=Finaltime:match("(.*)%:")
+        end
+      else
+        D="Please set marker"
       end
     else
-      D="Please set marker"
+      Finaltime="Day:        --.--.----\nTime(24h):  \t--:--:--"
     end
     
     gfx.setfont(1)
