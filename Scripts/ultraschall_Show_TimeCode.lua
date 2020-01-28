@@ -2,7 +2,17 @@
 -- Add time-markers, and display the offset but not as project-time, but as time in 24-hour format
 A,B,C,D=reaper.get_action_context()
 
-gfx.init("Projectposition to Normaltime-Converter", 286, 125,0,900,0)
+retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
+
+if dpi=="512" then
+  gfx.ext_retina=1
+  scale=2
+else
+  gfx.ext_retina=0
+  scale=1
+end
+
+gfx.init("Duration since last timemarker", 286*scale, 95*scale, 0, 900, 0)
 
 if reaper.GetOS():match("Other")~=nil then 
   gfx.setfont(1,"Arial",100,0)
@@ -20,7 +30,7 @@ color=reaper.ColorToNative(51,51,51)|0x1000000
 gfx.clear=color
 
 xoffset=2
-yoffset=3
+yoffset=-43
 
 
 function GetPreviousTimeMarker()
@@ -34,8 +44,8 @@ function GetPreviousTimeMarker()
         Date=LLLL:match("(.-)%s")
         if Time~=nil and Date~=nil then return Time, Date,C end      
       end
-  end  
-  return "00:00:00", "22.11.2018", 0
+  end 
+  return "00:00:00", "09.02.2020", 0
 end
 
 --A,B,C=
@@ -76,21 +86,19 @@ function main()
   Klumpel=Klumpel+1
   if Klumpel==3 or gfx.mouse_cap~=0 then
     Klumpel=0
-  --  xoffset=(10/500)*gfx.w
-  --  xoffset=(10/220)*gfx.h
+
     if reaper.GetPlayState()==0 then position=reaper.GetCursorPosition() else position=reaper.GetPlayPosition() end
     Offset, Dater, Pos=GetPreviousTimeMarker()
     Offset_Seconds=reaper.parse_timestr(Offset)
     if Pos~=nil then
       Times=(Offset_Seconds-Pos+position)
       Time=(Offset_Seconds-Pos+position)
---      reaper.MB(Time,"",0)
+      
       D=math.floor(((Time/24)/60)/60)
       Time=math.floor(Time-(D*86400))
       Time=reaper.format_timestr_pos(Time,"",5)
       if Time:match(".(.)")==":" then Time="0"..Time:match("(.*)%:") end
       
---      A,B,C=GetPreviousTimeMarker()
       D=ConvertTimeToTable(Dater,Offset)
       L=os.time(D)
       M=L+position-Pos
@@ -111,49 +119,18 @@ function main()
     gfx.rect(0,0,1000,1000)
     gfx.set(1)
     gfx.x=20+xoffset
-    gfx.y=14+yoffset
+    gfx.y=0--14+yoffset
     gfx.drawstr(Finaltime)
     gfx.set(0,0,0,0,0,1)
-  
+
     gfx.set(1,1,1,1,0,-1)
     L=gfx.w/gfx.h
-    gfx.blit(1,1,0,0,0,1000,1000,0,40,gfx.w,gfx.h*L)
+    gfx.blit(1,1,0,0,0,1000,1000,0,15,gfx.w,gfx.h*L)
     gfx.set(0.6)
-    gfx.rect(3+xoffset,3+yoffset,120,30)
-    gfx.x=9+xoffset
-    gfx.y=10+yoffset
-    gfx.set(0.8)
-    gfx.line(3+xoffset,3+yoffset,123+xoffset,3+yoffset)
-    gfx.line(3+xoffset,3+yoffset,3+xoffset,33+yoffset)
-    gfx.set(0.4)
-    gfx.line(123+xoffset,3+yoffset,123+xoffset,33+yoffset)
-    gfx.line(3+xoffset,33+yoffset,123+xoffset,33+yoffset)
+
     gfx.set(0)
     gfx.setfont(2)
-    gfx.drawstr("New Timemarker")
-    if LOL~=true and gfx.mouse_cap&1==1 and gfx.mouse_x>3+xoffset and gfx.mouse_x<123+xoffset and gfx.mouse_y>3+yoffset and gfx.mouse_y<33+yoffset then
-      Marker = reaper.AddProjectMarker2(0, false, position, 0, "_Time: "..CreateDateTime(), 0, 274877906943)
-      LOL=true
-      gfx.set(0.4)
-      gfx.line(3+xoffset,3+yoffset,123+xoffset,3+yoffset)
-      gfx.line(3+xoffset,3+yoffset,3+xoffset,33+yoffset)
-      gfx.set(0.8)
-      gfx.line(123+xoffset,3+yoffset,123+xoffset,33+yoffset)
-      gfx.line(3+xoffset,33+yoffset,123+xoffset,33+yoffset)
-      gfx.set(0)
-    end
-    if LOL==true then --gfx.mouse_cap&1==1 and gfx.mouse_x>3+xoffset and gfx.mouse_x<123+xoffset and gfx.mouse_y>3+yoffset and gfx.mouse_y<33+yoffset then
-  --    reaper.ShowConsoleMsg("AA\n","",0)
-      gfx.set(0.4)
-      gfx.line(3+xoffset,3+yoffset,123+xoffset,3+yoffset)
-      gfx.line(3+xoffset,3+yoffset,3+xoffset,33+yoffset)
-      gfx.set(0.8)
-      gfx.line(123+xoffset,3+yoffset,123+xoffset,33+yoffset)
-      gfx.line(3+xoffset,33+yoffset,123+xoffset,33+yoffset)
-      gfx.set(0)
-    else
-    --  reaper.ShowConsoleMsg("OO\n","",0)
-    end
+
     if gfx.mouse_cap&1==0 then LOL=false end
     BBB=gfx.getchar(65536)
     if BBB&2~=2 then 
@@ -161,8 +138,6 @@ function main()
       gfx.g=0.0
       gfx.b=0.0
       gfx.a=0.2
-  --    gfx.rect(1,1,gfx.w-2,gfx.h-3,0)
-  --    gfx.rect(2,2,gfx.w-2,gfx.h-3,0)
       gfx.rect(0,0,gfx.w,gfx.h,1)
     end
     BBB2=gfx.getchar()
