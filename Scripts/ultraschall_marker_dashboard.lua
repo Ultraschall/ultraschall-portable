@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,6 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-
-
 ------------------------------------------------------
 -- Open a URL in a browser - OS agnostic
 ------------------------------------------------------
@@ -42,8 +40,6 @@ function open_url(url)
   end
 end
 
-
-
 ------------------------------------------------------
 --  Show the GUI menu item. Wird verwendet, um Info-Texte hinter den Buttons anzuzeigen.
 ------------------------------------------------------
@@ -56,6 +52,9 @@ function show_menu(str)
 
 end
 
+------------------------------------------------------
+--  führe eine Funktion aus nach Namen
+------------------------------------------------------
 
 function run_action(commandID)
 
@@ -64,12 +63,16 @@ function run_action(commandID)
 
 end
 
+------------------------------------------------------
+--  Bau den Table mit allen Einträgen der MArker und Bilder auf
+------------------------------------------------------
+
 function build_markertable()
 
   markertable = {}
   run_action("_Ultraschall_Consolidate_Chapterimages") -- lese alle Images aus und schreibe sie in die ProjExt
   number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
-  print(number_of_normalmarkers)
+  -- print(number_of_normalmarkers)
 
   for i = 1, number_of_normalmarkers do
 
@@ -117,6 +120,18 @@ function build_markertable()
 
 end
 
+------------------------------------------------------
+-- Sortiere einen Table nach Index in einen neuen Table
+------------------------------------------------------
+
+function makeSortedTable(orig_table)
+  tablesort = {}
+  for key in pairs(orig_table) do
+    table.insert( tablesort, key )
+  end
+  table.sort(tablesort)
+  return tablesort
+end
 
 ------------------------------------------------------
 --  End of functions
@@ -128,12 +143,15 @@ end
 ------------------------------------------------------
 
 
--- WindowHeight = 60 + (event_count*30) +30
+markertable = build_markertable()
+tablesort = makeSortedTable(markertable)
+rows = #tablesort
+WindowHeight = 60 + (rows * 30) +30
 
 
 -- Grab all of the functions and classes from our GUI library
 
-local info = debug.getinfo(1,'S');
+info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
@@ -146,12 +164,9 @@ GUI.w, GUI.h = 800, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der
 -- position always in the center of the screen
 ------------------------------------------------------
 
--- l, t, r, b = 0, 0, GUI.w, GUI.h
--- __, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
--- GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
-
-
-
+l, t, r, b = 0, 0, GUI.w, GUI.h
+__, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
+GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 
 
 
@@ -165,7 +180,8 @@ GUI.w, GUI.h = 800, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der
 
 function buildGui()
 
-  local event_count = ultraschall.EventManager_CountRegisteredEvents()
+  markertable = build_markertable()
+  tablesort = makeSortedTable(markertable)
 
   GUI.elms = {}
 
@@ -179,35 +195,36 @@ function buildGui()
     line1            = GUI.Line:new(0, 271, 800, 271, "txt_muted"),
     line2            = GUI.Line:new(0, 270, 800, 270, "elm_outline"),
 
-    -- checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
-    -- checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
 
-    -- tutorials        = GUI.Btn:new(           30, 320, 190, 40,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/"),
 
   }
 
 
-
-  -----------------------------------------------------------------
-  -- Settings-Button
-  -----------------------------------------------------------------
-
   button_settings = GUI.Btn:new(700, 245, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
   table.insert(GUI.elms, button_settings)
 
-  -----------------------------------------------------------------
-  -- initialise the events - coming from the EventManager
-  -----------------------------------------------------------------
 
 
-  ------------------------------------------------------
-  -- Gehe alle Sektionen der ultraschall.ini durch und baut die normalen Settings auf.
-  -- Kann perspektivisch in eine Funktion ausgelagert werden
-  ------------------------------------------------------
-
-
-  position = 260
+  position = 60
   warningCount = 0
+
+
+  for _, key in ipairs(tablesort) do
+
+    -- print("---")
+    position = position + 30
+    output = key
+    name = markertable[key]["name"]
+    if name then
+
+      id = GUI.Lbl:new(20, position, name, 0)
+      table.insert(GUI.elms, id)
+
+    end
+
+  end
+
+  --[[
 
   for i = 1, event_count do
 
@@ -301,66 +318,13 @@ function buildGui()
   -- print("----")
   end
 
-  if warningCount > 0 then
-
-    if warningCount == 1 then
-      countText = "warning"
-    else
-      countText = "warnings"
-    end
-
-    warningtext1 = "found "..warningCount.." "..countText.."."
-    warningtext2 = "Please check the warnings below. Use the ?-button to get some advice."
-    warningtext3 = "You may ignore a warning for this session or use the action buttons to solve the issues."
-    warningtext4 = "Visit the settings to disable warnings permanently."
-
-    warning1 = GUI.Lbl:new(347, 128, warningtext1, 0)
-    table.insert(GUI.elms, warning1)
-    warning2 = GUI.Lbl:new(158, 168, warningtext2, 0)
-    table.insert(GUI.elms, warning2)
-    warning3 = GUI.Lbl:new(106, 188, warningtext3, 0)
-    table.insert(GUI.elms, warning3)
-    warning4 = GUI.Lbl:new(236, 208, warningtext4, 0)
-    table.insert(GUI.elms, warning4)
-
-
-  else
-
-    warningtext1 = "found no problems at all."
-    warningtext2 = "Good job!"
-    warning1 = GUI.Lbl:new(320, 130, warningtext1, 0)
-    table.insert(GUI.elms, warning1)
-    warning2 = GUI.Lbl:new(368, 150, warningtext2, 0)
-    table.insert(GUI.elms, warning2)
-
-  end
-
-
-
-
-
-
-
-  if warningCount == 0 then
-    logo_img = "us_small_ok.png"
-  elseif warningCount > 4 then
-    logo_img = "us_small_warnings_5.png"
-  else
-    logo_img = "us_small_warnings_"..warningCount..".png"
-  end
-
-
-  logo = GUI.Pic:new(          300,  10,   0,  0,    1,   script_path..logo_img)
-  table.insert(GUI.elms, logo)
-
-
-
+]]
 
 end
 
 
 
---[[
+
 
 GUI.func = buildGui -- Dauerschleife
 GUI.freq = 1          -- Aufruf jede Sekunde
@@ -388,19 +352,12 @@ end
 reaper.atexit(atexit)
 
 
-]]
 
-markertable = build_markertable()
 
-tablesort = {}
-for key in pairs(markertable) do
 
-  table.insert( tablesort, key )
 
-end
 
-table.sort(tablesort)
-
+--[[
 
 for _, key in ipairs(tablesort) do
 
@@ -419,6 +376,8 @@ for _, key in ipairs(tablesort) do
   print (output)
 
 end
+
+]]
 
 -- print(markertable)
 

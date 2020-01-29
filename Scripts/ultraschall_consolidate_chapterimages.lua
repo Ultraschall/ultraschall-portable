@@ -89,15 +89,15 @@ end
 -- keyscount_chapterimages = ultraschall.CountUSExternalState_key("chapterimages", "reaper-extstate.ini")
 -- keyscount_lostimages = ultraschall.CountUSExternalState_key("lostimages", "reaper-extstate.ini")
 
-keyscount_chapterimages = CountProjectValues("chapterimages")
-keyscount_lostimages = CountProjectValues("lostimages")
+-- keyscount_chapterimages = CountProjectValues("chapterimages")
+-- keyscount_lostimages = CountProjectValues("lostimages")
 
 -- print (keyscount_chapterimages .. " - " .. keyscount_lostimages)
 
-Message = "+;ExportContext;".."\nChapterImages with chapter: "..tostring(keyscount_chapterimages).."\nUnassigned Images: " ..tostring(keyscount_lostimages)
+-- Message = "+;ExportContext;".."\nChapterImages with chapter: "..tostring(keyscount_chapterimages).."\nUnassigned Images: " ..tostring(keyscount_lostimages)
 
-reaper.SetExtState("ultraschall_messages", "message_0", Message, false) -- nur debugging
-reaper.SetExtState("ultraschall_messages", "message_count", "1", false) -- nur debugging
+-- reaper.SetExtState("ultraschall_messages", "message_0", Message, false) -- nur debugging
+-- reaper.SetExtState("ultraschall_messages", "message_count", "1", false) -- nur debugging
 
 
 
