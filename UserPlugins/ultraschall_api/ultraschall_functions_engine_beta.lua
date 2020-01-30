@@ -833,106 +833,6 @@ G=ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender)
 H=ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender)
 --]]
 
-function ultraschall.GetFXStateChunk(StateChunk, TakeFXChain_id)
--- Why is this still in here?
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetFXStateChunk</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.975
-    Lua=5.3
-  </requires>
-  <functioncall>string FXStateChunk = ultraschall.GetFXStateChunk(string StateChunk, optional integer TakeFXChain_id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Returns an FXStateChunk from a TrackStateChunk or a MediaItemStateChunk.
-    
-    An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
-    
-    Returns nil in case of an error or if no FXStateChunk has been found.
-  </description>
-  <retvals>
-    string FXStateChunk - the FXStateChunk, stored in the StateChunk
-  </retvals>
-  <parameters>
-    string StateChunk - the StateChunk, from which you want to retrieve the FXStateChunk
-    optional integer TakeFXChain_id - when using MediaItemStateChunks, this allows you to choose the take of which you want the FXChain; default is 1
-  </parameters>
-  <chapter_context>
-    FX-Management
-    Assistance functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>fxmanagement, get, fxstatechunk, trackstatechunk, mediaitemstatechunk</tags>
-</US_DocBloc>
-]]
-  if ultraschall.IsValidTrackStateChunk(StateChunk)==false and ultraschall.IsValidMediaItemStateChunk(StateChunk)==false then ultraschall.AddErrorMessage("GetFXStateChunk", "StateChunk", "no valid Track/ItemStateChunk", -1) return end
-  if TakeFXChain_id~=nil and math.type(TakeFXChain_id)~="integer" then ultraschall.AddErrorMessage("GetFXStateChunk", "TakeFXChain_id", "must be an integer", -2) return end
-  if TakeFXChain_id==nil then TakeFXChain=1 end
-  
-  if string.find(StateChunk, "\n  ")==nil then
-    StateChunk=ultraschall.StateChunkLayouter(StateChunk)
-  end
-  for w in string.gmatch(StateChunk, " <FXCHAIN.-\n  >") do
-    return string.gsub("\n"..w, "\n      ", "\n    "):sub(2,-1)
-    --return w
-  end
-  local count=0
-  for w in string.gmatch(StateChunk, " <TAKEFX.-\n  >") do
-    count=count+1
-    if TakeFXChain_id==count then
-      return string.gsub("\n"..w, "\n      ", "\n    "):sub(2,-1)
-    end
-  end
-end
-
-
-function ultraschall.GetItem_ClickState()
--- how to get the connection to clicked item, when mouse moves away from the item while retaining click(moving underneath the item for dragging)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetItem_ClickState</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.981
-    SWS=2.10.0.1
-    Lua=5.3
-  </requires>
-  <functioncall>boolean clickstate, number position, MediaItem item, MediaItem_Take take = ultraschall.GetItem_ClickState()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Returns the currently clicked item and take, as well as the current timeposition.
-    
-    Works only, if the mouse is above the MediaItem while having clicked!
-    
-    Returns false, if no item is clicked at
-  </description>
-  <retvals>
-    boolean clickstate - true, item is clicked on; false, item isn't clicked on
-    number position - the position, at which the item is currently clicked at
-    MediaItem item - the Item, which is currently clicked at
-    MediaItem_Take take - the take found at clickposition
-  </retvals>
-  <chapter_context>
-    MediaItem Management
-    Assistance functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>mediaitem management, get, clicked, item</tags>
-</US_DocBloc>
---]]
-  -- TODO: Has an issue, if the mousecursor drags the item, but moves above or underneath the item(if item is in first or last track).
-  --       Even though the item is still clicked, it isn't returned as such.
-  --       The ConfigVar uiscale supports dragging information, but the information which item has been clicked gets lost somehow
-  local B=reaper.SNM_GetDoubleConfigVar("uiscale", -999)
-  local X,Y=reaper.GetMousePosition()
-  local Item, ItemTake = reaper.GetItemFromPoint(X,Y, true)
-  if tostring(B)=="-1.#QNAN" or Item==nil then
-    return false
-  end
-  return true, ultraschall.GetTimeByMouseXPosition(reaper.GetMousePosition()), Item, ItemTake
-end
 
 function ultraschall.GetTrackEnvelope_ClickState()
 -- how to get the connection to clicked envelopepoint, when mouse moves away from the item while retaining click(moving underneath the item for dragging)
@@ -972,18 +872,68 @@ function ultraschall.GetTrackEnvelope_ClickState()
   -- TODO: Has an issue, if the mousecursor drags the item, but moves above or underneath the item(if item is in first or last track).
   --       Even though the item is still clicked, it isn't returned as such.
   --       The ConfigVar uiscale supports dragging information, but the information which item has been clicked gets lost somehow
-  local B=reaper.SNM_GetDoubleConfigVar("uiscale", -999)
-  local X,Y=reaper.GetMousePosition()
-  local Track, Info = reaper.GetTrackFromPoint(X,Y)
-  if tostring(B)=="-1.#QNAN" or Info==0 then
-    return false
+  --local B, Track, Info, TrackEnvelope, TakeEnvelope, X, Y
+  
+  B=reaper.SNM_GetDoubleConfigVar("uiscale", -999)
+  if tostring(B)=="-1.#QNAN" then
+    ultraschall.EnvelopeClickState_OldTrack=nil
+    ultraschall.EnvelopeClickState_OldInfo=nil
+    ultraschall.EnvelopeClickState_OldTrackEnvelope=nil
+    ultraschall.EnvelopeClickState_OldTakeEnvelope=nil
+    return 1
+  else
+    Track=ultraschall.EnvelopeClickState_OldTrack
+    Info=ultraschall.EnvelopeClickState_OldInfo
+    TrackEnvelope=ultraschall.EnvelopeClickState_OldTrackEnvelope
+    TakeEnvelope=ultraschall.EnvelopeClickState_OldTakeEnvelope
   end
+  
+  if Track==nil then
+    X,Y=reaper.GetMousePosition()
+    Track, Info = reaper.GetTrackFromPoint(X,Y)
+    ultraschall.EnvelopeClickState_OldTrack=Track
+    ultraschall.EnvelopeClickState_OldInfo=Info
+  end
+  
+  -- BUggy, til the end
+  -- Ich will hier mir den alten Take auch noch merken, und danach herausfinden, welcher EnvPoint im Envelope existiert, der
+  --   a) an der Zeit existiert und
+  --   b) selektiert ist
+  -- damit könnte ich eventuell es schaffen, die Info zurückzugeben, welcher Envelopepoint gerade beklickt wird.
+  if TrackEnvelope==nil then
+    reaper.BR_GetMouseCursorContext()
+    TrackEnvelope = reaper.BR_GetMouseCursorContext_Envelope()
+    ultraschall.EnvelopeClickState_OldTrackEnvelope=TrackEnvelope
+  end
+  
+  if TakeEnvelope==nil then
+    reaper.BR_GetMouseCursorContext()
+    TakeEnvelope = reaper.BR_GetMouseCursorContext_Envelope()
+    ultraschall.EnvelopeClickState_OldTakeEnvelope=TakeEnvelope
+  end
+  --[[
+  
+  
+  
   reaper.BR_GetMouseCursorContext()
   local TrackEnvelope, TakeEnvelope = reaper.BR_GetMouseCursorContext_Envelope()
+  
+  if Track==nil then Track=ultraschall.EnvelopeClickState_OldTrack end
+  if Track~=nil then ultraschall.EnvelopeClickState_OldTrack=Track end
+  if TrackEnvelope~=nil then ultraschall.EnvelopeClickState_OldTrackEnvelope=TrackEnvelope end
+  if TrackEnvelope==nil then TrackEnvelope=ultraschall.EnvelopeClickState_OldTrackEnvelope end
+  if TakeEnvelope~=nil then ultraschall.EnvelopeClickState_OldTakeEnvelope=TakeEnvelope end
+  if TakeEnvelope==nil then TakeEnvelope=ultraschall.EnvelopeClickState_OldTakeEnvelope end
+  
+  --]]
+  --[[
   if TakeEnvelope==true or TrackEnvelope==nil then return false end
   local TimePosition=ultraschall.GetTimeByMouseXPosition(reaper.GetMousePosition())
-  local EnvelopePoint=reaper.GetEnvelopePointByTime(TrackEnvelope, TimePosition)
+  local EnvelopePoint=
   return true, TimePosition, Track, TrackEnvelope, EnvelopePoint
+  --]]
+  if TrackEnvelope==nil then TrackEnvelope=TakeEnvelope end
+  return true, ultraschall.GetTimeByMouseXPosition(reaper.GetMousePosition()), Track, TrackEnvelope--, reaper.GetEnvelopePointByTime(TrackEnvelope, TimePosition)
 end
 
 
@@ -1444,7 +1394,6 @@ end
 --A,B,C,D,E=ultraschall.ReadSubtitles_VTT("c:\\test.vtt")
 
 -- These seem to work:
-
 
 
 

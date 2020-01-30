@@ -8210,7 +8210,7 @@
       <slug>projrenderstems</slug>  
       <title>projrenderstems</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The Source-dropdownlist, as set in the Render to File-dialog.  
+          The Source-dropdownlist, as well as the "Embed stretch markers/transient guides"-checkbox, as set in the Render to File-dialog.  
           It is an integer  
           
            >0, Master mix  
@@ -8218,8 +8218,8 @@
            >3, Stems (selected tracks)  
            >8, Region render matrix  
            >32, Selected media items  
-            
-            
+           >256, "Embed stretch markers/transient guides"-checkbox; 0, unchecked; 1, checked  
+           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  

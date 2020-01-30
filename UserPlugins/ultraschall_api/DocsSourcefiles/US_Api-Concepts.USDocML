@@ -71,7 +71,7 @@
             Using the Ultraschall-API is quite easy.
             
             First make sure, you use the right versions of Reaper and SWS:
-               [Reaper 5.980](https://www.reaper.fm), [SWS 2.10.0.1](https://www.sws-extension.org) and [Julian Sader's plugin 0.986.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
+               [Reaper 6.20](https://www.reaper.fm), [SWS 2.10.0.1](https://www.sws-extension.org) and [Julian Sader's plugin 0.986.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             You can download them at [reaper.fm](http://www.reaper.fm) and [sws-extension.org](http://www.sws-extension.org) respectively.
             Julian Sader's plugin can be installed using ReaPack or gotten from [his own github-site](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             
@@ -107,7 +107,7 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall\_api4.00\_beta2.78.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.78.zip).  
+            1. Just download the zip-file of the current version from [ultraschall\_api4.00\_beta2.80.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.80.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.
@@ -625,6 +625,8 @@
                                                                       &4, dither stems
                                                                       &8, dither noise shaping
                         RenderTable["Endposition"]             - the endposition of the rendering selection in seconds
+                        RenderTable["EmbedStretchMarkers"]     - Embed stretch markers/transient guides
+                                                                      true, checked; false, unchecked
                         RenderTable["MultiChannelFiles"]       - Multichannel tracks to multichannel files-checkbox
                                                                       true, checked; false, unchecked
                         RenderTable["OfflineOnlineRendering"]  - Offline/Online rendering-dropdownlist
@@ -4537,9 +4539,9 @@
              etc.  
              You get the idea.
              
-             Now here's the problem: it runs the deferred function everytime. Even if you need it run only every few seconds, it will be run about 30 times a second.  
+             Now here's the problem: it runs the deferred function everytime. Even if you need it to run only every few seconds, it will be run about 30 times a second.  
              And if you have a condition, under which the defer-loop should end, you need to construct more or less complex structures to take care of that.  
-             Rule of thumb: the decision-making of how often the deferred function shall be run, is complex. Quitting a defer-loop as well(for beginners at least), especially, if you want to stop the defer-loop from the outside of the script-instance.  
+             Rule of thumb: the decision-making of how often the deferred function shall be run, is complex. Quitting a defer-loop is complex as well(for beginners at least), especially, if you want to stop the defer-loop from the outside of the script-instance.  
              
              For that, I created my own defer-loops, that take care of that.  
             
@@ -4558,9 +4560,8 @@
         <slug>DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API</slug>
         <title>DeferScripts: Special Defer-loops in the Ultraschall-API</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            It always bugged me, when I wanted to write a simple defer-loop that should run every 3 seconds or so, as the logic to do that is at some times very annoying to code time and again.  
-            So, I added my own defer-loop-functions, that take care of that.  
-            In total 20 of them.  
+            It always bugged me, when I wanted to write a simple defer-loop that should run every 3 seconds or so, as the logic to do that is sometimes very annoying to code time and again, sometimes more than the actual code itself.  
+            So, I added my own defer-loop-function, that takes care of that.  
             
             Let's have a look at a regular defer-loop in Reaper:  
                     
@@ -4584,6 +4585,7 @@
                         function main()
                             
                             if cycle_counter==30 then
+                                -- do this part only every 30th defer-cycler
                                 cycle_counter=1
                                 reaper.ShowConsoleMsg(A.."\n")
                                 A=A+1
@@ -4603,6 +4605,7 @@
                         
                         function main()
                             if reaper.time_precise()>seconds_counter then
+                                -- do this part only every three seconds
                                 seconds_counter=reaper.time_precise()+3
                                 reaper.ShowConsoleMsg(A.."\n")
                                 A=A+1
@@ -4614,25 +4617,20 @@
                         main()
             
             This code counts up variable A every 3 seconds and shows it to the ReaScript-console.  
-            It quickly becomes messy or at least harder to read. And I hate my code being hard to read, especially if it contains more lines than the examples above.  
+            It quickly becomes messy or at least harder to read. Especially, if you need to add more code, the "skipping mechanics" are often spread everywhere, making the code hard to debug and read. And I hate my code being hard to debug and read.  
             
-            The Ultraschall-API has for that the functions [Defer1](usdocml://Defer1) to [Defer20](usdocml://Defer20).
+            The Ultraschall-API has for that the functions [Defer](usdocml://Defer)
             
-            >**[Defer1](usdocml://Defer1)**
+            >**[Defer](usdocml://Defer)**
             
-                        boolean retval, string defer_identifier = ultraschall.Defer1(function func, optional integer mode, optional number timer_counter)
+                        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter)
                     
             >This works like reaper.defer, but has additional benefits, like the parameters mode and timer\_counter, who allow you to specify, how often the defer-cycle shall be executed.  
             >Either all the time(mode=0), every nth-cycle(mode=1) or every nth-second(mode=2). If mode is 1 or 2, you should set timer\_counter to the amount of cycles/seconds to wait for the next execution of the defer-loop.  
-            >It also returns a defer_identifier, which can be used by [StopDeferCycle](usdocml://StopDeferCycle) to stop the defer-loop from inside and outside of the script(more on that later).  
-            >Important: A defer-identifier is only valid, until the script stops/Reaper closes. The next time the script is started, it gets another defer-identifier!
+            >You can also specify a defer_identifier, which can be used by [StopDeferCycle](usdocml://StopDeferCycle) to stop the defer-loop from inside and outside of the script(more on that later).  
             
-            As you've seen, there are 20 Defer-functions in the Ultraschall-API. If you want to use only one defer-cycle in your script, just use [Defer1](usdocml://Defer1), but if you need multiple defer-loops in one script-instance,  
-            you should use another of these 20 Defer-functions, as otherwise the timer/cycle-counter of a ultraschall.Defer-function could get confused.  
-            So, rule of thumb: in one script-instance, every of the 20 Defer-functions can only be used for ONE defer-loop!  
-            This is due limitations in Lua and Reaper. I hope, I can raise this limitation at some point though.  
             
-            Now, let's get back to our examples and see, how it would look with these new Defer-functions.
+            Now, let's get back to our example and see, how it would look with these new Defer-functions.
             
                         dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
                         
@@ -4642,13 +4640,13 @@
                            reaper.ShowConsoleMsg(A.."\n")
                            A=A+1
                            
-                           ultraschall.Defer1(main, 1, 30)
+                           ultraschall.Defer(main, "MyDeferLoop", 1, 30)
                         end
                         
                         main()
             
-            Like our previous example, this counts variable A up every 30th cycle and shows in in the ReaScript console. But as you can see, the code is much cleaner due fewer lines.
-            You can also see, that ultraschall.Defer1 defers the function main, is set to mode 1(execute every nth cycle) and the number of cycles to wait inbetween execution(30).
+            Like our previous example, this counts variable A up every 30th cycle and shows its value in the ReaScript console. But as you can see, the code is much cleaner due fewer lines.
+            You can also see, that ultraschall.Defer which defers the function main, is set to mode 1(execute every nth cycle) and the number of cycles to wait inbetween execution is 30 cycles.
             
             Now let's see, whether we can modify the other example as well, that counts variable A up every 3 seconds:
             
@@ -4659,17 +4657,17 @@
                            reaper.ShowConsoleMsg(A.."\n")
                            A=A+1
                          
-                           ultraschall.Defer1(main, 2, 3)
+                           ultraschall.Defer(main, "MyDeferLoop", 2, 3)
                         end
                         
                         main()
             
-            You see, it is basically the same code. All that changed was the parameters for Defer1, which is now set to mode 2(execute code every nth seconds) and the number of seconds to wait(3 in this case).
+            You see, it is basically the same code. All that changed was the parameters for Defer, which is now set to mode 2(execute code every nth seconds) and the number of seconds to wait(3 in this case).
             
             This makes it much easier to run code of defer-scripts only when it is needed(and keep the code cleaner).  
             Save computer-resources, save electrical power, save the world!  
             
-            In the next chapter, I will show you, how to stop such a defer-loop from within and without the current script-instance.
+            In the next chapter, I will show you, how to stop such a defer-loop from within and outside the current script-instance.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
@@ -4686,15 +4684,14 @@
         <title>DeferScripts: Stopping Defer-loops from in- and outside of scripts</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             I was talking about being able to stop these Defer-loops I added to the Ultraschall-API.  
-            For that, we should have another look at the functions-description of Defer1(but this works as well for Defer2 to Defer20).  
+            For that, we should have another look at the functions-description of Defer.  
             
-            >**[Defer1](usdocml://Defer1)**
+            >**[Defer](usdocml://Defer)**
             
-                        boolean retval, string defer_identifier = ultraschall.Defer1(function func, optional integer mode, optional number timer_counter)
+                        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter)
                     
-            As you can see, it returns a string called defer\_identifier. This is a unique identifier for this defer-loop, which can be used to stop this exact defer-loop from in- and outside of this script-instance.  
-            
-            
+            As you can see, you can pass a parameter called defer\_identifier. This is a unique identifier for this defer-loop, which can be used to stop this exact defer-loop from the inside by the script who runs he Defer-cycle or from the outside by another script.
+           
             To stop a defer-loop, I added another function, called [StopDeferCycle](usdocml://StopDeferCycle).  
             
             >**[StopDeferCycle](usdocml://StopDeferCycle)**
@@ -4709,18 +4706,20 @@
             
                         dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
                         A=1
+                        defer_identifier="MyDeferLoop"
+                         
                          
                         function main()
                            reaper.ShowConsoleMsg(A.."\n")
                            A=A+1
                          
-                           retval, defer_identifier = ultraschall.Defer1(main, 2, 1)
+                           retval = ultraschall.Defer(main, defer_identifier, 2, 3) -- defer me every 
                            reaper.CF_SetClipboard(defer_identifier)
                         end
                         
                         main()
             
-            This code puts the defer_identifier into the clipboard and runs the Defer-script, that counts variable A up every 3 seconds and shows it in the ReaScript-console.  
+            This code puts the defer_identifier into the clipboard and runs the Defer-script, that counts variable A up every 3 seconds and shows its value in the ReaScript-console.  
             If we write now another script, that does the following:
             
                         dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
@@ -4731,11 +4730,11 @@
                 
             We can stop this defer-cycle, immediately. Try this for yourself.
             
-            One last note: in the example above, we stopped the script from the outside, but you can stop that script from inside the script as well.  
-            So, if you have two defer-loops, where the second defer-loop shall control, if the first defer-loop is running or not:  
-            Run the function, that shall be deferred(and has one of Defer1 to Defer20 inside of it) and stop it using StopDeferCycle.  
+            **IMPORTANT:** The defer\_identifier must be a unique one. If you use the defer\_identifier for multiple defer-loops, all these Defer-loops will be stopped altogether, when using StopDeferCycle!  
             
-            If for some reason you didn't get the defer\_identifier, no problem: use [GetDeferIdentifier](usdocml://GetDeferIdentifier) to get it for a specific Ultraschall-Defer-function in your script.
+            One last note: in the example above, we stopped the script from the outside, but you can stop that script from the inside of the script as well.  
+            So, if you have two defer-loops and the second defer-loop shall control, if the first defer-loop is running or not:  
+            Run the function, that shall be deferred, use ultraschall.Defer and pass to it your defer_identifier and stop it using StopDeferCycle and the defer_identifier.  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document></source_document>
@@ -4743,59 +4742,8 @@
             Defer Loops
         </chapter_context>
         <previous_chapter>DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API</previous_chapter>
-        <next_chapter>DeferScripts_004_Working_with_Defer_Identifiers</next_chapter>
-        <tags>defer, stop, defer loops, inside scripts, outside scripts</tags>
-    </US_DocBloc>
-    
-
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-        <slug>DeferScripts_004_Working_with_Defer_Identifiers</slug>
-        <title>DeferScripts: Working with DeferIdentifiers</title>
-        <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            You may remember from the previous chapters, that I mentioned briefly a so called defer-identifier, which can be used for several things, e.g. [StopDeferCycle](usdocml://StopDeferCycle).  
-            Well, there are more things you can do with it, like getting the current runstate of a Ultraschall-defer-cycle in a script.  
-            
-            First, let's get the defer-identifiers:
-            
-            >**[GetDeferIdentifier](usdocml://GetDeferIdentifier)**
-            
-                        string defer_identifier = ultraschall.GetDeferIdentifier(integer deferinstance, optional string scriptidentifier)
-                    
-            >This function returns the defer-identifier of a specific defer-instance from a specific scriptinstance.  
-            >Let's imagine the following example:  
-            >You have Defer1 and Defer2 running in your script. To get their DeferIdentifiers, with which you can stop them, you just need to use:
-            
-                        defer1_identifier = ultraschall.GetDeferIdentifier(1)
-                        defer2_identifier = ultraschall.GetDeferIdentifier(2)
-            
-            >Now imagine, you have Defer1 and Defer2-defer-loops running in another script. You have the ScriptIdentifier for that script-instance and would love to have these defer-identifiers. You just do it this way:
-                        
-                        defer1_identifier = ultraschall.GetDeferIdentifier(1, ScriptIdentifier)
-                        defer2_identifier = ultraschall.GetDeferIdentifier(2, ScriptIdentifier)
-            
-            >With these two variables, you can stop the Defer1 and Defer2-defer-loops in the other scriptinstance.
-            >One possible source for such a ScriptIdentifier would be using the function [Main_OnCommandByFilename](usdocml://Main_OnCommandByFilename).
-            
-            Second, let's get the runstate of Ultraschall-defer-loops:
-            
-            >**[GetDeferRunState](usdocml://GetDeferRunState)**
-            
-                        string defer_identifier = ultraschall.GetDeferRunState(integer deferinstance, optional string scriptidentifier)
-                        
-            >This basically works the same way as GetDeferIdentifier: pass over the defer-instance(1 to 20) and it will return true, if that specific defer-loop is running and false if not.  
-            >To get the runstates of other running script-instances, you can pass a second parameter scriptidentifier, which holds the scriptidentifier of that scriptinstance.  
-            >That way, you can monitor, if Ultraschall-defer-loops are still running or not.  
-            
-            I have more ideas, what you can do with the defer-identifier, but they will be part of the future...
-        </description>
-        <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
-        <chapter_context>
-            Defer Loops
-        </chapter_context>
-        <previous_chapter>DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside</previous_chapter>
         <next_chapter>Localize_001_Introduction</next_chapter>
-        <tags>defer, stop, defer loops, inside scripts, outside scripts, defer_identifier</tags>
+        <tags>defer, stop, defer loops, inside scripts, outside scripts</tags>
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -4819,7 +4767,7 @@
         <chapter_context>
             Localize Scripts
         </chapter_context>
-        <previous_chapter>DeferScripts_004_Working_with_Defer_Identifiers</previous_chapter>
+        <previous_chapter>DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside</previous_chapter>
         <next_chapter>Localize_002_LangPack_Fileformat</next_chapter>
         <tags>localize, uslangpack</tags>
     </US_DocBloc>

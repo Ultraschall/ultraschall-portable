@@ -2743,32 +2743,6 @@ end
 
 function ultraschall.GetReaperWindowPosition_Left()
 -- Due to Api-limitations: when the reaper-window is too small, it returns a wrong value, up to 72 pixels too high!
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetReaperWindowPosition_Left</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.40
-    Lua=5.3
-  </requires>
-  <functioncall>integer leftwindowposition = ultraschall.GetReaperWindowPosition_Left()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    This is deprecated! Use [GetReaperWindowAttributes](#GetReaperWindowAttributes) instead!
-    
-    Returns pixel-position of the left side of the main Reaper window. Due to Api-limitations, when the Reaper-window is too small, it returns a wrong value with up to +72 pixels difference!
-  </description>
-  <retvals>
-    integer leftwindowposition - the left side of the main Reaper window in pixels
-  </retvals>
-  <chapter_context>
-    Reaper Element Positions
-    Reaper Window
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>reaper, window, left, position, pixels</tags>
-</US_DocBloc>
-]]
 
   local temp,Technopop=ultraschall.GetIniFileValue("REAPER", "leftpanewid", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
   local temp,ElectricCafe=ultraschall.GetIniFileValue("REAPER", "dockheight_l", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
@@ -2789,32 +2763,7 @@ end
 
 function ultraschall.GetReaperWindowPosition_Right()
 -- Due to Api-limitations: when the reaper-window is too small, it returns a wrong value, up to 72 pixels too high!
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetReaperWindowPosition_Right</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.40
-    Lua=5.3
-  </requires>
-  <functioncall>integer rightwindowposition = ultraschall.GetReaperWindowPosition_Right()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    This is deprecated! Use [GetReaperWindowAttributes](#GetReaperWindowAttributes) instead!
-    
-    Returns pixel-position of the right side of the main Reaper window.
-  </description>
-  <retvals>
-    integer rightwindowposition - the right side of the main Reaper window in pixels
-  </retvals>
-  <chapter_context>
-    Reaper Element Positions
-    Reaper Window
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>reaper, window, right, position, pixels</tags>
-</US_DocBloc>
-]]
+
   local temp,Technopop=ultraschall.GetIniFileValue("REAPER", "leftpanewid", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
 
   local C,D,E,F,G,H,I,J,K,L=reaper.my_getViewport(1,2,3,4,5,6,7,8, true)

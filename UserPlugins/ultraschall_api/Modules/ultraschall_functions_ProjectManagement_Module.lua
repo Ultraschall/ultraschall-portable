@@ -448,3 +448,77 @@ function ultraschall.EnumProjects(idx)
 end
 
 
+function ultraschall.GetProjectLength(items, markers_regions, timesig_markers)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetProjectLength</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>number project_length, number last_itemedge, number last_regionedgepos, number last_markerpos, number last_timesigmarker = ultraschall.GetProjectLength(optional boolean return_last_itemedge, optional boolean return_last_markerpos, optional boolean return_lat_timesigmarkerpos)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the position of the last itemedge, regionend, marker, time-signature-marker in the project.
+    
+    It will return -1, if no such elements are found, means: last\_markerpos=-1 if no marker has been found
+    Exception when no items are found, it will return nil for last\_itemedge
+    
+    You can optimise the speed of the function, by setting the appropriate parameters to false.
+    So if you don't need the last itemedge, setting return\_last\_itemedge=false speeds up execution massively.
+    
+    To do the same for projectfiles, use: [GetProject\_Length](#GetProject_Length)
+  </description>
+  <retvals>
+    number length_of_project - the overall length of the project, including markers, regions, itemedges and time-signature-markers
+    number last_itemedge - the position of the last itemedge in the project; nil, if not found
+    number last_regionedgepos - the position of the last regionend in the project; -1, if not found
+    number last_markerpos - the position of the last marker in the project; -1, if not found 
+    number last_timesigmarker - the position of the last timesignature-marker in the project; -1, if not found
+  </retvals>
+  <parameters>
+    optional boolean return_last_itemedge - true or nil, return the last itemedge; false, don't return it
+    optional boolean return_last_markerpos - true or nil, return the last marker/regionend-position; false, don't return it 
+    optional boolean return_lat_timesigmarkerpos - true or nil, return the last timesignature-marker-position; false, don't return it
+  </parameters>
+  <chapter_context>
+    Project-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>project management, get, last, position, length of project, marker, regionend, itemend, timesignaturemarker</tags>
+</US_DocBloc>
+--]]
+  local Longest=-10000000000 -- this is a hack for MediaItems, who are stuck before ProjectStart; I hate it
+  if items~=false then
+    local Position, Length
+    for i=0, reaper.CountMediaItems(0)-1 do
+      Position=reaper.GetMediaItemInfo_Value(reaper.GetMediaItem(0,i), "D_POSITION")
+      Length=reaper.GetMediaItemInfo_Value(reaper.GetMediaItem(0,i), "D_LENGTH")
+      if Position+Length>Longest then Longest=Position+Length end
+    end
+  end
+  if Longest==-10000000000 then Longest=nil end -- same hack for MediaItems, who are stuck before ProjectStart; I hate it...
+  local Regionend=-1
+  local Markerend=-1
+  if markers_regions~=false then
+    for i=0, reaper.CountProjectMarkers(0)-1 do
+      local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
+      if isrgn==true then
+        if rgnend>Regionend then Regionend=rgnend end
+      else
+        if pos>Markerend then Markerend=pos end
+      end
+    end
+  end
+  local TimeSigEnd=-1
+  if timesig_markers~=false then
+    for i=0, reaper.CountTempoTimeSigMarkers(0)-1 do
+      local retval, timepos, measurepos, beatpos, bpm, timesig_num, timesig_denom, lineartempo = reaper.GetTempoTimeSigMarker(0, i)
+      if timepos>TimeSigEnd then TimeSigEnd=timepos end
+    end
+  end
+  return reaper.GetProjectLength(), Longest, Regionend, Markerend, TimeSigEnd
+end
+

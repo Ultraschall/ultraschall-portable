@@ -1630,6 +1630,8 @@ function ultraschall.EventManager_DebugMode_UserSpace(index)
     
     Note: Debugmode is not for productive usecases, as it costs resources. Please turn it off again, after you've finished debugging.
     See [EventManager\_DebugMode](#EventManager_DebugMode) for more details on stopping DebugMode.
+    
+    returns nil in case of an error
   </description>
   <parameters>
     integer index - the index of the event, whose UserSpace you want to retrieve
@@ -1646,7 +1648,7 @@ function ultraschall.EventManager_DebugMode_UserSpace(index)
   <tags>event manager, toggle, debug, debugmode, userspace</tags>
 </US_DocBloc>
 --]]
-  if math.type(index)~="integer" then return end
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("EventManager_DebugMode_UserSpace", "index", "must be an integer", -1) return end
   local Value=reaper.GetExtState("ultraschall_eventmanager", "UserSpaces_"..index)
   local count=0
   local count2=1

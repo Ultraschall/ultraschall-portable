@@ -209,7 +209,7 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  return 400.0279, "4.00","", "Beta 2.79",  "\"Yes - Owner of a lonely heart\"", ultraschall.hotfixdate
+  return 400.0280, "4.00","", "Beta 2.80",  "\"Starsailor - Four to the Floor\"", ultraschall.hotfixdate
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -975,7 +975,7 @@ function progresscounter(state)
     A=A..ultraschall.ReadFullFile(files[i]).."\n"
   end
 
-if ultraschall.US_BetaFunctions=="ON" then
+if ultraschall.US_BetaFunctions==true then
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_functions_engine_beta.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine_beta.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gui_engine_beta.lua")
@@ -1859,10 +1859,152 @@ function ultraschall.ConvertBitsToString(bitarray)
   return Result
 end
 
+function ultraschall.deprecated(functionname)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>deprecated</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.deprecated(string functionname)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      If you have a 3rd-party function added to Ultraschall-API, which you want to deprecate, use this 
+      function to show a warning message, if that function is used.
+      
+      It will be shown once when running the script, after (re-)start of Reaper.
+      
+      That way, you can tell scripters, whether they need to update their scripts using newer/better functions.
+      This is probably shown first to the user, who knows that way a potential problem and can tell the scripter about that.
+      
+      If there is a line "Author: authorname" in the file(as usual for ReaPack-compatible scripts), it will show the scripter's name in the dialog.
+      
+    </description>
+    <retvals>
+      boolean retval - true, defer-instance is running; false, defer-instance isn't running
+    </retvals>
+    <parameters>
+      integer deferinstance - 0, to use the parameter identifier
+      optional string identifier - when deferinstance>0 (for Defer1 through Defer20-defer-cycles):a script-identifier of a specific script-instance; nil, for the current script-instance
+                                 - when deferinstance=0 (when using the Defer-function): the identifier of the defer-cycle, you've started with Defer
+    </parameter>
+    <chapter_context>
+      API-Helper functions
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>helperfunctions, deprecated, show, status</tags>
+  </US_DocBloc>
+  ]]
+  if type(functionname)~="string" then ultraschall.AddErrorMessage("deprecated", "functionname", "must be a string", -1) return end 
+  local A,B,C,D,E,F,G=reaper.get_action_context()
+  local B1,B2=ultraschall.GetPath(B)
+  if reaper.HasExtState("ultraschall_"..B2, functionname)==false then
+    local Script=ultraschall.ReadFullFile(B)
+    local Author=Script:match("%*.-Author%:(.-)%c")
+    if Author==nil then Author="author of this script" end
+    reaper.MB("The script \n\n    "..B2.." \n\nuses Ultraschall-API deprecated function \n\n    "..functionname..". \n\nPlease contact "..Author.." to fix this. Otherwise, this script will stop working in the future.", "Ultraschall-API: Issue with this script!", 0)
+    reaper.SetExtState("ultraschall_"..B2, functionname, "Ping", false)
+  end
+end
 
 
+function ultraschall.FloatCompare(a,b,precision)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>FloatCompare</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, number diff = ultraschall.FloatCompare(number a, number b, number precision)</functioncall>
+  <description>
+    Compares two floatvalues and allows to set the precision to copmare against.
+    
+    So, if you want to compare 5.1 and 5.2, using precision=0.2 returns true(is equal), precision=0.1 returns false(isn't equal).
+    
+    Returns nil in case of failure.
+  </description>
+  <parameters>
+    number a - the first float-number to compare
+    number b - the second float-number to compare
+    number precision - the precision of the fraction, like 0.1 or 0.0063
+  </parameters>
+  <retvals>
+    boolean retval - true, numbers are equal; false, numbers aren't equal
+    number diff - the difference between numbers a and b
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunction, compare, precision, float</tags>
+</US_DocBloc>
+]]
+  if type(a)~="number" then ultraschall.AddErrorMessage("FloatCompare", "a", "Must be a number", -1) return nil end
+  if type(b)~="number" then ultraschall.AddErrorMessage("FloatCompare", "b", "Must be a number", -2) return nil end
+  if type(precision)~="number" then ultraschall.AddErrorMessage("FloatCompare", "precision", "Must be a number", -3) return nil end
+  return math.abs(a-b)<precision, math.abs(a-b)
+end
 
+function ToClip(toclipstring)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ToClip</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>ToClip(string toclipstring)</functioncall>
+  <description>
+    Puts a string into clipboard.
+  </description>
+  <parameters>
+    string toclipstring - the string, which you want to put into the clipboard
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunction, set, string, to clipboard</tags>
+</US_DocBloc>
+]]
+  reaper.CF_SetClipboard(toclipstring)
+end
 
+function FromClip()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>FromClip</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>string clipboard_string = FromClip()</functioncall>
+  <description>
+    Gets a string from clipboard.
+  </description>
+  <retvals>
+    string clipboard_string - the string-content from the clipboard
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunction, get, string, from clipboard</tags>
+</US_DocBloc>
+]]
+  return ultraschall.GetStringFromClipboard_SWS()
+end
 
 
 
