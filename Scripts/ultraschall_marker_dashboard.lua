@@ -92,6 +92,7 @@ function build_markertable()
 
       -- print(image_position)
 
+      markertable[image_position] = {}
       markertable[image_position]["adress"] = image_adress
 
     else
@@ -127,11 +128,46 @@ end
 function makeSortedTable(orig_table)
   tablesort = {}
   for key in pairs(orig_table) do
-    table.insert( tablesort, key )
+    table.insert( tablesort, tonumber(key) )
   end
   table.sort(tablesort)
   return tablesort
 end
+
+
+------------------------------------------------------
+-- Versetze den Cursor und zentriere den View darauf
+------------------------------------------------------
+
+function moveArrangeview(cursor_position)
+
+  actual_cursor = reaper.GetCursorPosition()
+  cursor_offset = cursor_position - actual_cursor
+  reaper.MoveEditCursor(cursor_offset, false)
+  runcommand("_Ultraschall_Center_Arrangeview_To_Cursor")
+
+end
+
+------------------------------------------------------
+-- Editiert einen Marker an der Zeitposition
+------------------------------------------------------
+
+function editMarker(cursor_position)
+
+  actual_cursor = reaper.GetCursorPosition()
+  cursor_offset = cursor_position - actual_cursor
+  reaper.MoveEditCursor(cursor_offset, false)
+  runcommand(40614)
+
+end
+
+
+
+
+
+
+
+
 
 ------------------------------------------------------
 --  End of functions
@@ -147,6 +183,7 @@ markertable = build_markertable()
 tablesort = makeSortedTable(markertable)
 rows = #tablesort
 WindowHeight = 60 + (rows * 30) +30
+blankimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/blank.png"
 
 
 -- Grab all of the functions and classes from our GUI library
@@ -189,145 +226,92 @@ function buildGui()
 
   --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
 
-
-    label_interfaces = GUI.Lbl:new(          360, 110,                  "Soundcheck",          0),
-    label_table      = GUI.Lbl:new(          20, 250,                  "Check                                                         Status                        Actions",          0),
-    line1            = GUI.Line:new(0, 271, 800, 271, "txt_muted"),
-    line2            = GUI.Line:new(0, 270, 800, 270, "elm_outline"),
+    label_table      = GUI.Lbl:new(          20, 20,                  "Nr.   Name                                                                              Position       Image       URL",          0),
 
 
 
   }
 
 
-  button_settings = GUI.Btn:new(700, 245, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
-  table.insert(GUI.elms, button_settings)
 
 
 
-  position = 60
-  warningCount = 0
-
+  position = 30
+  chapterCount = 0
 
   for _, key in ipairs(tablesort) do
 
-    -- print("---")
     position = position + 30
-    output = key
-    name = markertable[key]["name"]
-    if name then
 
-      id = GUI.Lbl:new(20, position, name, 0)
+    -- Linie
+    line1 = GUI.Line:new(0, position-8, 800, position-8, "txt_muted")
+    table.insert(GUI.elms, line1)
+    line2 = GUI.Line:new(0, position-7, 800, position-7, "elm_outline")
+    table.insert(GUI.elms, line2)
+
+    -- Nr.
+    chapterCount = chapterCount +1
+    id = GUI.Lbl:new(20, position, tostring(chapterCount), 0)
+    table.insert(GUI.elms, id)
+
+    -- Name
+    name = markertable[tostring(key)]["name"]
+    if name then
+      id = GUI.Lbl:new(50, position, name, 0)
+      table.insert(GUI.elms, id)
+    else
+      id = GUI.Lbl:new(50, position, "!!! Missing chapter name. Klick to edit.", 0)
       table.insert(GUI.elms, id)
 
     end
 
-  end
+    editlink = GUI.Pic:new(50, position-5, 200, 25, 1, blankimg, editMarker, key),
+    table.insert(GUI.elms, editlink)
 
-  --[[
 
-  for i = 1, event_count do
-
-    -- Suche die Sections der ultraschall.ini heraus, die in der Settings-GUI angezeigt werden sollen
-
-    position = position + 30 -- Feintuning notwendig
-
-    EventIdentifier = ""
-    button1 = ""
-
-    EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
-
-    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
-
-    -- print(i.."-"..EventName.."-"..EventIdentifier.."-"..tostring(last_state))
-
-    if last_state == true then
-      warningCount = warningCount +1
-    end
-    -- Name
-
-    EventNameDisplay = ultraschall.GetUSExternalState(EventName, "EventNameDisplay","ultraschall-settings.ini")
-
-    id = GUI.Lbl:new(20, position, EventNameDisplay, 0)
+    -- Position
+    chapterposition = string.sub(ultraschall.SecondsToTime(key),1,8)
+    id = GUI.Lbl:new(400, position, chapterposition, 0)
     table.insert(GUI.elms, id)
 
-    -- State
+    imagelink = GUI.Pic:new(400, position-5, 200, 25, 1, blankimg, moveArrangeview, key),
+    table.insert(GUI.elms, imagelink)
 
-    if EventPaused == true then
-      last_state_string = "IGNORED"
-      state_color = "txt_yellow"
-    elseif last_state == true then
-      last_state_string = "WARNING"
-      state_color = "txt_red"
-    else
-      last_state_string = "OK"
-      state_color = "txt_green"
-    end
+    -- Image
 
-    status = GUI.Lbl:new(288, position, last_state_string, 0, state_color)
-    table.insert(GUI.elms, status)
+    image = markertable[tostring(key)]["adress"]
+    if image then
 
-    -- Buttons
+      img_index = gfx.loadimg(0, image)
 
-    if EventPaused == true then
-      button1 = GUI.Btn:new(401, position-4, 80, 20,         " Re-Check", ultraschall.EventManager_ResumeEvent, EventIdentifier)
-      table.insert(GUI.elms, button1)
+      if img_index then     -- there is an image
+        preview_size = 25      -- preview size in Pixel, always square
+        w, h = gfx.getimgdim(img_index)
+        if w > h then     -- adjust size to the longer border
+          img_ratio = preview_size / w
+        else
+          img_ratio = preview_size / h
+        end
+      end
 
-    elseif last_state == true then
-      button1 = GUI.Btn:new(401, position-4, 80, 20,         " Ignore", ultraschall.EventManager_PauseEvent, EventIdentifier)
-      table.insert(GUI.elms, button1)
+
+      imagepreview = GUI.Pic:new(480, position-5, 25, 25, img_ratio, image, runcommand, "_Ultraschall_Open_Project_Folder"),
+      table.insert(GUI.elms, imagepreview)
 
     end
 
 
 
 
-        -- Action-Button
-    Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label","ultraschall-settings.ini")
-    Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action","ultraschall-settings.ini")
-    DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-settings.ini")
-    Description = ultraschall.GetUSExternalState(EventName, "Description","ultraschall-settings.ini")
 
-
-    if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
-
-
-      button2 = GUI.Btn:new(490, position-4, 144, 20,         Button1Label, run_action, Button1Action)
-      table.insert(GUI.elms, button2)
-    end
-
-    Button2Label = ultraschall.GetUSExternalState(EventName, "Button2Label","ultraschall-settings.ini")
-    Button2Action = ultraschall.GetUSExternalState(EventName, "Button2Action","ultraschall-settings.ini")
-
-    if Button2Label ~= "" and Button2Action and last_state_string ~= "OK" then -- es gibt Probleme
-
-      button3 = GUI.Btn:new(643, position-4, 144, 20,         Button2Label, run_action, Button2Action)
-      table.insert(GUI.elms, button3)
-    end
-
-    if last_state_string ~= "OK" then -- es gibt Probleme
-      info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, DescriptionWarning)
-      table.insert(GUI.elms, info_button)
-    else -- normaler Info-Text
-      info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, Description)
-      table.insert(GUI.elms, info_button)
-    end
-
-
-
-  -- print("----")
   end
-
-]]
 
 end
 
 
 
-
-
 GUI.func = buildGui -- Dauerschleife
-GUI.freq = 1          -- Aufruf jede Sekunde
+GUI.freq = 2         -- Aufruf jede Sekunde
 
 
 
