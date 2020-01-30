@@ -161,6 +161,20 @@ function editMarker(cursor_position)
 
 end
 
+------------------------------------------------------
+-- Setzt einen Marker an der Zeitposition
+------------------------------------------------------
+
+function insertMarker(cursor_position)
+
+  actual_cursor = reaper.GetCursorPosition()
+  cursor_offset = cursor_position - actual_cursor
+  reaper.MoveEditCursor(cursor_offset, false)
+  runcommand("_Ultraschall_Set_NamedMarker")
+
+end
+
+
 
 
 
@@ -259,13 +273,14 @@ function buildGui()
     if name then
       id = GUI.Lbl:new(50, position, name, 0)
       table.insert(GUI.elms, id)
+      name_func = editMarker
     else
-      id = GUI.Lbl:new(50, position, "!!! Missing chapter name. Klick to edit.", 0)
+      id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
       table.insert(GUI.elms, id)
-
+      name_func = insertMarker
     end
 
-    editlink = GUI.Pic:new(50, position-5, 200, 25, 1, blankimg, editMarker, key),
+    editlink = GUI.Pic:new(50, position-5, 200, 25, 1, blankimg, name_func, key),
     table.insert(GUI.elms, editlink)
 
 
@@ -295,7 +310,7 @@ function buildGui()
       end
 
 
-      imagepreview = GUI.Pic:new(480, position-5, 25, 25, img_ratio, image, runcommand, "_Ultraschall_Open_Project_Folder"),
+      imagepreview = GUI.Pic:new(480, position-5, 25, 25, img_ratio, image, open_url, image)
       table.insert(GUI.elms, imagepreview)
 
     end
