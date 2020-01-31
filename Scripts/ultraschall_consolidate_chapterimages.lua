@@ -46,7 +46,7 @@ function NearMarker(position)
 
     local marker_position = normalmarkersarray[i][0]
 
-    if position - marker_position < 2 and marker_position - position > -2 then
+    if position - marker_position < 2 and position - marker_position > -2 then
       return marker_position
     end
 

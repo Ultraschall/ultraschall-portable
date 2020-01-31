@@ -90,8 +90,6 @@ function build_markertable()
     retval, image_position, image_adress = reaper.EnumProjExtState (0, "chapterimages", i)
     if retval then
 
-      print(image_position)
-
       -- markertable[image_position] = {}
       if markertable[image_position] then
         markertable[image_position]["adress"] = image_adress
@@ -210,6 +208,9 @@ rows = #tablesort
 WindowHeight = 60 + (rows * 30) +30
 blankimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/blank.png"
 placeholderimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/placeholder.png"
+triangle = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/triangle.png"
+green = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_green.png"
+red = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_red.png"
 
 
 -- Grab all of the functions and classes from our GUI library
@@ -252,7 +253,7 @@ function buildGui()
 
   --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
 
-    label_table      = GUI.Lbl:new(          20, 20,                  "Nr.   Name                                                                              Position       Image       URL",          0),
+    label_table      = GUI.Lbl:new(          20, 20,                  "Nr.   Name                                                                              Position       Image       URL                               Export Check",          0),
   }
 
 
@@ -269,6 +270,12 @@ function buildGui()
     line2 = GUI.Line:new(0, position-7, 800, position-7, "elm_outline")
     table.insert(GUI.elms, line2)
 
+    -- Zeilen-Idikator
+    if reaper.GetCursorPosition() == key then
+      indicator = GUI.Pic:new(1, position-4, 25, 25, 0.5, triangle, "", ""),
+      table.insert(GUI.elms, indicator)
+    end
+
     -- Nr.
     chapterCount = chapterCount +1
     id = GUI.Lbl:new(20, position, tostring(chapterCount), 0)
@@ -280,16 +287,22 @@ function buildGui()
       id = GUI.Lbl:new(50, position, name, 0)
       table.insert(GUI.elms, id)
       name_func = editMarker
+      green_indicator = GUI.Pic:new(765, position-4, 25, 25, 0.5, green, "", ""),
+      table.insert(GUI.elms, green_indicator)
 
     elseif name and name == "" then
         id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
         table.insert(GUI.elms, id)
         name_func = editMarker
+        red_indicator = GUI.Pic:new(765, position-4, 25, 25, 0.5, red, "", ""),
+        table.insert(GUI.elms, red_indicator)
 
     else
       id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
       table.insert(GUI.elms, id)
       name_func = insertMarker
+      red_indicator = GUI.Pic:new(765, position-4, 25, 25, 0.5, red, "", ""),
+      table.insert(GUI.elms, red_indicator)
     end
 
     editlink = GUI.Pic:new(50, position-5, 200, 25, 1, blankimg, name_func, key),
@@ -344,7 +357,7 @@ end
 
 
 GUI.func = buildGui -- Dauerschleife
-GUI.freq = 2         -- Aufruf jede Sekunde
+GUI.freq = 0.3         -- Aufruf jede Sekunde
 
 
 
