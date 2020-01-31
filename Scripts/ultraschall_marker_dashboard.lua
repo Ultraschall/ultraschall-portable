@@ -34,9 +34,9 @@ function open_url(url)
 
   local OS=reaper.GetOS()
   if OS=="OSX32" or OS=="OSX64" then
-    os.execute("open ".. url)
+    os.execute("open ".. '\"' .. url .. '\"')
   else
-    os.execute("start ".. url)
+    os.execute("start ".. '\"' .. url .. '\"')
   end
 end
 
@@ -92,7 +92,7 @@ function build_markertable()
 
       -- print(image_position)
 
-      markertable[image_position] = {}
+      -- markertable[image_position] = {}
       markertable[image_position]["adress"] = image_adress
 
     else
@@ -175,6 +175,15 @@ function insertMarker(cursor_position)
 end
 
 
+function encodeURI(str)
+  if (str) then
+    str = string.gsub (str, "\n", "\r\n")
+    str = string.gsub (str, "([^%w ])",
+      function (c) return string.format ("%%%02X", string.byte(c)) end)
+    str = string.gsub (str, " ", "+")
+   end
+   return str
+end
 
 
 
@@ -198,6 +207,7 @@ tablesort = makeSortedTable(markertable)
 rows = #tablesort
 WindowHeight = 60 + (rows * 30) +30
 blankimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/blank.png"
+placeholderimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/placeholder.png"
 
 
 -- Grab all of the functions and classes from our GUI library
@@ -241,13 +251,7 @@ function buildGui()
   --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
 
     label_table      = GUI.Lbl:new(          20, 20,                  "Nr.   Name                                                                              Position       Image       URL",          0),
-
-
-
   }
-
-
-
 
 
   position = 30
@@ -270,10 +274,16 @@ function buildGui()
 
     -- Name
     name = markertable[tostring(key)]["name"]
-    if name then
+    if name and name ~= "" then
       id = GUI.Lbl:new(50, position, name, 0)
       table.insert(GUI.elms, id)
       name_func = editMarker
+
+    elseif name and name == "" then
+        id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
+        table.insert(GUI.elms, id)
+        name_func = editMarker
+
     else
       id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
       table.insert(GUI.elms, id)
@@ -289,7 +299,7 @@ function buildGui()
     id = GUI.Lbl:new(400, position, chapterposition, 0)
     table.insert(GUI.elms, id)
 
-    imagelink = GUI.Pic:new(400, position-5, 200, 25, 1, blankimg, moveArrangeview, key),
+    imagelink = GUI.Pic:new(400, position-5, 60, 25, 1, blankimg, moveArrangeview, key),
     table.insert(GUI.elms, imagelink)
 
     -- Image
@@ -297,7 +307,9 @@ function buildGui()
     image = markertable[tostring(key)]["adress"]
     if image then
 
-      img_index = gfx.loadimg(0, image)
+      img_index = gfx.loadimg(0, placeholderimg)
+
+      --[[
 
       if img_index then     -- there is an image
         preview_size = 25      -- preview size in Pixel, always square
@@ -309,8 +321,12 @@ function buildGui()
         end
       end
 
+      ]]
 
-      imagepreview = GUI.Pic:new(480, position-5, 25, 25, img_ratio, image, open_url, image)
+      img_ratio = 0.5
+      -- image_url = encodeURI(image)
+
+      imagepreview = GUI.Pic:new(480, position-5, 25, 25, img_ratio, placeholderimg, open_url, image)
       table.insert(GUI.elms, imagepreview)
 
     end
