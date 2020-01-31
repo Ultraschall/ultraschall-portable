@@ -90,10 +90,12 @@ function build_markertable()
     retval, image_position, image_adress = reaper.EnumProjExtState (0, "chapterimages", i)
     if retval then
 
-      -- print(image_position)
+      print(image_position)
 
       -- markertable[image_position] = {}
-      markertable[image_position]["adress"] = image_adress
+      if markertable[image_position] then
+        markertable[image_position]["adress"] = image_adress
+      end
 
     else
       break
