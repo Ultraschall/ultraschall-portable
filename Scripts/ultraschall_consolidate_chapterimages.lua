@@ -37,6 +37,23 @@ function CountProjectValues(section)
   end
 end
 
+function NearMarker(position)
+
+  number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
+  -- print(number_of_normalmarkers)
+
+  for i = 1, number_of_normalmarkers do
+
+    local marker_position = normalmarkersarray[i][0]
+
+    if position - marker_position < 2 and marker_position - position > -2 then
+      return marker_position
+    end
+
+  end
+  return false
+
+end
 
 
 retval = ultraschall.DeleteProjExtState_Section("chapterimages") -- erst mal alles löschen
@@ -56,15 +73,21 @@ if itemcount > 0 then
 
     if mediatype == "Image" then
 
-      position = ultraschall.GetItemPosition(media_item)
+      item_position = ultraschall.GetItemPosition(media_item)
 
       -- print (ultraschall.GetMarkerByTime(position, true))
 
-      if ultraschall.GetMarkerByTime(position, true) ~= "" then  -- da liegt auch ein Marker, alles gut
+      -- if ultraschall.GetMarkerByTime(position, true) ~= "" then  -- da liegt auch ein Marker, alles gut
+
+      position = NearMarker(item_position)
+
+      if position then
+
         section = "chapterimages"
 
       else  -- Bild liegt ohne Marker rum
         section = "lostimages"
+        position = item_position
 
       end
 
