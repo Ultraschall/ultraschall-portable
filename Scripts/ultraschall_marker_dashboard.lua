@@ -134,7 +134,6 @@ function makeSortedTable(orig_table)
   return tablesort
 end
 
-
 ------------------------------------------------------
 -- Versetze den Cursor und zentriere den View darauf
 ------------------------------------------------------
@@ -174,33 +173,19 @@ function insertMarker(cursor_position)
 
 end
 
-
-function encodeURI(str)
-  if (str) then
-    str = string.gsub (str, "\n", "\r\n")
-    str = string.gsub (str, "([^%w ])",
-      function (c) return string.format ("%%%02X", string.byte(c)) end)
-    str = string.gsub (str, " ", "+")
-   end
-   return str
-end
-
+------------------------------------------------------
+-- URL editieren: wird über die Subtitles Funktion von Markern (SWS) geregelt
+------------------------------------------------------
 
 function editURL(idx)
 
   old_url = reaper.NF_GetSWSMarkerRegionSub(idx)
-
-  --if olll==nil then return end
-
   retval, result = reaper.GetUserInputs("Edit Chapter URL", 1, "URL:,extrawidth=300" , old_url)
 
   if retval == true then
     new_url = reaper.NF_SetSWSMarkerRegionSub(result, idx) -- write new url
   end
-
 end
-
-
 
 
 ------------------------------------------------------
@@ -373,7 +358,6 @@ function buildGui()
       ]]
 
       img_ratio = 0.5
-      -- image_url = encodeURI(image)
 
       imagepreview = GUI.Pic:new(480, position-5, 25, 25, img_ratio, placeholderimg, open_url, image)
       table.insert(GUI.elms, imagepreview)
@@ -414,35 +398,3 @@ function atexit()
 end
 
 reaper.atexit(atexit)
-
-
-
-
-
-
-
---[[
-
-for _, key in ipairs(tablesort) do
-
-  print("---")
-
-  output = key
-  name = markertable[key]["name"]
-  if name then
-    output = output .. name
-    print ("Name: " .. name)
-  end
-  adress = markertable[key]["adress"]
-  if adress then output = output .. adress end
-
-   -- .. markertable[key]["name"] .. markertable[key]["adress"]
-  print (output)
-
-end
-
-]]
-
--- print(markertable)
-
--- end
