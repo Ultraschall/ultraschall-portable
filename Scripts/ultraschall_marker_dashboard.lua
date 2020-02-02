@@ -64,7 +64,7 @@ function run_action(commandID)
 end
 
 ------------------------------------------------------
---  Bau den Table mit allen Einträgen der MArker und Bilder auf
+--  Bau den Table mit allen Einträgen der Marker und Bilder auf
 ------------------------------------------------------
 
 function build_markertable()
@@ -80,7 +80,7 @@ function build_markertable()
 
     markertable[position] = {}
     markertable[position]["name"] = normalmarkersarray[i][1]
-
+    markertable[position]["idx"] = normalmarkersarray[i][2]
   end
 
 -- Gehe die Bilder mit Kapitelmarke durch
@@ -186,8 +186,19 @@ function encodeURI(str)
 end
 
 
+function editURL(idx)
 
+  old_url = reaper.NF_GetSWSMarkerRegionSub(idx)
 
+  --if olll==nil then return end
+
+  retval, result = reaper.GetUserInputs("Edit Chapter URL", 1, "URL:,extrawidth=300" , old_url)
+
+  if retval == true then
+    new_url = reaper.NF_SetSWSMarkerRegionSub(result, idx) -- write new url
+  end
+
+end
 
 
 
@@ -211,7 +222,7 @@ placeholderimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/placehold
 triangle = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/triangle.png"
 green = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_green.png"
 red = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_red.png"
-
+add = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/add.png"
 
 -- Grab all of the functions and classes from our GUI library
 
@@ -253,7 +264,7 @@ function buildGui()
 
   --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
 
-    label_table      = GUI.Lbl:new(          20, 20,                  "Nr.   Name                                                                              Position       Image       URL                               Export Check",          0),
+    label_table      = GUI.Lbl:new(          20, 20,                  "Nr.   Name                                                                              Position    Image    URL                                     Export Check",          0),
   }
 
 
@@ -289,6 +300,29 @@ function buildGui()
       name_func = editMarker
       green_indicator = GUI.Pic:new(765, position-4, 25, 25, 0.5, green, "", ""),
       table.insert(GUI.elms, green_indicator)
+
+
+      -- URL - nur wenn Name gesetzt ist
+
+      idx = markertable[tostring(key)]["idx"]
+      mkrRgnSubOut = reaper.NF_GetSWSMarkerRegionSub(idx-1)
+      url_displayed = string.sub(mkrRgnSubOut,1,31)
+      if #mkrRgnSubOut > 31 then
+        url_displayed = url_displayed .. "..."
+      end
+
+      if mkrRgnSubOut ~= "" then
+        url_txt = GUI.Lbl:new(522, position, url_displayed, 0)
+        table.insert(GUI.elms, url_txt)
+        edit_url = GUI.Pic:new(522, position-5, 200, 25, 1, blankimg, editURL, idx-1),
+        table.insert(GUI.elms, edit_url)
+      else
+        edit_url = GUI.Pic:new(522, position-5, 25, 25, 0.5, add, editURL, idx-1),
+        table.insert(GUI.elms, edit_url)
+      end
+
+
+
 
     elseif name and name == "" then
         id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
