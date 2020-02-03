@@ -214,6 +214,7 @@ triangle = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/triangle.png"
 green = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_green.png"
 red = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_red.png"
 add = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/add.png"
+link = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/link.png"
 
 -- Grab all of the functions and classes from our GUI library
 
@@ -224,7 +225,7 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Marker Dashboard"
-GUI.w, GUI.h = 800, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 820, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -255,7 +256,7 @@ function buildGui()
 
   --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
 
-    label_table      = GUI.Lbl:new(          20, 20,                  "Nr.   Name                                                                              Position    Image    URL                                     Export Check",          0),
+    label_table      = GUI.Lbl:new(          20, 20,                  "Nr.   Name                                                                              Position    Image    URL                                          Export Check",          0),
   }
 
 
@@ -267,9 +268,9 @@ function buildGui()
     position = position + 30
 
     -- Linie
-    line1 = GUI.Line:new(0, position-8, 800, position-8, "txt_muted")
+    line1 = GUI.Line:new(0, position-8, 820, position-8, "txt_muted")
     table.insert(GUI.elms, line1)
-    line2 = GUI.Line:new(0, position-7, 800, position-7, "elm_outline")
+    line2 = GUI.Line:new(0, position-7, 820, position-7, "elm_outline")
     table.insert(GUI.elms, line2)
 
     -- Zeilen-Idikator
@@ -286,10 +287,16 @@ function buildGui()
     -- Name
     name = markertable[tostring(key)]["name"]
     if name and name ~= "" then
-      id = GUI.Lbl:new(50, position, name, 0)
+
+      name_displayed = string.sub(name,1,40)
+      if #name > 40 then
+        name_displayed = name_displayed .. "..."
+      end
+
+      id = GUI.Lbl:new(50, position, name_displayed, 0)
       table.insert(GUI.elms, id)
       name_func = editMarker
-      green_indicator = GUI.Pic:new(765, position-4, 25, 25, 0.5, green, "", ""),
+      green_indicator = GUI.Pic:new(785, position-4, 25, 25, 0.5, green, show_menu, "Good to go")
       table.insert(GUI.elms, green_indicator)
 
 
@@ -303,12 +310,15 @@ function buildGui()
       end
 
       if mkrRgnSubOut ~= "" then
-        url_txt = GUI.Lbl:new(522, position, url_displayed, 0)
+        url_txt = GUI.Lbl:new(550, position, url_displayed, 0)
         table.insert(GUI.elms, url_txt)
-        edit_url = GUI.Pic:new(522, position-5, 200, 25, 1, blankimg, editURL, idx-1),
+        edit_url = GUI.Pic:new(550, position-5, 200, 25, 1, blankimg, editURL, idx-1)
         table.insert(GUI.elms, edit_url)
+        open_exturl = GUI.Pic:new(522, position-5, 25, 25, 0.5, link, open_url, mkrRgnSubOut)
+        table.insert(GUI.elms, open_exturl)
+
       else
-        edit_url = GUI.Pic:new(522, position-5, 25, 25, 0.5, add, editURL, idx-1),
+        edit_url = GUI.Pic:new(522, position-5, 25, 25, 0.5, add, editURL, idx-1)
         table.insert(GUI.elms, edit_url)
       end
 
@@ -319,14 +329,14 @@ function buildGui()
         id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
         table.insert(GUI.elms, id)
         name_func = editMarker
-        red_indicator = GUI.Pic:new(765, position-4, 25, 25, 0.5, red, "", ""),
+        red_indicator = GUI.Pic:new(785, position-4, 25, 25, 0.5, red, show_menu, "Chapters without Name will not be exported"),
         table.insert(GUI.elms, red_indicator)
 
     else
       id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
       table.insert(GUI.elms, id)
       name_func = insertMarker
-      red_indicator = GUI.Pic:new(765, position-4, 25, 25, 0.5, red, "", ""),
+      red_indicator = GUI.Pic:new(785, position-4, 25, 25, 0.5, red, show_menu, "Chapters without Name will not be exported"),
       table.insert(GUI.elms, red_indicator)
     end
 
@@ -365,7 +375,7 @@ function buildGui()
 
       img_ratio = 0.5
 
-      imagepreview = GUI.Pic:new(480, position-5, 25, 25, img_ratio, placeholderimg, open_url, image)
+      imagepreview = GUI.Pic:new(479, position-5, 25, 25, img_ratio, placeholderimg, open_url, image)
       table.insert(GUI.elms, imagepreview)
 
     end
@@ -383,9 +393,6 @@ end
 GUI.func = buildGui -- Dauerschleife
 GUI.freq = 0.3         -- Aufruf jede Sekunde
 
-
-
--- Open Soundcheck Screen, when it hasn't been opened yet
 
 if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
 else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows

@@ -28,6 +28,10 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 -- item = reaper.GetSelectedMediaItem(0, 0)
 
+------------------------------------------------------
+-- Zähle die Einträge in der ProjExt einer Section
+------------------------------------------------------
+
 function CountProjectValues(section)
 
   for i = 0, 100 do
@@ -36,6 +40,10 @@ function CountProjectValues(section)
     end
   end
 end
+
+------------------------------------------------------
+-- Befindet sich eine position in Nähe eines Markers?
+------------------------------------------------------
 
 function NearMarker(position)
 
@@ -55,9 +63,20 @@ function NearMarker(position)
 
 end
 
+------------------------------------------------------
+-- End of functions
+------------------------------------------------------
+
+
+
 
 retval = ultraschall.DeleteProjExtState_Section("chapterimages") -- erst mal alles löschen
 retval2 = ultraschall.DeleteProjExtState_Section("lostimages") -- erst mal alles löschen
+
+
+------------------------------------------------------
+-- Schreibe die Kapitelbilder, getrennt nach zugeordnet zu Markern und "lost"
+------------------------------------------------------
 
 itemcount = reaper.CountMediaItems(0)
 
@@ -76,7 +95,6 @@ if itemcount > 0 then
       item_position = ultraschall.GetItemPosition(media_item)
 
       -- print (ultraschall.GetMarkerByTime(position, true))
-
       -- if ultraschall.GetMarkerByTime(position, true) ~= "" then  -- da liegt auch ein Marker, alles gut
 
       position = NearMarker(item_position)
@@ -98,7 +116,24 @@ if itemcount > 0 then
   end
 end
 
+------------------------------------------------------
+-- Schreibe die URLs der Chapters
+------------------------------------------------------
 
+number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
+-- print(number_of_normalmarkers)
+
+for i = 1, number_of_normalmarkers do
+
+  position = tostring(normalmarkersarray[i][0])
+  idx = normalmarkersarray[i][2]
+  old_url = reaper.NF_GetSWSMarkerRegionSub(idx-1)
+  if old_url ~= "" then
+    -- print (i .. "-" .. position .. old_url)
+    urlcount = reaper.SetProjExtState(0, "chapterurls", position, old_url)
+  end
+
+end
 
 
 
