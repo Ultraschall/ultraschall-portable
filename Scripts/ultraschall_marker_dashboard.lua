@@ -183,7 +183,7 @@ function editURL(idx)
   retval, result = reaper.GetUserInputs("Edit Chapter URL", 1, "URL:,extrawidth=300" , old_url)
 
   if retval == true then
-    if (result:match("https?://(([%w_.~!*:@&+$/?%%#-]-)(%w[-.%w]*%.)(%w%w%w?%w?)(:?)(%d*)(/?)([%w_.~!*:@&+$/?%%#=-]*))")) or (result:match("ftps?://(([%w_.~!*:@&+$/?%%#-]-)(%w[-.%w]*%.)(%w%w%w?%w?)(:?)(%d*)(/?)([%w_.~!*:@&+$/?%%#=-]*))")) then
+    if (result:match("https?://(([%w_.~!*:@&+$/?%%#-]-)(%w[-.%w]*%.)(%w%w%w?%w?)(:?)(%d*)(/?)([%w_.~!*:@&+$/?%%#=-]*))")) then
       new_url = reaper.NF_SetSWSMarkerRegionSub(result, idx) -- write new url
     else
       editURL(idx)
