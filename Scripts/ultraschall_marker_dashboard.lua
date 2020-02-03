@@ -398,7 +398,14 @@ if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=
 else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
 
 
-if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
+if reaper.GetPlayState() == 5 then
+
+  Message = "!;ExportContext;".."Stop the recording first to open the Markers Dashboard"
+
+  reaper.SetExtState("ultraschall_messages", "message_0", Message, false) -- nur debugging
+  reaper.SetExtState("ultraschall_messages", "message_count", "1", false) -- nur debugging
+
+elseif windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
                         -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
 
   buildGui()
