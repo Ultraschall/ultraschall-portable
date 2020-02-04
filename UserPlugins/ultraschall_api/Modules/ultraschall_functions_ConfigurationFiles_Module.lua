@@ -81,8 +81,8 @@ function ultraschall.SetIniFileExternalState(section, key, value, ini_filename_w
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, set, external state, value, ini-files</tags>
 </US_DocBloc>
 ]]
@@ -124,8 +124,8 @@ function ultraschall.GetIniFileExternalState(section, key, ini_filename_with_pat
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, get, external state, value, ini-files</tags>
 </US_DocBloc>
 ]]
@@ -166,8 +166,8 @@ function ultraschall.CountIniFileExternalState_sec(ini_filename_with_path)
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, count, sections, ini-files</tags>
 </US_DocBloc>
 ]]
@@ -208,8 +208,8 @@ function ultraschall.CountIniFileExternalState_key(section, ini_filename_with_pa
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, count, keys, ini-files</tags>
 </US_DocBloc>
 ]]
@@ -257,8 +257,8 @@ function ultraschall.EnumerateIniFileExternalState_sec(number_of_section, ini_fi
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, get, section, enumerate, ini-files</tags>
 </US_DocBloc>
 ]]
@@ -306,8 +306,8 @@ function ultraschall.EnumerateIniFileExternalState_key(section, number, ini_file
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, get, key, enumerate, ini-files</tags>
 </US_DocBloc>
 ]]
@@ -367,8 +367,8 @@ function ultraschall.CountSectionsByPattern(pattern, ini_filename_with_path)
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, count, sections, pattern, get, ini-files</tags>
 </US_DocBloc>
 ]]
@@ -419,8 +419,8 @@ function ultraschall.CountKeysByPattern(pattern, ini_filename_with_path)
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, count, keys, pattern, get, ini-files</tags>
 </US_DocBloc>
 ]]
@@ -481,8 +481,8 @@ function ultraschall.CountValuesByPattern(pattern, ini_filename_with_path)
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, count, values, pattern, get, ini-files</tags>
 </US_DocBloc>
 ]]
@@ -543,8 +543,8 @@ function ultraschall.EnumerateSectionsByPattern(pattern, id, ini_filename_with_p
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, enumerate, section, pattern, get, ini-files</tags>
 </US_DocBloc>
 ]]
@@ -599,8 +599,8 @@ function ultraschall.EnumerateKeysByPattern(pattern, section, id, ini_filename_w
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, ini-files, enumerate, section, key, pattern, get</tags>
 </US_DocBloc>
 ]]
@@ -660,8 +660,8 @@ function ultraschall.EnumerateValuesByPattern(pattern, section, id, ini_filename
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, ini-files, enumerate, section, key, value, pattern, get</tags>
 </US_DocBloc>
 ]]
@@ -707,8 +707,8 @@ function ultraschall.GetKBIniFilepath()
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, get</tags>
 </US_DocBloc>
 ]]  
@@ -740,8 +740,8 @@ string filename_with_path - path and filename of the reaper-kb.ini
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, count, actions, action</tags>
 </US_DocBloc>
 ]]  
@@ -782,8 +782,8 @@ string filename_with_path - path and filename of the reaper-kb.ini
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, count, scripts, script</tags>
 </US_DocBloc>
 ]]  
@@ -824,8 +824,8 @@ string filename_with_path - path and filename of the reaper-kb.ini
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, count, keys, key</tags>
 </US_DocBloc>
 ]]  
@@ -884,8 +884,8 @@ function ultraschall.GetKBIniActions(filename_with_path, idx)
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, get, actions, action</tags>
 </US_DocBloc>
 ]]  
@@ -951,8 +951,8 @@ function ultraschall.GetKBIniScripts(filename_with_path, idx)
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, get, scripts, script</tags>
 </US_DocBloc>
 ]]  
@@ -1019,8 +1019,8 @@ function ultraschall.GetKBIniKeys(filename_with_path, idx)
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, get, keys, key</tags>
 </US_DocBloc>
 ]]  
@@ -1069,8 +1069,8 @@ function ultraschall.GetKBIniActionsID_ByActionCommandID(filename_with_path, Act
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, get, actions, action</tags>
 </US_DocBloc>
 ]]  
@@ -1116,8 +1116,8 @@ function ultraschall.GetKBIniScripts_ByActionCommandID(filename_with_path, Actio
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, get, scripts, script</tags>
 </US_DocBloc>
 ]]  
@@ -1163,8 +1163,8 @@ function ultraschall.GetKBIniKeys_ByActionCommandID(filename_with_path, ActionCo
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, get, keys, key</tags>
 </US_DocBloc>
 ]]  
@@ -1233,8 +1233,8 @@ function ultraschall.SetKBIniActions(filename_with_path, consolidate, section, A
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, add, set, replace, action, actions</tags>
 </US_DocBloc>
 ]]  
@@ -1331,8 +1331,8 @@ function ultraschall.SetKBIniScripts(filename_with_path, terminate_state, sectio
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, add, set, script, scripts, replace</tags>
 </US_DocBloc>
 ]]  
@@ -1432,8 +1432,8 @@ function ultraschall.SetKBIniKeys(filename_with_path, KeyType, KeyNote, ActionCo
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, add, set, key, keys, replace</tags>
 </US_DocBloc>
 ]]  
@@ -1515,8 +1515,8 @@ function ultraschall.DeleteKBIniActions(filename_with_path, idx)
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, delete, action, actions</tags>
 </US_DocBloc>
 ]]  
@@ -1574,8 +1574,8 @@ function ultraschall.DeleteKBIniScripts(filename_with_path, idx)
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, delete, script, scripts</tags>
 </US_DocBloc>
 ]]
@@ -1633,8 +1633,8 @@ function ultraschall.DeleteKBIniKeys(filename_with_path, idx)
     Configuration-Files Management
     Reaper-kb.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>configurationmanagement, reaper-kb.ini, kb.ini, keybindings, delete, key, keys, keybind</tags>
 </US_DocBloc>
 ]]
@@ -1696,14 +1696,15 @@ function ultraschall.GetIniFileValue(section, key, errval, inifile)
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>inifilemanagement, get, key, value, section</tags>
 </US_DocBloc>
 --]]
   if type(inifile)~="string" then ultraschall.AddErrorMessage("GetIniFileValue", "inifile", "must be a string", -1) return -1 end
   if section==nil then ultraschall.AddErrorMessage("GetIniFileValue", "section", "must be a string", -2) return -1 end
   if key==nil then ultraschall.AddErrorMessage("GetIniFileValue", "key", "must be a string", -3) return -1 end
+  if reaper.file_exists(inifile)==false then ultraschall.AddErrorMessage("GetIniFileValue","inifile", "file does not exist", -4) return -1 end
   if errval==nil then errval="" end
   section=tostring(section)
   key=tostring(key)
@@ -1742,8 +1743,8 @@ function ultraschall.SetIniFileValue(section, key, value, inifile)
     Configuration-Files Management
     Ini-Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
   <tags>inifilemanagement, set, key, value, section</tags>
 </US_DocBloc>
 --]]
@@ -1760,3 +1761,49 @@ end
 
 --A1=ultraschall.SetIniFileValue(file:match("(.-)REAPER.ini").."lula.ini", "ultrascshall_update", "D", "1")
 
+function ultraschall.QueryKeyboardShortcutByKeyID(modifier, key)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>QueryKeyboardShortcutByKeyID</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>string Shortcutname = ultraschall.QueryKeyboardShortcutByKeyID(integer modifier, integer key)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the name of the shortcut of the modifier-key-values, as stored in the KEY-entries within the reaper-kb.ini
+    
+    That way, you can take a KEY-entry from the reaper-kb.ini, like
+     
+          KEY 1 65 _Ultraschall_Play_From_Editcursor_Position 0
+          
+    Extract the modifier and key-values(1 and 65 in the example) and pass them to this function.
+    You will get returned "A" as 1 and 65 is the keyboard-shortcut-code for the A-key.
+    
+    Only necessary for those, who try to read keyboard-shortcuts directly from the reaper-kb.ini to display them in some way.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string Shortcutname - the actual name of the shortcut, like "A" or "F1" or "Ctrl+Alt+Shift+Win+PgUp".
+  </retvals>
+  <parameters>
+    integer modifier - the modifier value, which is the first one after KEY in a KEY-entry in the reaper-kb.ini-file
+    integer key - the key value, which is the second one after KEY in a KEY-entry in the reaper-kb.ini-file
+  </parameters>
+  <chapter_context>
+    Configuration-Files Management
+    Reaper-kb.ini
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
+  <tags>configurations management, key, shortcut, name, query, get</tags>
+</US_DocBloc>
+]]
+  if math.type(modifier)~="integer" then ultraschall.AddErrorMessage("QueryKeyboardShortcutByKeyID", "modifier", "must be an integer", -1) return nil end
+  if math.type(key)~="integer" then ultraschall.AddErrorMessage("QueryKeyboardShortcutByKeyID", "key", "must be an integer", -2) return nil end
+  local length_of_value, value = ultraschall.GetIniFileValue("Code", modifier.."_"..key, -999, ultraschall.Api_Path.."/IniFiles/Reaper-KEY-Codes_for_reaper-kb_ini.ini")
+  return value
+end

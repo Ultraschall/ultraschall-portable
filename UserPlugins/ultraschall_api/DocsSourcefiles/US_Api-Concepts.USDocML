@@ -55,7 +55,7 @@
                 PS: In this documentation, I assume you have some basic knowledge in Lua and in using Reaper's own API-functions. Explaining both of these is beyond the scope of this doc.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Introduction
         </chapter_context>
@@ -107,7 +107,7 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall\_api4.00\_beta2.80.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.80.zip).  
+            1. Just download the zip-file of the current version from [ultraschall\_api4.00\_beta2.9.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.9.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.
@@ -147,7 +147,7 @@
             Oh, before I forget: The ultraschall\_api-folder holds a folder "Scripts\_Examples" in which you can find some demos and example-scripts using this API.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Introduction
         </chapter_context>
@@ -176,7 +176,7 @@
                Check again from time to time to get the latest hotfixes.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Introduction
         </chapter_context>
@@ -211,7 +211,7 @@
             PS: If you know how to implement impossible things or do things better than the current implementation, you are welcome to donate your improved codes. :)
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Introduction
         </chapter_context>
@@ -260,7 +260,7 @@
             Thanks to him for allowing me to use it :)  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Introduction
         </chapter_context>
@@ -319,7 +319,7 @@
             These Ultraschall-API-specific datatypes are described in more detail in the following chapters.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Datatypes
         </chapter_context>
@@ -356,7 +356,7 @@
 
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Datatypes
         </chapter_context>
@@ -401,7 +401,7 @@
                     [DeleteMediaItemsFromArray](usdocml://DeleteMediaItemsFromArray), [DeselectMediaItems_MediaItemArray](usdocml://DeselectMediaItems_MediaItemArray), [GetAllLockedItemsFromMediaItemArray](usdocml://GetAllLockedItemsFromMediaItemArray), [InsertMediaItemArray](usdocml://InsertMediaItemArray), and more
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Datatypes
         </chapter_context>
@@ -453,7 +453,7 @@
                     [GetMediaItemStateChunkArrayLength](usdocml://GetMediaItemStateChunkArrayLength), [InsertMediaItemStateChunkArray](usdocml://InsertMediaItemStateChunkArray), [RippleInsert_MediaItemStateChunks](usdocml://RippleInsert_MediaItemStateChunks), [GetAllMediaItemsFromTrackStateChunk](usdocml://GetAllMediaItemsFromTrackStateChunk) and more
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Datatypes
         </chapter_context>
@@ -503,7 +503,7 @@
                     [AddEnvelopePoints_EnvelopePointObject](usdocml://AddEnvelopePoints_EnvelopePointObject), [SetEnvelopePoints_EnvelopePointObject](usdocml://SetEnvelopePoints_EnvelopePointObject), [DeleteEnvelopePoints_EnvelopePointObject](usdocml://DeleteEnvelopePoints_EnvelopePointObject) and more
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Datatypes
         </chapter_context>
@@ -544,7 +544,7 @@
                     [AddEnvelopePoints_EnvelopePointArray](usdocml://AddEnvelopePoints_EnvelopePointArray), [SetEnvelopePoints_EnvelopePointArray](usdocml://SetEnvelopePoints_EnvelopePointArray), [DeleteEnvelopePoints_EnvelopePointArray](usdocml://DeleteEnvelopePoints_EnvelopePointArray) and more
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Datatypes
         </chapter_context>
@@ -583,7 +583,7 @@
                     [ApplyColorTableToTrackColors](usdocml://ApplyColorTableToTrackColors)            
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Datatypes
         </chapter_context>
@@ -687,7 +687,7 @@
                     [RenderProject_RenderTable](usdocml://RenderProject_RenderTable)
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Datatypes
         </chapter_context>
@@ -753,7 +753,7 @@
                  - [IsValidMatchingPattern](usdocml://IsValidMatchingPattern) - checks, whether a string is a valid matching pattern for Lua's pattern-matching  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Datatypes
         </chapter_context>
@@ -784,7 +784,7 @@
             You could change them as well, but that would be pointless.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             API-Variables
         </chapter_context>
@@ -854,7 +854,7 @@
                Read the accompanying documentation-entries for [CreateRenderCFG_MP3CBR](usdocml://CreateRenderCFG_MP3CBR) and [RenderProject](usdocml://RenderProject) for more details and/or the following chapters.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Rendering
         </chapter_context>
@@ -925,7 +925,7 @@
             >[GetRenderCFG\_Settings\_MP4Mac\_Video](usdocml://GetRenderCFG_Settings_MP4Mac_Video), [GetRenderCFG\_Settings\_QTMOVMP4\_Video](usdocml://GetRenderCFG_Settings_QTMOVMP4_Video), [GetRenderCFG\_Settings\_WebMVideo](usdocml://GetRenderCFG_Settings_WebMVideo)
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Rendering
         </chapter_context>
@@ -974,7 +974,7 @@
             With that, you can interoperate with RenderTables and render-settings from/to projects, projectfiles and presets in any way you wish.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Rendering
         </chapter_context>
@@ -1070,7 +1070,7 @@
             For more enhanced customization of projectfiles for Rendering, see [Rendering: Change more render-settings in projectfiles](#Rendering_004_Change_more_render_settings).
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Rendering
         </chapter_context>
@@ -1104,7 +1104,7 @@
             The functions are just a small selection of the functions to alter project-files, as provided by the Ultraschall-API. Browse through the functions in the "Project-Files"-section of the index of the Ultraschall-API-Functions-Reference for many more of them.  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Rendering
         </chapter_context>
@@ -1199,7 +1199,7 @@
             This should give you a lot of control over render-presets.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Rendering
         </chapter_context>
@@ -1239,7 +1239,7 @@
             >Just pass to it the projectfilename+path of the project, that you want to add to the RenderQueue and it will do what is needed for that.  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Rendering
         </chapter_context>
@@ -1264,7 +1264,7 @@
             Due limitations with Reaper's own API, storing the vertical-scroll-position of the arrangeview isn't possible yet. This will change as soon as the limitation is raised from Reaper's own API.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Arrangeview Snapshots
         </chapter_context>
@@ -1296,7 +1296,7 @@
             To delete a certain slot, just use [DeleteArrangeviewSnapshot](usdocml://DeleteArrangeviewSnapshot).
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Arrangeview Snapshots
         </chapter_context>
@@ -1330,7 +1330,7 @@
             This should give you full control in what to restore from an Arrangeview-Snapshot and what to ignore.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Arrangeview Snapshots
         </chapter_context>
@@ -1353,7 +1353,7 @@
             This should give you more control about programming faster and quicker navigation-capabilities.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Navigation
         </chapter_context>
@@ -1382,7 +1382,7 @@
                   - [SetPlayAndEditCursor_WhenPlaying](usdocml://SetPlayAndEditCursor_WhenPlaying) - sets play and editcursor to position during playback
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Navigation
         </chapter_context>
@@ -1429,7 +1429,7 @@
             It will also check, if the next/previous closest edge is the beginning or the end of the project.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Navigation
         </chapter_context>
@@ -1463,7 +1463,7 @@
             This functions only centers the given position/cursor-position to the arrangeview. It keeps the zoom-factor intact.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Navigation
         </chapter_context>
@@ -1498,7 +1498,7 @@
             If you have your own custom actions toggling these actions, you probably shouldn't use this function. Otherwise it probably messes up your workflows.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Navigation
         </chapter_context>
@@ -1550,7 +1550,7 @@
             To get ProjectStateChunks, you need to read the rpp-file, as currently there's no Get/SetProjectStateChunk-function in Reaper's own API.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Get/Set Project/Track/MediaItem-States
         </chapter_context>
@@ -1576,7 +1576,7 @@
             Let's begin with getting items by time(range) and tracks.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             MediaItems
         </chapter_context>
@@ -1638,7 +1638,7 @@
                - [GetSelectedMediaItemsBetween](usdocml://GetSelectedMediaItemsBetween) - gets all selected MediaITems in given tracks between start- and endposition
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             MediaItems
         </chapter_context>
@@ -1679,7 +1679,7 @@
             >This function returns, if splitting was successful and the newly "created"-right-hand-split-items as an MediaItemAray. Only the right-hand-split-MediaItem of MediaItems, that could be split, will be returned. If a MediaItem could not be split(position outside MediaItemstart and MediaItemEnd), there will be no returned MediaItem for it then.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             MediaItems
         </chapter_context>
@@ -1742,7 +1742,7 @@
             With all these functions, deleting MediaItems is now comfortable to do.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             MediaItems
         </chapter_context>
@@ -1836,7 +1836,7 @@
              This should give you many additional use-cases into your hands.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             MediaItems
         </chapter_context>
@@ -1970,7 +1970,7 @@
                - [DeselectMediaItems_MediaItemArray](usdocml://DeselectMediaItems_MediaItemArray) - sets MediaItems in MediaItemArray deselected  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             MediaItems
         </chapter_context>
@@ -2046,7 +2046,7 @@
            >If you don't loop it(looped=false), the MediaItem will have the length anyway, but the image will be shown only for 1 second in the VideoProcessor-window.  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             MediaItems
         </chapter_context>
@@ -2146,7 +2146,7 @@
               - [CountItemSpectralEdits](usdocml://CountItemSpectralEdits) - to count the number of currently existing SpectralEdit-instances in a MediaItem  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             MediaItems
         </chapter_context>
@@ -2240,7 +2240,7 @@
             >Easy to do now.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             MediaItems
         </chapter_context>
@@ -2265,7 +2265,7 @@
             Let's start with reading files.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             File Management
         </chapter_context>
@@ -2359,7 +2359,7 @@
             These functions should fulfill most of your daily file-read-usecases.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             File Management
         </chapter_context>
@@ -2418,7 +2418,7 @@
             This should make saving files easier than having to code it completely yourself by hand.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             File Management
         </chapter_context>
@@ -2475,7 +2475,7 @@
             > After that, the function returns an array with all files, that are of the filetype you gave to parameter filetype.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             File Management
         </chapter_context>
@@ -2503,7 +2503,7 @@
             - [SetReaperWorkDir](usdocml://SetReaperWorkDir) - sets the current workdir of Reaper, where files(without a path) will be created in(needs Reaper-restart)
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             File Management
         </chapter_context>
@@ -2531,7 +2531,7 @@
             - [IsValidReaProject](usdocml://IsValidReaProject) - checks, whether an object is a valid ReaProject-object
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Project Management
         </chapter_context>
@@ -2571,7 +2571,7 @@
             That way, you can for instance work with newly created projects, to automatically add things to projects, that can't be added using TemplateProjects.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Project Management
         </chapter_context>
@@ -2617,7 +2617,7 @@
             So I thought, why not adding functions, that make that stuff easier?
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Color Management
         </chapter_context>
@@ -2696,7 +2696,7 @@
             With that, you can convert color-values into all color-values you ever want to have.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Color Management
         </chapter_context>
@@ -2769,7 +2769,7 @@
             
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Color Management
         </chapter_context>
@@ -2791,7 +2791,7 @@
             Over time, I intend to add functions to these colortables as well, so adding, removing, altering and changing colors in the colortable(like brightness, saturation and such) is possible more easily.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Color Management
         </chapter_context>
@@ -2834,7 +2834,7 @@
             
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Color Management
         </chapter_context>
@@ -2868,7 +2868,7 @@
             >The rest is the same, pass to the function a ColorTable and in the parameter Spread, how to spread/cycle the colors over the MediaItems.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Color Management
         </chapter_context>
@@ -2955,7 +2955,7 @@
             Refer [DeferScripts: Introduction to Ultraschall's Defer-functions](#DeferScripts_001_Introduction) for more information on the Defer1-function used in this demo-script.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Background-Scripts
         </chapter_context>
@@ -2978,7 +2978,7 @@
             Let's go into more detail.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Cough and Mute-Buttons
         </chapter_context>
@@ -3010,7 +3010,7 @@
             >This works the same as ToggleMute, but accepts a MediaTrack instead of a tracknumber. The rest is the same, position for the position of the new mutepoint and state for mute(0) or unmute(1).
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Cough and Mute-Buttons
         </chapter_context>
@@ -3071,7 +3071,7 @@
             With that, you should get a good overview over the mute-points in your project.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Cough and Mute-Buttons
         </chapter_context>
@@ -3103,7 +3103,7 @@
             >Works exactly like DeleteMuteState, but expects a MediaTrack-object instead of a tracknumber.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Cough and Mute-Buttons
         </chapter_context>
@@ -3128,7 +3128,7 @@
             Let's go into more details on that.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Error Messaging System
         </chapter_context>
@@ -3181,7 +3181,7 @@
             Now, we've created a new error-message, which is now kept by the Ultraschall-API-instance locally within your script.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Error Messaging System
         </chapter_context>
@@ -3249,7 +3249,7 @@
              - [ShowErrorMessagesInReascriptConsole](usdocml://ShowErrorMessagesInReascriptConsole) - prints the errormessages to the console, when they happen for "realtime"-debug-errorchecking
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Error Messaging System
         </chapter_context>
@@ -3286,7 +3286,7 @@
             And that's all you need to know about deleting errormessages.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Error Messaging System
         </chapter_context>
@@ -3311,7 +3311,7 @@
 
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Error Messaging System
         </chapter_context>
@@ -3336,7 +3336,7 @@
 
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Error Messaging System
         </chapter_context>
@@ -3375,7 +3375,7 @@
             and many more related to working with TrackStateChunks.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             TrackStates
         </chapter_context>
@@ -3406,7 +3406,7 @@
             Let's start with the routing.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Routing
         </chapter_context>
@@ -3498,7 +3498,7 @@
             Another thing: Routing-settings of the master-track aren't possible that way. You need to use [GetTrackMainSendState](usdocml://GetTrackMainSendState) and [SetTrackMainSendState](usdocml://SetTrackMainSendState) to route the signal of a track to the master-channel. Unlike the former functions, MainSend must be set in the sending track!  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Routing
         </chapter_context>
@@ -3572,7 +3572,7 @@
             
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Routing
         </chapter_context>
@@ -3708,7 +3708,7 @@
 
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Routing
         </chapter_context>
@@ -3735,7 +3735,7 @@
             Let's go into more detail on these concepts.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             ExtState Management
         </chapter_context>
@@ -3777,7 +3777,7 @@
             Some of the configuration-settings can be set also at runtime, but need another approach, which you can find on the Reaper-Internals-page for [Configuration Variables](Reaper_Config_Variables.html)
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             ExtState Management
         </chapter_context>
@@ -3888,7 +3888,7 @@
               >>Just like EnumerateKeysByPattern, but this enumerates through the values within a given section. It will return the value and it's corresponding keyname found.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             ExtState Management
         </chapter_context>
@@ -3920,7 +3920,7 @@
 
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             ExtState Management
         </chapter_context>
@@ -3967,7 +3967,7 @@
             I will look into that problem at some point.  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             ExtState Management
         </chapter_context>
@@ -3999,7 +3999,7 @@
             >It will return if getting the value was successful or not with return-value retval, as well as the value with value.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             ExtState Management
         </chapter_context>
@@ -4032,7 +4032,7 @@
             >It will return if getting the value was successful or not with return-value retval, as well as the value with value.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             ExtState Management
         </chapter_context>
@@ -4064,7 +4064,7 @@
             These kind of markers get the most attention, though regular marker/region/tempo-time signature marker-management is part of this API as well.  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Marker Management
         </chapter_context>
@@ -4083,12 +4083,13 @@
             
             >**[AddEditMarker](usdocml://AddEditMarker)**
             
-                                  integer marker_number = ultraschall.AddEditMarker(number position, integer shown_number, string edittitle)
+                                  integer marker_number, string guid = ultraschall.AddEditMarker(number position, integer shown_number, string edittitle)
                                   
             >This adds a new edit-marker. Give it a position, the shown number and an edittitle, which should hint at the reason of having to edit later.  
             >The title will be shown in the marker as "\_edit: Title". You can change it manually in Reaper, but should retain "\_edit: ", as this signals the  
             >Ultraschall-API, if this is an edit-marker. The editmarker also is red (255 0 0).  
-            >It will return the marker-number, which is the index of all markers in the project, means: markers and regions.  
+            >It will return the marker-number, which is the index of all markers in the project, means: markers and regions, as well as a unique guid for this marker, which
+            >can be used for ExtStates, etc.
             
             >**[SetEditMarker](usdocml://SetEditMarker)**
             
@@ -4108,10 +4109,10 @@
             
             >**[EnumerateEditMarkers](usdocml://EnumerateEditMarkers)**
             
-                                  integer retnumber, integer shown_number, number position, string edittitle = ultraschall.EnumerateEditMarkers(integer edit_index)
+                                  integer retnumber, integer shown_number, number position, string edittitle, string guid = ultraschall.EnumerateEditMarkers(integer edit_index)
                                   
             >This enumerates an edit-marker and all of it's attributes. Just pass over to it the edit-index-number and it will return the overall marker-index-number(markers and regions)  
-            >the shown-number as well as it's position and the title of the edit(without the \_edit: ).
+            >the shown-number as well as it's position and the title of the edit(without the \_edit: ) and the guid of the edit-marker.
             
             >**[CountEditMarkers](usdocml://CountEditMarkers)**
             
@@ -4161,7 +4162,7 @@
             One limitation though, you can't (yet) export/import regions into/from an exportfile.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Marker Management
         </chapter_context>
@@ -4207,7 +4208,7 @@
             So, with this, most of your wishes in regards of marker-management should be fulfilled.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Marker Management
         </chapter_context>
@@ -4238,7 +4239,7 @@
             
             Let's take the example above with foobar and use ultraschall-functions for adding such a marker.
             
-                        retval = ultraschall.AddCustomMarker("foobar", 20, "I am the text of this marker", 1, 0)
+                        retval, markernumber, guid = ultraschall.AddCustomMarker("foobar", 20, "I am the text of this marker", 1, 0)
                     
             This would produce a custom-marker at position 20. And it's markertext would look like:
             
@@ -4287,7 +4288,7 @@
               
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Marker Management
         </chapter_context>
@@ -4317,7 +4318,7 @@
             With that, you can finally pass over as many parameters/returnvalues/other information over to a child-script as you want.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Child Scripts
         </chapter_context>
@@ -4388,7 +4389,7 @@
             No problem, I created functions that'll do that just for you.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Child Scripts
         </chapter_context>
@@ -4435,7 +4436,7 @@
             Now, let's have a closer look on passing parameters and returnvalues between caller-scripts and called child-scripts.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Child Scripts
         </chapter_context>
@@ -4509,7 +4510,7 @@
             This should give you a lot to work with, when working with child-scripts.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Child Scripts
         </chapter_context>
@@ -4547,7 +4548,7 @@
             
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Defer Loops
         </chapter_context>
@@ -4670,7 +4671,7 @@
             In the next chapter, I will show you, how to stop such a defer-loop from within and outside the current script-instance.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Defer Loops
         </chapter_context>
@@ -4737,7 +4738,7 @@
             Run the function, that shall be deferred, use ultraschall.Defer and pass to it your defer_identifier and stop it using StopDeferCycle and the defer_identifier.  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Defer Loops
         </chapter_context>
@@ -4763,7 +4764,7 @@
             Let's start with the first one, the translationfile.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Localize Scripts
         </chapter_context>
@@ -4871,7 +4872,7 @@
              This makes life easier for the user and the scripter.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Localize Scripts
         </chapter_context>
@@ -4930,7 +4931,7 @@
              This should make having your scripts localized an easy and convenient task.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Localize Scripts
         </chapter_context>
@@ -4961,7 +4962,7 @@
             The Ultraschall-Api-EventManager came to do all of that for you.  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             EventManager
         </chapter_context>
@@ -5004,7 +5005,7 @@
             Read on, my dear.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             EventManager
         </chapter_context>
@@ -5059,7 +5060,7 @@
             Let's start with the states, who can be checked.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             EventManager
         </chapter_context>
@@ -5092,7 +5093,7 @@
             Now I'll explain to you, how to write a proper eventcheck-function, as you need to take some things into consideration for that.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             EventManager
         </chapter_context>
@@ -5128,7 +5129,7 @@
             operations like heavy patternmatching and such stuff. The longer your eventcheck-function needs to execute, the more laggy the EventManager becomes!
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             EventManager
         </chapter_context>
@@ -5235,7 +5236,7 @@
             Now, that we have our eventcheck-function, we can add a new event to the EventManager.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             EventManager
         </chapter_context>
@@ -5331,7 +5332,7 @@
                         )
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             EventManager
         </chapter_context>
@@ -5400,7 +5401,7 @@
                 
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             EventManager
         </chapter_context>
@@ -5460,7 +5461,7 @@
             This should give you a lot power to make your events working.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             EventManager
         </chapter_context>
@@ -5502,7 +5503,7 @@
             With that in your pocket, you have a lot of possibilities to control your full event-based workflows.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             EventManager
         </chapter_context>
@@ -5522,7 +5523,7 @@
             In this chapter, I want you to introduce you to some of these things.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Helper Functions
         </chapter_context>
@@ -5570,7 +5571,7 @@
             >How does GetMediaItemsFromClipboard work? It inserts the Items from the clipboard at the end of the project, gets them, using [GetAllMediaItemsBetween](usdocml://GetAllMediaItemsBetween) and deletes them again.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Helper Functions
         </chapter_context>
@@ -5623,7 +5624,7 @@
             - [ReverseTable](usdocml://ReverseTable) - reversed the entries of a table  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Helper Functions
         </chapter_context>
@@ -5656,7 +5657,7 @@
             >It will return a boolean(true for success), the current undo-message and alle the return-values returned by function Func.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Helper Functions
         </chapter_context>
@@ -5744,7 +5745,7 @@
             and more and more and more....
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Helper Functions
         </chapter_context>
@@ -5788,7 +5789,7 @@
             Meo Mespotine, Leipzig(Germany) 30th of November 2018
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
-        <source_document></source_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Final Words
         </chapter_context>

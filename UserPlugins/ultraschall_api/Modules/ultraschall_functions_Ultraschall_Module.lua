@@ -73,8 +73,8 @@ function ultraschall.pause_follow_one_cycle()
     Ultraschall Specific
     Followmode
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>ultraschall, userinterface, follow, off, followmode, turn off one cycle</tags>
 </US_DocBloc>
 --]]
@@ -112,8 +112,8 @@ function ultraschall.IsTrackSoundboard(tracknumber)
     Ultraschall Specific
     Track Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>ultraschall, isvalid, soundboard, track</tags>
 </US_DocBloc>
 --]]
@@ -171,8 +171,8 @@ function ultraschall.IsTrackStudioLink(tracknumber)
     Ultraschall Specific
     Track Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>ultraschall, isvalid, studiolink, track</tags>
 </US_DocBloc>
 --]]
@@ -231,8 +231,8 @@ function ultraschall.IsTrackStudioLinkOnAir(tracknumber)
     Ultraschall Specific
     Track Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>ultraschall, isvalid, studiolinkonair, track</tags>
 </US_DocBloc>
 --]]
@@ -291,8 +291,8 @@ function ultraschall.GetTypeOfTrack(tracknumber)
     Ultraschall Specific
     Track Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>ultraschall, get, type, soundboard, studiolink, studiolinkonair, track</tags>
 </US_DocBloc>
 --]]
@@ -374,8 +374,8 @@ function ultraschall.GetAllAUXSendReceives2()
     Ultraschall Specific
     Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>routing, trackmanagement, track, get, all, send, receive, aux, routing</tags>
 </US_DocBloc>
 ]]
@@ -429,8 +429,8 @@ function ultraschall.GetAllHWOuts2()
     Ultraschall Specific
     Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>ultraschall, trackmanagement, track, get, all, hwouts, hardware outputs, routing</tags>
 </US_DocBloc>
 ]]
@@ -477,8 +477,8 @@ function ultraschall.GetAllMainSendStates2()
     Ultraschall Specific
     Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>ultraschall, trackmanagement, track, get, all, send, main send, master send, routing</tags>
 </US_DocBloc>
 ]]
@@ -524,8 +524,8 @@ function ultraschall.SetUSExternalState(section, key, value, filename)
     Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>configurationmanagement, value, insert, store</tags>
 </US_DocBloc>
 --]]
@@ -571,8 +571,8 @@ function ultraschall.GetUSExternalState(section, key, filename)
     Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>configurationmanagement, value, get</tags>
 </US_DocBloc>
 --]]
@@ -613,8 +613,8 @@ function ultraschall.CountUSExternalState_sec(filename)
     Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>configurationmanagement, count, section</tags>
 </US_DocBloc>
 --]]
@@ -665,8 +665,8 @@ function ultraschall.CountUSExternalState_key(section, filename)
     Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>configurationmanagement, count, key</tags>
 </US_DocBloc>
 --]]
@@ -725,8 +725,8 @@ function ultraschall.EnumerateUSExternalState_sec(number, filename)
     Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>configurationmanagement, enumerate, section</tags>
 </US_DocBloc>
 --]]
@@ -776,8 +776,8 @@ function ultraschall.EnumerateUSExternalState_key(section, number, filename)
     Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>configurationmanagement, enumerate, key</tags>
 </US_DocBloc>
 --]]
@@ -835,8 +835,8 @@ function ultraschall.DeleteUSExternalState(section, key, filename)
     Ultraschall Specific
     Ultraschall.ini
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
   <tags>configurationmanagement, delete, section, key</tags>
 </US_DocBloc>
 ]]  
@@ -886,8 +886,8 @@ function ultraschall.Soundboard_StopAllSounds()
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
     <tags>ultraschall, soundboard, stop all sounds</tags>
   </US_DocBloc>
   ]]  
@@ -920,8 +920,8 @@ function ultraschall.Soundboard_TogglePlayPause(playerindex)
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
     <tags>ultraschall, soundboard, play, pause, toggle</tags>
   </US_DocBloc>
   ]]  
@@ -961,8 +961,8 @@ function ultraschall.Soundboard_TogglePlayStop(playerindex)
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
     <tags>ultraschall, soundboard, play, stop, toggle</tags>
   </US_DocBloc>
   ]]  
@@ -1002,8 +1002,8 @@ function ultraschall.Soundboard_Play(playerindex)
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
     <tags>ultraschall, soundboard, play</tags>
   </US_DocBloc>
   ]]  
@@ -1043,8 +1043,8 @@ function ultraschall.Soundboard_Stop(playerindex)
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
     <tags>ultraschall, soundboard, stop</tags>
   </US_DocBloc>
   ]]  
@@ -1085,8 +1085,8 @@ function ultraschall.Soundboard_TogglePlay_FadeOutStop(playerindex)
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
     <tags>ultraschall, soundboard, fadeout, play, stop</tags>
   </US_DocBloc>
   ]]  
@@ -1130,8 +1130,8 @@ function ultraschall.Soundboard_PlayList_CurrentIndex()
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
     <tags>ultraschall, soundboard, playlist, current position</tags>
   </US_DocBloc>
   ]]  
@@ -1172,8 +1172,8 @@ function ultraschall.Soundboard_PlayList_SetIndex(playerindex, play, stop_all_ot
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
     <tags>ultraschall, soundboard, playlist, set, playerindex, play, stop all others</tags>
   </US_DocBloc>
   ]]  
@@ -1217,8 +1217,8 @@ function ultraschall.Soundboard_PlayList_Next()
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
     <tags>ultraschall, soundboard, playlist, next, playerindex, play</tags>
   </US_DocBloc>
   ]]  
@@ -1259,8 +1259,8 @@ function ultraschall.Soundboard_PlayList_Previous()
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
     <tags>ultraschall, soundboard, playlist, next, playerindex, play</tags>
   </US_DocBloc>
   ]]  

@@ -651,116 +651,6 @@ end
 
 --a,b,c,d,e,f,g,h,i=ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x, y)
 
-function ultraschall.Localize_UseFile(filename, section, language)
--- TODO: getting the currently installed language for the case, that language = set to nil
---       I think, filename as place for the language is better: XRaym_de.USLangPack, XRaym_us.USLangPack, XRaym_fr.USLangPack or something
---       
---       Maybe I should force to use the extension USLangPack...
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>Localize_UseFile</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.975
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval = ultraschall.Localize_UseFile(string filename, string section, string language)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Sets the localize-file and the section to use in the localize-file.
-    If file cannot be found, the function will also look into resource-path/LangPack/ as well to find it.
-    
-    The file is of the format:
-    ;comment
-    ;another comment
-    [section]
-    original text=translated text
-    More Text with\nNewlines and %s - substitution=Translated Text with\nNewlines and %s - substitution
-    A third\=example with escaped equal\=in it = translated text with escaped\=equaltext
-    
-    see [specs for more information](../misc/ultraschall_translation_file_format.USLangPack).
-    
-    returns false in case of an error
-  </description>
-  <retvals>
-    boolean retval - true, translation-file has been found and set successfully; false, translation-file hasn't been found
-  </retvals>
-  <parameters>
-    string filename - the filename with path to the translationfile; if no path is given, it will look in resource-folder/LangPack for the translation-file
-    string section - the section of the translation-file, from which to read the translated strings
-    string language - the language, which will be put after filename and before extension, like mylangpack_de.USLangPack; 
-                    - us, usenglish
-                    - es, spanish
-                    - fr, french
-                    - de, german
-                    - jp, japanese
-                    - etc
-  </parameters>
-  <chapter_context>
-    Localization
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>localization, use, set, translationfile, section, filename</tags>
-</US_DocBloc>
---]]
-  if type(filename)~="string" then ultraschall.AddErrorMessage("Localize_UseFile", "filename", "must be a string", -1) return false end
-  if type(section)~="string" then ultraschall.AddErrorMessage("Localize_UseFile", "section", "must be a string", -2) return false end
-  local filenamestart, filenamsendof=ultraschall.GetPath(filename)
-  local filenamext=filenamsendof:match(".*(%..*)")
-  if language==nil then language="" end
-  local filename2=filename
-  if filenamext==nil or filenamsendof==nil then 
-    filename=filename.."_"..language
-  else
-    filename=filenamestart..filenamsendof:sub(1, -filenamext:len()-1).."_"..language..filenamext
-  end
-  
-  if reaper.file_exists(filename)==false then
-    if reaper.file_exists(reaper.GetResourcePath().."/LangPack/"..filename)==false then
-      ultraschall.AddErrorMessage("Localize_UseFile", "filename", "file does not exist", -3) return false
-    else
-      ultraschall.Localize_Filename=reaper.GetResourcePath().."/LangPack/"..filename2
-      ultraschall.Localize_Section=section
-      ultraschall.Localize_Language=language
-    end
-  else
-    ultraschall.Localize_Filename=filename2
-    ultraschall.Localize_Section=section
-    ultraschall.Localize_Language=language
-  end
-  ultraschall.Localize_File=ultraschall.ReadFullFile(filename).."\n["
-  ultraschall.Localize_File=ultraschall.Localize_File:match(section.."%]\n(.-)%[")
-  ultraschall.Localize_File_Content={}
-  for k in string.gmatch(ultraschall.Localize_File, "(.-)\n") do
-    k=string.gsub(k, "\\n", "\n")
-    k=string.gsub(k, "=", "\0")
-    k=string.gsub(k, "\\\0", "=")
-    local left, right=k:match("(.-)\0(.*)")
-    --print2(left, "======", right)
-    ultraschall.Localize_File_Content[left]=right
-  end
-  
-  
---  ultraschall.Localize_File2=string.gsub(ultraschall.Localize_File, "\n;.-\n", "\n")
-  
-  while ultraschall.Localize_File~=ultraschall.Localize_File2 do
-    ultraschall.Localize_File2=ultraschall.Localize_File
-    ultraschall.Localize_File=string.gsub(ultraschall.Localize_File2, "\n;.-\n", "\n")
-  end
-  
-  ultraschall.Localize_File=string.gsub(ultraschall.Localize_File, "\n\n", "\n")
-  
-  --print2("9"..ultraschall.Localize_File)
-  --print3(ultraschall.Localize_File)
-  
-  return true
-end
-
---O=ultraschall.Localize_UseFile(reaper.GetResourcePath().."/LangPack/ultraschall.USLangPack", "Export Assistant", "de")
-
-
---O={1,2,3}
---P=#O
 
 
 function ultraschall.TracksToColorPattern(colorpattern, startingcolor, direction)
@@ -1395,6 +1285,45 @@ end
 
 -- These seem to work:
 
-
+function ultraschall.Soundboard_PlayFadeIn(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>Soundboard_PlayFadeIn</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=6.02
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_PlayFadeIn(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Starts a sound with a fade-in of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, play, fadein</tags>
+  </US_DocBloc>
+  ]]  
+  print2("THIS ISN'T WORKING YET!")
+  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("Soundboard_PlayFadeIn", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("Soundboard_PlayFadeIn", "playerindex", "must be between 1 and 24", -2) return false end
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=24+playerindex-1
+  local Velocity=1  
+      
+  reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end 
 
 ultraschall.ShowLastErrorMessage()
