@@ -4277,9 +4277,9 @@ else
     ultraschall.LM(31)
     return ultraschall.SoundBoard_PlayList_Previous(table.unpack({...}))
   end
-  function ultraschall.WebInterface_GetInstalledInterfaces(...)
-    ultraschall.LM(32)
-    return ultraschall.WebInterface_GetInstalledInterfaces(table.unpack({...}))
+  function ultraschall.Soundboard_PlayFadeIn(...)
+    ultraschall.LM(31)
+    return ultraschall.Soundboard_PlayFadeIn(table.unpack({...}))
   end
 end
 collectgarbage("collect")

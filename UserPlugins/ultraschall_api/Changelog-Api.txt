@@ -209,6 +209,7 @@ TODO!! buggy function
    - RenderManagement: GetProject_RenderOutputPath - gets the render-output-path
    - RenderManagement: ResolveRenderPattern - resolves the render-pattern into its actual filename
    - Subtitles: ReadSubtitles\_VTT - imports a webvtt-subtitlefile
+   - Web Interface: WebInterface_GetInstalledInterfaces - returns all installed webinterfaces(webrc) of the current Reaper installation, custom and Reaper-defaults
    
 </TODO>
 
@@ -294,12 +295,13 @@ This is the last beta-release for the Ultraschall-API4.00 and the feature-freeze
    - Scripts: US\_Api\_Examples\_Working\_with\_FXStateChunks\_and\_MediaItems.lua - example of working with FXChainStateChunks
    - Themeing: GetAllThemeLayoutNames - returns all layout-names and values of the current theme
    - Themeing: GetAllThemeLayoutParameters - returns all theme-layout-parameter attributes of the current theme
+   - Ultraschall Soundboard: Soundboard\_PlayFadeIn - starts a sound with fadein, when having the Ultraschall4.00-Soundboard installed
    - User Interface: GetHelpDisplayMode - returns the current help-display-mode
    - User Interface: GetTCPWidth - gets the current width of the TCP(requested by nofish)
    - User Interface: SetHelpDisplayMode - sets the current help-display-mode
    - User Interface: WiringDiagram_GetOptions - gets the current wiring-diagram-options
    - User Interface: WiringDiagram_SetOptions - sets the wiring-diagram-options
-   - Web Interface: WebInterface_GetInstalledInterfaces - returns all installed webinterfaces(webrc) of the current Reaper installation, custom and Reaper-defaults
+   
    
 #### Changes from Beta 2.8 to Beta 2.9
    - ChildScripts: GetScriptParameters - produced Lua-error when no parameter was existing -> fixed

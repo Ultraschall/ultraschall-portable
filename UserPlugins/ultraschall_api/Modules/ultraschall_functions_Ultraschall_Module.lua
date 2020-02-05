@@ -1275,3 +1275,43 @@ end
 
 --ultraschall.Soundboard_PlayList_Previous()
 
+function ultraschall.Soundboard_PlayFadeIn(playerindex)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>Soundboard_PlayFadeIn</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=6.02
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.Soundboard_PlayFadeIn(integer playerindex)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      Starts a sound with a fade-in of a certain player in the Ultraschall-SoundBoard
+      
+      Needs ultraschall-Soundboard installed to be useable!
+      
+      Track(s) who hold the soundboard must be recarmed and recinput set to MIDI or VKB.
+    </description>
+    <parameters>
+      integer playerindex - the player of the SoundBoard; from 1-24
+    </parameters>
+    <chapter_context>
+      Ultraschall Specific
+      Soundboard
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>ultraschall, soundboard, play, fadein</tags>
+  </US_DocBloc>
+  ]]  
+  
+  if math.type(playerindex)~="integer" then ultraschall.AddErrorMessage("Soundboard_PlayFadeIn", "playerindex", "must be an integer", -1) return false end
+  if playerindex<1 or playerindex>24 then ultraschall.AddErrorMessage("Soundboard_PlayFadeIn", "playerindex", "must be between 1 and 24", -2) return false end
+  local mode=0            -- set to virtual keyboard of Reaper
+  local MIDIModifier=144  -- set to MIDI-Note
+  local Note=96+playerindex-1
+  local Velocity=1  
+      
+  reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
+end 
+
