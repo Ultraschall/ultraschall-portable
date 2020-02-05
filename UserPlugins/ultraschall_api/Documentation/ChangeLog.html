@@ -41,19 +41,46 @@ Ultraschall API Changelog
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
 <h3>4.00 Beta 2.9: - "Gentle Giant - Two weeks in Spain"</h3>
-<h4>readded from earlier development-builds</h4>
+<p>Has now 1111 functions, with 32 new ones</p>
+<p>This is the last beta-release for the Ultraschall-API4.00 and the feature-freeze-version. Until the final one, I will only fix bugs.</p>
+<p><strong>new in this release:</strong></p>
 <ul>
-<li>Developer: SetReaScriptConsole_FontStyle - sets the style of the font in the ReaConsole</li>
-<li>LiceCap: SetLiceCapExe - sets the LiceCap-executable, which shall be used by Reaper</li>
-<li>LiceCap: SetupLiceCap - sets up the LiceCap-executable settings of the currently chosen LiceCap-executable in Reaper</li>
-<li>ProjectManagement: SaveProjectAs - saves the current project under a new filename</li>
-<li>RenderManagement: GetProject_RenderOutputPath - gets the render-output-path</li>
-<li>RenderManagement: ResolveRenderPattern - resolves the render-pattern into its actual filename</li>
-<li>Subtitles: ReadSubtitles_VTT - imports a webvtt-subtitlefile</li>
+<li><p><strong>Render_Loop</strong><br />
+You can render now loops, including so called "wet-loops" which are loops, who include reverb and other such effects.<br />
+For them to be renderable properly, they need to "build up" the effects first until it sounds right.<br />
+Render_Loop does exactly that with 2-pass-rendering. The first one is the part, which includes the loop itself+the effects-buildup.<br />
+So it renders the part of the project until the reverb is build up fully+the actual part to be looped.<br />
+The second pass will cut the actual loop out of the first-pass-render and put it where you want it to be.<br />
+You can also influence the fadein/out time and style of the second-pass-rendering, so you can avoid clickings and pops due harsh cuts at the beginning or the end of a loop.</p></li>
+<li><p><strong>Secondary Rendering Support</strong><br />
+This is so hot, it only exists(yet) in pre-releases of Reaper. You can set a secondary render-format. And if you render your project, it will render out into both files.<br />
+That means, you can render your project as WAV+MP3 at the same time.<br />
+And all rendering-functions of Ultraschall-API support that new feature, including the current project, projectfiles, render-presets.</p></li>
+<li><p><strong>Marker-functions and Guids</strong><br />
+All marker/region-functions return now the guid of the marker/region as well. Which is really nice for storing additional metadata for markers/regions.<br />
+You can also request the markers/regions by guid now.</p></li>
+<li><p><strong>Envelope States</strong><br />
+You can read now all envelope-states available. Setting will come soon as well.</p></li>
+<li><p><strong>GFX_Init</strong><br />
+Allows you now to center the window by setting x and/or y-position to nil</p></li>
+<li><p><strong>MoveFileOrFolder</strong><br />
+Tired of copying your files around when you just want to move them? Or folders? Behold: MoveFileOrFolder moves files and folders for you.<br />
+This speeds up moving files around in Lua by magnitudes.</p></li>
+<li><p><strong>FXStateChunks and RFXChainFiles</strong><br />
+You can load/store FXStateChunks from/to RFXChainFiles, which are the FX-Chain-files you can save within the FX-Chain-window.</p></li>
+<li><p><strong>Capturing Screen and Windows</strong><br />
+You can now capture screens and windows for screenshots(CaptureScreenAreaAsPNG and CaptureWindowAsPNG).<br />
+Thanks to edgemeal for that.</p></li>
+<li><p><strong>GetTCPWidth</strong><br />
+returns the width of the TrackControlPanel.</p></li>
+<li><p><strong>More and bugfixes</strong><br />
+as usual ;)</p></li>
 </ul>
 <h4>New features in 4.00beta2.9</h4>
 <ul>
 <li>API: StuffMidiMessage-AllMessages_Englisch_Windows.ini - contains all names for all potential StuffMIDIMessage-messages</li>
+<li>Docs: Concepts: DeferScripts_004_Manipulating_and_Protecting_Defer_loops - describes manipulation of ultraschall.Defer-cycles and how to protect them from manipulation</li>
+<li>Docs: Concepts: ExtStateManagement_008_MarkerExtStates - describes the marker-extstate-functions</li>
 <li>Envelope Management: GetEnvelopeState_Act - returns the values of the ACT-entry of a TrackEnvelope/EnvelopeStateChunk</li>
 <li>Envelope Management: GetEnvelopeState_DefShape - returns the values of the DEFSHAPE-entry of a TrackEnvelope/EnvelopeStateChunk</li>
 <li>Envelope Management: GetEnvelopeState_LaneHeight - returns the values of the LANEHEIGHT-entry of a TrackEnvelope/EnvelopeStateChunk</li>
@@ -92,6 +119,7 @@ Ultraschall API Changelog
 <li>ChildScripts: GetScriptParameters - produced Lua-error when no parameter was existing -&gt; fixed</li>
 <li>ChildScripts: GetScriptReturnvalues - docs fixed; didn't reset returnvalue-counter; produced Lua-error when no parameter was existing; had another stupid bug in it that I don't wanna mention... :/ -&gt; fixed</li>
 <li>ConfigurationManagement: GetIniFileValue - checks now, if the ini-file exists in the first place</li>
+<li>Defer Management: Defer - returns now boolean always, as well as the defer_identifier</li>
 <li>Envelope Management: GetArmState_Envelope - reimplemented, should now return future parameters as well, when added by the Reaper-devs</li>
 <li>FileManagement: GetAllFilenamesInPath - returns now the paths with / as separator only</li>
 <li>FileManagement: GetMediafileAttributes - did not recognize jpgs with exif-data -&gt; should be fixed now(thanks to rstockm)</li>

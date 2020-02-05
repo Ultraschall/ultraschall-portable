@@ -603,6 +603,8 @@
             
             A Rendertable is a table, which stores all rendersettings you can set in Reaper. And with all, I mean all!
             
+            Important: You should never create RenderTables "by hand" but rather use my functions for that. That way your RenderTables will stay valid when I add new features to them in the future. You can, however, alter them, after you've created them with my functions.
+            
             Structure:  
             
                         RenderTable["AddToProj"]               - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
@@ -655,6 +657,7 @@
                                                                       8, HQ (512 pt)
                                                                       9, Extreme HQ(768pt HQ Sinc)
                         RenderTable["RenderString"]            - the render-cfg-string, that holds all settings of the currently set render-ouput-format as BASE64 string
+                        RenderTable["RenderString2"]           - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
                         RenderTable["RenderTable"]=true        - signals, this is a valid render-table
                         RenderTable["SampleRate"]              - the samplerate of the rendered file(s)
                         RenderTable["SaveCopyOfProject"]       - the "Save copy of project to outfile.wav.RPP"-checkbox
@@ -666,7 +669,10 @@
                                                                       1, Master mix + stems
                                                                       3, Stems (selected tracks)
                                                                       8, Region render matrix
+                                                                      16, Tracks with only Mono-Media to Mono Files
                                                                       32, Selected media items
+                                                                      64, selected media items via master
+                                                                      128, selected tracks via master
                         RenderTable["Startposition"]           - the startposition of the rendering selection in seconds
                         RenderTable["TailFlag"]                - in which bounds is the Tail-checkbox checked? 
                                                                        &1, custom time bounds
@@ -2943,7 +2949,7 @@
                       -- run the function main in mode 2(every x seconds) every 1 second
                       -- Defer1(functionname, mode(0, normaldefer; 1, every x cycles; 2, every x seconds), 
                       -- counter(number of seconds or cycles))
-                      ultraschall.Defer1(main,2,1)
+                      ultraschall.Defer(main,"Simple Event Manager", 2,1)
                     end
 
                     -- run the fun
@@ -3973,14 +3979,14 @@
         </chapter_context>
         <previous_chapter>ExtStateManagement_004_Ultraschall_Ini</previous_chapter>
         <next_chapter>ExtStateManagement_006_TrackExtStates</next_chapter>
-        <tags>extstate management, inifiles, trackextstates, itemextstates</tags>
+        <tags>extstate management, trackextstates, itemextstates</tags>
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ExtStateManagement_006_TrackExtStates</slug>
         <title>ExtState Management: Track Extstates</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            **Note: This is deprecated, as Reaper will have the same feature in better in a future version!**
+            **Note: This is deprecated, use Reaper's own reaper.GetSetTrackSendInfo_String instead**
             
             Let's store some extstates for tracks. For that, I added the functions: [GetTrackExtState](usdocml://GetTrackExtState), [SetTrackExtState](usdocml://SetTrackExtState)  
             TrackExtStates are stored as ProjectExtState within the projectfile.
@@ -4005,14 +4011,14 @@
         </chapter_context>
         <previous_chapter>ExtStateManagement_005_TrackItemExtStates</previous_chapter>
         <next_chapter>ExtStateManagement_007_ItemExtStates</next_chapter>
-        <tags>extstate management, inifiles, trackextstates</tags>
+        <tags>extstate management, trackextstates</tags>
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ExtStateManagement_007_ItemExtStates</slug>
         <title>ExtState Management: Item Extstates</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            **Note: This is deprecated, as Reaper will have the same feature in better in a future version!**
+            **Note: This is deprecated, use Reaper's own reaper.GetSetMediaItemInfo_String instead**
         
             Let's store some extstates for items. For that, I added the functions: [GetItemExtState](usdocml://GetItemExtState), [SetItemExtState](usdocml://SetItemExtState)  
             ItemExtStates are stored as ProjectExtState within the projectfile.
@@ -4037,8 +4043,43 @@
             ExtState Management
         </chapter_context>
         <previous_chapter>ExtStateManagement_006_TrackExtStates</previous_chapter>
+        <next_chapter>ExtStateManagement_008_MarkerExtStates</next_chapter>
+        <tags>extstate management, itemextstates</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ExtStateManagement_008_MarkerExtStates</slug>
+        <title>ExtState Management: Marker Extstates</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Sometimes, you would love to store additional information into markers/regions, but you refrain from that, as
+            you don't want to risk overcrowding the marker/regiontitle.  
+            So I added some functions, who work like regular extstates, but: for markers/regions: [GetMarkerExtState](usdocml://GetMarkerExtState), [SetMarkerExtState](usdocml://SetMarkerExtState)  
+            
+            >**[SetMarkerExtState](usdocml://SetMarkerExtState)**
+            
+                                  integer retval = ultraschall.SetMarkerExtState(integer index, string key, string value)
+                                  
+            >This function allows you to store an extstate to a marker. Its usage is simple: pass to it the marker_region-index(1-based)
+            >a keyname and its associated value.  
+            >Important: the marker_region-index is the index, which covers all markers and regions at the same time.  
+            >You can use functions like reaper.EnumProjectMarkers to get the appropriate marker-indices. You just need to increment the index by 1
+            >for usage with SetMarkerExtState's parameter index.  
+            >Toy around with it, you quickly get the idea.
+                                  
+            >**[GetMarkerExtState](usdocml://GetMarkerExtState)**
+            
+                                  string value = ultraschall.GetMarkerExtState(integer index, string key)
+            
+            >This returns a stored markerextstate. Just pass to it the index of a marker/region and the key, whose value you want.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
+        <chapter_context>
+            ExtState Management
+        </chapter_context>
+        <previous_chapter>ExtStateManagement_007_ItemExtStates</previous_chapter>
         <next_chapter>MarkersAndRegions_001_Introduction</next_chapter>
-        <tags>extstate management, inifiles, itemextstates</tags>
+        <tags>extstate management, markers, extstate, key, value, regions</tags>
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -4068,7 +4109,7 @@
         <chapter_context>
             Marker Management
         </chapter_context>
-        <previous_chapter>ExtStateManagement_007_ItemExtStates</previous_chapter>
+        <previous_chapter>ExtStateManagement_008_MarkerExtStates</previous_chapter>
         <next_chapter>MarkersAndRegions_002_General_How_To</next_chapter>
         <tags>markermanagement, introduction</tags>
     </US_DocBloc>
@@ -4624,11 +4665,12 @@
             
             >**[Defer](usdocml://Defer)**
             
-                        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter)
+                        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter, optional boolean protected)
                     
             >This works like reaper.defer, but has additional benefits, like the parameters mode and timer\_counter, who allow you to specify, how often the defer-cycle shall be executed.  
             >Either all the time(mode=0), every nth-cycle(mode=1) or every nth-second(mode=2). If mode is 1 or 2, you should set timer\_counter to the amount of cycles/seconds to wait for the next execution of the defer-loop.  
             >You can also specify a defer_identifier, which can be used by [StopDeferCycle](usdocml://StopDeferCycle) to stop the defer-loop from inside and outside of the script(more on that later).  
+            >The parameter protected allows you to prevent this defer-loop from being stopped or influenced from the outside. More on that later.
             
             
             Now, let's get back to our example and see, how it would look with these new Defer-functions.
@@ -4743,8 +4785,56 @@
             Defer Loops
         </chapter_context>
         <previous_chapter>DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API</previous_chapter>
-        <next_chapter>Localize_001_Introduction</next_chapter>
+        <next_chapter>DeferScripts_004_Manipulating_and_Protecting_Defer_loops</next_chapter>
         <tags>defer, stop, defer loops, inside scripts, outside scripts</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>DeferScripts_004_Manipulating_and_Protecting_Defer_loops</slug>
+        <title>DeferScripts: Manipulating and protecting Defer-loops</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Sometimes you want to be able to alter the behavior of defer-loops from the outside. So if you have numerous defer-loops,
+            you may want to have a central control-gui-script, with which you can set, how often to run a function, etc.  
+            For this, I added a bunch of functions: [GetDeferCycleSettings](usdocml://GetDeferCycleSettings) and [SetDeferCycleSettings](usdocml://SetDeferCycleSettings)
+            
+                >**[GetDeferCycleSettings](usdocml://GetDeferCycleSettings)**
+                
+                        integer mode, integer timer_counter = ultraschall.GetDeferCycleSettings(string deferidentifier)
+                        
+                >This function allows you to get the current settings of a defer-cycle with a certain deferidentifier. Just
+                >pass to it the deferidentifier and you'll get the current mode(0, run always; 1, run every x cycle; 2, run every x second)
+                >as well as the counter/timer for the number of cycles/seconds to wait, until the function is called the next time.  
+                >To set things, you need to use:
+                
+                >**[SetDeferCycleSettings](usdocml://SetDeferCycleSettings)**
+                
+                        boolean retval = ultraschall.SetDeferCycleSettings(string deferidentifier, optional integer mode, optional number timer_counter)
+                        
+                >With this function, you can set the new mode/timer-settings of a specific defer-cycle. You just need to pass to it the
+                >deferidentifier and optionally the mode(0, run always; 1, run every x cycle; 2, run every x second) and the counter/timer 
+                >for the number of cycles, seconds to wait until running the deferred-function the next time.  
+                >If you pass to both, you can reset the settings to the original ones, with which the defer-cycle has been called initially.
+                
+                This should give you ways of controlling, how often your deferred-functions shall be run and of saving computing-resources by that.
+                
+                Now there's one thing still missing: What if I want to prevent my Defer-Loop from being influenced by the outside at all?  
+                Let's get back to [Defer](usdocml://Defer), specifically the parameter protected.
+                
+                >**[Defer](usdocml://Defer)
+                
+                        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter, optional boolean protected)
+                        
+                >If you set the parameter protected to true, this defer-cycle can not be influenced from the outside. The only thing possible is 
+                >getting its current mode and timer-settings.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
+        <chapter_context>
+            Defer Loops
+        </chapter_context>
+        <previous_chapter>DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside</previous_chapter>
+        <next_chapter>Localize_001_Introduction</next_chapter>
+        <tags>defer, protect, manipulate, defer loops, inside scripts, outside scripts</tags>
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -4768,7 +4858,7 @@
         <chapter_context>
             Localize Scripts
         </chapter_context>
-        <previous_chapter>DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside</previous_chapter>
+        <previous_chapter>DeferScripts_004_Manipulating_and_Protecting_Defer_loops</previous_chapter>
         <next_chapter>Localize_002_LangPack_Fileformat</next_chapter>
         <tags>localize, uslangpack</tags>
     </US_DocBloc>

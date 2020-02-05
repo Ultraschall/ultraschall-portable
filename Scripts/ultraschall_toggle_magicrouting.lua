@@ -86,8 +86,8 @@ local function checkrouting()
 
 	end
 
-  retval, defer_identifier = ultraschall.Defer1(checkrouting, 2, 1)
-	return defer_identifier
+    ultraschall.Defer(checkrouting, "Check Routing Defer", 2, 10)
+	return "Check Routing Defer"
 
 end
 

@@ -54,7 +54,7 @@ function soundcheck_unsaved()
       end
     end
 
-    retval, defer3_identifier = ultraschall.Defer3(soundcheck_unsaved, 2, 3)
+    retval, defer3_identifier = ultraschall.Defer(soundcheck_unsaved, ultraschall.ScriptIdentifier..".defer_script03", 2, 3)
   end
 
 
@@ -118,7 +118,7 @@ function soundcheck_samplerate()
       end
     end
   end
-  retval, defer2_identifier = ultraschall.Defer2(soundcheck_samplerate, 2, 3)
+  retval, defer2_identifier = ultraschall.Defer(soundcheck_samplerate, ultraschall.ScriptIdentifier..".defer_script02", 2, 3)
 end
 
 
@@ -164,7 +164,7 @@ function soundcheck_main()
   soundcheck_samplerate_controller()
   soundcheck_unsaved_controller()
 
-  retval, defer1_identifier = ultraschall.Defer1(soundcheck_main, 2, 1)
+  retval, defer1_identifier = ultraschall.Defer(soundcheck_main, ultraschall.ScriptIdentifier..".defer_script01", 2, 1)
 
 end
 
