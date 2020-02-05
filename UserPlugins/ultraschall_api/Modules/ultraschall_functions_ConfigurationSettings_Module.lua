@@ -92,8 +92,8 @@ function ultraschall.GetSetConfigAcidImport(set, setting, persist)
     Configuration Settings
     Preferences: Video/REX/Misc
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, tempo, get, set, persist, tempo, import, media</tags>
 </US_DocBloc>
 --]]
@@ -145,8 +145,8 @@ function ultraschall.GetSetConfigActionMenu(set, setting, persist)
     Configuration Settings
     Menus
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, actions, menu</tags>
 </US_DocBloc>
 --]]
@@ -198,8 +198,8 @@ function ultraschall.GetSetConfigAdjRecLat(set, setting, persist)
     Configuration Settings
     Preferences: Recording
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, recording, adjreclat, audio, driver, latency</tags>
 </US_DocBloc>
 --]]
@@ -247,8 +247,8 @@ function ultraschall.GetSetConfigAdjRecManLat(set, setting, persist)
     Configuration Settings
     Preferences: Recording
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, recording, adjrecmanlat, manual, output, offset, samples</tags>
 </US_DocBloc>
 --]]
@@ -322,8 +322,8 @@ function ultraschall.GetSetConfigAfxCfg(set, setting, persist)
     Configuration Settings
     Project Settings: Media
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, project settings, media, apply fx glue freeze</tags>
 </US_DocBloc>
 --]]
@@ -391,8 +391,8 @@ function ultraschall.GetSetConfigAllStereoPairs(set, setting, persist)
     Configuration Settings
     Preferences: Audio
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, audio, stereo, pairs</tags>
 </US_DocBloc>
 --]]
@@ -441,8 +441,8 @@ function ultraschall.GetSetConfigAlwaysAllowKB(set, setting, persist)
     Configuration Settings
     Preferences: Advanced UI
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, recording, allow, keyboard</tags>
 </US_DocBloc>
 --]]
@@ -490,8 +490,8 @@ function ultraschall.GetSetConfigApplyFXTail(set, setting, persist)
     Configuration Settings
     Preferences: Media
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, recording, fxtail, apply fx, item</tags>
 </US_DocBloc>
 --]]
@@ -540,8 +540,8 @@ function ultraschall.GetSetConfigAdjRecManLatIn(set, setting, persist)
     Configuration Settings
     Preferences: Recording
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, input, manual offset</tags>
 </US_DocBloc>
 --]]
@@ -595,8 +595,8 @@ function ultraschall.GetSetConfigAudioPrShift(set, setting, persist)
     Configuration Settings
     Transport: Contextmenu
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, preserve pitch, master playrate</tags>
 </US_DocBloc>
 --]]
@@ -645,8 +645,8 @@ function ultraschall.GetSetConfigAudioCloseStop(set, setting, persist)
     Configuration Settings
     Preferences: Audio
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, audio close, when stopped</tags>
 </US_DocBloc>
 --]]
@@ -707,8 +707,8 @@ function ultraschall.GetSetConfigAudioThreadPr(set, setting, persist)
     Configuration Settings
     Preferences: Device
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, audio, thread, priority</tags>
 </US_DocBloc>
 --]]
@@ -761,8 +761,8 @@ function ultraschall.GetSetConfigAudioCloseTrackWnds(set, setting, persist)
     Configuration Settings
     Preferences: Advanced UI
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, keep open, windows, routing, track envelope, snapgrid</tags>
 </US_DocBloc>
 --]]
@@ -819,8 +819,8 @@ function ultraschall.GetSetConfigAutoMute(set, setting, persist)
     Configuration Settings
     Preferences: Mute/Solo
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, automute, mute, solo</tags>
 </US_DocBloc>
 --]]
@@ -880,8 +880,8 @@ function ultraschall.GetSetConfigAutoMuteFlags(set, setting, persist)
     Configuration Settings
     Preferences: Mute/Solo
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, automute, flags, mute, solo</tags>
 </US_DocBloc>
 --]]
@@ -939,8 +939,8 @@ function ultraschall.GetSetConfigAutoSaveInt(set, setting, persist)
     Configuration Settings
     Preferences: Project
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, autosave, project</tags>
 </US_DocBloc>
 --]]
@@ -1001,8 +1001,8 @@ function ultraschall.GetSetConfigAutoSaveMode(set, setting, persist)
     Configuration Settings
     Preferences: Project
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>configurationsettings, get, set, persist, autosave, mode, project</tags>
 </US_DocBloc>
 --]]
@@ -1060,8 +1060,8 @@ function ultraschall.SetRender_OfflineOnlineMode(mode)
     Configuration Settings
     Render to File
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>rendermanagement, render, set, offline, online, idle</tags>
 </US_DocBloc>
 ]]
@@ -1138,8 +1138,8 @@ function ultraschall.GetRender_OfflineOnlineMode()
     Configuration Settings
     Render to File
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>rendermanagement, render, get, offline, online, idle</tags>
 </US_DocBloc>
 ]]
@@ -1186,8 +1186,8 @@ function ultraschall.GetRender_ResampleMode()
     Configuration Settings
     Render to File
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>rendermanagement, render, get, resample mode</tags>
 </US_DocBloc>
 ]]
@@ -1238,8 +1238,8 @@ function ultraschall.SetRender_ResampleMode(mode)
     Configuration Settings
     Render to File
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>rendermanagement, render, set, resample mode</tags>
 </US_DocBloc>
 ]]
@@ -1295,8 +1295,8 @@ function ultraschall.GetStartNewFileRecSizeState()
     Configuration Settings
     Recording
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>recordingmanagement, maximum, file, size, file, switch, offset, restart, recording, get</tags>
 </US_DocBloc>
 --]]
@@ -1341,8 +1341,8 @@ function ultraschall.SetStartNewFileRecSizeState(start_new_files, offset_file_sw
     Configuration Settings
     Recording
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
   <tags>recordingmanagement, maximum, file, size, file, switch, offset, restart, recording, set</tags>
 </US_DocBloc>
 --]]

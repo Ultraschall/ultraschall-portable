@@ -55,7 +55,8 @@ for i=1, filecount do
   String=String..ultraschall.ReadFullFile(files[i], false).."\n"
 end
 
-if ultraschall.US_BetaFunctions=="ON" then
+
+if ultraschall.US_BetaFunctions==true then
     String=String.."\n"..ultraschall.ReadFullFile(Infilename2, false)
 end
 

@@ -79,8 +79,8 @@ function ultraschall.ToggleMute(track, position, state)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, mute, cough, position</tags>
 </US_DocBloc>
 --]]
@@ -131,8 +131,8 @@ function ultraschall.ToggleMute_TrackObject(trackobject, position, state)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, mute, cough, position, trackobject, mediatrack</tags>
 </US_DocBloc>
 --]]
@@ -183,8 +183,8 @@ function ultraschall.GetNextMuteState(track, position)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, mute, position, envelope, state, value</tags>
 </US_DocBloc>
 --]]
@@ -238,8 +238,8 @@ function ultraschall.GetPreviousMuteState(track, position)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, mute, position, envelope, state, value</tags>
 </US_DocBloc>
 --]]
@@ -288,8 +288,8 @@ function ultraschall.GetNextMuteState_TrackObject(MediaTrack, position)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, mute, position, envelope, state, value</tags>
 </US_DocBloc>
 --]]  
@@ -343,8 +343,8 @@ function ultraschall.GetPreviousMuteState_TrackObject(MediaTrack, position)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, mute, position, envelope, state, value</tags>
 </US_DocBloc>
 --]]
@@ -389,8 +389,8 @@ function ultraschall.CountMuteEnvelopePoints(track)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, mute, envelope, state</tags>
 </US_DocBloc>
 --]]
@@ -436,8 +436,8 @@ function ultraschall.DeleteMuteState(tracknumber, position)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, delete, mute, cough, position, tracknumber</tags>
 </US_DocBloc>
 ]]
@@ -481,8 +481,8 @@ function ultraschall.DeleteMuteState_TrackObject(MediaTrack, position)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, delete, mute, cough, position, mediatrack</tags>
 </US_DocBloc>
 ]]
@@ -527,8 +527,8 @@ function ultraschall.IsMuteAtPosition(tracknumber, position)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, check, mute, cough, position, tracknumber</tags>
 </US_DocBloc>
 ]]
@@ -570,8 +570,8 @@ function ultraschall.IsMuteAtPosition_TrackObject(MediaTrack, position)
     Mute Management
     Muting tracks within envelope-lanes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
   <tags>cough button, check, mute, cough, position, mediatrack</tags>
 </US_DocBloc>
 ]]
