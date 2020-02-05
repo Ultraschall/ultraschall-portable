@@ -103,8 +103,8 @@ function ultraschall.GetDeferRunState(deferinstance, identifier)
     <chapter_context>
       Defer-Management
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_DeferManagement_Module.lua</source_document>
     <tags>defermanagement, get, defer, runstate, defer_identifier</tags>
   </US_DocBloc>
   ]]
@@ -200,8 +200,8 @@ function ultraschall.StopDeferCycle(identifier)
     <chapter_context>
       Defer-Management
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_DeferManagement_Module.lua</source_document>
     <tags>defermanagement, defer, stop</tags>
   </US_DocBloc>
   ]]
@@ -957,8 +957,8 @@ function ultraschall.Defer(func, deferidentifier, mode, timer_counter, protected
     <chapter_context>
       Defer-Management
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_DeferManagement_Module.lua</source_document>
     <tags>defermanagement, defer, timer, defer-cycles, wait, seconds, defer-identifier</tags>
   </US_DocBloc>
   ]]  
@@ -1086,8 +1086,8 @@ function ultraschall.SetDeferCycleSettings(deferidentifier, mode, timer_counter)
   <chapter_context>
     Defer-Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_DeferManagement_Module.lua</source_document>
   <tags>defermanagement, set, defer, cycle, mode, timer, counter</tags>
 </US_DocBloc>
 ]]
@@ -1132,8 +1132,8 @@ function ultraschall.GetDeferCycleSettings(deferidentifier)
   <chapter_context>
     Defer-Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_DeferManagement_Module.lua</source_document>
   <tags>defermanagement, get, settings, defer, cycle, mode, timer, counter</tags>
 </US_DocBloc>
 ]]

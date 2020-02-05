@@ -55,7 +55,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.80 - "Starsailor - Four to the Floor" -  - Build: 42925</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.9 - "Gentle Giant - Two weeks in Spain" -  - Build: 42991</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -238,7 +238,7 @@ For more information on ReaPack and it's usage, refer <a href="https://reapack.c
 <p><strong>Manual Installation</strong>:</p>
 <p>If you can't or don't want to install ReaPack, you can also install it manually.</p>
 <ol>
-<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.80.zip">ultraschall_api4.00_beta2.80.zip</a>.<br />
+<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.9.zip">ultraschall_api4.00_beta2.9.zip</a>.<br />
 </li>
 <li>Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -&gt; Show REAPER resource path in explorer/finder...".<br />
 The folder UserPlugins should contain the folder ultraschall_api and the files ultraschall_api_readme.txt and ultraschall_api.lua after this step.<br />
@@ -3047,13 +3047,13 @@ Let's take edit-markers as an example, who have the functions: <a href="US_Api_F
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#AddEditMarker">AddEditMarker</a></strong></p>
 </blockquote>
-<pre><code>                  integer marker_number = ultraschall.AddEditMarker(number position, integer shown_number, string edittitle)
+<pre><code>                  integer marker_number, string guid = ultraschall.AddEditMarker(number position, integer shown_number, string edittitle)
                   </code></pre>
 <blockquote>
 <p>This adds a new edit-marker. Give it a position, the shown number and an edittitle, which should hint at the reason of having to edit later.<br />
 The title will be shown in the marker as "_edit: Title". You can change it manually in Reaper, but should retain "_edit: ", as this signals the<br />
 Ultraschall-API, if this is an edit-marker. The editmarker also is red (255 0 0).<br />
-It will return the marker-number, which is the index of all markers in the project, means: markers and regions.</p>
+It will return the marker-number, which is the index of all markers in the project, means: markers and regions, as well as a unique guid for this marker, which can be used for ExtStates, etc.</p>
 </blockquote>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#SetEditMarker">SetEditMarker</a></strong></p>
@@ -3078,11 +3078,11 @@ It will return the true, if deleting it was successful.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#EnumerateEditMarkers">EnumerateEditMarkers</a></strong></p>
 </blockquote>
-<pre><code>                  integer retnumber, integer shown_number, number position, string edittitle = ultraschall.EnumerateEditMarkers(integer edit_index)
+<pre><code>                  integer retnumber, integer shown_number, number position, string edittitle, string guid = ultraschall.EnumerateEditMarkers(integer edit_index)
                   </code></pre>
 <blockquote>
 <p>This enumerates an edit-marker and all of it's attributes. Just pass over to it the edit-index-number and it will return the overall marker-index-number(markers and regions)<br />
-the shown-number as well as it's position and the title of the edit(without the _edit: ).</p>
+the shown-number as well as it's position and the title of the edit(without the _edit: ) and the guid of the edit-marker.</p>
 </blockquote>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#CountEditMarkers">CountEditMarkers</a></strong></p>
@@ -3183,7 +3183,7 @@ For example, if you want to have a custom-marker-type called foobar, it would lo
 <pre><code>        _foobar:</code></pre>
 <p>Now, doing that manually is very inconvenient to do, so I made a bunch of functions, who do that for you. All you need to do is to declare the name of the custom-marker/region and pass that over to the function and it does the rest.</p>
 <p>Let's take the example above with foobar and use ultraschall-functions for adding such a marker.</p>
-<pre><code>        retval = ultraschall.AddCustomMarker(&quot;foobar&quot;, 20, &quot;I am the text of this marker&quot;, 1, 0)
+<pre><code>        retval, markernumber, guid = ultraschall.AddCustomMarker(&quot;foobar&quot;, 20, &quot;I am the text of this marker&quot;, 1, 0)
     </code></pre>
 <p>This would produce a custom-marker at position 20. And it's markertext would look like:</p>
 <pre><code>        _foobar: I am the text of this marker
@@ -4277,4 +4277,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.80 - 106 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.9 - 106 chapters available</td></table><br><hr></div></body></html>

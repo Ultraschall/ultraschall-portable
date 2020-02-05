@@ -80,8 +80,8 @@ function ultraschall.GetProjectFilename(proj)
     Project-Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
   <tags>helperfunctions, projectfiles, get, projecttab, filename</tags>
 </US_DocBloc>
 ]]
@@ -129,8 +129,8 @@ function ultraschall.CheckForChangedProjectTabs(update)
     Project-Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
   <tags>helperfunctions, projectfiles, check, projecttab, change, order, new, closed, close</tags>
 </US_DocBloc>
 ]]
@@ -238,8 +238,8 @@ function ultraschall.IsValidProjectStateChunk(ProjectStateChunk)
     Project-Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
   <tags>projectfiles, rpp, projectstatechunk, statechunk, check, valid</tags>
 </US_DocBloc>
 ]]  
@@ -281,8 +281,8 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
       Project-Files
       Helper functions
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
     <tags>projectmanagement, get, projectstatechunk</tags>
   </US_DocBloc>
   ]]  
@@ -434,8 +434,8 @@ function ultraschall.EnumProjects(idx)
     Project-Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
   <tags>helperfunctions, projectfiles, get, filename, project, reaproject, rendering, opened</tags>
 </US_DocBloc>
 --]]
@@ -485,8 +485,8 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers)
     Project-Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
   <tags>project management, get, last, position, length of project, marker, regionend, itemend, timesignaturemarker</tags>
 </US_DocBloc>
 --]]
@@ -520,5 +520,118 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers)
     end
   end
   return reaper.GetProjectLength(), Longest, Regionend, Markerend, TimeSigEnd
+end
+
+function ultraschall.GetRecentProjects()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetRecentProjects</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>integer count_of_RecentProjects, array RecentProjectsFilenamesWithPath = ultraschall.GetRecentProjects()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns all available recent projects, as listed in the File -> Recent projects-menu
+  </description>
+  <retvals>
+    integer count_of_RecentProjects - the number of available recent projects
+    array RecentProjectsFilenamesWithPath - the filenames of the recent projects
+  </retvals>
+  <chapter_context>
+    Project-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
+  <tags>projectmanagement, get, all, recent, projects, filenames, rpp</tags>
+</US_DocBloc>
+]]
+  local Length_of_value, Count = ultraschall.GetIniFileValue("REAPER", "numrecent", -100, reaper.get_ini_file())
+  local Count=tonumber(Count)
+  local RecentProjects={}
+  for i=1, Count do
+    if i<10 then zero="0" else zero="" end
+    Length_of_value, RecentProjects[i] = ultraschall.GetIniFileValue("Recent", "recent"..zero..i, -100, reaper.get_ini_file())  
+  end
+  
+  return Count, RecentProjects
+end
+
+function ultraschall.IsValidProjectBayStateChunk(ProjectBayStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>IsValidProjectBayStateChunk</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.IsValidProjectBayStateChunk(string ProjectBayStateChunk)</functioncall>
+  <description>
+    checks, if ProjectBayStateChunk is a valid ProjectBayStateChunk
+    
+    returns false in case of an error
+  </description>
+  <parameters>
+    string ProjectBayStateChunk - a string, that you want to check for being a valid ProjectBayStateChunk
+  </parameters>
+  <retvals>
+    boolean retval - true, valid ProjectBayStateChunk; false, not a valid ProjectBayStateChunk
+  </retvals>
+  <chapter_context>
+    Project-Management
+    ProjectBay
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
+  <tags>project management, check, projectbaystatechunk, is valid</tags>
+</US_DocBloc>
+]]
+  if type(ProjectBayStateChunk)~="string" then ultraschall.AddErrorMessage("IsValidProjectBayStateChunk", "ProjectBayStateChunk", "must be a string", -1) return false end
+  if ProjectBayStateChunk:match("<PROJBAY.-\n  >")==nil then return false else return true end
+end
+
+function ultraschall.GetAllMediaItems_FromProjectBayStateChunk(ProjectBayStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllMediaItems_FromProjectBayStateChunk</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer count, array MediaItemStateChunkArray = ultraschall.GetAllMediaItems_FromProjectBayStateChunk(string ProjectBayStateChunk)</functioncall>
+  <description>
+    returns all items from a ProjectBayStateChunk as MediaItemStateChunkArray
+    
+    returns -1 in case of an error
+  </description>
+  <parameters>
+    string ProjectBayStateChunk - a string, that you want to check for being a valid ProjectBayStateChunk
+  </parameters>
+  <retvals>
+    integer count - the number of items found in the ProjectBayStateChunk
+    array MediaitemStateChunkArray - all items as ItemStateChunks in a handy array
+  </retvals>
+  <chapter_context>
+    Project-Management
+    ProjectBay
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
+  <tags>project management, get, projectbaystatechunk, all items, mediaitemstatechunkarray</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidProjectBayStateChunk(ProjectBayStateChunk)==false then ultraschall.AddErrorMessage("GetAllMediaItems_FromProjectBayStateChunk", "ProjectBayStateChunk", "must be a valid ProjectBayStateChunk", -1) return -1 end
+  local MediaItemStateChunkArray={}
+  local count=0
+  for k in string.gmatch(ProjectBayStateChunk, "    <DATA.-\n    >") do
+    count=count+1
+    MediaItemStateChunkArray[count]=string.gsub(string.gsub(k, "    <DATA", "<ITEM"),"\n%s*", "\n").."\n"
+  end
+  return count, MediaItemStateChunkArray
 end
 

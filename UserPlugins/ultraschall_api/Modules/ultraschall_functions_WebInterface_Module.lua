@@ -27,13 +27,13 @@
 -------------------------------------
 --- ULTRASCHALL - API - FUNCTIONS ---
 -------------------------------------
----         ReaMote Module        ---
+---      WebInterface Module      ---
 -------------------------------------
 
 if type(ultraschall)~="table" then 
   -- update buildnumber and add ultraschall as a table, when programming within this file
   local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "ReaMote-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Ultraschall-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   if string=="" then string=10000 
   else 
@@ -52,52 +52,64 @@ if type(ultraschall)~="table" then
   ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
 end
 
-
-function ultraschall.AutoSearchReaMoteSlaves()
+function ultraschall.WebInterface_GetInstalledInterfaces()
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>AutoSearchReaMoteSlaves</slug>
+  <slug>WebInterface_GetInstalledInterfaces</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.977
-    SWS=2.10.0.1
-    JS=0.986
+    Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>ultraschall.AutoSearchReaMoteSlaves()</functioncall>
+  <functioncall>integer reapers_count_of_webinterface, array reapers_webinterface_filenames_with_path, array reapers_webinterface_titles, integer users_count_of_webinterface, array users_webinterface_filenames_with_path, array users_webinterface_titles = ultraschall.WebInterface_GetInstalledInterfaces()</functioncall>
   <description>
-    Auto-searches for new ReaMote-Slaves
+    Returns the currently installed web-interface-pages.
+    
+    Will return Reaper's default ones(resources-folder/Plugins/reaper_www_root/) as well as your customized ones(resources-folder/reaper_www_root/)
   </description>
+  <retvals>
+    integer reapers_count_of_webinterface - the number of factory-default webinterfaces, installed by Reaper
+    array reapers_webinterface_filenames_with_path - the filenames with path of the webinterfaces(can be .htm or .html)
+    array reapers_webinterface_titles - the titles of the webinterfaces, as shown in the titlebar of the browser
+    integer users_count_of_webinterface - the number of user-customized webinterfaces
+    array users_webinterface_filenames_with_path - the filenames with path of the webinterfaces(can be .htm or .html)
+    array users_webinterface_titles - the titles of the webinterfaces, as shown in the titlebar of the browser
+  </retvals>
   <chapter_context>
-    ReaMote
+    Web Interface
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_ReaMote_Module.lua</source_document>
-  <tags>reamote, scan, search, slaves</tags>
+  <source_document>Modules/ultraschall_functions_WebInterface_Module.lua</source_document>
+  <tags>web interface, get, all, installed, webrc, filename, title</tags>
 </US_DocBloc>
---]]
-  local hwnd, hwnd1, hwnd2, retval, prefspage, reopen, id
-  local use_prefspage=227
-  id=1076
-  hwnd = ultraschall.GetPreferencesHWND()
-  if hwnd~=nil then reaper.JS_Window_Destroy(hwnd) reopen=true end
-  retval, prefspage = reaper.BR_Win32_GetPrivateProfileString("REAPER", "prefspage", "-1", reaper.get_ini_file())
-  reaper.ViewPrefs(use_prefspage, 0)
-  hwnd = ultraschall.GetPreferencesHWND()
-  hwnd1=reaper.JS_Window_FindChildByID(hwnd, 0)
-  hwnd2=reaper.JS_Window_FindChildByID(hwnd1, id)
-  reaper.JS_WindowMessage_Send(hwnd2, "WM_LBUTTONDOWN", 1,1,1,1)
-  reaper.JS_WindowMessage_Send(hwnd2, "WM_LBUTTONUP", 1,1,1,1)
-
-  if hwnd~=nil then reaper.JS_Window_Destroy(hwnd) end
-  retval = reaper.BR_Win32_WritePrivateProfileString("REAPER", "prefspage", prefspage, reaper.get_ini_file())
-  reaper.ViewPrefs(prefspage, 0) 
-
-  if reopen~=true then 
-    hwnd = ultraschall.GetPreferencesHWND() 
-    if hwnd~=nil then reaper.JS_Window_Destroy(hwnd) end
+]]  
+  local filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/Plugins/reaper_www_root")
+  local files_WEBRC_names={}
+  for i=filecount, 1, -1 do
+    if files[i]:sub(-5,-1):match("%.htm")==nil then
+      table.remove(files, i)
+      filecount=filecount-1
+    end
   end
+  for i=1, filecount do
+    local A=ultraschall.ReadFullFile(files[i])
+    local start, ende=A:lower():match("<title>().-()</title>")
+    files_WEBRC_names[i]=A:sub(start, ende-1)
+  end
+
+  local filecount2, files2 = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/reaper_www_root")
+  local files_WEBRC_names2={}
+  for i=filecount2, 1, -1 do
+    if files2[i]:sub(-5,-1):match("%.htm")==nil then
+      table.remove(files2, i)
+      filecount2=filecount2-1
+    end
+  end
+  for i=1, filecount2 do
+    local A=ultraschall.ReadFullFile(files2[i])
+    local start, ende=A:lower():match("<title>().-()</title>")
+    files_WEBRC_names2[i]=A:sub(start, ende-1)
+  end
+  
+  return filecount, files, files_WEBRC_names, filecount2, files2, files_WEBRC_names2
 end
-
---ultraschall.AutoSearchReaMoteSlaves()
-

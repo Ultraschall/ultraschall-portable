@@ -78,8 +78,8 @@ function ultraschall.GetTrackStateChunk_Tracknumber(tracknumber)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstatechunk, get</tags>
 </US_DocBloc>
 ]]
@@ -107,9 +107,9 @@ function ultraschall.GetTrackState_NumbersOnly(state, TrackStateChunk, functionn
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>table values = ultraschall.GetProjectState_NumbersOnly(string projectfilename_with_path, string state, optional string ProjectStateChunk, optional boolean numbertoggle)</functioncall>
+  <functioncall>table values = ultraschall.GetTrackState_NumbersOnly(string state, optional string TrackStateChunk, optional string functionname, optional boolean numbertoggle)</functioncall>
   <description>
-    returns a state of the project or a TrackStateChunk.
+    returns a state of a TrackStateChunk.
     
     It only supports single-entry-states with numbers/integers, separated by spaces!
     All other values will be set to nil and strings with spaces will produce weird results!
@@ -129,8 +129,8 @@ function ultraschall.GetTrackState_NumbersOnly(state, TrackStateChunk, functionn
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, get, state, trackstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -182,8 +182,8 @@ function ultraschall.GetTrackName(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, name, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -236,8 +236,8 @@ function ultraschall.GetTrackPeakColorState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackcolor, color, get, state, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -276,8 +276,8 @@ function ultraschall.GetTrackBeatState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, beat, get, state, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -317,8 +317,8 @@ function ultraschall.GetTrackAutoRecArmState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, autorecarm, rec, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -359,8 +359,8 @@ function ultraschall.GetTrackMuteSoloState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, mute, solo, solodefeat, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -399,8 +399,8 @@ function ultraschall.GetTrackIPhaseState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, iphase, phase, button, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -445,8 +445,8 @@ function ultraschall.GetTrackIsBusState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, busstate, folder, subfolders, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -488,8 +488,8 @@ function ultraschall.GetTrackBusCompState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, busstate, folder, subfolders, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -535,8 +535,8 @@ function ultraschall.GetTrackShowInMixState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, mixer, show, mcp, tcp, fx, visible, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -574,8 +574,8 @@ function ultraschall.GetTrackFreeModeState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackfreemode, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -660,8 +660,8 @@ function ultraschall.GetTrackRecState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, midi, recordingpath, path, input, recinput, pdc, monitor, arm, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -700,8 +700,8 @@ function ultraschall.GetTrackVUState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, vu, metering, meter, multichannel, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -740,8 +740,8 @@ function ultraschall.GetTrackHeightState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, height, compact, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -787,8 +787,8 @@ function ultraschall.GetTrackINQState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, inq, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -825,8 +825,8 @@ function ultraschall.GetTrackNChansState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, channels, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -864,8 +864,8 @@ function ultraschall.GetTrackBypFXState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, bypass, fx, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -909,8 +909,8 @@ function ultraschall.GetTrackPerfState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, trackperformance, fx, buffering, media, anticipative, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -952,8 +952,8 @@ function ultraschall.GetTrackMIDIOutState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, midi, outstate, routing, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -991,8 +991,8 @@ function ultraschall.GetTrackMainSendState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, parent, channel, send, main, routing, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1108,8 +1108,8 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, group, groupstate, individual, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1249,8 +1249,8 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, group, groupstate, individual, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1314,8 +1314,8 @@ function ultraschall.GetTrackLockState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, lockstate, locked, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1354,8 +1354,8 @@ function ultraschall.GetTrackLayoutNames(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, theme, layout, name, mcp, tcp, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1420,8 +1420,8 @@ function ultraschall.GetTrackAutomodeState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, automode, envelopes, automation, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1459,8 +1459,8 @@ function ultraschall.GetTrackIcon_Filename(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, graphics, image, icon, trackicon, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1517,8 +1517,8 @@ function ultraschall.GetTrackRecCFG(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, reccfg, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1573,8 +1573,8 @@ function ultraschall.GetTrackMidiInputChanMap(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, midi, input, chanmap, channelmap, channel, mapping, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1613,8 +1613,8 @@ function ultraschall.GetTrackMidiCTL(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, midi, channel, linked, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1654,8 +1654,8 @@ function ultraschall.GetTrackWidth(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, width, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1699,8 +1699,8 @@ function ultraschall.GetTrackPanMode(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, panmode, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1738,8 +1738,8 @@ function ultraschall.GetTrackMidiColorMapFn(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, midicolormap, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1791,8 +1791,8 @@ function ultraschall.GetTrackMidiBankProgFn(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, midibankprog, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1846,8 +1846,8 @@ function ultraschall.GetTrackMidiTextStrFn(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, MidiTextStrFn, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1900,8 +1900,8 @@ function ultraschall.GetTrackID(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, trackid, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1956,8 +1956,8 @@ function ultraschall.GetTrackScore(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, score, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2002,8 +2002,8 @@ function ultraschall.GetTrackVolPan(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, get, vol, pan, override, panlaw, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2045,8 +2045,8 @@ function ultraschall.SetTrackName(tracknumber, name, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, name, set, state, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2112,8 +2112,8 @@ function ultraschall.SetTrackPeakColorState(tracknumber, colorvalue, TrackStateC
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, color, state, set, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2183,8 +2183,8 @@ function ultraschall.SetTrackBeatState(tracknumber, beatstate, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, beat, state, set, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2251,8 +2251,8 @@ function ultraschall.SetTrackAutoRecArmState(tracknumber, autorecarmstate, Track
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, autorecarm, rec, arm, track, set, state, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2324,8 +2324,8 @@ function ultraschall.SetTrackMuteSoloState(tracknumber, Mute, Solo, SoloDefeat, 
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, mute, solo, solo defeat, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2396,8 +2396,8 @@ function ultraschall.SetTrackIPhaseState(tracknumber, iphasestate, TrackStateChu
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, set, track, state, iphase, phase, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2469,8 +2469,8 @@ function ultraschall.SetTrackIsBusState(tracknumber, busstate1, busstate2, Track
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, busstate, folder, subfolder, compactible, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2537,8 +2537,8 @@ function ultraschall.SetTrackBusCompState(tracknumber, buscompstate1, buscompsta
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, compacting, busstate, folder, minimize, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2612,8 +2612,8 @@ function ultraschall.SetTrackShowInMixState(tracknumber, MCPvisible, MCP_FX_visi
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, state, set, show in mix, mcp, fx, tcp, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2689,8 +2689,8 @@ function ultraschall.SetTrackFreeModeState(tracknumber, freemodestate, TrackStat
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, trackfree, item, positioning, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2801,8 +2801,8 @@ function ultraschall.SetTrackRecState(tracknumber, ArmState, InputChannel, Monit
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, armstate, inputchannel, monitorinput, recinput, monitorwhilerec, pdc, recordingpath, midi, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2878,8 +2878,8 @@ function ultraschall.SetTrackVUState(tracknumber, VUState, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, armstate, vu, metering, multichannel, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2952,8 +2952,8 @@ function ultraschall.SetTrackHeightState(tracknumber, heightstate1, heightstate2
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, trackheight, height, compact, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3040,8 +3040,8 @@ function ultraschall.SetTrackINQState(tracknumber, INQ1, INQ2, INQ3, INQ4, INQ5,
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, inq, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3115,8 +3115,8 @@ function ultraschall.SetTrackNChansState(tracknumber, NChans, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, channels, number, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3185,8 +3185,8 @@ function ultraschall.SetTrackBypFXState(tracknumber, FXBypassState, TrackStateCh
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, track, set, fx, bypass, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3259,8 +3259,8 @@ function ultraschall.SetTrackPerfState(tracknumber, Perf, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, state, set, fx, performance, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3334,8 +3334,8 @@ function ultraschall.SetTrackMIDIOutState(tracknumber, MIDIOutState, TrackStateC
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, state, set, midi, midiout, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3404,8 +3404,8 @@ function ultraschall.SetTrackMainSendState(tracknumber, MainSendOn, ParentChanne
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, state, set, mainsend, parent channels, parent, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3477,8 +3477,8 @@ function ultraschall.SetTrackLockState(tracknumber, LockedState, TrackStateChunk
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, lock, state, set, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3547,8 +3547,8 @@ function ultraschall.SetTrackLayoutNames(tracknumber, TCP_Layoutname, MCP_Layout
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, state, set, mcp, tcp, layout, mixer, trackcontrol, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3617,8 +3617,8 @@ function ultraschall.SetTrackAutomodeState(tracknumber, automodestate, TrackStat
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, automode, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3686,8 +3686,8 @@ function ultraschall.SetTrackIcon_Filename(tracknumber, Iconfilename_with_path, 
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, track, set, trackicon, image, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3754,8 +3754,8 @@ function ultraschall.SetTrackMidiInputChanMap(tracknumber, InputChanMap, TrackSt
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, input, chanmap, channelmap, midi, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3824,8 +3824,8 @@ function ultraschall.SetTrackMidiCTL(tracknumber, LinkedToMidiChannel, unknown, 
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, linked, midi, midichannel, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3894,8 +3894,8 @@ function ultraschall.SetTrackID(tracknumber, TrackID, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, guid, trackid, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3966,8 +3966,8 @@ function ultraschall.SetTrackMidiColorMapFn(tracknumber, MIDI_ColorMapFN, TrackS
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, midi, colormap, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4037,8 +4037,8 @@ function ultraschall.SetTrackMidiBankProgFn(tracknumber, MIDIBankProgFn, TrackSt
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, midi, bank, prog, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4106,8 +4106,8 @@ function ultraschall.SetTrackMidiTextStrFn(tracknumber, MIDITextStrFn, TrackStat
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, midi, text, str, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4183,8 +4183,8 @@ function ultraschall.SetTrackPanMode(tracknumber, panmode, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, panmode, pan, balance, dual pan, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4253,8 +4253,8 @@ function ultraschall.SetTrackWidth(tracknumber, width, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, width, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4327,8 +4327,8 @@ function ultraschall.SetTrackScore(tracknumber, unknown1, unknown2, unknown3, un
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, score, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4403,8 +4403,8 @@ function ultraschall.SetTrackVolPan(tracknumber, vol, pan, overridepanlaw, unkno
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, vol, pan, override, panlaw, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4480,8 +4480,8 @@ function ultraschall.SetTrackRecCFG(tracknumber, reccfg_string, reccfg_nr, Track
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, reccfg, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4545,8 +4545,8 @@ function ultraschall.GetAllLockedTracks()
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstring, lock, lockstate, lockedstate, locked, get</tags>
 </US_DocBloc>
 ]]
@@ -4582,8 +4582,8 @@ function ultraschall.GetAllSelectedTracks()
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstring, selection, unselect, select, get</tags>
 </US_DocBloc>
 ]]
@@ -4630,8 +4630,8 @@ function ultraschall.GetTrackSelection_TrackStateChunk(TrackStateChunk)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, selection, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4675,8 +4675,8 @@ function ultraschall.SetTrackSelection_TrackStateChunk(selection_state, TrackSta
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, selection, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4718,8 +4718,8 @@ function ultraschall.SetAllTracksSelected(selected)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, tracks, get, selected</tags>
 </US_DocBloc>
 ]]
@@ -4759,8 +4759,8 @@ function ultraschall.SetTracksSelected(trackstring, reset)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, tracks, get, selected</tags>
 </US_DocBloc>
 ]]
@@ -4807,8 +4807,8 @@ function ultraschall.SetTracksToLocked(trackstring, reset)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstring, lock, lockstate, lockedstate, locked, set</tags>
 </US_DocBloc>
 ]]
@@ -4854,8 +4854,8 @@ function ultraschall.SetTracksToUnlocked(trackstring)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstring, lock, lockstate, lockedstate, locked, set, unlock, unlocked</tags>
 </US_DocBloc>
 ]]
@@ -4897,8 +4897,8 @@ function ultraschall.SetTrackStateChunk_Tracknumber(tracknumber, trackstatechunk
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstatechunk, set</tags>
 </US_DocBloc>
 ]]
@@ -4981,8 +4981,8 @@ function ultraschall.SetTrackGroupFlagsState(tracknumber, groups_bitfield_table,
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, groupflag, group, set, state, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -5099,8 +5099,8 @@ function ultraschall.SetTrackGroupFlags_HighState(tracknumber, groups_bitfield_t
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, groupflag, group, set, state, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]

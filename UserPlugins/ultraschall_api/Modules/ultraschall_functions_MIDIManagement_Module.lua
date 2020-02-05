@@ -79,8 +79,8 @@ function ultraschall.ZoomVertical_MidiEditor(zoomamt, HWND)
     MIDI Management
     MIDI Editor
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
   <tags>midimanagement, zoom, midieditor, vertically</tags>
 </US_DocBloc>
 ]]
@@ -127,8 +127,8 @@ function ultraschall.ZoomHorizontal_MidiEditor(zoomamt, HWND)
     MIDI Management
     MIDI Editor
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
   <tags>midimanagement, zoom, midieditor, horizontally</tags>
 </US_DocBloc>
 ]]
@@ -176,8 +176,8 @@ function ultraschall.OpenItemInMidiEditor(MediaItem)
     MIDI Management
     MIDI Editor
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
   <tags>midimanagement, open, item, midieditor</tags>
 </US_DocBloc>
 ]]
@@ -215,8 +215,8 @@ function ultraschall.MIDI_SendMidiNote(Channel, Note, Velocity, Mode)
       MIDI Management
       Notes
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
     <tags>midi management, send, note</tags>
   </US_DocBloc>
   ]]  
@@ -263,8 +263,8 @@ function ultraschall.MIDI_SendMidiCC(Channel, Note, Velocity, Mode)
       MIDI Management
       Notes
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
     <tags>midi management, send, cc</tags>
   </US_DocBloc>
   ]]  
@@ -311,8 +311,8 @@ function ultraschall.MIDI_SendMidiPC(Channel, Note, Velocity, Mode)
       MIDI Management
       Notes
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
     <tags>midi management, send, pc</tags>
   </US_DocBloc>
   ]]  
@@ -358,8 +358,8 @@ function ultraschall.MIDI_SendMidiPitch(Channel, Pitch, Mode)
       MIDI Management
       Notes
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
     <tags>midi management, send, pitch, bend</tags>
   </US_DocBloc>
   ]]  
@@ -377,3 +377,45 @@ function ultraschall.MIDI_SendMidiPitch(Channel, Pitch, Mode)
   reaper.StuffMIDIMessage(Mode, MIDIModifier, 0, Pitch)
 end
 
+function ultraschall.QueryMIDIMessageNameByID(modifier, key)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>QueryMIDIMessageNameByID</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>string midimessage_name = ultraschall.QueryMIDIMessageNameByID(integer modifier, integer key)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the name of the MIDI-message, as used by Reaper's function StuffMIDIMessage.
+    
+    Just pass over the first and second value. The last one is always velocity, which is ~=0 for it to be accepted.
+    However, some codes don't have a name associated. In that case, this function returns "-1"
+    
+    Only returns the names for mode 1 and english on Windows!
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string midimessage_name - the actual name of the midi-message, like "A" or "F1" or "Ctrl+Alt+Shift+Win+PgUp".
+  </retvals>
+  <parameters>
+    integer modifier - the modifier value, which is the second parameter of StuffMIDIMessage
+    integer key - the key value, which is the third parameter of StuffMIDIMessage
+  </parameters>
+  <chapter_context>
+    MIDI Management
+    Notes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
+  <tags>configurations management, key, shortcut, name, query, get</tags>
+</US_DocBloc>
+]]
+  if math.type(modifier)~="integer" then ultraschall.AddErrorMessage("QueryMIDIMessageNameByID", "modifier", "must be an integer", -1) return nil end
+  if math.type(key)~="integer" then ultraschall.AddErrorMessage("QueryMIDIMessageNameByID", "key", "must be an integer", -2) return nil end
+  local length_of_value, value = ultraschall.GetIniFileValue("All_StuffMIDIMessage_Messages_english_windows", modifier.."_"..key.."_1", -1, ultraschall.Api_Path.."/IniFiles/StuffMidiMessage-AllMessages_Englisch_Windows.ini")
+  return value
+end

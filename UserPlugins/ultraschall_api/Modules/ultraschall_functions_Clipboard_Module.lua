@@ -76,8 +76,8 @@ function ultraschall.GetMediaItemsFromClipboard()
   <chapter_context>
     Clipboard Functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Clipboard_Module.lua</source_document>
   <tags>copy and paste, clipboard, mediaitems, statechunk, mediaitemstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -115,8 +115,8 @@ function ultraschall.GetStringFromClipboard_SWS()
   <chapter_context>
     Clipboard Functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Clipboard_Module.lua</source_document>
   <tags>copy and paste, clipboard, sws</tags>
 </US_DocBloc>
 ]]
@@ -151,8 +151,8 @@ function ultraschall.PutMediaItemsToClipboard_MediaItemArray(MediaItemArray)
   <chapter_context>
     Clipboard Functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Clipboard_Module.lua</source_document>
   <tags>mediaitem, put, clipboard, set</tags>
 </US_DocBloc>
 ]]
