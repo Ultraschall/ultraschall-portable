@@ -189,8 +189,8 @@ function editURL(idx)
     if (result:match("https?://(([%w_.~!*:@&+$/?%%#-]-)(%w[-.%w]*%.)(%w%w%w?%w?)(:?)(%d*)(/?)([%w_.~!*:@&+$/?%%#=-]*))")) or result == "" then
       -- new_url = reaper.NF_SetSWSMarkerRegionSub(result, idx) -- write new url
       new_url = ultraschall.SetMarkerExtState(idx, "url", result)
-      print(new_url)
-      print(result)
+      -- print(new_url)
+      -- print(result)
     else
       editURL(idx)
     end
