@@ -86,12 +86,8 @@ function checkrouting()
 
 	end
 
-	retval, defer_identifier = ultraschall.Defer(checkrouting,"Check Routing Defer", 2, 1)
-	--ultraschall.ShowLastErrorMessage()
-	-- ultraschall.ShowLastErrorMessage()
-	-- print("-")
-	-- print(defer_identifier)
-	return defer_identifier
+    ultraschall.Defer(checkrouting, "Check Routing Defer", 2, 1)
+	return "Check Routing Defer"
 
 end
 

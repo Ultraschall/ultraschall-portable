@@ -3,12 +3,6 @@
     
     Soundboard-FadeIn
     
-    Docs: DeferScripts_004_Manipulating and Protecting Defer-loops
-          Guids in Markern
-          MarkerExtState
-          Secondary Rendering
-          RenderTables-Note: "You should never create RenderTables "by hand" but rather use my functions for that. That way your RenderTables will stay valid, when I add new features to them in the future. You can, however, alter them, after you've created them with my functions."
-    
     For 4.01betas:
     
     GetProjectLength - should return the last envelope-point-position as well(how to do that for pooled items?)
@@ -207,13 +201,6 @@
 TODO!! buggy function
         the line "reaper.JS_WindowMessage_Send(Textfield, "WM_SETFONT", styles[style] ,0,0,0)" seems to be the problem due WM_SETFONT
 
-
-</TODO>
-
-## Ultraschall Framework - Changelog
-
-### 4.00 Beta 2.9: - "Gentle Giant - Two weeks in Spain"
-
 #### readded from earlier development-builds
    - Developer: SetReaScriptConsole_FontStyle - sets the style of the font in the ReaConsole
    - LiceCap: SetLiceCapExe - sets the LiceCap-executable, which shall be used by Reaper
@@ -222,9 +209,66 @@ TODO!! buggy function
    - RenderManagement: GetProject_RenderOutputPath - gets the render-output-path
    - RenderManagement: ResolveRenderPattern - resolves the render-pattern into its actual filename
    - Subtitles: ReadSubtitles\_VTT - imports a webvtt-subtitlefile
+   - Web Interface: WebInterface_GetInstalledInterfaces - returns all installed webinterfaces(webrc) of the current Reaper installation, custom and Reaper-defaults
+   
+</TODO>
+
+## Ultraschall Framework - Changelog
+
+### 4.00 Beta 2.9: - "Gentle Giant - Two weeks in Spain"
+
+Has now 1111 functions, with 32 new ones
+
+This is the last beta-release for the Ultraschall-API4.00 and the feature-freeze-version. Until the final one, I will only fix bugs.  
+
+**new in this release:**
+
+  - **Render\_Loop**  
+  You can render now loops, including so called "wet-loops" which are loops, who include reverb and other such effects.  
+  For them to be renderable properly, they need to "build up" the effects first until it sounds right.  
+  Render\_Loop does exactly that with 2-pass-rendering. The first one is the part, which includes the loop itself+the effects-buildup.  
+  So it renders the part of the project until the reverb is build up fully+the actual part to be looped.  
+  The second pass will cut the actual loop out of the first-pass-render and put it where you want it to be.  
+  You can also influence the fadein/out time and style of the second-pass-rendering, so you can avoid clickings and pops due harsh cuts 
+  at the beginning or the end of a loop.
+  
+  - **Secondary Rendering Support**  
+  This is so hot, it only exists(yet) in pre-releases of Reaper. You can set a secondary render-format. And if you render your project, it will render out into both files.  
+  That means, you can render your project as WAV+MP3 at the same time.  
+  And all rendering-functions of Ultraschall-API support that new feature, including the current project, projectfiles, render-presets.  
+  
+  - **Marker-functions and Guids**  
+  All marker/region-functions return now the guid of the marker/region as well. Which is really nice for storing additional metadata for markers/regions.  
+  You can also request the markers/regions by guid now.  
+  
+  - **Envelope States**  
+  You can read now all envelope-states available. Setting will come soon as well.  
+  
+  - **GFX\_Init**  
+  Allows you now to center the window by setting x and/or y-position to nil
+  
+  - **MoveFileOrFolder**  
+  Tired of copying your files around when you just want to move them? Or folders? Behold: MoveFileOrFolder moves files and folders for you.  
+  This speeds up moving files around in Lua by magnitudes.
+  
+  - **FXStateChunks and RFXChainFiles**  
+  You can load/store FXStateChunks from/to RFXChainFiles, which are the FX-Chain-files you can save within the FX-Chain-window.
+  
+  - **Capturing Screen and Windows**  
+  You can now capture screens and windows for screenshots(CaptureScreenAreaAsPNG and CaptureWindowAsPNG).  
+  Thanks to edgemeal for that.  
+  
+  - **GetTCPWidth**  
+  returns the width of the TrackControlPanel.
+  
+  - **More and bugfixes**  
+  as usual ;)
+  
 
 #### New features in 4.00beta2.9   
    - API: StuffMidiMessage-AllMessages\_Englisch\_Windows.ini - contains all names for all potential StuffMIDIMessage-messages
+   - Docs: Concepts: DeferScripts\_004\_Manipulating\_and\_Protecting\_Defer\_loops - describes manipulation of ultraschall.Defer-cycles and how to protect them from manipulation
+   - Docs: Concepts: ExtStateManagement\_008\_MarkerExtStates - describes the marker-extstate-functions
    - Envelope Management: GetEnvelopeState\_Act - returns the values of the ACT-entry of a TrackEnvelope/EnvelopeStateChunk
    - Envelope Management: GetEnvelopeState\_DefShape - returns the values of the DEFSHAPE-entry of a TrackEnvelope/EnvelopeStateChunk
    - Envelope Management: GetEnvelopeState\_LaneHeight - returns the values of the LANEHEIGHT-entry of a TrackEnvelope/EnvelopeStateChunk
@@ -251,17 +295,19 @@ TODO!! buggy function
    - Scripts: US\_Api\_Examples\_Working\_with\_FXStateChunks\_and\_MediaItems.lua - example of working with FXChainStateChunks
    - Themeing: GetAllThemeLayoutNames - returns all layout-names and values of the current theme
    - Themeing: GetAllThemeLayoutParameters - returns all theme-layout-parameter attributes of the current theme
+   - Ultraschall Soundboard: Soundboard\_PlayFadeIn - starts a sound with fadein, when having the Ultraschall4.00-Soundboard installed
    - User Interface: GetHelpDisplayMode - returns the current help-display-mode
    - User Interface: GetTCPWidth - gets the current width of the TCP(requested by nofish)
    - User Interface: SetHelpDisplayMode - sets the current help-display-mode
    - User Interface: WiringDiagram_GetOptions - gets the current wiring-diagram-options
    - User Interface: WiringDiagram_SetOptions - sets the wiring-diagram-options
-   - Web Interface: WebInterface_GetInstalledInterfaces - returns all installed webinterfaces(webrc) of the current Reaper installation, custom and Reaper-defaults
+   
    
 #### Changes from Beta 2.8 to Beta 2.9
    - ChildScripts: GetScriptParameters - produced Lua-error when no parameter was existing -> fixed
    - ChildScripts: GetScriptReturnvalues - docs fixed; didn't reset returnvalue-counter; produced Lua-error when no parameter was existing; had another stupid bug in it that I don't wanna mention... :/ -> fixed
    - ConfigurationManagement: GetIniFileValue - checks now, if the ini-file exists in the first place
+   - Defer Management: Defer - returns now boolean always, as well as the defer_identifier
    - Envelope Management: GetArmState_Envelope - reimplemented, should now return future parameters as well, when added by the Reaper-devs
    - FileManagement: GetAllFilenamesInPath - returns now the paths with / as separator only
    - FileManagement: GetMediafileAttributes - did not recognize jpgs with exif-data -> should be fixed now(thanks to rstockm)
