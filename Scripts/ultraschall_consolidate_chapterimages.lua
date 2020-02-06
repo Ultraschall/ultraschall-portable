@@ -128,8 +128,8 @@ for i = 1, number_of_normalmarkers do
   position = tostring(normalmarkersarray[i][0])
   idx = normalmarkersarray[i][2]
   old_url = ultraschall.GetMarkerExtState(idx, "url")
-  if old_url then
-    -- print (i .. "-" .. position .. old_url)
+  if old_url and old_url ~= "" then
+    print (i .. "-" .. position .. old_url)
     urlcount = reaper.SetProjExtState(0, "chapterurls", position, old_url)
   end
 
