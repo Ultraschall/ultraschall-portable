@@ -179,12 +179,18 @@ end
 
 function editURL(idx)
 
-  old_url = reaper.NF_GetSWSMarkerRegionSub(idx)
+  old_url = ultraschall.GetMarkerExtState(idx, "url")
+  if old_url == nil then
+    old_url = ""
+  end
   retval, result = reaper.GetUserInputs("Edit Chapter URL", 1, "URL:,extrawidth=300" , old_url)
 
   if retval == true then
-    if (result:match("https?://(([%w_.~!*:@&+$/?%%#-]-)(%w[-.%w]*%.)(%w%w%w?%w?)(:?)(%d*)(/?)([%w_.~!*:@&+$/?%%#=-]*))")) then
-      new_url = reaper.NF_SetSWSMarkerRegionSub(result, idx) -- write new url
+    if (result:match("https?://(([%w_.~!*:@&+$/?%%#-]-)(%w[-.%w]*%.)(%w%w%w?%w?)(:?)(%d*)(/?)([%w_.~!*:@&+$/?%%#=-]*))")) or result == "" then
+      -- new_url = reaper.NF_SetSWSMarkerRegionSub(result, idx) -- write new url
+      new_url = ultraschall.SetMarkerExtState(idx, "url", result)
+      print(new_url)
+      print(result)
     else
       editURL(idx)
     end
@@ -303,7 +309,10 @@ function buildGui()
       -- URL - nur wenn Name gesetzt ist
 
       idx = markertable[tostring(key)]["idx"]
-      mkrRgnSubOut = reaper.NF_GetSWSMarkerRegionSub(idx-1)
+      mkrRgnSubOut = ultraschall.GetMarkerExtState(idx, "url")
+      if mkrRgnSubOut == nil then
+        mkrRgnSubOut = ""
+      end
       url_displayed = string.sub(mkrRgnSubOut,1,31)
       if #mkrRgnSubOut > 31 then
         url_displayed = url_displayed .. "..."
@@ -312,13 +321,13 @@ function buildGui()
       if mkrRgnSubOut ~= "" then
         url_txt = GUI.Lbl:new(550, position, url_displayed, 0)
         table.insert(GUI.elms, url_txt)
-        edit_url = GUI.Pic:new(550, position-5, 200, 25, 1, blankimg, editURL, idx-1)
+        edit_url = GUI.Pic:new(550, position-5, 200, 25, 1, blankimg, editURL, idx)
         table.insert(GUI.elms, edit_url)
         open_exturl = GUI.Pic:new(522, position-5, 25, 25, 0.5, link, open_url, mkrRgnSubOut)
         table.insert(GUI.elms, open_exturl)
 
       else
-        edit_url = GUI.Pic:new(522, position-5, 25, 25, 0.5, add, editURL, idx-1)
+        edit_url = GUI.Pic:new(522, position-5, 25, 25, 0.5, add, editURL, idx)
         table.insert(GUI.elms, edit_url)
       end
 
