@@ -710,9 +710,10 @@ end
 
 
 function Pic:onmousedown()
-
-  if IsInside(self, GUI.mouse.x, GUI.mouse.y) then
-    self.func(table.unpack(self.params))
+  if self.func and self.func ~= "" then
+    if IsInside(self, GUI.mouse.x, GUI.mouse.y) then
+      self.func(table.unpack(self.params))
+    end
   end
 end
 

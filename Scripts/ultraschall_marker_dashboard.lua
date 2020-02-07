@@ -214,13 +214,20 @@ markertable = build_markertable()
 tablesort = makeSortedTable(markertable)
 rows = #tablesort
 WindowHeight = 60 + (rows * 30) +30
+
+check_text = ""
+image_sizes = {}
+
 blankimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/blank.png"
 placeholderimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/placeholder.png"
 triangle = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/triangle.png"
 green = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_green.png"
 red = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_red.png"
+yellow = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_yellow.png"
 add = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/add.png"
 link = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/link.png"
+fillrow = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/fillrow.png"
+
 
 -- Grab all of the functions and classes from our GUI library
 
@@ -281,7 +288,7 @@ function buildGui()
 
     -- Zeilen-Idikator
     if reaper.GetCursorPosition() == key then
-      indicator = GUI.Pic:new(1, position-4, 25, 25, 0.5, triangle, "", ""),
+      indicator = GUI.Pic:new(1, position-7, 0, 0, 1, fillrow, "", ""),
       table.insert(GUI.elms, indicator)
     end
 
@@ -302,9 +309,9 @@ function buildGui()
       id = GUI.Lbl:new(50, position, name_displayed, 0)
       table.insert(GUI.elms, id)
       name_func = editMarker
-      green_indicator = GUI.Pic:new(785, position-4, 25, 25, 0.5, green, show_menu, "Good to go")
-      table.insert(GUI.elms, green_indicator)
 
+      check_image = green
+      check_text = "Good to go"
 
       -- URL - nur wenn Name gesetzt ist
 
@@ -332,21 +339,23 @@ function buildGui()
       end
 
 
-
-
     elseif name and name == "" then
         id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
         table.insert(GUI.elms, id)
         name_func = editMarker
-        red_indicator = GUI.Pic:new(785, position-4, 25, 25, 0.5, red, show_menu, "Chapters without Name will not be exported"),
-        table.insert(GUI.elms, red_indicator)
+
+        check_image = red
+        check_text = "Chapters without Name will not be exported"
+
 
     else
       id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
       table.insert(GUI.elms, id)
       name_func = insertMarker
-      red_indicator = GUI.Pic:new(785, position-4, 25, 25, 0.5, red, show_menu, "Chapters without Name will not be exported"),
-      table.insert(GUI.elms, red_indicator)
+
+      check_image = red
+      check_text = "Chapters without Name will not be exported"
+
     end
 
     editlink = GUI.Pic:new(50, position-5, 200, 25, 1, blankimg, name_func, key),
@@ -367,6 +376,47 @@ function buildGui()
     if image then
 
       img_index = gfx.loadimg(0, placeholderimg)
+
+      if img_index then     -- there is an image
+
+        if not image_sizes[image] then
+
+          image_sizes[image] = {}
+          image_test = gfx.loadimg(0, image)
+          w, h = gfx.getimgdim(image_test)
+
+          image_sizes[image]["w"] = w
+          image_sizes[image]["h"] = h
+
+        else
+          w = image_sizes[image]["w"]
+          h = image_sizes[image]["h"]
+        end
+
+        if w ~= h or w > 1400 or h > 1400 then
+
+          ratio_text = "|This chapter image is not square."
+          size_text = "|This chapter image is larger than 1400px."
+          proceed_text = "|You may proceed, but it may cause problems in several podcatchers."
+
+          image_warning_text = ""
+          if w ~= h then
+            image_warning_text = image_warning_text .. ratio_text
+          end
+          if w > 1400 or h > 1400 then
+            image_warning_text = image_warning_text .. size_text
+          end
+
+          if check_image == green then -- Grüne OK-Meldung wird ersetzt
+            check_image = yellow
+            check_text = image_warning_text .. proceed_text
+          else
+            check_text = check_text .. image_warning_text .. proceed_text -- rote Warnung bleibt bestehen und Gelbe nur angehängt
+          end
+
+        end
+
+      end
 
       --[[
 
@@ -389,7 +439,10 @@ function buildGui()
 
     end
 
+    -- Export-Check
 
+    check_indicator = GUI.Pic:new(785, position-4, 25, 25, 0.5, check_image, show_menu, check_text),
+    table.insert(GUI.elms, check_indicator)
 
 
 
