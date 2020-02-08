@@ -72,11 +72,15 @@ C3,C,C1,C2,C4,C5,C6,C7=ultraschall.GetApiVersion()
 versionnumber, version, date, beta, tagline = ultraschall.GetApiVersion()
 majorversion, subversion, bits, Os, portable = ultraschall.GetReaperAppVersion()
 
+if beta~="" then beta="-"..beta end
+
+
 SWS=reaper.CF_GetSWSVersion("")
 JS= reaper.JS_ReaScriptAPI_Version()
 
 C2vers=string.gsub(C2," ","")
 C2vers=C2vers:lower()
+if C2vers~="" then C2vers="_"..C2vers end
 
 
 -- set this to the online-repo of the Ultraschall-API
@@ -102,7 +106,7 @@ L=ultraschall.MakeCopyOfFile_Binary(SourceDir.."/ultraschall_api_readme.txt", Ta
 ReadMe_Reaper_Internals=[[
 compiled by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
 
-Documentation for Reaper-Internals ]]..majorversion.."."..subversion..[[ and Ultraschall Api 4.00-]]..beta..[[, SWS ]]..SWS..[[, JS-extension-plugin ]]..JS..[[ and ReaPack
+Documentation for Reaper-Internals ]]..majorversion.."."..subversion..[[ and Ultraschall Api 4.00]]..beta..[[, SWS ]]..SWS..[[, JS-extension-plugin ]]..JS..[[ and ReaPack
 
 Written and compiled by Meo Mespotine (mespotine.de) for the Ultraschall.FM-project.
 licensed under creative-commons by-sa-nc-license
@@ -118,8 +122,8 @@ ultraschall.WriteValueToFile(SourceDir.."/ultraschall_api/Reaper-Internals-readm
 Batter=[[
 cd ]]..SourceDir..[[
 
-del c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\ultraschall_api4.00_]]..C2vers..[[.zip
-zip.exe -r c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\ultraschall_api4.00_]]..C2vers..[[.zip *.lua *.txt ultraschall_api
+del c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\ultraschall_api4.00]]..C2vers..[[.zip
+zip.exe -r c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\ultraschall_api4.00]]..C2vers..[[.zip *.lua *.txt ultraschall_api
 
 del c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\Reaper-Internals-Ultraschall-Api-Docs.zip
 cd ultraschall_api

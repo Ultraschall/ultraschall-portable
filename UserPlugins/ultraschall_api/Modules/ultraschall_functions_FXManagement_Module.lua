@@ -1696,12 +1696,12 @@ function ultraschall.SetFXStateChunk(StateChunk, FXStateChunk, TakeFXChain_id)
   </requires>
   <functioncall>boolean retval, optional string alteredStateChunk = ultraschall.SetFXStateChunk(string StateChunk, string FXStateChunk, optional integer TakeFXChain_id)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Sets an already existing FXStateChunk in a TrackStateChunk or a MediaItemStateChunk.
+    Adds/replaces FXStateChunk to/in a TrackStateChunk or a MediaItemStateChunk.
     
     returns false in case of an error
   </description>
   <retvals>
-    boolean retval - true, if setting new values was successful; false, if setting was unsuccessful
+    boolean retval - true, if setting fxstatechunk was successful; false, if setting was unsuccessful
     optional string alteredStateChunk - the altered StateChunk
   </retvals>
   <parameters>
@@ -1719,16 +1719,26 @@ function ultraschall.SetFXStateChunk(StateChunk, FXStateChunk, TakeFXChain_id)
 </US_DocBloc>
 ]]
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetFXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return false end
-  if ultraschall.IsValidTrackStateChunk(StateChunk)==false and ultraschall.IsValidMediaItemStateChunk(StateChunk)==false then ultraschall.AddErrorMessage("SetFXStateChunk", "StateChunk", "no valid Track/ItemStateChunk", -1) return false end
+  if ultraschall.IsValidTrackStateChunk(StateChunk)==false and ultraschall.IsValidMediaItemStateChunk(StateChunk)==false then ultraschall.AddErrorMessage("SetFXStateChunk", "StateChunk", "no valid Track/ItemStateChunk", -2) return false end
   if TakeFXChain_id~=nil and math.type(TakeFXChain_id)~="integer" then ultraschall.AddErrorMessage("SetFXStateChunk", "TakeFXChain_id", "must be an integer", -3) return false end
   if TakeFXChain_id==nil then TakeFXChain_id=1 end
+  ultraschall.SuppressErrorMessages(true)
   local OldFXStateChunk=ultraschall.GetFXStateChunk(StateChunk, TakeFXChain_id)
-  if OldFXStateChunk==nil then ultraschall.AddErrorMessage("SetFXStateChunk", "TakeFXChain_id", "no FXStateChunk found", -4) return false end
+  ultraschall.SuppressErrorMessages(false)
+  if OldFXStateChunk==nil then 
+    --ultraschall.AddErrorMessage("SetFXStateChunk", "TakeFXChain_id", "no FXStateChunk found", -4) 
+    FXStateChunk=string.gsub(FXStateChunk, "\n%s*", "\n")  
+    FXStateChunk=string.gsub(FXStateChunk, "^%s*", "")
+    
+    --print2(FXStateChunk)
+    return false, ultraschall.StateChunkLayouter(StateChunk:match("(.*)>").."\n"..FXStateChunk.."\n>")
+  end
   OldFXStateChunk=string.gsub(OldFXStateChunk, "\n%s*", "\n")  
   OldFXStateChunk=string.gsub(OldFXStateChunk, "^%s*", "")
   
+  
   local Start, Stop = string.find(StateChunk, OldFXStateChunk, 0, true)
-  StateChunk=StateChunk:sub(1,Start-1)..FXStateChunk:sub(2,-1)..StateChunk:sub(Stop+1,-1)
+  StateChunk=StateChunk:sub(1,Start-1)..FXStateChunk:match("%s-(.*)")..StateChunk:sub(Stop+1,-1)
   StateChunk=string.gsub(StateChunk, "\n%s*", "\n")
   return true, StateChunk
 end

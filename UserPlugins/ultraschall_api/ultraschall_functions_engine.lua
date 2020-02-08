@@ -189,7 +189,7 @@ function ultraschall.GetApiVersion()
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>number versionnumber, string version, string date, string beta, string tagline = ultraschall.GetApiVersion()</functioncall>
+  <functioncall>number versionnumber, string version, string date, string beta, string tagline, string buildnumber = ultraschall.GetApiVersion()</functioncall>
   <description>
     returns the version, release-date and if it's a beta-version plus the currently installed hotfix
   </description>
@@ -200,6 +200,7 @@ function ultraschall.GetApiVersion()
     string beta - if it's a beta version, this is the beta-version-number
     string tagline - the tagline of the current release
     string hotfix_date - the release-date of the currently installed hotfix ($ResourceFolder/ultraschall_api/ultraschall_hotfixes.lua)
+    string buildnumber - the build-number of the current release
   </retvals>
   <chapter_context>
     API-Helper functions
@@ -209,7 +210,8 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  return 400.029, "4.00","", "Beta 2.9",  "\"Gentle Giant - Two weeks in Spain\"", ultraschall.hotfixdate
+  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+  return 400.100, "4.00","11th of February 2020", "",  "\"Aphrodite's Child - Four Horsemen\"", ultraschall.hotfixdate, string2
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()

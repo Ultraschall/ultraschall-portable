@@ -142,6 +142,8 @@ function ultraschall.CaptureScreenAreaAsPNG(filename_with_path, x, y, w, h)
   <description>
     captures an area of the screen and writes it as png-file.
     
+    Note for Mac-users: it doesn't seem to work under certain circumstances, which are still under investigation.
+    
     returns false in case of an error 
   </description>
   <parameters>
@@ -195,6 +197,8 @@ function ultraschall.CaptureWindowAsPNG(windowTitle, filename_with_path, x, y, w
     
     Note for Windows-users with no Windows 10:
     Keep in mind, that even if you choose a dedicated window, if it's located behind other windows, these might be captured as well.
+    
+    Note for Mac-users: it doesn't seem to work under certain circumstances, which are still under investigation.
     
     returns false in case of an error 
   </description>
