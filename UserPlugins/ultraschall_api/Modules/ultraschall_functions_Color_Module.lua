@@ -78,8 +78,8 @@ function ultraschall.ConvertColor(r,g,b)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>helper functions, color, native, convert, red, gree, blue</tags>
 </US_DocBloc>
 ]]
@@ -116,8 +116,8 @@ function ultraschall.ConvertColorReverse(color)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>helper functions, color, native, convert, red, gree, blue</tags>
 </US_DocBloc>
 ]]
@@ -155,8 +155,8 @@ function ultraschall.RGB2Grayscale(red,green,blue)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>colorvalues,rgb,gray,grayscale,grey,greyscale</tags>
 </US_DocBloc>
 --]]
@@ -209,8 +209,8 @@ function ultraschall.ConvertColorToGFX(r,g,b,a)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>helper functions, convert, red, green, blue, alpha, color, gfx</tags>
 </US_DocBloc>
 --]]
@@ -263,8 +263,8 @@ function ultraschall.ConvertGFXToColor(r,g,b,a)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>helper functions, convert, red, green, blue, alpha, color, gfx</tags>
 </US_DocBloc>
 --]]
@@ -322,8 +322,8 @@ function ultraschall.CreateColorTable(startr, startg, startb, endr, endg, endb, 
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, create, colortable</tags>
 </US_DocBloc>
 ]]
@@ -393,8 +393,8 @@ function ultraschall.CreateSonicRainboomColorTable()
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, create, colortable, sonic rainboom</tags>
 </US_DocBloc>
 ]]
@@ -461,8 +461,8 @@ function ultraschall.IsValidColorTable(ColorTable)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, check, colortable</tags>
 </US_DocBloc>
 ]]
@@ -521,8 +521,8 @@ function ultraschall.ApplyColorTableToTrackColors(ColorTable, Spread, StartTrack
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, apply, colortable, colorize, mediatracks</tags>
 </US_DocBloc>
 ]]
@@ -585,8 +585,8 @@ function ultraschall.ApplyColorTableToItemColors(ColorTable, Spread, MediaItemAr
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, apply, colortable, mediaitems, colorize</tags>
 </US_DocBloc>
 ]]
@@ -646,8 +646,8 @@ function ultraschall.ChangeColorBrightness(r, g, b, bright_r, bright_g, bright_b
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, change, color, brightness</tags>
 </US_DocBloc>
 ]]
@@ -731,8 +731,8 @@ function ultraschall.ChangeColorContrast(r, g, b, Minimum_r, Maximum_r, Minimum_
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, change, color, brightness</tags>
 </US_DocBloc>
 ]]
@@ -826,8 +826,8 @@ function ultraschall.ChangeColorSaturation(r,g,b,delta)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, change, color, saturation</tags>
 </US_DocBloc>
 ]]
@@ -884,8 +884,8 @@ function ultraschall.ConvertColorToMac(red, green, blue)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, native, mac, convert</tags>
 </US_DocBloc>
 ]]
@@ -925,8 +925,8 @@ function ultraschall.ConvertColorToWin(red, green, blue)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, native, windows, linux, convert</tags>
 </US_DocBloc>
 ]]
@@ -964,8 +964,8 @@ function ultraschall.ConvertColorFromMac(mac_colorvalue)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, native, mac, convert</tags>
 </US_DocBloc>
 ]]
@@ -1004,8 +1004,8 @@ function ultraschall.ConvertColorFromWin(win_colorvalue)
   <chapter_context>
     Color Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Color_Module.lua</source_document>
   <tags>color management, native, windows, linux, convert</tags>
 </US_DocBloc>
 ]]

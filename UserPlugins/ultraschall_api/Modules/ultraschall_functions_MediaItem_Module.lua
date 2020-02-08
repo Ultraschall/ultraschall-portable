@@ -77,8 +77,8 @@ function ultraschall.IsValidMediaItemStateChunk(itemstatechunk)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, check, mediaitemstatechunk, valid</tags>
 </US_DocBloc>
 ]]
@@ -119,8 +119,8 @@ function ultraschall.CheckMediaItemArray(MediaItemArray)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, check</tags>
 </US_DocBloc>
 ]]
@@ -165,8 +165,8 @@ function ultraschall.IsValidMediaItemArray(MediaItemArray)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, check</tags>
 </US_DocBloc>
 ]]
@@ -211,8 +211,8 @@ function ultraschall.CheckMediaItemStateChunkArray(MediaItemStateChunkArray)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, chunk, check</tags>
 </US_DocBloc>
 ]]
@@ -259,8 +259,8 @@ function ultraschall.IsValidMediaItemStateChunkArray(MediaItemStateChunkArray)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, chunk, check</tags>
 </US_DocBloc>
 ]]
@@ -301,8 +301,8 @@ function ultraschall.GetMediaItemsAtPosition(position, trackstring)
     MediaItem Management
     Get MediaItems
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, selection, statechunk</tags>
 </US_DocBloc>
 ]]
@@ -369,8 +369,8 @@ function ultraschall.OnlyMediaItemsOfTracksInTrackstring(MediaItemArray, trackst
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, selection</tags>
 </US_DocBloc>
 ]]
@@ -430,8 +430,8 @@ function ultraschall.SplitMediaItems_Position(position, trackstring, crossfade)
     MediaItem Management
     Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, split, edit, crossfade</tags>
 </US_DocBloc>
 ]]
@@ -503,8 +503,8 @@ function ultraschall.SplitItemsAtPositionFromArray(position, MediaItemArray, cro
     MediaItem Management
     Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, split, edit, crossfade, mediaitemarray</tags>
 </US_DocBloc>
 ]]
@@ -557,8 +557,8 @@ function ultraschall.DeleteMediaItem(MediaItemObject)
     MediaItem Management
     Delete
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, delete</tags>
 </US_DocBloc>
 ]]
@@ -598,8 +598,8 @@ function ultraschall.DeleteMediaItemsFromArray(MediaItemArray)
     MediaItem Management
     Delete
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, delete</tags>
 </US_DocBloc>
 ]]  
@@ -645,8 +645,8 @@ function ultraschall.DeleteMediaItems_Position(position, trackstring)
     MediaItem Management
     Delete
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, delete</tags>
 </US_DocBloc>
 ]]
@@ -707,7 +707,7 @@ function ultraschall.GetAllMediaItemsBetween(startposition, endposition, trackst
     boolean inside - true, only items that are completely within selection; false, include items that are partially within selection
   </parameters>
   <retvals>
-    integer count - the number of selected items
+    integer count - the number of found items
     array MediaItemArray - an array with all the found MediaItems
     array MediaItemStateChunkArray - an array with the MediaItemStateChunks, that can be used to create new items with <a href="#InsertMediaItem_MediaItemStateChunk">InsertMediaItem_MediaItemStateChunk</a>
   </retvals>
@@ -715,8 +715,8 @@ function ultraschall.GetAllMediaItemsBetween(startposition, endposition, trackst
     MediaItem Management
     Get MediaItems
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, selection, position, statechunk, rppxml</tags>
 </US_DocBloc>
 ]]
@@ -806,8 +806,8 @@ function ultraschall.MoveMediaItemsAfter_By(oldposition, changepositionby, track
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, move, position</tags>
 </US_DocBloc>
 ]]
@@ -866,8 +866,8 @@ function ultraschall.MoveMediaItemsBefore_By(oldposition, changepositionby, trac
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, move, position</tags>
 </US_DocBloc>
 ]]
@@ -932,8 +932,8 @@ function ultraschall.MoveMediaItemsBetween_To(startposition, endposition, newpos
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, move, position</tags>
 </US_DocBloc>
 ]]
@@ -999,8 +999,8 @@ function ultraschall.ChangeLengthOfMediaItems_FromArray(MediaItemArray, newlengt
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, length</tags>
 </US_DocBloc>
 ]]
@@ -1043,8 +1043,8 @@ function ultraschall.ChangeDeltaLengthOfMediaItems_FromArray(MediaItemArray, del
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, length</tags>
 </US_DocBloc>
 ]]
@@ -1089,8 +1089,8 @@ function ultraschall.ChangeOffsetOfMediaItems_FromArray(MediaItemArray, newoffse
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, offset</tags>
 </US_DocBloc>
 ]]
@@ -1139,8 +1139,8 @@ function ultraschall.ChangeDeltaOffsetOfMediaItems_FromArray(MediaItemArray, del
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, offset</tags>
 </US_DocBloc>
 ]]
@@ -1192,8 +1192,8 @@ function ultraschall.SectionCut(startposition, endposition, trackstring, add_to_
     MediaItem Management
     Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, edit, section, cut, clipboard</tags>
 </US_DocBloc>
 ]]
@@ -1255,8 +1255,8 @@ function ultraschall.SectionCut_Inverse(startposition, endposition, trackstring,
     MediaItem Management
     Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, edit, section, inverse, cut</tags>
 </US_DocBloc>
 ]]
@@ -1324,8 +1324,8 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
     MediaItem Management
     Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, edit, ripple, clipboard</tags>
 </US_DocBloc>
 ]]
@@ -1405,8 +1405,8 @@ function ultraschall.RippleCut_Reverse(startposition, endposition, trackstring, 
     MediaItem Management
     Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, edit, ripple, reverse, clipboard</tags>
 </US_DocBloc>
 ]]
@@ -1483,8 +1483,8 @@ function ultraschall.InsertMediaItem_MediaItem(position, MediaItem, MediaTrack)
     MediaItem Management
     Insert
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, insert</tags>
 </US_DocBloc>
 ]]
@@ -1536,8 +1536,8 @@ function ultraschall.InsertMediaItem_MediaItemStateChunk(position, MediaItemStat
     MediaItem Management
     Insert
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, insert</tags>
 </US_DocBloc>
 ]]
@@ -1589,8 +1589,8 @@ function ultraschall.InsertMediaItemArray(position, MediaItemArray, trackstring)
     MediaItem Management
     Insert
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, insert</tags>
 </US_DocBloc>
 ]]    
@@ -1660,8 +1660,8 @@ function ultraschall.GetMediaItemStateChunksFromItems(MediaItemArray)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, chunk</tags>
 </US_DocBloc>
 ]]
@@ -1712,8 +1712,8 @@ function ultraschall.RippleInsert(position, MediaItemArray, trackstring, moveenv
     MediaItem Management
     Insert
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, insert, ripple</tags>
 </US_DocBloc>
 ]]
@@ -1823,8 +1823,8 @@ function ultraschall.MoveMediaItems_FromArray(MediaItemArray, newposition)
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, insert, ripple</tags>
 </US_DocBloc>
 ]]
@@ -1887,8 +1887,8 @@ function ultraschall.InsertMediaItemStateChunkArray(position, MediaItemStateChun
     MediaItem Management
     Insert
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, insert, statechunk</tags>
 </US_DocBloc>
 ]]    
@@ -1958,8 +1958,8 @@ function ultraschall.OnlyMediaItemsOfTracksInTrackstring_StateChunk(MediaItemSta
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, selection, statechunk</tags>
 </US_DocBloc>
 ]]
@@ -2028,8 +2028,8 @@ function ultraschall.RippleInsert_MediaItemStateChunks(position, MediaItemStateC
     MediaItem Management
     Insert
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, insert, ripple</tags>
 </US_DocBloc>
 ]]
@@ -2138,8 +2138,8 @@ function ultraschall.GetAllMediaItemsFromTrack(tracknumber)
     MediaItem Management
     Get MediaItems
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, track, get, item, mediaitem, statechunk, state, chunk</tags>
 </US_DocBloc>
 ]]
@@ -2195,8 +2195,8 @@ function ultraschall.SetItemsLockState(MediaItemArray, lockstate)
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, track, set, item, mediaitem, lock</tags>
 </US_DocBloc>
 ]]
@@ -2243,8 +2243,8 @@ function ultraschall.AddLockStateToMediaItemStateChunk(MediaItemStateChunk, lock
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, track, set, item, mediaitem, statechunk, state, chunk, lock</tags>
 </US_DocBloc>
 ]]
@@ -2285,8 +2285,8 @@ function ultraschall.AddLockStateTo_MediaItemStateChunkArray(MediaItemStateChunk
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, track, set, item, mediaitem, statechunk, state, chunk, lock</tags>
 </US_DocBloc>
 ]]
@@ -2337,8 +2337,8 @@ function ultraschall.ApplyStateChunkToItems(MediaItemStateChunkArray, undostate)
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, track, set, item, mediaitem, statechunk, state, chunk, apply</tags>
 </US_DocBloc>
 ]]
@@ -2391,8 +2391,8 @@ function ultraschall.GetAllLockedItemsFromMediaItemArray(MediaItemArray)
     MediaItem Management
     Get MediaItems
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, track, set, item, mediaitem, selection, lock, lockstate, locked state, unlock, unlocked state</tags>
 </US_DocBloc>
 ]]
@@ -2437,8 +2437,8 @@ function ultraschall.GetMediaItemStateChunksFromMediaItemArray(MediaItemArray)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, track, set, item, mediaitem, selection, chunk, statechunk, state chunk, state</tags>
 </US_DocBloc>
 ]]
@@ -2463,10 +2463,10 @@ function ultraschall.GetSelectedMediaItemsAtPosition(position, trackstring)
   <slug>GetSelectedMediaItemsAtPosition</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.40
+    Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer count, array MediaItemArray = ultraschall.GetSelectedMediaItemsAtPosition(number position, string trackstring)</functioncall>
+  <functioncall>integer count, array MediaItemArray, array MediaItemStateChunkArray = ultraschall.GetSelectedMediaItemsAtPosition(number position, string trackstring)</functioncall>
   <description>
     Returns all selected items at position in the tracks as given by trackstring, as MediaItemArray. Empty MediaItemAray if none is found.
     
@@ -2484,25 +2484,22 @@ function ultraschall.GetSelectedMediaItemsAtPosition(position, trackstring)
     MediaItem Management
     Selected Items
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, get, selected, selection</tags>
 </US_DocBloc>
 ]]
-  if type(position)~="number" then ultraschall.AddErrorMessage("GetSelectedMediaItemsAtPosition", "position", "must be a number", -1) return -1 end
-  local retval, trackstring, trackstringarray, number_of_entries = ultraschall.RemoveDuplicateTracksInTrackstring(trackstring)
-  if retval==-1 then ultraschall.AddErrorMessage("GetSelectedMediaItemsAtPosition", "trackstring", "not a valid value. Must be a string with numbers,separated by commas, e.g. \"1,2,4,6,8\"", -2) return -1 end
-  local Number_of_items, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetMediaItemsAtPosition(position, trackstring)
-  if Number_of_items==-1 then ultraschall.AddErrorMessage("GetSelectedMediaItemsAtPosition", "trackstring", "not a valid value. Must be a string with numbers,separated by commas, e.g. \"1,2,4,6,8\"", -3) return -1 end
-  local SelectedMediaItemArray={}
-  local count=0
-  for i=1,Number_of_items do
-    if reaper.GetMediaItemInfo_Value(MediaItemArray[i], "B_UISEL")==1 then 
-      count=count+1 
-      SelectedMediaItemArray[count]=MediaItemArray[i] 
+  if type(position)~="number" then ultraschall.AddErrorMessage("GetSelectedMediaItemsAtPosition","position", "must be a number", -1) return -1 end
+  if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("GetSelectedMediaItemsAtPosition","trackstring", "must be a valid trackstring", -2) return -1 end
+  local A,B,C=ultraschall.GetMediaItemsAtPosition(position, trackstring)
+  for i=A, 1, -1 do
+    if reaper.IsMediaItemSelected(B[i])==false then
+      table.remove(B,i)
+      table.remove(C,i)
+      A=A-1
     end
   end
-  return count, SelectedMediaItemArray
+  return A,B,C
 end
 
 function ultraschall.GetSelectedMediaItemsBetween(startposition, endposition, trackstring, inside)
@@ -2534,8 +2531,8 @@ function ultraschall.GetSelectedMediaItemsBetween(startposition, endposition, tr
     MediaItem Management
     Selected Items
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, get, selected, selection, startposition, endposition</tags>
 </US_DocBloc>
 ]]
@@ -2583,8 +2580,8 @@ function ultraschall.DeselectMediaItems_MediaItemArray(MediaItemArray)
     MediaItem Management
     Selected Items
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, selected, selection, deselect, unselect</tags>
 </US_DocBloc>
 ]]
@@ -2624,8 +2621,8 @@ function ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
     MediaItem Management
     Selected Items
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, selected, selection, select</tags>
 </US_DocBloc>
 ]]
@@ -2669,8 +2666,8 @@ function ultraschall.EnumerateMediaItemsInTrack(tracknumber, idx)
     MediaItem Management
     Get MediaItems
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, track, get, item, mediaitem</tags>
 </US_DocBloc>
 ]]
@@ -2726,8 +2723,8 @@ function ultraschall.GetMediaItemArrayLength(MediaItemArray)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>itemmanagement,count,length,items,end,mediaitem,item</tags>
 </US_DocBloc>
 ]]
@@ -2773,8 +2770,8 @@ function ultraschall.GetMediaItemStateChunkArrayLength(MediaItemStateChunkArray)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>itemmanagement,count,length,items,end, mediaitem, statechunk,item</tags>
 </US_DocBloc>
 ]]
@@ -2821,8 +2818,8 @@ function ultraschall.GetAllMediaItemGUIDs()
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, get, guid, mediaitem, item</tags>
 </US_DocBloc>
 --]]
@@ -2864,8 +2861,8 @@ function ultraschall.GetItemSpectralConfig(itemidx, MediaItemStateChunk)
     MediaItem Management
     Spectral Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, get, item, spectral edit, fft, size</tags>
 </US_DocBloc>
 --]]
@@ -2918,8 +2915,8 @@ function ultraschall.SetItemSpectralConfig(itemidx, item_spectral_config, MediaI
     MediaItem Management
     Spectral Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, set, item, spectral edit, fft, size</tags>
 </US_DocBloc>
 --]]
@@ -2983,8 +2980,8 @@ function ultraschall.CountItemSpectralEdits(itemidx, MediaItemStateChunk)
     MediaItem Management
     Spectral Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, count, item, spectral edit</tags>
 </US_DocBloc>
 --]]
@@ -3057,8 +3054,8 @@ function ultraschall.GetItemSpectralEdit(itemidx, spectralidx, MediaItemStateChu
     MediaItem Management
     Spectral Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, get, item, spectral edit</tags>
 </US_DocBloc>
 --]]
@@ -3131,8 +3128,8 @@ function ultraschall.DeleteItemSpectralEdit(itemidx, spectralidx, MediaItemState
     MediaItem Management
     Spectral Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, delete, item, spectral edit</tags>
 </US_DocBloc>
 --]]
@@ -3203,8 +3200,8 @@ function ultraschall.SetItemSpectralVisibilityState(item, state, statechunk)
     MediaItem Management
     Spectral Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, spectrogram, set</tags>
 </US_DocBloc>
 ]]
@@ -3276,8 +3273,8 @@ function ultraschall.SetItemSpectralEdit(itemidx, spectralidx, start_pos, length
     MediaItem Management
     Spectral Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, spectraledit, edit, set</tags>
 </US_DocBloc>
 ]]
@@ -3352,8 +3349,8 @@ function ultraschall.GetItemSourceFile_Take(MediaItem, take_nr)
     MediaItem Management
     Get MediaItem-Takes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, track, get, item, mediaitem, take, pcmsource, filename</tags>
 </US_DocBloc>
 --]]
@@ -3424,8 +3421,8 @@ function ultraschall.AddItemSpectralEdit(itemidx, start_pos, length, gain, fade,
     MediaItem Management
     Spectral Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, add, item, spectral edit</tags>
 </US_DocBloc>
 --]]
@@ -3499,8 +3496,8 @@ function ultraschall.GetItemSpectralVisibilityState(itemidx, MediaItemStateChunk
     MediaItem Management
     Spectral Edit
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, get, item, spectral edit, spectogram, show</tags>
 </US_DocBloc>
 --]]
@@ -3560,8 +3557,8 @@ function ultraschall.InsertImageFile(filename_with_path, track, position, length
     MediaItem Management
     Insert
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>markermanagement, insert, mediaitem, position, mediafile, image, loop</tags>
 </US_DocBloc>
 --]]
@@ -3608,8 +3605,8 @@ function ultraschall.GetAllSelectedMediaItems()
     MediaItem Management
     Selected Items
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, get, all, selected, selection</tags>
 </US_DocBloc>
 ]]
@@ -3643,8 +3640,8 @@ function ultraschall.SetMediaItemsSelected_TimeSelection()
     MediaItem Management
     Selected Items
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, set, selected, item, mediaitem, timeselection</tags>
 </US_DocBloc>
 ]]
@@ -3677,8 +3674,8 @@ function ultraschall.GetParentTrack_MediaItem(MediaItem)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, get, parent, track, item, mediaitem, mediatrack</tags>
 </US_DocBloc>
 ]]
@@ -3720,8 +3717,8 @@ function ultraschall.IsItemInTrack2(MediaItem, tracknumber)
   <chapter_context>
     API-Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>helperfunctions, check, item, track</tags>
 </US_DocBloc>
 ]]
@@ -3769,8 +3766,8 @@ function ultraschall.IsItemInTimerange(MediaItem, startposition, endposition, in
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, check, timerange, tracks, mediaitems</tags>
 </US_DocBloc>
 ]]
@@ -3826,8 +3823,8 @@ function ultraschall.OnlyItemsInTracksAndTimerange(MediaItemArray, trackstring, 
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, check, alter, timerange, tracks, mediaitem, mediaitemarray</tags>
 </US_DocBloc>
 ]]
@@ -3888,8 +3885,8 @@ function ultraschall.ApplyActionToMediaItem(MediaItem, actioncommandid, repeat_a
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, run, action, midi, main, midieditor, item, mediaitem</tags>
 </US_DocBloc>
 ]]
@@ -3959,8 +3956,8 @@ function ultraschall.ApplyActionToMediaItemArray(MediaItemArray, actioncommandid
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, run, action, midi, main, midieditor, item, mediaitemarray</tags>
 </US_DocBloc>
 ]]
@@ -4017,8 +4014,8 @@ function ultraschall.GetAllMediaItemsInTimeSelection(trackstring, inside)
     MediaItem Management
     Get MediaItems
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, get, items, time, selection</tags>
 </US_DocBloc>
 ]]
@@ -4085,8 +4082,8 @@ function ultraschall.NormalizeItems(MediaItemArray)
     MediaItem Management
     Manipulate
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, normalize, items</tags>
 </US_DocBloc>
 ]]
@@ -4129,8 +4126,8 @@ function ultraschall.GetAllMediaItems()
     MediaItem Management
     Get MediaItems
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, get, all, mediaitems, mediaitemarray</tags>
 </US_DocBloc>
 --]]
@@ -4177,8 +4174,8 @@ function ultraschall.PreviewMediaItem(MediaItem, Previewtype)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, preview, audio, mediaitem, track, mediaexplorer</tags>
 </US_DocBloc>
 ]]
@@ -4215,8 +4212,8 @@ function ultraschall.StopAnyPreview()
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, stop, preview, audio, mediaitem, track, mediaexplorer</tags>
 </US_DocBloc>
 ]]
@@ -4257,8 +4254,8 @@ function ultraschall.PreviewMediaFile(filename_with_path, gain, loop)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, preview, play, audio, file</tags>
 </US_DocBloc>
 ]]
@@ -4310,8 +4307,8 @@ function ultraschall.GetMediaItemTake(MediaItem, TakeNr)
     MediaItem Management
     Get MediaItem-Takes
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, take, get, take, active</tags>
 </US_DocBloc>
 ]]
@@ -4357,8 +4354,8 @@ function ultraschall.ApplyFunctionToMediaItemArray(MediaItemArray, functionname,
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, apply, function, mediaitem, mediaitemarray</tags>
 </US_DocBloc>
 ]]  
@@ -4415,8 +4412,8 @@ function ultraschall.GetGapsBetweenItems(MediaTrack)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, get, gaps, between, items, item, mediaitem</tags>
 </US_DocBloc>
 ]]
@@ -4512,8 +4509,8 @@ function ultraschall.DeleteMediaItemsBetween(startposition, endposition,  tracks
     MediaItem Management
     Delete
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, delete, between</tags>
 </US_DocBloc>
 ]]
@@ -4564,8 +4561,8 @@ function ultraschall.ApplyActionToMediaItemArray2(MediaItemArray, actioncommandi
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitemmanagement, run, action, midi, main, midieditor, item, mediaitemarray</tags>
 </US_DocBloc>
 ]]
@@ -4625,8 +4622,8 @@ function ultraschall.GetMediafileAttributes(filename)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>markermanagement, get, position, length, num, channels, samplerate, filetype</tags>
 </US_DocBloc>
 --]]
@@ -4692,8 +4689,8 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, endposit
     MediaItem Management
     Insert
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>markermanagement, insert, mediaitem, position, mediafile, track</tags>
 </US_DocBloc>
 --]]
@@ -4780,8 +4777,8 @@ function ultraschall.CopyMediaItemToDestinationTrack(MediaItem, MediaTrack_desti
       MediaItem Management
       Assistance functions
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
     <tags>mediaitem management, copy, mediaitem, track, mediatrack, position</tags>
   </US_DocBloc>
   ]]
@@ -4834,8 +4831,8 @@ function ultraschall.IsSplitAtPosition(trackstring, position)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitem management, get, split, at position, seconds, mediaitem, mediaitemstart, mediaitemend</tags>
 </US_DocBloc>
 --]]
@@ -4881,8 +4878,8 @@ function ultraschall.GetItem_Number(MediaItem)
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitem management, get, itemindex, itemidx</tags>
 </US_DocBloc>
 --]]
@@ -4924,8 +4921,8 @@ function ultraschall.GetItem_HighestRecCounter()
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitem management, count, all, mediaitem, take, recpass, counter</tags>
 </US_DocBloc>
 --]]
@@ -4951,7 +4948,7 @@ function ultraschall.GetItem_ClickState()
   <slug>GetItem_ClickState</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.981
+    Reaper=6.02
     SWS=2.10.0.1
     Lua=5.3
   </requires>
@@ -4959,7 +4956,7 @@ function ultraschall.GetItem_ClickState()
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns the currently clicked item and take, as well as the current timeposition.
     
-    Works only, if the mouse is above the MediaItem while having clicked!
+    Mostly useful in defer-scripts.
     
     Returns false, if no item is clicked at
   </description>
@@ -4973,19 +4970,283 @@ function ultraschall.GetItem_ClickState()
     MediaItem Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
   <tags>mediaitem management, get, clicked, item</tags>
 </US_DocBloc>
 --]]
-  -- TODO: Has an issue, if the mousecursor drags the item, but moves above or underneath the item(if item is in first or last track).
-  --       Even though the item is still clicked, it isn't returned as such.
-  --       The ConfigVar uiscale supports dragging information, but the information which item has been clicked gets lost somehow
   local B=reaper.SNM_GetDoubleConfigVar("uiscale", -999)
   local X,Y=reaper.GetMousePosition()
   local Item, ItemTake = reaper.GetItemFromPoint(X,Y, true)
+  if Item==nil then Item=ultraschall.ItemClickState_OldItem end
+  if Item~=nil then ultraschall.ItemClickState_OldItem=Item end
+  if ItemTake==nil then ItemTake=ultraschall.ItemClickState_OldTake end
+  if ItemTake~=nil then ultraschall.ItemClickState_OldTake=ItemTake end
   if tostring(B)=="-1.#QNAN" or Item==nil then
+    ultraschall.ItemClickState_OldTake=nil
+    ultraschall.ItemClickState_OldItem=nil
     return false
   end
   return true, ultraschall.GetTimeByMouseXPosition(reaper.GetMousePosition()), Item, ItemTake
 end
+
+function ultraschall.GetEndOfItem(MediaItem)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetEndOfItem</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>number end_of_item_position = ultraschall.GetEndOfItem(MediaItem MediaItem)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the endposition of MediaItem
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    number end_of_item_position - the position of the ending edge of the MediaItem
+  </retvals>
+  <parameters>
+    MediaItem MediaItem - the MediaItem, whose ending-position you want to know
+  </parameters>
+  <chapter_context>
+    MediaItem Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem management, get, end of mediaitem, position</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.type(MediaItem)~="MediaItem" then ultraschall.AddErrorMessage("GetEndOfItem", "MediaItem", "must be a valid MediaItem", -1) return end
+  return reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION")-reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
+end
+
+function ultraschall.GetAllMediaItemAttributes_Table(MediaItem)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllMediaItemAttributes_Table</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>table AttributeTable = ultraschall.GetAllMediaItemAttributes_Table(MediaItem MediaItem)</functioncall>
+  <description>
+    Returns all attributes of MediaItem as a handy table.
+    
+    The returned table is of the following scheme:
+        AttributeTable["B_MUTE"] - bool * : muted
+        AttributeTable["B_LOOPSRC"] - bool * : loop source
+        AttributeTable["B_ALLTAKESPLAY"] - bool * : all takes play
+        AttributeTable["B_UISEL"] - bool * : selected in arrange view
+        AttributeTable["C_BEATATTACHMODE"] - char * : item timebase, -1=track or project default, 1=beats (position, length, rate), 2=beats (position only). for auto-stretch timebase: C_BEATATTACHMODE=1, C_AUTOSTRETCH=1
+        AttributeTable["C_AUTOSTRETCH:"] - char * : auto-stretch at project tempo changes, 1=enabled, requires C_BEATATTACHMODE=1
+        AttributeTable["C_LOCK"] - char * : locked, &1=locked
+        AttributeTable["D_VOL"] - double * : item volume, 0=-inf, 0.5=-6dB, 1=+0dB, 2=+6dB, etc
+        AttributeTable["D_POSITION"] - double * : item position in seconds
+        AttributeTable["D_LENGTH"] - double * : item length in seconds
+        AttributeTable["D_SNAPOFFSET"] - double * : item snap offset in seconds
+        AttributeTable["D_FADEINLEN"] - double * : item manual fadein length in seconds
+        AttributeTable["D_FADEOUTLEN"] - double * : item manual fadeout length in seconds
+        AttributeTable["D_FADEINDIR"] - double * : item fadein curvature, -1..1
+        AttributeTable["D_FADEOUTDIR"] - double * : item fadeout curvature, -1..1
+        AttributeTable["D_FADEINLEN_AUTO"] - double * : item auto-fadein length in seconds, -1=no auto-fadein
+        AttributeTable["D_FADEOUTLEN_AUTO"] - double * : item auto-fadeout length in seconds, -1=no auto-fadeout
+        AttributeTable["C_FADEINSHAPE"] - int * : fadein shape, 0..6, 0=linear
+        AttributeTable["C_FADEOUTSHAPE"] - int * : fadeout shape, 0..6, 0=linear
+        AttributeTable["I_GROUPID"] - int * : group ID, 0=no group
+        AttributeTable["I_LASTY"] - int * : Y-position of track in pixels (read-only)
+        AttributeTable["I_LASTH"] - int * : height in track in pixels (read-only)
+        AttributeTable["I_CUSTOMCOLOR"] - int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color anyway)
+        AttributeTable["I_CURTAKE"] - int * : active take number
+        AttributeTable["IP_ITEMNUMBER"] - int, item number on this track (read-only, returns the item number directly)
+        AttributeTable["F_FREEMODE_Y"] - float * : free item positioning Y-position, 0=top of track, 1=bottom of track (will never be 1)
+        AttributeTable["F_FREEMODE_H"] - float * : free item positioning height, 0=no height, 1=full height of track (will never be 0)
+        AttributeTable["P_TRACK"] - MediaTrack * (read-only)
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    table AttributeTable - a table with all attributes of a MediaItem
+  </retvals>
+  <parameters>
+    MediaItem MediaItem - the MediaItem, whose attributes you want to retrieve
+  </parameters>
+  <chapter_context>
+    MediaItem Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem management, get, all, attributes of mediaitem</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.type(MediaItem)~="MediaItem" then ultraschall.AddErrorMessage("GetAllMediaItemAttributes_Table", "MediaItem", "must be a valid MediaItem", -1) return end
+  local Attributes={}
+  Attributes["B_MUTE"]=reaper.GetMediaItemInfo_Value(MediaItem, "B_MUTE")
+  Attributes["B_LOOPSRC"]=reaper.GetMediaItemInfo_Value(MediaItem, "B_LOOPSRC")
+  Attributes["B_ALLTAKESPLAY"]=reaper.GetMediaItemInfo_Value(MediaItem, "B_ALLTAKESPLAY")
+  Attributes["B_UISEL"]=reaper.GetMediaItemInfo_Value(MediaItem, "B_UISEL")
+  Attributes["C_BEATATTACHMODE"]=reaper.GetMediaItemInfo_Value(MediaItem, "C_BEATATTACHMODE")
+  Attributes["C_AUTOSTRETCH"]=reaper.GetMediaItemInfo_Value(MediaItem, "C_AUTOSTRETCH")
+  Attributes["C_LOCK"]=reaper.GetMediaItemInfo_Value(MediaItem, "C_LOCK")
+  Attributes["D_VOL"]=reaper.GetMediaItemInfo_Value(MediaItem, "D_VOL")
+  Attributes["D_POSITION"]=reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION")
+  Attributes["D_LENGTH"]=reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
+  Attributes["D_SNAPOFFSET"]=reaper.GetMediaItemInfo_Value(MediaItem, "D_SNAPOFFSET")
+  Attributes["D_FADEINLEN"]=reaper.GetMediaItemInfo_Value(MediaItem, "D_FADEINLEN")
+  Attributes["D_FADEOUTLEN"]=reaper.GetMediaItemInfo_Value(MediaItem, "D_FADEOUTLEN")
+  Attributes["D_FADEINDIR"]=reaper.GetMediaItemInfo_Value(MediaItem, "D_FADEINDIR")
+  Attributes["D_FADEOUTDIR"]=reaper.GetMediaItemInfo_Value(MediaItem, "D_FADEOUTDIR")
+  Attributes["D_FADEINLEN_AUTO"]=reaper.GetMediaItemInfo_Value(MediaItem, "D_FADEINLEN_AUTO")
+  Attributes["D_FADEOUTLEN_AUTO"]=reaper.GetMediaItemInfo_Value(MediaItem, "D_FADEOUTLEN_AUTO")
+  Attributes["C_FADEINSHAPE"]=reaper.GetMediaItemInfo_Value(MediaItem, "C_FADEINSHAPE")
+  Attributes["C_FADEOUTSHAPE"]=reaper.GetMediaItemInfo_Value(MediaItem, "C_FADEOUTSHAPE")
+  Attributes["I_GROUPID"]=reaper.GetMediaItemInfo_Value(MediaItem, "I_GROUPID")
+  Attributes["I_LASTY"]=reaper.GetMediaItemInfo_Value(MediaItem, "I_LASTY")
+  Attributes["I_LASTH"]=reaper.GetMediaItemInfo_Value(MediaItem, "I_LASTH")
+  Attributes["I_CUSTOMCOLOR"]=reaper.GetMediaItemInfo_Value(MediaItem, "I_CUSTOMCOLOR")
+  Attributes["I_CURTAKE"]=reaper.GetMediaItemInfo_Value(MediaItem, "I_CURTAKE")
+  Attributes["IP_ITEMNUMBER"]=reaper.GetMediaItemInfo_Value(MediaItem, "IP_ITEMNUMBER")
+  Attributes["F_FREEMODE_Y"]=reaper.GetMediaItemInfo_Value(MediaItem, "F_FREEMODE_Y")
+  Attributes["F_FREEMODE_H"]=reaper.GetMediaItemInfo_Value(MediaItem, "F_FREEMODE_H")
+  Attributes["P_TRACK"]=reaper.GetMediaItemInfo_Value(MediaItem, "P_TRACK")
+  return Attributes
+end
+
+function ultraschall.SetAllMediaItemAttributes_Table(MediaItem, AttributeTable)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetAllMediaItemAttributes_Table</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetAllMediaItemAttributes_Table(MediaItem MediaItem, table AttributeTable)</functioncall>
+  <description>
+    Sets all attributes of MediaItem using a AttributeTable, which holds all the new settings for the MediaItem.
+    
+    The expected table is of the following scheme:
+        AttributeTable["B_MUTE"] - bool * : muted
+        AttributeTable["B_LOOPSRC"] - bool * : loop source
+        AttributeTable["B_ALLTAKESPLAY"] - bool * : all takes play
+        AttributeTable["B_UISEL"] - bool * : selected in arrange view
+        AttributeTable["C_BEATATTACHMODE"] - char * : item timebase, -1=track or project default, 1=beats (position, length, rate), 2=beats (position only). for auto-stretch timebase: C_BEATATTACHMODE=1, C_AUTOSTRETCH=1
+        AttributeTable["C_AUTOSTRETCH:"] - char * : auto-stretch at project tempo changes, 1=enabled, requires C_BEATATTACHMODE=1
+        AttributeTable["C_LOCK"] - char * : locked, &1=locked
+        AttributeTable["D_VOL"] - double * : item volume, 0=-inf, 0.5=-6dB, 1=+0dB, 2=+6dB, etc
+        AttributeTable["D_POSITION"] - double * : item position in seconds
+        AttributeTable["D_LENGTH"] - double * : item length in seconds
+        AttributeTable["D_SNAPOFFSET"] - double * : item snap offset in seconds
+        AttributeTable["D_FADEINLEN"] - double * : item manual fadein length in seconds
+        AttributeTable["D_FADEOUTLEN"] - double * : item manual fadeout length in seconds
+        AttributeTable["D_FADEINDIR"] - double * : item fadein curvature, -1..1
+        AttributeTable["D_FADEOUTDIR"] - double * : item fadeout curvature, -1..1
+        AttributeTable["D_FADEINLEN_AUTO"] - double * : item auto-fadein length in seconds, -1=no auto-fadein
+        AttributeTable["D_FADEOUTLEN_AUTO"] - double * : item auto-fadeout length in seconds, -1=no auto-fadeout
+        AttributeTable["C_FADEINSHAPE"] - int * : fadein shape, 0..6, 0=linear
+        AttributeTable["C_FADEOUTSHAPE"] - int * : fadeout shape, 0..6, 0=linear
+        AttributeTable["I_GROUPID"] - int * : group ID, 0=no group
+        AttributeTable["I_LASTY"] - int * : Y-position of track in pixels (read-only)
+        AttributeTable["I_LASTH"] - int * : height in track in pixels (read-only)
+        AttributeTable["I_CUSTOMCOLOR"] - int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color anyway)
+        AttributeTable["I_CURTAKE"] - int * : active take number
+        AttributeTable["IP_ITEMNUMBER"] - int, item number on this track (read-only, returns the item number directly)
+        AttributeTable["F_FREEMODE_Y"] - float * : free item positioning Y-position, 0=top of track, 1=bottom of track (will never be 1)
+        AttributeTable["F_FREEMODE_H"] - float * : free item positioning height, 0=no height, 1=full height of track (will never be 0)
+        AttributeTable["P_TRACK"] - MediaTrack * (read-only)
+    
+    returns false in case of an error or if some of the attributes could not be set.
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting attributes failed
+  </retvals>
+  <parameters>
+    MediaItem MediaItem - the MediaItem, whose attributes you want to set
+    table AttributeTable - a table which holds all settings, that you want to set
+  </parameters>
+  <chapter_context>
+    MediaItem Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem management, set, all, attributes of mediaitem</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.type(MediaItem)~="MediaItem" then ultraschall.AddErrorMessage("SetAllMediaItemAttributes_Table", "MediaItem", "must be a MediaItem", -1) return false end
+  if type(AttributeTable)~="table" then ultraschall.AddErrorMessage("SetAllMediaItemAttributes_Table", "AttributeTable", "must be a table", -2) return false end
+  local FailedAttributes=""
+  for i,v in pairs(AttributeTable) do
+    if i~="P_TRACK" and type(v)=="number" then
+      if (reaper.SetMediaItemInfo_Value(MediaItem, i, v))==false then
+        FailedAttributes=FailedAttributes..i.."\n"
+      end
+    elseif i~="P_TRACK" then
+        FailedAttributes=FailedAttributes..i.."\n"
+    end
+  end
+  if FailedAttributes~="" then ultraschall.AddErrorMessage("SetAllMediaItemAttributes_Table", "AttributeTable", "Could not set the following attributes: \n"..FailedAttributes:sub(1,-2), -3) return false end
+  reaper.UpdateArrange()
+  return true
+end
+
+function ultraschall.GetAllSelectedMediaItemsBetween(startposition, endposition, trackstring, inside)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllSelectedMediaItemsBetween</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer count, array MediaItemArray, array MediaItemStateChunkArray = ultraschall.GetAllSelectedMediaItemsBetween(number startposition, number endposition, string trackstring, boolean inside)</functioncall>
+  <description>
+    Gets all selected MediaItems between startposition and endposition from the tracks as given by trackstring. 
+    Set inside to true to get only items, that are fully within the start and endposition, set it to false, if you also want items, that are just partially inside(end or just the beginning of the item).
+    
+    Returns the number of selected items, an array with all the selected MediaItems and an array with all the MediaItemStateChunks of the selected items, as used by functions as <a href="#InsertMediaItem_MediaItemStateChunk">InsertMediaItem_MediaItemStateChunk</a>, reaper.GetItemStateChunk and reaper.SetItemStateChunk.
+    The statechunks include a new element "ULTRASCHALL_TRACKNUMBER", which contains the tracknumber of where the item originally was in; important, if you delete the items as you'll otherwise loose this information!
+    Returns -1 in case of failure.
+  </description>
+  <parameters>
+    number startposition - startposition in seconds
+    number endposition - endposition in seconds
+    string trackstring - the tracknumbers, separated by a comma
+    boolean inside - true, only items that are completely within selection; false, include items that are partially within selection
+  </parameters>
+  <retvals>
+    integer count - the number of selected items
+    array MediaItemArray - an array with all the found and selected MediaItems
+    array MediaItemStateChunkArray - an array with the MediaItemStateChunks, that can be used to create new items with <a href="#InsertMediaItem_MediaItemStateChunk">InsertMediaItem_MediaItemStateChunk</a>
+  </retvals>
+  <chapter_context>
+    MediaItem Management
+    Get MediaItems
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitemmanagement, tracks, selected, media, item, selection, position, statechunk, rppxml</tags>
+</US_DocBloc>
+]]
+  if type(startposition)~="number" then ultraschall.AddErrorMessage("GetAllSelectedMediaItemsBetween", "startposition", "must be a number", -1) return -1 end
+  if type(endposition)~="number" then ultraschall.AddErrorMessage("GetAllSelectedMediaItemsBetween", "endposition", "must be a number", -2) return -1 end
+  if startposition>endposition then ultraschall.AddErrorMessage("GetAllSelectedMediaItemsBetween", "endposition", "must be bigger than startposition", -3) return -1 end
+  if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("GetAllSelectedMediaItemsBetween", "trackstring", "must be a valid trackstring", -4) return -1 end
+  if type(inside)~="boolean" then ultraschall.AddErrorMessage("GetAllSelectedMediaItemsBetween", "inside", "must be a boolean", -5) return -1 end
+   
+  local A,B,C=ultraschall.GetAllMediaItemsBetween(startposition, endposition, trackstring, inside)
+  for i=A, 1, -1 do
+    if reaper.IsMediaItemSelected(B[i])==false then
+      table.remove(B,i)
+      table.remove(C,i)
+      A=A-1
+    end
+  end
+  return A,B,C
+end
+

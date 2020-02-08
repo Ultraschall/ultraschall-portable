@@ -1,0 +1,87 @@
+Render-Presets-docs as of Reaper 6.02
+
+compiled by Meo Mespotine, 20th of January 2019
+licensed under creative-commons cc-by-license
+
+The render-presets are stored into reaper-render.ini in the resources-folder of Reaper.
+Depending on what you chose for storing a preset, when hitting the Presets-button in the Render to File-dialog, the following entries
+are added into that file.
+
+!Note for Reaper 5 users: Reaper 6 changed the format of the reaper-render.ini, so some various-checkboxes moved to various_checkboxes2, the latter wasn't present before.
+
+When selecting "Options and format" or "All settings":
+    <RENDERPRESET string presetname  integer SampleRate  integer channels  integer offline_online_dropdownlist  integer useprojectsamplerate_checkbox  integer resamplemode_dropdownlist  integer various_checkboxes integer various_checkboxes2
+      string rendercfg
+    >
+
+When selecting "Bounds and Outputpattern filename" or "All settings":
+    RENDERPRESET_OUTPUT  string presetname  integer bounds_dropdownlist  number start_position  number end_position  integer source_dropdownlist_and_checkboxes  integer unknown  string outputfilename_renderpattern  integer tail_checkbox
+
+As mentioned, Presets, who who are stored with by the menu "All settings" have both of these entries with the same presetname, all others only one of them.
+They will be shown in the Render-preset-menu accordingly.
+As soon, as they are in the reaper-render.ini, they will be shown the next time you click the Render-preset-button in the Render to File-dialog.
+
+Parameters:
+various_checkboxes - keeps various checkboxes in <RENDERPRESET
+                                   &1, Dither Master
+                                   &2, Noise shape master
+                                   &4, Dither Stems
+                                   &8, Noise shape stems
+                                   
+various_checkboxes2 - more various checkboxes in <RENDERPRESET
+                                   &4,  Multichannel tracks to multichannel files
+                                   &16, Tracks with only mono media to mono files
+                                   &256, Embed stretch markers/transient guides
+                                   
+offline_online_dropdownlist - keeps the offline/online-dropdownlist in <RENDERPRESET
+                                   0, Full-speed Offline
+                                   1, 1x Offline
+                                   2, Online Render
+                                   3, Online Render (Idle)
+                                   4, Offline Render (Idle)
+                                     
+resamplemode_dropdownlist - keeps resample-mode-dropdownlist in <RENDERPRESET
+                                   0, Medium (64pt Sinc)
+                                   1, Low (Linear Interpolation)
+                                   2, Lowest (Point Sampling)
+                                   3, Good (192pt Sinc)
+                                   4, Better (384pt Sinc)
+                                   5, Fast (IIR + Linear Interpolation)
+                                   6, Fast (IIR2 + Linear Interpolation)
+                                   7, Fast (16pt Sinc)
+                                   8, HQ (512pt Sinc)
+                                   9, Extreme HQ (768pt Sinc)
+
+bounds_dropdownlist - keeps the settings in the bounds-dropdownlist in RENDERPRESET_OUTPUT
+                                   0, Custom time range
+                                   1, Entire project
+                                   2, Time selection
+                                   3, Project regions
+                                   5, Selected regions
+                             
+source_dropdownlist_and_checkboxes - keeps: Source dropdownlist in RENDERPRESET_OUTPUT
+                                   0,  Master mix
+                                   1,  Master mix + stems
+                                   3,  Stems (selected tracks)
+                                   8,  Region render matrix
+                                   32,  Selected media items
+                                   64,  Selected media items via master
+                                   128, Selected tracks via master
+
+
+Some general notes on the Render-Presets:
+    - any changes in this file will be used by Reaper immediately, the next time the Presets-Button is 
+      hit in the Render to File dialog
+    
+    - Some settings aren't stored in presets:
+        Tail ms-inputbox - value will be added somehow to endposition
+        Silently increment filenames to avoid overwriting-checkbox
+        Add rendered items to new tracks in project-checkbox
+        Save copy of project to outfile.wav.RPP-checkbox
+        Delay queued render to allow samples to load-checkbox
+        Delay queued render seconds-input box - so you can't store the amount of seconds to wait before a queued render is processed
+        
+    - RENDERPRESET_OUTPUT - the purpose of parameter "integer unknown" is unknown, maybe legacy value of features who got removed?
+    
+    - string rendercfg - this parameter in <RENDERPRESET holds the output-fileformat-settings as Base64-encoded string, 
+                         refer to render-codes-decoded-base64-strings.txt for how they are constructed

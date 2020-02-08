@@ -1,6 +1,6 @@
-Render_Codes as of Reaper 5.965 as decoded Base64-strings.
+Render_Codes as of Reaper 6.02 as decoded Base64-strings.
 
-documented by Meo Mespotine, 13th of February 2019 - mespotine.de
+documented by Meo Mespotine, 19th of December 2019 - mespotine.de
 licensed creative commons cc-by-nc.
 
 
@@ -9,7 +9,7 @@ Fixed values will be shown as the value or the ASCII-value (e.g. space - value 3
 Flexible values are described and the possible values, that can be set at this position.
 Multibyte-values have the same description including value-range and which byte keeps the lowest values(0-255) and which the highest(2147483647 and such)
 
-Couldn't figure out encoding-scheme of float values.
+Float-values follow the standard IEEE-standard, that C uses, when casting int to floats.
 
 WAVE:
     01: e - value 101 Header
@@ -67,7 +67,9 @@ AIFF:
             16, 16 bit PCM
             24, 24 bit PCM
             32, 32 bit PCM
-    06: unused - value 0
+    06: Embed beat length, if exact - checkbox
+        0, unchecked
+        32, checked
     07: unused - value 0
     08: unused - value 0
 

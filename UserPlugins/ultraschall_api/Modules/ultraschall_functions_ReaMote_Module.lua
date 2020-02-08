@@ -71,8 +71,8 @@ function ultraschall.AutoSearchReaMoteSlaves()
   <chapter_context>
     ReaMote
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaMote_Module.lua</source_document>
   <tags>reamote, scan, search, slaves</tags>
 </US_DocBloc>
 --]]

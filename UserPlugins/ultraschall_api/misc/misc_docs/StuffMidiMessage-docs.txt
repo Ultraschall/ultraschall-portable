@@ -1,0 +1,227 @@
+Documentation on how to use the StuffMIDIMessage-function in Reaper's ReaScript.
+
+Documented by Meo Mespotine 12th of October 2019 - licensed under creative-commons-license CC-BY-NC
+
+
+A user had a request for Ultraschall, which involved sending MIDI-messages.
+And one of the things I looked at to solve the request, was the function StuffMIDIMessage.
+
+So, long story short: I documented, how StuffMIDIMessages works, so you can actually use it to its fullest.
+
+Lets' begin.
+
+## Background
+    One of the interesting things is, that Reaper doesn't differentiate between MIDI and keyboad-shortcuts, means, 
+    you can adress them both, as long as you choose the right message.
+    That means, you can send MIDI-messages, like notes, cc, pc, pitchbend, including velocity to different areas.
+    And even more, you can send MIDI-messages to be treated as "Actions started by MIDI-shortcut" to Reaper, too.
+    Another funfact: 
+        you can send midi AND computer-keyboard-shortcuts to the Add Shortcuts/Find Shortcuts-dialogs of the Actionslist.
+    
+    This mirrors, in parts, the way, KEY-shortcut-entries are stored in the reaper-kb.ini-file
+    
+    Reaper itself stores all its keyboard-shortcuts as well as MIDI-messages as 3 byte sequence:
+        
+        integer key_midi_modifier    integer key_midinote    integer velocity
+
+   * key_midi_modifier - tells Reaper, whether it is a MIDI-message or a keyboard shortcut. This is also the place to store the 
+                         Keyboard-modifiers, like Alt, Shift+Ctrl, Win, etc.
+                         How they are encoded is still somewhat odd and unclear, as they are influenced by the key_note-parameter as well.
+                         The MIDI-messages you can adress are notes, cc-messages, pc-messages and pitchbend. This modifier is also the
+                         place to store, which channel you want to adress.
+                         
+   Accepted Keyboard-modifiers:
+                * Odd Modifier-Values 1-127 (1, 3, 5, ..., 123, 125, 127)
+                  The Note/Key-Values go from 0-255 and include the Modifier, 
+                  means: modifier 0  key_midinote 65 is "nothing" "Shift+A"
+                
+                * Even Modifier-Values (0, 2, 4, 6, ..., 122, 124, 126)
+                    The Note/Key-Values are pure ASCII and go from 0-255 and don't(!) include the Modifier, 
+                    means: 5 65 is "Shift" "A"
+                    
+                * Special Modifier 255
+                    This modifier is the only one, that includes special modifiers, like MultiZoom, Mousewheel, Horizontal-Mousewheel, MediaKbd-keys
+                    The following Key/Note-Values are special:
+                    When MultiZoom is enabled in the Preferences->Keyboard/Multitouch-page:
+
+                    72=MultiZoom
+                    73=Ctrl+MultiZoom
+                    74=Alt+MultiZoom
+                    200=MultiZoom
+                    201=Ctrl+MultiZoom
+                    202=Alt+MultiZoom
+                    203=Ctrl+Alt+MultiZoom
+                    204=Shift+MultiZoom
+                    205=Ctrl+Shift+MultiZoom
+                    206=Alt+Shift+MultiZoom
+                    207=Ctrl+Alt+Shift+MultiZoom
+                    When MultiRotate is enabled in the Preferences->Keyboard/Multitouch-page:
+
+                    24=MultiRotate
+                    25=Ctrl+MultiRotate
+                    152=MultiRotate
+                    153=Ctrl+MultiRotate
+                    154=Alt+MultiRotate
+                    155=Ctrl+Alt+MultiRotate
+                    156=Shift+MultiRotate
+                    157=Ctrl+Shift+MultiRotate
+                    158=Alt+Shift+MultiRotate
+                    159=Ctrl+Alt+Shift+MultiRotate
+                    When MultiSwipe is enabled in the Preferences->Keyboard/Multitouch-page Multitouch-Swipe-Horizontal:
+
+                    40=MultiHorz
+                    168=MultiHorz
+                    169=Ctrl+MultiHorz
+                    170=Alt+MultiHorz
+                    171=Ctrl+Alt+MultiHorz
+                    172=Shift+MultiHorz
+                    173=Ctrl+Shift+MultiHorz
+                    174=Alt+Shift+MultiHorz
+                    175=Ctrl+Alt+Shift+MultiHorz
+                    Multitouch-Swipe-Vertical:
+
+                    56=MultiVert
+                    184=MultiVert
+                    185=Ctrl+MultiVert
+                    186=Alt+MultiVert
+                    187=Ctrl+Alt+MultiVert
+                    188=Shift+MultiVert
+                    189=Ctrl+Shift+MultiVert
+                    190=Alt+Shift+MultiVert
+                    191=Ctrl+Alt+Shift+MultiVert
+                    Horizontal Mousewheel:
+
+                    88=HorizWheel
+                    90=Alt+HorizWheel
+                    216=HorizWheel
+                    217=Ctrl+HorizWheel
+                    218=Alt+HorizWheel
+                    219=Ctrl+Alt+HorizWheel
+                    220=Shift+HorizWheel
+                    221=Ctrl+Shift+HorizWheel
+                    222=Alt+Shift+HorizWheel
+                    223=Ctrl+Alt+Shift+HorizWheel
+                    "normal" Mousewheel:
+
+                    120=Mousewheel
+                    121=Ctrl+Mousewheel
+                    122=Alt+Mousewheel
+                    123=Ctrl+Alt+Mousewheel
+                    125=Ctrl+Shift+Mousewheel
+                    248=Mousewheel
+                    249=Ctrl+Mousewheel
+                    250=Alt+Mousewheel
+                    251=Ctrl+Alt+Mousewheel
+                    252=Shift+Mousewheel
+                    253=Ctrl+Shift+Mousewheel
+                    254=Alt+Shift+Mousewheel
+                    255=Ctrl+Alt+Shift+Mousewheel
+   
+   Accepted MIDI-modifiers: 
+                MIDI Chan X Notes - modifiers 144(channel 1) to 159(channel 16)
+                MIDI Chan X CC    - modifiers 176(channel 1) to 191(channel 16)
+                MIDI Chan X PC    - modifiers 192(channel 1) to 207(channel 16)
+                MIDI Chan X Pitch - modifiers 224(channel 1) to 239(channel 16)
+      
+   There are more areas, who can store MIDI-messages, but they seem to be unused currently. They are seen by Reaper as hex-codes from 00 to ff.
+                MIDI unused  - modifiers 128 to 143, 160 to 175, 208 to 223, 240 to 254
+                         
+                         
+   * key_midinote - this is the place for the midi-note or the key-value.
+                    The MIDI-note is between 0 and 127; higher notes repeat the notes, means: 128=0, 129=1, etc
+                    The key-code is between 0 and 255; depending on the modifier, they mean different things(including keyboard modifiers or not including keyboard modifiers, see modifiers-description above)
+
+   * velocity - this is the velocity of the MIDI-message you want to send.
+                0, note off - use this to send MIDI-messages to Reaper itself, without triggering Effects/Instruments on tracks with MIDI-Input!
+                1-255, the velocity to send
+                
+                With keyboard-shortcuts(mode=1, in the Add/Find Shortcuts-dialog of the Actions-dialog), even values mean no keypress, odd values mean keypress.
+                Exception: modifier 255 and notevalue 232++ is various MediaKbd-keys, selected by the velocity-value
+                           This is a little bit tricky, as this stores the modifiers in the key_midinote and the MediaKbd-key in the velocity-value, unlike all other keyvalues.
+                
+                MediaKeyboard-Keys-modifier, as stored in the :
+                        For additional MediaKbd-modifier-combinations, add the following values to the key_midinote-Value:
+                        +1=Ctrl+
+                        +2=Alt+
+                        +3=Ctrl+Alt+
+                        +4=Shift+
+                        +5=Ctrl+Shift+
+                        +6=Alt+Shift+
+                        +7=Ctrl+Alt+Shift+
+                        example: "255, 233, 142" leads to "Special_Modifier, Ctrl +, MediaKbdBrowseHome"
+                
+                The velovity-values are valid
+                        0 MediaKbd??
+                        2 MediaKbdBrowse-
+                        4 MediaKbdBrowse+
+                        6 MediaKbdBrowseRefr
+                        8 MediaKbdBrowseStop
+                        10 MediaKbdBrowseSrch
+                        12 MediaKbdBrowseFav
+                        14 MediaKbdBrowseHome
+                        16 MediaKbdMute
+                        18 MediaKbdVol-
+                        20 MediaKbdVol+
+                        22 MediaKbdTrack+
+                        24 MediaKbdTrack-
+                        26 MediaKbdStop
+                        28 MediaKbdPlayPause
+                        30 MediaKbdMail
+                        32 MediaKbdMedia
+                        34 MediaKbdApp1
+                        36 MediaKbdApp2
+                        38 MediaKbdBass-
+                        40 MediaKbdBass++
+                        42 MediaKbdBass+
+                        44 MediaKbdTreble-
+                        46 MediaKbdTreble+
+                        48 MediaKbdMicMute
+                        50 MediaKbdMic-
+                        52 MediaKbdMic+
+                        54 MediaKbdHelp
+                        56 MediaKbdFind
+                        58 MediaKbdNew
+                        60 MediaKbdOpen
+                        62 MediaKbdClose
+                        64 MediaKbdSave
+                        66 MediaKbdPrint
+                        68 MediaKbdUndo
+                        70 MediaKbdRedo
+                        72 MediaKbdCopy
+                        74 MediaKbdCut
+                        76 MediaKbdPaste
+                        78 MediaKbdReply
+                        80 MediaKbdForward
+                        82 MediaKbdSend
+                        84 MediaKbdSpellChk
+                        86 MediaKbdCmdCtl
+                        88 MediaKbdMicOnOff
+                        90 MediaKbdCorrect
+                        92 MediaKbdPlay
+                        94 MediaKbdPause
+                        96 MediaKbdRecord
+                        98 MediaKbdFF
+                        100 MediaKbdRew
+                        102 MediaKbdChan+
+                        104 MediaKbdChan-
+                        
+## The Function
+
+The function itself has 4 parameters, with one for the destination of the MIDI message, and three for the MIDI message itself:
+
+    reaper.StuffMIDIMessage(integer destination, integer key_midi_modifier, integer key_midi_note, integer velocity)
+
+
+The destination is for the Key/MIDI-message destination, means, where it's sent to.
+This is also the parameter to set, if you want to send MIDI-Messages/Keyboard-Shortcuts(latter only in Add Shortcut-dialog) to Reaper itself(mode==1)!
+
+    0 for Virtual Keyboard          - use this to send MIDI-messages to tracks, who have VKB or MIDI as input-device, the key_midi_modifier decides, which channel
+    1 for control (actions map etc) - use this to send Keyboard Shortcuts/MIDI-Messages to the Add/Find Shortcuts-dialog in the actions-list, as well as MIDI-Shortcuts to Reaper itself.
+    2 for VKB-on-current-channel    - use this to send MIDI-messages to the MIDI-channel, currently selected in the VirtualKeyBoard, key_midi_modifier will be ignored
+    3-15                            - seem to be unused...
+    
+to address other MIDI-hardware:
+    16 for external MIDI device 0   
+    17 for external MIDI device 1, etc; see GetNumMIDIOutputs, GetMIDIOutputName.
+    
+    
