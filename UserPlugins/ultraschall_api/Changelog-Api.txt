@@ -4,6 +4,7 @@
     Soundboard-FadeIn
     
     For 4.01betas:
+    Na gfx.getdropfile ist ja cool. Aber Feature-Request: die x/y Koordinaten wenn losgelassen wurde
     
     GetProjectLength - should return the last envelope-point-position as well(how to do that for pooled items?)
     
@@ -211,9 +212,24 @@ TODO!! buggy function
    - Subtitles: ReadSubtitles\_VTT - imports a webvtt-subtitlefile
    - Web Interface: WebInterface_GetInstalledInterfaces - returns all installed webinterfaces(webrc) of the current Reaper installation, custom and Reaper-defaults
    
+
+   
 </TODO>
 
+
 ## Ultraschall Framework - Changelog
+
+### 4.00 - "Aphrodite's Child - Four Horsemen"
+
+#### Changes from Beta 2.9 to Final
+   - API: GetApiVersion - returns now the build-number as well
+   - API: Reapack-API-xml-generator.lua - fixed filename-creation for non-beta-versions
+   - FileManagement: CheckForValidFileFormats - improved check for jpg and jpg with exif-metadata
+   - FXManagement: SetFXStateChunk - allows now adding FXStateChunks to StateChunks with no existing FXStateChunk as well; didn't add FXStateChunks correctly under some circumstances -> fixed(thanks to XRaym)
+   - Image Handling: CaptureScreenAreaAsPNG - doesn't work on Mac under some still unknown circumstances
+   - Image Handling: CaptureWindowAsPNG - doesn't work on Mac under some still unknown circumstances
+   
+---
 
 ### 4.00 Beta 2.9: - "Gentle Giant - Two weeks in Spain"
 
