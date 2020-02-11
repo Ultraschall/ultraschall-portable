@@ -262,6 +262,7 @@ function buildGui()
 
   markertable = build_markertable()
   tablesort = makeSortedTable(markertable)
+  ultraschall.RenumerateMarkers(0x666666|0x1000000, 1) -- nur die normalen, keine Edit oder planned
 
   GUI.elms = {}
 
