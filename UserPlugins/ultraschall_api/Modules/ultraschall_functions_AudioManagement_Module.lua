@@ -77,8 +77,8 @@ function ultraschall.GetHWInputs_Aliasnames()
     <chapter_context>
       Audio Management
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_AudioManagement_Module.lua</source_document>
     <tags>audiomanagement, get, alias, names, input, channels</tags>
   </US_DocBloc>
   ]]
@@ -125,8 +125,8 @@ function ultraschall.GetHWOutputs_Aliasnames()
     <chapter_context>
       Audio Management
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_AudioManagement_Module.lua</source_document>
     <tags>audiomanagement, get, alias, names, output, channels</tags>
   </US_DocBloc>
   ]]

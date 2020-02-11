@@ -30,7 +30,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 defer_identifier = "hallo"
 
-local function triggermagicrouting()
+function triggermagicrouting()
 
 	-- prüft, ob eine Aktualisierung der Matrix notwendig ist. Dies ist der Fall wenn entweder
 	-- A) Der MagicRouting Button gerade frisch gedrückt wurde (einmaliger Check) oder sich
@@ -67,11 +67,11 @@ local function triggermagicrouting()
 end
 
 
-local function checkrouting()
+function checkrouting()
 
 	if triggermagicrouting() then -- wird ein Update der Matrix wirklich benötigt?
 
-		local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
+		retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
 
 		if step == "preshow" then
 			commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Preshow")
@@ -86,8 +86,8 @@ local function checkrouting()
 
 	end
 
-  retval, defer_identifier = ultraschall.Defer1(checkrouting, 2, 1)
-	return defer_identifier
+    ultraschall.Defer(checkrouting, "Check Routing Defer", 2, 1)
+	return "Check Routing Defer"
 
 end
 

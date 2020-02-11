@@ -78,8 +78,8 @@ function ultraschall.GetTrackStateChunk_Tracknumber(tracknumber)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstatechunk, get</tags>
 </US_DocBloc>
 ]]
@@ -96,6 +96,58 @@ function ultraschall.GetTrackStateChunk_Tracknumber(tracknumber)
   end
 
   return reaper.GetTrackStateChunk(Track, "", false)
+end
+
+function ultraschall.GetTrackState_NumbersOnly(state, TrackStateChunk, functionname, numbertoggle)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrackState_NumbersOnly</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>table values = ultraschall.GetTrackState_NumbersOnly(string state, optional string TrackStateChunk, optional string functionname, optional boolean numbertoggle)</functioncall>
+  <description>
+    returns a state of a TrackStateChunk.
+    
+    It only supports single-entry-states with numbers/integers, separated by spaces!
+    All other values will be set to nil and strings with spaces will produce weird results!
+    
+    returns nil in case of an error
+  </description>
+  <parameters>
+    string state - the state, whose attributes you want to retrieve
+    string TrackStateChunk - a statechunk of a track
+    optional string functionname - if this function is used within specific gettrackstate-functions, pass here the "host"-functionname, so error-messages will reflect that
+    optional boolean numbertoggle - true or nil; converts all values to numbers; false, keep them as string versions
+  </parameters>
+  <retvals>
+    table values - all values found as numerical indexed array
+  </retvals>
+  <chapter_context>
+    Track Management
+    Get Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
+  <tags>trackmanagement, get, state, trackstatechunk</tags>
+</US_DocBloc>
+]]
+  if functionname~=nil and type(functionname)~="string" then ultraschall.AddErrorMessage(functionname,"functionname", "Must be a string or nil!", -6) return nil end
+  if functionname==nil then functionname="GetTrackState_NumbersOnly" end
+  if type(state)~="string" then ultraschall.AddErrorMessage(functionname, "state", "Must be a string", -7) return nil end
+  if projectfilename_with_path==nil and ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage(functionname,"TrackStateChunk", "No valid TrackStateChunk!", -2) return nil end
+  
+  TrackStateChunk=TrackStateChunk:match(state.." (.-)\n")
+  if TrackStateChunk==nil then return end
+  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(TrackStateChunk, " ")
+  if numbertoggle~=false then
+    for i=1, count do
+      individual_values[i]=tonumber(individual_values[i])
+    end
+  end
+  return table.unpack(individual_values)
 end
 
 --------------------------
@@ -130,8 +182,8 @@ function ultraschall.GetTrackName(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, name, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -184,27 +236,14 @@ function ultraschall.GetTrackPeakColorState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackcolor, color, get, state, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameter
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackPeakColorState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-    --get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackPeakColorState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  -- get peakcolor-state
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackPeakColorState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  str=str:match("PEAKCOL(%s.-)%c").." "
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("PEAKCOL", str, "GetTrackPeakColorState", true)
 end
 
 --A=ultraschall.GetTrackPeakColorState(2)
@@ -237,29 +276,14 @@ function ultraschall.GetTrackBeatState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, beat, get, state, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameter
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackBeatState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackBeatState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  
-  -- get beatstate
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackBeatState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end        
-  str=str:match("BEAT(%s.-)%c").." "
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("BEAT", str, "GetTrackBeatState", true)
 end
 
 --A=ultraschall.GetTrackBeatState(1)
@@ -283,7 +307,7 @@ function ultraschall.GetTrackAutoRecArmState(tracknumber, str)
     returns nil in case of an error
   </description>
   <retvals>
-    integer AutoRecArmState  - state of autorecarm; 1 for set; nil if unset
+    integer AutoRecArmState  - state of autorecarm; 1 for set; nil, if unset
   </retvals>
   <parameters>
     integer tracknumber - number of the track, beginning with 1; 0 for master track; -1, if you want to use the parameter TrackStateChunk instead.
@@ -293,30 +317,14 @@ function ultraschall.GetTrackAutoRecArmState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, autorecarm, rec, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackAutoRecArmState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackAutoRecArmState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackAutoRecArmState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-    
-  -- get recarm
-  str=str:match("AUTO_RECARM(%s.-)%c")
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("AUTO_RECARM", str, "GetTrackAutoRecArmState", true)
 end
 
 --A=ultraschall.GetTrackAutoRecArmState(1)
@@ -351,32 +359,14 @@ function ultraschall.GetTrackMuteSoloState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, mute, solo, solodefeat, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackMuteSoloState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackMuteSoloState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackMuteSoloState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get mutesolo-state
-  str=str:match("MUTESOLO(%s.-)%c")
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("MUTESOLO", str, "GetTrackMuteSoloState", true)
 end
 
 --A1,A2,A3 = ultraschall.GetTrackMuteSoloState(1)
@@ -409,32 +399,15 @@ function ultraschall.GetTrackIPhaseState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, iphase, phase, button, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackIPhaseState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-    
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackIPhaseState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackIPhaseState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-
-  -- get iphase-state
-  str=str:match("IPHASE(%s.-)%c")
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("IPHASE", str, "GetTrackIPhaseState", true)
 end
-
 --A=ultraschall.GetTrackIPhaseState(1)
 
 function ultraschall.GetTrackIsBusState(tracknumber, str)
@@ -472,34 +445,16 @@ function ultraschall.GetTrackIsBusState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, busstate, folder, subfolders, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackIsBusState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackIsBusState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackIsBusState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get busstate
-  str=str:match("ISBUS(%s.-)%c")
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("ISBUS", str, "GetTrackIsBusState", true)
 end
 
---A1,A2=ultraschall.GetTrackIsBusState(1)
 
 function ultraschall.GetTrackBusCompState(tracknumber, str)
 --[[
@@ -507,10 +462,10 @@ function ultraschall.GetTrackBusCompState(tracknumber, str)
   <slug>GetTrackBusCompState</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=5.40
+    Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>number BusCompState1, number BusCompState2 = ultraschall.GetTrackBusCompState(integer tracknumber, optional string TrackStateChunk)</functioncall>
+  <functioncall>number BusCompState1, number BusCompState2, number BusCompState3, number BusCompState4, number BusCompState5 = ultraschall.GetTrackBusCompState(integer tracknumber, optional string TrackStateChunk)</functioncall>
   <description>
     returns BusCompState, if the tracks in a folder are compacted or not.
     
@@ -521,6 +476,9 @@ function ultraschall.GetTrackBusCompState(tracknumber, str)
   <retvals>
     number BusCompState1 - 0 - no compacting, 1 - compacted tracks, 2 - minimized tracks
     number BusCompState2 - 0 - unknown,1 - unknown
+    number BusCompState3 - 0 - unknown,1 - unknown
+    number BusCompState4 - 0 - unknown,1 - unknown
+    number BusCompState5 - 0 - unknown,1 - unknown
   </retvals>
   <parameters>
     integer tracknumber - number of the track, beginning with 1; 0 for master track; -1, if you want to use the parameter TrackStateChunk instead.
@@ -530,31 +488,14 @@ function ultraschall.GetTrackBusCompState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, busstate, folder, subfolders, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackBusCompState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack        
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackBusCompState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackBusCompState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get buscompstate
-  str=str:match("BUSCOMP(%s.-)%c")
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("BUSCOMP", str, "GetTrackBusCompState", true)
 end
 
 --A,A2=ultraschall.GetTrackBusCompState(1)
@@ -594,41 +535,15 @@ function ultraschall.GetTrackShowInMixState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, mixer, show, mcp, tcp, fx, visible, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackShowInMixState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackShowInMixState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackShowInMixState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get showinmix-state
-  str=str:match("SHOWINMIX(%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s(.-)%s")),
-         
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s.-%s.-%s.-%s(.-)%s"))
-end  
-
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("SHOWINMIX", str, "GetTrackShowInMixState", true)
+end
 --A1,A2,A3,A4,A5,A6,A7,A8=ultraschall.GetTrackShowInMixState(2)
 
 function ultraschall.GetTrackFreeModeState(tracknumber, str)
@@ -659,31 +574,14 @@ function ultraschall.GetTrackFreeModeState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackfreemode, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackFreeModeState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackFreeModeState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackFreeModeState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get freemode-state
-  str=str:match("FREEMODE(%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("FREEMODE", str, "GetTrackFreeModeState", true)
 end
 
 --A=ultraschall.GetTrackFreeModeState(2)
@@ -762,40 +660,15 @@ function ultraschall.GetTrackRecState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, midi, recordingpath, path, input, recinput, pdc, monitor, arm, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackRecState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackRecState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackRecState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get rec-state
-  str=str:match("REC(%s.-)%c")
-  -- L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s(.-)%s")),
-         
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s.-%s.-%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("REC", str, "GetTrackRecState", true)
 end
-
 
 function ultraschall.GetTrackVUState(tracknumber, str)
 -- returns 0 if MultiChannelMetering is off
@@ -827,31 +700,14 @@ function ultraschall.GetTrackVUState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, vu, metering, meter, multichannel, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackVUState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackVUState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackVUState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get VU-state
-  str=str:match("VU(%s.-)%c")
-  -- L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("VU", str, "GetTrackVUState", true)
 end
 
 function ultraschall.GetTrackHeightState(tracknumber, str)
@@ -884,38 +740,14 @@ function ultraschall.GetTrackHeightState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, height, compact, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackHeightState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackHeightState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if type(str)~="string" or str:match("<TRACK.*>")==nil then 
-    ultraschall.AddErrorMessage("GetTrackHeightState", "TrackStateChunk", "no valid TrackStateChunk", -3) 
-    return nil 
-  end
-  
-  -- get trackheight-state
-  str=str:match("(TRACKHEIGHT%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("TRACKHEIGHT", str, "GetTrackHeightState", true)
 end
     
 --A,B,C=ultraschall.GetTrackHeightState(1)
@@ -955,41 +787,15 @@ function ultraschall.GetTrackINQState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, inq, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackINQState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackINQState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackINQState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get INQ-state
-  str=str:match("(INQ%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s(.-)%s")),
-         
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s.-%s.-%s.-%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("INQ", str, "GetTrackINQState", true)
 end
-
 
 function ultraschall.GetTrackNChansState(tracknumber, str)
 --[[
@@ -1019,31 +825,14 @@ function ultraschall.GetTrackNChansState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, channels, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackNChansState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-    
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackNChansState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackNChansState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-    
-  -- get Nchans-state
-  str=str:match("(NCHAN%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("NCHAN", str, "GetTrackNChansState", true)
 end
 
 
@@ -1075,33 +864,16 @@ function ultraschall.GetTrackBypFXState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, bypass, fx, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackBypFXState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackBypFXState", "tracknumber", "no such track", -2) return nil end
-
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackBypFXState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get bypFX-state
-  str=str:match("(FX%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("FX", str, "GetTrackBypFXState", true)
 end
+
 
 
 function ultraschall.GetTrackPerfState(tracknumber, str)
@@ -1137,31 +909,14 @@ function ultraschall.GetTrackPerfState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, trackperformance, fx, buffering, media, anticipative, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackPerfState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackPerfState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackPerfState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get perf-state
-  str=str:match("(PERF%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("PERF", str, "GetTrackPerfState", true)
 end
 
 function ultraschall.GetTrackMIDIOutState(tracknumber, str)
@@ -1197,32 +952,15 @@ function ultraschall.GetTrackMIDIOutState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, midi, outstate, routing, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackMIDIOutState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-    
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackMIDIOutState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackMIDIOutState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get MIDIout-state
-  str=str:match("(MIDIOUT%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))end
-
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("MIDIOUT", str, "GetTrackMIDIOutState", true)
+end
 
 function ultraschall.GetTrackMainSendState(tracknumber, str)
 --[[
@@ -1253,31 +991,14 @@ function ultraschall.GetTrackMainSendState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, parent, channel, send, main, routing, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackMainSendState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-    local tr
-    if tracknumber==0 then
-      tr=reaper.GetMasterTrack(0)
-    else
-      tr=reaper.GetTrack(0,0)
-    end
-    return math.floor(reaper.GetMediaTrackInfo_Value(tr, "B_MAINSEND")), math.floor(reaper.GetMediaTrackInfo_Value(tr, "C_MAINSEND_OFFS"))
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackMainSendState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get mainsend-state
-  str=str:match("(MAINSEND%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("MAINSEND", str, "GetTrackMainSendState", true)
 end
 
 --A,AA= ultraschall.GetTrackMainSendState(-1,"")
@@ -1387,8 +1108,8 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, group, groupstate, individual, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1528,8 +1249,8 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, group, groupstate, individual, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1593,33 +1314,16 @@ function ultraschall.GetTrackLockState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, lockstate, locked, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackLockState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackLockState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackLockState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-
-  -- get lock-state  
-  str=str:match("(LOCK%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  str=str:match("(.-)<ITEM")
+  return ultraschall.GetTrackState_NumbersOnly("LOCK", str, "GetTrackLockState", true)
 end
-
 
 function ultraschall.GetTrackLayoutNames(tracknumber, str)
 --[[
@@ -1650,8 +1354,8 @@ function ultraschall.GetTrackLayoutNames(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, theme, layout, name, mcp, tcp, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1716,31 +1420,15 @@ function ultraschall.GetTrackAutomodeState(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, automode, envelopes, automation, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackAutomodeState", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackAutomodeState", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackAutomodeState", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get automode-state
-  str=str:match("(AUTOMODE%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  --str=str:match("(.-)<ITEM")
+  return ultraschall.GetTrackState_NumbersOnly("AUTOMODE", str, "GetTrackAutomodeState", true)
 end
 
 function ultraschall.GetTrackIcon_Filename(tracknumber, str)
@@ -1771,8 +1459,8 @@ function ultraschall.GetTrackIcon_Filename(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, graphics, image, icon, trackicon, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1829,8 +1517,8 @@ function ultraschall.GetTrackRecCFG(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, reccfg, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -1885,29 +1573,15 @@ function ultraschall.GetTrackMidiInputChanMap(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, midi, input, chanmap, channelmap, channel, mapping, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackMidiInputChanMap", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackMidiInputChanMap", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackMidiInputChanMap", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-  
-  -- get midi-input-chanmap
-  local Track_MidiChanMap=str:match("MIDI_INPUT_CHANMAP (.-)%c")
-  return tonumber(Track_MidiChanMap)
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  --str=str:match("(.-)<ITEM")
+  return ultraschall.GetTrackState_NumbersOnly("MIDI_INPUT_CHANMAP", str, "GetTrackMidiInputChanMap", true)
 end
 
 function ultraschall.GetTrackMidiCTL(tracknumber, str)
@@ -1939,32 +1613,15 @@ function ultraschall.GetTrackMidiCTL(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, midi, channel, linked, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackMidiCTL", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackMidiCTL", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackMidiCTL", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-    
-  -- get midi ctl
-  str=str:match("(MIDICTL%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  --str=str:match("(.-)<ITEM")
+  return ultraschall.GetTrackState_NumbersOnly("MIDICTL", str, "GetTrackMidiCTL", true)
 end
 
 function ultraschall.GetTrackWidth(tracknumber, str)
@@ -1997,32 +1654,16 @@ function ultraschall.GetTrackWidth(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, width, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackWidth", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackWidth", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackWidth", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-    
-  -- get widtch-state
-  str=str:match("(WIDTH%s.-)%c")
-  local L=str
-  if str==nil then return 1 end
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  --str=str:match("(.-)<ITEM")
+  retval=ultraschall.GetTrackState_NumbersOnly("WIDTH", str, "GetTrackWidth", true)
+  if retval==nil then return 1 else return retval end
 end
 
 function ultraschall.GetTrackPanMode(tracknumber, str)
@@ -2058,31 +1699,15 @@ function ultraschall.GetTrackPanMode(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, panmode, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackPanMode", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackPanMode", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackPanMode", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-    
-  -- get panmode-state
-  str=str:match("(PANMODE%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  --str=str:match("(.-)<ITEM")
+  return ultraschall.GetTrackState_NumbersOnly("PANMODE", str, "GetTrackPanMode", true)
 end
 
 function ultraschall.GetTrackMidiColorMapFn(tracknumber, str)
@@ -2113,8 +1738,8 @@ function ultraschall.GetTrackMidiColorMapFn(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, midicolormap, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2166,8 +1791,8 @@ function ultraschall.GetTrackMidiBankProgFn(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, midibankprog, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2221,8 +1846,8 @@ function ultraschall.GetTrackMidiTextStrFn(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, MidiTextStrFn, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2275,8 +1900,8 @@ function ultraschall.GetTrackID(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, trackid, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2331,34 +1956,15 @@ function ultraschall.GetTrackScore(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, get, score, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackScore", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackScore", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackScore", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-    
-  -- get score
-  str=str:match("(SCORE%s.-)%c")
-  local L=str
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  --str=str:match("(.-)<ITEM")
+  return ultraschall.GetTrackState_NumbersOnly("SCORE", str, "GetTrackScore", true)
 end
 
 function ultraschall.GetTrackVolPan(tracknumber, str)
@@ -2396,35 +2002,15 @@ function ultraschall.GetTrackVolPan(tracknumber, str)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, get, vol, pan, override, panlaw, trackstatechunk</tags>
 </US_DocBloc>
 --]]
-  -- check parameters
-  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("GetTrackVolPan", "tracknumber", "must be an integer", -1) return nil end
-  if tracknumber~=-1 then
-  
-    -- get trackstatechunk
-    local retval, MediaTrack
-    if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetTrackVolPan", "tracknumber", "no such track", -2) return nil end
-      if tracknumber==0 then MediaTrack=reaper.GetMasterTrack(0)
-      else MediaTrack=reaper.GetTrack(0, tracknumber-1)
-      end
-      retval, str = ultraschall.GetTrackStateChunk(MediaTrack, "test", false)
-  else
-  end
-  if str==nil or str:match("<TRACK.*>")==nil then ultraschall.AddErrorMessage("GetTrackVolPan", "TrackStateChunk", "no valid TrackStateChunk", -3) return nil end
-    
-  -- get track-vol-pan-state
-  str=str:match("(VOLPAN%s.-)%c")
-
-  if str~=nil then str=str.." " else return nil end
-  return tonumber(str:match("%s(.-)%s")),
-         tonumber(str:match("%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s(.-)%s")),
-         tonumber(str:match("%s.-%s.-%s.-%s.-%s(.-)%s"))
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  --str=str:match("(.-)<ITEM")
+  return ultraschall.GetTrackState_NumbersOnly("VOLPAN", str, "GetTrackVolPan", true)
 end
 
 --------------------------
@@ -2459,8 +2045,8 @@ function ultraschall.SetTrackName(tracknumber, name, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, name, set, state, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2526,8 +2112,8 @@ function ultraschall.SetTrackPeakColorState(tracknumber, colorvalue, TrackStateC
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, color, state, set, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2597,8 +2183,8 @@ function ultraschall.SetTrackBeatState(tracknumber, beatstate, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, beat, state, set, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2665,8 +2251,8 @@ function ultraschall.SetTrackAutoRecArmState(tracknumber, autorecarmstate, Track
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, autorecarm, rec, arm, track, set, state, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2738,8 +2324,8 @@ function ultraschall.SetTrackMuteSoloState(tracknumber, Mute, Solo, SoloDefeat, 
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, mute, solo, solo defeat, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2810,8 +2396,8 @@ function ultraschall.SetTrackIPhaseState(tracknumber, iphasestate, TrackStateChu
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, set, track, state, iphase, phase, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2883,8 +2469,8 @@ function ultraschall.SetTrackIsBusState(tracknumber, busstate1, busstate2, Track
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, busstate, folder, subfolder, compactible, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -2951,8 +2537,8 @@ function ultraschall.SetTrackBusCompState(tracknumber, buscompstate1, buscompsta
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, compacting, busstate, folder, minimize, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3026,8 +2612,8 @@ function ultraschall.SetTrackShowInMixState(tracknumber, MCPvisible, MCP_FX_visi
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, state, set, show in mix, mcp, fx, tcp, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3103,8 +2689,8 @@ function ultraschall.SetTrackFreeModeState(tracknumber, freemodestate, TrackStat
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, trackfree, item, positioning, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3215,8 +2801,8 @@ function ultraschall.SetTrackRecState(tracknumber, ArmState, InputChannel, Monit
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, armstate, inputchannel, monitorinput, recinput, monitorwhilerec, pdc, recordingpath, midi, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3292,8 +2878,8 @@ function ultraschall.SetTrackVUState(tracknumber, VUState, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, armstate, vu, metering, multichannel, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3366,8 +2952,8 @@ function ultraschall.SetTrackHeightState(tracknumber, heightstate1, heightstate2
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, trackheight, height, compact, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3454,8 +3040,8 @@ function ultraschall.SetTrackINQState(tracknumber, INQ1, INQ2, INQ3, INQ4, INQ5,
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, inq, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3529,8 +3115,8 @@ function ultraschall.SetTrackNChansState(tracknumber, NChans, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, channels, number, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3599,8 +3185,8 @@ function ultraschall.SetTrackBypFXState(tracknumber, FXBypassState, TrackStateCh
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, track, set, fx, bypass, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3673,8 +3259,8 @@ function ultraschall.SetTrackPerfState(tracknumber, Perf, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, state, set, fx, performance, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3748,8 +3334,8 @@ function ultraschall.SetTrackMIDIOutState(tracknumber, MIDIOutState, TrackStateC
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, state, set, midi, midiout, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3818,8 +3404,8 @@ function ultraschall.SetTrackMainSendState(tracknumber, MainSendOn, ParentChanne
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, state, set, mainsend, parent channels, parent, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3891,8 +3477,8 @@ function ultraschall.SetTrackLockState(tracknumber, LockedState, TrackStateChunk
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, lock, state, set, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -3961,8 +3547,8 @@ function ultraschall.SetTrackLayoutNames(tracknumber, TCP_Layoutname, MCP_Layout
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, state, set, mcp, tcp, layout, mixer, trackcontrol, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4031,8 +3617,8 @@ function ultraschall.SetTrackAutomodeState(tracknumber, automodestate, TrackStat
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, automode, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4100,8 +3686,8 @@ function ultraschall.SetTrackIcon_Filename(tracknumber, Iconfilename_with_path, 
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, state, track, set, trackicon, image, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4168,8 +3754,8 @@ function ultraschall.SetTrackMidiInputChanMap(tracknumber, InputChanMap, TrackSt
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, input, chanmap, channelmap, midi, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4238,8 +3824,8 @@ function ultraschall.SetTrackMidiCTL(tracknumber, LinkedToMidiChannel, unknown, 
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, linked, midi, midichannel, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4308,8 +3894,8 @@ function ultraschall.SetTrackID(tracknumber, TrackID, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, guid, trackid, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4380,8 +3966,8 @@ function ultraschall.SetTrackMidiColorMapFn(tracknumber, MIDI_ColorMapFN, TrackS
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, midi, colormap, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4451,8 +4037,8 @@ function ultraschall.SetTrackMidiBankProgFn(tracknumber, MIDIBankProgFn, TrackSt
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, midi, bank, prog, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4520,8 +4106,8 @@ function ultraschall.SetTrackMidiTextStrFn(tracknumber, MIDITextStrFn, TrackStat
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, midi, text, str, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4597,8 +4183,8 @@ function ultraschall.SetTrackPanMode(tracknumber, panmode, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, panmode, pan, balance, dual pan, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4667,8 +4253,8 @@ function ultraschall.SetTrackWidth(tracknumber, width, TrackStateChunk)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, width, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4741,8 +4327,8 @@ function ultraschall.SetTrackScore(tracknumber, unknown1, unknown2, unknown3, un
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, score, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4817,8 +4403,8 @@ function ultraschall.SetTrackVolPan(tracknumber, vol, pan, overridepanlaw, unkno
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, vol, pan, override, panlaw, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4894,8 +4480,8 @@ function ultraschall.SetTrackRecCFG(tracknumber, reccfg_string, reccfg_nr, Track
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, track, set, state, reccfg, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -4959,8 +4545,8 @@ function ultraschall.GetAllLockedTracks()
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstring, lock, lockstate, lockedstate, locked, get</tags>
 </US_DocBloc>
 ]]
@@ -4996,8 +4582,8 @@ function ultraschall.GetAllSelectedTracks()
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstring, selection, unselect, select, get</tags>
 </US_DocBloc>
 ]]
@@ -5044,8 +4630,8 @@ function ultraschall.GetTrackSelection_TrackStateChunk(TrackStateChunk)
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, selection, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -5057,7 +4643,6 @@ function ultraschall.GetTrackSelection_TrackStateChunk(TrackStateChunk)
   local Track_Name=str:match(".-SEL (.-)%c.-REC")
   return tonumber(Track_Name)
 end
-
 
 function ultraschall.SetTrackSelection_TrackStateChunk(selection_state, TrackStateChunk)
 -- returns the trackname as a string
@@ -5090,8 +4675,8 @@ function ultraschall.SetTrackSelection_TrackStateChunk(selection_state, TrackSta
     Track Management
     Get Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, selection, state, get, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -5133,8 +4718,8 @@ function ultraschall.SetAllTracksSelected(selected)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, tracks, get, selected</tags>
 </US_DocBloc>
 ]]
@@ -5174,8 +4759,8 @@ function ultraschall.SetTracksSelected(trackstring, reset)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, tracks, get, selected</tags>
 </US_DocBloc>
 ]]
@@ -5222,8 +4807,8 @@ function ultraschall.SetTracksToLocked(trackstring, reset)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstring, lock, lockstate, lockedstate, locked, set</tags>
 </US_DocBloc>
 ]]
@@ -5269,8 +4854,8 @@ function ultraschall.SetTracksToUnlocked(trackstring)
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstring, lock, lockstate, lockedstate, locked, set, unlock, unlocked</tags>
 </US_DocBloc>
 ]]
@@ -5312,8 +4897,8 @@ function ultraschall.SetTrackStateChunk_Tracknumber(tracknumber, trackstatechunk
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, trackstatechunk, set</tags>
 </US_DocBloc>
 ]]
@@ -5396,8 +4981,8 @@ function ultraschall.SetTrackGroupFlagsState(tracknumber, groups_bitfield_table,
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, groupflag, group, set, state, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]
@@ -5514,8 +5099,8 @@ function ultraschall.SetTrackGroupFlags_HighState(tracknumber, groups_bitfield_t
     Track Management
     Set Track States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
   <tags>trackmanagement, groupflag, group, set, state, track, trackstatechunk</tags>
 </US_DocBloc>
 --]]

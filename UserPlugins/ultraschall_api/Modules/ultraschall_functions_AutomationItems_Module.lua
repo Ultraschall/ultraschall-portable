@@ -80,8 +80,8 @@ function ultraschall.GetProject_AutomationItemStateChunk(projectfilename_with_pa
   <chapter_context>
     Automation Items
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
   <tags>automationitems, get, automation, statechunk, projectstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -136,8 +136,8 @@ function ultraschall.GetProject_CountAutomationItems(projectfilename_with_path, 
   <chapter_context>
     Automation Items
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
   <tags>automationitems, count, automation, statechunk, projectstatechunk</tags>
 </US_DocBloc>
 ]]

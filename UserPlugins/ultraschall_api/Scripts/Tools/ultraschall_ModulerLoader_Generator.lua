@@ -72,7 +72,7 @@ end
 
 ultraschall.Modules_List={]]..ModulesList..[[}
 
-if ultraschall.US_BetaFunctions=="ON" then
+if ultraschall.US_BetaFunctions==true then
   -- if beta-functions are available, load all functions from all modules
   local found_files=0
   local files_array2={}

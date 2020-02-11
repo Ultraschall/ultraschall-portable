@@ -77,8 +77,8 @@ function ultraschall.GetItemPosition(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, position</tags>
 </US_DocBloc>
 ]]
@@ -128,8 +128,8 @@ function ultraschall.GetItemLength(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, length</tags>
 </US_DocBloc>
 ]]
@@ -177,8 +177,8 @@ function ultraschall.GetItemSnapOffset(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, snap, offset</tags>
 </US_DocBloc>
 ]]
@@ -228,8 +228,8 @@ function ultraschall.GetItemLoop(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, loop</tags>
 </US_DocBloc>
 ]]
@@ -278,8 +278,8 @@ function ultraschall.GetItemAllTakes(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, alltakes, all, takes</tags>
 </US_DocBloc>
 ]]
@@ -332,8 +332,8 @@ function ultraschall.GetItemFadeIn(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, fade in</tags>
 </US_DocBloc>
 ]]
@@ -393,8 +393,8 @@ function ultraschall.GetItemFadeOut(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, fade out</tags>
 </US_DocBloc>
 ]]
@@ -449,8 +449,8 @@ function ultraschall.GetItemMute(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, fade out</tags>
 </US_DocBloc>
 ]]
@@ -506,8 +506,8 @@ function ultraschall.GetItemFadeFlag(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, autofade</tags>
 </US_DocBloc>
 ]]
@@ -563,8 +563,8 @@ function ultraschall.GetItemLock(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, lock</tags>
 </US_DocBloc>
 ]]
@@ -621,8 +621,8 @@ function ultraschall.GetItemSelected(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, selected</tags>
 </US_DocBloc>
 ]]
@@ -679,8 +679,8 @@ function ultraschall.GetItemGroup(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, group</tags>
 </US_DocBloc>
 ]]
@@ -735,8 +735,8 @@ function ultraschall.GetItemIGUID(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, guid, iguid</tags>
 </US_DocBloc>
 ]]
@@ -790,8 +790,8 @@ function ultraschall.GetItemIID(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, iid</tags>
 </US_DocBloc>
 ]]
@@ -845,8 +845,8 @@ function ultraschall.GetItemName(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, name</tags>
 </US_DocBloc>
 ]]
@@ -901,8 +901,8 @@ function ultraschall.GetItemVolPan(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, volume, pan</tags>
 </US_DocBloc>
 ]]
@@ -958,8 +958,8 @@ function ultraschall.GetItemSampleOffset(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, sample, offset</tags>
 </US_DocBloc>
 ]]
@@ -2655,8 +2655,8 @@ function ultraschall.GetItemPlayRate(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, playrate, pitch</tags>
 </US_DocBloc>
 ]]
@@ -2723,8 +2723,8 @@ function ultraschall.GetItemChanMode(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, channel, mode</tags>
 </US_DocBloc>
 ]]
@@ -2779,8 +2779,8 @@ function ultraschall.GetItemGUID(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, guid</tags>
 </US_DocBloc>
 ]]
@@ -2826,8 +2826,8 @@ function ultraschall.GetItemRecPass(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, recpass</tags>
 </US_DocBloc>
 ]]
@@ -2885,8 +2885,8 @@ function ultraschall.GetItemBeat(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, beat, timebase</tags>
 </US_DocBloc>
 ]]
@@ -2945,8 +2945,8 @@ function ultraschall.GetItemMixFlag(MediaItem, statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, itemmix behavior</tags>
 </US_DocBloc>
 ]]
@@ -3003,8 +3003,8 @@ function ultraschall.GetItemUSTrackNumber_StateChunk(statechunk)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, track, tracknumber</tags>
 </US_DocBloc>
 ]]
@@ -3045,8 +3045,8 @@ function ultraschall.SetItemUSTrackNumber_StateChunk(statechunk, tracknumber)
     MediaItem Management
     Set MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, track, tracknumber</tags>
 </US_DocBloc>
 ]]
@@ -3088,8 +3088,8 @@ function ultraschall.SetItemPosition(MediaItem, position, statechunk)
     MediaItem Management
     Set MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, position</tags>
 </US_DocBloc>
 ]]
@@ -3139,8 +3139,8 @@ function ultraschall.SetItemLength(MediaItem, length, statechunk)
     MediaItem Management
     Set MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, length</tags>
 </US_DocBloc>
 ]]
@@ -3191,8 +3191,8 @@ function ultraschall.GetItemStateChunk(MediaItem, AddTracknumber)
     MediaItem Management
     Get MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
   <tags>mediaitemmanagement, get, statechunk, tracknumber</tags>
 </US_DocBloc>
 ]]
