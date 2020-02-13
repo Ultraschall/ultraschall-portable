@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-#
+# 
 # Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
-#
+# 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-#
+# 
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-#
+# 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,21 +20,11 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-#
+# 
 ################################################################################
 ]]
-
+ 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-
-
---------------------------
--- Start Ultraschall Messaging
---------------------------
-
-cmd=reaper.NamedCommandLookup("_Ultraschall_Messaging")
-reaper.Main_OnCommand(cmd,0)
-
-
 
 theme_version_now = 20180114 -- version of this theme
 
@@ -54,37 +44,37 @@ view = ultraschall.GetUSExternalState("ultraschall_gui", "view")
 sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
 mouse = ultraschall.GetUSExternalState("ultraschall_mouse", "state")
 first_start = ultraschall.GetUSExternalState("ultraschall_start", "firststart")
-startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value","ultraschall-settings.ini")
+startscreen = ultraschall.GetUSExternalState("ultraschall_start", "startscreen")
 follow = ultraschall.GetUSExternalState("ultraschall_follow", "state")
-follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
-magicrouting_state = ultraschall.GetUSExternalState("ultraschall_magicrouting", "state")
 
-if theme_version ~= tostring(theme_version_now) then
-  error_msg = "Your ULTRASCHALL THEME is out of date. \n\nULTRASCHALL wil NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/"
+  follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+
+if theme_version ~= tostring(theme_version_now) then 
+  error_msg = "Your ULTRASCHALL THEME is out of date. \n\nULTRASCHALL wil NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/" 
 end
 
 if plugin_version ~= theme_version then -- different versions of theme and plugin isntalled
-  error_msg = "There is a configuration mismatch between the ULTRASCHALL THEME ("..theme_version..") and PLUGIN ("..plugin_version..").\n\nULTRASCHALL will NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/"
+  error_msg = "There is a configuration mismatch between the ULTRASCHALL THEME ("..theme_version..") and PLUGIN ("..plugin_version..").\n\nULTRASCHALL will NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/" 
 end
 
-if plugin_version == "" then
-  error_msg = "The ULTRASCHALL PLUGIN was not properly installed.\n\nULTRASCHALL wil NOT work properly until you fix this.\n\nPlease check the installation guide on http://ultraschall.fm/install/"
+if plugin_version == "" then 
+  error_msg = "The ULTRASCHALL PLUGIN was not properly installed.\n\nULTRASCHALL wil NOT work properly until you fix this.\n\nPlease check the installation guide on http://ultraschall.fm/install/" 
 end
 
-if theme_version == "" then
-  error_msg = "There are parts of the ULTRASCHALL THEME missing.\n\nULTRASCHALL wil NOT work properly until you fix this.\n\nPlease check the installation guide on http://ultraschall.fm/install/"
+if theme_version == "" then 
+  error_msg = "There are parts of the ULTRASCHALL THEME missing.\n\nULTRASCHALL wil NOT work properly until you fix this.\n\nPlease check the installation guide on http://ultraschall.fm/install/" 
 end
 
 
 
 if error_msg then
-    type = 0
+    Type = 0
     title = "Ultraschall Configuration Problem"
-     result = reaper.ShowMessageBox( error_msg, title, type )
+     result = reaper.ShowMessageBox( error_msg, title, Type )
 
 elseif first_start == "true" or startscreen == "1" or startscreen == "-1" then
   start_id = reaper.NamedCommandLookup("_Ultraschall_StartScreen")
-  reaper.Main_OnCommand(start_id,0)   --Show Startscreen
+  reaper.Main_OnCommand(start_id,0)   --Show Startscreen    
 end
 
 if sec=="-1" then sec=0 end
@@ -126,7 +116,7 @@ end
 -- set OnAir button off
 
 on_air_button_id = reaper.NamedCommandLookup("_Ultraschall_OnAir")
-reaper.SetToggleCommandState(sec, on_air_button_id, 0)
+reaper.SetToggleCommandState(sec, on_air_button_id, 0) 
 
 --------------------------
 -- Restore opened/closed Windows
@@ -136,9 +126,7 @@ reaper.SetToggleCommandState(sec, on_air_button_id, 0)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Routing Snapshots",0.0, true)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Export Assistant",0.0, true)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Color Picker",0.0, true)
-reaper.SetExtState("Ultraschall_Windows","Ultraschall Soundcheck",0.0, true)
-reaper.SetExtState("Ultraschall_Windows","Ultraschall Settings",0.0, true)
-
+reaper.SetExtState("Ultraschall_Windows","Ultraschall 3",0.0, true)
 
 
 --------------------------
@@ -150,14 +138,14 @@ reaper.SetExtState("Ultraschall_Windows","Ultraschall Settings",0.0, true)
 m = reaper.GetMasterTrack(0)                                                  --streaming is always on the master track
 os = reaper.GetOS()
 
-if string.match(os, "OSX") then
+if string.match(os, "OSX") then 
   fx_slot = reaper.TrackFX_GetByName(m, "ITSR: StudioLinkOnAir", 0)      --get the slot of the StudioLink effect. If there is none: initiate one.
 else  -- Windows
   fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)      --get the slot of the StudioLink effect. If there is none: initiate one.
 end
 reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
 
--- is the ReaperThemeZip loaded? Only then (probably on first start) reload the ReaperTheme to get the colors working
+-- is the ReaperThemeZip loaded? Only then (probably on first start) reload the ReaperTheme to get the colors working 
 
 -- curtheme = reaper.GetLastColorThemeFile()
 -- if string.find(curtheme, "ReaperThemeZip", 1) then
@@ -165,98 +153,15 @@ reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
   reaper.OpenColorThemeFile(themeadress)
 -- end
 
+-- start Followmode-reset-backgroundscript
+  follow_reset_cmdid=reaper.NamedCommandLookup("_Ultraschall_Toggle_Reset")
+  reaper.SetExtState("ultraschall_follow", "state2", follow, false)
+  reaper.Main_OnCommand(follow_reset_cmdid,0)
 
---------------------------
--- Reset Windows counter
---------------------------
-
--- beim Start von Ultraschall werden alle Fenster-Counter auf 0 gesetzt
-
-inipath = reaper.GetResourcePath().."/reaper-extstate.ini"
-keyscount = ultraschall.CountIniFileExternalState_key("Ultraschall_Windows", inipath)
-
-for i = 1, keyscount, 1 do
-  keyname = ultraschall.EnumerateIniFileExternalState_key("Ultraschall_Windows", i, inipath)
-  length, keyvalue = ultraschall.GetIniFileExternalState("Ultraschall_Windows", keyname, inipath)
-
-  if tonumber(keyvalue) > 0 then
-    retval = ultraschall.SetIniFileExternalState("Ultraschall_Windows", keyname, "0.0", inipath)
-
-  end
+-- install hotfixes, if available
+if reaper.file_exists(reaper.GetResourcePath().."/Scripts/Ultraschall_Install.me")==true then
+ ultraschall.RunCommand("_Ultraschall_Hotfixes")
 end
-
---------------------------
--- Check for internal Microphone
---------------------------
-
-if string.sub(reaper.GetOS(),1,3) == "OSX"  then
-
-  handle1 = io.popen("system_profiler SPAudioDataType -xml | xmllint --xpath '/plist[@version=\"1.0\"]/array/dict/array[2]/dict/array/dict[1]//string[1]/text()' -")
-  handle2 = io.popen("system_profiler SPAudioDataType -xml | xmllint --xpath '/plist[@version=\"1.0\"]/array/dict/array[2]/dict/array/dict[1]//key[2]/text()' -")
-
-  result1 = handle1:read("*a")
-  result2 = handle2:read("*a")
-
-  handle1:close()
-  handle2:close()
-
-  -- print(result1)
-  -- print(result2)
-
-
-  if (result1=="Built-in Input" or result1=="Built-in Microphone") and result2=="coreaudio_default_audio_input_device" then
-    reaper.SetExtState("ultraschall_mic", "internal", "true", false)
-    -- print("Micro")
-  else
-    reaper.SetExtState("ultraschall_mic", "internal", "false", false)
-    -- print("nix")
-  end
-end
-
-
---------------------------
--- Start Soundcheck
---------------------------
-
-cmd=reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Controller")
-reaper.Main_OnCommand(cmd,0)
-
-
---------------------------
--- Start Magicrouting
---------------------------
-
-if (magicrouting_state == "1" or magicrouting_state == nil) then
-
-  cmd=reaper.NamedCommandLookup("_Ultraschall_Toggle_Magicrouting")
-  reaper.Main_OnCommand(cmd,0)
-
-end
-
---------------------------
--- Start Tims Chapter Ping
---------------------------
-
-if ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping", "Value" ,"ultraschall-settings.ini") == "1" then
-
-  cmd=reaper.NamedCommandLookup("_Ultraschall_Tims_Ping_Feature")
-  reaper.Main_OnCommand(cmd,0)
-
-end
-
---------------------------
--- Start Followmode-reset-backgroundscript
---------------------------
-
-if ultraschall.GetUSExternalState("ultraschall_settings_followmode_auto", "Value" ,"ultraschall-settings.ini") == "1" then
-
-  cmd=reaper.NamedCommandLookup("_Ultraschall_Toggle_Reset")
-  reaper.Main_OnCommand(cmd,0)
-
-end
-
-
-
 
 --------------------------
 -- First start actions
@@ -265,5 +170,7 @@ end
 -- not really needed right now, but maybe in coming releases
 
 if first_start == "true" or first_start == "-1" then
-  ultraschall.SetUSExternalState("ultraschall_start", "firststart", "false")  -- there will be only one first start
+  ultraschall.SetUSExternalState("ultraschall_start", "firststart", "false", true)  -- there will be only one first start
 end
+
+
