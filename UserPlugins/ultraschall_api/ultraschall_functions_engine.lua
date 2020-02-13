@@ -189,7 +189,7 @@ function ultraschall.GetApiVersion()
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>number versionnumber, string version, string date, string beta, string tagline = ultraschall.GetApiVersion()</functioncall>
+  <functioncall>number versionnumber, string version, string date, string beta, string tagline, string buildnumber = ultraschall.GetApiVersion()</functioncall>
   <description>
     returns the version, release-date and if it's a beta-version plus the currently installed hotfix
   </description>
@@ -200,6 +200,7 @@ function ultraschall.GetApiVersion()
     string beta - if it's a beta version, this is the beta-version-number
     string tagline - the tagline of the current release
     string hotfix_date - the release-date of the currently installed hotfix ($ResourceFolder/ultraschall_api/ultraschall_hotfixes.lua)
+    string buildnumber - the build-number of the current release
   </retvals>
   <chapter_context>
     API-Helper functions
@@ -209,7 +210,8 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  return 400.0279, "4.00","", "Beta 2.79",  "\"Yes - Owner of a lonely heart\"", ultraschall.hotfixdate
+  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+  return 400.100, "4.00","11th of February 2020", "",  "\"Aphrodite's Child - Four Horsemen\"", ultraschall.hotfixdate, string2
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -975,7 +977,7 @@ function progresscounter(state)
     A=A..ultraschall.ReadFullFile(files[i]).."\n"
   end
 
-if ultraschall.US_BetaFunctions=="ON" then
+if ultraschall.US_BetaFunctions==true then
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_functions_engine_beta.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine_beta.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gui_engine_beta.lua")
@@ -1286,7 +1288,11 @@ function ultraschall.US_snowmain()
       if ultraschall.snowwindoffset>ultraschall.snowsnowfactor then ultraschall.snowwindoffset=1 end
       
       -- calculate the movement toward the bottom, influenced by speed and wind
-      ultraschall.snowTemp=ultraschall.snowSnowflakes[i][2]+(ultraschall.snowSnowflakes[i][3]*ultraschall.snowspeed)-(ultraschall.snowWindtable[ultraschall.snowwindoffset]/4*ultraschall.snowSnowflakes[i][4])
+      ultraschall.snowTemp=
+        ultraschall.snowSnowflakes[i][2]+
+        (ultraschall.snowSnowflakes[i][3]*ultraschall.snowspeed)-
+        (ultraschall.snowWindtable[ultraschall.snowwindoffset]/4*
+        ultraschall.snowSnowflakes[i][4])
       if ultraschall.snowTemp>=ultraschall.snowSnowflakes[i][2] then ultraschall.snowSnowflakes[i][2]=ultraschall.snowTemp end -- prevent backwards flying snow
       -- calculate the movement toward left/right, influenced by wind
       ultraschall.snowSnowflakes[i][1]=ultraschall.snowSnowflakes[i][1]+(ultraschall.snowSnowflakes[i][4]+ultraschall.snowWindtable[ultraschall.snowwindoffset]/4*ultraschall.snowSnowflakes[i][4])
@@ -1358,6 +1364,7 @@ function ultraschall.WinterlySnowflakes(toggle, falling_speed, number_snowflakes
 ]]  
   if type(falling_speed)~="number" then ultraschall.AddErrorMessage("WinterlySnowflakes", "falling_speed", "must be a number", -1) return -1 end
   if math.type(number_snowflakes)~="integer" then ultraschall.AddErrorMessage("WinterlySnowflakes", "number_snowflakes", "must be an integer", -2) return -1 end
+  if number_snowflakes<1 or number_snowflakes>5000 then ultraschall.AddErrorMessage("WinterlySnowflakes", "number_snowflakes", "must be between 1 and 5000", -3) return -1 end
   if ultraschall.snowheight==nil then ultraschall.SnowInit() end
   ultraschall.snowspeed=falling_speed           -- the falling speed of the snowflakes
   ultraschall.snowsnowfactor=number_snowflakes  -- the number of snowflakes
@@ -1859,10 +1866,152 @@ function ultraschall.ConvertBitsToString(bitarray)
   return Result
 end
 
+function ultraschall.deprecated(functionname)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>deprecated</slug>
+    <requires>
+      Ultraschall=4.00
+      Reaper=5.965
+      Lua=5.3
+    </requires>
+    <functioncall>ultraschall.deprecated(string functionname)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      If you have a 3rd-party function added to Ultraschall-API, which you want to deprecate, use this 
+      function to show a warning message, if that function is used.
+      
+      It will be shown once when running the script, after (re-)start of Reaper.
+      
+      That way, you can tell scripters, whether they need to update their scripts using newer/better functions.
+      This is probably shown first to the user, who knows that way a potential problem and can tell the scripter about that.
+      
+      If there is a line "Author: authorname" in the file(as usual for ReaPack-compatible scripts), it will show the scripter's name in the dialog.
+      
+    </description>
+    <retvals>
+      boolean retval - true, defer-instance is running; false, defer-instance isn't running
+    </retvals>
+    <parameters>
+      integer deferinstance - 0, to use the parameter identifier
+      optional string identifier - when deferinstance>0 (for Defer1 through Defer20-defer-cycles):a script-identifier of a specific script-instance; nil, for the current script-instance
+                                 - when deferinstance=0 (when using the Defer-function): the identifier of the defer-cycle, you've started with Defer
+    </parameter>
+    <chapter_context>
+      API-Helper functions
+    </chapter_context>
+    <target_document>US_Api_Documentation</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>helperfunctions, deprecated, show, status</tags>
+  </US_DocBloc>
+  ]]
+  if type(functionname)~="string" then ultraschall.AddErrorMessage("deprecated", "functionname", "must be a string", -1) return end 
+  local A,B,C,D,E,F,G=reaper.get_action_context()
+  local B1,B2=ultraschall.GetPath(B)
+  if reaper.HasExtState("ultraschall_"..B2, functionname)==false then
+    local Script=ultraschall.ReadFullFile(B)
+    local Author=Script:match("%*.-Author%:(.-)%c")
+    if Author==nil then Author="author of this script" end
+    reaper.MB("The script \n\n    "..B2.." \n\nuses Ultraschall-API deprecated function \n\n    "..functionname..". \n\nPlease contact "..Author.." to fix this. Otherwise, this script will stop working in the future.", "Ultraschall-API: Issue with this script!", 0)
+    reaper.SetExtState("ultraschall_"..B2, functionname, "Ping", false)
+  end
+end
 
 
+function ultraschall.FloatCompare(a,b,precision)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>FloatCompare</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, number diff = ultraschall.FloatCompare(number a, number b, number precision)</functioncall>
+  <description>
+    Compares two floatvalues and allows to set the precision to copmare against.
+    
+    So, if you want to compare 5.1 and 5.2, using precision=0.2 returns true(is equal), precision=0.1 returns false(isn't equal).
+    
+    Returns nil in case of failure.
+  </description>
+  <parameters>
+    number a - the first float-number to compare
+    number b - the second float-number to compare
+    number precision - the precision of the fraction, like 0.1 or 0.0063
+  </parameters>
+  <retvals>
+    boolean retval - true, numbers are equal; false, numbers aren't equal
+    number diff - the difference between numbers a and b
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunction, compare, precision, float</tags>
+</US_DocBloc>
+]]
+  if type(a)~="number" then ultraschall.AddErrorMessage("FloatCompare", "a", "Must be a number", -1) return nil end
+  if type(b)~="number" then ultraschall.AddErrorMessage("FloatCompare", "b", "Must be a number", -2) return nil end
+  if type(precision)~="number" then ultraschall.AddErrorMessage("FloatCompare", "precision", "Must be a number", -3) return nil end
+  return math.abs(a-b)<precision, math.abs(a-b)
+end
 
+function ToClip(toclipstring)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ToClip</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>ToClip(string toclipstring)</functioncall>
+  <description>
+    Puts a string into clipboard.
+  </description>
+  <parameters>
+    string toclipstring - the string, which you want to put into the clipboard
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunction, set, string, to clipboard</tags>
+</US_DocBloc>
+]]
+  reaper.CF_SetClipboard(toclipstring)
+end
 
+function FromClip()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>FromClip</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>string clipboard_string = FromClip()</functioncall>
+  <description>
+    Gets a string from clipboard.
+  </description>
+  <retvals>
+    string clipboard_string - the string-content from the clipboard
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helperfunction, get, string, from clipboard</tags>
+</US_DocBloc>
+]]
+  return ultraschall.GetStringFromClipboard_SWS()
+end
 
 
 

@@ -74,7 +74,7 @@ function main()
 
   end
 
-  retval, defer_identifier = ultraschall.Defer20(main, 2, 1)
+  retval, defer_identifier = ultraschall.Defer(main, "Ultraschall Messaging",2, 1)
 
 end
 

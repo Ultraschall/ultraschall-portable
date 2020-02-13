@@ -98,8 +98,8 @@ function ultraschall.EventManager_EnumerateStartupEvents(index)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, enumerate, startup, event, function, actions, section, action</tags>
 </US_DocBloc>
 --]]
@@ -186,8 +186,8 @@ function ultraschall.EventManager_EnumerateStartupEvents2(EventIdentifier)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, enumerate, startup, event, function, actions, section, action</tags>
 </US_DocBloc>
 --]]
@@ -273,8 +273,8 @@ function ultraschall.EventManager_AddEvent(EventName, CheckAllXSeconds, CheckFor
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, add, new, event, function, actions, section, action</tags>
 </US_DocBloc>
 --]]
@@ -356,8 +356,8 @@ function ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, check, eventidentifier</tags>
 </US_DocBloc>
 --]]
@@ -399,8 +399,8 @@ function ultraschall.EventManager_RemoveEvent(EventIdentifier)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, remove, event</tags>
 </US_DocBloc>
 --]]
@@ -436,8 +436,8 @@ function ultraschall.EventManager_RemoveAllEvents_Script(ScriptIdentifier)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, remove, all events, scriptidentifier, event</tags>
 </US_DocBloc>
 --]]
@@ -496,8 +496,8 @@ function ultraschall.EventManager_SetEvent(EventIdentifier, EventName, CheckAllX
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, add, new, event, function, actions, section, action</tags>
 </US_DocBloc>
 --]]
@@ -609,8 +609,8 @@ function ultraschall.EventManager_EnumerateEvents(id)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, get, event, attributes</tags>
 </US_DocBloc>
 --]]
@@ -685,8 +685,8 @@ function ultraschall.EventManager_EnumerateEvents2(EventIdentifier)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, get, event, attributes</tags>
 </US_DocBloc>
 --]]
@@ -738,8 +738,8 @@ function ultraschall.EventManager_CountRegisteredEvents()
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, count, events</tags>
 </US_DocBloc>
 --]]
@@ -771,8 +771,8 @@ function ultraschall.EventManager_GetLastUpdateTime()
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, get, last update, time, date, time_precise, events</tags>
 </US_DocBloc>
 --]]
@@ -805,8 +805,8 @@ function ultraschall.EventManager_PauseEvent(EventIdentifier)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, pause, event</tags>
 </US_DocBloc>
 --]]
@@ -843,8 +843,8 @@ function ultraschall.EventManager_ResumeEvent(EventIdentifier)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, resume, event</tags>
 </US_DocBloc>
 --]]
@@ -876,8 +876,8 @@ function ultraschall.EventManager_Start()
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, start</tags>
 </US_DocBloc>
 --]]
@@ -922,8 +922,8 @@ function ultraschall.EventManager_Stop(force, ScriptIdentifier)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, stop, ScriptIdentifier</tags>
 </US_DocBloc>
 --]]
@@ -982,8 +982,8 @@ function ultraschall.EventManager_AddStartupEvent(EventName, CheckAllXSeconds, C
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, add, startup, new, event, function, actions, section, action</tags>
 </US_DocBloc>
 --]]
@@ -1066,8 +1066,8 @@ function ultraschall.EventManager_RemoveStartupEvent2(id)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, remove, startup, event</tags>
 </US_DocBloc>
 --]]
@@ -1113,8 +1113,8 @@ function ultraschall.EventManager_RemoveStartupEvent(EventIdentifier)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, startup, remove, event</tags>
 </US_DocBloc>
 --]]
@@ -1157,8 +1157,8 @@ function ultraschall.EventManager_CountStartupEvents()
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, startup, count, event</tags>
 </US_DocBloc>
 --]]
@@ -1220,8 +1220,8 @@ function ultraschall.EventManager_SetStartupEvent(EventIdentifier, EventName, Ch
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, set, startup, event, function, actions, section, action</tags>
 </US_DocBloc>
 --]]
@@ -1346,8 +1346,8 @@ function ultraschall.EventManager_GetPausedState2(EventIdentifier)
     <chapter_context>
       Event Manager
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
     <tags>eventmanager, get, paused, state, eventidentifier</tags>
   </US_DocBloc>
   ]]  
@@ -1390,8 +1390,8 @@ function ultraschall.EventManager_GetPausedState(id)
     <chapter_context>
       Event Manager
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
     <tags>eventmanager, get, paused, state, id, count</tags>
   </US_DocBloc>
   ]]  
@@ -1433,8 +1433,8 @@ function ultraschall.EventManager_GetEventIdentifier(id)
     <chapter_context>
       Event Manager
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
     <tags>eventmanager, get, eventidentifier, id, count</tags>
   </US_DocBloc>
   ]]  
@@ -1473,8 +1473,8 @@ function ultraschall.EventManager_GetLastCheckfunctionState(id)
     <chapter_context>
       Event Manager
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
     <tags>eventmanager, get, eventcheck function, state, id, count</tags>
   </US_DocBloc>
   ]]  
@@ -1514,8 +1514,8 @@ function ultraschall.EventManager_GetRegisteredEventID(EventIdentifier)
     <chapter_context>
       Event Manager
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
     <tags>eventmanager, get, id, event, eventidentifier</tags>
   </US_DocBloc>
   ]]  
@@ -1555,8 +1555,8 @@ function ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
     <chapter_context>
       Event Manager
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
-    <source_document>ultraschall_functions_engine.lua</source_document>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
     <tags>eventmanager, get, eventcheck function, state, eventidentifier</tags>
   </US_DocBloc>
   ]]  
@@ -1600,8 +1600,8 @@ function ultraschall.EventManager_DebugMode(toggle)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, toggle, debug, debugmode</tags>
 </US_DocBloc>
 --]]
@@ -1630,6 +1630,8 @@ function ultraschall.EventManager_DebugMode_UserSpace(index)
     
     Note: Debugmode is not for productive usecases, as it costs resources. Please turn it off again, after you've finished debugging.
     See [EventManager\_DebugMode](#EventManager_DebugMode) for more details on stopping DebugMode.
+    
+    returns nil in case of an error
   </description>
   <parameters>
     integer index - the index of the event, whose UserSpace you want to retrieve
@@ -1641,12 +1643,12 @@ function ultraschall.EventManager_DebugMode_UserSpace(index)
   <chapter_context>
     Event Manager
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
   <tags>event manager, toggle, debug, debugmode, userspace</tags>
 </US_DocBloc>
 --]]
-  if math.type(index)~="integer" then return end
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("EventManager_DebugMode_UserSpace", "index", "must be an integer", -1) return end
   local Value=reaper.GetExtState("ultraschall_eventmanager", "UserSpaces_"..index)
   local count=0
   local count2=1

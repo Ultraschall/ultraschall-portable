@@ -71,8 +71,8 @@ end
     User Interface
     Window Management
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_VID</target_document>
+  <source_document>ultraschall_video_engine.lua</source_document>
   <tags>user interface, window, hwnd, video</tags>
 </US_DocBloc>
 --]]
@@ -108,8 +108,8 @@ function ultraschall.VID_VideoUIStateCoords2Pixels(uistate_x, uistate_y, videowi
     User Interface
     Coordinates
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_VID</target_document>
+  <source_document>ultraschall_video_engine.lua</source_document>
   <tags>user interface, window, coordinates, pixel, ui_get_state, video-processor, convert</tags>
 </US_DocBloc>
 --]]
@@ -152,8 +152,8 @@ function ultraschall.VID_Pixels2VideoUIStateCoords(x, y, videowindow_width, vide
     User Interface
     Coordinates
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_VID</target_document>
+  <source_document>ultraschall_video_engine.lua</source_document>
   <tags>user interface, window, coordinates, pixel, ui_get_state, video-processor, convert</tags>
 </US_DocBloc>
 --]]

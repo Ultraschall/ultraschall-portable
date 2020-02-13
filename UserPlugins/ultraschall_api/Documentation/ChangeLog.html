@@ -40,6 +40,328 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.00 - "Aphrodite's Child - Four Horsemen"</h3>
+<h4>Changes from Beta 2.9 to Final</h4>
+<ul>
+<li>API: GetApiVersion - returns now the build-number as well</li>
+<li>API: Reapack-API-xml-generator.lua - fixed filename-creation for non-beta-versions</li>
+<li>FileManagement: CheckForValidFileFormats - improved check for jpg and jpg with exif-metadata</li>
+<li>FXManagement: SetFXStateChunk - allows now adding FXStateChunks to StateChunks with no existing FXStateChunk as well; didn't add FXStateChunks correctly under some circumstances -&gt; fixed(thanks to XRaym)</li>
+<li>Image Handling: CaptureScreenAreaAsPNG - doesn't work on Mac under some still unknown circumstances</li>
+<li>Image Handling: CaptureWindowAsPNG - doesn't work on Mac under some still unknown circumstances</li>
+</ul>
+<hr />
+<h3>4.00 Beta 2.9: - "Gentle Giant - Two weeks in Spain"</h3>
+<p>Has now 1111 functions, with 32 new ones</p>
+<p>This is the last beta-release for the Ultraschall-API4.00 and the feature-freeze-version. Until the final one, I will only fix bugs.</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Render_Loop</strong><br />
+You can render now loops, including so called "wet-loops" which are loops, who include reverb and other such effects.<br />
+For them to be renderable properly, they need to "build up" the effects first until it sounds right.<br />
+Render_Loop does exactly that with 2-pass-rendering. The first one is the part, which includes the loop itself+the effects-buildup.<br />
+So it renders the part of the project until the reverb is build up fully+the actual part to be looped.<br />
+The second pass will cut the actual loop out of the first-pass-render and put it where you want it to be.<br />
+You can also influence the fadein/out time and style of the second-pass-rendering, so you can avoid clickings and pops due harsh cuts at the beginning or the end of a loop.</p></li>
+<li><p><strong>Secondary Rendering Support</strong><br />
+This is so hot, it only exists(yet) in pre-releases of Reaper. You can set a secondary render-format. And if you render your project, it will render out into both files.<br />
+That means, you can render your project as WAV+MP3 at the same time.<br />
+And all rendering-functions of Ultraschall-API support that new feature, including the current project, projectfiles, render-presets.</p></li>
+<li><p><strong>Marker-functions and Guids</strong><br />
+All marker/region-functions return now the guid of the marker/region as well. Which is really nice for storing additional metadata for markers/regions.<br />
+You can also request the markers/regions by guid now.</p></li>
+<li><p><strong>Envelope States</strong><br />
+You can read now all envelope-states available. Setting will come soon as well.</p></li>
+<li><p><strong>GFX_Init</strong><br />
+Allows you now to center the window by setting x and/or y-position to nil</p></li>
+<li><p><strong>MoveFileOrFolder</strong><br />
+Tired of copying your files around when you just want to move them? Or folders? Behold: MoveFileOrFolder moves files and folders for you.<br />
+This speeds up moving files around in Lua by magnitudes.</p></li>
+<li><p><strong>FXStateChunks and RFXChainFiles</strong><br />
+You can load/store FXStateChunks from/to RFXChainFiles, which are the FX-Chain-files you can save within the FX-Chain-window.</p></li>
+<li><p><strong>Capturing Screen and Windows</strong><br />
+You can now capture screens and windows for screenshots(CaptureScreenAreaAsPNG and CaptureWindowAsPNG).<br />
+Thanks to edgemeal for that.</p></li>
+<li><p><strong>GetTCPWidth</strong><br />
+returns the width of the TrackControlPanel.</p></li>
+<li><p><strong>More and bugfixes</strong><br />
+as usual ;)</p></li>
+</ul>
+<h4>New features in 4.00beta2.9</h4>
+<ul>
+<li>API: StuffMidiMessage-AllMessages_Englisch_Windows.ini - contains all names for all potential StuffMIDIMessage-messages</li>
+<li>Docs: Concepts: DeferScripts_004_Manipulating_and_Protecting_Defer_loops - describes manipulation of ultraschall.Defer-cycles and how to protect them from manipulation</li>
+<li>Docs: Concepts: ExtStateManagement_008_MarkerExtStates - describes the marker-extstate-functions</li>
+<li>Envelope Management: GetEnvelopeState_Act - returns the values of the ACT-entry of a TrackEnvelope/EnvelopeStateChunk</li>
+<li>Envelope Management: GetEnvelopeState_DefShape - returns the values of the DEFSHAPE-entry of a TrackEnvelope/EnvelopeStateChunk</li>
+<li>Envelope Management: GetEnvelopeState_LaneHeight - returns the values of the LANEHEIGHT-entry of a TrackEnvelope/EnvelopeStateChunk</li>
+<li>Envelope Management: GetEnvelopeState_EnvName - returns the envelope-name and possible additional values, if it's an FX-envelope</li>
+<li>Envelope Management: GetEnvelopeState_NumbersOnly - returns all values of a parameter from an EnvelopeStateChunk, including the undocumented ones when the devs add them</li>
+<li>Envelope Management: GetEnvelopeState_PooledEnvInstance - returns the attributes of an automation-item within an EnvelopeStateChunk, including the undocumented ones when the devs add them</li>
+<li>Envelope Management: GetEnvelopeState_PT - returns the attributes of an envelope-point within an EnvelopeStateChunk, including the undocumented ones when the devs add them</li>
+<li>Envelope Management: GetEnvelopeState_Vis - returns the values of the VIS-entry of a TrackEnvelope/EnvelopeStateChunk</li>
+<li>File Management: MoveFileOrFolder - moves a file or folder from its old path to a new path</li>
+<li>FXManagement: GetAllRFXChainfiles - returns all RFXChainfiles currently available in ResourcePath/FXChains</li>
+<li>FXManagement: GetRecentFX - returns the recent fx-list</li>
+<li>FXManagement: LoadFXStateChunkFromRFXChainFile - loads an FXStateChunk from an RFXChain-file(requested by XRaym)</li>
+<li>FXManagement: SaveFXStateChunkAsRFXChainfile - writes an FXStateChunk into an RFXChain-file(requested by XRaym)</li>
+<li>Image Handling: CaptureScreenAreaAsPNG - captures a screenarea and writes it as png-file(written by edgemeal, big thanks for that!)</li>
+<li>Image Handling: CaptureWindowAsPNG - captures a window-area and writes it as a png-file(written by edgemeal, big thanks for that!)</li>
+<li>Image Handling: ResizePNG - resizes a png-file into a new file</li>
+<li>KB.ini-Management: QueryKeyboardShortcutByKeyID - returns the actual shortcutname as stored by the modifier-key-values in reaper-kb.ini's KEY-entries</li>
+<li>Metadata-Management: ProjExtState_CountAllKeys - counts the number of keys within a section of a ProjectExtState</li>
+<li>MIDI-Management: QueryMIDIMessageNameByID - returns the midi-message-name of a midi-message as sendable using StuffMIDIMessage</li>
+<li>Project Bay: IsValidProjectBayStateChunk - checks, if a ProjectBayStateChunk is a valid one</li>
+<li>Project Bay: GetAllMediaItems_FromProjectBayStateChunk - returns all items from a ProjectBayStateChunk as MediaItemStateChunkArray</li>
+<li>Project Management: GetRecentProjects - gets the last x recent projectfilenames, as listed in the recent projects-menu</li>
+<li>Rendering: Render_Loop - renders a part of a project for later use as loop; supports also the creation of "wetloops" like ones with reverb(requested by musicbynumbers)</li>
+<li>Scripts: US_Api_Examples_Working_with_FXStateChunks_and_MediaItems.lua - example of working with FXChainStateChunks</li>
+<li>Themeing: GetAllThemeLayoutNames - returns all layout-names and values of the current theme</li>
+<li>Themeing: GetAllThemeLayoutParameters - returns all theme-layout-parameter attributes of the current theme</li>
+<li>Ultraschall Soundboard: Soundboard_PlayFadeIn - starts a sound with fadein, when having the Ultraschall4.00-Soundboard installed</li>
+<li>User Interface: GetHelpDisplayMode - returns the current help-display-mode</li>
+<li>User Interface: GetTCPWidth - gets the current width of the TCP(requested by nofish)</li>
+<li>User Interface: SetHelpDisplayMode - sets the current help-display-mode</li>
+<li>User Interface: WiringDiagram_GetOptions - gets the current wiring-diagram-options</li>
+<li>User Interface: WiringDiagram_SetOptions - sets the wiring-diagram-options</li>
+</ul>
+<h4>Changes from Beta 2.8 to Beta 2.9</h4>
+<ul>
+<li>ChildScripts: GetScriptParameters - produced Lua-error when no parameter was existing -&gt; fixed</li>
+<li>ChildScripts: GetScriptReturnvalues - docs fixed; didn't reset returnvalue-counter; produced Lua-error when no parameter was existing; had another stupid bug in it that I don't wanna mention... :/ -&gt; fixed</li>
+<li>ConfigurationManagement: GetIniFileValue - checks now, if the ini-file exists in the first place</li>
+<li>Defer Management: Defer - returns now boolean always, as well as the defer_identifier</li>
+<li>Envelope Management: GetArmState_Envelope - reimplemented, should now return future parameters as well, when added by the Reaper-devs</li>
+<li>FileManagement: GetAllFilenamesInPath - returns now the paths with / as separator only</li>
+<li>FileManagement: GetMediafileAttributes - did not recognize jpgs with exif-data -&gt; should be fixed now(thanks to rstockm)</li>
+<li>FileManagement: WriteValueToFile - produced Lua-error when passing a nil-value as filename_with_path -&gt; fixed</li>
+<li>FXManagement: GetFXStateChunk - counted FXStateChunks, not Takes by parameter TakeFXChain_id -&gt; fixed</li>
+<li>FXManagement: RemoveFXStateChunkFromItemStateChunk - counted FXStateChunks, not Takes by parameter take_id -&gt; fixed</li>
+<li>FXManagement: SetFXStateChunk - counted FXStateChunks, not Takes by parameter TakeFXChain_id -&gt; fixed</li>
+<li>GFX: GFX_Init - when x and/or y position are set to nil, the window will be centered now horizontally, vertically or both</li>
+<li>Helper Functions: PrintProgressBar - did produce a Lua-error, when percentage==false -&gt; fixed now</li>
+<li>Marker Management: AddCustomMarker - returns now the indexnumber and guid of the newly added marker as well</li>
+<li>Marker Management: AddEditMarker - returns now the guid of the marker; did not return the correct marker-id, but rather the shown id; did not add a : after _edit -&gt; fixed</li>
+<li>Marker Management: AddEditRegion - returns now the guid of the region; did not return the correct marker-id, but rather the shown id -&gt; fixed</li>
+<li>Marker Management: AddNormalMarker - returns now the guid of the marker; did not return the correct marker-id, but rather the shown id -&gt; fixed</li>
+<li>Marker Management: AddPodRangeRegion - returns now the guid of the region; did not return the correct marker-id, but rather the shown id -&gt; fixed</li>
+<li>Marker Management: EnumerateCustomMarkers - returns now the guid of the marker as well</li>
+<li>Marker Management: EnumerateEditMarkers - returns now the guid of the marker as well</li>
+<li>Marker Management: EnumerateEditRegion - returns now the guid of the region as well</li>
+<li>Marker Management: EnumerateNormalMarkers - returns now the guid of the marker as well</li>
+<li>Marker Management: GetAllCustomMarkers - returns now the guid of the marker as well</li>
+<li>Marker Management: GetAllEditMarkers - returns now the guid of the editmarkers as well</li>
+<li>Marker Management: GetAllMarkersBetween - returns now the guid of the markers as well</li>
+<li>Marker Management: GetAllNormalMarkers - returns now the guid of the markers as well</li>
+<li>Marker Management: GetAllRegions - returns now the guid of the regions as well</li>
+<li>Marker Management: GetAllRegionsBetween - returns now the guid of the regions as well</li>
+<li>Marker Management: GetMarkerAndRegionsByIndex - returns now the guid of the found marker as well</li>
+<li>Marker Management: GetMarkerByName - returns now an array of guids as well; returned marker-numbers weren't useable with Reaper's own marker-functions due off by 1-error -&gt; fixed</li>
+<li>Marker Management: GetMarkerByName_Pattern - returns now an array of guids as well; returned marker-numbers weren't useable with Reaper's own marker-functions due off by 1-error -&gt; fixed</li>
+<li>Marker Management: GetMarkerByScreenCoordinates - retina will now be automatically set; parameter retina removed(please update your scripts!)</li>
+<li>Marker Management: GetMarkerByTime - retina will now be automatically set; parameter retina removed(please update your scripts!)</li>
+<li>Marker Management: GetPodRangeRegion - returns now the guid of the podrangeregion as well</li>
+<li>Marker Management: GetRegionByScreenCoordinates - retina will now be automatically set; parameter retina removed(please update your scripts!)</li>
+<li>Marker Management: GetRegionByTime - retina will now be automatically set; parameter retina removed(please update your scripts!)</li>
+<li>Marker Management: GetTimeSignaturesByScreenCoordinates - had typo in functionname, which I corrected(old scripts will still run);retina will now be automatically set; parameter retina removed(please update your scripts!)</li>
+<li>Marker Management: GetTimeSignaturesByTime - retina will now be automatically set; parameter retina removed(please update your scripts!)</li>
+<li>Miscellaneous: WinterlySnowflakes - did produce Lua-error, when number of snowflakes was &gt;5000; limited to 5000 now</li>
+<li>ParmAlias: GetParmAlias_MediaTrack - had wrong functionname in error-messages -&gt; fixed</li>
+<li>ParmAlias: Docs - all functions ParmLearn-function in the docs move to proper subchapters for clearer index-navigation</li>
+<li>Project Management: GetAllMediaItems_FromProjectBayStateChunk - didn't return ProjectBayStateChunk properly -&gt; fixed</li>
+<li>Project Management: GetProject_RenderCFG - returns now the render-cfg-string for the secondary renderformat as well</li>
+<li>Project Management: SetProject_RenderCFG - allows now setting of secondary render-format as well; backwards compatible with old scripts, who set only primary rendering format in ProjectStateChunks</li>
+<li>Rendering: AddRenderPreset - allows now adding the render-cfg-string for secondary renderformat as well; had inner variable exposed -&gt; fixed</li>
+<li>Rendering: ApplyRenderTable_Project - allows now setting the render-cfg-string for secondary renderformat as well</li>
+<li>Rendering: CreateNewRenderTable - allows now adding the render-cfg-string for secondary renderformat as well; had wrong functionname in docs -&gt; fixed</li>
+<li>Rendering: DeleteRenderPreset_FormatOptions - deletes now the render-cfg-string for secondary renderformat, if existing</li>
+<li>Rendering: GetRenderPreset_RenderTable - returns now possible render-cfg-string for secondary renderformat as well; some error-messages didn't work -&gt; fixed</li>
+<li>Rendering: GetRenderTable_Project - returns now a render-cfg-string for secondary renderformat</li>
+<li>Rendering: GetRenderTable_ProjectFile - returns now a render-cfg-string for secondary renderformat</li>
+<li>Rendering: IsValidRenderTable - checks now for the render-cfg-string for secondary renderformat as well</li>
+<li>Rendering: RenderProject - allows now setting the render-cfg-string for secondary renderformat as well; checks now, if projectfilename is a valid project</li>
+<li>Rendering: RenderProject_RenderTable - allows now setting the render-cfg-string for secondary renderformat as well; checks now, if projectfilename is a valid project</li>
+<li>Rendering: SetRenderPreset - allows now setting the render-cfg-string for secondary renderformat as well; set RenderString2="" to remove the secondary renderformat</li>
+<li>Track Management: GetTrackState_NumbersOnly - had wrong description in the docs -&gt; fixed</li>
+<li>User Interface: GetHWND_ArrangeViewAndTimeLine - moved to User Interface -&gt; Reaper-Windowhandler in the index of the docs</li>
+</ul>
+<hr />
+<h3>4.00 Beta 2.80: - "Starsailor - Four to the Floor"</h3>
+<p>Note: Ultraschall-API needs now Reaper 6.02 or higher. Please update to Reaper 6. It's worth it!</p>
+<p>Has now 1079 functions, with 20 new ones and 23 deprecated ones removed</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Improved Defer Management</strong><br />
+Ultraschall.Defer allows you now to set and get the timer-settings of a given ultraschall.Defer-cycle.<br />
+You can even do this from the outside of the deferred script!<br />
+You can also protect now ultraschall.Defer-cycles from being stopped from the outside.</p></li>
+<li><p><strong>Rendering functions</strong><br />
+The RenderPreset-functions do work again, after some changes in the way Reaper stores render-presets since Reaper 6.02.<br />
+They also allow you to use: preset-names with spaces. (I know, this should have been in there from the beginning... ;) )</p></li>
+<li><p><strong>GetItem_ClickState</strong><br />
+Is now fully functional. That means, if you call this function in every defer-cycle of a script, you can actually monitor clicked and dragged MediaItems.<br />
+This will open up new ways of editing and item-manipulation, like RippleDrag, etc.</p></li>
+<li><p><strong>FXStateChunk</strong><br />
+They can now be counted, added, removed and gotten. Means: I added the missing functions for working with them, so you can fully work with FXStateChunks now.<br />
+XRaym will love that :D</p></li>
+<li><p><strong>GetProjectLength</strong><br />
+unlike Reaper's own API-function GetProjectLength, this one returns the end of the last itemedge, the last regionedge, marker and time-sigmarker</p></li>
+<li><p><strong>Easy Clipboarding</strong><br />
+FromClip and ToClip allow you now to get/put strings from/to the clipboard without having to type gazillions of characters.</p></li>
+<li><p><strong>GetProject and GetTrackState-functions</strong><br />
+I completely reworked most of them, so they will now return all values, even those, which I haven't put into the docs yet.<br />
+That means, if the devs add new values, you can retrieve them right away, without being dependent on me to add them.<br />
+Will do the same with the Set-functions in the future.</p></li>
+</ul>
+<h4>New features in 4.00beta2.80</h4>
+<ul>
+<li>Helper functions: FloatCompare - compares two float-numbers, with the a chance to set a precision to compare against(thanks to fernsehmuell)</li>
+<li>Helper functions: FromClip - gets a string from the clipboard</li>
+<li>Helper functions: ToClip - puts a string into the clipboard</li>
+<li>DeferManagement: GetDeferCycleSettings - allows getting mode and timer-settings of running ultraschall.Defer-cycles at runtime and even from the outside of the deferred script<br />
+</li>
+<li>DeferManagement: SetDeferCycleSettings - allows setting mode and timer-settings of running ultraschall.Defer-cycles at runtime and even from the outside of the deferred script</li>
+<li>FXManagement: CountFXStateChunksInStateChunk - counts the FXStateChunks within a Project-/Track-/ItemStateChunk(requested by XRaym)</li>
+<li>FXManagement: RemoveFXStateChunkFromTrackStateChunk - removes a FXStateChunk from a TrackStateChunk(requested by XRaym)</li>
+<li>FXManagement: RemoveFXStateChunkFromItemStateChunk - removes a certain FXStateChunk from an ItemStateChunk(requested by XRaym)</li>
+<li>MediaItems: GetEndOfItem - returns the endposition of a MediaItem(thanks to fernsehmuell)</li>
+<li>MediaItems: GetAllMediaItemAttributes_Table - returns all attributes of a MediaItem as a handy table(requested by fernsehmuell)</li>
+<li>MediaItems: GetAllSelectedMediaItemsBetween - returns all selected MediaItems between start- and endposition within certain tracks of your choice(requested by fernsehmuell)</li>
+<li>MediaItems: SetAllMediaItemAttributes_Table - sets all attributes of a MediaItems using an attributes table, like the one returned by GetAllMediaItemAttributes_Table(requested by fernsehmuell)</li>
+<li>Reaper Internals: Jumping_FX_Button_in_TCP-demo.zip - demoes, how Set/GetLayout-functions work; includes a demo theme and a script, that influences it, including comments</li>
+<li>Reaper Internals: RenderPreset-Configfile.txt - documentation of the Render-Presets of Reaper</li>
+<li>Reaper Internals: Reaper-ProjectDefault-ConfigSettings.txt - documents all reaper.ini-entries, responsible for default project settings</li>
+<li>Reaper Internals: Reaper-StuffMidiMessage-Codes(engl_shortlist).txt - holds all messages and their meaning for StuffMIDIMessage</li>
+<li>Reaper Internals: StuffMidiMessage-docs.txt - describes the usage of the StuffMIDIMessage-function</li>
+<li>Render Management: GetRender_EmbedStretchMarkers - gets the current state of the "Embed stretch markers/transient guides"-checkbox from the Render to File dialog</li>
+<li>Render Management: SetRender_EmbedStretchMarkers - sets the current state of the "Embed stretch markers/transient guides"-checkbox from the Render to File dialog</li>
+<li>ProjectManagement: GetProjectState_NumbersOnly - returns all numerical values, associated with a certain state</li>
+<li>ProjectManagement: GetProject_PooledEnvAttach - gets the pooled-envattach-state</li>
+<li>ProjectManagement: GetProjectLength - gets the length of the current active project, as well as the position of the last itemedge, regionend, marker, time-sig-marker(requested by rstockm)</li>
+<li>TrackManagement: GetTrackState_NumbersOnly - returns all numerical values, associated with a certain state</li>
+</ul>
+<h4>Changes from Beta 2.79 to Beta 2.80</h4>
+<ul>
+<li>API: deprecated - allows showing a warning message, if a script uses a deprecated function in a script; will be shown only once until Reaper restarts, so scripts are stil useable</li>
+<li>Defer Management: GetDeferIdentifier - removed</li>
+<li>Defer Management: GetDeferRunState - removed Defer01-Defer20 management; threw Lua-error, when passing nonstring as identifier -&gt; fixed</li>
+<li>Defer Management: Defer1 through Defer20 - removed</li>
+<li>Defer Management: Defer - mode and timer can also be set now from the outside of the defer-cycle; can now be protected from stopping it from the outside; couldn't be stopped from the outside when mode~=2 -&gt; fixed</li>
+<li>Defer Management: GetDeferRunState - was missing parameters in the docs due typo -&gt; fixed</li>
+<li>Defer Management: StopDeferCycle - didn't work, when mode=2 of a ultraschall.Defer-cycle -&gt; fixed</li>
+<li>Docs: DeferScripts_004_Working_with_Defer_Identifiers - removed</li>
+<li>Docs: Defer - reworked docs and removed all references to Defer1 through Defer20</li>
+<li>Docs: JS-Extension - updated to 0.998</li>
+<li>Docs: Reaper - updated to Reaper 6.03</li>
+<li>Docs: render-codes-decoded-base64-strings.txt - removed last 00-byte in every string(except DDP), as it was wrongly there</li>
+<li>Event Manager: Eventmanager_RemoveEvent - couldn't be found due typo in new module-loader -&gt; fixed (thanks to rstockm)</li>
+<li>Event Manager: EventManager_RemoveAllEvents_Script - couldn't be found due typo in new module-loader -&gt; fixed</li>
+<li>Helper functions: Base64_Decoder - removed small bug, which added a nullbyte at end of strings</li>
+<li>MediaItems: GetSelectedMediaItemsAtPosition - sped up a little; returns now a MediaItemStateChunkArray as well</li>
+<li>ProjectManagement: GetProject_AddMediaToProjectAfterRender - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_AutoCrossFade - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_CursorPos - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_DefPitchMode - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_EnvAttach - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_Feedback - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_GlobalAuto - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_Grid - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_GroupDisabled - simplified implementation, future values added by Reaper-devs will now be returned properly; didn't return anything, when no groups were disabled -&gt; fixed</li>
+<li>ProjectManagement: GetProject_GroupOverride - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_HorizontalZoom - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_ItemMixBehavior - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_Lock - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_Loop - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_LoopGran - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterAutomode - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterFXByp - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterMuteSolo - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterNChans - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterPanMode - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterSel - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterTrackColor - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterTrackHeight - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterTrackView - didn't return the new values added in recent Reaper-versions -&gt; fixed and stabilized</li>
+<li>ProjectManagement: GetProject_MasterTrackView - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterVolume - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MasterWidth - simplified implementation, future values added by Reaper-devs will now be returned properly; didn't return 1 in case of +100 width -&gt; fixed</li>
+<li>ProjectManagement: GetProject_MaxProjectLength - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_MixerUIFlags - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_PanLaw - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_PanMode - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_PeakGain - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_Playrate - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_ProjOffsets - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_RecMode - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_RenderDitherState - simplified implementation, future values added by Reaper-devs will now be returned properly; updated docs with new options like embed stretch markers</li>
+<li>ProjectManagement: GetProject_RenderFreqNChans - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_RenderRange - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_RenderResample - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_RenderSpeed - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_RenderStems - simplified implementation, future values added by Reaper-devs will now be returned properly; updated docs with new rendering selected tracks/media through master-options</li>
+<li>ProjectManagement: GetProject_RippleState - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_SMPTESync - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_SampleRate - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_Selection - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_TakeLane - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_Tempo - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_TempoTimeSignature - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_TimeBase - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_Timemode - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_TrackMixingDepth - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_UseRecConfig - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_VerticalZoom - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: GetProject_VideoConfig - simplified implementation, future values added by Reaper-devs will now be returned properly</li>
+<li>ProjectManagement: SetProject_RenderDitherState - updated docs with new options like embed stretch markers</li>
+<li>ProjectManagement: SetProject_RenderStems - updated docs with new rendering selected tracks/media through master-options</li>
+<li>Reaper Internals: render-codes-decoded-base64-strings.txt - added new settings for AIFF</li>
+<li>Render Management: AddRenderPreset - supports now embed stretch markers-checkbox; works only with render-presets as of Reaper 6; supports now presetnames with spaces in it</li>
+<li>Render Management: ApplyRenderTable_Project - supports now embed stretch markers-checkbox as of Reaper 6</li>
+<li>Render Management: ApplyRenderTable_ProjectFile - supports now embed stretch markers-checkbox as of Reaper 6</li>
+<li>Render Management: CreateRenderCFG_AIFF - added Embed Beat Length-checkbox, as included with Reaper 6</li>
+<li>Render Management: CreateNewRenderTable - added new "Embed stretch markers/transient guides"-settings as of Reaper 6; CloseAfterRender wasn't accepted as boolean -&gt; fixed</li>
+<li>Render Management: GetRenderCFG_Settings_AIFF - returns Embed Beat Length-checkbox, as included with Reaper 6</li>
+<li>Render Management: GetRenderPreset_Names - reimplemented; supports now presetnames with spaces in them as well</li>
+<li>Render Management: GetRenderTable_Project - supports now "Embed stretch markers/transient guides"-settings as of Reaper 6</li>
+<li>Render Management: GetRenderTable_ProjectFile - supports now "Embed stretch markers/transient guides"-settings as of Reaper 6</li>
+<li>Render Management: GetRenderPreset_RenderTable - reimplemented due changed reaper-render.ini-format in Reaper 6, should be more stable now; backwards compatible to old Reaper 5 presets</li>
+<li>Render Management: DeleteRenderPreset_Bounds - supports now presetnames with spaces in it</li>
+<li>Render Management: DeleteRenderPreset_FormatOptions - supports now presetnames with spaces in it</li>
+<li>Render Management: IsValidRenderTable - checks now as well new "Embed stretch markers/transient guides"-settings as of Reaper 6</li>
+<li>Render Management: RenderProject_RenderTable - supports now new Embed stretch markers/transient guides-checkbox as of Reaper 6</li>
+<li>Render Management: SetRenderPreset - supports now new Embed stretch markers/transient guides-checkbox as of Reaper 6; supports now spaces in preset-names as well</li>
+<li>TakeManagement: GetFXStateChunk - parameter TakeFXChain_id wasn't optional due typo -&gt; fixed(thanks to XRaym)</li>
+<li>TakeManagement: SetFXStateChunk - docs were unclear, that only setting NOT inserting is possible; could crash, if no FXStateChunk for setting could be found -&gt; fixed(thanks to XRaym)</li>
+<li>TrackManagement: GetTrackPeakColorState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackBeatState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackAutoRecArmState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackMuteSoloState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackIPhaseState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackIsBusState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackBusCompState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackShowInMixState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackFreeModeState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackRecState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackVUState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackHeightState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackINQState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackNChansState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackBypFXState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackPerfState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackMIDIOutState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackMainSendState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackLockState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackAutomodeState - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackMidiCTL - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackWidth - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackPanMode - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackScore - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>TrackManagement: GetTrackVolPan - improved implementation, it returns now new values as well, who are added by the Reaper-devs and aren't documented yet</li>
+<li>User Interface: GetReaperWindowPosition_Left - removed</li>
+<li>User Interface: GetReaperWindowPosition_Right - removed</li>
+<li>User Interface: GetItem_ClickState - remembers now the dragged item+take, even if mouse-cursor is not above it anymore</li>
+</ul>
+<hr />
 <h3>4.00 Beta 2.79: - "Yes - Owner of a lonely heart"</h3>
 <p>Has now 1082 functions, with 12 new ones</p>
 <p><strong>New in this release:</strong></p>
@@ -48,7 +370,7 @@ Ultraschall API Changelog
 <li><p><strong>Speedup when loading US-API</strong><br />
 I made a modules-system, which speeds up loading and initalization as well as memory-use of the Ultraschall-API by magnitudes.<br />
 This approach loads only the functions needed by your script(used to load all functions in earlier versions).<br />
-The loading is now about 86% faster and memoryuse if 56% less.<br />
+The loading is now about 86% faster and memoryuse is 56% less.<br />
 And what do you need to do to make use of the modules approach?<br />
 Well, nothing. The Ultraschall-API does it for you! (requested by many, so hope, this helps you a lot).</p></li>
 <li><p><strong>Marker/Region Extstates</strong><br />
@@ -357,7 +679,7 @@ This function converts the y-coordinates between these two coordinate-systems.</
 <li><p><strong>New version of Config-Vars-displayer-script</strong><br />
 Shows changes with doubles without a problem now, is faster, uses the config-var-docs included with the API to get the currently accepted config-vars. I also improved the layout a bit.</p></li>
 </ul>
-<h3>New features in 4.00beta2.761</h3>
+<h4>New features in 4.00beta2.761</h4>
 <ul>
 <li>Helper functions: FindPatternsInString - finds all occurrences of a matching-pattern in a string</li>
 <li>Helper functions: IsWithinTimeRange - returns, if a time is within a start and endtime, takes care of the precision-problem time-positions in Lua have</li>
@@ -369,7 +691,7 @@ Shows changes with doubles without a problem now, is faster, uses the config-var
 <li>User Interface: UpdateMediaExplorer - updates the listview of the Media Explorer</li>
 <li>User Interface: MediaExplorer_OnCommand - runs an Media Explorer action(just like Reaper's Main_OnCommand and Midi_OnCommand-functions); runs no scripts yet, only native/extension actions</li>
 </ul>
-<h3>Changes from Beta 2.76 to Beta 2.761</h3>
+<h4>Changes from Beta 2.76 to Beta 2.761</h4>
 <ul>
 <li>Automation Items: GetProject_CountAutomationItems - didn't return the right retval in case of an error -&gt; fixed</li>
 <li>ColorManagement: RGB2Grayscale - didn't return the right retval in case of an error -&gt; fixed</li>

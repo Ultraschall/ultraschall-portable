@@ -81,8 +81,8 @@ function ultraschall.IsValidTrackString(trackstring)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, trackstring, check, valid</tags>
 </US_DocBloc>
 ]]
@@ -129,8 +129,8 @@ function ultraschall.IsValidTrackStateChunk(statechunk)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, check, validity, track, statechunk, valid</tags>
 </US_DocBloc>
 --]]
@@ -167,8 +167,8 @@ function ultraschall.CreateTrackString(firstnumber, lastnumber, step)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackstring, track, create</tags>
 </US_DocBloc>
 --]]
@@ -212,8 +212,8 @@ function ultraschall.CreateTrackString_SelectedTracks()
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, datastructure</tags>
 </US_DocBloc>
 ]]
@@ -257,8 +257,8 @@ function ultraschall.InsertTrack_TrackStateChunk(trackstatechunk)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackstring, track, create, trackstate, trackstatechunk, chunk, state</tags>
 </US_DocBloc>
 ]]--
@@ -300,8 +300,8 @@ function ultraschall.RemoveDuplicateTracksInTrackstring(trackstring)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, tracks, trackstring, sort, order</tags>
 </US_DocBloc>
 ]]
@@ -354,8 +354,8 @@ function ultraschall.IsTrackObjectTracknumber(MediaTrack, tracknumber)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, check, tracknumber, mediatrack, object</tags>
 </US_DocBloc>
 ]]
@@ -400,8 +400,8 @@ function ultraschall.InverseTrackstring(trackstring, limit)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, trackstring, inverse, tracknumber, tracknumbers, limit</tags>
 </US_DocBloc>
 ]]
@@ -448,8 +448,8 @@ function ultraschall.CountItemsInTrackStateChunk(trackstatechunk)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, tracks, media, item, statechunk, chunk, get</tags>
 </US_DocBloc>
 ]]
@@ -495,8 +495,8 @@ function ultraschall.GetItemStateChunkFromTrackStateChunk(trackstatechunk, idx)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, tracks, media, item, statechunk, chunk, get</tags>
 </US_DocBloc>
 ]]
@@ -550,8 +550,8 @@ function ultraschall.AddMediaItemStateChunk_To_TrackStateChunk(trackstatechunk, 
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, tracks, media, item, statechunk, chunk, add</tags>
 </US_DocBloc>
 ]]
@@ -591,8 +591,8 @@ function ultraschall.RemoveMediaItem_TrackStateChunk(trackstatechunk, idx)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, tracks, media, item, statechunk, chunk, delete</tags>
 </US_DocBloc>
 ]]
@@ -647,8 +647,8 @@ function ultraschall.RemoveMediaItemByIGUID_TrackStateChunk(trackstatechunk, IGU
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, tracks, media, item, statechunk, chunk, delete, iguid</tags>
 </US_DocBloc>
 ]]
@@ -698,8 +698,8 @@ function ultraschall.RemoveMediaItemByGUID_TrackStateChunk(trackstatechunk, GUID
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, tracks, media, item, statechunk, chunk, delete, guid</tags>
 </US_DocBloc>
 ]]
@@ -753,8 +753,8 @@ function ultraschall.OnlyTracksInBothTrackstrings(trackstring1, trackstring2)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, tracks, trackstring, sort, order</tags>
 </US_DocBloc>
 ]]
@@ -800,8 +800,8 @@ function ultraschall.OnlyTracksInOneTrackstring(trackstring1, trackstring2)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, tracks, trackstring, sort, order</tags>
 </US_DocBloc>
 ]]
@@ -857,8 +857,8 @@ function ultraschall.SetMediaItemStateChunk_in_TrackStateChunk(trackstatechunk, 
     MediaItem Management
     Set MediaItem States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, statechunk, chunk, set</tags>
 </US_DocBloc>
 ]]
@@ -919,8 +919,8 @@ function ultraschall.GetAllMediaItemsFromTrackStateChunk(trackstatechunk)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>mediaitemmanagement, tracks, media, item, get, trackstatechunk, mediaitemstatechunk, mediaitemstatechunkarray</tags>
 </US_DocBloc>
 ]]
@@ -958,8 +958,8 @@ function ultraschall.CreateTrackString_AllTracks()
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, tracks, trackstring</tags>
 </US_DocBloc>
 ]]
@@ -995,8 +995,8 @@ function ultraschall.GetTrackLength(Tracknumber)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement,count,length,items,end</tags>
 </US_DocBloc>
 ]]
@@ -1042,8 +1042,8 @@ function ultraschall.GetLengthOfAllMediaItems_Track(Tracknumber)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, count, length, all items, track, end</tags>
 </US_DocBloc>
 ]]
@@ -1091,8 +1091,8 @@ function ultraschall.ApplyActionToTrack(trackstring, actioncommandid)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, run, command, track</tags>
 </US_DocBloc>
 ]]
@@ -1141,8 +1141,8 @@ function ultraschall.InsertTrackAtIndex(index, number_of_tracks, wantdefaults)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, insert, new, track</tags>
 </US_DocBloc>
 ]]
@@ -1215,8 +1215,8 @@ function ultraschall.MoveTracks(trackstring, targetindex, makepreviousfolder)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, move, track, tracks, folder</tags>
 </US_DocBloc>
 ]]
@@ -1268,8 +1268,8 @@ function ultraschall.CreateTrackString_ArmedTracks()
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>helper functions, get, tracks, armed, trackstring</tags>
 </US_DocBloc>
 --]]
@@ -1303,8 +1303,8 @@ function ultraschall.CreateTrackString_UnarmedTracks()
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>helper functions, get, tracks, unarmed, trackstring</tags>
 </US_DocBloc>
 --]]
@@ -1344,8 +1344,8 @@ function ultraschall.CreateTrackStringByGUID(guid_csv_string)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackstring, track, create, guid</tags>
 </US_DocBloc>
 --]]
@@ -1387,8 +1387,8 @@ function ultraschall.CreateTrackStringByTracknames(tracknames_csv_string)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackstring, track, create, tracknames</tags>
 </US_DocBloc>
 --]]
@@ -1433,8 +1433,8 @@ function ultraschall.CreateTrackStringByMediaTracks(MediaTrackArray)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackstring, track, create, mediatrack, mediatracks</tags>
 </US_DocBloc>
 --]]
@@ -1483,8 +1483,8 @@ function ultraschall.GetTracknumberByGuid(guid)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>track management, get, track, guid, tracknumber</tags>
 </US_DocBloc>
 --]]
@@ -1525,8 +1525,8 @@ function ultraschall.DeleteTracks_TrackString(trackstring)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, delete, track, trackstring</tags>
 </US_DocBloc>
 ]]
@@ -1562,8 +1562,8 @@ function ultraschall.AnyTrackMute(master)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>trackmanagement, is, track, master, mute</tags>
 </US_DocBloc>
 ]]
@@ -1603,8 +1603,8 @@ function ultraschall.AnyTrackRecarmed()
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>helper functions, get, any track, recarmed</tags>
 </US_DocBloc>
 ]]
@@ -1634,8 +1634,8 @@ function ultraschall.AnyTrackPhased()
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>helper functions, get, anytrack, phase</tags>
 </US_DocBloc>
 ]]
@@ -1667,8 +1667,8 @@ function ultraschall.AnyTrackRecMonitored()
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>helper functions, get, anytrack, recmonitor</tags>
 </US_DocBloc>
 ]]
@@ -1703,8 +1703,8 @@ function ultraschall.AnyTrackHiddenTCP(master)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>helper functions, get, anytrack, hidden, tcp, master</tags>
 </US_DocBloc>
 ]]
@@ -1743,8 +1743,8 @@ function ultraschall.AnyTrackHiddenMCP(master)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>helper functions, get, anytrack, hidden, mcp, master</tags>
 </US_DocBloc>
 ]]
@@ -1779,8 +1779,8 @@ function ultraschall.AnyTrackFreeItemPositioningMode()
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>helper functions, get, anytrack, freemode, free item positioning mode</tags>
 </US_DocBloc>
 ]]
@@ -1815,8 +1815,8 @@ function ultraschall.AnyTrackFXBypass(master)
     Track Management
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
   <tags>helper functions, get, anytrack, fx bypass</tags>
 </US_DocBloc>
 ]]

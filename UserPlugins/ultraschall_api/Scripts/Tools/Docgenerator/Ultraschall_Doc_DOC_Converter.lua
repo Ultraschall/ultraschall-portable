@@ -448,7 +448,7 @@ end
 
 local String=ultraschall.ReadFullFile(Infilename, false)
 
-if ultraschall.US_BetaFunctions=="ON" then
+if ultraschall.US_BetaFunctions==true then
     String=String.."\n"..ultraschall.ReadFullFile(Infilename2, false)
 end
 

@@ -2871,9 +2871,11 @@ It is an integer-bitfield</p>
 <p>&amp;32=0, Show recording volume name(off), unchecked<br />
 &amp;32=1, Show recording volume name(on), checked</p>
 </blockquote>
-<p>set in Preferences -&gt; Buffering -&gt; Advanced Disk I/O Settings!<br />
-&gt;&amp;64=1 - Periodially close excess file handles(experimental)-checkbox unchecked<br />
-&gt;&amp;64=1 - Periodially close excess file handles(experimental)-checkbox checked</p>
+<p>set in Preferences -&gt; Buffering -&gt; Advanced Disk I/O Settings!</p>
+<blockquote>
+<p>&amp;64=1 - Periodially close excess file handles(experimental)-checkbox unchecked<br />
+&amp;64=1 - Periodially close excess file handles(experimental)-checkbox checked</p>
+</blockquote>
 <p>For the megabytes-inputbox(check free disk space on record start), see <a href="#diskcheckmb">diskcheckmb</a><br />
 For other settings set in Preferences -&gt; Recording, see <a href="#adjreclat">adjreclat</a>, <a href="#adjrecmanlat">adjrecmanlat</a>, <a href="#adjrecmanlatin">adjrecmanlatin</a>, <a href="#diskcheckmb">diskcheckmb</a>, <a href="#errnowarn">errnowarn</a>, <a href="#manuallat">manuallat</a>,<br />
 <a href="#manuallatin">manuallatin</a>, <a href="#maxrecsize">maxrecsize</a>, <a href="#maxrecsize_use">maxrecsize_use</a>, <a href="#peakrecbm">peakrecbm</a>, <a href="#promptendrec">promptendrec</a>, <a href="#recopts">recopts</a>, <a href="#recfile_wildcards">recfile_wildcards</a>,<br />
@@ -3454,14 +3456,14 @@ It is an integer</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="help"></a>
 &nbsp;<a href="#help"><b>help</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Stores the settings for the help-information-display under the TCP, as set in it’s accompanying context-menu.<br />
-It is an integer-bitfield.</p>
+It is an integer/integer-bitfield.</p>
 <blockquote>
 <p>Only one of the following can be set:<br />
-&amp;0=1, No information display<br />
-&amp;1=1, Reaper tips<br />
-&amp;2=1, Track/item count<br />
-&amp;3=1, selected track/item/envelope details<br />
-&amp;4=1, CPU/RAM use, time since last save</p>
+0, No information display<br />
+1, Reaper tips<br />
+2, Track/item count<br />
+3, selected track/item/envelope details<br />
+4, CPU/RAM use, time since last save</p>
 </blockquote>
 <blockquote>
 <p>This one can be set all the times:<br />
@@ -4417,9 +4419,12 @@ It is an integer-bitfield</p>
 <p>&amp;16=0, Master track -&gt; Show in separate window(off) - unchecked<br />
 &amp;16=1, Master track -&gt; Show in separate window(on) - checked</p>
 </blockquote>
-<p>also for<br />
-&gt;&amp;16=0, Master track -&gt; Show in docker(off) - unchecked<br />
-&gt;&amp;16=1, Master track -&gt; Show in docker(on) - checked</p>
+<p>&amp;16 is also for</p>
+<blockquote>
+<p>&amp;16=0, Master track -&gt; Show in docker(off) - unchecked<br />
+&amp;16=1, Master track -&gt; Show in docker(on) - checked</p>
+</blockquote>
+<p>so you can really decide, which setting to use</p>
 <p>For other mixer-context-menu-settings, see <a href="#showctinmix">showctinmix</a>, <a href="#mixrowflags">mixrowflags</a> and <a href="#mixeruiflag">mixeruiflag</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="mixeruiflag"></a>
@@ -5692,14 +5697,15 @@ Although the name indicates sample-rate, this stores the number of channels inst
 </blockquote>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projrenderstems"></a>
-&nbsp;<a href="#projrenderstems"><b>projrenderstems</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Source-dropdownlist, as set in the Render to File-dialog.<br />
+&nbsp;<a href="#projrenderstems"><b>projrenderstems</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Source-dropdownlist, as well as the “Embed stretch markers/transient guides”-checkbox, as set in the Render to File-dialog.<br />
 It is an integer</p>
 <blockquote>
 <p>0, Master mix<br />
 1, Master mix + stems<br />
 3, Stems (selected tracks)<br />
 8, Region render matrix<br />
-32, Selected media items</p>
+32, Selected media items<br />
+256, “Embed stretch markers/transient guides”-checkbox; 0, unchecked; 1, checked</p>
 </blockquote>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projripedit"></a>
@@ -8249,8 +8255,8 @@ It is an integer-bitfield</p>
 &amp;1=1, only show send wires on track mouseover - checked</p>
 </blockquote>
 <blockquote>
-<p>&amp;16=0, show routing controls when creating send/hardware output - unchecked<br />
-&amp;16=1, show routing controls when creating send/hardware output - checked</p>
+<p>&amp;8=0, show routing controls when creating send/hardware output - unchecked<br />
+&amp;8=1, show routing controls when creating send/hardware output - checked</p>
 </blockquote>
 <blockquote>
 <p>&amp;16=0, only show hardware output/input wires on track mouseover - unchecked<br />
@@ -8491,4 +8497,4 @@ This can’t be set, only read from reaper.ini -&gt; [reaper_video] !</p>
 <blockquote>
 <p>0, Project Settings-tab 1, Media-tab 2, Video-tab 3, Advanced-tab 4, Notes-tab</p>
 </blockquote>
-</td></tr></table></divl><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.79 - 439 configuration-variables available</td></table><br><hr></div></body></html>
+</td></tr></table></divl><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.9 - 439 configuration-variables available</td></table><br><hr></div></body></html>

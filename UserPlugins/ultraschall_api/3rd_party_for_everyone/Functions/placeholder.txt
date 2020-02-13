@@ -1,0 +1,70 @@
+function ultraschall.MyName_Functionname(parameter1, parameter2, parameter3)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MyName_Functionname</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.40
+    SWS=2.9.7
+    JS=0.962
+    Lua=5.3
+  </requires>
+  <functioncall>integer returnvalue1, integer returnvalue2 = ultraschall.MyName_Functionname(integer parameter1, integer parameter2, integer parameter3)</functioncall>
+  <description>
+    This is the description of the function. 
+    
+    It must include a description of datastructures needed(usually tables). 
+    
+    It also must include, which returnvalue to expect in case of an error.
+  </description>
+  <retvals>
+    integer returnvalue1 - the description of this returnvalue1
+                         - you can add another line this way, beginning with a -
+                         - the last line is just another line. To start description of the next returnvalue, just start it.
+    string returnvalue2 - the description of this returnvalue2
+                         - you can add another line this way, beginning with a -
+                         - the last line is just another line. To start description of the next returnvalue, just start it.
+  </retvals>
+  <parameters>
+    integer parameter1 - the description of this parameter1
+                       - you can add another line this way, beginning with a -
+                       - the last line is just another line. To start description of the next returnvalue, just start it.
+    integer parameter2 - the description of this parameter2
+                       - you can add another line this way, beginning with a -
+                       - the last line is just another line. To start description of the next returnvalue, just start it.
+    integer parameter3 - the description of this parameter3
+                       - you can add another line this way, beginning with a -
+                       - the last line is just another line. To start description of the next returnvalue, just start it.
+  </parameters>
+  <chapter_context>
+    Main Chapter in the Docs
+    Sub Chapter in the Docs
+  </chapter_context>
+  <target_document>US_Api_Documentation</target_document>
+  <source_document>sourcefilename.lua</source_document>
+  <tags>some, tags, who, describe, the, function, in, case, a, search, function, needs, something, to, search, for, separated, by, commas</tags>
+</US_DocBloc>
+]]
+    -- if the function has parameters, you need to check, if they are valid
+    -- check for integer parameters, if the user passed integers; check for string parameters, if the user passed strings, etc.
+    -- us Lua's type(), math.type() and Ultraschall-API's ultraschall.type(identifier object) for that.
+    --
+    -- Check also, if the user passed a valid value. Do files exist, that you want to read? Is an integer<0 allowed?
+    --
+    -- Use ultraschall.AddErrorMessage() to give to Ultraschall-API a description of the error, which can be gotten by the user using 
+    -- SLEM() or ultraschall.ShowLastErrorMessage() for debugging.
+
+    -- This demo-function adds three integer-values, as long as they are bigger than or equal 0
+
+    -- are the values valid integers?
+    if math.type(parameter1)~="integer" then ultraschall.AddErrorMessage("MyName_Functionname", "parameter1", "must be an integer", -1) return end
+    if math.type(parameter2)~="integer" then ultraschall.AddErrorMessage("MyName_Functionname", "parameter2", "must be an integer", -2) return end
+    if math.type(parameter3)~="integer" then ultraschall.AddErrorMessage("MyName_Functionname", "parameter3", "must be an integer", -3) return end
+
+    -- are the values>0?
+    if parameter1<0 then ultraschall.AddErrorMessage("MyName_Functionname", "parameter1", "must be an integer", -4) return end
+    if parameter2<0 then ultraschall.AddErrorMessage("MyName_Functionname", "parameter2", "must be an integer", -5) return end
+    if parameter3<0 then ultraschall.AddErrorMessage("MyName_Functionname", "parameter3", "must be an integer", -6) return end
+
+    return parameter1+parameter2+parameter3, "addition was successful"
+end
