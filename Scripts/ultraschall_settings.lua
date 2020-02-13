@@ -276,7 +276,7 @@ end
 local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
-gfx_path=script_path.."/Ultraschall_Gfx/Settings/"
+
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
@@ -303,8 +303,8 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 GUI.elms = {
 
 --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
-  logo             = GUI.Pic:new(          100,  10,   0,  0,    1,   gfx_path.."us_small.png"),
-  devices          = GUI.Pic:new(          500,  12,   0,  0,    1,   gfx_path.."us_devices.png"),
+  logo             = GUI.Pic:new(          100,  10,   0,  0,    1,   script_path.."us_small.png"),
+  devices          = GUI.Pic:new(          500,  12,   0,  0,    1,   script_path.."us_devices.png"),
   label_settings   = GUI.Lbl:new(          173, 115,                  "Settings:",          0),
   label_interfaces = GUI.Lbl:new(          566, 115,                  "Interfaces:",          0),
   label_table      = GUI.Lbl:new(          450, 186,                  "Local Monitoring                                           Delete",          0),
