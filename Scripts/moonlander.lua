@@ -24,26 +24,11 @@ reaper.atexit(atexit)
 
 gfx.init("Moonlander", 1000, 600)
 
-scale=1
-AAaA=string.match(reaper.GetOS(), "OSX")
-if string.match( reaper.GetOS(), "OSX")~=nil then
-  scale = 1--math.floor(1 * 0.8)
-  macoffset=-16
-  winoffset=0
-  font="times"
-else
-  macoffset=3
-  winoffset=10
-  scale=1
-  font="times"
-end
-
-
-gfx.setfont(1,"arial",math.floor(17*scale),0)
-gfx.setfont(2,font,math.floor(80*scale),98)
-gfx.setfont(3,"arial",math.floor(20*scale),73)
-gfx.setfont(4,"arial",math.floor(15*scale),0)
-gfx.setfont(5,"arial",math.floor(15*scale),0)
+gfx.setfont(1,"arial",20,0)
+gfx.setfont(2,"Times",80,98)
+gfx.setfont(3,"arial",20,73)
+gfx.setfont(4,"arial",15,0)
+gfx.setfont(5,"arial",15,0)
 
   PCM_sourcebgm1=reaper.PCM_Source_CreateFromFile(Path.."/moonlander/svoe.mp3")
   PCM_source2bgm=reaper.Xen_StartSourcePreview(PCM_sourcebgm1, 0.2, false)
@@ -440,12 +425,12 @@ function Titlemain()
   titlerotate=titlerotate+0.015+(deltay*0.00001)
   deltay=deltay+(2*deltadir)
   gfx.blit(12,0.5,titlerotate)
-  gfx.x=96+macoffset
-  gfx.y=250+winoffset
+  gfx.x=96
+  gfx.y=250
   gfx.set(0)
   gfx.drawstr("Meo Mespotine's",1,500,600)
-  gfx.x=98+macoffset
-  gfx.y=252+winoffset
+  gfx.x=98
+  gfx.y=252
   gfx.set(1)
   gfx.drawstr("Meo Mespotine's",1,500,600)
   gfx.set(1)

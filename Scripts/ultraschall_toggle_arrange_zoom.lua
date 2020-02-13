@@ -30,19 +30,19 @@ zoomfactor=reaper.GetHZoomLevel() -- get current zoom-level
 ZoomedInLevelDef=400              -- set this to the "zoom in"-level, you want to have
                                   -- 0.007(max zoom out) to 1000000(max zoom in) is valid,
                                   -- 400 is recommended
-Zoomstate=ultraschall.GetUSExternalState("ultraschall_view","zoom_toggle_state")
-ZoomedInLevel=ultraschall.GetUSExternalState("ultraschall_view","zoomin_level")
+Zoomstate=ultraschall.GetUSExternalState("view","zoom_toggle_state")
+ZoomedInLevel=ultraschall.GetUSExternalState("view","zoomin_level")
 ZoomedInLevel=tonumber(ZoomedInLevel)
 if ZoomedInLevel==-1 or ZoomedInLevel==nil then
   ZoomedInLevel=ZoomedInLevelDef
 end
 
 if Zoomstate=="false" or zoomfactor~=ZoomedInLevel then
-   ultraschall.SetUSExternalState("ultraschall_view","zoom_toggle_state","true")
-   ultraschall.SetUSExternalState("ultraschall_view","old_zoomfactor",zoomfactor)
+   ultraschall.SetUSExternalState("view","zoom_toggle_state","true")
+   ultraschall.SetUSExternalState("view","old_zoomfactor",zoomfactor)
    reaper.adjustZoom(ZoomedInLevel, 1, true, 0)
 else
-  ultraschall.SetUSExternalState("ultraschall_view","zoom_toggle_state","false")
-  oldzoomfactor=ultraschall.GetUSExternalState("ultraschall_view","old_zoomfactor")
+  ultraschall.SetUSExternalState("view","zoom_toggle_state","false")
+  oldzoomfactor=ultraschall.GetUSExternalState("view","old_zoomfactor")
   reaper.adjustZoom(tonumber(oldzoomfactor), 1, true, 0)
 end
