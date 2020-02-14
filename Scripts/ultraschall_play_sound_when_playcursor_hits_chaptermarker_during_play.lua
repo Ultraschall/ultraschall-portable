@@ -44,7 +44,7 @@ function main()
   newPosition=reaper.GetPlayPosition()
   if reaper.GetPlayState()==1 then -- Play
     if newPosition<oldPosition then
-      oldPosition=newPosition-1
+      oldPosition=newPosition-0.2
       if oldPosition<0 then
         oldPosition=0
       end
