@@ -89,7 +89,7 @@ end
 
 
 GUI.name = "Ultraschall Welcome Slideshow"
-GUI.w, GUI.h = 800, 665
+GUI.w, GUI.h = 680, 780
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -131,7 +131,7 @@ function buildGui(slide_number)
 
     previous_slide_number = slide_number -1
 
-    button_settings = GUI.Btn:new(20, 630, 85, 20,         " Back...", buildGui, previous_slide_number)
+    button_settings = GUI.Btn:new(20, 727, 35, 39,         " <", buildGui, previous_slide_number)
     table.insert(GUI.elms, button_settings)
 
   end
@@ -143,12 +143,12 @@ function buildGui(slide_number)
   if slide_number ~= #slideshow_table then
 
     next_slide_number = slide_number +1
-    button_settings = GUI.Btn:new(700, 630, 85, 20,         " Next...", buildGui, next_slide_number)
+    button_settings = GUI.Btn:new(489, 727, 174, 39,         " Next...", buildGui, next_slide_number)
     table.insert(GUI.elms, button_settings)
 
   else
 
-    button_settings = GUI.Btn:new(700, 630, 85, 20,         " Close", close_gfx)
+    button_settings = GUI.Btn:new(489, 727, 174, 39,         " Close", close_gfx)
     table.insert(GUI.elms, button_settings)
 
   end
