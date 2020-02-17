@@ -44,5 +44,21 @@ markercount=ultraschall.CountNormalMarkers_NumGap()
 
 runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if not visible
 
+function CreateDateTime(time)
+  local D=os.date("*t",time)
+  if D.day<10 then D.day="0"..D.day else D.day=tostring(D.day) end
+  if D.month<10 then D.month="0"..D.month else D.month=tostring(D.month) end
+  if D.hour<10 then D.hour="0"..D.hour else D.hour=tostring(D.hour) end
+  if D.min<10 then D.min="0"..D.min else D.min=tostring(D.min) end
+  if D.sec<10 then D.sec="0"..D.sec else D.sec=tostring(D.sec) end
+  local Date=D.day.."."..D.month.."."..D.year
+  local Time=D.hour..":"..D.min..":"..D.sec
+  return Date.." "..Time
+end
+
+L=CreateDateTime()
 timestamp=os.date("%Y-%m-%d; %H:%M:%S")
-reaper.AddProjectMarker2(0, false, current_position, 0, timestamp, markercount, 0)
+--reaper.AddProjectMarker2(0, false, current_position, 0, "_Time: "..timestamp, markercount, 274877906943)
+Marker = reaper.AddProjectMarker2(0, false, current_position, 0, 
+"_Time: "..CreateDateTime(), 
+0, 274877906943)
