@@ -199,7 +199,7 @@ function SoundcheckChangedInterface(userspace)
   -- get the current Interface
   local retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 
-  if actual_device_name ~= userspace["old_device_name"] and actual_device_name ~= "" then -- Device wurde gewechselt und es wird nicht gerendert
+  if actual_device_name ~= userspace["old_device_name"] and actual_device_name ~= "" and reaper.CountTracks(0) > 0 then -- Device wurde gewechselt und es wird nicht gerendert und es gibt mindestens 1 Spur
 
     local known_device_status = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-settings.ini")
 
