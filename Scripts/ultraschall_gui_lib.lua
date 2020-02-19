@@ -102,6 +102,7 @@ GUI.colors = {
 
   wnd_bg = {44, 44, 44, 1},      -- Window BG
   elm_bg = {48, 48, 48, 1},      -- Element BG
+  sld_bg = {60, 60, 60, 1},    -- Slider Background
   elm_frame = {70, 70, 70, 1},    -- Element Frame
   elm_highlight = {100, 100, 100, 1},    -- Element Highlight
   elm_fill = {200, 130, 64, 1},    -- Element Fill
@@ -976,7 +977,7 @@ function Sldr:draw()
 
 
   -- Draw track
-  GUI.color("elm_bg")
+  GUI.color("sld_bg")
   GUI.roundrect(x+offset, y, w, h, 4, 1, 1)
   GUI.color("elm_outline")
   GUI.roundrect(x+offset, y, w, h, 4, 1, 0)
