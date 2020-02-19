@@ -257,6 +257,10 @@ end
 
 
 
+-- install hotfixes, if available
+if reaper.file_exists(reaper.GetResourcePath().."/Scripts/Ultraschall_Install.me")==true then
+ ultraschall.RunCommand("_Ultraschall_Hotfixes")
+end
 
 --------------------------
 -- First start actions
