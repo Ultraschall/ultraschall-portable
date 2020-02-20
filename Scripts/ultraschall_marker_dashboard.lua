@@ -147,6 +147,15 @@ function moveArrangeview(cursor_position)
 
 end
 
+
+function addImage(cursor_position)
+
+  moveArrangeview(cursor_position)
+  show_menu("Drag and Drop an image on an empty track at this position")
+
+end
+
+
 ------------------------------------------------------
 -- Editiert einen Marker an der Zeitposition
 ------------------------------------------------------
@@ -437,6 +446,11 @@ function buildGui()
 
       imagepreview = GUI.Pic:new(479, position-5, 25, 25, img_ratio, placeholderimg, open_url, image)
       table.insert(GUI.elms, imagepreview)
+
+    elseif name and name ~= "" then -- noch kein Bild zugeordnet
+
+      add_image = GUI.Pic:new(479, position-5, 25, 25, 0.5, add, addImage, key)
+      table.insert(GUI.elms, add_image)
 
     end
 
