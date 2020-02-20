@@ -275,12 +275,23 @@ function buildGui()
 
   GUI.elms = {}
 
-  GUI.elms = {
 
-  --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
+-- Kopzeile
 
-    label_table      = GUI.Lbl:new(          20, 20,                  "Nr.   Name                                                                              Position    Image    URL                                          Export Check",          0),
-  }
+  id = GUI.Lbl:new(17, 20, "Nr.", 0)
+    table.insert(GUI.elms, id)
+  id = GUI.Lbl:new(50, 20, "Name", 0)
+    table.insert(GUI.elms, id)
+  id = GUI.Lbl:new(400, 20, "Position", 0)
+    table.insert(GUI.elms, id)
+  id = GUI.Lbl:new(469, 20, "Image", 0)
+    table.insert(GUI.elms, id)
+  id = GUI.Lbl:new(524, 20, "URL", 0)
+    table.insert(GUI.elms, id)
+  id = GUI.Lbl:new(720, 20, "Export Check", 0)
+    table.insert(GUI.elms, id)
+
+-- Ende Kopfzeile
 
 
   position = 30
@@ -340,7 +351,7 @@ function buildGui()
         table.insert(GUI.elms, url_txt)
         edit_url = GUI.Pic:new(550, position-5, 200, 25, 1, blankimg, editURL, idx)
         table.insert(GUI.elms, edit_url)
-        open_exturl = GUI.Pic:new(522, position-5, 25, 25, 0.5, link, open_url, mkrRgnSubOut)
+        open_exturl = GUI.Pic:new(522, position-5, 25, 25, 0.5, link, ultraschall.OpenURL, mkrRgnSubOut)
         table.insert(GUI.elms, open_exturl)
 
       else
@@ -444,7 +455,7 @@ function buildGui()
 
       img_ratio = 0.5
 
-      imagepreview = GUI.Pic:new(479, position-5, 25, 25, img_ratio, placeholderimg, open_url, image)
+      imagepreview = GUI.Pic:new(479, position-5, 25, 25, img_ratio, placeholderimg, ultraschall.OpenURL, image)
       table.insert(GUI.elms, imagepreview)
 
     elseif name and name ~= "" then -- noch kein Bild zugeordnet
@@ -459,16 +470,18 @@ function buildGui()
     check_indicator = GUI.Pic:new(785, position-4, 25, 25, 0.5, check_image, show_menu, check_text),
     table.insert(GUI.elms, check_indicator)
 
-
-
   end
 
 end
 
 
+------------------------------------------------------
+--  Ende der Funktionen, Beginn Hauptteil
+------------------------------------------------------
 
-GUI.func = buildGui -- Dauerschleife
-GUI.freq = 0.3         -- Aufruf jede Sekunde
+
+GUI.func = buildGui   -- Dauerschleife
+GUI.freq = 0.3        -- Aufruf jede 1/3 Sekunde
 
 
 if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
