@@ -147,6 +147,9 @@ function moveArrangeview(cursor_position)
 
 end
 
+------------------------------------------------------
+-- Versetze den Cursor und zeige einen Hilfetext zum einfügen von Bildern an
+------------------------------------------------------
 
 function addImage(cursor_position)
 
@@ -222,7 +225,9 @@ end
 markertable = build_markertable()
 tablesort = makeSortedTable(markertable)
 rows = #tablesort
+if rows < 4 then rows = 4 end -- Minimalhöhe
 WindowHeight = 60 + (rows * 30) +30
+
 
 check_text = ""
 image_sizes = {}
