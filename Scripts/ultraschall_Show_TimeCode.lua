@@ -1,4 +1,4 @@
--- Meo Mespotine - 26. November 2018
+-- Meo Mespotine - 20. February 2020
 -- Add time-markers, and display the offset but not as project-time, but as time in 24-hour format
 A,B,C,D=reaper.get_action_context()
 
@@ -40,12 +40,12 @@ function GetPreviousTimeMarker()
     local A,B,C,D,E,F,G,H,I,J=reaper.EnumProjectMarkers2(0,i)
       if C<=position and E:sub(1,7)=="_Time: " then 
         LLLL=E:sub(8,-1)      
-        Time=LLLL:match("%s(..:..:..)")
-        Date=LLLL:match("(.-)%s")
+        Time=LLLL:match("T(..:..:..)")
+        Date=LLLL:match("(.-)T")
         if Time~=nil and Date~=nil then return Time, Date,C end      
       end
   end 
-  return "--:--:--", "--.--.----", 0
+  return "--:--:--", "----.--.--", 0
 end
 
 --A,B,C=
@@ -69,9 +69,9 @@ end
 
 function ConvertTimeToTable(datestring,timestring)
   local Table={}
-  Table["year"]=tonumber(datestring:match(".*%.(.*)"))
-  Table["month"]=datestring:match(".-%.(.-)%.")
-  Table["day"]=datestring:match("(.-)%.")
+  Table["day"]=tonumber(datestring:match(".*%-(.*)"))
+  Table["month"]=datestring:match(".-%-(.-)%-")
+  Table["year"]=datestring:match("(.-)%-")
   
   Table["hour"]=tonumber(timestring:match("(.-):"))
   Table["min"]=tonumber(timestring:match(":(.-):"))
