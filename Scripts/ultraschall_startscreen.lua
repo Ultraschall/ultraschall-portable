@@ -129,7 +129,7 @@ gfx_path=script_path.."/Ultraschall_Gfx/Startscreen/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall 4"
-GUI.w, GUI.h = 680, 415
+GUI.w, GUI.h = 680, 780
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -145,34 +145,39 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
   -- body
   ---- GUI Elements ----
 
-GUI.elms = {
+GUI.elms = {}
 
 --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
-  logo             = GUI.Pic:new(          240,  10,   0,  0,    1,   gfx_path.."us.png"),
-  label            = GUI.Lbl:new(          180, 160,                  "Ultraschall 4 - Aicher - was successfully installed.",          0),
-  label2           = GUI.Lbl:new(          135, 220,                  "Visit the Podcast menu to explore the user interface and features.", 0),
-  label3           = GUI.Lbl:new(          210, 240,                  "Use Project templates for a quick setup.",                           0),
-  label4           = GUI.Lbl:new(          265, 290,                  "If you need assistance:",                                            0),
-  checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4, tonumber(ultraschall.GetUSExternalState("ultraschall_settings_startsceen","Value","ultraschall-settings.ini")), "ultraschall_settings_startsceen"),
-  tutorials        = GUI.Btn:new(           30, 320, 190, 40,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/"),
-  twitter          = GUI.Btn:new(          242, 320, 190, 40,         "Twitter",                                                            open_url, "https://twitter.com/ultraschall_fm"),
-  forum            = GUI.Btn:new(          455, 320, 190, 40,         "Userforum",                                                          open_url, "https://sendegate.de/c/ultraschall"),
-}
+logo = GUI.Pic:new(0,  0,   0,  0,    1,   gfx_path.."WELCOME_SCREEN.png")
+  table.insert(GUI.elms, logo)
+
+checkers = GUI.Checklist:new(20, 730, 240, 30,"","Show this Screen on Start", 4, tonumber(ultraschall.GetUSExternalState("ultraschall_settings_startsceen","Value","ultraschall-settings.ini")), "ultraschall_settings_startsceen")
+  table.insert(GUI.elms, checkers)
+
+ tutorials = GUI.Btn:new(           125, 665, 140, 30,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/")
+  table.insert(GUI.elms, tutorials)
+
+ twitter = GUI.Btn:new(          282, 665, 140, 30,         "Twitter",                                                            open_url, "https://twitter.com/ultraschall_fm")
+  table.insert(GUI.elms, twitter)
+
+ forum = GUI.Btn:new(          439, 665, 140, 30,         "Userforum",                                                          open_url, "https://sendegate.de/c/ultraschall")
+   table.insert(GUI.elms, forum)
 
 
-id = GUI.Btn:new(500, 370, 100, 40, "Quick Tutorial", startTutorial, "")
-    table.insert(GUI.elms, id)
+
+id = GUI.Btn:new(492, 727, 170, 40, "Quick Tutorial >", startTutorial, "")
+  table.insert(GUI.elms, id)
 
 
 
 
 versionsTable = get_versions()
 version_items = build_menu(versionsTable)
-GUI.elms.versions  = GUI.Btn:new(          276, 185, 120, 24,         " Show Details",                                                      show_menu, version_items)
+-- GUI.elms.versions  = GUI.Btn:new(          276, 185, 120, 24,         " Show Details",   show_menu, version_items)
 
 
-GUI.func = check_values
-GUI.freq = 1
+  -- GUI.func = check_values
+  GUI.freq = 1
 
 
 -- Open Startscreen, when it hasn't been opened yet
