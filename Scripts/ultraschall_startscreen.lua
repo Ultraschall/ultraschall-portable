@@ -84,13 +84,14 @@ function check_values()
 
   local startscreen
 
-  startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value","ultraschall-settings.ini")
-  if tostring(GUI.Val("checkers")[1]) == "1"  and (startscreen == "0" or startscreen=="-1") then      -- ckeckbox is activated
+  startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value", "ultraschall-settings.ini")
+
+  if tostring(GUI["elms"][2]["retval"][1]) == "1"  and (startscreen == "0" or startscreen=="-1") then      -- ckeckbox is activated
     ultraschall.SetUSExternalState("ultraschall_settings_startsceen", "Value", "1", "ultraschall-settings.ini")
-  elseif tostring(GUI.Val("checkers")[1]) == "0" and startscreen == "1" then    -- ckeckbox is deactivated
+
+  elseif tostring(GUI["elms"][2]["retval"][1]) == "0" and startscreen == "1" then    -- ckeckbox is deactivated
     ultraschall.SetUSExternalState("ultraschall_settings_startsceen", "Value", "0", "ultraschall-settings.ini")
   end
-
 end
 
 ------------------------------------------------------
@@ -176,7 +177,7 @@ version_items = build_menu(versionsTable)
 -- GUI.elms.versions  = GUI.Btn:new(          276, 185, 120, 24,         " Show Details",   show_menu, version_items)
 
 
-  -- GUI.func = check_values
+  GUI.func = check_values
   GUI.freq = 1
 
 
