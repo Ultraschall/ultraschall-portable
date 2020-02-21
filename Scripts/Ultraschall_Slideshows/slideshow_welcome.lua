@@ -71,7 +71,7 @@ function build_slideshow_table(slug)
 
   slideshow_table = {}
 
-  for i = 1, 10 do
+  for i = 1, 20 do
 
     slide_name = slideshow_path .. slug .. tostring(i) .. ".png"
     if file_exists(slide_name) then
