@@ -299,6 +299,25 @@ function buildGui()
 -- Ende Kopfzeile
 
 
+-- Zero State - es gibt noch keine Marker, also biete an einen an den Beginn des Projektes zu setzen
+
+  if #tablesort == 0 then
+
+    id = GUI.Lbl:new(400, 100, "There are no chapters yet.", 0)
+    table.insert(GUI.elms, id)
+    id = GUI.Lbl:new(400, 115, "It is recommendet to have at least one", 0)
+    table.insert(GUI.elms, id)
+    id = GUI.Lbl:new(400, 130, "at the beginning of a podcast!", 0)
+    table.insert(GUI.elms, id)
+
+    id = GUI.Btn:new(230, 100, 150, 45, "Create Chapter", insertMarker, "0")
+    table.insert(GUI.elms, id)
+
+  end
+
+-- Beginn des Tabellenaufbaus
+
+
   position = 30
   chapterCount = 0
 
