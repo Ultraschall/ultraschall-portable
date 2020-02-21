@@ -51,9 +51,9 @@ function CreateDateTime(time)
   if D.hour<10 then D.hour="0"..D.hour else D.hour=tostring(D.hour) end
   if D.min<10 then D.min="0"..D.min else D.min=tostring(D.min) end
   if D.sec<10 then D.sec="0"..D.sec else D.sec=tostring(D.sec) end
-  local Date=D.day.."."..D.month.."."..D.year
+  local Date=D.year.."-"..D.month.."-"..D.day
   local Time=D.hour..":"..D.min..":"..D.sec
-  return Date.." "..Time
+  return Date.."T"..Time
 end
 
 L=CreateDateTime()
