@@ -104,6 +104,15 @@ function show_menu(str)
 
 end
 
+function startTutorial()
+
+  gfx.quit()
+  CommandNumber = reaper.NamedCommandLookup("_Ultraschall_Slideshow_Welcome")
+  reaper.Main_OnCommand(CommandNumber,0)
+
+end
+
+
 
 ------------------------------------------------------
 --  End of functions
@@ -149,6 +158,12 @@ GUI.elms = {
   twitter          = GUI.Btn:new(          242, 320, 190, 40,         "Twitter",                                                            open_url, "https://twitter.com/ultraschall_fm"),
   forum            = GUI.Btn:new(          455, 320, 190, 40,         "Userforum",                                                          open_url, "https://sendegate.de/c/ultraschall"),
 }
+
+
+id = GUI.Btn:new(500, 370, 100, 40, "Quick Tutorial", startTutorial, "")
+    table.insert(GUI.elms, id)
+
+
 
 
 versionsTable = get_versions()
