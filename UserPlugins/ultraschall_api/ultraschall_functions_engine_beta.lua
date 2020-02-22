@@ -651,116 +651,6 @@ end
 
 --a,b,c,d,e,f,g,h,i=ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x, y)
 
-function ultraschall.Localize_UseFile(filename, section, language)
--- TODO: getting the currently installed language for the case, that language = set to nil
---       I think, filename as place for the language is better: XRaym_de.USLangPack, XRaym_us.USLangPack, XRaym_fr.USLangPack or something
---       
---       Maybe I should force to use the extension USLangPack...
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>Localize_UseFile</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.975
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval = ultraschall.Localize_UseFile(string filename, string section, string language)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Sets the localize-file and the section to use in the localize-file.
-    If file cannot be found, the function will also look into resource-path/LangPack/ as well to find it.
-    
-    The file is of the format:
-    ;comment
-    ;another comment
-    [section]
-    original text=translated text
-    More Text with\nNewlines and %s - substitution=Translated Text with\nNewlines and %s - substitution
-    A third\=example with escaped equal\=in it = translated text with escaped\=equaltext
-    
-    see [specs for more information](../misc/ultraschall_translation_file_format.USLangPack).
-    
-    returns false in case of an error
-  </description>
-  <retvals>
-    boolean retval - true, translation-file has been found and set successfully; false, translation-file hasn't been found
-  </retvals>
-  <parameters>
-    string filename - the filename with path to the translationfile; if no path is given, it will look in resource-folder/LangPack for the translation-file
-    string section - the section of the translation-file, from which to read the translated strings
-    string language - the language, which will be put after filename and before extension, like mylangpack_de.USLangPack; 
-                    - us, usenglish
-                    - es, spanish
-                    - fr, french
-                    - de, german
-                    - jp, japanese
-                    - etc
-  </parameters>
-  <chapter_context>
-    Localization
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>localization, use, set, translationfile, section, filename</tags>
-</US_DocBloc>
---]]
-  if type(filename)~="string" then ultraschall.AddErrorMessage("Localize_UseFile", "filename", "must be a string", -1) return false end
-  if type(section)~="string" then ultraschall.AddErrorMessage("Localize_UseFile", "section", "must be a string", -2) return false end
-  local filenamestart, filenamsendof=ultraschall.GetPath(filename)
-  local filenamext=filenamsendof:match(".*(%..*)")
-  if language==nil then language="" end
-  local filename2=filename
-  if filenamext==nil or filenamsendof==nil then 
-    filename=filename.."_"..language
-  else
-    filename=filenamestart..filenamsendof:sub(1, -filenamext:len()-1).."_"..language..filenamext
-  end
-  
-  if reaper.file_exists(filename)==false then
-    if reaper.file_exists(reaper.GetResourcePath().."/LangPack/"..filename)==false then
-      ultraschall.AddErrorMessage("Localize_UseFile", "filename", "file does not exist", -3) return false
-    else
-      ultraschall.Localize_Filename=reaper.GetResourcePath().."/LangPack/"..filename2
-      ultraschall.Localize_Section=section
-      ultraschall.Localize_Language=language
-    end
-  else
-    ultraschall.Localize_Filename=filename2
-    ultraschall.Localize_Section=section
-    ultraschall.Localize_Language=language
-  end
-  ultraschall.Localize_File=ultraschall.ReadFullFile(filename).."\n["
-  ultraschall.Localize_File=ultraschall.Localize_File:match(section.."%]\n(.-)%[")
-  ultraschall.Localize_File_Content={}
-  for k in string.gmatch(ultraschall.Localize_File, "(.-)\n") do
-    k=string.gsub(k, "\\n", "\n")
-    k=string.gsub(k, "=", "\0")
-    k=string.gsub(k, "\\\0", "=")
-    local left, right=k:match("(.-)\0(.*)")
-    --print2(left, "======", right)
-    ultraschall.Localize_File_Content[left]=right
-  end
-  
-  
---  ultraschall.Localize_File2=string.gsub(ultraschall.Localize_File, "\n;.-\n", "\n")
-  
-  while ultraschall.Localize_File~=ultraschall.Localize_File2 do
-    ultraschall.Localize_File2=ultraschall.Localize_File
-    ultraschall.Localize_File=string.gsub(ultraschall.Localize_File2, "\n;.-\n", "\n")
-  end
-  
-  ultraschall.Localize_File=string.gsub(ultraschall.Localize_File, "\n\n", "\n")
-  
-  --print2("9"..ultraschall.Localize_File)
-  --print3(ultraschall.Localize_File)
-  
-  return true
-end
-
---O=ultraschall.Localize_UseFile(reaper.GetResourcePath().."/LangPack/ultraschall.USLangPack", "Export Assistant", "de")
-
-
---O={1,2,3}
---P=#O
 
 
 function ultraschall.TracksToColorPattern(colorpattern, startingcolor, direction)
@@ -833,106 +723,6 @@ G=ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender)
 H=ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender)
 --]]
 
-function ultraschall.GetFXStateChunk(StateChunk, TakeFXChain_id)
--- Why is this still in here?
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetFXStateChunk</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.975
-    Lua=5.3
-  </requires>
-  <functioncall>string FXStateChunk = ultraschall.GetFXStateChunk(string StateChunk, optional integer TakeFXChain_id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Returns an FXStateChunk from a TrackStateChunk or a MediaItemStateChunk.
-    
-    An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
-    
-    Returns nil in case of an error or if no FXStateChunk has been found.
-  </description>
-  <retvals>
-    string FXStateChunk - the FXStateChunk, stored in the StateChunk
-  </retvals>
-  <parameters>
-    string StateChunk - the StateChunk, from which you want to retrieve the FXStateChunk
-    optional integer TakeFXChain_id - when using MediaItemStateChunks, this allows you to choose the take of which you want the FXChain; default is 1
-  </parameters>
-  <chapter_context>
-    FX-Management
-    Assistance functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>fxmanagement, get, fxstatechunk, trackstatechunk, mediaitemstatechunk</tags>
-</US_DocBloc>
-]]
-  if ultraschall.IsValidTrackStateChunk(StateChunk)==false and ultraschall.IsValidMediaItemStateChunk(StateChunk)==false then ultraschall.AddErrorMessage("GetFXStateChunk", "StateChunk", "no valid Track/ItemStateChunk", -1) return end
-  if TakeFXChain_id~=nil and math.type(TakeFXChain_id)~="integer" then ultraschall.AddErrorMessage("GetFXStateChunk", "TakeFXChain_id", "must be an integer", -2) return end
-  if TakeFXChain_id==nil then TakeFXChain=1 end
-  
-  if string.find(StateChunk, "\n  ")==nil then
-    StateChunk=ultraschall.StateChunkLayouter(StateChunk)
-  end
-  for w in string.gmatch(StateChunk, " <FXCHAIN.-\n  >") do
-    return string.gsub("\n"..w, "\n      ", "\n    "):sub(2,-1)
-    --return w
-  end
-  local count=0
-  for w in string.gmatch(StateChunk, " <TAKEFX.-\n  >") do
-    count=count+1
-    if TakeFXChain_id==count then
-      return string.gsub("\n"..w, "\n      ", "\n    "):sub(2,-1)
-    end
-  end
-end
-
-
-function ultraschall.GetItem_ClickState()
--- how to get the connection to clicked item, when mouse moves away from the item while retaining click(moving underneath the item for dragging)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetItem_ClickState</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.981
-    SWS=2.10.0.1
-    Lua=5.3
-  </requires>
-  <functioncall>boolean clickstate, number position, MediaItem item, MediaItem_Take take = ultraschall.GetItem_ClickState()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Returns the currently clicked item and take, as well as the current timeposition.
-    
-    Works only, if the mouse is above the MediaItem while having clicked!
-    
-    Returns false, if no item is clicked at
-  </description>
-  <retvals>
-    boolean clickstate - true, item is clicked on; false, item isn't clicked on
-    number position - the position, at which the item is currently clicked at
-    MediaItem item - the Item, which is currently clicked at
-    MediaItem_Take take - the take found at clickposition
-  </retvals>
-  <chapter_context>
-    MediaItem Management
-    Assistance functions
-  </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>mediaitem management, get, clicked, item</tags>
-</US_DocBloc>
---]]
-  -- TODO: Has an issue, if the mousecursor drags the item, but moves above or underneath the item(if item is in first or last track).
-  --       Even though the item is still clicked, it isn't returned as such.
-  --       The ConfigVar uiscale supports dragging information, but the information which item has been clicked gets lost somehow
-  local B=reaper.SNM_GetDoubleConfigVar("uiscale", -999)
-  local X,Y=reaper.GetMousePosition()
-  local Item, ItemTake = reaper.GetItemFromPoint(X,Y, true)
-  if tostring(B)=="-1.#QNAN" or Item==nil then
-    return false
-  end
-  return true, ultraschall.GetTimeByMouseXPosition(reaper.GetMousePosition()), Item, ItemTake
-end
 
 function ultraschall.GetTrackEnvelope_ClickState()
 -- how to get the connection to clicked envelopepoint, when mouse moves away from the item while retaining click(moving underneath the item for dragging)
@@ -972,18 +762,68 @@ function ultraschall.GetTrackEnvelope_ClickState()
   -- TODO: Has an issue, if the mousecursor drags the item, but moves above or underneath the item(if item is in first or last track).
   --       Even though the item is still clicked, it isn't returned as such.
   --       The ConfigVar uiscale supports dragging information, but the information which item has been clicked gets lost somehow
-  local B=reaper.SNM_GetDoubleConfigVar("uiscale", -999)
-  local X,Y=reaper.GetMousePosition()
-  local Track, Info = reaper.GetTrackFromPoint(X,Y)
-  if tostring(B)=="-1.#QNAN" or Info==0 then
-    return false
+  --local B, Track, Info, TrackEnvelope, TakeEnvelope, X, Y
+  
+  B=reaper.SNM_GetDoubleConfigVar("uiscale", -999)
+  if tostring(B)=="-1.#QNAN" then
+    ultraschall.EnvelopeClickState_OldTrack=nil
+    ultraschall.EnvelopeClickState_OldInfo=nil
+    ultraschall.EnvelopeClickState_OldTrackEnvelope=nil
+    ultraschall.EnvelopeClickState_OldTakeEnvelope=nil
+    return 1
+  else
+    Track=ultraschall.EnvelopeClickState_OldTrack
+    Info=ultraschall.EnvelopeClickState_OldInfo
+    TrackEnvelope=ultraschall.EnvelopeClickState_OldTrackEnvelope
+    TakeEnvelope=ultraschall.EnvelopeClickState_OldTakeEnvelope
   end
+  
+  if Track==nil then
+    X,Y=reaper.GetMousePosition()
+    Track, Info = reaper.GetTrackFromPoint(X,Y)
+    ultraschall.EnvelopeClickState_OldTrack=Track
+    ultraschall.EnvelopeClickState_OldInfo=Info
+  end
+  
+  -- BUggy, til the end
+  -- Ich will hier mir den alten Take auch noch merken, und danach herausfinden, welcher EnvPoint im Envelope existiert, der
+  --   a) an der Zeit existiert und
+  --   b) selektiert ist
+  -- damit könnte ich eventuell es schaffen, die Info zurückzugeben, welcher Envelopepoint gerade beklickt wird.
+  if TrackEnvelope==nil then
+    reaper.BR_GetMouseCursorContext()
+    TrackEnvelope = reaper.BR_GetMouseCursorContext_Envelope()
+    ultraschall.EnvelopeClickState_OldTrackEnvelope=TrackEnvelope
+  end
+  
+  if TakeEnvelope==nil then
+    reaper.BR_GetMouseCursorContext()
+    TakeEnvelope = reaper.BR_GetMouseCursorContext_Envelope()
+    ultraschall.EnvelopeClickState_OldTakeEnvelope=TakeEnvelope
+  end
+  --[[
+  
+  
+  
   reaper.BR_GetMouseCursorContext()
   local TrackEnvelope, TakeEnvelope = reaper.BR_GetMouseCursorContext_Envelope()
+  
+  if Track==nil then Track=ultraschall.EnvelopeClickState_OldTrack end
+  if Track~=nil then ultraschall.EnvelopeClickState_OldTrack=Track end
+  if TrackEnvelope~=nil then ultraschall.EnvelopeClickState_OldTrackEnvelope=TrackEnvelope end
+  if TrackEnvelope==nil then TrackEnvelope=ultraschall.EnvelopeClickState_OldTrackEnvelope end
+  if TakeEnvelope~=nil then ultraschall.EnvelopeClickState_OldTakeEnvelope=TakeEnvelope end
+  if TakeEnvelope==nil then TakeEnvelope=ultraschall.EnvelopeClickState_OldTakeEnvelope end
+  
+  --]]
+  --[[
   if TakeEnvelope==true or TrackEnvelope==nil then return false end
   local TimePosition=ultraschall.GetTimeByMouseXPosition(reaper.GetMousePosition())
-  local EnvelopePoint=reaper.GetEnvelopePointByTime(TrackEnvelope, TimePosition)
+  local EnvelopePoint=
   return true, TimePosition, Track, TrackEnvelope, EnvelopePoint
+  --]]
+  if TrackEnvelope==nil then TrackEnvelope=TakeEnvelope end
+  return true, ultraschall.GetTimeByMouseXPosition(reaper.GetMousePosition()), Track, TrackEnvelope--, reaper.GetEnvelopePointByTime(TrackEnvelope, TimePosition)
 end
 
 
@@ -1445,7 +1285,67 @@ end
 
 -- These seem to work:
 
+function ultraschall.WebInterface_GetInstalledInterfaces()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>WebInterface_GetInstalledInterfaces</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer reapers_count_of_webinterface, array reapers_webinterface_filenames_with_path, array reapers_webinterface_titles, integer users_count_of_webinterface, array users_webinterface_filenames_with_path, array users_webinterface_titles = ultraschall.WebInterface_GetInstalledInterfaces()</functioncall>
+  <description>
+    Returns the currently installed web-interface-pages.
+    
+    Will return Reaper's default ones(resources-folder/Plugins/reaper_www_root/) as well as your customized ones(resources-folder/reaper_www_root/)
+  </description>
+  <retvals>
+    integer reapers_count_of_webinterface - the number of factory-default webinterfaces, installed by Reaper
+    array reapers_webinterface_filenames_with_path - the filenames with path of the webinterfaces(can be .htm or .html)
+    array reapers_webinterface_titles - the titles of the webinterfaces, as shown in the titlebar of the browser
+    integer users_count_of_webinterface - the number of user-customized webinterfaces
+    array users_webinterface_filenames_with_path - the filenames with path of the webinterfaces(can be .htm or .html)
+    array users_webinterface_titles - the titles of the webinterfaces, as shown in the titlebar of the browser
+  </retvals>
+  <chapter_context>
+    Web Interface
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_WebInterface_Module.lua</source_document>
+  <tags>web interface, get, all, installed, webrc, filename, title</tags>
+</US_DocBloc>
+]]  
+  local filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/Plugins/reaper_www_root")
+  local files_WEBRC_names={}
+  for i=filecount, 1, -1 do
+    if files[i]:sub(-5,-1):match("%.htm")==nil then
+      table.remove(files, i)
+      filecount=filecount-1
+    end
+  end
+  for i=1, filecount do
+    local A=ultraschall.ReadFullFile(files[i])
+    local start, ende=A:lower():match("<title>().-()</title>")
+    files_WEBRC_names[i]=A:sub(start, ende-1)
+  end
 
+  local filecount2, files2 = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/reaper_www_root")
+  local files_WEBRC_names2={}
+  for i=filecount2, 1, -1 do
+    if files2[i]:sub(-5,-1):match("%.htm")==nil then
+      table.remove(files2, i)
+      filecount2=filecount2-1
+    end
+  end
+  for i=1, filecount2 do
+    local A=ultraschall.ReadFullFile(files2[i])
+    local start, ende=A:lower():match("<title>().-()</title>")
+    files_WEBRC_names2[i]=A:sub(start, ende-1)
+  end
+  
+  return filecount, files, files_WEBRC_names, filecount2, files2, files_WEBRC_names2
+end
 
 
 ultraschall.ShowLastErrorMessage()

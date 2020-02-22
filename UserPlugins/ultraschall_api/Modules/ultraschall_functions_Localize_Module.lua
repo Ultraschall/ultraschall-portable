@@ -100,8 +100,8 @@ function ultraschall.Localize_UseFile(filename, section, language)
   <chapter_context>
     Localization
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Localize_Module.lua</source_document>
   <tags>localization, use, set, translationfile, section, filename</tags>
 </US_DocBloc>
 --]]
@@ -200,8 +200,8 @@ function ultraschall.Localize(text, ...)
   <chapter_context>
     Localization
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Localize_Module.lua</source_document>
   <tags>localization, translate, string, translationfile</tags>
 </US_DocBloc>
 --]]
@@ -252,8 +252,8 @@ function ultraschall.Localize_RefreshFile()
   <chapter_context>
     Localization
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Localize_Module.lua</source_document>
   <tags>localization, reload, refresh, translationfile</tags>
 </US_DocBloc>
 --]]

@@ -84,7 +84,7 @@ function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness, roundness, antial
   <chapter_context>
     Basic Shapes
   </chapter_context>
-  <target_document>USApiGfxReference</target_document>
+  <target_document>US_Api_GFX</target_document>
   <source_document>ultraschall_gfx_engine.lua</source_document>
   <tags>gfx, functions, gfx, draw, thickness, round rectangle</tags>
 </US_DocBloc>
@@ -142,7 +142,7 @@ function ultraschall.GFX_BlitFramebuffer(framebufferidx, showidx)
   <chapter_context>
     Blitting
   </chapter_context>
-  <target_document>USApiGfxReference</target_document>
+  <target_document>US_Api_GFX</target_document>
   <source_document>ultraschall_gfx_engine.lua</source_document>
   <tags>gfx, functions, gfx, blit, framebuffer</tags>
 </US_DocBloc>
@@ -544,8 +544,8 @@ function ultraschall.GFX_Init(...)
     optional integer width -  the width of the window; minmum is 50
     optional integer height -  the height of the window; minimum is 16
     optional integer dockstate - &1=0, undocked; &1=1, docked
-    optional integer xpos - x-position of the window in pixels; minimum is -80
-    optional integer ypos - y-position of the window in pixels; minimum is -15
+    optional integer xpos - x-position of the window in pixels; minimum is -80; nil, to center it horizontally
+    optional integer ypos - y-position of the window in pixels; minimum is -15; nil, to center it vertically
   </parameters>
   <retvals>
     number retval  -  1.0, if window is opened
@@ -554,7 +554,7 @@ function ultraschall.GFX_Init(...)
   <chapter_context>
     Window Handling
   </chapter_context>
-  <target_document>USApiGfxReference</target_document>
+  <target_document>US_Api_GFX</target_document>
   <source_document>ultraschall_gfx_engine.lua</source_document>
   <tags>gfx, functions, gfx, init, window, create, hwnd</tags>
 </US_DocBloc>
@@ -580,6 +580,15 @@ function ultraschall.GFX_Init(...)
     -- use that found, unused windowtitle as temporary windowtitle
     parms[1]=parms[1]..freeslot
     
+    local A1,B,C,D=reaper.my_getViewport(0,0,0,0, 0,0,0,0, false)
+    
+    if parms[5]==nil then
+      parms[5]=(C-parms[2])/2
+    end
+    if parms[6]==nil then
+      parms[6]=(D-parms[3])/2
+    end
+
     -- open window  
     retval=gfx.init(table.unpack(parms))
     
@@ -618,7 +627,7 @@ function ultraschall.GFX_GetWindowHWND()
   <chapter_context>
     Window Handling
   </chapter_context>
-  <target_document>USApiGfxReference</target_document>
+  <target_document>US_Api_GFX</target_document>
   <source_document>ultraschall_gfx_engine.lua</source_document>
   <tags>gfx, functions, gfx, init, window, get, hwnd</tags>
 </US_DocBloc>
@@ -693,7 +702,7 @@ function ultraschall.GFX_GetMouseCap(doubleclick_wait, drag_wait)
   <chapter_context>
     Mouse Handling
   </chapter_context>
-  <target_document>USApiGfxReference</target_document>
+  <target_document>US_Api_GFX</target_document>
   <source_document>ultraschall_gfx_engine.lua</source_document>
   <tags>gfx, functions, mouse, mouse cap, leftclick, rightclick, doubleclick, drag, wheel, mousewheel, horizontal mousewheel</tags>
 </US_DocBloc>
@@ -839,7 +848,7 @@ function ultraschall.GFX_SetFont(fontindex, font, size, flagStr)
   <chapter_context>
     Font Handling
   </chapter_context>
-  <target_document>USApiGfxReference</target_document>
+  <target_document>US_Api_GFX</target_document>
   <source_document>ultraschall_gfx_engine.lua</source_document>
   <tags>gfx, functions, font, set, mac, windows</tags>
 </US_DocBloc>

@@ -81,8 +81,8 @@ function ultraschall.ToggleScrollingDuringPlayback(scrolling_switch, move_editcu
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, scrolling, toggle, edit cursor, play cursor</tags>
 </US_DocBloc>
 --]]
@@ -143,8 +143,8 @@ function ultraschall.SetPlayCursor_WhenPlaying(position)--, move_view)--, length
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, play cursor, set</tags>
 </US_DocBloc>
 --]]
@@ -188,8 +188,8 @@ function ultraschall.SetPlayAndEditCursor_WhenPlaying(position)--, move_view)--,
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, set, play cursor, edit cursor</tags>
 </US_DocBloc>
 --]]
@@ -227,8 +227,8 @@ function ultraschall.JumpForwardBy(seconds, seekplay)
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, set, forward, jump</tags>
 </US_DocBloc>
 --]]
@@ -268,8 +268,8 @@ function ultraschall.JumpBackwardBy(seconds, seekplay)
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, set, backward, jump</tags>
 </US_DocBloc>
 --]]
@@ -308,8 +308,8 @@ function ultraschall.JumpForwardBy_Recording(seconds)
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, set, forward, recording</tags>
 </US_DocBloc>
 --]]
@@ -355,8 +355,8 @@ function ultraschall.JumpBackwardBy_Recording(seconds)
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, jump, forward, recording</tags>
 </US_DocBloc>
 --]]
@@ -411,8 +411,8 @@ function ultraschall.GetNextClosestItemEdge(tracksstring, cursor_type, time_posi
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, next item, position, edge</tags>
 </US_DocBloc>
 --]]
@@ -526,8 +526,8 @@ function ultraschall.GetPreviousClosestItemEdge(tracksstring, cursor_type, time_
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, previous item, position, edge</tags>
 </US_DocBloc>
 --]]
@@ -633,8 +633,8 @@ function ultraschall.GetClosestNextMarker(cursor_type, time_position)
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, next marker, position, marker </tags>
 </US_DocBloc>
 --]]
@@ -715,8 +715,8 @@ function ultraschall.GetClosestPreviousMarker(cursor_type, time_position)
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, previous marker, position, marker</tags>
 </US_DocBloc>
 --]]
@@ -804,8 +804,8 @@ function ultraschall.GetClosestNextRegionEdge(cursor_type, time_position)
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, next region, region, position</tags>
 </US_DocBloc>
 --]]
@@ -894,8 +894,8 @@ function ultraschall.GetClosestPreviousRegionEdge(cursor_type, time_position)
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, previous region, region, position</tags>
 </US_DocBloc>
 --]]
@@ -987,8 +987,8 @@ function ultraschall.GetClosestGoToPoints(trackstring, time_position, check_item
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, previous, next, marker, region, item, edge</tags>
 </US_DocBloc>
 --]]
@@ -1084,8 +1084,8 @@ function ultraschall.CenterViewToCursor(cursortype, position)
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, center, cursor, mouse, edit, play</tags>
 </US_DocBloc>
 ]]
@@ -1130,8 +1130,8 @@ function ultraschall.GetLastCursorPosition()
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, last position, editcursor</tags>
 </US_DocBloc>
 ]]
@@ -1164,8 +1164,8 @@ function ultraschall.GetLastPlayState()
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, last playstate, editcursor</tags>
 </US_DocBloc>
 ]]
@@ -1200,8 +1200,8 @@ function ultraschall.GetLastLoopState()
   <chapter_context>
     Navigation
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, last loopstate, editcursor</tags>
 </US_DocBloc>
 ]]
@@ -1229,8 +1229,8 @@ function ultraschall.GetLoopState()
     Navigation
     Transport
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>transportmanagement, get, loop</tags>
 </US_DocBloc>
 --]]
@@ -1264,8 +1264,8 @@ function ultraschall.SetLoopState(state)
     Navigation
     Transport
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>transportmanagement, set, loop</tags>
 </US_DocBloc>
 --]]
@@ -1301,8 +1301,8 @@ function ultraschall.Scrubbing_MoveCursor_GetToggleState()
     Navigation
     Scrubbing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, get, scrub, when moving editcursor, action, surface</tags>
 </US_DocBloc>
 --]]
@@ -1336,8 +1336,8 @@ function ultraschall.Scrubbing_MoveCursor_Toggle(toggle)
     Navigation
     Scrubbing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
   <tags>navigation, scrub, toggle, when moving editcursor, action, surface</tags>
 </US_DocBloc>
 --]]

@@ -82,6 +82,7 @@ WindowHeight = 260 + (event_count*30) +30
 local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
+gfx_path=script_path.."/Ultraschall_Gfx/Soundcheck/"
 
 ---- Window settings and user functions ----
 
@@ -293,7 +294,7 @@ function buildGui()
   end
 
 
-  logo = GUI.Pic:new(          300,  10,   0,  0,    1,   script_path..logo_img)
+  logo = GUI.Pic:new(          300,  10,   0,  0,    1,   gfx_path..logo_img)
   table.insert(GUI.elms, logo)
 
 

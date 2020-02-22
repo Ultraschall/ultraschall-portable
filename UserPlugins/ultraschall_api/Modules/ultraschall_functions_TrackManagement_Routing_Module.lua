@@ -108,8 +108,8 @@ function ultraschall.GetTrackHWOut(tracknumber, idx, TrackStateChunk)
     Track Management
     Hardware Out
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, get, hwout, routing, phase, source, mute, pan, volume, post, pre, fader, channel, automation, pan-law, trackstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -238,8 +238,8 @@ function ultraschall.GetTrackAUXSendReceives(tracknumber, idx, TrackStateChunk)
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, get, send, receive, phase, source, mute, pan, volume, post, pre, fader, channel, automation, midi, trackstatechunk, pan-law</tags>
 </US_DocBloc>
 ]]
@@ -312,8 +312,8 @@ function ultraschall.CountTrackHWOuts(tracknumber, TrackStateChunk)
     Track Management
     Hardware Out
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, get, count, hwout, routing, trackstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -368,8 +368,8 @@ function ultraschall.CountTrackAUXSendReceives(tracknumber, TrackStateChunk)
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, get, count, send, receive, routing, trackstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -454,8 +454,8 @@ function ultraschall.AddTrackHWOut(tracknumber, outputchannel, post_pre_fader, v
     Track Management
     Hardware Out
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, add, hwout, routing, phase, source, mute, pan, volume, post, pre, fader, channel, automation, pan-law, trackstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -583,8 +583,8 @@ function ultraschall.AddTrackAUXSendReceives(tracknumber, recv_tracknumber, post
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, add, send, receive, phase, source, mute, pan, volume, post, pre, fader, channel, automation, midi, pan-law, trackstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -664,8 +664,8 @@ function ultraschall.DeleteTrackHWOut(tracknumber, idx, TrackStateChunk)
     Track Management
     Hardware Out
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, delete, hwout, routing, trackstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -736,8 +736,8 @@ function ultraschall.DeleteTrackAUXSendReceives(tracknumber, idx, TrackStateChun
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, delete, send, receive, routing, trackstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -838,8 +838,8 @@ function ultraschall.SetTrackHWOut(tracknumber, idx, outputchannel, post_pre_fad
     Track Management
     Hardware Out
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, set, hwout, routing, phase, source, mute, pan, volume, post, pre, fader, channel, automation, pan-law, trackstatechunk</tags>
 </US_DocBloc>
 ]]
@@ -978,8 +978,8 @@ function ultraschall.SetTrackAUXSendReceives(tracknumber, idx, recv_tracknumber,
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, set, send, receive, phase, source, mute, pan, volume, post, pre, fader, channel, automation, midi, trackstatechunk, pan-law</tags>
 </US_DocBloc>
 ]]
@@ -1060,8 +1060,8 @@ function ultraschall.ClearRoutingMatrix(ClearHWOuts, ClearAuxRecvs, ClearTrackMa
     Track Management
     Hardware Out
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>routing, trackmanagement, routing matrix, clear, tracksend, mainsend, receive, send, hwout, mastertrack</tags>
 </US_DocBloc>
 --]]
@@ -1120,8 +1120,8 @@ end
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>routing, trackmanagement, routing matrix, clear, tracksend, mainsend, receive, send, hwout, mastertrack</tags>
 </US_DocBloc>
 --]]
@@ -1178,8 +1178,8 @@ function ultraschall.GetAllHWOuts()
     Track Management
     Hardware Out
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, get, all, hwouts, hardware outputs, routing</tags>
 </US_DocBloc>
 ]]
@@ -1265,8 +1265,8 @@ function ultraschall.ApplyAllHWOuts(AllHWOuts, option)
     Track Management
     Hardware Out
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, set, all, hwout, routing</tags>
 </US_DocBloc>
 ]]
@@ -1353,8 +1353,8 @@ function ultraschall.GetAllAUXSendReceives()
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, get, all, send, receive, aux, routing</tags>
 </US_DocBloc>
 ]]
@@ -1444,8 +1444,8 @@ function ultraschall.ApplyAllAUXSendReceives(AllAUXSendReceives, option)
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, set, all, send, receive, aux, routing</tags>
 </US_DocBloc>
 ]]
@@ -1534,8 +1534,8 @@ function ultraschall.GetAllMainSendStates()
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, get, all, send, main send, master send, routing</tags>
 </US_DocBloc>
 ]]
@@ -1596,8 +1596,8 @@ function ultraschall.ApplyAllMainSendStates(AllMainSendsTable, option)
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, track, set, all, send, main send, master send, routing</tags>
 </US_DocBloc>
 ]]
@@ -1645,8 +1645,8 @@ function ultraschall.AreHWOutsTablesEqual(Table1, Table2, option)
     Track Management
     Hardware Out
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, compare, equal, hwouttable</tags>
 </US_DocBloc>
 ]]
@@ -1713,8 +1713,8 @@ function ultraschall.AreMainSendsTablesEqual(Table1, Table2, option)
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, compare, equal, allmainsendstable</tags>
 </US_DocBloc>
 ]]
@@ -1770,8 +1770,8 @@ function ultraschall.AreAUXSendReceivesTablesEqual(Table1, Table2, option)
     Track Management
     Send/Receive-Routing
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Routing_Module.lua</source_document>
   <tags>trackmanagement, compare, equal, allauxsendreceivestables</tags>
 </US_DocBloc>
 ]]
