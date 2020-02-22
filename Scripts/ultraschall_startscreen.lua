@@ -130,7 +130,7 @@ gfx_path=script_path.."/Ultraschall_Gfx/Startscreen/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall 4"
-GUI.w, GUI.h = 680, 780
+GUI.w, GUI.h = 680, 700
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -152,21 +152,21 @@ GUI.elms = {}
 logo = GUI.Pic:new(0,  0,   0,  0,    1,   gfx_path.."WELCOME_SCREEN.png")
   table.insert(GUI.elms, logo)
 
-checkers = GUI.Checklist:new(20, 730, 240, 30,"","Show this Screen on Start", 4, tonumber(ultraschall.GetUSExternalState("ultraschall_settings_startsceen","Value","ultraschall-settings.ini")), "ultraschall_settings_startsceen")
+checkers = GUI.Checklist:new(20, 665, 240, 30,"","Show this Screen on Start", 4, tonumber(ultraschall.GetUSExternalState("ultraschall_settings_startsceen","Value","ultraschall-settings.ini")), "ultraschall_settings_startsceen")
   table.insert(GUI.elms, checkers)
 
- tutorials = GUI.Btn:new(           125, 665, 140, 30,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/")
-  table.insert(GUI.elms, tutorials)
+ -- tutorials = GUI.Btn:new(           125, 665, 140, 30,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/")
+ -- table.insert(GUI.elms, tutorials)
 
- twitter = GUI.Btn:new(          282, 665, 140, 30,         "Twitter",                                                            open_url, "https://twitter.com/ultraschall_fm")
-  table.insert(GUI.elms, twitter)
+ -- twitter = GUI.Btn:new(          282, 665, 140, 30,         "Twitter",                                                            open_url, "https://twitter.com/ultraschall_fm")
+ -- table.insert(GUI.elms, twitter)
 
- forum = GUI.Btn:new(          439, 665, 140, 30,         "Userforum",                                                          open_url, "https://sendegate.de/c/ultraschall")
-   table.insert(GUI.elms, forum)
+ -- forum = GUI.Btn:new(          439, 665, 140, 30,         "Userforum",                                                          open_url, "https://sendegate.de/c/ultraschall")
+ --  table.insert(GUI.elms, forum)
 
 
 
-id = GUI.Btn:new(492, 727, 170, 40, "Quick Tutorial >", startTutorial, "")
+id = GUI.Btn:new(487, 660, 175, 40, "QUICK TUTORIAL >", startTutorial, "")
   table.insert(GUI.elms, id)
 
 
