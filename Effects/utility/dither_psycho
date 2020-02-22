@@ -5,7 +5,7 @@ desc:Bit Reduction and Dither with Psychoacoustic Noise Shaping
 
 slider1:16<1,32,1>Output Bit Depth
 slider2:1<0,3,1{Off,On,Disabled (Sample Rate Not Supported),Disabled (Overload)}>Psychoacoustic Noise Shaping
-slider3:2<0,1,2{Off (Truncate),On (TPDF),On (Highpass TPDF)}>Dither
+slider3:1<0,2,1{Off (Truncate),On (TPDF),On (Highpass TPDF)}>Dither
 slider4:2<1,2,0.1>Dither Bit Width (LSB)
 
 in_pin:left input
