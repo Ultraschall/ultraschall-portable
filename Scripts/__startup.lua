@@ -256,6 +256,14 @@ if ultraschall.GetUSExternalState("ultraschall_settings_followmode_auto", "Value
 end
 
 
+--------------------------
+-- Starte die Ulraclock
+--------------------------
+
+cmd=reaper.NamedCommandLookup("_Ultraschall_Clock")
+reaper.Main_OnCommand(cmd,0)
+
+
 
 -- install hotfixes, if available
 if reaper.file_exists(reaper.GetResourcePath().."/Scripts/Ultraschall_Install.me")==true then

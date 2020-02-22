@@ -53,6 +53,8 @@ reaper.SetToggleCommandState(sec, ID_4, 0)
 -- reaper.RefreshToolbar2(sec, ID_3)
 -- reaper.RefreshToolbar2(sec, ID_4)
 reaper.Main_OnCommand(40456,0)      --(re)load Screenset
+runcommand("_Ultraschall_Clock")
+runcommand("_Ultraschall_Clock")
 
 -- Msg(cmd)
 -- Msg(ID_2)
