@@ -385,7 +385,7 @@ function buildGui()
 
 
     elseif name and name == "" then
-        id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
+        id = GUI.Lbl:new(50, position, "[Missing - click to edit]", 0)
         table.insert(GUI.elms, id)
         name_func = editMarker
 
@@ -394,7 +394,7 @@ function buildGui()
 
 
     else
-      id = GUI.Lbl:new(50, position, "[Missing - klick to edit]", 0)
+      id = GUI.Lbl:new(50, position, "[Missing - click to edit]", 0)
       table.insert(GUI.elms, id)
       name_func = insertMarker
 
