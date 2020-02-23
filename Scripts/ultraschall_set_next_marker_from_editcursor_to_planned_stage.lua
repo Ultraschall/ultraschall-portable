@@ -29,10 +29,98 @@
 -- so the next planned chapter-marker to be set will be the one, we have just moved 
 -- with this script.
 -- Will ignore other planned-chapter markers as well as edit markers and regions.
-
 local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+function dbg(text)
+    debug= true
+    if debug then reaper.ShowConsoleMsg(tostring(text).."\n") end
+end
+
+function ultraschall.ConvertColor(r,g,b)
+    return reaper.ColorToNative(r,g,b)|0x1000000
+end
+
+function ultraschall.GetAllPlannedMarkers()
+  local markerlist={}
+  local counter=1
+  for i=0, reaper.CountProjectMarkers(0) do
+    local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
+    if color==ultraschall.ConvertColor(100,255,0) then markerlist[counter]=retval counter=counter+1 end
+  end
+  return counter-1, markerlist
+end
+
+function ultraschall.MoveMarkers(markerarray, time, relative)
+--  if type(markerarray)=="string" then temp=markerarray markerarray={} markerarray[1]=temp end
+  if type(markerarray)~="table" then return false end
+  if type(time)~="number" then return false end
+  if type(relative)~="boolean" then return false end
+  local counter=1
+  while markerarray[counter]~=nil do
+    local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, markerarray[counter]-1)
+
+    if relative==true then 
+        reaper.SetProjectMarkerByIndex2(0, retval-1, isrgn, pos+time, rgnend, markrgnindexnumber, name, color, 0)
+    else 
+        reaper.SetProjectMarkerByIndex2(0, retval-1, isrgn, time, rgnend, markrgnindexnumber, name, color, 0)
+    end
+    counter=counter+1
+  end
+  return true
+end
+
+function ultraschall.GetClosestNextNormalMarker(cursor_type, time_position)
+-- returns idx, position(in seconds) and name of the next closest marker
+  local cursortime=0
+  local retposition=reaper.GetProjectLength(0)+1--*200000000 --Working Hack, but isn't elegant....
+  local retindexnumber=-1
+  local retmarkername=""
+  
+  if tonumber(time_position)==nil and reaper.GetPlayState()==0 and tonumber(cursor_type)~=3 then
+    time_position=reaper.GetCursorPosition()
+  elseif tonumber(time_position)==nil and reaper.GetPlayState~=0 and tonumber(cursor_type)~=3 then
+    time_position=reaper.GetPlayPosition()
+  elseif tonumber(time_position)==nil and tonumber(cursor_type)~=3 then
+    time_position=tonumber(time_position)
+  end
+    
+  if tonumber(cursor_type)==nil then return -1 end
+  if tonumber(cursor_type)==0 then cursortime=reaper.GetCursorPosition() end
+  if tonumber(cursor_type)==1 then cursortime=reaper.GetPlayPosition() end
+  if tonumber(cursor_type)==2 then 
+      reaper.BR_GetMouseCursorContext() 
+      cursortime=reaper.BR_GetMouseCursorContext_Position() 
+      if cursortime==-1 then return -1 end
+  end
+  if tonumber(cursor_type)==3 then
+      if tonumber(time_position)==nil then return -1 end
+      cursortime=tonumber(time_position)
+  end
+  if tonumber(cursor_type)>3 or tonumber(cursor_type)<0 then return -1 end
+  
+  local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
+  
+  for i=0,retval do
+--  local retval2, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
+     retval,  isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
+  
+    if isrgn==false then
+--      if pos>time_position and pos<retposition then
+      if pos>cursortime and pos<retposition and (color==0 or color==23488102) then
+        retposition=pos
+        retindexnumber=retval
+        retmarkername=name
+        colore=color
+      end
+    end
+  end
+  if retindexnumber==-1 then retposition=-1 end
+  return retindexnumber, retposition, retmarkername
+end
+
+
 AA,AA2,AA3=ultraschall.GetClosestNextNormalMarker(0)
 
 if AA~=-1 then
