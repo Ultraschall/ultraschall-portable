@@ -33,15 +33,6 @@ local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-function dbg(text)
-    debug= true
-    if debug then reaper.ShowConsoleMsg(tostring(text).."\n") end
-end
-
-function ultraschall.ConvertColor(r,g,b)
-    return reaper.ColorToNative(r,g,b)|0x1000000
-end
-
 function ultraschall.GetAllPlannedMarkers()
   local markerlist={}
   local counter=1
@@ -53,7 +44,6 @@ function ultraschall.GetAllPlannedMarkers()
 end
 
 function ultraschall.MoveMarkers(markerarray, time, relative)
---  if type(markerarray)=="string" then temp=markerarray markerarray={} markerarray[1]=temp end
   if type(markerarray)~="table" then return false end
   if type(time)~="number" then return false end
   if type(relative)~="boolean" then return false end
@@ -103,12 +93,9 @@ function ultraschall.GetClosestNextNormalMarker(cursor_type, time_position)
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
   
   for i=0,retval do
---  local retval2, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
-     retval,  isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
-  
+    retval,  isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
     if isrgn==false then
---      if pos>time_position and pos<retposition then
-      if pos>cursortime and pos<retposition and (color==0 or color==23488102) then
+      if pos>cursortime and pos<retposition and (color==0 or color==0x1666666) then
         retposition=pos
         retindexnumber=retval
         retmarkername=name
