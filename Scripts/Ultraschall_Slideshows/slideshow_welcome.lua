@@ -85,7 +85,7 @@ end
 
 
 GUI.name = "Ultraschall Welcome Slideshow"
-GUI.w, GUI.h = 680, 700
+GUI.w, GUI.h = 680, 715
 
 ------------------------------------------------------
 -- position always in the center of the screen
