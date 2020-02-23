@@ -30,23 +30,25 @@
 --          dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- 4. have fun using the API. Test it with ultraschall.ApiTest()
 
--- requires at least Reaper 5.980, SWS 2.10.0.1 and JS-extension 0.986
+-- requires at least Reaper 6.02, SWS 2.10.0.1 and JS-extension 0.986
 
 
 local ReaperVersion=reaper.GetAppVersion()
 ReaperVersion=tonumber(ReaperVersion:match("(%d%.%d*)"))
 
-if ReaperVersion<5.980 then reaper.MB("Sorry, Reaper 5.980 or higher must be installed to use the API. \nGo to reaper.fm to get it.","Reaper version too old",0) return end
+if ReaperVersion<6.02 then reaper.MB("Sorry, Reaper 6.02 or higher must be installed to use the API. \nGo to reaper.fm to get it.","Reaper version too old",0) return end
 if reaper.CF_LocateInExplorer==nil then reaper.MB("Sorry, SWS 2.10.0.1 or higher must be installed to use the API. \nGo to sws-extension.org to get it.","SWS missing",0) return end
 if reaper.JS_ReaScriptAPI_Version==nil or reaper.JS_ReaScriptAPI_Version()<0.986 then reaper.MB("Sorry, JS-extension-plugin 0.986 or higher must be installed to use the API. \nGo to https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/ to get it.","JS-Extension plugin missing",0) return end
 
-if type(ultraschall)~="table" then ultraschall={} end
+--if type(ultraschall)~="table" then ultraschall={} end
+
+ultraschall={}
 
 ultraschall.temp, ultraschall.Script_Context=reaper.get_action_context()
 
 
 -- Beta-Functions On
-ultraschall.US_BetaFunctions="OFF"
+ultraschall.US_BetaFunctions=false
 
 ultraschall.temp1,ultraschall.temp=reaper.get_action_context()
 ultraschall.temp=string.gsub(ultraschall.temp,"\\","/")
@@ -59,11 +61,12 @@ if ultraschall.temp1 == ultraschall.temp then
   reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")    
 end
 
+
 if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
     ultraschall.Separator = "\\"
-  else
+else
     ultraschall.Separator = "/"
-  end
+end
 
 local info = debug.getinfo(1,'S');
 --ultraschall.Script_Path = info.source:match[[^@?(.*[\/])[^\/]-$]]
@@ -186,7 +189,7 @@ if reaper.file_exists(script_path.."ultraschall_hotfixes.lua") then ultraschall.
 -- if BETA-functions are available and usage of beta-functions is set to ON, include them. 
 -- Functions, that are in both, the "normal" parts of the framework as well as in the beta-part, will use the beta-version,
 -- if betafunctions are set to ON
-if ultraschall.US_BetaFunctions=="ON" then
+if ultraschall.US_BetaFunctions==true then
   if reaper.file_exists(script_path.."ultraschall_functions_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_functions_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_functions_engine_beta.lua") end
   if reaper.file_exists(script_path.."ultraschall_datastructures_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_datastructures_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_datastructures_engine_beta.lua") end
   if reaper.file_exists(script_path.."ultraschall_gui_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_gui_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_gui_engine_beta.lua") end

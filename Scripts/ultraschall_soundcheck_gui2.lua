@@ -82,6 +82,7 @@ WindowHeight = 260 + (event_count*30) +30
 local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
+gfx_path=script_path.."/Ultraschall_Gfx/Soundcheck/"
 
 ---- Window settings and user functions ----
 
@@ -293,7 +294,7 @@ function buildGui()
   end
 
 
-  logo = GUI.Pic:new(          300,  10,   0,  0,    1,   script_path..logo_img)
+  logo = GUI.Pic:new(          300,  10,   0,  0,    1,   gfx_path..logo_img)
   table.insert(GUI.elms, logo)
 
 
@@ -312,6 +313,7 @@ GUI.freq = 1          -- Aufruf jede Sekunde
 if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
 else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
 
+
 if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
                         -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
 
@@ -319,3 +321,9 @@ if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed 
   GUI.Init()
   GUI.Main()
 end
+
+function atexit()
+  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+end
+
+reaper.atexit(atexit)

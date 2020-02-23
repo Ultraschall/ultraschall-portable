@@ -136,7 +136,9 @@ reaper.SetToggleCommandState(sec, on_air_button_id, 0)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Routing Snapshots",0.0, true)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Export Assistant",0.0, true)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Color Picker",0.0, true)
-reaper.SetExtState("Ultraschall_Windows","Ultraschall 3",0.0, true)
+reaper.SetExtState("Ultraschall_Windows","Ultraschall Soundcheck",0.0, true)
+reaper.SetExtState("Ultraschall_Windows","Ultraschall Settings",0.0, true)
+
 
 
 --------------------------
@@ -254,7 +256,19 @@ if ultraschall.GetUSExternalState("ultraschall_settings_followmode_auto", "Value
 end
 
 
+--------------------------
+-- Starte die Ulraclock
+--------------------------
 
+cmd=reaper.NamedCommandLookup("_Ultraschall_Clock")
+reaper.Main_OnCommand(cmd,0)
+
+
+
+-- install hotfixes, if available
+if reaper.file_exists(reaper.GetResourcePath().."/Scripts/Ultraschall_Install.me")==true then
+ ultraschall.RunCommand("_Ultraschall_Hotfixes")
+end
 
 --------------------------
 -- First start actions

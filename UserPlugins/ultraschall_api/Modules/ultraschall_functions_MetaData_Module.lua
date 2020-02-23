@@ -77,8 +77,8 @@ function ultraschall.DeleteProjExtState_Section(section)
     Metadata Management
     Extension States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
   <tags>metadatamanagement, project, delete, extension, state, section</tags>
 </US_DocBloc>
 --]]
@@ -113,8 +113,8 @@ function ultraschall.DeleteProjExtState_Key(section, key)
     Metadata Management
     Extension States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
   <tags>metadatamanagement, project, delete, extension, state, key</tags>
 </US_DocBloc>
 --]]
@@ -152,8 +152,8 @@ function ultraschall.GetProjExtState_AllKeyValues(section)
     Metadata Management
     Extension States
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
   <tags>metadatamanagement, project, extension, state, get, all, key, values, section</tags>
 </US_DocBloc>
 --]]
@@ -213,8 +213,8 @@ function ultraschall.GetGuidExtState(guid, key, savelocation)
     Metadata Management
     Extension States(Guid)
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
   <tags>metadatamanagement, project, extension, state, get, guid, key, values</tags>
 </US_DocBloc>
 --]]
@@ -272,4 +272,137 @@ function ultraschall.GetTrackExtState(track, key)
     local retval, retval2 = ultraschall.GetGuidExtState("MediaTrack-"..guidString, key, 0)
     if retval==-1 then return false else return true, retval2 end
 end
+
+function ultraschall.SetMarkerExtState(index, key, value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetMarkerExtState</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.SetMarkerExtState(integer index, string key, string value)</functioncall>
+  <description>
+    Stores an Extstate for a specific marker/region.
+    
+    The index is for all markers and regions, inclusive and 1-based
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer retval - -1, in case of an error; 1, in case of success
+  </retvals>
+  <parameters>
+    integer index - the marker/region-index, for which to store an extstate; starting with 1 for first marker/region, 2 for second marker/region
+    string key - the key, into which the marker-extstate shall be stored
+    string value - the value, which you want to store into the marker-extstate
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Markers
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>extstate management, marker, region, set, extstate</tags>
+</US_DocBloc>
+--]]
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("SetMarkerExtState", "index", "must be an integer", -1) return -1 end
+  if index<1 or index>reaper.CountProjectMarkers(0) then ultraschall.AddErrorMessage("SetMarkerExtState", "index", "must be between 1 and "..reaper.CountProjectMarkers(0), -2) return -1 end
+  if type(key)~="string" then ultraschall.AddErrorMessage("SetMarkerExtState", "key", "must be a string", -3) return -1 end
+  if type(value)~="string" then ultraschall.AddErrorMessage("SetMarkerExtState", "value", "must be an integer", -4) return -1 end
+  local A,B=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..(index-1), 1, false)
+  return ultraschall.SetGuidExtState("MarkerExtState_"..B, key, value, 0, true, true)
+end
+
+--A1,B1,C1=ultraschall.SetMarkerExtState(2, "Keyt", "marker 2")
+--SLEM()
+
+function ultraschall.GetMarkerExtState(index, key)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetMarkerExtState</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string value = ultraschall.GetMarkerExtState(integer index, string key)</functioncall>
+  <description>
+    Retrieves an Extstate for a specific marker/region.
+    
+    The index is for all markers and regions, inclusive and 1-based
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string value - the value, that has been stored into the marker-extstate; nil, in case of an error
+  </retvals>
+  <parameters>
+    integer index - the marker/region-index, for which an extstate has been stored; starting with 1 for first marker/region, 2 for second marker/region
+    string key - the key, in which the marker-extstate is stored
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Markers
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>extstate management, marker, region, get, extstate</tags>
+</US_DocBloc>
+--]]
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("GetMarkerExtState", "index", "must be an integer", -1) return end
+  if index<1 or index>reaper.CountProjectMarkers(0) then ultraschall.AddErrorMessage("GetMarkerExtState", "index", "must be between 1 and "..reaper.CountProjectMarkers(0), -2) return end
+  if type(key)~="string" then ultraschall.AddErrorMessage("GetMarkerExtState", "key", "must be a string", -3) return end
+  local A,B=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..(index-1), 1, false)
+  local A1,B1=ultraschall.GetGuidExtState("MarkerExtState_"..B, key, 0, true)
+  return B1
+end
+
+--A1,B1,C1=ultraschall.GetMarkerExtState(2, "Keyt", "123")
+
+
+function ultraschall.ProjExtState_CountAllKeys(section)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ProjExtState_CountAllKeys</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer count = ultraschall.ProjExtState_CountAllKeys(string section)</functioncall>
+  <description>
+    Counts all keys stored within a certain ProjExtState-section.
+    
+    Be aware: if you want to enumerate them using reaper.EnumProjExtState, the first key is indexed 0, the second 1, etc!
+    
+    returns -1 in case of an error 
+  </description>
+  <parameters>
+    string section - the section, of which you want to count all keys
+  </parameters>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Extension States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadate management, projextstate, project, extstate, count</tags>
+</US_DocBloc>
+]]
+  if type(section)~="string" then ultraschall.AddErrorMessage("ProjExtState_CountAllKeys", "section", "must be a string", -1) return -1 end
+  local dingo=1
+  local stringer
+  while dingo~=0 do
+    stringer=reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")
+    dingo=reaper.GetProjExtState(0, section, stringer)
+  end
+  
+  return reaper.SetProjExtState(0, section, stringer, "")
+end  
+
 

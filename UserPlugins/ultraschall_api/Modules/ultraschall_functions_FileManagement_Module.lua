@@ -80,8 +80,8 @@ function ultraschall.ReadFullFile(filename_with_path, binary)
     File Management
     Read Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, read file, full file, binary, ascii</tags>
 </US_DocBloc>
 ]]
@@ -144,8 +144,8 @@ function ultraschall.ReadValueFromFile(filename_with_path, value)
     File Management
     Read Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, read file, value, pattern, lines</tags>
 </US_DocBloc>
 ]]
@@ -224,8 +224,8 @@ function ultraschall.ReadLinerangeFromFile(filename_with_path, firstlinenumber, 
     File Management
     Read Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, read file, range</tags>
 </US_DocBloc>
 ]]
@@ -278,8 +278,8 @@ function ultraschall.MakeCopyOfFile(input_filename_with_path, output_filename_wi
     File Management
     Manipulate Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>read file, value</tags>
   <tags>filemanagement, copy, file management</tags>
 </US_DocBloc>
@@ -324,8 +324,8 @@ function ultraschall.MakeCopyOfFile_Binary(input_filename_with_path, output_file
     File Management
     Manipulate Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, read file, binary</tags>
 </US_DocBloc>
 ]]
@@ -375,8 +375,8 @@ function ultraschall.ReadBinaryFileUntilPattern(input_filename_with_path, patter
     File Management
     Read Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, read file, pattern, binary</tags>
 </US_DocBloc>
 ]]
@@ -429,8 +429,8 @@ function ultraschall.ReadBinaryFileFromPattern(input_filename_with_path, pattern
     File Management
     Read Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, read file, pattern, binary</tags>
 </US_DocBloc>
 ]]
@@ -477,8 +477,8 @@ function ultraschall.CountLinesInFile(filename_with_path)
     File Management
     File Analysis
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, count</tags>
 </US_DocBloc>
 ]]
@@ -528,8 +528,8 @@ function ultraschall.ReadFileAsLines_Array(filename_with_path, firstlinenumber, 
     File Management
     Read Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, read file, range, array</tags>
 </US_DocBloc>
 ]]  
@@ -590,8 +590,8 @@ function ultraschall.ReadBinaryFile_Offset(input_filename_with_path, startoffset
     File Management
     Read Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, read file, binary, offset</tags>
 </US_DocBloc>
 ]]
@@ -642,8 +642,8 @@ function ultraschall.GetLengthOfFile(filename_with_path)
     File Management
     File Analysis
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement,file,length,bytes,count</tags>
 </US_DocBloc>
 ]]
@@ -689,8 +689,8 @@ function ultraschall.CountDirectoriesAndFilesInPath(path)
     File Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, count, directory, file, path</tags>
 </US_DocBloc>
 --]]
@@ -747,8 +747,8 @@ function ultraschall.GetAllFilenamesInPath(path)
     File Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, get, filenames, file, path</tags>
 </US_DocBloc>
 --]]
@@ -759,17 +759,20 @@ function ultraschall.GetAllFilenamesInPath(path)
   -- prepare variables
   local Files={}
   local count=1
-  local string=""
+  local String=""
   
   if path:sub(-1,-1)~="/" or path:sub(-1,-1)~="\\" then path=path.."/" end
   
   -- get all filenames in path
-  while string~=nil do
-    string=reaper.EnumerateFiles(path, count-1)
-    if string~=nil then Files[count]=path..string end
-    count=count+1
+  while String~=nil do
+    String=reaper.EnumerateFiles(path, count-1)
+    if String~=nil then Files[count]=path..String end
+    if Files[count]~=nil then
+        Files[count]=string.gsub(Files[count], "//", "/")
+        Files[count]=string.gsub(Files[count], "\\", "/")
+     end
+     count=count+1
   end
-  
   -- return results
   return count-2, Files
 end
@@ -800,8 +803,8 @@ function ultraschall.GetAllDirectoriesInPath(path)
     File Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, get, directory, file, path</tags>
 </US_DocBloc>
 --]]
@@ -857,8 +860,8 @@ function ultraschall.CheckForValidFileFormats(filename_with_path)
     File Management
     File Analysis
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>helper functions, image, video, audio, fileformat, check</tags>
 </US_DocBloc>
 --]]
@@ -870,8 +873,13 @@ function ultraschall.CheckForValidFileFormats(filename_with_path)
   -- prepare variables
   local length, content = ultraschall.ReadBinaryFile_Offset(filename_with_path, 0, 100)
   
+  --print2(content:sub(13,14))
   -- check for a specific imagefile supported by Reaper
-  if     content:match("JFIF")~=nil then return "JPG", true, "Image"
+  
+  --if     content:match("JFIF")~=nil then return "JPG", true, "Image"
+  if ultraschall.CompareStringWithAsciiValues(content, 0xFF, 0xD8, -1, -1, -1, -1, 0x45, 0x78, 0x69, 0x66, 0x00)==true then return "JPG", true, "Image"
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0xFF, 0xD8, -1, -1, -1, -1, 0x4A, 0x46, 0x49, 0x46, 0x00)==true then return "JPG", true, "Image"
+  elseif content:sub(1,3)=="ÿØÿ" then return "JPG", true, "Image"
   elseif content:sub(2,4)=="PNG" then return "PNG", true, "Image"
   elseif content:sub(1,2)=="BM" then return "BMP", true, "Image"
   elseif content:sub(1,3)=="GIF" then return "GIF", true, "Image"
@@ -938,8 +946,8 @@ function ultraschall.DirectoryExists(path, directory)
     File Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, directory, check, exists</tags>
 </US_DocBloc>
 ]]
@@ -984,8 +992,8 @@ function ultraschall.OnlyFilesOfCertainType(filearray, filetype)
     File Management
     File Analysis
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, get, filetype</tags>
 </US_DocBloc>
 ]]
@@ -1024,8 +1032,8 @@ function ultraschall.GetReaperWorkDir()
     File Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, get, current workdir of reaper</tags>
 </US_DocBloc>
 ]]
@@ -1060,8 +1068,8 @@ function ultraschall.DirectoryExists2(Path)
     File Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, check, directory, existence</tags>
 </US_DocBloc>
 ]]
@@ -1108,8 +1116,8 @@ function ultraschall.SetReaperWorkDir(path)
     File Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, set, new workdir of reaper</tags>
 </US_DocBloc>
 ]]
@@ -1148,8 +1156,8 @@ function ultraschall.GetPath(str,sep)
     File Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement,path,separator</tags>
 </US_DocBloc>
 --]]
@@ -1215,8 +1223,8 @@ function ultraschall.CreateValidTempFile(filename_with_path, create, suffix, ret
     File Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement, create, temporary, file, filename</tags>
 </US_DocBloc>
 ]]
@@ -1276,13 +1284,13 @@ function ultraschall.WriteValueToFile(filename_with_path, value, binarymode, app
     File Management
     Write Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement,export,write,file,textfile,binary</tags>
 </US_DocBloc>
 --]]
   -- check parameters
-  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("WriteValueToFile","filename_with_path", "invalid filename "..filename_with_path, -1) return -1 end
+  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("WriteValueToFile","filename_with_path", "invalid filename "..tostring(filename_with_path), -1) return -1 end
   --if type(value)~="string" then ultraschall.AddErrorMessage("WriteValueToFile","value", "must be string; convert with tostring(value), if necessary.", -2) return -1 end
   value=tostring(value)
   
@@ -1329,8 +1337,8 @@ function ultraschall.WriteValueToFile_Insert(filename_with_path, linenumber, val
     File Management
     Write Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement,export,write,file,textfile,insert</tags>
 </US_DocBloc>
 ]]
@@ -1376,8 +1384,8 @@ function ultraschall.WriteValueToFile_Replace(filename_with_path, startlinenumbe
     File Management
     Write Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement,export,write,file,textfile,replace</tags>
 </US_DocBloc>
 ]]
@@ -1426,8 +1434,8 @@ function ultraschall.WriteValueToFile_InsertBinary(filename_with_path, byteposit
     File Management
     Write Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement,export,write,file,textfile,insert,binary</tags>
 </US_DocBloc>
 ]]
@@ -1475,8 +1483,8 @@ function ultraschall.WriteValueToFile_ReplaceBinary(filename_with_path, startbyt
     File Management
     Write Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>filemanagement,export,write,file,textfile,replace,binary</tags>
 </US_DocBloc>
 ]]
@@ -1534,8 +1542,8 @@ function ultraschall.GetAllRecursiveFilesAndSubdirectories(path)
     File Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
   <tags>file management, get, all, files, directories, folder, subfolder, subdirectories, path, recursive</tags>
 </US_DocBloc>
 ]]
@@ -1580,4 +1588,198 @@ function ultraschall.GetAllRecursiveFilesAndSubdirectories(path)
 end
 
 --A,B,C,D=ultraschall.GetAllRecursiveFilesAndSubdirectories("L:\\")
+
+function ultraschall.SaveSubtitles_SRT(subtitle_filename_with_path, subtitle_table)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SaveSubtitles_SRT</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.99
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.SaveSubtitles_SRT(string subtitle_filename_with_path, table subtitle_table)</functioncall>
+  <description>
+    saves the subtitles from the subtitle-table.
+    
+    The subtitles-table is expected to be of the following format:
+    
+        subtitle_table[subtitle_index]["start"]   = starttime in seconds
+        subtitle_table[subtitle_index]["end"]     = endtime in seconds
+        subtitle_table[subtitle_index]["caption"] = the caption, which shall be shown from start to end-time
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    string guid - the guid of the marker/region of the marker with a specific index
+  </retvals>
+  <parameters>
+    string subtitle_filename_with_path - the filename of the subtitle-file, into which you want to store the subtitles
+    table Table - the subtitle-table, which holds all captions and the start- and endtimes of displaying the caption
+  </parameters>
+  <chapter_context>
+    File Management
+    Write Files
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>file management, save, write, subtitles, srt, subrip, export</tags>
+</US_DocBloc>
+--]]
+  if type(subtitle_filename_with_path)~="string" then ultraschall.AddErrorMessage("SaveSubtitles_SRT", "subtitle_filename_with_path", "must be a string", -1) return -1 end
+  if type(subtitle_table)~="table" then ultraschall.AddErrorMessage("SaveSubtitles_SRT", "subtitle_table", "must be a table", -2) return -1 end
+  local String=""
+  local i=1
+  while type(subtitle_table[i])=="table" do
+    if subtitle_table[i]["start"]==nil 
+    or subtitle_table[i]["end"]==nil 
+    or subtitle_table[i]["caption"]==nil then
+      ultraschall.AddErrorMessage("SaveSubtitles_SRT", "subtitle_table", "entry "..i.." is missing information!", -3)
+      return -1
+    end
+    String=String..i.."\n"..
+    string.gsub(ultraschall.SecondsToTimeString_hh_mm_ss_mss(subtitle_table[i]["start"]),"%.",",").." --> "..
+    string.gsub(ultraschall.SecondsToTimeString_hh_mm_ss_mss(subtitle_table[i]["end"]),"%.",",").."\n"..
+    subtitle_table[i]["caption"].."\n\n"
+    i=i+1
+  end
+  if String~="" then
+    return ultraschall.WriteValueToFile(subtitle_filename_with_path, String:sub(1,-3))
+  else
+    ultraschall.AddErrorMessage("SaveSubtitles_SRT", "subtitle_table", "no subtitles available", -4)
+    return -1
+  end
+end
+
+function ultraschall.ReadSubtitles_SRT(filename_with_path)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ReadSubtitles_SRT</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>integer Captions_Counter, table Captions = ultraschall.ReadSubtitles_SRT(string filename_with_path)</functioncall>
+  <description>
+    parses an srt-subtitle-file and returns its contents as table
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer Captions_Counter - the number of captions in the file
+    table Captions - the Captions as a table of the format:
+                   -    Captions[index]["start"]= the starttime of this caption in seconds
+                   -    Captions[index]["end"]= the endtime of this caption in seconds
+                   -    Captions[index]["caption"]= the caption itself
+  </retvals>
+  <parameters>
+    string filename_with_path - the filename with path of the subrip srt-file
+  </parameters>
+  <chapter_context>
+    File Management
+    Read Files
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, read, file, srt, subrip, subtitle, import</tags>
+</US_DocBloc>
+--]]
+  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("ReadSubtitles_SRT", "filename_with_path", "must be a string", -1) return end
+  if reaper.file_exists(filename_with_path)=="false" then ultraschall.AddErrorMessage("ReadSubtitles_SRT", "filename_with_path", "must be a string", -2) return end
+  local A, Type, Offset, Kind, Language, Subs, Subs_Counter, i, line
+  line=0
+  
+  Subs={}
+  Subs_Counter=0
+  A=ultraschall.ReadFullFile(filename_with_path)
+  i=0
+  local caption=""
+  if A:match("(.-)\n"):len()>0 then A="\n"..A line=-1 else line=0 end
+  A=A.."\n"
+  
+  for k in string.gmatch(A, "(.-)\n") do
+    line=line+1
+
+    if i==3 and k~="" then
+      -- get the captions
+      caption=caption..k.."\n"
+    elseif i==3 and k=="" then
+      -- put the captions into the Subs-table
+      if caption=="" then caption="" end
+      Subs[Subs_Counter]["caption"]=caption:sub(1,-2)
+      caption=""
+      i=0
+    end
+    if i==2 and k:match("%-%-%>")~=nil then 
+      -- get the start and endtime
+      Subs[Subs_Counter]["start"], Subs[Subs_Counter]["end"] = k:match("(.-) --> (.*)")
+      if Subs[Subs_Counter]["start"]==nil or Subs[Subs_Counter]["end"]==nil then ultraschall.AddErrorMessage("ReadSubtitles_SRT", "filename_with_path", "can't parse the time in line: "..line, -3) return end
+      Subs[Subs_Counter]["start"]=reaper.parse_timestr(Subs[Subs_Counter]["start"])
+      Subs[Subs_Counter]["end"]=reaper.parse_timestr(Subs[Subs_Counter]["end"])
+      i=3
+    elseif i==2 then 
+      -- if the time is not the expected start and endtime, stop with an error-message
+      ultraschall.AddErrorMessage("ReadSubtitles_SRT", "filename_with_path", "can't parse the time in line: "..line, -4) 
+      return
+    end
+    if i==1 and tonumber(k)==nil then 
+      -- if the caption-index isn't there, we have a faulty srt, so stop with an error-message
+      ultraschall.AddErrorMessage("ReadSubtitles_SRT", "filename_with_path", "can't parse the caption-index in line: "..line, -5) 
+      return 
+    elseif i==1 and tonumber(k)~=nil then
+      i=2
+    end
+    if i==0 and k=="" then 
+      -- if an empty line occurs, add a new entry to sub-table, into which we put the next caption
+      i=1
+      Subs_Counter=Subs_Counter+1
+      Subs[Subs_Counter]={}
+    end
+  end
+  
+  Subs[Subs_Counter]["caption"]=caption:sub(1,-2)
+  if Subs[Subs_Counter]["start"]==nil then Subs[Subs_Counter]=nil Subs_Counter=Subs_Counter-1 end
+  return Subs_Counter, Subs
+end
+
+function ultraschall.MoveFileOrFolder(file_foldername, oldpath, newpath)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MoveFileOrFolder</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.MoveFileOrFolder(string file_foldername, string oldpath, string newpath)</functioncall>
+  <description>
+    Moves a file or folder from oldpath to newpath.
+    
+    returns false in case of an error 
+  </description>
+  <parameters>
+    string file_foldername - the folder- or filename, which you want to move
+    string oldpath - the old path, in which the file or folder is located
+    string newpath - the new path, into which the file or folder shall be moved
+  </parameters>
+  <retvals>
+    boolean retval - true, moving was successful; false, moving was unsuccessful
+  </retvals>
+  <chapter_context>
+    Manipulate Files
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, move, folder, directory, file, sourcepath, oldpath, newpath, targetpath</tags>
+</US_DocBloc>
+]]
+  if type(file_foldername)~="string" then ultraschall.AddErrorMessage("MoveFileOrFolder",  "file_foldername", "must be a string", -1) return false end
+  if type(oldpath)~="string" then ultraschall.AddErrorMessage("MoveFileOrFolder",  "oldpath", "must be a string", -2) return false end
+  if type(newpath)~="string" then ultraschall.AddErrorMessage("MoveFileOrFolder",  "newpath", "must be a string", -3) return false end
+  if ultraschall.DirectoryExists(oldpath, file_foldername)==false and reaper.file_exists(oldpath.."/"..file_foldername)==false then ultraschall.AddErrorMessage("MoveFileOrFolder",  "file_foldername", "no such sourcefile or directory", -4) return false end
+  if ultraschall.DirectoryExists(newpath, file_foldername)==true or reaper.file_exists(newpath.."/"..file_foldername)==true then ultraschall.AddErrorMessage("MoveFileOrFolder",  "file_foldername", "target-file or -directory already exists", -5) return false end
+  return os.rename(oldpath.."/"..file_foldername, newpath.."/"..file_foldername)
+end
+
 

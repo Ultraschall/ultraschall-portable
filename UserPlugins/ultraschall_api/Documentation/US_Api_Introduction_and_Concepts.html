@@ -55,7 +55,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00Beta 2.78 - "Tchaikovski - Overture 1812" - 5th of November 2019 - Build: 40869</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00 - "Aphrodite's Child - Four Horsemen" - 11th of February 2020 - Build: 43008</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -131,7 +131,8 @@ Ultraschall API functions
 </tr><tr><td><a href="#ExtStateManagement_005_TrackItemExtStates">ExtState Management: Track and Item-Extstates</a></td>
 <td><a href="#ExtStateManagement_006_TrackExtStates">ExtState Management: Track Extstates</a></td>
 <td><a href="#ExtStateManagement_007_ItemExtStates">ExtState Management: Item Extstates</a></td>
-</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Marker Management</b></td></tr><tr><td><a href="#MarkersAndRegions_001_Introduction">Markers and Regions: Introduction</a></td>
+<td><a href="#ExtStateManagement_008_MarkerExtStates">ExtState Management: Marker Extstates</a></td>
+</tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Marker Management</b></td></tr><tr><td><a href="#MarkersAndRegions_001_Introduction">Markers and Regions: Introduction</a></td>
 <td><a href="#MarkersAndRegions_002_General_How_To">Markers and Regions: General How To</a></td>
 <td><a href="#MarkersAndRegions_003_Helpers_and_Manipulation">Markers and Regions: Helpers and Manipulation</a></td>
 <td><a href="#MarkersAndRegions_004_Custom_Markers_and_Regions">Markers and Regions: Custom-Markers and Custom-Regions</a></td>
@@ -142,7 +143,7 @@ Ultraschall API functions
 </tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Defer Loops</b></td></tr><tr><td><a href="#DeferScripts_001_Introduction">DeferScripts: Introduction to Ultraschall's Defer-functions</a></td>
 <td><a href="#DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API">DeferScripts: Special Defer-loops in the Ultraschall-API</a></td>
 <td><a href="#DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside">DeferScripts: Stopping Defer-loops from in- and outside of scripts</a></td>
-<td><a href="#DeferScripts_004_Working_with_Defer_Identifiers">DeferScripts: Working with DeferIdentifiers</a></td>
+<td><a href="#DeferScripts_004_Manipulating_and_Protecting_Defer_loops">DeferScripts: Manipulating and protecting Defer-loops</a></td>
 </tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Localize Scripts</b></td></tr><tr><td><a href="#Localize_001_Introduction">Localize Scripts: Introduction</a></td>
 <td><a href="#Localize_002_LangPack_Fileformat">Localize Scripts: Language-pack-fileformat</a></td>
 <td><a href="#Localize_003_Localize_Functions">Localize Scripts: Functions</a></td>
@@ -205,7 +206,7 @@ Ultraschall API functions
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_002_How_to_Use"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_002_How_to_Use">^</a> <u>How to use the Ultraschall API</u></h4></div><p><p>Using the Ultraschall-API is quite easy.</p>
-<p>First make sure, you use the right versions of Reaper and SWS: <a href="https://www.reaper.fm">Reaper 5.980</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 0.986.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
+<p>First make sure, you use the right versions of Reaper and SWS: <a href="https://www.reaper.fm">Reaper 6.20</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 0.986.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
 <p>To install the Ultraschall-API, just follow the following steps:</p>
 <p><strong>Installation via ReaPack</strong>:</p>
 <p>The easiest way is to install the Ultraschall-API using ReaPack. ReaPack is a package-manager for extensions and helper-stuff for Reaper, which allows you to easily install and update content done by the Reaper community. Many Scripts, Themes, JSFX-FX, etc are available through that.</p>
@@ -239,7 +240,7 @@ For more information on ReaPack and it's usage, refer <a href="https://reapack.c
 <p><strong>Manual Installation</strong>:</p>
 <p>If you can't or don't want to install ReaPack, you can also install it manually.</p>
 <ol>
-<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_beta2.78.zip">ultraschall_api4.00_beta2.78.zip</a>.<br />
+<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00.zip">ultraschall_api4.00.zip</a>.<br />
 </li>
 <li>Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -&gt; Show REAPER resource path in explorer/finder...".<br />
 The folder UserPlugins should contain the folder ultraschall_api and the files ultraschall_api_readme.txt and ultraschall_api.lua after this step.<br />
@@ -510,6 +511,7 @@ Structure:</p>
 This is mostly because, there are so many.</p>
 <p>So I added a new construct, called: the RenderTable.</p>
 <p>A Rendertable is a table, which stores all rendersettings you can set in Reaper. And with all, I mean all!</p>
+<p>Important: You should never create RenderTables "by hand" but rather use my functions for that. That way your RenderTables will stay valid when I add new features to them in the future. You can, however, alter them, after you've created them with my functions.</p>
 <p>Structure:</p>
 <pre><code>        RenderTable[&quot;AddToProj&quot;]               - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
         RenderTable[&quot;Bounds&quot;]                  - the Bounds-dropdownlist
@@ -531,6 +533,8 @@ This is mostly because, there are so many.</p>
                                                       &amp;4, dither stems
                                                       &amp;8, dither noise shaping
         RenderTable[&quot;Endposition&quot;]             - the endposition of the rendering selection in seconds
+        RenderTable[&quot;EmbedStretchMarkers&quot;]     - Embed stretch markers/transient guides
+                                                      true, checked; false, unchecked
         RenderTable[&quot;MultiChannelFiles&quot;]       - Multichannel tracks to multichannel files-checkbox
                                                       true, checked; false, unchecked
         RenderTable[&quot;OfflineOnlineRendering&quot;]  - Offline/Online rendering-dropdownlist
@@ -559,6 +563,7 @@ This is mostly because, there are so many.</p>
                                                       8, HQ (512 pt)
                                                       9, Extreme HQ(768pt HQ Sinc)
         RenderTable[&quot;RenderString&quot;]            - the render-cfg-string, that holds all settings of the currently set render-ouput-format as BASE64 string
+        RenderTable[&quot;RenderString2&quot;]           - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
         RenderTable[&quot;RenderTable&quot;]=true        - signals, this is a valid render-table
         RenderTable[&quot;SampleRate&quot;]              - the samplerate of the rendered file(s)
         RenderTable[&quot;SaveCopyOfProject&quot;]       - the &quot;Save copy of project to outfile.wav.RPP&quot;-checkbox
@@ -570,7 +575,10 @@ This is mostly because, there are so many.</p>
                                                       1, Master mix + stems
                                                       3, Stems (selected tracks)
                                                       8, Region render matrix
+                                                      16, Tracks with only Mono-Media to Mono Files
                                                       32, Selected media items
+                                                      64, selected media items via master
+                                                      128, selected tracks via master
         RenderTable[&quot;Startposition&quot;]           - the startposition of the rendering selection in seconds
         RenderTable[&quot;TailFlag&quot;]                - in which bounds is the Tail-checkbox checked? 
                                                        &amp;1, custom time bounds
@@ -2160,7 +2168,7 @@ Features that use these background-scripts are:</p>
       -- run the function main in mode 2(every x seconds) every 1 second
       -- Defer1(functionname, mode(0, normaldefer; 1, every x cycles; 2, every x seconds), 
       -- counter(number of seconds or cycles))
-      ultraschall.Defer1(main,2,1)
+      ultraschall.Defer(main,&quot;Simple Event Manager&quot;, 2,1)
     end
 
     -- run the fun
@@ -2979,7 +2987,7 @@ You can choose, whether to overwrite it, if it already exists and if the state s
 I will look into that problem at some point.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_006_TrackExtStates"></a>
-<div style="font-size:100%"><h4><a href="#ExtStateManagement_006_TrackExtStates">^</a> <u>ExtState Management: Track Extstates</u></h4></div><p><p><strong>Note: This is deprecated, as Reaper will have the same feature in better in a future version!</strong></p>
+<div style="font-size:100%"><h4><a href="#ExtStateManagement_006_TrackExtStates">^</a> <u>ExtState Management: Track Extstates</u></h4></div><p><p>**Note: This is deprecated, use Reaper's own reaper.GetSetTrackSendInfo_String instead**</p>
 <p>Let's store some extstates for tracks. For that, I added the functions: <a href="US_Api_Functions.html#GetTrackExtState">GetTrackExtState</a>, <a href="US_Api_Functions.html#SetTrackExtState">SetTrackExtState</a><br />
 TrackExtStates are stored as ProjectExtState within the projectfile.</p>
 <blockquote>
@@ -2999,7 +3007,7 @@ TrackExtStates are stored as ProjectExtState within the projectfile.</p>
 </blockquote>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_007_ItemExtStates"></a>
-<div style="font-size:100%"><h4><a href="#ExtStateManagement_007_ItemExtStates">^</a> <u>ExtState Management: Item Extstates</u></h4></div><p><p><strong>Note: This is deprecated, as Reaper will have the same feature in better in a future version!</strong></p>
+<div style="font-size:100%"><h4><a href="#ExtStateManagement_007_ItemExtStates">^</a> <u>ExtState Management: Item Extstates</u></h4></div><p><p>**Note: This is deprecated, use Reaper's own reaper.GetSetMediaItemInfo_String instead**</p>
 <p>Let's store some extstates for items. For that, I added the functions: <a href="US_Api_Functions.html#GetItemExtState">GetItemExtState</a>, <a href="US_Api_Functions.html#SetItemExtState">SetItemExtState</a><br />
 ItemExtStates are stored as ProjectExtState within the projectfile. These functions work basically like the ones for TrackExtStates</p>
 <blockquote>
@@ -3016,6 +3024,28 @@ ItemExtStates are stored as ProjectExtState within the projectfile. These functi
 <pre><code>                  boolean retval, string value = ultraschall.GetItemExtState(MediaItem item, string key)</code></pre>
 <blockquote>
 <p>This returns a stored itemextstate. Just pass to it a MediaItem-object and the key, whose value you want. It will return if getting the value was successful or not with return-value retval, as well as the value with value.</p>
+</blockquote>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_008_MarkerExtStates"></a>
+<div style="font-size:100%"><h4><a href="#ExtStateManagement_008_MarkerExtStates">^</a> <u>ExtState Management: Marker Extstates</u></h4></div><p><p>Sometimes, you would love to store additional information into markers/regions, but you refrain from that, as you don't want to risk overcrowding the marker/regiontitle.<br />
+So I added some functions, who work like regular extstates, but: for markers/regions: <a href="US_Api_Functions.html#GetMarkerExtState">GetMarkerExtState</a>, <a href="US_Api_Functions.html#SetMarkerExtState">SetMarkerExtState</a></p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#SetMarkerExtState">SetMarkerExtState</a></strong></p>
+</blockquote>
+<pre><code>                  integer retval = ultraschall.SetMarkerExtState(integer index, string key, string value)
+                  </code></pre>
+<blockquote>
+<p>This function allows you to store an extstate to a marker. Its usage is simple: pass to it the marker<em>region-index(1-based) a keyname and its associated value.<br />
+Important: the marker</em>region-index is the index, which covers all markers and regions at the same time.<br />
+You can use functions like reaper.EnumProjectMarkers to get the appropriate marker-indices. You just need to increment the index by 1 for usage with SetMarkerExtState's parameter index.<br />
+Toy around with it, you quickly get the idea.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#GetMarkerExtState">GetMarkerExtState</a></strong></p>
+</blockquote>
+<pre><code>                  string value = ultraschall.GetMarkerExtState(integer index, string key)</code></pre>
+<blockquote>
+<p>This returns a stored markerextstate. Just pass to it the index of a marker/region and the key, whose value you want.</p>
 </blockquote>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="MarkersAndRegions_001_Introduction"></a>
@@ -3046,13 +3076,13 @@ Let's take edit-markers as an example, who have the functions: <a href="US_Api_F
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#AddEditMarker">AddEditMarker</a></strong></p>
 </blockquote>
-<pre><code>                  integer marker_number = ultraschall.AddEditMarker(number position, integer shown_number, string edittitle)
+<pre><code>                  integer marker_number, string guid = ultraschall.AddEditMarker(number position, integer shown_number, string edittitle)
                   </code></pre>
 <blockquote>
 <p>This adds a new edit-marker. Give it a position, the shown number and an edittitle, which should hint at the reason of having to edit later.<br />
 The title will be shown in the marker as "_edit: Title". You can change it manually in Reaper, but should retain "_edit: ", as this signals the<br />
 Ultraschall-API, if this is an edit-marker. The editmarker also is red (255 0 0).<br />
-It will return the marker-number, which is the index of all markers in the project, means: markers and regions.</p>
+It will return the marker-number, which is the index of all markers in the project, means: markers and regions, as well as a unique guid for this marker, which can be used for ExtStates, etc.</p>
 </blockquote>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#SetEditMarker">SetEditMarker</a></strong></p>
@@ -3077,11 +3107,11 @@ It will return the true, if deleting it was successful.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#EnumerateEditMarkers">EnumerateEditMarkers</a></strong></p>
 </blockquote>
-<pre><code>                  integer retnumber, integer shown_number, number position, string edittitle = ultraschall.EnumerateEditMarkers(integer edit_index)
+<pre><code>                  integer retnumber, integer shown_number, number position, string edittitle, string guid = ultraschall.EnumerateEditMarkers(integer edit_index)
                   </code></pre>
 <blockquote>
 <p>This enumerates an edit-marker and all of it's attributes. Just pass over to it the edit-index-number and it will return the overall marker-index-number(markers and regions)<br />
-the shown-number as well as it's position and the title of the edit(without the _edit: ).</p>
+the shown-number as well as it's position and the title of the edit(without the _edit: ) and the guid of the edit-marker.</p>
 </blockquote>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#CountEditMarkers">CountEditMarkers</a></strong></p>
@@ -3182,7 +3212,7 @@ For example, if you want to have a custom-marker-type called foobar, it would lo
 <pre><code>        _foobar:</code></pre>
 <p>Now, doing that manually is very inconvenient to do, so I made a bunch of functions, who do that for you. All you need to do is to declare the name of the custom-marker/region and pass that over to the function and it does the rest.</p>
 <p>Let's take the example above with foobar and use ultraschall-functions for adding such a marker.</p>
-<pre><code>        retval = ultraschall.AddCustomMarker(&quot;foobar&quot;, 20, &quot;I am the text of this marker&quot;, 1, 0)
+<pre><code>        retval, markernumber, guid = ultraschall.AddCustomMarker(&quot;foobar&quot;, 20, &quot;I am the text of this marker&quot;, 1, 0)
     </code></pre>
 <p>This would produce a custom-marker at position 20. And it's markertext would look like:</p>
 <pre><code>        _foobar: I am the text of this marker
@@ -3376,15 +3406,14 @@ This continuous running of the function works like that:</p>
 </ul>
 <p>etc.<br />
 You get the idea.</p>
-<p>Now here's the problem: it runs the deferred function everytime. Even if you need it run only every few seconds, it will be run about 30 times a second.<br />
+<p>Now here's the problem: it runs the deferred function everytime. Even if you need it to run only every few seconds, it will be run about 30 times a second.<br />
 And if you have a condition, under which the defer-loop should end, you need to construct more or less complex structures to take care of that.<br />
-Rule of thumb: the decision-making of how often the deferred function shall be run, is complex. Quitting a defer-loop as well(for beginners at least), especially, if you want to stop the defer-loop from the outside of the script-instance.</p>
+Rule of thumb: the decision-making of how often the deferred function shall be run, is complex. Quitting a defer-loop is complex as well(for beginners at least), especially, if you want to stop the defer-loop from the outside of the script-instance.</p>
 <p>For that, I created my own defer-loops, that take care of that.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API"></a>
-<div style="font-size:100%"><h4><a href="#DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API">^</a> <u>DeferScripts: Special Defer-loops in the Ultraschall-API</u></h4></div><p><p>It always bugged me, when I wanted to write a simple defer-loop that should run every 3 seconds or so, as the logic to do that is at some times very annoying to code time and again.<br />
-So, I added my own defer-loop-functions, that take care of that.<br />
-In total 20 of them.</p>
+<div style="font-size:100%"><h4><a href="#DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API">^</a> <u>DeferScripts: Special Defer-loops in the Ultraschall-API</u></h4></div><p><p>It always bugged me, when I wanted to write a simple defer-loop that should run every 3 seconds or so, as the logic to do that is sometimes very annoying to code time and again, sometimes more than the actual code itself.<br />
+So, I added my own defer-loop-function, that takes care of that.</p>
 <p>Let's have a look at a regular defer-loop in Reaper:</p>
 <pre><code>        A=1
         
@@ -3403,6 +3432,7 @@ Now, if I want to have this code in the function only executed every 30th cycle(
         function main()
             
             if cycle_counter==30 then
+                -- do this part only every 30th defer-cycler
                 cycle_counter=1
                 reaper.ShowConsoleMsg(A..&quot;\n&quot;)
                 A=A+1
@@ -3420,6 +3450,7 @@ The same goes with executing the code only every x seconds.</p>
         
         function main()
             if reaper.time_precise()&gt;seconds_counter then
+                -- do this part only every three seconds
                 seconds_counter=reaper.time_precise()+3
                 reaper.ShowConsoleMsg(A..&quot;\n&quot;)
                 A=A+1
@@ -3430,24 +3461,20 @@ The same goes with executing the code only every x seconds.</p>
         
         main()</code></pre>
 <p>This code counts up variable A every 3 seconds and shows it to the ReaScript-console.<br />
-It quickly becomes messy or at least harder to read. And I hate my code being hard to read, especially if it contains more lines than the examples above.</p>
-<p>The Ultraschall-API has for that the functions <a href="US_Api_Functions.html#Defer1">Defer1</a> to <a href="US_Api_Functions.html#Defer20">Defer20</a>.</p>
+It quickly becomes messy or at least harder to read. Especially, if you need to add more code, the "skipping mechanics" are often spread everywhere, making the code hard to debug and read. And I hate my code being hard to debug and read.</p>
+<p>The Ultraschall-API has for that the functions <a href="US_Api_Functions.html#Defer">Defer</a></p>
 <blockquote>
-<p><strong><a href="US_Api_Functions.html#Defer1">Defer1</a></strong></p>
+<p><strong><a href="US_Api_Functions.html#Defer">Defer</a></strong></p>
 </blockquote>
-<pre><code>        boolean retval, string defer_identifier = ultraschall.Defer1(function func, optional integer mode, optional number timer_counter)
+<pre><code>        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter, optional boolean protected)
     </code></pre>
 <blockquote>
 <p>This works like reaper.defer, but has additional benefits, like the parameters mode and timer_counter, who allow you to specify, how often the defer-cycle shall be executed.<br />
 Either all the time(mode=0), every nth-cycle(mode=1) or every nth-second(mode=2). If mode is 1 or 2, you should set timer_counter to the amount of cycles/seconds to wait for the next execution of the defer-loop.<br />
-It also returns a defer_identifier, which can be used by <a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a> to stop the defer-loop from inside and outside of the script(more on that later).<br />
-Important: A defer-identifier is only valid, until the script stops/Reaper closes. The next time the script is started, it gets another defer-identifier!</p>
+You can also specify a defer_identifier, which can be used by <a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a> to stop the defer-loop from inside and outside of the script(more on that later).<br />
+The parameter protected allows you to prevent this defer-loop from being stopped or influenced from the outside. More on that later.</p>
 </blockquote>
-<p>As you've seen, there are 20 Defer-functions in the Ultraschall-API. If you want to use only one defer-cycle in your script, just use <a href="US_Api_Functions.html#Defer1">Defer1</a>, but if you need multiple defer-loops in one script-instance,<br />
-you should use another of these 20 Defer-functions, as otherwise the timer/cycle-counter of a ultraschall.Defer-function could get confused.<br />
-So, rule of thumb: in one script-instance, every of the 20 Defer-functions can only be used for ONE defer-loop!<br />
-This is due limitations in Lua and Reaper. I hope, I can raise this limitation at some point though.</p>
-<p>Now, let's get back to our examples and see, how it would look with these new Defer-functions.</p>
+<p>Now, let's get back to our example and see, how it would look with these new Defer-functions.</p>
 <pre><code>        dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
         
         A=1
@@ -3456,11 +3483,11 @@ This is due limitations in Lua and Reaper. I hope, I can raise this limitation a
            reaper.ShowConsoleMsg(A..&quot;\n&quot;)
            A=A+1
            
-           ultraschall.Defer1(main, 1, 30)
+           ultraschall.Defer(main, &quot;MyDeferLoop&quot;, 1, 30)
         end
         
         main()</code></pre>
-<p>Like our previous example, this counts variable A up every 30th cycle and shows in in the ReaScript console. But as you can see, the code is much cleaner due fewer lines. You can also see, that ultraschall.Defer1 defers the function main, is set to mode 1(execute every nth cycle) and the number of cycles to wait inbetween execution(30).</p>
+<p>Like our previous example, this counts variable A up every 30th cycle and shows its value in the ReaScript console. But as you can see, the code is much cleaner due fewer lines. You can also see, that ultraschall.Defer which defers the function main, is set to mode 1(execute every nth cycle) and the number of cycles to wait inbetween execution is 30 cycles.</p>
 <p>Now let's see, whether we can modify the other example as well, that counts variable A up every 3 seconds:</p>
 <pre><code>        dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
         A=1
@@ -3469,24 +3496,24 @@ This is due limitations in Lua and Reaper. I hope, I can raise this limitation a
            reaper.ShowConsoleMsg(A..&quot;\n&quot;)
            A=A+1
          
-           ultraschall.Defer1(main, 2, 3)
+           ultraschall.Defer(main, &quot;MyDeferLoop&quot;, 2, 3)
         end
         
         main()</code></pre>
-<p>You see, it is basically the same code. All that changed was the parameters for Defer1, which is now set to mode 2(execute code every nth seconds) and the number of seconds to wait(3 in this case).</p>
+<p>You see, it is basically the same code. All that changed was the parameters for Defer, which is now set to mode 2(execute code every nth seconds) and the number of seconds to wait(3 in this case).</p>
 <p>This makes it much easier to run code of defer-scripts only when it is needed(and keep the code cleaner).<br />
 Save computer-resources, save electrical power, save the world!</p>
-<p>In the next chapter, I will show you, how to stop such a defer-loop from within and without the current script-instance.</p>
+<p>In the next chapter, I will show you, how to stop such a defer-loop from within and outside the current script-instance.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside"></a>
 <div style="font-size:100%"><h4><a href="#DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside">^</a> <u>DeferScripts: Stopping Defer-loops from in- and outside of scripts</u></h4></div><p><p>I was talking about being able to stop these Defer-loops I added to the Ultraschall-API.<br />
-For that, we should have another look at the functions-description of Defer1(but this works as well for Defer2 to Defer20).</p>
+For that, we should have another look at the functions-description of Defer.</p>
 <blockquote>
-<p><strong><a href="US_Api_Functions.html#Defer1">Defer1</a></strong></p>
+<p><strong><a href="US_Api_Functions.html#Defer">Defer</a></strong></p>
 </blockquote>
-<pre><code>        boolean retval, string defer_identifier = ultraschall.Defer1(function func, optional integer mode, optional number timer_counter)
+<pre><code>        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter)
     </code></pre>
-<p>As you can see, it returns a string called defer_identifier. This is a unique identifier for this defer-loop, which can be used to stop this exact defer-loop from in- and outside of this script-instance.</p>
+<p>As you can see, you can pass a parameter called defer_identifier. This is a unique identifier for this defer-loop, which can be used to stop this exact defer-loop from the inside by the script who runs he Defer-cycle or from the outside by another script.</p>
 <p>To stop a defer-loop, I added another function, called <a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a>.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a></strong></p>
@@ -3500,17 +3527,19 @@ For that, we should have another look at the functions-description of Defer1(but
 <p>Let's take the following example:</p>
 <pre><code>        dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
         A=1
+        defer_identifier=&quot;MyDeferLoop&quot;
+         
          
         function main()
            reaper.ShowConsoleMsg(A..&quot;\n&quot;)
            A=A+1
          
-           retval, defer_identifier = ultraschall.Defer1(main, 2, 1)
+           retval = ultraschall.Defer(main, defer_identifier, 2, 3) -- defer me every 
            reaper.CF_SetClipboard(defer_identifier)
         end
         
         main()</code></pre>
-<p>This code puts the defer_identifier into the clipboard and runs the Defer-script, that counts variable A up every 3 seconds and shows it in the ReaScript-console.<br />
+<p>This code puts the defer_identifier into the clipboard and runs the Defer-script, that counts variable A up every 3 seconds and shows its value in the ReaScript-console.<br />
 If we write now another script, that does the following:</p>
 <pre><code>        dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
 
@@ -3518,47 +3547,43 @@ If we write now another script, that does the following:</p>
 
         retval = ultraschall.StopDeferCycle(defer_identifier_from_clipboard)</code></pre>
 <p>We can stop this defer-cycle, immediately. Try this for yourself.</p>
-<p>One last note: in the example above, we stopped the script from the outside, but you can stop that script from inside the script as well.<br />
-So, if you have two defer-loops, where the second defer-loop shall control, if the first defer-loop is running or not:<br />
-Run the function, that shall be deferred(and has one of Defer1 to Defer20 inside of it) and stop it using StopDeferCycle.</p>
-<p>If for some reason you didn't get the defer_identifier, no problem: use <a href="US_Api_Functions.html#GetDeferIdentifier">GetDeferIdentifier</a> to get it for a specific Ultraschall-Defer-function in your script.</p>
+<p><strong>IMPORTANT:</strong> The defer_identifier must be a unique one. If you use the defer_identifier for multiple defer-loops, all these Defer-loops will be stopped altogether, when using StopDeferCycle!</p>
+<p>One last note: in the example above, we stopped the script from the outside, but you can stop that script from the inside of the script as well.<br />
+So, if you have two defer-loops and the second defer-loop shall control, if the first defer-loop is running or not:<br />
+Run the function, that shall be deferred, use ultraschall.Defer and pass to it your defer<em>identifier and stop it using StopDeferCycle and the defer</em>identifier.</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="DeferScripts_004_Working_with_Defer_Identifiers"></a>
-<div style="font-size:100%"><h4><a href="#DeferScripts_004_Working_with_Defer_Identifiers">^</a> <u>DeferScripts: Working with DeferIdentifiers</u></h4></div><p><p>You may remember from the previous chapters, that I mentioned briefly a so called defer-identifier, which can be used for several things, e.g. <a href="US_Api_Functions.html#StopDeferCycle">StopDeferCycle</a>.<br />
-Well, there are more things you can do with it, like getting the current runstate of a Ultraschall-defer-cycle in a script.</p>
-<p>First, let's get the defer-identifiers:</p>
-<blockquote>
-<p><strong><a href="US_Api_Functions.html#GetDeferIdentifier">GetDeferIdentifier</a></strong></p>
-</blockquote>
-<pre><code>        string defer_identifier = ultraschall.GetDeferIdentifier(integer deferinstance, optional string scriptidentifier)
-    </code></pre>
-<blockquote>
-<p>This function returns the defer-identifier of a specific defer-instance from a specific scriptinstance.<br />
-Let's imagine the following example:<br />
-You have Defer1 and Defer2 running in your script. To get their DeferIdentifiers, with which you can stop them, you just need to use:</p>
-</blockquote>
-<pre><code>        defer1_identifier = ultraschall.GetDeferIdentifier(1)
-        defer2_identifier = ultraschall.GetDeferIdentifier(2)</code></pre>
-<blockquote>
-<p>Now imagine, you have Defer1 and Defer2-defer-loops running in another script. You have the ScriptIdentifier for that script-instance and would love to have these defer-identifiers. You just do it this way:</p>
-</blockquote>
-<pre><code>        defer1_identifier = ultraschall.GetDeferIdentifier(1, ScriptIdentifier)
-        defer2_identifier = ultraschall.GetDeferIdentifier(2, ScriptIdentifier)</code></pre>
-<blockquote>
-<p>With these two variables, you can stop the Defer1 and Defer2-defer-loops in the other scriptinstance. One possible source for such a ScriptIdentifier would be using the function <a href="US_Api_Functions.html#Main_OnCommandByFilename">Main_OnCommandByFilename</a>.</p>
-</blockquote>
-<p>Second, let's get the runstate of Ultraschall-defer-loops:</p>
-<blockquote>
-<p><strong><a href="US_Api_Functions.html#GetDeferRunState">GetDeferRunState</a></strong></p>
-</blockquote>
-<pre><code>        string defer_identifier = ultraschall.GetDeferRunState(integer deferinstance, optional string scriptidentifier)
-        </code></pre>
-<blockquote>
-<p>This basically works the same way as GetDeferIdentifier: pass over the defer-instance(1 to 20) and it will return true, if that specific defer-loop is running and false if not.<br />
-To get the runstates of other running script-instances, you can pass a second parameter scriptidentifier, which holds the scriptidentifier of that scriptinstance.<br />
-That way, you can monitor, if Ultraschall-defer-loops are still running or not.</p>
-</blockquote>
-<p>I have more ideas, what you can do with the defer-identifier, but they will be part of the future...</p>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="DeferScripts_004_Manipulating_and_Protecting_Defer_loops"></a>
+<div style="font-size:100%"><h4><a href="#DeferScripts_004_Manipulating_and_Protecting_Defer_loops">^</a> <u>DeferScripts: Manipulating and protecting Defer-loops</u></h4></div><p><p>Sometimes you want to be able to alter the behavior of defer-loops from the outside. So if you have numerous defer-loops, you may want to have a central control-gui-script, with which you can set, how often to run a function, etc.<br />
+For this, I added a bunch of functions: <a href="US_Api_Functions.html#GetDeferCycleSettings">GetDeferCycleSettings</a> and <a href="US_Api_Functions.html#SetDeferCycleSettings">SetDeferCycleSettings</a></p>
+<pre><code>&gt;**[GetDeferCycleSettings](US_Api_Functions.html#GetDeferCycleSettings)**
+
+        integer mode, integer timer_counter = ultraschall.GetDeferCycleSettings(string deferidentifier)
+        
+&gt;This function allows you to get the current settings of a defer-cycle with a certain deferidentifier. Just
+&gt;pass to it the deferidentifier and you&#39;ll get the current mode(0, run always; 1, run every x cycle; 2, run every x second)
+&gt;as well as the counter/timer for the number of cycles/seconds to wait, until the function is called the next time.  
+&gt;To set things, you need to use:
+
+&gt;**[SetDeferCycleSettings](US_Api_Functions.html#SetDeferCycleSettings)**
+
+        boolean retval = ultraschall.SetDeferCycleSettings(string deferidentifier, optional integer mode, optional number timer_counter)
+        
+&gt;With this function, you can set the new mode/timer-settings of a specific defer-cycle. You just need to pass to it the
+&gt;deferidentifier and optionally the mode(0, run always; 1, run every x cycle; 2, run every x second) and the counter/timer 
+&gt;for the number of cycles, seconds to wait until running the deferred-function the next time.  
+&gt;If you pass to both, you can reset the settings to the original ones, with which the defer-cycle has been called initially.
+
+This should give you ways of controlling, how often your deferred-functions shall be run and of saving computing-resources by that.
+
+Now there&#39;s one thing still missing: What if I want to prevent my Defer-Loop from being influenced by the outside at all?  
+Let&#39;s get back to [Defer](US_Api_Functions.html#Defer), specifically the parameter protected.
+
+&gt;**[Defer](US_Api_Functions.html#Defer)
+
+        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter, optional boolean protected)
+        
+&gt;If you set the parameter protected to true, this defer-cycle can not be influenced from the outside. The only thing possible is 
+&gt;getting its current mode and timer-settings.</code></pre>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Localize_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Localize_001_Introduction">^</a> <u>Localize Scripts: Introduction</u></h4></div><p><p>Reaper has (among thousands of others) one great thing: Localization. That means, you can translate the whole software into many languages.<br />
@@ -4315,4 +4340,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00 Beta 2.78 - 107 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00  - 108 chapters available</td></table><br><hr></div></body></html>

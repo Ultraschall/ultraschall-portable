@@ -41,30 +41,59 @@ function SoundcheckUnsaved(userspace)
 
 end
 
+
 function SoundcheckOverdub(userspace)
+
+  if reaper.GetPlayState() ~= 5 then
+    userspace["skip_overdub_check"] = 0 -- stoppen der Aufnahme führt dazu, dass beim nächsten Recording der Check wieder durchgeführt wird
+    -- return false
+  end
+
+  if userspace["skip_overdub_check"] == 1 then
+    return false
+  end
 
   local length = reaper.GetProjectLength(0)
   local play = reaper.GetPlayPosition()
   local cursor = reaper.GetCursorPosition()
-  local retval, overdub_started = reaper.GetProjExtState(0, "Overdub", "started")
 
-  if cursor >= length and overdub_started == "1" then
-    reaper.SetProjExtState(0, "Overdub", "started", "0")
+  if cursor >= length then -- alles in Ordnung, muss für diese Aufnahme nicht weiter geprüft werden.
+    userspace["skip_overdub_check"] = 1
+    userspace["overdub_warning"] = 0
     return false
 
-  elseif overdub_started == "1" or (play < length and reaper.GetPlayState() == 5) then
+  elseif (play < length and reaper.GetPlayState() == 5) or userspace["overdub_warning"] == 1 then -- es gibt Elemente, die hinter dem Rec-Cursor stehen und eine Aufnahme läuft
 
-      reaper.SetProjExtState(0, "Overdub", "started", "1")
-      return true
+    local itemcount = reaper.CountMediaItems(0)
+    if itemcount == 0 then
+      userspace["skip_overdub_check"] = 1
+      userspace["overdub_warning"] = 0
+      return false --ist die erste Aufnahme überhaupt, kann also nicht überlappen
+    end
+
+    for i = 0, itemcount-1 do -- gehe alle Items durch ob es irgnedwo ein Ende gibt, das hinter der aktuellen Aufnahmeposition steht
+      local MediaItem = reaper.GetMediaItem(0, i)
+      local end_position = reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION") + reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
+      if play < end_position then -- es ist wirklich ein overdub
+        userspace["overdub_warning"] = 1
+        userspace["skip_overdub_check"] = 0 -- auch weiter prüfen
+        return true
+      end
+    end
+
+    userspace["skip_overdub_check"] = 1
+    userspace["overdub_warning"] = 0
+    return false -- war wohl nur eine Kapitelmarke etc.
+
+  elseif userspace["overdub_warning"] == 1 then
+    userspace["skip_overdub_check"] = 0
+    return true
 
   else
     return false
   end
-  -- print(length)
 
 end
-
-
 
 function SoundcheckMic(userspace)
 
@@ -170,11 +199,19 @@ function SoundcheckChangedInterface(userspace)
   -- get the current Interface
   local retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 
-  if actual_device_name ~= userspace["old_device_name"] and actual_device_name ~= "" then -- Device wurde gewechselt und es wird nicht gerendert
+  if actual_device_name ~= userspace["old_device_name"] and actual_device_name ~= "" and reaper.CountTracks(0) > 0 then -- Device wurde gewechselt und es wird nicht gerendert und es gibt mindestens 1 Spur
 
     local known_device_status = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-settings.ini")
 
     if known_device_status == "" then
+
+      name_short = string.sub(actual_device_name, 1, 17)
+      device_string = "Unknown interface: "..name_short
+      warning_string = "You connected this sound interface for the first time:|"..actual_device_name.."|Please specify whether or nor you are using local monitoring on this device.|If your headphones are connected to the sound interface - choose local monitoring.|If your headphones are connected to the phones-jack of your computer: choose no local monitoring."
+
+      local update = ultraschall.SetUSExternalState("ultraschall_soundcheck_changed_interface", "EventNameDisplay", device_string, "ultraschall-settings.ini")
+
+      local update = ultraschall.SetUSExternalState("ultraschall_soundcheck_changed_interface", "DescriptionWarning", warning_string, "ultraschall-settings.ini")
 
       return true
 
@@ -193,6 +230,8 @@ function SoundcheckChangedInterface(userspace)
       reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	--Routing-Matrix neu aufbauen
 
       userspace["old_device_name"] = actual_device_name
+
+      local update = ultraschall.SetUSExternalState("ultraschall_soundcheck_changed_interface", "EventNameDisplay", "Unknown sound interface?", "ultraschall-settings.ini")
 
       return false
 

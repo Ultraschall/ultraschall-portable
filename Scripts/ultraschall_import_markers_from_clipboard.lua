@@ -52,8 +52,8 @@ end
 ----------------------------
 reaper.Undo_BeginBlock()
 
-os = reaper.GetOS()
-if string.match(os, "OSX") then 
+Os = reaper.GetOS()
+if string.match(Os, "OSX") then 
   color = 0x00FF88|0x1000000
 else
   color = 0x88FF00|0x1000000
@@ -73,7 +73,7 @@ for i=1, number_of_markerentries do
   if marker_table[3][i]~="" and marker_table[2][i]~=-1 then
     -- normal entry with time and text -> put a grey marker at position
     marker_table[3][i]=marker_table[3][i]:match("\t*%s*(.*)")
-    reaper.AddProjectMarker2(0, false, marker_table[2][i],0, marker_table[3][i]:match("(.-)%s-$"), 1 , 0x666666|0x1000000)
+    reaper.AddProjectMarker2(0, false, marker_table[2][i],0, marker_table[3][i]:match("(.-)%s-$"), 1 , 0)
   elseif marker_table[3][i]~="" and marker_table[2][i]==-1 then
     -- normal entry without time but text -> green marker
     green_marker_num=green_marker_num+1
@@ -83,6 +83,6 @@ for i=1, number_of_markerentries do
 end
 
 -- renumber grey markers
-ultraschall.RenumerateMarkers(0x666666|0x1000000, 1)
+ultraschall.RenumerateMarkers(0, 1)
 
 reaper.Undo_EndBlock("Ultraschall: Import markers from clipboard.",0)

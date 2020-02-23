@@ -2,6 +2,7 @@
 local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
+gfx_path=script_path.."/Ultraschall_Gfx/ColorPicker/"
 
 -- All functions in the GUI library are now contained in the GUI table,
 -- so they can be accessed via:          GUI.function(params)
@@ -72,8 +73,8 @@ GUI.elms = {
   
 --     name          = element type          x      y    w    h     caption               ...other params...
   colors      = GUI.ColorPic:new(    4, 4, 170, 170, t),
-  col1      = GUI.Pic:new(      190,4, 42, 83, 1, script_path.."us_col1.png", gentle_rainboom, ""),
-  col2      = GUI.Pic:new(      190,88, 42, 83, 1, script_path.."us_col2.png", spread_rainboom, ""),
+  col1      = GUI.Pic:new(      190,4, 42, 83, 1, gfx_path.."us_col1.png", gentle_rainboom, ""),
+  col2      = GUI.Pic:new(      190,88, 42, 83, 1, gfx_path.."us_col2.png", spread_rainboom, ""),
 --  label           = GUI.Lbl:new(          0,  160,               "Ultraschall was sucsessfully installed.", 0),
 --  label2           = GUI.Lbl:new(          135,  200,               "Visit the Podcast menu to explore the user interface and features.", 0),
 --  label3           = GUI.Lbl:new(          210,  220,               "Use Project templates for a quick setup.", 0),
@@ -140,3 +141,11 @@ GUI.elms = {
       GUI.Init()
       GUI.Main()
     end
+    
+function atexit()
+  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+end
+
+reaper.atexit(atexit)
+
+

@@ -30,7 +30,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 defer_identifier = "hallo"
 
-local function triggermagicrouting()
+function triggermagicrouting()
 
 	-- prüft, ob eine Aktualisierung der Matrix notwendig ist. Dies ist der Fall wenn entweder
 	-- A) Der MagicRouting Button gerade frisch gedrückt wurde (einmaliger Check) oder sich
@@ -45,13 +45,14 @@ local function triggermagicrouting()
 	-- local retval, deviceInfo = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 	-- print (deviceInfo)
 
-	if override == "on" then  -- automatic was just started by pressing button
-		needsTrigger = true
-		reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "off") -- einmal Neuaufbau der Matrix reicht
+
+	if currentCountTracks == 0 then -- es gibt keine Tracks also kein Bedarf
+	-- reaper.SetProjExtState(0, "ultraschall_magicrouting", "lastCountTracks", "0")
 		return needsTrigger
 
-	elseif currentCountTracks == 0 then -- es gibt keine Tracks also kein Bedarf
-		reaper.SetProjExtState(0, "ultraschall_magicrouting", "lastCountTracks", "0")
+	elseif override == "on" then  -- automatic was just started by pressing button
+		needsTrigger = true
+		reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "off") -- einmal Neuaufbau der Matrix reicht
 		return needsTrigger
 
 	elseif currentCountTracks ~= tonumber(lastCountTracks) then -- es gibt mindestens eine neue Spur oder Spuren 	wurden gelöscht
@@ -67,11 +68,11 @@ local function triggermagicrouting()
 end
 
 
-local function checkrouting()
+function checkrouting()
 
 	if triggermagicrouting() then -- wird ein Update der Matrix wirklich benötigt?
 
-		local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
+		retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
 
 		if step == "preshow" then
 			commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Preshow")
@@ -86,8 +87,8 @@ local function checkrouting()
 
 	end
 
-  retval, defer_identifier = ultraschall.Defer1(checkrouting, 2, 1)
-	return defer_identifier
+    ultraschall.Defer(checkrouting, "Check Routing Defer", 2, 1)
+	return "Check Routing Defer"
 
 end
 
@@ -102,18 +103,15 @@ if state ~= 1 then
 	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 1)
 
 
-	reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	-- automation was started so trigger at least one magicrouting
+	if reaper.CountTracks(0) > 0 then
+		 reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	-- automation was started so trigger at least one magicrouting
+	end
 
-  defer_identifier = checkrouting()
-  reaper.SetProjExtState(0, "ultraschall_magicrouting", "defer_identifier", defer_identifier)
-
+  checkrouting()
 
 else
 	-- Magicrouting off
 	reaper.SetToggleCommandState(sec, cmd, 0)
 	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 0)
-	-- reaper.ShowConsoleMsg("Stop".."\n")
-
-	retval, stop_defer_identifier = reaper.GetProjExtState(0, "ultraschall_magicrouting", "defer_identifier")
-	retval = ultraschall.StopDeferCycle(stop_defer_identifier)
+	retval = ultraschall.StopDeferCycle("Check Routing Defer")
 end
