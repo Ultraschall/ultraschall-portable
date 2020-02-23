@@ -146,6 +146,8 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
   -- body
   ---- GUI Elements ----
 
+blankimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/blank.png"
+
 GUI.elms = {}
 
 --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
@@ -169,11 +171,20 @@ checkers = GUI.Checklist:new(20, 665, 240, 30,"","Show this Screen on Start", 4,
 id = GUI.Btn:new(487, 660, 175, 40, "QUICK TUTORIAL >", startTutorial, "")
   table.insert(GUI.elms, id)
 
+link_url = GUI.Pic:new(133, 593, 86, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-twitter")
+  table.insert(GUI.elms, link_url)
+link_url = GUI.Pic:new(223, 593, 88, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-forum")
+  table.insert(GUI.elms, link_url)
+link_url = GUI.Pic:new(30, 593, 100, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-tutorials")
+  table.insert(GUI.elms, link_url)
+
+link_url = GUI.Pic:new(435, 305, 84, 30, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-changelog")
+  table.insert(GUI.elms, link_url)
 
 
 
-versionsTable = get_versions()
-version_items = build_menu(versionsTable)
+-- versionsTable = get_versions()
+-- version_items = build_menu(versionsTable)
 -- GUI.elms.versions  = GUI.Btn:new(          276, 185, 120, 24,         " Show Details",   show_menu, version_items)
 
 
