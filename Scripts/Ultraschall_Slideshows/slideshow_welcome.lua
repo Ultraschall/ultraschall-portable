@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -30,17 +30,12 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 -- Grab all of the functions and classes from our GUI library
 
--- local info = debug.getinfo(1,'S');
--- script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(reaper.GetResourcePath() .. "/Scripts/ultraschall_gui_lib.lua")
 slideshow_path = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Slideshows/"
 
 local info2 = debug.getinfo(1,'S');
-slideshow_slug = info2.source:match("^.+/(.+)$")
-slideshow_slug = slideshow_slug:sub(0, #slideshow_slug - 4) .. "_"
-
--- print (slideshow_slug)
-
+slideshow_path1, slideshow_slug = ultraschall.GetPath(info2.source)
+slideshow_slug=slideshow_slug:match("(.*)%.").."_"
 
 
 ---- Window settings and user functions ----
@@ -68,6 +63,7 @@ end
 
 
 function build_slideshow_table(slug)
+
 
   slideshow_table = {}
 
@@ -131,7 +127,7 @@ function buildGui(slide_number)
 
     previous_slide_number = slide_number -1
 
-    button_settings = GUI.Btn:new(20, 660, 35, 39,         " <", buildGui, previous_slide_number)
+    button_settings = GUI.Btn:new(20, 663, 35, 39,         " <", buildGui, previous_slide_number)
     table.insert(GUI.elms, button_settings)
 
   end
@@ -143,12 +139,12 @@ function buildGui(slide_number)
   if slide_number ~= #slideshow_table then
 
     next_slide_number = slide_number +1
-    button_settings = GUI.Btn:new(487, 660, 175, 40,         " Next...", buildGui, next_slide_number)
+    button_settings = GUI.Btn:new(487, 663, 175, 40,         " Next...", buildGui, next_slide_number)
     table.insert(GUI.elms, button_settings)
 
   else
 
-    button_settings = GUI.Btn:new(487, 660, 175, 40,         " Close", close_gfx)
+    button_settings = GUI.Btn:new(487, 663, 175, 40,         " Close", close_gfx)
     table.insert(GUI.elms, button_settings)
 
   end
