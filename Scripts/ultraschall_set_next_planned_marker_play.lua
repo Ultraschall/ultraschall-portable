@@ -40,11 +40,13 @@ PlannedColor = ultraschall.ConvertColor(100,255,0) -- color of all planned marke
 for i=0, num_markers-1 do
   retval, isrgnOut, posOut, rgnendOut, nameOut, markrgnindexnumberOut, colorOut = reaper.EnumProjectMarkers3(0, i)
   if isrgnOut==false and colorOut==PlannedColor then -- green and not a region
-    reaper.SetProjectMarker4(0, markrgnindexnumberOut, false, current_position, 0, nameOut, 0x666666|0x1000000, 0)
+    reaper.DeleteProjectMarkerByIndex(0, markrgnindexnumberOut)
+    reaper.AddProjectMarker2(0, false, current_position, 0, nameOut, markrgnindexnumberOut, 0)
+    --reaper.SetProjectMarker4(0, markrgnindexnumberOut, false, current_position, 0, nameOut, 0, 0)
     break
   end
 end
 
-ultraschall.RenumerateMarkers(0x666666|0x1000000, 1)
+ultraschall.RenumerateMarkers(0, 1)
 
 reaper.Undo_EndBlock("Ultraschall: Set next planned marker to Play-/Rec-Cursor.",0)
