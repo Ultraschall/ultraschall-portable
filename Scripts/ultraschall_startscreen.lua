@@ -168,7 +168,7 @@ checkers = GUI.Checklist:new(20, 665, 240, 30,"","Show this Screen on Start", 4,
 
 
 
-id = GUI.Btn:new(487, 660, 175, 40, "QUICK TUTORIAL >", startTutorial, "")
+id = GUI.Btn:new(487, 663, 175, 40, "QUICK TUTORIAL >", startTutorial, "")
   table.insert(GUI.elms, id)
 
 link_url = GUI.Pic:new(133, 593, 86, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-twitter")
