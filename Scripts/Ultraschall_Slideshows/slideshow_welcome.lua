@@ -127,7 +127,7 @@ function buildGui(slide_number)
 
     previous_slide_number = slide_number -1
 
-    button_settings = GUI.Btn:new(20, 660, 35, 39,         " <", buildGui, previous_slide_number)
+    button_settings = GUI.Btn:new(20, 663, 35, 39,         " <", buildGui, previous_slide_number)
     table.insert(GUI.elms, button_settings)
 
   end
@@ -139,12 +139,12 @@ function buildGui(slide_number)
   if slide_number ~= #slideshow_table then
 
     next_slide_number = slide_number +1
-    button_settings = GUI.Btn:new(487, 660, 175, 40,         " Next...", buildGui, next_slide_number)
+    button_settings = GUI.Btn:new(487, 663, 175, 40,         " Next...", buildGui, next_slide_number)
     table.insert(GUI.elms, button_settings)
 
   else
 
-    button_settings = GUI.Btn:new(487, 660, 175, 40,         " Close", close_gfx)
+    button_settings = GUI.Btn:new(487, 663, 175, 40,         " Close", close_gfx)
     table.insert(GUI.elms, button_settings)
 
   end
