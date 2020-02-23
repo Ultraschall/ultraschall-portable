@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -30,17 +30,12 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 -- Grab all of the functions and classes from our GUI library
 
--- local info = debug.getinfo(1,'S');
--- script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(reaper.GetResourcePath() .. "/Scripts/ultraschall_gui_lib.lua")
 slideshow_path = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Slideshows/"
 
 local info2 = debug.getinfo(1,'S');
-slideshow_slug = info2.source:match("^.+/(.+)$")
-slideshow_slug = slideshow_slug:sub(0, #slideshow_slug - 4) .. "_"
-
--- print (slideshow_slug)
-
+slideshow_path1, slideshow_slug = ultraschall.GetPath(info2.source)
+slideshow_slug=slideshow_slug:match("(.*)%.").."_"
 
 
 ---- Window settings and user functions ----
@@ -68,6 +63,7 @@ end
 
 
 function build_slideshow_table(slug)
+
 
   slideshow_table = {}
 
