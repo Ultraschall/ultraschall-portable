@@ -52,8 +52,8 @@ end
 ----------------------------
 reaper.Undo_BeginBlock()
 
-os = reaper.GetOS()
-if string.match(os, "OSX") then 
+Os = reaper.GetOS()
+if string.match(Os, "OSX") then 
   color = 0x00FF88|0x1000000
 else
   color = 0x88FF00|0x1000000
