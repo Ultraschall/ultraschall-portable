@@ -38,7 +38,9 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 function buildRoutingMatrix ()
 
 	local AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates()
-  local AllAUXSendReceives, number_of_tracks = ultraschall.GetAllAUXSendReceives()
+	local AllAUXSendReceives, number_of_tracks = ultraschall.GetAllAUXSendReceives()
+
+	soundbed_mix = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preshow_mix", "Value" ,"ultraschall-settings.ini")) -- wie hoch soll der Anteil des Soundbards während der Preshow im Monitormix sein
 
 --	 print(serialize(AllMainSends))
 
@@ -55,8 +57,13 @@ function buildRoutingMatrix ()
     		if ultraschall.GetTypeOfTrack(j) ~= "StudioLink" then
 
 					-- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
+					if ultraschall.GetTypeOfTrack(j) == "SoundBoard" then
+						send_volume = soundbed_mix
+					else
+						send_volume = 1
+					end
 
-    			setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, 1, 0, 0, 0, 0, 0, 0, -1, 0, 0, false)
+    			setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, send_volume, 0, 0, 0, 0, 0, 0, -1, 0, 0, false)
     			-- print(i.j)
     		end
 			end
@@ -64,8 +71,6 @@ function buildRoutingMatrix ()
     elseif tracktype == "SoundBoard" then	-- Behandlung der Soundboard Spuren
 
 			AllMainSends[i]["MainSendOn"] = 1 -- Bei der Preshow sendet nur das Soundboard auf den Main
-
-			soundbed_mix = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preshow_mix", "Value" ,"ultraschall-settings.ini")) -- wie hoch soll der ANteil des Soundbards während der Preshow im Monitormix sein
 
       retval = ultraschall.AddTrackHWOut(i, 0, 0, soundbed_mix, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
 
