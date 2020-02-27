@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-# 
+#
 # Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-# 
+#
 ################################################################################
 ]]
 
@@ -39,7 +39,7 @@ function RippleCut()
   reaper.Main_OnCommand(40717, 0)            -- Select all items in time selection
   reaper.Main_OnCommand(41383, 0)            -- Copy all items within time selection to clipboard
   reaper.Main_OnCommand(40201, 0)            -- Ripple cut Selection
-  reaper.Main_OnCommand(40289, 0)            -- Unselect all Items 
+  reaper.Main_OnCommand(40289, 0)            -- Unselect all Items
 end
 
 function AddMuteEnvelopePoint_IfNecessary(startsel, endsel)
@@ -47,7 +47,7 @@ function AddMuteEnvelopePoint_IfNecessary(startsel, endsel)
     Track=reaper.GetTrack(0,i-1)
     Envelope=reaper.GetTrackEnvelopeByName(Track, "Mute")
     retval, envIDX, envVal = ultraschall.IsMuteAtPosition(i, endsel)
-    
+
     if retval==false and Envelope~=nil then
       envIDX, envVal, envPosition = ultraschall.GetPreviousMuteState(i, endsel)
       if envIDX~=-1 then reaper.InsertEnvelopePoint(Envelope, endsel, envVal, 1, 0, false, false) end
@@ -69,11 +69,6 @@ followstate=reaper.GetToggleCommandState(follow_actionnumber)
 reaper.Undo_BeginBlock() -- Beginning of the undo block. Leave it at the top of your main function.
 -------------------------------------
 
-if init_end_timesel == init_start_timesel and reaper.CountSelectedMediaItems(0) == 1 then  -- exacty one item selected and no time selection
-  runcommand("_SWS_SAFETIMESEL")            -- Set time selection to item borders
-  init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)  -- get information wether or not a time selection is set
-end
-
 if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
   AddMuteEnvelopePoint_IfNecessary(init_start_timesel, init_end_timesel)
   RippleCut()
@@ -89,14 +84,14 @@ if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
       reaper.MoveEditCursor(-(init_end_timesel-init_start_timesel), 0)
       reaper.OnPlayButton() --play
     end
-    
+
     if followstate==1 then -- reactivate followmode if it was on before
       ultraschall.pause_follow_one_cycle()
       reaper.Main_OnCommand(followon_actionnumber,0)
     end
   end
 else                           -- no time selection or items selected
-   result = reaper.ShowMessageBox( "You need to make a time selection or to select a single item to ripple-cut.", "Ultraschall Ripple Cut", 0 )  -- Info window
+   result = reaper.ShowMessageBox( "You need to make a time selection to ripple-cut.", "Ultraschall Ripple Cut", 0 )  -- Info window
 end
 
 
