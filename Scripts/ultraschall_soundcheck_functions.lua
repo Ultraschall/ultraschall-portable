@@ -71,10 +71,16 @@ function SoundcheckOverdub(userspace)
       return false --ist die erste Aufnahme überhaupt, kann also nicht überlappen
     end
 
-    for i = 0, itemcount-1 do -- gehe alle Items durch ob es irgnedwo ein Ende gibt, das hinter der aktuellen Aufnahmeposition steht
+    trackstringarmed = ultraschall.CreateTrackString_ArmedTracks() -- gibt einen String aus aller armed tracks mit Kommas getrennt
+
+    for i = 0, itemcount-1 do -- gehe alle Items durch ob es irgendwo ein Ende gibt, das hinter der aktuellen Aufnahmeposition steht
       local MediaItem = reaper.GetMediaItem(0, i)
+      local MediaItemTrackChunk = reaper.GetMediaItemInfo_Value(MediaItem, "P_TRACK") -- in welchem Track ist das Item
+      local MediaItemTrack = reaper.GetMediaTrackInfo_Value(MediaItemTrackChunk, "IP_TRACKNUMBER")
+      local MediaItemTrack = string.format("%." .. (0 or 0) .. "f", MediaItemTrack)
+
       local end_position = reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION") + reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
-      if play < end_position then -- es ist wirklich ein overdub
+      if play < end_position and string.find(trackstringarmed, MediaItemTrack) then -- es ist wirklich ein overdub und der Track ist armed
         userspace["overdub_warning"] = 1
         userspace["skip_overdub_check"] = 0 -- auch weiter prüfen
         return true
