@@ -44,6 +44,7 @@ end
 
 function SoundcheckOverdub(userspace)
 
+
   if reaper.GetPlayState() ~= 5 then
     userspace["skip_overdub_check"] = 0 -- stoppen der Aufnahme führt dazu, dass beim nächsten Recording der Check wieder durchgeführt wird
     -- return false
@@ -73,14 +74,23 @@ function SoundcheckOverdub(userspace)
 
     trackstringarmed = ultraschall.CreateTrackString_ArmedTracks() -- gibt einen String aus aller armed tracks mit Kommas getrennt
 
+    armedtracktable = {}
+    for tracknumber in string.gmatch(trackstringarmed, '([^,]+)') do  -- baue einen indexierten Table mit den armed tracks
+      armedtracktable[tracknumber] = "armed"
+    end
+
+
     for i = 0, itemcount-1 do -- gehe alle Items durch ob es irgendwo ein Ende gibt, das hinter der aktuellen Aufnahmeposition steht
+
+
       local MediaItem = reaper.GetMediaItem(0, i)
       local MediaItemTrackChunk = reaper.GetMediaItemInfo_Value(MediaItem, "P_TRACK") -- in welchem Track ist das Item
       local MediaItemTrack = reaper.GetMediaTrackInfo_Value(MediaItemTrackChunk, "IP_TRACKNUMBER")
       local MediaItemTrack = string.format("%." .. (0 or 0) .. "f", MediaItemTrack)
 
       local end_position = reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION") + reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
-      if play < end_position and string.find(trackstringarmed, MediaItemTrack) then -- es ist wirklich ein overdub und der Track ist armed
+
+      if play < end_position and armedtracktable[MediaItemTrack] then -- es ist wirklich ein overdub und der Track ist armed
         userspace["overdub_warning"] = 1
         userspace["skip_overdub_check"] = 0 -- auch weiter prüfen
         return true
