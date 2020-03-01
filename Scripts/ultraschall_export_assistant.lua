@@ -49,7 +49,7 @@ script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
 GUI.name = "Ultraschall Export Assistant"
-GUI.w, GUI.h = 660, 440
+GUI.w, GUI.h = 660, 500
 
 -- position always in the centre of the screen
 
@@ -65,163 +65,146 @@ if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     separator = "
 
 -- Check if project has been saved
 
-retval, project_path_name = reaper.EnumProjects(-1, "")
-if project_path_name ~= "" then
-	dir = GetPath(project_path_name, separator)
-	name = string.sub(project_path_name, string.len(dir) + 1)
-	name = string.sub(name, 1, -5)
-	name = name:gsub(dir, "")
-end
+function buildGUI()
 
--- lookup existing episode image
+	retval, project_path_name = reaper.EnumProjects(-1, "")
+	if project_path_name ~= "" then
+		dir = GetPath(project_path_name, separator)
+		name = string.sub(project_path_name, string.len(dir) + 1)
+		name = string.sub(name, 1, -5)
+		name = name:gsub(dir, "")
+	end
 
-img_index = false
+	-- lookup existing episode image
 
-if dir then
+	img_index = false
+
+	if dir then
+		endings = {".jpg", ".jpeg", ".png"} -- prefer .png
+		for key,value in pairs(endings) do
+			img_adress = dir .. "cover" .. value          -- does cover.xyz exist?
+			img_test = gfx.loadimg(0, img_adress)
+			if img_test ~= -1 then
+				img_index = img_test
+			end
+		end
+	end
+
 	endings = {".jpg", ".jpeg", ".png"} -- prefer .png
 	for key,value in pairs(endings) do
-		img_adress = dir .. "cover" .. value          -- does cover.xyz exist?
+		img_adress = string.gsub(project_path_name, ".RPP", value)
 		img_test = gfx.loadimg(0, img_adress)
 		if img_test ~= -1 then
 			img_index = img_test
 		end
 	end
-end
 
-endings = {".jpg", ".jpeg", ".png"} -- prefer .png
-for key,value in pairs(endings) do
-	img_adress = string.gsub(project_path_name, ".RPP", value)
-	img_test = gfx.loadimg(0, img_adress)
-	if img_test ~= -1 then
-		img_index = img_test
+	if img_index then     -- there is an image
+		preview_size = 80      -- preview size in Pixel, always square
+		w, h = gfx.getimgdim(img_index)
+		if w > h then     -- adjust size to the longer border
+			img_ratio = preview_size / w
+		else
+			img_ratio = preview_size / h
+		end
 	end
-end
 
-if img_index then     -- there is an image
-	preview_size = 80      -- preview size in Pixel, always square
-	w, h = gfx.getimgdim(img_index)
-	if w > h then     -- adjust size to the longer border
-		img_ratio = preview_size / w
+
+
+		---- GUI Elements ----
+
+
+	-- if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
+
+	-- 	if img_index then     -- there is an episode-image
+
+	GUI.elms = {}
+
+
+	y_offset = -30  -- move all content up/down
+	spacing = 10
+
+	-- Heading
+
+	label3 = GUI.Lbl:new(30,  70+y_offset,"Follow these simple steps:", 0)
+	table.insert (GUI.elms, label3)
+
+	-- 1. Export MP3
+
+	label2 = GUI.Lbl:new(30,  120+y_offset,"1.", 0)
+	table.insert (GUI.elms, label2)
+	label = GUI.Lbl:new(50,  120+y_offset,"Export MP3\nRender your Podcast to a MP3 File.", 0)
+	table.insert (GUI.elms, label)
+	export = GUI.Btn:new(430, 120+y_offset, 190, 40,"Export MP3", runcommand, "_Ultraschall_Render_Check")
+	table.insert (GUI.elms, export)
+	y_offset = y_offset + spacing
+
+	-- 2. Chapter Markers
+
+	label2 = GUI.Lbl:new(30,  185+y_offset,"2.", 0)
+	table.insert (GUI.elms, label2)
+	label = GUI.Lbl:new(50,  185+y_offset,"Chapter Markers\nYou may take a final look at your chapter markers,\nand add URLs or images to them.", 0)
+	table.insert (GUI.elms, label)
+	chapters = GUI.Btn:new(430, 185+y_offset, 190, 40, "Edit Chapters", runcommand, "_Ultraschall_Marker_Dashboard")
+	table.insert (GUI.elms, chapters)
+	y_offset = y_offset + spacing
+
+	-- 3. ID3 Metadata
+
+	label2 = GUI.Lbl:new(30,  250+y_offset,"3.", 0)
+	table.insert (GUI.elms, label2)
+	label = GUI.Lbl:new(50,  250+y_offset,"ID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.", 0)
+	table.insert (GUI.elms, label)
+	metadata = GUI.Btn:new(430, 250+y_offset, 190, 40, "Edit MP3 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags")
+	table.insert (GUI.elms, metadata)
+	y_offset = y_offset + spacing
+
+	-- 4. - Image
+
+	label2 = GUI.Lbl:new(30,  320+y_offset,"4.", 0)
+	table.insert (GUI.elms, label2)
+
+	if img_index then
+		logo = GUI.Pic:new(484,310+y_offset, 80, 80, img_ratio, img_adress, runcommand, "_Ultraschall_Open_Project_Folder")
+		table.insert (GUI.elms, logo)
+		label3 = GUI.Lbl:new(50,  320+y_offset,"Podcast Episode Image:\nFound.", 0)
+		table.insert (GUI.elms, label3)
 	else
-		img_ratio = preview_size / h
+		label3 = GUI.Lbl:new(50,  320+y_offset,"Podcast Episode Image\nJust put a square .jpg, .jpeg or .png image with the\nname 'cover.xyz' OR with the same name as your\nproject file (.RPP) in the project folder.", 0)
+		table.insert (GUI.elms, label3)
 	end
+
+	y_offset = y_offset + spacing
+
+	-- 5. Finalize
+
+	label2 = GUI.Lbl:new(30,  412+y_offset,"5.", 0)
+	table.insert (GUI.elms, label2)
+	label = GUI.Lbl:new(50,  412+y_offset,"Finalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!", 0)
+	table.insert (GUI.elms, label)
+	finalize = GUI.Btn:new(430, 412+y_offset, 190, 40,      "Finalize MP3!", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES")
+	table.insert (GUI.elms, finalize)
+
 end
 
--- Msg(w .. "-" .. h)
 
-	-- body
-	---- GUI Elements ----
-
-
-if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
-
-	if img_index then     -- there is an episode-image
-
-		GUI.elms = {
-
-	--     name          = element type          x      y    w    h     caption               ...other params...
-		logo               = GUI.Pic:new(               484,280, 80, 80, img_ratio, img_adress, runcommand, "_Ultraschall_Open_Project_Folder"),
-		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3\nRender your Podcast to a MP3 File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers,\nand add URLs or images to them.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image:\nFound.\n\n\n\n\nFinalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!", 0),
-		label2          = GUI.Lbl:new(          30,  120+y_offset,               "1.\n\n\n\n2.\n\n\n\n\n3.\n\n\n\n4.\n\n\n\n\n\n5.", 0),
-		label3          = GUI.Lbl:new(          30,  70+y_offset,               "Follow these simple steps:", 0),
-		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultrschall_Render_Check"),
-		chapters           = GUI.Btn:new(          430, 185+y_offset, 190, 40,      "Edit Chapters", runcommand, "_Ultraschall_Marker_Dashboard"),
-		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit MP3 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
-		-- image                = GUI.Btn:new(          430, 315+y_offset, 190, 40,      "Open Project Folder", runcommand, "_Ultraschall_Open_Project_Folder"),
-		finalize           = GUI.Btn:new(          430, 412+y_offset, 190, 40,      "Finalize MP3!", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"),
-	}
-
-	else
-
-		GUI.elms = {
-
-	--     name          = element type          x      y    w    h     caption               ...other params...
-		-- logo               = GUI.Pic:new(               374,178, 0, 0, img_ratio, img_adress),
-		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3\nRender your Podcast to a MP3 File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers,\nand add URLs or images to them.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image\nJust put a square .jpg, .jpeg or .png image with the\nname 'cover.xyz' OR with the same name as your\nproject file (.RPP) in the project folder.\n\n\nFinalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!", 0),
-		label2          = GUI.Lbl:new(          30,  120+y_offset,               "1.\n\n\n\n2.\n\n\n\n\n3.\n\n\n\n4.\n\n\n\n\n\n5.", 0),
-		label3          = GUI.Lbl:new(          30,  70+y_offset,               "Follow these simple steps:", 0),
-		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultraschall_Render_Check"),
-		chapters           = GUI.Btn:new(          430, 185+y_offset, 190, 40,      "Edit Chapters", runcommand, "_Ultraschall_Marker_Dashboard"),
-		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit MP3 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
-		image                = GUI.Btn:new(          430, 315+y_offset, 190, 40,      "Open Project Folder", runcommand, "_Ultraschall_Open_Project_Folder"),
-		finalize           = GUI.Btn:new(          430, 412+y_offset, 190, 40,      "Finalize MP3!", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"),
-	}
-
-	end
-
-else -- macOS
-
-	if img_index then     -- there is an episode-image
-
-		GUI.elms = {
-
-	--     name          = element type          x      y    w    h     caption               ...other params...
-		logo               = GUI.Pic:new(               484,280, 80, 80, img_ratio, img_adress, runcommand, "_Ultraschall_Open_Project_Folder"),
-		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3\nRender your Podcast to a MP3 File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers,\nand add URLs or images to them.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image:\nFound.\n\n\n\n\nFinalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!", 0),
-		label2          = GUI.Lbl:new(          30,  120+y_offset,               "1.\n\n\n\n2.\n\n\n\n\n3.\n\n\n\n4.\n\n\n\n\n\n5.", 0),
-		label3          = GUI.Lbl:new(          30,  70+y_offset,               "Follow these simple steps:", 0),
-		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultraschall_Render_Check"),
-		chapters           = GUI.Btn:new(          430, 185+y_offset, 190, 40,      "Edit Chapters", runcommand, "_Ultraschall_Marker_Dashboard"),
-		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit MP3 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
-		-- image                = GUI.Btn:new(          430, 315+y_offset, 190, 40,      "Open Project Folder", runcommand, "_Ultraschall_Open_Project_Folder"),
-		finalize           = GUI.Btn:new(          430, 412+y_offset, 190, 40,      "Finalize MP3", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"),
-	}
-
-	else
-
-		GUI.elms = {
-
-	--     name          = element type          x      y    w    h     caption               ...other params...
-		-- logo               = GUI.Pic:new(               374,178, 0, 0, img_ratio, img_adress),
-		label           = GUI.Lbl:new(          50,  120+y_offset,               "Export MP3\nRender your Podcast to a MP3 File.\n\n\nChapter Markers\nYou may take a final look at your chapter markers,\nand add URLs or images to them.\n\n\nID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.\n\n\nPodcast Episode Image\nJust put a square .jpg, .jpeg or .png image with the\nname 'cover.xyz' OR with the same name as your\nproject file (.RPP) in the project folder.\n\n\nFinalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!", 0),
-		label2          = GUI.Lbl:new(          30,  120+y_offset,               "1.\n\n\n\n2.\n\n\n\n\n3.\n\n\n\n4.\n\n\n\n\n\n5.", 0),
-		label3          = GUI.Lbl:new(          30,  70+y_offset,               "Follow these simple steps:", 0),
-		export           = GUI.Btn:new(          430, 120+y_offset, 190, 40,      "Export MP3", runcommand, "_Ultraschall_Render_Check"),
-		chapters           = GUI.Btn:new(          430, 185+y_offset, 190, 40,      "Edit Chapters", runcommand, "_Ultraschall_Marker_Dashboard"),
-		metadata           = GUI.Btn:new(          430, 250+y_offset, 190, 40,      "Edit MP3 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags"),
-		image                = GUI.Btn:new(          430, 315+y_offset, 190, 40,      "Open Project Folder", runcommand, "_Ultraschall_Open_Project_Folder"),
-		finalize           = GUI.Btn:new(          430, 412+y_offset, 190, 40,      "Finalize MP3", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"),
-	}
-
-	end
-end
-
-	---- Put all of your own functions and whatever here ----
-
---Msg("hallo")
-
-
-
-	---- Main loop ----
-
---[[
-
-	If you want to run a function during the update loop, use the variable GUI.func prior to
-	starting GUI.Main() loop:
-
-	GUI.func = my_function
-	GUI.freq = 5     <-- How often in seconds to run the function, so we can avoid clogging up the CPU.
-						- Will run once a second if no value is given.
-						- Integers only, 0 will run every time.
-
-	GUI.Init()
-	GUI.Main()
-
-]]--
-
--- local startscreen = GUI.val("checkers")
--- local startscreen = GUI.elms.checkers[GUI.Val()]
 
 -- Open Export Assistant, when it hasn't been opened yet
-    if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).
-																	 -- If yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
-    else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
 
-    if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
+if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).
+																-- If yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
+else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
+
+if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
 					   -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
+
+	GUI.func = buildGUI
+	GUI.freq = 2     -- How often in seconds to run the function, so we can avoid clogging up the CPU.
+
+	 buildGUI()
 	 GUI.Init()
 	 GUI.Main()
-    end
+end
 
 function atexit()
   reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
