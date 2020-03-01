@@ -34,7 +34,7 @@ if Position=="" then Position=0 end
 if tonumber(Position)==-1 then Position=0 end
 
 --reaper.MB("Do you want to play the first sound in the Soundboard
-reaper.StuffMIDIMessage(0, 144,72+Position,0)
+reaper.StuffMIDIMessage(0, 144,0+Position,1)
 --reaper.StuffMIDIMessage(0, 144,72,1)
 
 

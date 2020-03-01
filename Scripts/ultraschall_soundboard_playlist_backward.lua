@@ -33,6 +33,7 @@ if Position=="" then Position=0 end
 if tonumber(Position)==-1 then return end
 
 reaper.StuffMIDIMessage(0, 144,72+Position,0)
+reaper.StuffMIDIMessage(0, 144,72+Position-1,0)
 reaper.StuffMIDIMessage(0, 144,72+Position-1,1)
 
 reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", Position-1)
