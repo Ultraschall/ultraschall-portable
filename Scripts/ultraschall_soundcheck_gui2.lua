@@ -297,7 +297,14 @@ function buildGui()
   logo = GUI.Pic:new(          300,  10,   0,  0,    1,   gfx_path..logo_img)
   table.insert(GUI.elms, logo)
 
+  if warningCount == 5 and eastereggShown == nil then
+    easteregg = "The project just scored five warnings.\nIt can only be attributable to human error.\n\nI can see you're really upset about this. I honestly think you ought to sit down calmly, take a stress pill, and think things over. I've still got the greatest enthusiasm and confidence in your podcast. And I want to help you.\n\nmaybe a round of moonlander would do you good?"
 
+    result = reaper.ShowMessageBox( easteregg, "Soundcheck - Deep Trouble Alert", 0 )  -- Info window
+    eastereggShown = true
+    run_action("_Ultraschall_Moonlander")
+
+  end
 
 
 end
