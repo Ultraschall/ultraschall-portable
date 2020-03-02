@@ -30,7 +30,11 @@
 --reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", -1)
 retval, Position=reaper.GetProjExtState(0, "ultraschall_soundboard", "playlistindex")
 if Position=="" then Position=0 end
-if tonumber(Position)==-1 then return end
+if tonumber(Position)<=0 then 
+  reaper.StuffMIDIMessage(0, 144,72,0)
+  reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", -1)
+  return 
+end
 
 reaper.StuffMIDIMessage(0, 144,72+Position,0)
 reaper.StuffMIDIMessage(0, 144,72+Position-1,0)
