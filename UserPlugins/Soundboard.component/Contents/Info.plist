@@ -13,28 +13,35 @@
 			<string>Ultr</string>
 			<key>name</key>
 			<string>Ultraschall: Soundboard</string>
+			<key>resourceUsage</key>
+			<dict>
+				<key>network.client</key>
+				<true/>
+				<key>temporary-exception.files.all.read-write</key>
+				<true/>
+			</dict>
 			<key>subtype</key>
-			<string>Soub</string>
+			<string>Sndb</string>
 			<key>type</key>
 			<string>aumu</string>
 			<key>version</key>
-			<integer>196864</integer>
+			<integer>262144</integer>
 		</dict>
 	</array>
 	<key>BuildMachineOSBuild</key>
-	<string>17D34a</string>
+	<string>18G3020</string>
 	<key>CFBundleDisplayName</key>
-	<string>Plugin</string>
+	<string>Soundboard</string>
 	<key>CFBundleExecutable</key>
 	<string>Soundboard</string>
 	<key>CFBundleIdentifier</key>
-	<string>fm.ultraschall.Soundboard</string>
+	<string>fm.ultraschall.soundboard</string>
 	<key>CFBundleName</key>
-	<string>Plugin</string>
+	<string>Soundboard</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.1.0</string>
+	<string>4.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleSupportedPlatforms</key>
@@ -42,24 +49,24 @@
 		<string>MacOSX</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>3.1.0</string>
+	<string>4.0.0</string>
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>
-	<string>9C40b</string>
+	<string>10G8</string>
 	<key>DTPlatformVersion</key>
 	<string>GM</string>
 	<key>DTSDKBuild</key>
-	<string>17C76</string>
+	<string>18G74</string>
 	<key>DTSDKName</key>
-	<string>macosx10.13</string>
+	<string>macosx10.14</string>
 	<key>DTXcode</key>
-	<string>0920</string>
+	<string>1030</string>
 	<key>DTXcodeBuild</key>
-	<string>9C40b</string>
+	<string>10G8</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Ultraschall</string>
+	<string>The Ultraschall Project</string>
 </dict>
 </plist>
