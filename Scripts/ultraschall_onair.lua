@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-# 
+#
 # Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,10 +20,15 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-# 
+#
 ################################################################################
 ]]
-  
+
+
+-- little helpers
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+
 																	-- Print Message to console (debugging)
 function Msg(val)
 	reaper.ShowConsoleMsg(tostring(val).."\n")
@@ -62,37 +67,65 @@ if playstate == 5 and state == 1 then -- is recording and stream active
 	if result == 1 then -- abort
 		return
 	end
+
 else
+
+
+
+
 	reaper.Undo_BeginBlock()
 
 	m = reaper.GetMasterTrack(0)                                                  --streaming is always on the master track
 	-- fx_name_retval, fx_name = reaper.TrackFX_GetFXName(m, 0, "")           --get the name of the first effect, debug only
 
+	-- nix, name = reaper.TrackFX_GetFXName(m,0,"")
+	-- print(name)
+
+
+
 	os = reaper.GetOS()
-	if string.match(os, "OSX") then 
+	if string.match(os, "OSX") then
 		--		fx_slot = reaper.TrackFX_GetByName(m, "ITSR: StudioLinkOnAir", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
-		-- fx_slot = reaper.TrackFX_GetByName(m, "2StudioLinkOnAir (ITSR)", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.		
-		-- fx_slot = reaper.TrackFX_AddByName(m, "ITSR: StudioLinkOnAir", false, 1)	
-		fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir", false, 1)
+		-- fx_slot = reaper.TrackFX_GetByName(m, "2StudioLinkOnAir (ITSR)", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
+		-- fx_slot = reaper.TrackFX_AddByName(m, "ITSR: StudioLinkOnAir", false, 1)
+		-- fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir", false, 1)
+
+		onair_name = "ITSR: StudioLinkOnAir"
+		onair_name_remove = "StudioLinkOnAir (ITSR)"
 
 	else	-- Windows
-		fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
+
+		onair_name = "StudioLinkOnAir (IT-Service Sebastian Reimers)"
+		onair_name_remove = "StudioLinkOnAir (IT-Service Sebastian Reimers)"
+
+		-- fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
 	end
+
+	-- fx_slot = reaper.TrackFX_GetByName(m, onair_name, 1)
+
+	-- print(onair_name)
+	-- fx_slot = reaper.TrackFX_AddByName(m, onair_name, false, 1)
+
+
+	-- track = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (ITSR)", false)
+	-- print("track: "..track)
 
 
 	if state ~= 1 then                                                                  --streaming is off: start streaming
 		reaper.SetToggleCommandState(sec, cmd, 1)
-		test2 = reaper.TrackFX_SetEnabled(m, fx_slot, true)
+		fx_slot = reaper.TrackFX_AddByName(m, onair_name, false, 1)
+		-- test2 = reaper.TrackFX_SetEnabled(m, fx_slot, true)
 	else                                                                                --streaming is on: stop streaming
 		reaper.SetToggleCommandState(sec, cmd, 0)
-		reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)							-- remove FX
-	end     
+		--reaper.SNM_MoveOrRemoveTrackFX(m, 0, 0)							-- remove FX
+		track = reaper.TrackFX_GetByName(m, onair_name_remove, false)
+		reaper.TrackFX_Delete(m, track)
+	end
 
 	reaper.RefreshToolbar2(sec, cmd)
 
 	reaper.Undo_EndBlock("Ultraschall toggle StudioLink OnAir", -1)
 
--- nix,name = reaper.TrackFX_GetFXName(m,0,"")
--- Msg(name)
+
 
 end
