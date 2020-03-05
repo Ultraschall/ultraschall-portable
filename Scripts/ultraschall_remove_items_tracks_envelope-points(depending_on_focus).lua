@@ -1,7 +1,7 @@
 Length=reaper.GetProjectLength()
 
 --reaper.MB(reaper.GetCursorContext(),"",0)
-if reaper.GetCursorContext()==0 then reaper.SetCursorContext(1) end
+-- if reaper.GetCursorContext()==0 then reaper.SetCursorContext(1) end
 
 reaper.Main_OnCommand(40697, 0)
 
