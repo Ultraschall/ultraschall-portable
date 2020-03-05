@@ -114,14 +114,26 @@ end
 function SoundcheckMic(userspace)
 
   retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
-  armed = ultraschall.CreateTrackString_ArmedTracks()
+  -- armed = ultraschall.CreateTrackString_ArmedTracks()
   number = reaper.Master_GetPlayRate(0)
+  armed = false
 
-  if number ~= 1 and armed ~= "" then
+  for i=0, reaper.CountTracks(0)-1 do
+    local MediaTrack = reaper.GetTrack(0,i)
+    if reaper.GetMediaTrackInfo_Value(MediaTrack, "I_RECARM") == 1 then
+      -- print(ultraschall.GetTypeOfTrack(i+1))
+      if ultraschall.GetTypeOfTrack(i+1) == "Other" then  -- Soundboard und StudioLink sollen den Mic-Check nicht triggern
+        armed = true
+      end
+    end
+  end
+
+
+  if number ~= 1 and armed then
     reaper.Main_OnCommand(40521,0) -- setze Playrate auf 1 vor Aufnahme
   end
 
-  if armed ~= "" then -- teste nur, wenn eine Spur zur Aufnahme aktiviert wurde
+  if armed then -- teste nur, wenn eine Spur zur Aufnahme aktiviert wurde
 
     if actual_device_name == "CoreAudio Built-in Microph" then -- Das interne Mic ist ausgewählt
       return true
