@@ -38,7 +38,7 @@ for i=0, reaper.CountTracks(0)-1 do
     ok, vol, pan = reaper.GetTrackUIVolPan(tr, 0, 0)
     -- print(vol)
     if vol < 0.01 then vol = 0 end
-    reaper.SetMediaTrackInfo_Value(tr, "D_VOL", vol*0.5)
+    reaper.SetMediaTrackInfo_Value(tr, "D_VOL", vol*0.8)
     -- print("Soundboard: "..i)
   -- else
     -- print("track: "..i)
