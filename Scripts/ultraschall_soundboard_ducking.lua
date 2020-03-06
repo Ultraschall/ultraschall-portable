@@ -28,7 +28,7 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-VolumeChange    = 10  -- The maximum volume-reduction of the ducking in dB; default-Value is 10dB-toggle
+VolumeChange    = 15  -- The maximum volume-reduction of the ducking in dB; default-Value is 10dB-toggle
 Number_of_steps = 18  -- The duration of the "fadeout/fadein" of the ducking; 1 second==30 steps; default 0.66 seconds
 
 
