@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 6.03
+            ## ReaScript API as of Reaper 6.05
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -8165,7 +8165,7 @@
         <functioncall prog_lang="lua">boolean retval, string valuestrNeedBig = reaper.GetSetProjectInfo_String(ReaProject project, string desc, string valuestrNeedBig, boolean is_set)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, ReaProject project, String desc, String valuestrNeedBig, Boolean is_set) = RPR_GetSetProjectInfo_String(project, desc, valuestrNeedBig, is_set)</functioncall>
         <requires>
-            Reaper=5.975
+            Reaper=6.05
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -8176,20 +8176,21 @@
             RENDER\_FILE: render directory
             RENDER\_PATTERN: render file name (may contain wildcards)
             RENDER\_FORMAT: base64-encoded sink configuration (see project files, etc). Callers can also pass a simple 4-byte string (non-base64-encoded), to use default settings for that sink type.
+            RENDER\_FORMAT2: base64-encoded secondary sink configuration. Callers can also pass a simple 4-byte string (non-base64-encoded), e.g. "evaw" or "l3pm", to use default settings for that sink type, or "" to disable secondary render.
             see [render-code-documentation](render-codes-decoded-base64-strings.txt) for how the unencoded RENDER_FORMAT-string is structured.
             
             To just use the 4-byte-string, you can use: 
             "evaw" for wave, "ffia" for aiff, " osi" for audio-cd, " pdd" for ddp, "calf" for flac, "l3pm" for mp3, "vggo" for ogg, "SggO" for Opus, "PMFF" for FFMpeg-video, "FVAX" for MP4Video/Audio on Mac, " FIG" for Gif, " FCL" for LCF, "kpvw" for wavepack            
         </description>
         <retvals>
-            boolean retval - 
-            string valuestrNeedBig - 
+            boolean retval - true, value can be set/get; false, value can't be set/get
+            string valuestrNeedBig - the current value for this project-setting
         </retvals>
         <parameters>
-             ReaProject project - 
-             string desc - 
-             string valuestrNeedBig - 
-             boolean is_set - 
+             ReaProject project - the project, whose setting you want to get or set
+             string desc - the setting, that you want to get/set; refer description for available ones
+             string valuestrNeedBig - if is_set==true, this is the new value to set
+             boolean is_set - true, set a new value; false, just get the current one
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -24339,11 +24340,15 @@
         <functioncall prog_lang="python">JS_GDI_ReleaseDC(void windowHWND, void deviceHDC)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.986
+            JS=0.999
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Any GDI HDC should be released immediately after drawing, and deferred scripts should get and release new DCs in each cycle.
+            To release a window HDC, both arguments must be supplied: the HWND as well as the HDC. To release a screen DC, only the HDC needs to be supplied.
+
+            For compatibility with previous versions, the HWND and HDC can be supplied in any order.
+
+            NOTE: Any GDI HDC should be released immediately after drawing, and deferred scripts should get and release new DCs in each cycle.
         </description>
         <parameters>
            identifier windowHWND - 
@@ -28018,19 +28023,15 @@
         <functioncall prog_lang="python">Boolean  JS_Window_IsWindow(void windowHWND)</functioncall>
         <requires>
             Reaper=5.965
-            JS=0.971
+            JS=0.999
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            DEPRECATED: Since REAPER v5.974, windows can be checked using the native function [ValidatePtr](#ValidatePtr)(windowHWND, "HWND").
-        
             Determines whether the specified window handle identifies an existing window.
 
             On macOS and Linux, only windows that were created by WDL/swell will be identified (and only such windows should be acted on by scripts).
 
-            WARNING! On MacOS and Linux, REAPER WILL CRASH if the handle passed to a [JS\_Window](#JS_Window) or [JS\_WindowMessage](#JS_WindowMessage) function does not refer to an existing window.
-
-            The IsWindow function is slower on macOS and Linux. Preferably use native functions such as [MIDIEditor\_GetMode](#MIDIEditor_GetMode) to test handles.
+            NOTE: Since REAPER v5.974, windows can be checked using the native function ValidatePtr(windowHWND, "HWND").
         </description>
         <retvals>
            boolean  - 
