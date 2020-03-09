@@ -3,7 +3,7 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.01 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.05 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -6074,6 +6074,22 @@
                     
           Stored in reaper.ini under the same name in the section REAPER.      
             
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>midipeaks</slug>  
+      <title>midipeaks</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          unknown
+          It is an integer  
+          
+          Default is 0
       </description>  
       <chapter_context>  
          Config Variables  

@@ -161,7 +161,7 @@ function onLoad() {
               <h3><a id="FunctionsIntro">How it works - basics</a></h3>
               The Web-Interface is programmed in JavaScript. You need to include main.js first, then call wwr_start(), which tells the Reaper-Server to accept requests.<br>
               You can now give Reaper requests, using commands like i.e. wwr_req(ActionCommandID) for one time requests. The ActionCommandID tells Reaper, what you want to call, i.e. the ActionCommandID 1007 starts play in Reaper.<br>
-              You can find a full Action Command ID-list at the page <a href="Reaper-ActionList.txt">Reaper Action-Command-IDs</a>.<p>
+              You can find a full Action Command ID-list in the Action-Dialog in the menu Actions -> Show Action List.<p>
               
                         Example Code that presses the Play-Button:<p>
                         <pre>
@@ -202,7 +202,7 @@ Look for the entries, beginning with SCR. Locate the line, which has the name of
  <i style="padding-left :10%;">SCR 4 32060 RS7d3c_1ee9bb229dabffe151848d7efa3c10f748e1a1cf "Custom: lyrics.lua" Cockos/lyrics.lua</i><p>
     The third entry(beginning with <i>RS7d3c_...</i>) is the Action-Command-Code. You can change it to something more "catchy" like Reascript_Lyrics_Script, so now it reads:<p>
     <i style="padding-left :10%;">SCR 4 32060 Reascript_Lyrics_Script "Custom: lyrics.lua" Cockos/lyrics.lua</i><p>
-    Note: If you want to use your newly defined Action-Command-Code in the Web-API, you need to put a underscore at the beginning(in our example, <i>Reascript_Lyrics_Script</i> becomes <i>_Reascript_Lyrics_Script</i>)! Else, it will not work.<p>
+    Note: If you want to use your newly defined Action-Command-Code in the Web-API, you need to put an underscore at the beginning(in our example, <i>Reascript_Lyrics_Script</i> becomes <i>_Reascript_Lyrics_Script</i>)! Else, it will not work.<p>
     
     Note also: If you had a shortcut associated with it, you need to change it too after changing the ActionCommandID. You can do it either in Reaper itself or you look for another existence of the old Action-Command-Code(in our example <i>RS7d3c...</i>) in the reaper-kb.ini file.<br>
     You should find it among the entries, that begin with KEY and it is written with an underscore at the beginning ( <i>_RS7d3c...</i>). Replace the code with <i>_Reascript_Lyrics_Script</i> (remember, here, it must begin with an underscore!).<br>
