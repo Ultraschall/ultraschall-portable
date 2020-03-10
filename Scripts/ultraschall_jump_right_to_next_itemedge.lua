@@ -48,6 +48,8 @@ end
 
 if trackstring=="" then trackstring=ultraschall.CreateTrackString(1, reaper.CountTracks(), 1) end -- get a string with the existing number of tracks
 
+if trackstring=="" then return end
+
 if reaper.GetPlayState()~=0 then
   -- during play and recording, set Play and Editcursor to previous closest item or marker
   if ultraschall.IsWithinTimeRange(reaper.GetPlayPosition(), lastposition+preroll, lastposition) then 
@@ -67,7 +69,7 @@ else
     position=reaper.GetCursorPosition()
   end
   elementposition_prev, elementtype_prev, number_prev, elementposition_next, elementtype_next, number_next = ultraschall.GetClosestGoToPoints(trackstring, position+0.001, true, false, false)
-
+  
   reaper.SetEditCurPos(elementposition_next+preroll, true, true)
   reaper.SetExtState("ultraschall", "nextitemedge_lastposition", elementposition_next, false)
 end

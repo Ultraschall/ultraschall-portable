@@ -56,6 +56,7 @@ if preroll=="" then preroll=-1 end
 
 trackstring= ultraschall.CreateTrackString_SelectedTracks()
 if trackstring=="" then trackstring=ultraschall.CreateTrackString(1, reaper.CountTracks(), 1) end -- get a string with the existing number of tracks
+if trackstring=="" then return end
 
 if reaper.GetPlayState()~=0 then
   if reaper.GetPlayState()&2==2 and ultraschall.IsSplitAtPosition(trackstring, reaper.GetCursorPosition())==true and preroll~=0 then
