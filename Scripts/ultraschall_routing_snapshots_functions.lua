@@ -216,6 +216,7 @@ function Main(slot)
 end
 
 
+
 function dbg(text)
     if debug then reaper.ShowConsoleMsg(tostring(text).."\n") end
 end
@@ -612,3 +613,12 @@ function ClearHardwareSends(track) -- remove all HWOUT enries inside <track> of 
   end
   return reaper.SetTrackStateChunk(track, new_TrackStateChunk)
 end
+
+function atexit()
+  if GUI==nil then return end
+  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+end
+
+reaper.atexit(atexit)
+
+
