@@ -405,7 +405,10 @@ function Main()
   GUI.char = gfx.getchar()
 
   --  (Escape key)  (Window closed)
-  if GUI.char == 27 or GUI.char == -1 then
+  if GUI.char == 27       -- escape
+  or GUI.char == 26164.0  -- alt+f4
+  or GUI.char == 23.0     -- cmd+w(?)
+  or GUI.char == -1 then  -- window is closed by the user
   windownumber=reaper.GetExtState("Ultraschall_Windows",GUI.name)
 --  reaper.MB(windownumber,"pre",0)
     reaper.SetExtState("Ultraschall_Windows",GUI.name,windownumber-1,true)
