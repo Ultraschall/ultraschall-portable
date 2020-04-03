@@ -64,6 +64,43 @@ function run_action(commandID)
 
 end
 
+function count_warnings(event_count)
+
+-- count the number of warnings
+
+  local warning_count = 0
+  for i = 1, event_count do
+
+    local EventIdentifier = ""
+
+    EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
+
+    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+
+    if last_state == true then
+      warning_count = warning_count +1
+    end
+  end
+  return warning_count
+end
+
+
+function toggle_more()
+
+  show_info = true
+  ultraschall.SetUSExternalState("ultraschall_gui", "showinfo", "true")
+
+
+end
+
+function toggle_less()
+
+  show_info = false
+  ultraschall.SetUSExternalState("ultraschall_gui", "showinfo", "false")
+
+end
+
+
 ------------------------------------------------------
 --  End of functions
 ------------------------------------------------------
@@ -97,7 +134,7 @@ l, t, r, b = 0, 0, GUI.w, GUI.h
 __, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
 GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 
-
+show_info = toboolean(ultraschall.GetUSExternalState("ultraschall_gui", "showinfo"))
 
   -- body
   ---- GUI Elements ----
@@ -150,14 +187,30 @@ function buildGui()
   ------------------------------------------------------
 
 
-  position = 260
-  warningCount = 0
+
+  warningCount = count_warnings(event_count)
+  position_warnings = 290                              -- Warnings immer oben
+  position_info = 290 + (warningCount * 30)   -- ab hier nur Infoeinträge
+
+
+
+
+
+  if show_info == true then
+    WindowHeight = 260 + (event_count*30) +80
+    button_more = GUI.Btn:new(365, WindowHeight-19, 70, 20,         " ▲", toggle_less)
+    table.insert(GUI.elms, button_more)
+  else
+    WindowHeight = 260 + (warningCount*30) +80
+    button_more = GUI.Btn:new(365, WindowHeight-19, 70, 20,         " ▼", toggle_more)
+    table.insert(GUI.elms, button_more)
+  end
+
+  gfx.init("", 800, WindowHeight, 0)
 
   for i = 1, event_count do
 
     -- Suche die Sections der ultraschall.ini heraus, die in der Settings-GUI angezeigt werden sollen
-
-    position = position + 30 -- Feintuning notwendig
 
     EventIdentifier = ""
     button1 = ""
@@ -166,84 +219,89 @@ function buildGui()
 
     last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
 
-    -- print(i.."-"..EventName.."-"..EventIdentifier.."-"..tostring(last_state))
+    if show_info == true or last_state == true then
 
-    if last_state == true then
-      warningCount = warningCount +1
+
+      if last_state == true then
+        position = position_warnings
+        position_warnings = position_warnings +30
+      else
+        position = position_info
+        position_info = position_info +30
+      end
+
+      -- print(i.."-"..EventName.."-"..EventIdentifier.."-"..tostring(last_state))
+
+      -- Name
+
+      EventNameDisplay = ultraschall.GetUSExternalState(EventName, "EventNameDisplay","ultraschall-settings.ini")
+
+      id = GUI.Lbl:new(20, position, EventNameDisplay, 0)
+      table.insert(GUI.elms, id)
+
+      -- State
+
+      if EventPaused == true then
+        last_state_string = "IGNORED"
+        state_color = "txt_yellow"
+      elseif last_state == true then
+        last_state_string = "WARNING"
+        state_color = "txt_red"
+      else
+        last_state_string = "OK"
+        state_color = "txt_green"
+      end
+
+      status = GUI.Lbl:new(288, position, last_state_string, 0, state_color)
+      table.insert(GUI.elms, status)
+
+      -- Buttons
+
+      if EventPaused == true then
+        button1 = GUI.Btn:new(401, position-4, 80, 20,         " Re-Check", ultraschall.EventManager_ResumeEvent, EventIdentifier)
+        table.insert(GUI.elms, button1)
+
+      elseif last_state == true then
+        button1 = GUI.Btn:new(401, position-4, 80, 20,         " Ignore", ultraschall.EventManager_PauseEvent, EventIdentifier)
+        table.insert(GUI.elms, button1)
+
+      end
+
+
+          -- Action-Button
+      Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label","ultraschall-settings.ini")
+      Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action","ultraschall-settings.ini")
+      DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-settings.ini")
+      Description = ultraschall.GetUSExternalState(EventName, "Description","ultraschall-settings.ini")
+
+
+      if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
+
+
+        button2 = GUI.Btn:new(490, position-4, 144, 20,         Button1Label, run_action, Button1Action)
+        table.insert(GUI.elms, button2)
+      end
+
+      Button2Label = ultraschall.GetUSExternalState(EventName, "Button2Label","ultraschall-settings.ini")
+      Button2Action = ultraschall.GetUSExternalState(EventName, "Button2Action","ultraschall-settings.ini")
+
+      if Button2Label ~= "" and Button2Action and last_state_string ~= "OK" then -- es gibt Probleme
+
+        button3 = GUI.Btn:new(643, position-4, 144, 20,         Button2Label, run_action, Button2Action)
+        table.insert(GUI.elms, button3)
+      end
+
+      if last_state_string ~= "OK" then -- es gibt Probleme
+        info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, DescriptionWarning)
+        table.insert(GUI.elms, info_button)
+      else -- normaler Info-Text
+        info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, Description)
+        table.insert(GUI.elms, info_button)
+      end
     end
-    -- Name
-
-    EventNameDisplay = ultraschall.GetUSExternalState(EventName, "EventNameDisplay","ultraschall-settings.ini")
-
-    id = GUI.Lbl:new(20, position, EventNameDisplay, 0)
-    table.insert(GUI.elms, id)
-
-    -- State
-
-    if EventPaused == true then
-      last_state_string = "IGNORED"
-      state_color = "txt_yellow"
-    elseif last_state == true then
-      last_state_string = "WARNING"
-      state_color = "txt_red"
-    else
-      last_state_string = "OK"
-      state_color = "txt_green"
-    end
-
-    status = GUI.Lbl:new(288, position, last_state_string, 0, state_color)
-    table.insert(GUI.elms, status)
-
-    -- Buttons
-
-    if EventPaused == true then
-      button1 = GUI.Btn:new(401, position-4, 80, 20,         " Re-Check", ultraschall.EventManager_ResumeEvent, EventIdentifier)
-      table.insert(GUI.elms, button1)
-
-    elseif last_state == true then
-      button1 = GUI.Btn:new(401, position-4, 80, 20,         " Ignore", ultraschall.EventManager_PauseEvent, EventIdentifier)
-      table.insert(GUI.elms, button1)
-
-    end
-
-
-
-
-        -- Action-Button
-    Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label","ultraschall-settings.ini")
-    Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action","ultraschall-settings.ini")
-    DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-settings.ini")
-    Description = ultraschall.GetUSExternalState(EventName, "Description","ultraschall-settings.ini")
-
-
-    if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
-
-
-      button2 = GUI.Btn:new(490, position-4, 144, 20,         Button1Label, run_action, Button1Action)
-      table.insert(GUI.elms, button2)
-    end
-
-    Button2Label = ultraschall.GetUSExternalState(EventName, "Button2Label","ultraschall-settings.ini")
-    Button2Action = ultraschall.GetUSExternalState(EventName, "Button2Action","ultraschall-settings.ini")
-
-    if Button2Label ~= "" and Button2Action and last_state_string ~= "OK" then -- es gibt Probleme
-
-      button3 = GUI.Btn:new(643, position-4, 144, 20,         Button2Label, run_action, Button2Action)
-      table.insert(GUI.elms, button3)
-    end
-
-    if last_state_string ~= "OK" then -- es gibt Probleme
-      info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, DescriptionWarning)
-      table.insert(GUI.elms, info_button)
-    else -- normaler Info-Text
-      info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, Description)
-      table.insert(GUI.elms, info_button)
-    end
-
-
-
-  -- print("----")
   end
+
+
 
   if warningCount > 0 then
 
