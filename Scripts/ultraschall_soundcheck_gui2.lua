@@ -85,6 +85,25 @@ function count_warnings(event_count)
 end
 
 
+function count_paused(event_count)
+
+  -- count the number of warnings
+
+    local paused_count = 0
+    for i = 1, event_count do
+
+      local EventIdentifier = ""
+
+      EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
+
+      if EventPaused == true then
+        paused_count = paused_count +1
+      end
+    end
+    return paused_count
+  end
+
+
 function toggle_more()
 
   show_info = true
@@ -100,6 +119,17 @@ function toggle_less()
   show_info = false
   ultraschall.SetUSExternalState("ultraschall_gui", "showinfo", "false")
   refresh_gui = true
+
+end
+
+function ignore(EventIdentifier)
+
+  ultraschall.EventManager_PauseEvent(EventIdentifier)
+  local event_count = ultraschall.EventManager_CountRegisteredEvents()
+  -- print(count_warnings(event_count).."-"..count_paused(event_count))
+  if count_warnings(event_count) == count_paused(event_count)+1 then
+    gfx.quit()
+  end
 
 end
 
@@ -278,7 +308,7 @@ function buildGui()
         table.insert(GUI.elms, button1)
 
       elseif last_state == true then
-        button1 = GUI.Btn:new(401, position-4, 80, 20,         " Ignore", ultraschall.EventManager_PauseEvent, EventIdentifier)
+        button1 = GUI.Btn:new(401, position-4, 80, 20,         " Ignore", ignore, EventIdentifier)
         table.insert(GUI.elms, button1)
 
       end
