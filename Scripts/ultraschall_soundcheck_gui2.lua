@@ -89,6 +89,8 @@ function toggle_more()
 
   show_info = true
   ultraschall.SetUSExternalState("ultraschall_gui", "showinfo", "true")
+  refresh_gui = true
+
 
 
 end
@@ -97,6 +99,7 @@ function toggle_less()
 
   show_info = false
   ultraschall.SetUSExternalState("ultraschall_gui", "showinfo", "false")
+  refresh_gui = true
 
 end
 
@@ -133,6 +136,7 @@ GUI.w, GUI.h = 800, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der
 l, t, r, b = 0, 0, GUI.w, GUI.h
 __, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
 GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
+refresh_gui = true
 
 show_info = toboolean(ultraschall.GetUSExternalState("ultraschall_gui", "showinfo"))
 
@@ -189,6 +193,11 @@ function buildGui()
 
 
   warningCount = count_warnings(event_count)
+  if warningCount ~= lastWarningCount then
+    refresh_gui = true
+  end
+  lastWarningCount = warningCount
+
   position_warnings = 290                              -- Warnings immer oben
   position_info = 290 + (warningCount * 30)   -- ab hier nur Infoeinträge
 
@@ -200,13 +209,20 @@ function buildGui()
     WindowHeight = 260 + (event_count*30) +80
     button_more = GUI.Btn:new(365, WindowHeight-19, 70, 20,         " ▲", toggle_less)
     table.insert(GUI.elms, button_more)
+    GUI.y = (screen_h - WindowHeight) / 2
   else
     WindowHeight = 260 + (warningCount*30) +80
     button_more = GUI.Btn:new(365, WindowHeight-19, 70, 20,         " ▼", toggle_more)
     table.insert(GUI.elms, button_more)
+    GUI.y = (screen_h - WindowHeight + 210 - warningCount*30) / 2
   end
 
-  gfx.init("", 800, WindowHeight, 0)
+  if refresh_gui == true then
+
+    gfx.init("", 800, WindowHeight, 0, GUI.x, GUI.y)
+    refresh_gui = false
+
+  end
 
   for i = 1, event_count do
 
