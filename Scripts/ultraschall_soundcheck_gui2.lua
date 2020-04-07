@@ -209,7 +209,6 @@ function buildGui()
 
   --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
 
-
     label_interfaces = GUI.Lbl:new(          360, 110,                  "Soundcheck",          0),
     label_table      = GUI.Lbl:new(          20, 250,                  "Check                                                         Status                        Actions",          0),
     line1            = GUI.Line:new(0, 271, 800, 271, "txt_muted"),
@@ -249,6 +248,14 @@ function buildGui()
   end
   lastWarningCount = warningCount
 
+  if warningCount == 0 and show_info == false then
+    GUI.elms = {
+
+      label_interfaces = GUI.Lbl:new(          360, 110,                  "Soundcheck",          0),
+
+    }
+  end
+
   position_warnings = 290                              -- Warnings immer oben
   position_info = 290 + (warningCount * 30)   -- ab hier nur Infoeinträge
 
@@ -261,6 +268,13 @@ function buildGui()
     button_more = GUI.Btn:new(365, WindowHeight-19, 70, 20,         " ▲", toggle_less)
     table.insert(GUI.elms, button_more)
     GUI.y = (screen_h - WindowHeight) / 2
+
+  elseif warningCount == 0 then
+    WindowHeight = 220
+    button_more = GUI.Btn:new(365, WindowHeight-19, 70, 20,         " ▼", toggle_more)
+    table.insert(GUI.elms, button_more)
+    GUI.y = (screen_h - WindowHeight + 330 - warningCount*30) / 2
+
   else
     WindowHeight = 260 + (warningCount*30) +80
     button_more = GUI.Btn:new(365, WindowHeight-19, 70, 20,         " ▼", toggle_more)
@@ -455,7 +469,9 @@ if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed 
 end
 
 function atexit()
-  ignore_all_warnings()
+  if ultraschall.GetUSExternalState("ultraschall_settings_graceful_soundcheck", "Value","ultraschall-settings.ini") == "1" then
+    ignore_all_warnings()
+  end
   reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
 
 end
