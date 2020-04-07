@@ -84,6 +84,27 @@ function count_warnings(event_count)
   return warning_count
 end
 
+function ignore_all_warnings()
+
+  -- count the number of warnings
+
+  local event_count = ultraschall.EventManager_CountRegisteredEvents()
+  local warning_count = 0
+    for i = 1, event_count do
+
+      local EventIdentifier = ""
+
+      EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
+
+      last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+
+      if last_state == true then
+        ultraschall.EventManager_PauseEvent(EventIdentifier)
+      end
+    end
+    return warning_count
+  end
+
 
 function count_paused(event_count)
 
@@ -434,7 +455,9 @@ if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed 
 end
 
 function atexit()
+  ignore_all_warnings()
   reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+
 end
 
 reaper.atexit(atexit)

@@ -280,7 +280,7 @@ gfx_path=script_path.."/Ultraschall_Gfx/Settings/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
-GUI.w, GUI.h = 800, 665   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 800, 695   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -365,7 +365,7 @@ end
 
 -- Soundcheck Settings
 
-position_old = position +195
+position_old = position +225
 
 for i = 1, section_count , 1 do
 
