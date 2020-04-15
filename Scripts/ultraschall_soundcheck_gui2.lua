@@ -155,6 +155,20 @@ function ignore(EventIdentifier)
 end
 
 
+function string.split(str, delimiter)
+
+  if (delimiter=='') then return false end
+  local pos,array = 0, {}
+  -- for each divider found
+  for st,sp in function() return string.find(str, delimiter, pos, true) end do
+      table.insert(array, string.sub(str, pos, st - 1))
+      pos = sp + 1
+  end
+  table.insert(array, string.sub(str, pos))
+  return array
+
+end
+
 ------------------------------------------------------
 --  End of functions
 ------------------------------------------------------
@@ -373,8 +387,25 @@ function buildGui()
       end
 
       if last_state_string ~= "OK" then -- es gibt Probleme
-        info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, DescriptionWarning)
-        table.insert(GUI.elms, info_button)
+
+        if show_info == true then -- ausgeklappt also ?
+
+          info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, DescriptionWarning)
+          table.insert(GUI.elms, info_button)
+
+        else -- nur Fehler also direkt schreiben
+          infotable = string.split(DescriptionWarning, "|")
+
+          for k, warningtextline in pairs(infotable) do
+
+            infotext = GUI.Lbl:new(20, position_warnings, warningtextline, 0)
+            table.insert(GUI.elms, infotext)
+            position_warnings = position_warnings +20
+
+            -- print(k, v)
+          end
+          position_warnings = position_warnings +40
+        end
       else -- normaler Info-Text
         info_button = GUI.Btn:new(365, position-4, 20, 20,         " ?", show_menu, Description)
         table.insert(GUI.elms, info_button)

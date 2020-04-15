@@ -409,6 +409,7 @@ function Main()
   windownumber=reaper.GetExtState("Ultraschall_Windows",GUI.name)
 --  reaper.MB(windownumber,"pre",0)
     reaper.SetExtState("Ultraschall_Windows",GUI.name,windownumber-1,true)
+    abort = true
 -- reaper.MB(reaper.GetExtState("Ultraschall_Windows",GUI.name),"post",0)
     return 0
   else
