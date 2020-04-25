@@ -3738,8 +3738,8 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
       Presetname2=A:match("%s(.-)%s")
     end
   
-    B=string.gsub(A,Quote..Presetname2..Quote, "A")
-    
+	B=A:sub(0,20).."A"..A:sub(21+Quote:len()+Quote:len()+Presetname2:len(),-1)
+	
     if B:match("\"")~=nil then
       Outputfilename_renderpattern2=B:match("\"(.-)\"")
     else
@@ -3753,6 +3753,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     B:match(".- (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) ")
     if Presetname2==Bounds_Name then found=true break end
   end
+  
 
   if found~=true then ultraschall.AddErrorMessage("GetRenderPreset_RenderTable", "Bounds_Name", "no such preset", -3) return end
   found=nil
@@ -3761,13 +3762,15 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     A2=A2.." "
     rendercfg=A2:match(".-\n%s*(.-)\n")
     Quote=A2:sub(15,15)
+	
     if Quote=="\"" then
       Presetname=A2:match(" [\"](.-)[\"]")
     else
       Quote=""
       Presetname=A2:match("%s(.-)%s")
     end
-    A2=string.gsub(A2, Quote..Presetname..Quote, "A")
+	
+	A2=A2:sub(0,14).."A"..A2:sub(15+Quote:len()+Quote:len()+Presetname:len(),-1)
   
     _temp, SampleRate, Channels, Offline_online_dropdownlist, 
     Useprojectsamplerate_checkbox, Resamplemode_dropdownlist, Various_checkboxes, Various_checkboxes2
