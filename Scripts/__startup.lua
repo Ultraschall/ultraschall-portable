@@ -190,19 +190,20 @@ end
 --------------------------
 
 if string.sub(reaper.GetOS(),1,3) == "OSX"  then
-
-  handle = io.popen("system_profiler SPAudioDataType -xml | grep -A 1 'Built-in Input' | tr -d '\t' | awk '{gsub(\"<[^>]*>\", \"\")}1' | tr -d '\n'")
+  handle = io.popen("system_profiler SPAudioDataType -xml | grep -B 1 'coreaudio_default_audio_input_device' | head -n 1") -- get default input device name
   result = handle:read("*a")
   handle:close()
 
-  --print(result)
+  result = string.gsub(result, "\n", "") -- remove newline
+  result = string.gsub(result, "\t", "") -- remove tabs
+  result = string.gsub(result, "(%b<>)", "") -- remove <*> tags
 
-  if (result=="Built-in Inputcoreaudio_default_audio_input_device") then
+  --print("("..result..")")
+
+  if (result=="Built-in Input" or result=="Built-in Microphone") then
     reaper.SetExtState("ultraschall_mic", "internal", "true", false)
-     --print("Micro")
   else
     reaper.SetExtState("ultraschall_mic", "internal", "false", false)
-     --print("nix")
   end
 end
 
