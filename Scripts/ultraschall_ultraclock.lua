@@ -53,6 +53,14 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+
+function GetProjectLength()
+  if reaper.GetPlayState()&4==4 and reaper.GetProjectLength()<reaper.GetPlayPosition() then
+    return reaper.GetPlayPosition()
+  else
+    return reaper.GetProjectLength()
+  end
+end
 -- Retina Management
 -- Get DPI
 retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
@@ -388,7 +396,7 @@ function drawClock()
   -- Project Length
   if uc_menu[6].checked then
     WriteAlignedText("Project Duration",0xb6b6bb, clockfont_bold, txt_line[9].size * fsize, txt_line[9].y*height+border,0) -- print date
-    WriteAlignedText(reaper.format_timestr_len(reaper.GetProjectLength(),"", 0,5):match("(.*):"),0xb6b6bb, clockfont_bold, txt_line[10].size * fsize, txt_line[10].y*height+border,0) -- print date
+    WriteAlignedText(reaper.format_timestr_len(GetProjectLength(),"", 0,5):match("(.*):"),0xb6b6bb, clockfont_bold, txt_line[10].size * fsize, txt_line[10].y*height+border,0) -- print date
   end
 
   -- Next/Previous Marker/Region
@@ -460,6 +468,7 @@ function MainLoop()
       reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
     end
     gfx.update()
+    ALABAMASONG=GetProjectLength()
     reaper.defer(MainLoop)
   end
 end

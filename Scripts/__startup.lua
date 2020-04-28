@@ -190,26 +190,20 @@ end
 --------------------------
 
 if string.sub(reaper.GetOS(),1,3) == "OSX"  then
+  handle = io.popen("system_profiler SPAudioDataType -xml | grep -B 1 'coreaudio_default_audio_input_device' | head -n 1") -- get default input device name
+  result = handle:read("*a")
+  handle:close()
 
-  handle1 = io.popen("system_profiler SPAudioDataType -xml | xmllint --xpath '/plist[@version=\"1.0\"]/array/dict/array[2]/dict/array/dict[1]//string[1]/text()' -")
-  handle2 = io.popen("system_profiler SPAudioDataType -xml | xmllint --xpath '/plist[@version=\"1.0\"]/array/dict/array[2]/dict/array/dict[1]//key[2]/text()' -")
+  result = string.gsub(result, "\n", "") -- remove newline
+  result = string.gsub(result, "\t", "") -- remove tabs
+  result = string.gsub(result, "(%b<>)", "") -- remove <*> tags
 
-  result1 = handle1:read("*a")
-  result2 = handle2:read("*a")
+  --print("("..result..")")
 
-  handle1:close()
-  handle2:close()
-
-  -- print(result1)
-  -- print(result2)
-
-
-  if (result1=="Built-in Input" or result1=="Built-in Microphone") and result2=="coreaudio_default_audio_input_device" then
+  if (result=="Built-in Input" or result=="Built-in Microphone") then
     reaper.SetExtState("ultraschall_mic", "internal", "true", false)
-    -- print("Micro")
   else
     reaper.SetExtState("ultraschall_mic", "internal", "false", false)
-    -- print("nix")
   end
 end
 

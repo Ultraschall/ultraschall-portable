@@ -116,7 +116,7 @@ function buildGUI()
 
 	-- if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
 
-	-- 	if img_index then     -- there is an episode-image
+	--      if img_index then     -- there is an episode-image
 
 	GUI.elms = {}
 
@@ -135,7 +135,7 @@ function buildGUI()
 	table.insert (GUI.elms, label2)
 	label = GUI.Lbl:new(50,  120+y_offset,"Export MP3\nRender your Podcast to a MP3 File.", 0)
 	table.insert (GUI.elms, label)
-	export = GUI.Btn:new(430, 120+y_offset, 190, 40,"Export MP3", runcommand, "_Ultraschall_Render_Check")
+	export = GUI.Btn:new(430, 120+y_offset, 190, 40,"Export MP3", runcommand, "_Ultraschall_Render_Check_For_MP3")
 	table.insert (GUI.elms, export)
 	y_offset = y_offset + spacing
 

@@ -405,7 +405,10 @@ function Main()
   GUI.char = gfx.getchar()
 
   --  (Escape key)  (Window closed)
-  if GUI.char == 27 or GUI.char == -1 then
+  if GUI.char == 27       -- escape
+  or GUI.char == 26164.0  -- alt+f4
+  or GUI.char == 23.0     -- cmd+w(?)
+  or GUI.char == -1 then  -- window is closed by the user
   windownumber=reaper.GetExtState("Ultraschall_Windows",GUI.name)
 --  reaper.MB(windownumber,"pre",0)
     reaper.SetExtState("Ultraschall_Windows",GUI.name,windownumber-1,true)
@@ -525,7 +528,49 @@ t         table with color values
 
 ]]--
 
+-----------------------------------------------------------------------------
+-- Area - New
 
+local Area = {}
+function Area:new(x, y, w, h, r, antialias, fill, color)
+
+  local roundarea = {}
+  roundarea.type = "Area"
+  roundarea.x, roundarea.y, roundarea.w, roundarea.h, roundarea.r = x * dpi_scale
+  , y * dpi_scale
+  , w * dpi_scale
+  , h * dpi_scale
+  , r * dpi_scale
+  roundarea.antialias = antialias
+  roundarea.fill = fill
+  roundarea.color = color or "txt"
+
+  setmetatable(roundarea, self)
+    self.__index = self
+    return roundarea
+
+end
+
+-- Area - Draw
+function Area:draw()
+
+  GUI.color(self.color)
+  GUI.roundrect(self.x, self.y, self.w, self.h, self.r, self.antialias, self.fill)
+
+end
+
+-- Area - Unused methods.
+
+function Area:onmousedown() end
+function Area:onmouseup() end
+function Area:ondoubleclick() end
+function Area:ondrag() end
+function Area:ontype() end
+
+GUI.Area = Area
+
+
+---------------------------------------------------------
 
 -----------------
 
@@ -551,7 +596,8 @@ function ColorPic:new(x, y, w, h, t)
 end
 
 
--- ColorPic - Mouseclick
+-- ColorPic - Zeichnen
+
 function ColorPic:draw()
   local key, value, r , g ,b = ""
   local offset = 0
