@@ -192,7 +192,9 @@ gfx_path=script_path.."/Ultraschall_Gfx/Soundcheck/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Soundcheck"
-GUI.w, GUI.h = 800, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+-- GUI.w, GUI.h = 800, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 900, 800   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -212,6 +214,54 @@ show_info = toboolean(ultraschall.GetUSExternalState("ultraschall_gui", "showinf
 ------------------------------------------------------
 --  Aufbau der nicht interkativen GUI-Elemente wie Logos etc.
 ------------------------------------------------------
+
+function buildGuiWarnings()
+
+  local event_count = ultraschall.EventManager_CountRegisteredEvents()
+  warningCount = count_warnings(event_count)
+  if warningCount ~= lastWarningCount then
+    refresh_gui = true
+  end
+  lastWarningCount = warningCount
+
+
+  GUI.elms = {}
+
+
+  ------- Header
+
+
+  header = GUI.Area:new(0,0,900,108,0,1,1,"header_bg")
+  table.insert(GUI.elms, header)
+
+  if warningCount == 0 then
+    logo_img = "us_small_ok.png"
+  elseif warningCount > 4 then
+    logo_img = "us_small_warnings_5.png"
+  else
+    logo_img = "us_small_warnings_"..warningCount..".png"
+  end
+
+  logo = GUI.Pic:new(          20,  5,   0,  0,    1,   gfx_path..logo_img)
+  table.insert(GUI.elms, logo)
+
+
+  -----------------------------------------------------------------
+  -- Settings-Button
+  -----------------------------------------------------------------
+
+  button_settings = GUI.Btn:new(770, 50, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
+  table.insert(GUI.elms, button_settings)
+
+
+
+
+
+
+
+end
+
+
 
 function buildGui()
 
@@ -480,7 +530,7 @@ function buildGui()
 end
 
 
-GUI.func = buildGui -- Dauerschleife
+GUI.func = buildGuiWarnings -- Dauerschleife
 GUI.freq = 1          -- Aufruf jede Sekunde
 
 
@@ -494,8 +544,10 @@ else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name))
 if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
                         -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
 
-  buildGui()
+  -- buildGui()
+  buildGuiWarnings()
   GUI.Init()
+
   GUI.Main()
 end
 

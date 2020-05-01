@@ -112,6 +112,7 @@ GUI.colors = {
   txt_red = {250, 40, 40, 1},      -- Text red
   txt_yellow = {250, 250, 40, 1},      -- Text red
   txt_muted = {100, 100, 100, 1},      -- Text dark grey
+  header_bg = {60, 60, 60, 1},    -- Header Background
 
   shadow = {0, 0, 0, 0.6}        -- Shadow. Don't call this with GUI.color
 
@@ -460,13 +461,16 @@ function Update(elm)
     -- If it wasn't down already...
     if not GUI.mouse.down then
 
+
+
       -- Was a different element clicked?
-      if not IsInside(elm, x, y) then
+      if not IsInside(elm, x, y) or elm.type == "Area" then -- Area darf nicht klickbare Elemente überdecken
 
         elm.focus = false
 
       else
 
+        -- print(elm.type)
 
       GUI.mouse.down = true
       GUI.mouse.ox, GUI.mouse.oy = x, y
@@ -492,7 +496,7 @@ function Update(elm)
     end
 
   -- If it was originally clicked in this element and has now been released
-  elseif GUI.mouse.down and IsInside(elm, GUI.mouse.ox, GUI.mouse.oy) then
+  elseif GUI.mouse.down and IsInside(elm, GUI.mouse.ox, GUI.mouse.oy) and elm.type ~= "Area" then -- Area darf nicht klickbare Elemente überdecken
 
     elm:onmouseup()
     GUI.mouse.down = false
@@ -544,6 +548,7 @@ function Area:new(x, y, w, h, r, antialias, fill, color)
   roundarea.antialias = antialias
   roundarea.fill = fill
   roundarea.color = color or "txt"
+  roundarea.focus = false
 
   setmetatable(roundarea, self)
     self.__index = self
