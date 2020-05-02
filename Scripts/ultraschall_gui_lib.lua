@@ -83,16 +83,18 @@ end
 
 if reaper.GetOS()=="OSX32" or reaper.GetOS()=="OSX64" then
   font_size = 14 * dpi_scale
+  font_size2 = 20 * dpi_scale
   font_face = "Helvetica"
 else
   font_size = 16 * dpi_scale
+  font_size2 = 22 * dpi_scale
   font_face = "Arial"
 end
 
 GUI.fonts = {
 
   {font_face, font_size},  -- 1. Title
-  {font_face, font_size},  -- 2. Header
+  {font_face, font_size2},  -- 2. Header
   {font_face, font_size},  -- 3. Label
   {font_face, font_size}  -- 4. Value
 
@@ -113,6 +115,7 @@ GUI.colors = {
   txt_yellow = {250, 250, 40, 1},      -- Text red
   txt_muted = {100, 100, 100, 1},      -- Text dark grey
   header_bg = {60, 60, 60, 1},    -- Header Background
+  section_bg = {52, 52, 52, 1},    -- Header Background
 
   shadow = {0, 0, 0, 0.6}        -- Shadow. Don't call this with GUI.color
 
@@ -902,13 +905,14 @@ GUI.Line = Line
 
 -- Lbl - New
 local Lbl = {}
-function Lbl:new(x, y, caption, shadow, color)
+function Lbl:new(x, y, caption, shadow, color, size)
 
 
   local label = {}
   label.type = "Lbl"
   label.color = color or "txt"
   label.x, label.y = x * dpi_scale, y * dpi_scale
+  label.size = size or 1
 
   -- Placeholders for these values, since we don't need them
   -- but some functions will throw a fit if they aren't there
@@ -930,7 +934,7 @@ function Lbl:draw()
 
   local x, y = self.x, self.y
 
-  GUI.font(1)
+  GUI.font(self.size)
 
   -- Shadow
   if self.shadow ~= 0 then

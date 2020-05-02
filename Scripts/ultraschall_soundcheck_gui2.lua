@@ -187,7 +187,8 @@ WindowHeight = 260 + (event_count*30) +30
 local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
-gfx_path=script_path.."/Ultraschall_Gfx/Soundcheck/"
+gfx_path = script_path.."/Ultraschall_Gfx/Soundcheck/"
+header_path = script_path.."/Ultraschall_Gfx/Headers/"
 
 ---- Window settings and user functions ----
 
@@ -231,7 +232,7 @@ function buildGuiWarnings()
   ------- Header
 
 
-  header = GUI.Area:new(0,0,900,108,0,1,1,"header_bg")
+  header = GUI.Area:new(0,0,900,90,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
 
   if warningCount == 0 then
@@ -242,22 +243,99 @@ function buildGuiWarnings()
     logo_img = "us_small_warnings_"..warningCount..".png"
   end
 
-  logo = GUI.Pic:new(          20,  5,   0,  0,    1,   gfx_path..logo_img)
+  logo = GUI.Pic:new(          15,  5,   0,  0,    0.8,   gfx_path..logo_img)
   table.insert(GUI.elms, logo)
+
+  headertxt = GUI.Pic:new(          170,  38,   0,  0,    1,   header_path.."headertxt_soundcheck.png")
+  table.insert(GUI.elms, headertxt)
 
 
   -----------------------------------------------------------------
-  -- Settings-Button
+  -- Settings-Buttons
   -----------------------------------------------------------------
 
   button_settings = GUI.Btn:new(770, 50, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
   table.insert(GUI.elms, button_settings)
 
+  button_all = GUI.Btn:new(670, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
+  table.insert(GUI.elms, button_all)
+
+  position = 140
+
+  for i = 1, event_count do
+
+    -- Suche die Sections der ultraschall.ini heraus, die in der Settings-GUI angezeigt werden sollen
+
+    EventIdentifier = ""
+    button1 = ""
+
+    EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
+    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+
+    Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label","ultraschall-settings.ini")
+    Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action","ultraschall-settings.ini")
+    Button2Label = ultraschall.GetUSExternalState(EventName, "Button2Label","ultraschall-settings.ini")
+    Button2Action = ultraschall.GetUSExternalState(EventName, "Button2Action","ultraschall-settings.ini")
+    DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-settings.ini")
+    Description = ultraschall.GetUSExternalState(EventName, "Description","ultraschall-settings.ini")
+    EventNameDisplay = ultraschall.GetUSExternalState(EventName, "EventNameDisplay","ultraschall-settings.ini")
+
+    -- Name
+
+
+
+    if EventPaused == true or last_state == true then
+
+      -- position = position + 100
+
+      -- State
+
+      if EventPaused == true then
+        state_color = "txt_yellow"
+        button1 = GUI.Btn:new(70, position-4, 80, 20,         " Re-Check", ultraschall.EventManager_ResumeEvent, EventIdentifier)
+        table.insert(GUI.elms, button1)
+      elseif last_state == true then
+        state_color = "txt_red"
+        button1 = GUI.Btn:new(70, position-4, 60, 20,         " Ignore", ignore, EventIdentifier)
+        table.insert(GUI.elms, button1)
+      else
+        state_color = "txt_green"
+      end
+
+
+      infotable = string.split(DescriptionWarning, "|")
+
+      block = GUI.Area:new(170,position-10,682,25*(#infotable+1),5,1,1,"section_bg")
+      table.insert(GUI.elms, block)
+
+
+      id = GUI.Lbl:new(180, position-2, EventNameDisplay, 0, "txt", 2)
+      table.insert(GUI.elms, id)
+
+      light = GUI.Area:new(48,position-7,10,25,3,1,1,state_color)
+      table.insert(GUI.elms, light)
 
 
 
 
 
+
+
+      position_warnings = position + 25
+      for k, warningtextline in pairs(infotable) do
+
+        infotext = GUI.Lbl:new(180, position_warnings, warningtextline, 0)
+        table.insert(GUI.elms, infotext)
+        position_warnings = position_warnings +20
+
+        -- print(k, v)
+      end
+      position = position_warnings + 40
+
+
+    end
+
+  end
 
 end
 
