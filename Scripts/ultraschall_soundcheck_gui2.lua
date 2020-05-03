@@ -169,6 +169,38 @@ function string.split(str, delimiter)
 
 end
 
+
+local function splitWords(Lines, limit)
+  while #Lines[#Lines] > limit do
+          Lines[#Lines+1] = Lines[#Lines]:sub(limit+1)
+          Lines[#Lines-1] = Lines[#Lines-1]:sub(1,limit)
+  end
+end
+
+local function wrap(str, limit)
+  local Lines, here, limit, found = {}, 1, limit or 72, str:find("(%s+)()(%S+)()")
+
+  if found then
+          Lines[1] = string.sub(str,1,found-1)  -- Put the first word of the string in the first index of the table.
+  else Lines[1] = str end
+
+  str:gsub("(%s+)()(%S+)()",
+          function(sp, st, word, fi)  -- Function gets called once for every space found.
+                  splitWords(Lines, limit)
+
+                  if fi-here > limit then
+                          here = st
+                          Lines[#Lines+1] = word                                                                                   -- If at the end of a line, start a new table index...
+                  else Lines[#Lines] = Lines[#Lines].." "..word end  -- ... otherwise add to the current table index.
+          end)
+
+  splitWords(Lines, limit)
+
+  return Lines
+end
+
+
+
 ------------------------------------------------------
 --  End of functions
 ------------------------------------------------------
@@ -194,7 +226,7 @@ header_path = script_path.."/Ultraschall_Gfx/Headers/"
 
 GUI.name = "Ultraschall Soundcheck"
 -- GUI.w, GUI.h = 800, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
-GUI.w, GUI.h = 900, 800   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 1000, 800   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 
 ------------------------------------------------------
@@ -232,7 +264,7 @@ function buildGuiWarnings()
   ------- Header
 
 
-  header = GUI.Area:new(0,0,900,90,0,1,1,"header_bg")
+  header = GUI.Area:new(0,0,1000,90,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
 
   if warningCount == 0 then
@@ -254,10 +286,10 @@ function buildGuiWarnings()
   -- Settings-Buttons
   -----------------------------------------------------------------
 
-  button_settings = GUI.Btn:new(770, 50, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
+  button_settings = GUI.Btn:new(870, 50, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
   table.insert(GUI.elms, button_settings)
 
-  button_all = GUI.Btn:new(670, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
+  button_all = GUI.Btn:new(770, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
   table.insert(GUI.elms, button_all)
 
   position = 140
@@ -303,9 +335,14 @@ function buildGuiWarnings()
       end
 
 
-      infotable = string.split(DescriptionWarning, "|")
+      -- infotable = string.split(DescriptionWarning, "|")
 
-      block = GUI.Area:new(170,position-10,682,25*(#infotable+1),5,1,1,"section_bg")
+      DescriptionWarning = string.gsub(DescriptionWarning, "|", " ")
+
+      local infotable = wrap(DescriptionWarning,90) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
+
+
+      block = GUI.Area:new(170,position-10,782,38+(20*#infotable),5,1,1,"section_bg")
       table.insert(GUI.elms, block)
 
 
@@ -314,10 +351,6 @@ function buildGuiWarnings()
 
       light = GUI.Area:new(48,position-7,10,25,3,1,1,state_color)
       table.insert(GUI.elms, light)
-
-
-
-
 
 
 
@@ -330,7 +363,31 @@ function buildGuiWarnings()
 
         -- print(k, v)
       end
-      position = position_warnings + 40
+
+      -- Action Buttons
+
+      button_offset = 0
+
+      if Button2Label ~= "" and Button2Action and last_state_string ~= "OK" then -- es gibt Probleme
+
+        button3 = GUI.Btn:new(790, position+35, 144, 20,         Button2Label, run_action, Button2Action)
+        table.insert(GUI.elms, button3)
+        button_offset = 25
+      end
+
+
+      if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
+
+        button2 = GUI.Btn:new(790, position+30-button_offset, 144, 20,         Button1Label, run_action, Button1Action)
+        table.insert(GUI.elms, button2)
+      end
+
+
+
+
+
+
+      position = position_warnings + 30
 
 
     end
