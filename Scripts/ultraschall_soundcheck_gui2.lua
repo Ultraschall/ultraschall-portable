@@ -267,6 +267,8 @@ function buildGuiWarnings()
   header = GUI.Area:new(0,0,1000,90,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
 
+--[[
+
   if warningCount == 0 then
     logo_img = "us_small_ok.png"
   elseif warningCount > 4 then
@@ -274,6 +276,9 @@ function buildGuiWarnings()
   else
     logo_img = "us_small_warnings_"..warningCount..".png"
   end
+
+]]
+  logo_img = "us_small.png"
 
   logo = GUI.Pic:new(          15,  5,   0,  0,    0.8,   gfx_path..logo_img)
   table.insert(GUI.elms, logo)
@@ -289,8 +294,8 @@ function buildGuiWarnings()
   button_settings = GUI.Btn:new(870, 50, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
   table.insert(GUI.elms, button_settings)
 
-  button_all = GUI.Btn:new(770, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
-  table.insert(GUI.elms, button_all)
+  -- button_all = GUI.Btn:new(770, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
+  -- table.insert(GUI.elms, button_all)
 
   position = 140
 
@@ -324,11 +329,11 @@ function buildGuiWarnings()
 
       if EventPaused == true then
         state_color = "txt_yellow"
-        button1 = GUI.Btn:new(70, position-4, 80, 20,         " Re-Check", ultraschall.EventManager_ResumeEvent, EventIdentifier)
+        button1 = GUI.Btn:new(65, position-4, 80, 20,         " Re-Check", ultraschall.EventManager_ResumeEvent, EventIdentifier)
         table.insert(GUI.elms, button1)
       elseif last_state == true then
         state_color = "txt_red"
-        button1 = GUI.Btn:new(70, position-4, 60, 20,         " Ignore", ignore, EventIdentifier)
+        button1 = GUI.Btn:new(65, position-4, 60, 20,         " Ignore", ignore, EventIdentifier)
         table.insert(GUI.elms, button1)
       else
         state_color = "txt_green"
@@ -339,17 +344,24 @@ function buildGuiWarnings()
 
       DescriptionWarning = string.gsub(DescriptionWarning, "|", " ")
 
-      local infotable = wrap(DescriptionWarning,90) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
+      local infotable = wrap(DescriptionWarning,80) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
 
+      -- infotable = infotable[1]
 
-      block = GUI.Area:new(170,position-10,782,38+(20*#infotable),5,1,1,"section_bg")
+      if EventPaused ~= true then
+        areaHeight = 20*#infotable
+      else
+        areaHeight = 20
+      end
+
+      block = GUI.Area:new(170,position-10,782,38+areaHeight,5,1,1,"section_bg")
       table.insert(GUI.elms, block)
 
 
       id = GUI.Lbl:new(180, position-2, EventNameDisplay, 0, "txt", 2)
       table.insert(GUI.elms, id)
 
-      light = GUI.Area:new(48,position-7,10,25,3,1,1,state_color)
+      light = GUI.Area:new(48,position-5,10,21,3,1,1,state_color)
       table.insert(GUI.elms, light)
 
 
@@ -357,32 +369,41 @@ function buildGuiWarnings()
       position_warnings = position + 25
       for k, warningtextline in pairs(infotable) do
 
-        infotext = GUI.Lbl:new(180, position_warnings, warningtextline, 0)
+        if EventPaused == true then
+          warningtextline = warningtextline .. "..."
+        end
+
+        infotext = GUI.Lbl:new(180, position_warnings, warningtextline, 0, "txt_grey")
         table.insert(GUI.elms, infotext)
         position_warnings = position_warnings +20
+
+        if EventPaused == true then -- zeige bei Ingored nur die erste Zeile an
+          break
+        end
 
         -- print(k, v)
       end
 
       -- Action Buttons
 
-      button_offset = 0
+      if EventPaused ~= true then -- Action Buttons nur bei warnings, nicht bei ignore
 
-      if Button2Label ~= "" and Button2Action and last_state_string ~= "OK" then -- es gibt Probleme
+        button_offset = 0
 
-        button3 = GUI.Btn:new(790, position+35, 144, 20,         Button2Label, run_action, Button2Action)
-        table.insert(GUI.elms, button3)
-        button_offset = 25
+        if Button2Label ~= "" and Button2Action and last_state_string ~= "OK" then -- es gibt Probleme
+
+          button3 = GUI.Btn:new(790, position+35, 144, 20,         Button2Label, run_action, Button2Action)
+          table.insert(GUI.elms, button3)
+          button_offset = 25
+        end
+
+        if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
+
+          button2 = GUI.Btn:new(790, position+30-button_offset, 144, 20,         Button1Label, run_action, Button1Action)
+          table.insert(GUI.elms, button2)
+        end
+
       end
-
-
-      if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
-
-        button2 = GUI.Btn:new(790, position+30-button_offset, 144, 20,         Button1Label, run_action, Button1Action)
-        table.insert(GUI.elms, button2)
-      end
-
-
 
 
 
