@@ -56,6 +56,36 @@ function show_menu(str)
 
 end
 
+local function splitWords(Lines, limit)
+  while #Lines[#Lines] > limit do
+          Lines[#Lines+1] = Lines[#Lines]:sub(limit+1)
+          Lines[#Lines-1] = Lines[#Lines-1]:sub(1,limit)
+  end
+end
+
+
+local function wrap(str, limit)
+  local Lines, here, limit, found = {}, 1, limit or 72, str:find("(%s+)()(%S+)()")
+
+  if found then
+          Lines[1] = string.sub(str,1,found-1)  -- Put the first word of the string in the first index of the table.
+  else Lines[1] = str end
+
+  str:gsub("(%s+)()(%S+)()",
+          function(sp, st, word, fi)  -- Function gets called once for every space found.
+                  splitWords(Lines, limit)
+
+                  if fi-here > limit then
+                          here = st
+                          Lines[#Lines+1] = word                                                                                   -- If at the end of a line, start a new table index...
+                  else Lines[#Lines] = Lines[#Lines].." "..word end  -- ... otherwise add to the current table index.
+          end)
+
+  splitWords(Lines, limit)
+
+  return Lines
+end
+
 
 function run_action(commandID)
 
@@ -84,6 +114,39 @@ function count_warnings(event_count)
   return warning_count
 end
 
+
+
+function count_all_warnings(event_count)
+
+  local active_warning_count = 0
+  local paused_warning_count = 0
+  local description_lines = 0
+  for i = 1, event_count do
+
+    local EventIdentifier = ""
+
+    EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
+
+    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+
+    if last_state == true and EventPaused ~= true then -- es ist eine Warnung und sie steht nicht auf ignored
+      DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-settings.ini")
+      DescriptionWarning = string.gsub(DescriptionWarning, "|", " ")
+      local infotable = wrap(DescriptionWarning,80)
+
+      description_lines = description_lines + #infotable
+      active_warning_count = active_warning_count +1
+    elseif EventPaused == true then
+
+      paused_warning_count = paused_warning_count + 1
+
+    end
+  end
+  return active_warning_count, paused_warning_count, description_lines
+end
+
+
+
 function ignore_all_warnings()
 
   -- count the number of warnings
@@ -110,19 +173,19 @@ function count_paused(event_count)
 
   -- count the number of warnings
 
-    local paused_count = 0
-    for i = 1, event_count do
+  local paused_count = 0
+  for i = 1, event_count do
 
-      local EventIdentifier = ""
+    local EventIdentifier = ""
 
-      EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
+    EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
 
-      if EventPaused == true then
-        paused_count = paused_count +1
-      end
+    if EventPaused == true then
+      paused_count = paused_count +1
     end
-    return paused_count
   end
+  return paused_count
+end
 
 
 function toggle_more()
@@ -170,34 +233,7 @@ function string.split(str, delimiter)
 end
 
 
-local function splitWords(Lines, limit)
-  while #Lines[#Lines] > limit do
-          Lines[#Lines+1] = Lines[#Lines]:sub(limit+1)
-          Lines[#Lines-1] = Lines[#Lines-1]:sub(1,limit)
-  end
-end
 
-local function wrap(str, limit)
-  local Lines, here, limit, found = {}, 1, limit or 72, str:find("(%s+)()(%S+)()")
-
-  if found then
-          Lines[1] = string.sub(str,1,found-1)  -- Put the first word of the string in the first index of the table.
-  else Lines[1] = str end
-
-  str:gsub("(%s+)()(%S+)()",
-          function(sp, st, word, fi)  -- Function gets called once for every space found.
-                  splitWords(Lines, limit)
-
-                  if fi-here > limit then
-                          here = st
-                          Lines[#Lines+1] = word                                                                                   -- If at the end of a line, start a new table index...
-                  else Lines[#Lines] = Lines[#Lines].." "..word end  -- ... otherwise add to the current table index.
-          end)
-
-  splitWords(Lines, limit)
-
-  return Lines
-end
 
 
 
@@ -211,7 +247,9 @@ end
 ------------------------------------------------------
 
 event_count = ultraschall.EventManager_CountRegisteredEvents()
-WindowHeight = 260 + (event_count*30) +30
+active_warning_count, paused_warning_count, description_lines = count_all_warnings(event_count)
+
+WindowHeight = 150 + (paused_warning_count*30) + (active_warning_count*30) + description_lines*30
 
 
 -- Grab all of the functions and classes from our GUI library
@@ -226,7 +264,7 @@ header_path = script_path.."/Ultraschall_Gfx/Headers/"
 
 GUI.name = "Ultraschall Soundcheck"
 -- GUI.w, GUI.h = 800, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
-GUI.w, GUI.h = 1000, 800   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 1000, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 
 ------------------------------------------------------
@@ -250,12 +288,32 @@ show_info = toboolean(ultraschall.GetUSExternalState("ultraschall_gui", "showinf
 
 function buildGuiWarnings()
 
+
+
   local event_count = ultraschall.EventManager_CountRegisteredEvents()
-  warningCount = count_warnings(event_count)
-  if warningCount ~= lastWarningCount then
+  active_warning_count, paused_warning_count, description_lines = count_all_warnings(event_count)
+
+  ignored_position = 143 + (active_warning_count*39) + description_lines*24
+  warnings_position = 140
+  position = 140
+
+
+  if active_warning_count ~= lastWarningCount then
     refresh_gui = true
   end
-  lastWarningCount = warningCount
+
+  lastWarningCount = active_warning_count
+
+
+  if refresh_gui == true then
+
+    WindowHeight = 120 + (paused_warning_count*60) + (active_warning_count*30) + description_lines*30
+    -- GUI.y = (screen_h - WindowHeight + 210 - warningCount*30) / 2
+    GUI.y = (screen_h - WindowHeight) / 2
+    gfx.init("", 1000, WindowHeight, 0, GUI.x, GUI.y)
+    refresh_gui = false
+
+  end
 
 
   GUI.elms = {}
@@ -267,23 +325,10 @@ function buildGuiWarnings()
   header = GUI.Area:new(0,0,1000,90,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
 
---[[
-
-  if warningCount == 0 then
-    logo_img = "us_small_ok.png"
-  elseif warningCount > 4 then
-    logo_img = "us_small_warnings_5.png"
-  else
-    logo_img = "us_small_warnings_"..warningCount..".png"
-  end
-
-]]
-  logo_img = "us_small.png"
-
-  logo = GUI.Pic:new(          15,  5,   0,  0,    0.8,   gfx_path..logo_img)
+  logo = GUI.Pic:new(          45,  25,   0,  0,    1,   header_path.."soundcheck_logo.png")
   table.insert(GUI.elms, logo)
 
-  headertxt = GUI.Pic:new(          170,  38,   0,  0,    1,   header_path.."headertxt_soundcheck.png")
+  headertxt = GUI.Pic:new(          115,  36,   0,  0,    0.8,   header_path.."headertxt_soundcheck.png")
   table.insert(GUI.elms, headertxt)
 
 
@@ -291,15 +336,21 @@ function buildGuiWarnings()
   -- Settings-Buttons
   -----------------------------------------------------------------
 
-  button_settings = GUI.Btn:new(870, 50, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
+  button_settings = GUI.Btn:new(870, 38, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
   table.insert(GUI.elms, button_settings)
 
   -- button_all = GUI.Btn:new(770, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
   -- table.insert(GUI.elms, button_all)
 
-  position = 140
+
+
+  lastcount = reaper.time_precise()
 
   for i = 1, event_count do
+
+    -- print (reaper.time_precise()-lastcount)
+    -- lastcount = reaper.time_precise()
+
 
     -- Suche die Sections der ultraschall.ini heraus, die in der Settings-GUI angezeigt werden sollen
 
@@ -323,38 +374,34 @@ function buildGuiWarnings()
 
     if EventPaused == true or last_state == true then
 
-      -- position = position + 100
-
       -- State
 
       if EventPaused == true then
         state_color = "txt_yellow"
-        button1 = GUI.Btn:new(65, position-4, 80, 20,         " Re-Check", ultraschall.EventManager_ResumeEvent, EventIdentifier)
+        button1 = GUI.Btn:new(65, ignored_position-4, 80, 20,         " Re-Check", ultraschall.EventManager_ResumeEvent, EventIdentifier)
         table.insert(GUI.elms, button1)
       elseif last_state == true then
         state_color = "txt_red"
-        button1 = GUI.Btn:new(65, position-4, 60, 20,         " Ignore", ignore, EventIdentifier)
+        button1 = GUI.Btn:new(65, warnings_position-4, 60, 20,         " Ignore", ignore, EventIdentifier)
         table.insert(GUI.elms, button1)
       else
         state_color = "txt_green"
       end
 
 
-      -- infotable = string.split(DescriptionWarning, "|")
-
       DescriptionWarning = string.gsub(DescriptionWarning, "|", " ")
 
       local infotable = wrap(DescriptionWarning,80) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
 
-      -- infotable = infotable[1]
-
       if EventPaused ~= true then
-        areaHeight = 20*#infotable
+        areaHeight = 38 + (20*#infotable)
+        position = warnings_position
       else
-        areaHeight = 20
+        areaHeight = 33
+        position = ignored_position
       end
 
-      block = GUI.Area:new(170,position-10,782,38+areaHeight,5,1,1,"section_bg")
+      block = GUI.Area:new(170,position-10,782, areaHeight,5,1,1,"section_bg")
       table.insert(GUI.elms, block)
 
 
@@ -366,49 +413,49 @@ function buildGuiWarnings()
 
 
 
-      position_warnings = position + 25
-      for k, warningtextline in pairs(infotable) do
 
-        if EventPaused == true then
-          warningtextline = warningtextline .. "..."
-        end
+      if EventPaused ~= true then -- Erklärtexte und Action Buttons nur bei warnings, nicht bei ignore
 
-        infotext = GUI.Lbl:new(180, position_warnings, warningtextline, 0, "txt_grey")
-        table.insert(GUI.elms, infotext)
-        position_warnings = position_warnings +20
 
-        if EventPaused == true then -- zeige bei Ingored nur die erste Zeile an
-          break
-        end
+        warnings_position = warnings_position + 25
 
-        -- print(k, v)
-      end
-
-      -- Action Buttons
-
-      if EventPaused ~= true then -- Action Buttons nur bei warnings, nicht bei ignore
+        -- Action Buttons
 
         button_offset = 0
+        ButtonPosition = warnings_position + (areaHeight*0.5) - 83
 
         if Button2Label ~= "" and Button2Action and last_state_string ~= "OK" then -- es gibt Probleme
 
-          button3 = GUI.Btn:new(790, position+35, 144, 20,         Button2Label, run_action, Button2Action)
+          button_offset = 15
+          button3 = GUI.Btn:new(790, ButtonPosition+40+button_offset, 144, 20,         Button2Label, run_action, Button2Action)
           table.insert(GUI.elms, button3)
-          button_offset = 25
+
         end
 
         if Button1Label and Button1Action and last_state_string ~= "OK" then -- es gibt Probleme
 
-          button2 = GUI.Btn:new(790, position+30-button_offset, 144, 20,         Button1Label, run_action, Button1Action)
+          button2 = GUI.Btn:new(790, ButtonPosition+40-button_offset, 144, 20,         Button1Label, run_action, Button1Action)
           table.insert(GUI.elms, button2)
         end
 
+        -- Erklärtexte
+
+        for k, warningtextline in pairs(infotable) do
+
+          infotext = GUI.Lbl:new(180, warnings_position, warningtextline, 0, "txt_grey")
+          table.insert(GUI.elms, infotext)
+          warnings_position = warnings_position +20
+
+          -- print(k, v)
+        end
+
+        warnings_position = warnings_position + 30
+
+      else
+
+        ignored_position = ignored_position + 50
+
       end
-
-
-
-
-      position = position_warnings + 30
 
 
     end
