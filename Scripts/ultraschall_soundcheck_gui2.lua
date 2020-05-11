@@ -212,7 +212,8 @@ function ignore(EventIdentifier)
   local event_count = ultraschall.EventManager_CountRegisteredEvents()
   -- print(count_warnings(event_count).."-"..count_paused(event_count))
   if count_warnings(event_count) == count_paused(event_count)+1 then
-    gfx.quit()
+    -- v
+    all_ignored = reaper.time_precise()
   end
 
 end
@@ -259,6 +260,7 @@ script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 gfx_path = script_path.."/Ultraschall_Gfx/Soundcheck/"
 header_path = script_path.."/Ultraschall_Gfx/Headers/"
+all_ignored = false
 
 ---- Window settings and user functions ----
 
@@ -288,6 +290,9 @@ show_info = toboolean(ultraschall.GetUSExternalState("ultraschall_gui", "showinf
 
 function buildGuiWarnings()
 
+  if all_ignored and reaper.time_precise() - all_ignored > 2 then
+    gfx.quit()
+  end
 
 
   local event_count = ultraschall.EventManager_CountRegisteredEvents()
@@ -298,18 +303,20 @@ function buildGuiWarnings()
   position = 140
 
 
-  if active_warning_count ~= lastWarningCount then
+  if active_warning_count ~= lastWarningCount or paused_warning_count ~= lastPausedCount then
     refresh_gui = true
   end
 
   lastWarningCount = active_warning_count
+  lastPausedCount = paused_warning_count
 
 
   if refresh_gui == true then
 
     WindowHeight = 120 + (paused_warning_count*60) + (active_warning_count*30) + description_lines*30
     -- GUI.y = (screen_h - WindowHeight + 210 - warningCount*30) / 2
-    GUI.y = (screen_h - WindowHeight) / 2
+    GUI.y = (screen_h - WindowHeight) - 150
+    -- GUI.y = 300
     gfx.init("", 1000, WindowHeight, 0, GUI.x, GUI.y)
     refresh_gui = false
 
