@@ -1,13 +1,34 @@
 <TODO>
     BUG REPORT: MB and GetUserInputs: Can't find ID of the buttons anymore. Changes in Reaper in recent versions?
     
-    Soundboard-FadeIn
     
-    For 4.01betas:
-    Na gfx.getdropfile ist ja cool. Aber Feature-Request: die x/y Koordinaten wenn losgelassen wurde
     
+    For 4.01.002:  
+      TODO!! Toggle/Set-Mute-state-functions, add autoarm mute-track-parameter
+                Needs first functions for activating Envelopes, but they don't exist, until they are displayed.
+                I might have to add non-activated envelopes by adding env-statechunks into TrackStateChunks.
+				
+    GetProjectLength - doesn't return the correct projectlength, if reaper.GetProjectLength()<recposition, as items in the state of being recorded don't count into it.
+                       in that case: when rec==true, anytrackarmed==true and Playposition>GetProjectLength, return the Editcursorposition instead.
+                       optional parameter needed, which allows toggling the old GetProjectLength and the new one with the recording management, to keep old scripts working
     GetProjectLength - should return the last envelope-point-position as well(how to do that for pooled items?)
     
+    GetSetMediaItemTake_Reverse - sets a MediaItemTake reversed/normal -> not existing in normal Reaper-API
+    
+    OpenURL muss noch url umwandeln auf Ansi Codepage 1252 auf Windows?. Also mit Bat-Datei arbeiten.
+    
+    RenderPresets: Presetnames with spaces are buggy in GetRenderPreset_Names and deleting-functions
+                   filename in GetRenderPreset_RenderTable has issues with spaces in the name, especially if - is in the name due pattern matching-foo
+                   
+                   solve them with removing the preset/filename using sub() NOT gsub()
+    
+    ToDo: ReaPack-Github-URl is buggy.
+    
+    FX-Names with Reaper's own API-functions have three different types on Mac, for Studiolink On Air.
+    I need functions, who take care of that in the API.
+    
+    GetAllMarkersBetween/GetAllRegionsBetween - if startposition/endposition==nil then start/endposition=0/GetProjectLength
+
     Add range before and after the position, so you can get markers, who aren't at the exact position
     Use GetAllMarkersBetween/GetAllRegionsBetween to get them.
        GetMarkerByScreenCoordinates 
@@ -95,21 +116,6 @@
                     - AutomationItems, ProjectBay, Metronome, MasterPlayspeed, Tempo, Extensions, MasterHWVolEnv, MasterFXList, MasterDualPanEnv
                       MasterDualPanEnv2, MasterDualPanEnvL, MasterDualPanEnvL2, MasterVolEnv, MasterVolEnv2, MasterVolEnv3, MasterHWPanEnv, TempoEnv_Ex   
         - TODO!! Add/Set/DeleteModulation
-        - TODO!! ultraschall.RenderProject_Loops()
-                Multipass-rendering
-                    When you want to render out a "wet"-loop, that needs reverb or something, you would need to render this loop three times:
-                            one to start up all reverbs, two for the actual loop and three for the "loop aftermath"
-                    After that, you need to edit this rendered file down to the middle part by hand, which is tedious.
-                    If there's a rendering-function could do that automatically, it would be cool.
-                        Load the project(if not the current one)
-                        Copy the tracks with the to be looped items/timeselection into an empty project, which must hold all rendering-settings(looped-time-selection probably)
-                        duplicate it so the items are now three times after each other
-                        Render it out and include the rendered file into the current project(maybe as stems?)
-                        edit it down to the original loop
-                        Render that out into a new file
-                        Delete the temp-rendered-files
-                        close the projects and return the filename
-
          - TODO!! MB and GetUserInputs not working on Mac due unknown bug. 
                  Can't find ID of the buttons anymore. Changes in Reaper in recent versions?
          - TODO!! GetUserInputs - count doesn't match, if fewer inputboxes are filled than do exist.
@@ -146,9 +152,7 @@
       TODO!! Rewrite Doccreation from scratch with proper css.
       TODO!! Lua-eigene Funktionen in die ultraschall-Table übernehmen, wie type, tostring, tonumber, etc. Dies könnten vom user überschrieben werden und dann
              produziert die API Fehler.
-      TODO!! Toggle/Set-Mute-state-functions, add autoarm mute-track-parameter
-                Needs first functions for activating Envelopes, but they don't exist, until they are displayed.
-                I might have to add non-activated envelopes by adding env-statechunks into TrackStateChunks.
+
       TODO!!  - totype(value, string type), converts a value to type and returns it, if impossible, returns nil; includes string, boolean, integer, float, hex, oct, base64, etc
       TODO!!  - SetStateChunk-functions: how to check for ProjectStateChunk/TrackStateChunk/ItemStateChunk/EnvStateChunk, when new parameters are added to the function?
                                          something with ... ? Otherwise, new added parameters will break old scripts...
@@ -171,6 +175,7 @@
 
       TODO!!  - functions to setup the LICECAP-settings, before running it; a function to run LiceCap
             set filename with .gif or .lcf to set the default filetype used!
+			Include LiceCap into Ultraschall-API, so you can use this version.
       TODO!!  - functions for native-colorstuff like, gradients, hue
             as well as the same functions for a colorarray, which has a number of colors inside of it, that can be contrasted, gradiented, etc
             they shall support gfx.init-color-values as output(boolean gfx.init-colorvalues (0 to 1)
@@ -201,7 +206,8 @@
 
 TODO!! buggy function
         the line "reaper.JS_WindowMessage_Send(Textfield, "WM_SETFONT", styles[style] ,0,0,0)" seems to be the problem due WM_SETFONT
-
+		
+		
 #### readded from earlier development-builds
    - Developer: SetReaScriptConsole_FontStyle - sets the style of the font in the ReaConsole
    - LiceCap: SetLiceCapExe - sets the LiceCap-executable, which shall be used by Reaper
@@ -210,14 +216,104 @@ TODO!! buggy function
    - RenderManagement: GetProject_RenderOutputPath - gets the render-output-path
    - RenderManagement: ResolveRenderPattern - resolves the render-pattern into its actual filename
    - Subtitles: ReadSubtitles\_VTT - imports a webvtt-subtitlefile
-   - Web Interface: WebInterface_GetInstalledInterfaces - returns all installed webinterfaces(webrc) of the current Reaper installation, custom and Reaper-defaults
-   
-
    
 </TODO>
 
-
 ## Ultraschall Framework - Changelog
+
+### 4.1.001 - "Radiohead - Spectre"
+
+Has now 1129 functions, with 18 new ones
+
+**new in this release:**
+
+  - **Automation Items**  
+  You can get all automation-items as well as deleting the ones you want to delete.  
+  That's right, you can now safely delete one programmatically!
+  
+  - **Rendering functions**  
+  Support now the new rendering options of Reaper 6.10: embedding Take markers as well as Do not render files that are likely silent.  
+  Note: Reaper 6.10 has a bug, which prevents simultaneously from setting Add to Project and Do not render files   likely silent-checkboxes of the Render to File-dialog. Fixed in later versions of Reaper.
+
+  - **SetTrack\_LastTouched**  
+  Allows you to set a track as last touched, which wasn't possible before.
+  
+  - **SetTrack\_Trackheight\_Force**  
+  Sets the trackheight of a track to any height you like, including heights not allowed by the theme.  
+  That way, you can set the trackheight to e.g. 1px, allowing you better organisation of your arrangeview's tracks.
+
+  - **CollapseTrackHeight**  
+  Speaking of trackheight, this function collapses tracks to the minimum height allowed by the currently selected theme.
+
+  - **GFX\_GetDropFile**  
+  Call it frequently when having opened your gfx-window, and it will return drag'n'dropped files as well as the dropping-position within the gfx.init-window. No need to fiddle it out by yourself.
+
+  - **ActionsList\_GetSelectedActions**  
+  Returns all selected entries from the opened actionlist, including Action Command Ids, texts, etc.  
+  Kudos to Edgemeal, who wrote the initial version of it.
+
+  - **IsTimeSigmarkerAtPosition**  
+  Already implemented for markers and regions, I added it for time-signature-markers as well.  
+  Returns, if a time-signature-maker is at a certain position.
+
+  - **and more plus bugfixes**  
+
+Kudos to Lokasenna and to Xenakios. Hope you both return at some point to the Reaper-community.
+
+#### New features in 4.1.001   
+
+   - Actions: ActionsList\_GetSelectedActions - gets the selected actions from the opened Action List(prototype code provided by Edgemeal. Thank you!)
+   - Automation Items: AutomationItems_GetAll - returns all automation-items of the current project
+   - Automation Items: AutomationItem_Delete - deletes an automation-item, including the option of retaining the envelope-points
+   - Envelopes: GetAllTakeEnvelopes - returns all TakeEnvelopes in the current project
+   - Envelopes: GetAllTrackEnvelopes - returns all TrackEnvelopes in the current project
+   - GFX-Management: GFX\_GetDropFile - gets the last dropped files from the gfx-window, including the drop-coordinates(requested by rstockm)
+   - Helperfunctions: Benchmark\_GetStartTime - returns the last starttime of the currently running benchmark-measure(requested by rstockm)
+   - Helperfunctions: Benchmark\_MeasureTime - starts/resets a benchmark-measure(requested by rstockm)
+   - Helperfunctions: EscapeMagicCharacters_String - escapes the magic-characters, used for pattern matching, from a string, so it can be used without triggering "magic"-pattern-matching-features
+   - Marker Management: IsTimeSigmarkerAtPosition - returns, if at a position/measure is a time-signature marker(requested by tompad)
+   - MediaItems: MediaItems\_Outtakes_AddSelectedItems - adds selected items into the outtakes-vault; this allows you to store outtakes of recordings easily
+   - MediaItems: MediaItems\_Outtakes_GetAllItems - gets all outtakes-items stored in the outtakes-vault
+   - MediaItems: MediaItems\_Outtakes_InsertAllItems - inserts all outtakes-items stored in the outtakes-vault into a project
+   - ProjectManagement: IsTimeSelectionActive - returns, if there's a time-selection(requested by tompad)
+   - Track Management: CollapseTrackHeight - collapses the height of a track to the minimum height, as defined by the theme
+   - Track Management: GetTrackByTrackName - search tracknames follwing a certain pattern or for a certain name
+   - Track Management: SetTrack\_LastTouched - sets a track to be last-touched track
+   - Track Management: SetTrack\_Trackheight\_Force - sets the trackheight of a track and allows setting heights beyond the limitations set by the theme
+   - Web Interface: WebInterface_GetInstalledInterfaces - returns all installed webinterfaces(webrc) of the current Reaper installation, custom and Reaper-defaults
+
+#### Changes from 4.00 to 4.1.001
+
+   - API: GetApiVersion - updated docs to reflect the current behavior
+   - DeveloperTools: ultraschall\_Add\_Developertools\_To\_Reaper.lua - weren't installed using this action -> fixed
+   - DeveloperTools: Ultraschall State Inspector - extended number of saveslots to 20; didn't correctly store and load gmem-states from the stateslots -> fixed (thanks to lexaproductions)
+   - Docs: Reaper-Internals - updated to Reaper 6.10, JS-extension 1.002
+   - Docs: Render-Presets - updated to Reaper 6.10
+   - Docs: Routing\_001\_Introduction - corrected typo
+   - Docs: ShowMenu - falsely claimed, that y-coordinates on Mac are buggy because they are reversed -> corrected
+   - FX-Management: CountParmLearn_FXStateChunk - added error-message, when fxid==0, as the first fxid must be 1 or higher(thanks to TonE)
+   - Helperfunctions: IsValidMatchingPattern - wasn't reporting unfinished captures all the time -> improved
+   - Markers: CountNormalMarkers_NumGap - had inner variables exposed -> fixed (thanks to fernsehmuell)
+   - MediaItems: GetAllSelectedMediaItems - returns now an MediaItemStateChunkArray as well
+   - MediaItems: IsValidMediaItemStateChunkArray - didn't always return true, when MediaItemStateChunkArrays were passed over it -> fixed
+   - Project Management: GetProject\_AddMediaToProjectAfterRender - added "do not likely silently files"-setting
+   - Project Management: GetProject\_RenderStems - added Embed take markers-setting
+   - Project Management: SetProject\_AddMediaToProjectAfterRender - added "do not likely silently files"-setting
+   - Project Management: SetProject\_RenderStems - added Embed take markers-setting
+   - Render: AddRenderPreset - supports new Embed Take-markers; added missing information to docs
+   - Render: ApplyRenderTable\_Project - supports new Embed Take-markers and no silent render-features; improved Embed stretch-markers support; accidentally reversed true and false in parameter OnlyMonoMedia -> fixed (thanks to aurelien)
+   - Render: CreateNewRenderTable - supports new Embed Take-markers and no silent render-features
+   - Render: GetRenderPreset\_RenderTable - supports new Embed Take-markers
+   - Render: GetRenderTable\_Project - supports new Embed Take-markers and no silent render-features; improved Embed stretch-markers support
+   - Render: GetRenderTable\_ProjectFile - supports new Embed Take-markers and no silent render-features; improved Embed stretch-markers support
+   - Render: IsValidRenderTable - supports new Embed Take-markers and no silent render-features; improved Embed stretch-markers support
+   - Render: SetRenderPreset - supports new Embed Take-markers; added missing information to docs
+   - TrackManagement: DeleteTracks_TrackString - didn't correctly delete the right tracks, sometimes throwing Lua-error -> fixed (thanks to aurelien)
+   - Ultraschall: IsTrackSoundboard - had inner variable exposed -> fixed
+   - Ultraschall: IsTrackStudioLink - had inner variable exposed -> fixed
+   - Ultraschall: IsTrackStudioLinkOnAir - had inner variable exposed -> fixed
+   
+---
 
 ### 4.00 - "Aphrodite's Child - Four Horsemen"
 

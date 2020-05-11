@@ -752,7 +752,7 @@ function ultraschall.ShowMenu(Title,Entries,x,y)
     
     One last thing: the title does not count as entry!
     
-    Note for Mac-users: has a possible issue with the y coordinate, where it's position is actually "reversed", due a Reaper-bug.
+    Note for Mac-users: y-coordinates are "reversed", so y=0 is at the bottom
     Note for Linux: does not work on Linux yet.
     
     returns -1 in case of an error
@@ -1031,7 +1031,7 @@ function ultraschall.MB(caption, title, mbtype, button1_caption, button2_caption
   <description>
     Shows Messagebox with user-clickable buttons. Works like reaper.MB() but unlike reaper.MB, this function accepts omitting some parameters for quicker use.
     
-    Important: This works only on Windows.
+    Important: This works only on Windows, due some bug on Mac which I couldn't work out yet.
     
     You can change the text in the buttons with button1_caption, button2_caption and button3_caption.
     
@@ -1068,7 +1068,7 @@ function ultraschall.MB(caption, title, mbtype, button1_caption, button2_caption
   <tags>user interface, user, interface, input, dialog, messagebox</tags>
 </US_DocBloc>
 --]]
-  if ultraschall.IsOS_Windows()==true then ultraschall.AddErrorMessage("MB", "", "works only on Windows, sorry", 0) return -1 end
+  if ultraschall.IsOS_Windows()==false then ultraschall.AddErrorMessage("MB", "", "works only on Windows, sorry", 0) return -1 end
   if type(caption)~="string" then ultraschall.AddErrorMessage("MB", "caption", "must be a string", -1) return -1 end
   if title~=nil and type(title)~="string" then ultraschall.AddErrorMessage("MB", "title", "must be a string or nil", -2) return -1 end
   if mbtype~=nil and math.type(mbtype)~="integer" then ultraschall.AddErrorMessage("MB", "mbtype", "must be an integer or nil(defaults to 0)", -3) return -1 end

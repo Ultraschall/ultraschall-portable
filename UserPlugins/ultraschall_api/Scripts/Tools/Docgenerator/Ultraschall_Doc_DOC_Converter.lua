@@ -26,7 +26,7 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 Tempfile=ultraschall.Api_Path.."/temp/temporary"
-ConversionToolMD2HTML="c:\\Program Files (x86)\\Pandoc\\pandoc.exe -f markdown_strict -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
+ConversionToolMD2HTML="c:\\Program Files\\Pandoc\\pandoc.exe -f markdown_strict -t html "..ultraschall.Api_Path.."/temp/temporary.md -o "..ultraschall.Api_Path.."/temp/temporary.html"
 
 Infilename=ultraschall.Api_Path.."/ultraschall_doc_engine.lua"
 Infilename2=ultraschall.Api_Path.."/ultraschall_doc_engine_beta.lua"
@@ -148,7 +148,7 @@ function ultraschall.ParseDescription(String)
 end
 
 function ultraschall.ParseRequires(String)
-  return String:match("Reaper=(.-)\n"), String:match("SWS=(.-)\n"), String:match("Lua=(.-)\n"), String:match("JS=(.-)\n")
+  return String:match("Reaper=(.-)\n"), String:match("SWS=(.-)\n"), String:match("Lua=(.-)\n"), String:match("JS=(.-)\n"), String:match("Ultraschall=(.-)\n")
 end
 
 function ultraschall.ParseChapterContext(String)
@@ -747,9 +747,11 @@ function entries()
       FunctionList=FunctionList.."\n"
 
     -- Requirement-images + Functionname
-      A,A2,A3,A4=ultraschall.ParseRequires(C[index][2])
-    --  FunctionList=FunctionList..
-      if A~=nil then FunctionList=FunctionList.."<img width=\"3%\" src=\"gfx/reaper"..A..".png\" alt=\"Reaper version "..A.."\">" end
+      A,A2,A3,A4,A5=ultraschall.ParseRequires(C[index][2])
+  
+      Temp=nil
+      if A~=nil then Temp="<img width=\"3%\" src=\"gfx/reaper"..A..".png\" alt=\"Reaper version "..A.."\">" end
+      if A5~=nil then FunctionList=FunctionList.."<img width=\"3%\" src=\"gfx/ultraschall"..A5..".png\" alt=\"Ultraschall version "..A5.."\">" end
       if A2~=nil then FunctionList=FunctionList.."<img width=\"3%\" src=\"gfx/sws"..A2..".png\" alt=\"SWS version "..A2.."\">" end
       if A4~=nil then FunctionList=FunctionList.."<img width=\"3%\" src=\"gfx/JS_"..A4..".png\" alt=\"Julian Sader's plugin version "..A4.."\">" end
       if A3~=nil then FunctionList=FunctionList.."<img width=\"3%\" src=\"gfx/lua"..A3..".png\" alt=\"Lua version "..A3.."\">" end

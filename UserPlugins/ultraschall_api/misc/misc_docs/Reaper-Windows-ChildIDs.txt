@@ -107,7 +107,12 @@ ChildIDs:
     1065  Wildcards                                    -   Button
     1115                                               -   Static
     1116  Output-format-dropdownlist                   -   ComboBox
+	1118  Output formats							   -   SysTabControl32
+	1155  Do not render files that are likely silent   -   Button
     1154  Add rendered items to new tracks in project  -   Button
+	1173  Stretch markers/transient guides			   -   Button
+	1178  Metadata									   -   Button
+	1179  Take markers								   -   Button
     1240  ms                                           -   Static
     1241  Master mix:                                  -   Static
     1307  Dither                                       -   Button
@@ -120,14 +125,18 @@ ChildIDs:
     58000  Hwnd for Output-format-settings             -   #32770
            this childhwnd changes, when you change 
            render-output-settings
+	58002  Hwnd for Secondary Output-format-settings   -   #32770
+           this childhwnd changes, when you change 
+           render-output-settings
 
+-- Primary output formats -> children of 58000
 >Render to File-dialog -> WAV
     1000  16 bit PCM                            -   ComboBox
     1001  Do not include markers or regions     -   ComboBox
     1002  Auto WAV/Wave64                       -   ComboBox
     1042  Write BWF ('bext') chunk              -   Button
     1044  Include project filename in BWF data  -   Button
-    1059  Embed project tempo (use with care)   -   Button
+    1059  Embed tempo 						    -   Button
     1185  WAV bit depth:                        -   Static
     1816  Large files:                          -   Static
     
@@ -225,6 +234,17 @@ ChildIDs:
     1045  Only write markers starting with #     -   Button
     1057  Write markers as cues     -   Button
     65535  Bit depth:               -   Static
+
+-- Secondary output formats -> children of 58002
+-- for some reason, they share the same id as primary. How to separate them from each other?
+    1115 the area of the actual secondary fileformat output-elements - Static
+	1116 Format-dropdownlist										 - ComboBox
+	1429 Same file type as primary, secondary output disabled 		 - Static
+	65535 Format										 			 - Static
+	
+
+
+
 
 >"Rendering to file..." or "Finished in ($time) (XX.Xx realtime)"
     1      Close       -   Button

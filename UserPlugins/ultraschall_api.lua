@@ -30,7 +30,7 @@
 --          dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- 4. have fun using the API. Test it with ultraschall.ApiTest()
 
--- requires at least Reaper 6.02, SWS 2.10.0.1 and JS-extension 0.986
+-- requires at least Reaper 6.02, SWS 2.10.0.1 and JS-extension 0.999
 
 
 local ReaperVersion=reaper.GetAppVersion()
@@ -38,7 +38,7 @@ ReaperVersion=tonumber(ReaperVersion:match("(%d%.%d*)"))
 
 if ReaperVersion<6.02 then reaper.MB("Sorry, Reaper 6.02 or higher must be installed to use the API. \nGo to reaper.fm to get it.","Reaper version too old",0) return end
 if reaper.CF_LocateInExplorer==nil then reaper.MB("Sorry, SWS 2.10.0.1 or higher must be installed to use the API. \nGo to sws-extension.org to get it.","SWS missing",0) return end
-if reaper.JS_ReaScriptAPI_Version==nil or reaper.JS_ReaScriptAPI_Version()<0.986 then reaper.MB("Sorry, JS-extension-plugin 0.986 or higher must be installed to use the API. \nGo to https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/ to get it.","JS-Extension plugin missing",0) return end
+if reaper.JS_ReaScriptAPI_Version==nil or reaper.JS_ReaScriptAPI_Version()<0.999 then reaper.MB("Sorry, JS-extension-plugin 0.999 or higher must be installed to use the API. \nGo to https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/ to get it.","JS-Extension plugin missing",0) return end
 
 --if type(ultraschall)~="table" then ultraschall={} end
 

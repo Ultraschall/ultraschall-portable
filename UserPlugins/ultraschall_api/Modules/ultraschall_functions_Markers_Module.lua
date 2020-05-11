@@ -2898,7 +2898,7 @@ function ultraschall.CountNormalMarkers_NumGap()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountNormalMarkers_NumGap</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.52
     Lua=5.3
   </requires>
@@ -2921,11 +2921,11 @@ function ultraschall.CountNormalMarkers_NumGap()
 </US_DocBloc>
 ]]
   local nix=""
-  a,nummarkers,b=reaper.CountProjectMarkers(0)
-  count=0
+  local a,nummarkers,b=reaper.CountProjectMarkers(0)
+  local count=0
   for b=1, nummarkers do
     for i=0, a do
-        retval, isrgn, pos, rgnend, name, markrgnindexnumber, color= reaper.EnumProjectMarkers3(0, i)
+        local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color= reaper.EnumProjectMarkers3(0, i)
         if markrgnindexnumber==b then 
             count=b 
             nix="hui" 
@@ -2938,6 +2938,7 @@ function ultraschall.CountNormalMarkers_NumGap()
 
   return count+1
 end  
+
 
 
 
@@ -4788,3 +4789,47 @@ function ultraschall.GetGuidFromMarkerID(index)
   local A,B=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..(index-1), 1, false)
   return B
 end
+
+function ultraschall.IsTimeSigmarkerAtPosition(position, position_mode)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>IsTimeSigmarkerAtPosition</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.IsTimeSigmarkerAtPosition(number position, optional integer position_mode)</functioncall>
+  <description>
+    returns, if at position is a time-signature marker
+	
+	returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, marker found; false, marker not found
+  </retvals>
+  <parameters>
+    number position - the position to check, whether there's a timesignature marker
+	optional integer position_mode - nil or 0, use position in seconds; 1, use position in measures
+  </parameters>			
+  <chapter_context>
+    Markers
+	Time Signature Markers
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, check, at position, timesig, marker/tags>
+</US_DocBloc>
+--]]
+  if type(position)~="number" then ultraschall.AddErrorMessage("IsTimeSigmarkerAtPosition", "position", "must be a number", -1) return false end
+  if position_mode~=nil and math.type(position_mode)~="integer" then ultraschall.AddErrorMessage("IsTimeSigmarkerAtPosition", "position_mode", "must be an integer or nil", -2) return false end
+  if position_mode==nil then position_mode=0 end
+  if position_mode~=0 and position_mode~=1 then ultraschall.AddErrorMessage("IsTimeSigmarkerAtPosition", "position", "must be either nil, 0 or 1", -3) return false end
+  for i=1, reaper.CountTempoTimeSigMarkers(0) do
+    local retval, timepos, measurepos, beatpos, bpm, timesig_num, timesig_denom, lineartempo = reaper.GetTempoTimeSigMarker(0, i)
+    if position_mode==0 and ultraschall.FloatCompare(position, timepos, 0.00000000000000000001)==true then return true end
+    if position_mode==1 and measurepos==position then return true end
+  end
+  return false
+end
+

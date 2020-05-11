@@ -635,3 +635,44 @@ function ultraschall.GetAllMediaItems_FromProjectBayStateChunk(ProjectBayStateCh
   return count, MediaItemStateChunkArray
 end
 
+function ultraschall.IsTimeSelectionActive()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>IsTimeSelectionActive</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, optional number start_of_timeselection, optional number end_of_timeselection = ultraschall.IsTimeSelectionActive(optional ReaProject Project)</functioncall>
+  <description>
+    Returns, if there's a time-selection and its start and endposition in a project.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, there is a time-selection; false, there isn't a time-selection
+	optional number start_of_timeselection - start of the time-selection
+	optional number end_of_timeselection - end of the time-selection
+  </retvals>
+  <parameters>
+    optional ReaProject Project - the project, whose time-selection-state you want to know; 0 or nil, the current project
+  </parameters>
+  <chapter_context>
+    Project-Management
+	Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
+  <tags>projectmanagement, time selection, get</tags>
+</US_DocBloc>
+]] 
+  if Project~=0 and Project~=nil and ultraschall.type(Project)~="ReaProject" then
+    ultraschall.AddErrorMessage("IsTimeSelectionActive", "Project", "must be a valid ReaProject, 0 or nil(for current)", -1)
+    return false
+  end
+  local Start, Endof = reaper.GetSet_LoopTimeRange2(Project, false, false, 0, 0, false)
+  if Start==Endof then return false end
+  return true, Start, Endof
+end
+

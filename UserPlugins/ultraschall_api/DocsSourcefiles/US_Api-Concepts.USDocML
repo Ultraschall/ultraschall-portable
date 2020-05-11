@@ -71,7 +71,7 @@
             Using the Ultraschall-API is quite easy.
             
             First make sure, you use the right versions of Reaper and SWS:
-               [Reaper 6.20](https://www.reaper.fm), [SWS 2.10.0.1](https://www.sws-extension.org) and [Julian Sader's plugin 0.986.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
+               [Reaper 6.20](https://www.reaper.fm), [SWS 2.10.0.1](https://www.sws-extension.org) and [Julian Sader's plugin 0.999.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             You can download them at [reaper.fm](http://www.reaper.fm) and [sws-extension.org](http://www.sws-extension.org) respectively.
             Julian Sader's plugin can be installed using ReaPack or gotten from [his own github-site](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             
@@ -107,7 +107,7 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall\_api4.00.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00.zip).  
+            1. Just download the zip-file of the current version from [ultraschall_api4.1\_001.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.1_001.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.
@@ -2911,7 +2911,7 @@
                     -- Ultraschall-API demoscript by Meo Mespotine 26.02.2019
                     -- 
                     -- a simple event-manager, that employs background-helper-scripts for listening for statechanges and
-                    -- the Defer-functions in Ultraschall-API 4.00 beta 2.72, who allow you to control, how often the deferred code
+                    -- the Defer-functions in Ultraschall-API, who allow you to control, how often the deferred code
                     -- shall be executed (every x seconds/every x defer-cycles).
 
                     dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
@@ -3397,7 +3397,7 @@
             In the past, I had numerous situations, where I wanted to influence my routing-settings programmatically. But every time I started, I stumbled and shuddered.
             Not because it is impossible with Reaper's own API, but because it's so complicated, irritating, confusing and so far away from the way the routing is managed with the 
             user-interface of Reaper, where you can see easily all individual sends/receives.  
-            This problem is applies to the whole management of HardwareOuts as well, which is also painful to program.  
+            This problem applies with the whole management of HardwareOuts as well, which is also painful to program.  
             So I desired some functions that keep programming the routing simple and down to it's basic components while retaining the flexibility of the full routing.  
             
             All these functions, HWOut as well as Routing(Send/Receive) are based on a simple concept, as seen in the user-interface of routing-settings:  

@@ -1662,13 +1662,16 @@ function ultraschall.GetProject_AddMediaToProjectAfterRender(projectfilename_wit
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_AddMediaToProjectAfterRender</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.40
+    Ultraschall=4.1
+    Reaper=6.10
     Lua=5.3
   </requires>
-  <functioncall>integer addmedia_after_render_state = ultraschall.GetProject_AddMediaToProjectAfterRender(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
+  <functioncall>integer state = ultraschall.GetProject_AddMediaToProjectAfterRender(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
   <description>
-    Returns, if rendered media shall be added to the project afterwards, from an RPP-Projectfile or a ProjectStateChunk.
+    Returns, if rendered media shall be added to the project afterwards as well as if likely silent files shall be rendered-state, from an RPP-Projectfile or a ProjectStateChunk.
+	
+	It's the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to file-dialog.
+	
     It's the entry RENDER_ADDTOPROJ
     
     Returns nil in case of error.
@@ -1678,7 +1681,9 @@ function ultraschall.GetProject_AddMediaToProjectAfterRender(projectfilename_wit
     optional string ProjectStateChunk - a ProjectStateChunk to use instead if a filename; only used, when projectfilename_with_path is nil
   </parameters>
   <retvals>
-    integer addmedia_after_render_state - 1, rendered media shall be added to the project afterwards; 0, don't add
+    integer state - the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox 
+				  - &1, rendered media shall be added to the project afterwards; 0, don't add
+				  - &2, don't render likely silent files; 0, render anyway
   </retvals>
   <chapter_context>
     Project-Management
@@ -1699,8 +1704,8 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_RenderStems</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=6.02
+    Ultraschall=4.1
+    Reaper=6.10
     Lua=5.3
   </requires>
   <functioncall>integer render_stems = ultraschall.GetProject_RenderStems(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -1727,6 +1732,7 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
     - 64,  Selected media items via master
     - 128, Selected tracks via master
     - &256, Embed stretch markers/transient guides-checkbox
+	- &1024, Embed Take markers
   </retvals>
   <chapter_context>
     Project-Management
@@ -5900,18 +5906,25 @@ function ultraschall.SetProject_AddMediaToProjectAfterRender(projectfilename_wit
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetProject_AddMediaToProjectAfterRender</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.40
+    Ultraschall=4.1
+    Reaper=6.10
     Lua=5.3
   </requires>
-  <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_AddMediaToProjectAfterRender(string projectfilename_with_path, integer addmedia_after_render_state, optional string ProjectStateChunk)</functioncall>
+  <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_AddMediaToProjectAfterRender(string projectfilename_with_path, integer state, optional string ProjectStateChunk)</functioncall>
   <description>
-    Returns, if rendered media shall be added to the project afterwards, from an RPP-Projectfile or a ProjectStateChunk.
+    Sets, if rendered media shall be added to the project afterwards as well as if likely silent files shall be rendered-state, from an RPP-Projectfile or a ProjectStateChunk.
+	
+	It's the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to file-dialog.
+	
+    It's the entry RENDER_ADDTOPROJ
+    
     Returns -1 in case of error.
   </description>
   <parameters>
     string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
-    integer addmedia_after_render_state - 1 - rendered media shall be added to the project afterwards, 0 - don't add
+    integer state - the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox 
+				  - &1, rendered media shall be added to the project afterwards; 0, don't add
+				  - &2, don't render likely silent files; 0, render anyway
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>
@@ -5951,8 +5964,8 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetProject_RenderStems</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=6.02
+    Ultraschall=4.1
+    Reaper=6.10
     Lua=5.3
   </requires>
   <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_RenderStems(string projectfilename_with_path, integer render_stems, optional string ProjectStateChunk)</functioncall>
@@ -5973,6 +5986,7 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
     - 64, Selected media items via master
     - 128, Selected tracks via master
     - &256, Embed stretch markers/transient guides-checkbox 
+	- &1024, Embed Take markers
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>

@@ -1732,3 +1732,121 @@ function ultraschall.GetEnvelopeState_EnvName(TrackEnvelope, EnvelopeStateChunk)
   return table.unpack(Individual_values)
 end
 
+function ultraschall.GetAllTrackEnvelopes(include_mastertrack)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllTrackEnvelopes</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_trackenvelopes, table TrackEnvelopes_Table = ultraschall.GetAllTrackEnvelopes()</functioncall>
+  <description>
+    Returns all TrackEnvelopes of all tracks from the current project as a handy table
+    
+    The format of the table is as follows:
+        TrackEnvelopes[trackenvelope_idx]["Track"] - the idx of the track; 0, for mastertrack, 1, for first track, etc
+        TrackEnvelopes[trackenvelope_idx]["EnvelopeObject"] - the TrackEnvelope-object
+        TrackEnvelopes[trackenvelope_idx]["EnvelopeName"] - the name of of TrackEnvelopeObject
+  </description>
+  <retvals>
+    integer number_of_trackenvelopes - the number of TrackEnvelopes found in the current project
+    table TrackEnvelopes_Table - all found TrackEnvelopes as a handy table(see description for details)
+  </retvals>
+  <chapter_context>
+    Envelope Management
+    Envelopes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+  <tags>envelope management, get all, track envelopes</tags>
+</US_DocBloc>
+--]]
+  local TrackEnvelopesTable={}
+  local TrackEnvelopes_Count=0
+  local _temp
+  
+  if include_mastertrack==true then
+    local Track=reaper.GetMasterTrack(0)
+    for a=0, reaper.CountTrackEnvelopes(Track)-1 do
+      TrackEnvelopes_Count=TrackEnvelopes_Count+1
+      TrackEnvelopesTable[TrackEnvelopes_Count]={}
+      TrackEnvelopesTable[TrackEnvelopes_Count]["Track"]=0
+      TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeObject"]=reaper.GetTrackEnvelope(Track, a)
+      _temp, TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeName"]=reaper.GetEnvelopeName(TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeObject"])
+    end
+  end
+  
+  for i=0, reaper.CountTracks(0)-1 do
+    local Track=reaper.GetTrack(0, i)
+    for a=0, reaper.CountTrackEnvelopes(Track)-1 do
+      TrackEnvelopes_Count=TrackEnvelopes_Count+1
+      TrackEnvelopesTable[TrackEnvelopes_Count]={}
+      TrackEnvelopesTable[TrackEnvelopes_Count]["Track"]=i+1
+      TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeObject"]=reaper.GetTrackEnvelope(Track, a)
+      _temp, TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeName"]=reaper.GetEnvelopeName(TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeObject"])
+    end    
+  end
+  return TrackEnvelopes_Count, TrackEnvelopesTable
+end
+
+--A,B=ultraschall.GetAllTrackEnvelopes(true)
+
+function ultraschall.GetAllTakeEnvelopes()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllTakeEnvelopes</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_takeenvelopes, table TakeEnvelopes_Table = ultraschall.GetAllTakeEnvelopes()</functioncall>
+  <description>
+    Returns all TakeEnvelopes of all MediaItems from the current project as a handy table
+    
+    The format of the table is as follows:
+        TakeEnvelopes[takeenvelope_idx]["MediaItem"] - the idx of the MediaItem
+        TakeEnvelopes[takeenvelope_idx]["MediaItem_Take"] - the idx of the trake of the MediaItem
+        TakeEnvelopes[takeenvelope_idx]["MediaItem_Take_Name"] - the name of the MediaItek_Take
+        TakeEnvelopes[takeenvelope_idx]["EnvelopeObject"] - the TakeEnvelopeObject in question
+        TakeEnvelopes[takeenvelope_idx]["EnvelopeName"] - the name of of TakeEnvelopeObject
+  </description>
+  <retvals>
+    integer number_of_takeenvelopes - the number of TakeEnvelopes found in the current project
+    table TakeEnvelopes_Table - all found TakeEnvelopes as a handy table(see description for details)
+  </retvals>
+  <chapter_context>
+    Envelope Management
+    Envelopes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+  <tags>envelope management, get all, take envelopes</tags>
+</US_DocBloc>
+--]]
+  local ItemEnvelopesTable={}
+  local ItemEnvelopes_Count=0
+  local _temp
+    
+  for i=0, reaper.CountMediaItems(0)-1 do
+    local MediaItem=reaper.GetMediaItem(0, i)
+    for x=0, reaper.CountTakes(MediaItem)-1 do
+      local MediaItem_Take=reaper.GetMediaItemTake(MediaItem, x)
+      for a=0, reaper.CountTakeEnvelopes(MediaItem_Take)-1 do
+        ItemEnvelopes_Count=ItemEnvelopes_Count+1
+        ItemEnvelopesTable[ItemEnvelopes_Count]={}
+        ItemEnvelopesTable[ItemEnvelopes_Count]["MediaItem"]=i+1
+        ItemEnvelopesTable[ItemEnvelopes_Count]["MediaItemTake"]=i+1
+        ItemEnvelopesTable[ItemEnvelopes_Count]["MediaItemTake_Name"]=reaper.GetTakeName(MediaItem_Take)
+        ItemEnvelopesTable[ItemEnvelopes_Count]["EnvelopeObject"]=reaper.GetTakeEnvelope(MediaItem_Take, a)
+        _temp, ItemEnvelopesTable[ItemEnvelopes_Count]["EnvelopeName"]=reaper.GetEnvelopeName(ItemEnvelopesTable[ItemEnvelopes_Count]["EnvelopeObject"])
+      end    
+    end
+  end
+  return ItemEnvelopes_Count, ItemEnvelopesTable
+end
+
+--A,B=ultraschall.GetAllItemEnvelopes()
+

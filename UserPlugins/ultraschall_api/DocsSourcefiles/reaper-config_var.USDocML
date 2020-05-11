@@ -1034,7 +1034,7 @@
            >&256=0, Frameless floating toolbar windows(off) - unchecked  
            >&256=1, Frameless floating toolbar windows(on) - checked  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -3807,7 +3807,7 @@
            
           For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
                                                    [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
           For other settings in Preferences -> Peaks/Waveforms, see [peaksedges](#peaksedges), [sampleedges](#sampleedges), [selitem_tintalpha](#selitem_tintalpha), [showpeaks](#showpeaks),   
@@ -4092,7 +4092,7 @@
            >0, checkbox is unchecked(no feedback)  
            >1, checkbox is checked(feedback allowed)  
             
-          For other settings in the Project -> Advanced, see [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [projsmptesync](#projsmptesync), [panmode](#panmode), [panlaw](#panlaw), [projintmix](#projintmix), [projmaxlen](#projmaxlen)  
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [projsmptesync](#projsmptesync), [panmode](#panmode), [panlaw](#panlaw), [projintmix](#projintmix), [projmaxlen](#projmaxlen)  
             
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -4327,7 +4327,7 @@
            >0, don't show dotted grid-line(off) - unchecked  
            >1, don't show dotted grid-line(on) - checked  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags),   
                                             [timeseledge](#timeseledge), [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -4351,7 +4351,7 @@
            >1, Through items  
            >2, Under items  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -4376,7 +4376,7 @@
            >1, Through items  
            >2, Under items  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -4424,7 +4424,7 @@
            >0, don't show guide lines(off) - unchecked  
            >1, show guide lines(on) - checked  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [maxitemlanes](#maxitemlanes),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [maxitemlanes](#maxitemlanes),   
                                             [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -5481,7 +5481,7 @@
           
            >1 to 2147483647; in lanes  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -5504,7 +5504,7 @@
           
            >0 to 99999999999999; higher values are possible
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -5699,12 +5699,17 @@
       <slug>miscopts</slug>  
       <title>miscopts</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Enable 'Preserve pitch when changing rate' for new items-checkbox  
-          It is an integer  
+          Enable "Preserve pitch when changing rate for new items'-checkbox as set in Project Settings -> Advanced, as well as 
+		  "On import of media to project"-dropdownlist as set in Project Settings -> Media
+          It is an integer-bitfield
           
-           >0, checked  
-           >1, unchecked  
-            
+           >&1=0, "Preserve pitch when changing rate" - checked
+           >&1=1, "Preserve pitch when changing rate" - unchecked 
+		   >&2 and &4 "On import of media to project"-dropdownlist
+		    
+			>> 0 0, Use global preference
+			>> 1 0, Copy media to project path
+			>> 0 1, Do not copy media to project path
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -6777,7 +6782,7 @@
            >0, Faster text rendering(on) - checked  
            >1, don't use faster text rendering(off) - unchecked  
             
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -7109,10 +7114,31 @@
            >0.50118723362727, -6.0  
            >0.5, -6.02  
             
-          For other settings in the Project -> Advanced, see [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [projsmptesync](#projsmptesync), [panmode](#panmode), [projintmix](#projintmix), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode)  
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [projsmptesync](#projsmptesync), [panmode](#panmode), [projintmix](#projintmix), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode)  
             
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>panlawflags</slug>  
+      <title>panlawflags</title>
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Linear scale above -3dB pan law-checkbox, as set in Project Settings -> Advanced
+          It is an integer
+			
+			>0, unchecked
+			>1, checked
+			
+		  For other settings in the Project -> Advanced, see [panmode](#panmode), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse),
+			
+		  Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7133,7 +7159,7 @@
            >5, Stereo pan  
            >6, Dual pan  
             
-          For other settings in the Project -> Advanced, see [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [projsmptesync](#projsmptesync), [panlaw](#panlaw), [projintmix](#projintmix), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode)  
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [projsmptesync](#projsmptesync), [panlaw](#panlaw), [projintmix](#projintmix), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode)  
             
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -7316,7 +7342,7 @@
           
            >1 to 2147483647; in pixels  
             
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -7896,7 +7922,7 @@
            >5, 12 bit integer  
            >6, 8 bit integer  
             
-          For other settings in the Project -> Advanced, see [itemmixflag](#itemmixflag), [feedbackmode](#feedbackmode), [projmaxlenuse](#projmaxlenuse), [projmaxlen](#projmaxlen), [projsmptesync](#projsmptesync), [panmode](#panmode), [panlaw](#panlaw)  
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [itemmixflag](#itemmixflag), [feedbackmode](#feedbackmode), [projmaxlenuse](#projmaxlenuse), [projmaxlen](#projmaxlen), [projsmptesync](#projsmptesync), [panmode](#panmode), [panlaw](#panlaw)  
             
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -7959,7 +7985,7 @@
            >0.0 is minimum value  
             
           For the checkbox, that enables/disables the limitation, see [projmaxlenuse](#projmaxlenuse)  
-          For other settings in the Project -> Advanced, see [itemmixflag](#itemmixflag), [feedbackmode](#feedbackmode), [projmaxlenuse](#projmaxlenuse), [projsmptesync](#projsmptesync), [panmode](#panmode), [panlaw](#panlaw), [projintmix](#projintmix)  
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [itemmixflag](#itemmixflag), [feedbackmode](#feedbackmode), [projmaxlenuse](#projmaxlenuse), [projsmptesync](#projsmptesync), [panmode](#panmode), [panlaw](#panlaw), [projintmix](#projintmix)  
             
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -7982,7 +8008,7 @@
            >1, box is checked(limit)  
             
           For the length-value for maximum project length, see [projmaxlen](#projmaxlen)  
-          For other settings in the Project -> Advanced, see [itemmixflag](#itemmixflag), [feedbackmode](#feedbackmode), [projsmptesync](#projsmptesync), [panmode](#panmode), [panlaw](#panlaw), [projintmix](#projintmix)  
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [itemmixflag](#itemmixflag), [feedbackmode](#feedbackmode), [projsmptesync](#projsmptesync), [panmode](#panmode), [panlaw](#panlaw), [projintmix](#projintmix)  
             
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -8308,11 +8334,14 @@
       <slug>projrenderaddtoproj</slug>  
       <title>projrenderaddtoproj</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The "add rendered items to new tracks in project"-checkbox, as set in the Render to File-dialog.  
-          It's an integer  
+          The "add rendered items to new tracks in project"-checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to File-dialog.  
+          It's an integer-bitfield
           
-           >0, the box isn't checked(no adding)  
-           >1, the box is checked(add the rendered files to the project)  
+           >&1=0, add rendered items to new tracks in project - unchecked
+		   >&1=1, add rendered items to new tracks in project - checked
+		   >&2=0, do not render files that are likely silent - unchecked
+		   >&2=1, do not render files that are likely silent - checked
+		   
            
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -8495,7 +8524,10 @@
            >3, Stems (selected tracks)  
            >8, Region render matrix  
            >32, Selected media items  
-           >256, "Embed stretch markers/transient guides"-checkbox; 0, unchecked; 1, checked  
+           >&256, "Embed stretch markers/transient guides"-checkbox; 0, unchecked; 1, checked  
+		   >&512, "Embed Metadata"-checkbox; 0, unchecked; 1, checked
+		   >&1024, "Take Markers"-checkbox; 0, unchecked; 1, checked
+		   
            
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -8663,7 +8695,7 @@
           
            >0 to 2147483647; 1000 = default  
            
-          For other settings in the Project -> Advanced, see [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
                                           [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
@@ -8686,7 +8718,7 @@
           
            >0 to 2147483647; higher values become negative ones; 0=never  
             
-          For other settings in the Project -> Advanced, see [projsmpteahead](#projsmpteahead), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpteahead](#projsmpteahead), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
                                           [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
@@ -8714,7 +8746,7 @@
            >8192, ASIO Positioning Protocol  
            
           For framerate-settings when projsmpteinput is set to LTC: Left and LTC: Right, see [projsmpterate](#projsmpterate)  
-          For other settings in the Project -> Advanced, see [projsmpteahead](#projsmpteahead), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpteahead](#projsmpteahead), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
 
                                           [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmptefw_rec](#projsmptefw_rec)  
@@ -8737,7 +8769,7 @@
           
            >0 to 2147483647; 0 = forever  
            
-          For other settings in the Project -> Advanced, see [projsmpterate](#projsmpterate), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
                                           [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
@@ -8760,7 +8792,7 @@
           
            >0 to 1e+305; in seconds(yes, even though the inputbox in the dialog asks for milliseconds, this value is in seconds!)  
            
-          For other settings in the Project -> Advanced, see [projsmpterate](#projsmpterate), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmptemaxfree](#projsmptemaxfree),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmptemaxfree](#projsmptemaxfree),   
                                           [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
                                           [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
@@ -8786,7 +8818,7 @@
            >23.976, 24.00, 25.00, 29.97(29.97DF), 29.972(29.97ND), 30.00  
            
           For setting, if the project's framerate or the LTC-framerate shall be used, see [projsmpterateuseproj](#projsmpterateuseproj)  
-          For other settings in the Project -> Advanced, see [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
                                           [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
@@ -8810,7 +8842,7 @@
            >1, use the project's framerate  
            
           For setting the LTC-framerate, see [projsmpterate](#projsmpterate).  
-          For other settings in the Project -> Advanced, see [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
                                           [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpteinput](#projsmpteinput)  
                                           
@@ -8833,7 +8865,7 @@
           
            >0 to 2147483647; 0=never  
            
-          For other settings in the Project -> Advanced, see [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteskip](#projsmpteskip),   
                                           [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
@@ -8856,7 +8888,7 @@
           
            >0 to 2147483647; higher numbers become negative; 0=never  
            
-          For other settings in the Project -> Advanced, see [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
                                           [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
@@ -8879,7 +8911,7 @@
           
            >0 to 2147483647; 0=never  
            
-          For other settings in the Project -> Advanced, see [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync),   
                                           [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
@@ -8924,7 +8956,7 @@
             >> 1 0, 24/30 fps MTC is 23.976ND/29.97ND  
             >> 0 1, 24/30 fps MTC is 24/30 fps  
            
-          For other settings in the Project -> Advanced, see [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
+          For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
                                           [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
@@ -10194,6 +10226,28 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>rulerlabelspacing</slug>  
+      <title>rulerlabelspacing</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Ruler label spacing-slider, as set in Preferences -> Appearance settings
+          It is an integer            
+		  
+		  >0 to 100
+		  
+          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+                                            [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
+                                            [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
+											
+		  Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>rulerlayout</slug>  
@@ -10224,7 +10278,7 @@
            >&64=0, Show time signature changes in grid(Preferences -> Appearance) (action 42329) (state on) - checked  
            >&64=1, Show time signature changes in grid(Preferences -> Appearance) (action 42329) (state off) - unchecked  
             
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -10850,7 +10904,7 @@
            >0, don't show last undo point(off) - unchecked  
            >1, show last undo point(on) - checked  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -11706,7 +11760,7 @@
            >0, don't draw vertical text bottom-up(off) - unchecked  
            >1, don't draw vertical text bottom-up(on) - checked  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -11760,7 +11814,7 @@
            >&2=0, Solid edge in loop selection(off) - unchecked  
            >&2=1, Solid edge in loop selection(on) - checked  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -11854,7 +11908,7 @@
           
            >200 to 1000; probably milliseconds  
            
-          For other settings in Preferences -> Appearance, see [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2), [maxitemlanes](#maxitemlanes),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2), [maxitemlanes](#maxitemlanes),   
                                             [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -11884,7 +11938,7 @@
            >&4=0, Envelope tooltips on hover(on) - checked  
            >&4=1, Envelope tooltips on hover(off) - unchecked  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2), [maxitemlanes](#maxitemlanes),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2), [maxitemlanes](#maxitemlanes),   
                                             [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
                     
@@ -11907,7 +11961,7 @@
           
            >0 to 2147483647; in pixels; higher values become negative  
            
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [vgrid](#vgrid)  
                     
@@ -12323,7 +12377,7 @@
            >&4096=0, checkbox(off) - unchecked  
            >&4096=1, checkbox(on) - checked  
             
-          For other settings in Preferences -> Appearance, see [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
+          For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [envlanes](#envlanes), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap)  
                     

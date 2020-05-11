@@ -2129,7 +2129,7 @@ function ultraschall.CountParmLearn_FXStateChunk(FXStateChunk, fxid)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountParmLearn_FXStateChunk</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.979
     Lua=5.3
   </requires>
@@ -2159,6 +2159,7 @@ function ultraschall.CountParmLearn_FXStateChunk(FXStateChunk, fxid)
 ]]
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("CountParmLearn_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return -1 end
   if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("CountParmLearn_FXStateChunk", "fxid", "must be an integer", -2) return -1 end
+  if fxid<1 then ultraschall.AddErrorMessage("CountParmLearn_FXStateChunk", "fxid", "must be bigger than 1", -3) return -1 end
     
   local count=0
   local FX, UseFX2, start, stop, UseFX

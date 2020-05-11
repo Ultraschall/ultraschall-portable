@@ -60,19 +60,22 @@ Docs={12,
 "ultraschall_Remove_Developertools_From_Reaper.lua"
 }
 
-
 -- remove all temp-files
 found_dirs, dirs_array, found_files, files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(SourceDir.."/ultraschall_api/temp/")
 for i=1, found_files do
   os.remove(files_array[i])
 end
 
+
+
+
+
 C3,C,C1,C2,C4,C5,C6,C7=ultraschall.GetApiVersion()
 
 versionnumber, version, date, beta, tagline = ultraschall.GetApiVersion()
 majorversion, subversion, bits, Os, portable = ultraschall.GetReaperAppVersion()
 
-if beta~="" then beta="-"..beta end
+--if beta~="" then beta="."..beta end
 
 
 SWS=reaper.CF_GetSWSVersion("")
@@ -85,19 +88,28 @@ if C2vers~="" then C2vers="_"..C2vers end
 
 -- set this to the online-repo of the Ultraschall-API
 --Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API4.00-beta2.71/"
-Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-4.00-beta2.9/"
+Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-4.1."..beta.."/"
 --Url="file:///c:/Ultraschall-Api-Git-Repo/Ultraschall-Api-for-Reaper/" -- for reapindex-tests first
-Url2="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-4.00-"..C2vers.."/"
+Url2="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-4.1."..beta.."/"
 
 -- set this to the repository-folder of the api on your system
-Target_Dir="c:\\Ultraschall-Api-Git-Repo\\Ultraschall-Api-for-Reaper\\"
+--Target_Dir="c:\\Ultraschall-Api-Git-Repo\\Ultraschall-Api-for-Reaper\\"
+Target_Dir="C:\\Users\\Meo\\Documents\\GitHub\\ultraschall-lua-api-for-reaper\\"
 
 found_dirs, dirs_array, found_files, files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(SourceDir.."/ultraschall_api")
+
+-- create folders, if not existing
+for i=1, found_dirs do
+  dirs=dirs_array[i]:match("UserPlugins/(.*)")
+  --print(Target_Dir..dirs)
+  reaper.RecursiveCreateDirectory(Target_Dir.."/"..dirs,0)
+end
 
 --remove unneeded files:
 for i=found_files, 1, -1 do
     if files_array[i]:match("EventManager_Startup.ini") then table.remove(files_array,i) found_files=found_files-1 end
 end
+
 
 L=ultraschall.MakeCopyOfFile_Binary(SourceDir.."/ultraschall_api.lua", Target_Dir.."/ultraschall_api.lua")
 L=ultraschall.MakeCopyOfFile_Binary(SourceDir.."/ultraschall_api_readme.txt", Target_Dir.."/ultraschall_api_readme.txt")
@@ -122,15 +134,12 @@ ultraschall.WriteValueToFile(SourceDir.."/ultraschall_api/Reaper-Internals-readm
 Batter=[[
 cd ]]..SourceDir..[[
 
-del c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\ultraschall_api4.00]]..C2vers..[[.zip
-zip.exe -r c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\ultraschall_api4.00]]..C2vers..[[.zip *.lua *.txt ultraschall_api
+del ]]..Target_Dir..[[\ultraschall_api4.1]]..C2vers..[[.zip
+zip.exe -r ]]..Target_Dir..[[\ultraschall_api4.1]]..C2vers..[[.zip *.lua *.txt ultraschall_api
 
-del c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\Reaper-Internals-Ultraschall-Api-Docs.zip
-cd ultraschall_api
-
-..\zip.exe -r c:\Ultraschall-Api-Git-Repo\Ultraschall-Api-for-Reaper\Reaper-Internals-Ultraschall-Api-Docs.zip Documentation\* Reaper-Internals-readme.txt c:\Reaper-Internal-Docs-Miscellaneous_Maybe_Helpful_Files
-del Reaper-Internals-readme.txt
-del Scripts\Tools\batter.bat
+del ultraschall_api\Reaper-Internals-readme.txt
+del ultraschall_api\Scripts\Tools\batter.bat
+pause
 ]]
 
 
@@ -144,15 +153,17 @@ D=os.date()
 Date=string.gsub(D:match("(.-) "),"%.","-").."T"..D:match(" (.*)").."Z"
 Hotfix="00"
 
-Markdown2RTF="c:\\Program Files (x86)\\Pandoc\\pandoc -f markdown -w plain -s -o c:\\temp\\tempfile.rtf c:\\temp\\tempfile"
+Markdown2RTF="c:\\Program Files\\Pandoc\\pandoc -f markdown -w plain -s -o c:\\temp\\tempfile.rtf c:\\temp\\tempfile"
 
 ChangeLog=ultraschall.ReadFullFile(SourceDir.."/ultraschall_api/Changelog-Api.txt")
 ChangeLog=string.gsub(ChangeLog, "<TODO>.-</TODO>", "")
+
 --reaper.CF_SetClipboard(ChangeLog)
 ultraschall.WriteValueToFile("c:\\temp\\tempfile", ChangeLog)
-
+SLEM()
 reaper.ExecProcess(Markdown2RTF,0)
 ChangeLog=ultraschall.ReadFullFile("c:\\temp\\tempfile.rtf")
+
 
 
 XML_start=
@@ -460,10 +471,21 @@ A0="c:\\windows\\system32\\cmd.exe /Q /C xcopy "..SourceDir.."\\ultraschall_api 
 --reaper.CF_SetClipboard(A0)
 A,A1,A2,A3=reaper.ExecProcess(A0, 0)
   
+-- create directories, if not existing
+for i=1, found_dirs do
+  ALALALALALALA=reaper.RecursiveCreateDirectory(dirs_array[i], 0)
+  ToClip(FromClip().."\n"..ALALALALALALA..", "..dirs_array[i])
+end
+
 for i=1, found_files do
   tempfile=files_array[i]:match("(ultraschall_api/.*)")
 --  if tempfile==nil then tempfile=files_array[i]:match("UserPlugins(/.*)") end
   L=ultraschall.MakeCopyOfFile_Binary(files_array[i], Target_Dir..tempfile)
+  retval, errcode, functionname, parmname, errormessage = ultraschall.GetLastErrorMessage()
+  if errormessage~=nil then
+--    ToClip(FromClip().."\n"..errcode..", "..functionname..", "..parmname..", "..errormessage)
+    ultraschall.DeleteAllErrorMessages()
+  end
 end
 
 

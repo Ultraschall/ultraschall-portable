@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 6.05
+            ## ReaScript API as of Reaper 6.10
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -183,36 +183,36 @@
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
                 ### Datatypes used in this document
                 
-                boolean - accepts only true or false as values
-                optional boolean - a boolean, that can be given, but is not required
-                number - can be integer, double or a floating-point-number
-                optional number - a number, that can be given, but is not required
-                integer - only integer numbers allowed
-                reaper.array - a special array, that Reaper provides
-                string - a string of characters/text
-                optional string - a string, that can be given, but is not required
+                boolean - accepts only true or false as values  
+                optional boolean - a boolean, that can be given, but is not required  
+                number - can be integer, double or a floating-point-number  
+                optional number - a number, that can be given, but is not required  
+                integer - only integer numbers allowed  
+                reaper.array - a special array, that Reaper provides  
+                string - a string of characters/text  
+                optional string - a string, that can be given, but is not required  
 
-                AudioAccessor - Audio Accessor object for a track or a media-item
-                BR\_Envelope \(BR\) - an envelope-object, created from a track or take-envelope
-                HWND - a window
-                IReaperControlSurface - a ControlSurface, e.g. OSC-devices
-                joystick\_device - a joystick-device
-                KbdSectionInfo - Keyboard Section Info, 
-                -        0, Main
-                -        100, Main (alt recording)
-                -        32060, MIDI Editor
-                -        32061, MIDI Event List Editor
-                -        32062, MIDI Inline Editor
-                -        32063, Media Explorer
-                PCM\_source - the audiosource of a MediaItem
-                ReaProject - a project within Reaper; 0 for current open project\(-tab\); in [EnumProjects](#EnumProjects), it is an object, not a number!
-                RprMidiTake \(FNG\) - ReaperMidiTake as object
-                RprMidiNote \(FNG\) - RprMidiNote as object
-                MediaTrack - a Reaper-Track as object
-                MediaItem - a Reaper-MediaItem like audio,video, Midi, etc as object
-                MediaItem\_Take - a take within a MediaItem as object
-                TrackEnvelope - an envelope of a track as object
-                WDL\_FastString\(S&M\) - a different kind of a string, made into a Reaper-object
+                AudioAccessor - Audio Accessor object for a track or a media-item  
+                BR\_Envelope \(BR\) - an envelope-object, created from a track or take-envelope  
+                HWND - a window  
+                IReaperControlSurface - a ControlSurface, e.g. OSC-devices  
+                joystick\_device - a joystick-device  
+                KbdSectionInfo - Keyboard Section Info,   
+                -        0, Main  
+                -        100, Main (alt recording)  
+                -        32060, MIDI Editor  
+                -        32061, MIDI Event List Editor  
+                -        32062, MIDI Inline Editor  
+                -        32063, Media Explorer  
+                PCM\_source - the audiosource of a MediaItem  
+                ReaProject - a project within Reaper; 0 for current open project\(-tab\); in [EnumProjects](#EnumProjects), it is an object, not a number!  
+                RprMidiTake \(FNG\) - ReaperMidiTake as object  
+                RprMidiNote \(FNG\) - RprMidiNote as object  
+                MediaTrack - a Reaper-Track as object  
+                MediaItem - a Reaper-MediaItem like audio,video, Midi, etc as object  
+                MediaItem\_Take - a take within a MediaItem as object  
+                TrackEnvelope - an envelope of a track as object  
+                WDL\_FastString\(S&M\) - a different kind of a string, made into a Reaper-object  
                 
                 deviceHDC - get it using function [JS\_GDI_GetWindowDC](#JS_GDI_GetWindowDC)
         </description>
@@ -3163,6 +3163,36 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>DeleteTakeMarker</slug>
+        <title>DeleteTakeMarker</title>
+        <functioncall prog_lang="cpp">bool retval = DeleteTakeMarker(MediaItem_Take* take, int idx)</functioncall>
+        <functioncall prog_lang="eel">bool retval = DeleteTakeMarker(MediaItem_Take take, int idx)</functioncall>
+        <functioncall prog_lang="lua">boolean retval = reaper.DeleteTakeMarker(MediaItem_Take take, integer idx)</functioncall>
+        <functioncall prog_lang="python">Boolean retval = RPR_DeleteTakeMarker(MediaItem_Take take, Int idx)</functioncall>
+        <requires>
+            Reaper=6.09
+            Lua=5.3
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Delete a take marker. Note that idx will change for all following take markers. 
+            See [GetNumTakeMarkers](#GetNumTakeMarkers)), [GetTakeMarker](#GetTakeMarker) and [SetTakeMarker](#SetTakeMarker).
+        </description>
+        <retvals>
+            boolean retval - true, deleting was successful; false, deleting was unsuccessful.
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            MediaItem_Take take - the take, whose take-marker you want to delete
+            integer idx - the id of the marker within the take, 0 for the first, 1 for the second, etc.
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Marker Management
+        </chapter_context>
+        <tags>markermanagement, delete, takemarker</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>DeleteTakeStretchMarkers</slug>
         <title>DeleteTakeStretchMarkers</title>
         <functioncall prog_lang="cpp">int DeleteTakeStretchMarkers(MediaItem_Take* take, int idx, const int* countInOptional)</functioncall>
@@ -6014,7 +6044,7 @@
                             - I_GROUPID : int * : group ID, 0=no group
                             - I_LASTY : int * : Y-position of track in pixels (read-only)
                             - I_LASTH : int * : height in track in pixels (read-only)
-                            - I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color anyway)
+                            - I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color.
                             - I_CURTAKE : int * : active take number
                             - IP_ITEMNUMBER : int, item number on this track (read-only, returns the item number directly)
                             - F_FREEMODE_Y : float * : free item positioning Y-position, 0=top of track, 1=bottom of track (will never be 1)
@@ -6254,7 +6284,7 @@
             B_PPITCH : bool * : preserve pitch when changing playback rate
             I_CHANMODE : int * : channel mode, 0=normal, 1=reverse stereo, 2=downmix, 3=left, 4=right
             I_PITCHMODE : int * : pitch shifter mode, -1=projext default, otherwise high 2 bytes=shifter, low 2 bytes=parameter
-            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color anyway)
+            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color.
             IP_TAKENUMBER : int : take number (read-only, returns the take number directly)
             P_TRACK : pointer to MediaTrack (read-only)
             P_ITEM : pointer to MediaItem (read-only)
@@ -6510,7 +6540,7 @@
             I_FOLDERCOMPACT : int * : folder compacted state (only valid on folders), 0=normal, 1=small, 2=tiny children
             I_MIDIHWOUT : int * : track midi hardware output index, &lt;0=disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31)
             I_PERFFLAGS : int * : track performance flags, &1=no media buffering, &2=no anticipative FX
-            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color anyway)
+            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color.
             I_HEIGHTOVERRIDE : int * : custom height override for TCP window, 0 for none, otherwise size in pixels
             B_HEIGHTLOCK : bool * : track height lock (must set I_HEIGHTOVERRIDE before locking)
             D_VOL : double * : trim volume of track, 0=-inf, 0.5=-6dB, 1=+0dB, 2=+6dB, etc
@@ -6792,6 +6822,36 @@
         </chapter_context>
         <tags>audio, midi, count, output, hardware</tags>
     </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>GetNumTakeMarkers</slug>
+        <title>GetNumTakeMarkers</title>
+        <functioncall prog_lang="cpp">int GetNumTakeMarkers(MediaItem_Take* take)</functioncall>
+        <functioncall prog_lang="eel">int GetNumTakeMarkers(MediaItem_Take take)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.GetNumTakeMarkers(MediaItem_Take take)</functioncall>
+        <functioncall prog_lang="python">Int RPR_GetNumTakeMarkers(MediaItem_Take take)</functioncall>
+        <requires>
+            Reaper=6.09
+            Lua=5.3
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Returns number of take markers.
+            See [DeleteTakeMarker](#DeleteTakeMarker)), [GetTakeMarker](#GetTakeMarker) and [SetTakeMarker](#SetTakeMarker).
+        </description>
+        <retvals>
+            integer retval - the number of found take-markers
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            MediaItem_Take take - the take, whose take-markers you want to count
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Marker Management
+        </chapter_context>
+        <tags>markermanagement, count, takemarker</tags>
+    </US_DocBloc>
+
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>GetNumTracks</slug>
@@ -7991,7 +8051,7 @@
         </requires>
         <description prog_lang="*">
             Gets/sets a take attribute string:
-                P_NAME : char * to take name
+                P_NAME : char * : take name
                 P_EXT:xyz : char * : extension-specific persistent data
                 GUID : GUID * : 16-byte GUID, can query or update. If using a _String() function, GUID is a string {xyz-...}.
         </description>
@@ -8121,13 +8181,14 @@
         <functioncall prog_lang="lua">number value = reaper.GetSetProjectInfo(ReaProject project, string desc, number value, boolean is_set)</functioncall>
         <functioncall prog_lang="python">Float RPR_GetSetProjectInfo(ReaProject project, String desc, Float value, Boolean is_set)</functioncall>
         <requires>
-            Reaper=6.01
+            Reaper=6.10
             Lua=5.3
         </requires>
         <description prog_lang="*">
             Get or set project information.
 
-            RENDER_SETTINGS : &amp;(1|2)=0:master mix, &amp;1=stems+master mix, &amp;2=stems only, &amp;4=multichannel tracks to multichannel files, &amp;8=use render matrix, &amp;16=tracks with only mono media to mono files, &amp;32=selected media items, &amp;64=selected media items via master
+            RENDER_SETTINGS : &amp;(1|2)=0:master mix, &amp;1=stems+master mix, &amp;2=stems only, &amp;4=multichannel tracks to multichannel files, &amp;8=use render matrix, &amp;16=tracks with only mono media to mono files, &amp;32=selected media items, &amp;64=selected media items via master, &amp; 128=Selected tracks via master, &amp;256=Stretch markers/transient guide-checkbox(Only with WAV/AIFF and Source=Selected media items/Selected media items via master), &amp;1024=Take markers-checkbox(Only with WAV and Source=Selected media items/Selected media items via master)
+            OGG, OPUS and FLAC support embedding of tempoinformation via metadata, settable using [GetSetProjectInfo_String](#GetSetProjectInfo_String).
             RENDER_BOUNDSFLAG : 0=custom time bounds, 1=entire project, 2=time selection, 3=all project regions, 4=selected media items, 5=selected project regions
             RENDER_CHANNELS : number of channels in rendered file
             RENDER_SRATE : sample rate of rendered file (or 0 for project sample rate)
@@ -8135,19 +8196,19 @@
             RENDER_ENDPOS : render end time when RENDER_BOUNDSFLAG=0
             RENDER_TAILFLAG : apply render tail setting when rendering: &amp;1=custom time bounds, &amp;2=entire project, &amp;4=time selection, &amp;8=all project regions, &amp;16=selected media items, &amp;32=selected project regions
             RENDER_TAILMS : tail length in ms to render (only used if RENDER_BOUNDSFLAG and RENDER_TAILFLAG are set)
-            RENDER_ADDTOPROJ : 1=add rendered files to project
+            RENDER_ADDTOPROJ : &amp;1=add rendered files to project, &amp;2=Do not render files that are likely silent
             RENDER_DITHER : &amp;1=dither, &amp;2=noise shaping, &amp;4=dither stems, &amp;8=noise shaping on stems
             PROJECT_SRATE : samplerate (ignored unless PROJECT_SRATE_USE set)
             PROJECT_SRATE_USE : set to 1 if project samplerate is used
         </description>
         <retvals>
-            number value -
+            number value - the new/current value set with this attribute
         </retvals>
         <parameters>
-            ReaProject project -
-            string desc - 
-            number value - 
-            boolean is_set -
+            ReaProject project -the project, whos project settings you want to get/set; 0, for the current project
+            string desc - the attribute you want to get/set, like RENDER_CHANNELS, PROJECT_SRATE, RENDER_SETTINGS, etc
+            number value - if is_set==true, this is the new value to set; if is_set==false, set this to 0
+            boolean is_set - true, set a new value; false, get the current value
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -8165,7 +8226,7 @@
         <functioncall prog_lang="lua">boolean retval, string valuestrNeedBig = reaper.GetSetProjectInfo_String(ReaProject project, string desc, string valuestrNeedBig, boolean is_set)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, ReaProject project, String desc, String valuestrNeedBig, Boolean is_set) = RPR_GetSetProjectInfo_String(project, desc, valuestrNeedBig, is_set)</functioncall>
         <requires>
-            Reaper=6.05
+            Reaper=6.10
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -8175,12 +8236,39 @@
             RECORD\_PATH: recording directory -- may be blank or a relative path, to get the effective path see [GetProjectPathEx](#GetProjectPathEx)
             RENDER\_FILE: render directory
             RENDER\_PATTERN: render file name (may contain wildcards)
+			RENDER\_TARGETS: semicolon separated list of files that would be written if the project is rendered using the most recent render settings
             RENDER\_FORMAT: base64-encoded sink configuration (see project files, etc). Callers can also pass a simple 4-byte string (non-base64-encoded), to use default settings for that sink type.
             RENDER\_FORMAT2: base64-encoded secondary sink configuration. Callers can also pass a simple 4-byte string (non-base64-encoded), e.g. "evaw" or "l3pm", to use default settings for that sink type, or "" to disable secondary render.
             see [render-code-documentation](render-codes-decoded-base64-strings.txt) for how the unencoded RENDER_FORMAT-string is structured.
-            
+
             To just use the 4-byte-string, you can use: 
             "evaw" for wave, "ffia" for aiff, " osi" for audio-cd, " pdd" for ddp, "calf" for flac, "l3pm" for mp3, "vggo" for ogg, "SggO" for Opus, "PMFF" for FFMpeg-video, "FVAX" for MP4Video/Audio on Mac, " FIG" for Gif, " FCL" for LCF, "kpvw" for wavepack            
+            
+            RENDER_METADATA: get or set the metadata saved with the project (not metadata embedded in project media). Example, ID3 album name metadata: Uses common ID3-tagcodes like TALB(album), TPE1(Artist), etc. 
+			To get album tag, use "ID3:TALB", to set album tag, use "ID3:TALB|my album name".
+			Supported tags-codes are: TIT2(Title), TPE1(Artist), TPE2(Albumartist), TALB(Album), TRCK(Track), TCON(Genre), TYER(Year), TDRC(Recording time: YYYY-MM-DD), TKEY(Key), TBPM(Tempo), TSRC(International Standard Recording Code), COMM(Comment), COMM_LANG(Comment language), APIC_TYPE(Image type), APIC_DESC(Image description), APIC_FILE(Image file)
+			APIC_TYPE can have be of the following:
+            0: Other
+            1: 32x32 pixel file icon (PNG only)
+            2: Other file icon
+            3: Cover (front)
+            4: Cover (back)
+            5: Leaflet page
+            6: Media
+            7: Lead artist/Lead Performer/Solo
+            8: Artist/Performer
+            9: Conductor
+            10: Band/Orchestra
+            11: Composer
+            12: Lyricist/Text writer
+            13: Recording location
+            14: During recording
+            15: During performance
+            16: Movie/video screen capture
+            17: A bright colored fish
+            18: Illustration
+            19: Band/Artist logotype
+            20: Publisher/Studiotype
         </description>
         <retvals>
             boolean retval - true, value can be set/get; false, value can't be set/get
@@ -8520,6 +8608,39 @@
             Envelope Management
         </chapter_context>
         <tags></tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>GetTakeMarker</slug>
+        <title>GetTakeMarker</title>
+        <functioncall prog_lang="cpp">double position = GetTakeMarker(MediaItem_Take* take, int idx, char* nameOut, int nameOut_sz, int* colorOutOptional)</functioncall>
+        <functioncall prog_lang="eel">double position = GetTakeMarker(MediaItem_Take take, int idx, #name, optional int &color)</functioncall>
+        <functioncall prog_lang="lua">number position, string name, optional number color = reaper.GetTakeMarker(MediaItem_Take take, integer idx)</functioncall>
+        <functioncall prog_lang="python">(Float position, MediaItem_Take take, Int idx, String nameOut, Int nameOut_sz, Int colorOutOptional) = RPR_GetTakeMarker(take, idx, nameOut, nameOut_sz, colorOutOptional))</functioncall>
+        <requires>
+            Reaper=6.09
+            Lua=5.3
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Get information about a take marker. Returns the position in media item source time, or -1 if the take marker does not exist.
+			
+            See [GetNumTakeMarkers](#GetNumTakeMarkers)), [DeleteTakeMarker](#DeleteTakeMarker) and [SetTakeMarker](#SetTakeMarker).
+        </description>
+        <retvals>
+            number position - the position of the takemarker within the take in seconds
+			string name - the name of the takemarker
+			optional number color - the color of the takemarker
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            MediaItem_Take take - the take, whose take-marker you want to get
+            integer idx - the id of the marker within the take, 0 for the first, 1 for the second, etc.
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Marker Management
+        </chapter_context>
+        <tags>markermanagement, get, takemarker</tags>
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -14528,7 +14649,7 @@
             I_GROUPID : int * : group ID, 0=no group
             I_LASTY : int * : Y-position of track in pixels (read-only)
             I_LASTH : int * : height in track in pixels (read-only)
-            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color anyway)
+            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color.
             I_CURTAKE : int * : active take number
             IP_ITEMNUMBER : int, item number on this track (read-only, returns the item number directly)
             F_FREEMODE_Y : float * : free item positioning Y-position, 0=top of track, 1=bottom of track (will never be 1)
@@ -14689,7 +14810,7 @@
             B_PPITCH : bool * : preserve pitch when changing playback rate
             I_CHANMODE : int * : channel mode, 0=normal, 1=reverse stereo, 2=downmix, 3=left, 4=right
             I_PITCHMODE : int * : pitch shifter mode, -1=projext default, otherwise high 2 bytes=shifter, low 2 bytes=parameter
-            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color anyway)
+            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color.
             IP_TAKENUMBER : int : take number (read-only, returns the take number directly)
         </description>
         <retvals>
@@ -14745,8 +14866,8 @@
             I_FOLDERCOMPACT : int * : folder compacted state (only valid on folders), 0=normal, 1=small, 2=tiny children
             I_MIDIHWOUT : int * : track midi hardware output index, &lt;0=disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31)
             I_PERFFLAGS : int * : track performance flags, &1=no media buffering, &2=no anticipative FX
-            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color anyway)
-            I_HEIGHTOVERRIDE : int * : custom height override for TCP window, 0 for none, otherwise size in pixels
+            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color.
+            I_HEIGHTOVERRIDE : int * : custom height override for TCP window, 0 for none, otherwise size in pixels(use [TrackList_AdjustWindows](#TrackList_AdjustWindows) to update TCP after this.
             B_HEIGHTLOCK : bool * : track height lock (must set I_HEIGHTOVERRIDE before locking)
             D_VOL : double * : trim volume of track, 0=-inf, 0.5=-6dB, 1=+0dB, 2=+6dB, etc
             D_PAN : double * : trim pan of track, -1..1
@@ -14888,7 +15009,9 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            Set exactly one track selected, deselect all others
+            Set exactly one track selected, deselect all others.
+			
+			This sets the track as Last-Touched-Track as well.
         </description>
         <parameters>
             track - the MediaTrack to be selected
@@ -15194,6 +15317,46 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SetTakeMarker</slug>
+        <title>SetTakeMarker</title>
+        <functioncall prog_lang="cpp">int index = SetTakeMarker(MediaItem_Take* take, int idx, const char* nameIn, double* srcposInOptional, int* colorInOptional)</functioncall>
+        <functioncall prog_lang="eel">int index = SetTakeMarker(MediaItem_Take take, int idx, "nameIn", optional srcposIn, optional int colorIn)</functioncall>
+        <functioncall prog_lang="lua">integer index = reaper.SetTakeMarker(MediaItem_Take take, integer idx, string nameIn, optional number srcposIn, optional number colorIn)</functioncall>
+        <functioncall prog_lang="python">(Int index, MediaItem_Take take, Int idx, String nameIn, Float srcposInOptional, Int colorInOptional) = RPR_SetTakeMarker(take, idx, nameIn, srcposInOptional, colorInOptional)</functioncall>
+        <requires>
+            Reaper=6.09
+            Lua=5.3
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Inserts or updates a take marker. If idx&lt;0, a take marker will be added, otherwise an existing take marker will be updated. Returns the index of the new or updated take marker (which may change if srcPos is updated).
+			
+			When inserting a new takemarker, parameter srcposIn must be given!
+			
+            See [GetNumTakeMarkers](#GetNumTakeMarkers)), [GetTakeMarker](#GetTakeMarker) and [DeleteTakeMarker](#DeleteTakeMarker).
+        </description>
+        <retvals>
+            integer index - 
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            MediaItem_Take take - the take, whose take-marker you want to delete
+            integer idx - the id of the marker within the take, 0 for the first, 1 for the second, etc.
+			
+			MediaItem_Take take - the take, from which you want to set an existing takemarker or insert a new one
+			integer idx - the index of the takemarker that you want to set; -1, adds a new takemarker
+			string nameIn - the name of the takemarker
+			optional number srcposIn - the position of the takemarker; omit if you want to keep the old position; must be given, when inserting a new takemarker
+			optional number colorIn - the color of the takemarker
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Marker Management
+        </chapter_context>
+        <tags>markermanagement, set, takemarker</tags>
+    </US_DocBloc>
+
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>SetTakeStretchMarker</slug>
         <title>SetTakeStretchMarker</title>
         <functioncall prog_lang="cpp">int SetTakeStretchMarker(MediaItem_Take* take, int idx, double pos, const double* srcposInOptional)</functioncall>
@@ -15483,6 +15646,8 @@
         </requires>
         <description prog_lang="*">
             Set a MediaTrack selected/deselected. Will retain already existing selection, so you can set multiple tracks selected that way.
+			
+			Will not affect Last-Touched-Track.
         </description>
         <parameters>
             track - the MediaTrack, whose selection state you want to set
@@ -19533,10 +19698,10 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            
+            Updates the TCP and optionally the MCP. Helpful, when setting a new trackheight using I_HEIGHTOVERRIDE in [SetMediaTrackInfo_Value](#SetMediaTrackInfo_Value).
         </description>
         <parameters>
-            isMinor - 
+            isMinor - false, updates only TCP; true, updates TCP and MCP
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -23644,31 +23809,36 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Composite</slug>
         <title>JS_Composite(JS)</title>
-        <functioncall prog_lang="cpp">int JS_Composite(void* windowHWND, int srcx, int srcy, int srcw, int srch, void* sysBitmap, int dstx, int dsty, int dstw, int dsth)</functioncall>
-        <functioncall prog_lang="eel">int extension_api("JS_Composite", void* windowHWND, int srcx, int srcy, int srcw, int srch, void* sysBitmap, int dstx, int dsty, int dstw, int dsth)</functioncall>
-        <functioncall prog_lang="lua">integer retval = reaper.JS_Composite(identifier windowHWND, integer srcx, integer srcy, integer srcw, integer srch, identifier sysBitmap, integer dstx, integer dsty, integer dstw, integer dsth)</functioncall>
-        <functioncall prog_lang="python">Int JS_Composite(void windowHWND, Int srcx, Int srcy, Int srcw, Int srch, void sysBitmap, Int dstx, Int dsty, Int dstw, Int dsth)</functioncall>
+        <functioncall prog_lang="cpp">int JS_Composite(void* windowHWND, int srcx, int srcy, int srcw, int srch, void* sysBitmap, int dstx, int dsty, int dstw, int dsth, bool* autoUpdateOptional)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_Composite", void* windowHWND, int srcx, int srcy, int srcw, int srch, void* sysBitmap, int dstx, int dsty, int dstw, int dsth, unsupported autoUpdateOptional)</functioncall>
+        <functioncall prog_lang="lua">integer reaper.JS_Composite(identifier windowHWND, integer srcx, integer srcy, integer srcw, integer srch, identifier sysBitmap, integer dstx, integer dsty, integer dstw, integer dsth, unsupported autoUpdate)</functioncall>
+        <functioncall prog_lang="python">(Int retval, void windowHWND, Int srcx, Int srcy, Int srcw, Int srch, void sysBitmap, Int dstx, Int dsty, Int dstw, Int dsth, Boolean autoUpdateOptional) = JS_Composite(windowHWND, srcx, srcy, srcw, srch, sysBitmap, dstx, dsty, dstw, dsth, autoUpdateOptional)</functioncall>
         <requires>
             Reaper=5.965
-            JS=0.986
+            JS=1.002
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Composites a LICE bitmap with a REAPER window.
+			Composites a LICE bitmap with a REAPER window. Each time that the window is re-drawn, the bitmap will be blitted over the window's client area (with per-pixel alpha blending).
 
-            Each time that the window is re-drawn, the bitmap will be blitted over the window's client area (with per-pixel alpha blending).
-            
-            If dstw or dsth is -1, the bitmap will be stretched to fill the width or height of the window, respectively.
+			\* If dstw or dsth is -1, the bitmap will be stretched to fill the width or height of the window, respectively.
 
-            Notes:
+			\* autoUpdate is an optional parameter that is false by default. If true, JS\_Composite will automatically invalidate and re-draw the part of the window that covers the current position of the bitmap, and if the bitmap is being moved, also the previous position. (If only one or a handful of bitmaps are being moved across the screen, autoUpdate should result in smoother animation on WindowsOS; if numerous bitmaps are spread over the entire window, it may be faster to disable autoUpdate and instead call JS\_Window\_InvalidateRect explicitly once all bitmaps have been moved.)
 
-            \* Re-drawing can also be induced by [JS\_Window\_InvalidateRect](#JS_Window_InvalidateRect).
-            \* This function should not be applied directly to top-level windows, but rather to child windows.
-            \* Some classes of UI elements, particularly buttons, do not take kindly to being composited, and may crash REAPER.
+			\* InvalidateRect should also be called whenever the contents of the bitmap contents have been changed, but not the position, to trigger a window update.
 
-            Returns:
-            1 if successful, otherwise -1 = windowHWND is not window, -3 = Could not obtain the original window process, -4 = sysBitmap is not a LICE bitmap, -5 = sysBitmap is not a system bitmap, -6 = Could not obtain the window HDC.
+			\* On WindowsOS, the key to reducing flickering is to slow down the frequency at which the window is re-drawn. InvalidateRect should only be called when absolutely necessary, preferably not more than 10 times per second. (Also refer to the JS\_Composite\_Delay function.)
 
+			\* On WindowsOS, flickering can further be reduced by keeping the invalidated area as small as possible, covering only the bitmaps that have been edited or moved. However, if numerous bitmaps are spread over the entire window, it may be faster to simply invalidate the entire client area.
+
+			\* This function should not be applied directly to top-level windows, but rather to child windows.
+
+			\* Some classes of UI elements, particularly buttons, do not take kindly to being composited, and may crash REAPER.
+
+			\* On WindowsOS, GDI blitting does not perform alpha multiplication of the source bitmap. For proper color rendering, a separate pre-multiplication step is therefore required, using either LICE\_Blit or LICE\_ProcessRect.
+
+			Returns:
+			1 if successful, otherwise -1 = windowHWND is not a window, -3 = Could not obtain the original window process, -4 = sysBitmap is not a LICE bitmap, -5 = sysBitmap is not a system bitmap, -6 = Could not obtain the window HDC.
         </description>
         <retvals>
            integer retval - 
@@ -23684,6 +23854,47 @@
            integer dsty - 
            integer dstw - 
            integer dsth - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+	
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Composite_Delay</slug>
+        <title>JS_Composite_Delay(JS)</title>
+        <functioncall prog_lang="cpp">int JS_Composite_Delay(void* windowHWND, double minTime, double maxTime, int numBitmapsWhenMax, double* prevMinTimeOut, double* prevMaxTimeOut, int* prevBitmapsOut)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_Composite_Delay", void* windowHWND, minTime, maxTime, int numBitmapsWhenMax, &prevMinTime, &prevMaxTime, int &prevBitmaps)</functioncall>
+        <functioncall prog_lang="lua">integer retval, number prevMinTime, number prevMaxTime, number prevBitmaps = reaper.JS_Composite_Delay(identifier windowHWND, number minTime, number maxTime, integer numBitmapsWhenMax)</functioncall>
+        <functioncall prog_lang="python">(Int retval, void windowHWND, Float minTime, Float maxTime, Int numBitmapsWhenMax, Float prevMinTimeOut, Float prevMaxTimeOut, Int prevBitmapsOut) = JS_Composite_Delay(windowHWND, minTime, maxTime, numBitmapsWhenMax, prevMinTimeOut, prevMaxTimeOut, prevBitmapsOut)</functioncall>
+        <requires>
+            Reaper=5.965
+            JS=1.002
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+			On WindowsOS, flickering of composited images can be improved considerably by slowing the refresh rate of the window. The optimal refresh rate may depend on the number of composited bitmaps.
+
+			minTime is the minimum refresh delay, in seconds, when only one bitmap is composited onto the window. The delay time will increase linearly with the number of bitmaps, up to a maximum of maxTime when numBitmapsWhenMax is reached.
+
+			Returns:
+			\* retval = 1 if successful, 0 if arguments are invalid (i.e. if maxTime &lt; minTime, or maxBitmaps &lt; 1).
+			\* If delay times have not previously been set for this window, prev values are -1.
+        </description>
+        <retvals>
+           integer retval - 
+		   number prevMinTime - 
+		   number prevMaxTime - 
+		   number prevBitmaps - 
+        </retvals>
+        <parameters>
+           identifier windowHWND - 
+		   number minTime - 
+		   number maxTime - 
+		   integer numBitmapsWhenMax - 
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -23731,17 +23942,21 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Composite_Unlink</slug>
         <title>JS_Composite_Unlink(JS)</title>
-        <functioncall prog_lang="cpp">void JS_Composite_Unlink(void* windowHWND, void* bitmap)</functioncall>
-        <functioncall prog_lang="eel">extension_api("JS_Composite_Unlink", void* windowHWND, void* bitmap)</functioncall>
-        <functioncall prog_lang="lua">reaper.JS_Composite_Unlink(identifier windowHWND, identifier bitmap)</functioncall>
-        <functioncall prog_lang="python">JS_Composite_Unlink(void windowHWND, void bitmap)</functioncall>
+        <functioncall prog_lang="cpp">void JS_Composite_Unlink(void* windowHWND, void* bitmapOptional, bool* autoUpdateOptional)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_Composite_Unlink", void* windowHWND, void* bitmap, unsupported autoUpdateOptional)</functioncall>
+        <functioncall prog_lang="lua">reaper.JS_Composite_Unlink(identifier windowHWND, identifier bitmap, unsupported autoUpdate)</functioncall>
+        <functioncall prog_lang="python">(void windowHWND, void bitmapOptional, Boolean autoUpdateOptional) = JS_Composite_Unlink(windowHWND, bitmapOptional, autoUpdateOptional)</functioncall>
         <requires>
             Reaper=5.965
-            JS=0.980
+            JS=1.002
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            
+            Unlinks the window and bitmap.
+
+			\* autoUpdate is an optional parameter. If unlinking a single bitmap and autoUpdate is true, the function will automatically re-draw the window to remove the blitted image.
+
+			If no bitmap is specified, all bitmaps composited to the window will be unlinked -- even those by other scripts.
         </description>
         <parameters>
            identifier windowHWND - 
@@ -23794,15 +24009,15 @@
         <functioncall prog_lang="python">JS_GDI_Blit(void destHDC, Int dstx, Int dsty, void sourceHDC, Int srcx, Int srxy, Int width, Int height, String modeOptional)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.988
+            JS=1.002
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Blits between two device contexts, which may include LICE "system bitmaps".
 
-            mode: Optional parameter. "SRCCOPY" by default, or specify "ALPHA" to enable per-pixel alpha blending.
+			mode: Optional parameter. "SRCCOPY" by default, or specify "ALPHA" to enable per-pixel alpha blending.
 
-            WARNING: On WindowsOS, GDI\_Blit does not perform alpha multiplication of the source bitmap. For proper color rendering, a seperate pre-multiplication step is therefore required, using either LICE\_Blit or LICE\_ProcessRect.
+			WARNING: On WindowsOS, GDI\_Blit does not perform alpha multiplication of the source bitmap. For proper color rendering, a separate pre-multiplication step is therefore required, using either LICE\_Blit or LICE\_ProcessRect.
         </description>
         <parameters>
            identifier destHDC - 
@@ -24516,13 +24731,15 @@
         <functioncall prog_lang="python">JS_GDI_StretchBlit(void destHDC, Int dstx, Int dsty, Int dstw, Int dsth, void sourceHDC, Int srcx, Int srxy, Int srcw, Int srch, String modeOptional)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.980
+            JS=1.002
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Blits between two device contexts, which may include LICE "system bitmaps".
 
-            modeOptional: "SRCCOPY" by default, or specify "ALPHA" to enable per-pixel alpha blending.
+			modeOptional: "SRCCOPY" by default, or specify "ALPHA" to enable per-pixel alpha blending.
+
+			WARNING: On WindowsOS, GDI\_Blit does not perform alpha multiplication of the source bitmap. For proper color rendering, a separate pre-multiplication step is therefore required, using either LICE\_Blit or LICE\_ProcessRect.
         </description>
         <parameters>
            identifier destHDC - 
@@ -24648,18 +24865,14 @@
         <functioncall prog_lang="python">JS_LICE_Arc(void bitmap, Float cx, Float cy, Float r, Float minAngle, Float maxAngle, Int color, Float alpha, String mode, Boolean antialias)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=1.000
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            LICE modes: "COPY" (default if empty string), "MASK", "ADD", "DODGE", "MUL", "OVERLAY" or "HSVADJ", any of which may be combined with "ALPHA".
-           
-           
-           
-           LICE color format: 0xAARRGGBB (AA is only used in ALPHA mode).
+			LICE modes: "COPY" (default if empty string), "MASK", "ADD", "DODGE", "MUL", "OVERLAY" or "HSVADJ", any of which may be combined with "ALPHA".
 
+			LICE color format: 0xAARRGGBB (AA is only used in ALPHA mode).
         </description>
-
         <parameters>
            identifier bitmap - 
            number cx - 
@@ -24895,13 +25108,12 @@
         <functioncall prog_lang="python">JS_LICE_DestroyBitmap(void bitmap)</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=1.000
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            
+            Deletes the bitmap, and also unlinks bitmap from any composited window.
         </description>
-
         <parameters>
            identifier bitmap - 
         </parameters>
@@ -25388,6 +25600,33 @@
            string mode - 
            boolean antialias - 
         </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_LICE_ListAllBitmaps</slug>
+        <title>JS_LICE_ListAllBitmaps(JS)</title>
+        <functioncall prog_lang="cpp">int JS_LICE_ListAllBitmaps(char* listOutNeedBig, int listOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_LICE_ListAllBitmaps", #list)</functioncall>
+        <functioncall prog_lang="lua">integer retval, string list = reaper.JS_LICE_ListAllBitmaps()</functioncall>
+        <functioncall prog_lang="python">(Int retval, String listOutNeedBig, Int listOutNeedBig_sz) = JS_LICE_ListAllBitmaps(listOutNeedBig, listOutNeedBig_sz)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=1.000
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+
+        </description>
+        <retvals>
+           integer retval - 
+		   string list - 
+        </retvals>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
         <chapter_context>
@@ -27290,6 +27529,43 @@
         <tags></tags>
     </US_DocBloc>
   
+  
+	<US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_EnableMetal</slug>
+        <title>JS_Window_EnableMetal(JS)</title>
+        <functioncall prog_lang="cpp">int retval = JS_Window_EnableMetal(void* windowHWND)</functioncall>
+        <functioncall prog_lang="eel">int retval = extension_api("JS_Window_EnableMetal", void* windowHWND)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.JS_Window_EnableMetal(identifier windowHWND)</functioncall>
+        <functioncall prog_lang="python">Int retval = JS_Window_EnableMetal(void windowHWND)</functioncall>
+        <requires>
+            Reaper=5.95
+            JS=1.000
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            On macOS, returns the Metal graphics setting:
+			2 = Metal enabled and support GetDC()/ReleaseDC() for drawing (more overhead).
+			1 = Metal enabled.
+			0 = N/A (Windows and Linux).
+			-1 = non-metal async layered mode.
+			-2 = non-metal non-async layered mode.
+
+			WARNING: If using mode -1, any BitBlt()/StretchBlt() MUST have the source bitmap persist. If it is resized after Blit it could cause crashes.
+        </description>
+		<retvals>
+			integer retval - 
+		</retvals>
+        <parameters>
+           identifier windowHWND - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+	
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_Find</slug>
         <title>JS_Window_Find(JS)</title>
@@ -27607,17 +27883,15 @@
         <functioncall prog_lang="python">void  JS_Window_GetForeground()</functioncall>
         <requires>
             Reaper=5.95
-            JS=0.951
+            JS=1.002
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Retrieves a HWND to the foreground window (the window with which the user is currently working).
-
+			Retrieves a HWND to the top-level foreground window (the window with which the user is currently working).
         </description>
         <retvals>
            identifier  - 
         </retvals>
-
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
         <chapter_context>
@@ -32464,6 +32738,8 @@
             If char is 0 or omitted, returns a character from the keyboard queue, or 0 if no character is available, or -1 if the graphics window is not open. If char is specified and nonzero, that character's status will be checked, and the function will return greater than 0 if it is pressed.
 
             Common values are standard ASCII, such as 'a', 'A', '=' and '1', but for many keys multi-byte values are used, including 'home', 'up', 'down', 'left', 'rght', 'f1'.. 'f12', 'pgup', 'pgdn', 'ins', and 'del'. 
+			
+			Shortcuts with scope "Global + textfields" will still run the associated action, scope of "Normal" or "Global" will not.
 
             Modified and special keys can also be returned, including:
 
@@ -32601,6 +32877,8 @@
         Initializes the graphics window with title name. Suggested width and height can be specified.
 
         Once the graphics window is open, [gfx_update()](#eel_gfx_update) should be called periodically. 
+		
+		To resizes/reposition the window, call gfx.init again and pass an empty string as name-parameter.
         </description>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -34971,6 +35249,8 @@
             Common values are standard ASCII, such as 'a', 'A', '=' and '1', but for many keys multi-byte values are used, 
             including 'home', 'up', 'down', 'left', 'right', 'f1'.. 'f12', 'pgup', 'pgdn', 'ins', and 'del'. 
             
+			Shortcuts with scope "Global + textfields" will still run the associated action, scope of "Normal" or "Global" will not.
+			
             Modified and special keys can also be returned, including:  
             
             - Ctrl/Cmd+A..Ctrl+Z as 1..26  
@@ -35168,6 +35448,8 @@
             Initializes the graphics window with title name. Suggested width and height can be specified.Once the graphics window is open, gfx.update() should be called periodically. 
             
             Only one graphics-window can be opened per script! Calling gfx.ini after a window has been opened has no effect.
+			
+			To resizes/reposition the window, call gfx.init again and pass an empty string as name-parameter.
         </description>
         <retvals>
             number retval - 1.0, if window is opened
