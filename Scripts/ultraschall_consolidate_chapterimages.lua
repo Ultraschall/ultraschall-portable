@@ -10,6 +10,7 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
 #
@@ -84,34 +85,36 @@ if itemcount > 0 then
   for i = 0, itemcount-1 do -- gehe alle Items durch
 
     media_item = reaper.GetMediaItem(0, i)
-
     take = reaper.GetActiveTake(media_item)
-    src = reaper.GetMediaItemTake_Source(take)
-    filename = reaper.GetMediaSourceFileName(src, "")
-    fileformat, supported_by_reaper, mediatype = ultraschall.CheckForValidFileFormats(filename)
-
-    if mediatype == "Image" then
-
-      item_position = ultraschall.GetItemPosition(media_item)
-
-      -- print (ultraschall.GetMarkerByTime(position, true))
-      -- if ultraschall.GetMarkerByTime(position, true) ~= "" then  -- da liegt auch ein Marker, alles gut
-
-      position = NearMarker(item_position)
-
-      if position then
-
-        section = "chapterimages"
-
-      else  -- Bild liegt ohne Marker rum
-        section = "lostimages"
-        position = item_position
-
+    if take==nil then take=reaper.GetMediaItemTake(media_item, 0) end
+    if take~=nil then
+      src = reaper.GetMediaItemTake_Source(take)
+      filename = reaper.GetMediaSourceFileName(src, "")
+      fileformat, supported_by_reaper, mediatype = ultraschall.CheckForValidFileFormats(filename)
+  
+      if mediatype == "Image" then
+  
+        item_position = ultraschall.GetItemPosition(media_item)
+  
+        -- print (ultraschall.GetMarkerByTime(position, true))
+        -- if ultraschall.GetMarkerByTime(position, true) ~= "" then  -- da liegt auch ein Marker, alles gut
+  
+        position = NearMarker(item_position)
+  
+        if position then
+  
+          section = "chapterimages"
+  
+        else  -- Bild liegt ohne Marker rum
+          section = "lostimages"
+          position = item_position
+  
+        end
+  
+        imagecount = reaper.SetProjExtState(0, section, position, filename)
+        --reaper.SetExtState(section, position, filename, true) -- nur debugging
+  
       end
-
-      imagecount = reaper.SetProjExtState(0, section, position, filename)
-      --reaper.SetExtState(section, position, filename, true) -- nur debugging
-
     end
   end
 end
@@ -180,3 +183,4 @@ os.execute("cp " .. filename .. " " .. dirname)
 
 
 -- image_key = tostring(position) .. "_img"
+
