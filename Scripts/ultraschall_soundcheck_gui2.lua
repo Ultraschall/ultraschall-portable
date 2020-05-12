@@ -290,7 +290,7 @@ show_info = toboolean(ultraschall.GetUSExternalState("ultraschall_gui", "showinf
 
 function buildGuiWarnings()
 
-  if all_ignored and reaper.time_precise() - all_ignored > 2 then
+  if all_ignored and reaper.time_precise() - all_ignored > 3 then
     gfx.quit()
   end
 
@@ -298,12 +298,12 @@ function buildGuiWarnings()
   local event_count = ultraschall.EventManager_CountRegisteredEvents()
   active_warning_count, paused_warning_count, description_lines = count_all_warnings(event_count)
 
-  ignored_position = 143 + (active_warning_count*39) + description_lines*24
+  ignored_position = 140 + (active_warning_count*43) + description_lines*24
   warnings_position = 140
   position = 140
 
 
-  if active_warning_count ~= lastWarningCount or paused_warning_count ~= lastPausedCount then
+  if active_warning_count ~= lastWarningCount or paused_warning_count ~= lastPausedCount or active_warning_count + paused_warning_count == 0 then
     refresh_gui = true
   end
 
@@ -314,6 +314,7 @@ function buildGuiWarnings()
   if refresh_gui == true then
 
     WindowHeight = 120 + (paused_warning_count*60) + (active_warning_count*30) + description_lines*30
+    if active_warning_count + paused_warning_count == 0 then WindowHeight = 300 end
     -- GUI.y = (screen_h - WindowHeight + 210 - warningCount*30) / 2
     GUI.y = (screen_h - WindowHeight) - 150
     -- GUI.y = 300
@@ -321,6 +322,17 @@ function buildGuiWarnings()
     refresh_gui = false
 
   end
+
+  if active_warning_count == 5 and eastereggShown == nil then
+
+    easteregg = "The project just scored five warnings.\nIt can only be attributable to human error.\n\nI can see you're really upset about this. I honestly think you ought to sit down calmly, take a stress pill, and think things over. I've still got the greatest enthusiasm and confidence in your podcast. And I want to help you.\n\nmaybe a round of moonlander would do you good?"
+
+    result = reaper.ShowMessageBox( easteregg, "Soundcheck - Deep Trouble Alert", 0 )  -- Info window
+    eastereggShown = true
+    run_action("_Ultraschall_Moonlander")
+
+  end
+
 
 
   GUI.elms = {}
@@ -349,6 +361,20 @@ function buildGuiWarnings()
   -- button_all = GUI.Btn:new(770, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
   -- table.insert(GUI.elms, button_all)
 
+
+
+  if active_warning_count + paused_warning_count == 0 then
+
+    block0 = GUI.Area:new(310,140,50, 110,15,1,1,"txt_green")
+    table.insert(GUI.elms, block0)
+
+    block2 = GUI.Area:new(380,140,348, 110,15,1,1,"section_bg")
+    table.insert(GUI.elms, block2)
+
+    well_txt = GUI.Pic:new(          422,  178,   0,  0,    0.9,   header_path.."all_is_well.png")
+    table.insert(GUI.elms, well_txt)
+
+  end
 
 
   lastcount = reaper.time_precise()
