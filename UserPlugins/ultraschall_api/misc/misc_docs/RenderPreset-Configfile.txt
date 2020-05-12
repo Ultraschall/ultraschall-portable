@@ -1,6 +1,6 @@
-Render-Presets-docs as of Reaper 6.02
+Render-Presets-docs as of Reaper 6.10
 
-compiled by Meo Mespotine, 20th of January 2019
+compiled by Meo Mespotine, 10th of May 2020
 licensed under creative-commons cc-by-license
 
 The render-presets are stored into reaper-render.ini in the resources-folder of Reaper.
@@ -32,6 +32,7 @@ various_checkboxes2 - more various checkboxes in <RENDERPRESET
                                    &4,  Multichannel tracks to multichannel files
                                    &16, Tracks with only mono media to mono files
                                    &256, Embed stretch markers/transient guides
+								   &1024, Embed take markers
                                    
 offline_online_dropdownlist - keeps the offline/online-dropdownlist in <RENDERPRESET
                                    0, Full-speed Offline
@@ -77,6 +78,7 @@ Some general notes on the Render-Presets:
         Tail ms-inputbox - value will be added somehow to endposition
         Silently increment filenames to avoid overwriting-checkbox
         Add rendered items to new tracks in project-checkbox
+		Do not render files that are likely silent-checkbox
         Save copy of project to outfile.wav.RPP-checkbox
         Delay queued render to allow samples to load-checkbox
         Delay queued render seconds-input box - so you can't store the amount of seconds to wait before a queued render is processed

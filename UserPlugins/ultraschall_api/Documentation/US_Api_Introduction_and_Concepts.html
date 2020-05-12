@@ -55,7 +55,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.00 - "Aphrodite's Child - Four Horsemen" - 11th of February 2020 - Build: 43008</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.1001 - "Radiohead - Spectre" - 11th of May 2020 - Build: 43088</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -168,34 +168,34 @@ Ultraschall API functions
 <p>The Ultraschall-Framework itself is intended to include a set of Lua-functions, that help creating such functionalities. By giving programmers helper functions to get access to each and every corner of Reaper. That way, extending Ultraschall and Reaper is more comfortable to do.</p>
 <p>This API was to be used within Ultraschall only, but quickly evolved into a huge 1000+ function-library, that many 3rd-party programmers and scripters may find use in, with many useful features, like:</p>
 <ul>
-<li><a href="#Rendering_001_Introduction">Rendering</a> - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to <a href="US_Api_Functions.html#RenderProject">RenderProject</a> or <a href="US_Api_Functions.html#RenderProject_Regions">RenderProject_Regions</a></li>
-<li><a href="#EventManager_001_Introduction">EventManager</a> - run actions when certain events happen. You can fully customize that the way you want and need.</li>
-<li><a href="#Navigation_001_Introduction">Navigation, Follow and Arrangeview-Manipulation</a> - get/set cursors, zoom, autoscroll-management, scroll, etc</li>
-<li><a href="#Arrangeview_Snapshots_001_Introduction">ArrangeView-Snapshots</a> - you can save, retrieve snapshots of the arrangeview, including position, zoomstates to quickly jump through parts of your project</li>
-<li><a href="#Trackstate_Management_001_Introduction">Trackstates</a> - you can access and set all(!) track-states available</li>
-<li><a href="#GetSetStates_Project_Track_Item_Env_001_Introduction">Mediaitem-states</a> - you can access and set many mediaitem-states (more will follow)</li>
-<li><a href="#ExtStateManagement_005_TrackItemExtStates">ItemExtStates/TrackExtStates</a> - you can save additional metadata easily for specific tracks and items using ItemExtStates and TrackExtStates</li>
-<li><a href="#FileManagement_001_Introduction">File access</a> - many helperfunctions for reading, writing, copying files. No more hassle writing it yourself! e.g <a href="US_Api_Functions.html#ReadFullFile">ReadFullFile</a>, <a href="US_Api_Functions.html#WriteValueToFile">WriteValueToFile</a>, etc</li>
-<li><a href="#Cough_Mute_Buttons_001_Introduction">Cough-Mute-management</a> - you can write your own cough-buttons, that set the state of the mute-envelope of a track easily</li>
-<li><a href="#MarkersAndRegions_001_Introduction">Marker</a> - extensive set of marker functions, get, set, export, import, enumerate, etc</li>
-<li><a href="#Getting_Manipulating_Items_008_Spectral_Edit">Spectrogram</a> - you can program the spectrogram-view</li>
-<li><a href="#Routing_001_Introduction">Routing</a> - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions, including TrackStateChunks and mass manipulation of routings. Includes mastertrack as well.</li>
-<li><a href="#Getting_Manipulating_Items_002_GetMediaItems">Get MediaItems</a> - you can get all media-items within a time-range AND within the tracks you prefer; a 2D-approach e.g. <a href="US_Api_Functions.html#GetAllMediaItemsBetween">GetAllMediaItemsBetween</a> and <a href="US_Api_Functions.html#GetMediaItemsAtPosition">GetMediaItemsAtPosition</a>, etc</li>
-<li>Gaps between items - you can get the gaps between items in a track, using <a href="US_Api_Functions.html#GetGapsBetweenItems">GetGapsBetweenItems</a></li>
-<li><a href="#Getting_Manipulating_Items_001_Introduction">Edit item(s)</a> - Split, Cut, Copy, Paste, Move, RippleCut, RippleInsert, SectionCut by tracks AND time/start to endposition e.g. <a href="US_Api_Functions.html#RippleCut">RippleCut</a>, <a href="RippleInsert">RippleInsert</a>, <a href="US_Api_Functions.html#SectionCut">SectionCut</a>, <a href="US_Api_Functions.html#SplitMediaItems_Position">SplitMediaItems_Position</a>, <a href="US_Api_Functions.html#MoveMediaItemsBefore_By">MoveMediaItemsBefore_By</a>, <a href="US_Api_Functions.html#MoveMediaItemsSectionTo">MoveMediaItemsSectionTo</a> and many more</li>
-<li><a href="#Getting_Manipulating_Items_009_Miscellaneous">Previewing MediaItems and files</a> - you can preview MediaItems and files without having to start playback of a project</li>
-<li>KB-Ini-Management - manipulate the reaper-kb.ini-file with custom-settings</li>
-<li><a href="#Datatypes_050_CheckingDatatypes">Checking for Datatypes</a> - check all datatypes introduced with Ultraschall-API and all Lua/Reaper-datatypes</li>
-<li><a href="#Helper_Functions_004_UndoManagement">UndoManagement</a> - functions for easily making undoing of functions as well as preventing creating an undo-point</li>
-<li><a href="#Helper_Functions_005_Miscellaneous">Run an Action</a> for Items/Tracks - apply actions to specific items/tracks</li>
-<li><a href="#Project_Management_002_Check_Changed_Projecttabs">Checking for changed projecttabs</a> - check, if projecttabs have been added/removed</li>
-<li><a href="#ExtStateManagement_001_Introduction">ExtState-Management</a> - an extensive set of functions for working with extstates as well as ini-files</li>
-<li><a href="#Helper_Functions_003_Data_Manipulation">Data Manipulation</a> - manipulate a lot of your data, including bitwise-integers, tables, etc</li>
-<li><a href="#Helper_Functions_002_ClipboardManagement">Clipboard-Management</a> - get items from clipboard, put them to clipboard, even multiple ones</li>
-<li><a href="#Error_Messaging_System_001_Introduction">Error Messaging System</a> - all functions create useful error-messages that can be shown using, eg: <a href="US_Api_Functions.html#ShowLastErrorMessage">ShowLastErrorMessage</a>, for easier debugging</li>
-<li><a href="#ChildScripts_001_Introduction">Child-scripts</a> - start scripts numerous times and be able to pass parameters and returnvalues back and forth; adds uniqe scriptidentifier to do that</li>
-<li><a href="#DeferScripts_001_Introduction">Defer-function-alternative</a> - run defer-cycles only every nth cycle/seconds and be able to stop a defer loop from inside and outside of a script instance</li>
-<li>tons of other helper-functions</li>
+<li><p><a href="#Rendering_001_Introduction">Rendering</a> - you can render your projects without having to use the render-dialog. You can customize the rendering-workflow in every way you want. Just create a renderstring and pass it over to <a href="US_Api_Functions.html#RenderProject">RenderProject</a> or <a href="US_Api_Functions.html#RenderProject_Regions">RenderProject_Regions</a></p></li>
+<li><p><a href="#EventManager_001_Introduction">EventManager</a> - run actions when certain events happen. You can fully customize that the way you want and need.</p></li>
+<li><p><a href="#Navigation_001_Introduction">Navigation, Follow and Arrangeview-Manipulation</a> - get/set cursors, zoom, autoscroll-management, scroll, etc</p></li>
+<li><p><a href="#Arrangeview_Snapshots_001_Introduction">ArrangeView-Snapshots</a> - you can save, retrieve snapshots of the arrangeview, including position, zoomstates to quickly jump through parts of your project</p></li>
+<li><p><a href="#Trackstate_Management_001_Introduction">Trackstates</a> - you can access and set all(!) track-states available</p></li>
+<li><p><a href="#GetSetStates_Project_Track_Item_Env_001_Introduction">Mediaitem-states</a> - you can access and set many mediaitem-states (more will follow)</p></li>
+<li><p><a href="#ExtStateManagement_005_TrackItemExtStates">ItemExtStates/TrackExtStates</a> - you can save additional metadata easily for specific tracks and items using ItemExtStates and TrackExtStates</p></li>
+<li><p><a href="#FileManagement_001_Introduction">File access</a> - many helperfunctions for reading, writing, copying files. No more hassle writing it yourself! e.g <a href="US_Api_Functions.html#ReadFullFile">ReadFullFile</a>, <a href="US_Api_Functions.html#WriteValueToFile">WriteValueToFile</a>, etc</p></li>
+<li><p><a href="#Cough_Mute_Buttons_001_Introduction">Cough-Mute-management</a> - you can write your own cough-buttons, that set the state of the mute-envelope of a track easily</p></li>
+<li><p><a href="#MarkersAndRegions_001_Introduction">Marker</a> - extensive set of marker functions, get, set, export, import, enumerate, etc</p></li>
+<li><p><a href="#Getting_Manipulating_Items_008_Spectral_Edit">Spectrogram</a> - you can program the spectrogram-view</p></li>
+<li><p><a href="#Routing_001_Introduction">Routing</a> - you can set Sends/Receives and HWOuts more straightforward than with Reaper's own Routing-functions, including TrackStateChunks and mass manipulation of routings. Includes mastertrack as well.</p></li>
+<li><p><a href="#Getting_Manipulating_Items_002_GetMediaItems">Get MediaItems</a> - you can get all media-items within a time-range AND within the tracks you prefer; a 2D-approach e.g. <a href="US_Api_Functions.html#GetAllMediaItemsBetween">GetAllMediaItemsBetween</a> and <a href="US_Api_Functions.html#GetMediaItemsAtPosition">GetMediaItemsAtPosition</a>, etc</p></li>
+<li><p>Gaps between items - you can get the gaps between items in a track, using <a href="US_Api_Functions.html#GetGapsBetweenItems">GetGapsBetweenItems</a></p></li>
+<li><p><a href="#Getting_Manipulating_Items_001_Introduction">Edit item(s)</a> - Split, Cut, Copy, Paste, Move, RippleCut, RippleInsert, SectionCut by tracks AND time/start to endposition e.g. <a href="US_Api_Functions.html#RippleCut">RippleCut</a>, <a href="RippleInsert">RippleInsert</a>, <a href="US_Api_Functions.html#SectionCut">SectionCut</a>, <a href="US_Api_Functions.html#SplitMediaItems_Position">SplitMediaItems_Position</a>, <a href="US_Api_Functions.html#MoveMediaItemsBefore_By">MoveMediaItemsBefore_By</a>, <a href="US_Api_Functions.html#MoveMediaItemsSectionTo">MoveMediaItemsSectionTo</a> and many more</p></li>
+<li><p><a href="#Getting_Manipulating_Items_009_Miscellaneous">Previewing MediaItems and files</a> - you can preview MediaItems and files without having to start playback of a project</p></li>
+<li><p>KB-Ini-Management - manipulate the reaper-kb.ini-file with custom-settings</p></li>
+<li><p><a href="#Datatypes_050_CheckingDatatypes">Checking for Datatypes</a> - check all datatypes introduced with Ultraschall-API and all Lua/Reaper-datatypes</p></li>
+<li><p><a href="#Helper_Functions_004_UndoManagement">UndoManagement</a> - functions for easily making undoing of functions as well as preventing creating an undo-point</p></li>
+<li><p><a href="#Helper_Functions_005_Miscellaneous">Run an Action</a> for Items/Tracks - apply actions to specific items/tracks</p></li>
+<li><p><a href="#Project_Management_002_Check_Changed_Projecttabs">Checking for changed projecttabs</a> - check, if projecttabs have been added/removed</p></li>
+<li><p><a href="#ExtStateManagement_001_Introduction">ExtState-Management</a> - an extensive set of functions for working with extstates as well as ini-files</p></li>
+<li><p><a href="#Helper_Functions_003_Data_Manipulation">Data Manipulation</a> - manipulate a lot of your data, including bitwise-integers, tables, etc</p></li>
+<li><p><a href="#Helper_Functions_002_ClipboardManagement">Clipboard-Management</a> - get items from clipboard, put them to clipboard, even multiple ones</p></li>
+<li><p><a href="#Error_Messaging_System_001_Introduction">Error Messaging System</a> - all functions create useful error-messages that can be shown using, eg: <a href="US_Api_Functions.html#ShowLastErrorMessage">ShowLastErrorMessage</a>, for easier debugging</p></li>
+<li><p><a href="#ChildScripts_001_Introduction">Child-scripts</a> - start scripts numerous times and be able to pass parameters and returnvalues back and forth; adds uniqe scriptidentifier to do that</p></li>
+<li><p><a href="#DeferScripts_001_Introduction">Defer-function-alternative</a> - run defer-cycles only every nth cycle/seconds and be able to stop a defer loop from inside and outside of a script instance</p></li>
+<li><p>tons of other helper-functions</p></li>
 <li><p>my Reaper-Internals Documentation AND</p></li>
 <li><p>it's documented with this documentation. :D</p></li>
 </ul>
@@ -206,33 +206,33 @@ Ultraschall API functions
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_002_How_to_Use"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_002_How_to_Use">^</a> <u>How to use the Ultraschall API</u></h4></div><p><p>Using the Ultraschall-API is quite easy.</p>
-<p>First make sure, you use the right versions of Reaper and SWS: <a href="https://www.reaper.fm">Reaper 6.20</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 0.986.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
+<p>First make sure, you use the right versions of Reaper and SWS: <a href="https://www.reaper.fm">Reaper 6.20</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 0.999.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
 <p>To install the Ultraschall-API, just follow the following steps:</p>
 <p><strong>Installation via ReaPack</strong>:</p>
 <p>The easiest way is to install the Ultraschall-API using ReaPack. ReaPack is a package-manager for extensions and helper-stuff for Reaper, which allows you to easily install and update content done by the Reaper community. Many Scripts, Themes, JSFX-FX, etc are available through that.</p>
 <ol>
-<li>Install ReaPack. Get it from <a href="https://reapack.com/">https://reapack.com/</a>. There's also a real good <a href="https://reapack.com/user-guide">User guide</a> for it available, that explains, how to do it.<br />
+<li><p>Install ReaPack. Get it from <a href="https://reapack.com/">https://reapack.com/</a>. There's also a real good <a href="https://reapack.com/user-guide">User guide</a> for it available, that explains, how to do it.<br />
 Copy the downloaded dll(Windows), dylib(Mac) or so(Linux)-file into the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -&gt; Show REAPER resource path in explorer/finder...".<br />
-</li>
-<li>(Re-)Start Reaper<br />
-</li>
-<li>Go into the Menu Extensions -&gt; ReaPack -&gt; manage Repositories<br />
-</li>
-<li>Click on Import/export...-button and choose Import repositories<br />
-</li>
+</p></li>
+<li><p>(Re-)Start Reaper<br />
+</p></li>
+<li><p>Go into the Menu Extensions -&gt; ReaPack -&gt; manage Repositories<br />
+</p></li>
+<li><p>Click on Import/export...-button and choose Import repositories<br />
+</p></li>
 <li><p>Paste into the dialog the following link</p>
 <pre><code> https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api_index.xml</code></pre>
-and hit OK.<br />
-</li>
-<li>Doubleclick on the Ultraschall-API-entry. A dialog will pop up with a description of the Ultraschall-API<br />
-</li>
-<li>Hit the Install/update Ultraschall-API-button and select Install all packages in this repository<br />
-</li>
-<li>ReaPack will ask you, if you want to install new packages/updates the next time you synchronize ReaPack.<br />
+<p>and hit OK.<br />
+</p></li>
+<li><p>Doubleclick on the Ultraschall-API-entry. A dialog will pop up with a description of the Ultraschall-API<br />
+</p></li>
+<li><p>Hit the Install/update Ultraschall-API-button and select Install all packages in this repository<br />
+</p></li>
+<li><p>ReaPack will ask you, if you want to install new packages/updates the next time you synchronize ReaPack.<br />
 Hit Yes.<br />
-</li>
-<li>ReaPack installs the Ultraschall-API. If no error appears, it will tell you to restart Reaper, as a new extension has been installed<br />
-</li>
+</p></li>
+<li><p>ReaPack installs the Ultraschall-API. If no error appears, it will tell you to restart Reaper, as a new extension has been installed<br />
+</p></li>
 <li><p>Restart Reaper.</p></li>
 </ol>
 <p>To update the Ultraschall-API in the future, choose in the menu Extensions -&gt; ReaPack -&gt; Synchronize packages. If an update is available, it will install it automatically.<br />
@@ -240,7 +240,7 @@ For more information on ReaPack and it's usage, refer <a href="https://reapack.c
 <p><strong>Manual Installation</strong>:</p>
 <p>If you can't or don't want to install ReaPack, you can also install it manually.</p>
 <ol>
-<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00.zip">ultraschall_api4.00.zip</a>.<br />
+<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.1_001.zip">ultraschall_api4.1_001.zip</a>.<br />
 </li>
 <li>Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -&gt; Show REAPER resource path in explorer/finder...".<br />
 The folder UserPlugins should contain the folder ultraschall_api and the files ultraschall_api_readme.txt and ultraschall_api.lua after this step.<br />
@@ -285,7 +285,7 @@ Voila, you have added the most recent bugfixes.</p>
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_004_Bugreporting_FeatureRequests"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_004_Bugreporting_FeatureRequests">^</a> <u>Introduction: Bugreporting and Feature Requests</u></h4></div><p><p>If you find any bugs or itches and want to report them, I suggest you the following procedure:</p>
 <ol>
-<li>Make notes of: what operating-system you use(Mac, Win, Linux), which Reaper-version, which SWS-Version and which Ultraschall-Framework-Version.</li>
+<li><p>Make notes of: what operating-system you use(Mac, Win, Linux), which Reaper-version, which SWS-Version and which Ultraschall-Framework-Version.</p></li>
 <li><p>Write down, what you wanted to do, what you expected to happen and what has happened instead. Make it as detailed as possible(a code-fragment that triggers a bug, a screenvideo i.e. would be perfect), as more information helps to find out, where the problem lies. It's always better to write too much, than the other way around. Please keep in mind when sending code-fragments: they need to be able to trigger the bug without any of your other code. And please don't send me hundreds of lines of your code, as I can't debug it for you. Just concentrate on the line(s), that trigger the bug successfully.</p></li>
 <li><p>Send these notes either as:<br />
 Issue at the GitHub-Repository of the Ultraschall-API(preferred): <a href="https://github.com/Ultraschall/Ultraschall-Api-for-Reaper.git">https://github.com/Ultraschall/Ultraschall-Api-for-Reaper.git</a><br />
@@ -2130,7 +2130,7 @@ Features that use these background-scripts are:</p>
 <pre><code>    -- Ultraschall-API demoscript by Meo Mespotine 26.02.2019
     -- 
     -- a simple event-manager, that employs background-helper-scripts for listening for statechanges and
-    -- the Defer-functions in Ultraschall-API 4.00 beta 2.72, who allow you to control, how often the deferred code
+    -- the Defer-functions in Ultraschall-API, who allow you to control, how often the deferred code
     -- shall be executed (every x seconds/every x defer-cycles).
 
     dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
@@ -2479,7 +2479,7 @@ There are also many functions, who create you trackstrings, like for locked trac
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Routing_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Routing_001_Introduction">^</a> <u>Routing: Introduction</u></h4></div><p><p>In the past, I had numerous situations, where I wanted to influence my routing-settings programmatically. But every time I started, I stumbled and shuddered. Not because it is impossible with Reaper's own API, but because it's so complicated, irritating, confusing and so far away from the way the routing is managed with the user-interface of Reaper, where you can see easily all individual sends/receives.<br />
-This problem is applies to the whole management of HardwareOuts as well, which is also painful to program.<br />
+This problem applies with the whole management of HardwareOuts as well, which is also painful to program.<br />
 So I desired some functions that keep programming the routing simple and down to it's basic components while retaining the flexibility of the full routing.</p>
 <p>All these functions, HWOut as well as Routing(Send/Receive) are based on a simple concept, as seen in the user-interface of routing-settings:</p>
 <ul>
@@ -4340,4 +4340,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.00  - 108 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 001 - 108 chapters available</td></table><br><hr></div></body></html>

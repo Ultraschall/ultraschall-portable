@@ -144,17 +144,12 @@ function ultraschall.CountCharacterInString(checkstring, character)
   return count, countarray
 end
 
-function ultraschall.malformedpatternhelper(patstring)
-  local A="Tudelu"
-  A:match(patstring)
-end
-
 function ultraschall.IsValidMatchingPattern(patstring)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>IsValidMatchingPattern</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.77
     Lua=5.3
   </requires>
@@ -177,10 +172,10 @@ function ultraschall.IsValidMatchingPattern(patstring)
   <tags>helper functions, pattern, string, check, valid, matching</tags>
 </US_DocBloc>
 ]]
-  local A=pcall(ultraschall.malformedpatternhelper,patstring)
+  local Q="Jam."
+  local A=pcall(string.match, Q, patstring)
   return A
 end
-
 
 
 function ultraschall.CSV2IndividualLinesAsArray(csv_line,separator)
@@ -5673,3 +5668,107 @@ function ultraschall.ConvertFunction_FromHexString(HEX_functionstring)
 end
 
 --B,B2=ultraschall.ConvertFunction_FromHexString(A)
+
+
+function ultraschall.Benchmark_GetStartTime()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Benchmark_GetStartTime</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>number starttime = ultraschall.Benchmark_GetStartTime()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+	This function is for benchmarking parts of your code.
+	It returns the starttime of the last benchmark-start.
+	
+	returns nil, if no benchmark has been made yet.
+	
+	Use [Benchmark_MeasureTime](#Benchmark_MeasureTime) to start/reset a new benchmark-measureing.
+  </description>
+  <retvals>
+    number starttime - the starttime of the currently running benchmark
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>helper functions, get, start, benchmark, time</tags>
+</US_DocBloc>
+--]]
+  return ultraschall.Benchmark_StartTime_Time
+end
+
+function ultraschall.Benchmark_MeasureTime(timeformat, reset)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Benchmark_MeasureTime</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>number elapsed_time, string elapsed_time_string, string measure_evaluation = ultraschall.Benchmark_MeasureTime(optional integer time_mode, optional boolean reset)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+	This function is for benchmarking parts of your code.
+	It returns the passed time, since last time calling this function.
+	
+	Use [Benchmark_GetStartTime](#Benchmark_GetStartTime) to start the benchmark.
+  </description>
+  <retvals>
+    number elapsed_time - the elapsed time in seconds
+	string elapsed_time_string - the elapsed time, formatted by parameter time_mode
+	string measure_evaluation - an evaluation of time, mostly starting with &lt; or &gt; an a number of +
+							  - 0, no time passed
+							  - >, for elapsed times greater than 1, the following + will show the number of integer digits; example: 12.927 -> ">++"
+							  - <, for elapsed times smaller than 1, the following + will show the number of zeros+1 in the fraction, until the first non-zero-digit appears; example: 0.0063 -> "<+++"
+  </retvals>
+  <parameters>
+	optional integer time_mode - the formatting of elapsed_time_string
+							   - 0=time
+							   - 1=measures.beats + time
+							   - 2=measures.beats
+							   - 3=seconds
+							   - 4=samples
+							   - 5=h:m:s:f
+	optional boolean reset - true, resets the starttime(for new measuring); false, keeps current measure-starttime(for continuing measuring)
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>helper functions, get, start, benchmark, time</tags>
+</US_DocBloc>
+--]]
+  local passed_time=reaper.time_precise()
+  if ultraschall.Benchmark_StartTime_Time==nil then ultraschall.Benchmark_StartTime_Time=passed_time end
+  if timeformat~=nil and math.type(timeformat)~="integer" then ultraschall.AddErrorMessage("Benchmark_MeasureTime", "timeformat", "must be an integer", -2) return end
+  if timeformat~=nil and (timeformat<0 or timeformat>7)then ultraschall.AddErrorMessage("Benchmark_MeasureTime", "timeformat", "must be between 0 and 7 or nil", -3) return end
+  passed_time=passed_time-ultraschall.Benchmark_StartTime_Time
+  if reset==true or reset==nil then ultraschall.Benchmark_StartTime_Time=reaper.time_precise() end
+  local valid=""
+  local passed_time_string=""
+  if passed_time==0 then
+  valid="0"
+  elseif passed_time>1 then 
+    valid=tostring(passed_time):match("(.-)%..*")
+    if valid==nil then valid=tostring(passed_time) end
+    valid=">"..string.gsub(valid, "%d", "+")
+  elseif passed_time<0.00016333148232661 then
+    valid="<++++"
+  else
+    valid=tostring(passed_time):match(".-%.(0*)")
+    if valid==nil then valid="0" end
+    valid="<"..string.gsub(valid, "0", "+").."+"
+  end
+  if timeformat==0 or timeformat==nil then
+	passed_time_string=tostring(passed_time) 
+  else
+    passed_time_string=reaper.format_timestr_len(passed_time, "", 0, timeformat-1)
+  end
+  return passed_time, passed_time_string, valid
+end

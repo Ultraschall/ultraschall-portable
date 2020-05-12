@@ -159,3 +159,138 @@ function ultraschall.GetProject_CountAutomationItems(projectfilename_with_path, 
   return count
 end
 
+function ultraschall.AutomationItems_GetAll()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutomationItems_GetAll</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_automationitems, table AutomationItems_Table = ultraschall.AutomationItems_GetAll()</functioncall>
+  <description>
+    Returns all automation items from the current project as a handy table
+    
+    The format of the table is as follows:
+        AutomationItems[automationitem_idx]["Track"] - the track, in which the automation item is located
+        AutomationItems[automationitem_idx]["EnvelopeObject"] - the envelope, in which the automationitem is located
+        AutomationItems[automationitem_idx]["EnvelopeName"] - the name of the envelope
+        AutomationItems[automationitem_idx]["AutomationItem_Index"] - the index of the automation with EnvelopeObject
+        AutomationItems[automationitem_idx]["AutomationItem_PoolID"] - the pool-Id of the automation item
+        AutomationItems[automationitem_idx]["AutomationItem_Position"] - the position of the automation item in seconds
+        AutomationItems[automationitem_idx]["AutomationItem_Length"] - the length of the automation item in seconds
+        AutomationItems[automationitem_idx]["AutomationItem_Startoffset"] - the startoffset of the automation item in seconds
+        AutomationItems[automationitem_idx]["AutomationItem_Playrate"]- the playrate of the automation item
+        AutomationItems[automationitem_idx]["AutomationItem_Baseline"]- the baseline of the automation item, between 0 and 1
+        AutomationItems[automationitem_idx]["AutomationItem_Amplitude"]- the amplitude of the automation item, between -1 and +1
+        AutomationItems[automationitem_idx]["AutomationItem_LoopSource"]- the loopsource-state of the automation item; 0, unlooped; 1, looped
+        AutomationItems[automationitem_idx]["AutomationItem_UISelect"]- the selection-state of the automation item; 0, unselected; nonzero, selected
+        AutomationItems[automationitem_idx]["AutomationItem_Pool_QuarteNoteLength"]- the quarternote-length
+  </description>
+  <retvals>
+    integer number_of_automationitems - the number of automation-items found in the current project
+    table AutomationItems_Table - all found automation-items as a handy table(see description for details)
+  </retvals>
+  <chapter_context>
+    Automation Items
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
+  <tags>automation items, get all</tags>
+</US_DocBloc>
+--]]
+  local Envelopes_Count, Envelopes=ultraschall.GetAllTrackEnvelopes(true)
+  local AutomationItems={}
+  local AutomationItems_Count=0
+  for i=1, Envelopes_Count do
+    for a=0, reaper.CountAutomationItems(Envelopes[i]["EnvelopeObject"])-1 do
+       AutomationItems_Count=AutomationItems_Count+1
+       AutomationItems[AutomationItems_Count]={}
+       AutomationItems[AutomationItems_Count]["Track"]=Envelopes[i]["Track"]
+       AutomationItems[AutomationItems_Count]["EnvelopeName"]=Envelopes[i]["EnvelopeName"]
+       AutomationItems[AutomationItems_Count]["EnvelopeObject"]=Envelopes[i]["EnvelopeObject"]
+       AutomationItems[AutomationItems_Count]["AutomationItem_Index"]=a
+       AutomationItems[AutomationItems_Count]["AutomationItem_PoolID"]=reaper.GetSetAutomationItemInfo(Envelopes[i]["EnvelopeObject"], a, "D_POOL_ID", 0, false)
+       AutomationItems[AutomationItems_Count]["AutomationItem_Position"]=reaper.GetSetAutomationItemInfo(Envelopes[i]["EnvelopeObject"], a, "D_POSITION", 0, false)
+       AutomationItems[AutomationItems_Count]["AutomationItem_Length"]=reaper.GetSetAutomationItemInfo(Envelopes[i]["EnvelopeObject"], a, "D_LENGTH", 0, false)
+       AutomationItems[AutomationItems_Count]["AutomationItem_Startoffset"]=reaper.GetSetAutomationItemInfo(Envelopes[i]["EnvelopeObject"], a, "D_STARTOFFS", 0, false)
+       AutomationItems[AutomationItems_Count]["AutomationItem_Playrate"]=reaper.GetSetAutomationItemInfo(Envelopes[i]["EnvelopeObject"], a, "D_PLAYRATE", 0, false)
+       AutomationItems[AutomationItems_Count]["AutomationItem_Baseline"]=reaper.GetSetAutomationItemInfo(Envelopes[i]["EnvelopeObject"], a, "D_BASELINE", 0, false)
+       AutomationItems[AutomationItems_Count]["AutomationItem_Amplitude"]=reaper.GetSetAutomationItemInfo(Envelopes[i]["EnvelopeObject"], a, "D_AMPLITUDE", 0, false)
+       AutomationItems[AutomationItems_Count]["AutomationItem_LoopSource"]=reaper.GetSetAutomationItemInfo(Envelopes[i]["EnvelopeObject"], a, "D_LOOPSRC", 0, false)
+       AutomationItems[AutomationItems_Count]["AutomationItem_UISelect"]=reaper.GetSetAutomationItemInfo(Envelopes[i]["EnvelopeObject"], a, "D_UISEL", 0, false)
+       AutomationItems[AutomationItems_Count]["AutomationItem_Pool_QuarteNoteLength"]=reaper.GetSetAutomationItemInfo(Envelopes[i]["EnvelopeObject"], a, "D_POOL_QNLEN", 0, false)
+    end
+  end
+  return AutomationItems_Count, AutomationItems
+end
+
+--A,B=ultraschall.AutomationItems_GetAll()
+
+function ultraschall.AutomationItem_Delete(TrackEnvelope, automationitem_idx, preserve_points)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutomationItem_Delete</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AutomationItem_Delete(TrackEnvelope env, integer automationitem_idx, optional boolean preservepoints)</functioncall>
+  <description>
+    Deletes an Automation-Item, optionally preserves the points who are added to the underlying envelope.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, deleting was successful; false, deleting was not successful
+  </retvals>
+  <parameters>
+    TrackEnvelope env - the TrackEnvelope, in which the automation-item to be deleted is located
+    integer automationitem_idx - the automationitem that shall be deleted; 0, for the first one
+    optional boolean preservepoints - true, keepthe envelopepoints and add them to the underlying envelope; nil or false, just delete the AutomationItem
+  </parameters>
+  <chapter_context>
+    Automation Items
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
+  <tags>automation items, delete, preserve points</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("AutomationItem_Delete", "TrackEnvelope", "must be a valid TrackEnvelope", -1) return false end
+  if math.type(automationitem_idx)~="integer" then ultraschall.AddErrorMessage("AutomationItem_Delete", "automationitem_idx", "must be an integer", -2) return false end
+  if automationitem_idx<0 then ultraschall.AddErrorMessage("AutomationItem_Delete", "automationitem_idx", "must be bigger or equal 0", -3) return false end
+  if reaper.CountAutomationItems(TrackEnvelope)-1<automationitem_idx then ultraschall.AddErrorMessage("AutomationItem_Delete", "automationitem_idx", "no such automationitem in TrackEnvelope", -4) return false end
+  local AutomationItems_Count, AutomationItems=ultraschall.GetAllAutomationItems()
+  local found
+  
+  reaper.Undo_BeginBlock()
+  for i=AutomationItems_Count, 1, -1 do
+    if TrackEnvelope~=AutomationItems[i]["EnvelopeObject"] or
+       automationitem_idx~=AutomationItems[i]["AutomationItem_Index"] then
+       reaper.GetSetAutomationItemInfo(AutomationItems[i]["EnvelopeObject"], AutomationItems[i]["AutomationItem_Index"], "D_UISEL", 0, true)
+    else
+      reaper.GetSetAutomationItemInfo(AutomationItems[i]["EnvelopeObject"], AutomationItems[i]["AutomationItem_Index"], "D_UISEL", 1, true)
+      AutomationItems_Count=AutomationItems_Count-1
+      table.remove(AutomationItems,i)
+      found=true
+    end
+  end
+  if preserve_points==true then
+    reaper.Main_OnCommand(42088,0)
+  else
+    reaper.Main_OnCommand(42086,0)
+  end
+  for i=AutomationItems_Count, 1, -1 do
+    reaper.GetSetAutomationItemInfo(AutomationItems[i]["EnvelopeObject"], AutomationItems[i]["AutomationItem_Index"], "D_UISEL", AutomationItems[i]["AutomationItem_UISelect"], true)
+  end
+  
+  reaper.Undo_EndBlock("Deleted Automation Item", -1)
+  -- following line necessary? Don't think so.
+  if found~=true then ultraschall.AddErrorMessage("AutomationItem_Delete", "automationitem_idx", "no such automation-item found", -5) return false end
+  return true
+end
+
+

@@ -24,3 +24,67 @@
 ################################################################################
 ]] 
 
+--dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+function ultraschall.GuiEngine_CreateInstance()
+  local GuiEngine={}
+  GuiEngine["GuiIdentifier"]=""
+  GuiEngine["opened"]=false
+  
+  GuiEngine["Return_Guid"]=function (self, dudel) 
+    return GuiEngine["GuiIdentifier"]
+  end
+  
+  GuiEngine["Destroy"]=function (self) 
+    GuiEngine=nil 
+  end
+  
+  GuiEngine["Open"]=function (self) 
+    if GuiEngine["opened"]==false then
+      local retval
+      retval, GuiEngine["GuiIdentifier"] = ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/ultraschall_gui_engine_server.lua")
+      GuiEngine["opened"]=true
+    end
+  end
+  
+  GuiEngine["Close"]=function (self) 
+    if GuiEngine["GuiIdentifier"]=="" then return false end
+    if GuiEngine["opened"]==true then
+      local State=reaper.GetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message")
+      reaper.SetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message", State.."Close\n",true)
+      GuiEngine["opened"]=false
+    end
+    
+    return true
+  end
+  
+  return GuiEngine
+end
+
+
+--A=ultraschall.GuiEngine_CreateInstance()
+--B=ultraschall.GuiEngine_CreateInstance()
+--X=A:Return_Guid("huch")
+--Y=B:Return_Guid("huch")
+
+--B:Open()
+--B:Close()
+--B:Close()
+--B:Close()
+
+--P=0
+function main()
+  P=P+1
+  if P==100 then
+    B:Close()
+    P=0
+  elseif P==1 then
+    B:Open()
+    B:Open()
+  end
+  L=reaper.GetExtState(B["GuiIdentifier"], "Message")
+  print3(B["GuiIdentifier"])
+  reaper.defer(main)
+end
+
+--main()

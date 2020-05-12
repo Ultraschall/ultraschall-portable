@@ -1505,7 +1505,7 @@ function ultraschall.DeleteTracks_TrackString(trackstring)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>DeleteTracks_TrackString</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.975
     Lua=5.3
   </requires>
@@ -1532,7 +1532,7 @@ function ultraschall.DeleteTracks_TrackString(trackstring)
 ]]
   local valid, count, individual_tracknumbers = ultraschall.IsValidTrackString(trackstring)
   if valid==false then ultraschall.AddErrorMessage("DeleteTracks_TrackString", "trackstring", "must be a valid trackstring", -1) return false end
-  for i=1, count do
+  for i=count, 1, -1 do
     reaper.DeleteTrack(reaper.GetTrack(0,individual_tracknumbers[i]-1))
   end
   return true
@@ -1830,3 +1830,213 @@ function ultraschall.AnyTrackFXBypass(master)
 end
 
 --A=ultraschall.AnyTrackFXBypass(true)
+
+function ultraschall.SetTrack_LastTouched(tracknumber)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetTrack_LastTouched</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetTrack_LastTouched(integer track)</functioncall>
+  <description>
+    Sets a track to be last touched track.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was not successful
+  </retvals>
+  <parameters>
+    integer track - the track, which you want to set as last touched track
+  </parameters>
+  <chapter_context>
+    Track Management
+	Set Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
+  <tags>track management, set, last touched track</tags>
+</US_DocBloc>
+--]]
+  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("SetTrack_LastTouched", "tracknumber", "must be an integer", -1) return false end
+  local track = reaper.GetTrack(0,tracknumber-1)
+  if track==nil then ultraschall.AddErrorMessage("SetTrack_LastTouched", "tracknumber", "no such track", -2) return false end
+  local trackstring = ultraschall.CreateTrackString_SelectedTracks()
+  reaper.SetOnlyTrackSelected(track)
+  local retval = ultraschall.SetTracksSelected(trackstring, true)
+  return true
+end
+
+function ultraschall.GetTrackByTrackName(trackname, case_sensitive, escaped_strict)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrackByTrackName</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_found_tracks, table found_tracks, table found_tracknames = ultraschall.GetTrackByTrackName(string trackname, boolean case_sensitive, integer escaped_strict)</functioncall>
+  <description>
+    returns all tracks with a certain name.
+	
+	You can set case-sensitivity, whether pattern-matchin is possible and whether the name shall be used strictly.
+	For instance, if you want to look for a track named exactly "JaM.-Enlightened" you set case_sensitive=false and escaped_strict=2. That way, tracks names "JaM.*Enlightened" will be ignored.
+	
+	returns -1 in case of an error
+  </description>
+  <retvals>
+    integer number_of_found_tracks - the number of found tracks
+	table found_tracks - the found tracks as table
+	table found_tracknames - the found tracknames
+  </retvals>
+  <parameters>
+    string trackname - the trackname to look for
+	boolean case_sensitive - true, take care of case-sensitivity; false, don't take case-sensitivity into account
+	integer escaped_strict - 0, use trackname as matching-pattern, will find all tracknames following the pattern(Ja.-m -> Jam, Jam123Police, JaABBAm)
+						   - 1, escape trackname off all magic characters, will find all tracknames with the escaped pattern in it (Ja.-m -> Ja.-m, Jam.-boree)
+						   - 2, strict, will only find tracks with the exact trackname-string in their name(Jam -> Jam)
+  </parameters>			
+  <chapter_context>
+    Track Management
+	Set Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
+  <tags>track management, set, last touched track</tags>
+</US_DocBloc>
+--]]
+  if type(trackname)~="string" then ultraschall.AddErrorMessage("GetTrackByTrackName", "trackname", "must be a string", -1) return -1 end
+  if type(case_sensitive)~="boolean" then ultraschall.AddErrorMessage("GetTrackByTrackName", "case_sensitive", "must be a boolean", -2) return -1 end
+  if math.type(escaped_strict)~="integer" then ultraschall.AddErrorMessage("GetTrackByTrackName", "escaped_strict", "must be an integer", -3) return -1 end
+  if escaped_strict<0 or escaped_strict>2 then ultraschall.AddErrorMessage("GetTrackByTrackName", "escaped_strict", "must be between 0 and 2", -4) return -1 end
+  local trackcount=0
+  local Tracks={}
+  local TrackNames={}
+  local retval, buf, found_track, track, trackname2
+  if case_sensitive==false then trackname=trackname:lower() end
+  if escaped_strict>0 then
+    trackname2=ultraschall.EscapeMagicCharacters_String(trackname)
+  else
+    ultraschall.IsValidMatchingPattern(trackname)
+    if ultraschall.IsValidMatchingPattern(trackname)==false then ultraschall.AddErrorMessage("GetTrackByTrackName", "trackname", "must be valid matching pattern", -5) return -1 end
+    trackname2=trackname
+  end
+
+  for i=0, reaper.CountTracks()-1 do
+    track=reaper.GetTrack(0,i)
+    retval, buf = reaper.GetTrackName(track)
+    found_track=buf:match(trackname2)
+
+    if found_track~=nil then
+      if escaped_strict==2 then
+        if buf==trackname then 
+          trackcount=trackcount+1 TrackNames[trackcount]=buf Tracks[trackcount]=track 
+        end
+      else
+        trackcount=trackcount+1 TrackNames[trackcount]=buf Tracks[trackcount]=track
+      end
+    end
+  end
+  return trackcount, Tracks, TrackNames
+end
+
+function ultraschall.CollapseTrackHeight(tracknumber)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CollapseTrackHeight</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.CollapseTrackHeight(integer track)</functioncall>
+  <description>
+    Collapses the height of a track to the minimum height as set by the theme
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, collapsing was successful; false, collapsing was not successful
+  </retvals>
+  <parameters>
+    integer track - the track, which you want to collapse in height
+  </parameters>
+  <chapter_context>
+    Track Management
+	Set Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
+  <tags>track management, set, collapse, trackheight</tags>
+</US_DocBloc>
+--]]
+  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("CollapseTrackHeight", "tracknumber", "must be an integer", -1) return false end
+  if tracknumber<0 then ultraschall.AddErrorMessage("CollapseTrackHeight", "tracknumber", "must be bigger 0 for master track for 1 and higher for regular tracks", -2) return false end
+  local track
+  if tracknumber==0 then track=reaper.GetMasterTrack(0) else
+    track=reaper.GetTrack(0,tracknumber-1)
+  end
+  if track==nil then ultraschall.AddErrorMessage("CollapseTrackHeight", "tracknumber", "no such track", -5) return false end
+  local lockstate = reaper.GetMediaTrackInfo_Value(track, "B_HEIGHTLOCK", 0) -- get current lockstate
+  reaper.SetMediaTrackInfo_Value(track, "B_HEIGHTLOCK", 0) -- unlock track
+  reaper.SetMediaTrackInfo_Value(track, "I_HEIGHTOVERRIDE", 1) -- set new height
+  reaper.TrackList_AdjustWindows(false) -- update TCP
+  reaper.SetMediaTrackInfo_Value(track, "B_HEIGHTLOCK", lockstate) -- restore lockstate of track
+  return true
+end
+
+--A=ultraschall.CollapseTrack(1)
+
+function ultraschall.SetTrack_Trackheight_Force(tracknumber, trackheight)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetTrack_Trackheight_Force</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetTrack_Trackheight_Force(integer track, integer trackheight)</functioncall>
+  <description>
+    Sets the trackheight of a track. Forces trackheight beyond limits set by the theme.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, collapsing was successful; false, collapsing was not successful
+  </retvals>
+  <parameters>
+    integer track - the track, which you want to set the height of
+	integer trackheigt - the trackheight in pixels, 0 and higher
+  </parameters>
+  <chapter_context>
+    Track Management
+	Set Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
+  <tags>track management, set, trackheight, force</tags>
+</US_DocBloc>
+--]]
+  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("SetTrack_Trackheight_Force", "tracknumber", "must be an integer", -1) return false end
+  if tracknumber<0 then ultraschall.AddErrorMessage("SetTrack_Trackheight_Force", "tracknumber", "must be bigger 0 for master track for 1 and higher for regular tracks", -2) return false end
+  if math.type(trackheight)~="integer" then ultraschall.AddErrorMessage("SetTrack_Trackheight_Force", "trackheight", "must be an integer", -3) return false end
+  if trackheight<0 then ultraschall.AddErrorMessage("SetTrack_Trackheight_Force", "trackheight", "must be bigger or equal 0", -4) return false end
+  local track
+  if tracknumber==0 then track=reaper.GetMasterTrack(0) else
+    track=reaper.GetTrack(0,tracknumber-1)
+  end
+  if track==nil then ultraschall.AddErrorMessage("SetTrack_Trackheight_Force", "tracknumber", "no such track", -5) return false end
+  local lockstate = reaper.GetMediaTrackInfo_Value(track, "B_HEIGHTLOCK", 0) -- get current lockstate
+  reaper.SetMediaTrackInfo_Value(track, "B_HEIGHTLOCK", 1) -- unlock track
+  reaper.SetMediaTrackInfo_Value(track, "I_HEIGHTOVERRIDE", trackheight) -- set new height
+  reaper.TrackList_AdjustWindows(false) -- update TCP
+  reaper.SetMediaTrackInfo_Value(track, "B_HEIGHTLOCK", lockstate) -- restore lockstate of track
+  return true
+end
+
+--A=ultraschall.SetTrack_Trackheight_Force(1, 2147483586)

@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -67,7 +67,7 @@ function ultraschall.GetProject_RenderOutputPath(projectfilename_with_path)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_RenderOutputPath</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.965
     Lua=5.3
   </requires>
@@ -89,7 +89,7 @@ function ultraschall.GetProject_RenderOutputPath(projectfilename_with_path)
     Project-Files
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
+  <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>render management, get, project, render, outputpath</tags>
 </US_DocBloc>
@@ -169,7 +169,7 @@ function ultraschall.ResolveRenderPattern(renderpattern)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ResolveRenderPattern</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.965
     Lua=5.3
   </requires>
@@ -192,7 +192,7 @@ function ultraschall.ResolveRenderPattern(renderpattern)
     Rendering Projects
     Assistance functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
+  <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>rendermanagement, resolve, renderpattern, filename</tags>
 </US_DocBloc>
@@ -418,7 +418,7 @@ function ultraschall.SetReaScriptConsole_FontStyle(style)
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>SetReaScriptConsole_FontStyle</slug>
     <requires>
-      Ultraschall=4.00
+      Ultraschall=4.1
       Reaper=5.965
       Lua=5.3
     </requires>
@@ -464,7 +464,7 @@ function ultraschall.SetReaScriptConsole_FontStyle(style)
       User Interface
       Miscellaneous
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
+    <target_document>US_Api_Functions</target_document>
     <source_document>ultraschall_functions_engine.lua</source_document>
     <tags>user interface, reascript, console, font, style</tags>
   </US_DocBloc>
@@ -511,7 +511,7 @@ function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x,
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>get_action_context_MediaItemDiff</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.975
     Lua=5.3
   </requires>
@@ -563,7 +563,7 @@ function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x,
   <chapter_context>
     API-Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
+  <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>helper functions, get, action, context, difftime, item, mediaitem, offset, length, end, start, locked, unlocked</tags>
 </US_DocBloc>
@@ -730,7 +730,7 @@ function ultraschall.GetTrackEnvelope_ClickState()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTrackEnvelope_ClickState</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.981
     SWS=2.10.0.1
     Lua=5.3
@@ -754,7 +754,7 @@ function ultraschall.GetTrackEnvelope_ClickState()
     Envelope Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
+  <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>envelope management, get, clicked, envelope, envelopepoint</tags>
 </US_DocBloc>
@@ -833,7 +833,7 @@ function ultraschall.SetLiceCapExe(PathToLiceCapExecutable)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetLiceCapExe</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.975
     SWS=2.9.7
     Lua=5.3
@@ -856,7 +856,7 @@ function ultraschall.SetLiceCapExe(PathToLiceCapExecutable)
     API-Helper functions
     LiceCap
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
+  <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>helper functions, set, licecap, executable</tags>
 </US_DocBloc>
@@ -875,7 +875,7 @@ function ultraschall.SetupLiceCap(output_filename, title, titlems, x, y, right, 
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetupLiceCap</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.975
     SWS=2.9.7
     Lua=5.3
@@ -917,7 +917,7 @@ function ultraschall.SetupLiceCap(output_filename, title, titlems, x, y, right, 
     API-Helper functions
     LiceCap
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
+  <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>helper functions, licecap, setup</tags>
 </US_DocBloc>
@@ -1054,7 +1054,7 @@ function ultraschall.SaveProjectAs(filename_with_path, fileformat, overwrite, cr
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SaveProjectAs</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.965
     SWS=2.10.0.1
     JS=0.963
@@ -1088,7 +1088,7 @@ function ultraschall.SaveProjectAs(filename_with_path, fileformat, overwrite, cr
     Project-Management
     Helper functions
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
+  <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>project management, save, project as, edl, rpp, vegas, samplitude</tags>
 </US_DocBloc>
@@ -1214,7 +1214,7 @@ function ultraschall.ReadSubtitles_VTT(filename_with_path)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ReadSubtitles_VTT</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.965
     Lua=5.3
   </requires>
@@ -1240,7 +1240,7 @@ function ultraschall.ReadSubtitles_VTT(filename_with_path)
     File Management
     Read Files
   </chapter_context>
-  <target_document>US_Api_Documentation</target_document>
+  <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
   <tags>filemanagement, read, file, webvtt, subtitle, import</tags>
 </US_DocBloc>
@@ -1283,69 +1283,68 @@ end
 
 --A,B,C,D,E=ultraschall.ReadSubtitles_VTT("c:\\test.vtt")
 
--- These seem to work:
-
-function ultraschall.WebInterface_GetInstalledInterfaces()
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>WebInterface_GetInstalledInterfaces</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=6.02
-    Lua=5.3
-  </requires>
-  <functioncall>integer reapers_count_of_webinterface, array reapers_webinterface_filenames_with_path, array reapers_webinterface_titles, integer users_count_of_webinterface, array users_webinterface_filenames_with_path, array users_webinterface_titles = ultraschall.WebInterface_GetInstalledInterfaces()</functioncall>
-  <description>
-    Returns the currently installed web-interface-pages.
+function ultraschall.BatchConvertFiles(filelist, RenderTable, BWFStart, PadStart, PadEnd, FXChain)
+-- Todo:
+-- Check on Mac and Linux
+-- Check all parameters for correct typings
+-- Test FXChain-capability
+  local BatchConvertData=""
+  local ExeFile, filename, path
+  if FXChain==nil then FXChain="" end
+  if BWFStart==true then BWFStart="    USERCSTART 1\n" else BWFStart="" end
+  if PadStart~=nil  then PadStart="    PAD_START "..PadStart.."\n" else PadStart="" end
+  if PadEnd~=nil  then PadEnd="    PAD_END "..PadEnd.."\n" else PadEnd="" end
+  local i=1
+  while filelist[i]~=nil do
+    path, filename = ultraschall.GetPath(filelist[i])
+    BatchConvertData=BatchConvertData..filelist[i].."\t"..filename.."\n"
+    i=i+1
+  end
+  BatchConvertData=BatchConvertData..[[
+<CONFIG
+]]..FXChain..[[
+  <OUTFMT 
+    ]]      ..RenderTable["RenderString"]..[[
     
-    Will return Reaper's default ones(resources-folder/Plugins/reaper_www_root/) as well as your customized ones(resources-folder/reaper_www_root/)
-  </description>
-  <retvals>
-    integer reapers_count_of_webinterface - the number of factory-default webinterfaces, installed by Reaper
-    array reapers_webinterface_filenames_with_path - the filenames with path of the webinterfaces(can be .htm or .html)
-    array reapers_webinterface_titles - the titles of the webinterfaces, as shown in the titlebar of the browser
-    integer users_count_of_webinterface - the number of user-customized webinterfaces
-    array users_webinterface_filenames_with_path - the filenames with path of the webinterfaces(can be .htm or .html)
-    array users_webinterface_titles - the titles of the webinterfaces, as shown in the titlebar of the browser
-  </retvals>
-  <chapter_context>
-    Web Interface
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_WebInterface_Module.lua</source_document>
-  <tags>web interface, get, all, installed, webrc, filename, title</tags>
-</US_DocBloc>
-]]  
-  local filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/Plugins/reaper_www_root")
-  local files_WEBRC_names={}
-  for i=filecount, 1, -1 do
-    if files[i]:sub(-5,-1):match("%.htm")==nil then
-      table.remove(files, i)
-      filecount=filecount-1
-    end
-  end
-  for i=1, filecount do
-    local A=ultraschall.ReadFullFile(files[i])
-    local start, ende=A:lower():match("<title>().-()</title>")
-    files_WEBRC_names[i]=A:sub(start, ende-1)
-  end
+    SRATE ]]..RenderTable["SampleRate"]..[[
+    
+    NCH ]]..RenderTable["Channels"]..[[
+    
+    RSMODE ]]..RenderTable["RenderResample"]..[[
+    
+    DITHER ]]..RenderTable["Dither"]..[[
+    
+]]..BWFStart..[[
+]]..PadStart..[[
+]]..PadEnd..[[
+    OUTPATH ]]..RenderTable["RenderFile"]..[[
+    
+    OUTPATTERN ']]..RenderTable["RenderPattern"]..[['
+  >
+>
+]]
 
-  local filecount2, files2 = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/reaper_www_root")
-  local files_WEBRC_names2={}
-  for i=filecount2, 1, -1 do
-    if files2[i]:sub(-5,-1):match("%.htm")==nil then
-      table.remove(files2, i)
-      filecount2=filecount2-1
-    end
+  ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/filelist.txt", BatchConvertData)
+  if ultraschall.IsOS_Windows()==true then
+    ExeFile=reaper.GetExePath().."\\reaper.exe"
+    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert "..string.gsub(ultraschall.API_TempPath, "/", "\\").."\\filelist.txt", -1)
+    print3(ExeFile.." -batchconvert "..string.gsub(ultraschall.API_TempPath, "/", "\\").."\\filelist.txt")
+
+  elseif ultraschall.IsOS_Mac()==true then
+    print2("Must be checked on Mac!!!!")
+    ExeFile=reaper.GetExePath().."\\reaper"
+    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert "..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt", -1)
+  else
+    print2("Must be checked on Linux!!!!")
+    ExeFile=reaper.GetExePath().."\\reaper"
+    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert "..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt", -1)
   end
-  for i=1, filecount2 do
-    local A=ultraschall.ReadFullFile(files2[i])
-    local start, ende=A:lower():match("<title>().-()</title>")
-    files_WEBRC_names2[i]=A:sub(start, ende-1)
-  end
-  
-  return filecount, files, files_WEBRC_names, filecount2, files2, files_WEBRC_names2
 end
+
+
+-- These seem to work working:
+
+
 
 
 ultraschall.ShowLastErrorMessage()

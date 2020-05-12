@@ -90,7 +90,7 @@ function ultraschall.IsTrackSoundboard(tracknumber)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>IsTrackSoundboard</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.95
     Lua=5.3
   </requires>
@@ -119,6 +119,7 @@ function ultraschall.IsTrackSoundboard(tracknumber)
 --]]
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("IsTrackSoundboard", "tracknumber", "must be an integer", -1) return false end
   if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("IsTrackSoundboard", "tracknumber", "no such track; must be between 1 and "..reaper.CountTracks(0).." for the current project. 0, for master-track.", -2) return false end
+  local track
   if tracknumber==0 then track=reaper.GetMasterTrack(0) else track=reaper.GetTrack(0,tracknumber-1) end
   if track~=nil then
     if reaper.TrackFX_GetByName(track, "Ultraschall: Soundboard", false)~=-1 or
@@ -127,18 +128,6 @@ function ultraschall.IsTrackSoundboard(tracknumber)
     else
       return false
     end
-    --[[
-    local count=0
-    while reaper.TrackFX_GetFXName(track, count, "")~="" do
-      local retval, buf = reaper.TrackFX_GetFXName(track, count, "")
-      if buf=="AUi: Ultraschall: Soundboard" then return true, count end -- Mac-check
-      if buf=="VSTi: Soundboard (Ultraschall)" then return true, count end -- Windows-check
-      if buf=="" then return false end
-      count=count+1
-    end
-  end
-  return false
-  --]]
   end
 end
 
@@ -149,7 +138,7 @@ function ultraschall.IsTrackStudioLink(tracknumber)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>IsTrackStudioLink</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.95
     Lua=5.3
   </requires>
@@ -178,6 +167,7 @@ function ultraschall.IsTrackStudioLink(tracknumber)
 --]]
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("IsTrackStudioLink", "tracknumber", "must be an integer", -1) return false end
   if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("IsTrackStudioLink", "tracknumber", "no such track; must be between 1 and "..reaper.CountTracks(0).." for the current project. 0, for master-track.", -2) return false end
+  local track
   if tracknumber==0 then track=reaper.GetMasterTrack(0) else track=reaper.GetTrack(0,tracknumber-1) end
   if track~=nil then
     if reaper.TrackFX_GetByName(track, "StudioLink (IT-Service Sebastian Reimers)", false)~=-1 or
@@ -186,18 +176,6 @@ function ultraschall.IsTrackStudioLink(tracknumber)
     else
       return false
     end
-  --[[
-    local count=0
-    while reaper.TrackFX_GetFXName(track, count, "")~="" do
-      local retval, buf = reaper.TrackFX_GetFXName(track, count, "")
-      if buf=="AU: ITSR: StudioLink" then return true, count end -- Mac-check
-      if buf=="VST: StudioLink (IT-Service Sebastian Reimers)" then return true, count end -- Windows-check
-      if buf=="" then return false end
-      count=count+1
-    end
-  end
-  return false
-  --]]
   end
 end
 
@@ -209,7 +187,7 @@ function ultraschall.IsTrackStudioLinkOnAir(tracknumber)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>IsTrackStudioLinkOnAir</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.95
     Lua=5.3
   </requires>
@@ -238,6 +216,7 @@ function ultraschall.IsTrackStudioLinkOnAir(tracknumber)
 --]]
   if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("IsTrackStudioLinkOnAir", "tracknumber", "must be an integer", -1) return false end
   if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("IsTrackStudioLinkOnAir", "tracknumber", "no such track; must be between 1 and "..reaper.CountTracks(0).." for the current project. 0, for master-track.", -2) return false end
+  local track
   if tracknumber==0 then track=reaper.GetMasterTrack(0) else track=reaper.GetTrack(0,tracknumber-1) end
   if track~=nil then
     if reaper.TrackFX_GetByName(track, "StudioLinkOnAir (IT-Service Sebastian Reimers)", false)~=-1 or
@@ -246,19 +225,7 @@ function ultraschall.IsTrackStudioLinkOnAir(tracknumber)
     else
       return false
     end
-    
-    --[[
-    local count=0
-    while reaper.TrackFX_GetFXName(track, count, "")~="" do
-      local retval, buf = reaper.TrackFX_GetFXName(track, count, "")
-      if buf=="AU: StudioLinkOnAir (ITSR)" then return true, count end -- Mac-check
-      if buf=="VST: StudioLinkOnAir (IT-Service Sebastian Reimers)" then return true, count end -- Windows-check
-      if buf=="" then return false end
-      count=count+1
-    end
-    --]]
   end
-  --return false
 end
 
 
@@ -1299,7 +1266,7 @@ function ultraschall.Soundboard_PlayFadeIn(playerindex)
       Ultraschall Specific
       Soundboard
     </chapter_context>
-    <target_document>US_Api_Documentation</target_document>
+    <target_document>US_Api_Functions</target_document>
     <source_document>ultraschall_functions_engine.lua</source_document>
     <tags>ultraschall, soundboard, play, fadein</tags>
   </US_DocBloc>

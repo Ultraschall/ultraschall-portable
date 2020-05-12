@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 ################################################################################
 ]]
 
--- Ultraschall State-Inspector 2.2 [Ultraschall-Developer Tools] 24.10.2019
+-- Ultraschall State-Inspector 2.2.1 [Ultraschall-Developer Tools] 28.04.2020
 --
 -- This Inspector monitors toggle-command-states or external-states of your choice.
 -- It's good for checking, if some toggling of states or changing of external-states
@@ -34,13 +34,13 @@
 --
 -- yes, it could be visually more appealing, so: accept the challenge and make it so ;)
 --
--- Meo Mespotine
+-- Meo-Ada Mespotine
 
 Aa,Ab,Ac,Ad,Ae=reaper.get_action_context()
 Path=Ab:match("(.*\\)")
 if Path==nil then Path=Ab:match("(.*/)") end
 
-version="2.2 - 24. 10. 2019"
+version="2.2.1 - 28. 04. 2020"
 
 gfx.init("Ultraschall State Inspector "..version, 560, 520)
 
@@ -1653,7 +1653,7 @@ end
 function SaveStateCollection(state)
   retval, retvals_csv=""
   if state==nil then
-    retval, retvals_csv = reaper.GetUserInputs("Save Your Statelist", 2, "Statelist-Slot-Nr(1-9),Title of Statelist,Filename", "")
+    retval, retvals_csv = reaper.GetUserInputs("Save Your Statelist", 2, "Statelist-Slot-Nr(1-20),Title of Statelist,Filename", "")
   else
     retval, Savefilename = reaper.GetUserInputs("Save-filename, leave empty to select an existing file", 1, "Filename", "")
     if Savefilename==nil or Savefilename=="" then
@@ -1663,7 +1663,7 @@ function SaveStateCollection(state)
   end
   if retval==false then return false end
   if Savefilename==nil then Savefilename=InspectorIni_File end
-  if tonumber(retvals_csv:match("(.-),"))==nil or tonumber(retvals_csv:match("(.-),"))<0 or tonumber(retvals_csv:match("(.-),"))>9 then reaper.MB("No valid slotnumber. Only 1 to 9 allowed!","Oops",0) return end
+  if tonumber(retvals_csv:match("(.-),"))==nil or tonumber(retvals_csv:match("(.-),"))<0 or tonumber(retvals_csv:match("(.-),"))>20 then reaper.MB("No valid slotnumber. Only 1 to 20 allowed!","Oops",0) return end
   slotnumber=tonumber(retvals_csv:match("(.-),"))
   slotname=retvals_csv:match(",(.*)")
   boolean=reaper.BR_Win32_WritePrivateProfileString("collection"..tonumber(retvals_csv:match("(.-),")), "Name", retvals_csv:match(",(.*)"), Savefilename)
@@ -1702,6 +1702,12 @@ function SaveStateCollection(state)
       LL2=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..2, states[i][2], Savefilename)
       LL3=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..3, states[i][3], Savefilename)
       LL4=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..4, states[i][4], Savefilename)
+    elseif states[i][1]=="gmem" then
+      temp= states[i][0]
+      if temp==true then reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..0, "true", Savefilename) end
+      LL=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..1, states[i][1], Savefilename)
+      LL2=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..2, states[i][2], Savefilename)
+      LL3=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..3, states[i][3], Savefilename)
     else
       temp= states[i][0]
       if temp==true then reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..0, "true", Savefilename) end
@@ -1721,10 +1727,21 @@ function ShowSlots(returnit)
   retval, slot7 = reaper.BR_Win32_GetPrivateProfileString("collection7", "Name", "", InspectorIni_File)
   retval, slot8 = reaper.BR_Win32_GetPrivateProfileString("collection8", "Name", "", InspectorIni_File)
   retval, slot9 = reaper.BR_Win32_GetPrivateProfileString("collection9", "Name", "", InspectorIni_File)
+  retval, slot10 = reaper.BR_Win32_GetPrivateProfileString("collection10", "Name", "", InspectorIni_File)
+  retval, slot11 = reaper.BR_Win32_GetPrivateProfileString("collection11", "Name", "", InspectorIni_File)
+  retval, slot12 = reaper.BR_Win32_GetPrivateProfileString("collection12", "Name", "", InspectorIni_File)
+  retval, slot13 = reaper.BR_Win32_GetPrivateProfileString("collection13", "Name", "", InspectorIni_File)
+  retval, slot14 = reaper.BR_Win32_GetPrivateProfileString("collection14", "Name", "", InspectorIni_File)
+  retval, slot15 = reaper.BR_Win32_GetPrivateProfileString("collection15", "Name", "", InspectorIni_File)
+  retval, slot16 = reaper.BR_Win32_GetPrivateProfileString("collection16", "Name", "", InspectorIni_File)
+  retval, slot17 = reaper.BR_Win32_GetPrivateProfileString("collection17", "Name", "", InspectorIni_File)
+  retval, slot18 = reaper.BR_Win32_GetPrivateProfileString("collection18", "Name", "", InspectorIni_File)
+  retval, slot19 = reaper.BR_Win32_GetPrivateProfileString("collection19", "Name", "", InspectorIni_File)
+  retval, slot20 = reaper.BR_Win32_GetPrivateProfileString("collection20", "Name", "", InspectorIni_File)
   if returnit~=true then
     reaper.MB("Your state-list slots:\n\n 1 - "..slot1.."\n 2 - "..slot2.."\n 3 - "..slot3.."\n 4 - "..slot4.."\n 5 - "..slot5.."\n 6 - "..slot6.."\n 7 - "..slot7.."\n 8 - "..slot8.."\n 9 - "..slot9,"State-list Slots",0)
   else
-    return slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9
+    return slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9, slot10, slot11, slot12, slot13, slot14, slot15, slot16, slot17, slot18, slot19, slot20
   end
 end
 
@@ -1756,7 +1773,9 @@ function LoadSlot(slot, quest, filename)
       retval, states[i][3]=reaper.BR_Win32_GetPrivateProfileString("collection"..slot, "entry"..i.."_3", "", filename)
       retval, states[i][4]=reaper.BR_Win32_GetPrivateProfileString("collection"..slot, "entry"..i.."_4", "", filename)
     end
-  
+    if states[i][1]=="gmem" then
+      retval, states[i][3]=reaper.BR_Win32_GetPrivateProfileString("collection"..slot, "entry"..i.."_3", "", filename)
+    end  
   end
   altered=""
   last_entry=0
@@ -1964,8 +1983,8 @@ function main()
         Inverse_Rectangle(2,2,30,15, 1, 1, 1, 0.3, 0.3, 0.3, true)
         gfx.update()
         gfx.x=2 gfx.y=18
-        slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9=ShowSlots(true)
-        FileMenu=gfx.showmenu("New State-list N|>LoadState|Slot 0 - \"Ultraschall\"  0|Slot 1 - \""..slot1.."\"  1|Slot 2 - \""..slot2.."\"  2|Slot 3 - \""..slot3.."\"  3|Slot 4 - \""..slot4.."\"  4|Slot 5 - \""..slot5.."\"  5|Slot 6 - \""..slot6.."\"  6|Slot 7 - \""..slot7.."\"  7|Slot 8 - \""..slot8.."\"  8|Slot 9 - \""..slot9.."\"  9|<|SaveState   S||Load State-List from External File   Ctrl+L|Save State-List into External File   Ctrl+S||Close   Esc")
+        slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9, slot10, slot11, slot12, slot13, slot14, slot15, slot16, slot17, slot18, slot19, slot20 = ShowSlots(true)
+        FileMenu=gfx.showmenu("New State-list N|>LoadState|Slot 0 - \"Ultraschall\"  0|Slot 1 - \""..slot1.."\"  1|Slot 2 - \""..slot2.."\"  2|Slot 3 - \""..slot3.."\"  3|Slot 4 - \""..slot4.."\"  4|Slot 5 - \""..slot5.."\"  5|Slot 6 - \""..slot6.."\"  6|Slot 7 - \""..slot7.."\"  7|Slot 8 - \""..slot8.."\"  8|Slot 9 - \""..slot9.."\"  9|Slot10 - \""..slot10.."\"   |Slot11 - \""..slot11.."\"   |Slot12 - \""..slot12.."\"   |Slot13 - \""..slot13.."\"   |Slot14 - \""..slot14.."\"   |Slot15 - \""..slot15.."\"   |Slot16 - \""..slot16.."\"   |Slot17 - \""..slot17.."\"   |Slot18 - \""..slot18.."\"   |Slot19 - \""..slot19.."\"   |Slot20 - \""..slot20.."\"   |<|SaveState   S||Load State-List from External File   Ctrl+L|Save State-List into External File   Ctrl+S||Close   Esc")
     elseif gfx.mouse_x>0 and gfx.mouse_x<30 and gfx.mouse_y>0 and gfx.mouse_y<15 then
         Inverse_Rectangle(2,2,30,15, 1, 1, 1, 0.3, 0.3, 0.3, false)
     end
@@ -1980,10 +1999,21 @@ function main()
     if FileMenu==9 then LoadSlot(7, false) FileMenu=0 end
     if FileMenu==10 then LoadSlot(8, false) FileMenu=0 end
     if FileMenu==11 then LoadSlot(9, false) FileMenu=0 end
-    if FileMenu==12 then SaveStateCollection() FileMenu=0 end
-    if FileMenu==13 then FileMenu=0 retval, filename = reaper.GetUserFileNameForRead("", "Select Inspector-File", "") if filename~=nil then LoadSlot(1, false, filename) end end
-    if FileMenu==14 then SaveStateCollection(1) FileMenu=0 end
-    if FileMenu==15 then gfx.quit() FileMenu=0 end
+    if FileMenu==12 then LoadSlot(10, false) FileMenu=0 end
+    if FileMenu==13 then LoadSlot(11, false) FileMenu=0 end
+    if FileMenu==14 then LoadSlot(12, false) FileMenu=0 end
+    if FileMenu==15 then LoadSlot(13, false) FileMenu=0 end
+    if FileMenu==16 then LoadSlot(14, false) FileMenu=0 end
+    if FileMenu==17 then LoadSlot(15, false) FileMenu=0 end
+    if FileMenu==18 then LoadSlot(16, false) FileMenu=0 end
+    if FileMenu==19 then LoadSlot(17, false) FileMenu=0 end
+    if FileMenu==20 then LoadSlot(18, false) FileMenu=0 end
+    if FileMenu==21 then LoadSlot(19, false) FileMenu=0 end
+    if FileMenu==22 then LoadSlot(20, false) FileMenu=0 end
+    if FileMenu==23 then SaveStateCollection() FileMenu=0 end
+    if FileMenu==24 then FileMenu=0 retval, filename = reaper.GetUserFileNameForRead("", "Select Inspector-File", "") if filename~=nil then LoadSlot(1, false, filename) end end
+    if FileMenu==25 then SaveStateCollection(1) FileMenu=0 end
+    if FileMenu==26 then gfx.quit() FileMenu=0 end
     
     --Add States Menu
     if gfx.mouse_x>33 and gfx.mouse_x<60+33 and gfx.mouse_y>0 and gfx.mouse_y<15 and gfx.mouse_cap==1 then

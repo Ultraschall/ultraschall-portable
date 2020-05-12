@@ -33,7 +33,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 timer=reaper.time_precise()
 Tempfile=ultraschall.Api_Path.."temp/"
 ChangeLogFile="Changelog-Api.txt"
-Pandoc="c:\\Program Files (x86)\\pandoc\\pandoc -f markdown_strict -t html \""..Tempfile..ChangeLogFile.."\" -o \""..ultraschall.Api_Path.."/Documentation/ChangeLog.html\""
+Pandoc="c:\\Program Files\\pandoc\\pandoc -f markdown_strict -t html \""..Tempfile..ChangeLogFile.."\" -o \""..ultraschall.Api_Path.."/Documentation/ChangeLog.html\""
 
   local retval, string4 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Docs-Introduction", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   local retval, string3 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Docs-FuncEngine", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
