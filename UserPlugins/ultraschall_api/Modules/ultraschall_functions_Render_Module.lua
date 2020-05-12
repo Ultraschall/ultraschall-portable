@@ -3362,6 +3362,56 @@ function ultraschall.SetRender_QueueDelay(state, length)
   return retval
 end
 
+function ultraschall.SetRender_SaveCopyOfProject(state)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetRender_SaveCopyOfProject</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    SWS=2.10.0.1
+    JS=0.972
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetRender_SaveCopyOfProject(boolean state)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets the "Save copy of project to outfile.wav.RPP"-checkbox of the Render to File-dialog.
+    
+    Returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, it was unsuccessful
+  </retvals>
+  <parameters>
+    boolean state - true, check the checkbox; false, uncheck the checkbox
+  </parameters>
+  <chapter_context>
+    Configuration Settings
+    Render to File
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render, set, checkbox, render, save copy of project</tags>
+</US_DocBloc>
+]]
+  if type(state)~="boolean" then ultraschall.AddErrorMessage("SetRender_SaveCopyOfProject", "state", "must be a boolean", -1) return false end
+  local SaveCopyOfProject, hwnd, retval
+  if state==true then SaveCopyOfProject=1 else SaveCopyOfProject=0 end
+  hwnd = ultraschall.GetRenderToFileHWND()
+  if hwnd==nil then
+    retval = reaper.BR_Win32_WritePrivateProfileString("REAPER", "autosaveonrender2", SaveCopyOfProject, reaper.get_ini_file())
+    retval = reaper.BR_Win32_WritePrivateProfileString("REAPER", "autosaveonrender", SaveCopyOfProject, reaper.get_ini_file())
+  else
+    reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd,1060), "BM_SETCHECK", SaveCopyOfProject,0,0,0)
+    retval = reaper.BR_Win32_WritePrivateProfileString("REAPER", "autosaveonrender2", SaveCopyOfProject, reaper.get_ini_file())
+    retval = reaper.BR_Win32_WritePrivateProfileString("REAPER", "autosaveonrender", SaveCopyOfProject, reaper.get_ini_file())
+  end
+  return retval
+end
+
+--B=ultraschall.SetRender_SaveCopyOfProject(true)
+
+
 --A=ultraschall.SetRender_SaveCopyOfProject(true)
 --ultraschall.SetRender_QueueDelay(true, 118)
 --reaper.SNM_SetIntConfigVar("renderqdelay", 7)
@@ -4439,14 +4489,15 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     -- change back the entries in RenderTable so the user does not have my temporary changes in it
     RenderTable["RenderPattern"]=RenderPattern
     RenderTable["RenderFile"]=RenderFile
-    
+
     -- let's render:
     reaper.PreventUIRefresh(-1) -- prevent updating the userinterface, as I don't want flickering when rendered files are added and I'll delete them after that
 
     -- let's change creation of copies of the rendered outfile.rpp-setting,
     oldCopyOfProject = ultraschall.GetRender_SaveCopyOfProject()
+
     ultraschall.SetRender_SaveCopyOfProject(RenderTable["SaveCopyOfProject"])
-    
+
     -- temporarily prevent creation of bak-files and save project, as otherwise we couldn't close the tab
     oldSaveOpts=reaper.SNM_GetIntConfigVar("saveopts", -111)
     if oldSaveOpts&1==1 then reaper.SNM_SetIntConfigVar("saveopts", oldSaveOpts-1) end
@@ -4455,7 +4506,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     
     -- reset old Save Copy of Project to outfile-checkbox setting
     ultraschall.SetRender_SaveCopyOfProject(oldCopyOfProject)
-    
+
     -- if no track has been added, the rendering was aborted by userinteraction or error
     if reaper.CountTracks(0)==OldTrackNumber then aborted=true end
     
