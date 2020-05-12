@@ -314,7 +314,7 @@ function buildGuiWarnings()
   if refresh_gui == true then
 
     WindowHeight = 120 + (paused_warning_count*60) + (active_warning_count*30) + description_lines*30
-    if active_warning_count + paused_warning_count == 0 then WindowHeight = 300 end
+    if active_warning_count + paused_warning_count == 0 then WindowHeight = 500 end
     -- GUI.y = (screen_h - WindowHeight + 210 - warningCount*30) / 2
     GUI.y = (screen_h - WindowHeight) - 150
     -- GUI.y = 300
@@ -365,13 +365,13 @@ function buildGuiWarnings()
 
   if active_warning_count + paused_warning_count == 0 then
 
-    block0 = GUI.Area:new(310,140,50, 110,15,1,1,"txt_green")
+    block0 = GUI.Area:new(305,230,50, 110,15,1,1,"txt_green")
     table.insert(GUI.elms, block0)
 
-    block2 = GUI.Area:new(380,140,348, 110,15,1,1,"section_bg")
+    block2 = GUI.Area:new(375,230,348, 110,15,1,1,"section_bg")
     table.insert(GUI.elms, block2)
 
-    well_txt = GUI.Pic:new(          422,  178,   0,  0,    0.9,   header_path.."all_is_well.png")
+    well_txt = GUI.Pic:new(          427,  268,   0,  0,    0.9,   header_path.."all_is_well.png")
     table.insert(GUI.elms, well_txt)
 
   end
