@@ -70,7 +70,7 @@ end
 function build_markertable()
 
   markertable = {}
-  run_action("_Ultraschall_Consolidate_Chapterimages") -- lese alle Images aus und schreibe sie in die ProjExt
+--  run_action("_Ultraschall_Consolidate_Chapterimages") -- lese alle Images aus und schreibe sie in die ProjExt
   number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
   -- print(number_of_normalmarkers)
 
@@ -271,12 +271,19 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 ------------------------------------------------------
 --  Aufbau der nicht interkativen GUI-Elemente wie Logos etc.
 ------------------------------------------------------
-
+  marker_update_counter = ultraschall.GetMarkerUpdateCounter()
+  MarkerUpdateCounter = 0
 function buildGui()
 
-  markertable = build_markertable()
-  tablesort = makeSortedTable(markertable)
-  ultraschall.RenumerateMarkers(0, 1) -- nur die normalen, keine Edit oder planned
+  if marker_update_counter ~= ultraschall.GetMarkerUpdateCounter() or MarkerUpdateCounter==5 then
+    markertable = build_markertable()
+  
+    tablesort = makeSortedTable(markertable)
+    ultraschall.RenumerateMarkers(0, 1) -- nur die normalen, keine Edit oder planned
+    MarkerUpdateCounter=0
+  end
+  marker_update_counter = ultraschall.GetMarkerUpdateCounter()
+  MarkerUpdateCounter=MarkerUpdateCounter+1
 
   GUI.elms = {}
 
