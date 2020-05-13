@@ -30,6 +30,111 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- Open a URL in a browser - OS agnostic
 ------------------------------------------------------
 
+function ConsolidateChapterImages()
+  function CountProjectValues(section)
+  
+    for i = 0, 100 do
+      if not reaper.EnumProjExtState (0, section, i) then
+        return i
+      end
+    end
+  end
+  
+  ------------------------------------------------------
+  -- Befindet sich eine position in Nähe eines Markers?
+  ------------------------------------------------------
+  
+  function NearMarker(position)
+  
+    number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
+    -- print(number_of_normalmarkers)
+  
+    for i = 1, number_of_normalmarkers do
+  
+      local marker_position = normalmarkersarray[i][0]
+  
+      if position - marker_position < 2 and position - marker_position > -2 then
+        return marker_position
+      end
+  
+    end
+    return false
+  
+  end
+  
+  ------------------------------------------------------
+  -- End of functions
+  ------------------------------------------------------
+  
+  
+  
+  
+  retval = ultraschall.DeleteProjExtState_Section("chapterimages") -- erst mal alles löschen
+  retval2 = ultraschall.DeleteProjExtState_Section("lostimages") -- erst mal alles löschen
+  
+  
+  ------------------------------------------------------
+  -- Schreibe die Kapitelbilder, getrennt nach zugeordnet zu Markern und "lost"
+  ------------------------------------------------------
+  
+  itemcount = reaper.CountMediaItems(0)
+  
+  if itemcount > 0 then
+    for i = 0, itemcount-1 do -- gehe alle Items durch
+  
+      media_item = reaper.GetMediaItem(0, i)
+  
+      take = reaper.GetActiveTake(media_item)
+      src = reaper.GetMediaItemTake_Source(take)
+      filename = reaper.GetMediaSourceFileName(src, "")
+      fileformat, supported_by_reaper, mediatype = ultraschall.CheckForValidFileFormats(filename)
+  
+      if mediatype == "Image" then
+  
+        item_position = ultraschall.GetItemPosition(media_item)
+  
+        -- print (ultraschall.GetMarkerByTime(position, true))
+        -- if ultraschall.GetMarkerByTime(position, true) ~= "" then  -- da liegt auch ein Marker, alles gut
+  
+        position = NearMarker(item_position)
+  
+        if position then
+  
+          section = "chapterimages"
+  
+        else  -- Bild liegt ohne Marker rum
+          section = "lostimages"
+          position = item_position
+  
+        end
+  
+        imagecount = reaper.SetProjExtState(0, section, position, filename)
+        --reaper.SetExtState(section, position, filename, true) -- nur debugging
+  
+      end
+    end
+  end
+  
+  ------------------------------------------------------
+  -- Schreibe die URLs der Chapters
+  ------------------------------------------------------
+  
+  number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
+  -- print(number_of_normalmarkers)
+  
+  for i = 1, number_of_normalmarkers do
+  
+    position = tostring(normalmarkersarray[i][0])
+    idx = normalmarkersarray[i][2]
+    old_url = ultraschall.GetMarkerExtState(idx, "url")
+    if old_url and old_url ~= "" then
+      -- print (i .. "-" .. position .. old_url)
+      urlcount = reaper.SetProjExtState(0, "chapterurls", position, old_url)
+    end
+  
+  end
+end
+
 function open_url(url)
 
   local OS=reaper.GetOS()
@@ -71,6 +176,7 @@ function build_markertable()
 
   markertable = {}
 --  run_action("_Ultraschall_Consolidate_Chapterimages") -- lese alle Images aus und schreibe sie in die ProjExt
+  ConsolidateChapterImages()
   number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
   -- print(number_of_normalmarkers)
 
