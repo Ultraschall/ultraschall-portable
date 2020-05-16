@@ -374,6 +374,8 @@ fillrow = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/fillrow.png"
 
 info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
+gfx_path = script_path.."/Ultraschall_Gfx/Soundcheck/"
+header_path = script_path.."/Ultraschall_Gfx/Headers/"
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
 ---- Window settings and user functions ----
@@ -416,6 +418,7 @@ function buildGui()
     ultraschall.RenumerateMarkers(0, 1) -- nur die normalen, keine Edit oder planned
     MarkerUpdateCounter=0
   end
+
   marker_update_counter = ultraschall.GetMarkerUpdateCounter()
   MarkerUpdateCounter=MarkerUpdateCounter+1
 
@@ -427,7 +430,7 @@ function buildGui()
   logo = GUI.Pic:new(          45,  25,   0,  0,    1,   header_path.."soundcheck_logo.png")
   table.insert(GUI.elms, logo)
 
-  headertxt = GUI.Pic:new(          115,  36,   0,  0,    0.8,   header_path.."headertxt_soundcheck.png")
+  headertxt = GUI.Pic:new(          115,  36,   0,  0,    0.8,   header_path.."headertxt_marker.png")
   table.insert(GUI.elms, headertxt)
 
 
@@ -435,23 +438,23 @@ function buildGui()
   -- Settings-Buttons
   -----------------------------------------------------------------
 
-  button_settings = GUI.Btn:new(770, 38, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
-  table.insert(GUI.elms, button_settings)9K
+  -- button_settings = GUI.Btn:new(770, 38, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
+  -- table.insert(GUI.elms, button_settings)
 
 
 -- Kopzeile
 
-  id = GUI.Lbl:new(17, 20, "Nr.", 0)
+  id = GUI.Lbl:new(17, 120, "Nr.", 0)
     table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(50, 20, "Name", 0)
+  id = GUI.Lbl:new(50, 120, "Name", 0)
     table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(400, 20, "Position", 0)
+  id = GUI.Lbl:new(400, 120, "Position", 0)
     table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(469, 20, "Image", 0)
+  id = GUI.Lbl:new(469, 120, "Image", 0)
     table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(524, 20, "URL", 0)
+  id = GUI.Lbl:new(524, 120, "URL", 0)
     table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(720, 20, "Export Check", 0)
+  id = GUI.Lbl:new(720, 120, "Export Check", 0)
     table.insert(GUI.elms, id)
 
 -- Ende Kopfzeile
@@ -476,7 +479,7 @@ function buildGui()
 -- Beginn des Tabellenaufbaus
 
 
-  position = 30
+  position = 130
 
 
   -- for _, key in ipairs(tablesort) do
@@ -484,14 +487,14 @@ function buildGui()
 
   if chapter_offset < #tablesort - chapter_pagelength then
 
-    buttonNext = GUI.Btn:new(401, 200, 80, 20,         " Next", nextPage, "")
+    buttonNext = GUI.Btn:new(701, 38, 80, 20,         " Next", nextPage, "")
     table.insert(GUI.elms, buttonNext)
 
   end
 
   if chapter_offset > chapter_pagelength then
 
-    buttonPrevious = GUI.Btn:new(310, 200, 80, 20,         " Previous", previousPage, "")
+    buttonPrevious = GUI.Btn:new(610, 38, 80, 20,         " Previous", previousPage, "")
     table.insert(GUI.elms, buttonPrevious)
 
   end
