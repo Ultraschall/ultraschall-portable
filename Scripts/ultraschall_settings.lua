@@ -280,7 +280,7 @@ gfx_path=script_path.."/Ultraschall_Gfx/Settings/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
-GUI.w, GUI.h = 800, 665   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 800, 695   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -305,8 +305,8 @@ GUI.elms = {
 --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
   logo             = GUI.Pic:new(          100,  10,   0,  0,    1,   gfx_path.."us_small.png"),
   devices          = GUI.Pic:new(          500,  12,   0,  0,    1,   gfx_path.."us_devices.png"),
-  label_settings   = GUI.Lbl:new(          173, 115,                  "Settings:",          0),
-  label_interfaces = GUI.Lbl:new(          566, 115,                  "Interfaces:",          0),
+  label_settings   = GUI.Lbl:new(          175, 115,                  "Settings",          0),
+  label_interfaces = GUI.Lbl:new(          569, 115,                  "Interfaces",          0),
   label_table      = GUI.Lbl:new(          450, 186,                  "Local Monitoring                                           Delete",          0),
 
   -- checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
@@ -365,7 +365,7 @@ end
 
 -- Soundcheck Settings
 
-position_old = position +195
+position_old = position +225
 
 for i = 1, section_count , 1 do
 
