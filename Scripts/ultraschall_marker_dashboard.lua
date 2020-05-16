@@ -32,102 +32,102 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function ConsolidateChapterImages()
   function CountProjectValues(section)
-  
+
     for i = 0, 100 do
       if not reaper.EnumProjExtState (0, section, i) then
         return i
       end
     end
   end
-  
+
   ------------------------------------------------------
   -- Befindet sich eine position in Nähe eines Markers?
   ------------------------------------------------------
-  
+
   function NearMarker(position)
-  
+
     number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
     -- print(number_of_normalmarkers)
-  
+
     for i = 1, number_of_normalmarkers do
-  
+
       local marker_position = normalmarkersarray[i][0]
-  
+
       if position - marker_position < 2 and position - marker_position > -2 then
         return marker_position
       end
-  
+
     end
     return false
-  
+
   end
-  
+
   ------------------------------------------------------
   -- End of functions
   ------------------------------------------------------
-  
-  
-  
-  
+
+
+
+
   retval = ultraschall.DeleteProjExtState_Section("chapterimages") -- erst mal alles löschen
   retval2 = ultraschall.DeleteProjExtState_Section("lostimages") -- erst mal alles löschen
-  
-  
+
+
   ------------------------------------------------------
   -- Schreibe die Kapitelbilder, getrennt nach zugeordnet zu Markern und "lost"
   ------------------------------------------------------
-  
+
   itemcount = reaper.CountMediaItems(0)
-  
+
   if itemcount > 0 then
     for i = 0, itemcount-1 do -- gehe alle Items durch
-  
+
       media_item = reaper.GetMediaItem(0, i)
-  
+
       take = reaper.GetActiveTake(media_item)
       if take==nil then take=reaper.GetMediaItemTake(media_item, 0) end
       if take~=nil then
-          
+
           src = reaper.GetMediaItemTake_Source(take)
           filename = reaper.GetMediaSourceFileName(src, "")
           fileformat, supported_by_reaper, mediatype = ultraschall.CheckForValidFileFormats(filename)
-      
+
           if mediatype == "Image" then
-      
+
             item_position = ultraschall.GetItemPosition(media_item)
-      
+
             -- print (ultraschall.GetMarkerByTime(position, true))
             -- if ultraschall.GetMarkerByTime(position, true) ~= "" then  -- da liegt auch ein Marker, alles gut
-      
+
             position = NearMarker(item_position)
-      
+
             if position then
-      
+
               section = "chapterimages"
-      
+
             else  -- Bild liegt ohne Marker rum
               section = "lostimages"
               position = item_position
-      
+
             end
-      
+
             imagecount = reaper.SetProjExtState(0, section, position, filename)
             --reaper.SetExtState(section, position, filename, true) -- nur debugging
-      
+
           end
       end
     end
   end
-  
+
   ------------------------------------------------------
   -- Schreibe die URLs der Chapters
   ------------------------------------------------------
-  
+
   number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
   -- print(number_of_normalmarkers)
-  
+
   for i = 1, number_of_normalmarkers do
-  
+
     position = tostring(normalmarkersarray[i][0])
     idx = normalmarkersarray[i][2]
     old_url = ultraschall.GetMarkerExtState(idx, "url")
@@ -135,7 +135,7 @@ function ConsolidateChapterImages()
       -- print (i .. "-" .. position .. old_url)
       urlcount = reaper.SetProjExtState(0, "chapterurls", position, old_url)
     end
-  
+
   end
 end
 
@@ -322,6 +322,23 @@ function editURL(idx)
 end
 
 
+function nextPage()
+
+  chapter_offset = chapter_offset + 5
+  return chapter_offset
+
+end
+
+
+function previousPage()
+
+  chapter_offset = chapter_offset - 5
+  return chapter_offset
+
+end
+
+
+
 ------------------------------------------------------
 --  End of functions
 ------------------------------------------------------
@@ -381,13 +398,20 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 ------------------------------------------------------
 --  Aufbau der nicht interkativen GUI-Elemente wie Logos etc.
 ------------------------------------------------------
-  marker_update_counter = ultraschall.GetMarkerUpdateCounter()
-  MarkerUpdateCounter = 0
+marker_update_counter = ultraschall.GetMarkerUpdateCounter()
+MarkerUpdateCounter = 0
+chapterCount = 0
+chapter_offset = 1
+chapter_pagelength = 5
+
+
 function buildGui()
+
+  print(chapter_offset)
 
   if marker_update_counter ~= ultraschall.GetMarkerUpdateCounter() or MarkerUpdateCounter==5 then
     markertable = build_markertable()
-  
+
     tablesort = makeSortedTable(markertable)
     ultraschall.RenumerateMarkers(0, 1) -- nur die normalen, keine Edit oder planned
     MarkerUpdateCounter=0
@@ -436,9 +460,36 @@ function buildGui()
 
 
   position = 30
-  chapterCount = 0
 
-  for _, key in ipairs(tablesort) do
+
+  -- for _, key in ipairs(tablesort) do
+
+
+  if chapter_offset < #tablesort - chapter_pagelength then
+
+    buttonNext = GUI.Btn:new(401, 200, 80, 20,         " Next", nextPage, "")
+    table.insert(GUI.elms, buttonNext)
+
+  end
+
+  if chapter_offset > chapter_pagelength then
+
+    buttonPrevious = GUI.Btn:new(310, 200, 80, 20,         " Previous", previousPage, "")
+    table.insert(GUI.elms, buttonPrevious)
+
+  end
+
+
+
+  for i = chapter_offset, chapter_offset + chapter_pagelength -1 do
+
+    -- print(key)
+    -- print(tablesort[chapterCount+1])
+
+
+
+
+    key = tablesort[i]
 
     position = position + 30
 
@@ -455,7 +506,7 @@ function buildGui()
     end
 
     -- Nr.
-    chapterCount = chapterCount +1
+    chapterCount = i
     id = GUI.Lbl:new(20, position, tostring(chapterCount), 0)
     table.insert(GUI.elms, id)
 
