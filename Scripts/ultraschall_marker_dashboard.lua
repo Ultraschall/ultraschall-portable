@@ -421,6 +421,23 @@ function buildGui()
 
   GUI.elms = {}
 
+  header = GUI.Area:new(0,0,820,90,0,1,1,"header_bg")
+  table.insert(GUI.elms, header)
+
+  logo = GUI.Pic:new(          45,  25,   0,  0,    1,   header_path.."soundcheck_logo.png")
+  table.insert(GUI.elms, logo)
+
+  headertxt = GUI.Pic:new(          115,  36,   0,  0,    0.8,   header_path.."headertxt_soundcheck.png")
+  table.insert(GUI.elms, headertxt)
+
+
+  -----------------------------------------------------------------
+  -- Settings-Buttons
+  -----------------------------------------------------------------
+
+  button_settings = GUI.Btn:new(770, 38, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
+  table.insert(GUI.elms, button_settings)9K
+
 
 -- Kopzeile
 
