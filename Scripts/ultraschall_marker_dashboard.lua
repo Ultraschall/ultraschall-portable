@@ -324,7 +324,7 @@ end
 
 function nextPage()
 
-  chapter_offset = chapter_offset + 5
+  chapter_offset = chapter_offset + chapter_pagelength
   return chapter_offset
 
 end
@@ -332,7 +332,7 @@ end
 
 function previousPage()
 
-  chapter_offset = chapter_offset - 5
+  chapter_offset = chapter_offset - chapter_pagelength
   return chapter_offset
 
 end
@@ -404,12 +404,12 @@ marker_update_counter = ultraschall.GetMarkerUpdateCounter()
 MarkerUpdateCounter = 0
 chapterCount = 0
 chapter_offset = 1
-chapter_pagelength = 5
+chapter_pagelength = 10
 
 
 function buildGui()
 
-  print(chapter_offset)
+  -- print(chapter_offset)
 
   if marker_update_counter ~= ultraschall.GetMarkerUpdateCounter() or MarkerUpdateCounter==5 then
     markertable = build_markertable()
@@ -422,15 +422,26 @@ function buildGui()
   marker_update_counter = ultraschall.GetMarkerUpdateCounter()
   MarkerUpdateCounter=MarkerUpdateCounter+1
 
+
+  pos_status = 753
+  pos_url = 535
+  pos_image = 472
+  pos_name = 55
+  pos_position = 400
+  pos_headerlogo = 27
+  pos_headertxt = pos_headerlogo + 70
+  pos_number = 29
+
+
   GUI.elms = {}
 
   header = GUI.Area:new(0,0,820,90,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
 
-  logo = GUI.Pic:new(          45,  25,   0,  0,    1,   header_path.."soundcheck_logo.png")
+  logo = GUI.Pic:new(pos_headerlogo,  25,   0,  0,    1,   header_path.."chapters_logo.png")
   table.insert(GUI.elms, logo)
 
-  headertxt = GUI.Pic:new(          115,  36,   0,  0,    0.8,   header_path.."headertxt_marker.png")
+  headertxt = GUI.Pic:new(pos_headertxt,  36,   0,  0,    0.8,   header_path.."headertxt_marker.png")
   table.insert(GUI.elms, headertxt)
 
 
@@ -442,20 +453,23 @@ function buildGui()
   -- table.insert(GUI.elms, button_settings)
 
 
+
+
 -- Kopzeile
 
-  id = GUI.Lbl:new(17, 120, "Nr.", 0)
+  id = GUI.Lbl:new(pos_status, 120, "Status", 0, "white")
     table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(50, 120, "Name", 0)
+  id = GUI.Lbl:new(pos_number, 120, "#", 0, "white")
     table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(400, 120, "Position", 0)
+  id = GUI.Lbl:new(pos_name, 120, "Name", 0, "white")
     table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(469, 120, "Image", 0)
+  id = GUI.Lbl:new(pos_position, 120, "Position", 0, "white")
     table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(524, 120, "URL", 0)
+  id = GUI.Lbl:new(pos_image-10, 120, "Image", 0, "white")
     table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(720, 120, "Export Check", 0)
+  id = GUI.Lbl:new(pos_url-22, 120, "URL", 0, "white")
     table.insert(GUI.elms, id)
+
 
 -- Ende Kopfzeile
 
@@ -487,7 +501,7 @@ function buildGui()
 
   if chapter_offset < #tablesort - chapter_pagelength then
 
-    buttonNext = GUI.Btn:new(701, 38, 80, 20,         " Next", nextPage, "")
+    buttonNext = GUI.Btn:new(714, 38, 80, 20,         " Next", nextPage, "")
     table.insert(GUI.elms, buttonNext)
 
   end
@@ -506,28 +520,36 @@ function buildGui()
     -- print(key)
     -- print(tablesort[chapterCount+1])
 
-
-
+    if tablesort[i] == nil then break end
 
     key = tablesort[i]
 
-    position = position + 30
+    position = position + 36
 
     -- Linie
-    line1 = GUI.Line:new(0, position-8, 820, position-8, "txt_muted")
-    table.insert(GUI.elms, line1)
-    line2 = GUI.Line:new(0, position-7, 820, position-7, "elm_outline")
-    table.insert(GUI.elms, line2)
+    -- line1 = GUI.Line:new(0, position-8, 820, position-8, "txt_muted")
+    -- table.insert(GUI.elms, line1)
+    -- line2 = GUI.Line:new(0, position-7, 820, position-7, "elm_outline")
+    -- table.insert(GUI.elms, line2)
+
+
 
     -- Zeilen-Idikator
     if reaper.GetCursorPosition() == key then
-      indicator = GUI.Pic:new(1, position-7, 0, 0, 1, fillrow, "", ""),
-      table.insert(GUI.elms, indicator)
+      rowcolor = "elm_frame"
+    else
+      rowcolor = "section_bg"
     end
+
+    block = GUI.Area:new(24,position-9,718, 30,5,1,1,rowcolor)
+    table.insert(GUI.elms, block)
+
+
+
 
     -- Nr.
     chapterCount = i
-    id = GUI.Lbl:new(20, position, tostring(chapterCount), 0)
+    id = GUI.Lbl:new(pos_number, position, tostring(chapterCount), 0)
     table.insert(GUI.elms, id)
 
     -- Name
@@ -539,7 +561,7 @@ function buildGui()
         name_displayed = name_displayed .. "..."
       end
 
-      id = GUI.Lbl:new(50, position, name_displayed, 0)
+      id = GUI.Lbl:new(pos_name, position, name_displayed, 0)
       table.insert(GUI.elms, id)
       name_func = editMarker
 
@@ -559,21 +581,21 @@ function buildGui()
       end
 
       if mkrRgnSubOut ~= "" then
-        url_txt = GUI.Lbl:new(550, position, url_displayed, 0)
+        url_txt = GUI.Lbl:new(pos_url, position, url_displayed, 0)
         table.insert(GUI.elms, url_txt)
-        edit_url = GUI.Pic:new(550, position-5, 200, 25, 1, blankimg, editURL, idx)
+        edit_url = GUI.Pic:new(pos_url, position-5, 200, 25, 1, blankimg, editURL, idx)
         table.insert(GUI.elms, edit_url)
-        open_exturl = GUI.Pic:new(522, position-5, 25, 25, 0.5, link, ultraschall.OpenURL, mkrRgnSubOut)
+        open_exturl = GUI.Pic:new(pos_url-28, position-5, 25, 25, 0.5, link, ultraschall.OpenURL, mkrRgnSubOut)
         table.insert(GUI.elms, open_exturl)
 
       else
-        edit_url = GUI.Pic:new(522, position-5, 25, 25, 0.5, add, editURL, idx)
+        edit_url = GUI.Pic:new(pos_url-28, position-5, 25, 25, 0.5, add, editURL, idx)
         table.insert(GUI.elms, edit_url)
       end
 
 
     elseif name and name == "" then
-        id = GUI.Lbl:new(50, position, "[Missing - click to edit]", 0)
+        id = GUI.Lbl:new(pos_name, position, "[Missing - click to edit]", 0)
         table.insert(GUI.elms, id)
         name_func = editMarker
 
@@ -582,7 +604,7 @@ function buildGui()
 
 
     else
-      id = GUI.Lbl:new(50, position, "[Missing - click to edit]", 0)
+      id = GUI.Lbl:new(pos_name, position, "[Missing - click to edit]", 0)
       table.insert(GUI.elms, id)
       name_func = insertMarker
 
@@ -591,16 +613,16 @@ function buildGui()
 
     end
 
-    editlink = GUI.Pic:new(50, position-5, 200, 25, 1, blankimg, name_func, key),
+    editlink = GUI.Pic:new(pos_name-20, position-5, 200, 25, 1, blankimg, name_func, key),
     table.insert(GUI.elms, editlink)
 
 
     -- Position
     chapterposition = string.sub(ultraschall.SecondsToTime(key),1,8)
-    id = GUI.Lbl:new(400, position, chapterposition, 0)
+    id = GUI.Lbl:new(pos_position, position, chapterposition, 0)
     table.insert(GUI.elms, id)
 
-    imagelink = GUI.Pic:new(400, position-5, 60, 25, 1, blankimg, moveArrangeview, key),
+    imagelink = GUI.Pic:new(pos_position, position-5, 60, 25, 1, blankimg, moveArrangeview, key),
     table.insert(GUI.elms, imagelink)
 
     -- Image
@@ -667,20 +689,43 @@ function buildGui()
 
       img_ratio = 0.5
 
-      imagepreview = GUI.Pic:new(479, position-5, 25, 25, img_ratio, placeholderimg, ultraschall.OpenURL, image)
+      imagepreview = GUI.Pic:new(pos_image, position-5, 25, 25, img_ratio, placeholderimg, ultraschall.OpenURL, image)
       table.insert(GUI.elms, imagepreview)
 
     elseif name and name ~= "" then -- noch kein Bild zugeordnet
 
-      add_image = GUI.Pic:new(479, position-5, 25, 25, 0.5, add, addImage, key)
+      add_image = GUI.Pic:new(pos_image, position-5, 25, 25, 0.5, add, addImage, key)
       table.insert(GUI.elms, add_image)
 
     end
 
     -- Export-Check
 
-    check_indicator = GUI.Pic:new(785, position-4, 25, 25, 0.5, check_image, show_menu, check_text),
-    table.insert(GUI.elms, check_indicator)
+--    check_indicator = GUI.Pic:new(60, position-4, 15, 25, 0.5, check_image, show_menu, check_text),
+--    table.insert(GUI.elms, check_indicator)
+
+    if check_image == red then
+      state_color = "txt_red"
+    elseif check_image == yellow then
+      state_color = "txt_yellow"
+    else
+      state_color = "txt_green"
+    end
+
+    light = GUI.Area:new(pos_status,position-4,10,20,3,1,1,state_color)
+    table.insert(GUI.elms, light)
+
+
+    if check_image == red then
+      buttonWarning = GUI.Btn:new(pos_status+20, position-4, 20, 20,         " ?", nextPage, "")
+      table.insert(GUI.elms, buttonWarning)
+    elseif check_image == yellow then
+      buttonWarning = GUI.Btn:new(pos_status+20, position-4, 20, 20,         " ?", nextPage, "")
+      table.insert(GUI.elms, buttonWarning)
+    else
+      buttonWarning = GUI.Btn:new(pos_status+20, position-4, 20, 20,         " ?", nextPage, "")
+      table.insert(GUI.elms, buttonWarning)
+    end
 
   end
 

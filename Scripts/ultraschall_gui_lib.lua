@@ -117,6 +117,7 @@ GUI.colors = {
   txt_grey = {150, 150, 150, 1},    -- Header Background
   header_bg = {60, 60, 60, 1},    -- Header Background
   section_bg = {52, 52, 52, 1},    -- Header Background
+  white = {250, 250, 250, 1},    -- Header Background
 
   shadow = {0, 0, 0, 0.6}        -- Shadow. Don't call this with GUI.color
 
