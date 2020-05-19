@@ -411,6 +411,10 @@ function buildGui()
 
   -- print(chapter_offset)
 
+  -------------------------
+  -- Aufbau der Daten
+  -------------------------
+
   if marker_update_counter ~= ultraschall.GetMarkerUpdateCounter() or MarkerUpdateCounter==5 then
     markertable = build_markertable()
 
@@ -422,6 +426,9 @@ function buildGui()
   marker_update_counter = ultraschall.GetMarkerUpdateCounter()
   MarkerUpdateCounter=MarkerUpdateCounter+1
 
+  -------------------------
+  -- Positionen der Spalten
+  -------------------------
 
   pos_status = 753
   pos_url = 535
@@ -432,8 +439,13 @@ function buildGui()
   pos_headertxt = pos_headerlogo + 70
   pos_number = 29
 
+  -----------------
 
   GUI.elms = {}
+
+  ----------------
+  -- Header
+  ----------------
 
   header = GUI.Area:new(0,0,820,90,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
@@ -445,17 +457,9 @@ function buildGui()
   table.insert(GUI.elms, headertxt)
 
 
-  -----------------------------------------------------------------
-  -- Settings-Buttons
-  -----------------------------------------------------------------
-
-  -- button_settings = GUI.Btn:new(770, 38, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
-  -- table.insert(GUI.elms, button_settings)
-
-
-
-
--- Kopzeile
+  ----------------
+  -- Tabellenköpfe
+  ----------------
 
   id = GUI.Lbl:new(pos_status, 120, "Status", 0, "white")
     table.insert(GUI.elms, id)
@@ -473,8 +477,9 @@ function buildGui()
 
 -- Ende Kopfzeile
 
-
+----------------------------------------------------------------------------------------------------
 -- Zero State - es gibt noch keine Marker, also biete an einen an den Beginn des Projektes zu setzen
+----------------------------------------------------------------------------------------------------
 
   if #tablesort == 0 then
 
@@ -490,51 +495,39 @@ function buildGui()
 
   end
 
--- Beginn des Tabellenaufbaus
-
+  -------------
 
   position = 130
 
-
-  -- for _, key in ipairs(tablesort) do
-
+  -------------------------
+  -- Navigations-Buttons
+  -------------------------
 
   if chapter_offset < #tablesort - chapter_pagelength then
-
     buttonNext = GUI.Btn:new(714, 38, 80, 20,         " Next", nextPage, "")
     table.insert(GUI.elms, buttonNext)
-
   end
 
   if chapter_offset > chapter_pagelength then
-
     buttonPrevious = GUI.Btn:new(610, 38, 80, 20,         " Previous", previousPage, "")
     table.insert(GUI.elms, buttonPrevious)
-
   end
 
-
+  ---------------------------------
+  -- Schleife durch Marker der Page
+  ---------------------------------
 
   for i = chapter_offset, chapter_offset + chapter_pagelength -1 do
 
-    -- print(key)
-    -- print(tablesort[chapterCount+1])
-
-    if tablesort[i] == nil then break end
-
+    if tablesort[i] == nil then break end     -- Marker auf der Page sind zu ende
     key = tablesort[i]
 
     position = position + 36
 
-    -- Linie
-    -- line1 = GUI.Line:new(0, position-8, 820, position-8, "txt_muted")
-    -- table.insert(GUI.elms, line1)
-    -- line2 = GUI.Line:new(0, position-7, 820, position-7, "elm_outline")
-    -- table.insert(GUI.elms, line2)
-
-
-
+    -------------------------
     -- Zeilen-Idikator
+    -------------------------
+
     if reaper.GetCursorPosition() == key then
       rowcolor = "elm_frame"
     else
@@ -544,15 +537,18 @@ function buildGui()
     block = GUI.Area:new(24,position-9,718, 30,5,1,1,rowcolor)
     table.insert(GUI.elms, block)
 
+    -------------------------
+    -- Nummer des Markers
+    -------------------------
 
-
-
-    -- Nr.
     chapterCount = i
     id = GUI.Lbl:new(pos_number, position, tostring(chapterCount), 0)
     table.insert(GUI.elms, id)
 
-    -- Name
+    -------------------------
+    -- Name des Markers
+    -------------------------
+
     name = markertable[tostring(key)]["name"]
     if name and name ~= "" then
 
@@ -566,9 +562,11 @@ function buildGui()
       name_func = editMarker
 
       check_image = green
-      check_text = "Good to go"
+      check_text = "Good to go!"
 
+      ----------------------------------
       -- URL - nur wenn Name gesetzt ist
+      ----------------------------------
 
       idx = markertable[tostring(key)]["idx"]
       mkrRgnSubOut = ultraschall.GetMarkerExtState(idx, "url")
@@ -600,8 +598,7 @@ function buildGui()
         name_func = editMarker
 
         check_image = red
-        check_text = "Chapters without Name will not be exported"
-
+        check_text = "Chapters without Name will not be exported."
 
     else
       id = GUI.Lbl:new(pos_name, position, "[Missing - click to edit]", 0)
@@ -609,23 +606,27 @@ function buildGui()
       name_func = insertMarker
 
       check_image = red
-      check_text = "Chapters without Name will not be exported"
+      check_text = "Chapters without Name will not be exported."
 
     end
 
-    editlink = GUI.Pic:new(pos_name-20, position-5, 200, 25, 1, blankimg, name_func, key),
+    editlink = GUI.Pic:new(pos_name-20, position-5, 350, 25, 1, blankimg, name_func, key),
     table.insert(GUI.elms, editlink)
 
+    -------------------------
+    -- Position des Markers
+    -------------------------
 
-    -- Position
     chapterposition = string.sub(ultraschall.SecondsToTime(key),1,8)
     id = GUI.Lbl:new(pos_position, position, chapterposition, 0)
     table.insert(GUI.elms, id)
 
-    imagelink = GUI.Pic:new(pos_position, position-5, 60, 25, 1, blankimg, moveArrangeview, key),
-    table.insert(GUI.elms, imagelink)
+    poslink = GUI.Pic:new(pos_position, position-5, 60, 25, 1, blankimg, moveArrangeview, key),
+    table.insert(GUI.elms, poslink)
 
+    -------------------------
     -- Image
+    -------------------------
 
     image = markertable[tostring(key)]["adress"]
     if image then
@@ -673,20 +674,6 @@ function buildGui()
 
       end
 
-      --[[
-
-      if img_index then     -- there is an image
-        preview_size = 25      -- preview size in Pixel, always square
-        w, h = gfx.getimgdim(img_index)
-        if w > h then     -- adjust size to the longer border
-          img_ratio = preview_size / w
-        else
-          img_ratio = preview_size / h
-        end
-      end
-
-      ]]
-
       img_ratio = 0.5
 
       imagepreview = GUI.Pic:new(pos_image, position-5, 25, 25, img_ratio, placeholderimg, ultraschall.OpenURL, image)
@@ -699,10 +686,9 @@ function buildGui()
 
     end
 
-    -- Export-Check
-
---    check_indicator = GUI.Pic:new(60, position-4, 15, 25, 0.5, check_image, show_menu, check_text),
---    table.insert(GUI.elms, check_indicator)
+    -------------------------
+    -- Status
+    -------------------------
 
     if check_image == red then
       state_color = "txt_red"
@@ -715,17 +701,9 @@ function buildGui()
     light = GUI.Area:new(pos_status,position-4,10,20,3,1,1,state_color)
     table.insert(GUI.elms, light)
 
+    buttonWarning = GUI.Btn:new(pos_status+20, position-4, 20, 20,         " ?", show_menu, check_text)
+    table.insert(GUI.elms, buttonWarning)
 
-    if check_image == red then
-      buttonWarning = GUI.Btn:new(pos_status+20, position-4, 20, 20,         " ?", nextPage, "")
-      table.insert(GUI.elms, buttonWarning)
-    elseif check_image == yellow then
-      buttonWarning = GUI.Btn:new(pos_status+20, position-4, 20, 20,         " ?", nextPage, "")
-      table.insert(GUI.elms, buttonWarning)
-    else
-      buttonWarning = GUI.Btn:new(pos_status+20, position-4, 20, 20,         " ?", nextPage, "")
-      table.insert(GUI.elms, buttonWarning)
-    end
 
   end
 
