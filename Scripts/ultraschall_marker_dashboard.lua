@@ -322,6 +322,12 @@ function editURL(idx)
 end
 
 
+-- Round a number to the nearest integer
+function round2(num)
+  return num % 1 >= 0.5 and math.ceil(num) or math.floor(num)
+end
+
+
 function nextPage()
 
   chapter_offset = chapter_offset + chapter_pagelength
@@ -352,8 +358,16 @@ end
 markertable = build_markertable()
 tablesort = makeSortedTable(markertable)
 rows = #tablesort
+local _, _, w, h = reaper.my_getViewport(0, 0, 0, 0, 0, 0, 0, 0, 0)
+maxlines = round2(h/60)
+
+-- print(maxlines.."-"..rows)
+
+
 if rows < 4 then rows = 4 end -- Minimalhöhe
-WindowHeight = 60 + (rows * 30) +30
+if rows > maxlines then rows = maxlines end -- Maximalhöhe
+
+WindowHeight = 175 + (rows * 36)
 
 
 check_text = ""
@@ -392,7 +406,6 @@ __, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
 GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 
 
-
   -- body
   ---- GUI Elements ----
 
@@ -404,7 +417,8 @@ marker_update_counter = ultraschall.GetMarkerUpdateCounter()
 MarkerUpdateCounter = 0
 chapterCount = 0
 chapter_offset = 1
-chapter_pagelength = 10
+chapter_pagelength = maxlines
+refresh_gui = false
 
 
 function buildGui()
@@ -421,7 +435,13 @@ function buildGui()
     tablesort = makeSortedTable(markertable)
     ultraschall.RenumerateMarkers(0, 1) -- nur die normalen, keine Edit oder planned
     MarkerUpdateCounter=0
+
   end
+
+  if marker_update_counter ~= ultraschall.GetMarkerUpdateCounter() then -- Höhe des Fensters nur dann aktualisieren, wenn sich Anzahl der Marker verändert hat
+    refresh_gui = true
+  end
+
 
   marker_update_counter = ultraschall.GetMarkerUpdateCounter()
   MarkerUpdateCounter=MarkerUpdateCounter+1
@@ -440,6 +460,24 @@ function buildGui()
   pos_number = 29
 
   -----------------
+
+
+  if refresh_gui == true then
+
+    rows = #tablesort
+
+    -- print(maxlines.."-"..rows)
+    if rows < 4 then rows = 4 end -- Minimalhöhe
+    if rows > maxlines then rows = maxlines end -- Maximalhöhe
+    WindowHeight = 175 + (rows * 36)
+
+    -- GUI.y = (screen_h - GUI.h) / 2
+    -- GUI.y = 300
+    gfx.init("", 820, WindowHeight, 0) -- ändere nur die Höhe, aber nicht die Position (!)
+    refresh_gui = false
+
+  end
+
 
   GUI.elms = {}
 
@@ -503,7 +541,7 @@ function buildGui()
   -- Navigations-Buttons
   -------------------------
 
-  if chapter_offset < #tablesort - chapter_pagelength then
+  if chapter_offset < #tablesort - chapter_pagelength + 1 then
     buttonNext = GUI.Btn:new(714, 38, 80, 20,         " Next", nextPage, "")
     table.insert(GUI.elms, buttonNext)
   end
