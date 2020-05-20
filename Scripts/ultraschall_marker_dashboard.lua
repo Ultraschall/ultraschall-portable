@@ -495,22 +495,7 @@ function buildGui()
   table.insert(GUI.elms, headertxt)
 
 
-  ----------------
-  -- Tabellenköpfe
-  ----------------
 
-  id = GUI.Lbl:new(pos_status, 120, "Status", 0, "white")
-    table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(pos_number, 120, "#", 0, "white")
-    table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(pos_name, 120, "Name", 0, "white")
-    table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(pos_position, 120, "Position", 0, "white")
-    table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(pos_image-10, 120, "Image", 0, "white")
-    table.insert(GUI.elms, id)
-  id = GUI.Lbl:new(pos_url-22, 120, "URL", 0, "white")
-    table.insert(GUI.elms, id)
 
 
 -- Ende Kopfzeile
@@ -521,16 +506,34 @@ function buildGui()
 
   if #tablesort == 0 then
 
-    id = GUI.Lbl:new(400, 100, "There are no chapters yet.", 0)
+    id = GUI.Lbl:new(400, 180, "There are no chapters yet.", 0)
     table.insert(GUI.elms, id)
-    id = GUI.Lbl:new(400, 115, "It is recommendet to have at least one", 0)
+    id = GUI.Lbl:new(400, 195, "It is recommendet to have at least one", 0)
     table.insert(GUI.elms, id)
-    id = GUI.Lbl:new(400, 130, "at the beginning of a podcast!", 0)
-    table.insert(GUI.elms, id)
-
-    id = GUI.Btn:new(230, 100, 150, 45, "Create Chapter", insertMarker, "0")
+    id = GUI.Lbl:new(400, 210, "at the beginning of a podcast!", 0)
     table.insert(GUI.elms, id)
 
+    id = GUI.Btn:new(230, 180, 150, 45, "Create Chapter", insertMarker, "0")
+    table.insert(GUI.elms, id)
+
+  else
+
+  ----------------
+  -- Tabellenköpfe
+  ----------------
+
+    id = GUI.Lbl:new(pos_status, 120, "Status", 0, "white")
+      table.insert(GUI.elms, id)
+    id = GUI.Lbl:new(pos_number, 120, "#", 0, "white")
+      table.insert(GUI.elms, id)
+    id = GUI.Lbl:new(pos_name, 120, "Name", 0, "white")
+      table.insert(GUI.elms, id)
+    id = GUI.Lbl:new(pos_position, 120, "Position", 0, "white")
+      table.insert(GUI.elms, id)
+    id = GUI.Lbl:new(pos_image-10, 120, "Image", 0, "white")
+      table.insert(GUI.elms, id)
+    id = GUI.Lbl:new(pos_url-22, 120, "URL", 0, "white")
+      table.insert(GUI.elms, id)
   end
 
   -------------
