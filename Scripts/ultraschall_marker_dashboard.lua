@@ -429,6 +429,10 @@ function buildGui()
   -- Aufbau der Daten
   -------------------------
 
+
+-- print(dpi_scale)
+
+
   if marker_update_counter ~= ultraschall.GetMarkerUpdateCounter() or MarkerUpdateCounter==5 then
     markertable = build_markertable()
 
@@ -461,6 +465,25 @@ function buildGui()
 
   -----------------
 
+
+  -----------------------------------------------------
+  -- Die Höhe des Dashboard wurde von NutzerIn geändert
+  -----------------------------------------------------
+
+  if gfx.h/dpi_scale ~= WindowHeight and gfx.h > 0 then
+
+    -- print(gfx.h/dpi_scale.."-"..WindowHeight)
+
+    maxlines = round2((gfx.h-(175*dpi_scale))/dpi_scale/36)
+    chapter_pagelength = maxlines
+    refresh_gui = true
+
+  end
+
+
+  -----------------------------------------------------
+  -- Das Dashboard muss in der Höhe abgepasst werden
+  -----------------------------------------------------
 
   if refresh_gui == true then
 
