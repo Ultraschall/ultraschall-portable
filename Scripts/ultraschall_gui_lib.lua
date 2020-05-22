@@ -106,10 +106,12 @@ GUI.colors = {
   elm_bg = {48, 48, 48, 1},      -- Element BG
   sld_bg = {60, 60, 60, 1},    -- Slider Background
   elm_frame = {70, 70, 70, 1},    -- Element Frame
+  button = {80, 80, 80, 1},    -- Element Frame
   elm_highlight = {100, 100, 100, 1},    -- Element Highlight
   elm_fill = {200, 130, 64, 1},    -- Element Fill
   elm_outline = {32, 32, 32, 1},
   txt = {200, 200, 200, 1},      -- Text
+  txt_button = {230, 230, 230, 1},      -- Text
   txt_green = {80, 250, 80, 1},      -- Text green
   txt_red = {250, 40, 40, 1},      -- Text red
   txt_yellow = {250, 250, 40, 1},      -- Text red
@@ -1745,7 +1747,7 @@ function Btn:draw()
   end
 
   -- Draw the button
-  GUI.color("elm_frame")
+  GUI.color("button")
   GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 4 * dpi_scale
   , 1 * dpi_scale
   , 1 * dpi_scale
@@ -1753,7 +1755,7 @@ function Btn:draw()
 
 
   -- Draw the caption
-  GUI.color("txt")
+  GUI.color("txt_button")
   GUI.font(4)
 
   if reaper.GetOS() == "OSX64" then
