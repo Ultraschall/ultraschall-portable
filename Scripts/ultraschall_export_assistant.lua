@@ -182,7 +182,7 @@ function buildGUI()
 	table.insert (GUI.elms, label2)
 	label = GUI.Lbl:new(50,  412+y_offset,"Finalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!", 0)
 	table.insert (GUI.elms, label)
-	finalize = GUI.Btn:new(430, 412+y_offset, 190, 40,      "Finalize MP3!", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES")
+	finalize = GUI.Btn:new(430, 412+y_offset, 190, 40,      "Finalize MP3!", runcommand, "_ULTRASCHALL_CONVERT_OLD_METADATA_AND_INSERT_MEDIA_PROPERTIES")
 	table.insert (GUI.elms, finalize)
 
 end
