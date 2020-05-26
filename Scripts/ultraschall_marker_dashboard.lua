@@ -358,8 +358,18 @@ end
 markertable = build_markertable()
 tablesort = makeSortedTable(markertable)
 rows = #tablesort
-local _, _, w, h = reaper.my_getViewport(0, 0, 0, 0, 0, 0, 0, 0, 0)
-maxlines = round2(h/60)
+
+maxlines = ultraschall.GetUSExternalState("ultraschall_markerdashboard", "maxlines")
+
+if maxlines == "" then
+  local _, _, w, h = reaper.my_getViewport(0, 0, 0, 0, 0, 0, 0, 0, 0)
+  maxlines = round2(h/60)
+  retval = ultraschall.SetUSExternalState("ultraschall_markerdashboard", "maxlines", tostring(maxlines))
+else
+  maxlines = tonumber(maxlines)
+end
+
+
 
 -- print(maxlines.."-"..rows)
 
@@ -423,15 +433,9 @@ refresh_gui = false
 
 function buildGui()
 
-  -- print(chapter_offset)
-
   -------------------------
   -- Aufbau der Daten
   -------------------------
-
-
--- print(dpi_scale)
-
 
   if marker_update_counter ~= ultraschall.GetMarkerUpdateCounter() or MarkerUpdateCounter==5 then
     markertable = build_markertable()
@@ -475,6 +479,7 @@ function buildGui()
     -- print(gfx.h/dpi_scale.."-"..WindowHeight)
 
     maxlines = round2((gfx.h-(175*dpi_scale))/dpi_scale/36)
+    retval = ultraschall.SetUSExternalState("ultraschall_markerdashboard", "maxlines", tostring(maxlines)) -- schreibe die neue Höhe in die ultraschall.ini
     chapter_pagelength = maxlines
     refresh_gui = true
 
@@ -655,6 +660,10 @@ function buildGui()
         table.insert(GUI.elms, edit_url)
       end
 
+      if string.len(name) > 62 then
+        check_image = red
+        check_text = "The title is too long ("..string.len(name)..") - it must be < 63 characters"
+      end
 
     elseif name and name == "" then
         id = GUI.Lbl:new(pos_name, position, "[Missing - click to edit]", 0)
