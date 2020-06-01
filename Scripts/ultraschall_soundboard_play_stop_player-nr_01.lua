@@ -24,12 +24,20 @@
   ################################################################################
   --]]
   
+    
   -- Toggles play and stop of Soundboard-player #1. 
   -- Track with soundboard must be recarmed and have recinput set to midi or virtual midi keyboard.    
   mode=0
   MIDIModifier=144
   Note=0  
   Velocity=1  
+
+  -- read default-midi-input-channel from the ultraschall.ini
+  -- and add, if necessary
+  retval, midi_channel = reaper.BR_Win32_GetPrivateProfileString("Ultraschall_Soundboard", "Default_Midi_Listen_Channel", "0", reaper.GetResourcePath().."/ultraschall.ini")
+  midi_channel=tonumber(midi_channel)-1
+  if midi_channel<0 or midi_channel>15 then midi_channel=0 end
+  MIDIModifier=MIDIModifier+midi_channel
   
   reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
   

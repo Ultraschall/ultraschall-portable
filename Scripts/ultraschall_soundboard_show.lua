@@ -52,9 +52,17 @@ if tr == nil then -- oben wurde kein Soundboard gefunden
   -- print (Retval)
 
   if Retval==6 then -- Yes ausgewählt
-    soundboard_path = reaper.GetResourcePath().."/TrackTemplates/Insert Ultraschall-Soundboard track.RTrackTemplate"
-    reaper.Main_openProject(soundboard_path)    -- erstellt einen Sondboard-Track am Ende des Projektes
-
+    --soundboard_path = reaper.GetResourcePath().."/TrackTemplates/Insert Ultraschall-Soundboard track.RTrackTemplate"
+    --reaper.Main_openProject(soundboard_path)    -- erstellt einen Sondboard-Track am Ende des Projektes
+    midi_channel = tonumber(ultraschall.GetUSExternalState("Ultraschall_Soundboard", "Default_Midi_Listen_Channel"))
+    if midi_channel==-1 then ultraschall.RunCommand("_ULTRASCHALL_SOUNDBOARD_INSERT_MIDI_CHANNEL_NO_MIDI_INPUT") 
+    elseif midi_channel==0 then ultraschall.RunCommand("_ULTRASCHALL_SOUNDBOARD_INSERT_MIDI_CHANNEL_ALL_MIDI_CHANNELS") 
+    else
+      if midi_channel>16 then midi_channel=0 end
+      if midi_channel<10 then zero="0" else zero="" end
+      ultraschall.RunCommand("_ULTRASCHALL_SOUNDBOARD_INSERT_MIDI_CHANNEL_"..zero..midi_channel) 
+      SLEM()
+    end
   end
 end
 

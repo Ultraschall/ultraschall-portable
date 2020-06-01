@@ -27,6 +27,15 @@
 -- stops playing of all sounds currently playing in the SoundBoard
 -- track, which holds Soundboard, must be recarmed and recinput must be set to MIDI or VirtualMidiKeyboard
 
+MIDIModifier=144
+
+  -- read default-midi-input-channel from the ultraschall.ini
+  -- and add, if necessary
+  retval, midi_channel = reaper.BR_Win32_GetPrivateProfileString("Ultraschall_Soundboard", "Default_Midi_Listen_Channel", "0", reaper.GetResourcePath().."/ultraschall.ini")
+  midi_channel=tonumber(midi_channel)-1
+  if midi_channel<0 or midi_channel>15 then midi_channel=0 end
+  MIDIModifier=MIDIModifier+midi_channel
+
 for i=0, 23 do
-  reaper.StuffMIDIMessage(0, 144,72+i,0)
+  reaper.StuffMIDIMessage(0, MIDIModifier,72+i,0)
 end

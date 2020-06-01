@@ -28,8 +28,15 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-VolumeChange    = 15  -- The maximum volume-reduction of the ducking in dB; default-Value is 10dB-toggle
-Number_of_steps = 18  -- The duration of the "fadeout/fadein" of the ducking; 1 second==30 steps; default 0.66 seconds
+
+retval, VolumeChange = reaper.BR_Win32_GetPrivateProfileString("Ultraschall_Soundboard", "VolumeChange", "15", reaper.GetResourcePath().."/ultraschall.ini")
+retval, Number_of_steps = reaper.BR_Win32_GetPrivateProfileString("Ultraschall_Soundboard", "Number_of_steps", "18", reaper.GetResourcePath().."/ultraschall.ini")
+
+VolumeChange=tonumber(VolumeChange)
+Number_of_steps=tonumber(Number_of_steps)
+
+--VolumeChange    = 15  -- The maximum volume-reduction of the ducking in dB; default-Value is 10dB-toggle
+--Number_of_steps = 18  -- The duration of the "fadeout/fadein" of the ducking; 1 second==30 steps; default 0.66 seconds
 
 
 -- this calculates the stepsize of the volume-alteration within each defer-cycle

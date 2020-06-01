@@ -31,5 +31,12 @@
   Note=82  
   Velocity=0  
   
+  -- read default-midi-input-channel from the ultraschall.ini
+  -- and add, if necessary
+  retval, midi_channel = reaper.BR_Win32_GetPrivateProfileString("Ultraschall_Soundboard", "Default_Midi_Listen_Channel", "0", reaper.GetResourcePath().."/ultraschall.ini")
+  midi_channel=tonumber(midi_channel)-1
+  if midi_channel<0 or midi_channel>15 then midi_channel=0 end
+  MIDIModifier=MIDIModifier+midi_channel
+  
   reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
   
