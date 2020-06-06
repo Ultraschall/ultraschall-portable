@@ -575,10 +575,16 @@ function buildGui()
   if chapter_offset < #tablesort - chapter_pagelength + 1 then
     buttonNext = GUI.Btn:new(714, 38, 80, 20,         " Next", nextPage, "")
     table.insert(GUI.elms, buttonNext)
+  else
+    buttonNext = GUI.Btn:new(714, 38, 80, 20,         " Next", "", "")
+    table.insert(GUI.elms, buttonNext)
   end
 
   if chapter_offset > chapter_pagelength then
     buttonPrevious = GUI.Btn:new(610, 38, 80, 20,         " Previous", previousPage, "")
+    table.insert(GUI.elms, buttonPrevious)
+  else
+    buttonPrevious = GUI.Btn:new(610, 38, 80, 20,         " Previous", "", "")
     table.insert(GUI.elms, buttonPrevious)
   end
 

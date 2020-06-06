@@ -112,6 +112,7 @@ GUI.colors = {
   elm_outline = {32, 32, 32, 1},
   txt = {200, 200, 200, 1},      -- Text
   txt_button = {230, 230, 230, 1},      -- Text
+  txt_button_disabled = {130, 130, 130, 1},      -- Text
   txt_green = {80, 250, 80, 1},      -- Text green
   txt_red = {250, 40, 40, 1},      -- Text red
   txt_yellow = {250, 250, 40, 1},      -- Text red
@@ -1698,7 +1699,7 @@ function Btn:new(x, y, w, h, caption, func, ...)
 
   btn.caption = caption
 
-  btn.func = func
+  btn.func = func or ""
   btn.params = {...}
 
   btn.state = 0
@@ -1755,7 +1756,14 @@ function Btn:draw()
 
 
   -- Draw the caption
-  GUI.color("txt_button")
+
+  if self.func == "" then
+    GUI.color("txt_button_disabled")
+  else
+    GUI.color("txt_button")
+  end
+
+
   GUI.font(4)
 
   if reaper.GetOS() == "OSX64" then
@@ -1791,7 +1799,7 @@ function Btn:onmouseup()
   self.state = 0
 
   -- If the button was released on the button, run func
-  if IsInside(self, GUI.mouse.x, GUI.mouse.y) then
+  if IsInside(self, GUI.mouse.x, GUI.mouse.y) and self.func~= "" then
 
     self.func(table.unpack(self.params))
 
