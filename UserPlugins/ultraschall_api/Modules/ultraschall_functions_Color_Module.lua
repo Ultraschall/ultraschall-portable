@@ -64,7 +64,7 @@ function ultraschall.ConvertColor(r,g,b)
   <functioncall>integer colorvalue, boolean retval = ultraschall.ConvertColor(integer r, integer g, integer b)</functioncall>
   <description>
     converts r, g, b-values to native-system-color. Works like reaper's ColorToNative, but doesn't need |0x1000000 added.
-    
+
     returns color-value 0, and retval=false in case of an error
   </description>
   <retvals>
@@ -88,6 +88,8 @@ function ultraschall.ConvertColor(r,g,b)
     if math.type(b)~="integer" then ultraschall.AddErrorMessage("ConvertColor","b", "only integer allowed", -3) return 0, false end
     return reaper.ColorToNative(r,g,b)|0x1000000, true
 end
+
+ultraschall.planned_marker_color=ultraschall.ConvertColor(100,255,0)
 
 function ultraschall.ConvertColorReverse(color)
 --[[

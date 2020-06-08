@@ -1402,7 +1402,7 @@ function ultraschall.GetEnvelopeState_DefShape(TrackEnvelope, EnvelopeStateChunk
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer shape, integer b, integer c = ultraschall.GetEnvelopeState_DefShape(TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
+  <functioncall>integer shape, integer pitch_custom_envelope_range_takes, integer pitch_snap_values = ultraschall.GetEnvelopeState_DefShape(TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Returns the current default-shape-state of a TrackEnvelope-object or EnvelopeStateChunk.
     
@@ -1411,18 +1411,25 @@ function ultraschall.GetEnvelopeState_DefShape(TrackEnvelope, EnvelopeStateChunk
     returns nil in case of error
   </description>
   <retvals>
-   integer shape - 0, linear
+    integer shape - 0, linear
                  - 1, square
                  - 2, slow start/end
                  - 3, fast start
                  - 4, fast end
                  - 5, bezier
-   integer b - unknown; default value is -1; probably pitch/snap
-             - -1, unknown
-             -  2, unknown                        
-   integer c - unknown; default value is -1; probably pitch/snap
-             - -1, unknown
-             -  2, unknown 
+   	integer pitch_custom_envelope_range_takes - the custom envelope range as set in the Pitch Envelope Settings; only available in take-fx-envelope "Pitch"
+											  - -1, if unset or for non pitch-envelopes
+											  - 0, Custom envelope range-checkbox unchecked
+											  - 1-2147483647, the actual semitones
+	integer pitch_snap_values - the snap values-dropdownlist as set in the Pitch Envelope Settings-dialog; only available in take-fx-envelope "Pitch"
+					 -  -1, unset/Follow global default
+					 -  0, Off
+					 -  1, 1 Semitone
+					 -  2, 50 cent
+					 -  3, 25 cent
+					 -  4, 10 cent
+					 -  5, 5 cent
+					 -  6, 1 cent
   </retvals>
   <parameters>
     TrackEnvelope TrackEnvelope - the TrackEnvelope, whose state you want to know; nil, to use parameter EnvelopeStateChunk instead
@@ -1849,4 +1856,229 @@ function ultraschall.GetAllTakeEnvelopes()
 end
 
 --A,B=ultraschall.GetAllItemEnvelopes()
+
+function ultraschall.SetEnvelopeState_Vis(TrackEnvelope, visibility, lane, unknown, EnvelopeStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetEnvelopeState_Vis</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string EnvelopeStateChunk = ultraschall.SetEnvelopeState_Vis(TrackEnvelope env, integer visibility, integer lane, integer unknown, optional string EnvelopeStateChunk)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      sets the current visibility-state of a TrackEnvelope-object or EnvelopeStateChunk.
+      
+      It is the state entry VIS
+      
+      returns false in case of error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+	string EnvelopeStateChunk - the altered EnvelopeStateChunk
+  </retvals>
+  <parameters>
+    TrackEnvelope env - the envelope, in whose envelope you want set the visibility states; nil, to us parameter EnvelopeStateChunk instead
+    integer visibility - the visibility of the envelope; 0, invisible; 1, visible
+    integer lane - the position of the envelope in the lane; 0, envelope is in media-lane; 1, envelope is in it's own lane
+    integer unknown - unknown; default=1 
+	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
+  </parameters>
+  <chapter_context>
+    Envelope Management
+    Set Envelope States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
+  <tags>envelope management, set, envelope, envelope statechunk, lane, visibility</tags>
+</US_DocBloc>
+--]]
+  if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("SetEnvelopeState_Vis", "TrackEnvelope", "must be a TrackEnvelope", -1) return false end
+  if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("SetEnvelopeState_Vis", "EnvelopeStateChunk", "must be a valid EnvelopeStateChunk", -2) return false end
+  if math.type(visibility)~="integer" then ultraschall.AddErrorMessage("SetEnvelopeState_Vis", "visibility", "must be an integer", -3) return false end
+  if math.type(lane)~="integer" then ultraschall.AddErrorMessage("SetEnvelopeState_Vis", "lane", "must be an integer", -4) return false end
+  if math.type(unknown)~="integer" then ultraschall.AddErrorMessage("SetEnvelopeState_Vis", "unknown", "must be an integer", -5) return false end
+  local A
+  if TrackEnvelope~=nil then
+    A,EnvelopeStateChunk=reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
+  end
+  EnvelopeStateChunk=string.gsub(EnvelopeStateChunk, "VIS .-\n", "VIS "..visibility.." "..lane.." "..unknown.."\n")
+  if TrackEnvelope~=nil then
+    reaper.SetEnvelopeStateChunk(TrackEnvelope, EnvelopeStateChunk, false)
+  end
+  return true, EnvelopeStateChunk
+end
+
+
+function ultraschall.SetEnvelopeState_Act(TrackEnvelope, act, automation_settings, EnvelopeStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetEnvelopeState_Act</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetEnvelopeState_Act(TrackEnvelope env, integer act, integer automation_settings, optional string EnvelopeStateChunk)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      sets the current bypass and automation-items-settings-state of a TrackEnvelope-object or EnvelopeStateChunk.
+      
+      It is the state entry ACT
+      
+      returns false in case of error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+	string EnvelopeStateChunk - the altered EnvelopeStateChunk
+  </retvals>
+  <parameters>
+    TrackEnvelope env - the envelope, in whose envelope you want set the bypass and automation-item-states; nil, to use parameter EnvelopeStateChunk instead
+    integer act - bypass-setting; 
+				-   0, bypass on
+				-   1, no bypass 
+    integer automation_settings - automation item-options for this envelope
+								- -1, project default behavior, outside of automation items
+								- 0, automation items do not attach underlying envelope
+								- 1, automation items attach to the underlying envelope on the right side
+								- 2, automation items attach to the underlying envelope on both sides
+								- 3, no automation item-options for this envelope
+								- 4, bypass underlying envelope outside of automation items 
+	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
+  </parameters>
+  <chapter_context>
+    Envelope Management
+    Set Envelope States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
+  <tags>envelope management, set, envelope, envelope statechunk, automation options, automation items, bypass, visibility</tags>
+</US_DocBloc>
+--]]
+  if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("SetEnvelopeState_Act", "TrackEnvelope", "must be a TrackEnvelope", -1) return false end
+  if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("SetEnvelopeState_Act", "EnvelopeStateChunk", "must be a valid EnvelopeStateChunk", -2) return false end
+  if math.type(act)~="integer" then ultraschall.AddErrorMessage("SetEnvelopeState_Act", "act", "must be an integer", -3) return false end
+  if math.type(automation_settings)~="integer" then ultraschall.AddErrorMessage("SetEnvelopeState_Act", "automation_settings", "must be an integer", -4) return false end
+  local A
+  if TrackEnvelope~=nil then
+    A,EnvelopeStateChunk=reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
+  end
+  
+  EnvelopeStateChunk=string.gsub(EnvelopeStateChunk, "ACT .-\n", "ACT "..act.." "..automation_settings.."\n")
+  if TrackEnvelope~=nil then
+    reaper.SetEnvelopeStateChunk(TrackEnvelope, EnvelopeStateChunk, false)
+  end
+  return true, EnvelopeStateChunk
+end
+
+function ultraschall.SetEnvelopeState_DefShape(TrackEnvelope, shape, pitch_custom_envelope_range_takes, pitch_snap_values, EnvelopeStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetEnvelopeState_DefShape</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string EnvelopeStateChunk = ultraschall.SetEnvelopeState_DefShape(TrackEnvelope env, integer shape, integer pitch_custom_envelope_range, integer pitch_snap_values, optional string EnvelopeStateChunk)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      sets the current default-shape-states and pitch-snap-settings of a TrackEnvelope-object or EnvelopeStateChunk.
+      
+      It is the state entry DEFSHAPE
+      
+      returns false in case of error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+	string EnvelopeStateChunk - the altered EnvelopeStateChunk
+  </retvals>
+  <parameters>
+    TrackEnvelope env - the envelope, in whose envelope you want set the default shape and pitch-snap states; nil, to use parameter EnvelopeStateChunk instead
+    integer shape - the default shape of envelope-points
+					- 0, linear
+					- 1, square
+					- 2, slow start/end
+					- 3, fast start
+					- 4, fast end
+					- 5, bezier 
+	integer pitch_custom_envelope_range_takes - the custom envelope range as set in the Pitch Envelope Settings; only available in take-fx-envelope "Pitch"
+											  - -1, if unset or for non pitch-envelopes
+											  - 0, Custom envelope range-checkbox unchecked
+											  - 1-2147483647, the actual semitones
+	integer pitch_snap_values - the snap values-dropdownlist as set in the Pitch Envelope Settings-dialog; only available in take-fx-envelope "Pitch"
+					 -  -1, unset/Follow global default
+					 -  0, Off
+					 -  1, 1 Semitone
+					 -  2, 50 cent
+					 -  3, 25 cent
+					 -  4, 10 cent
+					 -  5, 5 cent
+					 -  6, 1 cent
+	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
+  </parameters>
+  <chapter_context>
+    Envelope Management
+    Set Envelope States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
+  <tags>envelope management, set, envelope, envelope statechunk, shape, pitch snap, visibility</tags>
+</US_DocBloc>
+--]]
+  if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("SetEnvelopeState_DefShape", "TrackEnvelope", "must be a TrackEnvelope", -1) return false end
+  if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("SetEnvelopeState_DefShape", "EnvelopeStateChunk", "must be a valid EnvelopeStateChunk", -2) return false end
+  if math.type(shape)~="integer" then ultraschall.AddErrorMessage("SetEnvelopeState_DefShape", "shape", "must be an integer", -3) return false end
+  if math.type(pitch_custom_envelope_range_takes)~="integer" then ultraschall.AddErrorMessage("SetEnvelopeState_DefShape", "pitch_custom_envelope_range_takes", "must be an integer", -4) return false end
+  if math.type(pitch_snap_values)~="integer" then ultraschall.AddErrorMessage("SetEnvelopeState_DefShape", "pitch_snap_values", "must be an integer", -5) return false end
+  local A
+  if TrackEnvelope~=nil then
+    A,EnvelopeStateChunk=reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
+  end
+  EnvelopeStateChunk=string.gsub(EnvelopeStateChunk, "DEFSHAPE .-\n", "DEFSHAPE "..shape.." "..pitch_custom_envelope_range_takes.." "..pitch_snap_values.."\n")
+  if TrackEnvelope~=nil then
+    reaper.SetEnvelopeStateChunk(TrackEnvelope, EnvelopeStateChunk, false)
+  end
+  return true, EnvelopeStateChunk
+end
+
+function ultraschall.SetEnvelopeState_LaneHeight(TrackEnvelope, height, compacted, EnvelopeStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetEnvelopeState_LaneHeight</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string EnvelopeStateChunk = ultraschall.SetEnvelopeState_LaneHeight(TrackEnvelope env, integer height, integer compacted, optional string EnvelopeStateChunk)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      sets the current height-states and compacted-settings of a TrackEnvelope-object or EnvelopeStateChunk.
+      
+      It is the state entry LANEHEIGHT
+      
+      returns false in case of error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+	string EnvelopeStateChunk - the altered EnvelopeStateChunk
+  </retvals>
+  <parameters>
+    TrackEnvelope env - the envelope, whose envelope you want set the height and compacted-states; nil, to us parameter EnvelopeStateChunk instead
+    integer height - the height of the laneheight; the height of this envelope in pixels; 24 - 263 pixels
+	integer compacted - 1, envelope-lane is compacted("normal" height is not shown but still stored in height);
+					  - 0, envelope-lane is "normal" height 
+	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
+	</parameters>
+  <chapter_context>
+    Envelope Management
+    Set Envelope States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
+  <tags>envelope management, set, envelope, envelope statechunk, height, compacted, visibility</tags>
+</US_DocBloc>
+--]]
+	return ultraschall.SetEnvelopeHeight(height, compacted==1, TrackEnvelope, EnvelopeStateChunk)
+end
+
 

@@ -1046,6 +1046,8 @@ integer retval - -1 in case of error
   if OS=="OSX32" or OS=="OSX64" then
     os.execute("open ".. url)
   else
+	--reaper.BR_Win32_ShellExecute("open", url, "", "", 0)
+	--ACHWAS,ACHWAS2 = reaper.ExecProcess("%WINDIR\\SysWow64\\cmd.exe \"Ultraschall-URL\" /B ".. url, 0)
     os.execute("start \"Ultraschall-URL\" /B ".. url)
   end
   return true
@@ -5670,7 +5672,7 @@ end
 --B,B2=ultraschall.ConvertFunction_FromHexString(A)
 
 
-function ultraschall.Benchmark_GetStartTime()
+function ultraschall.Benchmark_GetStartTime(slot)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Benchmark_GetStartTime</slug>
@@ -5679,7 +5681,7 @@ function ultraschall.Benchmark_GetStartTime()
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>number starttime = ultraschall.Benchmark_GetStartTime()</functioncall>
+  <functioncall>number starttime = ultraschall.Benchmark_GetStartTime(optional integer slot)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
 	This function is for benchmarking parts of your code.
 	It returns the starttime of the last benchmark-start.
@@ -5691,6 +5693,9 @@ function ultraschall.Benchmark_GetStartTime()
   <retvals>
     number starttime - the starttime of the currently running benchmark
   </retvals>
+  <parameters>
+	optional integer slot - the slot, whose starttime you want to get
+  </parameters>
   <chapter_context>
     API-Helper functions
   </chapter_context>
@@ -5699,10 +5704,43 @@ function ultraschall.Benchmark_GetStartTime()
   <tags>helper functions, get, start, benchmark, time</tags>
 </US_DocBloc>
 --]]
-  return ultraschall.Benchmark_StartTime_Time
+  if slot==nil then slot=0 end
+  if math.type(slot)~="integer" then ultraschall.AddErrorMessage("Benchmark_GetStartTime", "slot", "must be an integer", -1) return end
+  if ultraschall.Benchmark_StartTime_Time==nil then ultraschall.Benchmark_StartTime_Time={} end
+  return ultraschall.Benchmark_StartTime_Time[slot]
 end
 
-function ultraschall.Benchmark_MeasureTime(timeformat, reset)
+function ultraschall.Benchmark_GetAllStartTimesAndSlots()
+	--[[
+	<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+	  <slug>Benchmark_GetAllStartTimesAndSlots</slug>
+	  <requires>
+		Ultraschall=4.1
+		Reaper=5.975
+		Lua=5.3
+	  </requires>
+	  <functioncall>number starttime = ultraschall.Benchmark_GetStartTime()</functioncall>
+	  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+		This function is for benchmarking parts of your code.
+		It returns a table with all starttimes of all current benchmark-measurings. The index of the table reflects the slots.
+		
+		Use [Benchmark_MeasureTime](#Benchmark_MeasureTime) to start/reset a new benchmark-measureing.
+	  </description>
+	  <retvals>
+		table starttime_slots - a table with all starttimes of all current benchmark-measurings, where the index reflects the slots
+	  </retvals>
+	  <chapter_context>
+		API-Helper functions
+	  </chapter_context>
+	  <target_document>US_Api_Functions</target_document>
+	  <source_document>ultraschall_functions_HelperFunctions_Module.lua</source_document>
+	  <tags>helper functions, get, all, slots, start, benchmark, time</tags>
+	</US_DocBloc>
+	--]]
+	return ultraschall.Benchmark_StartTime_Time
+end
+
+function ultraschall.Benchmark_MeasureTime(timeformat, reset, slot)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Benchmark_MeasureTime</slug>
@@ -5711,7 +5749,7 @@ function ultraschall.Benchmark_MeasureTime(timeformat, reset)
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>number elapsed_time, string elapsed_time_string, string measure_evaluation = ultraschall.Benchmark_MeasureTime(optional integer time_mode, optional boolean reset)</functioncall>
+  <functioncall>number elapsed_time, string elapsed_time_string, string measure_evaluation = ultraschall.Benchmark_MeasureTime(optional integer time_mode, optional boolean reset, optional integer slot)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
 	This function is for benchmarking parts of your code.
 	It returns the passed time, since last time calling this function.
@@ -5735,6 +5773,11 @@ function ultraschall.Benchmark_MeasureTime(timeformat, reset)
 							   - 4=samples
 							   - 5=h:m:s:f
 	optional boolean reset - true, resets the starttime(for new measuring); false, keeps current measure-starttime(for continuing measuring)
+	optional integer slot - if you want to have multiple benchmark-measures at the same time, you can store them in different slots.
+						  - means, you can measure in slot 1 and slot 2, where you can occasionally reset slot 1 while having continuous measuring in slot 2.
+						  - this allows you to measure the execution time of the whole script(slot 2) and certain parts of the script on individual basis(slot 1).
+						  - you can use as many slots, as you want.
+	                      - nil, default slot is 0
   </parameters>
   <chapter_context>
     API-Helper functions
@@ -5745,11 +5788,15 @@ function ultraschall.Benchmark_MeasureTime(timeformat, reset)
 </US_DocBloc>
 --]]
   local passed_time=reaper.time_precise()
-  if ultraschall.Benchmark_StartTime_Time==nil then ultraschall.Benchmark_StartTime_Time=passed_time end
+  if slot==nil then slot=0 end
+  if ultraschall.Benchmark_StartTime_Time==nil then ultraschall.Benchmark_StartTime_Time={} end 
+  if ultraschall.Benchmark_StartTime_Time[slot]==nil then ultraschall.Benchmark_StartTime_Time[slot]=passed_time end
   if timeformat~=nil and math.type(timeformat)~="integer" then ultraschall.AddErrorMessage("Benchmark_MeasureTime", "timeformat", "must be an integer", -2) return end
   if timeformat~=nil and (timeformat<0 or timeformat>7)then ultraschall.AddErrorMessage("Benchmark_MeasureTime", "timeformat", "must be between 0 and 7 or nil", -3) return end
-  passed_time=passed_time-ultraschall.Benchmark_StartTime_Time
-  if reset==true or reset==nil then ultraschall.Benchmark_StartTime_Time=reaper.time_precise() end
+  if math.type(slot)~="integer" then ultraschall.AddErrorMessage("Benchmark_MeasureTime", "slot", "must be an integer", -4) return end
+  
+  passed_time=passed_time-ultraschall.Benchmark_StartTime_Time[slot]
+  if reset==true or reset==nil then ultraschall.Benchmark_StartTime_Time[slot]=reaper.time_precise() end
   local valid=""
   local passed_time_string=""
   if passed_time==0 then
