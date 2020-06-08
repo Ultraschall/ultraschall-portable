@@ -330,7 +330,9 @@ end
 
 function nextPage()
 
-  chapter_offset = chapter_offset + chapter_pagelength
+  if chapter_offset + chapter_pagelength <= #tablesort then
+    chapter_offset = chapter_offset + chapter_pagelength
+  end
   return chapter_offset
 
 end
@@ -339,6 +341,7 @@ end
 function previousPage()
 
   chapter_offset = chapter_offset - chapter_pagelength
+  if chapter_offset < 1 then chapter_offset = 1 end
   return chapter_offset
 
 end
