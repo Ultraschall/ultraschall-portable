@@ -415,17 +415,13 @@ GUI.w, GUI.h = 820, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der
 GUI.x = ultraschall.GetUSExternalState("ultraschall_markerdashboard", "xpos")
 GUI.y = ultraschall.GetUSExternalState("ultraschall_markerdashboard", "ypos")
 
--- Wenn keine gespeichert, positioniere Mittig im REAPER-Fenster
+-- Wenn keine gespeichert, positioniere mittig im REAPER-Fenster
 
 if GUI.x == "" or GUI.y == "" then
   l, t, r, b = 0, 0, GUI.w, GUI.h
   __, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
   GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 end
-
-
-  -- body
-  ---- GUI Elements ----
 
 
 ------------------------------------------------------
@@ -458,8 +454,6 @@ function buildGui()
   if marker_update_counter ~= ultraschall.GetMarkerUpdateCounter() then -- Höhe des Fensters nur dann aktualisieren, wenn sich Anzahl der Marker verändert hat
     refresh_gui = true
   end
-
-
 
 
   marker_update_counter = ultraschall.GetMarkerUpdateCounter()
@@ -700,8 +694,8 @@ function buildGui()
         check_text = "The title is too long ("..string.len(name)..") - it must be < 63 characters"
       end
 
-    elseif name and name == "" then
-        id = GUI.Lbl:new(pos_name, position, "[Missing - click to edit]", 0)
+    elseif name and name == "" then -- es gibt einen Marker, der hat aber keinen Namen
+        id = GUI.Lbl:new(pos_name, position, "[Name missing - click to edit]", 0)
         table.insert(GUI.elms, id)
         name_func = editMarker
 
@@ -709,12 +703,12 @@ function buildGui()
         check_text = "Chapters without Name will not be exported."
 
     else
-      id = GUI.Lbl:new(pos_name, position, "[Missing - click to edit]", 0)
+      id = GUI.Lbl:new(pos_name, position, "[Marker missing - click to create]", 0)
       table.insert(GUI.elms, id)
       name_func = insertMarker
 
       check_image = red
-      check_text = "Chapters without Name will not be exported."
+      check_text = "This image needs a marker.|Please move to an existing marker or create a new one."
 
     end
 
