@@ -337,7 +337,6 @@ function nextPage()
 
 end
 
-
 function previousPage()
 
   chapter_offset = chapter_offset - chapter_pagelength
@@ -410,13 +409,19 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 GUI.name = "Ultraschall Marker Dashboard"
 GUI.w, GUI.h = 820, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
-------------------------------------------------------
--- position always in the center of the screen
-------------------------------------------------------
 
-l, t, r, b = 0, 0, GUI.w, GUI.h
-__, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
-GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
+-- hole die letzte Fensterposition aus der ultraschall.ini
+
+GUI.x = ultraschall.GetUSExternalState("ultraschall_markerdashboard", "xpos")
+GUI.y = ultraschall.GetUSExternalState("ultraschall_markerdashboard", "ypos")
+
+-- Wenn keine gespeichert, positioniere Mittig im REAPER-Fenster
+
+if GUI.x == "" or GUI.y == "" then
+  l, t, r, b = 0, 0, GUI.w, GUI.h
+  __, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
+  GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
+end
 
 
   -- body
@@ -431,7 +436,8 @@ MarkerUpdateCounter = 0
 chapterCount = 0
 chapter_offset = 1
 chapter_pagelength = maxlines
-refresh_gui = false
+refresh_gui = true
+firstrun = true
 
 
 function buildGui()
@@ -452,6 +458,8 @@ function buildGui()
   if marker_update_counter ~= ultraschall.GetMarkerUpdateCounter() then -- Höhe des Fensters nur dann aktualisieren, wenn sich Anzahl der Marker verändert hat
     refresh_gui = true
   end
+
+
 
 
   marker_update_counter = ultraschall.GetMarkerUpdateCounter()
@@ -490,8 +498,23 @@ function buildGui()
 
 
   -----------------------------------------------------
-  -- Das Dashboard muss in der Höhe abgepasst werden
+  -- Das Dashboard muss in der Höhe oder Position abgepasst werden
   -----------------------------------------------------
+
+  dockState, xpos, ypos, width, height = gfx.dock(-1, 0, 0, 0, 0) -- hole die aktuelle Position des GFX Fensters
+
+  if firstrun == true then -- beim ersten Aufruf werden die bisherigen Werte genommen
+    firstrun = false
+  else
+    if xpos ~= GUI.x or ypos ~= GUI.y then -- Fenster wurde verschoben, daher neue Werte holen
+
+      GUI.x = xpos
+      GUI.y = ypos
+      retval = ultraschall.SetUSExternalState("ultraschall_markerdashboard", "xpos", tostring(xpos)) -- schreibe die neue X-Position
+      retval = ultraschall.SetUSExternalState("ultraschall_markerdashboard", "ypos", tostring(ypos)) -- schreibe die neue X-Position
+
+    end
+  end
 
   if refresh_gui == true then
 
@@ -502,12 +525,15 @@ function buildGui()
     if rows > maxlines then rows = maxlines end -- Maximalhöhe
     WindowHeight = 175 + (rows * 36)
 
-    -- GUI.y = (screen_h - GUI.h) / 2
-    -- GUI.y = 300
-    gfx.init("", 820, WindowHeight, 0) -- ändere nur die Höhe, aber nicht die Position (!)
+    gfx.init("", 820, WindowHeight, 0, GUI.x, GUI.y)
+
     refresh_gui = false
 
   end
+
+
+
+
 
 
   GUI.elms = {}
