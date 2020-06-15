@@ -83,16 +83,18 @@ end
 
 if reaper.GetOS()=="OSX32" or reaper.GetOS()=="OSX64" then
   font_size = 14 * dpi_scale
+  font_size2 = 20 * dpi_scale
   font_face = "Helvetica"
 else
   font_size = 16 * dpi_scale
+  font_size2 = 22 * dpi_scale
   font_face = "Arial"
 end
 
 GUI.fonts = {
 
   {font_face, font_size},  -- 1. Title
-  {font_face, font_size},  -- 2. Header
+  {font_face, font_size2},  -- 2. Header
   {font_face, font_size},  -- 3. Label
   {font_face, font_size}  -- 4. Value
 
@@ -104,14 +106,21 @@ GUI.colors = {
   elm_bg = {48, 48, 48, 1},      -- Element BG
   sld_bg = {60, 60, 60, 1},    -- Slider Background
   elm_frame = {70, 70, 70, 1},    -- Element Frame
+  button = {80, 80, 80, 1},    -- Element Frame
   elm_highlight = {100, 100, 100, 1},    -- Element Highlight
   elm_fill = {200, 130, 64, 1},    -- Element Fill
   elm_outline = {32, 32, 32, 1},
   txt = {200, 200, 200, 1},      -- Text
+  txt_button = {230, 230, 230, 1},      -- Text
+  txt_button_disabled = {130, 130, 130, 1},      -- Text
   txt_green = {80, 250, 80, 1},      -- Text green
   txt_red = {250, 40, 40, 1},      -- Text red
   txt_yellow = {250, 250, 40, 1},      -- Text red
   txt_muted = {100, 100, 100, 1},      -- Text dark grey
+  txt_grey = {150, 150, 150, 1},    -- Header Background
+  header_bg = {60, 60, 60, 1},    -- Header Background
+  section_bg = {52, 52, 52, 1},    -- Header Background
+  white = {250, 250, 250, 1},    -- Header Background
 
   shadow = {0, 0, 0, 0.6}        -- Shadow. Don't call this with GUI.color
 
@@ -412,6 +421,7 @@ function Main()
   windownumber=reaper.GetExtState("Ultraschall_Windows",GUI.name)
 --  reaper.MB(windownumber,"pre",0)
     reaper.SetExtState("Ultraschall_Windows",GUI.name,windownumber-1,true)
+    abort = true
 -- reaper.MB(reaper.GetExtState("Ultraschall_Windows",GUI.name),"post",0)
     return 0
   else
@@ -459,13 +469,16 @@ function Update(elm)
     -- If it wasn't down already...
     if not GUI.mouse.down then
 
+
+
       -- Was a different element clicked?
-      if not IsInside(elm, x, y) then
+      if not IsInside(elm, x, y) or elm.type == "Area" then -- Area darf nicht klickbare Elemente überdecken
 
         elm.focus = false
 
       else
 
+        -- print(elm.type)
 
       GUI.mouse.down = true
       GUI.mouse.ox, GUI.mouse.oy = x, y
@@ -491,7 +504,7 @@ function Update(elm)
     end
 
   -- If it was originally clicked in this element and has now been released
-  elseif GUI.mouse.down and IsInside(elm, GUI.mouse.ox, GUI.mouse.oy) then
+  elseif GUI.mouse.down and IsInside(elm, GUI.mouse.ox, GUI.mouse.oy) and elm.type ~= "Area" then -- Area darf nicht klickbare Elemente überdecken
 
     elm:onmouseup()
     GUI.mouse.down = false
@@ -543,6 +556,7 @@ function Area:new(x, y, w, h, r, antialias, fill, color)
   roundarea.antialias = antialias
   roundarea.fill = fill
   roundarea.color = color or "txt"
+  roundarea.focus = false
 
   setmetatable(roundarea, self)
     self.__index = self
@@ -896,13 +910,14 @@ GUI.Line = Line
 
 -- Lbl - New
 local Lbl = {}
-function Lbl:new(x, y, caption, shadow, color)
+function Lbl:new(x, y, caption, shadow, color, size)
 
 
   local label = {}
   label.type = "Lbl"
   label.color = color or "txt"
   label.x, label.y = x * dpi_scale, y * dpi_scale
+  label.size = size or 1
 
   -- Placeholders for these values, since we don't need them
   -- but some functions will throw a fit if they aren't there
@@ -924,7 +939,7 @@ function Lbl:draw()
 
   local x, y = self.x, self.y
 
-  GUI.font(1)
+  GUI.font(self.size)
 
   -- Shadow
   if self.shadow ~= 0 then
@@ -1684,7 +1699,7 @@ function Btn:new(x, y, w, h, caption, func, ...)
 
   btn.caption = caption
 
-  btn.func = func
+  btn.func = func or ""
   btn.params = {...}
 
   btn.state = 0
@@ -1733,7 +1748,7 @@ function Btn:draw()
   end
 
   -- Draw the button
-  GUI.color("elm_frame")
+  GUI.color("button")
   GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 4 * dpi_scale
   , 1 * dpi_scale
   , 1 * dpi_scale
@@ -1741,7 +1756,14 @@ function Btn:draw()
 
 
   -- Draw the caption
-  GUI.color("txt")
+
+  if self.func == "" then
+    GUI.color("txt_button_disabled")
+  else
+    GUI.color("txt_button")
+  end
+
+
   GUI.font(4)
 
   if reaper.GetOS() == "OSX64" then
@@ -1777,7 +1799,7 @@ function Btn:onmouseup()
   self.state = 0
 
   -- If the button was released on the button, run func
-  if IsInside(self, GUI.mouse.x, GUI.mouse.y) then
+  if IsInside(self, GUI.mouse.x, GUI.mouse.y) and self.func~= "" then
 
     self.func(table.unpack(self.params))
 
