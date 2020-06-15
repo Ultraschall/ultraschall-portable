@@ -448,16 +448,16 @@ function ultraschall.EnumProjects(idx)
 end
 
 
-function ultraschall.GetProjectLength(items, markers_regions, timesig_markers)
+function ultraschall.GetProjectLength(items, markers_regions, timesig_markers, include_rec)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProjectLength</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>number project_length, number last_itemedge, number last_regionedgepos, number last_markerpos, number last_timesigmarker = ultraschall.GetProjectLength(optional boolean return_last_itemedge, optional boolean return_last_markerpos, optional boolean return_lat_timesigmarkerpos)</functioncall>
+  <functioncall>number project_length, number last_itemedge, number last_regionedgepos, number last_markerpos, number last_timesigmarker = ultraschall.GetProjectLength(optional boolean return_last_itemedge, optional boolean return_last_markerpos, optional boolean return_lat_timesigmarkerpos, optional boolean include_rec)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns the position of the last itemedge, regionend, marker, time-signature-marker in the project.
     
@@ -467,6 +467,8 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers)
     You can optimise the speed of the function, by setting the appropriate parameters to false.
     So if you don't need the last itemedge, setting return\_last\_itemedge=false speeds up execution massively.
     
+	If you want to have the full projectlength during recording, means, including items currently recorded, set include_rec=true
+	
     To do the same for projectfiles, use: [GetProject\_Length](#GetProject_Length)
   </description>
   <retvals>
@@ -480,6 +482,7 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers)
     optional boolean return_last_itemedge - true or nil, return the last itemedge; false, don't return it
     optional boolean return_last_markerpos - true or nil, return the last marker/regionend-position; false, don't return it 
     optional boolean return_lat_timesigmarkerpos - true or nil, return the last timesignature-marker-position; false, don't return it
+	optional boolean include_rec - true, takes into account the projectlength during recording; nil or false, only the projectlength exluding currently recorded MediaItems
   </parameters>
   <chapter_context>
     Project-Management
@@ -518,6 +521,9 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers)
       local retval, timepos, measurepos, beatpos, bpm, timesig_num, timesig_denom, lineartempo = reaper.GetTempoTimeSigMarker(0, i)
       if timepos>TimeSigEnd then TimeSigEnd=timepos end
     end
+  end
+  if include_rec==true and reaper.GetPlayState()&4~=0 and ultraschall.AnyTrackRecarmed()==true and reaper.GetPlayPosition()>reaper.GetProjectLength() then 
+	return reaper.GetPlayPosition(), Longest, Regionend, Markerend, TimeSigEnd
   end
   return reaper.GetProjectLength(), Longest, Regionend, Markerend, TimeSigEnd
 end

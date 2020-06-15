@@ -1286,10 +1286,11 @@ end
 function ultraschall.BatchConvertFiles(filelist, RenderTable, BWFStart, PadStart, PadEnd, FXChain)
 -- Todo:
 -- Check on Mac and Linux
+--    Linux saves outfile into wrong directory -> lastcwd not OUTPATH for some reason
 -- Check all parameters for correct typings
 -- Test FXChain-capability
   local BatchConvertData=""
-  local ExeFile, filename, path
+  --local ExeFile, filename, path
   if FXChain==nil then FXChain="" end
   if BWFStart==true then BWFStart="    USERCSTART 1\n" else BWFStart="" end
   if PadStart~=nil  then PadStart="    PAD_START "..PadStart.."\n" else PadStart="" end
@@ -1297,7 +1298,9 @@ function ultraschall.BatchConvertFiles(filelist, RenderTable, BWFStart, PadStart
   local i=1
   while filelist[i]~=nil do
     path, filename = ultraschall.GetPath(filelist[i])
-    BatchConvertData=BatchConvertData..filelist[i].."\t"..filename.."\n"
+    filename2=filename:match("(.-)%.")
+    if filename2==nil then filename2=filename end
+    BatchConvertData=BatchConvertData..filelist[i].."\t"..filename2.."\n"
     i=i+1
   end
   BatchConvertData=BatchConvertData..[[
@@ -1325,6 +1328,7 @@ function ultraschall.BatchConvertFiles(filelist, RenderTable, BWFStart, PadStart
 ]]
 
   ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/filelist.txt", BatchConvertData)
+print2(BatchConvertData)
   if ultraschall.IsOS_Windows()==true then
     ExeFile=reaper.GetExePath().."\\reaper.exe"
     AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert "..string.gsub(ultraschall.API_TempPath, "/", "\\").."\\filelist.txt", -1)
@@ -1336,13 +1340,15 @@ function ultraschall.BatchConvertFiles(filelist, RenderTable, BWFStart, PadStart
     AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert "..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt", -1)
   else
     print2("Must be checked on Linux!!!!")
-    ExeFile=reaper.GetExePath().."\\reaper"
+    ExeFile=reaper.GetExePath().."/reaper"
+--print3(ExeFile.." -batchconvert "..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt")
     AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert "..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt", -1)
   end
 end
 
 
 -- These seem to work working:
+
 
 
 
