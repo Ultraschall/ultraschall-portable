@@ -30,6 +30,8 @@
 ---        Markers Module         ---
 -------------------------------------
 
+
+
 if type(ultraschall)~="table" then 
   -- update buildnumber and add ultraschall as a table, when programming within this file
   local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
@@ -528,7 +530,7 @@ function ultraschall.CountNormalMarkers()
   for i=0, a-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
     if name==nil then name="" end
-    if name:sub(1,10)=="_Shownote:" or name:sub(1,5)=="_Edit" or color == ultraschall.ConvertColor(100,255,0) then 
+    if name:sub(1,10)=="_Shownote:" or name:sub(1,5)=="_Edit" or color == ultraschall.planned_marker_color then 
         -- if marker is shownote, chapter, edit or planned chapter
     elseif isrgn==false then count=count+1 -- elseif marker is no region, count up
     end
@@ -681,8 +683,14 @@ function ultraschall.EnumerateNormalMarkers(number)
   -- find the right normal-marker
   for i=0, a-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color= reaper.EnumProjectMarkers3(0,i)
+	
     if isrgn==false then
-      if name:sub(1,10)~="_Shownote:" and name:sub(1,5)~="_Edit" and color~=ultraschall.ConvertColor(100,255,0) then count=count+1 end
+      if name:sub(1,10)~="_Shownote:" and 
+		 name:sub(1,5)~="_Edit" and 
+		 color~=ultraschall.planned_marker_color 
+		 then 
+			count=count+1 
+	  end
     end
     if number>=0 and wentfine==0 and count==number then
         retnumber=retval 
@@ -992,7 +1000,7 @@ function ultraschall.SetNormalMarker(number, position, shown_number, markertitle
   for i=0, c-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
     if isrgn==false then
-      if name:sub(1,10)~="_Shownote:" and name:sub(1,5)~="_Edit" and color~=ultraschall.ConvertColor(100,255,0) then count=count+1 end
+      if name:sub(1,10)~="_Shownote:" and name:sub(1,5)~="_Edit" and color~=ultraschall.planned_marker_color then count=count+1 end
     end
     if number>=0 and wentfine==0 and count==number then
         if tonumber(position)==-1 or position==nil then position=pos end
@@ -1213,7 +1221,7 @@ function ultraschall.DeleteNormalMarker(number)
   for i=1, c-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if isrgn==false then
-      if name:sub(1,10)~="_Shownote:" and name:sub(1,5)~="_Edit" and color~=ultraschall.ConvertColor(100,255,0) then count=count+1 end
+      if name:sub(1,10)~="_Shownote:" and name:sub(1,5)~="_Edit" and color~=ultraschall.planned_marker_color then count=count+1 end
     end
     if number>=0 and wentfine==0 and count==number then
         retnumber=i
@@ -2177,7 +2185,7 @@ function ultraschall.IsMarkerNormal(markerid)
   local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, markerid)
   if retval>0 then
     if isrgn==false then
-      if name:sub(1,10)~="_Shownote:" and name:sub(1,5)~="_Edit" and color~=ultraschall.ConvertColor(100,255,0) then return true
+      if name:sub(1,10)~="_Shownote:" and name:sub(1,5)~="_Edit" and color~=ultraschall.planned_marker_color then return true
       else return false
       end
     end
@@ -2574,11 +2582,11 @@ function ultraschall.GetAllMarkersBetween(startposition, endposition)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetAllMarkersBetween</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer number_of_all_markers, array allmarkersarray = ultraschall.GetAllMarkersBetween(number startposition, number endposition)</functioncall>
+  <functioncall>integer number_of_all_markers, array allmarkersarray = ultraschall.GetAllMarkersBetween(optional number startposition, optional number endposition)</functioncall>
   <description>
     To get all Markers in the project(normal, edit, chapter), regardless of their category, between startposition and endposition.
     Doesn't return regions!
@@ -2599,8 +2607,8 @@ function ultraschall.GetAllMarkersBetween(startposition, endposition)
     array allmarkersarray  - an array, that holds all markers(not regions!) of the project
   </retvals>
   <parameters>
-    number startposition - the earliest position a returned marker may have
-    number endposition - the latest position a returned marker may have
+    optional number startposition - the earliest position a returned marker may have; nil for projectposition 0
+    optional number endposition - the latest position a returned marker may have; nil for end of project
   </parameters>
   <chapter_context>
     Markers
@@ -2611,8 +2619,10 @@ function ultraschall.GetAllMarkersBetween(startposition, endposition)
   <tags>markermanagement, marker, get, get all between, guid</tags>
 </US_DocBloc>
 --]]
-  if type(startposition)~="number" then ultraschall.AddErrorMessage("GetAllMarkersBetween","startposition", "Must be a number!", -1) return -1 end
-  if type(endposition)~="number" then ultraschall.AddErrorMessage("GetAllMarkersBetween","endposition", "Must be a number!", -2) return -1 end
+  if startposition~=nil and type(startposition)~="number" then ultraschall.AddErrorMessage("GetAllMarkersBetween","startposition", "Must be a number!", -1) return -1 end
+  if endposition~=nil and type(endposition)~="number" then ultraschall.AddErrorMessage("GetAllMarkersBetween","endposition", "Must be a number!", -2) return -1 end
+  if startposition==nil then startposition=0 end
+  if endposition==nil then endposition = ultraschall.GetProjectLength(false,false,false,true) end
   if endposition<startposition then ultraschall.AddErrorMessage("GetAllMarkersBetween","endposition", "Must be bigger than startposition!", -3) return -1 end
   if startposition<0 then ultraschall.AddErrorMessage("GetAllMarkersBetween","startposition", "Must be bigger or equal 0!", -4) return -1 end
   local A,B=ultraschall.GetAllMarkers()
@@ -2692,11 +2702,11 @@ function ultraschall.GetAllRegionsBetween(startposition, endposition, partial)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetAllRegionsBetween</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer number_of_all_regions, array allregionsarray = ultraschall.GetAllRegionsBetween(number startposition, number endposition, boolean partial)</functioncall>
+  <functioncall>integer number_of_all_regions, array allregionsarray = ultraschall.GetAllRegionsBetween(optional number startposition, optional number endposition, optional boolean partial)</functioncall>
   <description>
     To get all Regions in the project(normal, edit, chapter), regardless of their category between start- and endposition.
     Set partial to true, if you want to get regions as well, that are only partially between start- and endposition
@@ -2719,9 +2729,9 @@ function ultraschall.GetAllRegionsBetween(startposition, endposition, partial)
     array regionsarray - an array, that holds all regions(not markers!) of the project
   </retvals>
   <parameters>
-    number startposition - the earliest position a returned region may have
-    number endposition - the latest position a returned region may have
-    boolean retval - true, to get regions that are partially within start and endposition as well; false, only regions completely within start/endposition.
+    optional number startposition - the earliest position a returned region may have; nil, startposition=0
+    optional number endposition - the latest position a returned region may have; nil, endposition=end of project
+    optional boolean retval - true or nil, to get regions that are partially within start and endposition as well; false, only regions completely within start/endposition.
   </parameters>
   <chapter_context>
     Markers
@@ -2732,12 +2742,16 @@ function ultraschall.GetAllRegionsBetween(startposition, endposition, partial)
   <tags>markermanagement, region, get, get all, guid</tags>
 </US_DocBloc>
 --]]
-  if type(startposition)~="number" then ultraschall.AddErrorMessage("GetAllRegionsBetween","startposition", "Must be a number!", -1) return -1 end
-  if type(endposition)~="number" then ultraschall.AddErrorMessage("GetAllRegionsBetween","endposition", "Must be a number!", -2) return -1 end
+  if startposition~=nil and type(startposition)~="number" then ultraschall.AddErrorMessage("GetAllRegionsBetween","startposition", "Must be a number!", -1) return -1 end
+  if endposition~=nil and type(endposition)~="number" then ultraschall.AddErrorMessage("GetAllRegionsBetween","endposition", "Must be a number!", -2) return -1 end
+  if startposition==nil then startposition=0 end
+  if endposition==nil then endposition = ultraschall.GetProjectLength(false,false,false,true) end
+
   if endposition<startposition then ultraschall.AddErrorMessage("GetAllRegionsBetween","endposition", "Must be bigger than startposition!", -3) return -1 end
   if startposition<0 then ultraschall.AddErrorMessage("GetAllRegionsBetween","startposition", "Must be bigger or equal 0!", -4) return -1 end
-  if type(partial)~="boolean" then ultraschall.AddErrorMessage("GetAllRegionsBetween","partial", "Must be boolean!", -4) return -1 end
-
+  if partial~=nil and type(partial)~="boolean" then ultraschall.AddErrorMessage("GetAllRegionsBetween","partial", "Must be boolean!", -4) return -1 end
+  if partial==nil then partial=true end
+  
   local A,B=ultraschall.GetAllRegions()
   for i=A, 1, -1 do
     if partial==false then

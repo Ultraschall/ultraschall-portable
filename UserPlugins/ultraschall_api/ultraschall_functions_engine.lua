@@ -211,7 +211,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  return 410.001, "4.1","11th of May 2020", "001",  "\"Radiohead - Spectre\"", ultraschall.hotfixdate, BuildNumber
+  return 410.002, "4.1","8th of June 2020", "002",  "\"The Buzzcocks - Why can't I touch it\"", ultraschall.hotfixdate, BuildNumber
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -1390,7 +1390,7 @@ function PingMe(message, outputtarget)
     Reaper=5.95
     Lua=5.3
   </requires>
-  <functioncall>string pingmessage = PingMe(optional string message, integer outputtarget)</functioncall>
+  <functioncall>string pingmessage = PingMe(optional string message, optional integer outputtarget)</functioncall>
   <description>
     Shows the current script and line of script-execution, optionally with a message.
     

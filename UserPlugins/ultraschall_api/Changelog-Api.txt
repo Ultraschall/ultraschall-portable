@@ -4,16 +4,94 @@
     
     
     For 4.01.002:  
-      TODO!! Toggle/Set-Mute-state-functions, add autoarm mute-track-parameter
-                Needs first functions for activating Envelopes, but they don't exist, until they are displayed.
-                I might have to add non-activated envelopes by adding env-statechunks into TrackStateChunks.
-				
-    GetProjectLength - doesn't return the correct projectlength, if reaper.GetProjectLength()<recposition, as items in the state of being recorded don't count into it.
-                       in that case: when rec==true, anytrackarmed==true and Playposition>GetProjectLength, return the Editcursorposition instead.
-                       optional parameter needed, which allows toggling the old GetProjectLength and the new one with the recording management, to keep old scripts working
+	
+    -- GetHWOuts um herauszufinden, wieviele HWOuts das aktuelle Device hat. Es muss vermutlich aus der reaper.ini ausgelesen werden oder aus der reaper-hwouts.ini
+    
+    -- ToggleMute(_Object): state=2 toggelt relativ zum derzeitigen Mute-State, so dass man nicht erst extra den letzten state heraussuchen muss.
+				--Bugfixes!! NOCHMAL INTENSIVST TESTEN!!! 
+				-- RecArm on+Mute Button im TCP drücken toggelt nicht sauber. Man kann da den Track gemutet haben, auch wenn die MuteSpur auf unmuted steht. Da vielleicht den Mute-Button wieder auf unmuted stellen, wenn man unmuted macht?
+				state=2 kann vermutlich nicht so ohne Weiteres umgesetzt werden. Wär aber auch nicht schlimm.
+    
+	How to get selection in category-list of Preferences?
+	Edgemeal's way:
+	
+	"Not sure if this helps, but this seems to work at least getting the index of the selected item in the preferences treeview...
+
+EDIT: Updated to select a node, combine previous code into one script.
+
+Code:
+-- REAPER Preferences TreeView
+-- Tested: Win10 x64, REAPER v6.10 x64, JS_API v1.002.
+
+function GetAllNodes(hwnd)
+  local nodes = {}
+  local hNode = reaper.JS_WindowMessage_Send(hwnd, TVM_GETNEXTITEM, TVGN_ROOT, 0,0,0) -- first root node  
+  while(hNode > 0) do
+    nodes[#nodes+1] = hNode
+    local hChild = reaper.JS_WindowMessage_Send(hwnd, TVM_GETNEXTITEM, TVGN_CHILD, 0,hNode,0) -- child node
+    while(hChild > 0) do
+      nodes[#nodes+1] = hChild
+      hChild = reaper.JS_WindowMessage_Send(hwnd, TVM_GETNEXTITEM, TVGN_NEXT, 0,hChild,0) -- next child 
+    end
+    hNode = reaper.JS_WindowMessage_Send(hwnd, TVM_GETNEXTITEM, TVGN_NEXT, 0,hNode,0) -- next root 
+  end 
+  return nodes
+end
+
+function CollapseExpandAllNodes(hwnd, tve)
+  local hNode = reaper.JS_WindowMessage_Send(hwnd, TVM_GETNEXTITEM, TVGN_ROOT, 0,0,0) -- first root node
+  while(hNode > 0) do
+    reaper.JS_WindowMessage_Send(hwnd, TVM_EXPAND, tve,0, hNode,0) -- collapse/expand node
+    hNode = reaper.JS_WindowMessage_Send(hwnd, TVM_GETNEXTITEM, TVGN_NEXT, 0,hNode,0) -- next root node
+  end 
+end
+
+function SelectItem(hwnd, hNode)
+  reaper.JS_WindowMessage_Send(hwnd, TVM_SELECTITEM, TVGN_CARET,0, hNode,0)
+end
+ 
+function Main()
+  local pref_hwnd = reaper.JS_Window_FindTop("REAPER Preferences", true)
+  local tv_hwnd = reaper.JS_Window_FindChildByID(pref_hwnd, 0x456) 
+  if not tv_hwnd then return end
+
+  -- Collapse Nodes example,
+  CollapseExpandAllNodes(tv_hwnd, TVE_COLLAPSE)
+  -- Expand Nodes example,
+  --CollapseExpandAllNodes(tv_hwnd, TVE_EXPAND)
+   
+  local all_nodes = GetAllNodes(tv_hwnd) -- store handle of each node in a table
+  local sel_item = reaper.JS_WindowMessage_Send(tv_hwnd, TVM_GETNEXTITEM, TVGN_CARET, 0,0,0)  -- get handle of selected node
+
+  -- get selected item as index #
+  for i = 1, #all_nodes do
+    if all_nodes[i] == sel_item then
+     reaper.ShowConsoleMsg('Selected index = '..i-1 ..'\n')
+     break
+    end
+  end
+
+  -- example, select [Audio > MIDI devices] node
+  SelectItem(tv_hwnd, all_nodes[9])
+end
+
+TVM_EXPAND = "0x1102"
+TVM_GETNEXTITEM = "0x110A"
+TVM_SELECTITEM  = "0x110B"
+TVGN_ROOT = 0x0
+TVGN_NEXT = 0x1
+TVGN_CHILD = 0x4
+TVGN_CARET = 0x9
+TVE_COLLAPSE = 0x1
+TVE_EXPAND = 0x2
+
+Main()
+Have fun!"
+	
+
     GetProjectLength - should return the last envelope-point-position as well(how to do that for pooled items?)
     
-    GetSetMediaItemTake_Reverse - sets a MediaItemTake reversed/normal -> not existing in normal Reaper-API
+    SetMediaItemTake_Reverse - sets a MediaItemTake reversed/normal -> not existing in normal Reaper-API
     
     OpenURL muss noch url umwandeln auf Ansi Codepage 1252 auf Windows?. Also mit Bat-Datei arbeiten.
     
@@ -26,8 +104,6 @@
     
     FX-Names with Reaper's own API-functions have three different types on Mac, for Studiolink On Air.
     I need functions, who take care of that in the API.
-    
-    GetAllMarkersBetween/GetAllRegionsBetween - if startposition/endposition==nil then start/endposition=0/GetProjectLength
 
     Add range before and after the position, so you can get markers, who aren't at the exact position
     Use GetAllMarkersBetween/GetAllRegionsBetween to get them.
@@ -115,7 +191,7 @@
                - IsValid-check functions for
                     - AutomationItems, ProjectBay, Metronome, MasterPlayspeed, Tempo, Extensions, MasterHWVolEnv, MasterFXList, MasterDualPanEnv
                       MasterDualPanEnv2, MasterDualPanEnvL, MasterDualPanEnvL2, MasterVolEnv, MasterVolEnv2, MasterVolEnv3, MasterHWPanEnv, TempoEnv_Ex   
-        - TODO!! Add/Set/DeleteModulation
+         - TODO!! Add/Set/DeleteModulation
          - TODO!! MB and GetUserInputs not working on Mac due unknown bug. 
                  Can't find ID of the buttons anymore. Changes in Reaper in recent versions?
          - TODO!! GetUserInputs - count doesn't match, if fewer inputboxes are filled than do exist.
@@ -156,17 +232,6 @@
       TODO!!  - totype(value, string type), converts a value to type and returns it, if impossible, returns nil; includes string, boolean, integer, float, hex, oct, base64, etc
       TODO!!  - SetStateChunk-functions: how to check for ProjectStateChunk/TrackStateChunk/ItemStateChunk/EnvStateChunk, when new parameters are added to the function?
                                          something with ... ? Otherwise, new added parameters will break old scripts...
-      TODO!!  - import/export Bonus-script-packs-functions(for importing and registering additional bonus scripts)
-      TODO!!  - Add3rdParty-Script-support/functions-support
-      TODO!!  - AddUltraschallScripts() AddUltraschall3rdPartyScripts() add all 3rd party-scripts from the 3rd-party-US-folder
-            also add scripts to do that, that will be registered into the ActionList together with the ShowUSApiHelp-script as well
-            Note: Should be a script, rather than a function. Easier to handle.
-      TODO!!  - Import3rdPartyScripts(string filelist, integer script_target, boolean add)
-              copies files from filelist into script_target
-              script_target - 0, scripts-folder
-                            - 1, ultraschall-3rd-party-scripts-folder
-                            --1, don't copy files
-              boolean add - true, add the scripts to the actionlist; false, remove them from the action-list
       TODO!!  - create HTML-docs from all files in the functions-department of Ultraschall/3rd-party-functions
       TODO!!  - GFX: virtual screenbuffers(create/remove/blit)
                 - probably useless and tow slow
@@ -221,6 +286,85 @@ TODO!! buggy function
 
 ## Ultraschall Framework - Changelog
 
+### 4.1.002 - "The Buzzcocks - Why can't I touch it" - 8th of June 2020
+
+Has now 1146 functions, with 17 new ones
+
+**new in this release:**
+
+  - **Video window-Toggle Fullscreen**  
+  You can now toggle the video-window fullscreen/non-fullscreen via VideoWindow\_FullScreenToggle. 
+  
+  - **Activate/Deactivate Mute-envelopes**  
+  Wasn't possible until now: activation and deactivation of Mute-Envelopes, as otherwise you cannot write to them.
+  
+  - **MuteActions more stable**  
+  They should now set mute-envelope-points properly, no matter of mute-env-armstate and/or automation-mode.
+  
+  - **Project-Diffs-Developertool**  
+  Reimplemented, so it shows only the diff-lines now.
+  
+  - **Benchmarking-functions**  
+  You can have multiple benchmark-slots, so benchmarking multiple values at the same time is now possible.  
+  That way, you can benchmark the whole script and individual functions in one go.
+  
+  - **Item Buttons can be now toggled**  
+  Now, you can toggle the buttons shown at the top of the MediaItem, like mute, FX, Envelopes, etc. Change them in one go, to have different "profiles"
+  of MediaItem-buttons, that reflect the usecases of your different projects.
+  
+  - **PreventUIRefresh and RestoreUIRefresh**
+  Like Reaper's own PreventUIRefresh, but prevents accidental misuse of its counter, as the counting up is done by PreventUIRefresh and the "reset" of a  
+  PreventUIRefresh can be undone by RestoreUIRefresh.  
+  When using RestoreUIRefresh(true), all ultraschall.PreventUIRefresh-calls are reset, so the user-interface of Reaper is useable again.
+  
+  - **bugfixes and readdition of accidentally deleted function..oops ;)**
+
+#### New features in 4.1.002
+   - Benchmarking: Benchmark\_GetAllStartTimesAndSlots - returns the starttimes of all current benchmark-measuring-slots as a handy table(index=slot number)
+   - Envelope Management: SetEnvelopeState\_Act - sets bypass and automation-items-behavior
+   - Envelope Management: SetEnvelopeState\_DefShape - sets the default-envelope shapes and pitch-snap-settings
+   - Envelope Management: SetEnvelopeState\_LaneHeight - sets the height and compacted state of an envelope
+   - Envelope Management: SetEnvelopeState\_Vis - sets the visibility-state of an envelope
+   - Mute Management: ActivateMute - activates a mute-envelope of a track
+   - Mute Management: ActivateMute\_TrackObject - activates a mute-envelope of a track
+   - Mute Management: DeactivateMute - deactivates a mute-envelope of a track
+   - Mute Management: DeactivateMute\_TrackObject - deactivates a mute-envelope of a track
+   - Take Management: GetTake\_ReverseState - returns, if a take is reversed or not
+   - User Interface: GetItemButtonsVisible - gets the individual item-buttons visible/invisible-state
+   - User Interface: GetPreventUIRefreshCount - the number of times you need to restore UI-refresh
+   - User Interface: PreventUIRefresh - prevents refreshing of the user-interface, more solid, than Reaper's own PreventUIRefresh-function
+   - User Interface: RestoreUIRefresh - restores a prevented UI-refreshing
+   - User Interface: SetItemButtonsVisible - sets the individual item-buttons visible/invisible
+   - User Interface: VideoWindow\_FullScreenToggle - toggles full-screen-state of the video-processor-window(requested by vectorwarrior)
+   
+#### Changes from 4.1.001 to 4.1.002
+   - Benchmarking: Benchmark\_GetStartTime - has now additional optional parameter slot to get the starttime of a certain benchmarking-slot(requested by rstockm)
+   - Benchmarking: Benchmark\_MeasureTime - has now additional optional parameter slot, with which you can store multiple measurings into different slots, for more benchmarks than just one(requested by rstockm)
+   - Developer Tools: ultraschall\_developertool\_Project\_State\_Diffs\_Monitor.lua - improved so it now only shows changed lines and therfore proper diffs
+   - Docs: Reaper internals - updated to Reaper 6.11, SWS 2.11.0 and JS-extension 1.215; added accidentally missing functions
+   - Docs: US-docs - functionname's last ) was not bold for some reason -> fixed
+   - Envelope Management: GetEnvelopeState\_DefShape - added missing descriptions for returnvalues for pitch-snap
+   - GUI: Scythe - loads its libraries from UserPlugins\ultraschall\_api\3rd\_party\_modules\Scythe\ now, so it shouldn't get in conflict with user's own installation of a Scythe-instance
+   - Marker Management: CountNormalMarkers - optimized speed
+   - Marker Management: GetAllMarkersBetween - parameters can be nil now, allowing to be used for projectstart and projectend
+   - Marker Management: GetAllRegionsBetween - parameters can be nil now, allowing to be used for projectstart and projectend
+   - Marker Management: EnumerateNormalMarkers - optimized speed
+   - Marker Management: SetNormalMarker - optimized speed
+   - Marker Management: DeleteNormalMarker - optimized speed
+   - Marker Management: IsMarkerNormal - optimized speed
+   - Mute Management: GetNextMuteState - returns now the mutestate, even if no mute-envelope is active
+   - Mute Management: GetNextMuteState\_TrackObject - returns now the mutestate, even if no mute-envelope is active
+   - Mute Management: GetPreviousMuteState - returns now the mutestate, even if no mute-envelope is active
+   - Mute Management: GetPreviousMuteState\_TrackObject - returns now the mutestate, even if no mute-envelope is active; didn't return envIDX correctly -> fixed
+   - Mute Management: ToggleMute - sets now mute-envelope point regardless of env-recarm or automation-mode; activates inactive mute-envelopes now as well
+   - Mute Management: ToggleMute\_TrackObject - sets now mute-envelope point regardless of env-recarm or automation-mode; activates inactive mute-envelopes now as well
+   - Project Files: GetProject\_MarkersAndRegions - supports now returning regions-states of selected and region render-matrix; fixed bugs with selected regions not recognized(thanks to aurelien)
+   - Render: ApplyRenderTable\_Project - had problem, when applied twice in a script -> fixed(thanks to aurelien)
+   - Render: ApplyRenderTable\_ProjectFile - had problem, when applied twice in a script -> fixed(thanks to aurelien)
+   - SetRender_SaveCopyOfProject - got accidentally deleted, readded it now (thanks to aurelien)
+
+---
+
 ### 4.1.001 - "Radiohead - Spectre"
 
 Has now 1129 functions, with 18 new ones
@@ -230,14 +374,14 @@ Has now 1129 functions, with 18 new ones
   - **Automation Items**  
   You can get all automation-items as well as deleting the ones you want to delete.  
   That's right, you can now safely delete one programmatically!
-  
+
   - **Rendering functions**  
   Support now the new rendering options of Reaper 6.10: embedding Take markers as well as Do not render files that are likely silent.  
   Note: Reaper 6.10 has a bug, which prevents simultaneously from setting Add to Project and Do not render files   likely silent-checkboxes of the Render to File-dialog. Fixed in later versions of Reaper.
 
   - **SetTrack\_LastTouched**  
   Allows you to set a track as last touched, which wasn't possible before.
-  
+
   - **SetTrack\_Trackheight\_Force**  
   Sets the trackheight of a track to any height you like, including heights not allowed by the theme.  
   That way, you can set the trackheight to e.g. 1px, allowing you better organisation of your arrangeview's tracks.

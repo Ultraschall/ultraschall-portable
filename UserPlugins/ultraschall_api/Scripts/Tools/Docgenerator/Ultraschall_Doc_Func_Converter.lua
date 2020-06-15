@@ -589,8 +589,8 @@ function header()
 end
 
 function contentindex()
-  FunctionList=FunctionList.."<br><br><img src=\"gfx/us.png\"><div style=\"padding-left:0%;\"><br>"..version..beta.." - "..Tagline.." - "..date.." - Build: "..build..[[</div><h3>The Functions Reference</h3>
-      To add the API to your script, just add<p>
+  FunctionList=FunctionList.."<br><br><img src=\"gfx/us.png\"><div style=\"padding-left:0%;\"><br>"..version.."."..beta.." - "..Tagline.." - "..date.." - Build: "..build..[[</div><h3>The Functions Reference</h3>
+      To add the API to your script after installing it, just add<p>
       
       <pre><code>
         dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
@@ -860,11 +860,8 @@ for lolo=1, 60 do
       if two==nil then two="" end
       lua="<b>"..one.."</b>"..two 
     end --B[i][1] end
-    if temp~=nil then B[i][1]=string.gsub(B[i][1],temp:sub(1,-2).."%(","<b>"..temp.."</b>") lua=B[i][1] end
---    if B[i][2]=="cpp" then cpp="<div class=\"c_func\"><span class='all_view'>C: </span><code>"..B[i][1]:sub(1,-2).."<b>)</b></code><br><br></div>" end
---    if B[i][2]=="eel" then eel="<div class=\"e_func\"><span class='all_view'>EEL: </span><code>"..B[i][1]:sub(1,-2).."<b>)</b></code><br><br></div>" end
+    if temp~=nil then B[i][1]=string.gsub(B[i][1],temp:sub(1,-2).."%(","<b>"..temp.."</b>") if B[i][1]:sub(-1,-1)==")" then B[i][1]=B[i][1]:sub(1,-2).."<b>)</b>" end lua=B[i][1] end
     if B[i][2]=="lua" and lua==nil then lua="<div class=\"l_func\"><span class='all_view'></span><code>"..temp.."<b>)</b></code><br><br></div>" end
---    if B[i][2]=="python" then python="<div class=\"p_func\"><span class='all_view'>Python: </span><code>"..B[i][1]:sub(1,-2).."<b>)</b></code><br><br></div>" end
   end
   if cpp==nil then cpp="" end
   if eel==nil then eel="" end

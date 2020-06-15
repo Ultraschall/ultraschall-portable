@@ -8302,8 +8302,8 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_MarkersAndRegions</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=6.02
+    Ultraschall=4.1
+    Reaper=6.11
     Lua=5.3
   </requires>
   <functioncall>integer markerregioncount, integer NumMarker, integer Numregions, array Markertable = ultraschall.GetProject_MarkersAndRegions(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -8320,13 +8320,20 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
     integer markerregioncount - the number of markers and regions in the projectfile/ProjectStateChunk
     array markertable - an array with all elements of markers/regions
                       - markertable has the following entries:
-                      - markertable[id][1]=boolean isrgn - true, marker is a region; false, marker is a normal marker
-                      - markertable[id][2]=number pos    - the startposition of the marker/region
-                      - markertable[id][3]=number rgnend - the endposition of a region; 0, if it's a marker
-                      - markertable[id][4]=string name   - the name of the marker/region
-                      - markertable[id][5]=integer markrgnindexnumber - the shown number of the region/marker
-                      - markertable[id][6]=integer color - the color-value of the marker
-                      - markertable[id][7]=string guid - the guid of the marker
+                      - markertable[id][1] = boolean isrgn - true, marker is a region; false, marker is a normal marker
+                      - markertable[id][2] = number pos    - the startposition of the marker/region
+                      - markertable[id][3] = number rgnend - the endposition of a region; 0, if it's a marker
+                      - markertable[id][4] = string name   - the name of the marker/region
+                      - markertable[id][5] = integer markrgnindexnumber - the shown number of the region/marker
+                      - markertable[id][6] = integer color - the color-value of the marker
+                      - markertable[id][7] = string guid - the guid of the marker
+					  - markertable[id][8] = if a region: true, region is selected; false, region is not selected
+					  - markertable[id][9] = if a region: true, region-render-matrix Master mix is selected; false, region-render-matrix Master mix is unselected
+					  - markertable[id][10]= if a region: true, region-render-matrix All tracks is selected; false, region-render-matrix All tracks is unselected
+
+					  MarkerArray[MarkerCount][8]=tonumber(isrgn)&8==8  -- is region selected?
+	MarkerArray[MarkerCount][9]=tonumber(isrgn)&4==4  -- is region-matrix-mastermix selected?
+MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks selected?
   </retvals>
   <chapter_context>
     Project-Management
@@ -8366,14 +8373,14 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
 
     local shownnumber, position, name, isrgn, color, unknown, unknown2, guid = Marker:match("MARKER (.-) (.-) \"(.-)\" (.-) (.-) (.-) (.-) (.-) ")
     if name==nil then shownnumber, position, name, isrgn, color, unknown, unknown2, guid = Marker:match("MARKER (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) ") end
-    if isrgn=="1" then 
+    if tonumber(isrgn)&1==1 then 
       endposition, Markerlist=Markerlist:match("MARKER .- (.-) .-(MARKER.*)") 
     else 
       endposition=0.0 
     end
     
     MarkerArray[MarkerCount]={}
-    if tonumber(isrgn)==1 then 
+    if tonumber(isrgn)&1==1 then 
       MarkerArray[MarkerCount][1]=true 
       NumRegions=NumRegions+1 
     else 
@@ -8387,6 +8394,9 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
     MarkerArray[MarkerCount][5]=tonumber(shownnumber)
     MarkerArray[MarkerCount][6]=tonumber(color)
     MarkerArray[MarkerCount][7]=guid
+	MarkerArray[MarkerCount][8]=tonumber(isrgn)&8==8  -- is region selected?
+	MarkerArray[MarkerCount][9]=tonumber(isrgn)&4==4  -- is region-matrix-mastermix selected?
+	MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks selected?
   end
   return MarkerCount, NumMarker, NumRegions, MarkerArray
 end

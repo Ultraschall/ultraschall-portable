@@ -40,6 +40,75 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.1.002 - "The Buzzcocks - Why can't I touch it" - 8th of June 2020</h3>
+<p>Has now 1146 functions, with 17 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Video window-Toggle Fullscreen</strong><br />
+You can now toggle the video-window fullscreen/non-fullscreen via VideoWindow_FullScreenToggle.</p></li>
+<li><p><strong>Activate/Deactivate Mute-envelopes</strong><br />
+Wasn't possible until now: activation and deactivation of Mute-Envelopes, as otherwise you cannot write to them.</p></li>
+<li><p><strong>MuteActions more stable</strong><br />
+They should now set mute-envelope-points properly, no matter of mute-env-armstate and/or automation-mode.</p></li>
+<li><p><strong>Project-Diffs-Developertool</strong><br />
+Reimplemented, so it shows only the diff-lines now.</p></li>
+<li><p><strong>Benchmarking-functions</strong><br />
+You can have multiple benchmark-slots, so benchmarking multiple values at the same time is now possible.<br />
+That way, you can benchmark the whole script and individual functions in one go.</p></li>
+<li><p><strong>Item Buttons can be now toggled</strong><br />
+Now, you can toggle the buttons shown at the top of the MediaItem, like mute, FX, Envelopes, etc. Change them in one go, to have different "profiles" of MediaItem-buttons, that reflect the usecases of your different projects.</p></li>
+<li><p><strong>PreventUIRefresh and RestoreUIRefresh</strong> Like Reaper's own PreventUIRefresh, but prevents accidental misuse of its counter, as the counting up is done by PreventUIRefresh and the "reset" of a<br />
+PreventUIRefresh can be undone by RestoreUIRefresh.<br />
+When using RestoreUIRefresh(true), all ultraschall.PreventUIRefresh-calls are reset, so the user-interface of Reaper is useable again.</p></li>
+<li><p><strong>bugfixes and readdition of accidentally deleted function..oops ;)</strong></p></li>
+</ul>
+<h4>New features in 4.1.002</h4>
+<ul>
+<li>Benchmarking: Benchmark_GetAllStartTimesAndSlots - returns the starttimes of all current benchmark-measuring-slots as a handy table(index=slot number)</li>
+<li>Envelope Management: SetEnvelopeState_Act - sets bypass and automation-items-behavior</li>
+<li>Envelope Management: SetEnvelopeState_DefShape - sets the default-envelope shapes and pitch-snap-settings</li>
+<li>Envelope Management: SetEnvelopeState_LaneHeight - sets the height and compacted state of an envelope</li>
+<li>Envelope Management: SetEnvelopeState_Vis - sets the visibility-state of an envelope</li>
+<li>Mute Management: ActivateMute - activates a mute-envelope of a track</li>
+<li>Mute Management: ActivateMute_TrackObject - activates a mute-envelope of a track</li>
+<li>Mute Management: DeactivateMute - deactivates a mute-envelope of a track</li>
+<li>Mute Management: DeactivateMute_TrackObject - deactivates a mute-envelope of a track</li>
+<li>Take Management: GetTake_ReverseState - returns, if a take is reversed or not</li>
+<li>User Interface: GetItemButtonsVisible - gets the individual item-buttons visible/invisible-state</li>
+<li>User Interface: GetPreventUIRefreshCount - the number of times you need to restore UI-refresh</li>
+<li>User Interface: PreventUIRefresh - prevents refreshing of the user-interface, more solid, than Reaper's own PreventUIRefresh-function</li>
+<li>User Interface: RestoreUIRefresh - restores a prevented UI-refreshing</li>
+<li>User Interface: SetItemButtonsVisible - sets the individual item-buttons visible/invisible</li>
+<li>User Interface: VideoWindow_FullScreenToggle - toggles full-screen-state of the video-processor-window(requested by vectorwarrior)</li>
+</ul>
+<h4>Changes from 4.1.001 to 4.1.002</h4>
+<ul>
+<li>Benchmarking: Benchmark_GetStartTime - has now additional optional parameter slot to get the starttime of a certain benchmarking-slot(requested by rstockm)</li>
+<li>Benchmarking: Benchmark_MeasureTime - has now additional optional parameter slot, with which you can store multiple measurings into different slots, for more benchmarks than just one(requested by rstockm)</li>
+<li>Developer Tools: ultraschall_developertool_Project_State_Diffs_Monitor.lua - improved so it now only shows changed lines and therfore proper diffs</li>
+<li>Docs: Reaper internals - updated to Reaper 6.11, SWS 2.11.0 and JS-extension 1.215; added accidentally missing functions</li>
+<li>Docs: US-docs - functionname's last ) was not bold for some reason -&gt; fixed</li>
+<li>Envelope Management: GetEnvelopeState_DefShape - added missing descriptions for returnvalues for pitch-snap</li>
+<li>GUI: Scythe - loads its libraries from UserPlugins\ultraschall_api\3rd_party_modules\Scythe\ now, so it shouldn't get in conflict with user's own installation of a Scythe-instance</li>
+<li>Marker Management: CountNormalMarkers - optimized speed</li>
+<li>Marker Management: GetAllMarkersBetween - parameters can be nil now, allowing to be used for projectstart and projectend</li>
+<li>Marker Management: GetAllRegionsBetween - parameters can be nil now, allowing to be used for projectstart and projectend</li>
+<li>Marker Management: EnumerateNormalMarkers - optimized speed</li>
+<li>Marker Management: SetNormalMarker - optimized speed</li>
+<li>Marker Management: DeleteNormalMarker - optimized speed</li>
+<li>Marker Management: IsMarkerNormal - optimized speed</li>
+<li>Mute Management: GetNextMuteState - returns now the mutestate, even if no mute-envelope is active</li>
+<li>Mute Management: GetNextMuteState_TrackObject - returns now the mutestate, even if no mute-envelope is active</li>
+<li>Mute Management: GetPreviousMuteState - returns now the mutestate, even if no mute-envelope is active</li>
+<li>Mute Management: GetPreviousMuteState_TrackObject - returns now the mutestate, even if no mute-envelope is active; didn't return envIDX correctly -&gt; fixed</li>
+<li>Mute Management: ToggleMute - sets now mute-envelope point regardless of env-recarm or automation-mode; activates inactive mute-envelopes now as well</li>
+<li>Mute Management: ToggleMute_TrackObject - sets now mute-envelope point regardless of env-recarm or automation-mode; activates inactive mute-envelopes now as well</li>
+<li>Project Files: GetProject_MarkersAndRegions - supports now returning regions-states of selected and region render-matrix; fixed bugs with selected regions not recognized(thanks to aurelien)</li>
+<li>Render: ApplyRenderTable_Project - had problem, when applied twice in a script -&gt; fixed(thanks to aurelien)</li>
+<li>Render: ApplyRenderTable_ProjectFile - had problem, when applied twice in a script -&gt; fixed(thanks to aurelien)</li>
+<li>SetRender_SaveCopyOfProject - got accidentally deleted, readded it now (thanks to aurelien)</li>
+</ul>
+<hr />
 <h3>4.1.001 - "Radiohead - Spectre"</h3>
 <p>Has now 1129 functions, with 18 new ones</p>
 <p><strong>new in this release:</strong></p>

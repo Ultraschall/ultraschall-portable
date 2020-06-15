@@ -2119,6 +2119,7 @@
                                             - &1, a region
                                             - &2, Region-render-matrix: add all tracks to the rendering of this region
                                             - &4, Region-render-matrix: add Mastermix to the rendering of this region
+											- &8, Region is selected
       integer markercolor - the color of the marker
       integer unknown - unknown
       string R - unknown, default is a simple R
