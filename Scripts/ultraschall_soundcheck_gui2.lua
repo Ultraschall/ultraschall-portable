@@ -269,14 +269,21 @@ GUI.name = "Ultraschall Soundcheck"
 GUI.w, GUI.h = 1000, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 
-------------------------------------------------------
--- position always in the center of the screen
-------------------------------------------------------
+GUI.x = ultraschall.GetUSExternalState("ultraschall_soundcheck", "xpos")
+GUI.y = ultraschall.GetUSExternalState("ultraschall_soundcheck", "ypos")
+
+-- Wenn keine gespeichert, positioniere mittig im REAPER-Fenster
+
 
 l, t, r, b = 0, 0, GUI.w, GUI.h
-__, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
-GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
+  __, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
+
+if GUI.x == "" or GUI.y == "" then
+   GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
+end
+
 refresh_gui = true
+firstrun = true
 
 show_info = toboolean(ultraschall.GetUSExternalState("ultraschall_gui", "showinfo"))
 
@@ -312,14 +319,31 @@ function buildGuiWarnings()
   lastDescriptionLines = description_lines
 
 
+  dockState, xpos, ypos, width, height = gfx.dock(-1, 0, 0, 0, 0) -- hole die aktuelle Position des GFX Fensters
+
+  if firstrun == true then -- beim ersten Aufruf werden die bisherigen Werte genommen
+    firstrun = false
+  else
+    if xpos ~= GUI.x or ypos ~= GUI.y then -- Fenster wurde verschoben, daher neue Werte holen
+
+      GUI.x = xpos
+      GUI.y = ypos
+      retval = ultraschall.SetUSExternalState("ultraschall_soundcheck", "xpos", tostring(xpos)) -- schreibe die neue X-Position
+      retval = ultraschall.SetUSExternalState("ultraschall_soundcheck", "ypos", tostring(ypos)) -- schreibe die neue X-Position
+
+    end
+  end
+
+
   if refresh_gui == true then
 
     WindowHeight = 140 + (paused_warning_count*60) + (active_warning_count*30) + description_lines*30
     if active_warning_count + paused_warning_count == 0 then WindowHeight = 500 end
     -- GUI.y = (screen_h - WindowHeight + 210 - warningCount*30) / 2
-    GUI.y = (screen_h - WindowHeight) - 150
+    -- GUI.y = (screen_h - WindowHeight) - 150
     -- GUI.y = 300
     gfx.init("", 1000, WindowHeight, 0, GUI.x, GUI.y)
+
     refresh_gui = false
 
   end
