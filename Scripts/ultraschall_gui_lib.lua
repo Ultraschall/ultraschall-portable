@@ -1516,13 +1516,14 @@ value     selected an/aus (numerischer Wert 0/1)
 
 -- Checklist - New
 local Checklist = {}
-function Checklist:new(x, y, w, h, caption, opts, pad, value, sectionName)
+function Checklist:new(x, y, w, h, caption, opts, pad, value, sectionName, limit)
 
 
 
   local chk = {}
   chk.type = "Checklist"
   chk.sectionname = sectionName
+  chk.limit = limit or 255
 
   chk.x, chk.y, chk.w, chk.h = x * dpi_scale
   , y * dpi_scale
@@ -1592,7 +1593,6 @@ function Checklist:draw()
 
   for i = 1, self.numopts do
 
-
     -- Draw the option frame
     GUI.color("elm_frame")
     gfx.rect(x + size / 2, cur_y + (optheight - size) / 2, size, size, 0)
@@ -1615,7 +1615,15 @@ function Checklist:draw()
     gfx.y = cur_y + (optheight - str_h) / 2
 
     if self.numopts == 1 then
-      GUI.shadow(self.optarray[i])
+
+      if string.len(self.optarray[i]) > self.limit then
+        draw_txt = string.sub (self.optarray[i], 1, self.limit) .. "..."
+      else
+        draw_txt = self.optarray[i]
+      end
+
+      GUI.shadow(draw_txt)
+      -- print(self.limit)
     else
       GUI.color("txt")
       gfx.drawstr(self.optarray[i])
