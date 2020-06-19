@@ -25,6 +25,8 @@
 ]]
 
 
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
 function Msg(val)
 	reaper.ShowConsoleMsg(tostring(val).."\n")
 end
@@ -42,14 +44,84 @@ function GetPath(str,sep)
 
 end
 
+local function splitWords(Lines, limit)
+  while #Lines[#Lines] > limit do
+          Lines[#Lines+1] = Lines[#Lines]:sub(limit+1)
+          Lines[#Lines-1] = Lines[#Lines-1]:sub(1,limit)
+  end
+end
+
+
+local function wrap(str, limit)
+  local Lines, here, limit, found = {}, 1, limit or 72, str:find("(%s+)()(%S+)()")
+
+  if found then
+          Lines[1] = string.sub(str,1,found-1)  -- Put the first word of the string in the first index of the table.
+  else Lines[1] = str end
+
+  str:gsub("(%s+)()(%S+)()",
+          function(sp, st, word, fi)  -- Function gets called once for every space found.
+                  splitWords(Lines, limit)
+
+                  if fi-here > limit then
+                          here = st
+                          Lines[#Lines+1] = word                                                                                   -- If at the end of a line, start a new table index...
+                  else Lines[#Lines] = Lines[#Lines].." "..word end  -- ... otherwise add to the current table index.
+          end)
+
+  splitWords(Lines, limit)
+
+  return Lines
+end
+
+
+function buildExportStep()
+
+	local infotable = wrap(StepDescription,60) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
+
+	local block = GUI.Area:new(200,position-10,752, areaHeight,5,1,1,"section_bg")
+	table.insert(GUI.elms, block)
+
+	local heading = GUI.Lbl:new(210, position-2, StepNameDisplay, 0, "txt", 2)
+	table.insert(GUI.elms, heading)
+
+	local light = GUI.Area:new(48,position-5,10,21,3,1,1,state_color)
+	table.insert(GUI.elms, light)
+
+	local statusbutton = GUI.Btn:new(65, position-4, 110, 20,         status_txt, "")
+	table.insert(GUI.elms, statusbutton)
+
+	for k, warningtextline in pairs(infotable) do
+
+		local infotext = GUI.Lbl:new(210, warnings_position, warningtextline, 0, "txt_grey")
+		table.insert(GUI.elms, infotext)
+		warnings_position = warnings_position +20
+
+		-- print(k, v)
+	end
+
+	local ButtonPosition = position + (areaHeight*0.5) - 83
+
+	local button_offset = 25
+	local button1 = GUI.Btn:new(790, ButtonPosition+40+button_offset, 144, 20,  button_txt, runcommand, button_action)
+	table.insert(GUI.elms, button1)
+
+end
+
+
+
 -- initiate values
 
 local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
+gfx_path = script_path.."/Ultraschall_Gfx/Soundcheck/"
+header_path = script_path.."/Ultraschall_Gfx/Headers/"
+
+
 
 GUI.name = "Ultraschall Export Assistant"
-GUI.w, GUI.h = 660, 500
+GUI.w, GUI.h = 1000, 700
 
 -- position always in the centre of the screen
 
@@ -121,62 +193,122 @@ function buildGUI()
 	GUI.elms = {}
 
 
-	y_offset = -30  -- move all content up/down
+	y_offset = 50  -- move all content up/down
 	spacing = 10
+
+	------------------
+  ------- Header
+	------------------
+
+  header = GUI.Area:new(0,0,1000,90,0,1,1,"header_bg")
+  table.insert(GUI.elms, header)
+
+  logo = GUI.Pic:new(          45,  25,   0,  0,    1,   header_path.."export_logo.png")
+  table.insert(GUI.elms, logo)
+
+  headertxt = GUI.Pic:new(          115,  36,   0,  0,    0.8,   header_path.."headertxt_export.png")
+  table.insert(GUI.elms, headertxt)
+
+
+
 
 	-- Heading
 
-	label3 = GUI.Lbl:new(30,  70+y_offset,"Follow these simple steps:", 0)
-	table.insert (GUI.elms, label3)
+--	label3 = GUI.Lbl:new(30,  70+y_offset,"Follow these simple steps:", 0)
+--	table.insert (GUI.elms, label3)
 
 	-- 1. Export MP3
 
-	label2 = GUI.Lbl:new(30,  120+y_offset,"1.", 0)
-	table.insert (GUI.elms, label2)
-	label = GUI.Lbl:new(50,  120+y_offset,"Export MP3\nRender your Podcast to a MP3 File.", 0)
-	table.insert (GUI.elms, label)
-	export = GUI.Btn:new(430, 120+y_offset, 190, 40,"Export MP3", runcommand, "_Ultraschall_Render_Check_For_MP3")
-	table.insert (GUI.elms, export)
-	y_offset = y_offset + spacing
+
+	filecount, files = ultraschall.GetAllFilenamesInPath(dir)
+
+	state_color = "txt_red"
+	status_txt = " no MP3 found"
+
+	for i=1, filecount do
+		if ( string.sub( files[i], -3 ) ) == "mp3" then
+			state_color = "txt_yellow"
+			status_txt = " unknown MP3 found"
+
+		end
+	end
+
+	areaHeight = 80
+	position = 90 + y_offset
+	StepNameDisplay = "1. Export MP3"
+	StepDescription = "Render your Podcast to a MP3 File. Make use of our prests in the top right corner of the render-dialog."
+	warnings_position = position+30
+	button_txt = "Export MP3"
+	button_action = "_Ultraschall_Render_Check"
+
+	buildExportStep()
+
 
 	-- 2. Chapter Markers
 
-	label2 = GUI.Lbl:new(30,  185+y_offset,"2.", 0)
-	table.insert (GUI.elms, label2)
-	label = GUI.Lbl:new(50,  185+y_offset,"Chapter Markers\nYou may take a final look at your chapter markers,\nand add URLs or images to them.", 0)
-	table.insert (GUI.elms, label)
-	chapters = GUI.Btn:new(430, 185+y_offset, 190, 40, "Edit Chapters", runcommand, "_Ultraschall_Marker_Dashboard")
-	table.insert (GUI.elms, chapters)
-	y_offset = y_offset + spacing
+
+	areaHeight = 90
+	position = 190 + y_offset
+	StepNameDisplay = "2. Chapter Markers"
+	state_color = "txt_green"
+	StepDescription = "You may take a final look at your chapter markers, and add URLs or images to them."
+	warnings_position = position+30
+	button_txt = "Edit Chapters"
+	button_action = "_Ultraschall_Marker_Dashboard"
+	status_txt = " OK"
+
+	buildExportStep()
+
 
 	-- 3. ID3 Metadata
 
-	label2 = GUI.Lbl:new(30,  250+y_offset,"3.", 0)
-	table.insert (GUI.elms, label2)
-	label = GUI.Lbl:new(50,  250+y_offset,"ID3 Metadata\nUse the ID3 Editor to add metadata to your podcast.", 0)
-	table.insert (GUI.elms, label)
-	metadata = GUI.Btn:new(430, 250+y_offset, 190, 40, "Edit MP3 Metadata", runcommand, "_Ultraschall_Edit_ID3_Tags")
-	table.insert (GUI.elms, metadata)
-	y_offset = y_offset + spacing
+	areaHeight = 70
+	position = 300 + y_offset
+	StepNameDisplay = "3. ID3 Metadata"
+	state_color = "txt_yellow"
+	status_txt = " Missing Metadata"
+	StepDescription = "Use the ID3 Editor to add metadata to your podcast."
+	warnings_position = position+30
+	button_txt = "Edit MP3 Metadata"
+	button_action = "_Ultraschall_Edit_ID3_Tags"
+
+	buildExportStep()
+
 
 	-- 4. - Image
 
-	label2 = GUI.Lbl:new(30,  320+y_offset,"4.", 0)
-	table.insert (GUI.elms, label2)
 
-	if img_index then
-		logo = GUI.Pic:new(484,310+y_offset, 80, 80, img_ratio, img_adress, runcommand, "_Ultraschall_Open_Project_Folder")
-		table.insert (GUI.elms, logo)
-		label3 = GUI.Lbl:new(50,  320+y_offset,"Podcast Episode Image:\nFound.", 0)
-		table.insert (GUI.elms, label3)
-	else
-		label3 = GUI.Lbl:new(50,  320+y_offset,"Podcast Episode Image\nJust put a square .jpg, .jpeg or .png image with the\nname 'cover.xyz' OR with the same name as your\nproject file (.RPP) in the project folder.", 0)
-		table.insert (GUI.elms, label3)
-	end
+	areaHeight = 100
+	position = 390 + y_offset
+	StepNameDisplay = "4. Podcast Episode Image"
+	state_color = "txt_green"
+	status_txt = " Found"
+	StepDescription = "Just put a square .jpg, .jpeg or .png image with the name 'cover.xyz' OR with the same name as your project file (.RPP) in the project folder."
+	warnings_position = position+30
+	button_txt = "Drag Image here"
+	button_action = ""
 
-	y_offset = y_offset + spacing
+	buildExportStep()
 
 	-- 5. Finalize
+
+	areaHeight = 100
+	position = 510 + y_offset
+	StepNameDisplay = "5. Finalize MP3"
+	state_color = "txt_yellow"
+	status_txt = " Ready to finalize"
+	StepDescription = "Hit the button and select your MP3 to finalize it with metadata, chapters and episode image!"
+	warnings_position = position+30
+	button_txt = "Finalize MP3!"
+	button_action = "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"
+
+	buildExportStep()
+
+--[[
+
+
+
+
 
 	label2 = GUI.Lbl:new(30,  412+y_offset,"5.", 0)
 	table.insert (GUI.elms, label2)
@@ -184,6 +316,9 @@ function buildGUI()
 	table.insert (GUI.elms, label)
 	finalize = GUI.Btn:new(430, 412+y_offset, 190, 40,      "Finalize MP3!", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES")
 	table.insert (GUI.elms, finalize)
+
+  ]]
+
 
 end
 
