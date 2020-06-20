@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2016 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,8 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function PutActiveEnvelopesIntoLane_IfSetInPrefs()
+  -- shows all visible envelopes in either the track-lane or in it's own envelope-lane, depending 
+  -- on the setting in preferences -> Envelope Display -> Show new envelopes in separate envelope lanes
   Envlanes=reaper.SNM_GetIntConfigVar("envlanes", "-9999")&1
   if Envlanes&1==1 then
     -- show envelopes under the tracks
