@@ -1616,14 +1616,14 @@ function Checklist:draw()
 
     if self.numopts == 1 then
 
-      if string.len(self.optarray[i]) > self.limit then
+      if string.len(self.optarray[i]) > self.limit then -- es gibt eine Limitierung der Länge
         draw_txt = string.sub (self.optarray[i], 1, self.limit) .. "..."
       else
         draw_txt = self.optarray[i]
       end
 
       GUI.shadow(draw_txt)
-      -- print(self.limit)
+
     else
       GUI.color("txt")
       gfx.drawstr(self.optarray[i])
@@ -1697,6 +1697,21 @@ local Btn = {}
 function Btn:new(x, y, w, h, caption, func, ...)
 
   local btn = {}
+
+  if w == 1 then
+    str_w, str_h = gfx.measurestr(caption)
+    -- w = (string.len(caption)+3)*7
+    w = str_w / dpi_scale + 20
+    btn.blank = false
+  end
+  if w == 0 then
+    w = string.len(caption)*7
+    btn.blank = true
+  else
+    btn.blank = false
+  end
+
+
   btn.type = "Btn"
 
   btn.x, btn.y, btn.w, btn.h = x * dpi_scale
@@ -1728,7 +1743,7 @@ function Btn:draw()
   local state = self.state
 
   -- Draw the shadow
-  if state == 0 then
+  if state == 0 and self.blank ~= true then
     local dist = GUI.shadow_dist
     GUI.color("shadow")
     for i = 1, dist do
@@ -1756,11 +1771,14 @@ function Btn:draw()
   end
 
   -- Draw the button
-  GUI.color("button")
-  GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 4 * dpi_scale
-  , 1 * dpi_scale
-  , 1 * dpi_scale
-)
+
+  if self.blank ~= true then
+    GUI.color("button")
+    GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 4 * dpi_scale
+    , 1 * dpi_scale
+    , 1 * dpi_scale
+  )
+  end
 
 
   -- Draw the caption
@@ -1783,7 +1801,11 @@ function Btn:draw()
   end
 
   local str_w, str_h = gfx.measurestr(self.caption)
-  gfx.x = x + 1 * state + ((w - str_w) / 2) - 2 * dpi_scale
+  if self.blank ~= true then
+    gfx.x = x + 1 * state + ((w - str_w) / 2) - 2 * dpi_scale
+  else
+    gfx.x = x
+  end
 
   gfx.y = y + 1 * state + ((h - str_h) / 2) - 2 * dpi_scale
 

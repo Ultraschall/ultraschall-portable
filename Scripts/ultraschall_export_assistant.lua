@@ -79,21 +79,25 @@ function buildExportStep()
 
 	local infotable = wrap(StepDescription,60) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
 
-	local block = GUI.Area:new(200,position-10,752, areaHeight,5,1,1,"section_bg")
-	table.insert(GUI.elms, block)
 
-	local heading = GUI.Lbl:new(210, position-2, StepNameDisplay, 0, "txt", 2)
-	table.insert(GUI.elms, heading)
 
 	local light = GUI.Area:new(48,position-5,10,21,3,1,1,state_color)
 	table.insert(GUI.elms, light)
 
-	local statusbutton = GUI.Btn:new(65, position-4, 110, 20,         status_txt, "")
+	local statusbutton = GUI.Btn:new(65, position-4, 0, 20,         status_txt, "")
 	table.insert(GUI.elms, statusbutton)
+
+
+
+	local block = GUI.Area:new(210,position-10,752, areaHeight,5,1,1,"section_bg")
+	table.insert(GUI.elms, block)
+
+	local heading = GUI.Lbl:new(220, position-2, StepNameDisplay, 0, "txt", 2)
+	table.insert(GUI.elms, heading)
 
 	for k, warningtextline in pairs(infotable) do
 
-		local infotext = GUI.Lbl:new(210, warnings_position, warningtextline, 0, "txt_grey")
+		local infotext = GUI.Lbl:new(220, warnings_position, warningtextline, 0, "txt_grey")
 		table.insert(GUI.elms, infotext)
 		warnings_position = warnings_position +20
 
