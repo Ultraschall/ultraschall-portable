@@ -443,12 +443,13 @@ function Main()
     if new_time - GUI.last_time >= GUI.freq then
       GUI.func()
       GUI.last_time = new_time
+      gfx.update() -- rufe nur in der Frequenz des GUI Updates auf
 
     end
   end
 
+  -- gfx.update()
 
-  gfx.update()
 
 end
 
@@ -1700,7 +1701,6 @@ function Btn:new(x, y, w, h, caption, func, ...)
 
   if w == 1 then
     str_w, str_h = gfx.measurestr(caption)
-    -- w = (string.len(caption)+3)*7
     w = str_w / dpi_scale + 20
     btn.blank = false
   end

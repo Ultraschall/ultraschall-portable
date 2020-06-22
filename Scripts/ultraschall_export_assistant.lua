@@ -143,6 +143,7 @@ if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     separator = "
 
 function buildGUI()
 
+
 	retval, project_path_name = reaper.EnumProjects(-1, "")
 	if project_path_name ~= "" then
 		dir = GetPath(project_path_name, separator)
@@ -280,6 +281,15 @@ function buildGUI()
 
 
 	-- 4. - Image
+
+
+	changed, num_dropped_files, dropped_files, drop_mouseposition_x, drop_mouseposition_y = ultraschall.GFX_GetDropFile()
+	if num_dropped_files > 0 then
+		-- print ("da: "..dropped_files[1])
+	else
+		-- print ("nix"..tostring(changed))
+	end
+
 
 
 	areaHeight = 100
