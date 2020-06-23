@@ -108,10 +108,71 @@ function buildExportStep()
 
 	local button_offset = 25
 	local button1 = GUI.Btn:new(790, ButtonPosition+40+button_offset, 144, 20,  button_txt, runcommand, button_action)
-	table.insert(GUI.elms, button1)
+
+	if not no_button then
+		table.insert(GUI.elms, button1)
+	else
+		no_button = false
+	end
+
 
 end
 
+function checkImage()
+
+	retval, project_path_name = reaper.EnumProjects(-1, "")
+	if project_path_name ~= "" then
+		dir = GetPath(project_path_name, separator)
+		name = string.sub(project_path_name, string.len(dir) + 1)
+		name = string.sub(name, 1, -5)
+		name = name:gsub(dir, "")
+	end
+
+	-- lookup existing episode image
+
+	img_index = false
+	found = false
+
+	if dir then
+		endings = {".jpg", ".jpeg", ".png"} -- prefer .png
+		for key,value in pairs(endings) do
+			img_adress = dir .. "cover" .. value          -- does cover.xyz exist?
+			img_test = gfx.loadimg(0, img_adress)
+			if img_test ~= -1 then
+				img_index = img_test
+				img_location = img_adress
+			end
+		end
+	end
+
+	endings = {".jpg", ".jpeg", ".png"} -- prefer .png
+	for key,value in pairs(endings) do
+		img_adress = string.gsub(project_path_name, ".RPP", value)
+		img_test = gfx.loadimg(0, img_adress)
+		if img_test ~= -1 then
+			img_index = img_test
+			img_location = img_adress
+		end
+	end
+
+	if img_index then     -- there is an image
+		found = true
+		preview_size = 80      -- preview size in Pixel, always square
+		w, h = gfx.getimgdim(img_index)
+		if w > h then     -- adjust size to the longer border
+			img_ratio = preview_size / w
+		else
+			img_ratio = preview_size / h
+		end
+	end
+
+	return found, img_location, img_ratio
+
+end
+
+function GetFileExtension(url)
+  return url:match("^.+(%..+)$")
+end
 
 
 -- initiate values
@@ -144,47 +205,7 @@ if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     separator = "
 function buildGUI()
 
 
-	retval, project_path_name = reaper.EnumProjects(-1, "")
-	if project_path_name ~= "" then
-		dir = GetPath(project_path_name, separator)
-		name = string.sub(project_path_name, string.len(dir) + 1)
-		name = string.sub(name, 1, -5)
-		name = name:gsub(dir, "")
-	end
 
-	-- lookup existing episode image
-
-	img_index = false
-
-	if dir then
-		endings = {".jpg", ".jpeg", ".png"} -- prefer .png
-		for key,value in pairs(endings) do
-			img_adress = dir .. "cover" .. value          -- does cover.xyz exist?
-			img_test = gfx.loadimg(0, img_adress)
-			if img_test ~= -1 then
-				img_index = img_test
-			end
-		end
-	end
-
-	endings = {".jpg", ".jpeg", ".png"} -- prefer .png
-	for key,value in pairs(endings) do
-		img_adress = string.gsub(project_path_name, ".RPP", value)
-		img_test = gfx.loadimg(0, img_adress)
-		if img_test ~= -1 then
-			img_index = img_test
-		end
-	end
-
-	if img_index then     -- there is an image
-		preview_size = 80      -- preview size in Pixel, always square
-		w, h = gfx.getimgdim(img_index)
-		if w > h then     -- adjust size to the longer border
-			img_ratio = preview_size / w
-		else
-			img_ratio = preview_size / h
-		end
-	end
 
 
 
@@ -200,6 +221,7 @@ function buildGUI()
 
 	y_offset = 50  -- move all content up/down
 	spacing = 10
+	no_button = false
 
 	------------------
   ------- Header
@@ -286,8 +308,26 @@ function buildGUI()
 	changed, num_dropped_files, dropped_files, drop_mouseposition_x, drop_mouseposition_y = ultraschall.GFX_GetDropFile()
 	if num_dropped_files > 0 then
 		-- print ("da: "..dropped_files[1])
+		source_file = dropped_files[1]
+		extension = (GetFileExtension(source_file))
+		destination_file = dir .. "cover" .. extension
+
+		retval = ultraschall.MakeCopyOfFile_Binary(source_file, destination_file)
 	else
 		-- print ("nix"..tostring(changed))
+	end
+
+	found, img_adress, img_ratio = checkImage()
+
+	if found then
+		status_txt = " Image found"
+		state_color = "txt_green"
+		no_button = true
+
+	else
+		status_txt = " Missing"
+		state_color = "txt_red"
+		no_button = true
 	end
 
 
@@ -295,14 +335,27 @@ function buildGUI()
 	areaHeight = 100
 	position = 390 + y_offset
 	StepNameDisplay = "4. Podcast Episode Image"
-	state_color = "txt_green"
-	status_txt = " Found"
-	StepDescription = "Just put a square .jpg, .jpeg or .png image with the name 'cover.xyz' OR with the same name as your project file (.RPP) in the project folder."
+
+
+	StepDescription = "Just drop a square .jpg, .jpeg or .png image to the empty slot on the right. You may populate the smaller slots with covers for different shows and activate them with a click."
 	warnings_position = position+30
-	button_txt = "Drag Image here"
-	button_action = ""
+
 
 	buildExportStep()
+
+	if found then
+		logo_path = img_adress
+	else
+		logo_path = header_path.."dropzone_large.png"
+		img_ratio = 1
+	end
+
+	print(logo_path)
+
+	logo = GUI.Pic:new(784,390+y_offset, 80, 80, img_ratio, logo_path, runcommand, "_Ultraschall_Open_Project_Folder")
+	table.insert (GUI.elms, logo)
+
+
 
 	-- 5. Finalize
 
@@ -318,20 +371,6 @@ function buildGUI()
 
 	buildExportStep()
 
---[[
-
-
-
-
-
-	label2 = GUI.Lbl:new(30,  412+y_offset,"5.", 0)
-	table.insert (GUI.elms, label2)
-	label = GUI.Lbl:new(50,  412+y_offset,"Finalize MP3\nHit the button and select your MP3 to finalize it\nwith metadata, chapters and episode image!", 0)
-	table.insert (GUI.elms, label)
-	finalize = GUI.Btn:new(430, 412+y_offset, 190, 40,      "Finalize MP3!", runcommand, "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES")
-	table.insert (GUI.elms, finalize)
-
-  ]]
 
 
 end
