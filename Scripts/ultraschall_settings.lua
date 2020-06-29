@@ -344,126 +344,146 @@ GUI.elms = {
 ---- Put all of your own functions and whatever here ----
 
 
------------------------------------------------------------------
--- initialise the settings - coming from the ultraschall-settings.ini file
------------------------------------------------------------------
+function SettingsPageSettings()
 
-section_count = ultraschall.CountUSExternalState_sec("ultraschall-settings.ini")
+  -----------------------------------------------------------------
+  -- initialise the settings - coming from the ultraschall-settings.ini file
+  -----------------------------------------------------------------
 
-------------------------------------------------------
--- Gehe alle Sektionen der ultraschall.ini durch und baut die normalen Settings auf.
--- Kann perspektivisch in eine Funktion ausgelagert werden
-------------------------------------------------------
+  section_count = ultraschall.CountUSExternalState_sec("ultraschall-settings.ini")
 
-x_offset = 15
+  ------------------------------------------------------
+  -- Gehe alle Sektionen der ultraschall.ini durch und baut die normalen Settings auf.
+  -- Kann perspektivisch in eine Funktion ausgelagert werden
+  ------------------------------------------------------
+
+  x_offset = 15
 
 
-for i = 1, section_count , 1 do
+  for i = 1, section_count , 1 do
 
-  sectionName = ultraschall.EnumerateUSExternalState_sec(i, "ultraschall-settings.ini")
+    sectionName = ultraschall.EnumerateUSExternalState_sec(i, "ultraschall-settings.ini")
 
-  -- Suche die Sections der ultraschall-settings.ini heraus, die in der Settings-GUI angezeigt werden sollen
+    -- Suche die Sections der ultraschall-settings.ini heraus, die in der Settings-GUI angezeigt werden sollen
 
-  if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
+    if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
 
-    position = 85 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 30) -- Feintuning notwendig
-    settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
+      position = 85 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 30) -- Feintuning notwendig
+      settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
 
-    if settings_Type == "checkbox" then
-      id = GUI.Checklist:new(20+x_offset, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini")), sectionName)
+      if settings_Type == "checkbox" then
+        id = GUI.Checklist:new(20+x_offset, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini")), sectionName)
+        table.insert(GUI.elms, id)
+
+        -- Info-Button
+        info = GUI.Btn:new(350+x_offset, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
+        table.insert(GUI.elms, info)
+
+      elseif settings_Type == "slider" then
+        position = position+8
+        id = GUI.Sldr:new(245+x_offset, position, 80, ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"minimum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"maximum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"steps","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"actualstep","ultraschall-settings.ini"), sectionName)
+        table.insert(GUI.elms, id)
+
+        -- Info-Button
+        info = GUI.Btn:new(350+x_offset, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
+        table.insert(GUI.elms, info)
+
+      end
+    end
+  end
+end
+
+
+function SettingsPageSoundcheck()
+
+
+  -- Soundcheck Settings
+
+  -----------------------------
+  ------- Header Soundcheck
+  -----------------------------
+
+  section_count = ultraschall.CountUSExternalState_sec("ultraschall-settings.ini")
+
+  position = 80
+
+  position_old = position +5
+  y_offset = 80
+  x_offset = 15
+
+
+  header = GUI.Area:new(0,position_old-y_offset+15,410,65,0,1,1,"header_bg")
+  table.insert(GUI.elms, header)
+
+  logo = GUI.Pic:new(          45,  25+position_old-y_offset,   0,  0,    1,   header_path.."soundcheck_logo.png")
+  table.insert(GUI.elms, logo)
+
+  headertxt = GUI.Pic:new(          115,  36+position_old-y_offset,   0,  0,    0.8,   header_path.."headertxt_soundcheck.png")
+  table.insert(GUI.elms, headertxt)
+
+
+
+
+  for i = 1, section_count , 1 do
+
+    sectionName = ultraschall.EnumerateUSExternalState_sec(i,"ultraschall-settings.ini")
+    if sectionName and string.find(sectionName, "ultraschall_soundcheck", 1) then
+
+      position = position_old + (tonumber(ultraschall.GetUSExternalState(sectionName,"Position","ultraschall-settings.ini")) * 30) -- Feintuning notwendig
+
+      id = GUI.Checklist:new(20+x_offset, position, 240, 30,         "", "Soundcheck: "..ultraschall.GetUSExternalState(sectionName,"EventNameDisplay","ultraschall-settings.ini"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini")), sectionName)
       table.insert(GUI.elms, id)
 
       -- Info-Button
-      info = GUI.Btn:new(350+x_offset, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
-      table.insert(GUI.elms, info)
-
-    elseif settings_Type == "slider" then
-      position = position+8
-      id = GUI.Sldr:new(245+x_offset, position, 80, ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"minimum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"maximum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"steps","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"actualstep","ultraschall-settings.ini"), sectionName)
-      table.insert(GUI.elms, id)
-
-      -- Info-Button
-      info = GUI.Btn:new(350+x_offset, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
+      info = GUI.Btn:new(350+x_offset, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"Description","ultraschall-settings.ini"))
       table.insert(GUI.elms, info)
 
     end
   end
 end
 
--- Soundcheck Settings
 
------------------------------
-------- Header Soundcheck
------------------------------
-
-position_old = position +335
-y_offset = 80
+function SettingsPageDevices()
 
 
-header = GUI.Area:new(0,position_old-y_offset+15,410,65,0,1,1,"header_bg")
-table.insert(GUI.elms, header)
+  ------------------------------------------------------
+  --  Anzahl der Elemente vor der Devices-Sektion
+  ------------------------------------------------------
 
-logo = GUI.Pic:new(          45,  25+position_old-y_offset,   0,  0,    1,   header_path.."soundcheck_logo.png")
-table.insert(GUI.elms, logo)
+  GUI.counter = #GUI.elms
 
-headertxt = GUI.Pic:new(          115,  36+position_old-y_offset,   0,  0,    0.8,   header_path.."headertxt_soundcheck.png")
-table.insert(GUI.elms, headertxt)
+  ------------------------------------------------------
+  --  Das gerade aktive Device wird immer noch einmal aktualisiert/überschrieben.
+  --  So werden unsichtbar geschaltete Einträge wieder sichtbar.
+  ------------------------------------------------------
 
+  retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 
+  stored_device_state = ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-settings.ini")
 
-
-for i = 1, section_count , 1 do
-
-  sectionName = ultraschall.EnumerateUSExternalState_sec(i,"ultraschall-settings.ini")
-  if sectionName and string.find(sectionName, "ultraschall_soundcheck", 1) then
-
-    position = position_old + (tonumber(ultraschall.GetUSExternalState(sectionName,"Position","ultraschall-settings.ini")) * 30) -- Feintuning notwendig
-
-    id = GUI.Checklist:new(20+x_offset, position, 240, 30,         "", "Soundcheck: "..ultraschall.GetUSExternalState(sectionName,"EventNameDisplay","ultraschall-settings.ini"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini")), sectionName)
-    table.insert(GUI.elms, id)
-
-    -- Info-Button
-    info = GUI.Btn:new(350+x_offset, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"Description","ultraschall-settings.ini"))
-    table.insert(GUI.elms, info)
-
+  if stored_device_state == "3" or stored_device_state == "0" then
+    ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "0", "ultraschall-settings.ini")
+  else
+    ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1", "ultraschall-settings.ini")
   end
+
+  ------------------------------------------------------
+  --  Info-Button für Devices
+  ------------------------------------------------------
+
+  devicetext = "This column shows all audio interfaces you ever connected.|You can delete obsolete devices.|If you can plug a headphone to your audio interface, it supports Local Monitoring.|If you can not connect a headphone direct into your audio interface, make shure to|uncheck the Local Monitoring box to get the audio routing right."
+
+
+  info_device = GUI.Btn:new(568, 119, 20, 20,         " ?", show_menu, devicetext)
+  table.insert(GUI.elms, info_device)
+
+  show_devices()        -- Baue die rechte Seite mit den Audio-Interfaces
+
 end
 
-
-
-------------------------------------------------------
---  Anzahl der Elemente vor der Devices-Sektion
-------------------------------------------------------
-
-GUI.counter = #GUI.elms
-
-------------------------------------------------------
---  Das gerade aktive Device wird immer noch einmal aktualisiert/überschrieben.
---  So werden unsichtbar geschaltete Einträge wieder sichtbar.
-------------------------------------------------------
-
-retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
-
-stored_device_state = ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-settings.ini")
-
-if stored_device_state == "3" or stored_device_state == "0" then
-  ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "0", "ultraschall-settings.ini")
-else
-  ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1", "ultraschall-settings.ini")
-end
-
-------------------------------------------------------
---  Info-Button für Devices
-------------------------------------------------------
-
-devicetext = "This column shows all audio interfaces you ever connected.|You can delete obsolete devices.|If you can plug a headphone to your audio interface, it supports Local Monitoring.|If you can not connect a headphone direct into your audio interface, make shure to|uncheck the Local Monitoring box to get the audio routing right."
-
-
-info_device = GUI.Btn:new(568, 119, 20, 20,         " ?", show_menu, devicetext)
-table.insert(GUI.elms, info_device)
-
-
-show_devices()        -- Baue die rechte Seite mit den Audio-Interfaces
+SettingsPageSettings()
+SettingsPageSoundcheck()
+SettingsPageDevices()
 
 GUI.func = set_values -- Dauerschleife
 GUI.freq = 1          -- Aufruf jede Sekunde
