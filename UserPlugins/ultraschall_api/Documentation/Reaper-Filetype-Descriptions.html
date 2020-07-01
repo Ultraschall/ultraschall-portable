@@ -716,7 +716,7 @@ Some sections begin with &lt; and end with &gt; while others are written in one 
 <h4>If it's a VST-plugin:</h4>
 <i>&lt;VST "Name" VST-Plugin-filename a "name2" Plugin-Identification-number</i><p>
     <div style="padding-left:4%;">
-    <i>"Name"</i> - Name can be freely chosen, Reaper starts VST for VstFX,VSTi for instruments<p>
+    <i>"Name"</i> - Name can be freely chosen, Reaper starts VST: for VstFX, VSTi: for instruments, VST3: for vst3-effects; VST3i: for vst3-instruments<p>
     <i>reacomp.dll</i> VST-Plugin-filename <p>
     <i>0</i> - unknown<p>
     <i>"name2"</i> overwrites the "Name" entry within Reaper. purpose unknown<p>
@@ -773,9 +773,18 @@ Some sections begin with &lt; and end with &gt; while others are written in one 
 &gt;<p>
 
 
-<h4>If it's an AppleAU-plugin:</h4>
-    still missing!!<p>
-
+    <h4>If it's an AppleAU-plugin:</h4>    
+    &lt;AU "AUType: Pluginname" "Pluginname" "AliasName" d e g
+            <div style="padding-left:4%;">
+                <i>"AUType: name of the au-plugin"</i> - the name of the AU-Plugin; AUType is either AU:(fx) or AUi:(instruments)<p>
+                <i>"Pluginname"</i> - a second name of the plugin-name; unknown what it's purpose<p>
+                <i>"AliasName"</i> - An alternative name, which you can set for the plugin; default is ""<p>
+                <i>d</i> - d<p>
+                <i>e</i> - e<p>
+                <i>f</i> - f<p>
+            </div>
+    
+ 
  
     <h4>After the VST/JS/DX/AU-section</h4>
     After the VST/JS/DX/AU-section, there are some additional entries that may occur, giving control to envelopes, MIDI/OSC-bindings, and others. Most of them are controllable through the FX-dialogue-window, mostly by clicking on the <strong>+</strong> or the <strong>param</strong> button.<p>

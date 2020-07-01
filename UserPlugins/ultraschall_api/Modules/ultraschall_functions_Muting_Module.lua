@@ -638,8 +638,8 @@ function ultraschall.ActivateMute(track, visible)
     <tags>envelope management, mute, activate</tags>
   </US_DocBloc>
   --]]
-  if math.type(track)~="integer" then ultraschall.AddErrorMessage("ActivateMute", "mute", "must be an integer", -1) return false end
-  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("ActivateMute", "mute", "no such track", -2) return false end
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("ActivateMute", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("ActivateMute", "track", "no such track", -2) return false end
   local env=reaper.GetTrackEnvelopeByName(reaper.GetTrack(0,track-1), "Mute")
   local retval
   if env==nil then
@@ -687,8 +687,8 @@ function ultraschall.DeactivateMute(track)
     <tags>envelope management, mute, deactivate</tags>
   </US_DocBloc>
   --]]
-  if math.type(track)~="integer" then ultraschall.AddErrorMessage("DeactivateMute", "mute", "must be an integer", -1) return false end
-  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("DeactivateMute", "mute", "no such track", -2) return false end
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("DeactivateMute", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("DeactivateMute", "track", "no such track", -2) return false end
   local env=reaper.GetTrackEnvelopeByName(reaper.GetTrack(0,track-1), "Mute")
   local retval
   if env~=nil then
