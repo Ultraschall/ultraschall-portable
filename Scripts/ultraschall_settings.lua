@@ -76,6 +76,38 @@ function run_action(commandID)
 end
 
 
+
+local function splitWords(Lines, limit)
+  while #Lines[#Lines] > limit do
+          Lines[#Lines+1] = Lines[#Lines]:sub(limit+1)
+          Lines[#Lines-1] = Lines[#Lines-1]:sub(1,limit)
+  end
+end
+
+
+local function wrap(str, limit)
+  local Lines, here, limit, found = {}, 1, limit or 72, str:find("(%s+)()(%S+)()")
+
+  if found then
+          Lines[1] = string.sub(str,1,found-1)  -- Put the first word of the string in the first index of the table.
+  else Lines[1] = str end
+
+  str:gsub("(%s+)()(%S+)()",
+          function(sp, st, word, fi)  -- Function gets called once for every space found.
+                  splitWords(Lines, limit)
+
+                  if fi-here > limit then
+                          here = st
+                          Lines[#Lines+1] = word                                                                                   -- If at the end of a line, start a new table index...
+                  else Lines[#Lines] = Lines[#Lines].." "..word end  -- ... otherwise add to the current table index.
+          end)
+
+  splitWords(Lines, limit)
+
+  return Lines
+end
+
+
 ------------------------------------------------------
 -- Switch State of an event in the Soundcheck
 ------------------------------------------------------
@@ -227,7 +259,8 @@ function show_devices()
   retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "") -- gerade aktives device
   sectionName = "ultraschall_devices"
   key_count = ultraschall.CountUSExternalState_key(sectionName, "ultraschall-settings.ini")
-  position = 127
+  position = 217
+  local x_position = 75
 
   for i = 1, key_count , 1 do
     device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i,"ultraschall-settings.ini")
@@ -241,11 +274,11 @@ function show_devices()
 
       if devices_blacklist[device_name] == 1 then -- das Gerät kann bekanntermaßen kein local monitoring
 
-        id = GUI.Lbl:new(          480, position+7,                  device_name,          0)
+        id = GUI.Lbl:new(          x_position + 40, position+7,                  device_name,          0)
 
       else
 
-        id = GUI.Checklist:new(440, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")), sectionName, 32)
+        id = GUI.Checklist:new(x_position, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")), sectionName, 32)
       end
 
       table.insert(GUI.elms, id)
@@ -254,11 +287,11 @@ function show_devices()
 
       -- Delete-Button
         button_id = (#GUI["elms"])
-        delete = GUI.Btn:new(738, position+3, 20, 20,         " X", remove_device, device_name)
+        delete = GUI.Btn:new(x_position + 500, position+3, 20, 20,         " X", remove_device, device_name)
         table.insert(GUI.elms, delete)
 
       else
-        label_active = GUI.Lbl:new( 731, position+6,                  "active",          0, "white")
+        label_active = GUI.Lbl:new( x_position + 500, position+6,                  "active - cannot be deleted",          0, "white")
         table.insert(GUI.elms, label_active)
 
       end
@@ -291,7 +324,7 @@ header_path = script_path.."/Ultraschall_Gfx/Headers/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
-GUI.w, GUI.h = 820, 735   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 820, 625   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -505,11 +538,40 @@ function SettingsPageDevices()
   --  Info-Button für Devices
   ------------------------------------------------------
 
-  devicetext = "This column shows all audio interfaces you ever connected.|You can delete obsolete devices.|If you can plug a headphone to your audio interface, it supports Local Monitoring.|If you can not connect a headphone direct into your audio interface, make shure to|uncheck the Local Monitoring box to get the audio routing right."
+  local position = 190
+
+  block = GUI.Area:new(45,position-10,730, 400,5,1,1,"section_bg")
+      table.insert(GUI.elms, block)
 
 
-  info_device = GUI.Btn:new(568, 119, 20, 20,         " ?", show_menu, devicetext)
-  table.insert(GUI.elms, info_device)
+  local label_table = GUI.Lbl:new( 85, position+20,                  "Local Monitoring",          0, "white")
+      table.insert(GUI.elms, label_table)
+
+  local label_table2 = GUI.Lbl:new( 575, position+20,                  "Delete",          0, "white")
+      table.insert(GUI.elms, label_table2)
+
+
+  devicetext = "This list shows all audio interfaces you ever connected. You can delete obsolete devices. If you can plug a headphone to your audio interface, it supports Local Monitoring. If you can not connect a headphone direct into your audio interface, make shure to uncheck the Local Monitoring box to get the audio routing right."
+
+  infotable = wrap(devicetext,100) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
+
+
+
+  infoposition = position + 280
+
+
+	for k, warningtextline in pairs(infotable) do
+
+		local infotext = GUI.Lbl:new(85, infoposition, warningtextline, 0, "txt_grey")
+		table.insert(GUI.elms, infotext)
+		infoposition = infoposition +20
+
+		-- print(k, v)
+	end
+
+
+  -- info_device = GUI.Btn:new(568, 119, 20, 20,         " ?", show_menu, devicetext)
+  -- table.insert(GUI.elms, info_device)
 
   show_devices()        -- Baue die rechte Seite mit den Audio-Interfaces
 
