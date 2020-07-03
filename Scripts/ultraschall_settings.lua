@@ -267,6 +267,14 @@ function show_devices()
 end
 
 
+function changeTab(tab_number)
+
+  ultraschall.SetUSExternalState("ultraschall_gui","settingsview",tostring(tab_number))
+  buildGUI()
+
+end
+
+
 ------------------------------------------------------
 --  End of functions
 ------------------------------------------------------
@@ -305,41 +313,73 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 
 
 
+function buildGUI()
+
+  settings_view = ultraschall.GetUSExternalState("ultraschall_gui","settingsview")
+  if settings_view == "" then
+    settings_view = 1
+    ultraschall.SetUSExternalState("ultraschall_gui","settingsview","1")
+  else
+    settings_view = tonumber(settings_view)
+  end
+
+  GUI.elms = {
+
+  --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
+
+    -- label_table      = GUI.Lbl:new(          450, 122,                  "Local Monitoring                                           Delete",          0),
+
+    -- checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
+    -- checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
+
+    -- tutorials        = GUI.Btn:new(           30, 320, 190, 40,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/"),
+
+  }
+
+  -----------------------------
+  ------- Header Settings
+  -----------------------------
+
+  header = GUI.Area:new(0,0,1000,90,0,1,1,"header_bg")
+  table.insert(GUI.elms, header)
+
+  logo = GUI.Pic:new(          45,  25,   0,  0,    1,   header_path.."settings_logo.png")
+  table.insert(GUI.elms, logo)
+
+  headertxt = GUI.Pic:new(          115,  36,   0,  0,    0.8,   header_path.."headertxt_settings.png")
+  table.insert(GUI.elms, headertxt)
 
 
-GUI.elms = {
+  -----------------------------
+  ------- Tabs
+  -----------------------------
 
---     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
+  for i = 1, 3, 1 do
 
-  label_table      = GUI.Lbl:new(          450, 122,                  "Local Monitoring                                           Delete",          0),
+    tab_x_offset = - 105 + (i*150)
 
-  -- checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
-  -- checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
+    if i == settings_view then
+      tab_image = "tab_settingsview_active_" .. i .. ".png"
+    else
+      tab_image = "tab_settingsview_inactive_" .. i .. ".png"
+    end
 
-  -- tutorials        = GUI.Btn:new(           30, 320, 190, 40,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/"),
-
-}
-
------------------------------
-------- Header Settings
------------------------------
-
- header = GUI.Area:new(0,0,1000,90,0,1,1,"header_bg")
- table.insert(GUI.elms, header)
-
- logo = GUI.Pic:new(          45,  25,   0,  0,    1,   header_path.."settings_logo.png")
- table.insert(GUI.elms, logo)
-
- headertxt = GUI.Pic:new(          115,  36,   0,  0,    0.8,   header_path.."headertxt_settings.png")
- table.insert(GUI.elms, headertxt)
-
- logo = GUI.Pic:new(          445,  25,   0,  0,    1,   header_path.."interfaces_logo.png")
- table.insert(GUI.elms, logo)
-
- headertxt = GUI.Pic:new(          515,  36,   0,  0,    0.8,   header_path.."headertxt_interfaces.png")
- table.insert(GUI.elms, headertxt)
+    tab = GUI.Pic:new(tab_x_offset,  140,   150,  50,    0.5,   header_path..tab_image, changeTab, i)
+    table.insert(GUI.elms, tab)
 
 
+  end
+
+  if settings_view == 3 then
+    SettingsPageDevices()
+  elseif settings_view == 2 then
+    SettingsPageSoundcheck()
+  else
+    SettingsPageSettings()
+  end
+
+
+end
 
 ---- Put all of your own functions and whatever here ----
 
@@ -357,7 +397,10 @@ function SettingsPageSettings()
   -- Kann perspektivisch in eine Funktion ausgelagert werden
   ------------------------------------------------------
 
-  x_offset = 15
+  x_offset = 55
+
+  block = GUI.Area:new(45,180,730, 400,5,1,1,"section_bg")
+      table.insert(GUI.elms, block)
 
 
   for i = 1, section_count , 1 do
@@ -368,7 +411,7 @@ function SettingsPageSettings()
 
     if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
 
-      position = 85 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 30) -- Feintuning notwendig
+      position = 195 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 30) -- Feintuning notwendig
       settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
 
       if settings_Type == "checkbox" then
@@ -376,7 +419,7 @@ function SettingsPageSettings()
         table.insert(GUI.elms, id)
 
         -- Info-Button
-        info = GUI.Btn:new(350+x_offset, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
+        info = GUI.Btn:new(400+x_offset, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
         table.insert(GUI.elms, info)
 
       elseif settings_Type == "slider" then
@@ -385,7 +428,7 @@ function SettingsPageSettings()
         table.insert(GUI.elms, id)
 
         -- Info-Button
-        info = GUI.Btn:new(350+x_offset, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
+        info = GUI.Btn:new(400+x_offset, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
         table.insert(GUI.elms, info)
 
       end
@@ -405,23 +448,14 @@ function SettingsPageSoundcheck()
 
   section_count = ultraschall.CountUSExternalState_sec("ultraschall-settings.ini")
 
-  position = 80
+  position = 190
 
   position_old = position +5
   y_offset = 80
-  x_offset = 15
+  x_offset = 55
 
-
-  header = GUI.Area:new(0,position_old-y_offset+15,410,65,0,1,1,"header_bg")
-  table.insert(GUI.elms, header)
-
-  logo = GUI.Pic:new(          45,  25+position_old-y_offset,   0,  0,    1,   header_path.."soundcheck_logo.png")
-  table.insert(GUI.elms, logo)
-
-  headertxt = GUI.Pic:new(          115,  36+position_old-y_offset,   0,  0,    0.8,   header_path.."headertxt_soundcheck.png")
-  table.insert(GUI.elms, headertxt)
-
-
+  block = GUI.Area:new(45,position-10,730, 400,5,1,1,"section_bg")
+      table.insert(GUI.elms, block)
 
 
   for i = 1, section_count , 1 do
@@ -435,7 +469,7 @@ function SettingsPageSoundcheck()
       table.insert(GUI.elms, id)
 
       -- Info-Button
-      info = GUI.Btn:new(350+x_offset, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"Description","ultraschall-settings.ini"))
+      info = GUI.Btn:new(400+x_offset, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"Description","ultraschall-settings.ini"))
       table.insert(GUI.elms, info)
 
     end
@@ -481,12 +515,12 @@ function SettingsPageDevices()
 
 end
 
-SettingsPageSettings()
-SettingsPageSoundcheck()
-SettingsPageDevices()
+buildGUI()
 
-GUI.func = set_values -- Dauerschleife
-GUI.freq = 1          -- Aufruf jede Sekunde
+--GUI.func = buildGUI   -- Dauerschleife
+
+  GUI.func = set_values
+  GUI.freq = 1          -- Aufruf jede Sekunde
 
 
 
