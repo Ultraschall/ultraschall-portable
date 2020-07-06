@@ -261,10 +261,11 @@ function show_devices()
   key_count = ultraschall.CountUSExternalState_key(sectionName, "ultraschall-settings.ini")
   position = 217
   local x_position = 75
+  truncate = 50 -- angezeigte maximale Länge des Devicenamens
 
   for i = 1, key_count , 1 do
     device_name = ultraschall.EnumerateUSExternalState_key(sectionName, i,"ultraschall-settings.ini")
-    device_name_displayed = string.sub (device_name, 1, 32)
+    device_name_displayed = string.sub (device_name, 1, truncate)
 
     stored_device_state = tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini"))
 
@@ -278,7 +279,7 @@ function show_devices()
 
       else
 
-        id = GUI.Checklist:new(x_position, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")), sectionName, 32)
+        id = GUI.Checklist:new(x_position, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")), sectionName, truncate)
       end
 
       table.insert(GUI.elms, id)
