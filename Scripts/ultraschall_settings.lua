@@ -135,6 +135,7 @@ function set_values()
   for i = 1, #GUI["elms"] , 1 do  -- Anzahl der Einträge ist immer doppelt so hoch durch die Info-Buttons pro Eintrag
 
       -- Buttons und Label werden übersprungen
+    EventIdentifier = ""
 
     if (GUI["elms"][i]["type"]) == "Checklist" or (GUI["elms"][i]["type"]) == "Sldr" then
 
@@ -188,8 +189,8 @@ function set_values()
         -- Start Action
         ---------------
 
-        if newvalue ~= "0" and ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"StartFunction", "ultraschall-settings.ini") ~= "" then
-          -- ein Setting wurde aktiviert, das auch eine Start-Action hat
+        if newvalue ~= "0" and ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"StartFunction", "ultraschall-settings.ini") ~= "" and EventIdentifier == "" then
+          -- ein Setting wurde aktiviert, das auch eine Start-Action hat. Ausnahme sind Soundchecks, die starten ohnehin bei Bedarf.
 
           cmd=reaper.NamedCommandLookup(ultraschall.GetUSExternalState(GUI["elms"][i]["sectionname"],"StartFunction", "ultraschall-settings.ini"))
           reaper.Main_OnCommand(cmd,0)
