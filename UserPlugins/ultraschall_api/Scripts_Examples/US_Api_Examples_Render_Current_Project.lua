@@ -24,24 +24,17 @@
   ################################################################################
   --]]
 
--- Ultraschall-API demoscript by Meo Mespotine 30.11.2018
+-- Ultraschall-API demoscript by Meo Mespotine 08.Jul.2020
 -- 
 -- render the current project either from time-selection or as a whole to numerous audio-file-formats(in this example: flac, opus, mp3, wav)
 -- see Functions-Reference for more details on the parameter-settings, given to the functions,
 -- as well as other formats
 --
--- checks, if the project needs to be saved first(as an unsaved project can't be rendered using my approach due API-limitations). 
 -- After that, it will show an input-box, where you enter the render-filename with path. file-extensions will be given by Reaper's rendering-process automatically
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
--- Check if file needs to be saved, otherwise give script Output-filename with path
-if reaper.IsProjectDirty(0)==0 then
-  retval2, renderfilename_with_path=reaper.GetUserInputs("Please give filename+path of the target-render-file.", 1, ",extrawidth=200","")
-  else
-  reaper.MB("Project must be save first. Quitting now.", "Project not saved", 0)
-  return
-end
+retval2, renderfilename_with_path=reaper.GetUserInputs("Please give filename+path of the target-render-file.", 1, ",extrawidth=200","")
 
 if retval2==true then
   -- Create Renderstrings first, for Flac, Opus, MP3(Maxquality) and Wav
@@ -54,13 +47,13 @@ if retval2==true then
   if loopend==0 then loopend=reaper.GetProjectLength() end
   
   -- Render the files. Will automatically increment filenames(if already existing) and close the rendering-window after render.
-  retval, renderfilecount, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderCFG(projectfilename_with_path, renderfilename_with_path, loopstart, loopend, false, true, true, render_cfg_string_Flac)
+  retval, renderfilecount, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject(projectfilename_with_path, renderfilename_with_path, loopstart, loopend, false, true, true, render_cfg_string_Flac)  
   renderfile1=Filearray[1]
-  retval, renderfilecount, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderCFG(projectfilename_with_path, renderfilename_with_path, loopstart, loopend, false, true, true, render_cfg_string_Opus)
+  retval, renderfilecount, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject(projectfilename_with_path, renderfilename_with_path, loopstart, loopend, false, true, true, render_cfg_string_Opus)
   renderfile2=Filearray[1]
-  retval, renderfilecount, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderCFG(projectfilename_with_path, renderfilename_with_path, loopstart, loopend, false, true, true, render_cfg_string_MP3_maxquality)
+  retval, renderfilecount, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject(projectfilename_with_path, renderfilename_with_path, loopstart, loopend, false, true, true, render_cfg_string_MP3_maxquality)
   renderfile3=Filearray[1]
-  retval, renderfilecount, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderCFG(projectfilename_with_path, renderfilename_with_path, loopstart, loopend, false, true, true, render_cfg_string_Wav)
+  retval, renderfilecount, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject(projectfilename_with_path, renderfilename_with_path, loopstart, loopend, false, true, true, render_cfg_string_Wav)
   renderfile4=Filearray[1]
   
   -- show the filenames of the rendered files
