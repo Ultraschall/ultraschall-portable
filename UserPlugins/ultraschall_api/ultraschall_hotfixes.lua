@@ -45,7 +45,7 @@
 --
 -- If you have new functions to contribute, you can use this file as well. Keep in mind, that I will probably change them to work
 -- with the error-messaging-system as well as adding information for the API-documentation.
-ultraschall.hotfixdate="08_Jul_2020"
+ultraschall.hotfixdate="10_Jul_2020"
 
 --ultraschall.ShowLastErrorMessage()
 
@@ -222,4 +222,175 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
   local count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(projectfilename_with_path, RenderTable)
   if count==-1 then retval=-1 else retval=0 end
   return retval, count, MediaItemStateChunkArray, Filearray
+end
+
+function ultraschall.CreateNewRenderTable(Source, Bounds, Startposition, Endposition, TailFlag, TailMS, RenderFile, RenderPattern,
+SampleRate, Channels, OfflineOnlineRendering, ProjectSampleRateFXProcessing, RenderResample, OnlyMonoMedia, MultiChannelFiles,
+Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, RenderQueueDelay, RenderQueueDelaySeconds, CloseAfterRender, 
+EmbedStretchMarkers, RenderString2, EmbedTakeMarkers, SilentRender, EmbedMetadata)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CreateNewRenderTable</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>RenderTable RenderTable = ultraschall.CreateNewRenderTable(integer Source, integer Bounds, number Startposition, number Endposition, integer TailFlag, integer TailMS, string RenderFile, string RenderPattern, integer SampleRate, integer Channels, integer OfflineOnlineRendering, boolean ProjectSampleRateFXProcessing, integer RenderResample, boolean OnlyMonoMedia, boolean MultiChannelFiles, integer Dither, string RenderString, boolean SilentlyIncrementFilename, boolean AddToProj, boolean SaveCopyOfProject, boolean RenderQueueDelay, integer RenderQueueDelaySeconds, boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean SilentRender, optional boolean EmbedMetadata)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Creates a new RenderTable.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    RenderTable RenderTable - the created RenderTable
+  </retvals>
+  <parameters>
+    integer Source - The Source-dropdownlist; 
+                   - 0, Master mix
+                   - 1, Master mix + stems
+                   - 3, Stems (selected tracks)
+                   - 8, Region render matrix
+                   - 32, Selected media items
+                   - 256, Embed stretch markers/transient guides-checkbox=on; optional, as parameter EmbedStretchMarkers is meant for that
+    integer Bounds - The Bounds-dropdownlist
+                   - 0, Custom time range
+                   - 1, Entire project
+                   - 2, Time selection
+                   - 3, Project regions
+                   - 4, Selected Media Items(in combination with Source 32)
+                   - 5, Selected regions
+    number Startposition - the startposition of the render-section in seconds; only used when Bounds=0(Custom time range)
+    number Endposition - the endposition of the render-section in seconds; only used when Bounds=0(Custom time range)
+    integer TailFlag - in which bounds is the Tail-checkbox checked? 
+                     - &1, custom time bounds
+                     - &2, entire project
+                     - &4, time selection
+                     - &8, all project regions
+                     - &16, selected media items
+                     - &32, selected project regions
+    integer TailMS - the amount of milliseconds of the tail
+    string RenderFile - the contents of the Directory-inputbox of the Render to File-dialog
+    string RenderPattern - the render pattern as input into the File name-inputbox of the Render to File-dialog; set to "" if you don't want to use it
+    integer SampleRate - the samplerate of the rendered file(s)
+    integer Channels - the number of channels in the rendered file; 
+                     - 1, mono
+                     - 2, stereo
+                     - 3 and higher, the number of channels
+    integer OfflineOnlineRendering - Offline/Online rendering-dropdownlist
+                                   - 0, Full-speed Offline
+                                   - 1, 1x Offline
+                                   - 2, Online Render
+                                   - 3, Online Render(Idle)
+                                   - 4, Offline Render(Idle)
+    boolean ProjectSampleRateFXProcessing - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
+    integer RenderResample - Resample mode-dropdownlist
+                           - 0, Medium (64pt Sinc)
+                           - 1, Low (Linear Interpolation)
+                           - 2, Lowest (Point Sampling)
+                           - 3, Good (192pt Sinc)
+                           - 4, Better (348 pt Sinc)
+                           - 5, Fast (IIR + Linear Interpolation)
+                           - 6, Fast (IIRx2 + Linear Interpolation)
+                           - 7, Fast (16pt Sinc)
+                           - 8, HQ (512 pt)
+                           - 9, Extreme HQ(768pt HQ Sinc)
+    boolean OnlyMonoMedia - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
+    boolean MultiChannelFiles - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
+    integer Dither - the Dither/Noise shaping-checkboxes: 
+                   - &1, dither master mix
+                   - &2, noise shaping master mix
+                   - &4, dither stems
+                   - &8, dither noise shaping stems
+                   
+    string RenderString - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
+    boolean SilentlyIncrementFilename - Silently increment filenames to avoid overwriting-checkbox; ignored, as this can't be stored in projectfiles
+    boolean AddToProj - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
+    boolean SaveCopyOfProject - the "Save copy of project to outfile.wav.RPP"-checkbox; ignored, as this can't be stored in projectfiles
+    boolean RenderQueueDelay - Delay queued render to allow samples to load-checkbox; ignored, as this can't be stored in projectfiles
+    integer RenderQueueDelaySeconds - the amount of seconds for the render-queue-delay
+    boolean CloseAfterRender - true, closes rendering to file-dialog after render; false, doesn't close it
+    optional boolean EmbedStretchMarkers - true, Embed stretch markers/transient guides-checkbox=on; false or nil, Embed stretch markers/transient guides"-checkbox=off
+    optional string RenderString2 - the render-string for the secondary rendering
+	optional boolean EmbedTakeMarkers - the "Take markers"-checkbox; true, checked; false, unchecked; default=unchecked
+	optional boolean SilentRender - the "Do not render files that are likely silent"-checkbox; true, checked; false, unchecked; default=unchecked
+    optional boolean EmbedMetadata - the "Embed metadata"-checkbox; true, checked; false, unchecked; default=unchecked    
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render, is valid, check, rendertable</tags>
+</US_DocBloc>
+]]
+  if math.type(Source)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Source", "#1: must be an integer", -20) return end    
+  if math.type(Bounds)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Bounds", "#2: must be an integer", -4) return end
+  if type(Startposition)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Startposition", "#3: must be an integer", -21) return end
+  if type(Endposition)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Endposition", "#4: must be an integer", -7) return end
+  if math.type(TailFlag)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "TailFlag", "#5: must be an integer", -22) return end    
+  if math.type(TailMS)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "TailMS", "#6: must be an integer", -23) return end    
+  if type(RenderFile)~="string" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderFile", "#7: must be a string", -12) return end 
+  if type(RenderPattern)~="string" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderPattern", "#8: must be a string", -13) return end 
+  if math.type(SampleRate)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "SampleRate", "#9: must be an integer", -17) return end
+  if math.type(Channels)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Channels", "#10: must be an integer", -5) return end
+  if math.type(OfflineOnlineRendering)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "OfflineOnlineRendering", "#11: must be an integer", -9) return end
+  if type(ProjectSampleRateFXProcessing)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "ProjectSampleRateFXProcessing", "#12: must be a boolean", -11) return end 
+  if math.type(RenderResample)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderResample", "#13: must be an integer", -15) return end
+  if type(OnlyMonoMedia)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "OnlyMonoMedia", "#14: must be a boolean", -10) return end 
+  if type(MultiChannelFiles)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "MultiChannelFiles", "#15: must be a boolean", -8) return end
+  if math.type(Dither)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Dither", "#16: must be an integer", -6) return end
+  if type(RenderString)~="string" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderString", "#17: must be a string", -16) return end 
+  if type(SilentlyIncrementFilename)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "SilentlyIncrementFilename", "#18: must be a boolean", -19) return end
+  if type(AddToProj)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "AddToProj", "#19: must be a boolean", -3) return end
+  if type(SaveCopyOfProject)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "SaveCopyOfProject", "#20: must be a boolean", -18) return end
+  if type(RenderQueueDelay)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderQueueDelay", "#21: must be a boolean", -14) return end
+  if math.type(RenderQueueDelaySeconds)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderQueueDelaySeconds", "#22: must be an integer", -24) return end
+  if type(CloseAfterRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "CloseAfterRender", "#23: must be a boolean", -25) return end
+    
+  if EmbedStretchMarkers~=nil and type(EmbedStretchMarkers)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "#24: EmbedStretchMarkers", "must be nil(for false) or boolean", -26) return end
+  if RenderString2~=nil and type(RenderString2)~="string" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderString2", "#25: must be nil or string", -27) return end
+  if EmbedStretchMarkers==nil then EmbedStretchMarkers=false end
+  if RenderString2==nil then RenderString2="" end
+  
+  if EmbedTakeMarkers~=nil and type(EmbedTakeMarkers)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "EmbedTakeMarkers", "#26: must be nil(for false) or boolean", -28) return end
+  if SilentRender~=nil and type(SilentRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "SilentRender", "#27: must be nil(for false) or boolean", -29) return end
+  
+  if EmbedMetadata~=nil and type(EmbedMetadata)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "CloseAfterRender", "#28: must be a boolean", -30) return end
+  if EmbedTakeMarkers==nil then EmbedTakeMarkers=false end  
+  if SilentRender==nil then SilentRender=false end
+  if EmbedMetadata==nil then EmbedMetadata=false end
+  
+  local RenderTable={}
+  RenderTable["AddToProj"]=AddToProj
+  RenderTable["Bounds"]=Bounds
+  RenderTable["Channels"]=Channels
+  RenderTable["Dither"]=Dither
+  RenderTable["Endposition"]=Endposition
+  RenderTable["MultiChannelFiles"]=MultiChannelFiles
+  RenderTable["OfflineOnlineRendering"]=OfflineOnlineRendering
+  RenderTable["OnlyMonoMedia"]=OnlyMonoMedia
+  RenderTable["ProjectSampleRateFXProcessing"]=ProjectSampleRateFXProcessing
+  RenderTable["RenderFile"]=RenderFile
+  RenderTable["RenderPattern"]=RenderPattern
+  RenderTable["RenderQueueDelay"]=RenderQueueDelay
+  RenderTable["RenderQueueDelaySeconds"]=RenderQueueDelaySeconds
+  RenderTable["RenderResample"]=RenderResample
+  RenderTable["RenderString"]=RenderString
+  RenderTable["RenderString2"]=RenderString2
+  RenderTable["RenderTable"]=true 
+  RenderTable["SampleRate"]=SampleRate
+  RenderTable["SaveCopyOfProject"]=SaveCopyOfProject
+  RenderTable["SilentlyIncrementFilename"]=SilentlyIncrementFilename
+  RenderTable["Source"]=Source
+  RenderTable["Startposition"]=Startposition
+  RenderTable["TailFlag"]=TailFlag
+  RenderTable["TailMS"]=TailMS
+  RenderTable["CloseAfterRender"]=CloseAfterRender
+  RenderTable["EmbedStretchMarkers"]=EmbedStretchMarkers
+  RenderTable["EmbedTakeMarkers"]=EmbedTakeMarkers
+  RenderTable["NoSilentRender"]=SilentRender
+  RenderTable["EmbedMetaData"]=EmbedMetadata
+  return RenderTable
 end
