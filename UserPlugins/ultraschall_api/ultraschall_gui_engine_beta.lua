@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,34 +27,68 @@
 --dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function ultraschall.GuiEngine_CreateInstance()
+  -- this class creates a new GuiEngine-Object, with all it's methods and stuff
   local GuiEngine={}
   GuiEngine["GuiIdentifier"]=""
   GuiEngine["opened"]=false
   
-  GuiEngine["Return_Guid"]=function (self, dudel) 
+  GuiEngine["Initiate"]=function (self) -- initiates a new Gui-Engine-instance and starts it
+    local retval    
+    retval, GuiEngine["GuiIdentifier"] = ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/ultraschall_gui_engine_server.lua")    
+  end
+  
+  GuiEngine["Return_Guid"]=function (self, dudel) -- returns the guid of the GUI-engine-instance
     return GuiEngine["GuiIdentifier"]
   end
   
   GuiEngine["Destroy"]=function (self) 
+   -- buggy, doesn't delete the returned table
+   -- so probably we keep it in here for the time being but delete it anyhow at some point
+    GuiEngine.Close()
+    GuiEngine.Close=nil
+    GuiEngine.Open=nil
+    GuiEngine.Destroy=nil
+    GuiEngine.LoadGUIFile=nil
+    GuiEngine.Terminate=nil
+    GuiEngine.Return_Guid=nil
+    GuiEngine.Initiate=nil
+    GuiEngine["GuiIdentifier"]=nil
+    GuiEngine["opened"]=nil
     GuiEngine=nil 
   end
   
-  GuiEngine["Open"]=function (self) 
+  GuiEngine["Open"]=function (self) -- tells the gui-engine-instance to open the gui in the gui-engine-instance
+    if GuiEngine["GuiIdentifier"]=="" then return false end
     if GuiEngine["opened"]==false then
-      local retval
-      retval, GuiEngine["GuiIdentifier"] = ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/ultraschall_gui_engine_server.lua")
+      local State=reaper.GetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message")
+      reaper.SetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message", State.."Open\n",false)
       GuiEngine["opened"]=true
     end
   end
   
-  GuiEngine["Close"]=function (self) 
+  GuiEngine["LoadGUIFile"]=function (self, GuiFile) -- tells the gui-engine-instance to load gui from a guifile
+    if GuiEngine["GuiIdentifier"]=="" then return false end
+    local State=reaper.GetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message")
+    reaper.SetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message", "Load:"..GuiFile.."\n",false)
+    GuiEngine["opened"]=true
+  end
+  
+  GuiEngine["Close"]=function (self) -- tells the gui-engine-instance to close the gui-engine-instance
     if GuiEngine["GuiIdentifier"]=="" then return false end
     if GuiEngine["opened"]==true then
       local State=reaper.GetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message")
-      reaper.SetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message", State.."Close\n",true)
+      reaper.SetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message", State.."Close\n",false)
       GuiEngine["opened"]=false
-    end
-    
+    end    
+    return true
+  end
+
+  GuiEngine["Terminate"]=function (self) -- tells the gui-engine-instance to terminate itself altogether
+    if GuiEngine["GuiIdentifier"]=="" then return false end
+    local State=reaper.GetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message")
+    reaper.SetExtState(GuiEngine["GuiIdentifier"].."-GuiEngine", "Message", State.."Terminate\n",false)
+    GuiEngine["opened"]=false    
+    GuiEngine["GuiIdentifier"]=""
     return true
   end
   

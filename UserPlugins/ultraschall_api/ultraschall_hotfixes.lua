@@ -45,7 +45,9 @@
 --
 -- If you have new functions to contribute, you can use this file as well. Keep in mind, that I will probably change them to work
 -- with the error-messaging-system as well as adding information for the API-documentation.
-ultraschall.hotfixdate="XX_XXX_XXXX"
+ultraschall.hotfixdate="HotFix 3: 10_Jul_2020"
 
 --ultraschall.ShowLastErrorMessage()
+
+
 

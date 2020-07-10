@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 6.11
+            ## ReaScript API as of Reaper 6.12
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -1460,6 +1460,8 @@
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Create a send/receive (desttrInOptional!=NULL), or a hardware output (desttrInOptional==NULL) with default properties, return &gt;=0 on success (== new send/receive index). See [RemoveTrackSend](#RemoveTrackSend), [GetSetTrackSendInfo](#GetSetTrackSendInfo), [GetTrackSendInfo_Value](#GetTrackSendInfo_Value), [SetTrackSendInfo_Value](#SetTrackSendInfo_Value).
+            
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
         </description>
         <retvals>
             integer - the id of the new HWOut or Send created. HWOut and Send have their own individual index-numbering.
@@ -4340,7 +4342,7 @@
         </retvals>
         <parameters>
             number tpos - the position in seconds, that you want to have formatted
-            string buf - unknown
+            string buf - needed by Reaper, just set it to ""
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -8184,9 +8186,9 @@
             Reaper=6.11
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Get or set project information.
-
+ 
             RENDER_SETTINGS : &amp;(1|2)=0:master mix, &amp;1=stems+master mix, &amp;2=stems only, &amp;4=multichannel tracks to multichannel files, &amp;8=use render matrix, &amp;16=tracks with only mono media to mono files, &amp;32=selected media items, &amp;64=selected media items via master, &amp; 128=Selected tracks via master, &amp;256=Stretch markers/transient guide-checkbox(Only with WAV/AIFF and Source=Selected media items/Selected media items via master), &amp;512=Embed Metadata, if format supports is, &amp;1024=Take markers-checkbox(Only with WAV and Source=Selected media items/Selected media items via master)
             OGG, OPUS and FLAC support embedding of tempoinformation via metadata, settable using [GetSetProjectInfo_String](#GetSetProjectInfo_String).
             RENDER_BOUNDSFLAG : 0=custom time bounds, 1=entire project, 2=time selection, 3=all project regions, 4=selected media items, 5=selected project regions
@@ -8250,11 +8252,11 @@
             Examples in Lua:
             getting the album name from the metadata of the current project:
             
-                retval, albumname    = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB", false)
+                 retval, albumname    = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB", false)
                 
             setting the album name in the metadata of the current project:
             
-                retval, albumame_new = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB|New album name", true)
+                 retval, albumame_new = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB|New album name", true)
             
 			Supported tags-codes are: TIT2(Title), TPE1(Artist), TPE2(Albumartist), TALB(Album), TRCK(Track), TCON(Genre), TYER(Year), TDRC(Recording time: YYYY-MM-DD), TKEY(Key), TBPM(Tempo), TSRC(International Standard Recording Code), COMM(Comment), COMM\_LANG(Comment language), APIC\_TYPE(Image type), APIC\_DESC(Image description), APIC\_FILE(Image file)
 			APIC\_TYPE can have be of the following:
@@ -8397,36 +8399,38 @@
         <functioncall prog_lang="cpp">unsigned int GetSetTrackGroupMembership(MediaTrack* tr, const char* groupname, unsigned int setmask, unsigned int setvalue)</functioncall>
         <functioncall prog_lang="eel">uint GetSetTrackGroupMembership(MediaTrack tr, "groupname", uint setmask, uint setvalue)</functioncall>
         <functioncall prog_lang="lua">integer = reaper.GetSetTrackGroupMembership(MediaTrack tr, string groupname, integer setmask, integer setvalue)</functioncall>
-        <functioncall prog_lang="python">Unknown RPR_GetSetTrackGroupMembership(MediaTrack tr, String groupname, Unknown setmask, Unknown setvalue)</functioncall>
+        <functioncall prog_lang="python">Int RPR_GetSetTrackGroupMembership(MediaTrack tr, String groupname, Int setmask, Int setvalue)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.12
             Lua=5.3
         </requires>
         <description prog_lang="*">
             Gets or modifies the group membership for a track. Returns group state prior to call (each bit represents one of the 32 group numbers). if setmask has bits set, those bits in setvalue will be applied to group. Group can be one of:
-                VOLUME_MASTER
-                VOLUME_SLAVE
-                VOLUME_VCA_MASTER
-                VOLUME_VCA_SLAVE
-                PAN_MASTER
-                PAN_SLAVE
-                WIDTH_MASTER
-                WIDTH_SLAVE
-                MUTE_MASTER
-                MUTE_SLAVE
-                SOLO_MASTER
-                SOLO_SLAVE
-                RECARM_MASTER
-                RECARM_SLAVE
-                POLARITY_MASTER
-                POLARITY_SLAVE
-                AUTOMODE_MASTER
-                AUTOMODE_SLAVE
-                VOLUME_REVERSE
-                PAN_REVERSE
-                WIDTH_REVERSE
-                NO_MASTER_WHEN_SLAVE
-                VOLUME_VCA_SLAVE_ISPREFX
+            VOLUME_LEAD
+            VOLUME_FOLLOW
+            VOLUME_VCA_LEAD
+            VOLUME_VCA_FOLLOW
+            PAN_LEAD
+            PAN_FOLLOW
+            WIDTH_LEAD
+            WIDTH_FOLLOW
+            MUTE_LEAD
+            MUTE_FOLLOW
+            SOLO_LEAD
+            SOLO_FOLLOW
+            RECARM_LEAD
+            RECARM_FOLLOW
+            POLARITY_LEAD
+            POLARITY_FOLLOW
+            AUTOMODE_LEAD
+            AUTOMODE_FOLLOW
+            VOLUME_REVERSE
+            PAN_REVERSE
+            WIDTH_REVERSE
+            NO_LEAD_WHEN_FOLLOW
+            VOLUME_VCA_FOLLOW_ISPREFX
+
+            Note: REAPER v6.11 and earlier used _MASTER and _SLAVE rather than _LEAD and _FOLLOW, which is deprecated but still supported (scripts that must support v6.11 and earlier can use the deprecated strings).
         </description>
         <retvals>
             integer - 
@@ -9481,6 +9485,8 @@
         </requires>
         <description prog_lang="*">
             returns number of sends/receives/hardware outputs
+            
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
         </description>
         <retvals>
             integer - the number of sends/receives/hardware outputs
@@ -9617,7 +9623,9 @@
                 I\_MIDIFLAGS : int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanP_DESTTRACK : read only, returns MediaTrack *, destination track, only applies for sends/recvs
                 P\_SRCTRACK : read only, returns MediaTrack *, source track, only applies for sends/recvs
                 P\_ENV:&lt;envchunkname : read only, returns TrackEnvelope *. To get a specific TrackEnvelope, call with :&lt;VOLENV, :&lt;PANENV, etc appended.
-                
+        
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
+        
             See [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
         </description>
         <retvals>
@@ -10751,7 +10759,7 @@
         <functioncall prog_lang="cpp">unsigned int joystick_getbuttonmask(joystick_device* dev)</functioncall>
         <functioncall prog_lang="eel">uint joystick_getbuttonmask(joystick_device dev)</functioncall>
         <functioncall prog_lang="lua">integer = reaper.joystick_getbuttonmask(joystick_device dev)</functioncall>
-        <functioncall prog_lang="python">Unknown RPR_joystick_getbuttonmask(joystick_device dev)</functioncall>
+        <functioncall prog_lang="python">Int RPR_joystick_getbuttonmask(joystick_device dev)</functioncall>
         <requires>
             Reaper=5.62
             Lua=5.3
@@ -13472,7 +13480,7 @@
         <functioncall prog_lang="cpp">unsigned int PCM_Sink_Enum(int idx, const char** descstrOut)</functioncall>
         <functioncall prog_lang="eel">uint PCM_Sink_Enum(int idx, #descstr)</functioncall>
         <functioncall prog_lang="lua">integer retval, string descstr = reaper.PCM_Sink_Enum(integer idx)</functioncall>
-        <functioncall prog_lang="python">Unknown RPR_PCM_Sink_Enum(Int idx, String descstrOut)</functioncall>
+        <functioncall prog_lang="python">Int RPR_PCM_Sink_Enum(Int idx, String descstrOut)</functioncall>
         <requires>
             Reaper=5.62
             Lua=5.3
@@ -13794,6 +13802,61 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>PromptForAction</slug>
+        <title>PromptForAction</title>
+        <functioncall prog_lang="cpp">int PromptForAction(int session_mode, int init_id, int section_id)</functioncall>
+        <functioncall prog_lang="eel">int PromptForAction(int session_mode, int init_id, int section_id)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.PromptForAction(integer session_mode, integer init_id, integer section_id)</functioncall>
+        <functioncall prog_lang="python">Int RPR_PromptForAction(Int session_mode, Int init_id, Int section_id)</functioncall>
+        <requires>
+            Reaper=6.12
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Opens the actionlist and allows you to get, which action the user selected.
+            
+            So the user can select numerous actions, and when they hit the select or select/close-button, you can get the actions selected.
+            
+            To start a new session, pass 1 as parameter session_mode.
+            
+            After that, repeatedly call the function with session_mode=0, which will return the selected actions.
+                    - -1, the actionlist is closed
+                    - 0, no action has been selected
+                    - any other number, this action has been selected.
+            In the latter case, call the function until it returns 0 again to get all selected actions.
+            
+            If you're finished, call the function with session_mode=-1
+            
+            
+            When finished, call with session_mode=-1.
+        </description>
+        <retvals>
+            integer retval - the selected actions
+                           - -1, actionlist is not opened
+                           - 0, no action has been selected yet/you retrieved all selected actions
+                           - any other number, the selected actions; call repeatedly to get all selected commandids until the function returns 0 again
+        </retvals>
+        <parameters>
+            integer session_mode - 1, start a new session; 0, retrieve selected actions; -1, end a session
+            integer init_id - the command-id, which shall be preselected, when the actionlist opens
+            integer section_id - the section in which you want to let the user select
+                               - 0 - Main
+                               - 100 - Main (alt recording)
+                               - 32060 - MIDI Editor
+                               - 32061 - MIDI Event List Editor
+                               - 32062 - MIDI Inline Editor
+                               - 32063 - Media Explorer 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            User Interface
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ReaScriptError</slug>
         <title>ReaScriptError</title>
         <functioncall prog_lang="cpp">void ReaScriptError(const char* errmsg)</functioncall>
@@ -13824,7 +13887,7 @@
         <functioncall prog_lang="cpp">int RecursiveCreateDirectory(const char* path, size_t ignored)</functioncall>
         <functioncall prog_lang="eel">int RecursiveCreateDirectory("path", size_t ignored)</functioncall>
         <functioncall prog_lang="lua">integer = reaper.RecursiveCreateDirectory(string path, integer ignored)</functioncall>
-        <functioncall prog_lang="python">Int RPR_RecursiveCreateDirectory(String path, Unknown ignored)</functioncall>
+        <functioncall prog_lang="python">Int RPR_RecursiveCreateDirectory(String path, Int ignored)</functioncall>
         <requires>
             Reaper=5.62
             Lua=5.3
@@ -13979,6 +14042,8 @@
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Remove a send/receive/hardware output. See [CreateTrackSend](#CreateTrackSend), [GetSetTrackSendInfo](#GetSetTrackSendInfo), [GetTrackSendInfo_Value](#GetTrackSendInfo_Value), [SetTrackSendInfo_Value](#SetTrackSendInfo_Value), [GetTrackNumSends](#GetTrackNumSends).
+            
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
         </description>
         <retvals>
             boolean - true, removing worked; false, removing didn't work(e.g. does not exist)
@@ -14612,7 +14677,7 @@
             Reaper=5.62
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             mode: see [GetGlobalAutomationOverride](GetGlobalAutomationOverride)
         </description>
         <parameters>
@@ -14692,12 +14757,14 @@
         <functioncall prog_lang="lua">boolean = reaper.SetMediaItemInfo_Value(MediaItem item, string parmname, number newvalue)</functioncall>
         <functioncall prog_lang="python">Boolean RPR_SetMediaItemInfo_Value(MediaItem item, String parmname, Float newvalue)</functioncall>
         <requires>
-            Reaper=6.01
+            Reaper=6.12
             Lua=5.3
         </requires>
         <description prog_lang="*">
             Set media item numerical-value attributes.
             B_MUTE : bool * : muted
+            B_MUTE_ACTUAL : bool * : muted (ignores solo). setting this value will not affect C_MUTE_SOLO.
+            C_MUTE_SOLO : char * : solo override (-1=soloed, 0=no override, 1=unsoloed). note that this API does not automatically unsolo other items when soloing (nor clear the unsolos when clearing the last soloed item), it must be done by the caller via action or via this API.
             B_LOOPSRC : bool * : loop source
             B_ALLTAKESPLAY : bool * : all takes play
             B_UISEL : bool * : selected in arrange view
@@ -14910,53 +14977,53 @@
             Reaper=6.01
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Set track numerical-value attributes.
-            B_MUTE : bool * : muted
-            B_PHASE : bool * : track phase inverted
-            IP_TRACKNUMBER : int : track number 1-based, 0=not found, -1=master track (read-only, returns the int directly)
-            I_SOLO : int * : soloed, 0=not soloed, 1=soloed, 2=soloed in place, 5=safe soloed, 6=safe soloed in place
-            I_FXEN : int * : fx enabled, 0=bypassed, !0=fx active
-            I_RECARM : int * : record armed, 0=not record armed, 1=record armed
-            I_RECINPUT : int * : record input, &lt;0=no input, 0..n=mono hardware input, 512+n=rearoute input, &1024=stereo input pair. &4096=MIDI input, if set then low 5 bits represent channel (0=all, 1-16=only chan), next 6 bits represent physical input (63=all, 62=VKB)
-            I_RECMODE : int * : record mode, 0=input, 1=stereo out, 2=none, 3=stereo out w/latency compensation, 4=midi output, 5=mono out, 6=mono out w/ latency compensation, 7=midi overdub, 8=midi replace
-            I_RECMON : int * : record monitoring, 0=off, 1=normal, 2=not when playing (tape style)
-            I_RECMONITEMS : int * : monitor items while recording, 0=off, 1=on
-            I_AUTOMODE : int * : track automation mode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch
-            I_NCHAN : int * : number of track channels, 2-64, even numbers only
-            I_SELECTED : int * : track selected, 0=unselected, 1=selected
-            I_WNDH : int * : current TCP window height in pixels including envelopes (read-only)
-            I_TCPH : int * : current TCP window height in pixels not including envelopes (read-only)
-            I_TCPY : int * : current TCP window Y-position in pixels relative to top of arrange view (read-only)
-            I_MCPX : int * : current MCP X-position in pixels relative to mixer container
-            I_MCPY : int * : current MCP Y-position in pixels relative to mixer container
-            I_MCPW : int * : current MCP width in pixels
-            I_MCPH : int * : current MCP height in pixels
-            I_FOLDERDEPTH : int * : folder depth change, 0=normal, 1=track is a folder parent, -1=track is the last in the innermost folder, -2=track is the last in the innermost and next-innermost folders, etc
-            I_FOLDERCOMPACT : int * : folder compacted state (only valid on folders), 0=normal, 1=small, 2=tiny children
-            I_MIDIHWOUT : int * : track midi hardware output index, &lt;0=disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31)
-            I_PERFFLAGS : int * : track performance flags, &1=no media buffering, &2=no anticipative FX
-            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color.
-            I_HEIGHTOVERRIDE : int * : custom height override for TCP window, 0 for none, otherwise size in pixels(use [TrackList_AdjustWindows](#TrackList_AdjustWindows) to update TCP after this.
-            B_HEIGHTLOCK : bool * : track height lock (must set I_HEIGHTOVERRIDE before locking)
-            D_VOL : double * : trim volume of track, 0=-inf, 0.5=-6dB, 1=+0dB, 2=+6dB, etc
-            D_PAN : double * : trim pan of track, -1..1
-            D_WIDTH : double * : width of track, -1..1
-            D_DUALPANL : double * : dualpan position 1, -1..1, only if I_PANMODE==6
-            D_DUALPANR : double * : dualpan position 2, -1..1, only if I_PANMODE==6
-            I_PANMODE : int * : pan mode, 0=classic 3.x, 3=new balance, 5=stereo pan, 6=dual pan
-            D_PANLAW : double * : pan law of track, &lt;0=project default, 1=+0dB, etc
-            P_ENV:&lt;envchunkname : TrackEnvelope*, read only. Call with :&lt;VOLENV, :&lt;PANENV, etc appended.
-            B_SHOWINMIXER : bool * : track control panel visible in mixer (do not use on master track)
-            B_SHOWINTCP : bool * : track control panel visible in arrange view (do not use on master track)
-            B_MAINSEND : bool * : track sends audio to parent
-            C_MAINSEND_OFFS : char * : channel offset of track send to parent
-            B_FREEMODE : bool * : track free item positioning enabled (call UpdateTimeline() after changing)
-            C_BEATATTACHMODE : char * : track timebase, -1=project default, 0=time, 1=beats (position, length, rate), 2=beats (position only)
-            F_MCP_FXSEND_SCALE : float * : scale of fx+send area in MCP (0=minimum allowed, 1=maximum allowed)
-            F_MCP_SENDRGN_SCALE : float * : scale of send area as proportion of the fx+send total area (0=minimum allowed, 1=maximum allowed)
-            I_PLAY_OFFSET_FLAG : int * : track playback offset state, &1=bypassed, &2=offset value is measured in samples (otherwise measured in seconds)
-            D_PLAY_OFFSET : double * : track playback offset, units depend on I_PLAY_OFFSET_FLAG
+            B\_MUTE : bool \* : muted
+            B\_PHASE : bool \* : track phase inverted
+            IP\_TRACKNUMBER : int : track number 1-based, 0=not found, -1=master track (read-only, returns the int directly)
+            I\_SOLO : int \* : soloed, 0=not soloed, 1=soloed, 2=soloed in place, 5=safe soloed, 6=safe soloed in place
+            I\_FXEN : int \* : fx enabled, 0=bypassed, !0=fx active
+            I\_RECARM : int \* : record armed, 0=not record armed, 1=record armed
+            I\_RECINPUT : int \* : record input, &lt;0=no input, 0..n=mono hardware input, 512+n=rearoute input, &1024=stereo input pair. &4096=MIDI input, if set then low 5 bits represent channel (0=all, 1-16=only chan), next 6 bits represent physical input (63=all, 62=VKB)
+            I\_RECMODE : int \* : record mode, 0=input, 1=stereo out, 2=none, 3=stereo out w/latency compensation, 4=midi output, 5=mono out, 6=mono out w/ latency compensation, 7=midi overdub, 8=midi replace
+            I\_RECMON : int \* : record monitoring, 0=off, 1=normal, 2=not when playing (tape style)
+            I\_RECMONITEMS : int \* : monitor items while recording, 0=off, 1=on
+            I\_AUTOMODE : int \* : track automation mode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch
+            I\_NCHAN : int \* : number of track channels, 2-64, even numbers only
+            I\_SELECTED : int \* : track selected, 0=unselected, 1=selected
+            I\_WNDH : int \* : current TCP window height in pixels including envelopes (read-only)
+            I\_TCPH : int \* : current TCP window height in pixels not including envelopes (read-only)
+            I\_TCPY : int \* : current TCP window Y-position in pixels relative to top of arrange view (read-only)
+            I\_MCPX : int \* : current MCP X-position in pixels relative to mixer container
+            I\_MCPY : int \* : current MCP Y-position in pixels relative to mixer container
+            I\_MCPW : int \* : current MCP width in pixels
+            I\_MCPH : int \* : current MCP height in pixels
+            I\_FOLDERDEPTH : int \* : folder depth change, 0=normal, 1=track is a folder parent, -1=track is the last in the innermost folder, -2=track is the last in the innermost and next-innermost folders, etc
+            I\_FOLDERCOMPACT : int \* : folder compacted state (only valid on folders), 0=normal, 1=small, 2=tiny children
+            I\_MIDIHWOUT : int \* : track midi hardware output index, &lt;0=disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31)
+            I\_PERFFLAGS : int \* : track performance flags, &1=no media buffering, &2=no anticipative FX
+            I\_CUSTOMCOLOR : int \* : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color.
+            I\_HEIGHTOVERRIDE : int \* : custom height override for TCP window, 0 for none, otherwise size in pixels(use [TrackList\_AdjustWindows](#TrackList_AdjustWindows) to update TCP after this.
+            B\_HEIGHTLOCK : bool \* : track height lock (must set I\_HEIGHTOVERRIDE before locking)
+            D\_VOL : double \* : trim volume of track, 0=-inf, 0.5=-6dB, 1=+0dB, 2=+6dB, etc
+            D\_PAN : double \* : trim pan of track, -1..1
+            D\_WIDTH : double \* : width of track, -1..1
+            D\_DUALPANL : double \* : dualpan position 1, -1..1, only if I\_PANMODE==6
+            D\_DUALPANR : double \* : dualpan position 2, -1..1, only if I\_PANMODE==6
+            I\_PANMODE : int \* : pan mode, 0=classic 3.x, 3=new balance, 5=stereo pan, 6=dual pan
+            D\_PANLAW : double \* : pan law of track, &lt;0=project default, 1=+0dB, etc
+            P\_ENV:&lt;envchunkname : TrackEnvelope\*, read only. Call with :&lt;VOLENV, :&lt;PANENV, etc appended.
+            B\_SHOWINMIXER : bool \* : track control panel visible in mixer (do not use on master track)
+            B\_SHOWINTCP : bool \* : track control panel visible in arrange view (do not use on master track)
+            B\_MAINSEND : bool \* : track sends audio to parent
+            C\_MAINSEND\_OFFS : char \* : channel offset of track send to parent
+            B\_FREEMODE : bool \* : track free item positioning enabled (call UpdateTimeline() after changing)
+            C\_BEATATTACHMODE : char \* : track timebase, -1=project default, 0=time, 1=beats (position, length, rate), 2=beats (position only)
+            F\_MCP\_FXSEND\_SCALE : float \* : scale of fx+send area in MCP (0=minimum allowed, 1=maximum allowed)
+            F\_MCP\_SENDRGN\_SCALE : float \* : scale of send area as proportion of the fx+send total area (0=minimum allowed, 1=maximum allowed)
+            I\_PLAY\_OFFSET\_FLAG : int \* : track playback offset state, &1=bypassed, &2=offset value is measured in samples (otherwise measured in seconds)
+            D\_PLAY\_OFFSET : double \* : track playback offset, units depend on I\_PLAY_OFFSET_FLAG
         </description>
         <retvals>
             boolean - 
@@ -16120,6 +16187,8 @@
                 I\_MIDIFLAGS : int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanSee [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
 
 
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
+
             See [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
         </description>
         <retvals>
@@ -16586,11 +16655,11 @@
         <functioncall prog_lang="lua">integer = reaper.TakeFX_AddByName(MediaItem_Take take, string fxname, integer instantiate)</functioncall>
         <functioncall prog_lang="python">Int RPR_TakeFX_AddByName(MediaItem_Take take, String fxname, Int instantiate)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.12
             Lua=5.3
         </requires>
-        <description prog_lang="*">
-            Adds or queries the position of a named FX in a take. Specify a negative value for instantiate to always create a new effect, 0 to only query the first instance of an effect, or a positive value to add an instance if one is not found.
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Adds or queries the position of a named FX in a take. See [TrackFX_AddByName()](#TrackFX_AddByName) for information on fxname and instantiate. 
         </description>
         <retvals>
             integer - 
@@ -18461,7 +18530,18 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            Adds or queries the position of a named FX from the track FX chain (recFX=false) or record input FX/monitoring FX (recFX=true, monitoring FX are on master track). Specify a negative value for instantiate to always create a new effect, 0 to only query the first instance of an effect, or a positive value to add an instance if one is not found. fxname can have prefix to specify type: VST3:,VST2:,VST:,AU:,JS:, or DX:.
+            Adds or queries the position of a named FX from the track FX chain (recFX=false) or record input FX/monitoring FX (recFX=true, monitoring FX are on master track). 
+            
+            Specify a negative value for instantiate to always create a new effect, 
+            0 to only query the first instance of an effect, or a positive value to add an instance if one is not found. 
+            If instantiate is &lt;= -1000, it is used for the insertion position (-1000 is first item in chain, -1001 is second, etc). 
+            
+            fxname can have prefix to specify type: VST3:,VST2:,VST:,AU:,JS:, or DX:, or 
+            FXADD: which adds selected items from the currently-open FX browser, 
+            FXADD:2 to limit to 2 FX added, or 
+            FXADD:2e to only succeed if exactly 2 FX are selected. 
+            
+            Returns -1 on failure or the new position in chain on success.
         </description>
         <retvals>
             integer - 
@@ -18637,7 +18717,7 @@
         <title>TrackFX_GetByName</title>
         <functioncall prog_lang="cpp">int TrackFX_GetByName(MediaTrack* track, const char* fxname, bool instantiate)</functioncall>
         <functioncall prog_lang="eel">int TrackFX_GetByName(MediaTrack track, "fxname", bool instantiate)</functioncall>
-        <functioncall prog_lang="lua">integer = reaper.TrackFX_GetByName(MediaTrack track, string fxname, boolean instantiate)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.TrackFX_GetByName(MediaTrack track, string fxname, boolean instantiate)</functioncall>
         <functioncall prog_lang="python">Int RPR_TrackFX_GetByName(MediaTrack track, String fxname, Boolean instantiate)</functioncall>
         <requires>
             Reaper=5.62
@@ -18647,12 +18727,12 @@
             Get the index of the first track FX insert that matches fxname. If the FX is not in the chain and instantiate is true, it will be inserted. See [TrackFX_GetInstrument](#TrackFX_GetInstrument), [TrackFX_GetEQ](#TrackFX_GetEQ). Deprecated in favor of TrackFX_AddByName.
         </description>
         <retvals>
-            integer - 
+            integer retval - 
         </retvals>
         <parameters>
-            track - 
-            fxname - 
-            instantiate - 
+            MediaTrack track - 
+            string fxname - 
+            boolean instantiate - 
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -20127,7 +20207,7 @@
             Reaper=5.62
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Updates the TCP and optionally the MCP. Helpful, when setting a new trackheight using I_HEIGHTOVERRIDE in [SetMediaTrackInfo_Value](#SetMediaTrackInfo_Value).
         </description>
         <parameters>
@@ -20726,36 +20806,38 @@
         <functioncall prog_lang="cpp">unsigned int GetSetTrackGroupMembershipHigh(MediaTrack* tr, const char* groupname, unsigned int setmask, unsigned int setvalue)</functioncall>
         <functioncall prog_lang="eel">uint GetSetTrackGroupMembershipHigh(MediaTrack tr, "groupname", uint setmask, uint setvalue)</functioncall>
         <functioncall prog_lang="lua">integer groupstate = reaper.GetSetTrackGroupMembershipHigh(MediaTrack tr, string groupname, integer setmask, integer setvalue)</functioncall>
-        <functioncall prog_lang="python">Unknown RPR_GetSetTrackGroupMembershipHigh(MediaTrack tr, String groupname, Unknown setmask, Unknown setvalue)</functioncall>
+        <functioncall prog_lang="python">Int RPR_GetSetTrackGroupMembershipHigh(MediaTrack tr, String groupname, Int setmask, Int setvalue)</functioncall>
         <requires>
-            Reaper=5.70
+            Reaper=6.12
             Lua=5.3
         </requires>
         <description prog_lang="*"> 
             Gets or modifies the group membership for a track. Returns group state prior to call (each bit represents one of the high 32 group numbers). if setmask has bits set, those bits in setvalue will be applied to group. Group can be one of:
-            VOLUME_MASTER
-            VOLUME_SLAVE
-            VOLUME_VCA_MASTER
-            VOLUME_VCA_SLAVE
-            PAN_MASTER
-            PAN_SLAVE
-            WIDTH_MASTER
-            WIDTH_SLAVE
-            MUTE_MASTER
-            MUTE_SLAVE
-            SOLO_MASTER
-            SOLO_SLAVE
-            RECARM_MASTER
-            RECARM_SLAVE
-            POLARITY_MASTER
-            POLARITY_SLAVE
-            AUTOMODE_MASTER
-            AUTOMODE_SLAVE
+            VOLUME_LEAD
+            VOLUME_FOLLOW
+            VOLUME_VCA_LEAD
+            VOLUME_VCA_FOLLOW
+            PAN_LEAD
+            PAN_FOLLOW
+            WIDTH_LEAD
+            WIDTH_FOLLOW
+            MUTE_LEAD
+            MUTE_FOLLOW
+            SOLO_LEAD
+            SOLO_FOLLOW
+            RECARM_LEAD
+            RECARM_FOLLOW
+            POLARITY_LEAD
+            POLARITY_FOLLOW
+            AUTOMODE_LEAD
+            AUTOMODE_FOLLOW
             VOLUME_REVERSE
             PAN_REVERSE
             WIDTH_REVERSE
-            NO_MASTER_WHEN_SLAVE
-            VOLUME_VCA_SLAVE_ISPREFX
+            NO_LEAD_WHEN_FOLLOW
+            VOLUME_VCA_FOLLOW_ISPREFX
+
+            Note: REAPER v6.11 and earlier used _MASTER and _SLAVE rather than _LEAD and _FOLLOW, which is deprecated but still supported (scripts that must support v6.11 and earlier can use the deprecated strings).
         </description>
         <parameters>
             tr - 
@@ -20788,6 +20870,8 @@
         <description prog_lang="*"> 
             Gets/sets a send attribute string:
                 P_EXT:xyz : char * : extension-specific persistent data
+                
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
         </description>
         <parameters>
             MediaTrack tr - 
@@ -32314,7 +32398,7 @@
             SWS=2.10.0.1
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Redraw the Notes window (call if you've changed a subtitle via [NF_SetSWSMarkerRegionSub](#NF_SetSWSMarkerRegionSub) which is currently displayed in the Notes window and you want to appear the new subtitle immediately.)
         </description>
         <target_document>Reaper_Api_Documentation</target_document>
@@ -35884,6 +35968,10 @@
             Draws a string at gfx.x, gfx.y, and updates gfx.x/gfx.y so that subsequent draws will occur in a similar place.
             
             You can optionally set a clipping area for the text, if you set parameter flags&amp;256 and the parameters right and bottom.
+            
+            On Windows, fonts with a size > 255 may have trouble of being displayed correctly, due problems with the font-rendering and the alpha-channel. <a href="https://forum.cockos.com/showpost.php?p=2311977&postcount=7">Justin's post about this.</a>
+            To overcome this, try this to disable the alpha-channel: 
+            By default, gfx.blit() blits with alpha channel. You can disable this behavior by setting "gfx.mode=2" before calling gfx.blit().
         </description>
         <parameters>
             string str - the string to be drawn into the gfx.init-window
@@ -38212,7 +38300,7 @@
                  -I_SOLO : int * : 0=not soloed, 1=solo, 2=soloed in place. also: 5=solo-safe solo, 6=solo-safe soloed in place
                  -I_FXEN : int * : 0=fx bypassed, nonzero = fx active
                  -I_RECARM : int * : 0=not record armed, 1=record armed
-                 -I_RECINPUT : int * : record input. <0 = no input, 0..n = mono hardware input, 512+n = rearoute input, 1024 set for stereo input pair. 4096 set for MIDI input, if set, then low 5 bits represent channel (0=all, 1-16=only chan), then next 6 bits represent physical input (63=all, 62=VKB)
+                 -I_RECINPUT : int * : record input. &lt;0 = no input, 0..n = mono hardware input, 512+n = rearoute input, 1024 set for stereo input pair. 4096 set for MIDI input, if set, then low 5 bits represent channel (0=all, 1-16=only chan), then next 6 bits represent physical input (63=all, 62=VKB)
                  -I_RECMODE : int * : record mode (0=input, 1=stereo out, 2=none, 3=stereo out w/latcomp, 4=midi output, 5=mono out, 6=mono out w/ lat comp, 7=midi overdub, 8=midi replace
                  -I_RECMON : int * : record monitor (0=off, 1=normal, 2=not when playing (tapestyle))
                  -I_RECMONITEMS : int * : monitor items while recording (0=off, 1=on)
@@ -38222,8 +38310,8 @@
                  -I_WNDH : int * : current TCP window height (Read-only)
                  -I_FOLDERDEPTH : int * : folder depth change (0=normal, 1=track is a folder parent, -1=track is the last in the innermost folder, -2=track is the last in the innermost and next-innermost folders, etc
                  -I_FOLDERCOMPACT : int * : folder compacting (only valid on folders), 0=normal, 1=small, 2=tiny children
-                 -I_MIDIHWOUT : int * : track midi hardware output index (<0 for disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31))
-                 -I_PERFFLAGS : int * : track perf flags (&1=no media buffering, &2=no anticipative FX)
+                 -I_MIDIHWOUT : int * : track midi hardware output index (&lt;0 for disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31))
+                 -I_PERFFLAGS : int * : track perf flags (&amp;1=no media buffering, &amp;2=no anticipative FX)
                  -I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used (though will store the color anyway).
                  -I_HEIGHTOVERRIDE : int * : custom height override for TCP window. 0 for none, otherwise size in pixels
                  -D_VOL : double * : trim volume of track (0 (-inf)..1 (+0dB) .. 2 (+6dB) etc ..)
@@ -38232,8 +38320,8 @@
                  -D_DUALPANL : double * : dualpan position 1 (-1..1), only if I_PANMODE==6
                  -D_DUALPANR : double * : dualpan position 2 (-1..1), only if I_PANMODE==6
                  -I_PANMODE : int * : pan mode (0 = classic 3.x, 3=new balance, 5=stereo pan, 6 = dual pan)
-                 -D_PANLAW : double * : pan law of track. <0 for project default, 1.0 for +0dB, etc
-                 -P_ENV : read only, returns TrackEnvelope *, setNewValue=<VOLENV, <PANENV, etc
+                 -D_PANLAW : double * : pan law of track. &lt;0 for project default, 1.0 for +0dB, etc
+                 -P_ENV : read only, returns TrackEnvelope *, setNewValue=&lt;VOLENV, &lt;PANENV, etc
                  -B_SHOWINMIXER : bool * : show track panel in mixer -- do not use on master
                  -B_SHOWINTCP : bool * : show track panel in tcp -- do not use on master
                  -B_MAINSEND : bool * : track sends audio to parent
@@ -38352,18 +38440,20 @@
         </requires>
         <description indent="default">
             Get or set send/receive/hardware output attributes.
+            
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
         </description>
         <retvals>
             void* -
         </retvals>
         <parameters>
             tr - the MediaTrack object for the track to be gotten or set
-            category - <0 for receives, 0=sends, >0 for hardware outputs 
+            category - &lt;0 for receives, 0=sends, &gt;0 for hardware outputs 
             sendidx - 0..n (to enumerate, iterate over sendidx until it returns NULL) 
             parmname - the parameter to get/set
                  -P_DESTTRACK : read only, returns MediaTrack *, destination track, only applies for sends/recvs
                  -P_SRCTRACK : read only, returns MediaTrack *, source track, only applies for sends/recvs
-                 -P_ENV : read only, returns TrackEnvelope *, setNewValue=<VOLENV, <PANENV, etc
+                 -P_ENV : read only, returns TrackEnvelope *, setNewValue=&lt;VOLENV, &lt;PANENV, etc
                  -B_MUTE : returns bool *
                  -B_PHASE : returns bool *, true to flip phase
                  -B_MONO : returns bool *
@@ -38372,8 +38462,8 @@
                  -D_PANLAW : returns double *,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
                  -I_SENDMODE : returns int *, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
                  -I_AUTOMODE : returns int * : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
-                 -I_SRCCHAN : returns int *, index,&1024=mono, -1 for none
-                 -I_DSTCHAN : returns int *, index, &1024=mono, otherwise stereo pair, hwout:&512=rearoute
+                 -I_SRCCHAN : returns int *, index,&amp;1024=mono, -1 for none
+                 -I_DSTCHAN : returns int *, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
                  -I_MIDIFLAGS : returns int *, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chan
             setNewValue - the new value to be set
         </parameters>
@@ -41083,9 +41173,10 @@
         <parameters>
             item - a MediaItem-object
             parmname - the parameter to be gotten/set
-                -P_TRACK : MediaTrack * (read only)
-                -P_NOTES : char * : item note text (do not write to returned pointer, use setNewValue to update)
+                -P_TRACK : MediaTrack * (read only)                
                 -B_MUTE : bool * to muted state
+                -B_MUTE_ACTUAL : bool * : muted (ignores solo). setting this value will not affect C_MUTE_SOLO.
+                -C_MUTE_SOLO : char * : solo override (-1=soloed, 0=no override, 1=unsoloed). note that this API does not automatically unsolo other items when soloing (nor clear the unsolos when clearing the last soloed item), it must be done by the caller via action or via this API.
                 -B_LOOPSRC : bool * to loop source
                 -B_ALLTAKESPLAY : bool * to all takes play
                 -B_UISEL : bool * to ui selected
@@ -41111,6 +41202,7 @@
                 -IP_ITEMNUMBER : int, item number within the track (read-only, returns the item number directly)
                 -F_FREEMODE_Y : float * to free mode y position (0..1)
                 -F_FREEMODE_H : float * to free mode height (0..1)
+                -P_NOTES : char * : item note text (do not write to returned pointer, use setNewValue to update)
             setNewValue - the new value to be set, refer description of parmname for the values
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>

@@ -1752,7 +1752,7 @@ function ultraschall.GetFXStateChunk(StateChunk, TakeFXChain_id)
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string FXStateChunk = ultraschall.GetFXStateChunk(string StateChunk, optional integer TakeFXChain_id)</functioncall>
+  <functioncall>string FXStateChunk, integer linenumber = ultraschall.GetFXStateChunk(string StateChunk, optional integer TakeFXChain_id)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns an FXStateChunk from a TrackStateChunk or a MediaItemStateChunk.
     
@@ -1762,6 +1762,7 @@ function ultraschall.GetFXStateChunk(StateChunk, TakeFXChain_id)
   </description>
   <retvals>
     string FXStateChunk - the FXStateChunk, stored in the StateChunk
+    integer linenumber - returns the first linenumber, at which the found FXStateChunk starts in the StateChunk
   </retvals>
   <parameters>
     string StateChunk - the StateChunk, from which you want to retrieve the FXStateChunk
@@ -1778,28 +1779,63 @@ function ultraschall.GetFXStateChunk(StateChunk, TakeFXChain_id)
 ]]
   if ultraschall.IsValidTrackStateChunk(StateChunk)==false and ultraschall.IsValidMediaItemStateChunk(StateChunk)==false then ultraschall.AddErrorMessage("GetFXStateChunk", "StateChunk", "no valid Track/ItemStateChunk", -1) return end
   if TakeFXChain_id~=nil and math.type(TakeFXChain_id)~="integer" then ultraschall.AddErrorMessage("GetFXStateChunk", "TakeFXChain_id", "must be an integer", -2) return end
-  if TakeFXChain_id==nil then TakeFXChain_id=1 end
+  local add, takefx, trackfx
+  
+  local finallinenumber
+  local FXStateChunk=""
   
   if string.find(StateChunk, "\n  ")==nil then
     StateChunk=ultraschall.StateChunkLayouter(StateChunk)
   end
-  for w in string.gmatch(StateChunk, " <FXCHAIN.-\n  >") do
-    return w
-  end
-  local count=0
-  local FXStateChunk
-      
-  StateChunk=string.gsub(StateChunk, "TAKE\n", "TAKEend\n  TAKE\n")
-  StateChunk="  TAKE\n"..StateChunk.."\n  TAKEend\n"
 
-  for w in string.gmatch(StateChunk, "(  TAKE\n.-)\n  TAKEend\n") do
-    count=count+1
-    if TakeFXChain_id==count then
-      FXStateChunk=w:match("  <TAKEFX.-\n  >")
-      if FXStateChunk==nil then ultraschall.AddErrorMessage("GetFXStateChunk", "TakeFXChain_id", "No FXChain in this take available", -3) end
-      return FXStateChunk
+  local linenumber=0
+  if ultraschall.IsValidTrackStateChunk(StateChunk)==true then
+    for w in string.gmatch(StateChunk, ".-\n") do
+      linenumber=linenumber+1
+      if w=="  <FXCHAIN\n" then
+        trackfx=true
+        if finallinenumber==nil then finallinenumber=linenumber end
+      elseif trackfx==true and w=="  >\n" then
+        trackfx=false
+      end
+      if trackfx==true then
+        FXStateChunk=FXStateChunk..w
+      end
+    end
+    if FXStateChunk~="" then add="  >" else add="" end
+    if FXStateChunk:len()<7 then FXStateChunk="" end
+    
+    return FXStateChunk..add, finallinenumber
+  end
+  
+  if TakeFXChain_id==nil then TakeFXChain_id=1 end
+  local count=0
+  local FXStateChunk=""
+  
+  StateChunk="  TAKE\n"..StateChunk.."\n"
+  takefx=false
+  linenumber=0
+  
+  for w in string.gmatch(StateChunk, "(.-\n)") do
+    linenumber=linenumber+1
+    if w:sub(1,7)=="  TAKE\n" or w:sub(1,7)=="  TAKE "then
+      count=count+1
+    end
+    
+    if w=="  <TAKEFX\n" then
+      takefx=true
+    elseif takefx==true and w=="  >\n" then
+      takefx=false
+    end
+    
+    if takefx==true and TakeFXChain_id==count then
+      if finallinenumber==nil then finallinenumber=linenumber end
+      FXStateChunk=FXStateChunk..w
     end
   end
+  if FXStateChunk:len()<7 then FXStateChunk="" end
+  if FXStateChunk~="" then add="  >" else add="" end
+  return FXStateChunk..add, finallinenumber
 end
 
 
@@ -2636,4 +2672,358 @@ function ultraschall.GetRecentFX()
   end
   
   return Count, RecentFXs
+end
+
+function ultraschall.GetTrackFX_AlternativeName(tracknumber, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrackFX_AlternativeName</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.11
+    Lua=5.3
+  </requires>
+  <functioncall>string alternative_fx_name = ultraschall.GetTrackFX_AlternativeName(integer tracknumber, integer fx_id)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the alternative name of a specific trackfx.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string alternative_fx_name - the alternative fx-name set for this fx
+  </retvals>
+  <parameters>
+    integer tracknumber - the tracknumber, in which this track is located; 0, for master-track
+    integer fx_id - the fx-id within the fxchain; 1, for the first trackfx
+  </parameter>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, alternative name, aliasname, trackfx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(tracknumber)~="number: integer" then ultraschall.AddErrorMessage("GetTrackFX_AlternativeName", "tracknumber", "must be an integer", -1) return end
+  if tracknumber>reaper.CountTracks(0) or tracknumber<0 then ultraschall.AddErrorMessage("GetTrackFX_AlternativeName", "tracknumber", "must be 1 and higher; 0, master track", -2) return end
+  if ultraschall.type(fx_id)~="number: integer" then ultraschall.AddErrorMessage("GetTrackFX_AlternativeName", "fx_id", "must be an integer", -3) return end
+  if fx_id<1 then ultraschall.AddErrorMessage("GetTrackFX_AlternativeName", "fx_id", "must be 1 and higher", -4) return end
+  local Track, _, StatChunk, FXStateChunk, counter, AltName, StartOffset, EndOffset, StateChunk
+  if tracknumber~=0 then
+    Track=reaper.GetTrack(0,tracknumber-1)
+  else
+    Track=reaper.GetMasterTrack(0)
+  end
+  _,StateChunk=reaper.GetTrackStateChunk(Track, "", false)
+  FXStateChunk = ultraschall.GetFXStateChunk(StateChunk, 1)
+
+  counter=0
+  AltName=""
+
+  FXStateChunk=string.gsub(FXStateChunk, "<JS_", " <JS_")
+  for k in string.gmatch(FXStateChunk, "(.-)\n") do
+    if k:match("    <(......)")=="VIDEO_" then 
+      counter=counter+1
+      if counter==fx_id then
+        local name=string.gsub(k:match("VIDEO_EFFECT \".-\" (.*)"),"\"", "")
+        return name
+      end
+    elseif k:match("    <(...)")=="DX " then 
+      counter=counter+1    
+      if counter==fx_id then
+        local name=string.gsub(k:match("<DX \".-\" (.*)"),"\"", "")
+        return name
+      end
+    elseif k:match("    <(...)")=="AU " then 
+      counter=counter+1
+      if counter==fx_id then
+        local name=k:match("<AU \".-\" \".-\" (.*)")
+        if name:sub(1,1)=="\"" then return name:match("\"(.-)\"") else return name:match(".- ") end
+        return name
+      end
+    elseif k:match("    <(...)")=="VST" then 
+      counter=counter+1
+      if counter==fx_id then      
+        local name=k:match("<VST \".-\" .- .- (.*)")
+        if name:sub(1,1)=="\"" then return name:match("\"(.-)\"") else return name:match(".- ") end
+        return name
+      end
+    elseif k:match("    <(...)")=="JS " then 
+      counter=counter+1
+      if counter==fx_id then      
+        local name=string.gsub(k:match("<JS .- (.*)"), "\"", "")
+        return name
+      end
+    end
+  end
+end
+
+function ultraschall.GetTakeFX_AlternativeName(item, take_id, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTakeFX_AlternativeName</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.11
+    Lua=5.3
+  </requires>
+  <functioncall>string alternative_fx_name = ultraschall.GetTakeFX_AlternativeName(integer tracknumber, integer take_id, integer fx_id)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the alternative name of a specific takefx.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string alternative_fx_name - the alternative fx-name set for this fx
+  </retvals>
+  <parameters>
+    integer tracknumber - the tracknumber, in which this track is located; 0, for master-track
+    integer take_id - the id of the take of whose FXChain's fx you want to get the alternative name
+    integer fx_id - the fx-id within the fxchain; 1, for the first trackfx
+  </parameter>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, alternative name, aliasname, takefx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(item)~="MediaItem" then ultraschall.AddErrorMessage("GetTakeFX_AlternativeName", "item", "must be a MediaItem", -1) return end
+  if ultraschall.type(take_id)~="number: integer" then ultraschall.AddErrorMessage("GetTakeFX_AlternativeName", "take_id", "must be an integer", -2) return end
+  if take_id<1 or reaper.CountTakes(item)<take_id then ultraschall.AddErrorMessage("GetTakeFX_AlternativeName", "take_id", "no such take", -3) return end
+  if ultraschall.type(fx_id)~="number: integer" then ultraschall.AddErrorMessage("GetTakeFX_AlternativeName", "fx_id", "must be an integer", -4) return end
+  if fx_id<1 then ultraschall.AddErrorMessage("GetTakeFX_AlternativeName", "fx_id", "must be 1 and higher", -6) return end
+  local Track, _, StatChunk, FXStateChunk, counter, AltName, StartOffset, EndOffset, StateChunk
+
+  _,StateChunk=reaper.GetItemStateChunk(item, "", false)
+  FXStateChunk = ultraschall.GetFXStateChunk(StateChunk, take_id)
+
+  counter=0
+  AltName=""
+
+  for k in string.gmatch(FXStateChunk, "(.-)\n") do
+    if k:match("    <(......)")=="VIDEO_" then 
+      counter=counter+1
+      if counter==fx_id then
+        local name=string.gsub(k:match("VIDEO_EFFECT \".-\" (.*)"),"\"", "")
+        return name
+      end
+    elseif k:match("    <(...)")=="DX " then 
+      counter=counter+1    
+      if counter==fx_id then
+        local name=string.gsub(k:match("<DX \".-\" (.*)"),"\"", "")
+        return name
+      end
+    elseif k:match("    <(...)")=="AU " then 
+      counter=counter+1
+      if counter==fx_id then
+        local name=k:match("<AU \".-\" \".-\" (.*)")
+        if name:sub(1,1)=="\"" then return name:match("\"(.-)\"") else return name:match(".- ") end
+        return name
+      end
+    elseif k:match("    <(...)")=="VST" then 
+      counter=counter+1
+      if counter==fx_id then      
+        local name=k:match("<VST \".-\" .- .- (.*)")
+        if name:sub(1,1)=="\"" then return name:match("\"(.-)\"") else return name:match(".- ") end
+        return name
+      end
+    elseif k:match("    <(...)")=="JS " then 
+      counter=counter+1
+      if counter==fx_id then      
+        local name=string.gsub(k:match("<JS .- (.*)"), "\"", "")
+        return name
+      end
+    end
+  end
+  
+end
+
+--AAAA=ultraschall.GetTakeFX_AlternativeName(reaper.GetMediaItem(0,0), 2, 5)
+
+
+function ultraschall.SetTrackFX_AlternativeName(tracknumber, fx_id, newname)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetTrackFX_AlternativeName</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.11
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetTrackFX_AlternativeName(integer tracknumber, integer fx_id, string newname)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    sets the alternative name of a specific trackfx.
+    
+    Returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer tracknumber - the tracknumber, in which this track is located; 0, for master-track
+    integer fx_id - the fx-id within the fxchain; 1, for the first trackfx
+    string newname - the new alternative name for the fx
+  </parameter>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, alternative name, aliasname, trackfx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(tracknumber)~="number: integer" then ultraschall.AddErrorMessage("SetTrackFX_AlternativeName", "tracknumber", "must be an integer", -1) return false end
+  if tracknumber>reaper.CountTracks(0) or tracknumber<0 then ultraschall.AddErrorMessage("SetTrackFX_AlternativeName", "tracknumber", "must be 1 and higher; 0, master track", -2) return false end
+  if ultraschall.type(fx_id)~="number: integer" then ultraschall.AddErrorMessage("SetTrackFX_AlternativeName", "fx_id", "must be an integer", -3) return false end
+  if fx_id<1 then ultraschall.AddErrorMessage("SetTrackFX_AlternativeName", "fx_id", "must be 1 and higher", -4) return false end
+  if ultraschall.type(newname)~="string" then ultraschall.AddErrorMessage("SetTrackFX_AlternativeName", "newname", "must be a string", -5) return false end
+  
+  local Track, _, FXStateChunk, counter, StateChunk, retval, NewFXStateChunk, alteredStateChunk
+  if tracknumber~=0 then
+    Track=reaper.GetTrack(0,tracknumber-1)
+  else
+    Track=reaper.GetMasterTrack(0)
+  end
+  _,StateChunk=reaper.GetTrackStateChunk(Track, "", false)
+  FXStateChunk = ultraschall.GetFXStateChunk(StateChunk, 1).."\n"
+
+  counter=0
+  
+  newname=string.gsub(newname, "\n", "")
+  newname=string.gsub(newname, "\"", "")
+  if newname:match(" ")~=nil then newname="\""..newname.."\"" end
+
+  NewFXStateChunk=""
+  for k in string.gmatch(FXStateChunk, "(.-)\n") do
+    if k:match("    <(......)")=="VIDEO_" then 
+      counter=counter+1
+      if counter==fx_id then
+        k=string.gsub(k, "<VIDEO_EFFECT \".-\" (.*)", "<VIDEO_EFFECT \"Video processor\" "..newname)
+      end
+    elseif k:match("    <(...)")=="DX " then 
+      counter=counter+1    
+      if counter==fx_id then
+        local Pre=k:match("(.-<DX \".-\" ).*")
+        k=Pre..newname
+      end
+    elseif k:match("    <(...)")=="AU " then 
+      counter=counter+1
+      if counter==fx_id then
+        local k1,k2=k:match("(.- \".-\" \".-\" ).*( .- .- .-)")
+        k=k1..newname..k2
+      end
+    elseif k:match("    <(...)")=="VST" then 
+      counter=counter+1
+      if counter==fx_id then        
+        local Pre=k:match("(.-<VST \".-\" .- .- ).*")
+        k=Pre..newname
+      end
+    elseif k:match("    <(...)")=="JS " then 
+      counter=counter+1
+      if counter==fx_id then      
+        local k1=k:match("(.-<.- .- )")
+        k=k1..newname
+      end
+    end
+    NewFXStateChunk=NewFXStateChunk..k.."\n"
+  end
+  retval, alteredStateChunk = ultraschall.SetFXStateChunk(StateChunk, NewFXStateChunk)
+  
+  _=reaper.SetTrackStateChunk(Track, alteredStateChunk, false)  
+  return true
+end
+
+function ultraschall.SetTakeFX_AlternativeName(item, take_id, fx_id, newname)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetTakeFX_AlternativeName</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.11
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetTakeFX_AlternativeName(integer tracknumber, integer take_id, integer fx_id, string newname)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    sets the alternative name of a specific takefx.
+    
+    Returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer tracknumber - the tracknumber, in which this track is located; 0, for master-track
+    integer take_id - the take, in which the fx in question is located
+    integer fx_id - the fx-id within the fxchain; 1, for the first trackfx
+    string newname - the new alternative name for the fx
+  </parameter>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, alternative name, aliasname, takefx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(item)~="MediaItem" then ultraschall.AddErrorMessage("SetTakeFX_AlternativeName", "item", "must be a MediaItem", -1) return end
+  if ultraschall.type(take_id)~="number: integer" then ultraschall.AddErrorMessage("SetTakeFX_AlternativeName", "take_id", "must be an integer", -2) return end
+  if take_id<1 or reaper.CountTakes(item)<take_id then ultraschall.AddErrorMessage("SetTakeFX_AlternativeName", "take_id", "no such take", -3) return end
+  if ultraschall.type(fx_id)~="number: integer" then ultraschall.AddErrorMessage("SetTakeFX_AlternativeName", "fx_id", "must be an integer", -4) return end
+  if fx_id<1 then ultraschall.AddErrorMessage("SetTakeFX_AlternativeName", "fx_id", "must be 1 and higher", -5) return end
+  if ultraschall.type(newname)~="string" then ultraschall.AddErrorMessage("SetTakeFX_AlternativeName", "newname", "must be a string", -6) return false end
+  local _, FXStateChunk, counter, StateChunk, retval, NewFXStateChunk, alteredStateChunk
+
+  _,StateChunk=reaper.GetItemStateChunk(item, "", false)
+  FXStateChunk = ultraschall.GetFXStateChunk(StateChunk, take_id)
+  if FXStateChunk=="" then ultraschall.AddErrorMessage("SetTakeFX_AlternativeName", "fx_id", "no such fxchain", -7) return false end
+
+  counter=0
+  newname=string.gsub(newname, "\n", "")
+  newname=string.gsub(newname, "\"", "")
+  if newname:match(" ")~=nil then newname="\""..newname.."\"" end
+
+  NewFXStateChunk=""
+  for k in string.gmatch(FXStateChunk, "(.-)\n") do
+    if k:match("    <(......)")=="VIDEO_" then 
+      counter=counter+1
+      if counter==fx_id then
+        k=string.gsub(k, "<VIDEO_EFFECT \".-\" (.*)", "<VIDEO_EFFECT \"Video processor\" "..newname)
+      end
+    elseif k:match("    <(...)")=="DX " then 
+      counter=counter+1    
+      if counter==fx_id then
+        local Pre=k:match("(.-<DX \".-\" ).*")
+        k=Pre..newname
+      end
+    elseif k:match("    <(...)")=="AU " then 
+      counter=counter+1
+      if counter==fx_id then
+        local k1,k2=k:match("(.- \".-\" \".-\" ).*( .- .- .-)")
+        k=k1..newname..k2
+      end
+    elseif k:match("    <(...)")=="VST" then 
+      counter=counter+1
+      if counter==fx_id then      
+        local Pre=k:match("(.-<VST \".-\" .- .- ).*")
+        k=Pre..newname
+      end
+    elseif k:match("    <(...)")=="JS " then 
+      counter=counter+1
+      if counter==fx_id then      
+        local k1=k:match("(.-<.- .- )")
+        k=k1..newname
+      end
+    end
+    NewFXStateChunk=NewFXStateChunk..k.."\n"
+  end
+  
+  retval, alteredStateChunk = ultraschall.SetFXStateChunk(StateChunk, NewFXStateChunk, take_id)  
+  _=reaper.SetItemStateChunk(item, alteredStateChunk, false)  
+  return true
 end

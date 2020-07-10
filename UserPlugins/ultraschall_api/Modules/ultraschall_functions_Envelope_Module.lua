@@ -2082,3 +2082,541 @@ function ultraschall.SetEnvelopeState_LaneHeight(TrackEnvelope, height, compacte
 end
 
 
+function ultraschall.ActivateEnvelope(Envelope, visible, bypass)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ActivateEnvelope</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.981
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.ActivateEnvelope(TrackEnvelope env, optional boolean visible, optional boolean bypass)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Activates an envelope, so it can be displayed in the arrange-view.
+    
+    Will add an envelope-point at position 0 in the envelope, if no point is in the envelope yet
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+   boolean retval - true, activating was successful; false, activating was unsuccessful
+  </retvals>
+  <parameters>
+   TrackEnvelope Envelope - the envelope, which you want to activate
+   optional boolean visible - true or nil, show envelope; false, don't show envelope
+   optional boolean bypass  - true or nil, don't bypass envelope; false, bypass envelope
+  </parameters>
+  <chapter_context>
+    Envelope Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+  <tags>envelope management, activate, envelope</tags>
+</US_DocBloc>
+--]]
+  -- Meo-Ada Mespotine
+  -- activates an envelope
+  -- thanks to Sexan for giving the hint to make this work
+  --
+  -- parameters:
+  --    TrackEnvelope Envelope - the envelope, which you want to activate
+  --    optional boolean visible - true or nil, show envelope; false, don't show envelope
+  --    optional boolean bypass  - true or nil, don't bypass envelope; false, bypass envelope
+  if ultraschall.type(Envelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("ActivateEnvelope", "Envelope", "must be a trackenvelope-object", -1) return false end
+  if visible~=nil and ultraschall.type(visible)~="boolean" then ultraschall.AddErrorMessage("ActivateEnvelope", "visible", "must be either nil or a boolean", -2) return false end
+  if bypass~=nil and ultraschall.type(bypass)~="boolean" then ultraschall.AddErrorMessage("ActivateEnvelope", "bypass", "must be either nil or a boolean", -3) return false end
+  local _, EnvelopeStateChunk = reaper.GetEnvelopeStateChunk(send_env_vol, "", false)
+  if EnvelopeStateChunk:match("PT ")==nil then
+   EnvelopeStateChunk = EnvelopeStateChunk:match("(.*)>").."PT 0 1 0\n>"
+  end
+  if bypass~=false then
+    EnvelopeStateChunk = string.gsub(EnvelopeStateChunk, "ACT . ", "ACT 1 ")
+  end
+  if visible~=false then
+    EnvelopeStateChunk = string.gsub(EnvelopeStateChunk, "VIS . ", "VIS 1 ")
+  end
+  return reaper.SetEnvelopeStateChunk(Envelope, EnvelopeStateChunk, false)
+end
+
+function ultraschall.ActivateTrackVolumeEnv(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ActivateTrackVolumeEnv</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.ActivateTrackVolumeEnv(integer track)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      activates a volume-envelope of a track
+        
+      returns false in case of error
+    </description>
+    <retvals>
+      boolean retval - true, activating was successful; false, activating was unsuccessful
+    </retvals>
+    <parameters>
+      integer track - the track, whose volume-envelope you want to activate; 1, for the first track
+    </parameters>
+    <chapter_context>
+      Envelope Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, volume, activate</tags>
+  </US_DocBloc>
+  --]]
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("ActivateTrackVolumeEnv", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("ActivateTrackVolumeEnv", "track", "no such track", -2) return false end
+  local env=reaper.GetTrackEnvelopeByName(reaper.GetTrack(0,track-1), "Volume")
+  local retval
+  ultraschall.PreventUIRefresh()
+  if env==nil then
+    retval = ultraschall.ApplyActionToTrack(tostring(track), 40406)
+  else 
+    retval=false ultraschall.AddErrorMessage("ActivateTrackVolumeEnv", "", "already activated", -3)
+  end
+  ultraschall.RestoreUIRefresh()
+  return retval
+end
+
+--ultraschall.ActivateTrackVolumeEnv(1)
+
+function ultraschall.ActivateTrackVolumeEnv_TrackObject(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ActivateTrackVolumeEnv_TrackObject</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.ActivateTrackVolumeEnv_TrackObject(MediaTrack track)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      activates a volume-envelope of a MediaTrack-object
+        
+      returns false in case of error
+    </description>
+    <retvals>
+      boolean retval - true, activating was successful; false, activating was unsuccessful
+    </retvals>
+    <parameters>
+      MediaTrack track - the track, whose volume-envelope you want to activate
+    </parameters>
+    <chapter_context>
+      Envelope Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, volume, activate</tags>
+  </US_DocBloc>
+  --]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("ActivateTrackVolumeEnv_TrackObject", "track", "must be a MediaTrack", -1) return false end
+  local env=reaper.GetTrackEnvelopeByName(track, "Volume")
+  local retval
+  if env==nil then
+    ultraschall.PreventUIRefresh()
+    local tracknumber=reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
+    retval = ultraschall.ApplyActionToTrack(tostring(tracknumber), 40406)
+    ultraschall.RestoreUIRefresh()
+  else 
+    retval=false ultraschall.AddErrorMessage("ActivateTrackVolumeEnv_TrackObject", "", "already activated", -3)
+  end
+  return retval
+end
+
+function ultraschall.ActivateTrackPanEnv(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ActivateTrackPanEnv</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.ActivateTrackPanEnv(integer track)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      activates a pan-envelope of a track
+        
+      returns false in case of error
+    </description>
+    <retvals>
+      boolean retval - true, activating was successful; false, activating was unsuccessful
+    </retvals>
+    <parameters>
+      integer track - the track, whose pan-envelope you want to activate; 1, for the first track
+    </parameters>
+    <chapter_context>
+      Envelope Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, pan, activate</tags>
+  </US_DocBloc>
+  --]]
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("ActivateTrackPanEnv", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("ActivateTrackPanEnv", "track", "no such track", -2) return false end
+  local env=reaper.GetTrackEnvelopeByName(reaper.GetTrack(0,track-1), "Pan")
+  local retval
+  ultraschall.PreventUIRefresh()
+  if env==nil then
+    retval = ultraschall.ApplyActionToTrack(tostring(track), 40407)
+  else 
+    retval=false ultraschall.AddErrorMessage("ActivateTrackPanEnv", "", "already activated", -3)
+  end
+  ultraschall.RestoreUIRefresh()
+  return retval
+end
+
+--ultraschall.ActivateTrackPanEnv(1)
+
+function ultraschall.ActivateTrackPanEnv_TrackObject(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ActivateTrackPanEnv_TrackObject</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.ActivateTrackPanEnv_TrackObject(MediaTrack track)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      activates a pan-envelope of a MediaTrack-object
+        
+      returns false in case of error
+    </description>
+    <retvals>
+      boolean retval - true, activating was successful; false, activating was unsuccessful
+    </retvals>
+    <parameters>
+      MediaTrack track - the track, whose pan-envelope you want to activate
+    </parameters>
+    <chapter_context>
+      Envelope Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, pan, activate</tags>
+  </US_DocBloc>
+  --]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("ActivateTrackPanEnv_TrackObject", "track", "must be a MediaTrack", -1) return false end
+  local env=reaper.GetTrackEnvelopeByName(track, "Pan")
+  local retval
+  if env==nil then
+    ultraschall.PreventUIRefresh()
+    local tracknumber=reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
+    retval = ultraschall.ApplyActionToTrack(tostring(tracknumber), 40407)
+    ultraschall.RestoreUIRefresh()
+  else 
+    retval=false ultraschall.AddErrorMessage("ActivateTrackPanEnv_TrackObject", "", "already activated", -3)
+  end
+  return retval
+end
+
+function ultraschall.ActivateTrackPreFXPanEnv(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ActivateTrackPreFXPanEnv</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.ActivateTrackPreFXPanEnv(integer track)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      activates a preFX-pan-envelope of a track
+        
+      returns false in case of error
+    </description>
+    <retvals>
+      boolean retval - true, activating was successful; false, activating was unsuccessful
+    </retvals>
+    <parameters>
+      integer track - the track, whose preFX-pan-envelope you want to activate; 1, for the first track
+    </parameters>
+    <chapter_context>
+      Envelope Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, prefx-pan, activate</tags>
+  </US_DocBloc>
+  --]]
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("ActivateTrackPreFXPanEnv", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("ActivateTrackPreFXPanEnv", "track", "no such track", -2) return false end
+  local env=reaper.GetTrackEnvelopeByName(reaper.GetTrack(0,track-1), "Pan (Pre-FX)")
+  local retval
+  ultraschall.PreventUIRefresh()
+  if env==nil then
+    retval = ultraschall.ApplyActionToTrack(tostring(track), 40409)
+  else 
+    retval=false ultraschall.AddErrorMessage("ActivateTrackPreFXPanEnv", "", "already activated", -3)
+  end
+  ultraschall.RestoreUIRefresh()
+  return retval
+end
+
+--ultraschall.ActivateTrackPreFXPanEnv(1)
+
+function ultraschall.ActivateTrackPreFXPanEnv_TrackObject(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ActivateTrackPreFXPanEnv_TrackObject</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.ActivateTrackPreFXPanEnv_TrackObject(MediaTrack track)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      activates a preFX-pan-envelope of a MediaTrack-object
+        
+      returns false in case of error
+    </description>
+    <retvals>
+      boolean retval - true, activating was successful; false, activating was unsuccessful
+    </retvals>
+    <parameters>
+      MediaTrack track - the track, whose prefx-pan-envelope you want to activate
+    </parameters>
+    <chapter_context>
+      Envelope Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, prefx-pan, activate</tags>
+  </US_DocBloc>
+  --]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("ActivateTrackPreFXPanEnv_TrackObject", "track", "must be a MediaTrack", -1) return false end
+  local env=reaper.GetTrackEnvelopeByName(track, "Pan (Pre-FX)")
+  local retval
+  if env==nil then
+    ultraschall.PreventUIRefresh()
+    local tracknumber=reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
+    retval = ultraschall.ApplyActionToTrack(tostring(tracknumber), 40409)
+    ultraschall.RestoreUIRefresh()
+  else 
+    retval=false ultraschall.AddErrorMessage("ActivateTrackPreFXPanEnv_TrackObject", "", "already activated", -3)
+  end
+  return retval
+end
+
+function ultraschall.ActivateTrackPreFXVolumeEnv(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ActivateTrackPreFXVolumeEnv</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.ActivateTrackPreFXVolumeEnv(integer track)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      activates a preFX-volume-envelope of a track
+        
+      returns false in case of error
+    </description>
+    <retvals>
+      boolean retval - true, activating was successful; false, activating was unsuccessful
+    </retvals>
+    <parameters>
+      integer track - the track, whose preFX-volume-envelope you want to activate; 1, for the first track
+    </parameters>
+    <chapter_context>
+      Envelope Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, prefx-volume, activate</tags>
+  </US_DocBloc>
+  --]]
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("ActivateTrackPreFXVolumeEnv", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("ActivateTrackPreFXVolumeEnv", "track", "no such track", -2) return false end
+  local env=reaper.GetTrackEnvelopeByName(reaper.GetTrack(0,track-1), "Volume (Pre-FX)")
+  local retval
+  ultraschall.PreventUIRefresh()
+  if env==nil then
+    retval = ultraschall.ApplyActionToTrack(tostring(track), 40408)
+  else 
+    retval=false ultraschall.AddErrorMessage("ActivateTrackPreFXVolumeEnv", "", "already activated", -3)
+  end
+  ultraschall.RestoreUIRefresh()
+  return retval
+end
+
+--ultraschall.ActivateTrackPreFXVolumeEnv(1)
+
+function ultraschall.ActivateTrackPreFXVolumeEnv_TrackObject(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ActivateTrackPreFXVolumeEnv_TrackObject</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.ActivateTrackPreFXVolumeEnv_TrackObject(MediaTrack track)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      activates a preFX-volume-envelope of a MediaTrack-object
+        
+      returns false in case of error
+    </description>
+    <retvals>
+      boolean retval - true, activating was successful; false, activating was unsuccessful
+    </retvals>
+    <parameters>
+      MediaTrack track - the track, whose prefx-volume-envelope you want to activate
+    </parameters>
+    <chapter_context>
+      Envelope Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, prefx-volume, activate</tags>
+  </US_DocBloc>
+  --]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("ActivateTrackPreFXVolumeEnv_TrackObject", "track", "must be a MediaTrack", -1) return false end
+  local env=reaper.GetTrackEnvelopeByName(track, "Volume (Pre-FX)")
+  local retval
+  if env==nil then
+    ultraschall.PreventUIRefresh()
+    local tracknumber=reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
+    retval = ultraschall.ApplyActionToTrack(tostring(tracknumber), 40408)
+    ultraschall.RestoreUIRefresh()
+  else 
+    retval=false ultraschall.AddErrorMessage("ActivateTrackPreFXVolumeEnv_TrackObject", "", "already activated", -3)
+  end
+  return retval
+end
+
+function ultraschall.ActivateTrackTrimVolumeEnv(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ActivateTrackTrimVolumeEnv</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.ActivateTrackTrimVolumeEnv(integer track)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      activates a trim-volume-envelope of a track
+        
+      returns false in case of error
+    </description>
+    <retvals>
+      boolean retval - true, activating was successful; false, activating was unsuccessful
+    </retvals>
+    <parameters>
+      integer track - the track, whose trim-volume-envelope you want to activate; 1, for the first track
+    </parameters>
+    <chapter_context>
+      Envelope Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, trim-volume, activate</tags>
+  </US_DocBloc>
+  --]]
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("ActivateTrackTrimVolumeEnv", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("ActivateTrackTrimVolumeEnv", "track", "no such track", -2) return false end
+  local env=reaper.GetTrackEnvelopeByName(reaper.GetTrack(0,track-1), "Trim Volume")
+  local retval
+  ultraschall.PreventUIRefresh()
+  if env==nil then
+    retval = ultraschall.ApplyActionToTrack(tostring(track), 42020)
+  else 
+    retval=false ultraschall.AddErrorMessage("ActivateTrackTrimVolumeEnv", "", "already activated", -3)
+  end
+  ultraschall.RestoreUIRefresh()
+  return retval
+end
+
+--ultraschall.ActivateTrackTrimVolumeEnv(3)
+
+function ultraschall.ActivateTrackTrimVolumeEnv_TrackObject(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>ActivateTrackTrimVolumeEnv_TrackObject</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.ActivateTrackTrimVolumeEnv_TrackObject(MediaTrack track)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      activates a trim-volume-envelope of a MediaTrack-object
+        
+      returns false in case of error
+    </description>
+    <retvals>
+      boolean retval - true, activating was successful; false, activating was unsuccessful
+    </retvals>
+    <parameters>
+      MediaTrack track - the track, whose trim-volume-envelope you want to activate
+    </parameters>
+    <chapter_context>
+      Envelope Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, trim-volume, activate</tags>
+  </US_DocBloc>
+  --]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("ActivateTrackTrimVolumeEnv_TrackObject", "track", "must be a MediaTrack", -1) return false end
+  local env=reaper.GetTrackEnvelopeByName(track, "Trim Volume")
+  local retval
+  if env==nil then
+    ultraschall.PreventUIRefresh()
+    local tracknumber=reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
+    retval = ultraschall.ApplyActionToTrack(tostring(tracknumber), 42020)
+    ultraschall.RestoreUIRefresh()
+  else 
+    retval=false ultraschall.AddErrorMessage("ActivateTrackTrimVolumeEnv_TrackObject", "", "already activated", -3)
+  end
+  return retval
+end
+
+
+function ultraschall.GetTakeEnvelopeUnderMouseCursor()
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetTakeEnvelopeUnderMouseCursor</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>TakeEnvelope env, MediaItem_Take take, number projectposition = ultraschall.GetTakeEnvelopeUnderMouseCursor()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns the take-envelope underneath the mouse
+    </description>
+    <retvals>
+      TakeEnvelope env - the take-envelope found unterneath the mouse; nil, if none has been found
+      MediaItem_Take take - the take from which the take-envelope is
+      number projectposition - the project-position
+    </retvals>
+    <chapter_context>
+      Envelope Management
+      Envelopes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, get, take, envelope, mouse position</tags>
+  </US_DocBloc>
+  --]]
+  -- todo: retval for position within the take
+  
+  local Awindow, Asegment, Adetails = reaper.BR_GetMouseCursorContext()
+  local retval, takeEnvelope = reaper.BR_GetMouseCursorContext_Envelope()
+  if takeEnvelope==true then 
+    return retval, reaper.BR_GetMouseCursorContext_Position(), reaper.BR_GetMouseCursorContext_Item()
+  else
+    return nil, reaper.BR_GetMouseCursorContext_Position()
+  end
+end
+
+

@@ -4403,8 +4403,7 @@ For other settings in Preferences -&gt; Track Control Panels, see <a href="#slid
 <a href="#vudecay">vudecay</a>, <a href="#vumaxvol">vumaxvol</a>, <a href="#vuminvol">vuminvol</a>, <a href="#vuupdfreq">vuupdfreq</a>, <a href="#pandispmode">pandispmode</a>, <a href="#slidershex">slidershex</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="mixerflag"></a>
-&nbsp;<a href="#mixerflag"><b>mixerflag</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Show icon for last track in folder, as set in the mixer-context-menu.<br />
-It is an integer-bitfield</p>
+&nbsp;<a href="#mixerflag"><b>mixerflag</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Show icon for last track in folder, as set in the mixer-context-menu as well as TCP-context-menu -&gt; Show TCP on right side of arrange(action 42373) It is an integer-bitfield</p>
 <blockquote>
 <p>&amp;1=0, show icon for last track in folder(on) - checked<br />
 &amp;1=1, show icon for last track in folder(off) - unchecked</p>
@@ -4431,6 +4430,9 @@ It is an integer-bitfield</p>
 &amp;16=1, Master track -&gt; Show in docker(on) - checked</p>
 </blockquote>
 <p>so you can really decide, which setting to use</p>
+<blockquote>
+<p>&amp;32=0, show TCP on the left side of arrange-view &amp;32=1, show TCP on the right side of arrange-view</p>
+</blockquote>
 <p>For other mixer-context-menu-settings, see <a href="#showctinmix">showctinmix</a>, <a href="#mixrowflags">mixrowflags</a> and <a href="#mixeruiflag">mixeruiflag</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="mixeruiflag"></a>
@@ -5311,7 +5313,7 @@ Correspondents with settings in the variable <a href="#projfrbase">projfrbase</a
 It is an integer.</p>
 <blockquote>
 <p>0, integer framerate-settings<br />
-1, 29.97DF<br />
+1, 29.97DF when projfrbase is set to 30<br />
 2, 23.976 fps when projfrbase is set to 24<br />
 2, 29.97ND when projfrbase is set to 30</p>
 </blockquote>
@@ -5724,7 +5726,8 @@ It is an integer</p>
 8, Region render matrix<br />
 32, Selected media items<br />
 &amp;256, “Embed stretch markers/transient guides”-checkbox; 0, unchecked; 1, checked<br />
-&amp;512, “Embed Metadata”-checkbox; 0, unchecked; 1, checked &amp;1024, “Take Markers”-checkbox; 0, unchecked; 1, checked</p>
+&amp;512, “Embed Metadata”-checkbox; 0, unchecked; 1, checked<br />
+&amp;1024, “Take Markers”-checkbox; 0, unchecked; 1, checked</p>
 </blockquote>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projripedit"></a>
@@ -6660,8 +6663,8 @@ It is an integer-bitfield</p>
 </blockquote>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="rewireslave"></a>
-&nbsp;<a href="#rewireslave"><b>rewireslave</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The checkboxes in the ReWire-Slave-Settings, as set in the ReWire-section of Preferences -&gt; ReWire/DX as well as in Project Settings -&gt; Advanced<br />
-You must click the “ReWire slave project settings”-button, to access the settings-dialog.<br />
+&nbsp;<a href="#rewireslave"><b>rewireslave</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The checkboxes in the ReWire-Client-Settings, as set in the ReWire-section of Preferences -&gt; ReWire/DX as well as in Project Settings -&gt; Advanced<br />
+You must click the “ReWire client project settings”-button, to access the settings-dialog.<br />
 It is an integer bitfield.</p>
 <blockquote>
 <p>&amp;1=0, Ignore tempo change notifications from master-radiobutton selected<br />
@@ -6675,13 +6678,13 @@ It is an integer bitfield.</p>
 For other ReWire-settings, see <a href="#userewire">userewire</a> and <a href="#runallonstop">runallonstop</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER only, when Save as default project settings is clicked(That button is in Project Settings only)</p>
 </td></tr></table></divl><hr><a id="rewireslavedelay"></a>
-&nbsp;<a href="#rewireslavedelay"><b>rewireslavedelay</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The “Play project n audio blocks early (usually 0)”-inputbox in the ReWire-Slave-Settings, as set in the ReWire-section of Preferences -&gt; ReWire/DX;<br />
-You must click the “ReWire slave project settings”-button, to access the settings-dialog.<br />
+&nbsp;<a href="#rewireslavedelay"><b>rewireslavedelay</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The “Play project n audio blocks early (usually 0)”-inputbox in the ReWire-Client-Settings, as set in the ReWire-section of Preferences -&gt; ReWire/DX;<br />
+You must click the “ReWire client project settings”-button, to access the settings-dialog.<br />
 It is an integer</p>
 <blockquote>
 <p>0 to 2147483647; audioblocks</p>
 </blockquote>
-<p>For the checkboxes in the ReWire-Slave-Settings-dialog, see <a href="#rewireslave">rewireslave</a>.<br />
+<p>For the checkboxes in the ReWire-Client-Settings-dialog, see <a href="#rewireslave">rewireslave</a>.<br />
 For other ReWire-settings, see <a href="#userewire">userewire</a> and <a href="#runallonstop">runallonstop</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="reximport"></a>
@@ -7927,19 +7930,19 @@ It is an integer-bitfield</p>
 &amp;2=1, Auto-open panels when opening ReWire devices - unchecked</p>
 </blockquote>
 <blockquote>
-<p>&amp;4=0, Check for ReWire mixer/device on startup (and automatically enter slave mode if present) - unchecked<br />
-&amp;4=1, Check for ReWire mixer/device on startup (and automatically enter slave mode if present) - checked</p>
+<p>&amp;4=0, Check for ReWire mixer/device on startup (and automatically enter client mode if present) - unchecked<br />
+&amp;4=1, Check for ReWire mixer/device on startup (and automatically enter client mode if present) - checked</p>
 </blockquote>
 <blockquote>
 <p>&amp;8=0, unknown<br />
 &amp;8=1, unknown</p>
 </blockquote>
 <blockquote>
-<p>&amp;16=0, Use alternative configuration file (reaper-rewire.ini) when in slave mode - checked<br />
-&amp;16=1, Use alternative configuration file (reaper-rewire.ini) when in slave mode - unchecked</p>
+<p>&amp;16=0, Use alternative configuration file (reaper-rewire.ini) when in client mode - checked<br />
+&amp;16=1, Use alternative configuration file (reaper-rewire.ini) when in client mode - unchecked</p>
 </blockquote>
 <p>For Run FX on stop when ReWire devices are active-checkbox, see <a href="#runallonstop">runallonstop</a>.<br />
-For other ReWire-settings set behind the Button for “Rewire slave project settings”-dialog, see <a href="#rewireslave">rewireslave</a> and <a href="#rewireslavedelay">rewireslavedelay</a>.</p>
+For other ReWire-settings set behind the Button for “Rewire client project settings”-dialog, see <a href="#rewireslave">rewireslave</a> and <a href="#rewireslavedelay">rewireslavedelay</a>.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="verchk"></a>
 &nbsp;<a href="#verchk"><b>verchk</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The “Automatically check for new versions of REAPER on startup”-checkbox in the “Startup Settings”-section as set in Preferences -&gt; General.<br />
@@ -8529,4 +8532,4 @@ This can’t be set, only read from reaper.ini -&gt; [reaper_video] !</p>
 <blockquote>
 <p>0, Project Settings-tab 1, Media-tab 2, Video-tab 3, Advanced-tab 4, Notes-tab</p>
 </blockquote>
-</td></tr></table></divl><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 002 - 444 configuration-variables available</td></table><br><hr></div></body></html>
+</td></tr></table></divl><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 003 - 444 configuration-variables available</td></table><br><hr></div></body></html>
