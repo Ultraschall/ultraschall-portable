@@ -3244,7 +3244,7 @@ EmbedStretchMarkers, RenderString2, EmbedTakeMarkers, SilentRender, EmbedMetadat
   if EmbedTakeMarkers~=nil and type(EmbedTakeMarkers)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "EmbedTakeMarkers", "#26: must be nil(for false) or boolean", -28) return end
   if SilentRender~=nil and type(SilentRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "SilentRender", "#27: must be nil(for false) or boolean", -29) return end
   
-  if type(EmbedMetadata)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "CloseAfterRender", "#28: must be a boolean", -30) return end
+  if EmbedMetadata~=nil and type(EmbedMetadata)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "CloseAfterRender", "#28: must be a boolean", -30) return end
   if EmbedTakeMarkers==nil then EmbedTakeMarkers=false end  
   if SilentRender==nil then SilentRender=false end
   if EmbedMetadata==nil then EmbedMetadata=false end
@@ -3281,6 +3281,8 @@ EmbedStretchMarkers, RenderString2, EmbedTakeMarkers, SilentRender, EmbedMetadat
   RenderTable["EmbedMetaData"]=EmbedMetadata
   return RenderTable
 end
+
+
 
 -- Für Dich zum Testen für zukünftige Paraneters:
 
@@ -4973,12 +4975,17 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
   end
   if type(renderfilename_with_path)~="string" then ultraschall.AddErrorMessage("RenderProject", "renderfilename_with_path", "Must be a string.", -7) return -1 end  
   if rendercfg==nil or (ultraschall.GetOutputFormat_RenderCfg(rendercfg)==nil or ultraschall.GetOutputFormat_RenderCfg(rendercfg)=="Unknown") then ultraschall.AddErrorMessage("RenderProject", "rendercfg", "No valid render_cfg-string.", -9) return -1 end
-  if rendercfg2==nil or (ultraschall.GetOutputFormat_RenderCfg(rendercfg2)==nil or ultraschall.GetOutputFormat_RenderCfg(rendercfg2)=="Unknown") then ultraschall.AddErrorMessage("RenderProject", "rendercfg2", "No valid render_cfg-string.", -18) return -1 end
+  if rendercfg2==nil then rendercfg2=""
+  elseif rendercfg2~=nil and (ultraschall.GetOutputFormat_RenderCfg(rendercfg2)==nil or ultraschall.GetOutputFormat_RenderCfg(rendercfg2)=="Unknown") then 
+    ultraschall.AddErrorMessage("RenderProject", "rendercfg2", "No valid render_cfg-string.", -18) 
+    return -1 
+  end
   if type(overwrite_without_asking)~="boolean" then ultraschall.AddErrorMessage("RenderProject", "overwrite_without_asking", "Must be boolean", -10) return -1 end
   if filenameincrease~=nil and type(filenameincrease)~="boolean" then ultraschall.AddErrorMessage("RenderProject", "filenameincrease", "Must be either nil or boolean", -13) return -1 end
   if renderclosewhendone~=nil and type(renderclosewhendone)~="boolean" then ultraschall.AddErrorMessage("RenderProject", "renderclosewhendone", "Must be either nil or a boolean", -12) return -1 end
 
   if RenderTable~=nil and ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("RenderProject", "RenderTable", "Must be either nil or a valid RenderTable", -15) return -1 end
+
 
   -- split renderfilename into path and filename, as we need this for render-pattern and render-file-entries
   if renderfilename_with_path~=nil then 
@@ -4992,7 +4999,7 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
 
     -- get rendercfg from current project, if not already given
     if rendercfg==nil then temp, rendercfg = reaper.GetSetProjectInfo_String(0, "RENDER_FORMAT", "", false) end 
-    if rendercfg2==nil then temp, rendercfg = reaper.GetSetProjectInfo_String(0, "RENDER_FORMAT2", "", false) end 
+    if rendercfg2==nil then temp, rendercfg2 = reaper.GetSetProjectInfo_String(0, "RENDER_FORMAT2", "", false) end 
     -- get rendersettings from current project
     RenderTable=ultraschall.GetRenderTable_Project()
 
@@ -5006,7 +5013,6 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
     end
   else
   -- if rendering an rpp-projectfile
-    
     -- get rendercfg from projectfile, if not already given
     if rendercfg==nil then ultraschall.GetProject_RenderCFG(projectfilename_with_path) end
     
@@ -5014,17 +5020,18 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
     RenderTable=ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path)
     
     -- set the start and endposition according to settings (-1 for projectlength, -2 for time/loop-selection)
-    timesel1_start, timesel1_end = ultraschall.GetProject_Selection(projectfilename_with_path)
+    timesel1_start, timesel1_end = ultraschall.GetProject_Selection(projectfilename_with_path)    
+    if timesel1_start>timesel1_end then timesel1_start, timesel1_end = timesel1_end, timesel1_start end
     if startposition==-1 then startposition=0
-    elseif startposition==-2 then startposition=start_sel
+    elseif startposition==-2 then startposition=timesel1_start
     end
     if endposition==-1 then endposition=ultraschall.GetProject_Length(projectfilename_with_path)
-    elseif endposition==-2 then endposition=end_sel
+    elseif endposition==-2 then endposition=timesel1_end
     end
   end    
   
   -- desired render-range invalid?
-  if endposition<=startposition then ultraschall.AddErrorMessage("RenderProject", "startposition or endposition in RPP-Project", "Must be bigger than startposition.", -11) return -1 end
+  if endposition<=startposition then ultraschall.AddErrorMessage("RenderProject", "endposition", "Must be bigger than startposition.", -11) return -1 end
   
   -- set, if the rendering to file-dialog shall be automatically closed, according to user preference or default setting
   if renderclosewhendone==nil then 
@@ -5050,6 +5057,7 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
     return -1
   end
   RenderTable["RenderString"]=rendercfg
+  RenderTable["RenderString2"]=rendercfg2
   
 --  if ultraschall.GetOutputFormat_RenderCfg(RenderTable["RenderString"])==nil or ultraschall.GetOutputFormat_RenderCfg(RenderTable["RenderString"])=="Unknown" then ultraschall.AddErrorMessage("RenderProject", "", "No valid render_cfg-string.", -16) return -1 end
   
