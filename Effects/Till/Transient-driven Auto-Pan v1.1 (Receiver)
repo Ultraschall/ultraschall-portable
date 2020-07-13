@@ -1,0 +1,204 @@
+// written by Till
+//
+// note: the effect receives data from reg[x] x is specified by the "receive pan data from" slider
+//
+// note: the lookahead must be compensated manually in REAPER versions < 2
+//
+// note: the frequency of data being received from the transmitter depends on
+// the overall blocksize which is apparently depending on your interface's latency.
+// so the receiver effect cannot always be up to date with the transmitter effect
+// the quantisation is being interpolated linearly
+
+desc: Transient-Driven Auto-Pan v1.1 (Receiver)
+//tags: processing stereo modulation
+//author: Till
+
+slider1:0<0,2,1{Stereo,Left,Right}>Input
+slider2:0<0,9,1{reg00,reg01,reg02,reg03,reg04,reg05,reg06,reg07,reg08,reg09}>Receive Pan Data From
+slider3:0<-100,100,1>Received Pan
+slider4:0<0,10,1>Sloppiness
+slider5:0<0,1,1{No,Yes}>Invert Received Pan
+slider6:1<.2,5,.1>Multiply Received Pan
+slider7:100<1,100,1>Max Pan
+slider8:0<0,10,1>Max Delay (ms)
+slider9:0<0,100,1>Look Ahead (ms)
+slider10:0<-100,100,1>Current Pan
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+/////////////////
+///           ///
+///  I N I T  ///
+///           ///
+/////////////////
+
+@init
+
+	log2 = log(2);
+	sqrt2 = sqrt(2);
+
+	curpan = 0;
+
+	maxdelay = ceil((10 + 100) / 1000 * srate);
+
+	delaybufferl = 0;
+	delaybufferr = 2 * maxdelay;
+
+	delaypointer = 0;
+
+	receivedpan = 0;
+	oldreceivedpan = 0;
+
+	spls = 0;
+
+	pdc_bot_ch = 0;
+	pdc_top_ch = 2;
+
+/////////////////
+///           ///
+///  SLIDER   ///
+///           ///
+/////////////////
+
+@slider
+
+	// SLIDER VALUES
+
+	input = slider1;
+
+	receive = slider2;
+
+	sloppiness = slider4;
+
+	invert = slider5;
+
+	multiply = slider6;
+
+	maxpan = slider7;
+
+	delay = slider8 / 1000 * srate;
+
+	lookahead = slider9 / 1000 * srate;
+
+	pdc_delay = lookahead;
+
+/////////////////
+///           ///
+///  BLOCK    ///
+///           ///
+/////////////////
+
+@block
+
+	blocksize = samplesblock;
+
+// receiving
+
+	oldreceivedpan = receivedpan;
+
+	receive == 0 ? (
+		receivedpan = reg00;
+	) : receive == 1 ? (
+		receivedpan = reg01;
+	) : receive == 2 ? (
+		receivedpan = reg02;
+	) : receive == 3 ? (
+		receivedpan = reg03;
+	) : receive == 4 ? (
+		receivedpan = reg04;
+	) : receive == 5 ? (
+		receivedpan = reg5;
+	) : receive == 6 ? (
+		receivedpan = reg6;
+	) : receive == 7 ? (
+		receivedpan = reg7;
+	) : receive == 8 ? (
+		receivedpan = reg8;
+	) : receive == 9 ? (
+		receivedpan = reg09;
+	) : 0;
+
+	slider3 = receivedpan;
+
+	spls = 0;
+
+/////////////////
+///           ///
+///  SAMPLE   ///
+///           ///
+/////////////////
+
+@sample
+
+// choosing input
+
+	input == 0 ? (
+		l = spl0;
+		r = spl1;
+	) : input == 1 ? (
+		l = spl0;
+		r = spl0;
+	) : input == 2 ? (
+		l = spl1;
+		r = spl1;
+	) : 0;
+
+// buffering
+
+	delaybufferl[delaypointer] = l;
+	delaybufferl[delaypointer + maxdelay] = l;
+	delaybufferr[delaypointer] = r;
+	delaybufferr[delaypointer + maxdelay] = r;
+
+// interpolating receivedpan
+
+	curpan = oldreceivedpan + (receivedpan - oldreceivedpan) * spls / blocksize;
+
+// modifying input pan
+
+	invert && curpan *= -1;
+	curpan *= multiply;
+	curpan = min(max(-maxpan, curpan), maxpan);
+
+// sloppiness
+
+	s = sloppiness * sloppiness * sloppiness * sloppiness;
+	curpan = (curpan + s * curpan) / (s + 1);
+
+// calculating the actual volumes
+
+	abspan = abs(curpan);
+	dominantpandb = 6 * abspan / 100;
+	dominantpan = exp((dominantpandb / 6) * log2);
+	recessivepan = 2 - dominantpan;
+
+// leveling
+
+	curpan > 0 ? (
+		r = dominantpan * delaybufferr[maxdelay + delaypointer - lookahead];
+		x = abspan / 100 * delay;
+		f = x - floor(x);
+		c = floor(x + 1) - x;
+		l = recessivepan * (c * delaybufferl[maxdelay + delaypointer - floor(abspan / 100 * delay) - lookahead] + f * delaybufferl[maxdelay + delaypointer - ceil(abspan / 100 * delay) - lookahead]);
+	) : (
+		l = dominantpan * delaybufferl[maxdelay + delaypointer - lookahead];
+		x = abspan / 100 * delay;
+		f = x - floor(x);
+		c = floor(x + 1) - x;
+		r = recessivepan * (c * delaybufferr[maxdelay + delaypointer - floor(abspan / 100 * delay) - lookahead] + f * delaybufferr[maxdelay + delaypointer - ceil(abspan / 100 * delay) - lookahead]);
+	);
+
+	slider10 = curpan;
+	
+// outputting
+
+	spl0 = l;
+	spl1 = r;
+
+	delaypointer += 1;
+	delaypointer >= maxdelay && (delaypointer = 0);
+
+	spls += 1;
