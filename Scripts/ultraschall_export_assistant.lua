@@ -241,7 +241,7 @@ end
 function CheckMetadata()
 
 	local state_color = "txt_red"
-	local status_txt = "No Metadata found"
+	local status_txt = " Missing"
 
 	retval1, Title    = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TIT2", false)
 	retval2, Podcast  = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB", false)
@@ -251,22 +251,58 @@ function CheckMetadata()
 	retval6, Description = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:COMM", false)
 
 	-- If the metadata is from projects of Ultraschall 4.0 and lower, read it in from Project Notes
-	if Title ~= "" and Podcast ~= "" and Author ~="" and Year ~= "" and Category ~= "" and Description ~= "" then
+	if Title ~= "" and Podcast ~= "" and Author ~="" and Year ~= "" and Category ~= "" and Description ~= "" then -- Alle Felder ausgefüllt
 
 		state_color = "txt_green"
-		status_txt = "Metadata found"
+		status_txt = " OK"
 
-	elseif Title ~= "" or Podcast ~= "" or Author ~="" or Year ~= "" or Category ~= "" or Description ~= "" then
+	elseif Title ~= "" or Podcast ~= "" or Author ~="" or Year ~= "" or Category ~= "" or Description ~= "" then -- mindestens ein Feld fehlt
 
 		state_color = "txt_yellow"
-		status_txt = "Metadata incomplete"
+		status_txt = " Metadata incomplete"
 
 	end
 
-return state_color, status_txt
+	return state_color, status_txt
 
 end
 
+function CheckChapters()
+
+	local state_color = "txt_red"
+	local status_txt = " Missing"
+
+	number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
+
+	if number_of_normalmarkers > 0 then
+
+		missing_name = 0
+
+		for i = 1, number_of_normalmarkers, 1 do
+			if normalmarkersarray[i][1] == "" then
+				missing_name = missing_name +1
+			end
+		end
+
+		if missing_name > 0 then -- es gibt Kapitel ohne Namen
+			state_color = "txt_yellow"
+			status_txt = " Chapters incomplete"
+		else
+
+			number_of_editmarkers, editmarkersarray = ultraschall.GetAllEditMarkers()
+
+			if number_of_editmarkers > 0 then  -- es gibt nich Edit-Marker
+				state_color = "txt_yellow"
+				status_txt = " Edit markers found"
+			else -- alles gut
+				state_color = "txt_green"
+				status_txt = " OK"
+			end
+		end
+	end
+
+	return state_color, status_txt
+end
 
 
 -- initiate values
@@ -360,7 +396,7 @@ function buildGUI()
 	filecount, files = ultraschall.GetAllFilenamesInPath(dir)
 
 	state_color = "txt_red"
-	status_txt = " no MP3 found"
+	status_txt = " Missing"
 
 	for i=1, filecount do
 		if ( string.sub( files[i], -3 ) ) == "mp3" then
@@ -387,12 +423,13 @@ function buildGUI()
 	areaHeight = 90
 	position = 190 + y_offset
 	StepNameDisplay = "2. Chapter Markers"
-	state_color = "txt_green"
+
+	state_color, status_txt = CheckChapters()
+
 	StepDescription = "You may take a final look at your chapter markers, and add URLs or images to them."
 	warnings_position = position+30
 	button_txt = "Edit Chapters"
 	button_action = "_Ultraschall_Marker_Dashboard"
-	status_txt = " OK"
 
 	buildExportStep()
 
@@ -447,7 +484,7 @@ function buildGUI()
 	found, img_adress, img_ratio = checkImage()
 
 	if found then
-		status_txt = " Image found"
+		status_txt = " OK"
 		state_color = "txt_green"
 		no_button = true
 
