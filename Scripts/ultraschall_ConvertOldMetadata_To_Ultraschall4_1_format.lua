@@ -24,8 +24,8 @@
 ################################################################################
 ]]
 
--- allows editing the basic Metadata for the Podcast.
--- rewritten 24th of May 2020, Meo-Ada Mespotine
+-- converts, if necessary old Metadata from Ultraschall 4 and lower to Ultraschall4.1 and higher format
+-- 24th of May 2020, Meo-Ada Mespotine
 
 -- read out Metadata (Ultraschall 4.1 and higher)
 retval1, Title    = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TIT2", false)
@@ -38,7 +38,6 @@ retval6, Description = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID
 
 -- If the metadata is from projects of Ultraschall 4.0 and lower, read it in from Project Notes
 if Title=="" and Podcast=="" and Author=="" and Year=="" and Category=="" and Description=="" then
-  
   oldnotes=reaper.GetSetProjectNotes(0, false, "").."\n"
   
   Title, Author, Podcast, Year, Category, Description = oldnotes:match("(.-)\n(.-)\n(.-)\n(.-)\n(.-)\n(.-)\n")
@@ -49,34 +48,13 @@ if Title=="" and Podcast=="" and Author=="" and Year=="" and Category=="" and De
   if Year==nil        then Year="" end
   if Category==nil    then Category="" end
   if Description==nil then Description="" end
-end
 
--- if no year is set already, set it to the current year
-if Year=="" then
-  Date = os.date("*t")
-  Year=Date.year
-end
-
-oldnotes=Title.."\n"..Author.."\n"..Podcast.."\n"..Year.."\n"..Category.."\n"..Description
-
--- Inputdialog for Metadata
-retval, result = reaper.GetUserInputs("Edit ID3 Podcast Metadata - Don't use ( ) ' or \" ", 6, "Episode Title:,Author:,Podcast:,Year:,Podcast Category:,Description:,extrawidth=300, separator=\n", oldnotes)
-
-
--- Ultraschall 4.0 and lower, for backwards-compatibility: 
--- store the Metadate into Project-Notes as well.
--- That way, the project can be shared to users of Ultraschall 4 and lower
-
--- This support is deprecated and should be removed with Ultraschall 5!!!
-if retval == true then
-  notes = reaper.GetSetProjectNotes(0, true, result) -- write new notes
-end
-
-
--- now store the Metadata into Reaper's own storage -> Ultraschall 4.1 and higher
-if retval == true then
-  Title, Author, Podcast, Year, Category, Description = notes:match("(.-)\n(.-)\n(.-)\n(.-)\n(.-)\n(.*)")
-
+  -- if no year is set already, set it to the current year
+  if Year=="" then
+    Date = os.date("*t")
+    Year=Date.year
+  end
+  
   retval1, Title = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TIT2|"..Title, true)
   retval2, Podcast = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB|"..Podcast, true)
   retval3, Author = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TPE1|"..Author, true)
@@ -84,3 +62,7 @@ if retval == true then
   retval5, Category = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TCON|"..Category, true)
   retval6, Description = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:COMM|"..Description, true)
 end
+
+cmdid=reaper.NamedCommandLookup("_ULTRASCHALL_INSERT_MEDIA_PROPERTIES")
+--_ULTRASCHALL_CONVERT_OLD_METADATA_AND_INSERT_MEDIA_PROPERTIES
+reaper.Main_OnCommand(cmdid,0)

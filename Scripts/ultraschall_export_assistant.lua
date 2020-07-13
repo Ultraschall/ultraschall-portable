@@ -238,6 +238,35 @@ function UsePresetCover(preset_path)
 
 end
 
+function CheckMetadata()
+
+	local state_color = "txt_red"
+	local status_txt = "No Metadata found"
+
+	retval1, Title    = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TIT2", false)
+	retval2, Podcast  = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB", false)
+	retval3, Author   = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TPE1", false)
+	retval4, Year     = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TYER", false)
+	retval5, Category = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TCON", false)
+	retval6, Description = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:COMM", false)
+
+	-- If the metadata is from projects of Ultraschall 4.0 and lower, read it in from Project Notes
+	if Title ~= "" and Podcast ~= "" and Author ~="" and Year ~= "" and Category ~= "" and Description ~= "" then
+
+		state_color = "txt_green"
+		status_txt = "Metadata found"
+
+	elseif Title ~= "" or Podcast ~= "" or Author ~="" or Year ~= "" or Category ~= "" or Description ~= "" then
+
+		state_color = "txt_yellow"
+		status_txt = "Metadata incomplete"
+
+	end
+
+return state_color, status_txt
+
+end
+
 
 
 -- initiate values
@@ -373,8 +402,9 @@ function buildGUI()
 	areaHeight = 70
 	position = 300 + y_offset
 	StepNameDisplay = "3. ID3 Metadata"
-	state_color = "txt_yellow"
-	status_txt = " Missing Metadata"
+
+	state_color, status_txt = CheckMetadata()
+
 	StepDescription = "Use the ID3 Editor to add metadata to your podcast."
 	warnings_position = position+30
 	button_txt = "Edit MP3 Metadata"
@@ -491,7 +521,7 @@ function buildGUI()
 	StepDescription = "Hit the button and select your MP3 to finalize it with metadata, chapters and episode image!"
 	warnings_position = position+30
 	button_txt = "Finalize MP3!"
-	button_action = "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"
+	button_action = "_ULTRASCHALL_CONVERT_OLD_METADATA_AND_INSERT_MEDIA_PROPERTIES"
 
 	buildExportStep()
 
