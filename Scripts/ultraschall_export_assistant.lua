@@ -562,7 +562,7 @@ function buildGUI()
 	position = 510 + y_offset
 	StepNameDisplay = "5. Finalize MP3"
 	state_color = "txt_yellow"
-	status_txt = " Ready"
+	status_txt = " Caution..."
 	StepDescription = "Hit the button and select your MP3 to finalize it with metadata, chapters and episode image!"
 	warnings_position = position+30
 	button_txt = "Finalize MP3!"
