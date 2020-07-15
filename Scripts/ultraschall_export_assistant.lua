@@ -375,6 +375,8 @@ function buildGUI()
 	spacing = 10
 	no_button = false
 
+	MetadataCompletedStatus = ""
+
 	------------------
   ------- Header
 	------------------
@@ -431,6 +433,7 @@ function buildGUI()
 	StepNameDisplay = "2. Chapter Markers"
 
 	state_color, status_txt = CheckChapters()
+	MetadataCompletedStatus = status_txt
 
 	StepDescription = "You may take a final look at your chapter markers, and add URLs or images to them."
 	warnings_position = position+30
@@ -447,6 +450,7 @@ function buildGUI()
 	StepNameDisplay = "3. ID3 Metadata"
 
 	state_color, status_txt = CheckMetadata()
+	MetadataCompletedStatus = MetadataCompletedStatus .. " -" ..status_txt
 
 	StepDescription = "Use the ID3 Editor to add metadata to your podcast."
 	warnings_position = position+30
@@ -502,7 +506,7 @@ function buildGUI()
 		no_button = true
 	end
 
-
+	MetadataCompletedStatus = MetadataCompletedStatus .. " -" ..status_txt
 
 	areaHeight = 100
 	position = 390 + y_offset
@@ -561,16 +565,29 @@ function buildGUI()
 	areaHeight = 100
 	position = 510 + y_offset
 	StepNameDisplay = "5. Finalize MP3"
-	state_color = "txt_yellow"
-	status_txt = " Caution..."
+
+	if string.find(MetadataCompletedStatus, "Incomplete") or string.find(MetadataCompletedStatus, "Edit") then
+		status_txt = " Incomplete"
+		state_color = "txt_yellow"
+	elseif string.find(MetadataCompletedStatus, "Missing") then
+		if string.find(MetadataCompletedStatus, "OK") then
+			status_txt = " Incomplete"
+			state_color = "txt_yellow"
+		else
+			status_txt = " Missing"
+			state_color = "txt_red"
+		end
+	else
+		status_txt = " OK"
+		state_color = "txt_green"
+	end
+
 	StepDescription = "Hit the button and select your MP3 to finalize it with metadata, chapters and episode image!"
 	warnings_position = position+30
 	button_txt = "Finalize MP3!"
 	button_action = "_ULTRASCHALL_CONVERT_OLD_METADATA_AND_INSERT_MEDIA_PROPERTIES"
 
 	buildExportStep()
-
-
 
 end
 
