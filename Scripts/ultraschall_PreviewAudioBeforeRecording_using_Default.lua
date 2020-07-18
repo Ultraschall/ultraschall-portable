@@ -72,6 +72,7 @@ function main()
     end
     if reaper.GetPlayState()~=0 then reaper.CSurf_OnStop() end 
     ultraschall.SectionCut(Recposition, reaper.GetProjectLength()+Recposition, trackstringarmed, false)
+    reaper.SetExtState("ultraschall_PreviewRecording", "RecPosition", Recposition, false)
 
     NewTime=ultraschall.TimeToMeasures(0, -Playposition)
     reaper.SNM_SetDoubleConfigVar("prerollmeas", NewTime)

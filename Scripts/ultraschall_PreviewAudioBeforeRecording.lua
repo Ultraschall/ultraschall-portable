@@ -172,7 +172,8 @@ function main()
     if reaper.GetPlayState()~=0 then reaper.CSurf_OnStop() end 
     reaper.Undo_BeginBlock()
     ultraschall.SectionCut(Recposition, reaper.GetProjectLength()+Recposition, trackstringarmed, false)
-
+    reaper.SetExtState("ultraschall_PreviewRecording", "RecPosition", Recposition, false)
+    
     reaper.MoveEditCursor(Recposition-Playposition, false)
     local Gap=Recposition-Playposition
     local NewTime=ultraschall.TimeToMeasures(0, Gap)
