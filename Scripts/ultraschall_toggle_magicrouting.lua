@@ -83,11 +83,27 @@ function checkrouting()
 		reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")
 		step = "editing"
 
-	elseif playstate == 5 and step == "editing" then -- Es wird aufgenommen, aber das Routin gist auf Editing
-		reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "recording")
-		reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")
-		step = "recording"
+	elseif playstate == 5 and step == "editing" then -- Es wird aufgenommen, aber das Routing ist auf Editing
 
+
+		preroll_rec = reaper.GetExtState("ultraschall_PreviewRecording", "RecPosition")
+		if preroll_rec ~= "" then -- es ist ein Preroll-Recording aktiv
+
+			if tonumber(preroll_rec) < reaper.GetPlayPosition() then -- ab hier läuft die Aufnahme nach dem Preroll
+				reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "recording")
+				reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")
+				step = "recording"
+				reaper.DeleteExtState("ultraschall_PreviewRecording", "RecPosition", false) -- lösche Eintrag für Preroll
+				-- print (tonumber(preroll_rec) .. " - " .. reaper.GetPlayPosition())
+
+			end
+		else
+
+			reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "recording")
+			reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")
+			step = "recording"
+
+		end
 	end
 
  -------------------------------------------------
@@ -113,7 +129,7 @@ function checkrouting()
  -- Defer-Schleife jede Sekunde
  -------------------------------------------------
 
-  ultraschall.Defer(checkrouting, "Check Routing Defer", 2, 1)
+  ultraschall.Defer(checkrouting, "Check Routing Defer", 1, 10) -- alle 10 cycle - ca. 3 mal die Sekunde
 	return "Check Routing Defer"
 
 end
