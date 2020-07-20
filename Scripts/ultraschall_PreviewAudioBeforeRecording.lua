@@ -123,6 +123,8 @@ end
 
 ---- Window settings and user functions ----
 
+reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "1", false)
+
 GUI.name = "Ultraschall Preroll Recording"
 GUI.w, GUI.h = 350, 80
 
@@ -141,7 +143,7 @@ GUI.elms = { }
 ok_button = GUI.Btn:new(240, 27, 90, 30,   " OK", main, "")
 table.insert(GUI.elms, ok_button)
 
-label = GUI.Lbl:new( 20 , 20,              "Place Editcursor to \nStart of Preview-Playposition \nand click OK",          0)
+label = GUI.Lbl:new( 20 , 20,              "Place Editcursor to \nStart of Preview-Playposition \nand click OK", 0)
 table.insert(GUI.elms, label)
 
 GUI.Init()

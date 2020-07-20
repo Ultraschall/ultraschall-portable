@@ -386,19 +386,36 @@ function buildGuiWarnings()
   -- button_all = GUI.Btn:new(770, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
   -- table.insert(GUI.elms, button_all)
 
+  if active_warning_count == 1 and reaper.GetExtState("ultraschall_PreviewRecording", "Dialog") == "1" then
 
+    reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false)
+    gfx.quit()
+    reaper.atexit(atexit)
 
-  if active_warning_count + paused_warning_count == 0 then
+  end
 
-    block0 = GUI.Area:new(305,230,50, 110,15,1,1,"txt_green")
-    table.insert(GUI.elms, block0)
+  if active_warning_count + paused_warning_count == 0 then --
 
-    block2 = GUI.Area:new(375,230,348, 110,15,1,1,"section_bg")
-    table.insert(GUI.elms, block2)
+    preroll_rec = reaper.GetExtState("ultraschall_PreviewRecording", "RecPosition")
+    dialog = reaper.GetExtState("ultraschall_PreviewRecording", "Dialog")
 
-    well_txt = GUI.Pic:new(          427,  268,   0,  0,    0.9,   header_path.."all_is_well.png")
-    table.insert(GUI.elms, well_txt)
+    if preroll_rec ~= "" or dialog == "1" then -- es ist ein Preroll-Recording aktiv
+      reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false)
+      gfx.quit()
+      reaper.atexit(atexit)
+    else
 
+      gfx.init("", 1000, 220, 0, GUI.x, GUI.y)
+
+      block0 = GUI.Area:new(340,130,25, 55,7,1,1,"txt_green")
+      table.insert(GUI.elms, block0)
+
+      block2 = GUI.Area:new(375,130,190, 55,7,1,1,"section_bg")
+      table.insert(GUI.elms, block2)
+
+      well_txt = GUI.Pic:new(          400,  148,   0,  0,    0.5,   header_path.."all_is_well.png")
+      table.insert(GUI.elms, well_txt)
+    end
   end
 
 
