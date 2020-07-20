@@ -474,8 +474,9 @@ A,A1,A2,A3=reaper.ExecProcess(A0, 0)
 -- create directories, if not existing
 for i=1, found_dirs do
   ALALALALALALA=reaper.RecursiveCreateDirectory(dirs_array[i], 0)
-  ToClip(FromClip().."\n"..ALALALALALALA..", "..dirs_array[i])
+--  ToClip(FromClip().."\n"..ALALALALALALA..", "..dirs_array[i])
 end
+
 
 for i=1, found_files do
   tempfile=files_array[i]:match("(ultraschall_api/.*)")
@@ -499,7 +500,7 @@ XML_file=XML_file.."\t"..[[<source file="ultraschall_api_readme.txt" type="exten
 for i=1, found_files do
   tempfile=files_array[i]:match("(ultraschall_api/.*)")
   if tempfile==nil then tempfile=files_array[i]:match("UserPlugins(/.*)") end
-  XML_file=XML_file.."\t<source file=\"/"..tempfile.."\" type=\"extension\">"..Url..tempfile.."</source>\n"
+  XML_file=XML_file.."\t<source file=\"/"..tempfile.."\" type=\"extension\">"..Url..string.gsub(tempfile," ", "%%20").."</source>\n"
 end
 
 for i=1, Docs[1] do

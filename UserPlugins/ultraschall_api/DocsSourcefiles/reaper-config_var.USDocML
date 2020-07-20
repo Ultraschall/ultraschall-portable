@@ -6227,7 +6227,7 @@
       <slug>mixerflag</slug>  
       <title>mixerflag</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Show icon for last track in folder, as set in the mixer-context-menu.  
+          Show icon for last track in folder, as set in the mixer-context-menu as well as TCP-context-menu -> Show TCP on right side of arrange(action 42373)
           It is an integer-bitfield  
           
            >&1=0, show icon for last track in folder(on) - checked  
@@ -6251,6 +6251,9 @@
            >&16=1, Master track -> Show in docker(on) - checked  
            
           so you can really decide, which setting to use
+          
+           >&32=0, show TCP on the left side of arrange-view
+           >&32=1, show TCP on the right side of arrange-view
             
           For other mixer-context-menu-settings, see [showctinmix](#showctinmix), [mixrowflags](#mixrowflags) and [mixeruiflag](#mixeruiflag)  
             
@@ -7679,7 +7682,7 @@
           It is an integer.  
            
            >0, integer framerate-settings  
-           >1, 29.97DF  
+           >1, 29.97DF when projfrbase is set to 30  
            >2, 23.976 fps when projfrbase is set to 24  
            >2, 29.97ND when projfrbase is set to 30  
             
@@ -8543,7 +8546,7 @@
            >8, Region render matrix  
            >32, Selected media items  
            >&256, "Embed stretch markers/transient guides"-checkbox; 0, unchecked; 1, checked  
-		   >&512, "Embed Metadata"-checkbox; 0, unchecked; 1, checked
+		   >&512, "Embed Metadata"-checkbox; 0, unchecked; 1, checked  
 		   >&1024, "Take Markers"-checkbox; 0, unchecked; 1, checked
 		   
            
@@ -10127,8 +10130,8 @@
       <slug>rewireslave</slug>  
       <title>rewireslave</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The checkboxes in the ReWire-Slave-Settings, as set in the ReWire-section of Preferences -> ReWire/DX as well as in Project Settings -> Advanced  
-            You must click the "ReWire slave project settings"-button, to access the settings-dialog.  
+          The checkboxes in the ReWire-Client-Settings, as set in the ReWire-section of Preferences -> ReWire/DX as well as in Project Settings -> Advanced  
+            You must click the "ReWire client project settings"-button, to access the settings-dialog.  
           It is an integer bitfield.  
           
            >&1=0, Ignore tempo change notifications from master-radiobutton selected  
@@ -10154,13 +10157,13 @@
       <slug>rewireslavedelay</slug>  
       <title>rewireslavedelay</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The "Play project n audio blocks early (usually 0)"-inputbox in the ReWire-Slave-Settings, as set in the ReWire-section of Preferences -> ReWire/DX;   
-           You must click the "ReWire slave project settings"-button, to access the settings-dialog.  
+          The "Play project n audio blocks early (usually 0)"-inputbox in the ReWire-Client-Settings, as set in the ReWire-section of Preferences -> ReWire/DX;   
+           You must click the "ReWire client project settings"-button, to access the settings-dialog.  
           It is an integer  
           
            >0 to 2147483647; audioblocks  
             
-          For the checkboxes in the ReWire-Slave-Settings-dialog, see [rewireslave](#rewireslave).  
+          For the checkboxes in the ReWire-Client-Settings-dialog, see [rewireslave](#rewireslave).  
           For other ReWire-settings, see [userewire](#userewire) and [runallonstop](#runallonstop)  
             
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.
@@ -12357,17 +12360,17 @@
            >&2=0, Auto-open panels when opening ReWire devices - checked  
            >&2=1, Auto-open panels when opening ReWire devices - unchecked  
            
-           >&4=0, Check for ReWire mixer/device on startup (and automatically enter slave mode if present) - unchecked  
-           >&4=1, Check for ReWire mixer/device on startup (and automatically enter slave mode if present) - checked  
+           >&4=0, Check for ReWire mixer/device on startup (and automatically enter client mode if present) - unchecked  
+           >&4=1, Check for ReWire mixer/device on startup (and automatically enter client mode if present) - checked  
            
            >&8=0, unknown  
            >&8=1, unknown  
            
-           >&16=0, Use alternative configuration file (reaper-rewire.ini) when in slave mode - checked  
-           >&16=1, Use alternative configuration file (reaper-rewire.ini) when in slave mode - unchecked  
+           >&16=0, Use alternative configuration file (reaper-rewire.ini) when in client mode - checked  
+           >&16=1, Use alternative configuration file (reaper-rewire.ini) when in client mode - unchecked  
            
           For Run FX on stop when ReWire devices are active-checkbox, see [runallonstop](#runallonstop).  
-          For other ReWire-settings set behind the Button for "Rewire slave project settings"-dialog, see [rewireslave](#rewireslave) and [rewireslavedelay](#rewireslavedelay).  
+          For other ReWire-settings set behind the Button for "Rewire client project settings"-dialog, see [rewireslave](#rewireslave) and [rewireslavedelay](#rewireslavedelay).  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  

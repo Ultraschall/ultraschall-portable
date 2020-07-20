@@ -2608,6 +2608,8 @@ function ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
   <description>
     Selects all MediaItems, that are in MediaItemArray.
     
+    It retains any current selection.
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -2633,6 +2635,8 @@ function ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
     end
     count=count+1
   end
+  
+  reaper.UpdateArrange()
   return 1
 end
 

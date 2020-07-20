@@ -165,3 +165,90 @@ function ultraschall.VID_Pixels2VideoUIStateCoords(x, y, videowindow_width, vide
   return x/videowindow_width, x/videowindow_height
 end
 
+function ultraschall.ProjectSettings_GetVideoFramerate()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ProjectSettings_GetVideoFramerate</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>integer framerate, string addnotes = ultraschall.ProjectSettings_GetVideoFramerate()</functioncall>
+  <description>
+    returns the video-framerate of the current project
+  </description>
+  <retvals>
+    integer framerate - the framerate in fps from 1 to 999999999
+    string addnotes - either "DF", "ND" or ""
+  </retvals>
+  <chapter_context>
+    Project Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_video_engine.lua</source_document>
+  <tags>project settings, get, framerate</tags>
+</US_DocBloc>
+]]
+  local framerate=reaper.SNM_GetIntConfigVar("projfrbase", -999)
+  local subframerate=reaper.SNM_GetIntConfigVar("projfrdrop", -999)
+  if     subframerate==1 then return 29.97, "DF"
+  elseif subframerate==2 then return 23.976, ""
+  elseif subframerate==2 then return 29.97, "ND"
+  else return framerate, ""
+  end
+end
+
+function ultraschall.ProjectSettings_SetVideoFramerate(framerate, persist)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ProjectSettings_SetVideoFramerate</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.ProjectSettings_SetVideoFramerate(integer framerate, boolean persist)</functioncall>
+  <description>
+    sets the video-framerate of the current project and optionally the default video-framerate for new projects
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer framerate - the framerate in fps from 1 to 999999999;
+                      - 0, 29.97 fps DF
+                      - -1, 23.976 fp
+                      - -2, 29.97 fps ND
+    boolean persist - true, set these values as default for new projects; false, don't set these values as defaults for 
+  </parameters>
+  <chapter_context>
+    Project Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_video_engine.lua</source_document>
+  <tags>project settings, set, framerate, default projects</tags>
+</US_DocBloc>
+]]
+  if math.type(framerate)~="integer" then ultraschall.AddErrorMessage("ProjectSettings_SetVideoFramerate", "framerate", "must be an integer", -1) return false end
+  if framerate<-2 or framerate>999999999 then ultraschall.AddErrorMessage("ProjectSettings_SetVideoFramerate", "framerate", "must be between -2 and 999999999", -2) return false end
+  if type(persist)~="boolean" then ultraschall.AddErrorMessage("ProjectSettings_SetVideoFramerate", "persist", "must be a boolean", -3) return false end
+  if     framerate==0  then framerate=30 subframerate=1 -- 29.97 fps DF
+  elseif framerate==-1 then framerate=24 subframerate=2 -- 23.976 fps 
+  elseif framerate==-2 then framerate=30 subframerate=2 -- 29.97 fps ND
+  else subframerate=0
+  end
+  reaper.SNM_SetIntConfigVar("projfrbase", framerate)
+  reaper.SNM_SetIntConfigVar("projfrdrop", subframerate)  
+  if persist==true then
+    reaper.BR_Win32_WritePrivateProfileString("REAPER", "projfrbase", framerate, reaper.get_ini_file())
+    reaper.BR_Win32_WritePrivateProfileString("REAPER", "projfrdrop", subframerate, reaper.get_ini_file())
+  end
+  return true
+end
+
+--A=ultraschall.ProjectSettings_SetVideoFramerate(11, true)

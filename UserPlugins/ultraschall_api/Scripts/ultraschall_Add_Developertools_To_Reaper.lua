@@ -31,3 +31,6 @@ filecount, files = ultraschall.GetAllFilenamesInPath(ultraschall.Api_Path.."/Scr
 for i=1, filecount do
   reaper.AddRemoveReaScript(true, 0, files[i], true)
 end
+
+reaper.AddRemoveReaScript(true, 0, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/3rd_party_modules/Lokasenna_GUI v2/Developer Tools/GUI Builder/Lokasenna_GUI Builder.lua", true)
+

@@ -24,7 +24,7 @@
   ################################################################################
   --]]
 
--- Ultraschall-API demoscript - 17th of December 2018
+-- Ultraschall-API demoscript - 7th of July 2020
 --
 -- Render Regions of current project as FLAC
 -- FLAC will be 24 Bit and encoding-speed of 5
@@ -34,7 +34,6 @@
 --
 -- Your last Exportfilename will be remembered by the script.
 --
--- Before rendering, project must be saved first.
 -- This script requires
 --   - the Ultraschall-API (ultraschall.fm/api)
 --   - SWS-extension (sws-extension.org)
@@ -50,20 +49,13 @@ function main()
   B,C,D=reaper.BR_GetMouseCursorContext()
   Markers, M2 = ultraschall.GetRegionByScreenCoordinates(reaper.GetMousePosition(), false)
   if A==5 and C=="region_lane" and Markers~="" then
---    reaper.ClearConsole()
---    Markers=string.gsub(Markers,"\n\n", "\n")
---    reaper.ShowConsoleMsg(Markers.."A")
-    if reaper.IsProjectDirty(0)==0 then
-      Oldfilename=reaper.GetExtState("Render", "ExportFilename")
-      Count, Split_string = ultraschall.SplitStringAtLineFeedToArray(Markers)
-      L=Count-2
-      E, F = reaper.GetUserInputs("Export-Filename", 1, "Filename", Oldfilename)
-      if E==true then
-        retval, renderfilecount, MediaItemStateChunkArray, Filearray = ultraschall.RenderProjectRegions_RenderCFG(nil, F, tonumber(Split_string[L]), true, false, nil, nil, render_cfg_string)
-        reaper.SetExtState("Render", "ExportFilename", F, true)
-      end
-    else
-      reaper.MB("Project must be saved first", "Error", 0)
+    Oldfilename=reaper.GetExtState("Render", "ExportFilename")
+    Count, Split_string = ultraschall.SplitStringAtLineFeedToArray(Markers)
+    L=Count-2
+    E, F = reaper.GetUserInputs("Export-Filename", 1, "Filename", Oldfilename)
+    if E==true then
+      retval, renderfilecount, MediaItemStateChunkArray, Filearray = ultraschall.RenderProjectRegions_RenderCFG(nil, F, tonumber(Split_string[L]), true, false, nil, nil, render_cfg_string)
+      reaper.SetExtState("Render", "ExportFilename", F, true)
     end
   end
   
