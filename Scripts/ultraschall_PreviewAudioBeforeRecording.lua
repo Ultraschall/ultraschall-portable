@@ -46,6 +46,10 @@
 -- Cheers
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+-- Grab all of the functions and classes from our GUI library
+local info = debug.getinfo(1,'S');
+script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
+GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
 if ultraschall.AnyTrackRecarmed()==false then reaper.MB("There is no track armed for recording", "No Recarmed track", 0) return end
 
@@ -74,88 +78,11 @@ end
 
 if reaper.GetPlayState()&4==4 then reaper.CSurf_OnStop() return end
 
-function roundrect(x, y, w, h, r, antialias, fill)
-  local aa = antialias or 1
-  fill = fill or 0
 
-  if fill == 0 or false then
-    gfx.roundrect(x, y, w, h, r, aa)
-  elseif h >= 2 * r then
-    -- Corners
-    gfx.circle(x + r, y + r, r, 1, aa)      -- top-left
-    gfx.circle(x + w - r, y + r, r, 1, aa)    -- top-right
-    gfx.circle(x + w - r, y + h - r, r , 1, aa)  -- bottom-right
-    gfx.circle(x + r, y + h - r, r, 1, aa)    -- bottom-left
-
-    -- Ends
-    gfx.rect(x, y + r, r, h - r * 2)
-    gfx.rect(x + w - r, y + r, r + 1, h - r * 2)
-
-    -- Body + sides
-    gfx.rect(x + r, y, w - r * 2, h + 1)
-
-  else
-    r = h / 2 - 1
-
-    -- Ends
-    gfx.circle(x + r, y + r, r, 1, aa)
-    gfx.circle(x + w - r, y + r, r, 1, aa)
-
-    -- Body
-    gfx.rect(x + r, y, w - r * 2, h)
-  end
-end
-
-
-
-function drawgfx()
-  buttonx=0
-  buttony=5
-  -- draws OK-Button and the text
-  gfx.set(0.15, 0.15, 0.15)
-  gfx.rect(0,0,gfx.w,gfx.h,1)
-  gfx.set(0.2)
-
-  for i = 1, 1 do
-    gfx.set(0,0,0,0.6)
-    roundrect(220-i+buttonx, 30-i+buttony, 70, 40, 8, 1, 1)
-    roundrect(220+i+buttonx, 30+i+buttony, 70, 40, 8, 1, 1)
-  end
-  gfx.set(0,0,0,0.6)
-  roundrect(220+buttonx, 30-2+buttony, 70, 40, 8, 1, 1)
-  gfx.set(0.392156862745098)
-  roundrect(220+buttonx, 30-1+buttony, 70, 40, 8, 1, 1)
-
-  gfx.set(0.2745098039215686)
-  roundrect(220+buttonx, 30+buttony, 70, 40, 8, 1, 1)
-
-  gfx.set(1)
-  gfx.x=16 gfx.y=28
-  gfx.setfont(1,font_face , font_size, 66)
-  gfx.drawstr("Place Editcursor to \nStart of Preview-Playposition \nand click OK")
-  gfx.x=245+buttonx gfx.y=42+buttony
-  gfx.setfont(1,font_face , font_size, 66)
-  gfx.drawstr("OK")
-end
 
 function main()
-  -- let's do the magic
 
-  -- if the window-size is changed, redraw window-content
-  if height~=gfx.h or width~=gfx.w then
-    height=gfx.h
-    width=gfx.w
-    drawgfx()
-  end
 
-  -- let's check for user-input
-  local A=gfx.getchar()
-
-  -- if window is closed or user hits ESC-key, quit the script
-  if A==-1 or A==27 then tudelu=false gfx.quit() reaper.SNM_SetIntConfigVar("preroll", Preroll_Settings) end
-
-  -- if user hits the OK,Button:
-  if A==13 or A==32 or gfx.mouse_cap&1==1 and gfx.mouse_x>=230 and gfx.mouse_x<=290 and gfx.mouse_y>=30 and gfx.mouse_y<=90 then
     Playposition=reaper.GetCursorPosition() -- get current editcursor-position, from where the previewing will start
     gfx.quit() -- close gfx-window
     if Recposition<Playposition then
@@ -189,21 +116,49 @@ function main()
     reaper.Undo_EndBlock("PreviewRecording", -1)
       tudelu=false
     end
-  end
-  gfx.update()
+
+  -- gfx.update()
   if tudelu~=false then reaper.defer(main) end
 end
 
+
+---- Window settings and user functions ----
+
+GUI.name = "Ultraschall Preroll Recording"
+GUI.w, GUI.h = 350, 80
+
+------------------------------------------------------
+-- position always in the center of the screen
+------------------------------------------------------
+
+l, t, r, b = 0, 0, GUI.w, GUI.h
+__, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
+GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
+
+GUI.elms = { }
+
+-- Inhalt des Fensters - Text und Button
+
+ok_button = GUI.Btn:new(240, 27, 90, 30,         " OK", main, "")
+table.insert(GUI.elms, ok_button)
+
+label = GUI.Lbl:new( 20 , 20,                  "Place Editcursor to \nStart of Preview-Playposition \nand click OK",          0)
+table.insert(GUI.elms, label)
+
+
+GUI.Init()
+GUI.Main()
+
 -- main program
-gfx.init("Place Edit-Cursor", 320,120,0,100,300) -- open window
+-- gfx.init("Place Edit-Cursor", 320,120,0,100,300) -- open window
 
 -- let's get initial window height and width(for checking later, if we need to redraw the window contents due window-size-changes)
-height=gfx.h
-width=gfx.w
+-- height=gfx.h
+-- width=gfx.w
 
 -- draw gfx
-drawgfx()
+-- drawgfx()
 
 
 -- start the magic
-main()
+-- main()
