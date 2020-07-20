@@ -82,7 +82,6 @@ if reaper.GetPlayState()&4==4 then reaper.CSurf_OnStop() return end
 
 function main()
 
-
     Playposition=reaper.GetCursorPosition() -- get current editcursor-position, from where the previewing will start
     gfx.quit() -- close gfx-window
     if Recposition<Playposition then
@@ -139,26 +138,11 @@ GUI.elms = { }
 
 -- Inhalt des Fensters - Text und Button
 
-ok_button = GUI.Btn:new(240, 27, 90, 30,         " OK", main, "")
+ok_button = GUI.Btn:new(240, 27, 90, 30,   " OK", main, "")
 table.insert(GUI.elms, ok_button)
 
-label = GUI.Lbl:new( 20 , 20,                  "Place Editcursor to \nStart of Preview-Playposition \nand click OK",          0)
+label = GUI.Lbl:new( 20 , 20,              "Place Editcursor to \nStart of Preview-Playposition \nand click OK",          0)
 table.insert(GUI.elms, label)
-
 
 GUI.Init()
 GUI.Main()
-
--- main program
--- gfx.init("Place Edit-Cursor", 320,120,0,100,300) -- open window
-
--- let's get initial window height and width(for checking later, if we need to redraw the window contents due window-size-changes)
--- height=gfx.h
--- width=gfx.w
-
--- draw gfx
--- drawgfx()
-
-
--- start the magic
--- main()

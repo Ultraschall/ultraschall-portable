@@ -96,6 +96,7 @@ function checkrouting()
 				reaper.DeleteExtState("ultraschall_PreviewRecording", "RecPosition", false) -- lösche Eintrag für Preroll
 				-- print (tonumber(preroll_rec) .. " - " .. reaper.GetPlayPosition())
 
+
 			end
 		else
 

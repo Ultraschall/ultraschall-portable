@@ -54,6 +54,11 @@ function SoundcheckOverdub(userspace)
     return false
   end
 
+  preroll_rec = reaper.GetExtState("ultraschall_PreviewRecording", "RecPosition")
+  if preroll_rec ~= "" then -- es ist ein Preroll-Recording aktiv, also alles ok
+    return false
+  end
+
   local length = reaper.GetProjectLength(0)
   local play = reaper.GetPlayPosition()
   local cursor = reaper.GetCursorPosition()
