@@ -40,8 +40,8 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 if ultraschall.AnyTrackRecarmed()==false then reaper.MB("There is no track armed for recording", "No Recarmed track", 0) return end
+Playposition=tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preroll_recording", "Value","ultraschall-settings.ini"))
 
-Playposition=tonumber(ultraschall.GetUSExternalState("Ultraschall_PreviewRecording", "PreRollTime"))
 if Playposition==nil then Playposition=-4 end
 if Playposition>0 then Playposition=-Playposition end
 
