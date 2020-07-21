@@ -1,6 +1,9 @@
 <TODO>
         
-    For 4.01.004:
+    For 4.01.005:
+        - Set Metadata from Project - still missing
+        - SetParmMIDIPLink_FXStateChunk - still missing?
+        - IsFileUsedInProject - check, if a file is used in the current project, could allow deleting it, though getting if it's part of projectbay could be the issue here
         - MoveChildWithinParentHWND - hat wohl OffByOne error, wenn relative und width/height=0 gesetzt; tauchte bei Arrangeview auf
         - AddMediaItemStateChunk_in_TrackStateChunk
         - BatchConvertFiles - maybe finishing it up?
@@ -292,6 +295,79 @@ TODO!! buggy function
 </TODO>
 
 ## Ultraschall Framework - Changelog
+
+### 4.1.005 - "Exodus from Genesis" - 15th of August 2020
+
+Has now 1215 functions, with 15 new ones
+
+**new in this release:**
+
+  - **Bla**  
+    Bla
+    
+#### New features in 4.1.005
+
+
+#### Changes from 4.1.004 to 4.1.005
+
+---
+
+### 4.1.004 - "I, E.T." - 21st of July 2020
+
+Has now 1215 functions, with 15 new ones
+
+**new in this release:**
+
+  - **Background Copying**  
+    You can now copy files in the background(as additional defer-loops) within your script, while you do other stuff in your main defer-loops.  
+    You can set a buffer-size, which means, how much shall be copied per defer-cycle to balance between transfer-speed and possible Reaper-GUI-lags.  
+    
+  - **TimeToMeasures**  
+    This allows you to convert a time in seconds to measures. I've used it in one script to set pre-roll(which only accepts measures) to a length in seconds.  
+ 
+  - **RenderCodes for FFMPEG 4.1.3 on Windows**  
+    If you've installed FFMPEG 4.1.3 in your Reaper-installation, you have additional output-render-formats available. I've added docs for these renderstring-settings now as well.  
+    
+  - **Updated docs, examplescripts and bugfixes**
+    
+#### New features in 4.1.004
+   - Docs: Concepts: Background Copying - decribes, how to program the background-copying-queue
+   - FileManagement: CopyFile_AddFileToQueue - add files to the background-copying-queue
+   - FileManagement: CopyFile_FlushCopiedFiles - flush the files from the copied list of the background-copying-queue
+   - FileManagement: CopyFile_GetBufferSize - get the current copying-buffer size of the background-copying-queue
+   - FileManagement: CopyFile_GetCopiedStatus - returns the current copy-status of a file in the background-copying-queue
+   - FileManagement: CopyFile_GetCurrentlyCopiedFile - get the currently copied file in the background-copying-queue
+   - FileManagement: CopyFile_GetCurrentlyRunningCopyInstances - get amount of currently running background-copying-instances
+   - FileManagement: CopyFile_GetPausedState - get paused state of the background-copying-queue
+   - FileManagement: CopyFile_GetRemainingFilesToCopy - get the remaining files in the background-copying-queue
+   - FileManagement: CopyFile_IsCurrentlyCopying - returns, if background-copying is currently copying
+   - FileManagement: CopyFile_Pause - toggle pausing of the background-copying-instances
+   - FileManagement: CopyFile_SetBufferSize - set the new copying-buffer-size of the background-copying-queue
+   - FileManagement: CopyFile_StartCopying - start copying all files in the background-copying-queue
+   - FileManagement: CopyFile_StopCopying - stop copying the files in the background-copying-queue
+   - Helper Functions: TimeToMeasures - converts a time to measures
+   - Project Management: GetProject\_MetaDataStateChunk - gets the statechunk from a project, which holds all metadata
+   
+
+#### Changes from 4.1.003 to 4.1.004
+   - Docs: Reaper Internals - updated to Reaper 6.13
+   - Docs: render-codes - added codes, who are available after having FFMPEG 4.1.3 installed
+   - Docs: VideoProcessor-docs - added detailed description for @param and reworked code-examples, as they didn't work previously(thanks to Eliseat)
+   - Examplescripts: US\_Api\_Examples\_Render\_Current\_Project.lua - updated to the more recent rendering-functions(used the first and outdated ones)
+   - Examplescripts: US\_Api\_Examples\_Render\_Project.lua - updated to the more recent rendering-functions(used the first and outdated ones)
+   - Examplescripts: US\_Api\_Examples\_Render\_Region\_of\_current\_Project.lua - updated to the more recent rendering-functions(used the first and outdated ones)
+   - File Management: ReadBinaryFile\_Offset - produced nil-error, when offset was after file's end; returned false in case of an error, even though it should return integer -> fixed
+   - File Management: ReadBinaryFileFromPattern - returned false in case of an error, even though it should return integer -> fixed
+   - File Management: ReadBinaryFileUntilPattern - returned false in case of an error, even though it should return integer -> fixed
+   - MediaItems: RippleCut - moving of markers didn't work; added optional parameter which allows optionally moving markers as well
+   - Rendering: CreateNewRenderTable - did not allow EmbedMetadata being optional -> fixed(thanks to aurelien)   
+   - Rendering: RenderProject - produced error, when a project's timeselection start&end where stored "backwards"; rendercfg for secondary rendering didn't work and caused havoc in numerous functions -> fixed (thanks to elzoido)
+
+
+
+   
+   
+---
 
 ### 4.1.003 - "Premier" - 1st of July 2020
 

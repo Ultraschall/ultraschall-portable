@@ -802,7 +802,7 @@ function ultraschall.GetRenderCFG_Settings_WAV(rendercfg)
                              -   4, Markers starting with # only
                              -   5, Regions only
                              -   6, Regions starting with # only 
-      boolean EmbedProjectTempo - Embed project tempo (use with care)-checkbox; true, checked; false, unchecked 
+      boolean EmbedProjectTempo - Embed tempo-checkbox; true, checked; false, unchecked 
     </retvals>
     <parameters>
       string render_cfg - the render-cfg-string, that contains the wav-settings
@@ -3282,8 +3282,6 @@ EmbedStretchMarkers, RenderString2, EmbedTakeMarkers, SilentRender, EmbedMetadat
   return RenderTable
 end
 
-
-
 -- Für Dich zum Testen für zukünftige Paraneters:
 
 --[[A,B=ultraschall.CreateNewRenderTable(2, 0, 2, 22, 0,                        -- 5
@@ -5189,35 +5187,8 @@ function ultraschall.RenderProject_Regions(projectfilename_with_path, renderfile
   if addregionname==true then 
     if addregionnameseparator==nil then addregionnameseparator="" end
     renderfilename_with_path=renderfilename_with_path..addregionnameseparator..markertable[region][4]
---    render_filename_with_path2=renderfilename_with_path:match("(.*)%.")
---    render_filename_with_path3=renderfilename_with_path:match("(.*)%.")
---    if render_filename_with_path2==nil then
---      render_filename_with_path2=renderfilename_with_path.."O"
---      render_filename_with_path2=markertable[region][4].."O"
---    else
---      render_filename_with_path2=render_filename_with_path2..markertable[region][4]..render_filename_with_path2
---    end
-  -- old buggy code. In here only for future reference, if my new code(the lines after if addregionname==true then) introduced new bugs, 
-  -- rather than only fixing them
---      print(region, markertable[region], projectfilename_with_path)
---[[
-      renderfilename_with_path2=
-          renderfilename_with_path:match("(.*)%.")..
-          markertable[region][4]..
-          renderfilename_with_path:match(".*(%..*)")
-
-  --]]
-  --[[
-    if renderfilename_with_path==nil then 
-      renderfilename_with_path=renderfilename_with_path..markertable[region][4]
-    else
-      renderfilename_with_path=renderfilename_with_path2
-      print2(renderfilename_with_path, "Ach", renderfilename_with_path2, "Ach", renderfilename_with_path3)
-    end
-    --]]
   end
 --      print2(renderfilename_with_path, "Ach")  
-
   return ultraschall.RenderProject(projectfilename_with_path, renderfilename_with_path, tonumber(markertable[region][2]), tonumber(markertable[region][3]), overwrite_without_asking, renderclosewhendone, filenameincrease, rendercfg, rendercfg2)
 end
 
@@ -5643,7 +5614,7 @@ function ultraschall.CreateRenderCFG_WAV(BitDepth, LargeFiles, BWFChunk, Include
                            - 4, Markers starting with # only
                            - 5, Regions only
                            - 6, Regions starting with # only
-    boolean EmbedProjectTempo - Embed project tempo (use with care)-checkbox; true, checked; false, unchecked
+    boolean EmbedProjectTempo - Embed tempo-checkbox; true, checked; false, unchecked
   </parameters>
   <chapter_context>
     Rendering Projects

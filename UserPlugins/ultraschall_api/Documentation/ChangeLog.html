@@ -40,6 +40,65 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.1.005 - "Exodus from Genesis" - 15th of August 2020</h3>
+<p>Has now 1215 functions, with 15 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><strong>Bla</strong><br />
+Bla</li>
+</ul>
+<h4>New features in 4.1.005</h4>
+<h4>Changes from 4.1.004 to 4.1.005</h4>
+<hr />
+<h3>4.1.004 - "I, E.T." - 21st of July 2020</h3>
+<p>Has now 1215 functions, with 15 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Background Copying</strong><br />
+You can now copy files in the background(as additional defer-loops) within your script, while you do other stuff in your main defer-loops.<br />
+You can set a buffer-size, which means, how much shall be copied per defer-cycle to balance between transfer-speed and possible Reaper-GUI-lags.</p></li>
+<li><p><strong>TimeToMeasures</strong><br />
+This allows you to convert a time in seconds to measures. I've used it in one script to set pre-roll(which only accepts measures) to a length in seconds.</p></li>
+<li><p><strong>RenderCodes for FFMPEG 4.1.3 on Windows</strong><br />
+If you've installed FFMPEG 4.1.3 in your Reaper-installation, you have additional output-render-formats available. I've added docs for these renderstring-settings now as well.</p></li>
+<li><p><strong>Updated docs, examplescripts and bugfixes</strong></p></li>
+</ul>
+<h4>New features in 4.1.004</h4>
+<ul>
+<li>Docs: Concepts: Background Copying - decribes, how to program the background-copying-queue</li>
+<li>FileManagement: CopyFile_AddFileToQueue - add files to the background-copying-queue</li>
+<li>FileManagement: CopyFile_FlushCopiedFiles - flush the files from the copied list of the background-copying-queue</li>
+<li>FileManagement: CopyFile_GetBufferSize - get the current copying-buffer size of the background-copying-queue</li>
+<li>FileManagement: CopyFile_GetCopiedStatus - returns the current copy-status of a file in the background-copying-queue</li>
+<li>FileManagement: CopyFile_GetCurrentlyCopiedFile - get the currently copied file in the background-copying-queue</li>
+<li>FileManagement: CopyFile_GetCurrentlyRunningCopyInstances - get amount of currently running background-copying-instances</li>
+<li>FileManagement: CopyFile_GetPausedState - get paused state of the background-copying-queue</li>
+<li>FileManagement: CopyFile_GetRemainingFilesToCopy - get the remaining files in the background-copying-queue</li>
+<li>FileManagement: CopyFile_IsCurrentlyCopying - returns, if background-copying is currently copying</li>
+<li>FileManagement: CopyFile_Pause - toggle pausing of the background-copying-instances</li>
+<li>FileManagement: CopyFile_SetBufferSize - set the new copying-buffer-size of the background-copying-queue</li>
+<li>FileManagement: CopyFile_StartCopying - start copying all files in the background-copying-queue</li>
+<li>FileManagement: CopyFile_StopCopying - stop copying the files in the background-copying-queue</li>
+<li>Helper Functions: TimeToMeasures - converts a time to measures</li>
+<li>Project Management: GetProject_MetaDataStateChunk - gets the statechunk from a project, which holds all metadata</li>
+</ul>
+<h4>Changes from 4.1.003 to 4.1.004</h4>
+<ul>
+<li>Docs: Reaper Internals - updated to Reaper 6.13</li>
+<li>Docs: render-codes - added codes, who are available after having FFMPEG 4.1.3 installed</li>
+<li>Docs: VideoProcessor-docs - added detailed description for @param and reworked code-examples, as they didn't work previously(thanks to Eliseat)</li>
+<li>Examplescripts: US_Api_Examples_Render_Current_Project.lua - updated to the more recent rendering-functions(used the first and outdated ones)</li>
+<li>Examplescripts: US_Api_Examples_Render_Project.lua - updated to the more recent rendering-functions(used the first and outdated ones)</li>
+<li>Examplescripts: US_Api_Examples_Render_Region_of_current_Project.lua - updated to the more recent rendering-functions(used the first and outdated ones)</li>
+<li>File Management: ReadBinaryFile_Offset - produced nil-error, when offset was after file's end; returned false in case of an error, even though it should return integer -&gt; fixed</li>
+<li>File Management: ReadBinaryFileFromPattern - returned false in case of an error, even though it should return integer -&gt; fixed</li>
+<li>File Management: ReadBinaryFileUntilPattern - returned false in case of an error, even though it should return integer -&gt; fixed</li>
+<li>MediaItems: RippleCut - moving of markers didn't work; added optional parameter which allows optionally moving markers as well</li>
+<li>Rendering: CreateNewRenderTable - did not allow EmbedMetadata being optional -&gt; fixed(thanks to aurelien)<br />
+</li>
+<li>Rendering: RenderProject - produced error, when a project's timeselection start&amp;end where stored "backwards"; rendercfg for secondary rendering didn't work and caused havoc in numerous functions -&gt; fixed (thanks to elzoido)</li>
+</ul>
+<hr />
 <h3>4.1.003 - "Premier" - 1st of July 2020</h3>
 <p>Has now 1200 functions, with 54 new ones</p>
 <p><strong>new in this release:</strong></p>

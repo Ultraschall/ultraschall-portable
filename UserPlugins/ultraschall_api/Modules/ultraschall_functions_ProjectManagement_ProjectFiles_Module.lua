@@ -4050,7 +4050,52 @@ function ultraschall.GetProject_QRenderOutFiles(projectfilename_with_path, Proje
   return count-1, QRenderOutFilesList, QRenderOutFilesListGuid, AutoCloseWhenFinished, AutoIncrementFilename, SaveCopyToOutfile
 end
 
--- Mespotine End
+function ultraschall.GetProject_MetaDataStateChunk(projectfilename_with_path, ProjectStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetProject_MetaDataStateChunk</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.11
+    Lua=5.3
+  </requires>
+  <functioncall>string ProjectBayStateChunk = ultraschall.GetProject_MetaDataStateChunk(string ProjectStateChunk, optional string ProjectStateChunk)</functioncall>
+  <description>
+    returns the Metadata-StateChunk, that holds all Metadata-entries.
+
+    It's the entry &lt;RENDER_METADATA ... &gt;
+    
+    returns nil in case of an error
+  </description>
+  <parameters>
+    string projectfilename_with_path - the projectfile+path, from which to get the projectbay-statechunk; nil to use ProjectStateChunk
+    optional string ProjectStateChunk - a statechunk of a project, usually the contents of a rpp-project-file
+  </parameters>
+  <retvals>
+    string ProjectBayStateChunk - the statechunk of the metadata
+  </retvals>
+  <chapter_context>
+    Project-Management
+    RPP-Files Get
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua</source_document>
+  <tags>projectmanagement, get, metadatastatechunk, statechunk, projectstatechunk</tags>
+</US_DocBloc>
+]]
+  -- check parameters and prepare variable ProjectStateChunk
+  if projectfilename_with_path~=nil and type(projectfilename_with_path)~="string" then ultraschall.AddErrorMessage("GetProject_MetaDataStateChunk","projectfilename_with_path", "Must be a string or nil(the latter when using parameter ProjectStateChunk)!", -1) return nil end
+  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_MetaDataStateChunk","ProjectStateChunk", "No valid ProjectStateChunk!", -2) return nil end
+  if projectfilename_with_path~=nil then
+    if reaper.file_exists(projectfilename_with_path)==true then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path, false)
+    else ultraschall.AddErrorMessage("GetProject_MetaDataStateChunk","projectfilename_with_path", "File does not exist!", -3) return nil
+    end
+  if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_MetaDataStateChunk", "projectfilename_with_path", "No valid RPP-Projectfile!", -4) return nil end
+  end
+  return ProjectStateChunk:match("<RENDER_METADATA.-\n  >")
+end
+
+
 
 --- Set ---
 

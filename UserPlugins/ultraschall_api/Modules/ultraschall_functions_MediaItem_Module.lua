@@ -1291,16 +1291,16 @@ function ultraschall.SectionCut_Inverse(startposition, endposition, trackstring,
 end
 
 
-function ultraschall.RippleCut(startposition, endposition, trackstring, moveenvelopepoints, add_to_clipboard)
+function ultraschall.RippleCut(startposition, endposition, trackstring, moveenvelopepoints, add_to_clipboard, movemarkers)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>RippleCut</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer number_items, array MediaItemArray_StateChunk = ultraschall.RippleCut(number startposition, number endposition, string trackstring, boolean moveenvelopepoints, boolean add_to_clipboard)</functioncall>
+  <functioncall>integer number_items, array MediaItemArray_StateChunk = ultraschall.RippleCut(number startposition, number endposition, string trackstring, boolean moveenvelopepoints, boolean add_to_clipboard, boolean movemarkers)</functioncall>
   <description>
     Cuts out all items between startposition and endposition in the tracks given by trackstring. After cut, it moves the remaining items after(!) endposition toward projectstart, by the difference between start and endposition.
     
@@ -1314,6 +1314,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
     string trackstring - the tracknumbers, separated by ,
     boolean moveenvelopepoints - moves envelopepoints, if existing, as well
     boolean add_to_clipboard - true, puts the cut items into the clipboard; false, don't put into the clipboard
+    boolean movemarkers - true or nil, move markers; false, don't move markers
   </parameters>
   <retvals>
     integer number_items - the number of cut items
@@ -1336,7 +1337,8 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
   if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("RippleCut", "trackstring", "must be a valid trackstring", -3) return -1 end
   if type(add_to_clipboard)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "add_to_clipboard", "must be a boolean", -4) return -1 end  
   if type(moveenvelopepoints)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "moveenvelopepoints", "must be a boolean", -5) return -1 end
-
+  if movemarkers~=nil and type(movemarkers)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "movemarkers", "must be a boolean", -7) return -1 end
+  if movemarkers==nil then movemarkers=true end
   local L,trackstring,A2,A3=ultraschall.RemoveDuplicateTracksInTrackstring(trackstring)
   if trackstring==-1 or trackstring=="" then ultraschall.AddErrorMessage("RippleCut", "trackstring", "must be a valid trackstring", -6) return -1 end
   local delta=endposition-startposition

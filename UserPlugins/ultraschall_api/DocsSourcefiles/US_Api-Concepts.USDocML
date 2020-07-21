@@ -19,7 +19,7 @@
                 - [Mediaitem-states](#GetSetStates_Project_Track_Item_Env_001_Introduction) - you can access and set many mediaitem-states (more will follow)
                 - [ItemExtStates/TrackExtStates](#ExtStateManagement_005_TrackItemExtStates) - you can save additional metadata easily for specific tracks and items using ItemExtStates and TrackExtStates
                 - [File access](#FileManagement_001_Introduction) - many helperfunctions for reading, writing, copying files. No more hassle writing it yourself!
-                    e.g [ReadFullFile](usdocml://ReadFullFile), [WriteValueToFile](usdocml://WriteValueToFile), etc
+                    e.g [ReadFullFile](usdocml://ReadFullFile), [WriteValueToFile](usdocml://WriteValueToFile), or even [Background copying of files](#FileManagement_006_Background_Copying)etc
                 - [Cough-Mute-management](#Cough_Mute_Buttons_001_Introduction) - you can write your own cough-buttons, that set the state of the mute-envelope of a track easily
                 - [Marker](#MarkersAndRegions_001_Introduction) - extensive set of marker functions, get, set, export, import, enumerate, etc
                 - [Spectrogram](#Getting_Manipulating_Items_008_Spectral_Edit) - you can program the spectrogram-view
@@ -827,7 +827,7 @@
                        
                        -- Pass this Render-string to the rendering-function
                        retval, rendered_files_count, rendered_files_MediaItemStateChunk, rendered_files_array 
-                                      = ultraschall.RenderProject(nil, "c:\\exportfile.mp3", 0, -1, false, false, false, render_cfg_string)
+                                      = ultraschall.RenderProject(nil, "c:\\exportfile.mp3", 0, -1, false, false, false, render_cfg_string, nil)
                
             The full control way:  
             
@@ -878,7 +878,7 @@
             These are essential for rendering a project using the provided rendering-functions, so the Ultraschall-API provides functions who create or analyze such render-strings.  
             
             All these functions start with CreateRenderCFG_ in their name, so if you are looking for a specific format, use CreateRenderCFG\_audioformat (like CreateRenderCFG\_FLAC, etc).   
-            The parameters of these functions represent all format-options as you are used from the Render-dialog. They should be fairly complete, though some formats (Video, OGG) are limited with some of their options(fps only supported up to 2000.00).  
+            The parameters of these functions represent all format-options as you are used from the Render-dialog. They should be fairly complete, though some formats (Video, OGG) are limited with some of their options(fps only supported up to 2000.00 in Ultraschall-API for API-limitations).  
             
             Example for FLAC:
 
@@ -1030,6 +1030,8 @@
                                                the chapter "Rendering: About Renderstrings"
                                                if you omit it or set it to nil, it will use the format-settings already set in the project or projectfile
             
+                         rendercfg2         - the same like rendercfg, but for the secondary render-format(see Render to File-dialog for what that means)
+                         
             It also returns some interesting return-values:
             
                         retval                   - 0, if rendering was successful; -1, in case of an error(like invalid parametervalues or user aborted rendering)  
@@ -1100,7 +1102,7 @@
                - [SetProject_RenderResample](usdocml://SetProject_RenderResample) - to set "Resample mode (if needed)" 
                - [SetProject_RenderSpeed](usdocml://SetProject_RenderSpeed) to set the render-speed, and
                - [SetProject_RenderStems](usdocml://SetProject_RenderStems) to set, whether to render stems, Master mix, region-render-matrix, etc (Source-dropdownlist)  
-                
+               
             If you want to alter the currently opened project in its rpp-projectfile, you need to save it first. After that, use:
             
                         retval, projectfilename_with_path = reaper.EnumProjects(-1,"")
@@ -2486,10 +2488,147 @@
             File Management
         </chapter_context>
         <previous_chapter>FileManagement_003_Write</previous_chapter>
+        <next_chapter>FileManagement_006_Background_Copying</next_chapter>
+        <tags>documentation, files, filemanagement, analyse</tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>FileManagement_006_Background_Copying</slug>
+        <title>File Management: Background Copying</title>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            If you have a defer-script and would like to copy files in the background while doing other stuff in the meantime, or if you want to copy huge files in Lua, you'll 
+            probably face the problem, that copying huge files may block Reaper.  
+            This'll happen, when you have huge files and you try to copy the whole file at once. You can cirvumvent it by reading and writing the file piece by piece, which is programmable 
+            in Lua, which needs some kind of defer-loop as well to work on big files; every defer-cycle reading and writing a piece of the file.  
+            But, as I'm too lazy to do that time and again(and you're probably too), I programmed a bunch of functions and mechanism, that'll do it for you.  
+            
+            Basically it works like that:
+            1) add files to the copying-queue, using [CopyFile\_AddFileToQueue](usdocml://CopyFile_AddFileToQueue)
+            2) start copying in the background using [CopyFile\_StartCopying](usdocml://CopyFile_StartCopying) 
+            
+            and that will copy files in the background(1MB per defer-cycle) and you'll need to do nothing anymore, EXCEPT: not having more than 900-defer-cycles in your script currently running.  
+            
+            Wait, are you saying, you want more control over the copying? Want to set the copy-buffer-size? Want to pause or stop the processing? Want to know, when the copying is done?
+            Okokok, I've heard you, so here's a bunch of functions, who could help you having control over the background-copying.
+                        
+            
+            >**[CopyFile\_AddFileToQueue](usdocml://CopyFile_AddFileToQueue)**
+            
+                            integer current_copyqueue_position = ultraschall.CopyFile_AddFileToQueue(string filename, string targetfilename, boolean overwrite)
+            
+            > This adds a file into the copy-queue. Just add the filename and the new targetname into it. You can also decide, whether a possibly existing file shall be overwritten.  
+            > If you have started the copying already and it's still running, this file will be copied immediately.  
+            > The returned value in current\_copyqueue\_position allows you get the current copying status and possible error-messages using [CopyFile\_GetCopiedStatus](usdocml://CopyFile_GetCopiedStatus)
+            
+            >**[CopyFile\_GetBufferSize](usdocml://CopyFile_GetBufferSize)**
+            
+                            integer buffer_size = ultraschall.CopyFile_GetBufferSize()
+            
+            > This returns the size of the copying-buffer. Default is 1MB but you can raise or lower it using [CopyFile\_SetBufferSize](usdocml://CopyFile_SetBufferSize), depending on the workload the copying shall cause.  
+            > 1MB seems to be a good value for background-copying files even on slower systems.
+
+            >**[CopyFile\_SetBufferSize](usdocml://CopyFile_SetBufferSize)**
+            
+                            boolean retval = ultraschall.CopyFile_SetBufferSize(integer buffersize)
+            
+            > This sets the size of the copying-buffer. Default is 1MB but you can raise or lower it depending on the workload the copying shall cause.  
+            > 1MB seems to be a good value for background-copying files even on slower systems.
+
+            To start/stop/pause copying, you can use these functions:
+            
+            >**[CopyFile\_StartCopying](usdocml://CopyFile_StartCopying)**
+            
+                            integer instance_number = ultraschall.CopyFile_StartCopying()
+            
+            > This starts a new copying-instance, which processes the file-copy-queue. You can have actually up to 30 running in the background, which means: the more, the more stuff can be copied.  
+            > So if the copy-buffer-size is 1MB, you can have up to 30 copying-instances, with each copying 1MB/second so the amount of data copied per second is 30MB with 30 started copying instances.  
+            > You need to be careful though, if you've set the copy-buffer-size too high, having multiple copying-instances will lead to a laggy or even frozen GUI of Reaper, until the queue is finished in processing.  
+            > When the queue is finished in processing, each copying-instance will stop itself automatically.
+            
+            >**[CopyFile\_StopCopying](usdocml://CopyFile_StopCopying)**
+            
+                            ultraschall.CopyFile_StopCopying()
+            
+            > This stops immediately the processing of the copying-queue. If background-copying was in the middle of the copying, the last file processed remains incompletely copied.
+            
+            >**[CopyFile\_IsCurrentlyCopying](usdocml://CopyFile\_IsCurrentlyCopying)**
+            
+                            boolean retval = ultraschall.CopyFile_IsCurrentlyCopying()
+            
+            > This returns, if there's any background-copying-instance running. So you can check, whether to start a background-instance after having added new files to the copy-file-queue.
+            
+            >**[CopyFile\_GetCurrentlyRunningCopyInstances](usdocml://CopyFile\_GetCurrentlyRunningCopyInstances)**
+            
+                            integer number_of_instances = ultraschall.CopyFile_GetCurrentlyRunningCopyInstances()
+            
+            > This returns, how many background-copy-instances are currently running.
+            
+            >**[CopyFile\_Pause](usdocml://CopyFile_Pause)**
+            
+                            boolean retval = ultraschall.CopyFile_Pause(boolean toggle)
+            
+            > This allows you to pause/unpause ALL copying-instances to save ressources. Keep in mind: if you pause the copying-queue and finish your script, the copying-instances still run paused in the background.  
+            > That said, if you pause them, you MUST unpause/stop them before exiting your script or your script will run indefinitely.
+            
+            >**[CopyFile\_GetPausedState](usdocml://CopyFile_GetPausedState)**
+            
+                            boolean retval = ultraschall.CopyFile_GetPausedState()
+            
+            > This will return, if the copying-instances are currently paused or not.  
+            
+            
+            Now that you know, how to add files to the queue and how to control the copying-instances, you probably would also want to know the current copy-status of files, including possible error-messages.  
+            For that, I need to explain more details.
+            The Background-Copy-feature of Ultraschall-API manages two queues inside of it:  
+            
+            1. the actual queue, which will be processed and eventually become empty  
+            2. a file-queue-statelist, which will store the information about the current copied-status, error-messages, etc. This will only become empty, if you flush it yourself from time to time.  
+            
+            To access the states you need, you should have stored the current\_copyqueue\_position returned by the CopyFile\_AddFileToQueue-function, as this is your golden ticket to get every information you want.  
+            
+            
+            >**[CopyFile\_GetCopiedStatus](usdocml://CopyFile_GetCopiedStatus)**
+            
+                            string filename, boolean already_processed, string error_message, string error_code = ultraschall.CopyFile_GetCopiedStatus(integer fileindex)
+                  
+            > This returns all copy-states of a certain file in the queue. You just pass as parameter the current\_copyqueue\_position returned by the CopyFile\_AddFileToQueue-function and it will return everything.  
+            > For instance, the filename in question, if it has been already processed(no matter if successfully or unsuccessfully), a possible error-message(which is "" if everything went fine) and the possible error-code.  
+            
+            If you've finished copying and want to get rid of the old states, you can flush the file-queue-statelist:
+            
+            >**[CopyFile\_FlushCopiedFiles](usdocml://CopyFile_FlushCopiedFiles)**
+            
+                            ultraschall.CopyFile_FlushCopiedFiles()
+                  
+            > This flushes the file-queue-statelist completely. From that moment on, all current\_copyqueue\_position returned by the CopyFile\_AddFileToQueue up to this point become invalid.  
+            > This will not affect background-copy, so if you want to stop processing the file-queue, you need to use [CopyFile\_StopCopying](usdocml://CopyFile_StopCopying).
+            
+            But that's not all control and information, you probably want
+            
+            >**[CopyFile\_GetCurrentlyCopiedFile](usdocml://CopyFile_GetCurrentlyCopiedFile)**
+            
+                            integer number_of_remaining_files, string filename, integer remaining_bytes_to_copy, integer percentage = ultraschall.CopyFile_GetCurrentlyCopiedFile()
+                  
+            > This give you information about the file currently in processing. So you can get, how many files are remaining in the queue, the filename currently processed, the remaining bytes to copy of this file and a percentage of how far copying has progressed.  
+            
+            >**[CopyFile\_GetRemainingFilesToCopy](usdocml://CopyFile\_GetRemainingFilesToCopy)**
+            
+                            integer filecount = ultraschall.CopyFile_GetRemainingFilesToCopy()
+                  
+            > And this returns the number of files, who haven't been processed yet in the background-copy-queue.
+            
+            With that, doing extensive copying-work should be possible for you, even writing a file-manager if you wish.
+        </description>
+        <target_document>US_Api_Introduction_and_Concepts</target_document>
+        <source_document>US_Api-Concepts.USDocML</source_document>
+        <chapter_context>
+            File Management
+        </chapter_context>
+        <previous_chapter>FileManagement_004_Analyse</previous_chapter>
         <next_chapter>FileManagement_005_Misc</next_chapter>
         <tags>documentation, files, filemanagement, analyse</tags>
     </US_DocBloc>
-
+    
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>FileManagement_005_Misc</slug>
         <title>File Management: Misc</title>
@@ -2513,7 +2652,7 @@
         <chapter_context>
             File Management
         </chapter_context>
-        <previous_chapter>FileManagement_004_Analyse</previous_chapter>
+        <previous_chapter>FileManagement_006_Background_Copying</previous_chapter>
         <next_chapter>Project_Management_001_Introduction</next_chapter>
         <tags>documentation, files, filemanagement, miscellaneous</tags>
     </US_DocBloc>

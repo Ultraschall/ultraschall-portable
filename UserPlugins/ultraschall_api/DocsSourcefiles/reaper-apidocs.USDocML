@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 6.12
+            ## ReaScript API as of Reaper 6.13
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -13893,11 +13893,14 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            Creates a new directory. You can recursivly create directories, means: if the higher directories don't exist, the will also be automatically created.
+            Creates a new directory. 
+            
+            You can recursivly create directories, means: if the higher directories don't exist, the will also be automatically created.
+            
             returns positive value on success, 0 on failure.
         </description>
         <retvals>
-            integer - 
+            integer - 0, failure; 1 and higher, success
         </retvals>
         <parameters>
             path - the directory-path to be created
@@ -41099,10 +41102,11 @@
         <title>update_disk_counters</title>
         <functioncall prog_lang="cpp">void (*update_disk_counters)(int readamt, int writeamt)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.13
         </requires>
         <description indent="default">
-            Updates disk I/O statistics with bytes transferred since last call.
+            Updates disk I/O statistics with bytes transferred since last call. 
+            Notify REAPER of a write error by calling with readamt=0, writeamt=-101010110 for unknown or -101010111 for disk full
         </description>
         <retvals>
             void -

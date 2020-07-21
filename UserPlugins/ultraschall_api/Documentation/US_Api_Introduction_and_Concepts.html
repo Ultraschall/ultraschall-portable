@@ -55,7 +55,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.1003 - "Premier" - 1st of July 2020 - Build: 43221</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.1005 - "Exodus from Genesis" - 15th of August 2020 - Build: 43242</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -100,6 +100,7 @@ Ultraschall API functions
 <td><a href="#FileManagement_003_Write">File Management: Write</a></td>
 <td><a href="#FileManagement_004_Analyse">File Management: Analyse</a></td>
 </tr><tr><td><a href="#FileManagement_005_Misc">File Management: Misc</a></td>
+<td><a href="#FileManagement_006_Background_Copying">File Management: Background Copying</a></td>
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Project Management</b></td></tr><tr><td><a href="#Project_Management_001_Introduction">Project Management: Introduction</a></td>
 <td><a href="#Project_Management_002_Check_Changed_Projecttabs">Project Management: Check for changed projecttabs</a></td>
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Color Management</b></td></tr><tr><td><a href="#ColorManagement_001_Introduction">Color Management: Introduction</a></td>
@@ -175,7 +176,7 @@ Ultraschall API functions
 <li><p><a href="#Trackstate_Management_001_Introduction">Trackstates</a> - you can access and set all(!) track-states available</p></li>
 <li><p><a href="#GetSetStates_Project_Track_Item_Env_001_Introduction">Mediaitem-states</a> - you can access and set many mediaitem-states (more will follow)</p></li>
 <li><p><a href="#ExtStateManagement_005_TrackItemExtStates">ItemExtStates/TrackExtStates</a> - you can save additional metadata easily for specific tracks and items using ItemExtStates and TrackExtStates</p></li>
-<li><p><a href="#FileManagement_001_Introduction">File access</a> - many helperfunctions for reading, writing, copying files. No more hassle writing it yourself! e.g <a href="US_Api_Functions.html#ReadFullFile">ReadFullFile</a>, <a href="US_Api_Functions.html#WriteValueToFile">WriteValueToFile</a>, etc</p></li>
+<li><p><a href="#FileManagement_001_Introduction">File access</a> - many helperfunctions for reading, writing, copying files. No more hassle writing it yourself! e.g <a href="US_Api_Functions.html#ReadFullFile">ReadFullFile</a>, <a href="US_Api_Functions.html#WriteValueToFile">WriteValueToFile</a>, or even <a href="#FileManagement_006_Background_Copying">Background copying of files</a>etc</p></li>
 <li><p><a href="#Cough_Mute_Buttons_001_Introduction">Cough-Mute-management</a> - you can write your own cough-buttons, that set the state of the mute-envelope of a track easily</p></li>
 <li><p><a href="#MarkersAndRegions_001_Introduction">Marker</a> - extensive set of marker functions, get, set, export, import, enumerate, etc</p></li>
 <li><p><a href="#Getting_Manipulating_Items_008_Spectral_Edit">Spectrogram</a> - you can program the spectrogram-view</p></li>
@@ -679,7 +680,7 @@ So I added some API-variables, like:</p>
        
        -- Pass this Render-string to the rendering-function
        retval, rendered_files_count, rendered_files_MediaItemStateChunk, rendered_files_array 
-                      = ultraschall.RenderProject(nil, &quot;c:\\exportfile.mp3&quot;, 0, -1, false, false, false, render_cfg_string)</code></pre>
+                      = ultraschall.RenderProject(nil, &quot;c:\\exportfile.mp3&quot;, 0, -1, false, false, false, render_cfg_string, nil)</code></pre>
 <p>The full control way:</p>
 <ol>
 <li><p>creating a <a href="#Datatypes_008_RenderTable">RenderTable</a>, which holds all settings you can set for the rendering-process, using one of the following functions:<br />
@@ -706,7 +707,7 @@ So I added some API-variables, like:</p>
 They are usually stored into RPP-projectfiles and are quite cryptic(for those of you, who know what that means: BASE64-encoded).<br />
 These are essential for rendering a project using the provided rendering-functions, so the Ultraschall-API provides functions who create or analyze such render-strings.</p>
 <p>All these functions start with CreateRenderCFG_ in their name, so if you are looking for a specific format, use CreateRenderCFG_audioformat (like CreateRenderCFG_FLAC, etc).<br />
-The parameters of these functions represent all format-options as you are used from the Render-dialog. They should be fairly complete, though some formats (Video, OGG) are limited with some of their options(fps only supported up to 2000.00).</p>
+The parameters of these functions represent all format-options as you are used from the Render-dialog. They should be fairly complete, though some formats (Video, OGG) are limited with some of their options(fps only supported up to 2000.00 in Ultraschall-API for API-limitations).</p>
 <p>Example for FLAC:</p>
 <pre><code>        render_string = ultraschall.CreateRenderCFG_FLAC(integer BitDepth, integer EncSpeed)</code></pre>
 <p>creates the render-string for the FLAC-fileformat. Just provide the BitDepth(e.g 0 for 24 Bit) and the encoding-speed(EncSpeed) (e.g 5 for the default encoding speed).<br />
@@ -804,7 +805,10 @@ That said, a lot of the parameters are the same.</p>
 <p>The last parameter is the place for your render-string:</p>
 <pre><code>         rendercfg           - the renderstring, as created using a CreateRenderCFG_XXX-function, as described in 
                                the chapter &quot;Rendering: About Renderstrings&quot;
-                               if you omit it or set it to nil, it will use the format-settings already set in the project or projectfile</code></pre>
+                               if you omit it or set it to nil, it will use the format-settings already set in the project or projectfile
+
+         rendercfg2         - the same like rendercfg, but for the secondary render-format(see Render to File-dialog for what that means)
+         </code></pre>
 <p>It also returns some interesting return-values:</p>
 <pre><code>        retval                   - 0, if rendering was successful; -1, in case of an error(like invalid parametervalues or user aborted rendering)  
         renderfilecount          - the number of rendered files. Usually 1, but can be higher, when rendering stems as well  
@@ -1821,6 +1825,131 @@ Default is, file will be stored as binary and value replaces the current content
 <blockquote>
 <p>After that, the function returns an array with all files, that are of the filetype you gave to parameter filetype.</p>
 </blockquote>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FileManagement_006_Background_Copying"></a>
+<div style="font-size:100%"><h4><a href="#FileManagement_006_Background_Copying">^</a> <u>File Management: Background Copying</u></h4></div><p><p>If you have a defer-script and would like to copy files in the background while doing other stuff in the meantime, or if you want to copy huge files in Lua, you'll probably face the problem, that copying huge files may block Reaper.<br />
+This'll happen, when you have huge files and you try to copy the whole file at once. You can cirvumvent it by reading and writing the file piece by piece, which is programmable in Lua, which needs some kind of defer-loop as well to work on big files; every defer-cycle reading and writing a piece of the file.<br />
+But, as I'm too lazy to do that time and again(and you're probably too), I programmed a bunch of functions and mechanism, that'll do it for you.</p>
+<p>Basically it works like that: 1) add files to the copying-queue, using <a href="US_Api_Functions.html#CopyFile_AddFileToQueue">CopyFile_AddFileToQueue</a> 2) start copying in the background using <a href="US_Api_Functions.html#CopyFile_StartCopying">CopyFile_StartCopying</a></p>
+<p>and that will copy files in the background(1MB per defer-cycle) and you'll need to do nothing anymore, EXCEPT: not having more than 900-defer-cycles in your script currently running.</p>
+<p>Wait, are you saying, you want more control over the copying? Want to set the copy-buffer-size? Want to pause or stop the processing? Want to know, when the copying is done? Okokok, I've heard you, so here's a bunch of functions, who could help you having control over the background-copying.</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_AddFileToQueue">CopyFile_AddFileToQueue</a></strong></p>
+</blockquote>
+<pre><code>            integer current_copyqueue_position = ultraschall.CopyFile_AddFileToQueue(string filename, string targetfilename, boolean overwrite)</code></pre>
+<blockquote>
+<p>This adds a file into the copy-queue. Just add the filename and the new targetname into it. You can also decide, whether a possibly existing file shall be overwritten.<br />
+If you have started the copying already and it's still running, this file will be copied immediately.<br />
+The returned value in current_copyqueue_position allows you get the current copying status and possible error-messages using <a href="US_Api_Functions.html#CopyFile_GetCopiedStatus">CopyFile_GetCopiedStatus</a></p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_GetBufferSize">CopyFile_GetBufferSize</a></strong></p>
+</blockquote>
+<pre><code>            integer buffer_size = ultraschall.CopyFile_GetBufferSize()</code></pre>
+<blockquote>
+<p>This returns the size of the copying-buffer. Default is 1MB but you can raise or lower it using <a href="US_Api_Functions.html#CopyFile_SetBufferSize">CopyFile_SetBufferSize</a>, depending on the workload the copying shall cause.<br />
+1MB seems to be a good value for background-copying files even on slower systems.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_SetBufferSize">CopyFile_SetBufferSize</a></strong></p>
+</blockquote>
+<pre><code>            boolean retval = ultraschall.CopyFile_SetBufferSize(integer buffersize)</code></pre>
+<blockquote>
+<p>This sets the size of the copying-buffer. Default is 1MB but you can raise or lower it depending on the workload the copying shall cause.<br />
+1MB seems to be a good value for background-copying files even on slower systems.</p>
+</blockquote>
+<p>To start/stop/pause copying, you can use these functions:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_StartCopying">CopyFile_StartCopying</a></strong></p>
+</blockquote>
+<pre><code>            integer instance_number = ultraschall.CopyFile_StartCopying()</code></pre>
+<blockquote>
+<p>This starts a new copying-instance, which processes the file-copy-queue. You can have actually up to 30 running in the background, which means: the more, the more stuff can be copied.<br />
+So if the copy-buffer-size is 1MB, you can have up to 30 copying-instances, with each copying 1MB/second so the amount of data copied per second is 30MB with 30 started copying instances.<br />
+You need to be careful though, if you've set the copy-buffer-size too high, having multiple copying-instances will lead to a laggy or even frozen GUI of Reaper, until the queue is finished in processing.<br />
+When the queue is finished in processing, each copying-instance will stop itself automatically.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_StopCopying">CopyFile_StopCopying</a></strong></p>
+</blockquote>
+<pre><code>            ultraschall.CopyFile_StopCopying()</code></pre>
+<blockquote>
+<p>This stops immediately the processing of the copying-queue. If background-copying was in the middle of the copying, the last file processed remains incompletely copied.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_IsCurrentlyCopying">CopyFile_IsCurrentlyCopying</a></strong></p>
+</blockquote>
+<pre><code>            boolean retval = ultraschall.CopyFile_IsCurrentlyCopying()</code></pre>
+<blockquote>
+<p>This returns, if there's any background-copying-instance running. So you can check, whether to start a background-instance after having added new files to the copy-file-queue.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_GetCurrentlyRunningCopyInstances">CopyFile_GetCurrentlyRunningCopyInstances</a></strong></p>
+</blockquote>
+<pre><code>            integer number_of_instances = ultraschall.CopyFile_GetCurrentlyRunningCopyInstances()</code></pre>
+<blockquote>
+<p>This returns, how many background-copy-instances are currently running.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_Pause">CopyFile_Pause</a></strong></p>
+</blockquote>
+<pre><code>            boolean retval = ultraschall.CopyFile_Pause(boolean toggle)</code></pre>
+<blockquote>
+<p>This allows you to pause/unpause ALL copying-instances to save ressources. Keep in mind: if you pause the copying-queue and finish your script, the copying-instances still run paused in the background.<br />
+That said, if you pause them, you MUST unpause/stop them before exiting your script or your script will run indefinitely.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_GetPausedState">CopyFile_GetPausedState</a></strong></p>
+</blockquote>
+<pre><code>            boolean retval = ultraschall.CopyFile_GetPausedState()</code></pre>
+<blockquote>
+<p>This will return, if the copying-instances are currently paused or not.</p>
+</blockquote>
+<p>Now that you know, how to add files to the queue and how to control the copying-instances, you probably would also want to know the current copy-status of files, including possible error-messages.<br />
+For that, I need to explain more details. The Background-Copy-feature of Ultraschall-API manages two queues inside of it:</p>
+<ol>
+<li>the actual queue, which will be processed and eventually become empty<br />
+</li>
+<li>a file-queue-statelist, which will store the information about the current copied-status, error-messages, etc. This will only become empty, if you flush it yourself from time to time.</li>
+</ol>
+<p>To access the states you need, you should have stored the current_copyqueue_position returned by the CopyFile_AddFileToQueue-function, as this is your golden ticket to get every information you want.</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_GetCopiedStatus">CopyFile_GetCopiedStatus</a></strong></p>
+</blockquote>
+<pre><code>            string filename, boolean already_processed, string error_message, string error_code = ultraschall.CopyFile_GetCopiedStatus(integer fileindex)
+  </code></pre>
+<blockquote>
+<p>This returns all copy-states of a certain file in the queue. You just pass as parameter the current_copyqueue_position returned by the CopyFile_AddFileToQueue-function and it will return everything.<br />
+For instance, the filename in question, if it has been already processed(no matter if successfully or unsuccessfully), a possible error-message(which is "" if everything went fine) and the possible error-code.</p>
+</blockquote>
+<p>If you've finished copying and want to get rid of the old states, you can flush the file-queue-statelist:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_FlushCopiedFiles">CopyFile_FlushCopiedFiles</a></strong></p>
+</blockquote>
+<pre><code>            ultraschall.CopyFile_FlushCopiedFiles()
+  </code></pre>
+<blockquote>
+<p>This flushes the file-queue-statelist completely. From that moment on, all current_copyqueue_position returned by the CopyFile_AddFileToQueue up to this point become invalid.<br />
+This will not affect background-copy, so if you want to stop processing the file-queue, you need to use <a href="US_Api_Functions.html#CopyFile_StopCopying">CopyFile_StopCopying</a>.</p>
+</blockquote>
+<p>But that's not all control and information, you probably want</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_GetCurrentlyCopiedFile">CopyFile_GetCurrentlyCopiedFile</a></strong></p>
+</blockquote>
+<pre><code>            integer number_of_remaining_files, string filename, integer remaining_bytes_to_copy, integer percentage = ultraschall.CopyFile_GetCurrentlyCopiedFile()
+  </code></pre>
+<blockquote>
+<p>This give you information about the file currently in processing. So you can get, how many files are remaining in the queue, the filename currently processed, the remaining bytes to copy of this file and a percentage of how far copying has progressed.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CopyFile_GetRemainingFilesToCopy">CopyFile_GetRemainingFilesToCopy</a></strong></p>
+</blockquote>
+<pre><code>            integer filecount = ultraschall.CopyFile_GetRemainingFilesToCopy()
+  </code></pre>
+<blockquote>
+<p>And this returns the number of files, who haven't been processed yet in the background-copy-queue.</p>
+</blockquote>
+<p>With that, doing extensive copying-work should be possible for you, even writing a file-manager if you wish.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FileManagement_005_Misc"></a>
 <div style="font-size:100%"><h4><a href="#FileManagement_005_Misc">^</a> <u>File Management: Misc</u></h4></div><p><p>Last, but not least, I added many other useful functions regarding file-management, like:</p>
@@ -4340,4 +4469,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 003 - 108 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 005 - 109 chapters available</td></table><br><hr></div></body></html>
