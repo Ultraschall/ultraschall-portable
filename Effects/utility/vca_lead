@@ -1,0 +1,19 @@
+desc:VCA Lead
+//tags: utility gain
+
+slider1:0<-120,24,1>Volume (dB)
+
+
+out_pin:Controller Out L
+out_pin:Controller Out R
+
+
+@init
+s=1;
+
+@slider
+cv = 10^((slider1-30)/20);
+
+@sample
+spl0 = spl1 = cv*s;
+s=-s;

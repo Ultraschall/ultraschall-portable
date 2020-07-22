@@ -1,0 +1,28 @@
+desc:VCA Follow
+//tags: utility gain
+//author: Unknown
+
+in_pin:Audio In L
+in_pin:Audio In R
+in_pin:Controller In L
+in_pin:Controller In R
+out_pin:Audio Out L
+out_pin:Audio Out R
+
+
+slider1:50<0,300,1>Transition Time (ms)
+
+@init
+curgain=0.0;
+curgain2=0.0;
+reflevel = 10^(30/20);
+
+
+@slider
+sc = exp(-1.0 / (slider1*0.001*srate));
+sc2 = (1-sc)*reflevel;
+
+@sample
+
+spl0 *= (curgain = curgain * sc + min(abs(spl2),8.0)*sc2);
+spl1 *= (curgain2 = curgain2 * sc + min(abs(spl3),8.0)*sc2);

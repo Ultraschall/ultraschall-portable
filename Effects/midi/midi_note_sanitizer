@@ -1,0 +1,31 @@
+desc:MIDI note sanitizer
+//tags: MIDI filter processing
+//author: Cockos
+
+// removes note-ons that follow (optionally closely) matching note-ons
+// removes note-offs that follow (at any distance) matching note-offs
+slider1:retrigger=0<0,128,1>retrigger threshold (1/32nds, 0=no retrigger)
+
+in_pin:none
+out_pin:none
+
+@block
+pos += samplesblock;
+
+while (midirecv(offs,m1,m2,m3))(
+  send=1;
+  (m1&0xe0)==0x80 ? (
+    s = (m1&0xf)|(m2<<4); // first 2048 memory words are a table
+    ((m1&0x10) && m3) ? ( // note-on
+      s[] ? (
+        rtl = retrigger > 0 ? (retrigger * (60 / 8) * srate / tempo) : (10^20);
+        pos > s[]+rtl ? midisend(offs,m1&0xef,m2,0) : send=0;
+      );
+      send ? s[] = pos;
+    ) : (
+      s[] ? s[]=0 : send=0;
+    );
+  );
+  send ? midisend(offs,m1,m2,m3);
+);
+

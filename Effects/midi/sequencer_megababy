@@ -71,7 +71,7 @@ slider6:100<1,100,1>--Note Length
 slider7:1<0,1,1{Piano Roll,Drum Map}>--Mode
 slider8:0<0,100,1>--Swing
 slider9:4<1,16,1>Steps Per Beat
-slider10:0<0,6,1{Off,On (Pattern Change),On (Pattern Change + Transpose),On (Pattern Change + Resync),On (Pattern Change + Transpose + Resync),On (Pattern Change + Resync Quantized),On (Pattern Change + Transpose + Resync Quantized)}>MIDI Trigger
+slider10:0<0,8,1{Off,On (Pattern Change),On (Pattern Change + Transpose),On (Pattern Change + Resync),On (Pattern Change + Transpose + Resync),On (Pattern Change + Resync Quantized),On (Pattern Change + Transpose + Resync Quantized),Off (Always Recording),Off (Always Recording + Toggle Notes)}>MIDI Trigger
 slider11:72<0,127,1>--Trigger Note Start
 slider12:0<0,15,1{Off,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}>--Chain
 slider13:0.2<0.0,1.0,0.001>--Lane Height Percent
@@ -272,7 +272,6 @@ nn[11] = strcpy(511, "B");
 notename_digit=0;
 
 notenames=nn+128;
-nn_filename=1000; // string slot for notename file name
 lnotenames_file=-1;
 max_notename_length=4; //Number of characters in note name. This controls the notename field width in GUI. 
 
@@ -641,7 +640,13 @@ prev_p==p ? ( // not changing pattern
   p <= chain ? update_chain_beats();
 );
 
-midi_trigger=slider10|0;
+slider10 > 6 ? (
+  midi_trigger = 0;
+  force_record_mode = (slider10|0) - 6;
+) : (
+  midi_trigger = slider10|0;
+  force_record_mode = 0;
+);
 trig_note_start=slider11|0;
 
 chain=slider12|0;
@@ -1361,7 +1366,7 @@ loop(midi_buf_len,
   s = msg1&0xF0;
   n=msg23&0x7F;        
   npos=n-basenote;
-  (play_state_i==5) ? ( // Recording
+  (play_state_i&1) && (force_record_mode || (play_state_i&4)) ? ( // Recording
     vel=(msg23/256)|0;
     s==0x90 && vel > 0 ? ( // Note-On  
       (npos >= 0 && npos < numnotes) ? (
@@ -1383,19 +1388,13 @@ loop(midi_buf_len,
             rec_p_notelist=notelist+listlength;
             rec_p_velolist=velolist+listlength*max_numnotes;
           );
-          nlm=(rec_p_notelist[bp] & mask);
-          nlm==0 ? ( 
-            rec_p_notelist[bp]+=mask; // Record new note
-          );
+          force_record_mode==2 ? rec_p_notelist[bp]~=mask : rec_p_notelist[bp]|=mask; // Record new note
           // Overwrite velocity
           rec_velpos=npos*listlength_pat[rec_p]+bp;
           rec_p_velolist[rec_velpos] &= 0xFFFFFF80; //clear old velocity
           rec_p_velolist[rec_velpos] += vel; //set new velocity
         ) : (
-          nlm=(notelist[bp] & mask);
-          nlm==0 ? ( 
-            notelist[bp]+=mask; // Record new note
-          );
+          force_record_mode==2 ? notelist[bp]~=mask : notelist[bp]|=mask; // Record new note
           setVelo(npos*listlength+bp, vel); // Overwrite velocity
         );
         recmask -= mask;
@@ -1978,24 +1977,23 @@ lnotenames_file != notenames_file && mode==1 ? (
   
   memset(notenames, 0, 128); // clear old note names
   max_notename_length=4; // reset to default
-  notename_str = #;
-  nn_filename = #;
   // handle = file_open("seqbaby_data/GM Kit.txt");
-  strcpy_fromslider(nn_filename, slider15);
-  !((handle = file_open(nn_filename)) < 0) ? ( // file_open successful
+  strcpy_fromslider(#nn_filename, slider15);
+  !((handle = file_open(#nn_filename)) < 0) ? ( // file_open successful
     nn_name=1; // collect note names to string slots starting from slot 1, slot 0 is always empty string
-    notename_name = #;
-    while(
-      str_len = file_string(handle,notename_str);
-      match("%-3{notename_note}d\t%{notename_name}s",notename_str) ? (
+    while (file_string(handle,#notename_str) > 0) (
+      match("%-3d\t%s\r*",#notename_str,notename_note,nn_name) ||
+      match("%-3d\t%s\n*",#notename_str,notename_note,nn_name) ||
+      match("%-3d\t%s",#notename_str,notename_note,nn_name) ||
+      match("%-3d %s\r*",#notename_str,notename_note,nn_name) ||
+      match("%-3d %s\n*",#notename_str,notename_note,nn_name) ||
+      match("%-3d %s",#notename_str,notename_note,nn_name) ? (
         notename_note >= 0 && notename_note <= 127 ? (
-          strncpy(nn_name, notename_name, strlen(notename_name)-2);
           notenames[notename_note]=nn_name;
           strlen(nn_name) > max_notename_length ? max_notename_length = strlen(nn_name);
           nn_name+=1;         
         );
       );
-      str_len > 0;
     );
     file_close(handle);
   );
@@ -3086,9 +3084,8 @@ mouse_y < tbh ? y+=1;
       ) : (
         x != last_x ? (
           new_note=basenote+(x - last_x);
-          new_note >= 0 && new_note <= 127 ? last_x=x;
-          new_note < 0 ? new_note=0;
-          new_note > 127 ? new_note=127;
+          new_note >= 0 && new_note+numnotes <= 128 ? last_x=x;
+          new_note < 0 ? new_note=0 : new_note+numnotes > 128 ? new_note=128-numnotes;
           basenote=new_note;
           sliderchange(slider2=basenote);
           refresh_tb=1;
@@ -3101,11 +3098,11 @@ mouse_y < tbh ? y+=1;
         last_x=x;
       ) : (
         x != last_x ? (
-          new_note=numnotes+(x - last_x);
-          new_note >= 1 && new_note <= 32 ? last_x=x;
-          new_note < 1 ? new_note=1;
-          new_note > 32 ? new_note=32;
-          numnotes=new_note;
+          new_numnotes=numnotes+(x - last_x);
+          new_numnotes >= 1 && new_numnotes <= 32 && basenote+new_numnotes <= 128 ? last_x=x;
+          new_numnotes < 1 ? new_numnotes=1 : new_numnotes > 32 ? new_numnotes=32;
+          basenote+new_numnotes > 128 ? new_numnotes=128-basenote;
+          numnotes=new_numnotes;
           sliderchange(slider4=numnotes);
           refresh_tb=1;
         );

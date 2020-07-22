@@ -87,25 +87,21 @@ function buildExportStep()
 
 	local infotable = wrap(StepDescription,60) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
 
-
-
-	local light = GUI.Area:new(48,position-5,10,21,3,1,1,state_color)
+	local light = GUI.Area:new(48 ,position-5,10,21,3,1,1,state_color)
 	table.insert(GUI.elms, light)
 
-	local statusbutton = GUI.Btn:new(65, position-4, 0, 20,         status_txt, "")
+	local statusbutton = GUI.Btn:new(65 , position-4, 0, 20,         status_txt, "")
 	table.insert(GUI.elms, statusbutton)
 
-
-
-	local block = GUI.Area:new(210,position-10,752, areaHeight,5,1,1,"section_bg")
+	local block = GUI.Area:new(210+x_offset ,position-10,752, areaHeight,5,1,1,"section_bg")
 	table.insert(GUI.elms, block)
 
-	local heading = GUI.Lbl:new(220, position-2, StepNameDisplay, 0, "txt", 2)
+	local heading = GUI.Lbl:new(220+x_offset , position-2, StepNameDisplay, 0, "txt", 2)
 	table.insert(GUI.elms, heading)
 
 	for k, warningtextline in pairs(infotable) do
 
-		local infotext = GUI.Lbl:new(220, warnings_position, warningtextline, 0, "txt_grey")
+		local infotext = GUI.Lbl:new(220+x_offset , warnings_position, warningtextline, 0, "txt_grey")
 		table.insert(GUI.elms, infotext)
 		warnings_position = warnings_position +20
 
@@ -115,7 +111,7 @@ function buildExportStep()
 	local ButtonPosition = position + (areaHeight*0.5) - 83
 
 	local button_offset = 25
-	local button1 = GUI.Btn:new(790, ButtonPosition+40+button_offset, 144, 20,  button_txt, runcommand, button_action)
+	local button1 = GUI.Btn:new(790+x_offset-23 , ButtonPosition+40+button_offset, 166, 20,  button_txt, runcommand, button_action)
 
 	if not no_button then
 		table.insert(GUI.elms, button1)
@@ -238,9 +234,95 @@ function UsePresetCover(preset_path)
 
 end
 
+function CheckMetadata()
 
+	local state_color = "txt_red"
+	local status_txt = " Missing"
+
+	retval1, Title    = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TIT2", false)
+	retval2, Podcast  = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB", false)
+	retval3, Author   = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TPE1", false)
+	retval4, Year     = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TYER", false)
+	retval5, Category = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TCON", false)
+	retval6, Description = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:COMM", false)
+
+	-- If the metadata is from projects of Ultraschall 4.0 and lower, read it in from Project Notes
+	if Title ~= "" and Podcast ~= "" and Author ~="" and Year ~= "" and Category ~= "" and Description ~= "" then -- Alle Felder ausgefüllt
+
+		state_color = "txt_green"
+		status_txt = " OK"
+
+	elseif Title ~= "" or Podcast ~= "" or Author ~="" or Year ~= "" or Category ~= "" or Description ~= "" then -- mindestens ein Feld fehlt
+
+		state_color = "txt_yellow"
+		status_txt = " Incomplete"
+
+	end
+
+	return state_color, status_txt
+
+end
+
+function CheckChapters()
+
+	local state_color = "txt_red"
+	local status_txt = " Missing"
+
+	number_of_normalmarkers, normalmarkersarray = ultraschall.GetAllNormalMarkers()
+
+	if number_of_normalmarkers > 0 then
+
+		missing_name = 0
+
+		for i = 1, number_of_normalmarkers, 1 do
+			if normalmarkersarray[i][1] == "" then
+				missing_name = missing_name +1
+			end
+		end
+
+		if missing_name > 0 then -- es gibt Kapitel ohne Namen
+			state_color = "txt_yellow"
+			status_txt = " Incomplete"
+		else
+
+			number_of_editmarkers, editmarkersarray = ultraschall.GetAllEditMarkers()
+
+			if number_of_editmarkers > 0 then  -- es gibt nich Edit-Marker
+				state_color = "txt_yellow"
+				status_txt = " Edit markers"
+			else -- alles gut
+				state_color = "txt_green"
+				status_txt = " OK"
+			end
+		end
+	end
+
+	return state_color, status_txt
+end
+
+function atexit()
+  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+end
+
+--------------------
+--- End of functions
+--------------------
+
+
+-- Ist das Projekt gespeichert? Sonst Abbruch
+
+
+if reaper.GetProjectName(0, "") == "" then
+
+  Message = "?;ExportContext;".."Save your project to use the export assistant."
+  reaper.SetExtState("ultraschall_messages", "message_0", Message, false)
+  reaper.SetExtState("ultraschall_messages", "message_count", "1", false)
+	goto exit
+end
 
 -- initiate values
+
+
 
 local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
@@ -248,10 +330,11 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 gfx_path = script_path.."/Ultraschall_Gfx/Soundcheck/"
 header_path = script_path.."/Ultraschall_Gfx/Headers/"
 cover_path = script_path.."/Ultraschall_Gfx/Covers/"
+x_offset = -40
 
 
 GUI.name = "Ultraschall Export Assistant"
-GUI.w, GUI.h = 1000, 700
+GUI.w, GUI.h = 960, 700
 
 -- position always in the centre of the screen
 
@@ -265,16 +348,16 @@ y_offset = -30  -- move all content up/down
 
 dropzone = {}
 dropzone[1] = {}
-dropzone[1]["x"] = 870
+dropzone[1]["x"] = 870 + x_offset
 dropzone[1]["y"] = 391
 dropzone[2] = {}
-dropzone[2]["x"] = 870
+dropzone[2]["x"] = 870 + x_offset
 dropzone[2]["y"] = 432
 dropzone[3] = {}
-dropzone[3]["x"] = 911
+dropzone[3]["x"] = 911 + x_offset
 dropzone[3]["y"] = 391
 dropzone[4] = {}
-dropzone[4]["x"] = 911
+dropzone[4]["x"] = 911 + x_offset
 dropzone[4]["y"] = 432
 
 -- OS BASED SEPARATOR
@@ -285,24 +368,14 @@ if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     separator = "
 
 function buildGUI()
 
-
-
-
-
-
-		---- GUI Elements ----
-
-
-	-- if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
-
-	--      if img_index then     -- there is an episode-image
-
 	GUI.elms = {}
 
 
 	y_offset = 50  -- move all content up/down
 	spacing = 10
 	no_button = false
+
+	MetadataCompletedStatus = ""
 
 	------------------
   ------- Header
@@ -331,12 +404,12 @@ function buildGUI()
 	filecount, files = ultraschall.GetAllFilenamesInPath(dir)
 
 	state_color = "txt_red"
-	status_txt = " no MP3 found"
+	status_txt = " Missing"
 
 	for i=1, filecount do
 		if ( string.sub( files[i], -3 ) ) == "mp3" then
 			state_color = "txt_yellow"
-			status_txt = " unknown MP3 found"
+			status_txt = " Unknown"
 
 		end
 	end
@@ -358,12 +431,14 @@ function buildGUI()
 	areaHeight = 90
 	position = 190 + y_offset
 	StepNameDisplay = "2. Chapter Markers"
-	state_color = "txt_green"
+
+	state_color, status_txt = CheckChapters()
+	MetadataCompletedStatus = status_txt
+
 	StepDescription = "You may take a final look at your chapter markers, and add URLs or images to them."
 	warnings_position = position+30
 	button_txt = "Edit Chapters"
 	button_action = "_Ultraschall_Marker_Dashboard"
-	status_txt = " OK"
 
 	buildExportStep()
 
@@ -373,8 +448,10 @@ function buildGUI()
 	areaHeight = 70
 	position = 300 + y_offset
 	StepNameDisplay = "3. ID3 Metadata"
-	state_color = "txt_yellow"
-	status_txt = " Missing Metadata"
+
+	state_color, status_txt = CheckMetadata()
+	MetadataCompletedStatus = MetadataCompletedStatus .. " -" ..status_txt
+
 	StepDescription = "Use the ID3 Editor to add metadata to your podcast."
 	warnings_position = position+30
 	button_txt = "Edit MP3 Metadata"
@@ -385,6 +462,8 @@ function buildGUI()
 
 	-- 4. - Image
 
+
+	images_offset = -18
 
 	changed, num_dropped_files, dropped_files, drop_mouseposition_x, drop_mouseposition_y = ultraschall.GFX_GetDropFile()
 	if num_dropped_files > 0 and changed then
@@ -417,7 +496,7 @@ function buildGUI()
 	found, img_adress, img_ratio = checkImage()
 
 	if found then
-		status_txt = " Image found"
+		status_txt = " OK"
 		state_color = "txt_green"
 		no_button = true
 
@@ -427,7 +506,7 @@ function buildGUI()
 		no_button = true
 	end
 
-
+	MetadataCompletedStatus = MetadataCompletedStatus .. " -" ..status_txt
 
 	areaHeight = 100
 	position = 390 + y_offset
@@ -449,12 +528,12 @@ function buildGUI()
 
 	-- print(logo_path)
 
-	logo = GUI.Pic:new(784,390+y_offset, 80, 80, img_ratio, logo_path, runcommand, "_Ultraschall_Open_Project_Folder")
+	logo = GUI.Pic:new(784 + x_offset + images_offset, 390+y_offset, 80, 80, img_ratio, logo_path, runcommand, "_Ultraschall_Open_Project_Folder")
 	table.insert (GUI.elms, logo)
 
 	if found then
 		logo_hover_path = header_path.."dropzone_large_hover.png"
-		logo2 = GUI.Pic:new(784,390+y_offset, 80, 80, 1, logo_hover_path, runcommand, "_Ultraschall_Open_Project_Folder")
+		logo2 = GUI.Pic:new(784 + x_offset + images_offset, 390+y_offset, 80, 80, 1, logo_hover_path, runcommand, "_Ultraschall_Open_Project_Folder")
 		table.insert (GUI.elms, logo2)
 	end
 
@@ -468,12 +547,12 @@ function buildGUI()
 
 		if found then
 
-			logo_slot = GUI.Pic:new(dropzone[i].x, dropzone[i].y + y_offset, 37, 37, img_ratio, image_slot_path, UsePresetCover, image_slot_path)
+			logo_slot = GUI.Pic:new(dropzone[i].x + images_offset, dropzone[i].y + y_offset, 37, 37, img_ratio, image_slot_path, UsePresetCover, image_slot_path)
 			table.insert (GUI.elms, logo_slot)
 
 		else
 
-			logo_slot = GUI.Pic:new(dropzone[i].x, dropzone[i].y + y_offset, 38, 38, 1, logo_path, runcommand, "_Ultraschall_Open_Project_Folder")
+			logo_slot = GUI.Pic:new(dropzone[i].x + images_offset, dropzone[i].y + y_offset, 38, 38, 1, logo_path, runcommand, "_Ultraschall_Open_Project_Folder")
 			table.insert (GUI.elms, logo_slot)
 
 		end
@@ -486,16 +565,29 @@ function buildGUI()
 	areaHeight = 100
 	position = 510 + y_offset
 	StepNameDisplay = "5. Finalize MP3"
-	state_color = "txt_yellow"
-	status_txt = " Ready to finalize"
+
+	if string.find(MetadataCompletedStatus, "Incomplete") or string.find(MetadataCompletedStatus, "Edit") then
+		status_txt = " Incomplete"
+		state_color = "txt_yellow"
+	elseif string.find(MetadataCompletedStatus, "Missing") then
+		if string.find(MetadataCompletedStatus, "OK") then
+			status_txt = " Incomplete"
+			state_color = "txt_yellow"
+		else
+			status_txt = " Missing"
+			state_color = "txt_red"
+		end
+	else
+		status_txt = " OK"
+		state_color = "txt_green"
+	end
+
 	StepDescription = "Hit the button and select your MP3 to finalize it with metadata, chapters and episode image!"
 	warnings_position = position+30
 	button_txt = "Finalize MP3!"
-	button_action = "_ULTRASCHALL_INSERT_MEDIA_PROPERTIES"
+	button_action = "_ULTRASCHALL_CONVERT_OLD_METADATA_AND_INSERT_MEDIA_PROPERTIES"
 
 	buildExportStep()
-
-
 
 end
 
@@ -518,8 +610,6 @@ if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed 
 	 GUI.Main()
 end
 
-function atexit()
-  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
-end
-
 reaper.atexit(atexit)
+
+::exit::
