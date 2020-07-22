@@ -88,32 +88,34 @@ function main()
       -- if playposition is bigger than recposition, then show error-message, clean up and exit
       reaper.SNM_SetIntConfigVar("preroll", Preroll_Settings)
       reaper.MB("The recording-position must be after the preview-play-position!", "Ooops" ,0)
+      reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false)
+      reaper.DeleteExtState("ultraschall_PreviewRecording", "RecPosition", false) -- lösche Eintrag für Preroll
       return
     else
       -- in all other cases, set the correct pre-roll-measure-settings, start recording(with preroll activated), clean up and exit
-    trackstringarmed = ultraschall.CreateTrackString_ArmedTracks()
-    if trackstringarmed=="" then
-      return
-    end
-    if reaper.GetPlayState()~=0 then reaper.CSurf_OnStop() end
-    reaper.Undo_BeginBlock()
-    ultraschall.SectionCut(Recposition, reaper.GetProjectLength()+Recposition, trackstringarmed, false)
-    reaper.SetExtState("ultraschall_PreviewRecording", "RecPosition", Recposition, false)
+      trackstringarmed = ultraschall.CreateTrackString_ArmedTracks()
+      if trackstringarmed=="" then
+        return
+      end
+      if reaper.GetPlayState()~=0 then reaper.CSurf_OnStop() end
+      reaper.Undo_BeginBlock()
+      ultraschall.SectionCut(Recposition, reaper.GetProjectLength()+Recposition, trackstringarmed, false)
+      reaper.SetExtState("ultraschall_PreviewRecording", "RecPosition", Recposition, false)
 
-    -- Stelle das MagicRouting so um, dass im preroll auf jeden Fall was zu hören ist:
-    reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "editing")
-    reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")
+      -- Stelle das MagicRouting so um, dass im preroll auf jeden Fall was zu hören ist:
+      reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "editing")
+      reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")
 
-    reaper.MoveEditCursor(Recposition-Playposition, false)
-    local Gap=Recposition-Playposition
-    local NewTime=ultraschall.TimeToMeasures(0, Gap)
+      reaper.MoveEditCursor(Recposition-Playposition, false)
+      local Gap=Recposition-Playposition
+      local NewTime=ultraschall.TimeToMeasures(0, Gap)
 
-    reaper.SNM_SetDoubleConfigVar("prerollmeas", NewTime)
-    reaper.CSurf_OnRecord()
-    reaper.SNM_SetIntConfigVar("preroll", Preroll_Settings)
-    reaper.SNM_SetDoubleConfigVar("prerollmeas", OldTime)
-    reaper.Undo_EndBlock("PreviewRecording", -1)
-      tudelu=false
+      reaper.SNM_SetDoubleConfigVar("prerollmeas", NewTime)
+      reaper.CSurf_OnRecord()
+      reaper.SNM_SetIntConfigVar("preroll", Preroll_Settings)
+      reaper.SNM_SetDoubleConfigVar("prerollmeas", OldTime)
+      reaper.Undo_EndBlock("PreviewRecording", -1)
+        tudelu=false
     end
 
   -- gfx.update()
@@ -148,3 +150,14 @@ table.insert(GUI.elms, label)
 
 GUI.Init()
 GUI.Main()
+
+function atexit()
+
+  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+  reaper.SNM_SetIntConfigVar("preroll", Preroll_Settings)
+  reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false)
+  reaper.DeleteExtState("ultraschall_PreviewRecording", "RecPosition", false) -- lösche Eintrag für Preroll
+
+end
+
+reaper.atexit(atexit)

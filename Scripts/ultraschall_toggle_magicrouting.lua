@@ -93,7 +93,9 @@ function checkrouting()
 				reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "recording")
 				reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")
 				step = "recording"
+
 				reaper.DeleteExtState("ultraschall_PreviewRecording", "RecPosition", false) -- lösche Eintrag für Preroll
+				reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false)
 				-- print (tonumber(preroll_rec) .. " - " .. reaper.GetPlayPosition())
 
 

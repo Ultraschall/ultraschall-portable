@@ -388,9 +388,9 @@ function buildGuiWarnings()
 
   if active_warning_count == 1 and reaper.GetExtState("ultraschall_PreviewRecording", "Dialog") == "1" then
 
-    reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false)
+    -- reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false)
     gfx.quit()
-    reaper.atexit(atexit)
+    reaper.atexit(atexitClean)
 
   end
 
@@ -400,9 +400,8 @@ function buildGuiWarnings()
     dialog = reaper.GetExtState("ultraschall_PreviewRecording", "Dialog")
 
     if preroll_rec ~= "" or dialog == "1" then -- es ist ein Preroll-Recording aktiv
-      reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false)
       gfx.quit()
-      reaper.atexit(atexit)
+      reaper.atexit(atexitClean)
     else
 
       gfx.init("", 1000, 220, 0, GUI.x, GUI.y)
@@ -564,6 +563,12 @@ function atexit()
   if ultraschall.GetUSExternalState("ultraschall_settings_graceful_soundcheck", "Value","ultraschall-settings.ini") == "1" then
     ignore_all_warnings()
   end
+  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+
+end
+
+function atexitClean()
+
   reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
 
 end
