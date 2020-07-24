@@ -146,27 +146,94 @@ else
   gfx.setfont(15, "Calibri", 32)
 end
 
-function text(str,x,y,w,h,align,col,style,lineSpacing,vCenter)
-  local lineSpace = drawScale*(lineSpacing or 11)
-  setCol(col or {255,255,255})
-  local str = str or '---'
-  local tmp,cnt = string.gsub(str,'<br>','')
-  if cnt ~= 0 then --line break found
-    local strOver = string.sub(str,(string.find(str,'<br>')+4),-1)
-    local thisLineY, nextLineY = nil, nil
-    if vCenter ~= false then             --vertically align 2-line
-      thisLineY, nextLineY = y-(lineSpace/2), y+(lineSpace/2)
-    else thisLineY, nextLineY = y, y+lineSpace
-    end
-    text(strOver,x,nextLineY,w,h,align,col,style,lineSpacing,vCenter)
-    y = thisLineY
-    str = string.sub(str,0,(string.find(str,'<br>')-1))
-  end
-  gfx.setfont(style or 1)
-  gfx.x, gfx.y = x,y
-  gfx.drawstr(str,align or 0,x+(w or 0),y+(h or 0 ))
+
+if reaper.LocalizeString ~= nil then
+  translate = function(s) return reaper.LocalizeString(s or '---',"Default_6.0_Theme_Adjuster") end
+else
+  translate = function(s) return s or '---' end
 end
 
+
+function text(str,x,y,w,h,align,col,style,lineSpacing,vCenter,wrap)
+  local lineSpace = drawScale*(lineSpacing or 11)
+  setCol(col or {255,255,255})
+  gfx.setfont(style or 1)
+
+  local lines = nil
+  str = translate(str)
+  if wrap == true then
+    lines = textWrap(str,drawScale * 105)
+  else
+    lines = {}
+    for s in string.gmatch(str, "([^#]+)") do
+      table.insert(lines, s)
+    end
+  end
+  if vCenter ~= false and #lines > 1 then
+    y = y - lineSpace/2
+  end
+  for k,v in ipairs(lines) do
+    gfx.x, gfx.y = x,y
+    gfx.drawstr(v,align or 0,x+(w or 0),y+(h or 0))
+    y = y + lineSpace
+  end
+end
+
+function textWrap(str,w) -- returns array of lines
+  local lines,curlen,curline,last_sspace = {}, 0, "", false
+  -- enumerate words
+  for s in str:gmatch("([^%s-/]*[-/]* ?)") do
+    local sspace = false -- set if space was the delimiter
+    if s:match(' $') then
+      sspace = true
+      s = s:sub(1,-2)
+    end
+    local measure_s = s
+    if curlen ~= 0 and last_sspace == true then
+      measure_s = " " .. measure_s
+    end
+    last_sspace = sspace
+
+    local length = gfx.measurestr(measure_s)
+    if length > w then
+      if curline ~= "" then
+        table.insert(lines,curline)
+        curline = ""
+      end
+      curlen = 0
+      while length > w do
+        -- split up a long word, decimating measure_s as we go
+        local wlen = string.len(measure_s) - 1
+        while wlen > 0 do
+          local sstr = string.format("%s%s",measure_s:sub(1,wlen), wlen>1 and "-" or "")
+          local slen = gfx.measurestr(sstr)
+          if slen <= w or wlen == 1 then
+            table.insert(lines,sstr)
+            measure_s = measure_s:sub(wlen+1)
+            length = gfx.measurestr(measure_s)
+            break
+          end
+          wlen = wlen - 1
+        end
+      end
+    end
+    if measure_s ~= "" then
+      if curlen == 0 or curlen + length <= w then
+        curline = curline .. measure_s
+        curlen = curlen + length
+      else
+        -- word would not fit, add without leading space and remeasure
+        table.insert(lines,curline)
+        curline = s
+        curlen = gfx.measurestr(s)
+      end
+    end
+  end
+  if curline ~= "" then
+    table.insert(lines,curline)
+  end
+  return lines
+end
 
   --------- IMAGES ----------
 
@@ -288,6 +355,29 @@ spinStyles = {
   }
 }
 
+Fader = Element:new()
+function Fader:new(parent,o)
+  o.parent = parent;
+  self.__index = self
+  o.x, o.y, self.w, self.h = o.x or 0, o.y or 0, o.w or 21,o.h or 27
+  self.img, self.imgType ='slider', 3
+  self.range, self.action, self.param, self.helpR = o.range, o.action, o.param, o.helpR
+  adoptChild(parent,o)
+  setmetatable(o, self)
+  return o
+end
+
+FaderBg = Element:new()
+function FaderBg:new(parent,o)
+  self.__index = self
+  o.x, o.y, self.w, self.h = o.x or 0, o.y or 0, o.w or 21,o.h or 27
+  o.parent = parent
+  self.action, self.param, self.helpR = o.action, o.param, o.helpR
+  adoptChild(parent,o)
+  setmetatable(o, self)
+  return o
+end
+
 ParamTable = Element:new()
 function ParamTable:new(parent,o)
   self.__index = self
@@ -358,9 +448,9 @@ end
 
 SwatchHitbox = Element:new()
 function SwatchHitbox:new(parent,o)
+  o.parent = parent;
   self.__index = self
   self.x, self.y, self.w, self.h = 0,0,200,34
-  o.parent = parent
   self.helpR=helpR_choosePalette
   adoptChild(parent,o)
   setmetatable(o, self)
@@ -377,10 +467,25 @@ function Swatch:doParamGet()
   end
 end
 
+function Fader:doParamGet()
+  local lx = self.x;
+  local tmp,title,value,defValue,min,max = reaper.ThemeLayout_GetParameter(self.param)
+  if max > min then
+    self.x = 432 * ((value - min) / (max - min))
+  else
+    self.x = 432/2
+  end
+  if lx ~= self.x then
+    self.parent:onSize()
+    redraw = 1
+  end
+end
+
 -------------- PARAMS --------------
 
 function indexParams()
-  paramsIdx ={['A']={},['B']={},['C']={}}
+  
+  paramsIdx ={['A']={},['B']={},['C']={},['global']={}}
   local i=1
   while reaper.ThemeLayout_GetParameter(i) ~= nil do
     local tmp,desc = reaper.ThemeLayout_GetParameter(i)
@@ -395,9 +500,9 @@ end
 
 function paramIdxGet(param)
   if paramsIdx == nil then reaper.ShowConsoleMsg('paramsIdx is nil\n') end
-  local panel = string.sub(param,0,(string.find(param, '%_')-1))
+  local panel = param and string.sub(param,0,(string.find(param, '%_')-1))
   if param == 'tcp_indent' or param == 'tcp_control_align' or param == 'mcp_indent' or param == 'tcp_LabelMeasure'
-      or panel == 'envcp' or panel == 'trans' then --params which act on ALL layouts
+      or panel == 'envcp' or panel == 'trans' or panel == 'glb' then --params which act on ALL layouts
     local p = paramsIdx['A'][param]
     if p ~= nil then return p end
   else
@@ -406,6 +511,24 @@ function paramIdxGet(param)
       if p ~= nil then return p end
     end
   end
+end
+
+function paramToVal(param,v)
+  local val,suffix
+  if param == -1000 then val, suffix = v / 1000, '' end
+  if param <= -1001 and param >= -1003 then val, suffix = v / 256, '' end
+  if param == -1004 then val, suffix = math.floor(v / 2.56 + .5), ' %' end
+  if param == -1005 then val, suffix = math.floor(v * 0.9375 - 180 + .5),' °' end
+  return val, suffix
+end
+
+function valToParam(param,v)
+  local val
+  if param == -1000 then val = v * 1000 end
+  if param <= -1001 and param >= -1003 then val = v * 256 end
+  if param == -1004 then val = math.floor(v * 2.56 + .5) end
+  if param == -1005 then val = math.floor((v + 180) / 0.9375 + .5) end
+  return val
 end
 
 function Element:doParamGet()
@@ -425,7 +548,7 @@ function Button:doParamGet()
     if type(self.param) ~= 'number' then
       self.param = paramIdxGet(self.param)
     end
-    local tmp,tmp,v = reaper.ThemeLayout_GetParameter(self.param)
+    local tmp,tmp,v = reaper.ThemeLayout_GetParameter(self.param or -1)
     if v == 1 then
       self.drawImg = tostring(self.img..'_on')
     else self.drawImg = nil
@@ -446,9 +569,7 @@ function Button:doParamGet()
 end
 
 function Readout:doParamGet()
-
   if self.param ~= nil and self.param[1]~= nil then
-
     if self.valsTable ~= nil then
       if self.action == nil then -- then you're just a palette
         self.text.str = self.valsTable[palette.current]
@@ -460,14 +581,18 @@ function Readout:doParamGet()
         else self.text.str = 'ERR '..p..' '..value
         end
       end
-
     elseif self.action == doPageSpin then self.imgValueFrame = editPage-1
+    elseif self.action == doFader then
+      local tmp,tmp,value = reaper.ThemeLayout_GetParameter(self.param[1]) --< color faders have param as number, no need to lookup 
+      local v, suffix = paramToVal(self.param[1],value)
+      self.text.str = string.format(suffix == "" and "%.2f" or "%d%s",v,suffix);
     end
   end
 end
 
 function paramSet(param)
   local p,v = param[1], param[2]
+  --reaper.ShowConsoleMsg('paramSet '..p..' to '..v..'\n')
   if type(p) ~= 'number' then p = paramIdxGet(p) or 0 end
   local name,desc,value,defvalue,minvalue,maxvalue = reaper.ThemeLayout_GetParameter(p)
   newValue = value + v
@@ -481,18 +606,21 @@ end
 function doFlagParam(param) --param name, visFlag
   local p = paramIdxGet(param[1])
   local name,desc,value = reaper.ThemeLayout_GetParameter(p)
-  _dave = value ~ param[2]  --- console
   reaper.ThemeLayout_SetParameter(p, value ~ param[2], true)
   reaper.ThemeLayout_RefreshAll()
   paramGet = 1
 end
 
 function paramToggle(p)
-  local tmp,tmp,v = reaper.ThemeLayout_GetParameter(p)
-  if v == 1 then reaper.ThemeLayout_SetParameter(p, 0, true)
-  else reaper.ThemeLayout_SetParameter(p, 1, true)
+  if p ~= nil then
+    local tmp,tmp,v = reaper.ThemeLayout_GetParameter(p)
+    if v == 1 then
+      reaper.ThemeLayout_SetParameter(p, 0, true)
+    else
+      reaper.ThemeLayout_SetParameter(p, 1, true)
+    end
+    reaper.ThemeLayout_RefreshAll()
   end
-  reaper.ThemeLayout_RefreshAll()
 end
 
 function actionToggle(p)
@@ -545,6 +673,35 @@ function Button:doUpdateState()
   if old ~= self.drawImg then redraw = 1 end
 end
 
+function Fader:doUpdateState()
+  if self.updateState ~= nil then
+    self:updateState()
+  end
+  local tmp,title,value,defValue,min,max = reaper.ThemeLayout_GetParameter(self.param)
+  local lx = self.x;
+  if self.dragStart ~= nil then
+    local dX = gfx.mouse_x - self.dragStart
+    local v = math.floor(dX * ((max - min)/(432 * drawScale)))
+    newValue = self.dragStartValue + v
+    if newValue < min then newValue = min end
+    if newValue > max then newValue = max end
+    if max > min then
+      self.x = 432 * ((newValue - min) / (max - min))
+    else
+      self.x = 432/2
+    end
+  else
+    self:doParamGet()
+  end
+end
+
+function Readout:doUpdateState()
+  if self.updateState ~= nil then
+    self:updateState()
+  end
+  self:doParamGet()
+end
+
 function anySelected(self) -- called by an object's updateState value, and uses its getParam values.
   if self.text ~= nil and self.text.colFalse ~= nil and needReaperStateUpdate==1 then
     local p  = 'P_TCP_LAYOUT'
@@ -580,15 +737,16 @@ function noneSelected(self)
 end
 
 function isDefault(self)
-  -- this should be integrated into the draw step
   local tmp, def = reaper.ThemeLayout_GetLayout(self.getParam[1], -1)
   if self.text ~= nil then
     if self.text.colFalse ~= nil then
+      local oldcol = self.text.col
       if def == self.getParam[2] or (def == '' and self.getParam[2] == 'A') then
-        local oldcol = self.text.col
-        self.text.col = self.text.colTrue else self.text.col = self.text.colFalse
-        if oldcol ~= self.text.col then redraw = 1 end
+        self.text.col = self.text.colTrue
+      else
+        self.text.col = self.text.colFalse
       end
+      if oldcol ~= self.text.col then redraw = 1 end
     end
   end
 end
@@ -730,9 +888,11 @@ end
 function themeCheck()
   local theme,tmp,tmp,theme_version = reaper.ThemeLayout_GetParameter(0)
   if theme ~= oldTheme or theme == nil then
+    last_theme_filename = reaper.GetLastColorThemeFile()
+    last_theme_filename_check = reaper.time_precise()
     if theme ~= 'defaultV6' or theme_version < 1 then --theme_version catch for later changes
       _wrongTheme.visible, _dockedRoot.visible, _undockedRoot.visible = true, false, false
-      _theme.text.str = string.match(reaper.GetLastColorThemeFile(), '[^\\/]*$')
+      _theme.text.str = string.match(last_theme_filename, '[^\\/]*$')
       if gfx.measurestr(_theme.text.str)<160 then _theme.w=160 else _theme.w=gfx.measurestr(_theme.text.str) end
       _wrongTheme:onSize()
       redraw = 1
@@ -743,6 +903,18 @@ function themeCheck()
       redraw = 1
     end
     oldTheme = theme
+  else
+    local now = reaper.time_precise()
+    if now > last_theme_filename_check+1 then
+      -- once per second see if the theme filename changed and reload parameters
+      last_theme_filename_check = now
+      local tfn = reaper.GetLastColorThemeFile()
+      if tfn ~= last_theme_filename then
+        last_theme_filename = tfn
+        paramGet = 1
+        redraw = 1
+      end
+    end
   end
 end
 
@@ -802,11 +974,11 @@ function getEditPage()
 end
 
 function doActivePage()
-  if editPage<1 or editPage>5 then editPage = 1 end
+  if editPage<1 or editPage>6 then editPage = 1 end
 
   if _dockedRoot.visible ~= false then
     for i, v in ipairs(_dockedRoot.children) do
-      if i>0 and i<6 then -- ignore the last child (the undock button)
+      if i>0 and i<7 then -- ignore the last child (the undock button)
         if i == editPage then v.visible = true
         else v.visible = false end
       end
@@ -814,7 +986,7 @@ function doActivePage()
   end
 
   if _undockedRoot.visible ~= false then
-    if editPage == 5 then editPage = 4 end
+    if editPage == 6 then editPage = 5 end
     for i, v in ipairs(_subPageContainer.children) do
       if i>0 and i<=(#_subPageContainer.children) then
         if i == editPage then v.visible = true
@@ -833,7 +1005,7 @@ function doPageSpin(param)
   if val == 0 then return end
   if val > 0 then val = 1 else val = -1 end -- one at a time
 
-  if _undockedRoot.visible == true then limit = 4 end
+  if _undockedRoot.visible == true then limit = 5 end
   if editPage>=limit and val==1 then
     editPage = 1
   else
@@ -842,11 +1014,11 @@ function doPageSpin(param)
     end
   end
   doActivePage()
+  needReaperStateUpdate = 1
   paramGet = 1
   root:onSize()
   redraw = 1
 end
-
 
 function doActiveLayout(param)
   function isLayoutName(n)
@@ -902,6 +1074,36 @@ function reduceCustCol(ifSelected)
   end
   reaper.Undo_EndBlock('Dimming of custom colors',-1)
 end
+
+function resetColorControls()
+  for i=-1005,-1000,1 do
+    local tmp,tmp,tmp,d = reaper.ThemeLayout_GetParameter(i)
+    reaper.ThemeLayout_SetParameter(i, d, i == -1000)
+  end
+  paramGet = 1
+  redraw = 1
+end
+
+function doFader(self,dX)
+  if self.userEntry == true then --< the fader's readout
+    local name,desc,value,defvalue,minvalue,maxvalue = reaper.ThemeLayout_GetParameter(self.param[1])
+    local vValMin, vValMinSuffix = paramToVal(self.param[1],minvalue)
+    local vValMax, vValMaxSuffix = paramToVal(self.param[1],maxvalue)
+    local r,v = reaper.GetUserInputs(desc, 1, vValMin..vValMinSuffix..' to '..vValMax..vValMinSuffix, self.text.str)
+    local val = tonumber(v:match("[-]?[%d.,]+"))
+    if r ~= false and val ~= nil then
+      local tmp,tmp,tmp,tmp,minvalue,maxvalue = reaper.ThemeLayout_GetParameter(self.param[1])
+      val = math.floor(valToParam(self.param[1],val))
+      if val < minvalue then val = minvalue end
+      if val > maxvalue then val = maxvalue end
+      reaper.ThemeLayout_SetParameter(self.param[1], val, true)
+      paramGet = 1
+      redraw = 1
+    end
+  else --non-readout fader stuff 
+  end
+end
+
 
 --------- ARRANGE ELEMENTS ---------
 
@@ -1001,10 +1203,15 @@ function Element:draw()
     local thisCol = self.drawColor or self.color or nil
     if thisCol ~= nil then
       setCol(thisCol)
-      gfx.rect(thisX,thisY,thisDrawW,thisDrawH)
+      if self.shape == nil then
+        gfx.rect(thisX,thisY,thisDrawW,thisDrawH)
+      else 
+        local r = thisDrawW/2
+        gfx.circle(thisX+r,thisY+r,r,true)
+      end
     end
 
-    if self.img ~= nil or self.valsImage ~= nil then
+    if self.img ~= nil or  self.valsImage ~= nil then
       local img = self.img or self.valsImage
       if self.drawImg ~= nil then -- then this element's image isn't static
         img = self.drawImg
@@ -1037,11 +1244,8 @@ function Element:draw()
       end
     local txtScaleOffs = ''
     if drawScale == 2 then txtScaleOffs = 1 end
-      --[[if reaper.GetOS() == "OSX64" or reaper.GetOS() == "OSX32" then
-        textY = thisY + 2 else textY = thisY
-      end]]
       local tx,tw = thisX + (drawScale*textPadding), thisW - 2*(drawScale*textPadding)
-      text(self.text.str,tx,thisY,tw,thisDrawH,self.text.align,self.text.col,txtScaleOffs..(self.text.style or 1),self.text.lineSpacing,self.text.vCenter)
+      text(self.text.str,tx,thisY,tw,thisDrawH,self.text.align,self.text.col,txtScaleOffs..(self.text.style or 1),self.text.lineSpacing,self.text.vCenter,self.text.wrap)
     end
 
     drawChildren(self.children)
@@ -1069,21 +1273,29 @@ function drawChildren(ch)
 end
 
   --------- MOUSE ---------
-
-function Element:mouseOver(x,y)
+  
+function Element:mouseOver()
   doHelp(self)
-  if self.moColor ~= nil then self.drawColor = self.moColor end
+  if self.moColor ~= nil then 
+    self.moColorOff, self.color = self.col, self.moColor
+    redraw = 1
+  end
 end
 
 function Element:mouseAway()
   if self.imgFrame ~= nil then
     self.imgFrame = 0
   end
+  if self.moColor ~= nil then
+    self.color, self.moColorOff = self.moColorOff, nil
+  end
   _helpL.y, _helpR.y = 10000,10000
   redraw = 1
 end
 
+function Element:mouseDown(x,y) end 
 function Element:mouseUp(x,y) end
+function Element:doubleClick() end
 
 function Element:mouseWheel(v)
   if self.action ~= nil and type(self.param) == "table" then
@@ -1102,6 +1314,75 @@ function Button:mouseOver()
     end
   end
   doHelp(self)
+end
+
+function Fader:mouseOver()
+  if self.img ~= nil then
+    if self.imgType ~= nil and self.imgType == 3 and self.imgFrame ~= 1 then
+      self.imgFrame = 1
+      redraw = 1
+    end
+  end
+end
+
+function Fader:mouseDown(x,y)
+  local name,desc,value,defvalue,minvalue,maxvalue = reaper.ThemeLayout_GetParameter(self.param)
+  if self.dragStart == nil then
+    self.dragStart = x
+    self.dragStartValue = value
+  end
+  local dX = x - self.dragStart
+  
+  if dX ~= 0 then
+    local v = math.floor(dX * ((maxvalue - minvalue)/(432 * drawScale)))
+    newValue = self.dragStartValue + v
+    if newValue < minvalue then newValue = minvalue end
+    if newValue > maxvalue then newValue = maxvalue end
+    reaper.ThemeLayout_SetParameter(self.param, newValue,false)
+    ctheme_param_needsave = { self.param }
+    self:doUpdateState()
+    self.parent:onSize()
+    redraw = 1
+  end
+end
+
+function FaderBg:mouseDown(x,y)
+  local tmp,tmp,value,tmp,minvalue,maxvalue = reaper.ThemeLayout_GetParameter(self.param)
+  local v = minvalue + math.floor(((x/drawScale-self.drawx-10)/432)*(maxvalue-minvalue))
+  reaper.ThemeLayout_SetParameter(self.param,v,false)
+  ctheme_param_needsave = { self.param }
+  self:doUpdateState()
+  self.parent:onSize()
+  redraw = 1
+end
+
+function Fader:doubleClick() 
+  local tmp,title,value,defValue = reaper.ThemeLayout_GetParameter(self.param)
+  reaper.ThemeLayout_SetParameter(self.param,defValue, true)
+  ctheme_param_needsave = nil
+end
+
+function Fader:mouseWheel(v)
+  local tmp,tmp,value,tmp,minvalue,maxvalue = reaper.ThemeLayout_GetParameter(self.param)
+  newValue = value + v
+  if newValue < minvalue then newValue = minvalue end
+  if newValue > maxvalue then newValue = maxvalue end
+  reaper.ThemeLayout_SetParameter(self.param, newValue, false)
+  ctheme_param_needsave = { self.param, reaper.time_precise() + .5 }
+  self:doUpdateState()
+  self.parent:onSize()
+  redraw = 1
+end
+
+FaderBg.mouseWheel = Fader.mouseWheel
+
+function Readout:doubleClick() 
+  if self.userEntry == true then
+    self.action(self)
+    root:doUpdateState()
+    resize = 1
+    paramGet = 1
+  end
 end
 
 function doHelp(self)
@@ -1132,7 +1413,8 @@ function Button:mouseUp()
 end
 
 function SwatchHitbox:mouseOver()
-  --add some  mouseover indication here
+  self.parent.children[12].color = {180,180,180}
+  self.parent.children[13].text.col = {180,180,180}
   doHelp(self)
 end
 
@@ -1140,6 +1422,10 @@ function SwatchHitbox:mouseUp()
   palette.current = self.paletteIdx
   paramGet = 1
   redraw = 1
+end
+
+function SwatchHitbox:mouseAway()
+  self.parent:doParamGet()
 end
 
 function Element:hitTest(x,y)
@@ -1161,13 +1447,12 @@ function Element:hitTest(x,y)
 end
 
 -- Spinner label values
-menuBoxVals = {'TRACK','MIXER','COLORS','ENVELOPE','TRANSPORT'}
+menuBoxVals = {'GLOBAL','TRACK','MIXER','COLORS','ENVELOPE','TRANSPORT'}
 folderIndentVals = {'NONE','1/8','1/4','1/2',1,2,'MAX' }
 tcpLabelVals = {'AUTO',20,50,80,110,140,170}
 tcpVolVals = {'KNOB',40,70,100,130,160,190}
 tcpMeterVals = {4,10,20,40,80,160,320}
 tcpInVals = {'MIN',25,40,60,90,150,200}
-mcpBorderVals = {'NONE', 'ON LEFT', 'ON RIGHT', 'ROOT FOLDER', 'ALL FOLDERS'}
 mcpMeterExpVals = {'NONE',2,4,8}
 envcpLabelVals = {'AUTO',20,50,80,110,140,170}
 transRateVals = {'KNOB',80,130,160,200,250,310,380}
@@ -1175,57 +1460,62 @@ mcpBorderVals = {'NONE', 'LEFT EDGE', 'RIGHT EDGE', 'ROOT FOLDERS', 'AROUND FOLD
 dockedMcpMeterExpVals = {'NONE','+ 2 PIXELS','+ 4 PIXELS','+ 8 PIXELS'}
 undockPaletteNamesVals = {'REAPER v6', 'PRIDE','WARM','COOL','VICE','EEEK'}
 controlAlignVals = {'FOLDER INDENT','ALIGNED'}
+trackControlAlignVals = {'FOLDER INDENT','ALIGNED','EXTEND NAME'}
 
-helpL_layout = 'These settings are<br>automatically<br>saved to your<br>REAPER install, and<br>'
-             ..'will be used<br>whenever you use<br>this theme.'
-helpL_customCol = 'Any assigned<br>custom colors will<br>be saved with your<br>'
-             ..'project, when it is<br>saved.'
-helpL_colDimming = 'This theme draws<br>custom colors at<br>full strength. Old<br>'
-                 ..'projects may<br>appear very bright,<br>dim them here.'
-helpL_dock = 'REAPER will<br>remember whether<br>you docked this<br>script, and where.'
-helpL_applySize = 'Layout and scale<br>assignments are<br>part of your REAPER<br>'
-                ..'project, and will be<br>saved when it is<br>saved.'
+helpL_layout = 'These settings are automatically saved to your REAPER install, and '
+             ..'will be used whenever you use this theme.'
+helpL_customCol = 'Any assigned custom colors will be saved with your '
+             ..'project, when it is saved.'
+helpL_colDimming = 'This theme draws custom colors at full strength. Old '
+                 ..'projects may appear very bright, dim them here.'
+helpL_dock = 'REAPER will remember whether you docked this script, and where.'
+helpL_applySize = 'Layout and scale assignments are part of your REAPER '
+                ..'project, and will be saved when it is saved.'
 
-helpR_help = 'Turn off this help<br>text.'
-helpR_dock = 'Dock this script<br>in its condensed<br>format.'
-helpR_indent = 'Amount to indent a<br>panel due to its<br>depth within your<br>project folder<br>'
-             ..'structure.<br><br>Value chosen is<br>used by all layouts.'
-helpR_control_align = 'Choose whether to<br>indent the panel<br>controls when<br>'
-                    ..'folders indent, or to<br>keep controls<br>aligned.<br><br>'
-                    ..'Value chosen is<br>used by all layouts.'
-helpR_layoutButton = 'Select which of the<br>three layouts you<br>wish to edit or<br>apply.'
-helpR_default = 'Indicates whether<br>this layout is<br>the \'default\' layout.<br><br>'
-              ..'To choose your<br>default use the<br>Options > Layouts<br>menu or the<br>'
-              ..'Screensets/Layouts<br>window.'
-helpR_selected = 'Indicates whether<br>one or more of<br>the selected tracks<br>is using this layout.'
-helpR_applySize = 'Applies this layout<br>to any selected<br>tracks, at this size.<br><br>'
-                ..'REAPER may already<br>be using a<br>non-100% size,<br>depending on your<br>'
-                ..'HiDPI settings'
-helpR_nameSizeEnv = 'Size of the<br>envelopes\' name<br>field.<br><br>If set to AUTO then,<br>'
-                  ..'while the script is<br>running, it will<br>adjust this to fit the<br>'
-                  ..'longest envelope<br>name currently<br>in your project.'
-helpR_meterScale = 'Requires \'DO METER<br>EXPANSION\' to be<br>ticked below, and<br>'
-                 ..'the conditions you<br>set to be met.<br><br>Tracks with greater<br>'
-                 ..'than 2 channels<br>will then expand<br>the width of their<br>'
-                 ..'meters by the set<br>amount of pixels<br>(per channel), and<br>'
-                 ..'enlarge the track<br>width to fit.'
-helpR_borders = 'Adds visual<br>separation to your<br>mixer with borders.<br><br>'
-              ..'LEFT EDGE and/or<br>RIGHT EDGE allow<br>you to manually<br>use layout<br>'
-              ..'assignments to add<br>these as needed.<br><br>ROOT FOLDERS<br>draws a border on<br>'
-              ..'the left edge of root<br>level folders, and<br>on the right hand<br>'
-              ..'edge of the end of<br>that folder if it is<br>one level deep.<br><br>'
-              ..'AROUND FOLDERS<br>draws borders at<br>the start and end<br>of every folder.'
-help_pref = 'These buttons set<br>REAPER preferences.<br><br>Their settings are<br>automatically<br>'
-          ..'saved to your<br>REAPER install.'
+helpR_help = 'Turn off this help text.'
+helpR_dock = 'Dock this script in its condensed format.'
+helpR_trackLabelColor = 'If a track has a custom color, use that color on the track name.'
+helpR_colAdj = 'Adjust how REAPER draws the theme colors.  Mousewheel for fine '
+              ..'adjustment. Double click the fader to reset. Double click the value to enter a new value.'
+helpR_resetColAdj = 'Reset all of these color controls to return the theme to its unaltered state.'
+helpR_indent = 'Amount to indent a panel due to its depth within your project folder '
+             ..'structure.  Value chosen is used by all layouts.'
+helpR_control_align = 'Choose whether to indent the panel controls when '
+                   ..'folders indent, or to keep controls aligned.  '
+                    ..'Value chosen is used by all layouts.'
+helpR_layoutButton = 'Select which of the three layouts you wish to edit or apply.'
+helpR_default = 'Indicates whether this layout is the \'default\' layout. '
+              ..'To choose your default use the Options > Layouts menu or the '
+              ..'Screensets/Layouts window.'
+helpR_selected = 'Indicates whether one or more of the selected tracks is using this layout.'
+helpR_applySize = 'Applies this layout to any selected tracks, at this size. '
+                ..'REAPER may already be using a non-100% size, depending on your '
+                ..'HiDPI settings.'
+helpR_nameSizeEnv = 'Size of the envelopes\' name field.  If set to AUTO then, '
+                  ..'while the script is running, it will adjust this to fit the '
+                  ..'longest envelope name currently in your project.'
+helpR_meterScale = 'Requires \'DO METER EXPANSION\' to be ticked below, and '
+                 ..'the conditions you set to be met. Tracks with greater '
+                 ..'than 2 channels will then expand the width of their '
+                 ..'meters by the set amount of pixels (per channel), and '
+                 ..'enlarge the track width to fit.'
+helpR_borders = 'Adds visual separation to your mixer with borders. '
+              ..'LEFT EDGE and/or RIGHT EDGE allow you to manually use layout '
+              ..'assignments to add these as needed. ROOT FOLDERS draws a border on '
+              ..'the left edge of root level folders, and on the right hand '
+              ..'edge of the end of that folder if it is one level deep. '
+              ..'AROUND FOLDERS draws borders at the start and end of every folder.'
+help_pref = 'These buttons set REAPER preferences. Their settings are automatically '
+          ..'saved to your REAPER install.'
 
-helpR_recolProject = 'Assigns random<br>colors from the<br>palette.<br><br>Tracks which share<br>'
-                   ..'a color will be<br>given the same new<br>color.'
-helpR_choosePalette = 'Click to select a<br>palette.'
+helpR_recolProject = 'Assigns random colors from the palette. Tracks which share '
+                   ..'a color will be given the same new color.'
+helpR_choosePalette = 'Click to select a palette.'
 
-helpR_emvMatchIndent = 'Indent with folders,<br>matching the<br>\'Folder Indent<br>'
-                     ..'Width\' setting on<br>the Track Control<br>Panel Page.'
-help_playRate = 'If \'Show Play Rate\'<br>is on, sets the size<br>of the play rate<br>control.<br><br>'
-              ..'TIP : right-click<br>the play rate control<br>to adjust its range.'
+helpR_emvMatchIndent = 'Indent with folders, matching the \'Folder Indent '
+                     ..'Width\' setting on the Track Control Panel Page.'
+help_playRate = 'If \'Show Play Rate\' is on, sets the size of the play rate control. '
+              ..'TIP : right-click the play rate control to adjust its range.'
 
 
   --------- POPULATE ---------
@@ -1237,12 +1527,30 @@ _wrongTheme = Element:new(root, {flexW='100%',h=30,color={51,51,51}})
 Element:new(_wrongTheme, {x=6,y=2,w=26,h=26,img='icon_warning_on'})
 _theme = Element:new(_wrongTheme, {x=32,y=2,w=100,h=15,text={str='',align = 4,col={129,137,137}}})
 Element:new(_theme, {x=0,y=11,w=160,h=15,text={str='is not compatible with this script',align = 4,col={230,23,91}}})
-_switchTheme = Button:new(_wrongTheme, {flow=true,img='button_empty',imgType=3,y=2,w=92,border='x',action=switchTheme,text={str='Switch to the<br>Default v6 theme', align=5,lineSpacing=9,col={129,137,137}}})
+_switchTheme = Button:new(_wrongTheme, {flow=true,img='button_empty',imgType=3,y=2,w=92,border='x',action=switchTheme,text={str='Switch to the#Default v6 theme', align=5,lineSpacing=9,col={129,137,137}}})
 
 
   ------ DOCKED LAYOUT -------
 
 _dockedRoot = Element:new(root, {flexW='100%',h=_gfxh})
+
+_pageGlobal = Element:new(_dockedRoot, {flow=true,title='GLOBAL',y=0,flexW='fill',x=0,w=-16,h=_gfxh})
+Spinner:new(_pageGlobal, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin,readoutParam={editPage}})
+_gammaUnd = Element:new(_pageGlobal, {flow=true,x=0,y=6,w=453,h=19,color={90,94,94},helpR=helpR_colAdj,interactive=false})
+_gammaUndBg =  FaderBg:new(_gammaUnd, {x=1,y=1,w=451,h=17,img='faderbg_gamma',action=doFader,param=-1000,helpR=helpR_colAdj,interactive=false})
+Element:new(_gammaUndBg, {x=195,y=2,w=1,h=13,color={255,255,255,64}}) --zero line
+Fader:new(_gammaUndBg, {x=1,y=-4,action=doFader,param=-1000,helpR=helpR_colAdj})
+_gammaBox = Element:new(_pageGlobal, {flow=true,x=0,y=-6,w=72,h=30,border='x'})
+Element:new(_gammaBox, {x=0,y=4,w=72,h=11,text={str='GAMMA',style=2,align=4,col={129,137,137}}})
+Readout:new(_gammaBox,{x=0,y=16,w=52,h=11,userEntry=true,action=doFader,moColor={60,60,60},param={-1000},text={str='',align=4,col={129,137,137}}})
+
+_saturationUnd = Element:new(_pageGlobal, {flow=true,x=0,y=6,w=453,h=19,color={90,94,94},helpR=helpR_colAdj,interactive=false})
+_saturationUndBg =  FaderBg:new(_saturationUnd, {x=1,y=1,w=451,h=17,img='faderbg_saturation',action=doFader,param=-1004,helpR=helpR_colAdj,interactive=false})
+Element:new(_saturationUndBg, {x=226,y=2,w=1,h=13,color={255,255,255,64}}) --zero line
+Fader:new(_saturationUndBg, {x=1,y=-4,action=doFader,param=-1004,helpR=helpR_colAdj})
+_saturationBox = Element:new(_pageGlobal, {flow=true,x=0,y=-6,w=72,h=30,border='x'})
+Element:new(_saturationBox, {x=0,y=4,w=72,h=11,text={str='SATURATION',style=2,align=4,col={129,137,137}}})
+Readout:new(_saturationBox,{x=0,y=16,w=52,h=11,userEntry=true,action=doFader,moColor={60,60,60},param={-1004},text={str='',align=4,col={129,137,137}}})
 
 _pageTrack = Element:new(_dockedRoot, {flow=true,title='TRACK',y=0,flexW='fill',x=0,w=-16,h=_gfxh})
 Spinner:new(_pageTrack, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin,readoutParam={editPage}})
@@ -1323,10 +1631,62 @@ Element:new(_pageContainer, {x=0,y=39,w=513,h=1,color={0,0,0}}) -- black title d
 
 _subPageContainer = Element:new(_pageContainer, {x=0,y=40,w=513,h=639})
 
+--GLOBAL PAGE
+_pageGlobal_und = Element:new(_subPageContainer, {x=0,y=0,w=513,h=639})
+Button:new(_pageGlobal_und, {flow=false,x=169,y=29,w=30,img='color_text',imgType=3,action=paramToggle,param='glb_track_label_color',helpR=helpR_trackLabelColor})
+Element:new(_pageGlobal_und, {x=208,y=30,w=165,h=28,text={str='Custom color track names',style=2,align=4,col={129,137,137}},helpR=helpR_trackLabelColor})
+
+_colAdjBoxStroke = Element:new(_pageGlobal_und, {x=0,y=88,w=513,h=475,color={51,51,51}}) -- stroke
+_colAdjBox = Element:new(_colAdjBoxStroke, {x=1,y=1,w=511,h=473,color={51,51,51},helpL=helpL_layout}) -- fill
+Element:new(_colAdjBox, {x=0,y=26,w=511,h=11,text={str='COLOR CONTROLS',style=2,align=5,col={129,137,137}},helpR=helpR_trackLabelColor})
+
+_gamma = Element:new(_colAdjBox, {x=29,y=64,w=453,h=19,color={90,94,94},helpR=helpR_colAdj,interactive=false})
+_gammabg =  FaderBg:new(_gamma, {x=1,y=1,w=451,h=17,img='faderbg_gamma',action=doFader,param=-1000,helpR=helpR_colAdj,interactive=false})
+Element:new(_gammabg, {x=195,y=2,w=1,h=13,color={255,255,255,64}}) --zero line
+Fader:new(_gammabg, {x=1,y=-4,action=doFader,param=-1000,helpR=helpR_colAdj})
+Element:new(_colAdjBox, {x=29,y=90,w=72,h=11,text={str='GAMMA',style=2,align=4,col={129,137,137}},helpR=helpR_colAdj})
+Readout:new(_colAdjBox,{x=101,y=88,w=52,h=15,userEntry=true,action=doFader,moColor={40,40,40},param={-1000},text={str='',align=4,col={129,137,137}},helpR=helpR_colAdj})
+
+_hms = Element:new(_colAdjBox, {x=29,y=128,w=453,h=53,color={90,94,94},helpR=helpR_colAdj,interactive=false})
+_highlightbg = FaderBg:new(_hms, {x=1,y=1,w=451,h=17,color={71,73,73},action=doFader,param=-1003,helpR=helpR_colAdj})
+Element:new(_highlightbg, {x=226,y=2,w=1,h=13,color={255,255,255,64}}) --zero line
+_midtonebg = FaderBg:new(_hms, {x=1,y=18,w=451,h=17,color={51,51,51},action=doFader,param=-1002,helpR=helpR_colAdj})
+Element:new(_midtonebg, {x=226,y=2,w=1,h=13,color={255,255,255,64}}) --zero line
+_shadowbg = FaderBg:new(_hms, {x=1,y=35,w=451,h=17,color={44,44,44},action=doFader,param=-1001,helpR=helpR_colAdj})
+Element:new(_shadowbg, {x=226,y=2,w=1,h=13,color={255,255,255,64}}) --zero line
+Fader:new(_highlightbg, {x=1,y=-4,action=doFader,param=-1003,helpR=helpR_colAdj})
+Fader:new(_midtonebg, {x=1,y=-4,action=doFader,param=-1002,helpR=helpR_colAdj})
+Fader:new(_shadowbg, {x=1,y=-4,action=doFader,param=-1001,helpR=helpR_colAdj})
+Element:new(_colAdjBox, {x=29,y=188,w=72,h=11,text={str='HIGHLIGHTS',style=2,align=4,col={129,137,137}},helpR=helpR_colAdj})
+Readout:new(_colAdjBox,{x=101,y=186,w=52,h=15,userEntry=true,action=doFader,moColor={40,40,40},param={-1003},text={str='',align=4,col={129,137,137}},helpR=helpR_colAdj})
+Element:new(_colAdjBox, {x=192,y=188,w=72,h=11,text={str='MIDTONES',style=2,align=6,col={129,137,137}},helpR=helpR_colAdj})
+Readout:new(_colAdjBox,{x=266,y=186,w=52,h=15,userEntry=true,action=doFader,moColor={40,40,40},param={-1002},text={str='',align=5,col={129,137,137}},helpR=helpR_colAdj})
+Element:new(_colAdjBox, {x=358,y=188,w=72,h=11,text={str='SHADOWS',style=2,align=6,col={129,137,137}},helpR=helpR_colAdj})
+Readout:new(_colAdjBox,{x=430,y=186,w=52,h=15,userEntry=true,action=doFader,moColor={40,40,40},param={-1001},text={str='',align=6,col={129,137,137}},helpR=helpR_colAdj})
+
+_saturation = Element:new(_colAdjBox, {x=29,y=226,w=453,h=19,color={90,94,94},helpR=helpR_colAdj,interactive=false})
+_saturationbg = FaderBg:new(_saturation, {x=1,y=1,w=451,h=17,img='faderbg_saturation',action=doFader,param=-1004,helpR=helpR_colAdj})
+Element:new(_saturationbg, {x=226,y=2,w=1,h=13,color={255,255,255,64}}) --zero line
+Fader:new(_saturationbg, {x=1,y=-4,action=doFader,param=-1004,helpR=helpR_colAdj})
+Element:new(_colAdjBox, {x=29,y=252,w=72,h=11,text={str='SATURATION',style=2,align=4,col={129,137,137}},helpR=helpR_colAdj})
+Readout:new(_colAdjBox,{x=101,y=250,w=62,h=15,userEntry=true,action=doFader,moColor={40,40,40},param={-1004},text={str='',align=4,col={129,137,137}},helpR=helpR_colAdj})
+
+_tint = Element:new(_colAdjBox, {x=29,y=290,w=453,h=19,color={90,94,94},helpR=helpR_colAdj,interactive=false})
+_tintbg = FaderBg:new(_tint, {x=1,y=1,w=451,h=17,img='faderbg_tint',action=doFader,param=-1005,helpR=helpR_colAdj})
+Element:new(_tintbg, {x=226,y=2,w=1,h=13,color={255,255,255,64}}) --zero line
+Fader:new(_tintbg, {x=1,y=-4,action=doFader,param=-1005,helpR=helpR_colAdj})
+Element:new(_colAdjBox, {x=29,y=316,w=72,h=11,text={str='TINT',style=2,align=4,col={129,137,137}},helpR=helpR_colAdj})
+Readout:new(_colAdjBox,{x=101,y=314,w=62,h=15,userEntry=true,action=doFader,moColor={40,40,40},param={-1005},text={str='',align=4,col={129,137,137}},helpR=helpR_colAdj})
+
+Button:new(_colAdjBox, {x=140,y=356,w=30,img='color_apply_all',imgType=3,action=paramToggle,param=-1006})
+Element:new(_colAdjBox, {x=179,y=356,w=330,h=30,text={str='Also affect project custom colors',style=2,align=4,col={129,137,137}}})
+Button:new(_colAdjBox, {flow=false,x=140,y=415,w=30,img='bin',imgType=3,action=resetColorControls,helpR=helpR_resetColAdj})
+Element:new(_colAdjBox, {x=179,y=415,w=165,h=28,text={str='Reset all color controls',style=2,align=4,col={129,137,137}},helpR=helpR_resetColAdj})
+
 --TRACK PAGE
 _pageTrack_und = Element:new(_subPageContainer, {x=0,y=0,w=513,h=639})
 Spinner:new(_pageTrack_und, {x=61,y=19,w=165,title='FOLDER INDENT',action=paramSet,param='tcp_indent',valsTable=folderIndentVals,helpR=helpR_indent,helpL=helpL_layout})
-Spinner:new(_pageTrack_und, {x=287,y=19,w=165,title='ALIGN CONTROLS',action=paramSet,param='tcp_control_align',valsTable=controlAlignVals,helpR=helpR_control_align,helpL=helpL_layout})
+Spinner:new(_pageTrack_und, {x=287,y=19,w=165,title='ALIGN CONTROLS',action=paramSet,param='tcp_control_align',valsTable=trackControlAlignVals,helpR=helpR_control_align,helpL=helpL_layout})
 _layoutTrackStroke = Element:new(_pageTrack_und, {x=0,y=153,w=513,h=486,color={129,137,137}}) -- stroke
 
 _tcpButLayA = Button:new(_pageTrack_und, {x=30,y=65,w=69,img='layout_docked_A',imgType=3,action=doActiveLayout,param={'tcp','A'},helpR=helpR_layoutButton})
@@ -1355,8 +1715,8 @@ tcpMeterLocVals = {'LEFT','RIGHT','LEFT IF ARMED'}
 Spinner:new(_layoutTrack, {x=278,y=70,w=163,title='METER LOCATION',action=paramSet,param='tcp_MeterLoc',valsTable=tcpMeterLocVals})
 
 tcpTableVals = {img = 'cell_hide',
-                columns = {{visFlag=1,text={str='IF MIXER<br>IS VISIBLE'}},{visFlag=2,text={str='IF TRACK<br>NOT SELECTED'}},
-                        {visFlag=4,text={str='IF TRACK<br>NOT ARMED'}},{visFlag=8,text={str='ALWAYS<br>HIDE',col={204,69,114}}}},
+                columns = {{visFlag=1,text={str='IF MIXER#IS VISIBLE'}},{visFlag=2,text={str='IF TRACK#NOT SELECTED'}},
+                        {visFlag=4,text={str='IF TRACK#NOT ARMED'}},{visFlag=8,text={str='ALWAYS#HIDE',col={204,69,114}}}},
                 rows = {{param='tcp_Record_Arm',text={str='RECORD ARM'},img='key_recarm'},
                         {param='tcp_Monitor',text={str='MONITOR'},img='key_mon'},{param='tcp_Track_Name',text={str='TRACK NAME'}},
                         {param='tcp_Volume',text={str='VOLUME'},img='key_vol'},{param='tcp_Routing',text={str='ROUTING'},img='key_route'},
@@ -1395,8 +1755,8 @@ Spinner:new(_mixerTop, {x=69,y=29,w=163,title='ADD BORDER',action=paramSet,param
 Spinner:new(_mixerTop, {x=285,y=29,w=157,title='METER EXPANSION',action=paramSet,param='mcp_meterExpSize',valsTable=dockedMcpMeterExpVals,helpR=helpR_meterScale})
 
 mcpTableVals = {img = 'cell_tick',
-                columns = {{visFlag=1,text={str='IF TRACK<br>SELECTED'}},{visFlag=2,text={str='IF TRACK<br>NOT SELECTED'}},
-                        {visFlag=4,text={str='IF TRACK<br>ARMED'}},{visFlag=8,text={str='IF TRACK<br>NOT ARMED'}}},
+                columns = {{visFlag=1,text={str='IF TRACK#SELECTED'}},{visFlag=2,text={str='IF TRACK#NOT SELECTED'}},
+                        {visFlag=4,text={str='IF TRACK#ARMED'}},{visFlag=8,text={str='IF TRACK#NOT ARMED'}}},
                 rows = {{param='mcp_Sidebar',text={str='EXTEND WITH SIDEBAR', helpR=helpR_sidebar}},
                         {param='mcp_Narrow',text={str='NARROW FORM'}},{param='mcp_Meter_Expansion',text={str='DO METER EXPANSION'}},
                         {param='mcp_Labels',text={str='ELEMENT LABELS'}}}
@@ -1405,7 +1765,7 @@ _mixerTable = ParamTable:new(_mixerTop, {x=29,y=84,w=453,h=130,valsTable=mcpTabl
 
 _mLower = Element:new(_pageMixer_und, {x=0,y=427,w=513,h=212,color={129,137,137}}) -- stroke
 _extMixerf = Element:new(_mLower, {x=1,y=1,w=255,h=210,color={38,38,38},helpL=help_pref}) -- fill
-Element:new(_extMixerf, {x=29,y=24,w=173,h=30,text={str='EXTENDED MIXER CONTROLS<br>when size permits',style=2,align=4,col={129,137,137}}})
+Element:new(_extMixerf, {x=29,y=24,w=173,h=30,text={str='EXTENDED MIXER CONTROLS#when size permits',style=2,align=4,col={129,137,137}}})
 Button:new(_extMixerf, {x=29,y=65,w=30,img='show_fx',imgType=3,action=actionToggle,param=40549})
 Element:new(_extMixerf, {x=68,y=65,w=172,h=30,text={str='Show FX Inserts',style=2,align=4,col={129,137,137}}})
 Button:new(_extMixerf, {x=29,y=108,w=30,img='show_param',imgType=3,action=actionToggle,param=40910})
@@ -1415,7 +1775,7 @@ Element:new(_extMixerf, {x=68,y=151,w=172,h=30,text={str='Show Sends',style=2,al
 
 _parmMixer = Element:new(_mLower, {x=256,y=1,w=256,h=210,color={51,51,51},helpL=help_pref}) -- fill
 Button:new(_parmMixer, {x=29,y=65,w=30,img='multi_row',imgType=3,action=actionToggle,param=40371})
-Element:new(_parmMixer, {x=68,y=65,w=172,h=30,text={str='Show Multiple-row Mixer<br>when size permits',style=2,align=4,col={129,137,137}}})
+Element:new(_parmMixer, {x=68,y=65,w=172,h=30,text={str='Show Multiple-row Mixer#when size permits',style=2,align=4,col={129,137,137}}})
 Button:new(_parmMixer, {x=29,y=108,w=30,img='scroll_sel',imgType=3,action=actionToggle,param=40221})
 Element:new(_parmMixer, {x=68,y=108,w=172,h=30,text={str='Scroll to selected track',style=2,align=4,col={129,137,137}}})
 Button:new(_parmMixer, {x=29,y=151,w=30,img='show_icons',imgType=3,action=actionToggle,param=40903})
@@ -1431,9 +1791,9 @@ Readout:new(_paletteBox, {x=124,y=19,w=263,h=30,param={'scriptVariable',palette.
 Element:new(_paletteBox, {x=30,y=49,w=450,h=1,color={35,35,35}}) --div above
 _palette = Palette:new(_paletteBox, {x=30,y=58,w=450,h=45,cellW=45,img='color_apply_large',action=applyCustCol})
 Element:new(_paletteBox, {x=30,y=111,w=450,h=1,color={35,35,35}}) --div below
-Element:new(_paletteBox, {x=124,y=112,w=263,h=30,text={str='Click a color to apply it to all selected tracks',style=3,align=5,col={129,137,137}}})
+Element:new(_paletteBox, {x=0,y=112,w=511,h=30,text={str='Click a color to apply it to all selected tracks',style=3,align=5,col={129,137,137}}})
 Button:new(_paletteBox, {x=140,y=146,w=30,img='color_apply_all',imgType=3,action=applyPalette,helpR=helpR_recolProject})
-Element:new(_paletteBox, {x=179,y=146,w=208,h=30,text={str='Recolor project using this palette',style=2,align=4,col={129,137,137}},helpR=helpR_recolProject})
+Element:new(_paletteBox, {x=179,y=146,w=330,h=30,text={str='Recolor project using this palette',style=2,align=4,col={129,137,137}},helpR=helpR_recolProject})
 _paletteMenuBox = Element:new(_paletteBoxStroke, {x=1,y=205,w=511,h=218,color={38,38,38}}) -- fill
 
 -- add swatches
@@ -1445,9 +1805,9 @@ Swatch:new(_paletteMenuBox,{x=282,y=92,paletteIdx=4})
 Swatch:new(_paletteMenuBox,{x=282,y=155,paletteIdx=6})
 
 Button:new(_pageColor_und, {x=144,y=464,img='color_dim_all',imgType=3,action=reduceCustCol,param=false,helpR=helpL_colDimming})
-Element:new(_pageColor_und, {x=183,y=464,w=208,h=30,text={str='Dim all assigned custom colors',style=2,align=4,col={129,137,137}},helpR=helpL_colDimming})
-Button:new(_pageColor_und, {x=144,y=507,w=30,img='color_dim',imgType=3,action=reduceCustCol,param=true})
-Element:new(_pageColor_und, {x=183,y=507,w=208,h=30,text={str='Dim custom colors on selected tracks',style=2,align=4,col={129,137,137}}})
+Element:new(_pageColor_und, {x=183,y=464,w=330,h=30,text={str='Dim all assigned custom colors',style=2,align=4,col={129,137,137}},helpR=helpL_colDimming})
+Button:new(_pageColor_und, {x=144,y=507,w=30,img='color_dim',imgType=3,action=reduceCustCol,param=true,helpR=helpL_colDimming})
+Element:new(_pageColor_und, {x=183,y=507,w=330,h=30,text={str='Dim custom colors on selected tracks',style=2,align=4,col={129,137,137}},helpR=helpL_colDimming})
 
 --ENV & TRANSPORT PAGE
 _pageEnvTrans_und = Element:new(_subPageContainer, {x=0,y=40,w=513,h=639,helpL=helpL_layout})
@@ -1467,7 +1827,7 @@ apply.und.trans[3] = Button:new(_pageEnvTrans_und, {x=290,y=318,w=61,img='apply_
 Spinner:new(_pageEnvTrans_und, {x=182,y=372,w=149,title='PLAY RATE SIZE',action=paramSet,param='trans_rate_size',valsTable=transRateVals,helpR=help_playRate,helpL=helpL_layout})
 
 _transPrefsStroke = Element:new(_pageEnvTrans_und, {x=0,y=431,w=513,h=176,color={129,137,137}}) -- stroke
-_transPrefs = Element:new(_transPrefsStroke, {x=1,y=1,w=511,h=174,color={38,38,38},helpL=help_pref}) -- fill
+_transPrefs = Element:new(_transPrefsStroke, {x=1,y=1,w=511,h=174,color={38,38,38},helpL=helpL_pref}) -- fill
 
 Button:new(_transPrefs, {x=192,y=26,img='center_transport',imgType=3,action=actionToggle,param=40533})
 Element:new(_transPrefs, {x=231,y=26,w=150,h=30,text={str='Center transport',style=2,align=4,col={129,137,137}}})
@@ -1481,9 +1841,9 @@ Button:new(_transPrefs, {x=285,y=112,img='play_text',imgType=3,action=actionTogg
 Element:new(_transPrefs, {x=324,y=112,w=150,h=30,text={str='Show play state as text',style=2,align=4,col={129,137,137}}})
 
 --HELP
-_helpL = Element:new(_pageContainer, {x=-144,y=500,w=115,h=200,text={str='',style=2,align=2,vCenter=false,lineSpacing=14,col={129,137,137}}})
+_helpL = Element:new(_pageContainer, {x=-144,y=500,w=115,h=200,text={str='',style=2,align=2,wrap=true,vCenter=false,lineSpacing=14,col={129,137,137}}})
 Element:new(_helpL, {x=18,y=-25,w=97,h=19,img='helpHeader_l'})
-_helpR = Element:new(_pageContainer, {x=542,y=200,w=115,h=200,text={str='Show play state',style=2,align=0,vCenter=false,lineSpacing=14,col={129,137,137}}})
+_helpR = Element:new(_pageContainer, {x=542,y=200,w=115,h=200,text={str='Show play state',style=2,align=0,wrap=true,vCenter=false,lineSpacing=14,col={129,137,137}}})
 Element:new(_helpR, {x=0,y=-25,w=97,h=19,img='helpHeader_r'})
 
   --------- RUNLOOP ---------
@@ -1554,6 +1914,12 @@ function runloop()
 
   -- mouse stuff
   local isCap = (gfx.mouse_cap&1)
+  now = reaper.time_precise()
+  
+  if gfx.mouse_x ~= mouseXold or gfx.mouse_y ~= mouseYold or (firstClick ~= nil and last_click_time ~= nil and last_click_time+.25 < now) then
+    firstClick = nil
+  end
+  
   if gfx.mouse_x ~= mouseXold or gfx.mouse_y ~= mouseYold or isCap ~= mouseCapOld or gfx.mouse_wheel ~= 0  then
     local wheel_amt = 0
     if gfx.mouse_wheel ~= 0 then
@@ -1568,25 +1934,48 @@ function runloop()
       if activeMouseElement ~= nil and hit == activeMouseElement then -- still over element
         activeMouseElement:mouseUp(gfx.mouse_x,gfx.mouse_y)
       end
+      if activeMouseElement ~= nil and activeMouseElement.dragStart ~= nil then
+        activeMouseElement.dragStart, activeMouseElement.dragStartValue = nil, nil
+      end
     end
 
     if isCap == 0 or mouseCapOld == 0 then -- uncaptured mouse-down or mouse-move
       if activeMouseElement ~= nil and activeMouseElement ~= hit then
         activeMouseElement:mouseAway()
       end
-      activeMouseElement = hit
+      activeMouseElement = hit 
     end
 
     if activeMouseElement ~= nil then
+
       if isCap == 0 or mouseCapOld == 0 then -- uncaptured mouse-down or mouse-move
         activeMouseElement:mouseOver()
       end
       if wheel_amt ~= 0 then
         activeMouseElement:mouseWheel(wheel_amt)
       end
+      
+      if isCap == 1 then
+        local x,y = gfx.mouse_x,gfx.mouse_y
+        activeMouseElement:mouseDown(gfx.mouse_x,gfx.mouse_y)
+        
+        if firstClick == nil or last_click_time == nil then 
+          firstClick = {gfx.mouse_x,gfx.mouse_y}
+          last_click_time = now
+        else if now < last_click_time+.25 and math.abs((x-firstClick[1])*(x-firstClick[1]) + (y- firstClick[2])*(y- firstClick[2])) < 4 then 
+          activeMouseElement:doubleClick() 
+          firstClick = nil
+          else
+            firstClick = nil
+          end 
+        end
+          
+      end
+      
     end
     mouseXold, mouseYold, mouseCapOld = gfx.mouse_x, gfx.mouse_y, isCap
   end
+
   if paramGet == 1 then
     root:doParamGet()
     paramGet = 0
@@ -1600,6 +1989,14 @@ function runloop()
   elseif redraw == 1 then
     root:draw()
     redraw = 0
+  end
+
+  if ctheme_param_needsave ~= nil then
+    if (gfx.mouse_cap&1)==0 and (ctheme_param_needsave[2] == nil or now > ctheme_param_needsave[2]) then
+      local tmp,tmp,value = reaper.ThemeLayout_GetParameter(ctheme_param_needsave[1])
+      reaper.ThemeLayout_SetParameter(ctheme_param_needsave[1],value,true) 
+      ctheme_param_needsave = nil
+    end
   end
 
   gfx.update()

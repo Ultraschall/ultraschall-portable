@@ -71,7 +71,7 @@
             Using the Ultraschall-API is quite easy.
             
             First make sure, you use the right versions of Reaper and SWS:
-               [Reaper 6.20](https://www.reaper.fm), [SWS 2.10.0.1](https://www.sws-extension.org) and [Julian Sader's plugin 0.999.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
+               [Reaper 6.02](https://www.reaper.fm), [SWS 2.10.0.1](https://www.sws-extension.org) and [Julian Sader's plugin 1.215.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             You can download them at [reaper.fm](http://www.reaper.fm) and [sws-extension.org](http://www.sws-extension.org) respectively.
             Julian Sader's plugin can be installed using ReaPack or gotten from [his own github-site](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             

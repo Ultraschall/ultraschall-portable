@@ -362,9 +362,9 @@ end
 
 --ultraschall.ShowLastErrorMessage()
 
-function ultraschall.GetProjectReWireSlave(projectfilename_with_path)
+function ultraschall.GetProjectReWireClient(projectfilename_with_path)
 --To Do
--- ProjectSettings->Advanced->Rewire Slave Settings
+-- ProjectSettings->Advanced->Rewire Client Settings
 end
 
 function ultraschall.GetLastEnvelopePoint(Envelopeobject)
@@ -724,7 +724,7 @@ H=ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender)
 --]]
 
 
-function ultraschall.GetTrackEnvelope_ClickState()
+function ultraschall.GetTrackEnvelope_ClickStates()
 -- how to get the connection to clicked envelopepoint, when mouse moves away from the item while retaining click(moving underneath the item for dragging)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -1067,7 +1067,7 @@ function ultraschall.SaveProjectAs(filename_with_path, fileformat, overwrite, cr
     returns false in case of an error
   </description>
   <retvals>
-    boolean retval - true, saving was successful; false, saving wasn't succesful
+    boolean retval - true, saving was successful; false, saving wasn't successful
     string newfilename_with_path - the new projectfilename with path, helpful if you only gave the filename
   </retvals>
   <parameters>
@@ -1300,7 +1300,7 @@ function ultraschall.BatchConvertFiles(filelist, RenderTable, BWFStart, PadStart
     path, filename = ultraschall.GetPath(filelist[i])
     filename2=filename:match("(.-)%.")
     if filename2==nil then filename2=filename end
-    BatchConvertData=BatchConvertData..filelist[i].."\t"..filename2.."\n"
+    BatchConvertData=BatchConvertData..filelist[i].."\t"..filelist[i]:match("(.*)%.").."\n"
     i=i+1
   end
   BatchConvertData=BatchConvertData..[[
@@ -1322,13 +1322,13 @@ function ultraschall.BatchConvertFiles(filelist, RenderTable, BWFStart, PadStart
 ]]..PadEnd..[[
     OUTPATH ]]..RenderTable["RenderFile"]..[[
     
-    OUTPATTERN ']]..RenderTable["RenderPattern"]..[['
+    OUTPATTERN ']]..[['
   >
 >
 ]]
 
   ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/filelist.txt", BatchConvertData)
-print2(BatchConvertData)
+print3(BatchConvertData)
   if ultraschall.IsOS_Windows()==true then
     ExeFile=reaper.GetExePath().."\\reaper.exe"
     AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert "..string.gsub(ultraschall.API_TempPath, "/", "\\").."\\filelist.txt", -1)
@@ -1347,8 +1347,45 @@ print2(BatchConvertData)
 end
 
 
--- These seem to work working:
+function ultraschall.GetTakeEnvelopeUnderMouseCursor()
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetTakeEnvelopeUnderMouseCursor</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>TakeEnvelope env, MediaItem_Take take, number projectposition = ultraschall.GetTakeEnvelopeUnderMouseCursor()</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns the take-envelope underneath the mouse
+    </description>
+    <retvals>
+      TakeEnvelope env - the take-envelope found unterneath the mouse; nil, if none has been found
+      MediaItem_Take take - the take from which the take-envelope is
+      number projectposition - the project-position
+    </retvals>
+    <chapter_context>
+      Envelope Management
+      Envelopes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, get, take, envelope, mouse position</tags>
+  </US_DocBloc>
+  --]]
+  -- todo: retval for position within the take
+  
+  local Awindow, Asegment, Adetails = reaper.BR_GetMouseCursorContext()
+  local retval, takeEnvelope = reaper.BR_GetMouseCursorContext_Envelope()
+  if takeEnvelope==true then 
+    return retval, reaper.BR_GetMouseCursorContext_Position(), reaper.BR_GetMouseCursorContext_Item()
+  else
+    return nil, reaper.BR_GetMouseCursorContext_Position()
+  end
+end
 
+-- These seem to work working:
 
 
 

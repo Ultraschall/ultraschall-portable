@@ -75,7 +75,7 @@ function ultraschall.GetTrackHWOut(tracknumber, idx, TrackStateChunk)
     integer idx - the id-number of the HWOut, beginning with 1 for the first HWOut-Settings
     optional string TrackStateChunk - a TrackStateChunk, whose HWOUT-entries you want to get
   </parameters>
-  <retvals>
+  <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
     integer outputchannel - outputchannel, with 1024+x the individual hw-outputchannels, 0,2,4,etc stereo output channels
     integer post_pre_fader - 0-post-fader(post pan), 1-preFX, 3-pre-fader(Post-FX), as set in the Destination "Controls for Track"-dialogue
     number volume - volume, as set in the Destination "Controls for Track"-dialogue; see [MKVOL2DB](#MKVOL2DB) to convert it into a dB-value
@@ -1382,8 +1382,9 @@ function ultraschall.GetAllAUXSendReceives()
       AUXSendReceives[i][a]["snd_src"], 
       AUXSendReceives[i][a]["pan_law"], 
       AUXSendReceives[i][a]["midichanflag"], 
-      AUXSendReceives[i][a]["automation"] = ultraschall.GetTrackAUXSendReceives(i, a)     
-      AUXSendReceives[i][a]["recv_track_guid"]=reaper.GetTrackGUID(reaper.GetTrack(0,AUXSendReceives[i][a]["recv_tracknumber"]))
+      AUXSendReceives[i][a]["automation"] = ultraschall.GetTrackAUXSendReceives(i, a)
+      AUXSendReceives[i][a]["recv_track_guid"]=reaper.GetTrackGUID(reaper.GetTrack(0,AUXSendReceives[i][a]["recv_tracknumber"]-1))
+      
       --]]
     end
   end

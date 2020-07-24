@@ -143,6 +143,8 @@ os.remove(Tempfile..ChangeLogFile)
 
 --ultraschall.ShowLastErrorMessage()
 
+retval, script_identifier = ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/Scripts/Tools/ultraschall_ModulerLoader_Generator.lua")
+
 --]]
 reaper.SetExtState("ultraschall", "doc", "", false)
 if reaper.MB("Create Ultraschall-Docs ?", "Reaper-Docs", 4)==6 then pp=1 end
