@@ -46,6 +46,9 @@ if A == false then
   cmd=reaper.NamedCommandLookup("40521")  -- set playrate to 1
   reaper.Main_OnCommand(cmd,0)
 
+  cmd=reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Editing")  -- set routing matrix to editing
+  reaper.Main_OnCommand(cmd,0)
+
   cmd=reaper.NamedCommandLookup("40296")  -- select all tracks
   reaper.Main_OnCommand(cmd,0)
 
