@@ -422,7 +422,7 @@ function buildGUI()
 	areaHeight = 80
 	position = 90 + y_offset
 	StepNameDisplay = "1. Export MP3"
-	StepDescription = "Render your Podcast to a MP3 File. Make use of our prests in the top right corner of the render-dialog."
+	StepDescription = "Render your podcast to a MP3 file. Make use of our presets in the top right corner of the render-dialog."
 	warnings_position = position+30
 	button_txt = "Export MP3"
 	button_action = "_Ultraschall_Render_Check"
@@ -457,7 +457,7 @@ function buildGUI()
 	state_color, status_txt = CheckMetadata()
 	MetadataCompletedStatus = MetadataCompletedStatus .. " -" ..status_txt
 
-	StepDescription = "Use the ID3 Editor to add metadata to your podcast."
+	StepDescription = "Use the ID3 editor to add metadata to your podcast."
 	warnings_position = position+30
 	button_txt = "Edit MP3 Metadata"
 	button_action = "_Ultraschall_Edit_ID3_Tags"
@@ -518,7 +518,7 @@ function buildGUI()
 	StepNameDisplay = "4. Podcast Episode Image"
 
 
-	StepDescription = "Just drop a square .jpg, .jpeg or .png image to the empty slot on the right. You may populate the smaller slots with covers for different shows and activate them with a click."
+	StepDescription = "Just drop a square JPG, JPEG or PNG image to the empty slot on the right. You may populate the smaller slots with covers for different shows and activate them with a click."
 	warnings_position = position+30
 
 
