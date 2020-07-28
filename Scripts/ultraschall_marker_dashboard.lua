@@ -486,7 +486,7 @@ function buildGui()
   pos_headerlogo = 27
   pos_headertxt = pos_headerlogo + 70
   pos_number = 29
-  pos_trashbin = 718
+  pos_trashbin = 715
 
   -----------------
 
