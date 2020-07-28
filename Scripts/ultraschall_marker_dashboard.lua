@@ -283,6 +283,20 @@ function editMarker(cursor_position)
 end
 
 ------------------------------------------------------
+-- Löscht einen Marker an der Zeitposition
+------------------------------------------------------
+
+function deleteMarker(cursor_position)
+
+  actual_cursor = reaper.GetCursorPosition()
+  cursor_offset = cursor_position - actual_cursor
+  reaper.MoveEditCursor(cursor_offset, false)
+  runcommand(40613)
+
+end
+
+
+------------------------------------------------------
 -- Setzt einen Marker an der Zeitposition
 ------------------------------------------------------
 
@@ -385,15 +399,16 @@ WindowHeight = 175 + (rows * 36)
 check_text = ""
 image_sizes = {}
 
-blankimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/blank.png"
-placeholderimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/placeholder.png"
-triangle = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/triangle.png"
-green = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_green.png"
-red = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_red.png"
-yellow = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/glow_yellow.png"
-add = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/add.png"
-link = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/link.png"
-fillrow = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/fillrow.png"
+blankimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/MarkerDashboard/blank.png"
+placeholderimg = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/MarkerDashboard/placeholder.png"
+triangle = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/MarkerDashboard/triangle.png"
+green = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/MarkerDashboard/glow_green.png"
+red = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/MarkerDashboard/glow_red.png"
+yellow = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/MarkerDashboard/glow_yellow.png"
+add = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/MarkerDashboard/marker_add.png"
+trash = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/MarkerDashboard/marker_trash.png"
+link = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/MarkerDashboard/marker_link.png"
+fillrow = reaper.GetResourcePath() .. "/Scripts/Ultraschall_Gfx/MarkerDashboard/fillrow.png"
 
 
 -- Grab all of the functions and classes from our GUI library
@@ -471,6 +486,7 @@ function buildGui()
   pos_headerlogo = 27
   pos_headertxt = pos_headerlogo + 70
   pos_number = 29
+  pos_trashbin = 718
 
   -----------------
 
@@ -619,6 +635,7 @@ function buildGui()
 
     if tablesort[i] == nil then break end     -- Marker auf der Page sind zu ende
     key = tablesort[i]
+    name = markertable[tostring(key)]["name"]
 
     position = position + 36
 
@@ -644,10 +661,21 @@ function buildGui()
     table.insert(GUI.elms, id)
 
     -------------------------
+    -- Trashbin
+    -------------------------
+
+    if rowcolor == "elm_frame" and name then
+      trashbin = GUI.Pic:new(pos_trashbin, position-6, 25, 25, 1, trash, deleteMarker, key)
+    else
+      trashbin = GUI.Pic:new(pos_trashbin, position-6, 25, 25, 1, blankimg, moveArrangeview, key)
+    end
+
+    table.insert(GUI.elms, trashbin)
+
+    -------------------------
     -- Name des Markers
     -------------------------
 
-    name = markertable[tostring(key)]["name"]
     if name and name ~= "" then
 
       name_displayed = string.sub(name,1,40)
@@ -681,11 +709,11 @@ function buildGui()
         table.insert(GUI.elms, url_txt)
         edit_url = GUI.Pic:new(pos_url, position-5, 200, 25, 1, blankimg, editURL, idx)
         table.insert(GUI.elms, edit_url)
-        open_exturl = GUI.Pic:new(pos_url-28, position-5, 25, 25, 0.5, link, ultraschall.OpenURL, mkrRgnSubOut)
+        open_exturl = GUI.Pic:new(pos_url-28, position-5, 25, 25, 1, link, ultraschall.OpenURL, mkrRgnSubOut)
         table.insert(GUI.elms, open_exturl)
 
       else
-        edit_url = GUI.Pic:new(pos_url-28, position-5, 25, 25, 0.5, add, editURL, idx)
+        edit_url = GUI.Pic:new(pos_url-28, position-5, 25, 25, 1, add, editURL, idx)
         table.insert(GUI.elms, edit_url)
       end
 
@@ -783,7 +811,7 @@ function buildGui()
 
     elseif name and name ~= "" then -- noch kein Bild zugeordnet
 
-      add_image = GUI.Pic:new(pos_image, position-5, 25, 25, 0.5, add, addImage, key)
+      add_image = GUI.Pic:new(pos_image, position-5, 25, 25, 1, add, addImage, key)
       table.insert(GUI.elms, add_image)
 
     end
