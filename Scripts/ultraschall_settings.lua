@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,19 +24,95 @@
 ################################################################################
 ]]
 
----------------
--- States der ultraschall_devices in der ultraschall-settings.ini:
+--[[
+
+Aufbau der ultraschall-settings.ini
+
+Die Ultraschall-Settings werden aus drei Bereichen dynamisch befüllt und über drei reiter angezeigt:
+1. General Settings
+2. Soundcheck Settings
+3. Interface Settings
+
+--------------------
+1. General Settings
+--------------------
+Enthält alle Einträge, die in einem Abschnitt
+[ultraschall_settings_wasuachimmer]
+liegen.
+Es werden immer diese Felder benötigt (Beispiel):
+
+[ultraschall_settings_startsceen]
+Description=Should the Ultraschall start screen be displayed at every launch? -- erscheint als Erklärtext wenn man auf den "?" Button  drückt
+name=Show the start screen -- sichtbarer Text des Settings-Eintrags
+position=1 -- An welcher Position der Eintrag steht. Achtung: muss unique sein sonst überlappen sich Einträge
+settingstype=checkbox -- derzeit möglich: checkbox (an/aus) oder Slider (s.u.)
+Value=1 -- Wert des Eintrages. Bei Checkbox 0=aus 1=an, beim Slider ein numerischer Wert (s.u.)
+
+Zusätzliche Felder beim Typ "Slider":
+
+maximum=1.0  -- Maximalwert des Sliders ganz rechts
+minimum=0.0  -- Minimalwert des Sliders ganz links
+steps=10     -- Anzahl der Zwischenschritte für Rasterung
+actualstep=5 -- auf welchem Rasterschritt der Slider gerade steht (korrespondiert mit Value)
+
+-----------------------
+2. Soundcheck Settings
+-----------------------
+Enthält alle Einträge, die in einem Abschnitt
+[ultraschall_soundcheck_wasuachimmer]
+liegen.
+Es werden immer diese Felder benötigt (Beispiel):
+
+[ultraschall_soundcheck_mic]
+Button1Action=40099 -- Aktion, die auf dem ersten Soundcheck-Button liegt
+Button1Label=Change interface... -- Label des ersten Buttons
+CheckAllXSeconds=1 -- Intervall, in dem der Soundcheck im Hintergrund prüft
+CheckForXSeconds=0 -- steht immer auf 0
+CheckFunction=SoundcheckMic -- Funktion, die den eigentlichen Check durchführt, muss in ultraschall_soundcheck_functions.lua liegen. Liefert die Funktion false ist das Ereignis nicht eingetreten, bei true hat der Check angeschlagen.
+Description=Prevents you from accidentally recording with the built-in microphone|instead of using your dedicated sound interface. -- Hilfetext auf dem "?" Button in den Settings
+DescriptionWarning=You have just armed a track for recording, but your recording interface seems to be the internal microphone. |This results in very poor sound quality. |You can ignore this and still continue or change the sound interface. -- Text, der im Soundcheck-Fenster direkt angezeigt wird
+EventIdentifier=Ultraschall_Eventidentifier: {B78C2305-5EBF-8F42-90CA-EE2A31F2FB05} -- wird bei jedem Start neu vergeben, nicht von Nutzern zu verändern
+EventNameDisplay=Check for internal microphone -- Name des Soundcheck in den Settings
+EventPaused=false -- EventManager Flag, steht immer auf false
+Position=4 -- Position in den Settings. Wichtig: muss unique sein sonst überlappen sich Einträge
+settingstype=checkbox -- ist immer checkbox bei Soundchecks
+StartActionsOnceDuringTrue=false -- EventManager Flag, steht immer auf false
+StartFunction=_Ultraschall_Soundcheck_Startgui -- die Aktion, die ausgeführt wird wenn der Check anschlägt. Ist in den meisten Fällen das starten der Soundcheck-GUI
+Value=0 -- 0 = Soundcheck abgeschaltet, 1 = angeschaltet (Status der Checkbox)
+
+Jeder Soundcheck _muss_ einen Call-to-Action Button haben. Optional kann auch ein zweiter konfiguriert werden (aber kein dritter):
+
+Button2Action= -- Aktion, die auf dem zweiten Soundcheck-Button liegt
+Button2Label= -- Label des zweiten Buttons
+
+Jede Änderung in den Settings wirkt sich unmittelbar auf den EventManager aus. Alle aktiven Soundchecks sind in diesem registriert.
+
+-----------------------
+3. Interface Settings
+-----------------------
+
+Enthält alle Einträge, die in dem Abschnitt
+[ultraschall_devices]
+liegen.
+
+Über die EInträge werden zum einen Devices verwaltet, die gängig sind und von denen wir wissen, ob sie local monitoring können, etwa das Zoom H6:
+
+CoreAudio H6=2
+
+Zum anderen werden dort alle bisher unbekannten Devices mit ihrem Namen eingetragen, die NutzerIn anschließt. Wenn ein bisher unbekanntes Device (noch kein Eintrag in diesen Settings) angeschlossen wird, meldet sich ein Soundcheck mit der Abfrage, ob local monitoring möglich ist oder nicht. Der Wert wird dann eingetragen.
+
+Wird ein Device über die GUI "gelöscht", so verbleibt der Eintrag in den Settings, wird aber auf unsichtbar geschaltet (Wert 2 oder 3). Wenn das Gerät doch noch einmal angeschlossen wird, erscheint dann kein Soundcheck sondern der entsprechende Wert wird auf 0 oder 1 gesetzt.
+
+
+die States im Überblick:
+
 -- 0 = eingeblendet, kann/soll kein lokales Monitoring
 -- 1 = eingeblendet, kann/soll lokales Monitoring
 -- 2 = ausgeblendet, kann/soll lokales Monitoring
 -- 3 = ausgeblendet, kann/soll kein lokales Monitoring
---
--- ToDos
---
--- Lautstärke Soundboard zu Monitoring während der preshow
---
-----------------
 
+
+]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 dofile(reaper.GetResourcePath().."/Scripts/ultraschall_soundcheck_functions.lua")
@@ -435,7 +511,7 @@ function SettingsPageSettings()
   x_offset = 55
 
   block = GUI.Area:new(45,180,730, 400,5,1,1,"section_bg")
-      table.insert(GUI.elms, block)
+    table.insert(GUI.elms, block)
 
 
   for i = 1, section_count , 1 do
@@ -459,7 +535,7 @@ function SettingsPageSettings()
 
       elseif settings_Type == "slider" then
         position = position+8
-        id = GUI.Sldr:new(245+x_offset, position, 80, ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"minimum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"maximum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"steps","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"actualstep","ultraschall-settings.ini"), sectionName)
+        id = GUI.Sldr:new(275+x_offset, position, 80, ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"minimum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"maximum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"steps","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"actualstep","ultraschall-settings.ini"), sectionName)
         table.insert(GUI.elms, id)
 
         -- Info-Button
