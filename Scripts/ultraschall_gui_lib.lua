@@ -496,7 +496,7 @@ function Update(elm)
       end
 
     --     Dragging?                   Did the mouse start out in this element?
-    elseif (x ~= GUI.mouse.lx or y ~= GUI.mouse.ly) and IsInside(elm, GUI.mouse.ox, GUI.mouse.oy) then
+    elseif (x ~= GUI.mouse.lx or y ~= GUI.mouse.ly) and IsInside(elm, GUI.mouse.ox, GUI.mouse.oy) and elm.type ~= "Area" then
 
       if elm.focus ~= nil then elm:ondrag() end
 
@@ -1089,7 +1089,7 @@ function Sldr:draw()
 
   local str_w, str_h = gfx.measurestr(self.caption)
 
-  gfx.x = x - 188 * dpi_scale
+  gfx.x = x - 218 * dpi_scale
   gfx.y = y - 2 * dpi_scale
 
   gfx.drawstr(self.caption)
