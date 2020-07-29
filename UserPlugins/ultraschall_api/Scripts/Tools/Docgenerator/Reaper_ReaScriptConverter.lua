@@ -563,7 +563,7 @@ function header()
 end
 
 function contentindex()
-  FunctionList=FunctionList.."<h2><img src=\"gfx/reaper.png\"><br>Reaper Reascript-Api-Documentation 6.10<br>\"The All-Away World\"</h2><h3>The Functions Reference</h3><table style=\"font-size:10pt;\" width=\"100%\">"
+  FunctionList=FunctionList.."<h2><img src=\"gfx/reaper.png\"><br>Reaper Reascript-Api-Documentation 6.12<br>\"Black Lives Matter\"</h2><h3>The Functions Reference</h3><table style=\"font-size:10pt;\" width=\"100%\">"
   reaper.ClearConsole()
   reaper.ShowConsoleMsg("Create Index\n")
   HeaderList={}
@@ -708,6 +708,9 @@ for inf=0, 0 do
   eel=""
   lua=""
   python=""
+
+if cpp~="" then print2("<div style=\"padding-left:4%;font-size:104%\">\n<b>"..cpp.."\n"..eel.."\n"..lua.."\n"..python.."</b></div>\n") end
+--  if ololol==nil then return end
 
 -- Description
   newdesc, markup_type, markup_version, lang, prog_lang=ultraschall.ParseDescription(C[index][2])

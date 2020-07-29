@@ -3203,3 +3203,163 @@ function ultraschall.GetItemStateChunk(MediaItem, AddTracknumber)
   return true, statechunk
 end
 
+function ultraschall.GetItem_Video_IgnoreAudio(Item, take_index, StateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetItem_Video_IgnoreAudio</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.11
+    Lua=5.3
+  </requires>
+  <functioncall>boolean checked_state = ultraschall.GetItem_Video_IgnoreAudio(MediaItem Item, integer take_index, optional string StateChunk)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets the "Ignore audio"-checkbox of a video-item-source in a specific MediaItem-take.
+    
+    Returns nil in case of an error(no video source in take)
+  </description>
+  <retvals>
+    boolean checked_state - true, checkbox is checked; false, checkbox is unchecked
+  </retvals>
+  <parameters>
+    MediaItem Item - the MediaItem, of whose video-sources in its takes, you want to get the ignore audio-checkbox state; nil, to use parameter StateChunk
+    integer take_index - the take, of whose video-source you want to get the ignore audio-checkbox state; 0, for the active take; 1 and higher for take 1 and higher
+    optional string StateChunk - if Item==nil, this must be a MediaItem-statechunk.
+  </parameter>
+  <chapter_context>
+    MediaItem Management
+    Get MediaItem States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
+  <tags>mediaitem management, item, take, get, ignore audio checkbox, state</tags>
+</US_DocBloc>
+]]
+  if Item~=nil and ultraschall.type(Item)~="MediaItem" then ultraschall.AddErrorMessage("GetItem_Video_IgnoreAudio", "Item", "must be a MediaItem", -1) return end
+  if ultraschall.type(take_index)~="number: integer" then ultraschall.AddErrorMessage("GetItem_Video_IgnoreAudio", "take_index", "must be an integer", -2) return end
+  if take_index<0 then ultraschall.AddErrorMessage("GetItem_Video_IgnoreAudio", "take_index", "must be 0(for active take) or 1 and higher for take 1 and higher", -3) return end
+  if Item==nil and ultraschall.IsValidMediaItemStateChunk(StateChunk)==false then ultraschall.AddErrorMessage("GetItem_Video_IgnoreAudio", "StateChunk", "must be a string", -4) return end
+  
+  local VideoSection, retval, restSC, index, Take
+  if Item==nil then
+    restSC=StateChunk
+  else
+    retval, restSC=reaper.GetItemStateChunk(A, "", false)
+  end
+  restSC=ultraschall.StateChunkLayouter(restSC)
+  restSC=restSC:match("GUID.-\n(.*)")
+  restSC="  TAKE\n"..string.gsub(restSC, "TAKE\n", "TAKE_END_3000\nTAKE\n").."  TAKE_END_3000\n"
+  
+  if take_index==0 then 
+    Take=restSC:match("(TAKE SEL.-TAKE_END_3000)")
+    if Take==nil then
+      Take=restSC:match("(TAKE.-TAKE_END_3000)")
+    end
+    VideoSection=Take:match("\n  <SOURCE VIDEO.-\n  >")
+    if VideoSection==nil then ultraschall.AddErrorMessage("GetItem_Video_IgnoreAudio", "Item", "no video-source available in active take", -5) 
+    else
+      if VideoSection:match("    AUDIO %d")==nil then return false else return true end      
+    end
+  end
+  restSC="  TAKE\n"..string.gsub(restSC, "TAKE SEL\n", "TAKE_END_3000\nTAKE\n").."  TAKE_END_3000\n"
+
+  index=0
+  for Take in string.gmatch(restSC, "(TAKE\n.-)TAKE_END_3000") do
+    index=index+1
+    if take_index==index then
+      VideoSection=Take:match("\n  <SOURCE VIDEO.-\n  >")
+      if VideoSection==nil then ultraschall.AddErrorMessage("GetItem_Video_IgnoreAudio", "Item", "no video-source available", -6) return 
+      else 
+        if VideoSection:match("    AUDIO %d")==nil then return false else return true end
+      end 
+    end
+  end
+end
+
+--AAAA=reaper.GetMediaItem(0,0)
+--retval, AAAA2=reaper.GetItemStateChunk(AAAA, "", false)
+
+--A=ultraschall.GetItem_Video_IgnoreAudio(nil, 0, AAAA2)
+
+function ultraschall.SetItem_Video_IgnoreAudio(Item, take_index, checkbox_state, StateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetItem_Video_IgnoreAudio</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.11
+    Lua=5.3
+  </requires>
+  <functioncall>string statechunk = ultraschall.GetItem_Video_IgnoreAudio(MediaItem Item, integer take_index, boolean checkbox_state, optional string StateChunk)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets the "Ignore audio"-checkbox of a video-item-source in a specific MediaItem-take.
+    
+    Returns nil in case of an error(no video source in take)
+  </description>
+  <retvals>
+    string statechunk - the altered statechunk
+  </retvals>
+  <parameters>
+    MediaItem Item - the MediaItem, of whose video-sources in its takes, you want to set the ignore audio-checkbox state; nil, to use parameter StateChunk
+    integer take_index - the take, of whose video-source you want to set the ignore audio-checkbox state; 0, for the active take; 1 and higher for take 1 and higher
+    boolean checkbox_state - true, checkbox is checked(ignores audio), false, checkbox is unchecked(audio is retained)
+    optional string StateChunk - if Item==nil, this must be a MediaItem-statechunk.
+  </parameter>
+  <chapter_context>
+    MediaItem Management
+    Set MediaItem States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
+  <tags>mediaitem management, item, take, set, ignore audio checkbox, state</tags>
+</US_DocBloc>
+]]
+  if Item~=nil and ultraschall.type(Item)~="MediaItem" then ultraschall.AddErrorMessage("SetItem_Video_IgnoreAudio", "Item", "must be a MediaItem", -1) return end
+  if ultraschall.type(take_index)~="number: integer" then ultraschall.AddErrorMessage("SetItem_Video_IgnoreAudio", "take_index", "must be an integer", -2) return end
+  if take_index<0 then ultraschall.AddErrorMessage("SetItem_Video_IgnoreAudio", "take_index", "must be 0(for selected take) or 1 and higher for take 1 and higher", -3) return end
+  if Item==nil and ultraschall.IsValidMediaItemStateChunk(StateChunk)==false then ultraschall.AddErrorMessage("SetItem_Video_IgnoreAudio", "StateChunk", "must be a string", -4) return end
+  if ultraschall.type(checkbox_state)~="boolean" then ultraschall.AddErrorMessage("SetItem_Video_IgnoreAudio", "checkbox_state", "must be a boolean", -5) return end  
+  
+  local retval, SC, NEWTAKES, take, SC3
+  if Item==nil then
+    SC=StateChunk
+  else
+    retval, SC=reaper.GetItemStateChunk(A, "", false)
+  end
+  SC=ultraschall.StateChunkLayouter(SC)
+  
+  if SC:match("TAKE SEL\n")==nil then
+    take_index=1
+  end
+
+  NEWTAKES=""
+  take=0
+  for k in string.gmatch(SC, "TAKE.-\n  >") do
+    take=take+1
+    if (take_index~=0 and take==take_index) or
+        (take_index==0 and k:match("TAKE SEL\n")~=nil) then
+      if k:match("<SOURCE VIDEO")==nil then
+        ultraschall.AddErrorMessage("SetItem_Video_IgnoreAudio", "Item", "no video-source available", -6) return 
+      else
+        if k:match("    AUDIO 0")~=nil and checkbox_state==false then
+          k=string.gsub(k, "  AUDIO 0\n", "")
+        elseif k:match("    AUDIO 0")==nil and checkbox_state==true then
+          k=string.gsub(k, "<SOURCE VIDEO\n", "<SOURCE VIDEO\n    AUDIO 0\n")
+        end
+      end
+    end
+    NEWTAKES=NEWTAKES..k.."\n"
+  end
+  NEWTAKES=SC:match("(.-ALL)TAKE")..NEWTAKES
+  SC3=""
+  for k in string.gmatch(NEWTAKES, "(.-)\n") do
+    SC3=SC3..k:match("%s*(.*)").."\n"
+  end
+  SC3=SC3.."\n"..SC:match(".*TAKE.-\n  >\n(.*)")
+  if Item~=nil then
+    reaper.SetItemStateChunk(Item, SC3, false)
+  end
+  return SC3
+end
+
+

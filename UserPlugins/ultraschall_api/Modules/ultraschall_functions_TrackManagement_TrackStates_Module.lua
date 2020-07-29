@@ -604,8 +604,7 @@ function ultraschall.GetTrackRecState(tracknumber, str)
     returns nil in case of an error
   </description>
   <retvals>
-    integer ArmState - returns 1(armed) or 0(unarmed)
-    
+    integer ArmState - returns 1(armed) or 0(unarmed)    
      integer InputChannel - returns the InputChannel
     --1 - No Input
     -1-16(more?) - Mono Input Channel
@@ -620,10 +619,8 @@ function ultraschall.GetTrackRecState(tracknumber, str)
     -5088 - All MIDI Inputs - All Channels
     -5089 - All MIDI Inputs - Channel 1
     -...
-    -5104 - All MIDI Inputs - Channel 16
-    
-     integer MonitorInput - 0 monitor off, 1 monitor on, 2 monitor on tape audio style
-     
+    -5104 - All MIDI Inputs - Channel 16    
+     integer MonitorInput - 0 monitor off, 1 monitor on, 2 monitor on tape audio style     
      integer RecInput - returns rec-input type
     -0 input(Audio or Midi)
     -1 Record Output Stereo
@@ -642,11 +639,8 @@ function ultraschall.GetTrackRecState(tracknumber, str)
     -14 Record Input Force Multichannel
     -15 Record Input Force MIDI
     -16 MIDI latch replace
-    
      integer MonitorWhileRec - Monitor Trackmedia when recording, 0 is off, 1 is on
-    
      integer presPDCdelay - preserve PDC delayed monitoring in media items
-    
      integer RecordingPath  - recording path used 
     -0 - Primary Recording-Path only
     -1 - Secondary Recording-Path only
@@ -1028,28 +1022,28 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
     
     The following flags(and their accompanying array-entry-index) are available:
                            1 - Volume Master
-                           2 - Volume Slave
+                           2 - Volume Follow
                            3 - Pan Master
-                           4 - Pan Slave
+                           4 - Pan Follow
                            5 - Mute Master
-                           6 - Mute Slave
+                           6 - Mute Follow
                            7 - Solo Master
-                           8 - Solo Slave
+                           8 - Solo Follow
                            9 - Record Arm Master
-                           10 - Record Arm Slave
+                           10 - Record Arm Follow
                            11 - Polarity/Phase Master
-                           12 - Polarity/Phase Slave
+                           12 - Polarity/Phase Follow
                            13 - Automation Mode Master
-                           14 - Automation Mode Slave
+                           14 - Automation Mode Follow
                            15 - Reverse Volume
                            16 - Reverse Pan
                            17 - Do not master when slaving
                            18 - Reverse Width
                            19 - Width Master
-                           20 - Width Slave
+                           20 - Width Follow
                            21 - VCA Master
-                           22 - VCA Slave
-                           23 - VCA pre-FX slave
+                           22 - VCA Follow
+                           23 - VCA pre-FX Follow
     
     The GroupState_as_Flags-bitfield is a hint, if a certain flag is set in any of the groups. So, if you want to know, if VCA Master is set in any group, check if flag &1048576 (2^20) is set to 1048576.
     
@@ -1065,32 +1059,32 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
     -
     -the following flags are available:
     -2^0 - Volume Master
-    -2^1 - Volume Slave
+    -2^1 - Volume Follow
     -2^2 - Pan Master
-    -2^3 - Pan Slave
+    -2^3 - Pan Follow
     -2^4 - Mute Master
-    -2^5 - Mute Slave
+    -2^5 - Mute Follow
     -2^6 - Solo Master
-    -2^7 - Solo Slave
+    -2^7 - Solo Follow
     -2^8 - Record Arm Master
-    -2^9 - Record Arm Slave
+    -2^9 - Record Arm Follow
     -2^10 - Polarity/Phase Master
-    -2^11 - Polarity/Phase Slave
+    -2^11 - Polarity/Phase Follow
     -2^12 - Automation Mode Master
-    -2^13 - Automation Mode Slave
+    -2^13 - Automation Mode Follow
     -2^14 - Reverse Volume
     -2^15 - Reverse Pan
     -2^16 - Do not master when slaving
     -2^17 - Reverse Width
     -2^18 - Width Master
-    -2^19 - Width Slave
+    -2^19 - Width Follow
     -2^20 - VCA Master
-    -2^21 - VCA Slave
-    -2^22 - VCA pre-FX slave
+    -2^21 - VCA Follow
+    -2^22 - VCA pre-FX Follow
     
      array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
     -e.g. If Volume Master is set only in Group 1, entry 1 in the array will be set to 1. If Volume Master is set on Group 2 and Group 4, the first entry in the array will be set to 10.
-    -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F slave, array[16] is Do not master when slaving, etc
+    -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F Follow, array[16] is Do not master when slaving, etc
     -As said before, the values in each entry is a flag, that tells you, which of the groups is set with a certain flag. The following flags determine, in which group a certain flag is set:
     -2^0 - Group 1
     -2^1 - Group 2
@@ -1169,28 +1163,28 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
     
     The following flags(and their accompanying array-entry-index) are available:
                            1 - Volume Master
-                           2 - Volume Slave
+                           2 - Volume Follow
                            3 - Pan Master
-                           4 - Pan Slave
+                           4 - Pan Follow
                            5 - Mute Master
-                           6 - Mute Slave
+                           6 - Mute Follow
                            7 - Solo Master
-                           8 - Solo Slave
+                           8 - Solo Follow
                            9 - Record Arm Master
-                           10 - Record Arm Slave
+                           10 - Record Arm Follow
                            11 - Polarity/Phase Master
-                           12 - Polarity/Phase Slave
+                           12 - Polarity/Phase Follow
                            13 - Automation Mode Master
-                           14 - Automation Mode Slave
+                           14 - Automation Mode Follow
                            15 - Reverse Volume
                            16 - Reverse Pan
                            17 - Do not master when slaving
                            18 - Reverse Width
                            19 - Width Master
-                           20 - Width Slave
+                           20 - Width Follow
                            21 - VCA Master
-                           22 - VCA Slave
-                           23 - VCA pre-FX slave
+                           22 - VCA Follow
+                           23 - VCA pre-FX Follow
     
     The GroupState_as_Flags-bitfield is a hint, if a certain flag is set in any of the groups. So, if you want to know, if VCA Master is set in any group, check if flag &1048576 (2^20) is set to 1048576.
     
@@ -1206,32 +1200,32 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
     -
     -the following flags are available:
     -2^0 - Volume Master
-    -2^1 - Volume Slave
+    -2^1 - Volume Follow
     -2^2 - Pan Master
-    -2^3 - Pan Slave
+    -2^3 - Pan Follow
     -2^4 - Mute Master
-    -2^5 - Mute Slave
+    -2^5 - Mute Follow
     -2^6 - Solo Master
-    -2^7 - Solo Slave
+    -2^7 - Solo Follow
     -2^8 - Record Arm Master
-    -2^9 - Record Arm Slave
+    -2^9 - Record Arm Follow
     -2^10 - Polarity/Phase Master
-    -2^11 - Polarity/Phase Slave
+    -2^11 - Polarity/Phase Follow
     -2^12 - Automation Mode Master
-    -2^13 - Automation Mode Slave
+    -2^13 - Automation Mode Follow
     -2^14 - Reverse Volume
     -2^15 - Reverse Pan
     -2^16 - Do not master when slaving
     -2^17 - Reverse Width
     -2^18 - Width Master
-    -2^19 - Width Slave
+    -2^19 - Width Follow
     -2^20 - VCA Master
-    -2^21 - VCA Slave
-    -2^22 - VCA pre-FX slave
+    -2^21 - VCA Follow
+    -2^22 - VCA pre-FX Follow
     
      array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
     -e.g. If Volume Master is set only in Group 33, entry 1 in the array will be set to 1. If Volume Master is set on Group 34 and Group 36, the first entry in the array will be set to 10.
-    -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F slave, array[16] is Do not master when slaving, etc
+    -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F Follow, array[16] is Do not master when slaving, etc
     -As said before, the values in each entry is a flag, that tells you, which of the groups is set with a certain flag. The following flags determine, in which group a certain flag is set:
     -2^0 - Group 33
     -2^1 - Group 34
@@ -2751,49 +2745,43 @@ function ultraschall.SetTrackRecState(tracknumber, ArmState, InputChannel, Monit
   </retvals>
   <parameters>
     integer tracknumber - number of the track, beginning with 1; 0 for master-track; -1 if you want to use parameter TrackStateChunk
-    integer ArmState - set to 1(armed) or 0(unarmed)
-    
+    integer ArmState - set to 1(armed) or 0(unarmed)    
     integer InputChannel - the InputChannel
-    --1 - No Input
-    -1-16(more?) - Mono Input Channel
-    -1024 - Stereo Channel 1 and 2
-    -1026 - Stereo Channel 3 and 4
-    -1028 - Stereo Channel 5 and 6
-    -...
-    -5056 - Virtual MIDI Keyboard all Channels
-    -5057 - Virtual MIDI Keyboard Channel 1
-    -...
-    -5072 - Virtual MIDI Keyboard Channel 16
-    -5088 - All MIDI Inputs - All Channels
-    -5089 - All MIDI Inputs - Channel 1
-    -...
-    -5104 - All MIDI Inputs - Channel 16
-    
-    integer Monitor Input - 0 monitor off, 1 monitor on, 2 monitor on tape audio style
-    
+        --1 - No Input
+        -1-16(more?) - Mono Input Channel
+        -1024 - Stereo Channel 1 and 2
+        -1026 - Stereo Channel 3 and 4
+        -1028 - Stereo Channel 5 and 6
+        -...
+        -5056 - Virtual MIDI Keyboard all Channels
+        -5057 - Virtual MIDI Keyboard Channel 1
+        -...
+        -5072 - Virtual MIDI Keyboard Channel 16
+        -5088 - All MIDI Inputs - All Channels
+        -5089 - All MIDI Inputs - Channel 1
+        -...
+        -5104 - All MIDI Inputs - Channel 16
+    integer Monitor Input - 0 monitor off, 1 monitor on, 2 monitor on tape audio style    
     integer RecInput - the rec-input type
-    -0 input(Audio or Midi)
-    -1 Record Output Stereo
-    -2 Disabled, Input Monitoring Only
-    -3 Record Output Stereo, Latency Compensated
-    -4 Record Output MIDI
-    -5 Record Output Mono
-    -6 Record Output Mono, Latency Compensated
-    -7 MIDI overdub
-    -8 MIDI replace
-    -9 MIDI touch replace
-    -10 Record Output Multichannel
-    -11 Record Output Multichannel, Latency Compensated 
-    -12 Record Input Force Mono
-    -13 Record Input Force Stereo
-    -14 Record Input Force Multichannel
-    -15 Record Input Force MIDI
-    -16 MIDI latch replace
-    
+        -0 input(Audio or Midi)
+        -1 Record Output Stereo
+        -2 Disabled, Input Monitoring Only
+        -3 Record Output Stereo, Latency Compensated
+        -4 Record Output MIDI
+        -5 Record Output Mono
+        -6 Record Output Mono, Latency Compensated
+        -7 MIDI overdub
+        -8 MIDI replace
+        -9 MIDI touch replace
+        -10 Record Output Multichannel
+        -11 Record Output Multichannel, Latency Compensated 
+        -12 Record Input Force Mono
+        -13 Record Input Force Stereo
+        -14 Record Input Force Multichannel
+        -15 Record Input Force MIDI
+        -16 MIDI latch replace
     integer MonitorWhileRec - Monitor Trackmedia when recording, 0 is off, 1 is on
-    
     integer presPDCdelay - preserve PDC delayed monitoring in media items
-    
     integer RecordingPath - 0 Primary Recording-Path only, 1 Secondary Recording-Path only, 2 Primary Recording Path and Secondary Recording Path(for invisible backup)
     optional string TrackStateChunk - use a trackstatechunk instead of a track; only used when tracknumber is -1
   </parameters>
@@ -3249,10 +3237,10 @@ function ultraschall.SetTrackPerfState(tracknumber, Perf, TrackStateChunk)
   <parameters>
     integer tracknumber - number of the track, beginning with 1; -1 if you want to use parameter TrackStateChunk
     integer Perf  - performance-state
-    - 0 - allow anticipative FX + allow media buffering
-    - 1 - allow anticipative FX + prevent media buffering
-    - 2 - prevent anticipative FX + allow media buffering
-    - 3 - prevent anticipative FX + prevent media buffering
+        - 0 - allow anticipative FX + allow media buffering
+        - 1 - allow anticipative FX + prevent media buffering
+        - 2 - prevent anticipative FX + allow media buffering
+        - 3 - prevent anticipative FX + prevent media buffering
     optional string TrackStateChunk - use a trackstatechunk instead of a track; only used when tracknumber is -1
   </parameters>
   <chapter_context>
@@ -4941,28 +4929,28 @@ function ultraschall.SetTrackGroupFlagsState(tracknumber, groups_bitfield_table,
     
     The following flags(and their accompanying array-entry-index) are available:
                            1 - Volume Master
-                           2 - Volume Slave
+                           2 - Volume Follow
                            3 - Pan Master
-                           4 - Pan Slave
+                           4 - Pan Follow
                            5 - Mute Master
-                           6 - Mute Slave
+                           6 - Mute Follow
                            7 - Solo Master
-                           8 - Solo Slave
+                           8 - Solo Follow
                            9 - Record Arm Master
-                           10 - Record Arm Slave
+                           10 - Record Arm Follow
                            11 - Polarity/Phase Master
-                           12 - Polarity/Phase Slave
+                           12 - Polarity/Phase Follow
                            13 - Automation Mode Master
-                           14 - Automation Mode Slave
+                           14 - Automation Mode Follow
                            15 - Reverse Volume
                            16 - Reverse Pan
                            17 - Do not master when slaving
                            18 - Reverse Width
                            19 - Width Master
-                           20 - Width Slave
+                           20 - Width Follow
                            21 - VCA Master
-                           22 - VCA Slave
-                           23 - VCA pre-FX slave
+                           22 - VCA Follow
+                           23 - VCA pre-FX Follow
     
     This function will work only for Groups 1 to 32. To set Groups 33 to 64, use <a href="#SetTrackGroupFlags_HighState">SetTrackGroupFlags_HighState</a> instead!
     
@@ -5059,28 +5047,28 @@ function ultraschall.SetTrackGroupFlags_HighState(tracknumber, groups_bitfield_t
     
     The following flags(and their accompanying array-entry-index) are available:
                            1 - Volume Master
-                           2 - Volume Slave
+                           2 - Volume Follow
                            3 - Pan Master
-                           4 - Pan Slave
+                           4 - Pan Follow
                            5 - Mute Master
-                           6 - Mute Slave
+                           6 - Mute Follow
                            7 - Solo Master
-                           8 - Solo Slave
+                           8 - Solo Follow
                            9 - Record Arm Master
-                           10 - Record Arm Slave
+                           10 - Record Arm Follow
                            11 - Polarity/Phase Master
-                           12 - Polarity/Phase Slave
+                           12 - Polarity/Phase Follow
                            13 - Automation Mode Master
-                           14 - Automation Mode Slave
+                           14 - Automation Mode Follow
                            15 - Reverse Volume
                            16 - Reverse Pan
                            17 - Do not master when slaving
                            18 - Reverse Width
                            19 - Width Master
-                           20 - Width Slave
+                           20 - Width Follow
                            21 - VCA Master
-                           22 - VCA Slave
-                           23 - VCA pre-FX slave
+                           22 - VCA Follow
+                           23 - VCA pre-FX Follow
     
     This function will work only for Groups 33(2^0) to 64(2^31). To set Groups 1 to 32, use <a href="#SetTrackGroupFlagsState">SetTrackGroupFlagsState</a> instead!
     

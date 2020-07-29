@@ -54,6 +54,12 @@ function SoundcheckOverdub(userspace)
     return false
   end
 
+  preroll_rec = reaper.GetExtState("ultraschall_PreviewRecording", "RecPosition")
+  preroll_dialog = reaper.GetExtState("ultraschall_PreviewRecording", "Dialog")
+  if preroll_rec ~= "" or preroll_dialog == "1" then -- es ist ein Preroll-Recording aktiv, also alles ok
+    return false
+  end
+
   local length = reaper.GetProjectLength(0)
   local play = reaper.GetPlayPosition()
   local cursor = reaper.GetCursorPosition()
@@ -172,11 +178,24 @@ function SoundcheckTransitionRecordToStop(userspace)
   -- get the current playstate
   local current_playstate=reaper.GetPlayState()
   local retval, editing_started = reaper.GetProjExtState(0, "Editing", "started")
+  local retval, recording_started = reaper.GetProjExtState(0, "Recording", "started")
 
-  if current_playstate==0 and userspace["old_playstate"]==5 and editing_started ~= "1" then -- 0 = Stop, 5 = recording
+  if current_playstate==5 then --
+    reaper.SetProjExtState(0, "Editing", "started", "0")
+    reaper.SetProjExtState(0, "Recording", "started", "1")
+    userspace["prepare_warning"] = "0"
+    -- userspace["old_playstate"]=current_playstate
+    return false
+  elseif userspace["prepare_warning"] == "1" and editing_started ~= "1" then
+    return true
+
+  elseif current_playstate==1 and recording_started == "1" and editing_started ~= "1" then -- 0 = Stop, 5 = recording
+    userspace["prepare_warning"] = "1"
+    reaper.OnStopButton()
+
     return true
   else
-    userspace["old_playstate"]=current_playstate
+    userspace["prepare_warning"] = "0"
     return false
   end
 end

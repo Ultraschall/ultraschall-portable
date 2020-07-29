@@ -211,7 +211,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  return 410.001, "4.1","11th of May 2020", "001",  "\"Radiohead - Spectre\"", ultraschall.hotfixdate, BuildNumber
+  return 410.003, "4.1","1st of July 2020", "003",  "\"Premier\"", ultraschall.hotfixdate, BuildNumber
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -815,7 +815,7 @@ function ultraschall.CountErrorMessages()
   return ultraschall.ErrorCounter
 end
 
-function ultraschall.ShowLastErrorMessage()
+function ultraschall.ShowLastErrorMessage(dunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ShowLastErrorMessage</slug>
@@ -824,10 +824,13 @@ function ultraschall.ShowLastErrorMessage()
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>ultraschall.ShowLastErrorMessage()</functioncall>
+  <functioncall>ultraschall.ShowLastErrorMessage(optional integer dunk)</functioncall>
   <description>
     Displays the last error message in a messagebox, if existing and unread.
   </description>
+  <paramters>
+    optional integer dunk - allows to index the last x'ish message to be returned; nil or 0, the last one; 1, the one before the last one, etc.
+  </parameters>
   <chapter_context>
     Developer
     Error Handling
@@ -837,9 +840,18 @@ function ultraschall.ShowLastErrorMessage()
   <tags>developer, error, show, message</tags>
 </US_DocBloc>
 --]]
-  -- get the error-information
-  local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage()
+  local three
+  if dunk=="dunk" then three="Three points" end
+  dunk=math.tointeger(dunk)
+  if dunk==nil then dunk=0 end
   
+  local CountErrMessage=ultraschall.CountErrorMessages()
+  if CountErrMessage<=0 then return end
+  if dunk<0 then dunk=CountErrMessage+dunk else dunk=CountErrMessage-dunk end
+  -- get the error-information
+  --local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage()
+    local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp = ultraschall.ReadErrorMessage(dunk)
+    AAA=retval
   -- if errormessage exists and message is unread
   if retval==true and lastreadtime=="unread" then 
     if parmname~="" then 
@@ -851,6 +863,7 @@ function ultraschall.ShowLastErrorMessage()
       reaper.MB(functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode,"Ultraschall Api Error Message",0) 
     end
   end
+  return three
 end
 
 --[[
@@ -861,13 +874,16 @@ end
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>SLEM()</functioncall>
+  <functioncall>SLEM(optional integer dunk)</functioncall>
   <description>
     Displays the last error message in a messagebox, if existing and unread.
     
     Like ultraschall.ShowLastErrorMessage() but this is easier to type.
     Note: written without ultraschall. in the beginning!
   </description>
+  <parameters>
+    optional integer dunk - allows to index the last x'ish message to be returned; nil or 0, the last one; 1, the one before the last one, etc.
+  </parameters>
   <chapter_context>
     Developer
     Error Handling
@@ -1390,7 +1406,7 @@ function PingMe(message, outputtarget)
     Reaper=5.95
     Lua=5.3
   </requires>
-  <functioncall>string pingmessage = PingMe(optional string message, integer outputtarget)</functioncall>
+  <functioncall>string pingmessage = PingMe(optional string message, optional integer outputtarget)</functioncall>
   <description>
     Shows the current script and line of script-execution, optionally with a message.
     

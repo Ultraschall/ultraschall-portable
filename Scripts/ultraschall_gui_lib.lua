@@ -83,16 +83,18 @@ end
 
 if reaper.GetOS()=="OSX32" or reaper.GetOS()=="OSX64" then
   font_size = 14 * dpi_scale
+  font_size2 = 20 * dpi_scale
   font_face = "Helvetica"
 else
   font_size = 16 * dpi_scale
+  font_size2 = 22 * dpi_scale
   font_face = "Arial"
 end
 
 GUI.fonts = {
 
   {font_face, font_size},  -- 1. Title
-  {font_face, font_size},  -- 2. Header
+  {font_face, font_size2},  -- 2. Header
   {font_face, font_size},  -- 3. Label
   {font_face, font_size}  -- 4. Value
 
@@ -103,15 +105,22 @@ GUI.colors = {
   wnd_bg = {44, 44, 44, 1},      -- Window BG
   elm_bg = {48, 48, 48, 1},      -- Element BG
   sld_bg = {60, 60, 60, 1},    -- Slider Background
-  elm_frame = {70, 70, 70, 1},    -- Element Frame
+  elm_frame = {90, 90, 90, 1},    -- Element Frame
+  button = {80, 80, 80, 1},    -- Element Frame
   elm_highlight = {100, 100, 100, 1},    -- Element Highlight
   elm_fill = {200, 130, 64, 1},    -- Element Fill
   elm_outline = {32, 32, 32, 1},
   txt = {200, 200, 200, 1},      -- Text
+  txt_button = {230, 230, 230, 1},      -- Text
+  txt_button_disabled = {130, 130, 130, 1},      -- Text
   txt_green = {80, 250, 80, 1},      -- Text green
   txt_red = {250, 40, 40, 1},      -- Text red
   txt_yellow = {250, 250, 40, 1},      -- Text red
   txt_muted = {100, 100, 100, 1},      -- Text dark grey
+  txt_grey = {150, 150, 150, 1},    -- Header Background
+  header_bg = {60, 60, 60, 1},    -- Header Background
+  section_bg = {52, 52, 52, 1},    -- Header Background
+  white = {250, 250, 250, 1},    -- Header Background
 
   shadow = {0, 0, 0, 0.6}        -- Shadow. Don't call this with GUI.color
 
@@ -412,6 +421,7 @@ function Main()
   windownumber=reaper.GetExtState("Ultraschall_Windows",GUI.name)
 --  reaper.MB(windownumber,"pre",0)
     reaper.SetExtState("Ultraschall_Windows",GUI.name,windownumber-1,true)
+    abort = true
 -- reaper.MB(reaper.GetExtState("Ultraschall_Windows",GUI.name),"post",0)
     return 0
   else
@@ -433,12 +443,13 @@ function Main()
     if new_time - GUI.last_time >= GUI.freq then
       GUI.func()
       GUI.last_time = new_time
+      gfx.update() -- rufe nur in der Frequenz des GUI Updates auf
 
     end
   end
 
+  -- gfx.update()
 
-  gfx.update()
 
 end
 
@@ -459,13 +470,16 @@ function Update(elm)
     -- If it wasn't down already...
     if not GUI.mouse.down then
 
+
+
       -- Was a different element clicked?
-      if not IsInside(elm, x, y) then
+      if not IsInside(elm, x, y) or elm.type == "Area" then -- Area darf nicht klickbare Elemente überdecken
 
         elm.focus = false
 
       else
 
+        -- print(elm.type)
 
       GUI.mouse.down = true
       GUI.mouse.ox, GUI.mouse.oy = x, y
@@ -482,7 +496,7 @@ function Update(elm)
       end
 
     --     Dragging?                   Did the mouse start out in this element?
-    elseif (x ~= GUI.mouse.lx or y ~= GUI.mouse.ly) and IsInside(elm, GUI.mouse.ox, GUI.mouse.oy) then
+    elseif (x ~= GUI.mouse.lx or y ~= GUI.mouse.ly) and IsInside(elm, GUI.mouse.ox, GUI.mouse.oy) and elm.type ~= "Area" then
 
       if elm.focus ~= nil then elm:ondrag() end
 
@@ -491,7 +505,7 @@ function Update(elm)
     end
 
   -- If it was originally clicked in this element and has now been released
-  elseif GUI.mouse.down and IsInside(elm, GUI.mouse.ox, GUI.mouse.oy) then
+  elseif GUI.mouse.down and IsInside(elm, GUI.mouse.ox, GUI.mouse.oy) and elm.type ~= "Area" then -- Area darf nicht klickbare Elemente überdecken
 
     elm:onmouseup()
     GUI.mouse.down = false
@@ -543,6 +557,7 @@ function Area:new(x, y, w, h, r, antialias, fill, color)
   roundarea.antialias = antialias
   roundarea.fill = fill
   roundarea.color = color or "txt"
+  roundarea.focus = false
 
   setmetatable(roundarea, self)
     self.__index = self
@@ -896,13 +911,14 @@ GUI.Line = Line
 
 -- Lbl - New
 local Lbl = {}
-function Lbl:new(x, y, caption, shadow, color)
+function Lbl:new(x, y, caption, shadow, color, size)
 
 
   local label = {}
   label.type = "Lbl"
   label.color = color or "txt"
   label.x, label.y = x * dpi_scale, y * dpi_scale
+  label.size = size or 1
 
   -- Placeholders for these values, since we don't need them
   -- but some functions will throw a fit if they aren't there
@@ -924,7 +940,7 @@ function Lbl:draw()
 
   local x, y = self.x, self.y
 
-  GUI.font(1)
+  GUI.font(self.size)
 
   -- Shadow
   if self.shadow ~= 0 then
@@ -1073,7 +1089,7 @@ function Sldr:draw()
 
   local str_w, str_h = gfx.measurestr(self.caption)
 
-  gfx.x = x - 188 * dpi_scale
+  gfx.x = x - 218 * dpi_scale
   gfx.y = y - 2 * dpi_scale
 
   gfx.drawstr(self.caption)
@@ -1501,13 +1517,14 @@ value     selected an/aus (numerischer Wert 0/1)
 
 -- Checklist - New
 local Checklist = {}
-function Checklist:new(x, y, w, h, caption, opts, pad, value, sectionName)
+function Checklist:new(x, y, w, h, caption, opts, pad, value, sectionName, limit)
 
 
 
   local chk = {}
   chk.type = "Checklist"
   chk.sectionname = sectionName
+  chk.limit = limit or 255
 
   chk.x, chk.y, chk.w, chk.h = x * dpi_scale
   , y * dpi_scale
@@ -1577,7 +1594,6 @@ function Checklist:draw()
 
   for i = 1, self.numopts do
 
-
     -- Draw the option frame
     GUI.color("elm_frame")
     gfx.rect(x + size / 2, cur_y + (optheight - size) / 2, size, size, 0)
@@ -1600,7 +1616,15 @@ function Checklist:draw()
     gfx.y = cur_y + (optheight - str_h) / 2
 
     if self.numopts == 1 then
-      GUI.shadow(self.optarray[i])
+
+      if string.len(self.optarray[i]) > self.limit then -- es gibt eine Limitierung der Länge
+        draw_txt = string.sub (self.optarray[i], 1, self.limit) .. "..."
+      else
+        draw_txt = self.optarray[i]
+      end
+
+      GUI.shadow(draw_txt)
+
     else
       GUI.color("txt")
       gfx.drawstr(self.optarray[i])
@@ -1674,6 +1698,20 @@ local Btn = {}
 function Btn:new(x, y, w, h, caption, func, ...)
 
   local btn = {}
+
+  if w == 1 then
+    str_w, str_h = gfx.measurestr(caption)
+    w = str_w / dpi_scale + 20
+    btn.blank = false
+  end
+  if w == 0 then
+    w = string.len(caption)*7
+    btn.blank = true
+  else
+    btn.blank = false
+  end
+
+
   btn.type = "Btn"
 
   btn.x, btn.y, btn.w, btn.h = x * dpi_scale
@@ -1684,7 +1722,7 @@ function Btn:new(x, y, w, h, caption, func, ...)
 
   btn.caption = caption
 
-  btn.func = func
+  btn.func = func or ""
   btn.params = {...}
 
   btn.state = 0
@@ -1705,7 +1743,7 @@ function Btn:draw()
   local state = self.state
 
   -- Draw the shadow
-  if state == 0 then
+  if state == 0 and self.blank ~= true then
     local dist = GUI.shadow_dist
     GUI.color("shadow")
     for i = 1, dist do
@@ -1733,15 +1771,25 @@ function Btn:draw()
   end
 
   -- Draw the button
-  GUI.color("elm_frame")
-  GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 4 * dpi_scale
-  , 1 * dpi_scale
-  , 1 * dpi_scale
-)
+
+  if self.blank ~= true then
+    GUI.color("button")
+    GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 4 * dpi_scale
+    , 1 * dpi_scale
+    , 1 * dpi_scale
+  )
+  end
 
 
   -- Draw the caption
-  GUI.color("txt")
+
+  if self.func == "" then
+    GUI.color("txt_button_disabled")
+  else
+    GUI.color("txt_button")
+  end
+
+
   GUI.font(4)
 
   if reaper.GetOS() == "OSX64" then
@@ -1753,7 +1801,11 @@ function Btn:draw()
   end
 
   local str_w, str_h = gfx.measurestr(self.caption)
-  gfx.x = x + 1 * state + ((w - str_w) / 2) - 2 * dpi_scale
+  if self.blank ~= true then
+    gfx.x = x + 1 * state + ((w - str_w) / 2) - 2 * dpi_scale
+  else
+    gfx.x = x
+  end
 
   gfx.y = y + 1 * state + ((h - str_h) / 2) - 2 * dpi_scale
 
@@ -1777,7 +1829,7 @@ function Btn:onmouseup()
   self.state = 0
 
   -- If the button was released on the button, run func
-  if IsInside(self, GUI.mouse.x, GUI.mouse.y) then
+  if IsInside(self, GUI.mouse.x, GUI.mouse.y) and self.func~= "" then
 
     self.func(table.unpack(self.params))
 

@@ -1,0 +1,317 @@
+// written by Till
+//
+// note: the effect sends data to regx. x is specified by the "send pan data to" slider
+//
+// note: the lookahead must be compensated manually
+//
+//
+
+desc: Transient-Driven Auto-Pan (Transmitter)
+//tags: processing stereo modulation
+//author: Till
+
+slider1:0<0,2,1{Stereo,Left,Right}>Input
+slider2:3<0,3,1{Left to Right,Right to Left,Bounce,Random (Ignores Pan/Random step size)}>Pan Mode
+slider3:10<0,100,1>Pan Step Size (%)
+slider4:0<0,100,1>Random Step Size (%)
+slider5:100<1,100,1>Max Pan
+slider6:20<0,1000,1>Fade Time (ms)
+slider7:0<0,10,1>Sloppiness (Transmitter Only)
+slider8:250<20,500,1>Min Pause Between Pans (ms)
+slider9:0<0,10,1>Max Delay (ms)
+slider11:0<0,5,1{Left+Right,Left,Right,Sidechain Left+Right,Sidechain Left,Sidechain Right}>Director
+slider12:0<0,1,1{No,Yes}>Preview Director
+slider13:5<0,10,.1>Sensitivity
+slider14:0<0,100,1>Look Ahead (ms)
+slider15:0<0,10,1{Off,reg00,reg01,reg02,reg03,reg04,reg05,reg06,reg07,reg08,reg09}>Send Pan Data To
+slider16:0<-100,100,1>Current Pan
+
+in_pin:left input
+in_pin:right input
+in_pin:sidechain left input
+in_pin:sidechain right input
+out_pin:left output
+out_pin:right output
+
+/////////////////
+///           ///
+///  I N I T  ///
+///           ///
+/////////////////
+
+@init
+
+	log2 = log(2);
+	sqrt2 = sqrt(2);
+
+	curgain = 1;
+	curgaindb = 0;
+	splsincelastpan = 0;
+	now = 0;
+	curpan = 0;
+	sloppypan = 0;
+	targetpan = 0;
+	lastpan = 0;
+	forth = 1;
+
+	maxdelay = ceil((10 + 100) / 1000 * srate);
+
+	delaybufferl = 0;
+	delaybufferr = 2 * maxdelay;
+
+	delaypointer = 0;
+
+	rmswindow = 50 / 1000 * srate;
+	rmsbuffer = 4 * maxdelay;
+
+	rmssum = 0;
+	rmsp = 0;
+
+/////////////////
+///           ///
+///  SLIDER   ///
+///           ///
+/////////////////
+
+@slider
+
+	// SLIDER VALUES
+
+	input = slider1;
+
+	mode = slider2;
+
+	stepsize = slider3;
+	randomstepsize = slider4;
+
+	maxpan = slider5;
+
+	fadetime = slider6 / 1000 * srate;
+	sloppiness = slider7;
+
+	pause = slider8 / 1000 * srate;
+
+	delay = slider9 / 1000 * srate;
+
+	director = slider11;
+
+	preview = slider12;
+	
+	sensitivity = slider13;
+
+	lookahead = slider14 / 1000 * srate;
+
+	sendto = slider15;
+
+	attack = max(1, sqr(sensitivity) * 0.003 * srate);
+	release = max(1, pause / 2);
+
+	tolerancedb = 12 - sensitivity;
+	tolerance = 2 ^ (tolerancedb / 6);
+
+	minrms = 2 ^ (-5 - sensitivity / 2);
+
+/////////////////
+///           ///
+///  SAMPLE   ///
+///           ///
+/////////////////
+
+@sample
+
+	// choosing input
+
+	input == 0 ? (
+		l = spl0;
+		r = spl1;
+	) : input == 1 ? (
+		l = spl0;
+		r = spl0;
+	) : input == 2 ? (
+		l = spl1;
+		r = spl1;
+	) : 0;
+
+	// buffering
+
+	delaybufferl[delaypointer] = l;
+	delaybufferl[delaypointer + maxdelay] = l;
+	delaybufferr[delaypointer] = r;
+	delaybufferr[delaypointer + maxdelay] = r;
+
+	// choosing director
+
+	director == 0 ? (
+		dl = spl0;
+		dr = spl1;
+	) : director == 1 ? (
+		dl = spl0;
+		dr = spl0;
+	) : director == 2 ? (
+		dl = spl1;
+		dr = spl1;
+	) : director == 3 ? (
+		dl = spl2;
+		dr = spl3;
+	) : director == 4 ? (
+		dl = spl2;
+		dr = spl2;
+	) : director == 5 ? (
+		dl = spl3;
+		dr = spl3;
+	) : 0;
+
+	cursample = (abs(dl) + abs(dr)) / 2;
+
+// calcing rms power
+
+	rmssum -= rmsbuffer[rmsp];
+
+	rmssum += sqr(cursample);
+
+	rmsbuffer[rmsp] = sqr(cursample);
+
+	rms = max(sqrt(rmssum / rmswindow), minrms);
+
+	rmsp+=1;
+	rmsp >= rmswindow && rmsp = 0;
+
+	threshold = rms * 1.68;
+	thresholddb = 6 * log(threshold) / log2 + 3;
+
+// detecting
+
+	(cursample >= threshold) ? (
+		cursampledb = 6 * log(cursample) / log2;
+		targetgaindb = thresholddb - cursampledb;
+	) : (
+		targetgaindb = 0;
+	);
+
+	targetgaindb > curgaindb ? (
+		curgaindb += (targetgaindb - curgaindb) / release;
+	) : (
+		curgaindb += (targetgaindb - curgaindb) / attack;
+	);
+
+	curgain = exp((curgaindb / 6) * log2);
+
+	detector = cursample * curgain;
+
+// panning
+
+	pop = 0;
+	now ? (
+		(splsincelastpan > pause) && now = 0;
+	) : (
+		detector > threshold * tolerance && (
+			pop = 1;
+			now = 1;
+			splsincelastpan = 0;
+			lastpan = curpan;
+			mode == 0 ? (
+				targetpan = curpan + stepsize + (rand(2) - 1) * randomstepsize;
+				targetpan < -maxpan && (targetpan += 2 * maxpan);
+				targetpan > maxpan && (targetpan -= 2 * maxpan);
+			) : mode == 1 ? (
+				targetpan = curpan - stepsize - (rand(2) - 1) * randomstepsize;
+				targetpan > maxpan && (targetpan -= 2 * maxpan);
+				targetpan < -maxpan && (targetpan += 2 * maxpan);
+			) : mode == 2 ? (
+				forth ? (
+					targetpan = curpan + stepsize + (rand(2) - 1) * randomstepsize;
+				) : (
+					targetpan = curpan - stepsize - (rand(2) - 1) * randomstepsize;
+				);
+				targetpan > maxpan && (
+					targetpan = 2 * maxpan - targetpan;
+					forth = 0;
+				);
+				targetpan < -maxpan && (
+					targetpan = - 2* maxpan - targetpan;
+					forth = 1;
+				);
+			) : (
+				targetpan = ceil((rand(2) - 1) * maxpan);
+			);
+		);
+	);
+
+	splsincelastpan += 1;
+
+//fading the pan
+
+	curpan != targetpan && (
+		fadepos = splsincelastpan / fadetime;
+		fadepos = (-cos(min(fadepos, 1) * $pi) + 1) / 2;
+		curpan = lastpan + (targetpan - lastpan) * fadepos;
+	);
+
+// sending pan info
+
+	sendto > 0 && (
+		sendto == 1 ? (
+			reg00 = curpan;
+		) : sendto == 2 ? (
+			reg01 = curpan;
+		) : sendto == 3 ? (
+			reg02 = curpan;
+		) : sendto == 4 ? (
+			reg03 = curpan;
+		) : sendto == 5 ? (
+			reg04 = curpan;
+		) : sendto == 6 ? (
+			reg05 = curpan;
+		) : sendto == 7 ? (
+			reg06 = curpan;
+		) : sendto == 8 ? (
+			reg07 = curpan;
+		) : sendto == 9 ? (
+			reg08 = curpan;
+		) : sendto == 10 ? (
+			reg09 = curpan;
+		) : 0;
+	);
+
+// sloppiness
+
+	s = sloppiness * sloppiness * sloppiness * sloppiness;
+	sloppypan = (curpan + s * sloppypan) / (s + 1);
+
+// calculating the actual volumes
+
+	abspan = abs(sloppypan);
+	dominantpandb = 6 * abspan / 100;
+	dominantpan = exp((dominantpandb / 6) * log2);
+	recessivepan = 2 - dominantpan;
+
+// leveling
+
+	sloppypan > 0 ? (
+		r = dominantpan * delaybufferr[maxdelay + delaypointer - lookahead];
+		x = abspan / 100 * delay;
+		f = x - floor(x);
+		c = floor(x + 1) - x;
+		l = recessivepan * (c * delaybufferl[maxdelay + delaypointer - floor(abspan / 100 * delay) - lookahead] + f * delaybufferl[maxdelay + delaypointer - ceil(abspan / 100 * delay) - lookahead]);
+	) : (
+		l = dominantpan * delaybufferl[maxdelay + delaypointer - lookahead];
+		x = abspan / 100 * delay;
+		f = x - floor(x);
+		c = floor(x + 1) - x;
+		r = recessivepan * (c * delaybufferr[maxdelay + delaypointer - floor(abspan / 100 * delay) - lookahead] + f * delaybufferr[maxdelay + delaypointer - ceil(abspan / 100 * delay) - lookahead]);
+	);
+	
+// outputting
+
+	preview ? (
+		spl0 = dl;
+		spl1 = pop;
+	) : (
+		spl0 = l;
+		spl1 = r;
+	);
+
+	slider16 = curpan;
+
+	delaypointer += 1;
+	delaypointer >= maxdelay && (delaypointer = 0);

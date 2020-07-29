@@ -40,6 +40,243 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.1.003 - "Premier" - 1st of July 2020</h3>
+<p>Has now 1200 functions, with 54 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Theme Parameter Access and monitoring script</strong><br />
+Since Reaper 6, Cockos added the option of influencing a theme via so called theme-parameters. One such example is WhiteTie's Default Reaper6-Theme, which can be influenced via the theme-adjuster.<br />
+And here's the thing: this can not only be influenced, it can also be programmed.<br />
+So if you wanted to write scripts, who automatically adjust things without having to use the theme-adjuster, by using GetAllThemeLayoutParameters, ApplyAllThemeLayoutParameters, GetAllThemeLayoutParameters, GetThemeParameterIndexByDescription, GetThemeParameterIndexByName, SetThemeParameterIndexByDescription and SetThemeParameterIndexByName.<br />
+And if you want to know, which theme-parameters can be set and which values are the right ones, the developer-package includes now a Theme-Parameter monitoring script.<br />
+With that, you can see altered parameters(in Reaper's default v6 theme, for instance) and use the aforementioned functions to influence them accordingly.<br />
+Just run the "Script: ultraschall_Add_Developertools_To_Reaper.lua"-script after installing the update and there you have it.<br />
+One huge step into theme-customization...</p></li>
+<li><p><strong>MetaData</strong><br />
+Since Reaper has metadata-export-capabilities now, I've added nice and handy functions to get and set them, including docs and everything.<br />
+The rendering-functions also allow now switching on the metadata-embedding, so there's no excuse anymore to not use it.</p></li>
+<li><p><strong>LangPack Compare-script</strong><br />
+This is probably useful for translators among you. I wrote a script, which compares two ReaperLangPack-files and returns the differences between the two into the clipboard.<br />
+That way you can compare the most recent official LangPack with a former one and can see immediately, what has been added/altered and into where, so you can update your translation accordingly.<br />
+Just run the "Script: ultraschall_Add_Developertools_To_Reaper.lua"-script after installing the update and there you have it.</p></li>
+<li><p><strong>Envelope Activation</strong><br />
+When working with envelopes, especially when scripting, you can not really work with envelopes, unless they are activated. Funny enough: there's no "Activate"Envelope"-function in Reaper's own API.<br />
+So I tried to find ways around it.<br />
+With ActivateEnvelope(good for send-envelopes), ActivateTrackPanEnv, ActivateTrackPreFXPanEnv, ActivateTrackPreFXVolumeEnv, ActivateTrackTrimVolumeEnv, ActivateTrackVolumeEnv you can activate most of the most important envelopes and therefore script them.<br />
+Some are still missing, so I hope, I can add the missing ones too...</p></li>
+<li><p><strong>TrackManager</strong><br />
+It has been requested in the feature-request subforum and the general-forum: functions for the trackmanager.<br />
+Thing is, it is quite useful, but there are simply no actions available for it, even though having shortcuts set to some of the basics can be very handy.<br />
+So I added TrackManager_ClearFilter, TrackManager_OpenClose, TrackManager_ShowAll, TrackManager_SelectionFromProject, TrackManager_SelectionFromList, TrackManager_SetFilter who allow you to script many of the ui-elements of the track manager.</p></li>
+<li><p><strong>Lokasenna's Gui Lib v2</strong><br />
+now part of Ultraschall-API. Just run the function Lokasenna_LoadGuiLib_v2, which loads the GUI-Lib version deployed with Ultraschall-API including all its classes and the rest is the same as you are used to.<br />
+There's nothing to worry, if you've already installed Lokasenna's GuiLib v2, as the version I deploy is independent of it.<br />
+So you can safely use both on one system.</p></li>
+<li><p><strong>Ignore-Audio checkbox of video-items</strong><br />
+This is requested from time to time again, so I finally added it: the possibility to set the "ignore audio"-checkbox of a video-item.<br />
+GetItem_Video_IgnoreAudio and SetItem_Video_IgnoreAudio are the functions of your choice.</p></li>
+<li><p><strong>Setting Aliasnames for FX-plugins</strong><br />
+Not available in the regular API, but in Ultraschall-API. This has been requested shortly before this release, a way to set the alternative/alias name of track and item-fx.<br />
+A demofile US_Api_Examples_SetAliasNamesOfFX-Plugins.lua shows, what you can do with it...</p></li>
+<li><p><strong>SetTimeUnit</strong><br />
+Allows setting the timeunit of the transportfield, the ruler and the alternative ruler. Good for toggling through-actions...</p></li>
+<li><p><strong>Image Handling</strong><br />
+ResizeJPG, ConvertPNG2JPG and ConvertJPG2PNG give you more control over managing different image-files.</p></li>
+<li><p><strong>Bugfixes and other stuff</strong><br />
+For rendering, FXChains(as requested), updated nomenclature of functions, SLEM allows now getting more than just the last error-message, etc, etc</p></li>
+</ul>
+<h4>New features in 4.1.003</h4>
+<ul>
+<li>Developer Tools: Developer LangPack - added developer-langpack for Reaper 6.12c</li>
+<li>Developer Tools: ultraschall_developertool_Theme_Parameter_Monitor.lua - monitor and manipulate theme-parameters(like from the default Reaper6-theme)</li>
+<li>Developer Tools: ultraschall_developertool_Compare_LangPacks.lua - allows you to select two ReaperLangPack-files and puts missing/changed entries from each file into the clipboard</li>
+<li>Envelopes: ActivateEnvelope - activates an envelope, so it can be shown in the arrangeview(thanks to sexan; requested by daniellumertz)</li>
+<li>Envelopes: ActivateTrackPanEnv - activates the pan-envelope lane of a track</li>
+<li>Envelopes: ActivateTrackPanEnv_TrackObject - activates the pan-envelope lane of a trackobject</li>
+<li>Envelopes: ActivateTrackPreFXPanEnv - activates the pre-fx-pan-envelope lane of a track</li>
+<li>Envelopes: ActivateTrackPreFXPanEnv_TrackObject - activates the pre-fx-pan-envelope lane of a trackobject</li>
+<li>Envelopes: ActivateTrackPreFXVolumeEnv - activates the pre-fx-volume-envelope lane of a track</li>
+<li>Envelopes: ActivateTrackPreFXVolumeEnv_TrackObject - activates the pre-fx-volume-envelope lane of a trackobject</li>
+<li>Envelopes: ActivateTrackTrimVolumeEnv - activates the trim-volume-envelope lane of a track</li>
+<li>Envelopes: ActivateTrackTrimVolumeEnv_TrackObject - activates the trim-volume-envelope lane of a trackobject</li>
+<li>Envelopes: ActivateTrackVolumeEnv - activates the volume-envelope lane of a track</li>
+<li>Envelopes: ActivateTrackVolumeEnv_TrackObject - activates the volume-envelope lane of a trackobject</li>
+<li>Envelopes: GetTakeEnvelopeUnderMouseCursor - returns the take-envelope currently under the mouse</li>
+<li>FXManagement: GetTakeFX_AlternativeName - gets the alternative/aliasname of a takefx(requested by dimtok)</li>
+<li>FXManagement: GetTrackFX_AlternativeName - gets the alternative/aliasname of a trackfx(requested by dimtok)<br />
+</li>
+<li>FXManagement: SetTakeFX_AlternativeName - sets the alternative/aliasname of a takefx(requested by dimtok)</li>
+<li>FXManagement: SetTrackFX_AlternativeName - sets the alternative/aliasname of a takefx(requested by dimtok)</li>
+<li>GUI: Lokasenna's Gui Lib v2 - added his Gui-Lib v2 into Ultraschall-API; will not affect other possible GuiLib-installations on the current Reaper-installation</li>
+<li>GUI: Lokasenna_LoadGuiLib_v2 - loads Lokasennas Gui-Lib and all available classes into your script</li>
+<li>Image Handling: ResizeJPG - resizes jpgs to new jpgs</li>
+<li>Image Handling: ConvertPNG2JPG - converts png into jpg</li>
+<li>Image Handling: ConvertJPG2PNG - converts jpg into png</li>
+<li>MediaItem Management: GetItem_Video_IgnoreAudio - gets the current state of the ignore audio-checkbox of a video-source of a MediaItem's take(requested by earhax)</li>
+<li>MediaItem Management: SetItem_Video_IgnoreAudio - sets the state of the ignore audio-checkbox of a video-source of a MediaItem's take(requested by earhax)</li>
+<li>Metadata Management: Metadata_BWF_GetSet - gets, sets BWF-metadata-tags from/in the current project</li>
+<li>Metadata Management: Metadata_CART_GetSet - gets, sets CART-metadata-tags from/in the current project</li>
+<li>Metadata Management: Metadata_CUE_GetSet - gets, sets CUE-metadata-tags from/in the current project</li>
+<li>Metadata Management: Metadata_ID3_GetSet - gets, sets ID3-metadata-tags from/in the current project</li>
+<li>Metadata Management: Metadata_INFO_GetSet - gets, sets INFO-metadata-tags from/in the current project</li>
+<li>Metadata Management: Metadata_IXML_GetSet - gets, sets IXML-metadata-tags from/in the current project</li>
+<li>Metadata Management: Metadata_VORBIS_GetSet - gets, sets VORBIS-metadata-tags(for Opus/Ogg-files) from/in the current project</li>
+<li>Render Management: GetRender_AddRenderedFilesToProject - gets the checkbox-state for add rendered items to new tracks in project-checkbox in the Render to File-dialog</li>
+<li>Render Management: GetRender_EmbedMetaData - gets the checkbox-state for embed-metadata in the Render to File-dialog</li>
+<li>Render Management: GetRender_NoSilentFiles - gets the checkbox-state for "Do not render files that are likely silent"-checkbox in the Render to File-dialog</li>
+<li>Render Management: GetRender_TailLength - gets the current taillength, as set in the Render to File-dialog</li>
+<li>Render Management: SetRender_AddRenderedFilesToProject - gets the checkbox-state for add rendered items to new tracks in project-checkbox in the Render to File-dialog</li>
+<li>Render Management: SetRender_EmbedMetaData - sets the checkbox for embed-metadata in the Render to File-dialog</li>
+<li>Render Management: SetRender_NoSilentFiles - sets the checkbox-state for "Do not render files that are likely silent"-checkbox in the Render to File-dialog</li>
+<li>Render Management: SetRender_TailLength - sets the current taillength, as set in the Render to File-dialog</li>
+<li>Theme Management: ApplyAllThemeLayoutParameters - applies changes theme-layout parameters to the current theme; use GetAllThemeLayoutParameters to get an alterable table</li>
+<li>Theme Management: GetThemeParameterIndexByDescription - gets the theme parameter's values by its description</li>
+<li>Theme Management: GetThemeParameterIndexByName - gets the theme parameter's values by its name</li>
+<li>Theme Management: SetThemeParameterIndexByDescription - sets the theme parameter's values by its description<br />
+</li>
+<li>Theme Management: SetThemeParameterIndexByName - sets the theme parameter's values by its name<br />
+</li>
+<li>Track Management: GetAllVisibleTracks_Arrange - returns all tracks currently visible in viewable part of the arrange-view</li>
+<li>Track Manager: TrackManager_ClearFilter - clears the filter of the opened track manager(requested by Monomirror)</li>
+<li>Track Manager: TrackManager_OpenClose - open, closes and toggles opening of the track manager(requested by Monomirror)</li>
+<li>Track Manager: TrackManager_ShowAll - shows all tracks of the opened track manager(requested by Monomirror)</li>
+<li>Track Manager: TrackManager_SelectionFromProject - sets the selection of the opened track manager to the track-selection of the project(requested by Monomirror)</li>
+<li>Track Manager: TrackManager_SelectionFromList - sets the track-selection of the project into the track-selection of the opened track manager(requested by Monomirror)</li>
+<li>Track Manager: TrackManager_SetFilter - sets the filter of the opened track manager(requested by Monomirror)</li>
+<li>User Interface: GetTrackManagerHWND - gets the tcp of the trackmanager, if opened</li>
+<li>User Interface: SetTimeUnit - sets the timeunit for transport, ruler and secondary ruler</li>
+<li>User Interface: TCP_SetWidth - allows setting a new width of the tcp(initial code by amagalma, thanks for that :) )<br />
+</li>
+<li>Video Management: ProjectSettings_GetVideoFramerate - gets the currently set project's video-framerate</li>
+<li>Video Management: ProjectSettings_SetVideoFramerate - sets the currently set project's video-framerate and optionally the default for new projects</li>
+</ul>
+<h4>Changes from 4.1.002 to 4.1.003</h4>
+<ul>
+<li>API: Requirements - requires now JS-extension 1.215</li>
+<li>API: titles will now be references to FarScape-episode-titles, until I conquered the farscape of Gui-development<br />
+</li>
+<li>Docs: GetRender_AutoIncrementFilename - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: GetRender_EmbedMetaData - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: GetRender_EmbedStretchMarkers - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: GetRender_NoSilentFiles - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: GetRender_OfflineOnlineMode - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: GetRender_ProjectSampleRateForMix - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: GetRender_QueueDelay - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: GetRender_ResampleMode - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: GetRender_SaveCopyOfProject - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: Reaper Internals - updated to Reaper 6.12, fixed nonconverted markdown-links</li>
+<li>Docs: SetRender_AutoIncrementFilename - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: SetRender_EmbedMetaData - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: SetRender_EmbedStretchMarkers - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: SetRender_NoSilentFiles - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: SetRender_OfflineOnlineMode - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: SetRender_ProjectSampleRateForMix - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: SetRender_QueueDelay - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: SetRender_ResampleMode - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>Docs: SetRender_SaveCopyOfProject - moved in the index to Rendering Projects -&gt; Render Settings, where I would expect such functions</li>
+<li>GFX: GFX_Init - produced nil-error, when the optional-parameters weren't set due missing default-values on my side -&gt; fixed</li>
+<li>Error Management: error-messages - optional boolean errormessages include now, which is the default value when using nil</li>
+<li>Error Management: ShowLastErrorMessage - allows now to access the messages before the last one as well</li>
+<li>Error Management: SLEM - allows now to access the messages before the last one as well</li>
+<li>Envelopes: ActivateMute - had wrong returnvalue in errormessages for parameter track -&gt; fixed</li>
+<li>Envelopes: DeactivateMute - had wrong returnvalue in errormessages for parameter track -&gt; fixed</li>
+<li>FXManagement: GetFXStateChunk - had numerous problems so I reimplemented it from scratch; returns now the linenumber at which the found FXStateChunk starts in the passed StateChunk</li>
+<li>Helper functions: OpenURL - didn't work on Linux -&gt; fixed</li>
+<li>MediaItem Management: SelectMediaItems_MediaItemArray - updates now arrangeview, so selected items are now visible as such</li>
+<li>ReaMote: AutoSearchReaMoteClients - renamed from AutoSearchReaMoteSlaves; the old name is still available but deprecated</li>
+<li>Render Management: AddRenderPreset - added option for embed-metadata-checkbox</li>
+<li>Render Management: ApplyRenderTable_Project - added option for embed-metadata-checkbox</li>
+<li>Render Management: ApplyRenderTable_ProjectFile - added option for embed-metadata-checkbox</li>
+<li>Render Management: CreateNewRenderTable - added option for embed-metadata-checkbox<br />
+</li>
+<li>Render Management: GetRenderTable_Project - added option for embed-metadata-checkbox</li>
+<li>Render Management: GetRenderTable_ProjectFile - added option for embed-metadata-checkbox</li>
+<li>Render Management: GetRenderPreset_RenderTable - added option for embed-metadata-checkbox</li>
+<li>Render Management: GetRenderToFileHWND - didn't return render to file-dialog-hwnd on recent Reaper-versions -&gt; fixed</li>
+<li>Render Management: IsValidRenderTable - added option for embed-metadata-checkbox</li>
+<li>Render Management: RenderProject_RenderTable - added option for embed-metadata-checkbox</li>
+<li>Render Management: SetRenderPreset - added option for embed-metadata-checkbox<br />
+</li>
+<li>Routing Management: GetAllAUXSendReceives - could produce a nil-error and returned wrong track-guid, PLEASE CHECK, IF YOUR ROUTING-CODE IS BUGGY NOW AND REPORT BACK2ME, Thanx! -&gt; fixed</li>
+<li>TrackGroups: GetTrackGroupFlagsState - updated nomenclature to Reaper's new one<br />
+</li>
+<li>TrackGroups: GetTrackGroupFlags_HighState - updated nomenclature to Reaper's new one</li>
+<li>TrackGroups: SetTrackGroupFlagsState - updated nomenclature to Reaper's new one</li>
+<li>TrackGroups: SetTrackGroupFlags_HighState - updated nomenclature to Reaper's new one</li>
+<li>Theme Management: GetAllThemeLayoutNames - didn't return themelayout index 0 -&gt; fixed</li>
+<li>Theme Management: GetAllThemeLayoutParameters - didn't return themeparameter index 0; had off-by-one error in retval index -&gt; fixed</li>
+<li>User Interface: GetHWND_ArrangeViewAndTimeLine - returns now tracklistwindow-tcp as well; didn't find TCP-hwnd when TCP was on the right side of the arrange-view -&gt; fixed(thanks to Edgemeal)</li>
+</ul>
+<hr />
+<h3>4.1.002 - "The Buzzcocks - Why can't I touch it" - 8th of June 2020</h3>
+<p>Has now 1146 functions, with 17 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Video window-Toggle Fullscreen</strong><br />
+You can now toggle the video-window fullscreen/non-fullscreen via VideoWindow_FullScreenToggle.</p></li>
+<li><p><strong>Activate/Deactivate Mute-envelopes</strong><br />
+Wasn't possible until now: activation and deactivation of Mute-Envelopes, as otherwise you cannot write to them.</p></li>
+<li><p><strong>MuteActions more stable</strong><br />
+They should now set mute-envelope-points properly, no matter of mute-env-armstate and/or automation-mode.</p></li>
+<li><p><strong>Project-Diffs-Developertool</strong><br />
+Reimplemented, so it shows only the diff-lines now.</p></li>
+<li><p><strong>Benchmarking-functions</strong><br />
+You can have multiple benchmark-slots, so benchmarking multiple values at the same time is now possible.<br />
+That way, you can benchmark the whole script and individual functions in one go.</p></li>
+<li><p><strong>Item Buttons can be now toggled</strong><br />
+Now, you can toggle the buttons shown at the top of the MediaItem, like mute, FX, Envelopes, etc. Change them in one go, to have different "profiles" of MediaItem-buttons, that reflect the usecases of your different projects.</p></li>
+<li><p><strong>PreventUIRefresh and RestoreUIRefresh</strong> Like Reaper's own PreventUIRefresh, but prevents accidental misuse of its counter, as the counting up is done by PreventUIRefresh and the "reset" of a<br />
+PreventUIRefresh can be undone by RestoreUIRefresh.<br />
+When using RestoreUIRefresh(true), all ultraschall.PreventUIRefresh-calls are reset, so the user-interface of Reaper is useable again.</p></li>
+<li><p><strong>bugfixes and readdition of accidentally deleted function..oops ;)</strong></p></li>
+</ul>
+<h4>New features in 4.1.002</h4>
+<ul>
+<li>Benchmarking: Benchmark_GetAllStartTimesAndSlots - returns the starttimes of all current benchmark-measuring-slots as a handy table(index=slot number)</li>
+<li>Envelope Management: SetEnvelopeState_Act - sets bypass and automation-items-behavior</li>
+<li>Envelope Management: SetEnvelopeState_DefShape - sets the default-envelope shapes and pitch-snap-settings</li>
+<li>Envelope Management: SetEnvelopeState_LaneHeight - sets the height and compacted state of an envelope</li>
+<li>Envelope Management: SetEnvelopeState_Vis - sets the visibility-state of an envelope</li>
+<li>Mute Management: ActivateMute - activates a mute-envelope of a track</li>
+<li>Mute Management: ActivateMute_TrackObject - activates a mute-envelope of a track</li>
+<li>Mute Management: DeactivateMute - deactivates a mute-envelope of a track</li>
+<li>Mute Management: DeactivateMute_TrackObject - deactivates a mute-envelope of a track</li>
+<li>Take Management: GetTake_ReverseState - returns, if a take is reversed or not</li>
+<li>User Interface: GetItemButtonsVisible - gets the individual item-buttons visible/invisible-state</li>
+<li>User Interface: GetPreventUIRefreshCount - the number of times you need to restore UI-refresh</li>
+<li>User Interface: PreventUIRefresh - prevents refreshing of the user-interface, more solid, than Reaper's own PreventUIRefresh-function</li>
+<li>User Interface: RestoreUIRefresh - restores a prevented UI-refreshing</li>
+<li>User Interface: SetItemButtonsVisible - sets the individual item-buttons visible/invisible</li>
+<li>User Interface: VideoWindow_FullScreenToggle - toggles full-screen-state of the video-processor-window(requested by vectorwarrior)</li>
+</ul>
+<h4>Changes from 4.1.001 to 4.1.002</h4>
+<ul>
+<li>Benchmarking: Benchmark_GetStartTime - has now additional optional parameter slot to get the starttime of a certain benchmarking-slot(requested by rstockm)</li>
+<li>Benchmarking: Benchmark_MeasureTime - has now additional optional parameter slot, with which you can store multiple measurings into different slots, for more benchmarks than just one(requested by rstockm)</li>
+<li>Developer Tools: ultraschall_developertool_Project_State_Diffs_Monitor.lua - improved so it now only shows changed lines and therfore proper diffs</li>
+<li>Docs: Reaper internals - updated to Reaper 6.11, SWS 2.11.0 and JS-extension 1.215; added accidentally missing functions</li>
+<li>Docs: US-docs - functionname's last ) was not bold for some reason -&gt; fixed</li>
+<li>Envelope Management: GetEnvelopeState_DefShape - added missing descriptions for returnvalues for pitch-snap</li>
+<li>GUI: Scythe - loads its libraries from UserPlugins\ultraschall_api\3rd_party_modules\Scythe\ now, so it shouldn't get in conflict with user's own installation of a Scythe-instance</li>
+<li>Marker Management: CountNormalMarkers - optimized speed</li>
+<li>Marker Management: GetAllMarkersBetween - parameters can be nil now, allowing to be used for projectstart and projectend</li>
+<li>Marker Management: GetAllRegionsBetween - parameters can be nil now, allowing to be used for projectstart and projectend</li>
+<li>Marker Management: EnumerateNormalMarkers - optimized speed</li>
+<li>Marker Management: SetNormalMarker - optimized speed</li>
+<li>Marker Management: DeleteNormalMarker - optimized speed</li>
+<li>Marker Management: IsMarkerNormal - optimized speed</li>
+<li>Mute Management: GetNextMuteState - returns now the mutestate, even if no mute-envelope is active</li>
+<li>Mute Management: GetNextMuteState_TrackObject - returns now the mutestate, even if no mute-envelope is active</li>
+<li>Mute Management: GetPreviousMuteState - returns now the mutestate, even if no mute-envelope is active</li>
+<li>Mute Management: GetPreviousMuteState_TrackObject - returns now the mutestate, even if no mute-envelope is active; didn't return envIDX correctly -&gt; fixed</li>
+<li>Mute Management: ToggleMute - sets now mute-envelope point regardless of env-recarm or automation-mode; activates inactive mute-envelopes now as well</li>
+<li>Mute Management: ToggleMute_TrackObject - sets now mute-envelope point regardless of env-recarm or automation-mode; activates inactive mute-envelopes now as well</li>
+<li>Project Files: GetProject_MarkersAndRegions - supports now returning regions-states of selected and region render-matrix; fixed bugs with selected regions not recognized(thanks to aurelien)</li>
+<li>Render: ApplyRenderTable_Project - had problem, when applied twice in a script -&gt; fixed(thanks to aurelien)</li>
+<li>Render: ApplyRenderTable_ProjectFile - had problem, when applied twice in a script -&gt; fixed(thanks to aurelien)</li>
+<li>SetRender_SaveCopyOfProject - got accidentally deleted, readded it now (thanks to aurelien)</li>
+</ul>
+<hr />
 <h3>4.1.001 - "Radiohead - Spectre"</h3>
 <p>Has now 1129 functions, with 18 new ones</p>
 <p><strong>new in this release:</strong></p>

@@ -2608,6 +2608,8 @@ function ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
   <description>
     Selects all MediaItems, that are in MediaItemArray.
     
+    It retains any current selection.
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -2633,6 +2635,8 @@ function ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
     end
     count=count+1
   end
+  
+  reaper.UpdateArrange()
   return 1
 end
 
@@ -5410,4 +5414,53 @@ function ultraschall.MediaItems_Outtakes_InsertAllItems(TargetProject, tracknumb
   return true, Count, MediaItems
 end
 
+
+function ultraschall.GetTake_ReverseState(MediaItem, takenumber)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTake_ReverseState</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.GetTake_ReverseState(MediaItem item, integer takenumber)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns, if the chosen take of the MediaItem is reversed
+  
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, take is reversed; false, take is not reversed
+  </retvals>
+  <parameters>
+    MediaItem item - the MediaItem, of whose take you want to get the reverse-state
+    integer takenumber - the take, whose reverse-state you want to know; 1, for the first take, etc
+  </parameters>
+  <chapter_context>
+    MediaItem Management
+    Get MediaItem-Takes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>take management, get, reverse, state</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.type(MediaItem)~="MediaItem" then ultraschall.AddErrorMessage("GetTake_ReverseState", "MediaItem", "must be a MediaItem", -1) return false end
+  if math.type(takenumber)~="integer" then ultraschall.AddErrorMessage("GetTake_ReverseState", "takenumber", "must be an integer", -2) return false end
+  if takenumber<1 then ultraschall.AddErrorMessage("GetTake_ReverseState", "takenumber", "must be bigger than 0", -3) return false end
+  local Count=reaper.CountTakes(Item)
+  
+  local retval, StateChunk = reaper.GetItemStateChunk(Item, "", false)
+  local StateChunk = ultraschall.StateChunkLayouter(StateChunk)
+  local i=0
+  for k in string.gmatch(StateChunk, "\n(  <SOURCE.-\n  >)") do
+    i=i+1
+    if i==takenumber then
+      local Mode=k:match("MODE (%d*).")
+      if Mode==nil then Mode=false else Mode=tonumber(Mode)&2==2 end
+      return Mode
+    end
+  end
+end
 

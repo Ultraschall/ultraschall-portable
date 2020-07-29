@@ -31,12 +31,15 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 VolumeChange    = 15  -- The maximum volume-reduction of the ducking in dB; default-Value is 10dB-toggle
 Number_of_steps = 18  -- The duration of the "fadeout/fadein" of the ducking; 1 second==30 steps; default 0.66 seconds
 
-
 -- this calculates the stepsize of the volume-alteration within each defer-cycle
 Stepsize=VolumeChange/Number_of_steps
 
 -- get current toggle-state
 retval, state=reaper.GetProjExtState(0, "Ultraschall_Soundboard", "Ducking_Toggle_State")
+retval, state2=reaper.GetProjExtState(0, "Ultraschall_Soundboard", "Ducking_running")
+if state2~="" then return end
+reaper.SetProjExtState(0, "Ultraschall_Soundboard", "Ducking_running", "Hui")
+
 state=tonumber(state)
 
 if state==1 then
@@ -64,6 +67,7 @@ function main()
     Counter=Counter-1 
     reaper.defer(main) 
   else
+    reaper.SetProjExtState(0, "Ultraschall_Soundboard", "Ducking_running", "")
     if found==true then
       -- if we've found a Soundboard-track, alter toggle-state
       if state==1 then

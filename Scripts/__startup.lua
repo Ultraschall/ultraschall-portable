@@ -150,12 +150,17 @@ reaper.SetExtState("Ultraschall_Windows","Ultraschall Settings",0.0, true)
 m = reaper.GetMasterTrack(0)                                                  --streaming is always on the master track
 os = reaper.GetOS()
 
+--get the slot of the StudioLink effect.
+
 if string.match(os, "OSX") then
-  fx_slot = reaper.TrackFX_GetByName(m, "ITSR: StudioLinkOnAir", 0)      --get the slot of the StudioLink effect. If there is none: initiate one.
+  fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir (ITSR)", false, 0)
 else  -- Windows
-  fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)      --get the slot of the StudioLink effect. If there is none: initiate one.
+  fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)
 end
-reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
+
+if fx_slot ~= -1 then
+  reaper.TrackFX_Delete(m, fx_slot)
+end
 
 -- is the ReaperThemeZip loaded? Only then (probably on first start) reload the ReaperTheme to get the colors working
 

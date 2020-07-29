@@ -2053,8 +2053,9 @@ function ultraschall.GetRenderTable_Project()
             RenderTable["Channels"] - the number of channels in the rendered file; 1, mono; 2, stereo; higher, the number of channels
             RenderTable["CloseAfterRender"] - true, closes rendering to file-dialog after render; false, doesn't close it
             RenderTable["Dither"] - &1, dither master mix; &2, noise shaping master mix; &4, dither stems; &8, dither noise shaping stems
+            RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
             RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
-			RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked
+			RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked            
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds
             RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
 			RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
@@ -2115,6 +2116,7 @@ function ultraschall.GetRenderTable_Project()
   if RenderTable["Source"]&4~=0 then RenderTable["Source"]=RenderTable["Source"]-4 RenderTable["MultiChannelFiles"]=true else RenderTable["MultiChannelFiles"]=false end
   if RenderTable["Source"]&16~=0 then RenderTable["Source"]=RenderTable["Source"]-16 RenderTable["OnlyMonoMedia"]=true else RenderTable["OnlyMonoMedia"]=false end
   if RenderTable["Source"]&256~=0 then RenderTable["Source"]=RenderTable["Source"]-256 RenderTable["EmbedStretchMarkers"]=true else RenderTable["EmbedStretchMarkers"]=false end
+  if RenderTable["Source"]&512~=0 then RenderTable["Source"]=RenderTable["Source"]-512 RenderTable["EmbedMetaData"]=true else RenderTable["EmbedMetaData"]=false end
   if RenderTable["Source"]&1024~=0 then RenderTable["Source"]=RenderTable["Source"]-1024 RenderTable["EmbedTakeMarkers"]=true else RenderTable["EmbedTakeMarkers"]=false end
   RenderTable["Bounds"]=math.tointeger(reaper.GetSetProjectInfo(ReaProject, "RENDER_BOUNDSFLAG", 0, false))
   RenderTable["Channels"]=math.tointeger(reaper.GetSetProjectInfo(ReaProject, "RENDER_CHANNELS", 0, false))
@@ -2170,7 +2172,7 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
   <slug>GetRenderTable_ProjectFile</slug>
   <requires>
     Ultraschall=4.1
-    Reaper=6.10
+    Reaper=6.11
     Lua=5.3
   </requires>
   <functioncall>table RenderTable = ultraschall.GetRenderTable_ProjectFile(string projectfilename_with_path)</functioncall>
@@ -2182,6 +2184,7 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
             RenderTable["Channels"] - the number of channels in the rendered file; 1, mono; 2, stereo; higher, the number of channels
             RenderTable["CloseAfterRender"] - close rendering to file-dialog after render; always true, as this isn't stored in projectfiles
             RenderTable["Dither"] - &1, dither master mix; &2, noise shaping master mix; &4, dither stems; &8, dither noise shaping stems
+            RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
             RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
 			RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds
@@ -2250,6 +2253,7 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
   RenderTable["RenderTable"]=true
   RenderTable["Source"]=render_stems
   if render_stems&256~=0 then RenderTable["EmbedStretchMarkers"]=true RenderTable["Source"]=RenderTable["Source"]-256 else RenderTable["EmbedStretchMarkers"]=false end
+  if render_stems&512~=0 then RenderTable["Source"]=RenderTable["Source"]-512 RenderTable["EmbedMetaData"]=true elseif render_stems&512==0 then RenderTable["EmbedMetaData"]=false end
   if render_stems&1024~=0 then RenderTable["Source"]=RenderTable["Source"]-1024 RenderTable["EmbedTakeMarkers"]=true elseif render_stems&1024==0 then RenderTable["EmbedTakeMarkers"]=false end
   if RenderTable["Source"]&4~=0 then RenderTable["Source"]=RenderTable["Source"]-4 RenderTable["MultiChannelFiles"]=true else RenderTable["MultiChannelFiles"]=false end
   if RenderTable["Source"]&16~=0 then RenderTable["Source"]=RenderTable["Source"]-16 RenderTable["OnlyMonoMedia"]=true else RenderTable["OnlyMonoMedia"]=false end
@@ -2785,6 +2789,8 @@ function ultraschall.IsValidRenderTable(RenderTable)
   if type(RenderTable["RenderString2"])~="string" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"RenderString2\"] must be a string", -17) return false end 
   if type(RenderTable["EmbedTakeMarkers"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"EmbedTakeMarkers\"] must be a boolean", -18) return false end 
   if type(RenderTable["NoSilentRender"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"NoSilentRender\"] must be a boolean", -19) return false end 
+  if type(RenderTable["EmbedMetaData"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"EmbedMetaData\"] must be a boolean", -20) return false end   
+    
 
   return true
 end
@@ -2812,6 +2818,7 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
             RenderTable["Channels"] - the number of channels in the rendered file; 1, mono; 2, stereo; higher, the number of channels
             RenderTable["CloseAfterRender"] - true, close rendering to file-dialog after render; false, don't close it
             RenderTable["Dither"] - &1, dither master mix; &2, noise shaping master mix; &4, dither stems; &8, dither noise shaping stems
+            RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
             RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
 			RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds
@@ -2854,6 +2861,7 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   <tags>projectfiles, set, project, rendertable</tags>
 </US_DocBloc>
 ]]
+	
   if ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("ApplyRenderTable_Project", "RenderTable", "not a valid RenderTable", -1) return false end
   if apply_rendercfg_string~=nil and type(apply_rendercfg_string)~="boolean" then ultraschall.AddErrorMessage("ApplyRenderTable_Project", "apply_rendercfg_string", "must be boolean", -2) return false end
   local _temp, retval, hwnd, AddToProj, ProjectSampleRateFXProcessing, ReaProject, SaveCopyOfProject, retval
@@ -2864,17 +2872,25 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   else 
 	if RenderTable["Source"]&256~=0 then RenderTable["Source"]=RenderTable["Source"]-256 end
   end
+  
+  if RenderTable["EmbedMetaData"]==true then 
+	if RenderTable["Source"]&512==0 then RenderTable["Source"]=RenderTable["Source"]+512 end
+  else 
+	if RenderTable["Source"]&512~=0 then RenderTable["Source"]=RenderTable["Source"]-512 end
+  end
+  
   if RenderTable["EmbedTakeMarkers"]==true then 
 	if RenderTable["Source"]&1024==0 then RenderTable["Source"]=RenderTable["Source"]+1024 end
   else 
 	if RenderTable["Source"]&1024~=0 then RenderTable["Source"]=RenderTable["Source"]-1024 end
   end
   
-  if RenderTable["MultiChannelFiles"]==true then RenderTable["Source"]=RenderTable["Source"]+4 end
-  if RenderTable["OnlyMonoMedia"]==false then RenderTable["Source"]=RenderTable["Source"]+16 end
+  if RenderTable["MultiChannelFiles"]==true and RenderTable["Source"]&4~=0 then RenderTable["Source"]=RenderTable["Source"]+4 end
+  if RenderTable["OnlyMonoMedia"]==false and RenderTable["Source"]&16~=0 then RenderTable["Source"]=RenderTable["Source"]+16 end
+  
   reaper.GetSetProjectInfo(ReaProject, "RENDER_SETTINGS", RenderTable["Source"], true)
-
   reaper.GetSetProjectInfo(ReaProject, "RENDER_BOUNDSFLAG", RenderTable["Bounds"], true)
+  
   reaper.GetSetProjectInfo(ReaProject, "RENDER_CHANNELS", RenderTable["Channels"], true)
   reaper.GetSetProjectInfo(ReaProject, "RENDER_SRATE", RenderTable["SampleRate"], true)
   
@@ -2960,6 +2976,7 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
             RenderTable["Channels"] - the number of channels in the rendered file; 1, mono; 2, stereo; higher, the number of channels
             RenderTable["CloseAfterRender"] - close rendering to file-dialog after render; ignored, as this can't be set in projectfiles
             RenderTable["Dither"] - &1, dither master mix; &2, noise shaping master mix; &4, dither stems; &8, dither noise shaping stems
+            RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
             RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
 			RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds
@@ -3016,8 +3033,9 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
   
   
   
-  if RenderTable["MultiChannelFiles"]==true then RenderTable["Source"]=RenderTable["Source"]+4 end
-  if RenderTable["OnlyMonoMedia"]==true then RenderTable["Source"]=RenderTable["Source"]+16 end
+  if RenderTable["MultiChannelFiles"]==true and RenderTable["Source"]&4~=0 then RenderTable["Source"]=RenderTable["Source"]+4 end
+  if RenderTable["OnlyMonoMedia"]==false and RenderTable["Source"]&16~=0 then RenderTable["Source"]=RenderTable["Source"]+16 end
+  
   if RenderTable["EmbedStretchMarkers"]==true then 
     if RenderTable["Source"]&256==0 then 
        RenderTable["Source"]=RenderTable["Source"]+256
@@ -3027,6 +3045,17 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
        RenderTable["Source"]=RenderTable["Source"]-256
     end
   end
+    
+  if RenderTable["EmbedMetaData"]==true then 
+    if RenderTable["Source"]&512==0 then 
+       RenderTable["Source"]=RenderTable["Source"]+512
+    end
+  else
+    if RenderTable["Source"]&512~=0 then 
+       RenderTable["Source"]=RenderTable["Source"]-512
+    end
+  end
+  
   if RenderTable["EmbedTakeMarkers"]==true then 
     if RenderTable["Source"]&1024==0 then 
        RenderTable["Source"]=RenderTable["Source"]+1024
@@ -3084,7 +3113,8 @@ end
 
 function ultraschall.CreateNewRenderTable(Source, Bounds, Startposition, Endposition, TailFlag, TailMS, RenderFile, RenderPattern,
 SampleRate, Channels, OfflineOnlineRendering, ProjectSampleRateFXProcessing, RenderResample, OnlyMonoMedia, MultiChannelFiles,
-Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, RenderQueueDelay, RenderQueueDelaySeconds, CloseAfterRender, EmbedStretchMarkers, RenderString2, EmbedTakeMarkers, SilentRender)
+Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, RenderQueueDelay, RenderQueueDelaySeconds, CloseAfterRender, 
+EmbedStretchMarkers, RenderString2, EmbedTakeMarkers, SilentRender, EmbedMetadata)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateNewRenderTable</slug>
@@ -3093,7 +3123,7 @@ Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, R
     Reaper=6.10
     Lua=5.3
   </requires>
-  <functioncall>RenderTable RenderTable = ultraschall.CreateNewRenderTable(integer Source, integer Bounds, number Startposition, number Endposition, integer TailFlag, integer TailMS, string RenderFile, string RenderPattern, integer SampleRate, integer Channels, integer OfflineOnlineRendering, boolean ProjectSampleRateFXProcessing, integer RenderResample, boolean OnlyMonoMedia, boolean MultiChannelFiles, integer Dither, string RenderString, boolean SilentlyIncrementFilename, boolean AddToProj, boolean SaveCopyOfProject, boolean RenderQueueDelay, integer RenderQueueDelaySeconds, boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean SilentRender)</functioncall>
+  <functioncall>RenderTable RenderTable = ultraschall.CreateNewRenderTable(integer Source, integer Bounds, number Startposition, number Endposition, integer TailFlag, integer TailMS, string RenderFile, string RenderPattern, integer SampleRate, integer Channels, integer OfflineOnlineRendering, boolean ProjectSampleRateFXProcessing, integer RenderResample, boolean OnlyMonoMedia, boolean MultiChannelFiles, integer Dither, string RenderString, boolean SilentlyIncrementFilename, boolean AddToProj, boolean SaveCopyOfProject, boolean RenderQueueDelay, integer RenderQueueDelaySeconds, boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean SilentRender, optional boolean EmbedMetadata)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Creates a new RenderTable.
     
@@ -3171,6 +3201,7 @@ Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, R
     optional string RenderString2 - the render-string for the secondary rendering
 	optional boolean EmbedTakeMarkers - the "Take markers"-checkbox; true, checked; false, unchecked; default=unchecked
 	optional boolean SilentRender - the "Do not render files that are likely silent"-checkbox; true, checked; false, unchecked; default=unchecked
+    optional boolean EmbedMetadata - the "Embed metadata"-checkbox; true, checked; false, unchecked; default=unchecked    
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -3204,15 +3235,19 @@ Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, R
   if type(RenderQueueDelay)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderQueueDelay", "#21: must be a boolean", -14) return end
   if math.type(RenderQueueDelaySeconds)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderQueueDelaySeconds", "#22: must be an integer", -24) return end
   if type(CloseAfterRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "CloseAfterRender", "#23: must be a boolean", -25) return end
-  if EmbedStretchMarkers~=nil and type(EmbedStretchMarkers)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "#24: EmbedStretchMarkers", "must be nil or boolean", -26) return end
+    
+  if EmbedStretchMarkers~=nil and type(EmbedStretchMarkers)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "#24: EmbedStretchMarkers", "must be nil(for false) or boolean", -26) return end
   if RenderString2~=nil and type(RenderString2)~="string" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderString2", "#25: must be nil or string", -27) return end
   if EmbedStretchMarkers==nil then EmbedStretchMarkers=false end
   if RenderString2==nil then RenderString2="" end
   
-  if EmbedTakeMarkers~=nil and type(EmbedTakeMarkers)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "EmbedTakeMarkers", "#26: must be nil or boolean", -26) return end
-  if SilentRender~=nil and type(SilentRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "SilentRender", "#27: must be nil or boolean", -27) return end
-  if EmbedTakeMarkers==nil then EmbedTakeMarkers=false end
+  if EmbedTakeMarkers~=nil and type(EmbedTakeMarkers)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "EmbedTakeMarkers", "#26: must be nil(for false) or boolean", -28) return end
+  if SilentRender~=nil and type(SilentRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "SilentRender", "#27: must be nil(for false) or boolean", -29) return end
+  
+  if EmbedMetadata~=nil and type(EmbedMetadata)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "CloseAfterRender", "#28: must be a boolean", -30) return end
+  if EmbedTakeMarkers==nil then EmbedTakeMarkers=false end  
   if SilentRender==nil then SilentRender=false end
+  if EmbedMetadata==nil then EmbedMetadata=false end
   
   local RenderTable={}
   RenderTable["AddToProj"]=AddToProj
@@ -3243,17 +3278,21 @@ Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, R
   RenderTable["EmbedStretchMarkers"]=EmbedStretchMarkers
   RenderTable["EmbedTakeMarkers"]=EmbedTakeMarkers
   RenderTable["NoSilentRender"]=SilentRender
+  RenderTable["EmbedMetaData"]=EmbedMetadata
   return RenderTable
 end
 
+
+
 -- Für Dich zum Testen für zukünftige Paraneters:
---[[
-A,B=ultraschall.CreateNewRenderTable(2, 0, 2, 22, 0,                        -- 5
+
+--[[A,B=ultraschall.CreateNewRenderTable(2, 0, 2, 22, 0,                        -- 5
                                      190, "aRenderFile", "apattern", 99, 3, -- 10
                                      3,    false,   2, false, false,        -- 15
                                      1, "", true, true, true,               -- 20
                                      true, 0, true, true, "",               -- 25
-                                     true, false)                           -- 30
+                                     true, true, true)                     -- 30
+                                     SLEM()
 --]]
 --Source, Bounds, Startposition, Endposition, TailFlag, TailMS, RenderFile, RenderPattern,
 --SampleRate, Channels, OfflineOnlineRendering, ProjectSampleRateFXProcessing, RenderResample, OnlyMonoMedia, MultiChannelFiles,
@@ -3290,8 +3329,8 @@ function ultraschall.GetRender_SaveCopyOfProject()
     boolean retval - true, checkbox is checked; false, checkbox is unchecked
   </retvals>
   <chapter_context>
-    Configuration Settings
-    Render to File
+    Rendering Projects
+    Render Settings
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
@@ -3338,8 +3377,8 @@ function ultraschall.SetRender_QueueDelay(state, length)
     integer length - the number of seconds the delay shall be
   </parameters>
   <chapter_context>
-    Configuration Settings
-    Render to File
+    Rendering Projects
+    Render Settings
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
@@ -3361,6 +3400,56 @@ function ultraschall.SetRender_QueueDelay(state, length)
   end
   return retval
 end
+
+function ultraschall.SetRender_SaveCopyOfProject(state)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetRender_SaveCopyOfProject</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    SWS=2.10.0.1
+    JS=0.972
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetRender_SaveCopyOfProject(boolean state)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets the "Save copy of project to outfile.wav.RPP"-checkbox of the Render to File-dialog.
+    
+    Returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, it was unsuccessful
+  </retvals>
+  <parameters>
+    boolean state - true, check the checkbox; false, uncheck the checkbox
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render, set, checkbox, render, save copy of project</tags>
+</US_DocBloc>
+]]
+  if type(state)~="boolean" then ultraschall.AddErrorMessage("SetRender_SaveCopyOfProject", "state", "must be a boolean", -1) return false end
+  local SaveCopyOfProject, hwnd, retval
+  if state==true then SaveCopyOfProject=1 else SaveCopyOfProject=0 end
+  hwnd = ultraschall.GetRenderToFileHWND()
+  if hwnd==nil then
+    retval = reaper.BR_Win32_WritePrivateProfileString("REAPER", "autosaveonrender2", SaveCopyOfProject, reaper.get_ini_file())
+    retval = reaper.BR_Win32_WritePrivateProfileString("REAPER", "autosaveonrender", SaveCopyOfProject, reaper.get_ini_file())
+  else
+    reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd,1060), "BM_SETCHECK", SaveCopyOfProject,0,0,0)
+    retval = reaper.BR_Win32_WritePrivateProfileString("REAPER", "autosaveonrender2", SaveCopyOfProject, reaper.get_ini_file())
+    retval = reaper.BR_Win32_WritePrivateProfileString("REAPER", "autosaveonrender", SaveCopyOfProject, reaper.get_ini_file())
+  end
+  return retval
+end
+
+--B=ultraschall.SetRender_SaveCopyOfProject(true)
+
 
 --A=ultraschall.SetRender_SaveCopyOfProject(true)
 --ultraschall.SetRender_QueueDelay(true, 118)
@@ -3387,8 +3476,8 @@ function ultraschall.GetRender_QueueDelay()
     integer length - the number of seconds the delay shall be
   </retvals>
   <chapter_context>
-    Configuration Settings
-    Render to File
+    Rendering Projects
+    Render Settings
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
@@ -3438,8 +3527,8 @@ function ultraschall.SetRender_ProjectSampleRateForMix(state)
     boolean state - true, check the checkbox; false, uncheck the checkbox
   </parameters>
   <chapter_context>
-    Configuration Settings
-    Render to File
+    Rendering Projects
+    Render Settings
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
@@ -3480,8 +3569,8 @@ function ultraschall.GetRender_ProjectSampleRateForMix()
     boolean state - true, check the checkbox; false, uncheck the checkbox
   </retvals>
   <chapter_context>
-    Configuration Settings
-    Render to File
+    Rendering Projects
+    Render Settings
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
@@ -3525,8 +3614,8 @@ function ultraschall.SetRender_AutoIncrementFilename(state)
     boolean state - true, check the checkbox; false, uncheck the checkbox
   </parameters>
   <chapter_context>
-    Configuration Settings
-    Render to File
+    Rendering Projects
+    Render Settings
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
@@ -3568,8 +3657,8 @@ function ultraschall.GetRender_AutoIncrementFilename()
     boolean state - true, check the checkbox; false, uncheck the checkbox
   </retvals>
   <chapter_context>
-    Configuration Settings
-    Render to File
+    Rendering Projects
+    Render Settings
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
@@ -3685,6 +3774,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
      RenderTable["Channels"] - the number of channels in the rendered file; 1, mono; 2, stereo; higher, the number of channels
      RenderTable["CloseAfterRender"] - close rendering to file-dialog after rendering; always true, as this isn't stored in render-presets
      RenderTable["Dither"] - &1, dither master mix; &2, noise shaping master mix; &4, dither stems; &8, dither noise shaping stems
+     RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
      RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
 	 RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked
      RenderTable["Endposition"] - the endposition of the rendering selection in seconds
@@ -3852,6 +3942,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
   RenderTable["NoSilentRender"]=false
   RenderTable["Source"]=tonumber(Source_dropdownlist_and_checkboxes2)
   RenderTable["Dither"]=tonumber(Various_checkboxes)
+  RenderTable["EmbedMetaData"]=tonumber(Various_checkboxes2)&512==512
 
   return RenderTable
 end
@@ -4035,11 +4126,12 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       &8, dither noise shaping stems
               RenderTable["MultiChannelFiles"] - multichannel-files-checkbox
               RenderTable["OnlyMonoMedia"] - only mono media-checkbox
+              RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
               RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides-checkbox
 			  RenderTable["EmbedTakeMarkers"] - Embed Take markers-checkbox
               RenderTable["RenderString"] - the render-cfg-string, which holds the render-outformat-settings
               RenderTable["RenderString2"] - the render-cfg-string, which holds the secondary render-outformat-settings
-      
+  
      Returns false in case of an error
    </description>
    <parameters>
@@ -4072,6 +4164,7 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
   if RenderTable["MultiChannelFiles"]==true then CheckBoxes=CheckBoxes+4 end
   if RenderTable["OnlyMonoMedia"]==true then CheckBoxes=CheckBoxes+16 end
   if RenderTable["EmbedStretchMarkers"]==true then CheckBoxes=CheckBoxes+256 end
+  if RenderTable["EmbedMetaData"]==true then CheckBoxes=CheckBoxes+512 end
   if RenderTable["EmbedTakeMarkers"]==true then CheckBoxes=CheckBoxes+1024 end
   
   if RenderTable["ProjectSampleRateFXProcessing"]==true then ProjectSampleRateFXProcessing=1 else ProjectSampleRateFXProcessing=0 end
@@ -4211,9 +4304,10 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       &2, noise shaping master mix
                                       &4, dither stems
                                       &8, dither noise shaping stems
+              RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked  
               RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides-checkbox
-			  RenderTable["EmbedTakeMarkers"] - Embed Take markers-checkbox
-			  RenderTable["RenderString"] - the render-cfg-string, which holds the render-outformat-settings
+              RenderTable["EmbedTakeMarkers"] - Embed Take markers-checkbox
+              RenderTable["RenderString"] - the render-cfg-string, which holds the render-outformat-settings
               RenderTable["RenderString2"] - the render-cfg-string, which holds the secondary render-outformat-settings; "" to remove it from this preset
       
      Returns false in case of an error
@@ -4251,6 +4345,7 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
   if RenderTable["MultiChannelFiles"]==true then MonoMultichannelEmbed=MonoMultichannelEmbed+4 end
   if RenderTable["OnlyMonoMedia"]==true then MonoMultichannelEmbed=MonoMultichannelEmbed+16 end
   if RenderTable["EmbedStretchMarkers"]==true then MonoMultichannelEmbed=MonoMultichannelEmbed+256 end
+  if RenderTable["EmbedMetaData"]==true then CheckBoxes=CheckBoxes+512 end
   if RenderTable["EmbedTakeMarkers"]==true then MonoMultichannelEmbed=MonoMultichannelEmbed+1024 end
   
   if RenderTable["ProjectSampleRateFXProcessing"]==true then ProjectSampleRateFXProcessing=1 else ProjectSampleRateFXProcessing=0 end
@@ -4339,6 +4434,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
             RenderTable["Channels"] - the number of channels in the rendered file; 1, mono; 2, stereo; higher, the number of channels
             RenderTable["CloseAfterRender"] - true, close rendering to file-dialog after render; false, don't close it
             RenderTable["Dither"] - &1, dither master mix; &2, noise shaping master mix; &4, dither stems; &8, dither noise shaping stems
+            RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked  
             RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds
             RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
@@ -4388,10 +4484,11 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
   <tags>projectfiles, render, output, file, rendertable</tags>
 </US_DocBloc>
 ]]
+--MESPOTINE
   if RenderTable~=nil and ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("RenderProject_RenderTable", "RenderTable", "must be a valid RenderTable", -1) return -1 end
-  if AddToProj~=nil and type(AddToProj)~="boolean" then ultraschall.AddErrorMessage("RenderProject_RenderTable", "AddToProj", "must be nil or boolean", -10) return -1 end
-  if CloseAfterRender~=nil and type(CloseAfterRender)~="boolean" then ultraschall.AddErrorMessage("RenderProject_RenderTable", "CloseAfterRender", "must be nil or boolean", -11) return -1 end
-  if SilentlyIncrementFilename~=nil and type(SilentlyIncrementFilename)~="boolean" then ultraschall.AddErrorMessage("RenderProject_RenderTable", "SilentlyIncrementFilename", "must be nil or boolean", -12) return -1 end
+  if AddToProj~=nil and type(AddToProj)~="boolean" then ultraschall.AddErrorMessage("RenderProject_RenderTable", "AddToProj", "must be nil(for false) or boolean", -10) return -1 end
+  if CloseAfterRender~=nil and type(CloseAfterRender)~="boolean" then ultraschall.AddErrorMessage("RenderProject_RenderTable", "CloseAfterRender", "must be nil(for true) or boolean", -11) return -1 end
+  if SilentlyIncrementFilename~=nil and type(SilentlyIncrementFilename)~="boolean" then ultraschall.AddErrorMessage("RenderProject_RenderTable", "SilentlyIncrementFilename", "must be nil(for true) or boolean", -12) return -1 end
 
   if RenderTable==nil then norendertable=true end
 
@@ -4434,19 +4531,20 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     -- get the current settings as rendertable and apply the RenderTable the user passed to us
     local OldRenderTable=ultraschall.GetRenderTable_Project()
     ultraschall.ApplyRenderTable_Project(RenderTable, true) -- here the bug happens(Which bug, Meo? Which Bug? Forgot about me, Meo? - Yours sincerely Meo)
-    ultraschall.ShowLastErrorMessage()
+    --ultraschall.ShowLastErrorMessage()
     
     -- change back the entries in RenderTable so the user does not have my temporary changes in it
     RenderTable["RenderPattern"]=RenderPattern
     RenderTable["RenderFile"]=RenderFile
-    
+
     -- let's render:
     reaper.PreventUIRefresh(-1) -- prevent updating the userinterface, as I don't want flickering when rendered files are added and I'll delete them after that
 
     -- let's change creation of copies of the rendered outfile.rpp-setting,
     oldCopyOfProject = ultraschall.GetRender_SaveCopyOfProject()
+
     ultraschall.SetRender_SaveCopyOfProject(RenderTable["SaveCopyOfProject"])
-    
+
     -- temporarily prevent creation of bak-files and save project, as otherwise we couldn't close the tab
     oldSaveOpts=reaper.SNM_GetIntConfigVar("saveopts", -111)
     if oldSaveOpts&1==1 then reaper.SNM_SetIntConfigVar("saveopts", oldSaveOpts-1) end
@@ -4455,7 +4553,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     
     -- reset old Save Copy of Project to outfile-checkbox setting
     ultraschall.SetRender_SaveCopyOfProject(oldCopyOfProject)
-    
+
     -- if no track has been added, the rendering was aborted by userinteraction or error
     if reaper.CountTracks(0)==OldTrackNumber then aborted=true end
     
@@ -4877,12 +4975,17 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
   end
   if type(renderfilename_with_path)~="string" then ultraschall.AddErrorMessage("RenderProject", "renderfilename_with_path", "Must be a string.", -7) return -1 end  
   if rendercfg==nil or (ultraschall.GetOutputFormat_RenderCfg(rendercfg)==nil or ultraschall.GetOutputFormat_RenderCfg(rendercfg)=="Unknown") then ultraschall.AddErrorMessage("RenderProject", "rendercfg", "No valid render_cfg-string.", -9) return -1 end
-  if rendercfg2==nil or (ultraschall.GetOutputFormat_RenderCfg(rendercfg2)==nil or ultraschall.GetOutputFormat_RenderCfg(rendercfg2)=="Unknown") then ultraschall.AddErrorMessage("RenderProject", "rendercfg2", "No valid render_cfg-string.", -18) return -1 end
+  if rendercfg2==nil then rendercfg2=""
+  elseif rendercfg2~=nil and (ultraschall.GetOutputFormat_RenderCfg(rendercfg2)==nil or ultraschall.GetOutputFormat_RenderCfg(rendercfg2)=="Unknown") then 
+    ultraschall.AddErrorMessage("RenderProject", "rendercfg2", "No valid render_cfg-string.", -18) 
+    return -1 
+  end
   if type(overwrite_without_asking)~="boolean" then ultraschall.AddErrorMessage("RenderProject", "overwrite_without_asking", "Must be boolean", -10) return -1 end
   if filenameincrease~=nil and type(filenameincrease)~="boolean" then ultraschall.AddErrorMessage("RenderProject", "filenameincrease", "Must be either nil or boolean", -13) return -1 end
   if renderclosewhendone~=nil and type(renderclosewhendone)~="boolean" then ultraschall.AddErrorMessage("RenderProject", "renderclosewhendone", "Must be either nil or a boolean", -12) return -1 end
 
   if RenderTable~=nil and ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("RenderProject", "RenderTable", "Must be either nil or a valid RenderTable", -15) return -1 end
+
 
   -- split renderfilename into path and filename, as we need this for render-pattern and render-file-entries
   if renderfilename_with_path~=nil then 
@@ -4896,7 +4999,7 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
 
     -- get rendercfg from current project, if not already given
     if rendercfg==nil then temp, rendercfg = reaper.GetSetProjectInfo_String(0, "RENDER_FORMAT", "", false) end 
-    if rendercfg2==nil then temp, rendercfg = reaper.GetSetProjectInfo_String(0, "RENDER_FORMAT2", "", false) end 
+    if rendercfg2==nil then temp, rendercfg2 = reaper.GetSetProjectInfo_String(0, "RENDER_FORMAT2", "", false) end 
     -- get rendersettings from current project
     RenderTable=ultraschall.GetRenderTable_Project()
 
@@ -4910,7 +5013,6 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
     end
   else
   -- if rendering an rpp-projectfile
-    
     -- get rendercfg from projectfile, if not already given
     if rendercfg==nil then ultraschall.GetProject_RenderCFG(projectfilename_with_path) end
     
@@ -4918,17 +5020,18 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
     RenderTable=ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path)
     
     -- set the start and endposition according to settings (-1 for projectlength, -2 for time/loop-selection)
-    timesel1_start, timesel1_end = ultraschall.GetProject_Selection(projectfilename_with_path)
+    timesel1_start, timesel1_end = ultraschall.GetProject_Selection(projectfilename_with_path)    
+    if timesel1_start>timesel1_end then timesel1_start, timesel1_end = timesel1_end, timesel1_start end
     if startposition==-1 then startposition=0
-    elseif startposition==-2 then startposition=start_sel
+    elseif startposition==-2 then startposition=timesel1_start
     end
     if endposition==-1 then endposition=ultraschall.GetProject_Length(projectfilename_with_path)
-    elseif endposition==-2 then endposition=end_sel
+    elseif endposition==-2 then endposition=timesel1_end
     end
   end    
   
   -- desired render-range invalid?
-  if endposition<=startposition then ultraschall.AddErrorMessage("RenderProject", "startposition or endposition in RPP-Project", "Must be bigger than startposition.", -11) return -1 end
+  if endposition<=startposition then ultraschall.AddErrorMessage("RenderProject", "endposition", "Must be bigger than startposition.", -11) return -1 end
   
   -- set, if the rendering to file-dialog shall be automatically closed, according to user preference or default setting
   if renderclosewhendone==nil then 
@@ -4954,6 +5057,7 @@ function ultraschall.RenderProject(projectfilename_with_path, renderfilename_wit
     return -1
   end
   RenderTable["RenderString"]=rendercfg
+  RenderTable["RenderString2"]=rendercfg2
   
 --  if ultraschall.GetOutputFormat_RenderCfg(RenderTable["RenderString"])==nil or ultraschall.GetOutputFormat_RenderCfg(RenderTable["RenderString"])=="Unknown" then ultraschall.AddErrorMessage("RenderProject", "", "No valid render_cfg-string.", -16) return -1 end
   
@@ -5852,8 +5956,8 @@ function ultraschall.GetRender_EmbedStretchMarkers()
     boolean state - true, check the checkbox; false, uncheck the checkbox
   </retvals>
   <chapter_context>
-    Configuration Settings
-    Render to File
+    Rendering Projects
+    Render Settings
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
@@ -5897,8 +6001,8 @@ function ultraschall.SetRender_EmbedStretchMarkers(state)
     boolean state - true, check the checkbox; false, uncheck the checkbox
   </parameters>
   <chapter_context>
-    Configuration Settings
-    Render to File
+    Rendering Projects
+    Render Settings
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
@@ -6041,3 +6145,538 @@ function ultraschall.Render_Loop(RenderTable, RenderFilename, AutoIncrement, Fir
   return count, MediaItemStateChunkArray, Filearray
 end
 
+function ultraschall.GetRender_EmbedMetaData()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetRender_EmbedMetaData</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.11
+    SWS=2.10.0.1
+    JS=0.972
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.GetRender_EmbedMetaData()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets the current state of the "Embed metadata"-checkbox from the Render to File-dialog.
+  </description>
+  <retvals>
+    boolean state - true, check the checkbox; false, uncheck the checkbox
+  </retvals>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render, get, checkbox, render, embed metadata</tags>
+</US_DocBloc>
+]]
+  local SaveCopyOfProject, hwnd, retval, length, state
+  hwnd = ultraschall.GetRenderToFileHWND()
+  if hwnd==nil then
+    state=reaper.SNM_GetIntConfigVar("projrenderstems", 0)&512
+  else
+    state = reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd,1178), "BM_GETCHECK", 0,0,0,0)
+  end
+  if state==0 then state=false else state=true end
+  return state
+end
+
+--A=ultraschall.GetRender_EmbedMetaData()
+
+function ultraschall.SetRender_EmbedMetaData(state)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetRender_EmbedMetaData</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.11
+    SWS=2.10.0.1
+    JS=0.972
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetRender_EmbedMetaData(boolean state)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets the new state of the "Embed metadata"-checkbox from the Render to File-dialog.
+    
+    Returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, it was unsuccessful
+  </retvals>
+  <parameters>
+    boolean state - true, check the checkbox; false, uncheck the checkbox
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render, set, checkbox, render, embed metadata, transient guides</tags>
+</US_DocBloc>
+]]
+  if type(state)~="boolean" then ultraschall.AddErrorMessage("SetRender_EmbedStretchMarkers", "state", "must be a boolean", -1) return false end
+  local SaveCopyOfProject, hwnd, retval, Oldstate, Oldstate2, state2
+  if state==false then state=0 else state=1 end
+  hwnd = ultraschall.GetRenderToFileHWND()
+  Oldstate=reaper.SNM_GetIntConfigVar("projrenderstems", -99)
+  Oldstate2=Oldstate&512  
+  if Oldstate2==512 and state==0 then state2=Oldstate-512
+  elseif Oldstate2==0 and state==1 then state2=Oldstate+512
+  else state2=Oldstate
+  end
+  
+  
+  if hwnd==nil then
+    reaper.SNM_SetIntConfigVar("projrenderstems", state2)
+  else
+    reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd, 1178), "BM_SETCHECK", state,0,0,0)
+    reaper.SNM_SetIntConfigVar("projrenderstems", state2)
+  end
+  return true
+end
+
+--A=ultraschall.SetRender_EmbedMetaData(true)
+
+
+function ultraschall.SetRender_OfflineOnlineMode(mode)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetRender_OfflineOnlineMode</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    SWS=2.10.0.1
+    JS=0.972
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetRender_OfflineOnlineMode(integer mode)</functioncall>
+  <description>
+    sets the current mode of the offline/online-render-dropdownlist from the Render to File-dialog
+    
+    Returns false in case of an error
+  </description>
+  <parameters>
+    integer mode - the mode, that you want to set
+                 - 0, Full-speed Offline
+                 - 1, 1x Offline
+                 - 2, Online Render
+                 - 3, Offline Render (Idle)
+                 - 4, 1x Offline Render (Idle)
+  </parameters>
+  <retvals>
+    boolean retval - true, setting it was successful; false, setting it was unsuccessful
+  </retvals>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
+  <tags>rendermanagement, render, set, offline, online, idle</tags>
+</US_DocBloc>
+]]
+  if math.type(mode)~="integer" then ultraschall.AddErrorMessage("SetRender_OfflineOnlineMode", "mode", "must be an integer", -1) return false end
+  if mode<0 or mode>4 then ultraschall.AddErrorMessage("SetRender_OfflineOnlineMode", "mode", "must be between 0 and 4", -2) return false end
+  local oldfocus=reaper.JS_Window_GetFocus()
+  
+  local hwnd = ultraschall.GetRenderToFileHWND()
+  if hwnd==nil then reaper.SNM_SetIntConfigVar("projrenderlimit", mode) return end
+
+    -- select the new format-setting
+    if ultraschall.IsOS_Windows()==true then
+    reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd, 1001), "CB_SETCURSEL", mode,0,0,0)
+    --[[
+      reaper.JS_WindowMessage_Post(reaper.JS_Window_FindChildByID(hwnd, 1001), "CB_SETCURSEL", mode,0,0,0)
+    
+      reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd, 1001), "WM_LBUTTONDOWN", 1,0,0,0)
+      reaper.JS_WindowMessage_Post(reaper.JS_Window_FindChildByID(hwnd, 1001), "WM_LBUTTONUP", 1,0,0,0)
+        
+      reaper.JS_WindowMessage_Post(reaper.JS_Window_FindChildByID(hwnd, 1001), "WM_LBUTTONDOWN", 1,0,0,0)
+      reaper.JS_WindowMessage_Post(reaper.JS_Window_FindChildByID(hwnd, 1001), "WM_LBUTTONUP", 1,0,0,0)
+      --]]
+    elseif ultraschall.IsOS_Mac()==true then
+      reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd, 1001), "CB_SETCURSEL", mode,0,0,0)
+    else
+      -- ToDo: Check with Linux
+      reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd, 1001), "CB_SETCURSEL", mode,0,0,0)
+    end
+
+    reaper.JS_Window_SetFocus(oldfocus)    --]]
+    
+    --[[
+    -- select the new format-setting
+    reaper.JS_WindowMessage_Post(reaper.JS_Window_FindChildByID(hwnd,1001), "CB_SETCURSEL", mode,0,0,0)
+    -- the following triggers Reaper to understand, that changes occurred, by clicking at the
+    -- dropdownlist twice.
+    -- Does this work on Mac and Linux?
+    reaper.JS_WindowMessage_Post(reaper.JS_Window_FindChildByID(hwnd, 1001), "WM_LBUTTONDOWN", 1,0,0,0)
+    reaper.JS_WindowMessage_Post(reaper.JS_Window_FindChildByID(hwnd, 1001), "WM_LBUTTONUP", 1,0,0,0)
+    
+    reaper.JS_WindowMessage_Post(reaper.JS_Window_FindChildByID(hwnd, 1001), "WM_LBUTTONDOWN", 1,0,0,0)
+    reaper.JS_WindowMessage_Post(reaper.JS_Window_FindChildByID(hwnd, 1001), "WM_LBUTTONUP", 1,0,0,0)
+
+    reaper.JS_Window_SetFocus(oldfocus)    --]]
+    return true
+end
+
+--A=ultraschall.SetRender_OfflineOnlineMode(4)
+
+function ultraschall.GetRender_OfflineOnlineMode()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetRender_OfflineOnlineMode</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    SWS=2.10.0.1
+    JS=0.972
+    Lua=5.3
+  </requires>
+  <functioncall>integer mode = ultraschall.GetRender_OfflineOnlineMode()</functioncall>
+  <description>
+    gets the current mode of the offline/online-render-dropdownlist from the Render to File-dialog
+  </description>
+  <retvals>
+    integer mode - the mode, that is set
+                 - 0, Full-speed Offline
+                 - 1, 1x Offline
+                 - 2, Online Render
+                 - 3, Offline Render (Idle)
+                 - 4, 1x Offline Render (Idle)
+  </retvals>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
+  <tags>rendermanagement, render, get, offline, online, idle</tags>
+</US_DocBloc>
+]]
+  local oldfocus=reaper.JS_Window_GetFocus()
+  
+  local hwnd = ultraschall.GetRenderToFileHWND()
+  if hwnd==nil then return reaper.SNM_GetIntConfigVar("projrenderlimit", -1) end
+
+  return reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd,1001), "CB_GETCURSEL", 0,100,0,100)
+end
+
+--A,B,C=ultraschall.GetRender_OfflineOnlineMode()
+
+
+function ultraschall.GetRender_ResampleMode()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetRender_ResampleMode</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    SWS=2.10.0.1
+    JS=0.972
+    Lua=5.3
+  </requires>
+  <functioncall>integer mode = ultraschall.GetRender_ResampleMode()</functioncall>
+  <description>
+    gets the current mode of the "Resample mode (if needed)"-dropdownlist from the Render to File-dialog
+  </description>
+  <retvals>
+    integer mode - the mode, that is set
+                 -  0, Medium (64pt Sinc), 
+                 -  1, Low (Linear Interpolation), 
+                 -  2, Lowest (Point Sampling), 
+                 -  3, Good(192pt Sinc), 
+                 -  4, Better(384pt Sinc), 
+                 -  5, Fast (IIR + Linear Interpolation), 
+                 -  6, Fast (IIRx2 + Linear Interpolation), 
+                 -  7, Fast (16pt sinc) - Default, 
+                 -  8, HQ (512pt Sinc), 
+                 -  9, Extreme HQ (768pt HQ Sinc)
+  </retvals>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
+  <tags>rendermanagement, render, get, resample mode</tags>
+</US_DocBloc>
+]]
+  local oldfocus=reaper.JS_Window_GetFocus()
+  
+  local hwnd = ultraschall.GetRenderToFileHWND()
+  if hwnd==nil then return reaper.SNM_GetIntConfigVar("projrenderresample", -1) end
+
+  return reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd,1000), "CB_GETCURSEL", 0,100,0,100)
+end
+
+--A,B,C=ultraschall.GetRender_ResampleMode()
+
+function ultraschall.SetRender_ResampleMode(mode)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetRender_ResampleMode</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.975
+    SWS=2.10.0.1
+    JS=0.972
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetRender_ResampleMode(integer mode)</functioncall>
+  <description>
+    sets the current mode of the "Resample mode (if needed)"-dropdownlist from the Render to File-dialog
+    
+    Returns false in case of an error
+  </description>
+  <parameters>
+    integer mode - the mode, that is set
+                 -  0, Medium (64pt Sinc), 
+                 -  1, Low (Linear Interpolation), 
+                 -  2, Lowest (Point Sampling), 
+                 -  3, Good(192pt Sinc), 
+                 -  4, Better(384pt Sinc), 
+                 -  5, Fast (IIR + Linear Interpolation), 
+                 -  6, Fast (IIRx2 + Linear Interpolation), 
+                 -  7, Fast (16pt sinc) - Default, 
+                 -  8, HQ (512pt Sinc), 
+                 -  9, Extreme HQ (768pt HQ Sinc)
+  </parameters>
+  <retvals>
+    boolean retval - true, setting it was successful; false, setting it was unsuccessful
+  </retvals>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationSettings_Module.lua</source_document>
+  <tags>rendermanagement, render, set, resample mode</tags>
+</US_DocBloc>
+]]
+  if math.type(mode)~="integer" then ultraschall.AddErrorMessage("SetRender_ResampleMode", "mode", "must be an integer", -1) return false end
+  if mode<0 or mode>9 then ultraschall.AddErrorMessage("SetRender_ResampleMode", "mode", "must be between 0 and 9", -2) return false end
+  local oldfocus=reaper.JS_Window_GetFocus()
+  
+  local hwnd = ultraschall.GetRenderToFileHWND()
+  if hwnd==nil then reaper.SNM_SetIntConfigVar("projrenderresample", mode) return end
+
+    -- select the new format-setting
+    if ultraschall.IsOS_Windows()==true then
+      reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd, 1000), "CB_SETCURSEL", mode,0,0,0)   
+    elseif ultraschall.IsOS_Mac()==true then
+      reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd, 1000), "CB_SETCURSEL", mode,0,0,0)
+    else
+      -- ToDo: Check with Linux
+      reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd, 1000), "CB_SETCURSEL", mode,0,0,0)
+    end
+
+    reaper.JS_Window_SetFocus(oldfocus)    --]]
+    return true
+end
+
+
+function ultraschall.GetRender_NoSilentFiles()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetRender_NoSilentFiles</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolan curcheckstate = ultraschall.GetRender_NoSilentFiles()</functioncall>
+  <description>
+    Returns the current check-state of the "Do not render files that are likely silent"-checkbox of the Render to File-dialog
+  </description>
+  <retvals>
+    boolean curcheckstate - true, checkbox is checked; false, checkbox is unchecked
+  </retvals>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render management, get, silent files render, checkbox</tags>
+</US_DocBloc>
+]]  
+  return reaper.GetSetProjectInfo(0, "RENDER_ADDTOPROJ", 0, false)&2==2
+end
+
+function ultraschall.SetRender_NoSilentFiles(state)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetRender_NoSilentFiles</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolan retval = ultraschall.SetRender_NoSilentFiles(boolean state)</functioncall>
+  <description>
+    Sets the current check-state of the "Do not render files that are likely silent"-checkbox of the Render to File-dialog
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting checkbox was successful; false, setting checkbox was unsuccessful
+  </retvals>
+  <parameters>
+    boolean state - true, checkbox is checked; false, checkbox is unchecked
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render management, set, silent files render, checkbox</tags>
+</US_DocBloc>
+]]  
+  if ultraschall.type(state)~="boolean" then ultraschall.AddErrorMessage("SetRender_NoSilentFiles", "state", "must be a boolean", -1) return false end
+  local curstate=reaper.GetSetProjectInfo(0, "RENDER_ADDTOPROJ", 0, false)
+  if curstate&2==2 and state==false then reaper.GetSetProjectInfo(0, "RENDER_ADDTOPROJ", curstate-2, true)
+  elseif curstate&2==0 and state==true then reaper.GetSetProjectInfo(0, "RENDER_ADDTOPROJ", curstate+2, true)
+  end
+  return true
+end
+
+--ultraschall.SetRender_NoSilentFiles(false)
+
+function ultraschall.GetRender_AddRenderedFilesToProject()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetRender_AddRenderedFilesToProject</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolan curcheckstate = ultraschall.GetRender_AddRenderedFilesToProject()</functioncall>
+  <description>
+    Returns the current check-state of the "Add rendered items to new tracks in project"-checkbox of the Render to File-dialog
+  </description>
+  <retvals>
+    boolean curcheckstate - true, checkbox is checked; false, checkbox is unchecked
+  </retvals>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render management, get, add rendered items to new tracks in project, checkbox</tags>
+</US_DocBloc>
+]]  
+  return reaper.GetSetProjectInfo(0, "RENDER_ADDTOPROJ", 0, false)&1==1
+end
+
+--A=ultraschall.GetRender_AddRenderedFilesToProject()
+
+function ultraschall.SetRender_AddRenderedFilesToProject(state)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetRender_AddRenderedFilesToProject</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolan retval = ultraschall.SetRender_AddRenderedFilesToProject(boolean state)</functioncall>
+  <description>
+    Sets the current check-state of the "Add rendered items to new tracks in project"-checkbox of the Render to File-dialog
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting checkbox was successful; false, setting checkbox was unsuccessful
+  </retvals>
+  <parameters>
+    boolean state - true, checkbox is checked; false, checkbox is unchecked
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render management, set, add rendered items to new tracks in project, checkbox</tags>
+</US_DocBloc>
+]]  
+  if ultraschall.type(state)~="boolean" then ultraschall.AddErrorMessage("SetRender_AddRenderedFilesToProject", "state", "must be a boolean", -1) return false end
+  local curstate=reaper.GetSetProjectInfo(0, "RENDER_ADDTOPROJ", 0, false)
+  if curstate&1==1 and state==false then reaper.GetSetProjectInfo(0, "RENDER_ADDTOPROJ", curstate-1, true)
+  elseif curstate&1==0 and state==true then reaper.GetSetProjectInfo(0, "RENDER_ADDTOPROJ", curstate+1, true)
+  end
+  return true
+end
+
+function ultraschall.GetRender_TailLength()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetRender_TailLength</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>integer taillength_ms = ultraschall.GetRender_TailLength()</functioncall>
+  <description>
+    Returns the current tail-length in ms, as set in the Render to File-dialog
+  </description>
+  <retvals>
+    integer taillength_ms - the current taillength in ms
+  </retvals>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render management, get, tail length, ms, checkbox</tags>
+</US_DocBloc>
+]]  
+  return math.tointeger(reaper.GetSetProjectInfo(0, "RENDER_TAILMS", 0, false))
+end
+
+--A=ultraschall.GetRender_TailLength()
+
+function ultraschall.SetRender_TailLength(taillength)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetRender_TailLength</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolan retval = ultraschall.SetRender_TailLength(boolean state)</functioncall>
+  <description>
+    Sets the tail-length, as set in the Render to File-dialog
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer taillength - the taillength in milliseconds
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Render Settings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render management, set, tail length, ms, checkbox</tags>
+</US_DocBloc>
+]]  
+  if ultraschall.type(taillength)~="number: integer" then ultraschall.AddErrorMessage("SetRender_TailLength", "taillength", "must be an integer", -1) return false end
+  if taillength<0 then ultraschall.AddErrorMessage("SetRender_TailLength", "taillength", "must be an integer", -2) return false end
+
+  reaper.GetSetProjectInfo(0, "RENDER_TAILMS", taillength, true)
+  return true
+end

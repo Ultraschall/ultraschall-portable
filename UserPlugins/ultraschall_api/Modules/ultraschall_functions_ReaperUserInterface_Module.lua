@@ -372,7 +372,7 @@ function ultraschall.RestoreArrangeviewSnapshot(slot, position, vzoom, hcentermo
                                  -    1, keeps edit-cursor in center of zoom
                                  -    2, keeps center of view in the center during zoom
                                  -    3, keeps in center of zoom, what is beneath the mousecursor
-    optional boolean verticalscroll - true, sets vertical scroll-value as well; false, doesn't set vertical-scroll-value
+    optional boolean verticalscroll - true or nil, sets vertical scroll-value as well; false, doesn't set vertical-scroll-value
   </parameters>
   <retvals>
     boolean retval - false, in case of error; true, in case of success
@@ -396,12 +396,12 @@ function ultraschall.RestoreArrangeviewSnapshot(slot, position, vzoom, hcentermo
   if math.type(slot)~="integer" then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot","slot", "Must be an integer", -1) return false end
   if slot<0 then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot","slot", "Must be bigger than 0", -2) return false end
   if ultraschall.IsValidArrangeviewSnapshot(slot)==false then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot", "slot", "No such slot available", -3) return false end
-  if position~=nil and type(position)~="boolean" then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot","position", "Must be nil or a boolean", -4) return false end
-  if vzoom~=nil and type(vzoom)~="boolean" then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot","vzoom", "Must be nil or a boolean", -5) return false end
+  if position~=nil and type(position)~="boolean" then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot","position", "Must be nil(for true) or a boolean", -4) return false end
+  if vzoom~=nil and type(vzoom)~="boolean" then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot","vzoom", "Must be nil(for true) or a boolean", -5) return false end
   if vzoom==nil then vzoom=true end
   if position==false and hcentermode~=nil and math.type(hcentermode)~="integer" then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot","hcentermode", "Must be nil or an integer", -6) return false end
   if hcentermode~=nil and (hcentermode<-1 or hcentermode>3) then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot","hcentermode", "Must be nil or between -1 and 3", -7) return false end
-  if verticalscroll~=nil and type(verticalscroll)~="boolean" then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot","verticalscroll", "Must be nil or a boolean", -8) return false end
+  if verticalscroll~=nil and type(verticalscroll)~="boolean" then ultraschall.AddErrorMessage("RestoreArrangeviewSnapshot","verticalscroll", "Must be nil(for true) or a boolean", -8) return false end
     
   -- prepare variables by retrieving the snapshot-slot-information
   local bool, description, start, ende, vzoom3, hzoom, vscroll = ultraschall.RetrieveArrangeviewSnapshot(slot)
@@ -1419,7 +1419,7 @@ function ultraschall.GetHWND_ArrangeViewAndTimeLine()
     SWS=2.9.7
     Lua=5.3
   </requires>
-  <functioncall>HWND arrange_view, HWND timeline, HWND TrackControlPanel = ultraschall.GetHWND_ArrangeViewAndTimeLine()</functioncall>
+  <functioncall>HWND arrange_view, HWND timeline, HWND TrackControlPanel, HWND TrackListWindow = ultraschall.GetHWND_ArrangeViewAndTimeLine()</functioncall>
   <description>
     Returns the HWND-Reaper-Windowhandler for the tracklist- and timeline-area in the arrange-view 
     
@@ -1428,7 +1428,8 @@ function ultraschall.GetHWND_ArrangeViewAndTimeLine()
   <retvals>
     HWND arrange_view - the HWND-window-handler for the tracklist-area of the arrangeview
     HWND timeline - the HWND-window-handler for the timeline/markerarea of the arrangeview
-    HWND TrackControlPanel - the HWND-window-handler for the track-control-panel(TCP)(may not work anymore in an upcoming Reaper-release!)
+    HWND TrackControlPanel - the HWND-window-handler for the track-control-panel(TCP)(may not work anymore in an upcoming Reaper-release! Send me a note in that case!)
+    HWND TrackListWindow - the HWND-window-handler for the tracklist-window
   </retvals>
   <chapter_context>
     User Interface
@@ -1487,12 +1488,6 @@ function ultraschall.GetHWND_ArrangeViewAndTimeLine()
          max~=ScrollState[i]["max"] or
          trackPos~=ScrollState[i]["trackPos"] then
         ARHWND=temphwnd 
-        --[[print2(reaper.JS_Window_GetTitle(temphwnd), position, ScrollState[i]["position"], 
-                                                    pageSize, ScrollState[i]["pageSize"],
-                                                    min, ScrollState[i]["min"],
-                                                    max, ScrollState[i]["max"],
-                                                    trackPos, ScrollState[i]["trackPos"]
-                                                    )--]]
         break
       end
     end
@@ -1526,9 +1521,13 @@ function ultraschall.GetHWND_ArrangeViewAndTimeLine()
     -- TCP: check all hwnds to find the one, that has right<left, top=top, bottom_timeline=top_arrangeview
     for i=1, Count do
       local temphwnd=reaper.JS_Window_HandleFromAddress(Individual_values[i])
-      if ScrollState[i]["right"]<=left 
+      if (reaper.GetToggleCommandState(42373)==0 and ScrollState[i]["right"]<=left 
           and ScrollState[i]["top"]==top 
-          and ScrollState[i]["bottom"]==bottom-18
+          and ScrollState[i]["bottom"]==bottom-18) 
+          or
+          (reaper.GetToggleCommandState(42373)==1 and ScrollState[i]["left"]>=right
+                    and ScrollState[i]["top"]==top 
+                    and ScrollState[i]["bottom"]==bottom-18) 
           then
         if TCPHWND==nil then 
           TCPHWND=temphwnd 
@@ -1557,8 +1556,10 @@ function ultraschall.GetHWND_ArrangeViewAndTimeLine()
     TCPHWND=reaper.JS_Window_HandleFromAddress(reaper.GetExtState("ultraschall", "tcphwnd"))
     if TCPHWND=="" then TCPHWND=nil end
   end  
-  return ARHWND, TLHWND, TCPHWND
+  return ARHWND, TLHWND, TCPHWND, reaper.JS_Window_FindChildByID(reaper.GetMainHwnd(), 1000)
 end
+
+--reaper.SNM_SetIntConfigVar("mixerflag", 2)
 
 
 function ultraschall.GetVerticalScroll()
@@ -1866,21 +1867,20 @@ function ultraschall.GetRenderToFileHWND()
 --]]
 
   local translation=reaper.JS_Localize("Render to File", "DLG_506")
-  local open_render_queue_tr=reaper.JS_Localize("Open render queue...", "DLG_506")
-  local save_changes_and_close_tr=reaper.JS_Localize("Save changes and close", "DLG_506")
-  local render_tr=reaper.JS_Localize("Render...", "DLG_506")
-  local wildcards_tr=reaper.JS_Localize("Wildcards", "DLG_506")
   
-  --count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find("Render to File", false)
+  local presets=reaper.JS_Localize("Presets", "DLG_506")
+  local monofiles=reaper.JS_Localize("Tracks with only mono media to mono files", "DLG_506")
+  local render_to=reaper.JS_Localize("Render to", "DLG_506")
+  
+  
   local count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find(translation, true)
   if count_hwnds==0 then return nil
   else
     for i=count_hwnds, 1, -1 do
       if ultraschall.HasHWNDChildWindowNames(hwnd_array[i], 
-                                            open_render_queue_tr.."\0"..
-                                            save_changes_and_close_tr.."\0"..
---                                            render_tr.."\0".. -- includes number of to be rendered files, so you can't use this
-                                            wildcards_tr)==true then return hwnd_array[i] end
+                                            monofiles,
+                                            render_to,
+                                            presets)==true then return hwnd_array[i] end
     end
   end
   return nil
@@ -3725,4 +3725,592 @@ end
 
 --A=ultraschall.GetTCPWidth()
 
+function ultraschall.VideoWindow_FullScreenToggle(toggle)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>VideoWindow_FullScreenToggle</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.05
+      Lua=5.3
+    </requires>
+    <functioncall>boolean fullscreenstate = ultraschall.VideoWindow_FullScreenToggle(optional boolean toggle)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      toggles fullscree-state of Reaper's video-processor-window 
+        
+      returns nil in case of error
+    </description>
+    <retvals>
+      boolean fullscreenstate - true, video-window is now fullscreen; false, video-window is NOT fullscreen
+    </retvals>
+    <parameters>
+      optional boolean toggle - true, sets video-window to fullscreen; false, sets video-window to windowed; nil, toggle between fullscreen and nonfullscreen states
+    </parameters>
+    <chapter_context>
+      User Interface
+      Window Management
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
+    <tags>user interface, set, video window, fullscreen, windowed</tags>
+  </US_DocBloc>
+  --]]
+  local Hwnd = ultraschall.GetVideoHWND()
+  if Hwnd==nil then ultraschall.AddErrorMessage("VideoWindow_FullScreenToggle", "", "Video window not opened", -1) return end
+  if toggle~=nil and type(toggle)~="boolean" then ultraschall.AddErrorMessage("VideoWindow_FullScreenToggle", "toggle", "must be a boolean or nil", -2) return end
+  local CurState=ultraschall.GetUSExternalState("reaper_video", "fullscreen", "reaper.ini")=="1"
+  if toggle==nil or toggle~=CurState then
+    reaper.JS_WindowMessage_Send(Hwnd, "WM_LBUTTONDBLCLK", 1,1,0,0)
+  end
+  if toggle==nil then toggle=CurState==false end
+  return toggle
+end
+
+
+function ultraschall.PreventUIRefresh()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>PreventUIRefresh</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer current_preventcount = ultraschall.PreventUIRefresh()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    like Reaper's own PreventUIRefresh, it allows you to prevent redrawing of the userinterface.
+    
+    Unlike Reaper's own PreventUIRefresh, this will manage the preventcount itself.
+    
+    this will not take into account usage of Reaper's own PreventUIRefresh, so you should use either
+    
+    To reallow refreshing of the UI, use [RestoreUIRefresh](#RestoreUIRefresh).
+  </description>
+  <retvals>
+    integer current_preventcount - the number of times PreventUIRefresh has been called since scriptstart
+  </retvals>
+  <chapter_context>
+    User Interface
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
+  <tags>user interface, prevent, ui, refresh</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.PreventUIRefresh_Value==nil then ultraschall.PreventUIRefresh_Value=0 end
+  ultraschall.PreventUIRefresh_Value=ultraschall.PreventUIRefresh_Value+1
+  reaper.PreventUIRefresh(1)
+  return ultraschall.PreventUIRefresh_Value
+end
+
+function ultraschall.RestoreUIRefresh(full)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RestoreUIRefresh</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer current_preventcount = ultraschall.RestoreUIRefresh(optional boolean full)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    This reallows UI-refresh, after you've prevented it using [PreventUIRefresh](#PreventUIRefresh).
+    
+    If you set parameter full=true, it will reset all PreventUIRefresh-calls since scriptstart at once, otherwise you need to call this
+    as often until the returnvalue current_preventcount equals 0.
+    
+    To get the remaining UI-refreshes to be restored, use [GetPreventUIRefreshCount](#GetPreventUIRefreshCount)
+    
+    If no UIRefreshes are available anymore, calling this function has no effect.
+  </description>
+  <retvals>
+    integer current_preventcount - the remaining number of times PreventUIRefresh has been called since scriptstart
+  </retvals>
+  <parameters>
+    optional boolean full - true, restores UIRefresh fully, no matter, how often PreventUIRefresh has been called before; false or nil, just reset one single call to PreventUIRefresh
+  </parameters>
+  <chapter_context>
+    User Interface
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
+  <tags>user interface, restore, ui, refresh</tags>
+</US_DocBloc>
+--]]
+  if full==true then 
+    reaper.PreventUIRefresh(-ultraschall.PreventUIRefresh_Value)   
+    ultraschall.PreventUIRefresh_Value=0
+  else
+    if ultraschall.PreventUIRefresh_Value>0 then 
+      reaper.PreventUIRefresh(-1)
+      ultraschall.PreventUIRefresh_Value=ultraschall.PreventUIRefresh_Value-1
+    end
+  end
+  return ultraschall.PreventUIRefresh_Value
+end
+
+--A=ultraschall.PreventUIRefresh()
+--B=ultraschall.RestoreUIRefresh(full)
+
+function ultraschall.GetPreventUIRefreshCount()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetPreventUIRefreshCount</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer current_preventcount = ultraschall.GetPreventUIRefreshCount()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    This returns the number of times [PreventUIRefresh](#PreventUIRefresh) has been called since scriptstart, minus possible restored UI refreshes.
+    
+    Use [RestoreUIRefresh](#RestoreUIRefresh) to restore UI-refresh 
+  </description>
+  <retvals>
+    integer current_preventcount - the remaining number of times PreventUIRefresh has been called since scriptstart
+  </retvals>
+  <chapter_context>
+    User Interface
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Muting_Module.lua</source_document>
+  <tags>user interface, get, remaining, ui, refresh</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.PreventUIRefresh_Value==nil then ultraschall.PreventUIRefresh_Value=0 end
+  return ultraschall.PreventUIRefresh_Value
+end
+
+
+function ultraschall.SetItemButtonsVisible(Volume, Locked, Mute, Notes, PooledMidi, GroupedItems, PerTakeFX, Properties, AutomationEnvelopes)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetItemButtonsVisible</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+	SWS=2.9.7
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetItemButtonsVisible(optional boolean Volume, optional integer Locked, optional integer Mute, optional integer Notes, optional boolean PooledMidi, optional boolean GroupedItems, optional integer PerTakeFX, optional integer Properties, optional integer AutomationEnvelopes)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    allows setting, which item-buttons shall be shown
+  
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting button was successful; false, buttons couldn't be set
+  </retvals>
+  <parameters>
+    optional boolean Volume - true, show the volume knob; false, don't show the volume knob; nil, keep current setting
+	optional integer Locked - sets state of locked/unlocked button
+							- nil, keep current state
+						    - 0, don't show lockstate button
+							- 1, show locked button only
+							- 2, show unlocked button only
+							- 3, show locked and unlocked button
+	optional integer Mute - sets state of mute/unmuted button
+							- nil, keep current state
+						    - 0, don't show mute button
+							- 1, show mute button only
+							- 2, show unmuted button only
+							- 3, show muted and unmuted button
+	optional integer Notes - sets state of itemnotes-button
+							- nil, keep current state
+						    - 0, don't show item-note button
+							- 1, show itemnote existing-button only
+							- 2, show no itemnote existing-button only
+							- 3, show itemnote existing and no itemnote existing-button
+	optional boolean PooledMidi - true, show the pooled midi-button; false, don't show the pooled midi-button; nil, keep current setting
+	optional boolean GroupedItems - true, show the grouped item-button; false, don't show the grouped item-button; nil, keep current setting
+	optional integer PerTakeFX - sets state of take fx-button
+							- nil, keep current state
+						    - 0, don't show take-fx button
+							- 1, show active take fx-button only
+							- 2, show non active take fx-button only
+							- 3, show active and nonactive take fx-button
+	optional integer Properties - show properties-button
+								- nil, keep current state
+								- 0, don't show item properties-button
+								- 1, show item properties-button
+								- 2, show item properties-button only if resampled media
+	optional integer AutomationEnvelopes - sets state of envelope-button
+										- nil, keep current state
+										- 0, don't show envelope-button
+										- 1, show active envelope-button only
+										- 2, show non active envelope-button only
+										- 3, show active and nonactive envelope-button
+  </parameters>
+  <chapter_context>
+    User Interface
+    MediaItems
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>user interface, set, media items, show, buttons</tags>
+</US_DocBloc>
+--]]
+  if type(Volume)~="boolean" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Volume", "must be a boolean" , -1) return false end
+  if math.type(Locked)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Locked", "must be an integer" , -2) return false end
+  if math.type(Mute)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Mute", "must be an integer" , -3) return false end
+  if math.type(Notes)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Notes", "must be an integer" , -4) return false end
+  
+  if type(PooledMidi)~="boolean" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "PooledMidi", "must be a boolean" , -5) return false end
+  if type(GroupedItems)~="boolean" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "GroupedItems", "must be a boolean" , -6) return false end
+  if math.type(PerTakeFX)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "PerTakeFX", "must be an integer" , -7) return false end
+  if math.type(Properties)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Properties", "must be an integer" , -8) return false end
+  if math.type(AutomationEnvelopes)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "AutomationEnvelopes", "must be an integer" , -9) return false end
+
+  local State = reaper.SNM_GetIntConfigVar("itemicons", -99)
+  if Locked~=nil then
+    if Locked&1==0 and State&1~=0 then State=State-1 elseif Locked&1~=0 and State&1==0 then State=State+1 end
+    if Locked&2==0 and State&2~=0 then State=State-2 elseif Locked&2~=0 and State&2==0 then State=State+2 end
+  end
+
+  if PerTakeFX~=nil then
+    if PerTakeFX&1==0 and State&4~=0 then State=State-4 elseif PerTakeFX&1~=0 and State&4==0 then State=State+4 end
+    if PerTakeFX&2==0 and State&8~=0 then State=State-8 elseif PerTakeFX&2~=0 and State&8==0 then State=State+8 end
+  end
+
+  if Mute~=nil then
+    if Mute&1==0 and State&16~=0 then State=State-16 elseif Mute&1~=0 and State&16==0 then State=State+16 end
+    if Mute&2==0 and State&32~=0 then State=State-32 elseif Mute&2~=0 and State&32==0 then State=State+32 end
+  end
+  
+  if Notes~=nil then
+    if Notes&1==0 and State&64~=0 then  State=State-64  elseif Notes&1~=0 and State&64 ==0 then State=State+64  end
+    if Notes&2==0 and State&128~=0 then State=State-128 elseif Notes&2~=0 and State&128==0 then State=State+128 end
+  end  
+  
+  if GroupedItems~=nil then
+    if GroupedItems==false and State&256~=0 then  State=State-256  elseif GroupedItems==true and State&256==0 then State=State+256  end
+  end  
+
+  if Properties~=nil then
+    if State&2048 == 2048 then State=State-2048 end
+    if State&4096 == 4096 then State=State-4096 end
+    if Properties==1 then State=State+2048
+    elseif Properties==0 then State=State+4096
+    end
+  end
+  
+  if PooledMidi~=nil then
+    if PooledMidi==true and State&8192~=0 then  State=State-8192  elseif PooledMidi==false and State&8192==0 then State=State+8192 end
+  end  
+
+  if Volume~=nil then
+    if Volume==false and State&16384~=0 then  State=State-16384  elseif Volume==true and State&16384==0 then State=State+16384 end
+  end  
+
+  if AutomationEnvelopes~=nil then
+    if AutomationEnvelopes&1==1 and State&262144~=0 then State=State-262144 elseif AutomationEnvelopes&1~=1 and State&262144==0 then State=State+262144 end
+    if AutomationEnvelopes&2==0 and State&524288~=0 then State=State+524288 elseif AutomationEnvelopes&2~=0 and State&524288==0 then State=State-524288 end
+  end  
+  
+  reaper.SNM_SetIntConfigVar("itemicons", State)
+  reaper.UpdateArrange()
+  return true
+end
+
+function ultraschall.GetItemButtonsVisible()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetItemButtonsVisible</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+	SWS=2.9.7
+    Lua=5.3
+  </requires>
+  <functioncall>boolean Volume, integer Locked, integer Mute, integer Notes, boolean PooledMidi, boolean GroupedItems, integer PerTakeFX, integer Properties, integer AutomationEnvelopes = ultraschall.GetItemButtonsVisible()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    gets, which item-buttons are be shown
+  </description>
+  <retvals>
+    boolean Volume - true, shows the volume knob; false, doesn't show the volume knob
+	integer Locked - gets visibility-state of locked/unlocked button
+						    - 0, doesn't show lockstate button
+							- 1, shows locked button only
+							- 2, shows unlocked button only
+							- 3, shows locked and unlocked button
+	integer Mute - gets visibility-state of mute/unmuted button
+						    - 0, doesn't show mute button
+							- 1, shows mute button only
+							- 2, shows unmuted button only
+							- 3, shows muted and unmuted button
+	integer Notes - gets visibility-state of itemnotes-button
+						    - 0, doesn't show item-note button
+							- 1, shows itemnote existing-button only
+							- 2, shows no itemnote existing-button only
+							- 3, shows itemnote existing and no itemnote existing-button
+	boolean PooledMidi - true, shows the pooled midi-button; false, don't show the pooled midi-button
+	boolean GroupedItems - true, shows the grouped item-button; false, don't show the grouped item-button
+	integer PerTakeFX - gets visibility-state of take fx-button
+						    - 0, doesn't show take-fx button
+							- 1, shows active take fx-button only
+							- 2, shows non active take fx-button only
+							- 3, shows active and nonactive take fx-button
+	integer Properties - gets visibility-state of properties-button
+								- 0, doesn't show item properties-button
+								- 1, shows item properties-button
+								- 2, shows item properties-button only if resampled media
+	integer AutomationEnvelopes - gets visibility-state of envelope-button
+										- 0, doesn't show envelope-button
+										- 1, shows active envelope-button only
+										- 2, shows non active envelope-button only
+										- 3, shows active and nonactive envelope-button
+  </retvals>
+  <chapter_context>
+    User Interface
+    MediaItems
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>user interface, media items, get, show, buttons</tags>
+</US_DocBloc>
+--]]
+  local State = reaper.SNM_GetIntConfigVar("itemicons", -99)
+  local Volume, Locked, Mute, Notes, PooledMidi, GroupedItems, PerTakeFX, Properties, AutomationEnvelopes=false,0,0,0,false,false,0,0,0
+  if State&1~=0 then Locked=Locked+1 end
+  if State&2~=0 then Locked=Locked+2 end
+  
+  if State&4~=0 then PerTakeFX=PerTakeFX+1 end
+  if State&8~=0 then PerTakeFX=PerTakeFX+2 end
+  
+  if State&16~=0 then Mute=Mute+1 end
+  if State&32~=0 then Mute=Mute+2 end
+  
+  if State&64 ~=0 then Notes=Notes+1 end
+  if State&128~=0 then Notes=Notes+2 end
+  
+  GroupedItems=State&256~=0
+  
+  if State&2048~=0 then Properties=Properties+1 
+  elseif State&4096==0 then Properties=Properties+2 end
+  
+  PooledMidi=State&8192==0
+  
+  Volume=State&16384==0
+  
+  if State&262144==0 then AutomationEnvelopes=AutomationEnvelopes+1 end
+  if State&524288~=0 then AutomationEnvelopes=AutomationEnvelopes+2 end  
+  
+  return Volume, Locked, Mute, Notes, PooledMidi, GroupedItems, PerTakeFX, Properties, AutomationEnvelopes
+end
+
+function ultraschall.TCP_SetWidth(width)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetThemeParameterIndexByDescription</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetThemeParameterIndexByDescription(integer width)</functioncall>
+  <description>
+    allows setting the width of the tcp.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer width - the new width of the tcp in pixels; 0 and higher
+  </parameters>
+  <chapter_context>
+    User Interface
+    Track Control Panel(TCP)
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>userinterface, set, width, tcp, track control panel</tags>
+</US_DocBloc>
+]]
+  -- initial code by amagalma
+  if ultraschall.type(width)~="number: integer" then ultraschall.AddErrorMessage("TCP_SetWidth", "width", "must be an integer", -1) return false end
+  if width<0 then ultraschall.AddErrorMessage("TCP_SetWidth", "width", "must be bigger or equal 0", -2) return false end
+
+  local main = reaper.GetMainHwnd()
+  local _, _, tcp_hwnd, tracklist = ultraschall.GetHWND_ArrangeViewAndTimeLine()
+  local x,y = 0,0 
+  local _, _, _, av_r = reaper.JS_Window_GetRect(tracklist) 
+  
+  local _, main_x = reaper.JS_Window_GetRect(main) 
+  local _, tcp_x, tcp_y, tcp_r = reaper.JS_Window_GetRect(tcp_hwnd) 
+
+  if tcp_r < av_r then
+    x,y = reaper.JS_Window_ScreenToClient(main, tcp_x+(tcp_r-tcp_x)+2, tcp_y)
+    reaper.JS_WindowMessage_Send(main, "WM_LBUTTONDOWN", 1, 0, x, y) -- mouse down message at splitter location
+    reaper.JS_WindowMessage_Send(main, "WM_LBUTTONUP", 0, 0, (tcp_x+width)-main_x-2, y) -- set width, mouse up message
+  else -- ' TCP is on right side
+    x,y = reaper.JS_Window_ScreenToClient(main, tcp_x-5, tcp_y)
+    reaper.JS_WindowMessage_Send(main, "WM_LBUTTONDOWN", 1, 0, x, y)
+    reaper.JS_WindowMessage_Send(main, "WM_LBUTTONUP", 0, 0, (tcp_r-width)-main_x-8, y)
+  end 
+  return true
+end
+
+--ultraschall.TCP_SetWidth(300)
+
+function ultraschall.GetTrackManagerHWND()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrackManagerHWND</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.965
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>HWND hwnd = ultraschall.GetTrackManagerHWND()</functioncall>
+  <description>
+    returns the HWND of the Track Manager-dialog, if the window is opened.
+    
+    returns nil if Track Manager-dialog is closed
+  </description>
+  <retvals>
+    HWND hwnd - the window-handler of the Track Manager-dialog
+  </retvals>
+  <chapter_context>
+    User Interface
+    Reaper-Windowhandler
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>user interface, window, track manager, hwnd, get</tags>
+</US_DocBloc>
+--]]
+  local translation=reaper.JS_Localize("Track Manager", "common")
+ 
+  local selection=reaper.JS_Localize("Set selection from:", "DLG_469")
+  local show_all=reaper.JS_Localize("Show all", "DLG_469")
+  local mcp=reaper.JS_Localize("MCP", "trackmgr")
+  
+  local count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find(translation, true)
+  if count_hwnds==0 then return nil
+  else
+    for i=count_hwnds, 1, -1 do
+      if ultraschall.HasHWNDChildWindowNames(hwnd_array[i], 
+                                           selection,
+                                           show_all,
+                                           mcp)==true then return hwnd_array[i] end
+    end
+  end
+  return nil
+end
+
+function ultraschall.SetTimeUnit(transport_unit, ruler_unit, ruler_unit2)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetTimeUnit</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolan retval = ultraschall.SetTimeUnit(optional integer transport_unit, optional integer ruler_unit, optional integer ruler_unit2)</functioncall>
+  <description>
+    Sets the time-unit for transport, ruler and secondary ruler
+    
+    returns false in case of error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    optional integer transport_unit - the unit for the transport
+                                    - nil, keep current
+                                    - 0, seconds
+                                    - 1, samples
+                                    - 2, Minutes:Seconds
+                                    - 3, Measures.Beats/minutes:Seconds
+                                    - 4, Measures.Beats
+                                    - 5, Hours:Minutes:Seconds:Frames
+                                    - 6, Absolute frames
+    optional integer ruler_unit - the unit for the ruler
+                                - nil, keep current
+                                - 0, seconds
+                                - 1, samples
+                                - 2, Minutes:Seconds
+                                - 3, Measures.Beats/minutes:Seconds
+                                - 4, Measures.Beats
+                                - 5, Hours:Minutes:Seconds:Frames
+                                - 6, Absolute frames
+                                - 7, Measures.Beats(minimal)/minutes:Seconds
+                                - 8, Measures.Beats(minimal)
+    optional integer ruler_unit2 - the unit for the secondary ruler
+                                 - nil, keep current
+                                 - 0, seconds
+                                 - 1, samples
+                                 - 2, Minutes:Seconds
+                                 - 3, Hours:Minutes:Seconds:Frames
+                                 - 4, Absolute frames
+                                 - 5, None
+  </parameters>
+  <chapter_context>
+    User Interface
+    Transport and Ruler
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>user interface, transport, ruler, set, time unit</tags>
+</US_DocBloc>
+]]
+  if transport_unit~=nil and ultraschall.type(transport_unit)~="number: integer" then ultraschall.AddErrorMessage("SetTimeUnit", "transport_unit", "must be an integer", -1) return false end
+  if transport_unit~=nil then
+    if transport_unit<0 or transport_unit>6 then 
+      ultraschall.AddErrorMessage("SetTimeUnit", "transport_unit", "must be between 0 and 6", -2) 
+      return false 
+    end
+  end
+  if ruler_unit~=nil and ultraschall.type(ruler_unit)~="number: integer" then ultraschall.AddErrorMessage("SetTimeUnit", "ruler_unit", "must be an integer", -3) return false end
+  if ruler_unit~=nil then
+    if ruler_unit<0 or ruler_unit>8 then 
+      ultraschall.AddErrorMessage("SetTimeUnit", "ruler_unit", "must be between 0 and 8", -4)
+      return false 
+    end
+  end
+  if ruler_unit2~=nil and ultraschall.type(ruler_unit2)~="number: integer" then ultraschall.AddErrorMessage("SetTimeUnit", "ruler_unit2", "must be an integer", -5) return false end
+  if ruler_unit2~=nil then
+    if ruler_unit2<0 or ruler_unit2>5 then 
+      ultraschall.AddErrorMessage("SetTimeUnit", "ruler_unit2", "must be between 0 and 8", -6)
+      return false 
+    end
+  end
+  if     transport_unit==0 then cmdid=40412 -- seconds
+  elseif transport_unit==1 then cmdid=40413 -- samples
+  elseif transport_unit==2 then cmdid=40410 -- Minutes:Seconds
+  elseif transport_unit==3 then cmdid=40534 -- Measures.Beats/minutes:Seconds
+  elseif transport_unit==4 then cmdid=40411 -- Measures.Beats
+  elseif transport_unit==5 then cmdid=40414 -- Hours:Minutes:Seconds:Frames
+  elseif transport_unit==6 then cmdid=41972 -- Absolute frames
+  end
+  if transport_unit~=nil then reaper.Main_OnCommand(cmdid, 0) end
+
+  if     ruler_unit==0 then cmdid=40368 -- seconds
+  elseif ruler_unit==1 then cmdid=40369 -- samples
+  elseif ruler_unit==2 then cmdid=40365 -- Minutes:Seconds
+  elseif ruler_unit==3 then cmdid=40366 -- Measures.Beats/minutes:Seconds
+  elseif ruler_unit==4 then cmdid=40367 -- Measures.Beats
+  elseif ruler_unit==5 then cmdid=40370 -- Hours:Minutes:Seconds:Frames
+  elseif ruler_unit==6 then cmdid=41973 -- Absolute frames
+  elseif ruler_unit==7 then cmdid=41918 -- Measures.Beats(minimal)/minutes:Seconds
+  elseif ruler_unit==8 then cmdid=41916 -- Measures.Beats(minimal)
+  end
+  if ruler_unit~=nil then reaper.Main_OnCommand(cmdid, 0) end
+  
+  if     ruler_unit2==0 then cmdid=42362 -- seconds
+  elseif ruler_unit2==1 then cmdid=42363 -- samples
+  elseif ruler_unit2==2 then cmdid=42361 -- Minutes:Seconds
+  elseif ruler_unit2==3 then cmdid=42364 -- Hours:Minutes:Seconds:Frames
+  elseif ruler_unit2==4 then cmdid=42365 -- Absolute frames
+  elseif ruler_unit2==5 then cmdid=42360 -- None
+  end
+  if ruler_unit2~=nil then reaper.Main_OnCommand(cmdid, 0) end
+  
+  return true
+end
 

@@ -72,13 +72,17 @@ sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
 if sec=="-1" then sec="0" end
 sec=tonumber(sec)
 
+--get the slot of the StudioLink effect.
+
 if string.match(os, "OSX") then
-	fx_slot = reaper.TrackFX_GetByName(m, "ITSR: StudioLinkOnAir", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
-else     -- Windows
-	fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
+  fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir (ITSR)", false, 0)
+else  -- Windows
+  fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)
 end
 
-reaper.SNM_MoveOrRemoveTrackFX(m, fx_slot, 0)
+if fx_slot ~= -1 then
+  reaper.TrackFX_Delete(m, fx_slot)
+end
 
 on_air_button_id = reaper.NamedCommandLookup("_Ultraschall_OnAir")
 

@@ -70,9 +70,50 @@ end
 
 function checkrouting()
 
-	if triggermagicrouting() then -- wird ein Update der Matrix wirklich benötigt?
+	retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step") -- in welchem Preset ist das Routing?
+	playstate = reaper.GetPlayStateEx(0)
 
-		retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
+
+ -------------------------------------------------
+ -- Umschalten des Routing abhängig vom Playstate
+ -------------------------------------------------
+
+	if playstate == 1 and step ~= "editing" then -- es wird abgespielt aber das Routing steht nicht auf Editing
+		reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "editing")
+		reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")
+		step = "editing"
+
+	elseif playstate == 5 and step == "editing" then -- Es wird aufgenommen, aber das Routing ist auf Editing
+
+
+		preroll_rec = reaper.GetExtState("ultraschall_PreviewRecording", "RecPosition")
+		if preroll_rec ~= "" then -- es ist ein Preroll-Recording aktiv
+
+			if tonumber(preroll_rec) < reaper.GetPlayPosition() then -- ab hier läuft die Aufnahme nach dem Preroll
+				reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "recording")
+				reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")
+				step = "recording"
+
+				reaper.DeleteExtState("ultraschall_PreviewRecording", "RecPosition", false) -- lösche Eintrag für Preroll
+				reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false)
+				-- print (tonumber(preroll_rec) .. " - " .. reaper.GetPlayPosition())
+
+
+			end
+		else
+
+			reaper.SetProjExtState(0, "ultraschall_magicrouting", "step", "recording")
+			reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")
+			step = "recording"
+
+		end
+	end
+
+ -------------------------------------------------
+ -- Umschalten des Routing
+ -------------------------------------------------
+
+	if triggermagicrouting() then -- wird ein Update der Matrix wirklich benötigt?
 
 		if step == "preshow" then
 			commandid = reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Preshow")
@@ -87,7 +128,11 @@ function checkrouting()
 
 	end
 
-    ultraschall.Defer(checkrouting, "Check Routing Defer", 2, 1)
+ -------------------------------------------------
+ -- Defer-Schleife jede Sekunde
+ -------------------------------------------------
+
+  ultraschall.Defer(checkrouting, "Check Routing Defer", 1, 10) -- alle 10 cycle - ca. 3 mal die Sekunde
 	return "Check Routing Defer"
 
 end

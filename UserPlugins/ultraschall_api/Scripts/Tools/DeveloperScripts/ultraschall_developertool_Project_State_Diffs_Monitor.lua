@@ -1,7 +1,7 @@
   --[[
   ################################################################################
   # 
-  # Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+  # Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
   # 
   # Permission is hereby granted, free of charge, to any person obtaining a copy
   # of this software and associated documentation files (the "Software"), to deal
@@ -37,98 +37,62 @@ Projectfiles include Projectbay, Extension-stuff, TrackStateChunks who include M
 This will display the changed lines(including line-number within the statechunk)
  + the two lines before it (if existing and not being changed lines themselves)
 
-Changed lines begin with:
-line xx >>  
-
 It will ask you, whether to put the changed lines into the clipboard.
 
-Meo Mespotine mespotine.de - 31st of october 2018
+Meo Mespotine mespotine.de - 3rd of June 2020
 --]]
 
-function SplitStringAtLineFeedToArray(unsplitstring)
-  local array={}
-  local i=1
-  if unsplitstring==nil then return -1 end
-  local astring=unsplitstring
-  local pos
-  astring=string.gsub (unsplitstring, "\r\n", "\n")
-  astring=string.gsub (astring, "\n\r", "\n")
-  astring=string.gsub (astring, "\r", "\n")
-  astring=astring.."\n"
-  while astring:match("%c") do
-    array[i],pos=astring:match("(.-)\n()")
---    reaper.MB(array[i], tostring(pos),0)
-    if sub~=nil then break end 
-    astring=astring:sub(pos,-1)
-    i=i+1
-  end
-  if astring~="" and astring~=nil then array[i]=astring
-  else i=i-1
-  end
-  return i,array
-end
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-function ReadFullFile(filename_with_path, binary)
-  -- Returns the whole file filename_with_path or nil in case of error
-  -- check parameters
-  if filename_with_path == nil then return nil end
-  if reaper.file_exists(filename_with_path)==false then return nil end
-  
-  -- prepare variables
-  if binary==true then binary="b" else binary="" end
-  local linenumber=0
-  
-  -- read file
-  local file=io.open(filename_with_path,"r"..binary)
-  local filecontent=file:read("a")
-  
-  -- count lines in file, when non binary
-  if binary~=true then
-    for w in string.gmatch(filecontent, "\n") do
-      linenumber=linenumber+1
-    end
-  else
-    linenumber=-1
-  end
-  file:close()
-  -- return read file, length and linenumbers
-  return filecontent, filecontent:len(), linenumber
-end
+Proj, ProjFileName=reaper.EnumProjects(0)
 
-timer=reaper.time_precise()+3
-oldprojsc="\nlol"
-
+P=0
 function main()
-  reaper.Main_SaveProject(0,false)
-  Project, Filename=reaper.EnumProjects(-1,"")
-  projsc=ReadFullFile(Filename)
-    if oldprojsc:match("(\n.*)")~=projsc:match("(\n.*)") then
-      count1, split_string1 = SplitStringAtLineFeedToArray(oldprojsc)
-      count2, split_string2 = SplitStringAtLineFeedToArray(projsc)
-      if split_string1==nil then split_string1={} end
-      reaper.ClearConsole()
-      reaper.ShowConsoleMsg("Monitoring StateChunk-changes in proj: "..Filename.."\n\n")
-      a=-10
-      temp=""
-      for i=1, count2 do
-        if split_string1[i]~=split_string2[i] and proj==oldproj then
-          if a~=-10 and (a<i-2 or a<i-2) then reaper.ShowConsoleMsg("\n\n") end
-          if a<i-2 and i-2>0 then reaper.ShowConsoleMsg("Change:\n\t"..split_string2[i-2].."\n") end
-          if a<i-1 and i-1>0 then reaper.ShowConsoleMsg("\t"..split_string2[i-1].."\n") end
-          if A==6 then temp=temp.."line "..i.." >>  "..split_string2[i].."\n" end
-          reaper.ShowConsoleMsg("line "..i.." >>  "..split_string2[i].."\n")
-          a=i
-        elseif proj~=oldproj then
-          if A==6 then temp=temp..split_string2[i].."\n" end
-          reaper.ShowConsoleMsg(split_string2[i].."\n")
-        end        
+  P=P+1
+  if P==10 then
+    reaper.Main_SaveProject(Proj, false)
+    Contents, correctnumberoflines, number_of_lines = ultraschall.ReadFileAsLines_Array(ProjFileName, 1, -1)
+    Diffs=""
+    
+    if OldContents==nil then
+      OldContents=Contents
+      OldLength=number_of_lines
+    else
+      table_copy = ultraschall.MakeCopyOfTable(Contents)
+      table_copy2={}
+      for i=2, number_of_lines do
+        for a=2, OldLength do
+          if table_copy[i]==OldContents[a] then table_copy[i]=nil end
+        end
       end
-      if A==6 and temp~="" then reaper.CF_SetClipboard("Monitoring StateChunk-changes in proj: "..Filename.."\n\n"..temp.."\n") end
+
+      first=true
+      for i=2, number_of_lines do
+        if table_copy[i]~=nil then 
+          if i>=2 and table_copy[i-2]==nil and table_copy[i-1]==nil then print("\n\t     "..Contents[i-2]) Diffs=Diffs.."\n\t     "..Contents[i-2] end
+          if i>=3 and table_copy[i-1]==nil then print("\t     "..Contents[i-1]) Diffs=Diffs.."\n\t     "..Contents[i-1] end
+          print("  "..i.."\t:    "..table_copy[i]) Diffs=Diffs.."\n  "..i.."\t:"..table_copy[i]
+          if i<number_of_lines and table_copy[i+1]==nil then print("\t     "..Contents[i+1]) Diffs=Diffs.."\n\t     "..Contents[i+1].."\n" end
+          
+
+          yes=true 
+        end
+      end
+      if yes==true then print("***") end
+      
+      if yes==true and ToClipboard==6 then print3(Diffs.."\n") end
+      
+      yes=false
     end
-    oldprojsc=projsc
-    oldproj=proj
+    
+    OldContents=Contents
+    OldLength=number_of_lines  
+    P=0
+  end
   reaper.defer(main)
 end
+
+main()
 
 text=[[Display Project-changes in the rpp-file.
   
@@ -139,18 +103,15 @@ This constantly saves the current project, so be aware of that!
 Projectfiles include Projectbay, Extension-stuff, TrackStateChunks who include MediaItemStateChunk of MediaItems in that given track, as well as TrackEnvelopes and ItemEnvelopes and many other settings in the project.
 
 This will display the changed lines(including line-number within the statechunk)
- + the two lines before it (if existing and not being changed lines themselves)
-
-Changed lines begin with:
-line xx >>  
+ + the two lines before it and the one after it
 
 It will ask you, whether to put the changed lines into the clipboard.
 
-Meo Mespotine mespotine.de - 31st of october 2018"]]
+Meo Mespotine mespotine.de - 3rd of June 2020"]]
  
-reaper.MB(text, "Project-StateChunk Diff-monitor-tool 1.0", 0)
+reaper.MB(text, "Project-StateChunk Diff-monitor-tool 2.0", 0)
 
 a=-10
-A=reaper.MB("Put Difs to Clipboard?", "", 4)
+ToClipboard=reaper.MB("Put Difs to Clipboard?", "", 4)
 
 main()

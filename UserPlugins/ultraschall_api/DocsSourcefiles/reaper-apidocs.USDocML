@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 6.10
+            ## ReaScript API as of Reaper 6.12
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -1460,6 +1460,8 @@
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Create a send/receive (desttrInOptional!=NULL), or a hardware output (desttrInOptional==NULL) with default properties, return &gt;=0 on success (== new send/receive index). See [RemoveTrackSend](#RemoveTrackSend), [GetSetTrackSendInfo](#GetSetTrackSendInfo), [GetTrackSendInfo_Value](#GetTrackSendInfo_Value), [SetTrackSendInfo_Value](#SetTrackSendInfo_Value).
+            
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
         </description>
         <retvals>
             integer - the id of the new HWOut or Send created. HWOut and Send have their own individual index-numbering.
@@ -4340,7 +4342,7 @@
         </retvals>
         <parameters>
             number tpos - the position in seconds, that you want to have formatted
-            string buf - unknown
+            string buf - needed by Reaper, just set it to ""
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -8181,13 +8183,13 @@
         <functioncall prog_lang="lua">number value = reaper.GetSetProjectInfo(ReaProject project, string desc, number value, boolean is_set)</functioncall>
         <functioncall prog_lang="python">Float RPR_GetSetProjectInfo(ReaProject project, String desc, Float value, Boolean is_set)</functioncall>
         <requires>
-            Reaper=6.10
+            Reaper=6.11
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Get or set project information.
-
-            RENDER_SETTINGS : &amp;(1|2)=0:master mix, &amp;1=stems+master mix, &amp;2=stems only, &amp;4=multichannel tracks to multichannel files, &amp;8=use render matrix, &amp;16=tracks with only mono media to mono files, &amp;32=selected media items, &amp;64=selected media items via master, &amp; 128=Selected tracks via master, &amp;256=Stretch markers/transient guide-checkbox(Only with WAV/AIFF and Source=Selected media items/Selected media items via master), &amp;1024=Take markers-checkbox(Only with WAV and Source=Selected media items/Selected media items via master)
+ 
+            RENDER_SETTINGS : &amp;(1|2)=0:master mix, &amp;1=stems+master mix, &amp;2=stems only, &amp;4=multichannel tracks to multichannel files, &amp;8=use render matrix, &amp;16=tracks with only mono media to mono files, &amp;32=selected media items, &amp;64=selected media items via master, &amp; 128=Selected tracks via master, &amp;256=Stretch markers/transient guide-checkbox(Only with WAV/AIFF and Source=Selected media items/Selected media items via master), &amp;512=Embed Metadata, if format supports is, &amp;1024=Take markers-checkbox(Only with WAV and Source=Selected media items/Selected media items via master)
             OGG, OPUS and FLAC support embedding of tempoinformation via metadata, settable using [GetSetProjectInfo_String](#GetSetProjectInfo_String).
             RENDER_BOUNDSFLAG : 0=custom time bounds, 1=entire project, 2=time selection, 3=all project regions, 4=selected media items, 5=selected project regions
             RENDER_CHANNELS : number of channels in rendered file
@@ -8239,15 +8241,25 @@
 			RENDER\_TARGETS: semicolon separated list of files that would be written if the project is rendered using the most recent render settings
             RENDER\_FORMAT: base64-encoded sink configuration (see project files, etc). Callers can also pass a simple 4-byte string (non-base64-encoded), to use default settings for that sink type.
             RENDER\_FORMAT2: base64-encoded secondary sink configuration. Callers can also pass a simple 4-byte string (non-base64-encoded), e.g. "evaw" or "l3pm", to use default settings for that sink type, or "" to disable secondary render.
-            see [render-code-documentation](render-codes-decoded-base64-strings.txt) for how the unencoded RENDER_FORMAT-string is structured.
+            see [render-code-documentation](render-codes-decoded-base64-strings.txt) for how the unencoded RENDER\_FORMAT-string is structured.
 
             To just use the 4-byte-string, you can use: 
             "evaw" for wave, "ffia" for aiff, " osi" for audio-cd, " pdd" for ddp, "calf" for flac, "l3pm" for mp3, "vggo" for ogg, "SggO" for Opus, "PMFF" for FFMpeg-video, "FVAX" for MP4Video/Audio on Mac, " FIG" for Gif, " FCL" for LCF, "kpvw" for wavepack            
             
-            RENDER_METADATA: get or set the metadata saved with the project (not metadata embedded in project media). Example, ID3 album name metadata: Uses common ID3-tagcodes like TALB(album), TPE1(Artist), etc. 
+            RENDER\_METADATA: get or set the metadata saved with the project (not metadata embedded in project media). Example, ID3 album name metadata: Uses common ID3-tagcodes like TALB(album), TPE1(Artist), etc. 
 			To get album tag, use "ID3:TALB", to set album tag, use "ID3:TALB|my album name".
-			Supported tags-codes are: TIT2(Title), TPE1(Artist), TPE2(Albumartist), TALB(Album), TRCK(Track), TCON(Genre), TYER(Year), TDRC(Recording time: YYYY-MM-DD), TKEY(Key), TBPM(Tempo), TSRC(International Standard Recording Code), COMM(Comment), COMM_LANG(Comment language), APIC_TYPE(Image type), APIC_DESC(Image description), APIC_FILE(Image file)
-			APIC_TYPE can have be of the following:
+            
+            Examples in Lua:
+            getting the album name from the metadata of the current project:
+            
+                 retval, albumname    = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB", false)
+                
+            setting the album name in the metadata of the current project:
+            
+                 retval, albumame_new = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB|New album name", true)
+            
+			Supported tags-codes are: TIT2(Title), TPE1(Artist), TPE2(Albumartist), TALB(Album), TRCK(Track), TCON(Genre), TYER(Year), TDRC(Recording time: YYYY-MM-DD), TKEY(Key), TBPM(Tempo), TSRC(International Standard Recording Code), COMM(Comment), COMM\_LANG(Comment language), APIC\_TYPE(Image type), APIC\_DESC(Image description), APIC\_FILE(Image file)
+			APIC\_TYPE can have be of the following:
             0: Other
             1: 32x32 pixel file icon (PNG only)
             2: Other file icon
@@ -8387,36 +8399,38 @@
         <functioncall prog_lang="cpp">unsigned int GetSetTrackGroupMembership(MediaTrack* tr, const char* groupname, unsigned int setmask, unsigned int setvalue)</functioncall>
         <functioncall prog_lang="eel">uint GetSetTrackGroupMembership(MediaTrack tr, "groupname", uint setmask, uint setvalue)</functioncall>
         <functioncall prog_lang="lua">integer = reaper.GetSetTrackGroupMembership(MediaTrack tr, string groupname, integer setmask, integer setvalue)</functioncall>
-        <functioncall prog_lang="python">Unknown RPR_GetSetTrackGroupMembership(MediaTrack tr, String groupname, Unknown setmask, Unknown setvalue)</functioncall>
+        <functioncall prog_lang="python">Int RPR_GetSetTrackGroupMembership(MediaTrack tr, String groupname, Int setmask, Int setvalue)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.12
             Lua=5.3
         </requires>
         <description prog_lang="*">
             Gets or modifies the group membership for a track. Returns group state prior to call (each bit represents one of the 32 group numbers). if setmask has bits set, those bits in setvalue will be applied to group. Group can be one of:
-                VOLUME_MASTER
-                VOLUME_SLAVE
-                VOLUME_VCA_MASTER
-                VOLUME_VCA_SLAVE
-                PAN_MASTER
-                PAN_SLAVE
-                WIDTH_MASTER
-                WIDTH_SLAVE
-                MUTE_MASTER
-                MUTE_SLAVE
-                SOLO_MASTER
-                SOLO_SLAVE
-                RECARM_MASTER
-                RECARM_SLAVE
-                POLARITY_MASTER
-                POLARITY_SLAVE
-                AUTOMODE_MASTER
-                AUTOMODE_SLAVE
-                VOLUME_REVERSE
-                PAN_REVERSE
-                WIDTH_REVERSE
-                NO_MASTER_WHEN_SLAVE
-                VOLUME_VCA_SLAVE_ISPREFX
+            VOLUME_LEAD
+            VOLUME_FOLLOW
+            VOLUME_VCA_LEAD
+            VOLUME_VCA_FOLLOW
+            PAN_LEAD
+            PAN_FOLLOW
+            WIDTH_LEAD
+            WIDTH_FOLLOW
+            MUTE_LEAD
+            MUTE_FOLLOW
+            SOLO_LEAD
+            SOLO_FOLLOW
+            RECARM_LEAD
+            RECARM_FOLLOW
+            POLARITY_LEAD
+            POLARITY_FOLLOW
+            AUTOMODE_LEAD
+            AUTOMODE_FOLLOW
+            VOLUME_REVERSE
+            PAN_REVERSE
+            WIDTH_REVERSE
+            NO_LEAD_WHEN_FOLLOW
+            VOLUME_VCA_FOLLOW_ISPREFX
+
+            Note: REAPER v6.11 and earlier used _MASTER and _SLAVE rather than _LEAD and _FOLLOW, which is deprecated but still supported (scripts that must support v6.11 and earlier can use the deprecated strings).
         </description>
         <retvals>
             integer - 
@@ -8861,6 +8875,35 @@
             Marker Management
         </chapter_context>
         <tags></tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>GetThemeColor</slug>
+        <title>GetThemeColor</title>
+        <functioncall prog_lang="cpp">int GetThemeColor(const char* ini_key, int flagsOptional)</functioncall>
+        <functioncall prog_lang="eel">int GetThemeColor("ini_key", int flags)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.GetThemeColor(string ini_key, integer flags)</functioncall>
+        <functioncall prog_lang="python">Int RPR_GetThemeColor(String ini_key, Int flagsOptional)</functioncall>
+        <requires>
+            Reaper=6.11
+            Lua=5.3
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Returns the theme color specified, or -1 on failure. If the low bit of flags is set, the color as originally specified by the theme (before any transformations) is returned, otherwise the current (possibly transformed and modified) color is returned. See [SetThemeColor](#SetThemeColor) for a list of valid ini_key.
+        </description>
+        <retvals>
+            integer retval - 
+        </retvals>
+        <parameters>
+            string ini_key - 
+			integer flags - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Theme management
+        </chapter_context>
+        <tags>theme, get, theme, color</tags>
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -9442,6 +9485,8 @@
         </requires>
         <description prog_lang="*">
             returns number of sends/receives/hardware outputs
+            
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
         </description>
         <retvals>
             integer - the number of sends/receives/hardware outputs
@@ -9578,7 +9623,9 @@
                 I\_MIDIFLAGS : int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanP_DESTTRACK : read only, returns MediaTrack *, destination track, only applies for sends/recvs
                 P\_SRCTRACK : read only, returns MediaTrack *, source track, only applies for sends/recvs
                 P\_ENV:&lt;envchunkname : read only, returns TrackEnvelope *. To get a specific TrackEnvelope, call with :&lt;VOLENV, :&lt;PANENV, etc appended.
-                
+        
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
+        
             See [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
         </description>
         <retvals>
@@ -10712,7 +10759,7 @@
         <functioncall prog_lang="cpp">unsigned int joystick_getbuttonmask(joystick_device* dev)</functioncall>
         <functioncall prog_lang="eel">uint joystick_getbuttonmask(joystick_device dev)</functioncall>
         <functioncall prog_lang="lua">integer = reaper.joystick_getbuttonmask(joystick_device dev)</functioncall>
-        <functioncall prog_lang="python">Unknown RPR_joystick_getbuttonmask(joystick_device dev)</functioncall>
+        <functioncall prog_lang="python">Int RPR_joystick_getbuttonmask(joystick_device dev)</functioncall>
         <requires>
             Reaper=5.62
             Lua=5.3
@@ -10859,6 +10906,37 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>LocalizeString</slug>
+        <title>LocalizeString</title>
+        <functioncall prog_lang="cpp">const char* LocalizeString(const char* src_string, const char* section, int flagsOptional)</functioncall>
+        <functioncall prog_lang="eel">bool LocalizeString(#retval, "src_string", "section", int flags)</functioncall>
+        <functioncall prog_lang="lua">string retval = reaper.LocalizeString(string src_string, string section, integer flags)</functioncall>
+        <functioncall prog_lang="python">String RPR_LocalizeString(String src_string, String section, Int flagsOptional)</functioncall>
+        <requires>
+            Reaper=6.11
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Returns a localized version of src_string, in section section. flags can have 1 set to only localize if sprintf-style formatting matches the original.
+        </description>
+        <retvals>
+            string retval - the localized string or the original string, if no localized string is available
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1">
+            string src_string - the string, which you want to be translated
+			string section - the section in the ReaperLangPack-file, in which the string to localize is located
+			integer flags - 1, set to only localize if sprintf-style formatting matches the original
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Loop_OnArrow</slug>
@@ -13402,7 +13480,7 @@
         <functioncall prog_lang="cpp">unsigned int PCM_Sink_Enum(int idx, const char** descstrOut)</functioncall>
         <functioncall prog_lang="eel">uint PCM_Sink_Enum(int idx, #descstr)</functioncall>
         <functioncall prog_lang="lua">integer retval, string descstr = reaper.PCM_Sink_Enum(integer idx)</functioncall>
-        <functioncall prog_lang="python">Unknown RPR_PCM_Sink_Enum(Int idx, String descstrOut)</functioncall>
+        <functioncall prog_lang="python">Int RPR_PCM_Sink_Enum(Int idx, String descstrOut)</functioncall>
         <requires>
             Reaper=5.62
             Lua=5.3
@@ -13724,6 +13802,61 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>PromptForAction</slug>
+        <title>PromptForAction</title>
+        <functioncall prog_lang="cpp">int PromptForAction(int session_mode, int init_id, int section_id)</functioncall>
+        <functioncall prog_lang="eel">int PromptForAction(int session_mode, int init_id, int section_id)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.PromptForAction(integer session_mode, integer init_id, integer section_id)</functioncall>
+        <functioncall prog_lang="python">Int RPR_PromptForAction(Int session_mode, Int init_id, Int section_id)</functioncall>
+        <requires>
+            Reaper=6.12
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Opens the actionlist and allows you to get, which action the user selected.
+            
+            So the user can select numerous actions, and when they hit the select or select/close-button, you can get the actions selected.
+            
+            To start a new session, pass 1 as parameter session_mode.
+            
+            After that, repeatedly call the function with session_mode=0, which will return the selected actions.
+                    - -1, the actionlist is closed
+                    - 0, no action has been selected
+                    - any other number, this action has been selected.
+            In the latter case, call the function until it returns 0 again to get all selected actions.
+            
+            If you're finished, call the function with session_mode=-1
+            
+            
+            When finished, call with session_mode=-1.
+        </description>
+        <retvals>
+            integer retval - the selected actions
+                           - -1, actionlist is not opened
+                           - 0, no action has been selected yet/you retrieved all selected actions
+                           - any other number, the selected actions; call repeatedly to get all selected commandids until the function returns 0 again
+        </retvals>
+        <parameters>
+            integer session_mode - 1, start a new session; 0, retrieve selected actions; -1, end a session
+            integer init_id - the command-id, which shall be preselected, when the actionlist opens
+            integer section_id - the section in which you want to let the user select
+                               - 0 - Main
+                               - 100 - Main (alt recording)
+                               - 32060 - MIDI Editor
+                               - 32061 - MIDI Event List Editor
+                               - 32062 - MIDI Inline Editor
+                               - 32063 - Media Explorer 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            User Interface
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ReaScriptError</slug>
         <title>ReaScriptError</title>
         <functioncall prog_lang="cpp">void ReaScriptError(const char* errmsg)</functioncall>
@@ -13754,7 +13887,7 @@
         <functioncall prog_lang="cpp">int RecursiveCreateDirectory(const char* path, size_t ignored)</functioncall>
         <functioncall prog_lang="eel">int RecursiveCreateDirectory("path", size_t ignored)</functioncall>
         <functioncall prog_lang="lua">integer = reaper.RecursiveCreateDirectory(string path, integer ignored)</functioncall>
-        <functioncall prog_lang="python">Int RPR_RecursiveCreateDirectory(String path, Unknown ignored)</functioncall>
+        <functioncall prog_lang="python">Int RPR_RecursiveCreateDirectory(String path, Int ignored)</functioncall>
         <requires>
             Reaper=5.62
             Lua=5.3
@@ -13909,6 +14042,8 @@
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             Remove a send/receive/hardware output. See [CreateTrackSend](#CreateTrackSend), [GetSetTrackSendInfo](#GetSetTrackSendInfo), [GetTrackSendInfo_Value](#GetTrackSendInfo_Value), [SetTrackSendInfo_Value](#SetTrackSendInfo_Value), [GetTrackNumSends](#GetTrackNumSends).
+            
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
         </description>
         <retvals>
             boolean - true, removing worked; false, removing didn't work(e.g. does not exist)
@@ -14542,7 +14677,7 @@
             Reaper=5.62
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             mode: see [GetGlobalAutomationOverride](GetGlobalAutomationOverride)
         </description>
         <parameters>
@@ -14622,12 +14757,14 @@
         <functioncall prog_lang="lua">boolean = reaper.SetMediaItemInfo_Value(MediaItem item, string parmname, number newvalue)</functioncall>
         <functioncall prog_lang="python">Boolean RPR_SetMediaItemInfo_Value(MediaItem item, String parmname, Float newvalue)</functioncall>
         <requires>
-            Reaper=6.01
+            Reaper=6.12
             Lua=5.3
         </requires>
         <description prog_lang="*">
             Set media item numerical-value attributes.
             B_MUTE : bool * : muted
+            B_MUTE_ACTUAL : bool * : muted (ignores solo). setting this value will not affect C_MUTE_SOLO.
+            C_MUTE_SOLO : char * : solo override (-1=soloed, 0=no override, 1=unsoloed). note that this API does not automatically unsolo other items when soloing (nor clear the unsolos when clearing the last soloed item), it must be done by the caller via action or via this API.
             B_LOOPSRC : bool * : loop source
             B_ALLTAKESPLAY : bool * : all takes play
             B_UISEL : bool * : selected in arrange view
@@ -14840,53 +14977,53 @@
             Reaper=6.01
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Set track numerical-value attributes.
-            B_MUTE : bool * : muted
-            B_PHASE : bool * : track phase inverted
-            IP_TRACKNUMBER : int : track number 1-based, 0=not found, -1=master track (read-only, returns the int directly)
-            I_SOLO : int * : soloed, 0=not soloed, 1=soloed, 2=soloed in place, 5=safe soloed, 6=safe soloed in place
-            I_FXEN : int * : fx enabled, 0=bypassed, !0=fx active
-            I_RECARM : int * : record armed, 0=not record armed, 1=record armed
-            I_RECINPUT : int * : record input, &lt;0=no input, 0..n=mono hardware input, 512+n=rearoute input, &1024=stereo input pair. &4096=MIDI input, if set then low 5 bits represent channel (0=all, 1-16=only chan), next 6 bits represent physical input (63=all, 62=VKB)
-            I_RECMODE : int * : record mode, 0=input, 1=stereo out, 2=none, 3=stereo out w/latency compensation, 4=midi output, 5=mono out, 6=mono out w/ latency compensation, 7=midi overdub, 8=midi replace
-            I_RECMON : int * : record monitoring, 0=off, 1=normal, 2=not when playing (tape style)
-            I_RECMONITEMS : int * : monitor items while recording, 0=off, 1=on
-            I_AUTOMODE : int * : track automation mode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch
-            I_NCHAN : int * : number of track channels, 2-64, even numbers only
-            I_SELECTED : int * : track selected, 0=unselected, 1=selected
-            I_WNDH : int * : current TCP window height in pixels including envelopes (read-only)
-            I_TCPH : int * : current TCP window height in pixels not including envelopes (read-only)
-            I_TCPY : int * : current TCP window Y-position in pixels relative to top of arrange view (read-only)
-            I_MCPX : int * : current MCP X-position in pixels relative to mixer container
-            I_MCPY : int * : current MCP Y-position in pixels relative to mixer container
-            I_MCPW : int * : current MCP width in pixels
-            I_MCPH : int * : current MCP height in pixels
-            I_FOLDERDEPTH : int * : folder depth change, 0=normal, 1=track is a folder parent, -1=track is the last in the innermost folder, -2=track is the last in the innermost and next-innermost folders, etc
-            I_FOLDERCOMPACT : int * : folder compacted state (only valid on folders), 0=normal, 1=small, 2=tiny children
-            I_MIDIHWOUT : int * : track midi hardware output index, &lt;0=disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31)
-            I_PERFFLAGS : int * : track performance flags, &1=no media buffering, &2=no anticipative FX
-            I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color.
-            I_HEIGHTOVERRIDE : int * : custom height override for TCP window, 0 for none, otherwise size in pixels(use [TrackList_AdjustWindows](#TrackList_AdjustWindows) to update TCP after this.
-            B_HEIGHTLOCK : bool * : track height lock (must set I_HEIGHTOVERRIDE before locking)
-            D_VOL : double * : trim volume of track, 0=-inf, 0.5=-6dB, 1=+0dB, 2=+6dB, etc
-            D_PAN : double * : trim pan of track, -1..1
-            D_WIDTH : double * : width of track, -1..1
-            D_DUALPANL : double * : dualpan position 1, -1..1, only if I_PANMODE==6
-            D_DUALPANR : double * : dualpan position 2, -1..1, only if I_PANMODE==6
-            I_PANMODE : int * : pan mode, 0=classic 3.x, 3=new balance, 5=stereo pan, 6=dual pan
-            D_PANLAW : double * : pan law of track, &lt;0=project default, 1=+0dB, etc
-            P_ENV:&lt;envchunkname : TrackEnvelope*, read only. Call with :&lt;VOLENV, :&lt;PANENV, etc appended.
-            B_SHOWINMIXER : bool * : track control panel visible in mixer (do not use on master track)
-            B_SHOWINTCP : bool * : track control panel visible in arrange view (do not use on master track)
-            B_MAINSEND : bool * : track sends audio to parent
-            C_MAINSEND_OFFS : char * : channel offset of track send to parent
-            B_FREEMODE : bool * : track free item positioning enabled (call UpdateTimeline() after changing)
-            C_BEATATTACHMODE : char * : track timebase, -1=project default, 0=time, 1=beats (position, length, rate), 2=beats (position only)
-            F_MCP_FXSEND_SCALE : float * : scale of fx+send area in MCP (0=minimum allowed, 1=maximum allowed)
-            F_MCP_SENDRGN_SCALE : float * : scale of send area as proportion of the fx+send total area (0=minimum allowed, 1=maximum allowed)
-            I_PLAY_OFFSET_FLAG : int * : track playback offset state, &1=bypassed, &2=offset value is measured in samples (otherwise measured in seconds)
-            D_PLAY_OFFSET : double * : track playback offset, units depend on I_PLAY_OFFSET_FLAG
+            B\_MUTE : bool \* : muted
+            B\_PHASE : bool \* : track phase inverted
+            IP\_TRACKNUMBER : int : track number 1-based, 0=not found, -1=master track (read-only, returns the int directly)
+            I\_SOLO : int \* : soloed, 0=not soloed, 1=soloed, 2=soloed in place, 5=safe soloed, 6=safe soloed in place
+            I\_FXEN : int \* : fx enabled, 0=bypassed, !0=fx active
+            I\_RECARM : int \* : record armed, 0=not record armed, 1=record armed
+            I\_RECINPUT : int \* : record input, &lt;0=no input, 0..n=mono hardware input, 512+n=rearoute input, &1024=stereo input pair. &4096=MIDI input, if set then low 5 bits represent channel (0=all, 1-16=only chan), next 6 bits represent physical input (63=all, 62=VKB)
+            I\_RECMODE : int \* : record mode, 0=input, 1=stereo out, 2=none, 3=stereo out w/latency compensation, 4=midi output, 5=mono out, 6=mono out w/ latency compensation, 7=midi overdub, 8=midi replace
+            I\_RECMON : int \* : record monitoring, 0=off, 1=normal, 2=not when playing (tape style)
+            I\_RECMONITEMS : int \* : monitor items while recording, 0=off, 1=on
+            I\_AUTOMODE : int \* : track automation mode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch
+            I\_NCHAN : int \* : number of track channels, 2-64, even numbers only
+            I\_SELECTED : int \* : track selected, 0=unselected, 1=selected
+            I\_WNDH : int \* : current TCP window height in pixels including envelopes (read-only)
+            I\_TCPH : int \* : current TCP window height in pixels not including envelopes (read-only)
+            I\_TCPY : int \* : current TCP window Y-position in pixels relative to top of arrange view (read-only)
+            I\_MCPX : int \* : current MCP X-position in pixels relative to mixer container
+            I\_MCPY : int \* : current MCP Y-position in pixels relative to mixer container
+            I\_MCPW : int \* : current MCP width in pixels
+            I\_MCPH : int \* : current MCP height in pixels
+            I\_FOLDERDEPTH : int \* : folder depth change, 0=normal, 1=track is a folder parent, -1=track is the last in the innermost folder, -2=track is the last in the innermost and next-innermost folders, etc
+            I\_FOLDERCOMPACT : int \* : folder compacted state (only valid on folders), 0=normal, 1=small, 2=tiny children
+            I\_MIDIHWOUT : int \* : track midi hardware output index, &lt;0=disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31)
+            I\_PERFFLAGS : int \* : track performance flags, &1=no media buffering, &2=no anticipative FX
+            I\_CUSTOMCOLOR : int \* : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used, but will store the color.
+            I\_HEIGHTOVERRIDE : int \* : custom height override for TCP window, 0 for none, otherwise size in pixels(use [TrackList\_AdjustWindows](#TrackList_AdjustWindows) to update TCP after this.
+            B\_HEIGHTLOCK : bool \* : track height lock (must set I\_HEIGHTOVERRIDE before locking)
+            D\_VOL : double \* : trim volume of track, 0=-inf, 0.5=-6dB, 1=+0dB, 2=+6dB, etc
+            D\_PAN : double \* : trim pan of track, -1..1
+            D\_WIDTH : double \* : width of track, -1..1
+            D\_DUALPANL : double \* : dualpan position 1, -1..1, only if I\_PANMODE==6
+            D\_DUALPANR : double \* : dualpan position 2, -1..1, only if I\_PANMODE==6
+            I\_PANMODE : int \* : pan mode, 0=classic 3.x, 3=new balance, 5=stereo pan, 6=dual pan
+            D\_PANLAW : double \* : pan law of track, &lt;0=project default, 1=+0dB, etc
+            P\_ENV:&lt;envchunkname : TrackEnvelope\*, read only. Call with :&lt;VOLENV, :&lt;PANENV, etc appended.
+            B\_SHOWINMIXER : bool \* : track control panel visible in mixer (do not use on master track)
+            B\_SHOWINTCP : bool \* : track control panel visible in arrange view (do not use on master track)
+            B\_MAINSEND : bool \* : track sends audio to parent
+            C\_MAINSEND\_OFFS : char \* : channel offset of track send to parent
+            B\_FREEMODE : bool \* : track free item positioning enabled (call UpdateTimeline() after changing)
+            C\_BEATATTACHMODE : char \* : track timebase, -1=project default, 0=time, 1=beats (position, length, rate), 2=beats (position only)
+            F\_MCP\_FXSEND\_SCALE : float \* : scale of fx+send area in MCP (0=minimum allowed, 1=maximum allowed)
+            F\_MCP\_SENDRGN\_SCALE : float \* : scale of send area as proportion of the fx+send total area (0=minimum allowed, 1=maximum allowed)
+            I\_PLAY\_OFFSET\_FLAG : int \* : track playback offset state, &1=bypassed, &2=offset value is measured in samples (otherwise measured in seconds)
+            D\_PLAY\_OFFSET : double \* : track playback offset, units depend on I\_PLAY_OFFSET_FLAG
         </description>
         <retvals>
             boolean - 
@@ -15453,6 +15590,366 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SetThemeColor</slug>
+        <title>SetThemeColor</title>
+        <functioncall prog_lang="cpp">int SetThemeColor(const char* ini_key, int color, int flagsOptional)</functioncall>
+        <functioncall prog_lang="eel">int SetThemeColor("ini_key", int color, int flags)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.SetThemeColor(string ini_key, integer color, integer flags)</functioncall>
+        <functioncall prog_lang="python">Int RPR_SetThemeColor(String ini_key, Int color, Int flagsOptional)</functioncall>
+        <requires>
+            Reaper=6.11
+            Lua=5.3
+        </requires>
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Temporarily updates the theme color to the color specified (or the theme default color if -1 is specified). Returns -1 on failure, otherwise returns the color (or transformed-color). Note that the UI is not updated by this, the caller should call [UpdateArrange()](#UpdateArrange) etc as necessary. If the low bit of flags is set, any color transformations are bypassed. To read a value see [GetThemeColor](#GetThemeColor).
+			Currently valid ini_keys:
+			
+			* col_main_bg2 : Main window/transport background 
+			* col_main_text2 : Main window/transport text 
+			* col_main_textshadow : Main window text shadow (ignored if too close to text color) 
+			* col_main_3dhl : Main window 3D highlight 
+			* col_main_3dsh : Main window 3D shadow 
+			* col_main_resize2 : Main window pane resize mouseover 
+			* col_main_text : Window text 
+			* col_main_bg : Window background 
+			* col_main_editbk : Window edit background 
+			* col_transport_editbk : Transport edit background 
+			* col_toolbar_text : Toolbar button text 
+			* col_toolbar_text_on : Toolbar button enabled text 
+			* col_toolbar_frame : Toolbar frame when floating or docked 
+			* toolbararmed_color : Toolbar button armed color 
+			* toolbararmed_drawmode : Toolbar button armed fill mode -- blendmode 000300fe
+			* io_text : I/O window text 
+			* io_3dhl : I/O window 3D highlight 
+			* io_3dsh : I/O window 3D shadow 
+			* genlist_bg : Window list background 
+			* genlist_fg : Window list text 
+			* genlist_grid : Window list grid lines 
+			* genlist_selbg : Window list selected row 
+			* genlist_selfg : Window list selected text 
+			* genlist_seliabg : Window list selected row (inactive) 
+			* genlist_seliafg : Window list selected text (inactive) 
+			* col_buttonbg : Button background 
+			* col_tcp_text : Track panel text 
+			* col_tcp_textsel : Track panel (selected) text 
+			* col_seltrack : Selected track control panel background 
+			* col_seltrack2 : Unselected track control panel background (enabled with a checkbox above) 
+			* tcplocked_color : Locked track control panel overlay color 
+			* tcplocked_drawmode : Locked track control panel fill mode -- blendmode 0002c000
+			* col_tracklistbg : Empty track list area 
+			* col_mixerbg : Empty mixer list area 
+			* col_arrangebg : Empty arrange view area 
+			* arrange_vgrid : Empty arrange view area vertical grid shading 
+			* col_fadearm : Fader background when automation recording 
+			* col_fadearm2 : Fader background when automation playing 
+			* col_fadearm3 : Fader background when in inactive touch/latch 
+			* col_tl_fg : Timeline foreground 
+			* col_tl_fg2 : Timeline foreground (secondary markings) 
+			* col_tl_bg : Timeline background 
+			* col_tl_bgsel : Time selection color 
+			* timesel_drawmode : Time selection fill mode -- blendmode 00021100
+			* col_tl_bgsel2 : Timeline background (in loop points) 
+			* col_trans_bg : Transport status background 
+			* col_trans_fg : Transport status text 
+			* playrate_edited : Project play rate control when not 1.0 
+			* col_mi_label : Media item label 
+			* col_mi_label_sel : Media item label (selected) 
+			* col_mi_label_float : Floating media item label 
+			* col_mi_label_float_sel : Floating media item label (selected) 
+			* col_mi_bg : Media item background (odd tracks) 
+			* col_mi_bg2 : Media item background (even tracks) 
+			* col_tr1_itembgsel : Media item background selected (odd tracks) 
+			* col_tr2_itembgsel : Media item background selected (even tracks) 
+			* itembg_drawmode : Media item background fill mode -- blendmode 00030000
+			* col_tr1_peaks : Media item peaks (odd tracks) 
+			* col_tr2_peaks : Media item peaks (even tracks) 
+			* col_tr1_ps2 : Media item peaks when selected (odd tracks) 
+			* col_tr2_ps2 : Media item peaks when selected (even tracks) 
+			* col_peaksedge : Media item peaks edge highlight (odd tracks) 
+			* col_peaksedge2 : Media item peaks edge highlight (even tracks) 
+			* col_peaksedgesel : Media item peaks edge highlight when selected (odd tracks) 
+			* col_peaksedgesel2 : Media item peaks edge highlight when selected (even tracks) 
+			* cc_chase_drawmode : Media item MIDI CC peaks fill mode -- blendmode 00024000
+			* col_peaksfade : Media item peaks when active in crossfade editor (fade-out) 
+			* col_peaksfade2 : Media item peaks when active in crossfade editor (fade-in) 
+			* col_mi_fades : Media item fade/volume controls 
+			* fadezone_color : Media item fade quiet zone fill color 
+			* fadezone_drawmode : Media item fade quiet zone fill mode -- blendmode 00022600
+			* fadearea_color : Media item fade full area fill color 
+			* fadearea_drawmode : Media item fade full area fill mode -- blendmode 00020000
+			* col_mi_fade2 : Media item edges of controls 
+			* col_mi_fade2_drawmode : Media item edges of controls blend mode -- blendmode 00024c00
+			* item_grouphl : Media item edge when selected via grouping 
+			* col_offlinetext : Media item "offline" text 
+			* col_stretchmarker : Media item stretch marker line 
+			* col_stretchmarker_h0 : Media item stretch marker handle (1x) 
+			* col_stretchmarker_h1 : Media item stretch marker handle (&gt;1x) 
+			* col_stretchmarker_h2 : Media item stretch marker handle (&lt;1x) 
+			* col_stretchmarker_b : Media item stretch marker handle edge 
+			* col_stretchmarkerm : Media item stretch marker blend mode -- blendmode 0002a800
+			* col_stretchmarker_text : Media item stretch marker text 
+			* col_stretchmarker_tm : Media item transient guide handle 
+			* take_marker : Media item take marker 
+			* selitem_tag : Selected media item bar color 
+			* activetake_tag : Active media item take bar color 
+			* col_tr1_bg : Track background (odd tracks) 
+			* col_tr2_bg : Track background (even tracks) 
+			* col_tr1_divline : Track divider line (odd tracks) 
+			* col_tr2_divline : Track divider line (even tracks) 
+			* col_envlane1_divline : Envelope lane divider line (odd tracks) 
+			* col_envlane2_divline : Envelope lane divider line (even tracks) 
+			* marquee_fill : Marquee fill 
+			* marquee_drawmode : Marquee fill mode -- blendmode 000299fe
+			* marquee_outline : Marquee outline 
+			* marqueezoom_fill : Marquee zoom fill 
+			* marqueezoom_drawmode : Marquee zoom fill mode -- blendmode 00024002
+			* marqueezoom_outline : Marquee zoom outline 
+			* col_cursor : Edit cursor 
+			* col_cursor2 : Edit cursor (alternate) 
+			* playcursor_color : Play cursor 
+			* playcursor_drawmode : Play cursor fill mode -- blendmode 00028000
+			* col_gridlines2 : Grid lines (start of measure) 
+			* col_gridlines2dm : Grid lines (start of measure) - draw mode -- blendmode 0002c000
+			* col_gridlines3 : Grid lines (start of beats) 
+			* col_gridlines3dm : Grid lines (start of beats) - draw mode -- blendmode 00025400
+			* col_gridlines : Grid lines (in between beats) 
+			* col_gridlines1dm : Grid lines (in between beats) - draw mode -- blendmode 00025900
+			* guideline_color : Editing guide line color 
+			* guideline_drawmode : Editing guide fill mode -- blendmode 0002c000
+			* region : Regions 
+			* region_lane_bg : Region lane background 
+			* region_lane_text : Region lane text 
+			* marker : Markers 
+			* marker_lane_bg : Marker lane background 
+			* marker_lane_text : Marker lane text 
+			* col_tsigmark : Time signature change marker 
+			* ts_lane_bg : Time signature lane background 
+			* ts_lane_text : Time signature lane text 
+			* timesig_sel_bg : Time signature marker selected background 
+			* col_routinghl1 : Routing matrix row highlight 
+			* col_routinghl2 : Routing matrix column highlight 
+			* col_vudoint : Theme has interlaced VU meters -- bool 00000000
+			* col_vuclip : VU meter clip indicator 
+			* col_vutop : VU meter top 
+			* col_vumid : VU meter middle 
+			* col_vubot : VU meter bottom 
+			* col_vuintcol : VU meter interlace/edge color 
+			* col_vumidi : VU meter midi activity 
+			* col_vuind1 : VU (indicator) - no signal 
+			* col_vuind2 : VU (indicator) - low signal 
+			* col_vuind3 : VU (indicator) - med signal 
+			* col_vuind4 : VU (indicator) - hot signal 
+			* mcp_fx_normal : Mixer FX text: normal 
+			* mcp_fx_bypassed : Mixer FX text: bypassed 
+			* mcp_fx_offlined : Mixer FX text: offline 
+			* mcp_sends_normal : Mixer sends text: normal 
+			* mcp_sends_muted : Mixer sends text: muted 
+			* mcp_send_midihw : Mixer sends text: MIDI hardware 
+			* mcp_sends_levels : Mixer sends level 
+			* mcp_fxparm_normal : Mixer FX knob text: normal 
+			* mcp_fxparm_bypassed : Mixer FX knob text: bypassed 
+			* mcp_fxparm_offlined : Mixer FX knob text: offline 
+			* midi_rulerbg : MIDI editor ruler background 
+			* midi_rulerfg : MIDI editor ruler text 
+			* midi_grid2 : MIDI editor grid line (start of measure) 
+			* midi_griddm2 : MIDI editor grid line (start of measure) - draw mode -- blendmode 00021e00
+			* midi_grid3 : MIDI editor grid line (start of beats) 
+			* midi_griddm3 : MIDI editor grid line (start of beats) - draw mode -- blendmode 00023300
+			* midi_grid1 : MIDI editor grid line (between beats) 
+			* midi_griddm1 : MIDI editor grid line (between beats) - draw mode -- blendmode 00021e00
+			* midi_trackbg1 : MIDI editor background color (naturals) 
+			* midi_trackbg2 : MIDI editor background color (sharps/flats) 
+			* midi_trackbg_outer1 : MIDI editor background color, out of bounds (naturals) 
+			* midi_trackbg_outer2 : MIDI editor background color, out of bounds (sharps/flats) 
+			* midi_selpitch1 : MIDI editor background color, selected pitch (naturals) 
+			* midi_selpitch2 : MIDI editor background color, selected pitch (sharps/flats) 
+			* midi_selbg : MIDI editor time selection color 
+			* midi_selbg_drawmode : MIDI editor time selection fill mode -- blendmode 00021001
+			* midi_gridhc : MIDI editor CC horizontal center line 
+			* midi_gridhcdm : MIDI editor CC horizontal center line - draw mode -- blendmode 00030000
+			* midi_gridh : MIDI editor CC horizontal line 
+			* midi_gridhdm : MIDI editor CC horizontal line - draw mode -- blendmode 00028000
+			* midi_ccbut : MIDI editor CC lane add/remove buttons 
+			* midioct : MIDI editor octave line color 
+			* midi_inline_trackbg1 : MIDI inline background color (naturals) 
+			* midi_inline_trackbg2 : MIDI inline background color (sharps/flats) 
+			* midioct_inline : MIDI inline octave line color 
+			* midi_endpt : MIDI editor end marker 
+			* midi_notebg : MIDI editor note, unselected (midi_note_colormap overrides) 
+			* midi_notefg : MIDI editor note, selected (midi_note_colormap overrides) 
+			* midi_notemute : MIDI editor note, muted, unselected (midi_note_colormap overrides) 
+			* midi_notemute_sel : MIDI editor note, muted, selected (midi_note_colormap overrides) 
+			* midi_itemctl : MIDI editor note controls 
+			* midi_ofsn : MIDI editor note (offscreen) 
+			* midi_ofsnsel : MIDI editor note (offscreen, selected) 
+			* midi_editcurs : MIDI editor cursor 
+			* midi_pkey1 : MIDI piano key color (naturals) 
+			* midi_pkey2 : MIDI piano key color (sharps/flats) 
+			* midi_pkey3 : MIDI piano key color (selected) 
+			* midi_noteon_flash : MIDI piano key note-on flash 
+			* midi_leftbg : MIDI piano pane background 
+			* midifont_col_light_unsel : MIDI editor note text and control color, unselected (light) 
+			* midifont_col_dark_unsel : MIDI editor note text and control color, unselected (dark) 
+			* midifont_mode_unsel : MIDI editor note text and control mode, unselected -- blendmode 00028000
+			* midifont_col_light : MIDI editor note text and control color (light) 
+			* midifont_col_dark : MIDI editor note text and control color (dark) 
+			* midifont_mode : MIDI editor note text and control mode -- blendmode 0002c000
+			* score_bg : MIDI notation editor background 
+			* score_fg : MIDI notation editor staff/notation/text 
+			* score_sel : MIDI notation editor selected staff/notation/text 
+			* score_timesel : MIDI notation editor time selection 
+			* score_loop : MIDI notation editor loop points, selected pitch 
+			* midieditorlist_bg : MIDI list editor background 
+			* midieditorlist_fg : MIDI list editor text 
+			* midieditorlist_grid : MIDI list editor grid lines 
+			* midieditorlist_selbg : MIDI list editor selected row 
+			* midieditorlist_selfg : MIDI list editor selected text 
+			* midieditorlist_seliabg : MIDI list editor selected row (inactive) 
+			* midieditorlist_seliafg : MIDI list editor selected text (inactive) 
+			* midieditorlist_bg2 : MIDI list editor background (secondary) 
+			* midieditorlist_fg2 : MIDI list editor text (secondary) 
+			* midieditorlist_selbg2 : MIDI list editor selected row (secondary) 
+			* midieditorlist_selfg2 : MIDI list editor selected text (secondary) 
+			* col_explorer_sel : Media explorer selection 
+			* col_explorer_seldm : Media explorer selection mode -- blendmode 00026600
+			* col_explorer_seledge : Media explorer selection edge 
+			* docker_shadow : Tab control shadow 
+			* docker_selface : Tab control selected tab 
+			* docker_unselface : Tab control unselected tab 
+			* docker_text : Tab control text 
+			* docker_text_sel : Tab control text selected tab 
+			* docker_bg : Tab control background 
+			* windowtab_bg : Tab control background in windows 
+			* auto_item_unsel : Envelope: Unselected automation item 
+			* col_env1 : Envelope: Volume (pre-FX) 
+			* col_env2 : Envelope: Volume 
+			* env_trim_vol : Envelope: Trim Volume 
+			* col_env3 : Envelope: Pan (pre-FX) 
+			* col_env4 : Envelope: Pan 
+			* env_track_mute : Envelope: Mute 
+			* col_env5 : Envelope: Master playrate 
+			* col_env6 : Envelope: Master tempo 
+			* col_env7 : Envelope: Send volume 
+			* col_env8 : Envelope: Send pan 
+			* col_env9 : Envelope: Send volume 2 
+			* col_env10 : Envelope: Send pan 2 
+			* env_sends_mute : Envelope: Send mute 
+			* col_env11 : Envelope: Audio hardware output volume 
+			* col_env12 : Envelope: Audio hardware output pan 
+			* col_env13 : Envelope: FX parameter 1 
+			* col_env14 : Envelope: FX parameter 2 
+			* col_env15 : Envelope: FX parameter 3 
+			* col_env16 : Envelope: FX parameter 4 
+			* env_item_vol : Envelope: Item take volume 
+			* env_item_pan : Envelope: Item take pan 
+			* env_item_mute : Envelope: Item take mute 
+			* env_item_pitch : Envelope: Item take pitch 
+			* wiring_grid2 : Wiring: Background 
+			* wiring_grid : Wiring: Background grid lines 
+			* wiring_border : Wiring: Box border 
+			* wiring_tbg : Wiring: Box background 
+			* wiring_ticon : Wiring: Box foreground 
+			* wiring_recbg : Wiring: Record section background 
+			* wiring_recitem : Wiring: Record section foreground 
+			* wiring_media : Wiring: Media 
+			* wiring_recv : Wiring: Receives 
+			* wiring_send : Wiring: Sends 
+			* wiring_fader : Wiring: Fader 
+			* wiring_parent : Wiring: Master/Parent 
+			* wiring_parentwire_border : Wiring: Master/Parent wire border 
+			* wiring_parentwire_master : Wiring: Master/Parent to master wire 
+			* wiring_parentwire_folder : Wiring: Master/Parent to parent folder wire 
+			* wiring_pin_normal : Wiring: Pins normal 
+			* wiring_pin_connected : Wiring: Pins connected 
+			* wiring_pin_disconnected : Wiring: Pins disconnected 
+			* wiring_horz_col : Wiring: Horizontal pin connections 
+			* wiring_sendwire : Wiring: Send hanging wire 
+			* wiring_hwoutwire : Wiring: Hardware output wire 
+			* wiring_recinputwire : Wiring: Record input wire 
+			* wiring_hwout : Wiring: System hardware outputs 
+			* wiring_recinput : Wiring: System record inputs 
+			* group_0 : Group #1 
+			* group_1 : Group #2 
+			* group_2 : Group #3 
+			* group_3 : Group #4 
+			* group_4 : Group #5 
+			* group_5 : Group #6 
+			* group_6 : Group #7 
+			* group_7 : Group #8 
+			* group_8 : Group #9 
+			* group_9 : Group #10 
+			* group_10 : Group #11 
+			* group_11 : Group #12 
+			* group_12 : Group #13 
+			* group_13 : Group #14 
+			* group_14 : Group #15 
+			* group_15 : Group #16 
+			* group_16 : Group #17 
+			* group_17 : Group #18 
+			* group_18 : Group #19 
+			* group_19 : Group #20 
+			* group_20 : Group #21 
+			* group_21 : Group #22 
+			* group_22 : Group #23 
+			* group_23 : Group #24 
+			* group_24 : Group #25 
+			* group_25 : Group #26 
+			* group_26 : Group #27 
+			* group_27 : Group #28 
+			* group_28 : Group #29 
+			* group_29 : Group #30 
+			* group_30 : Group #31 
+			* group_31 : Group #32 
+			* group_32 : Group #33 
+			* group_33 : Group #34 
+			* group_34 : Group #35 
+			* group_35 : Group #36 
+			* group_36 : Group #37 
+			* group_37 : Group #38 
+			* group_38 : Group #39 
+			* group_39 : Group #40 
+			* group_40 : Group #41 
+			* group_41 : Group #42 
+			* group_42 : Group #43 
+			* group_43 : Group #44 
+			* group_44 : Group #45 
+			* group_45 : Group #46 
+			* group_46 : Group #47 
+			* group_47 : Group #48 
+			* group_48 : Group #49 
+			* group_49 : Group #50 
+			* group_50 : Group #51 
+			* group_51 : Group #52 
+			* group_52 : Group #53 
+			* group_53 : Group #54 
+			* group_54 : Group #55 
+			* group_55 : Group #56 
+			* group_56 : Group #57 
+			* group_57 : Group #58 
+			* group_58 : Group #59 
+			* group_59 : Group #60 
+			* group_60 : Group #61 
+			* group_61 : Group #62 
+			* group_62 : Group #63 
+			* group_63 : Group #64
+        </description>
+        <retvals>
+            integer retval - 
+        </retvals>
+        <parameters>
+            string ini_key - 
+			integer color - 
+			integer flags - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Theme management
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>SetToggleCommandState</slug>
         <title>SetToggleCommandState</title>
         <functioncall prog_lang="cpp">bool SetToggleCommandState(int section_id, int command_id, int state)</functioncall>
@@ -15689,6 +16186,8 @@
                 I\_DSTCHAN : int \*, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
                 I\_MIDIFLAGS : int \*, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chanSee [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
 
+
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
 
             See [CreateTrackSend](#CreateTrackSend), [RemoveTrackSend](#RemoveTrackSend), [GetTrackNumSends](#GetTrackNumSends).
         </description>
@@ -16156,11 +16655,11 @@
         <functioncall prog_lang="lua">integer = reaper.TakeFX_AddByName(MediaItem_Take take, string fxname, integer instantiate)</functioncall>
         <functioncall prog_lang="python">Int RPR_TakeFX_AddByName(MediaItem_Take take, String fxname, Int instantiate)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.12
             Lua=5.3
         </requires>
-        <description prog_lang="*">
-            Adds or queries the position of a named FX in a take. Specify a negative value for instantiate to always create a new effect, 0 to only query the first instance of an effect, or a positive value to add an instance if one is not found.
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Adds or queries the position of a named FX in a take. See [TrackFX_AddByName()](#TrackFX_AddByName) for information on fxname and instantiate. 
         </description>
         <retvals>
             integer - 
@@ -18031,7 +18530,18 @@
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            Adds or queries the position of a named FX from the track FX chain (recFX=false) or record input FX/monitoring FX (recFX=true, monitoring FX are on master track). Specify a negative value for instantiate to always create a new effect, 0 to only query the first instance of an effect, or a positive value to add an instance if one is not found. fxname can have prefix to specify type: VST3:,VST2:,VST:,AU:,JS:, or DX:.
+            Adds or queries the position of a named FX from the track FX chain (recFX=false) or record input FX/monitoring FX (recFX=true, monitoring FX are on master track). 
+            
+            Specify a negative value for instantiate to always create a new effect, 
+            0 to only query the first instance of an effect, or a positive value to add an instance if one is not found. 
+            If instantiate is &lt;= -1000, it is used for the insertion position (-1000 is first item in chain, -1001 is second, etc). 
+            
+            fxname can have prefix to specify type: VST3:,VST2:,VST:,AU:,JS:, or DX:, or 
+            FXADD: which adds selected items from the currently-open FX browser, 
+            FXADD:2 to limit to 2 FX added, or 
+            FXADD:2e to only succeed if exactly 2 FX are selected. 
+            
+            Returns -1 on failure or the new position in chain on success.
         </description>
         <retvals>
             integer - 
@@ -18207,7 +18717,7 @@
         <title>TrackFX_GetByName</title>
         <functioncall prog_lang="cpp">int TrackFX_GetByName(MediaTrack* track, const char* fxname, bool instantiate)</functioncall>
         <functioncall prog_lang="eel">int TrackFX_GetByName(MediaTrack track, "fxname", bool instantiate)</functioncall>
-        <functioncall prog_lang="lua">integer = reaper.TrackFX_GetByName(MediaTrack track, string fxname, boolean instantiate)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.TrackFX_GetByName(MediaTrack track, string fxname, boolean instantiate)</functioncall>
         <functioncall prog_lang="python">Int RPR_TrackFX_GetByName(MediaTrack track, String fxname, Boolean instantiate)</functioncall>
         <requires>
             Reaper=5.62
@@ -18217,12 +18727,12 @@
             Get the index of the first track FX insert that matches fxname. If the FX is not in the chain and instantiate is true, it will be inserted. See [TrackFX_GetInstrument](#TrackFX_GetInstrument), [TrackFX_GetEQ](#TrackFX_GetEQ). Deprecated in favor of TrackFX_AddByName.
         </description>
         <retvals>
-            integer - 
+            integer retval - 
         </retvals>
         <parameters>
-            track - 
-            fxname - 
-            instantiate - 
+            MediaTrack track - 
+            string fxname - 
+            boolean instantiate - 
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -19697,7 +20207,7 @@
             Reaper=5.62
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Updates the TCP and optionally the MCP. Helpful, when setting a new trackheight using I_HEIGHTOVERRIDE in [SetMediaTrackInfo_Value](#SetMediaTrackInfo_Value).
         </description>
         <parameters>
@@ -20296,36 +20806,38 @@
         <functioncall prog_lang="cpp">unsigned int GetSetTrackGroupMembershipHigh(MediaTrack* tr, const char* groupname, unsigned int setmask, unsigned int setvalue)</functioncall>
         <functioncall prog_lang="eel">uint GetSetTrackGroupMembershipHigh(MediaTrack tr, "groupname", uint setmask, uint setvalue)</functioncall>
         <functioncall prog_lang="lua">integer groupstate = reaper.GetSetTrackGroupMembershipHigh(MediaTrack tr, string groupname, integer setmask, integer setvalue)</functioncall>
-        <functioncall prog_lang="python">Unknown RPR_GetSetTrackGroupMembershipHigh(MediaTrack tr, String groupname, Unknown setmask, Unknown setvalue)</functioncall>
+        <functioncall prog_lang="python">Int RPR_GetSetTrackGroupMembershipHigh(MediaTrack tr, String groupname, Int setmask, Int setvalue)</functioncall>
         <requires>
-            Reaper=5.70
+            Reaper=6.12
             Lua=5.3
         </requires>
         <description prog_lang="*"> 
             Gets or modifies the group membership for a track. Returns group state prior to call (each bit represents one of the high 32 group numbers). if setmask has bits set, those bits in setvalue will be applied to group. Group can be one of:
-            VOLUME_MASTER
-            VOLUME_SLAVE
-            VOLUME_VCA_MASTER
-            VOLUME_VCA_SLAVE
-            PAN_MASTER
-            PAN_SLAVE
-            WIDTH_MASTER
-            WIDTH_SLAVE
-            MUTE_MASTER
-            MUTE_SLAVE
-            SOLO_MASTER
-            SOLO_SLAVE
-            RECARM_MASTER
-            RECARM_SLAVE
-            POLARITY_MASTER
-            POLARITY_SLAVE
-            AUTOMODE_MASTER
-            AUTOMODE_SLAVE
+            VOLUME_LEAD
+            VOLUME_FOLLOW
+            VOLUME_VCA_LEAD
+            VOLUME_VCA_FOLLOW
+            PAN_LEAD
+            PAN_FOLLOW
+            WIDTH_LEAD
+            WIDTH_FOLLOW
+            MUTE_LEAD
+            MUTE_FOLLOW
+            SOLO_LEAD
+            SOLO_FOLLOW
+            RECARM_LEAD
+            RECARM_FOLLOW
+            POLARITY_LEAD
+            POLARITY_FOLLOW
+            AUTOMODE_LEAD
+            AUTOMODE_FOLLOW
             VOLUME_REVERSE
             PAN_REVERSE
             WIDTH_REVERSE
-            NO_MASTER_WHEN_SLAVE
-            VOLUME_VCA_SLAVE_ISPREFX
+            NO_LEAD_WHEN_FOLLOW
+            VOLUME_VCA_FOLLOW_ISPREFX
+
+            Note: REAPER v6.11 and earlier used _MASTER and _SLAVE rather than _LEAD and _FOLLOW, which is deprecated but still supported (scripts that must support v6.11 and earlier can use the deprecated strings).
         </description>
         <parameters>
             tr - 
@@ -20358,6 +20870,8 @@
         <description prog_lang="*"> 
             Gets/sets a send attribute string:
                 P_EXT:xyz : char * : extension-specific persistent data
+                
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
         </description>
         <parameters>
             MediaTrack tr - 
@@ -20689,13 +21203,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>BR_EnvGetProperties</slug>
         <title>BR_EnvGetProperties(SWS)</title>
-        <functioncall prog_lang="cpp">void BR_EnvGetProperties(BR_Envelope* envelope, bool* activeOut, bool* visibleOut, bool* armedOut, bool* inLaneOut, int* laneHeightOut, int* defaultShapeOut, double* minValueOut, double* maxValueOut, double* centerValueOut, int* typeOut, bool* faderScalingOut)</functioncall>
-        <functioncall prog_lang="eel">extension_api("BR_EnvGetProperties", BR_Envelope envelope, bool &amp;active, bool &amp;visible, bool &amp;armed, bool &amp;inLane, int &amp;laneHeight, int &amp;defaultShape, &amp;minValue, &amp;maxValue, &amp;centerValue, int &amp;type, bool &amp;faderScaling)</functioncall>
-        <functioncall prog_lang="lua">boolean active retval, boolean visible, boolean armed, boolean inLane, number laneHeight, number defaultShape, number minValue, number maxValue, number centerValue, number type, boolean faderScaling = reaper.BR_EnvGetProperties(BR_Envelope envelope)</functioncall>
-        <functioncall prog_lang="python">(BR_Envelope envelope, Boolean activeOut, Boolean visibleOut, Boolean armedOut, Boolean inLaneOut, Int laneHeightOut, Int defaultShapeOut, Float minValueOut, Float maxValueOut, Float centerValueOut, Int typeOut, Boolean faderScalingOut) = BR_EnvGetProperties(envelope, activeOut, visibleOut, armedOut, inLaneOut, laneHeightOut, defaultShapeOut, minValueOut, maxValueOut, centerValueOut, typeOut, faderScalingOut)</functioncall>
+        <functioncall prog_lang="cpp">void BR_EnvGetProperties(BR_Envelope* envelope, bool* activeOut, bool* visibleOut, bool* armedOut, bool* inLaneOut, int* laneHeightOut, int* defaultShapeOut, double* minValueOut, double* maxValueOut, double* centerValueOut, int* typeOut, bool* faderScalingOut, int* automationItemsOptionsOutOptional)</functioncall>
+        <functioncall prog_lang="eel">extension_api("BR_EnvGetProperties", BR_Envelope envelope, bool &active, bool &visible, bool &armed, bool &inLane, int &laneHeight, int &defaultShape, &minValue, &maxValue, &centerValue, int &type, bool &faderScaling, optional int &automationItemsOptions)</functioncall>
+        <functioncall prog_lang="lua">boolean active, boolean visible, boolean armed, boolean inLane, number laneHeight, number defaultShape, number minValue, number maxValue, number centerValue, number type, boolean faderScaling, optional number automationItemsOptions = reaper.BR_EnvGetProperties(BR_Envelope envelope)</functioncall>
+        <functioncall prog_lang="python">(BR_Envelope envelope, Boolean activeOut, Boolean visibleOut, Boolean armedOut, Boolean inLaneOut, Int laneHeightOut, Int defaultShapeOut, Float minValueOut, Float maxValueOut, Float centerValueOut, Int typeOut, Boolean faderScalingOut, Int automationItemsOptionsOutOptional) = BR_EnvGetProperties(envelope, activeOut, visibleOut, armedOut, inLaneOut, laneHeightOut, defaultShapeOut, minValueOut, maxValueOut, centerValueOut, typeOut, faderScalingOut, automationItemsOptionsOutOptional)</functioncall>
         <requires>
             Reaper=5.62
-            SWS=2.9.7
+            SWS=2.11.0
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -20711,6 +21225,7 @@
             maxValue: maximum envelope value
             type: envelope type: 0-&gt;Volume, 1-&gt;Volume (Pre-FX), 2-&gt;Pan, 3-&gt;Pan (Pre-FX), 4-&gt;Width, 5-&gt;Width (Pre-FX), 6-&gt;Mute, 7-&gt;Pitch, 8-&gt;Playrate, 9-&gt;Tempo map, 10-&gt;Parameter
             faderScaling: true if envelope uses fader scaling
+			automationItemsOptions: -1-&gt;project default, &amp;1=0-&gt;don't attach to underl. env., &amp;1-&gt;attach to underl. env. on right side, &amp;2-&gt;attach to underl. env. on both sides, &amp;4: bypass underl. env.
         </description>
         <retvals>
             active retval - 
@@ -20775,17 +21290,18 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>BR_EnvSetProperties</slug>
         <title>BR_EnvSetProperties(SWS)</title>
-        <functioncall prog_lang="cpp">void BR_EnvSetProperties(BR_Envelope* envelope, bool active, bool visible, bool armed, bool inLane, int laneHeight, int defaultShape, bool faderScaling)</functioncall>
-        <functioncall prog_lang="eel">extension_api("BR_EnvSetProperties", BR_Envelope envelope, bool active, bool visible, bool armed, bool inLane, int laneHeight, int defaultShape, bool faderScaling)</functioncall>
-        <functioncall prog_lang="lua">reaper.BR_EnvSetProperties(BR_Envelope envelope, boolean active, boolean visible, boolean armed, boolean inLane, integer laneHeight, integer defaultShape, boolean faderScaling)</functioncall>
-        <functioncall prog_lang="python">BR_EnvSetProperties(BR_Envelope envelope, Boolean active, Boolean visible, Boolean armed, Boolean inLane, Int laneHeight, Int defaultShape, Boolean faderScaling)</functioncall>
+        <functioncall prog_lang="cpp">void BR_EnvSetProperties(BR_Envelope* envelope, bool active, bool visible, bool armed, bool inLane, int laneHeight, int defaultShape, bool faderScaling, int* automationItemsOptionsInOptional)</functioncall>
+        <functioncall prog_lang="eel">extension_api("BR_EnvSetProperties", BR_Envelope envelope, bool active, bool visible, bool armed, bool inLane, int laneHeight, int defaultShape, bool faderScaling, optional int automationItemsOptionsIn)</functioncall>
+        <functioncall prog_lang="lua"> reaper.BR_EnvSetProperties(BR_Envelope envelope, boolean active, boolean visible, boolean armed, boolean inLane, integer laneHeight, integer defaultShape, boolean faderScaling, optional number automationItemsOptionsIn)</functioncall>
+        <functioncall prog_lang="python">(BR_Envelope envelope, Boolean active, Boolean visible, Boolean armed, Boolean inLane, Int laneHeight, Int defaultShape, Boolean faderScaling, Int automationItemsOptionsInOptional) = BR_EnvSetProperties(envelope, active, visible, armed, inLane, laneHeight, defaultShape, faderScaling, automationItemsOptionsInOptional)</functioncall>
         <requires>
-            Reaper=5.62
-            SWS=2.9.7
+            Reaper=5.979
+            SWS=2.11.0
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
             \[BR\] Set envelope properties for the envelope object allocated with [BR_EnvAlloc](#BR_EnvAlloc). For parameter description see [BR_EnvGetProperties](#BR_EnvGetProperties).
+			Setting automationItemsOptions requires REAPER 5.979+.
         </description>
         <parameters>
             envelope - 
@@ -21015,11 +21531,11 @@
         <functioncall prog_lang="python">(Boolean retval, MediaItem item, String imageOut, Int imageOut_sz, Int imageFlagsOut) = BR_GetMediaItemImageResource(item, imageOut, imageOut_sz, imageFlagsOut)</functioncall>
         <requires>
             Reaper=5.62
-            SWS=2.9.7
+            SWS=2.11.0
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            \[BR\] Get currently loaded image resource and it's flags for a given item. Returns false if there is no image resource set. To set image resource, see [BR_SetMediaItemImageResource](#BR_SetMediaItemImageResource).
+            \[BR\] Get currently loaded image resource and its flags for a given item. Returns false if there is no image resource set. To set image resource, see [BR\_SetMediaItemImageResource](#BR_SetMediaItemImageResource).
         </description>
         <retvals>
             retval - 
@@ -22023,12 +22539,14 @@
         <functioncall prog_lang="lua">reaper.BR_SetMediaItemImageResource(MediaItem item, string imageIn, integer imageFlags)</functioncall>
         <functioncall prog_lang="python">BR_SetMediaItemImageResource(MediaItem item, String imageIn, Int imageFlags)</functioncall>
         <requires>
-            Reaper=5.62
-            SWS=2.9.7
+            Reaper=5.974
+            SWS=2.11.0
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            \[BR\] Set image resource and it's flags for a given item. To clear current image resource, pass imageIn as . To get image resource, see [BR_GetMediaItemImageResource](#BR_GetMediaItemImageResource).
+            \[BR\] Set image resource and its flags for a given item. To clear current image resource, pass imageIn as "".
+			imageFlags: &amp;1=0: don't display image, &amp;1: center / tile, &amp;3: stretch, &amp;5: full height (REAPER 5.974+).
+			To get image resource, see [BR\_GetMediaItemImageResource](#BR_GetMediaItemImageResource).
         </description>
         <parameters>
             item - 
@@ -22405,21 +22923,25 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>CF_GetClipboard</slug>
         <title>CF_GetClipboard(SWS)</title>
-        <functioncall prog_lang="cpp">void CF_GetClipboard(char* buf, int buf_sz)</functioncall>
-        <functioncall prog_lang="eel">extension_api("CF_GetClipboard", #buf)</functioncall>
-        <functioncall prog_lang="lua">string buf = reaper.CF_GetClipboard(string buf)</functioncall>
-        <functioncall prog_lang="python">(String buf, Int buf_sz) = CF_GetClipboard(buf, buf_sz)</functioncall>
+        <functioncall prog_lang="cpp">void CF_GetClipboard(char* bufNeedBig, int buf_sz)</functioncall>
+        <functioncall prog_lang="eel">extension_api("CF_GetClipboard", #buf, int buf_sz)</functioncall>
+        <functioncall prog_lang="lua">string buf = reaper.CF_GetClipboard(string buf, integer buf_sz)</functioncall>
+        <functioncall prog_lang="python">(String bufNeedBig, Int buf_sz) = CF_GetClipboard(bufNeedBig, buf_sz)</functioncall>
         <requires>
-            Reaper=5.62
-            SWS=2.9.7
+            Reaper=5.979
+            SWS=2.11.0
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            Read the contents of the system clipboard (limited to 1023 characters in Lua).
+            Read the contents of the system clipboard.
         </description>
         <retvals>
-            buf - the content of the clipboard
+            string buf - the content of the clipboard
         </retvals>
+		<parameters>
+		    string buf - just pass "" in here
+			integer buf_sz - the number of characters you want to get from the clipboard
+		</parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
         <chapter_context>
@@ -22437,11 +22959,11 @@
         <functioncall prog_lang="python">String CF_GetClipboardBig(WDL_FastString output)</functioncall>
         <requires>
             Reaper=5.62
-            SWS=2.9.7
+            SWS=2.11.0
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Read the contents of the system clipboard. See [SNM_CreateFastString](#SNM_CreateFastString) and [SNM_DeleteFastString](#SNM_DeleteFastString).
+            \[DEPRECATED: Use [CF_GetClipboard](#CF_GetClipboard)\] Read the contents of the system clipboard. See [SNM_CreateFastString](#SNM_CreateFastString) and [SNM_DeleteFastString](#SNM_DeleteFastString).
         </description>
         <retvals>
             string - the content of the clipboard
@@ -23783,7 +24305,7 @@
         <functioncall prog_lang="lua">number byte = reaper.JS_Byte(identifier pointer, integer offset)</functioncall>
         <functioncall prog_lang="python">(void pointer, Int offset, Int byteOut) = JS_Byte(pointer, offset, byteOut)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.971
             Lua=5.3
         </requires>
@@ -23809,13 +24331,13 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Composite</slug>
         <title>JS_Composite(JS)</title>
-        <functioncall prog_lang="cpp">int JS_Composite(void* windowHWND, int srcx, int srcy, int srcw, int srch, void* sysBitmap, int dstx, int dsty, int dstw, int dsth, bool* autoUpdateOptional)</functioncall>
-        <functioncall prog_lang="eel">int extension_api("JS_Composite", void* windowHWND, int srcx, int srcy, int srcw, int srch, void* sysBitmap, int dstx, int dsty, int dstw, int dsth, unsupported autoUpdateOptional)</functioncall>
-        <functioncall prog_lang="lua">integer reaper.JS_Composite(identifier windowHWND, integer srcx, integer srcy, integer srcw, integer srch, identifier sysBitmap, integer dstx, integer dsty, integer dstw, integer dsth, unsupported autoUpdate)</functioncall>
-        <functioncall prog_lang="python">(Int retval, void windowHWND, Int srcx, Int srcy, Int srcw, Int srch, void sysBitmap, Int dstx, Int dsty, Int dstw, Int dsth, Boolean autoUpdateOptional) = JS_Composite(windowHWND, srcx, srcy, srcw, srch, sysBitmap, dstx, dsty, dstw, dsth, autoUpdateOptional)</functioncall>
+        <functioncall prog_lang="cpp">int JS_Composite(void* windowHWND, int dstx, int dsty, int dstw, int dsth, void* sysBitmap, int srcx, int srcy, int srcw, int srch, bool* autoUpdateOptional)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_Composite", void* windowHWND, int dstx, int dsty, int dstw, int dsth, void* sysBitmap, int srcx, int srcy, int srcw, int srch, optional boolean autoUpdateOptional)</functioncall>
+        <functioncall prog_lang="lua">integer reaper.JS_Composite(identifier windowHWND, integer dstx, integer dsty, integer dstw, integer dsth, identifier sysBitmap, integer srcx, integer srcy, integer srcw, integer srch, optional boolean autoUpdate)</functioncall>
+        <functioncall prog_lang="python">(Int retval, void windowHWND, Int dstx, Int dsty, Int dstw, Int dsth, void sysBitmap, Int srcx, Int srcy, Int srcw, Int srch, Boolean autoUpdateOptional) = JS_Composite(windowHWND, dstx, dsty, dstw, dsth, sysBitmap, srcx, srcy, srcw, srch, autoUpdateOptional)</functioncall>
         <requires>
-            Reaper=5.965
-            JS=1.002
+            Reaper=5.974
+            JS=1.215
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -23823,11 +24345,11 @@
 
 			\* If dstw or dsth is -1, the bitmap will be stretched to fill the width or height of the window, respectively.
 
-			\* autoUpdate is an optional parameter that is false by default. If true, JS\_Composite will automatically invalidate and re-draw the part of the window that covers the current position of the bitmap, and if the bitmap is being moved, also the previous position. (If only one or a handful of bitmaps are being moved across the screen, autoUpdate should result in smoother animation on WindowsOS; if numerous bitmaps are spread over the entire window, it may be faster to disable autoUpdate and instead call JS\_Window\_InvalidateRect explicitly once all bitmaps have been moved.)
+			\* autoUpdate is an optional parameter that is false by default. If true, JS\_Composite will automatically invalidate and re-draw the part of the window that covers the current position of the bitmap, and if the bitmap is being moved, also the previous position. (If only one or a handful of bitmaps are being moved across the screen, autoUpdate should result in smoother animation on WindowsOS; if numerous bitmaps are spread over the entire window, it may be faster to disable autoUpdate and instead call [JS\_Window\_InvalidateRect](#JS_Window_InvalidateRect) explicitly once all bitmaps have been moved.)
 
 			\* InvalidateRect should also be called whenever the contents of the bitmap contents have been changed, but not the position, to trigger a window update.
 
-			\* On WindowsOS, the key to reducing flickering is to slow down the frequency at which the window is re-drawn. InvalidateRect should only be called when absolutely necessary, preferably not more than 10 times per second. (Also refer to the JS\_Composite\_Delay function.)
+			\* On WindowsOS, the key to reducing flickering is to slow down the frequency at which the window is re-drawn. InvalidateRect should only be called when absolutely necessary, preferably not more than 20 times per second. (Also refer to the [JS\_Composite\_Delay](#JS_Composite_Delay) function.)
 
 			\* On WindowsOS, flickering can further be reduced by keeping the invalidated area as small as possible, covering only the bitmaps that have been edited or moved. However, if numerous bitmaps are spread over the entire window, it may be faster to simply invalidate the entire client area.
 
@@ -23835,25 +24357,32 @@
 
 			\* Some classes of UI elements, particularly buttons, do not take kindly to being composited, and may crash REAPER.
 
-			\* On WindowsOS, GDI blitting does not perform alpha multiplication of the source bitmap. For proper color rendering, a separate pre-multiplication step is therefore required, using either LICE\_Blit or LICE\_ProcessRect.
+			\* On WindowsOS, GDI blitting does not perform alpha multiplication of the source bitmap. For proper color rendering, a separate pre-multiplication step is therefore required, using either [LICE\_Blit](#LICE_Blit) or [LICE\_ProcessRect](#LICE_ProcessRect).
 
 			Returns:
-			1 if successful, otherwise -1 = windowHWND is not a window, -3 = Could not obtain the original window process, -4 = sysBitmap is not a LICE bitmap, -5 = sysBitmap is not a system bitmap, -6 = Could not obtain the window HDC.
+			1 if successful, otherwise -1 = windowHWND is not a window, -3 = Could not obtain the original window process, -4 = sysBitmap is not a LICE bitmap, -5 = sysBitmap is not a system bitmap, -6 = Could not obtain the window HDC, -7 = Error when subclassing to new window process.
         </description>
         <retvals>
-           integer retval - 
+           integer retval - 1 if successful
+                          - -1 = windowHWND is not a window
+                          - -3 = Could not obtain the original window process
+                          - -4 = sysBitmap is not a LICE bitmap
+                          - -5 = sysBitmap is not a system bitmap
+                          - -6 = Could not obtain the window HDC
+                          - -7 = Error when subclassing to new window process.
         </retvals>
         <parameters>
            identifier windowHWND - 
-           integer srcx - 
-           integer srcy - 
-           integer srcw - 
-           integer srch - 
-           identifier sysBitmap - 
            integer dstx - 
            integer dsty - 
            integer dstw - 
            integer dsth - 
+           identifier sysBitmap - 
+           integer srcx - 
+           integer srcy - 
+           integer srcw - 
+           integer srch - 
+           optional boolean autoUpdate - 
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -23871,8 +24400,8 @@
         <functioncall prog_lang="lua">integer retval, number prevMinTime, number prevMaxTime, number prevBitmaps = reaper.JS_Composite_Delay(identifier windowHWND, number minTime, number maxTime, integer numBitmapsWhenMax)</functioncall>
         <functioncall prog_lang="python">(Int retval, void windowHWND, Float minTime, Float maxTime, Int numBitmapsWhenMax, Float prevMinTimeOut, Float prevMaxTimeOut, Int prevBitmapsOut) = JS_Composite_Delay(windowHWND, minTime, maxTime, numBitmapsWhenMax, prevMinTimeOut, prevMaxTimeOut, prevBitmapsOut)</functioncall>
         <requires>
-            Reaper=5.965
-            JS=1.002
+            Reaper=5.974
+            JS=1.010
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -23880,9 +24409,11 @@
 
 			minTime is the minimum refresh delay, in seconds, when only one bitmap is composited onto the window. The delay time will increase linearly with the number of bitmaps, up to a maximum of maxTime when numBitmapsWhenMax is reached.
 
+			If both minTime and maxTime are 0, all delay settings for the window are cleared.
+
 			Returns:
 			\* retval = 1 if successful, 0 if arguments are invalid (i.e. if maxTime &lt; minTime, or maxBitmaps &lt; 1).
-			\* If delay times have not previously been set for this window, prev values are -1.
+			\* If delay times have not previously been set for this window, prev time values are 0.
         </description>
         <retvals>
            integer retval - 
@@ -23912,7 +24443,7 @@
         <functioncall prog_lang="lua">integer retval, string list = reaper.JS_Composite_ListBitmaps(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">(Int retval, void windowHWND, String listOutNeedBig, Int listOutNeedBig_sz) = JS_Composite_ListBitmaps(windowHWND, listOutNeedBig, listOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.980
             Lua=5.3
         </requires>
@@ -23947,7 +24478,7 @@
         <functioncall prog_lang="lua">reaper.JS_Composite_Unlink(identifier windowHWND, identifier bitmap, unsupported autoUpdate)</functioncall>
         <functioncall prog_lang="python">(void windowHWND, void bitmapOptional, Boolean autoUpdateOptional) = JS_Composite_Unlink(windowHWND, bitmapOptional, autoUpdateOptional)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=1.002
             Lua=5.3
         </requires>
@@ -23978,7 +24509,7 @@
         <functioncall prog_lang="lua">number double = reaper.JS_Double(identifier address, integer pointer)</functioncall>
         <functioncall prog_lang="python">(void pointer, Int offset, Float doubleOut) = JS_Double(pointer, offset, doubleOut)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.971
             Lua=5.3
         </requires>
@@ -24008,7 +24539,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_Blit(identifier destHDC, integer dstx, integer dsty, identifier sourceHDC, integer srcx, integer srxy, integer width, integer height, optional string mode)</functioncall>
         <functioncall prog_lang="python">JS_GDI_Blit(void destHDC, Int dstx, Int dsty, void sourceHDC, Int srcx, Int srxy, Int width, Int height, String modeOptional)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=1.002
             Lua=5.3
         </requires>
@@ -24046,7 +24577,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_GDI_CreateFillBrush(integer color)</functioncall>
         <functioncall prog_lang="python">void  JS_GDI_CreateFillBrush(Int color)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24075,7 +24606,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_GDI_CreateFont(integer height, integer weight, integer angle, boolean italic, boolean underline, boolean strike, string fontName)</functioncall>
         <functioncall prog_lang="python">void  JS_GDI_CreateFont(Int height, Int weight, Int angle, Boolean italic, Boolean underline, Boolean strikeOut, String fontName)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24121,7 +24652,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_GDI_CreatePen(integer width, integer color)</functioncall>
         <functioncall prog_lang="python">void  JS_GDI_CreatePen(Int width, Int color)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24151,7 +24682,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_DeleteObject(identifier GDIObject)</functioncall>
         <functioncall prog_lang="python">JS_GDI_DeleteObject(void GDIObject)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24178,7 +24709,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_GDI_DrawText(identifier deviceHDC, string text, integer len, integer left, integer top, integer right, integer bottom, string align))</functioncall>
         <functioncall prog_lang="python">Int  JS_GDI_DrawText(void deviceHDC, String text, Int len, Int left, Int top, Int right, Int bottom, String align))</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24217,7 +24748,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_FillEllipse(identifier deviceHDC, integer left, integer top, integer right, integer bottom)</functioncall>
         <functioncall prog_lang="python">JS_GDI_FillEllipse(void deviceHDC, Int left, Int top, Int right, Int bottom)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24248,7 +24779,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_FillPolygon(identifier deviceHDC, string packedX, string packedY, integer numPoints)</functioncall>
         <functioncall prog_lang="python">JS_GDI_FillPolygon(void deviceHDC, String packedX, String packedY, Int numPoints)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24279,7 +24810,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_FillRect(identifier deviceHDC, integer left, integer top, integer right, integer bottom)</functioncall>
         <functioncall prog_lang="python">JS_GDI_FillRect(void deviceHDC, Int left, Int top, Int right, Int bottom)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24310,7 +24841,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_FillRoundRect(identifier deviceHDC, integer left, integer top, integer right, integer bottom, integer xrnd, integer yrnd)</functioncall>
         <functioncall prog_lang="python">JS_GDI_FillRoundRect(void deviceHDC, Int left, Int top, Int right, Int bottom, Int xrnd, Int yrnd)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24343,7 +24874,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_GDI_GetClientDC(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">void  JS_GDI_GetClientDC(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24373,7 +24904,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_GDI_GetScreenDC()</functioncall>
         <functioncall prog_lang="python">void  JS_GDI_GetScreenDC()</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24404,7 +24935,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_GDI_GetSysColor(string GUIElement)</functioncall>
         <functioncall prog_lang="python">Int  JS_GDI_GetSysColor(String GUIElement)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24433,7 +24964,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_GDI_GetTextColor(identifier deviceHDC)</functioncall>
         <functioncall prog_lang="python">Int  JS_GDI_GetTextColor(void deviceHDC)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24462,7 +24993,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_GDI_GetWindowDC(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">void  JS_GDI_GetWindowDC(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24492,7 +25023,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_Line(identifier deviceHDC, integer x1, integer y1, integer x2, integer y2)</functioncall>
         <functioncall prog_lang="python">JS_GDI_Line(void deviceHDC, Int x1, Int y1, Int x2, Int y2)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24523,7 +25054,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_Polyline(identifier deviceHDC, string packedX, string packedY, integer numPoints)</functioncall>
         <functioncall prog_lang="python">JS_GDI_Polyline(void deviceHDC, String packedX, String packedY, Int numPoints)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24554,7 +25085,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_ReleaseDC(identifier windowHWND, identifier deviceHDC)</functioncall>
         <functioncall prog_lang="python">JS_GDI_ReleaseDC(void windowHWND, void deviceHDC)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.999
             Lua=5.3
         </requires>
@@ -24585,7 +25116,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_GDI_SelectObject(identifier deviceHDC, identifier GDIObject)</functioncall>
         <functioncall prog_lang="python">void  JS_GDI_SelectObject(void deviceHDC, void GDIObject)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24616,7 +25147,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_SetPixel(identifier deviceHDC, integer x, integer y, integer color)</functioncall>
         <functioncall prog_lang="python">JS_GDI_SetPixel(void deviceHDC, Int x, Int y, Int color)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24646,7 +25177,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_SetTextBkColor(identifier deviceHDC, integer color)</functioncall>
         <functioncall prog_lang="python">JS_GDI_SetTextBkColor(void deviceHDC, Int color)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24674,7 +25205,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_SetTextBkMode(identifier deviceHDC, integer mode)</functioncall>
         <functioncall prog_lang="python">JS_GDI_SetTextBkMode(void deviceHDC, Int mode)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24702,7 +25233,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_SetTextColor(identifier deviceHDC, integer color)</functioncall>
         <functioncall prog_lang="python">JS_GDI_SetTextColor(void deviceHDC, Int color)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -24730,7 +25261,7 @@
         <functioncall prog_lang="lua">reaper.JS_GDI_StretchBlit(identifier destHDC, integer dstx, integer dsty, integer dstw, integer dsth, identifier sourceHDC, integer srcx, integer srxy, integer srcw, integer srch, optional string mode)</functioncall>
         <functioncall prog_lang="python">JS_GDI_StretchBlit(void destHDC, Int dstx, Int dsty, Int dstw, Int dsth, void sourceHDC, Int srcx, Int srxy, Int srcw, Int srch, String modeOptional)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=1.002
             Lua=5.3
         </requires>
@@ -24770,7 +25301,7 @@
         <functioncall prog_lang="lua">number int = reaper.JS_Int(identifier pointer, integer offset)</functioncall>
         <functioncall prog_lang="python">(void pointer, Int offset, Int intOut) = JS_Int(pointer, offset, intOut)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.971
             Lua=5.3
         </requires>
@@ -24801,7 +25332,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_AlterBitmapHSV(identifier bitmap, number hue, number saturation, number value)</functioncall>
         <functioncall prog_lang="python">(JS_LICE_AlterBitmapHSV(void bitmap, Float hue, Float saturation, Float value)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.988
             Lua=5.3
         </requires>
@@ -24830,7 +25361,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_AlterRectHSV(identifier bitmap, integer x, integer y, integer w, integer h, number hue, number saturation, number value)</functioncall>
         <functioncall prog_lang="python">JS_LICE_AlterRectHSV(void bitmap, Int x, Int y, Int w, Int h, Float hue, Float saturation, Float value)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.988
             Lua=5.3
         </requires>
@@ -24864,7 +25395,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_Arc(identifier bitmap, number cx, number cy, number r, number minAngle, number maxAngle, integer color, number alpha, string mode, boolean antialias)</functioncall>
         <functioncall prog_lang="python">JS_LICE_Arc(void bitmap, Float cx, Float cy, Float r, Float minAngle, Float maxAngle, Int color, Float alpha, String mode, Boolean antialias)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=1.000
             Lua=5.3
         </requires>
@@ -24892,6 +25423,35 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_LICE_ArrayAllBitmaps</slug>
+        <title>JS_LICE_ArrayAllBitmaps(JS)</title>
+        <functioncall prog_lang="cpp">int JS_LICE_ArrayAllBitmaps(void* reaperarray)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_LICE_ArrayAllBitmaps", void* reaperarray)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.JS_LICE_ArrayAllBitmaps(identifier reaperarray)</functioncall>
+        <functioncall prog_lang="python">Int JS_LICE_ArrayAllBitmaps(void reaperarray)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.215
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+
+        </description>
+        <retvals>
+            integer retval - 
+        </retvals>
+        <parameters>
+           identifier reaperarray - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
   
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_LICE_Bezier</slug>
@@ -24901,7 +25461,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_Bezier(identifier bitmap, number xstart, number ystart, number xctl1, number yctl1, number xctl2, number yctl2, number xend, number yend, number tol, integer color, number alpha, string mode, boolean antialias)</functioncall>
         <functioncall prog_lang="python">JS_LICE_Bezier(void bitmap, Float xstart, Float ystart, Float xctl1, Float yctl1, Float xctl2, Float yctl2, Float xend, Float yend, Float tol, Int color, Float alpha, String mode, Boolean antialias)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.986
             Lua=5.3
         </requires>
@@ -24942,7 +25502,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_Blit(identifier destBitmap, integer dstx, integer dsty, identifier sourceBitmap, integer srcx, integer srcy, integer width, integer height, number alpha, string mode)</functioncall>
         <functioncall prog_lang="python">JS_LICE_Blit(void destBitmap, Int dstx, Int dsty, void sourceBitmap, Int srcx, Int srcy, Int width, Int height, Float alpha, String mode)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.988
             Lua=5.3
         </requires>
@@ -24982,7 +25542,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_Circle(identifier bitmap, number cx, number cy, number r, integer color, number alpha, string mode, boolean antialias)</functioncall>
         <functioncall prog_lang="python">JS_LICE_Circle(void bitmap, Float cx, Float cy, Float r, Int color, Float alpha, String mode, Boolean antialias)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25021,7 +25581,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_Clear(identifier bitmap, integer color)</functioncall>
         <functioncall prog_lang="python">JS_LICE_Clear(void bitmap, Int color)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25049,7 +25609,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_LICE_CreateBitmap(boolean isSysBitmap, integer width, integer height)</functioncall>
         <functioncall prog_lang="python">void  JS_LICE_CreateBitmap(Boolean isSysBitmap, Int width, Int height)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25080,7 +25640,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_LICE_CreateFont()</functioncall>
         <functioncall prog_lang="python">void  JS_LICE_CreateFont()</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25107,7 +25667,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_DestroyBitmap(identifier bitmap)</functioncall>
         <functioncall prog_lang="python">JS_LICE_DestroyBitmap(void bitmap)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=1.000
             Lua=5.3
         </requires>
@@ -25133,7 +25693,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_DestroyFont(identifier LICEFont)</functioncall>
         <functioncall prog_lang="python">JS_LICE_DestroyFont(void LICEFont)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25160,7 +25720,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_DrawChar(identifier bitmap, integer x, integer y, integer c, integer color, number alpha, integer mode))</functioncall>
         <functioncall prog_lang="python">JS_LICE_DrawChar(void bitmap, Int x, Int y, Int c, Int color, Float alpha, Int mode))</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25193,7 +25753,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_LICE_DrawText(identifier bitmap, identifier LICEFont, string text, integer textLen, integer x1, integer y1, integer x2, integer y2)</functioncall>
         <functioncall prog_lang="python">Int  JS_LICE_DrawText(void bitmap, void LICEFont, String text, Int textLen, Int x1, Int y1, Int x2, Int y2)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25229,7 +25789,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_FillCircle(identifier bitmap, number cx, number cy, number r, integer color, number alpha, string mode, boolean antialias)</functioncall>
         <functioncall prog_lang="python">JS_LICE_FillCircle(void bitmap, Float cx, Float cy, Float r, Int color, Float alpha, String mode, Boolean antialias)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25268,7 +25828,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_FillPolygon(identifier bitmap, string packedX, string packedY, integer numPoints, integer color, number alpha, string mode)</functioncall>
         <functioncall prog_lang="python">JS_LICE_FillPolygon(void bitmap, String packedX, String packedY, Int numPoints, Int color, Float alpha, String mode)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.986
             Lua=5.3
         </requires>
@@ -25304,7 +25864,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_FillRect(identifier bitmap, integer x, integer y, integer w, integer h, integer color, number alpha, string mode)</functioncall>
         <functioncall prog_lang="python">JS_LICE_FillRect(void bitmap, Int x, Int y, Int w, Int h, Int color, Float alpha, String mode)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25343,7 +25903,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_FillTriangle(identifier bitmap, integer x1, integer y1, integer x2, integer y2, integer x3, integer y3, integer color, number alpha, string mode)</functioncall>
         <functioncall prog_lang="python">JS_LICE_FillTriangle(void bitmap, Int x1, Int y1, Int x2, Int y2, Int x3, Int y3, Int color, Float alpha, String mode)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25384,7 +25944,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_LICE_GetDC(identifier bitmap)</functioncall>
         <functioncall prog_lang="python">void  JS_LICE_GetDC(void bitmap)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25413,7 +25973,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_LICE_GetHeight(identifier bitmap)</functioncall>
         <functioncall prog_lang="python">Int  JS_LICE_GetHeight(void bitmap)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25442,7 +26002,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_LICE_GetPixel(identifier bitmap, integer x, integer y)</functioncall>
         <functioncall prog_lang="python">Int  JS_LICE_GetPixel(void bitmap, Int x, Int y)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25474,7 +26034,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_LICE_GetWidth(identifier bitmap)</functioncall>
         <functioncall prog_lang="python">Int  JS_LICE_GetWidth(void bitmap)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25503,7 +26063,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_GradRect(identifier bitmap, integer dstx, integer dsty, integer dstw, integer dsth, number ir, number ig, number ib, number ia, number drdx, number dgdx, number dbdx, number dadx, number drdy, number dgdy, number dbdy, number dady, string mode)</functioncall>
         <functioncall prog_lang="python">JS_LICE_GradRect(void bitmap, Int dstx, Int dsty, Int dstw, Int dsth, Float ir, Float ig, Float ib, Float ia, Float drdx, Float dgdx, Float dbdx, Float dadx, Float drdy, Float dgdy, Float dbdy, Float dady, String mode)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25547,7 +26107,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_LICE_IsFlipped(identifier bitmap)</functioncall>
         <functioncall prog_lang="python">Boolean  JS_LICE_IsFlipped(void bitmap)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25576,7 +26136,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_Line(identifier bitmap, number x1, number y1, number x2, number y2, integer color, number alpha, string mode, boolean antialias)</functioncall>
         <functioncall prog_lang="python">JS_LICE_Line(void bitmap, Float x1, Float y1, Float x2, Float y2, Int color, Float alpha, String mode, Boolean antialias)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25616,7 +26176,7 @@
         <functioncall prog_lang="lua">integer retval, string list = reaper.JS_LICE_ListAllBitmaps()</functioncall>
         <functioncall prog_lang="python">(Int retval, String listOutNeedBig, Int listOutNeedBig_sz) = JS_LICE_ListAllBitmaps(listOutNeedBig, listOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=1.000
             Lua=5.3
         </requires>
@@ -25635,6 +26195,33 @@
         <tags></tags>
     </US_DocBloc>
   
+  <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_LICE_LoadJPG</slug>
+        <title>JS_LICE_LoadJPG(JS)</title>
+        <functioncall prog_lang="cpp">void* JS_LICE_LoadJPG(const char* filename)</functioncall>
+        <functioncall prog_lang="eel">void* extension_api("JS_LICE_LoadJPG", "filename")</functioncall>
+        <functioncall prog_lang="lua">identifier reaper.JS_LICE_LoadJPG(string filename)</functioncall>
+        <functioncall prog_lang="python">void JS_LICE_LoadJPG(String filename)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.215
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Returns a system LICE bitmap containing the JPEG.
+        </description>
+        <retvals>
+           identifier - the bitmap, which holds the jpg
+        </retvals>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
+  
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_LICE_LoadPNG</slug>
         <title>JS_LICE_LoadPNG(JS)</title>
@@ -25643,7 +26230,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_LICE_LoadPNG(string filename)</functioncall>
         <functioncall prog_lang="python">void  JS_LICE_LoadPNG(String filename)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.980
             Lua=5.3
         </requires>
@@ -25673,7 +26260,7 @@
         <functioncall prog_lang="lua">number width, number Height = reaper.JS_LICE_MeasureText(string text)</functioncall>
         <functioncall prog_lang="python">(String text, Int widthOut, Int HeightOut) = JS_LICE_MeasureText(text, widthOut, HeightOut)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.986
             Lua=5.3
         </requires>
@@ -25703,7 +26290,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_LICE_ProcessRect(identifier bitmap, integer x, integer y, integer w, integer h, string mode, number operand)</functioncall>
         <functioncall prog_lang="python">Boolean JS_LICE_ProcessRect(void bitmap, Int x, Int y, Int w, Int h, String mode, Float operand)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.988
             Lua=5.3
         </requires>
@@ -25746,7 +26333,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_PutPixel(identifier bitmap, integer x, integer y, integer color, number alpha, string mode)</functioncall>
         <functioncall prog_lang="python">JS_LICE_PutPixel(void bitmap, Int x, Int y, Int color, Float alpha, String mode)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25783,7 +26370,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_Resize(identifier bitmap, integer width, integer height)</functioncall>
         <functioncall prog_lang="python">JS_LICE_Resize(void bitmap, Int width, Int height)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25812,7 +26399,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_RotatedBlit(identifier destBitmap, integer dstx, integer dsty, integer dstw, integer dsth, identifier sourceBitmap, number srcx, number srcy, number srcw, number srch, number angle, number rotxcent, number rotycent, boolean cliptosourcerect, number alpha, string mode)</functioncall>
         <functioncall prog_lang="python">JS_LICE_RotatedBlit(void destBitmap, Int dstx, Int dsty, Int dstw, Int dsth, void sourceBitmap, Float srcx, Float srcy, Float srcw, Float srch, Float angle, Float rotxcent, Float rotycent, Boolean cliptosourcerect, Float alpha, String mode)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.986
             Lua=5.3
         </requires>
@@ -25853,7 +26440,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_RoundRect(identifier bitmap, number x, number y, number w, number h, integer cornerradius, integer color, number alpha, string mode, boolean antialias)</functioncall>
         <functioncall prog_lang="python">JS_LICE_RoundRect(void bitmap, Float x, Float y, Float w, Float h, Int cornerradius, Int color, Float alpha, String mode, Boolean antialias)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25894,7 +26481,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_ScaledBlit(identifier destBitmap, integer dstx, integer dsty, integer dstw, integer dsth, identifier srcBitmap, number srcx, number srcy, number srcw, number srch, number alpha, string mode)</functioncall>
         <functioncall prog_lang="python">JS_LICE_ScaledBlit(void destBitmap, Int dstx, Int dsty, Int dstw, Int dsth, void srcBitmap, Float srcx, Float srcy, Float srcw, Float srch, Float alpha, String mode)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.986
             Lua=5.3
         </requires>
@@ -25931,7 +26518,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_SetAlphaFromColorMask(identifier bitmap, integer colorRGB)</functioncall>
         <functioncall prog_lang="python">JS_LICE_SetAlphaFromColorMask(void bitmap, Int colorRGB)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.988
             Lua=5.3
         </requires>
@@ -25959,7 +26546,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_SetFontBkColor(identifier LICEFont, integer color)</functioncall>
         <functioncall prog_lang="python">JS_LICE_SetFontBkColor(void LICEFont, Int color)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -25987,7 +26574,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_SetFontColor(identifier LICEFont, integer color)</functioncall>
         <functioncall prog_lang="python">JS_LICE_SetFontColor(void LICEFont, Int color)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -26015,7 +26602,7 @@
         <functioncall prog_lang="lua">reaper.JS_LICE_SetFontFromGDI(identifier LICEFont, identifier GDIFont, string moreFormats)</functioncall>
         <functioncall prog_lang="python">JS_LICE_SetFontFromGDI(void LICEFont, void GDIFont, String moreFormats)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -26041,27 +26628,62 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en">
-        <slug>JS_LICE_WritePNG</slug>
-        <title>JS_LICE_WritePNG(JS)</title>
-        <functioncall prog_lang="cpp">bool JS_LICE_WritePNG(const char* filename, void* bitmap, bool wantAlpha)</functioncall>
-        <functioncall prog_lang="eel">bool extension_api("JS_LICE_WritePNG", "filename", void* bitmap, bool wantAlpha)</functioncall>
-        <functioncall prog_lang="lua">boolean retval = reaper.JS_LICE_WritePNG(string filename, identifier bitmap, boolean wantAlpha)</functioncall>
-        <functioncall prog_lang="python">Boolean JS_LICE_WritePNG(String filename, void bitmap, Boolean wantAlpha)</functioncall>
+        <slug>JS_LICE_WriteJPG</slug>
+        <title>JS_LICE_WriteJPG(JS)</title>
+        <functioncall prog_lang="cpp">bool JS_LICE_WriteJPG(const char* filename, LICE_IBitmap* bitmap, int quality, bool* forceBaselineOptional)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_LICE_WriteJPG", "filename", LICE_IBitmap bitmap, int quality, bool forceBaselineOptional)</functioncall>
+        <functioncall prog_lang="lua">boolean reaper.JS_LICE_WriteJPG(string filenameLICE_IBitmap bitmap, integer quality, optional boolean forceBaseline)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String filename, LICE_IBitmap bitmap, Int quality, Boolean forceBaselineOptional) = JS_LICE_WriteJPG(filename, bitmap, quality, forceBaselineOptional)</functioncall>
         <requires>
-            Reaper=5.95
-            JS=0.986
+            Reaper=5.974
+            JS=1.215
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-        
+            Parameters:
+
+            \* quality is an integer in the range 1..100.
+            \* forceBaseline is an optional boolean parameter that ensures compatibility with all JPEG viewers by preventing too low quality, "cubist" settings. 
         </description>
         <retvals>
-            boolean retval - 
+            boolean retval - true, writing was successful; false, writing was unsuccessful
         </retvals>
         <parameters>
-           string filename - 
-           identifier bitmap - 
-           boolean wantAlpha - 
+           string filename - the filename+path of the jpg to write
+           LICE_IBitmap bitmap - the bitmap, that you want to write as jpg-file
+           integer quality - the quality-setting in percent, from 1(lowest quality) to 100(highest quality)
+           optional boolean forceBaseline - true, ensure compatibility with all JPEG-viewers(prevent too low quality); nil or false, allow too low quality(possible compatibility-problems with some JPEG-viewers)
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_LICE_WritePNG</slug>
+        <title>JS_LICE_WritePNG(JS)</title>
+        <functioncall prog_lang="cpp">bool JS_LICE_WritePNG(const char* filename, LICE_IBitmap* bitmap, bool wantAlpha)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_LICE_WritePNG", "filename", LICE_IBitmap bitmap, bool wantAlpha)</functioncall>
+        <functioncall prog_lang="lua">boolean reaper.JS_LICE_WritePNG(string filenameLICE_IBitmap bitmap, boolean wantAlpha)</functioncall>
+        <functioncall prog_lang="python">Boolean JS_LICE_WritePNG(String filename, LICE_IBitmap bitmap, Boolean wantAlpha)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.215
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Writes the contents of a LICE_IBitMap as png-file.
+        </description>
+        <retvals>
+            boolean retval - true, writing was successful; false, writing was not successful
+        </retvals>
+        <parameters>
+           string filename - the filename+path of the png-file to write
+           LICE_IBitmap bitmap - the bitmap, whose contents shall be written as png-file
+           boolean wantAlpha - true, store alpha; false, don't store alpha
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -26079,7 +26701,7 @@
         <functioncall prog_lang="lua">reaper.JS_ListView_EnsureVisible(identifier listviewHWND, integer index, boolean partialOK)</functioncall>
         <functioncall prog_lang="python">JS_ListView_EnsureVisible(void listviewHWND, Int index, Boolean partialOK)</functioncall>
         <requires>
-            Reaper=5.982
+            Reaper=5.974
             JS=0.990
             Lua=5.3
         </requires>
@@ -26107,7 +26729,7 @@
         <functioncall prog_lang="lua">string translation = reaper.JS_Localize(string USEnglish, string LangPackSection)</functioncall>
         <functioncall prog_lang="python">(String USEnglish, String LangPackSection, String translationOut, Int translationOut_sz) = JS_Localize(USEnglish, LangPackSection, translationOut, translationOut_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -26144,7 +26766,7 @@
         <functioncall prog_lang="lua">reaper.JS_MIDIEditor_ArrayAll(identifier reaperarray)</functioncall>
         <functioncall prog_lang="python">JS_MIDIEditor_ArrayAll(void reaperarray)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -26176,7 +26798,7 @@
         <functioncall prog_lang="lua">string buf = reaper.JS_MIDIEditor_ListAll(string buf)</functioncall>
         <functioncall prog_lang="python">(String buf, Int buf_sz) = JS_MIDIEditor_ListAll(buf, buf_sz)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -26211,7 +26833,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Mem_Alloc(integer sizeBytes)</functioncall>
         <functioncall prog_lang="python">void JS_Mem_Alloc(Int sizeBytes)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.971
             Lua=5.3
         </requires>
@@ -26241,7 +26863,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Mem_Alloc(integer sizeBytes)</functioncall>
         <functioncall prog_lang="python">Boolean JS_Mem_Free(void mallocPointer)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.971
             Lua=5.3
         </requires>
@@ -26270,7 +26892,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Mem_FromString(identifier mallocPointer, integer offset, string packedString, integer stringLength)</functioncall>
         <functioncall prog_lang="python">Boolean JS_Mem_FromString(void mallocPointer, Int offset, String packedString, Int stringLength)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.971
             Lua=5.3
         </requires>
@@ -26302,7 +26924,7 @@
         <functioncall prog_lang="lua">identifier = reaper.JS_Mouse_GetCursor()</functioncall>
         <functioncall prog_lang="python">void JS_Mouse_GetCursor()</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.988
             Lua=5.3
         </requires>
@@ -26329,7 +26951,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_Mouse_GetState(integer flags)</functioncall>
         <functioncall prog_lang="python">Int  JS_Mouse_GetState(Int flags)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -26367,7 +26989,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Mouse_LoadCursor(integer cursorNumber)</functioncall>
         <functioncall prog_lang="python">void  JS_Mouse_LoadCursor(Int cursorNumber)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.964
             Lua=5.3
         </requires>
@@ -26401,7 +27023,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Mouse_LoadCursorFromFile(string pathAndFileName, <b>unsupported</b> optional boolean forceNewLoad)</functioncall>
         <functioncall prog_lang="python">void  JS_Mouse_LoadCursorFromFile(String pathAndFileName, Boolean forceNewLoadOptional)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.964
             Lua=5.3
         </requires>
@@ -26436,7 +27058,7 @@
         <functioncall prog_lang="lua">reaper.JS_Mouse_SetCursor(identifier cursorHandle)</functioncall>
         <functioncall prog_lang="python">JS_Mouse_SetCursor(void cursorHandle)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -26464,7 +27086,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Mouse_SetPosition(integer x, integer y)</functioncall>
         <functioncall prog_lang="python">Boolean  JS_Mouse_SetPosition(Int x, Int y)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -26495,7 +27117,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_PtrFromStr(string s)</functioncall>
         <functioncall prog_lang="python">void  JS_PtrFromStr(String s)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -26524,7 +27146,7 @@
         <functioncall prog_lang="lua">number version = reaper.JS_ReaScriptAPI_Version()</functioncall>
         <functioncall prog_lang="python">(Float versionOut) JS_ReaScriptAPI_Version(versionOut)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -26552,7 +27174,7 @@
         <functioncall prog_lang="lua">boolean retval, string buf = reaper.JS_String(identifier pointer, integer offset, integer lengthChars)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, void pointer, Int offset, Int lengthChars, String bufOutNeedBig, Int bufOutNeedBig_sz) = JS_String(pointer, offset, lengthChars, bufOutNeedBig, bufOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.971
             Lua=5.3
         </requires>
@@ -26584,7 +27206,7 @@
         <functioncall prog_lang="lua">string state = reaper.JS_VKeys_GetDown(number cutoffTime)</functioncall>
         <functioncall prog_lang="python">(Float cutoffTime, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetDown(cutoffTime, stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.993
             Lua=5.3
         </requires>
@@ -26617,7 +27239,7 @@
         <functioncall prog_lang="lua">reaper.JS_VKeys_ClearHistory()</functioncall>
         <functioncall prog_lang="python">JS_VKeys_ClearHistory()</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.980
             Lua=5.3
         </requires>
@@ -26640,7 +27262,7 @@
         <functioncall prog_lang="lua">boolean retval, string state = reaper.JS_VKeys_GetHistory()</functioncall>
         <functioncall prog_lang="python">(Boolean retval, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetHistory(stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.980
             Lua=5.3
         </requires>
@@ -26667,7 +27289,7 @@
         <functioncall prog_lang="lua">boolean retval, string state = reaper.JS_VKeys_GetState()</functioncall>
         <functioncall prog_lang="python">(Boolean retval, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetState(stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.993
             Lua=5.3
         </requires>
@@ -26703,7 +27325,7 @@
         <functioncall prog_lang="lua">string state = reaper.JS_VKeys_GetUp(number cutoffTime)</functioncall>
         <functioncall prog_lang="python">(Float cutoffTime, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetUp(cutoffTime, stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.986
             Lua=5.3
         </requires>
@@ -26734,7 +27356,7 @@
         <functioncall prog_lang="lua">integer retval = reaper.JS_VKeys_Intercept(integer keyCode, integer intercept)</functioncall>
         <functioncall prog_lang="python">Int JS_VKeys_Intercept(Int keyCode, Int intercept)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.980
             Lua=5.3
         </requires>
@@ -26772,7 +27394,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_WindowMessage_Intercept(identifier windowHWND, string messages, boolean passThrough)</functioncall>
         <functioncall prog_lang="python">Int  JS_WindowMessage_Intercept(void windowHWND, String messages, Boolean passThrough)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.980
             Lua=5.3
         </requires>
@@ -26840,7 +27462,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_WindowMessage_InterceptList(identifier windowHWND, string messages)</functioncall>
         <functioncall prog_lang="python">Int  JS_WindowMessage_InterceptList(void windowHWND, String messages)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.980
             Lua=5.3
         </requires>
@@ -26905,7 +27527,7 @@
         <functioncall prog_lang="lua">boolean retval, string buf = reaper.JS_WindowMessage_ListIntercepts(identifier windowHWND, string buf)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, void windowHWND, String buf, Int buf_sz) = JS_WindowMessage_ListIntercepts(windowHWND, buf, buf_sz)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -26937,7 +27559,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_WindowMessage_PassThrough(identifier windowHWND, string message, boolean passThrough)</functioncall>
         <functioncall prog_lang="python">Int  JS_WindowMessage_PassThrough(void windowHWND, String message, Boolean passThrough)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.998
             Lua=5.3
         </requires>
@@ -26970,7 +27592,7 @@
         <functioncall prog_lang="lua">boolean retval, boolean passedThrough, number time, number wParamLow, number wParamHigh, number lParamLow, number lParamHigh = reaper.JS_WindowMessage_Peek(identifier windowHWND, string message)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, void windowHWND, String message, Boolean passedThroughOut, Float timeOut, Int wParamLowOut, Int wParamHighOut, Int lParamLowOut, Int lParamHighOut) = JS_WindowMessage_Peek(windowHWND, message, passedThroughOut, timeOut, wParamLowOut, wParamHighOut, lParamLowOut, lParamHighOut)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27029,7 +27651,7 @@
         <functioncall prog_lang="lua">boolean retval = reaper.JS_WindowMessage_Post(identifier windowHWND, string message, number wParam, integer wParamHighWord, number lParam, integer lParamHighWord)</functioncall>
         <functioncall prog_lang="python">Boolean JS_WindowMessage_Post(void windowHWND, String message, Float wParam, Int wParamHighWord, Float lParam, Int lParamHighWord)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.998
             Lua=5.3
         </requires>
@@ -27076,7 +27698,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_WindowMessage_Release(identifier windowHWND, string messages)</functioncall>
         <functioncall prog_lang="python">Int  JS_WindowMessage_Release(void windowHWND, String messages)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27111,7 +27733,7 @@
         <functioncall prog_lang="lua">reaper.JS_WindowMessage_ReleaseAll()</functioncall>
         <functioncall prog_lang="python">JS_WindowMessage_ReleaseAll()</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27137,7 +27759,7 @@
         <functioncall prog_lang="lua">reaper.JS_WindowMessage_ReleaseWindow(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">JS_WindowMessage_ReleaseWindow(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27165,7 +27787,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_WindowMessage_Send(identifier windowHWND, string message, number wParam, integer wParamHighWord, number lParam, integer lParamHighWord)</functioncall>
         <functioncall prog_lang="python">Int JS_WindowMessage_Send(void windowHWND, String message, Float wParam, Int wParamHighWord, Float lParam, Int lParamHighWord)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.998
             Lua=5.3
         </requires>
@@ -27210,7 +27832,7 @@
         <functioncall prog_lang="lua">number address = reaper.JS_Window_AddressFromHandle(identifier handle)</functioncall>
         <functioncall prog_lang="python">(void handle, Float addressOut) = JS_Window_AddressFromHandle(handle, addressOut)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27239,7 +27861,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_ArrayAllChild(identifier parentHWND, identifier reaperarray)</functioncall>
         <functioncall prog_lang="python">JS_Window_ArrayAllChild(void parentHWND, void reaperarray)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27272,7 +27894,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_ArrayAllTop(identifier reaperarray)</functioncall>
         <functioncall prog_lang="python">JS_Window_ArrayAllTop(void reaperarray)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27304,7 +27926,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_ArrayFind(string title, boolean exact, identifier reaperarray)</functioncall>
         <functioncall prog_lang="python">JS_Window_ArrayFind(String title, Boolean exact, void reaperarray)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27342,7 +27964,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_AttachResizeGrip(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">JS_Window_AttachResizeGrip(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27369,7 +27991,7 @@
         <functioncall prog_lang="lua">identifier HWND = reaper.JS_Window_AttachTopmostPin(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">void JS_Window_AttachTopmostPin(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.988
             Lua=5.3
         </requires>
@@ -27400,7 +28022,7 @@
         <functioncall prog_lang="lua">number x, number y = reaper.JS_Window_ClientToScreen(identifier windowHWND, integer x, integer y)</functioncall>
         <functioncall prog_lang="python">(void windowHWND, Int x, Int y, Int xOut, Int yOut) = JS_Window_ClientToScreen(windowHWND, x, y, xOut, yOut)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27433,7 +28055,7 @@
         <functioncall prog_lang="lua">identifier retval, optional string style = reaper.JS_Window_Create(string title, string className, integer x, integer y, integer w, integer h, optional string style, identifier ownerHWND)</functioncall>
         <functioncall prog_lang="python">(void retval, String title, String className, Int x, Int y, Int w, Int h, String styleOptional, void ownerHWNDOptional) = JS_Window_Create(title, className, x, y, w, h, styleOptional, ownerHWNDOptional)</functioncall>
         <requires>
-            Reaper=5.982
+            Reaper=5.974
             JS=0.995
             Lua=5.3
         </requires>
@@ -27480,7 +28102,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_Destroy(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">JS_Window_Destroy(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27508,7 +28130,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_Enable(identifier windowHWND, boolean enable)</functioncall>
         <functioncall prog_lang="python">JS_Window_Enable(void windowHWND, Boolean enable)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27538,7 +28160,7 @@
         <functioncall prog_lang="lua">integer retval = reaper.JS_Window_EnableMetal(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">Int retval = JS_Window_EnableMetal(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=1.000
             Lua=5.3
         </requires>
@@ -27574,7 +28196,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_Find(string title, boolean exact)</functioncall>
         <functioncall prog_lang="python">void  JS_Window_Find(String title, Boolean exact)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.989
             Lua=5.3
         </requires>
@@ -27610,7 +28232,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_FindChild(identifier parentHWND, string title, boolean exact)</functioncall>
         <functioncall prog_lang="python">void  JS_Window_FindChild(void parentHWND, String title, Boolean exact)</functioncall>
         <requires>
-            Reaper=5.982
+            Reaper=5.974
             JS=0.990
             Lua=5.3
         </requires>
@@ -27646,7 +28268,7 @@
         <functioncall prog_lang="lua">identifier HWND = reaper.JS_Window_FindChildByID(identifier parentHWND, integer ID)</functioncall>
         <functioncall prog_lang="python">void JS_Window_FindChildByID(void parentHWND, Int ID)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -27686,7 +28308,7 @@
         <functioncall prog_lang="lua">identifier HWND - reaper.JS_Window_FindEx(identifier parentHWND, identifier childHWND, string className, string title)</functioncall>
         <functioncall prog_lang="python">void JS_Window_FindEx(void parentHWND, void childHWND, String className, String title)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.964
             Lua=5.3
         </requires>
@@ -27721,7 +28343,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_FindTop(string title, boolean exact)</functioncall>
         <functioncall prog_lang="python">void JS_Window_FindTop(String title, Boolean exact)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.989
             Lua=5.3
         </requires>
@@ -27754,7 +28376,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_FromPoint(integer x, integer y)</functioncall>
         <functioncall prog_lang="python">void  JS_Window_FromPoint(Int x, Int y)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27785,7 +28407,7 @@
         <functioncall prog_lang="lua">string buf = reaper.JS_Window_GetClassName(identifier windowHWND, string buf)</functioncall>
         <functioncall prog_lang="python">(void windowHWND, String buf, Int buf_sz) = JS_Window_GetClassName(windowHWND, buf, buf_sz)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27816,7 +28438,7 @@
         <functioncall prog_lang="lua">boolean retval, number left, number top, number right, number bottom = reaper.JS_Window_GetClientRect(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, void windowHWND, Int leftOut, Int topOut, Int rightOut, Int bottomOut) = JS_Window_GetClientRect(windowHWND, leftOut, topOut, rightOut, bottomOut)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27847,6 +28469,38 @@
     </US_DocBloc>
   
     <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_GetClientSize</slug>
+        <title>JS_Window_GetClientSize(JS)</title>
+        <functioncall prog_lang="cpp">bool JS_Window_GetClientSize(void* windowHWND, int* widthOut, int* heightOut)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_Window_GetClientSize", void* windowHWND, int &width, int &height)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, number width, number height = reaper.JS_Window_GetClientSize(identifier windowHWND)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, void windowHWND, Int widthOut, Int heightOut) = JS_Window_GetClientSize(windowHWND, widthOut, heightOut)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.215
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Retrieves a HWND to the window that has the keyboard focus, if the window is attached to the calling thread's message queue.
+
+        </description>
+        <retvals>
+           boolean retval - 
+           number width - 
+           number height - 
+        </retvals>
+        <parameters>
+           identifier windowHWND - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>  
+  
+    <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_GetFocus</slug>
         <title>JS_Window_GetFocus(JS)</title>
         <functioncall prog_lang="cpp">void* JS_Window_GetFocus()</functioncall>
@@ -27854,7 +28508,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_GetFocus()</functioncall>
         <functioncall prog_lang="python">void  JS_Window_GetFocus()</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27882,7 +28536,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_GetForeground()</functioncall>
         <functioncall prog_lang="python">void  JS_Window_GetForeground()</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=1.002
             Lua=5.3
         </requires>
@@ -27901,6 +28555,38 @@
     </US_DocBloc>
   
     <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_Window_GetLong</slug>
+        <title>JS_Window_GetLong(JS)</title>
+        <functioncall prog_lang="cpp">void JS_Window_GetLong(void* windowHWND, const char* info, double* retvalOut)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_Window_GetLong", void* windowHWND, "info", &retval)</functioncall>
+        <functioncall prog_lang="lua">number retval = reaper.JS_Window_GetLong(identifier windowHWND, string info)</functioncall>
+        <functioncall prog_lang="python">(void windowHWND, String info, Float retvalOut) = JS_Window_GetLong(windowHWND, info, retvalOut)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.010
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+           In the case of "DLGPROC" and "WNDPROC", the return values can be converted to pointers by [JS\_Window\_HandleFromAddress](#JS_Window_HandleFromAddress).
+
+		   If the function fails, the return value is 0.
+        </description>
+        <retvals>
+           number retval - 
+        </retvals>
+        <parameters>
+           identifier windowHWND - 
+           string info - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
+    <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_Window_GetLongPtr</slug>
         <title>JS_Window_GetLongPtr(JS)</title>
         <functioncall prog_lang="cpp">void* JS_Window_GetLongPtr(void* windowHWND, const char* info)</functioncall>
@@ -27908,8 +28594,8 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_GetLongPtr(identifier windowHWND, string info)</functioncall>
         <functioncall prog_lang="python">void  JS_Window_GetLongPtr(void windowHWND, String info)</functioncall>
         <requires>
-            Reaper=5.95
-            JS=0.951
+            Reaper=5.974
+            JS=1.010
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -27922,7 +28608,8 @@
            
            
            For documentation about the types of information returned, refer to the Win32 function GetWindowLongPtr.
-
+		   The values returned by "DLGPROC" and "WNDPROC" are typically used as-is, as pointers, whereas the others should first be converted to integers.
+		   
         </description>
         <retvals>
            identifier  - 
@@ -27947,7 +28634,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_GetParent(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">void  JS_Window_GetParent(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -27979,7 +28666,7 @@
         <functioncall prog_lang="lua">boolean retval, number left, number top, number right, number bottom = reaper.JS_Window_GetRect(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, void windowHWND, Int leftOut, Int topOut, Int rightOut, Int bottomOut) = JS_Window_GetRect(windowHWND, leftOut, topOut, rightOut, bottomOut)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28015,7 +28702,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_GetRelated(identifier windowHWND, string relation)</functioncall>
         <functioncall prog_lang="python">void  JS_Window_GetRelated(void windowHWND, String relation)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28050,7 +28737,7 @@
         <functioncall prog_lang="lua">boolean retval, number position, number pageSize, number min, number max, number trackPos = reaper.JS_Window_GetScrollInfo(identifier windowHWND, string scrollbar)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, void windowHWND, String scrollbar, Int positionOut, Int pageSizeOut, Int minOut, Int maxOut, Int trackPosOut) = JS_Window_GetScrollInfo(windowHWND, scrollbar, positionOut, pageSizeOut, minOut, maxOut, trackPosOut)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28098,7 +28785,7 @@
         <functioncall prog_lang="lua">string title = reaper.JS_Window_GetTitle(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">(void windowHWND, String titleOut, Int titleOut_sz) = JS_Window_GetTitle(windowHWND, titleOut, titleOut_sz)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.992
             Lua=5.3
         </requires>
@@ -28129,7 +28816,7 @@
         <functioncall prog_lang="lua">number left, number top, number right, number bottom = reaper.JS_Window_GetViewportFromRect(integer x1, integer y1, integer x2, integer y2, boolean wantWork)</functioncall>
         <functioncall prog_lang="python">(Int x1, Int y1, Int x2, Int y2, Boolean wantWork, Int leftOut, Int topOut, Int rightOut, Int bottomOut) = JS_Window_GetViewportFromRect(x1, y1, x2, y2, wantWork, leftOut, topOut, rightOut, bottomOut)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.980
             Lua=5.3
         </requires>
@@ -28169,7 +28856,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_HandleFromAddress(number address)</functioncall>
         <functioncall prog_lang="python">void  JS_Window_HandleFromAddress(Float address)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28199,7 +28886,7 @@
         <functioncall prog_lang="lua">boolean retval = reaper.JS_Window_InvalidateRect(identifier windowHWND, integer left, integer top, integer right, integer bottom, boolean eraseBackground)</functioncall>
         <functioncall prog_lang="python">Boolean JS_Window_InvalidateRect(void windowHWND, Int left, Int top, Int right, Int bottom, Boolean eraseBackground)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.980
             Lua=5.3
         </requires>
@@ -28235,7 +28922,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Window_IsChild(identifier parentHWND, identifier childHWND)</functioncall>
         <functioncall prog_lang="python">Boolean  JS_Window_IsChild(void parentHWND, void childHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28266,7 +28953,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Window_IsVisible(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">Boolean  JS_Window_IsVisible(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28296,7 +28983,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Window_IsWindow(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">Boolean  JS_Window_IsWindow(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.999
             Lua=5.3
         </requires>
@@ -28329,7 +29016,7 @@
         <functioncall prog_lang="lua">integer retval, string list = reaper.JS_Window_ListAllChild(identifier parentHWND)</functioncall>
         <functioncall prog_lang="python">(Int retval, void parentHWND, String listOutNeedBig, Int listOutNeedBig_sz) = JS_Window_ListAllChild(parentHWND, listOutNeedBig, listOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -28364,7 +29051,7 @@
         <functioncall prog_lang="lua">integer retval, string list = reaper.JS_Window_ListAllTop()</functioncall>
         <functioncall prog_lang="python">(Int retval, String listOutNeedBig, Int listOutNeedBig_sz) = JS_Window_ListAllTop(listOutNeedBig, listOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -28395,7 +29082,7 @@
         <functioncall prog_lang="lua">integer retval, string list = reaper.JS_Window_ListFind(string title, boolean exact)</functioncall>
         <functioncall prog_lang="python">(Int retval, String title, Boolean exact, String listOutNeedBig, Int listOutNeedBig_sz) = JS_Window_ListFind(title, exact, listOutNeedBig, listOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -28433,7 +29120,7 @@
         <functioncall prog_lang="lua">number left, number top, number right, number bottom = reaper.JS_Window_MonitorFromRect(integer x1, integer y1, integer x2, integer y2, boolean wantWork)</functioncall>
         <functioncall prog_lang="python">(Int x1, Int y1, Int x2, Int y2, Boolean wantWork, Int leftOut, Int topOut, Int rightOut, Int bottomOut) = JS_Window_MonitorFromRect(x1, y1, x2, y2, wantWork, leftOut, topOut, rightOut, bottomOut)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -28469,7 +29156,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_Move(identifier windowHWND, integer left, integer top)</functioncall>
         <functioncall prog_lang="python">JS_Window_Move(void windowHWND, Int left, Int top)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.993
             Lua=5.3
         </requires>
@@ -28504,7 +29191,7 @@
         <functioncall prog_lang="lua">boolean retval = reaper.JS_Window_OnCommand(identifier windowHWND, integer commandID)</functioncall>
         <functioncall prog_lang="python">Boolean JS_Window_OnCommand(void windowHWND, Int commandID)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -28538,7 +29225,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Window_RemoveXPStyle(identifier windowHWND, boolean remove)</functioncall>
         <functioncall prog_lang="python">Boolean  JS_Window_RemoveXPStyle(void windowHWND, Boolean remove)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28568,7 +29255,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_Resize(identifier windowHWND, integer width, integer height)</functioncall>
         <functioncall prog_lang="python">JS_Window_Resize(void windowHWND, Int width, Int height)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.993
             Lua=5.3
         </requires>
@@ -28601,7 +29288,7 @@
         <functioncall prog_lang="lua">number x, number y = reaper.JS_Window_ScreenToClient(identifier windowHWND, integer x, integer y)</functioncall>
         <functioncall prog_lang="python">(void windowHWND, Int x, Int y, Int xOut, Int yOut) = JS_Window_ScreenToClient(windowHWND, x, y, xOut, yOut)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28634,7 +29321,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_SetFocus(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">JS_Window_SetFocus(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28662,7 +29349,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_SetForeground(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">JS_Window_SetForeground(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28690,7 +29377,7 @@
         <functioncall prog_lang="lua">number retval = reaper.JS_Window_SetLong(identifier windowHWND, string info, number value)</functioncall>
         <functioncall prog_lang="python">(void windowHWND, String info, Float value, Float retvalOut) = JS_Window_SetLong(windowHWND, info, value, retvalOut)</functioncall>
         <requires>
-            Reaper=5.982
+            Reaper=5.974
             JS=0.990
             Lua=5.3
         </requires>
@@ -28723,7 +29410,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Window_SetOpacity(identifier windowHWND, string mode, number value)</functioncall>
         <functioncall prog_lang="python">Boolean JS_Window_SetOpacity(void windowHWND, String mode, Float value)</functioncall>
         <requires>
-            Reaper=5.982
+            Reaper=5.974
             JS=0.990
             Lua=5.3
         </requires>
@@ -28763,7 +29450,7 @@
         <functioncall prog_lang="lua">identifier reaper.JS_Window_SetParent(identifier childHWND, identifier parentHWND)</functioncall>
         <functioncall prog_lang="python">void JS_Window_SetParent(void childHWND, void parentHWND)</functioncall>
         <requires>
-            Reaper=5.982
+            Reaper=5.974
             JS=0.998
             Lua=5.3
         </requires>
@@ -28794,7 +29481,7 @@
         <functioncall prog_lang="lua">boolean retval, optional string ZOrder, optional string flags = reaper.JS_Window_SetPosition(identifier windowHWND, integer left, integer top, integer width, integer height, optional string ZOrder, optional string flags)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, void windowHWND, Int left, Int top, Int width, Int height, String ZOrderOptional, String flagsOptional) = JS_Window_SetPosition(windowHWND, left, top, width, height, ZOrderOptional, flagsOptional)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.991
             Lua=5.3
         </requires>
@@ -28835,7 +29522,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Window_SetScrollPos(identifier windowHWND, string scrollbar, integer position)</functioncall>
         <functioncall prog_lang="python">Boolean  JS_Window_SetScrollPos(void windowHWND, String scrollbar, Int position)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28873,7 +29560,7 @@
         <functioncall prog_lang="lua">boolean retval, string style = reaper.JS_Window_SetStyle(identifier windowHWND, string style)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, void windowHWND, String style) = JS_Window_SetStyle(windowHWND, style)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.991
             Lua=5.3
         </requires>
@@ -28908,7 +29595,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Window_SetTitle(identifier windowHWND, string title)</functioncall>
         <functioncall prog_lang="python">Boolean  JS_Window_SetTitle(void windowHWND, String title)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -28939,7 +29626,7 @@
         <functioncall prog_lang="lua">boolean reaper.JS_Window_SetZOrder(identifier windowHWND, string ZOrder, identifier insertAfterHWND)</functioncall>
         <functioncall prog_lang="python">Boolean JS_Window_SetZOrder(void windowHWND, String ZOrder, void insertAfterHWND)</functioncall>
         <requires>
-            Reaper=5.982
+            Reaper=5.974
             JS=0.991
             Lua=5.3
         </requires>
@@ -28977,7 +29664,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_Show(identifier windowHWND, string state)</functioncall>
         <functioncall prog_lang="python">JS_Window_Show(void windowHWND, String state)</functioncall>
         <requires>
-            Reaper=5.982
+            Reaper=5.974
             JS=0.991
             Lua=5.3
         </requires>
@@ -29010,7 +29697,7 @@
         <functioncall prog_lang="lua">reaper.JS_Window_Update(identifier windowHWND)</functioncall>
         <functioncall prog_lang="python">JS_Window_Update(void windowHWND)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.980
             Lua=5.3
         </requires>
@@ -29037,7 +29724,7 @@
         <functioncall prog_lang="lua">integer retval, string folder = reaper.JS_Dialog_BrowseForFolder(string caption, string initialFolder)</functioncall>
         <functioncall prog_lang="python">(Int retval, String caption, String initialFolder, String folderOutNeedBig, Int folderOutNeedBig_sz) = JS_Dialog_BrowseForFolder(caption, initialFolder, folderOutNeedBig, folderOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.962
             Lua=5.3
         </requires>
@@ -29068,7 +29755,7 @@
         <functioncall prog_lang="lua">integer retval, string fileNames = reaper.JS_Dialog_BrowseForOpenFiles(string windowTitle, string initialFolder, string initialFile, string extensionList, boolean allowMultiple)</functioncall>
         <functioncall prog_lang="python">(Int retval, String windowTitle, String initialFolder, String initialFile, String extensionList, Boolean allowMultiple, String fileNamesOutNeedBig, Int fileNamesOutNeedBig_sz) = JS_Dialog_BrowseForOpenFiles(windowTitle, initialFolder, initialFile, extensionList, allowMultiple, fileNamesOutNeedBig, fileNamesOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.986
             Lua=5.3
         </requires>
@@ -29128,7 +29815,7 @@
         <functioncall prog_lang="lua">integer retval, string fileName = reaper.JS_Dialog_BrowseForSaveFile(string windowTitle, string initialFolder, string initialFile, string extensionList)</functioncall>
         <functioncall prog_lang="python">(Int retval, String windowTitle, String initialFolder, String initialFile, String extensionList, String fileNameOutNeedBig, Int fileNameOutNeedBig_sz) = JS_Dialog_BrowseForSaveFile(windowTitle, initialFolder, initialFile, extensionList, fileNameOutNeedBig, fileNameOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.986
             Lua=5.3
         </requires>
@@ -29179,7 +29866,7 @@
         <functioncall prog_lang="lua">integer reaper.JS_ListView_EnumSelItems(identifier listviewHWND, integer index)</functioncall>
         <functioncall prog_lang="python">Int JS_ListView_EnumSelItems(void listviewHWND, Int index)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.962
             Lua=5.3
         </requires>
@@ -29209,7 +29896,7 @@
         <functioncall prog_lang="lua">integer retval, string text = reaper.JS_ListView_GetFocusedItem(identifier listviewHWND)</functioncall>
         <functioncall prog_lang="python">(Int retval, void listviewHWND, String textOut, Int textOut_sz) = JS_ListView_GetFocusedItem(listviewHWND, textOut, textOut_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -29240,7 +29927,7 @@
         <functioncall prog_lang="lua">string text, number state = reaper.JS_ListView_GetItem(identifier listviewHWND, integer index, integer subItem)</functioncall>
         <functioncall prog_lang="python">(void listviewHWND, Int index, Int subItem, String textOut, Int textOut_sz, Int stateOut) = JS_ListView_GetItem(listviewHWND, index, subItem, textOut, textOut_sz, stateOut)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -29273,7 +29960,7 @@
         <functioncall prog_lang="lua">integer retval = reaper.JS_ListView_GetItemCount(identifier listviewHWND)</functioncall>
         <functioncall prog_lang="python">Int JS_ListView_GetItemCount(void listviewHWND)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -29303,7 +29990,7 @@
         <functioncall prog_lang="lua">integer retval = reaper.JS_ListView_GetItemState(identifier listviewHWND, integer index)</functioncall>
         <functioncall prog_lang="python">Int JS_ListView_GetItemState(void listviewHWND, Int index)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -29334,7 +30021,7 @@
         <functioncall prog_lang="lua">string text = reaper.JS_ListView_GetItemText(identifier listviewHWND, integer index, integer subItem)</functioncall>
         <functioncall prog_lang="python">(void listviewHWND, Int index, Int subItem, String textOut, Int textOut_sz) = JS_ListView_GetItemText(listviewHWND, index, subItem, textOut, textOut_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -29366,7 +30053,7 @@
         <functioncall prog_lang="lua">integer retval = reaper.JS_ListView_GetSelectedCount(identifier listviewHWND)</functioncall>
         <functioncall prog_lang="python">Int JS_ListView_GetSelectedCount(void listviewHWND)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -29396,7 +30083,7 @@
         <functioncall prog_lang="lua">integer retval, string items = reaper.JS_ListView_ListAllSelItems(identifier listviewHWND)</functioncall>
         <functioncall prog_lang="python">(Int retval, void listviewHWND, String itemsOutNeedBig, Int itemsOutNeedBig_sz) = JS_ListView_ListAllSelItems(listviewHWND, itemsOutNeedBig, itemsOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             JS=0.963
             Lua=5.3
         </requires>
@@ -29427,7 +30114,7 @@
         <functioncall prog_lang="lua">AudioWriter reaper.Xen_AudioWriter_Create(string filename, integer numchans, integer samplerate)</functioncall>
         <functioncall prog_lang="python">AudioWriter  Xen_AudioWriter_Create(String filename, Int numchans, Int samplerate)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -29458,7 +30145,7 @@
         <functioncall prog_lang="lua">reaper.Xen_AudioWriter_Destroy(AudioWriter writer)</functioncall>
         <functioncall prog_lang="python">Xen_AudioWriter_Destroy(AudioWriter writer)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -29485,7 +30172,7 @@
         <functioncall prog_lang="lua">integer reaper.Xen_AudioWriter_Write(AudioWriter writer, integer numframes, identifier data, integer offset)</functioncall>
         <functioncall prog_lang="python">Int  Xen_AudioWriter_Write(AudioWriter writer, Int numframes, void data, Int offset)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -29517,7 +30204,7 @@
         <functioncall prog_lang="lua">integer reaper.Xen_GetMediaSourceSamples(PCM_source src, identifier destbuf, integer destbufoffset, integer numframes, integer numchans, number samplerate, number sourceposition)</functioncall>
         <functioncall prog_lang="python">Int  Xen_GetMediaSourceSamples(PCM_source src, void destbuf, Int destbufoffset, Int numframes, Int numchans, Float samplerate, Float sourceposition)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.951
             Lua=5.3
         </requires>
@@ -29553,7 +30240,7 @@
         <functioncall prog_lang="lua">integer reaper.Xen_StartSourcePreview(PCM_source source, number gain, boolean loop, optional number outputchanindexIn)</functioncall>
         <functioncall prog_lang="python">(Int retval, PCM_source source, Float gain, Boolean loop, Int outputchanindexInOptional) = Xen_StartSourcePreview(source, gain, loop, outputchanindexInOptional)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.991
             Lua=5.3
         </requires>
@@ -29591,7 +30278,7 @@
         <functioncall prog_lang="lua">integer retval = reaper.Xen_StopSourcePreview(integer preview_id)</functioncall>
         <functioncall prog_lang="python">Int Xen_StopSourcePreview(Int preview_id)</functioncall>
         <requires>
-            Reaper=5.95
+            Reaper=5.974
             JS=0.986
             Lua=5.3
         </requires>
@@ -29622,7 +30309,7 @@
         <functioncall prog_lang="lua">integer reaper.BR_Win32_CB_FindString(identifier comboBoxHwnd, integer startId, string string)</functioncall>
         <functioncall prog_lang="python">Int  BR_Win32_CB_FindString(void comboBoxHwnd, Int startId, String string)</functioncall>
         <requires>
-            Reaper=5.965
+            Reaper=5.974
             SWS=2.10.0.1
             Lua=5.3
         </requires>
@@ -31181,7 +31868,7 @@
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
         <chapter_context>
-            Audio Management
+            MetaData Management
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
@@ -31569,6 +32256,38 @@
         <tags></tags>
     </US_DocBloc>
     
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>NF_ReadID3v2Tag</slug>
+        <title>NF_ReadID3v2Tag(SWS)</title>
+        <functioncall prog_lang="cpp">bool NF_ReadID3v2Tag(const char* fn, const char* tag, char* tagval, int tagval_sz)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("NF_ReadID3v2Tag", "fn", "tag", #tagval)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string tagval = reaper.NF_ReadID3v2Tag(string fn, string tag, string tagval)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String fn, String tag, String tagval, Int tagval_sz) = NF_ReadID3v2Tag(fn, tag, tagval, tagval_sz)</functioncall>
+        <requires>
+            Reaper=5.965
+            SWS=2.11.0
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Reads an ID3v2 tag ('text information frame'), works with mp3 only. Supported tags e.g.: "TBPM" (BPM), "TCOP" (Copyright). For other possibly supported tags see [id3v2.4.0-frames.txt](http://id3.org/id3v2.4.0-frames) Returns false if tag was not found.
+        </description>
+        <retvals>
+            boolean retval - true, requested tag exists in the file; false, requested tag does not exist in the file
+			string tagval - the value of the tag
+        </retvals>
+        <parameters>
+            string fn - the filename with path of the mp3-file, whose tag-value you want to request
+			string tag - the tag, which you want to retrieve, like TIT2(Title), TPE1(Artist), TPE2(Albumartist), TALB(Album), TRCK(Track), TCON(Genre), TYER(Year), TDRC(Recording time: YYYY-MM-DD), TKEY(Key), TBPM(Tempo), TSRC(International Standard Recording Code), COMM(Comment), COMM_LANG(Comment language, etc
+			string tagval - just pass "" in here
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            MetaData Management
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>NF_SetSWSMarkerRegionSub</slug>
@@ -31631,7 +32350,42 @@
         <tags></tags>
     </US_DocBloc>
     
-    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>NF_TakeFX_GetModuleName</slug>
+        <title>NF_TakeFX_GetModuleName(SWS)</title>
+        <functioncall prog_lang="cpp">bool NF_TakeFX_GetModuleName(MediaItem* item, int fx, char* nameOut, int nameOutSz)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("NF_TakeFX_GetModuleName", MediaItem item, int fx, # name, int name)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string name = reaper.NF_TakeFX_GetModuleName(MediaItem item, integer fx)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, MediaItem item, Int fx, String nameOut, Int nameOutSz) = NF_TakeFX_GetModuleName(item, fx, nameOut, nameOutSz)</functioncall>
+        <requires>
+            Reaper=5.965
+            SWS=2.11.0
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+			Deprecated.
+			Retrieves the name of the module of a takefx from a MediaItem.
+			
+            See [BR\_TrackFX\_GetFXModuleName](#BR_TrackFX_GetFXModuleName). fx: counted consecutively across all takes (zero-based).
+        </description>
+        <retvals>
+            boolean retval - true, modulename could be retrieved; false, modulename couldn't be retrieved(e.g. no such fx)
+			string name - the name of the module
+        </retvals>
+        <parameters>
+            MediaItem item - the MediaItem, whose modulename of an effect you want to receive
+			integer fx - the index of the fx(with 0 for the first), whose modulename you want to receive
+			string name - just pass "" to it
+			integer buf_sz - the number of characters you want to retrieve for the module-name
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            MetaData Management
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+	
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>NF_UpdateSWSMarkerRegionSubWindow</slug>
         <title>NF_UpdateSWSMarkerRegionSubWindow(SWS)</title>
@@ -31644,7 +32398,7 @@
             SWS=2.10.0.1
             Lua=5.3
         </requires>
-        <description prog_lang="*">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Redraw the Notes window (call if you've changed a subtitle via [NF_SetSWSMarkerRegionSub](#NF_SetSWSMarkerRegionSub) which is currently displayed in the Notes window and you want to appear the new subtitle immediately.)
         </description>
         <target_document>Reaper_Api_Documentation</target_document>
@@ -35214,6 +35968,10 @@
             Draws a string at gfx.x, gfx.y, and updates gfx.x/gfx.y so that subsequent draws will occur in a similar place.
             
             You can optionally set a clipping area for the text, if you set parameter flags&amp;256 and the parameters right and bottom.
+            
+            On Windows, fonts with a size > 255 may have trouble of being displayed correctly, due problems with the font-rendering and the alpha-channel. <a href="https://forum.cockos.com/showpost.php?p=2311977&postcount=7">Justin's post about this.</a>
+            To overcome this, try this to disable the alpha-channel: 
+            By default, gfx.blit() blits with alpha channel. You can disable this behavior by setting "gfx.mode=2" before calling gfx.blit().
         </description>
         <parameters>
             string str - the string to be drawn into the gfx.init-window
@@ -37542,7 +38300,7 @@
                  -I_SOLO : int * : 0=not soloed, 1=solo, 2=soloed in place. also: 5=solo-safe solo, 6=solo-safe soloed in place
                  -I_FXEN : int * : 0=fx bypassed, nonzero = fx active
                  -I_RECARM : int * : 0=not record armed, 1=record armed
-                 -I_RECINPUT : int * : record input. <0 = no input, 0..n = mono hardware input, 512+n = rearoute input, 1024 set for stereo input pair. 4096 set for MIDI input, if set, then low 5 bits represent channel (0=all, 1-16=only chan), then next 6 bits represent physical input (63=all, 62=VKB)
+                 -I_RECINPUT : int * : record input. &lt;0 = no input, 0..n = mono hardware input, 512+n = rearoute input, 1024 set for stereo input pair. 4096 set for MIDI input, if set, then low 5 bits represent channel (0=all, 1-16=only chan), then next 6 bits represent physical input (63=all, 62=VKB)
                  -I_RECMODE : int * : record mode (0=input, 1=stereo out, 2=none, 3=stereo out w/latcomp, 4=midi output, 5=mono out, 6=mono out w/ lat comp, 7=midi overdub, 8=midi replace
                  -I_RECMON : int * : record monitor (0=off, 1=normal, 2=not when playing (tapestyle))
                  -I_RECMONITEMS : int * : monitor items while recording (0=off, 1=on)
@@ -37552,8 +38310,8 @@
                  -I_WNDH : int * : current TCP window height (Read-only)
                  -I_FOLDERDEPTH : int * : folder depth change (0=normal, 1=track is a folder parent, -1=track is the last in the innermost folder, -2=track is the last in the innermost and next-innermost folders, etc
                  -I_FOLDERCOMPACT : int * : folder compacting (only valid on folders), 0=normal, 1=small, 2=tiny children
-                 -I_MIDIHWOUT : int * : track midi hardware output index (<0 for disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31))
-                 -I_PERFFLAGS : int * : track perf flags (&1=no media buffering, &2=no anticipative FX)
+                 -I_MIDIHWOUT : int * : track midi hardware output index (&lt;0 for disabled, low 5 bits are which channels (0=all, 1-16), next 5 bits are output device index (0-31))
+                 -I_PERFFLAGS : int * : track perf flags (&amp;1=no media buffering, &amp;2=no anticipative FX)
                  -I_CUSTOMCOLOR : int * : custom color, OS dependent color|0x100000 (i.e. ColorToNative(r,g,b)|0x100000). If you do not |0x100000, then it will not be used (though will store the color anyway).
                  -I_HEIGHTOVERRIDE : int * : custom height override for TCP window. 0 for none, otherwise size in pixels
                  -D_VOL : double * : trim volume of track (0 (-inf)..1 (+0dB) .. 2 (+6dB) etc ..)
@@ -37562,8 +38320,8 @@
                  -D_DUALPANL : double * : dualpan position 1 (-1..1), only if I_PANMODE==6
                  -D_DUALPANR : double * : dualpan position 2 (-1..1), only if I_PANMODE==6
                  -I_PANMODE : int * : pan mode (0 = classic 3.x, 3=new balance, 5=stereo pan, 6 = dual pan)
-                 -D_PANLAW : double * : pan law of track. <0 for project default, 1.0 for +0dB, etc
-                 -P_ENV : read only, returns TrackEnvelope *, setNewValue=<VOLENV, <PANENV, etc
+                 -D_PANLAW : double * : pan law of track. &lt;0 for project default, 1.0 for +0dB, etc
+                 -P_ENV : read only, returns TrackEnvelope *, setNewValue=&lt;VOLENV, &lt;PANENV, etc
                  -B_SHOWINMIXER : bool * : show track panel in mixer -- do not use on master
                  -B_SHOWINTCP : bool * : show track panel in tcp -- do not use on master
                  -B_MAINSEND : bool * : track sends audio to parent
@@ -37682,18 +38440,20 @@
         </requires>
         <description indent="default">
             Get or set send/receive/hardware output attributes.
+            
+            For ReaRoute-users: the outputs are hardware outputs, but with 512 added to the destination channel index (512 is the first rearoute channel, 513 the second, etc).
         </description>
         <retvals>
             void* -
         </retvals>
         <parameters>
             tr - the MediaTrack object for the track to be gotten or set
-            category - <0 for receives, 0=sends, >0 for hardware outputs 
+            category - &lt;0 for receives, 0=sends, &gt;0 for hardware outputs 
             sendidx - 0..n (to enumerate, iterate over sendidx until it returns NULL) 
             parmname - the parameter to get/set
                  -P_DESTTRACK : read only, returns MediaTrack *, destination track, only applies for sends/recvs
                  -P_SRCTRACK : read only, returns MediaTrack *, source track, only applies for sends/recvs
-                 -P_ENV : read only, returns TrackEnvelope *, setNewValue=<VOLENV, <PANENV, etc
+                 -P_ENV : read only, returns TrackEnvelope *, setNewValue=&lt;VOLENV, &lt;PANENV, etc
                  -B_MUTE : returns bool *
                  -B_PHASE : returns bool *, true to flip phase
                  -B_MONO : returns bool *
@@ -37702,8 +38462,8 @@
                  -D_PANLAW : returns double *,1.0=+0.0db, 0.5=-6dB, -1.0 = projdef etc
                  -I_SENDMODE : returns int *, 0=post-fader, 1=pre-fx, 2=post-fx (deprecated), 3=post-fx
                  -I_AUTOMODE : returns int * : automation mode (-1=use track automode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch)
-                 -I_SRCCHAN : returns int *, index,&1024=mono, -1 for none
-                 -I_DSTCHAN : returns int *, index, &1024=mono, otherwise stereo pair, hwout:&512=rearoute
+                 -I_SRCCHAN : returns int *, index,&amp;1024=mono, -1 for none
+                 -I_DSTCHAN : returns int *, index, &amp;1024=mono, otherwise stereo pair, hwout:&amp;512=rearoute
                  -I_MIDIFLAGS : returns int *, low 5 bits=source channel 0=all, 1-16, next 5 bits=dest channel, 0=orig, 1-16=chan
             setNewValue - the new value to be set
         </parameters>
@@ -40413,9 +41173,10 @@
         <parameters>
             item - a MediaItem-object
             parmname - the parameter to be gotten/set
-                -P_TRACK : MediaTrack * (read only)
-                -P_NOTES : char * : item note text (do not write to returned pointer, use setNewValue to update)
+                -P_TRACK : MediaTrack * (read only)                
                 -B_MUTE : bool * to muted state
+                -B_MUTE_ACTUAL : bool * : muted (ignores solo). setting this value will not affect C_MUTE_SOLO.
+                -C_MUTE_SOLO : char * : solo override (-1=soloed, 0=no override, 1=unsoloed). note that this API does not automatically unsolo other items when soloing (nor clear the unsolos when clearing the last soloed item), it must be done by the caller via action or via this API.
                 -B_LOOPSRC : bool * to loop source
                 -B_ALLTAKESPLAY : bool * to all takes play
                 -B_UISEL : bool * to ui selected
@@ -40441,6 +41202,7 @@
                 -IP_ITEMNUMBER : int, item number within the track (read-only, returns the item number directly)
                 -F_FREEMODE_Y : float * to free mode y position (0..1)
                 -F_FREEMODE_H : float * to free mode height (0..1)
+                -P_NOTES : char * : item note text (do not write to returned pointer, use setNewValue to update)
             setNewValue - the new value to be set, refer description of parmname for the values
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
