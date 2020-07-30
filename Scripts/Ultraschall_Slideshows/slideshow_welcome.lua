@@ -152,8 +152,11 @@ function buildGui(slide_number)
 end
 
 slideshow_table = build_slideshow_table(slideshow_slug)
+startslide = tonumber(reaper.GetExtState("Tutorial", "start"))
+if startslide == nil then startslide = 1 end
 
-GUI.func = buildGui()   -- Dauerschleife
+
+GUI.func = buildGui(startslide)   -- Dauerschleife
 GUI.freq = 1          -- Aufruf jede Sekunde
 
 if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).  yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
