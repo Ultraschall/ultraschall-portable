@@ -41,8 +41,14 @@ function checkGuiStates()
     if project_state == "" then -- es wurde noch kein GUI-Status für dieses Elelemnt in die Projektdatei gespeichert
       reaper.SetProjExtState(0, "gui_statemanager", GUIServices[i], tostring(gui_state)) -- speichere den aktuellen GUI-Status in die Projektdatei
     elseif project_state ~= tostring(gui_state) then -- die states unterscheiden sich
+      -- print(GUIServices[i].."-"..project_state.."-"..gui_state)
+      if  (string.find(GUIServices[i], "Matrix") or string.find(GUIServices[i], "View")) and project_state == "0" then -- bei den Routingmatrix- und View-Einträgen wird nur der aktiv gespeicherte ausgewertet
+        -- abwarten, der relevante Eintrag des Routings/View kommt noch
+      else
 
-      reaper.Main_OnCommand(commandid,0) -- stelle den GUI-State um so dass die Werte wieder stimmen
+        reaper.Main_OnCommand(commandid,0) -- stelle den GUI-State um so dass die Werte wieder stimmen
+
+      end
 
     end -- alles ok, states sind gleich also nichts zu tun
 
@@ -52,7 +58,7 @@ function checkGuiStates()
  -- Defer-Schleife
  -------------------------------------------------
 
-  ultraschall.Defer(checkGuiStates, "Check GUI Defer", 2, 2) -- alle 2 Sekunden
+  ultraschall.Defer(checkGuiStates, "Check GUI Defer", 2, 1) -- alle 2 Sekunden
 	return "Check GUI Defer"
 
 end
@@ -61,9 +67,17 @@ end
 
 GUIServices = {
   "_Ultraschall_Toggle_Follow",
-  "_Ultraschall_Toggle_Mouse_Selection"
-
+  "_Ultraschall_Toggle_Mouse_Selection",
+  "_Ultraschall_Toggle_Magicrouting",
+  "_Ultraschall_set_Matrix_Preshow",
+  "_Ultraschall_set_Matrix_Editing",
+  "_Ultraschall_set_Matrix_Recording",
+  "_Ultraschall_Set_View_Setup",
+  "_Ultraschall_Set_View_Record",
+  "_Ultraschall_Set_View_Edit",
+  "_Ultraschall_Set_View_Story",
 }
+
 
 checkGuiStates()
 

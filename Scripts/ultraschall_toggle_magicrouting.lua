@@ -146,6 +146,7 @@ if state ~= 1 then
 	-- Magicrouting on
 	reaper.SetToggleCommandState(sec, cmd, 1)
 	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 1)
+	reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_Toggle_Magicrouting", 1)
 
 
 	if reaper.CountTracks(0) > 0 then
@@ -158,5 +159,6 @@ else
 	-- Magicrouting off
 	reaper.SetToggleCommandState(sec, cmd, 0)
 	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 0)
+	reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_Toggle_Magicrouting", 0)
 	retval = ultraschall.StopDeferCycle("Check Routing Defer")
 end
