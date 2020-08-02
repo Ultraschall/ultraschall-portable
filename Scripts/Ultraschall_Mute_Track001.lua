@@ -38,9 +38,6 @@ is_new_value, filename, sectionID, cmdID, mode, resolution, val=reaper.get_actio
 
 track=tonumber(filename:match("(...)%.lua"))
 
-MuteEnvelope = reaper.GetTrackEnvelopeByName(reaper.GetTrack(0, track-1), "Mute")
-
-
 if track==nil then reaper.MB("You should write a three-digit tracknumber in the filename of the script before .lua, like: mute_track_001.lua", "Error", 0) return end
 
 if reaper.GetPlayState()~=0 then
