@@ -3,7 +3,7 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.11 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.13 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -7367,8 +7367,8 @@
           This is a project-setting.
           It is a double-float.  
           
-           >0.01 to 4.0  
-           
+           >0.01 to 4.0; higher is possible(up to 1200 and higher)
+                      
           For preserving pitch when setting master-playrate, see [audioprshift](#audioprshift)  
           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.

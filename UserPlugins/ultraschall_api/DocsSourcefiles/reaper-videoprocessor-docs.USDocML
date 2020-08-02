@@ -32,31 +32,60 @@
         <requires>
             Reaper=5.97
         </requires>
-        <description>
+        <description>            
             To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin.
             Next to it, on the left side of the editor-field, your parameter-knobs will appear(if you've defined some). 
             Code for the Video-Processor-Plugin must be written in EEL, not in Lua or Python.
-            Example code, with a knob for turning the video on and off:
+            
+            Example code, with a knob for turning the video on the current track on and off(use this as track-fx!):
                     <pre><code>
-                    // A small demo-script that turns video on&off
-                    //@amp;param1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
+                            // A small demo-script that turns video of the current track on&off
+                            //@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
 
-                    frame=input_track(0); // variable frame set with the videoframe from the first 
-                                          // videoitem in the project at a given position
-              
-                    gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
-                                                           // to prevent from having the last frame(s) be shown indefinately
+                            frame=1; // variable frame set with the videoframe from the first 
+                                                                              // videoitem in the project at a given position
+                                                  
+                            gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
+                                                                                               // to prevent from having the last frame(s) be shown indefinately
 
-                    //Now, put the picture to the framebuffer -> outputting the video
-                    gfx_blit(frame,  // the current video-frame
-                                1,   // don't preserve aspect-ratio
-                                0,0, // put upper right corner of the video at position 0,0
-                                project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
-                                                                          //   multiplied by the VideoOnOff-Parameter
-                                                                          //   1=video squeezed to 100% height & width 
-                                                                          //   0=video squeezed to 0% height & width
-                                );
+                            //Now, put the picture to the framebuffer -> outputting the video
+                            gfx_blit(frame,  // the current video-frame
+                                     1,   // don't preserve aspect-ratio
+                                     0,0, // put upper right corner of the video at position 0,0
+                                     project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
+                                          //   multiplied by the VideoOnOff-Parameter
+                                          //   1=video squeezed to 100% height & width 
+                                          //   0=video squeezed to 0% height & width
+                                                                    );
                       </code></pre>
+
+            The following code allows turning the video of the track above(!) the current track on/off and allows moving it and turning it on and off
+
+                    <pre><code>
+                            // A small demo-script that turns video of the current track on&off
+                            //@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
+                            //@param 2:MoveX 'Move X' 0 0 2048 1024 1
+                            //@param 3:MoveY 'Move Y' 0 0 2048 1024 1
+
+                            frame=input_track(0); // variable frame set with the videoframe from the first 
+                                                   // videoitem in the project at a given position above the current one
+                                                  
+                            gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
+                                                                                               // to prevent from having the last frame(s) be shown indefinately
+
+                            //Now, put the picture to the framebuffer -> outputting the video
+                            gfx_blit(frame,            // the current video-frame
+                                     1,                // don't preserve aspect-ratio
+                                     0+MoveX,0+MoveY,  // put upper right corner of the video at position 0,0
+                                                       // and add the knob-value of MoveX and MoveY to the position
+                                                       // so changing position is possible
+                                     project_w*VideoOnOff, project_h*VideoOnOff // size of the video width, height, 
+                                          //   multiplied by the VideoOnOff-Parameter
+                                          //   1=video squeezed to 100% height & width 
+                                          //   0=video squeezed to 0% height & width
+                                                                    );
+                      </code></pre>
+
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
@@ -296,8 +325,22 @@
             Reaper=5.97
         </requires>
         <description prog_lang="*">
-            Hold the values for the individual parameters, means param1 hold the value for parameter 1 .. param24 for parameter 24.
+            Manage the knobs of your video-processor-script.
+            param1 hold the value for parameter 1 .. param24 for parameter 24.
+            
+            used as:
+            //@param X:ParameterVariableName "ParamShownName" default_value minimum_val maximum_val medium_value step_size
         </description>
+        <parameters>
+            @param X: - the parameter number, where X is a number between 1 and 24
+            string ParameterVariableName - the variable, which holds the current setting of the knob 
+            string "ParamShownName" - this will be shown at the knob
+            number default_value - the default-value, with which it will be initialized or reset to, when doubleclicking the knob; can be float and/or negative as well; should be between minimum_val and maximum_val
+            number minimum_val - the minimum value; can be any value, float and negative; should be lower than minimum_val
+            number maximum_val - the maximum value; can be any value, float and negative; should be bigger than minimum_val
+            number medium_value - the value that shall be the medium value, which is the value when the knobposition is at 12 o clock; must be bwetween minimum_val and maximum_val; can be float and negative
+            number step_size - the size of each step, when turning around the knob; can be float; negative values are interpreted as between 0 and 1
+        </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
         <chapter_context>
