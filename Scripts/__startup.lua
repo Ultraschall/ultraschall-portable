@@ -49,15 +49,15 @@ error_msg = false
 
 theme_version = reaper.GetExtState("ultraschall_versions", "theme")
 plugin_version = reaper.GetExtState("ultraschall_versions", "plugin")
-views = ultraschall.GetUSExternalState("ultraschall_gui", "views")
-view = ultraschall.GetUSExternalState("ultraschall_gui", "view")
-sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
-mouse = ultraschall.GetUSExternalState("ultraschall_mouse", "state")
+-- views = ultraschall.GetUSExternalState("ultraschall_gui", "views")
+-- view = ultraschall.GetUSExternalState("ultraschall_gui", "view")
+-- sec = ultraschall.GetUSExternalState("ultraschall_gui", "sec")
+-- mouse = ultraschall.GetUSExternalState("ultraschall_mouse", "state")
 first_start = ultraschall.GetUSExternalState("ultraschall_start", "firststart")
 startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value","ultraschall-settings.ini")
-follow = ultraschall.GetUSExternalState("ultraschall_follow", "state")
-follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
-magicrouting_state = ultraschall.GetUSExternalState("ultraschall_magicrouting", "state")
+-- follow = ultraschall.GetUSExternalState("ultraschall_follow", "state")
+-- follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+-- magicrouting_state = ultraschall.GetUSExternalState("ultraschall_magicrouting", "state")
 
 if theme_version ~= tostring(theme_version_now) then
   error_msg = "Your ULTRASCHALL THEME is out of date. \n\nULTRASCHALL wil NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/"
@@ -75,8 +75,6 @@ if theme_version == "" then
   error_msg = "There are parts of the ULTRASCHALL THEME missing.\n\nULTRASCHALL wil NOT work properly until you fix this.\n\nPlease check the installation guide on http://ultraschall.fm/install/"
 end
 
-
-
 if error_msg then
     type = 0
     title = "Ultraschall Configuration Problem"
@@ -86,6 +84,9 @@ elseif first_start == "true" or startscreen == "1" or startscreen == "-1" then
   start_id = reaper.NamedCommandLookup("_Ultraschall_StartScreen")
   reaper.Main_OnCommand(start_id,0)   --Show Startscreen
 end
+
+
+--[[ wird alles durch GUI State Manager gelöst
 
 if sec=="-1" then sec=0 end
 if view=="-1" then view="setup" end
@@ -117,16 +118,40 @@ if tonumber(mouse) <= 0 then -- selection is activated
 end
 
 
+
+
+
 if follow == "1" and reaper.GetToggleCommandState(follow_id)~=1 then -- follow is activated
   reaper.SetToggleCommandState(sec, follow_id, 1)
   reaper.RefreshToolbar2(sec, follow_id)
+end
+
+]]
+
+
+mouse_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Mouse_Selection")
+reaper.SetToggleCommandState(0, mouse_id, 1)
+reaper.RefreshToolbar2(0, mouse_id)
+
+follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+reaper.SetToggleCommandState(0, follow_id, 1)
+reaper.RefreshToolbar2(0, follow_id)
+
+cmd=reaper.NamedCommandLookup("_Ultraschall_Toggle_Magicrouting")
+retval, project_state = reaper.GetProjExtState(0, "gui_statemanager", "_Ultraschall_Toggle_Magicrouting")
+if project_state ~= "0" then
+  reaper.Main_OnCommand(cmd,0) -- starte MagicRouting
+else
+  reaper.SetToggleCommandState(0, cmd, 0)
 end
 
 
 -- set OnAir button off
 
 on_air_button_id = reaper.NamedCommandLookup("_Ultraschall_OnAir")
-reaper.SetToggleCommandState(sec, on_air_button_id, 0)
+reaper.SetToggleCommandState(0, on_air_button_id, 0)
+reaper.RefreshToolbar2(0, on_air_button_id)
+
 
 --------------------------
 -- Restore opened/closed Windows
@@ -145,7 +170,12 @@ reaper.SetExtState("Ultraschall_Windows","Ultraschall Settings",0.0, true)
 -- Run on every start ----
 --------------------------
 
+
+
+------------------------------------------
 -- remove StudioLink OnAir FX from Master
+------------------------------------------
+
 
 m = reaper.GetMasterTrack(0)                                                  --streaming is always on the master track
 os = reaper.GetOS()
@@ -162,12 +192,13 @@ if fx_slot ~= -1 then
   reaper.TrackFX_Delete(m, fx_slot)
 end
 
--- is the ReaperThemeZip loaded? Only then (probably on first start) reload the ReaperTheme to get the colors working
 
--- curtheme = reaper.GetLastColorThemeFile()
--- if string.find(curtheme, "ReaperThemeZip", 1) then
-  themeadress = reaper.GetResourcePath() .. "/ColorThemes/Ultraschall_3.1.ReaperTheme"
-  reaper.OpenColorThemeFile(themeadress)
+------------------------------------------
+-- Lade das Theme
+------------------------------------------
+
+themeadress = reaper.GetResourcePath() .. "/ColorThemes/Ultraschall_3.1.ReaperTheme"
+reaper.OpenColorThemeFile(themeadress)
 -- end
 
 
@@ -214,23 +245,18 @@ end
 
 
 --------------------------
+-- Start GUI State Manager
+--------------------------
+
+cmd=reaper.NamedCommandLookup("_Ultraschall_GUI_statemanager")
+reaper.Main_OnCommand(cmd,0)
+
+--------------------------
 -- Start Soundcheck
 --------------------------
 
 cmd=reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Controller")
 reaper.Main_OnCommand(cmd,0)
-
-
---------------------------
--- Start Magicrouting
---------------------------
-
-if (magicrouting_state == "1" or magicrouting_state == nil) then
-
-  cmd=reaper.NamedCommandLookup("_Ultraschall_Toggle_Magicrouting")
-  reaper.Main_OnCommand(cmd,0)
-
-end
 
 --------------------------
 -- Start Tims Chapter Ping
