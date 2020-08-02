@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ function Msg(val)
 end
 
 -- Adjusts zoom stepwise.
--- Will limit the zoom out from 0 to projectlength+edit/play-cursor, depending on what is the last.
+-- Will limit the zoom out from 0 to projectlength with editcursor centered
 
     steplength = 0.4 -- factor to adjust the steplength of the zoom
     length=0
@@ -57,7 +57,7 @@ if length<180 then length=180 end   -- zoomlimit does not apply under 3 minutes
         -- reaper.Main_OnCommand(40295,0)
         reaper.SetExtState("ultraschall_follow", "started", "started", false)
     else
-        reaper.adjustZoom(val, 0, false, -1)
+        reaper.adjustZoom(val, 0, false, 1)
         start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
         
         if val < 0 and end_time-start_time>=length then
