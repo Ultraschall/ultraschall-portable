@@ -26,12 +26,16 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-A=ultraschall.GetUSExternalState("ultraschall_follow", "state")
+-- A=ultraschall.GetUSExternalState("ultraschall_follow", "state")
+
+commandid = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+buttonstate = reaper.GetToggleCommandStateEx(0, commandid)
+if buttonstate <= 0 then buttonstate = 0 end
 
 if reaper.GetPlayState() == 0 or reaper.GetPlayState() == 2 then -- 0 = Stop, 2 = Pause
   current_position = reaper.GetCursorPosition() -- Position of edit-cursor
 else
-    if A~="0" then -- follow mode is active
+    if buttonstate == 1 then -- follow mode is active
     current_position = reaper.GetPlayPosition() -- Position of play-cursor
 --     elseif reaper.GetPlayState()~=0 then
 --          current_position = reaper.GetPlayPosition() -- Position of play-cursor
@@ -59,6 +63,6 @@ end
 L=CreateDateTime()
 timestamp=os.date("%Y-%m-%d; %H:%M:%S")
 --reaper.AddProjectMarker2(0, false, current_position, 0, "_Time: "..timestamp, markercount, 274877906943)
-Marker = reaper.AddProjectMarker2(0, false, current_position, 0, 
-"_Time: "..CreateDateTime(), 
+Marker = reaper.AddProjectMarker2(0, false, current_position, 0,
+"_Time: "..CreateDateTime(),
 0, 274877906943)
