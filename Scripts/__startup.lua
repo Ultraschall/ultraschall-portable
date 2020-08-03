@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -118,9 +118,6 @@ if tonumber(mouse) <= 0 then -- selection is activated
 end
 
 
-
-
-
 if follow == "1" and reaper.GetToggleCommandState(follow_id)~=1 then -- follow is activated
   reaper.SetToggleCommandState(sec, follow_id, 1)
   reaper.RefreshToolbar2(sec, follow_id)
@@ -128,6 +125,9 @@ end
 
 ]]
 
+--------------------------
+-- Restore / set GUI states
+--------------------------
 
 mouse_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Mouse_Selection")
 reaper.SetToggleCommandState(0, mouse_id, 1)
@@ -149,6 +149,19 @@ else
   reaper.SetToggleCommandState(0, cmd, 0)
 end
 
+retval, project_state = reaper.GetProjExtState(0, "gui_statemanager", "_Ultraschall_set_Matrix_Recording")
+-- print ("Matrix: "..project_state)
+if project_state == "" then
+  cmd=reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Recording")
+  reaper.Main_OnCommand(cmd,0) -- Preset wenn kein Routing gespeichert ist: Recording
+end
+
+retval, project_view = reaper.GetProjExtState(0, "gui_statemanager", "_ULTRASCHALL_SET_VIEW_EDIT")
+-- print ("View: "..project_view)
+if project_view == "" then
+  cmd=reaper.NamedCommandLookup("_Ultraschall_Set_View_Record")
+  reaper.Main_OnCommand(cmd,0) -- Preset wenn kein View gespeichert ist: Recording
+end
 
 -- set OnAir button off
 
@@ -167,13 +180,6 @@ reaper.SetExtState("Ultraschall_Windows","Ultraschall Export Assistant",0.0, tru
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Color Picker",0.0, true)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Soundcheck",0.0, true)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Settings",0.0, true)
-
-
-
---------------------------
--- Run on every start ----
---------------------------
-
 
 
 ------------------------------------------
