@@ -49,6 +49,8 @@ function MoveUntilStop()
     -- if recording stops, move items, trackenvelope-points, regions and markers after current recording-position
     -- back to close the 4+ second gap
     stopposition=reaper.GetPlayPosition()
+    marker_number = ultraschall.AddEditMarker(stopposition, -1, "")
+    marker_number = ultraschall.AddEditMarker(firststartposition, -1, "")
     Aretval = ultraschall.MoveMediaItemsAfter_By(position, -(position-stopposition), trackstring)
     retval = ultraschall.MoveMarkersBy(position, reaper.GetProjectLength()+1, -(position-stopposition), false)
     for i=0, reaper.CountTracks(0)-1 do
@@ -77,6 +79,7 @@ function main()
   position=position+4
   reaper.CSurf_OnRecord()
   MoveUntilStop()
+  positionTOO=os.time()
 
   -- retval = ultraschall.EventManager_ResumeEvent(event_identifier)
 end
@@ -86,5 +89,6 @@ if reaper.GetPlayState()~=0 then
 end
 
 reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "1", false) -- deaktiviere OverDub Soundcheck
+firststartposition=reaper.GetCursorPosition()
 
 main()
