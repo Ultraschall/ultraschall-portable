@@ -76,6 +76,7 @@ GUIServices = {
   "_Ultraschall_Set_View_Record",
   "_Ultraschall_Set_View_Edit",
   "_Ultraschall_Set_View_Story",
+  "_Ultraschall_toggle_item_labels",
 }
 
 

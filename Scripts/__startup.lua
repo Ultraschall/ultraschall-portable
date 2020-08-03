@@ -137,6 +137,10 @@ follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
 reaper.SetToggleCommandState(0, follow_id, 1)
 reaper.RefreshToolbar2(0, follow_id)
 
+label_id = reaper.NamedCommandLookup("__Ultraschall_toggle_item_labels")
+reaper.SetToggleCommandState(0, label_id, 0)
+reaper.RefreshToolbar2(0, label_id)
+
 cmd=reaper.NamedCommandLookup("_Ultraschall_Toggle_Magicrouting")
 retval, project_state = reaper.GetProjExtState(0, "gui_statemanager", "_Ultraschall_Toggle_Magicrouting")
 if project_state ~= "0" then

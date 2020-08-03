@@ -26,24 +26,23 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
-cmd = reaper.NamedCommandLookup("_Ultraschall_Toggle_Mouse_Selection")
-state = reaper.GetToggleCommandStateEx(sec, cmd)
+cmd = reaper.NamedCommandLookup("_Ultraschall_toggle_item_labels")
+state = reaper.GetToggleCommandStateEx(0, cmd)
 
 if state <= 0 then
 	newstate = 1
-	reaper.SetToggleCommandState(sec, cmd, newstate)
-	reaper.Main_OnCommand(39029,0)      --change mode to select
+	reaper.SetToggleCommandState(0, cmd, newstate)
 else
 	newstate = 0
-	reaper.SetToggleCommandState(sec, cmd, newstate)
-	reaper.Main_OnCommand(39013,0)      --change mode to move
+	reaper.SetToggleCommandState(0, cmd, newstate)
 end
 
-reaper.SetProjExtState(0, "gui_statemanager", "_ULTRASCHALL_TOGGLE_MOUSE_SELECTION", tostring(newstate)) -- speichere den aktuellen GUI-Status in Projektdatei
+reaper.Main_OnCommand(40651,0)      -- toggle item labels view
+
+reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_toggle_item_labels", tostring(newstate)) -- speichere den aktuellen GUI-Status in Projektdatei
 
 
-reaper.RefreshToolbar2(sec, cmd)
+reaper.RefreshToolbar2(0, cmd)
 
 -- Msg(cmd)
 -- Msg(ID_2)
