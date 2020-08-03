@@ -838,6 +838,58 @@ else
     ultraschall.LM(10)
     return ultraschall.MoveFileOrFolder(table.unpack({...}))
   end
+  function ultraschall.CopyFile_StartCopying(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_StartCopying(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_IsCurrentlyCopying(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_IsCurrentlyCopying(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_GetCurrentlyRunningCopyInstances(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_GetCurrentlyRunningCopyInstances(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_GetCurrentlyCopiedFile(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_GetCurrentlyCopiedFile(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_SetBufferSize(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_SetBufferSize(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_GetBufferSize(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_GetBufferSize(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_AddFileToQueue(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_AddFileToQueue(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_GetCopiedStatus(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_GetCopiedStatus(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_FlushCopiedFiles(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_FlushCopiedFiles(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_StopCopying(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_StopCopying(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_Pause(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_Pause(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_GetPausedState(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_GetPausedState(table.unpack({...}))
+  end
+  function ultraschall.CopyFile_GetRemainingFilesToCopy(...)
+    ultraschall.LM(10)
+    return ultraschall.CopyFile_GetRemainingFilesToCopy(table.unpack({...}))
+  end
   function ultraschall.IsValidFXStateChunk(...)
     ultraschall.LM(11)
     return ultraschall.IsValidFXStateChunk(table.unpack({...}))
@@ -1445,6 +1497,10 @@ else
   function ultraschall.Benchmark_MeasureTime(...)
     ultraschall.LM(12)
     return ultraschall.Benchmark_MeasureTime(table.unpack({...}))
+  end
+  function ultraschall.TimeToMeasures(...)
+    ultraschall.LM(12)
+    return ultraschall.TimeToMeasures(table.unpack({...}))
   end
   function ultraschall.ResizePNG(...)
     ultraschall.LM(13)
@@ -2761,6 +2817,10 @@ else
   function ultraschall.GetProject_QRenderOutFiles(...)
     ultraschall.LM(23)
     return ultraschall.GetProject_QRenderOutFiles(table.unpack({...}))
+  end
+  function ultraschall.GetProject_MetaDataStateChunk(...)
+    ultraschall.LM(23)
+    return ultraschall.GetProject_MetaDataStateChunk(table.unpack({...}))
   end
   function ultraschall.SetProject_RippleState(...)
     ultraschall.LM(23)

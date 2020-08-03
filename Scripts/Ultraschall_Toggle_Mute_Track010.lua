@@ -24,9 +24,9 @@
 ################################################################################
 ]]
 
--- Meo-Ada Mespotine - 27th of April 2020
+-- Meo-Ada Mespotine - 2nd of August 2020
 
--- toggles mutes of a track, regardless of its envelope-automation-mode
+-- set mutes of a trackenvelope to muted, regardless of its envelope-automation-mode
 -- the trackname is taken from the filename of the script:
 -- filenameXXX.lua
 -- where XXX is the tracknumber you want to togglemute.
@@ -40,29 +40,20 @@ track=tonumber(filename:match("(...)%.lua"))
 
 if track==nil then reaper.MB("You should write a three-digit tracknumber in the filename of the script before .lua, like: mute_track_001.lua", "Error", 0) return end
 
-ActionOffset=(track-1)*8
-trackobject=reaper.GetTrack(0,track-1)
-
-if trackobject==nil then return end
-
 if reaper.GetPlayState()~=0 then
   position=reaper.GetPlayPosition()
 else
   position=reaper.GetCursorPosition()
 end
 
-envIDX, envVal,  envPosition = ultraschall.GetPreviousMuteState(track, position)
+envIDX, envVal, envPosition = ultraschall.GetPreviousMuteState(track, position)
 
-if envVal==1 then envVal=0 else envVal=1 end
-
-if reaper.GetMediaTrackInfo_Value(trackobject, "I_AUTOMODE")==3 then
-  TrackEnvelope = reaper.GetTrackEnvelopeByName(reaper.GetTrack(0, track-1), "Mute")
-  Muteretval = ultraschall.GetArmState_Envelope(TrackEnvelope)
-  if Muteretval==1 and reaper.GetPlayState()~=0 then
-    reaper.Main_OnCommand(22+ActionOffset,0)
-  else
-    retval = ultraschall.ToggleMute(track, position, envVal)
-  end
+reaper.Undo_BeginBlock()
+if envVal==0 then 
+  ultraschall.ToggleMute(track, position, 1)
+  undomsg="UnMuting mute-envelope of track "..track
 else
-  retval = ultraschall.ToggleMute(track, position, envVal)
+  ultraschall.ToggleMute(track, position, 0)
+  undomsg="Muting mute-envelope of track "..track
 end
+reaper.Undo_EndBlock(undomsg, -1)

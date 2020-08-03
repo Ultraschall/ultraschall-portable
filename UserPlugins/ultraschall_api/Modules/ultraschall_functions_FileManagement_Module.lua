@@ -361,7 +361,7 @@ function ultraschall.ReadBinaryFileUntilPattern(input_filename_with_path, patter
     Pattern can also contain patterns for pattern matching. Refer the LUA-docs for pattern matching.
     i.e. characters like ^$()%.[]*+-? must be escaped with a %, means: %[%]%(%) etc
     
-    returns false in case of an error
+    returns -1 in case of an error
   </description>
   <retvals>
     integer length - the length of the returned data
@@ -382,19 +382,19 @@ function ultraschall.ReadBinaryFileUntilPattern(input_filename_with_path, patter
 ]]
   local temp=""
   local temp2
-  if type(input_filename_with_path)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "input_filename_with_path", "must be a string", -1) return false end
-  if type(pattern)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "pattern", "must be a string", -2) return false end
-  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "pattern", "malformed pattern", -3) return false end
+  if type(input_filename_with_path)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "input_filename_with_path", "must be a string", -1) return -1 end
+  if type(pattern)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "pattern", "must be a string", -2) return -1 end
+  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "pattern", "malformed pattern", -3) return -1 end
   
   if reaper.file_exists(input_filename_with_path)==true then
     local fileread=io.open(input_filename_with_path,"rb")
-    if fileread==nil then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "input_filename_with_path", "could not read file "..input_filename_with_path..", probably due another application accessing it.", -6) return false end
+    if fileread==nil then ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "input_filename_with_path", "could not read file "..input_filename_with_path..", probably due another application accessing it.", -6) return -1 end
     temp=fileread:read("*a")
     temp2=temp:match("(.-"..pattern..")")
-    if temp2==nil then fileread:close() ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "pattern", "pattern not found in file", -4) return false end
+    if temp2==nil then fileread:close() ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "pattern", "pattern not found in file", -4) return -1 end
     fileread:close()
   else
-    ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "input_filename_with_path", "file "..input_filename_with_path.." does not exist", -5) return false
+    ultraschall.AddErrorMessage("ReadBinaryFileUntilPattern", "input_filename_with_path", "file "..input_filename_with_path.." does not exist", -5) return -1
   end
   return temp2:len(), temp2
 end
@@ -415,7 +415,7 @@ function ultraschall.ReadBinaryFileFromPattern(input_filename_with_path, pattern
     The pattern can also contain patterns for pattern matching. Refer the LUA-docs for pattern matching.
     i.e. characters like ^$()%.[]*+-? must be escaped with a %, means: %[%]%(%) etc
     
-    returns false in case of an error
+    returns -1 in case of an error
   </description>
   <retvals>
     integer length - the length of the returned data
@@ -436,19 +436,19 @@ function ultraschall.ReadBinaryFileFromPattern(input_filename_with_path, pattern
 ]]
   local temp=""
   local temp2
-  if type(input_filename_with_path)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "input_filename_with_path", "must be a string", -1) return false end
-  if type(pattern)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "pattern", "must be a string", -2) return false end
-  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "pattern", "malformed pattern", -3) return false end
+  if type(input_filename_with_path)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "input_filename_with_path", "must be a string", -1) return -1 end
+  if type(pattern)~="string" then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "pattern", "must be a string", -2) return -1 end
+  if ultraschall.IsValidMatchingPattern(pattern)==false then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "pattern", "malformed pattern", -3) return -1 end
   
   if reaper.file_exists(input_filename_with_path)==true then
     local fileread=io.open(input_filename_with_path,"rb")
-    if fileread==nil then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "input_filename_with_path", "could not read file "..input_filename_with_path..", probably due another application accessing it.", -6) return false end
+    if fileread==nil then ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "input_filename_with_path", "could not read file "..input_filename_with_path..", probably due another application accessing it.", -6) return -1 end
     temp=fileread:read("*a")
     temp2=temp:match("("..pattern..".*)")
-    if temp2==nil then fileread:close() ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "pattern", "pattern not found in file", -4) return false end
+    if temp2==nil then fileread:close() ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "pattern", "pattern not found in file", -4) return -1 end
     fileread:close()
   else
-    ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "input_filename_with_path", "file "..input_filename_with_path.." does not exist", -5) return false
+    ultraschall.AddErrorMessage("ReadBinaryFileFromPattern", "input_filename_with_path", "file "..input_filename_with_path.." does not exist", -5) return -1
   end
   return temp2:len(), temp2
 end
@@ -575,7 +575,7 @@ function ultraschall.ReadBinaryFile_Offset(input_filename_with_path, startoffset
     When setting startoffset to a negative value, it will read from the end of the file, means: 
     -100 will start -100 characters before the end of the file and numberofbytes will read from that point on    
     
-    Returns false, if file can not be opened.
+    Returns -1, if file can not be opened.
   </description>
   <retvals>
     integer length - the length of the returned part of the file, might be shorter than requested, if file ends before
@@ -599,10 +599,10 @@ function ultraschall.ReadBinaryFile_Offset(input_filename_with_path, startoffset
   local temp=""
   local length, eof
   local temp2
-  if input_filename_with_path==nil then ultraschall.AddErrorMessage("ReadBinaryFile_Offset", "filename_with_path", "nil not allowed as filename", -1) return false end
-  if math.type(startoffset)~="integer" then ultraschall.AddErrorMessage("ReadBinaryFile_Offset", "startoffset", "no valid startoffset. Only integer allowed.", -2) return false end
-  if math.type(numberofbytes)~="integer" then ultraschall.AddErrorMessage("ReadBinaryFile_Offset", "numberofbytes", "no valid value. Only integer allowed.", -3) return false end
-  if numberofbytes<-1 then ultraschall.AddErrorMessage("ReadBinaryFile_Offset", "numberofbytes", "must be positive value (0 to n) or -1 for until end of file.", -4) return false end
+  if input_filename_with_path==nil then ultraschall.AddErrorMessage("ReadBinaryFile_Offset", "filename_with_path", "nil not allowed as filename", -1) return -1 end
+  if math.type(startoffset)~="integer" then ultraschall.AddErrorMessage("ReadBinaryFile_Offset", "startoffset", "no valid startoffset. Only integer allowed.", -2) return -1 end
+  if math.type(numberofbytes)~="integer" then ultraschall.AddErrorMessage("ReadBinaryFile_Offset", "numberofbytes", "no valid value. Only integer allowed.", -3) return -1 end
+  if numberofbytes<-1 then ultraschall.AddErrorMessage("ReadBinaryFile_Offset", "numberofbytes", "must be positive value (0 to n) or -1 for until end of file.", -4) return -1 end
   
   if reaper.file_exists(input_filename_with_path)==true then
     local fileread=io.open(input_filename_with_path,"rb")
@@ -610,10 +610,11 @@ function ultraschall.ReadBinaryFile_Offset(input_filename_with_path, startoffset
     if startoffset>=0 then fileread:seek ("set" , startoffset) else eof=fileread:seek ("end") fileread:seek ("set" , eof-1-(startoffset*-1)) end
     temp=fileread:read(numberofbytes)
     fileread:close()
+    if temp==nil then temp="" end
     return temp:len(), temp
   else
     ultraschall.AddErrorMessage("ReadBinaryFile_Offset", "filename_with_path", "file does not exist."..input_filename_with_path, -6)
-    return false
+    return -1
   end
 end
 
@@ -627,7 +628,7 @@ function ultraschall.GetLengthOfFile(filename_with_path)
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer lengthoffile = ultraschall.GetLengthOfFile(string filename_with_path)</functioncall>
+  <functioncall>integer length_of_file = ultraschall.GetLengthOfFile(string filename_with_path)</functioncall>
   <description>
     Returns the length of the file filename_with_path in bytes.
     Will return -1, if no such file exists.
@@ -636,7 +637,7 @@ function ultraschall.GetLengthOfFile(filename_with_path)
     string filename_with_path - filename to write the value to
   </parameters>
   <retvals>
-    integer lengthoffile - the length of the file in bytes. -1 in case of error
+    integer length_of_file - the length of the file in bytes. -1 in case of error
   </retvals>
   <chapter_context>
     File Management
@@ -1780,6 +1781,555 @@ function ultraschall.MoveFileOrFolder(file_foldername, oldpath, newpath)
   if ultraschall.DirectoryExists(oldpath, file_foldername)==false and reaper.file_exists(oldpath.."/"..file_foldername)==false then ultraschall.AddErrorMessage("MoveFileOrFolder",  "file_foldername", "no such sourcefile or directory", -4) return false end
   if ultraschall.DirectoryExists(newpath, file_foldername)==true or reaper.file_exists(newpath.."/"..file_foldername)==true then ultraschall.AddErrorMessage("MoveFileOrFolder",  "file_foldername", "target-file or -directory already exists", -5) return false end
   return os.rename(oldpath.."/"..file_foldername, newpath.."/"..file_foldername)
+end
+
+ultraschall.CopyFile_Buffer=1000000 -- 1 MB/defer-cycle is default
+ultraschall.CopyFile_NumberOfFiles=0
+ultraschall.CopyFile_Files={}
+ultraschall.CopyFile_FilesTarget={}
+ultraschall.CopyFile_FilesOffset=0
+ultraschall.CopyFile_CurrentFileLength=0
+ultraschall.CopyFile_CopiedFiles={}
+ultraschall.CopyFile_CopiedFilesState={}
+ultraschall.CopyFile_FilesOverwrite={}
+ultraschall.CopyFile_CopiedFilesError={}
+ultraschall.CopyFile_CopiedFilesErrorNr={}
+ultraschall.CopyFile_CopiedFilesOffset=0
+ultraschall.CopyFile_CopiedFilesMax=0
+ultraschall.CopyFile_Paused=false
+ultraschall.CopyFiles_InBackgroundInstanceCounter=0
+
+
+
+function ultraschall.CopyFiles_InBackgroundFunction()
+  -- this helperfunction copies the files in the background and should never be started directly, but rather by CopyFiles_StartCopying
+  local errormsg2
+  if ultraschall.CopyFile_Paused~=true then
+    -- if there are no files to copy, stop here
+    if ultraschall.CopyFile_NumberOfFiles==0 then 
+      ultraschall.CopyFiles_InBackgroundInstanceCounter=ultraschall.CopyFiles_InBackgroundInstanceCounter-1 
+      ultraschall.CopyFile_Currently=false 
+      return 
+    end
+    
+    -- if there are files to copy, signal "currently copying"
+    ultraschall.CopyFile_Currently=true
+    
+    -- read the content of the file from fileoffset to fileoffset+buffersize
+    local length, content = ultraschall.ReadBinaryFile_Offset(ultraschall.CopyFile_Files[1], ultraschall.CopyFile_FilesOffset, ultraschall.CopyFile_Buffer)
+
+    if ultraschall.CopyFile_FilesOffset==0 and ultraschall.CopyFile_FilesOverwrite[1]==false and reaper.file_exists(ultraschall.CopyFile_FilesTarget[1])==true then
+      length=-2
+    end
+
+      -- if fileoffset=0 then empty the targetfile
+    if length>0 and ultraschall.CopyFile_FilesOffset==0 and ultraschall.CopyFile_NumberOfFiles>0 then
+      local path, filename = ultraschall.GetPath(ultraschall.CopyFile_FilesTarget[1])
+      reaper.RecursiveCreateDirectory(path, 0)
+      errormsg=ultraschall.WriteValueToFile(ultraschall.CopyFile_FilesTarget[1], "", true, false)
+      ultraschall.CopyFile_CurrentFileLength=ultraschall.GetLengthOfFile(ultraschall.CopyFile_Files[1])
+    end
+    
+    -- write the filebuffer to the targetfile, if the length of the filebuffer is > 0
+    if length>0 then
+      ultraschall.WriteValueToFile(ultraschall.CopyFile_FilesTarget[1], content, true, true)
+      --SLEM()
+      ultraschall.CopyFile_FilesOffset=ultraschall.CopyFile_FilesOffset+ultraschall.CopyFile_Buffer
+    end
+    -- if file is fully written, drop it from the queue and reset fileoffset to 0
+    if length<ultraschall.CopyFile_Buffer or errormsg==-1 then
+      ultraschall.CopyFile_NumberOfFiles=ultraschall.CopyFile_NumberOfFiles-1
+      table.remove(ultraschall.CopyFile_Files, 1)
+      table.remove(ultraschall.CopyFile_FilesTarget, 1)
+      table.remove(ultraschall.CopyFile_FilesOverwrite, 1)
+      ultraschall.CopyFile_FilesOffset=0
+      ultraschall.CopyFile_CopiedFilesOffset=ultraschall.CopyFile_CopiedFilesOffset+1
+      ultraschall.CopyFile_CopiedFilesState[ultraschall.CopyFile_CopiedFilesOffset]=true
+      if length<0 or errormsg==-1 then 
+        local retval, errcode, functionname, parmname, errormessage = ultraschall.GetLastErrorMessage()
+        ultraschall.CopyFile_CopiedFilesError[ultraschall.CopyFile_CopiedFilesOffset]=errormessage
+        ultraschall.CopyFile_CopiedFilesErrorNr[ultraschall.CopyFile_CopiedFilesOffset]=errcode
+        if length==-2 then
+          ultraschall.CopyFile_CopiedFilesError[ultraschall.CopyFile_CopiedFilesOffset]="targetfile already exists"
+          ultraschall.CopyFile_CopiedFilesErrorNr[ultraschall.CopyFile_CopiedFilesOffset]=-98
+        end
+      end
+    end
+  end
+
+  -- do it again
+  reaper.defer(ultraschall.CopyFiles_InBackgroundFunction)
+end
+
+function ultraschall.CopyFile_StartCopying()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_StartCopying</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer instance_number = ultraschall.CopyFile_StartCopying()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Starts copying the files added to the background-copy-queue.
+    
+    You can run this function multiple times, to have multiple background-copy-instances, depending on how fast the copying shall be and how much ressources it should eat.
+    Each instance copies the amount of data set with [CopyFile\_SetBufferSize](#CopyFile_SetBufferSize), so if the buffersize is set to 1048576(1 MB) then each instance will copy 1 MB per defer-cycle.
+    That way you can balance the amount of data copied each defer-cycle with the amount of time each defer-cycle uses Reaper's processing-time.
+    So having multiple instances with smaller buffer-sizes can prevent lagging of the gui of Reaper.
+        
+    You can have up to 30 instances running in the background at the same time.
+    
+    Add files with [CopyFile\_AddFileToQueue](#CopyFile_AddFileToQueue)
+    
+    If all files are copied, the instances will be stopped completely, so using [CopyFile\_GetCurrentlyRunningCopyInstances](#CopyFile_GetCurrentlyRunningCopyInstances) returning 0 can tell you, if the copying is finished already.
+    
+    Will return -1, if all possible 30 instances are started already.
+  </description>
+  <retvals>    
+    integer instance_number - the copying-instance started
+  </retvals>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, copy file, background, start, copying instance</tags>
+</US_DocBloc>
+]]
+  if ultraschall.CopyFiles_InBackgroundInstanceCounter<30 then 
+    ultraschall.CopyFiles_InBackgroundInstanceCounter=ultraschall.CopyFiles_InBackgroundInstanceCounter+1
+    ultraschall.CopyFiles_InBackgroundFunction()
+    return ultraschall.CopyFiles_InBackgroundInstanceCounter
+  else
+    return -1
+  end
+end
+
+function ultraschall.CopyFile_IsCurrentlyCopying()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_IsCurrentlyCopying</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.CopyFile_IsCurrentlyCopying()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns, if the any copying-instance is (still) currently copying files.
+  </description>
+  <retvals>    
+    boolean retval - true, currently copying files; false, no file currently copying
+  </retvals>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, get, copying file currently, copying instance</tags>
+</US_DocBloc>
+]]
+  return ultraschall.CopyFiles_InBackgroundInstanceCounter>0
+end
+
+function ultraschall.CopyFile_GetCurrentlyRunningCopyInstances()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_GetCurrentlyRunningCopyInstances</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_instances = ultraschall.CopyFile_GetCurrentlyRunningCopyInstances()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the number of copying-instances currently started by [CopyFile\_StartCopying](#CopyFile_StartCopying)
+  </description>
+  <retvals>    
+    integer number_of_instances - the number of copying instances started
+  </retvals>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, get, copying instance</tags>
+</US_DocBloc>
+]]
+  return ultraschall.CopyFiles_InBackgroundInstanceCounter
+end
+
+function ultraschall.CopyFile_GetCurrentlyCopiedFile()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_GetCurrentlyCopiedFile</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_remaining_files, string filename, integer remaining_bytes_to_copy, integer percentage = ultraschall.CopyFile_GetCurrentlyCopiedFile()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the information about the file currently copied
+  </description>
+  <retvals>    
+    integer number_of_remaining_files - the number of files still in the copying-queue
+    string filename - the filename with path of the file currently copied
+    integer remaining_bytes_to_copy - the number of bytes not copied yet of the current file
+    integer percentage - the percentage of the already copied part of the file
+  </retvals>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, get, copying instance</tags>
+</US_DocBloc>
+]]
+  return ultraschall.CopyFile_NumberOfFiles, ultraschall.CopyFile_Files[1], ultraschall.CopyFile_CurrentFileLength-ultraschall.CopyFile_FilesOffset, math.floor(100/ultraschall.CopyFile_CurrentFileLength*ultraschall.CopyFile_FilesOffset)
+end
+
+function ultraschall.CopyFile_SetBufferSize(buffersize)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_SetBufferSize</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.CopyFile_SetBufferSize(integer buffersize)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets the buffer-size of the background-copy-instances in bytes.
+    
+    That means, each copying-instance will copy this amount of data per defer-cycle.
+    
+    Returns false in case of an error.
+  </description>
+  <retvals>
+    boolean retval - true, setting this was successful; false, setting this was unsuccessful
+  </retvals>
+  <parameters>
+    integer buffersize - the amount of bytes of the buffer-size
+  </parameters>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, set, buffersize, copying instance</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(buffersize)~="number: integer" then ultraschall.AddErrorMessage("CopyFile_SetBufferSize", "buffersize", "must be an integer", -1) return false end
+  if buffersize<1 then ultraschall.AddErrorMessage("CopyFile_SetBufferSize", "buffersize", "must be at least 1 byte", -2) return false end
+  ultraschall.CopyFile_Buffer=buffersize
+end
+
+--ultraschall.CopyFile_SetBufferSize(true)
+--SLEM()
+
+function ultraschall.CopyFile_GetBufferSize()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_GetBufferSize</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer buffer_size = ultraschall.CopyFile_GetBufferSize()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the current buffer-size in bytes.
+  </description>
+  <retvals>    
+    integer buffer_size - the buffer-size for the copying instances in bytes
+  </retvals>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, get, buffersize, copying instance</tags>
+</US_DocBloc>
+]]
+  return ultraschall.CopyFile_Buffer
+end
+
+
+
+function ultraschall.CopyFile_AddFileToQueue(filename, targetfilename, overwrite)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_AddFileToQueue</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer current_copyqueue_position = ultraschall.CopyFile_AddFileToQueue(string filename, string targetfilename, boolean overwrite)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Adds a new file to the copy-queue. 
+    
+    If you try to copy a file into a subdirectory, which does not exist yet, this subdirectory will be created.  
+    If the background-copying is still active(the copying-queue not finished with copying) at the time of adding, the file will be copied right away.  
+    To check, whether you need to start if there are still running copying-instances in the background, use [CopyFile\_IsCurrentlyCopying](#CopyFile_IsCurrentlyCopying).
+    
+    The returned value in current\_copyqueue\_position allows you get the current copying status and possible error-messages using [CopyFile\_GetCopiedStatus](#CopyFile_GetCopiedStatus)
+    
+    returns -1 in case of an error.
+  </description>
+  <retvals>    
+    integer current_copyqueue_position - the position in the copy-queue
+  </retvals>
+  <parameters>
+    string filename - the file to be copied, including its path
+    string targetfilename - the targetfile, to which the file shall be copied including its path
+    boolean overwrite - true, overwrite an already existing file; false, don't overwrite an already existing file
+  </parameters>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, add, sourcefile, targetfile, overwrite</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(filename)~="string" then ultraschall.AddErrorMessage("CopyFile_AddFileToQueue", "filename", "must be a string", -1) return -1 end
+  if ultraschall.type(targetfilename)~="string" then ultraschall.AddErrorMessage("CopyFile_AddFileToQueue", "targetfilename", "must be a string", -2) return -1 end
+  if ultraschall.type(overwrite)~="boolean" then ultraschall.AddErrorMessage("CopyFile_AddFileToQueue", "overwrite", "must be a boolean", -3) return -1 end
+  ultraschall.CopyFile_NumberOfFiles=ultraschall.CopyFile_NumberOfFiles+1  
+  ultraschall.CopyFile_Files[ultraschall.CopyFile_NumberOfFiles]=filename
+  ultraschall.CopyFile_FilesTarget[ultraschall.CopyFile_NumberOfFiles]=targetfilename
+  ultraschall.CopyFile_FilesOverwrite[ultraschall.CopyFile_NumberOfFiles]=overwrite
+  
+  ultraschall.CopyFile_CopiedFilesMax=ultraschall.CopyFile_CopiedFilesMax+1
+  ultraschall.CopyFile_CopiedFiles[ultraschall.CopyFile_CopiedFilesMax]=filename
+  ultraschall.CopyFile_CopiedFilesState[ultraschall.CopyFile_CopiedFilesMax]=false
+  ultraschall.CopyFile_CopiedFilesError[ultraschall.CopyFile_CopiedFilesMax]=""
+  ultraschall.CopyFile_CopiedFilesErrorNr[ultraschall.CopyFile_CopiedFilesMax]=0
+  return ultraschall.CopyFile_CopiedFilesMax
+end
+
+function ultraschall.CopyFile_GetCopiedStatus(fileindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_GetCopiedStatus</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>string filename, boolean already_processed, string error_message, string error_code = ultraschall.CopyFile_GetCopiedStatus(integer fileindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the copystatus of a file in the copy-queue
+    
+    Will return -1 in case of an error.
+  </description>
+  <retvals>    
+    string filename - the filename of the file to be copied
+    boolean already_processed - true, files has been processed; false, the file has not been processed, yet
+    string error_message - the error-message, when copying didn't work; "" if no error occurred
+    string error_code - an error-code for the error happening
+  </retvals>
+  <parameters>
+    integer fileindex - the index of the file within the copying-queue
+  </parameters>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, get, copied status</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(fileindex)~="number: integer" then ultraschall.AddErrorMessage("CopyFile_GetCopiedStatus", "fileindex", "must be an integer", -1) return nil end
+  if fileindex>ultraschall.CopyFile_CopiedFilesMax then ultraschall.AddErrorMessage("CopyFile_GetCopiedStatus", "fileindex", "no such file in the queue", -2) return nil end
+  return ultraschall.CopyFile_CopiedFiles[fileindex], 
+         ultraschall.CopyFile_CopiedFilesState[fileindex],
+         ultraschall.CopyFile_CopiedFilesError[fileindex],
+         ultraschall.CopyFile_CopiedFilesErrorNr[fileindex]
+end
+
+function ultraschall.CopyFile_FlushCopiedFiles()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_FlushCopiedFiles</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.CopyFile_FlushCopiedFiles()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Flushes the queue for the already copied files.
+    
+    This invalidates the files-index given by [CopyFile\_AddFileToQueue](#CopyFile_AddFileToQueue)!
+  </description>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, flush, copied status</tags>
+</US_DocBloc>
+]]
+  ultraschall.CopyFile_CopiedFiles={}
+  ultraschall.CopyFile_CopiedFilesState={}
+  ultraschall.CopyFile_CopiedFilesError={}
+  ultraschall.CopyFile_CopiedFilesErrorNr={}
+  ultraschall.CopyFile_CopiedFilesOffset=0
+  ultraschall.CopyFile_CopiedFilesMax=0
+end
+
+function ultraschall.CopyFile_StopCopying()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_StopCopying</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.CopyFile_StopCopying()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Stops copying of all files immediately. If the currently file isn't finished copying yet, it will remain incomplete.
+    
+    Returns the last file processed, so you can check, if the file has been copied properly.
+  </description>
+  <retvals>    
+    string filename - the last filename that has been processed
+    string filename_target - the target of the last filename, that has been processed
+  </retvals>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, stop, copying</tags>
+</US_DocBloc>
+]]
+  if ultraschall.CopyFile_NumberOfFiles==0 then return end
+  for i=ultraschall.CopyFile_CopiedFilesOffset+1, ultraschall.CopyFile_CopiedFilesMax do
+    ultraschall.CopyFile_CopiedFilesOffset=ultraschall.CopyFile_CopiedFilesOffset+1
+    ultraschall.CopyFile_CopiedFilesState[ultraschall.CopyFile_CopiedFilesOffset]=true
+    ultraschall.CopyFile_CopiedFilesError[ultraschall.CopyFile_CopiedFilesOffset]="Copying cancelled"
+    ultraschall.CopyFile_CopiedFilesErrorNr[ultraschall.CopyFile_CopiedFilesOffset]=-99
+  end
+  local lastfile=ultraschall.CopyFile_Files[1]
+  local lastfile_target=ultraschall.CopyFile_FilesTarget[1]
+  ultraschall.CopyFile_NumberOfFiles=0
+  ultraschall.CopyFile_Files={}
+  ultraschall.CopyFile_FilesTarget={}
+  ultraschall.CopyFile_FilesOffset=0
+  return lastfile, lastfile_target
+end
+
+function ultraschall.CopyFile_Pause(toggle)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_Pause</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.CopyFile_Pause(boolean toggle)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Pauses the copying of the files in the copying-queue.
+    
+    Will return false in case of an error.
+  </description>
+  <retvals>    
+    boolean retval - true, pausing was successful; false, pausing was unsuccessful
+  </retvals>
+  <parameters>
+    integer toogle - true, pause the copying; false, go on with copying of the files
+  </parameters>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, pause</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(toggle)~="boolean" then ultraschall.AddErrorMessage("CopyFile_Pause", "toogle", "must be a boolean", -1) return false end
+  ultraschall.CopyFile_Paused=toggle
+  return true
+end
+
+function ultraschall.CopyFile_GetPausedState()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_GetPausedState</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.CopyFile_GetPausedState()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the current paused-state of the background-copying
+  </description>
+  <retvals>    
+    boolean retval - true, copying is paused; false, copying isn't paused
+  </retvals>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, get, paused state</tags>
+</US_DocBloc>
+]]
+  return ultraschall.CopyFile_Paused
+end
+
+function ultraschall.CopyFile_GetRemainingFilesToCopy()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CopyFile_GetRemainingFilesToCopy</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer filecount = ultraschall.CopyFile_GetRemainingFilesToCopy()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the number of files that still need to be copied.
+  </description>
+  <retvals>    
+    integer filecount - the number of files to be copied
+  </retvals>
+  <chapter_context>
+    File Management
+    Background Copy
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>filemanagement, background copy, get, number of files to be copied</tags>
+</US_DocBloc>
+]]
+  if ultraschall.CopyFile_NumberOfFiles==0 then return 0 end
+  local files={}
+  for i=1, ultraschall.CopyFile_NumberOfFiles-ultraschall.CopyFile_FilesOffset+1 do
+    files[i]=ultraschall.CopyFile_Files[i+ultraschall.CopyFile_FilesOffset-1]
+  end
+  return ultraschall.CopyFile_NumberOfFiles-ultraschall.CopyFile_FilesOffset+1, files
 end
 
 
