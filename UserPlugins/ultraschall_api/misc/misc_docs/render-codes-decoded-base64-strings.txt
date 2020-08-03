@@ -1,6 +1,7 @@
-Render_Codes as of Reaper 6.02 as decoded Base64-strings.
+Render_Codes as of Reaper 6.12 as decoded Base64-strings.
+On Windows: some settings need FFMPEG 4.1.3 installed or are unavailable otherwise
 
-documented by Meo Mespotine, 19th of December 2019 - mespotine.de
+documented by Meo Mespotine, 21st of July 2020 - mespotine.de
 licensed creative commons cc-by-nc.
 
 
@@ -418,51 +419,91 @@ Video(ffmpeg/libav encoder)
     04: F - value 70 Header
     05: Format:
                 0, AVI
+                1, MPEG1(Windows; only with FFMPEG 4.1.3 installed)
+                1, MPEG2(Windows; only with FFMPEG 4.1.3 installed)
                 3, QT/MOV/MP4
                 4, MKV
+                5, FLV(Windows; only with FFMPEG 4.1.3 installed)
                 6, WEBM
     06: unused - value 0
     07: unused - value 0
     08: unused - value 0
     09: Video Codec:
             with AVI:
+                0, XviD(Windows; only with FFMPEG 4.1.3 installed)
+                1, H.264(Windows; only with FFMPEG 4.1.3 installed)
                 2, DV
                 3, MJPEG
                 4, FFV1 (lossless)
                 5, Hufyuv (lossless)
+            with MPEG1
+                0, MPEG-1
+            with MPEG2
+                0, MPEG-2
             with QT/MOV/MP4
-                2, MJPEG
+                0, H.264(Windows; only with FFMPEG 4.1.3 installed)
+                1, MPEG-2(Windows; only with FFMPEG 4.1.3 installed)
+                2, MJPEG            
             with MKV
+                0, H.264(Windows; only with FFMPEG 4.1.3 installed)
+                1, XviD(Windows; only with FFMPEG 4.1.3 installed)
                 2, FFV1 (lossless)
                 3, Hufyuv (lossles)
                 4, MJPEG
+                5, MPEG-2(Windows; only with FFMPEG 4.1.3 installed)    
+            with FLV
+                0, H.264(Windows; only with FFMPEG 4.1.3 installed)
+                1, FLV1(Windows; only with FFMPEG 4.1.3 installed)
             with WEBM
                 0, VP8
+                1, VP9(Windows; only with FFMPEG 4.1.3 installed)
     10: unused - value 0
     11: unused - value 0
     12: unused - value 0
-    13: WEBM: VP8 kbps(0 to 2147483647) - lowest byte
-    14: WEBM: VP8 kbps(0 to 2147483647)
-    15: WEBM: VP8 kbps(0 to 2147483647)
-    16: WEBM: VP8 kbps(0 to 2147483647) - highest byte
+    13: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647) - lowest byte
+    14: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647)
+    15: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647)
+    16: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647) - highest byte
     17: Audio Codec:
             with AVI:
+                0, MP3(Windows; only with FFMPEG 4.1.3 installed)
+                1, AAC(Windows; only with FFMPEG 4.1.3 installed)
+                2, AC3(Windows; only with FFMPEG 4.1.3 installed)
                 3, 16 bit PCM
                 4, 24 bit PCM
                 5, 32 bit FP
-            with QT/MOV/MP4, MKV
+            with MPEG-1
+                0, MP3(Windows; only with FFMPEG 4.1.3 installed)
+                1, MP2(Windows; only with FFMPEG 4.1.3 installed)
+            with MPEG-2
+                0, AAC(Windows; only with FFMPEG 4.1.3 installed)
+                1, MP3(Windows; only with FFMPEG 4.1.3 installed)
+                2, MP2(Windows; only with FFMPEG 4.1.3 installed)
+            with QT/MOV/MP4
+                0, AAC(Windows; only with FFMPEG 4.1.3 installed)
+                1, MP3(Windows; only with FFMPEG 4.1.3 installed)
+                2, 16 bit PCM
+                3, 24 bit PCM
+                4, 32 bit FP               
+            with MKV
+                0, MP3(Windows; only with FFMPEG 4.1.3 installed)
+                1, AAC(Windows; only with FFMPEG 4.1.3 installed)
                 2, 16 bit PCM
                 3, 24 bit PCM
                 4, 32 bit FP
+            with FLV
+                0, MP3(Windows; only with FFMPEG 4.1.3 installed)
+                1, AAC(Windows; only with FFMPEG 4.1.3 installed)
             with WEBM
                 0, VORBIS
+                1, OPUS(Windows; only with FFMPEG 4.1.3 installed)
     18: unused - value 0
     19: unused - value 0
     20: unused - value 0
-    21: WEBM: VORBIS-bitrate(0 to 2147483647) - lowest byte
-    22: WEBM: VORBIS-bitrate(0 to 2147483647)
-    23: WEBM: VORBIS-bitrate(0 to 2147483647)
-    24: WEBM: VORBIS-bitrate(0 to 2147483647) - highest byte
+    21: WEBM/MKV/QT/MOV/MP4/MPEG1&2: VORBIS/OPUS/AAC/MP3(QT/MOV/MP4)/MP2/AC3-bitrate(0 to 2147483647) - lowest byte
+    22: WEBM/MKV/QT/MOV/MP4/MPEG1&2: VORBIS/OPUS/AAC/MP3(QT/MOV/MP4)/MP2/AC3-bitrate(0 to 2147483647)
+    23: WEBM/MKV/QT/MOV/MP4/MPEG1&2: VORBIS/OPUS/AAC/MP3(QT/MOV/MP4)/MP2/AC3-bitrate(0 to 2147483647)
+    24: WEBM/MKV/QT/MOV/MP4/MPEG1&2: VORBIS/OPUS/AAC/MP3(QT/MOV/MP4)/MP2/AC3-bitrate(0 to 2147483647) - highest byte
     25: Resolution width(0 to 2147483647) - lowest byte
     26: Resolution width(0 to 2147483647)
     27: Resolution width(0 to 2147483647)
@@ -481,10 +522,10 @@ Video(ffmpeg/libav encoder)
     38: unused - value 0
     39: unused - value 0
     40: unused - value 0
-    41: MJPEG quality(0 to 2147483647) - lowest byte
-    42: MJPEG quality(0 to 2147483647)
-    43: MJPEG quality(0 to 2147483647)
-    44: MJPEG quality(0 to 2147483647) - highest byte
+    41: MJPEG/H.264 quality(0 to 2147483647) - lowest byte
+    42: MJPEG/H.264 quality(0 to 2147483647)
+    43: MJPEG/H.264 quality(0 to 2147483647)
+    44: MJPEG/H.264 quality(0 to 2147483647) - highest byte
     
 
 Video(MPEG-4/MOV (macOS 10.7+ AVFoundation))

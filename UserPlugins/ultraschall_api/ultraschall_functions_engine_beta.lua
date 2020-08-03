@@ -1385,8 +1385,26 @@ function ultraschall.GetTakeEnvelopeUnderMouseCursor()
   end
 end
 
--- These seem to work working:
+function ultraschall.GetAllSelectedRegions_Project()
+  -- still has an issue, when GetProjectStateChunk doesn't return a ProjectStateChunk(probably due timeout-issues)
+  -- so check, if ProjectStateChunk is an actual one or nil!!
+  -- seems to be problematic on Mac mostly...
+  local ProjectStateChunk = ultraschall.GetProjectStateChunk(nil, false)
+  local markerregioncount, NumMarker, Numregions, Markertable = ultraschall.GetProject_MarkersAndRegions(nil, ProjectStateChunk)
+  
+  local regions={}
+  local regionscnt=0
 
+  for i=1, markerregioncount do
+    if Markertable[i][1]==true and Markertable[i][8]==true then
+      regionscnt=regionscnt+1
+      regions[regionscnt]=Markertable[i][5]
+    end
+  end
+  return regionscnt, regions
+end
+
+-- These seem to work working:
 
 
 

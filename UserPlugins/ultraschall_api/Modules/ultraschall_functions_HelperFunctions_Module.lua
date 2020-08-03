@@ -5821,3 +5821,58 @@ function ultraschall.Benchmark_MeasureTime(timeformat, reset, slot)
   end
   return passed_time, passed_time_string, valid
 end
+
+function ultraschall.TimeToMeasures(project, Time)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>TimeToMeasures</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>number measure = ultraschall.TimeToMeasures(ReaProject project, number Time))</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+       a function which converts a time into current projects time-measures
+       only useful, when there are no tempo-changes in the project
+       
+       returns nil in case of an error
+    </description>
+    <retvals>
+      number measure - the measures, that parameter time needs to be reflected
+    </retvals>
+    <parameters>
+        ReaProject project  - ReaProject to use the timesignature-settings from
+        number time         - in seconds, the time to convert into a time-measurment, which can be
+                            - used in config-variable "prerollmeas"
+    </parameters>
+    <chapter_context>
+      API-Helper functions
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+    <tags>helper functions, convert, time, to measures</tags>
+  </US_DocBloc>
+  --]]
+  -- quick function that converts a time into current projects time-measures
+  -- only useful, when there are no tempo-changes in the project
+  --
+  -- parameters:
+  --  project - ReaProject to use the timesignature-settings from
+  --  time    - in seconds, the time to convert into a time-measurment, which can be
+  --             used in config-variable "prerollmeas"
+  --
+  -- retval:
+  --  measure - the measures, that parameter time needs to be reflected
+  --print2(ultraschall.type(Time))
+  if project~=0 and ultraschall.type(project)~="ReaProject" then ultraschall.AddErrorMessage("TimeToMeasures", "project", "must be a ReaProject", -1) return end
+  if ultraschall.type(Time):sub(1,7)~="number:" then ultraschall.AddErrorMessage("TimeToMeasures", "Time", "must be a number in seconds", -2) return end
+  local Measures=reaper.TimeMap2_beatsToTime(project, 0, 1)
+  local retval, measures, cml, fullbeats, cdenom = reaper.TimeMap2_timeToBeats(project, 10)
+  local QN=reaper.TimeMap2_timeToQN(project, 1)
+  local Measures_Fin=Measures/cdenom
+  local Measures_Fin2=Measures_Fin*Time
+  return Measures_Fin2
+end
+
+
