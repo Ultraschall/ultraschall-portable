@@ -338,7 +338,10 @@ function buildGuiWarnings()
   if refresh_gui == true then
 
     WindowHeight = 140 + (paused_warning_count*60) + (active_warning_count*30) + description_lines*30
-    if active_warning_count + paused_warning_count == 0 then WindowHeight = 500 end
+    if active_warning_count + paused_warning_count == 0 then
+      WindowHeight = 220
+    end
+
     -- GUI.y = (screen_h - WindowHeight + 210 - warningCount*30) / 2
     -- GUI.y = (screen_h - WindowHeight) - 150
     -- GUI.y = 300
