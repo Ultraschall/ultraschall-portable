@@ -596,7 +596,7 @@ function buildGUI()
 	StepDescription = "Hit the button and select your MP3 to finalize it with metadata, chapters and episode image!"
 	warnings_position = position+30
 	button_txt = "Finalize MP3!"
-	button_action = "_ULTRASCHALL_CONVERT_OLD_METADATA_AND_INSERT_MEDIA_PROPERTIES"
+	button_action = "_Ultraschall_ConvertOldMetadata_To_Ultraschall4_1_format"
 
 	buildExportStep()
 
