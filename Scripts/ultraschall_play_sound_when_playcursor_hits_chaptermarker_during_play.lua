@@ -37,6 +37,19 @@ Filename_ok = reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/ok.flac"
 Filename_edit = reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/edit.flac"
 Filename_empty = reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/empty.flac"
 
+logscale = {
+
+  0.02,
+  0.05,
+  0.11,
+  0.18,
+  0.27,
+  0.35,
+  0.42,
+  0.52,
+  0.7,
+  1}
+
 
 oldPosition=reaper.GetPlayPosition()
 
@@ -66,8 +79,13 @@ function main()
 
       volume = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value" ,"ultraschall-settings.ini"))
 
+      volume = volume * 10
+
+      volume = logscale[volume]
+
+
       if volume == nil then
-        volume = 1
+        volume = 0
       end
 
       --ultraschall.PreviewMediaFile(Filename, 1, false)

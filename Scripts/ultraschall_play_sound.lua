@@ -30,12 +30,34 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+
+logscale = {
+
+0.02,
+0.05,
+0.11,
+0.18,
+0.27,
+0.35,
+0.42,
+0.52,
+0.7,
+1}
+
+
 Filename = reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/ok.flac"
 
 volume = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value" ,"ultraschall-settings.ini"))
 
+volume = volume * 10
+
+volume = logscale[volume]
+
+-- print (volume)
+
+
 if volume == nil then
-  volume = 1
+  volume = 0
 end
 
 PCM_Source=reaper.PCM_Source_CreateFromFile(Filename)
