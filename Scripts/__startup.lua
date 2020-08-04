@@ -258,7 +258,7 @@ end
 -- Start GUI State Manager
 --------------------------
 
-cmd=reaper.NamedCommandLookup("_Ultraschall_GUI_statemanager")
+cmd=reaper.NamedCommandLookup("_Ultraschall_Gui_Statemanager")
 reaper.Main_OnCommand(cmd,0)
 
 --------------------------

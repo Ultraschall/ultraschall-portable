@@ -27,8 +27,40 @@
 -- little helpers
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+function IsAnyMuteOrVolumePreFXEnvelopeVisible(autotogglebutton)
+  -- autotogglebutton
+  -- true, set the state of the mute-envelope-button in Main toolbar accordingly
+  -- false, just return, if there are any visible Mute/Volume(PreFX)-envelopes
+  for i=0, reaper.CountTracks()-1 do
+    local Track=reaper.GetTrack(0,i)
+    local TrackEnvelope_Mute = reaper.GetTrackEnvelopeByName(Track, "Mute")
+    local TrackEnvelope_Volume = reaper.GetTrackEnvelopeByName(Track, "Volume (Pre-FX)")
+    if TrackEnvelope_Mute~=nil or TrackEnvelope_Volume~=nil then
+      local Aretval2, Aretval
+      if TrackEnvelope_Mute~=nil then   Aretval2= reaper.GetEnvelopeInfo_Value(TrackEnvelope_Mute,   "I_TCPH_USED") else Aretval2=0 end
+      if TrackEnvelope_Volume~=nil then Aretval = reaper.GetEnvelopeInfo_Value(TrackEnvelope_Volume, "I_TCPH_USED") else Aretval=0  end
+
+      if Aretval2>0 or Aretval>0 then
+        if autotogglebutton==true then
+          local cmdid=reaper.NamedCommandLookup("_Ultraschall_Mute_Envelope")
+          reaper.SetToggleCommandState(0, cmdid, 1)
+          reaper.RefreshToolbar(cmdid)
+        end
+      return true end
+    end
+  end
+  if autotogglebutton==true then
+    local cmdid=reaper.NamedCommandLookup("_Ultraschall_Mute_Envelope")
+    reaper.SetToggleCommandState(0, cmdid, 0)
+    reaper.RefreshToolbar(cmdid)
+  end
+  return false
+end
+
 
 function checkGuiStates()
+
+  A=IsAnyMuteOrVolumePreFXEnvelopeVisible(true)
 
   for i = 1, #GUIServices do
 
