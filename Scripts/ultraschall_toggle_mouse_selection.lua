@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,17 +27,21 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 is_new,name,sec,cmd,rel,res,val = reaper.get_action_context()
+cmd = reaper.NamedCommandLookup("_Ultraschall_Toggle_Mouse_Selection")
 state = reaper.GetToggleCommandStateEx(sec, cmd)
 
 if state <= 0 then
-	reaper.SetToggleCommandState(sec, cmd, 1)
+	newstate = 1
+	reaper.SetToggleCommandState(sec, cmd, newstate)
 	reaper.Main_OnCommand(39029,0)      --change mode to select
 else
-	reaper.SetToggleCommandState(sec, cmd, 0)
+	newstate = 0
+	reaper.SetToggleCommandState(sec, cmd, newstate)
 	reaper.Main_OnCommand(39013,0)      --change mode to move
 end
 
-ultraschall.SetUSExternalState("ultraschall_mouse", "state", state)
+reaper.SetProjExtState(0, "gui_statemanager", "_ULTRASCHALL_TOGGLE_MOUSE_SELECTION", tostring(newstate)) -- speichere den aktuellen GUI-Status in Projektdatei
+
 
 reaper.RefreshToolbar2(sec, cmd)
 

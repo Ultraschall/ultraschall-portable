@@ -62,5 +62,8 @@ end
 
 reaper.SetToggleCommandState(sec, ID_1, 0)
 reaper.SetToggleCommandState(sec, ID_2, 0)
+reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_set_Matrix_Editing", 1)
+reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_set_Matrix_Recording", 0)
+reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_set_Matrix_Preshow", 0)
 
 reaper.RefreshToolbar2(sec, cmd)

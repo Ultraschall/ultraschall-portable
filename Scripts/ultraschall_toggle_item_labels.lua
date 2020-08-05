@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,25 @@
 ################################################################################
 ]]
 
--- sets Arrangeview to that the cursor-position is centered if the cursor is not visible
--- when stopped, it will take the edit-cursor, when playing/recording, it will take the play-cursor instead
-
-
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
--- A=ultraschall.GetUSExternalState("ultraschall_follow", "state")
+cmd = reaper.NamedCommandLookup("_Ultraschall_toggle_item_labels")
+state = reaper.GetToggleCommandStateEx(0, cmd)
 
-commandid = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
-buttonstate = reaper.GetToggleCommandStateEx(0, commandid)
-if buttonstate <= 0 then buttonstate = 0 end
-
-start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-length=(end_time-start_time)/2
-
-if buttonstate == 1 and reaper.GetPlayState() ~= 0 and reaper.GetPlayPosition()>end_time-length then
-    reaper.BR_SetArrangeView(0, (reaper.GetPlayPosition()-length), (reaper.GetPlayPosition()+length))
+if state <= 0 then
+	newstate = 1
+	reaper.SetToggleCommandState(0, cmd, newstate)
+else
+	newstate = 0
+	reaper.SetToggleCommandState(0, cmd, newstate)
 end
+
+reaper.Main_OnCommand(40651,0)      -- toggle item labels view
+
+reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_toggle_item_labels", tostring(newstate)) -- speichere den aktuellen GUI-Status in Projektdatei
+
+
+reaper.RefreshToolbar2(0, cmd)
+
+-- Msg(cmd)
+-- Msg(ID_2)

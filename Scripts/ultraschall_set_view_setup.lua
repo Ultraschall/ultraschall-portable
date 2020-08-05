@@ -47,6 +47,12 @@ reaper.SetToggleCommandState(sec, ID_2, 0)
 reaper.SetToggleCommandState(sec, ID_3, 0)
 reaper.SetToggleCommandState(sec, ID_4, 0)
 
+reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_Set_View_Setup", 1)
+reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_Set_View_Record", 0)
+reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_Set_View_Edit", 0)
+reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_Set_View_Story", 0)
+
+
 --reaper.RefreshToolbar2(sec, ID_1)
 -- reaper.RefreshToolbar2(sec, ID_2)
 -- reaper.RefreshToolbar2(sec, ID_3)
