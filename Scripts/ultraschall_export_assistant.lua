@@ -471,24 +471,26 @@ function buildGUI()
 	images_offset = -18
 
 	changed, num_dropped_files, dropped_files, drop_mouseposition_x, drop_mouseposition_y = ultraschall.GFX_GetDropFile()
-	if num_dropped_files > 0 and changed then
+	if num_dropped_files > 0 and changed then -- es gibt ein drop-Event
 		-- print ("da: "..dropped_files[1])
 
-		dropzone_id = GetDropzone(drop_mouseposition_x/dpi_scale, (drop_mouseposition_y/dpi_scale)-y_offset)
+		-- print (drop_mouseposition_x/dpi_scale.."-".. (drop_mouseposition_y/dpi_scale)-y_offset)
+
+		dropzone_id = 	GetDropzone((drop_mouseposition_x/dpi_scale)-images_offset, (drop_mouseposition_y/dpi_scale)-y_offset)
 		source_file = dropped_files[1]
 		extension = (GetFileExtension(source_file))
 
-		if dropzone_id ~= 0 then
+		if dropzone_id ~= 0 then -- es wurde eines der 4 kleinen Slots getroffen
 
 			-- print(dropzone_id)
 			destination_file = cover_path .. tostring(dropzone_id) .. extension
 			DeleteImages(cover_path .. tostring(dropzone_id))
 
-		else
+		else -- irgendwo anders, wird dann als Hauptgrafik gewertet
 
 			destination_file = dir .. "cover" .. extension
 			DeleteImages(dir .. "cover")
-			--print (drop_mouseposition_x/dpi_scale.."-".. drop_mouseposition_y/dpi_scale)
+
 
 		end
 
@@ -565,6 +567,8 @@ function buildGUI()
 
 			logo_slot = GUI.Pic:new(dropzone[i].x + images_offset, dropzone[i].y + y_offset, 38, 38, 1, logo_path, runcommand, "_Ultraschall_Open_Project_Folder")
 			table.insert (GUI.elms, logo_slot)
+			-- print (i..": ".. dropzone[i].x + images_offset.." - "..dropzone[i].y + y_offset)
+
 
 		end
 
