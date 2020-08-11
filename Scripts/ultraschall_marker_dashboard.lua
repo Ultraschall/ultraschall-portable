@@ -319,7 +319,7 @@ function editURL(idx)
   if old_url == nil then
     old_url = ""
   end
-  retval, result = reaper.GetUserInputs("Edit Chapter URL", 1, "URL- begins with http:// or https://,extrawidth=300" , old_url)
+  retval, result = reaper.GetUserInputs("Edit Chapter URL", 1, "Begins with http:// or https://,extrawidth=300" , old_url)
 
   if retval == true then
     if (result:match("https?://(([%w_.~!*:@&+$/?%%#-]-)(%w[-.%w]*%.)(%w%w%w?%w?)(:?)(%d*)(/?)([%w_.~!*:@&+$/?%%#=-]*))")) or result == "" then
