@@ -115,7 +115,7 @@ function main()
       reaper.SNM_SetIntConfigVar("preroll", Preroll_Settings)
       reaper.SNM_SetDoubleConfigVar("prerollmeas", OldTime)
       reaper.Undo_EndBlock("PreviewRecording", -1)
-        tudelu=false
+      tudelu=false
     end
 
   -- gfx.update()
@@ -155,8 +155,8 @@ function atexit()
 
   reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
   reaper.SNM_SetIntConfigVar("preroll", Preroll_Settings)
-  reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false)
-  reaper.DeleteExtState("ultraschall_PreviewRecording", "RecPosition", false) -- lösche Eintrag für Preroll
+  reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false) -- lösche Eintrag für Preroll Dialog
+  -- reaper.DeleteExtState("ultraschall_PreviewRecording", "RecPosition", false) -- lösche Eintrag für Preroll
 
 end
 
