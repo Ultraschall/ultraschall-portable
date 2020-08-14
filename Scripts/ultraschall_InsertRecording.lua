@@ -45,7 +45,9 @@ function MoveUntilStop()
     end
     position=position+4
   end
-  if reaper.GetPlayState()&4==4 then reaper.defer(MoveUntilStop) else
+  if reaper.GetPlayState()&4==4 then
+    reaper.defer(MoveUntilStop)
+  else
     -- if recording stops, move items, trackenvelope-points, regions and markers after current recording-position
     -- back to close the 4+ second gap
     stopposition=reaper.GetPlayPosition()

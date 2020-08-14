@@ -295,6 +295,23 @@ show_info = toboolean(ultraschall.GetUSExternalState("ultraschall_gui", "showinf
 --  Aufbau der nicht interkativen GUI-Elemente wie Logos etc.
 ------------------------------------------------------
 
+function atexit()
+
+  if ultraschall.GetUSExternalState("ultraschall_settings_graceful_soundcheck", "Value","ultraschall-settings.ini") == "1" then
+     ignore_all_warnings()
+  end
+  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+
+end
+
+
+function atexitClean()
+
+  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+
+end
+
+
 function buildGuiWarnings()
 
   if all_ignored and reaper.time_precise() - all_ignored > 3 then
@@ -360,8 +377,6 @@ function buildGuiWarnings()
     run_action("_Ultraschall_Moonlander")
 
   end
-
-
 
   GUI.elms = {}
 
@@ -538,6 +553,8 @@ function buildGuiWarnings()
 
   end
 
+  ::done::
+
 end
 
 
@@ -558,22 +575,10 @@ if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed 
   -- buildGui()
   buildGuiWarnings()
   GUI.Init()
-
   GUI.Main()
-end
-
-function atexit()
-  if ultraschall.GetUSExternalState("ultraschall_settings_graceful_soundcheck", "Value","ultraschall-settings.ini") == "1" then
-    ignore_all_warnings()
-  end
-  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
 
 end
 
-function atexitClean()
 
-  reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
-
-end
 
 reaper.atexit(atexit)
