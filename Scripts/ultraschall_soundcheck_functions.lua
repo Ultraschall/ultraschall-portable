@@ -135,8 +135,8 @@ function SoundcheckMic(userspace)
   end
 
 
-  if number ~= 1 and armed then
-    reaper.Main_OnCommand(40521,0) -- setze Playrate auf 1 vor Aufnahme
+  if number ~= 1 and reaper.GetPlayState() == 5 then
+    reaper.Main_OnCommand(40521,0) -- setze Playrate auf 1 bei einer Aufnahme
   end
 
   if armed then -- teste nur, wenn eine Spur zur Aufnahme aktiviert wurde
