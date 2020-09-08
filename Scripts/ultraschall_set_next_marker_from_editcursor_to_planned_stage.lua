@@ -112,6 +112,11 @@ AA,AA2,AA3=ultraschall.GetClosestNextNormalMarker(0)
 
 if AA~=-1 then
   A,B=ultraschall.GetAllPlannedMarkers()
-  ultraschall.MoveMarkers(B, .1, true)
-  reaper.SetProjectMarkerByIndex2(0, AA-1, false, 0.1, 0, 0, AA3, ultraschall.ConvertColor(100,255,0), 0)
+  reaper.Undo_BeginBlock()
+    ultraschall.MoveMarkers(B, .1, true)
+  reaper.Undo_EndBlock("Set next normal marker to planned chapter", -1)
+  
+  reaper.Undo_BeginBlock()
+    reaper.SetProjectMarkerByIndex2(0, AA-1, false, 0.1, 0, 0, AA3, ultraschall.ConvertColor(100,255,0), 0)
+  reaper.Undo_EndBlock("Set next normal marker to planned chapter", -1) -- has to be a second UNDO block!
 end
