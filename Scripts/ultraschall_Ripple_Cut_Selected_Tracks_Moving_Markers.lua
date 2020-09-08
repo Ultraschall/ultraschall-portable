@@ -34,4 +34,7 @@ if startloop==0 and startloop==endloop then reaper.MB("No time-selection active"
 
 trackstring = ultraschall.CreateTrackString_SelectedTracks()
 if trackstring=="" then reaper.MB("No tracks selected", "No track-selection", 0) return end
+
+reaper.Undo_BeginBlock()
 ultraschall.RippleCut(startloop, endloop, trackstring, true, true, true)
+reaper.Undo_EndBlock("Ripple cut in selected Tracks, moving markers", -1)

@@ -33,4 +33,7 @@ if startloop==0 and startloop==endloop then reaper.MB("No time-selection active"
 
 trackstring = ultraschall.CreateTrackString_SelectedTracks()
 if trackstring=="" then reaper.MB("No tracks selected", "No track-selection", 0) return end
+
+reaper.Undo_BeginBlock()
 number_items, MediaItemArray_StateChunk = ultraschall.SectionCut(startloop, endloop, trackstring, true)
+reaper.Undo_EndBlock("Cut all items within time-selection in selected tracks", -1)

@@ -31,4 +31,6 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 startloop, endloop = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 if startloop==0 and startloop==endloop then reaper.MB("No time-selection active", "No time-selection", 0) return end
 
+reaper.Undo_BeginBlock()
 number_items, MediaItemArray_StateChunk = ultraschall.SectionCut(startloop, endloop, ultraschall.CreateTrackString_AllTracks(), true)
+reaper.Undo_EndBlock("Cut all items within time-selection", -1)
