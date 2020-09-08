@@ -74,6 +74,8 @@ sec=tonumber(sec)
 
 --get the slot of the StudioLink effect.
 
+::tryagain::
+
 if string.match(os, "OSX") then
   fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir (ITSR)", false, 0)
 else  -- Windows
@@ -81,7 +83,8 @@ else  -- Windows
 end
 
 if fx_slot ~= -1 then
-  reaper.TrackFX_Delete(m, fx_slot)
+	reaper.TrackFX_Delete(m, fx_slot)
+	goto tryagain  -- falls es mehr als einen Effekt gibt
 end
 
 on_air_button_id = reaper.NamedCommandLookup("_Ultraschall_OnAir")
