@@ -29,15 +29,81 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
 
 numAudioIns = reaper.GetNumAudioInputs()
-print("Inputs: "..numAudioIns)
+-- print("Inputs: "..numAudioIns)
 
 numtracks = reaper.GetNumTracks()
-print("Tracks: "..numtracks)
+-- print("Tracks: "..numtracks)
+
+retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "") -- gerade aktives device
+
+
+function mapAllInputs ()
+
+  local usedChannels = {}
+
+  for i=0, numtracks-1 do
+    track_object = reaper.GetTrack(0, i)
+    input = reaper.GetMediaTrackInfo_Value(track_object, "I_RECINPUT")
+    -- print("Track: "..(i+1).." Input: "..input)
+
+    if input >= 0 and input < 1024 then
+        usedChannels[input] = true
+    end
+  end
+
+  return usedChannels
+
+end
+
+
+function findFirstFreeInput ()
+
+  numAudioIns = reaper.GetNumAudioInputs()
+
+  for i = 0, numAudioIns-1 do
+
+    if usedChannels[i] ~= true then
+      return i
+    end
+  end
+
+  return false
+
+end
+
+usedChannels = mapAllInputs()
+inputChannels = {}
 
 for i=0, numtracks-1 do
   track_object = reaper.GetTrack(0, i)
   input = reaper.GetMediaTrackInfo_Value(track_object, "I_RECINPUT")
-  print("Track: "..(i+1).." Input: "..input)
+  -- print("Track: "..(i+1).." Input: "..input)
+
+  if input >= 0 and input < 1024 then
+
+    if inputChannels[input] == true then
+
+      newInput = findFirstFreeInput()
+
+      if newInput ~= false then
+        reaper.SetMediaTrackInfo_Value(track_object, "I_RECINPUT", newInput)
+        inputChannels[newInput] = true
+        usedChannels[newInput] = true
+
+      else
+
+        print ("all Inputs in use")
+
+      end
+
+    else
+
+      inputChannels[input] = true
+
+    end
+
+  end
+
 
 end
 
