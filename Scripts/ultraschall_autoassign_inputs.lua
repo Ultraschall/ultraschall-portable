@@ -36,6 +36,14 @@ numtracks = reaper.GetNumTracks()
 
 retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "") -- gerade aktives device
 
+-- actual_device_name = "zoom H3"
+
+if string.find(actual_device_name, "H6", 1) or string.find(actual_device_name, "H5", 1) or string.find(actual_device_name, "H4", 1) then
+  offset = 2
+else
+  offset = 0
+end
+
 
 function mapAllInputs ()
 
@@ -47,6 +55,7 @@ function mapAllInputs ()
     -- print("Track: "..(i+1).." Input: "..input)
 
     if input >= 0 and input < 1024 then
+        -- input = input + offset
         usedChannels[input] = true
     end
   end
@@ -60,7 +69,7 @@ function findFirstFreeInput ()
 
   numAudioIns = reaper.GetNumAudioInputs()
 
-  for i = 0, numAudioIns-1 do
+  for i = 0 + offset, numAudioIns-1 do
 
     if usedChannels[i] ~= true then
       return i
@@ -81,9 +90,10 @@ for i=0, numtracks-1 do
 
   if input >= 0 and input < 1024 then
 
-    if inputChannels[input] == true then
+    -- input = input + offset
+    if inputChannels[input] == true or (offset == 2 and input < 2) then -- der Input Kanal ist schon einmal belegt, oder es ist ein Zoom Gerät und Kanal 1/2 ist belegt
 
-      newInput = findFirstFreeInput()
+      newInput = findFirstFreeInput() -- suche den ersten noch freien Input-Kanal (bei Zoom H4/5/&: > Kanal 2)
 
       if newInput ~= false then
         reaper.SetMediaTrackInfo_Value(track_object, "I_RECINPUT", newInput)
@@ -92,7 +102,11 @@ for i=0, numtracks-1 do
 
       else
 
-        print ("all Inputs in use")
+        Message = "!;Audio Device;".."The number of tracks exceeds the number ob inputs of your audio interface."
+        reaper.SetExtState("ultraschall_messages", "message_0", Message, false)
+        reaper.SetExtState("ultraschall_messages", "message_count", "1", false)
+
+        -- print ("all Inputs in use")
 
       end
 
