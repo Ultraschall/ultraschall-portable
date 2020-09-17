@@ -41,6 +41,53 @@ function SoundcheckUnsaved(userspace)
 
 end
 
+function SoundcheckInputs(userspace)
+
+  if ultraschall.CreateTrackString_ArmedTracks() ~= "" then -- schlägt nur an, wenn mindestens ein Track auf recarm steht
+
+    numtracks = reaper.GetNumTracks()
+    retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "") -- gerade aktives device
+
+    if string.find(actual_device_name, "H6", 1) or string.find(actual_device_name, "H5", 1) or string.find(actual_device_name, "H4", 1) then
+      offset = 2
+    else
+      offset = 0
+    end
+
+    local inputChannels = {}
+
+    for i=0, numtracks-1 do
+
+      track_object = reaper.GetTrack(0, i)
+      input = reaper.GetMediaTrackInfo_Value(track_object, "I_RECINPUT")
+      -- print("Track: "..(i+1).." Input: "..input)
+
+      if input >= 0 and input < 1024 then
+
+        -- input = input + offset
+        if inputChannels[input] == true or (offset == 2 and input < 2) then -- der Input Kanal ist schon einmal belegt, oder es ist ein Zoom Gerät und Kanal 1/2 ist belegt
+
+          -- newInput = findFirstFreeInput() -- suche den ersten noch freien Input-Kanal (bei Zoom H4/5/&: > Kanal 2)
+
+          return true
+        else
+          inputChannels[input] = true
+        end
+
+
+
+      end
+
+
+    end
+
+  end
+
+  return false
+
+end
+
+
 
 function SoundcheckOverdub(userspace)
 
