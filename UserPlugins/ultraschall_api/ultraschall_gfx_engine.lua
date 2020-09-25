@@ -1061,3 +1061,87 @@ end
 
 --ultraschall.Lokasenna_LoadGuiLib_v2()
 
+function ultraschall.GFX_DrawEmbossedSquare(x, y, w, h, rbg, gbg, bbg, r, g, b)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_DrawEmbossedSquare</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.95
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.GFX_DrawEmbossedSquare(integer x, integer y, integer w, integer h, optional integer rgb, optional integer gbg, optional integer bbg, optional integer r, optional integer g, optional integer b)</functioncall>
+  <description>
+    draws an embossed rectangle, optionally with a background-color
+    
+    returns false in case of an error
+  </description>
+  <parameters>
+    integer x - the x position of the rectangle
+    integer y - the y position of the rectangle
+    integer w - the width of the rectangle
+    integer h - the height of the rectangle
+    optional integer rgb - the red-color of the background-rectangle; set to nil for no background-color
+    optional integer gbg - the green-color of the background-rectangle; set to nil for no background-color/uses rbg if gbg and bbg are set to nil
+    optional integer bbg - the blue-color of the background-rectangle; set to nil for no background-color/uses rbg if gbg and bbg are set to nil
+    optional integer r - the red-color of the embossed-rectangle; nil, to use 1
+    optional integer g - the green-color of the embossed-rectangle; nil, to use 1
+    optional integer b - the blue-color of the embossed-rectangle; nil, to use 1
+  </parameters>
+  <retvals>
+    boolean retval - true, drawing was successful; false, drawing wasn't successful
+  </retvals>
+  <chapter_context>
+    Basic Shapes
+  </chapter_context>
+  <target_document>US_Api_GFX</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, functions, gfx, draw, thickness, embossed rectangle</tags>
+</US_DocBloc>
+]]
+  if gfx.getchar()==-1 then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "", "no gfx-window opened", -1) return false end
+  if ultraschall.type(x)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "x", "must be an integer", -2) return false end
+  if ultraschall.type(y)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "y", "must be an integer", -3) return false end
+  if ultraschall.type(w)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "w", "must be an integer", -4) return false end
+  if ultraschall.type(h)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "h", "must be an integer", -5) return false end
+  
+  if rbg~=nil and type(rbg)~="number" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "rbg", "must be a number or nil", -6) return false end
+  if bbg~=nil and type(bbg)~="number" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "gbg", "must be a number or nil", -7) return false end
+  if gbg~=nil and type(gbg)~="number" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "bbg", "must be a number or nil", -8) return false end
+  
+  if r~=nil and type(r)~="number" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "r", "must be a number or nil", -9) return false end
+  if g~=nil and type(g)~="number" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "g", "must be a number or nil", -10) return false end
+  if b~=nil and type(b)~="number" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "b", "must be a number or nil", -11) return false end
+  local offsetx=1
+  local offsety=1
+  
+  
+  if r~=nil and g==nil and b==nil then g=r b=r end
+  if r==nil or g==nil or g==nil then r=1 g=1 b=1 end   
+  if b==nil or g==nil then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "r, g and b", "either all three must be set or only one of them", -12) return false end 
+  -- background
+  if rbg~=nil and bbg==nil and gbg==nil then
+    bbg=rbg
+    gbg=rbg
+  end
+  if rbg~=nil and bbg~=nil and gbg~=nil then
+    gfx.set(rbg,gbg,bbg)
+    gfx.rect(x+1,y+1,w,h,1)
+  end
+  
+  -- darker-edges
+  gfx.set(0.5*r, 0.5*g, 0.5*b)
+  gfx.line(x+offsetx  , y+offsety,   x+w+offsetx, y+offsety  )
+  gfx.line(x+w+offsetx, y+offsety,   x+w+offsetx, y+h+offsety)
+  gfx.line(x+w+offsetx, y+h+offsety, x+offsetx  , y+h+offsety)
+  gfx.line(x+offsetx  , y+h+offsety, x+offsetx  , y+offsety  )
+
+  -- brighter-edges
+  gfx.set(r, g, b)
+  gfx.line(x,   y,   x+w, y  )
+  gfx.line(x+w, y,   x+w, y+h)
+  gfx.line(x+w, y+h, x  , y+h)
+  gfx.line(x  , y+h, x  , y  )
+  return true
+end 
+

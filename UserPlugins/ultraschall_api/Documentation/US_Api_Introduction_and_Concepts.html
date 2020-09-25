@@ -55,8 +55,8 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.1004 - "I, E.T." - 21st of July 2020 - Build: 43239</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
-<td><a href="#Introduction_002_How_to_Use">How to use the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.1005 - "The Beatles - I want you(she's so heavy)" - 25th of September 2020 - Build: 43343</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<td><a href="#Introduction_002_How_to_Use">How to install and use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
 </tr><tr><td><a href="#Introduction_005_License">Introduction: License</a></td>
@@ -158,7 +158,19 @@ Ultraschall API functions
 <td><a href="#EventManager_StartupEvents">EventManager: Working with startup events</a></td>
 </tr><tr><td><a href="#EventManager_The_Basic_Concept">EventManager: The Basic Concept</a></td>
 <td><a href="#EventManager_WhichEventsCanBeChecked">EventManager: Which events can be checked?</a></td>
-</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Helper Functions</b></td></tr><tr><td><a href="#Helper_Functions_001_Introduction">Helper_Functions: Introduction</a></td>
+</tr><p><tr><td>&nbsp;</td></tr><tr><td><b>FX-Management</b></td></tr><tr><td><a href="#FX_Introduction">FX-Management: Introduction</a></td>
+<td><a href="#FX_Manipulating_Individual_Effects">FX-Management: Manipulating individual effects</a></td>
+<td><a href="#FX_ParameterAlias">Parameter Alias</a></td>
+<td><a href="#FX_ParameterLFOLearn">Parameter LFO Learn</a></td>
+</tr><tr><td><a href="#FX_ParameterMappingLearn">Parameter Mapping Learn</a></td>
+<td><a href="#FX_ParameterModulationLearnAliasMapping_Introduction">Parameter Modulation/Learn/Alias: Introduction</a></td>
+<td><a href="#FX_ParameterModulation_Introduction">Parameter Modulation Introduction</a></td>
+<td><a href="#FX_ParameterModulation_ParmModTable">Parameter Modulation: the ParmModTable</a></td>
+</tr><tr><td><a href="#FX_ParameterModulation_ParmModTableExamples">Parameter Modulation: ParmModTable-examples</a></td>
+<td><a href="#FX_ParameterModulation_UsingParmModTables">Parameter Modulation: Using ParmModTables</a></td>
+<td><a href="#FX_Working_with_FXStateChunks">FX-Management: Working with FX-StateChunks</a></td>
+<td><a href="#FX_Working_with_FXStateChunks_Functions">FX-Management: Working with FX-StateChunk's functions</a></td>
+</tr><tr></tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Helper Functions</b></td></tr><tr><td><a href="#Helper_Functions_001_Introduction">Helper_Functions: Introduction</a></td>
 <td><a href="#Helper_Functions_002_ClipboardManagement">Helper_Functions: Clipboard Management</a></td>
 <td><a href="#Helper_Functions_003_Data_Manipulation">Helper_Functions: Data Manipulation</a></td>
 <td><a href="#Helper_Functions_004_UndoManagement">Helper_Functions: Undo Management</a></td>
@@ -206,7 +218,7 @@ Ultraschall API functions
 <p>PS: In this documentation, I assume you have some basic knowledge in Lua and in using Reaper's own API-functions. Explaining both of these is beyond the scope of this doc.</p>
 
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_002_How_to_Use"></a>
-<div style="font-size:100%"><h4><a href="#Introduction_002_How_to_Use">^</a> <u>How to use the Ultraschall API</u></h4></div><p><p>Using the Ultraschall-API is quite easy.</p>
+<div style="font-size:100%"><h4><a href="#Introduction_002_How_to_Use">^</a> <u>How to install and use the Ultraschall API</u></h4></div><p><p>Using the Ultraschall-API is quite easy.</p>
 <p>First make sure, you use the right versions of Reaper and SWS: <a href="https://www.reaper.fm">Reaper 6.02</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 1.215.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
 <p>To install the Ultraschall-API, just follow the following steps:</p>
 <p><strong>Installation via ReaPack</strong>:</p>
@@ -2464,10 +2476,14 @@ For that, I added the following functions: <a href="US_Api_Functions.html#CountE
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#ShowLastErrorMessage">ShowLastErrorMessage</a></strong></p>
 </blockquote>
-<pre><code>                    ultraschall.ShowLastErrorMessage()
+<pre><code>                    ultraschall.ShowLastErrorMessage(optional integer dunk, optional integer target, optional integer message_type)
+                    
+                    or 
+                    
+                    SLEM(optional integer dunk, optional integer target, optional integer message_type)
                     </code></pre>
 <blockquote>
-<p>This is probably the most useful for debugging purposes. It simply shows a message-box with the last added error-message in the error-messaging-system, including the functionname, the parametername, the errormessage and the errorcode. Add this at the end of your script or within a function, after the code where problems arise to see, which function caused the trouble.</p>
+<p>This is probably the most useful for debugging purposes. It simply shows the last added error-message stored in the error-messaging-system, including the functionname, the parametername, the errormessage and the errorcode. You can optionally select, which other "last" errormessage you want to display, as well as its target. That means, you can select if the error-message shall be displayed in a messagebox, the reascript-console, the clipboard or if certain error-messages shall be returned as string be the function. You can also select the default-output-target in the Ultraschall-API-settings-dialog(just look for "Script: Ultraschall_API_Settings.lua" in the actionslist). Add this at the end of your script or within a function, after the code where problems arise to see, which function caused the trouble.</p>
 </blockquote>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#GetLastErrorMessage">GetLastErrorMessage</a></strong></p>
@@ -2511,10 +2527,10 @@ When setread is set to true, ShowLastErrorMessage will not show this errormessag
 </blockquote>
 <pre><code>                    boolean retval, integer errcode, string functionname, string parmname, string errormessage, 
                     string lastreadtime, string err_creation_date, string err_creation_timestamp = 
-                                                                        ultraschall.ReadErrorMessage(integer errornumber)
+                                                                        ultraschall.ReadErrorMessage(integer errornumber, optional boolean keep_unread)
                                                                         </code></pre>
 <blockquote>
-<p>Just like GetLastErrorMessage, but returns a specific errormessage, as specified by the parameter errornumber.</p>
+<p>Just like GetLastErrorMessage, but returns a specific errormessage, as specified by the parameter errornumber. You can also keep the error-message state as "unread" if you want to build a function that peeks into an error-message without leaving a trace.</p>
 </blockquote>
 <p>In addition to that, there's also:</p>
 <ul>
@@ -4213,6 +4229,556 @@ That means, all rules for regular events also apply here, but you don't need to 
 </ul>
 <p>With that in your pocket, you have a lot of possibilities to control your full event-based workflows.</p>
 
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_Introduction"></a>
+<div style="font-size:100%"><h4><a href="#FX_Introduction">^</a> <u>FX-Management: Introduction</u></h4></div><p><p>When working with audio, it's almost impossible to not use FX on items and tracks, using parameter modulation and learn.<br />
+But sometimes, the way Reaper's user interface manages things is not enough. You want to code the stuff yourself to make it behave to your needs.</p>
+<p>So I simply had to implement a lot of features for manipulation of FX, including some stuff never been codeable before.</p>
+<p>So let's dive into the magical wonderful world of fx-management.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_Working_with_FXStateChunks"></a>
+<div style="font-size:100%"><h4><a href="#FX_Working_with_FXStateChunks">^</a> <u>FX-Management: Working with FX-StateChunks</u></h4></div><p><p>A lot of fx-possibilities are already possible with Reaper's native API-functions, but sometimes you need the real deal, the full control.<br />
+And Reaper has such a datastructure for that, called FXStateChunk.</p>
+<p>FXStateChunks are parts of either MediaItemStateChunks or TrackStateChunks. What they basically do is hold all information, settings, etc of all fx in the FXChain of the MediaItem or MediaTrack.<br />
+These hold bypass-settings, state-binary strings, aliasnames of the fx, parameter-learn/parameter modulation, etc. So if you want to manipulate specific fx beyond Reaper's own api-functions, manipulating FXStateChunks is the way to go.</p>
+<p>Getting an FXStateChunk is quite easy.</p>
+<ol>
+<li>Get the item/track-statechunk, using <a href="US_Api_Functions.html#GetTrackStateChunk_Tracknumber">GetTrackStateChunk_Tracknumber</a>(for trackfx) or reaper.GetItemStateChunk(item/take-fx).</li>
+<li>Get the FXStateChunk from the item/track-statechunk with <a href="US_Api_Functions.html#GetFXStateChunk">GetFXStateChunk</a></li>
+</ol>
+<p>Now you can manipulate it to your needs. When you're finished manipulating the FXStateChunk, you can set it back into the original item or track-statechunk.</p>
+<p>To set it again, you go the path into the other direction 1. Set the FXStateChunk in the item/take-statechunk via <a href="US_Api_Functions.html#SetFXStateChunk">SetFXStateChunk</a> 2. Set the item/track-statechunk into the item/track, using <a href="US_Api_Functions.html#SetTrackStateChunk_Tracknumber">SetTrackStateChunk_Tracknumber</a>(for trackfx) or reaper.SetItemStateChunk(item/take-fx).</p>
+<p>That's the basic workflow to toy around with FXStateChunks. More details in the next chapters</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_Working_with_FXStateChunks_Functions"></a>
+<div style="font-size:100%"><h4><a href="#FX_Working_with_FXStateChunks_Functions">^</a> <u>FX-Management: Working with FX-StateChunk's functions</u></h4></div><p><p>Now let's go into more detail on numerous functions regarding FXStateChunks.</p>
+<p>The most important ones are the functions for getting and setting a FXStateChunk from/into track/item-statechunks.</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#GetFXStateChunk">GetFXStateChunk</a></strong></p>
+</blockquote>
+<pre><code>                    string FXStateChunk, integer linenumber = 
+                                    ultraschall.GetFXStateChunk(string StateChunk, optional integer TakeFXChain_id)
+                    </code></pre>
+<blockquote>
+<p>This gets the FXStateChunk from a track or item-statechunk and returns also its linenumber within the original statechunk. There's also an optional parameter TakeFXChain_id, which is helpful in item-statechunks, as they can have multiple FXStateChunks, with one for each existing take. Just set it to the take-id(beginning with 1) which shall get the FXStateChunk. Unlike Reaper's own Get/Set-TrackStateChunk-functions, this formats the StateChunk properly, so using the fileformat for string-substitution is possible to do.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#SetFXStateChunk">SetFXStateChunk</a></strong></p>
+</blockquote>
+<pre><code>                    boolean retval, optional string alteredStateChunk = 
+                                    ultraschall.SetFXStateChunk(string StateChunk, string FXStateChunk, optional integer TakeFXChain_id)
+                    </code></pre>
+<blockquote>
+<p>This sets the FXStateChunk in a track or item-statechunk and returns the altered Item/Track-StateChunk.<br />
+There's also an optional parameter TakeFXChain_id, which is helpful in item-statechunks, as they can have multiple FXStateChunks, with one for each existing take. Just set it to the take-id(beginning with 1) which shall get the FXStateChunk.</p>
+</blockquote>
+<p>There are more helper-functions included, like:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CountFXStateChunksInStateChunk">CountFXStateChunksInStateChunk</a></strong></p>
+</blockquote>
+<pre><code>                    integer count_of_takefx_statechunks, integer count_of_trackfx_statechunks 
+                                                = ultraschall.CountFXStateChunksInStateChunk(string StateChunk)
+                    </code></pre>
+<blockquote>
+<p>This counts all available FXStateChunks existing within an item/track/project-statechunk.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#IsValidFXStateChunk">IsValidFXStateChunk</a></strong></p>
+</blockquote>
+<pre><code>                    boolean retval = ultraschall.IsValidFXStateChunk(string StateChunk)
+                    </code></pre>
+<blockquote>
+<p>This checks, if a statechunk is a valid FXStateChunk and returns true in that case.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#RemoveFXStateChunkFromItemStateChunk">RemoveFXStateChunkFromItemStateChunk</a></strong></p>
+</blockquote>
+<pre><code>                    string alteredItemStateChunk = ultraschall.RemoveFXStateChunkFromItemStateChunk(
+                                                                        string ItemStateChunk, integer take_id)
+                                                                        </code></pre>
+<blockquote>
+<p>This removes an FXStateChunk from an ItemStateChunk. Just pass to it the ItemStateChunk as well as the take-number. It returns the StateChunk without the FXStateChunk of the take with take_id.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#RemoveFXStateChunkFromTrackStateChunk">RemoveFXStateChunkFromTrackStateChunk</a></strong></p>
+</blockquote>
+<pre><code>                    string altered_TrackStateChunk = ultraschall.RemoveFXStateChunkFromTrackStateChunk(
+                                                                                        string TrackStateChunk)
+                                                                        </code></pre>
+<blockquote>
+<p>This removes an FXStateChunk from a TrackStateChunk. It returns the StateChunk without the FXStateChunk.</p>
+</blockquote>
+<p>Now there are numerous sources for FXChains, including RFXChain-files, who are files you can store in Reaper, who hold all settings of an FXChain. So if you want to deal with these files, I've included functions for it:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#LoadFXStateChunkFromRFXChainFile">LoadFXStateChunkFromRFXChainFile</a></strong></p>
+</blockquote>
+<pre><code>                    string FXStateChunk = ultraschall.LoadFXStateChunkFromRFXChainFile(string filename, 
+                                                                                        integer trackfx_or_takefx)
+                                                                        </code></pre>
+<blockquote>
+<p>This loads an FXChain from an RFXChain-file. You can set the whole path to it but if you only set the filename, it will try to read the RFXChain-file from the folder Resourcepath/FXChains/ It's important to tell the function, whether it shall be used as track or take-fx, as there are small detail-differences between the two FXChain-types.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#SaveFXStateChunkAsRFXChainfile">SaveFXStateChunkAsRFXChainfile</a></strong></p>
+</blockquote>
+<pre><code>                    integer retval = ultraschall.SaveFXStateChunkAsRFXChainfile(
+                                                                              string filename, string FXStateChunk)
+                                                                        </code></pre>
+<blockquote>
+<p>This saves an FXChain into an RFXChain-file. You can set the whole path to the target-file but if you only set the filename, it will store the RFXChain-file into the folder Resourcepath/FXChains/</p>
+</blockquote>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_Manipulating_Individual_Effects"></a>
+<div style="font-size:100%"><h4><a href="#FX_Manipulating_Individual_Effects">^</a> <u>FX-Management: Manipulating individual effects</u></h4></div><p><p>Now that you have the FXStateChunk, you might want to manipulate individual FX. Problem is, you need to parse them out of the FXChain by hand.<br />
+Or you use the following way to manipulate individual effects because...you can already guess: I made some functions for that.</p>
+<p>Manipulating individual effects needs some special treatment, but don't be afraid, it's not that hard to manage.</p>
+<p>First, get the FXStateChunk, like described in the previous chapters.<br />
+Then you can get the lines of the FXStateChunk for a specific fx by using <a href="US_Api_Functions.html#GetFXFromFXStateChunk">GetFXFromFXStateChunk</a>.</p>
+<pre><code>                    string fx_lines, integer startoffset, integer endoffset = 
+                            ultraschall.GetFXFromFXStateChunk(string FXStateChunk, integer fxindex)
+                            </code></pre>
+<p>Just pass to it the FXStateChunk and the index of the fx, whose lines you want to get.<br />
+It will return these lines as a string and the start and endoffset of these lines within the FXStateChunk.<br />
+Keep these values, we'll need them later.</p>
+<p>Now that we have the string "fx_lines", you can manipulate this string, using Lua's string-manipulation-functions, string.gsub for instance.<br />
+So to set the bypass-state of the fx-lines, you can use:</p>
+<pre><code>                    fx_lines=string.gsub(fx_lines, &quot;BYPASS.-\n&quot;, &quot;BYPASS 1 0 0\n&quot;)
+                    </code></pre>
+<p>This will replace the part of the string beginning with BYPASS and ending with the next newline(\n) with BYPASS 1 0 0, where the 1 signals,<br />
+that this fx is not bypassed anymore.</p>
+<p>Now if you've changed the fx-lines accordingly, you can put it into the FXStateChunk quite easily. We just need to use the returnvalues returned by GetFXFromFXStateChunk that you hopefully kept.</p>
+<pre><code>                    FXStateChunk=FXStateChunk:sub(1,startoffset)..fx_lines..FXStateChunk:sub(endoffset, -1)
+                    </code></pre>
+<p>and that's it. You've successfully set the bypass-state of the fx you've got via GetFXFromFXStateChunk. You can set this FXStateChunk back into its original statechunk and then commit it to the track/item of your choice.</p>
+<p>The following example-script toggles bypass for the first FX in the first track of your project:</p>
+<pre><code>                    -- toggle bypass-state of the first fx in the first track on and off
+                    dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+
+                    -- get the FXStateChunk
+                    retval, TrackStateChunk = ultraschall.GetTrackStateChunk_Tracknumber(1)
+                    if retval==false then 
+                        print2(&quot;An error has happened: No track available&quot;) 
+                        return 
+                    end
+                    FXStateChunk = ultraschall.GetFXStateChunk(TrackStateChunk)
+
+                    -- get the lines of the first fx in the FXStateChunk
+                    fx_lines, startoffset, endoffset =  ultraschall.GetFXFromFXStateChunk(FXStateChunk, 1)
+                    if fx_lines==nil then 
+                        print2(&quot;An error has happened: No such FX available&quot;) 
+                        return 
+                    end
+
+                    -- see, if the first number in the BYPASS-line is 1(not bypassed) or not
+                    -- and toggle accordingly (when 1 newtoggle=0 else newtoggle=1)
+                    if fx_lines:match(&quot;BYPASS 1&quot;) then newtoggle=&quot;0&quot; else newtoggle=&quot;1&quot; end
+
+                    -- set the new bypassed-value into the fx-lines
+                    fx_lines=string.gsub(fx_lines, &quot;BYPASS.-\n&quot;, &quot;BYPASS &quot;..newtoggle..&quot; 0 0\n&quot;)
+
+                    -- use the fx_lines and put them into the right place of the FXStateChunk
+                    FXStateChunk=FXStateChunk:sub(1,startoffset)
+                                 ..fx_lines
+                                 ..FXStateChunk:sub(endoffset, -1)
+
+                    -- Put the altered FXStateChunk back into the TrackStateChunk
+                    retval, TrackStateChunk=ultraschall.SetFXStateChunk(TrackStateChunk, FXStateChunk)
+
+                    -- commit the TrackStateChunk to the first track so we actually toggle 
+                    -- the bypass-state of the first fx of track 1
+                    ultraschall.SetTrackStateChunk_Tracknumber(1, TrackStateChunk)</code></pre>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterModulationLearnAliasMapping_Introduction"></a>
+<div style="font-size:100%"><h4><a href="#FX_ParameterModulationLearnAliasMapping_Introduction">^</a> <u>Parameter Modulation/Learn/Alias: Introduction</u></h4></div><p><p>For those, who want more control on how fx are managed, Reaper has this feature called Parameter Modulation as well as Parameter Learn and Parameter Alias and there's a lot of stuff you can do with it.<br />
+But: it wasn't programmable yet.<br />
+And as you all know this: if it's not yet programmable and you're asking for it, I try to make it happen.<br />
+Hence, Ladies and Gentlemen and varieties inbetween, please welcome: Parameter Learn, Alias and Modulation.</p>
+<p>First things first: to influence one of these, you need to get FXStateChunks and, if needed, set them after your changes.<br />
+So if you don't know yet on how to work with FXStateChunks, read the chapters on <a href="#FX_Introduction">FXStateChunks</a></p>
+<p>Let's start with the easiest of the three: Parameter Alias</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterAlias"></a>
+<div style="font-size:100%"><h4><a href="#FX_ParameterAlias">^</a> <u>Parameter Alias</u></h4></div><p><p>Parameter Aliases allow you to give new names to parameters. For instance, you have added ReaEQ as first effect in the FXChain and you have this parameter called "Freq-Band 1".<br />
+You may want to have a name, which describes more what the parameter does, like "Humming Removal".</p>
+<p>In that case, you can set parameter-alias-names.</p>
+<ol>
+<li>First you need to <a href="US_Api_Functions.html#GetFXStateChunk">get the FXStateChunk</a>, into which you want to set the parameter-alias-name<br />
+</li>
+<li>Then you can use <a href="US_Api_Functions.html#AddParmAlias_FXStateChunk">AddParmAlias_FXStateChunk</a> to add a new aliasname or <a href="US_Api_Functions.html#SetParmAlias2_FXStateChunk">SetParmAlias2_FXStateChunk</a> to set an existing aliasname in the FXStateChunk<br />
+</li>
+<li>Set the FXStateChunk back into the original statechunk</li>
+</ol>
+<p>In the following example, I assume that track 1 has ReaEQ in its FXChain as first parameter and the "Reset to factory defaults"-preset selected.<br />
+The first parameter of ReaEQ is named "Freq-Low Shelf".<br />
+As there is no aliasname available yet, we need to add it:</p>
+<pre><code>                    dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+                    
+                    aliasname=&quot;The new parameter-alias-name&quot;
+                    
+                    -- Get the trackstatechunk and the FXStateChunk from it
+                    retval,TrackStateChunk = ultraschall.GetTrackStateChunk_Tracknumber(1)
+                    FXStateChunk=ultraschall.GetFXStateChunk(TrackStateChunk)
+
+                    -- add the new parameter-aliasname, and show an error-message, if there is already one
+                    retval, alteredFXStateChunk = ultraschall.AddParmAlias_FXStateChunk(FXStateChunk, 1, 1, aliasname)
+                    if retval==false then print2(&quot;Parameter-has already an aliasname. Please use &quot;..
+                                                 &quot;SetParmAlias2_FXStateChunk to set it to a new one.&quot;) return end
+
+                    -- set the altered FXStateChunk to the TrackStateChunk and commit it to the first track
+                    retval, TrackStateChunk=ultraschall.SetFXStateChunk(TrackStateChunk, alteredFXStateChunk)
+                    retval = ultraschall.SetTrackStateChunk_Tracknumber(1, TrackStateChunk)</code></pre>
+<p>If you want to set it to a new name, you can use <a href="US_Api_Functions.html#SetParmAlias2_FXStateChunk">SetParmAlias2_FXStateChunk</a>. The following code sets the parameter-aliasname to "Totally new name"</p>
+<pre><code>                    dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+                    
+                    aliasname=&quot;Totally new name&quot;
+                    
+                    -- Get the trackstatechunk and the FXStateChunk from it
+                    retval,TrackStateChunk = ultraschall.GetTrackStateChunk_Tracknumber(1)
+                    FXStateChunk=ultraschall.GetFXStateChunk(TrackStateChunk)
+
+                    -- set the new parameter-aliasname
+                    retval, alteredFXStateChunk = ultraschall.SetParmAlias2_FXStateChunk(FXStateChunk, 1, 1, aliasname)
+
+                    -- set the altered FXStateChunk to the TrackStateChunk and commit it to the first track
+                    retval, TrackStateChunk=ultraschall.SetFXStateChunk(TrackStateChunk, alteredFXStateChunk)
+                    retval = ultraschall.SetTrackStateChunk_Tracknumber(1, TrackStateChunk)</code></pre>
+<p>There are more functions related to Parameter Aliases, that give you more possibilities:</p>
+<blockquote>
+<p><a href="US_Api_Functions.html#GetAllParmAliasNames_FXStateChunk">GetAllParmAliasNames_FXStateChunk</a> - this gets all aliasnames from an fx within an FXStateChunk<br />
+<a href="US_Api_Functions.html#CountParmAlias_FXStateChunk">CountParmAlias_FXStateChunk</a> - this counts all aliasnames of an fx within an FXStateChunk<br />
+<a href="US_Api_Functions.html#DeleteParmAlias_FXStateChunk">DeleteParmAlias_FXStateChunk</a> - this deletes an aliasname of an fx within an FXStateChunk, indexed by existing aliasnames<br />
+<a href="US_Api_Functions.html#DeleteParmAlias2_FXStateChunk">DeleteParmAlias2_FXStateChunk</a> - this deletes an aliasname of an fx within an FXStateChunk, indexed by parameterindex<br />
+<a href="US_Api_Functions.html#SetParmAlias_FXStateChunk">SetParmAlias_FXStateChunk</a> - this sets an aliasname of an fx within an FXStateChunk, indexed by existing aliasnames<br />
+<a href="US_Api_Functions.html#SetParmAlias2_FXStateChunk">SetParmAlias2_FXStateChunk</a> - this sets an aliasname of an fx within an FXStateChunk, indexed by parameterindex<br />
+<a href="US_Api_Functions.html#GetParmAlias_FXStateChunk">GetParmAlias_FXStateChunk</a> - this gets an aliasname of an fx within an FXStateChunk, indexed by existing aliasnames<br />
+<a href="US_Api_Functions.html#GetParmAlias2_FXStateChunk">GetParmAlias2_FXStateChunk</a> - this gets an aliasname of an fx within an FXStateChunk, indexed by parameterindex</p>
+</blockquote>
+<p>In the next chapter, we'll discuss, how to map MIDI and OSC by learning to parameters.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterMappingLearn"></a>
+<div style="font-size:100%"><h4><a href="#FX_ParameterMappingLearn">^</a> <u>Parameter Mapping Learn</u></h4></div><p><p>Another thing I implemented is Parameter-Mapping Learn. This is the dialog you can reach, when opening the FXChain, hitting the Param-menu -&gt; Learn -&gt; one of the parameters.<br />
+These work in principle with the same approach as ParmAlias in the previous chapter:</p>
+<p>To add a learn for a parameter, you</p>
+<ol>
+<li>first need to <a href="US_Api_Functions.html#GetFXStateChunk">get the FXStateChunk</a>, in which you want to add/get/set parameter-learns<br />
+</li>
+<li>then you can use <a href="US_Api_Functions.html#AddParmLearn_FXStateChunk">AddParmLearn_FXStateChunk</a> to add a new parameter-learn for a parameter in the FXStateChunk<br />
+</li>
+<li>Set the FXStateChunk back into the original statechunk(TrackStateChunk or MediaItemStateChunk)</li>
+</ol>
+<p>Means, first get the FXStateChunk, then you can manipulate it via the ParmLearn-functions and then you set the manipulated one back into it.</p>
+<p>There are more functions related to ParameterLearn, that give you more possibilities:</p>
+<blockquote>
+<p><a href="US_Api_Functions.html#CountParmLearn_FXStateChunk">CountParmLearn_FXStateChunk</a> - this counts all ParmLearns available of an fx within an FXStateChunk<br />
+<a href="US_Api_Functions.html#DeleteParmLearn_FXStateChunk">DeleteParmLearn_FXStateChunk</a> - this deletes a ParmLearn of an fx within an FXStateChunk, indexed by existing ParmLearns<br />
+<a href="US_Api_Functions.html#SetParmLearn_FXStateChunk">SetParmLearn_FXStateChunk</a> - this sets a ParmLearn of an fx within an FXStateChunk, indexed by existing ParmLearns<br />
+<a href="US_Api_Functions.html#GetParmLearn_FXStateChunk">GetParmLearn_FXStateChunk</a> - this gets a ParmLearn of an fx within an FXStateChunk, indexed by existing ParmLearns</p>
+</blockquote>
+<p>These should allow you to add/set/delete ParmLearns with all possible options you can set in the dialog.</p>
+<p>Due API-limitations, I haven't got around some get/set/delete-functions, that allow you to index by parameter-index, only by already existing ones.<br />
+So for the moment, if you want to set/delete a ParmLearn-entry for a specific parameter-index, you should check all of them via <a href="US_Api_Functions.html#GetParmLearn_FXStateChunk">GetParmLearn_FXStateChunk</a>(which returns the parameter-index as well) and use its "order-index".<br />
+For instance: if you want to delete a possibly existing ParmLearn-entry for parameter 16, check all existing ones, if you find one with parameter-index 16.<br />
+If that is the case with the second ParmLearn, you delete the second one. If you can't find one, then you don't need to delete it.<br />
+Will try to make this more convenient in the future. I promise.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterLFOLearn"></a>
+<div style="font-size:100%"><h4><a href="#FX_ParameterLFOLearn">^</a> <u>Parameter LFO Learn</u></h4></div><p><p>LFO-Learn is something, that can be set via the Learn Phase-button in the LFO-section of the ParameterModulation-dialog(more on that later).<br />
+And it can be set as well, in very much the same way, as ParmLearn in the previous chapter.</p>
+<p>To add a learn for a parameter, you</p>
+<ol>
+<li>first need to <a href="US_Api_Functions.html#GetFXStateChunk">get the FXStateChunk</a>, in which you want to add/get/set parameter-learns<br />
+</li>
+<li>then you can use <a href="US_Api_Functions.html#AddParmLFOLearn_FXStateChunk">AddParmLFOLearn_FXStateChunk</a> to add a new LFO-learn for a parameter in the FXStateChunk<br />
+</li>
+<li>Set the FXStateChunk back into the original statechunk(TrackStateChunk or MediaItemStateChunk)</li>
+</ol>
+<p>Means, first get the FXStateChunk, then you can manipulate it via the ParmLFOLearn-functions and then you set the manipulated one back into it.</p>
+<p>There are more functions related to ParameterLFOLearn, that give you more possibilities:</p>
+<blockquote>
+<p><a href="US_Api_Functions.html#CountParmLFOLearn_FXStateChunk">CountParmLFOLearn_FXStateChunk</a> - this counts all LFOLearns available of an fx within an FXStateChunk<br />
+<a href="US_Api_Functions.html#DeleteParmLFOLearn_FXStateChunk">DeleteParmLFOLearn_FXStateChunk</a> - this deletes a LFOLearn of an fx within an FXStateChunk, indexed by existing LFOLearns<br />
+<a href="US_Api_Functions.html#SetParmLFOLearn_FXStateChunk">SetParmLFOLearn_FXStateChunk</a> - this sets a LFOLearn of an fx within an FXStateChunk, indexed by existing LFOLearns<br />
+<a href="US_Api_Functions.html#GetParmLFOLearn_FXStateChunk">GetParmLFOLearn_FXStateChunk</a> - this gets a LFOLearn of an fx within an FXStateChunk, indexed by existing LFOLearns</p>
+</blockquote>
+<p>These should allow you to add/set/delete LFOLearns with all possible options you can set in the dialog.</p>
+<p>Important: the parameter midi_note some of these functions have, is a multibyte value, which allows you setting MIDI-Notes as well as Chan/CC.<br />
+So if you want to add MIDI chan1-Note 0, you set the value to<br />
+144, MIDI Chan 1 Note 1 (Byte1=144, Byte2=0)<br />
+while MIDI-chan1-Note 1 must be set as<br />
+400, MIDI Chan 1 Note 1 (Byte1=144, Byte2=1)</p>
+<p>Due API-limitations, I haven't got around some get/set/delete-functions, that allow you to index by parameter-index, only by already existing ones.<br />
+So for the moment, if you want to set/delete an LFOLearn-entry for a specific parameter-index, you should check all of them via <a href="US_Api_Functions.html#GetParmLFOLearn_FXStateChunk">GetParmLFOLearn_FXStateChunk</a>(which returns the parameter-index as well) and use its "order-index".<br />
+For instance: if you want to delete a possibly existing LFOLearn-entry for parameter 16, check all existing ones, if you find one with parameter-index 16.<br />
+If that is the case with the second LFOLearn, you delete the second one. If you can't find one, then you don't need to delete it.<br />
+Will try to make this more convenient in the future. I promise.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterModulation_Introduction"></a>
+<div style="font-size:100%"><h4><a href="#FX_ParameterModulation_Introduction">^</a> <u>Parameter Modulation Introduction</u></h4></div><p><p>You already learnt about Learn and LFO Learn. You also learnt about giving parameters different aliasnames.<br />
+But: you can do even more with parameter-modulation, which also allows linking of parameters.<br />
+This can be achieved by openeing the FXChain, hitting the Param-button -&gt; FX parameter list -&gt; Parameter modulation/MIDI link.</p>
+<p>If you do that, a nice little window appears, which allows you all sorts of automation/modulation/linking of parameters.</p>
+<p>Up until now, this wasn't programmable.</p>
+<p>It's time to leave the "Up until now" in the past.</p>
+<p>Welcome to parameter-modulation!</p>
+<p>PS: It's good to have some experience in using ParameterModulation before attempting to script it.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterModulation_ParmModTable"></a>
+<div style="font-size:100%"><h4><a href="#FX_ParameterModulation_ParmModTable">^</a> <u>Parameter Modulation: the ParmModTable</u></h4></div><p><p>A ParmModTable is a table, which holds all settings of a parameter-modulation in one table.<br />
+This allows you to easily set settings the way you want. Just create one, alter it, commit it to a parameter.<br />
+Or get one from an already existing ParameterModulation.</p>
+<p>But before we get into how to work with them, let's have a look at the table itself.</p>
+<p>The table has numerous entries, that can be set or unset. The following screenshot shows you, which setting is stored with which entry:</p>
+<p><img src="gfx/ParmModTable.png" alt="Parameter Modulation-dialog and all ParmModTable-entries shown at their respective settings" /></p>
+<p>As you can see, the checkbox for LFO is stored in the ParmModTable-entry "LFO".<br />
+The attack-slider of the Audio Control Signal-section is stored in the ParmModTable-entry "AUDIOCONTROL_ATTACK", etc.<br />
+So if you want to know, which setting that you want to alter is stored in which ParmModTable-entry, just have a look at this picture to find it.</p>
+<p>Now, what are the actual entries of the ParmModTable and their meanings? Glad you ask:</p>
+<pre><code>
+    
+    ParmModTable["PARAM_NR"]               - the index of the parameter that you want to modulate; 1 for the first, 2 for the second, etc
+    ParmModTable["PARAM_TYPE"]             - the type of the parameter, usually "", "wet" or "bypass"
+
+    ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"]  
+                                            - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
+                                              true, checked; false, unchecked
+    ParmModTable["PARAMOD_BASELINE"]       - Enable parameter modulation, baseline value(envelope overrides)-slider; 
+                                                0.000 to 1.000
+
+    ParmModTable["AUDIOCONTROL"]           - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
+                                                Note: if true, this needs all other AUDIOCONTROL_-entries to be set
+    ParmModTable["AUDIOCONTROL_CHAN"]      - the Track audio channel-dropdownlist; When stereo, the first stereo-channel; 
+                                              nil, if not available
+    ParmModTable["AUDIOCONTROL_STEREO"]    - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
+                                                AUDIOCONTROL_CHAN+1; nil, if not available
+    ParmModTable["AUDIOCONTROL_ATTACK"]    - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
+    ParmModTable["AUDIOCONTROL_RELEASE"]   - the Release-slider; 0-1000ms; nil, if not available
+    ParmModTable["AUDIOCONTROL_MINVOLUME"] - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
+                                              nil, if not available
+    ParmModTable["AUDIOCONTROL_MAXVOLUME"] - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
+                                              nil, if not available
+    ParmModTable["AUDIOCONTROL_STRENGTH"]  - the Strength-slider; 0(0%) to 1000(100%)
+    ParmModTable["AUDIOCONTROL_DIRECTION"] - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
+
+    ParmModTable["LFO"]                    - if the LFO-checkbox checked; true, checked; false, unchecked
+                                                Note: if true, this needs all LFO_-entries to be set
+    ParmModTable["LFO_SHAPE"]              - the LFO Shape-dropdownlist; 
+                                                0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
+                                                nil, if not available
+    ParmModTable["LFO_SHAPEOLD"]           - use the old-style of the LFO_SHAPE; 
+                                                0, use current style of LFO_SHAPE; 
+                                                1, use old style of LFO_SHAPE; 
+                                                nil, if not available
+    ParmModTable["LFO_TEMPOSYNC"]          - the Tempo sync-checkbox; true, checked; false, unchecked
+    ParmModTable["LFO_SPEED"]              - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
+    ParmModTable["LFO_STRENGTH"]           - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
+    ParmModTable["LFO_PHASE"]              - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
+    ParmModTable["LFO_DIRECTION"]          - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
+    ParmModTable["LFO_PHASERESET"]         - the LFO Phase reset-dropdownlist; 
+                                                0, On seek/loop(deterministic output)
+                                                1, Free-running(non-deterministic output)
+                                                nil, if not available
+
+    ParmModTable["PARMLINK"]               - the Link from MIDI or FX parameter-checkbox
+                                              true, checked; false, unchecked
+    ParmModTable["PARMLINK_LINKEDPLUGIN"]  - the selected plugin; nil, if not available
+                                                -1, nothing selected yet
+                                                -100, MIDI-parameter-settings
+                                                1 - the first fx-plugin
+                                                2 - the second fx-plugin
+                                                3 - the third fx-plugin, etc
+    ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available
+                                                When MIDI, this is irrelevant.
+                                                When FX-parameter:
+                                                  0 to n; 0 for the first; 1, for the second, etc
+
+    ParmModTable["PARMLINK_OFFSET"]        - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+    ParmModTable["PARMLINK_SCALE"]         - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+
+    ParmModTable["MIDIPLINK"]              - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+    ParmModTable["MIDIPLINK_BUS"]          - the MIDI-bus selected in the button-menu; 
+                                                0 to 15 for bus 1 to 16; 
+                                                nil, if not available
+    ParmModTable["MIDIPLINK_CHANNEL"]      - the MIDI-channel selected in the button-menu; 
+                                                0, omni; 1 to 16 for channel 1 to 16; 
+                                                nil, if not available
+    ParmModTable["MIDIPLINK_MIDICATEGORY"] - the MIDI_Category selected in the button-menu; nil, if not available
+                                                144, MIDI note
+                                                160, Aftertouch
+                                                176, CC 14Bit and CC
+                                                192, Program Change
+                                                208, Channel Pressure
+                                                224, Pitch
+    ParmModTable["MIDIPLINK_MIDINOTE"]     - the MIDI-note selected in the button-menu; nil, if not available
+                                              When MIDI note:
+                                                   0(C-2) to 127(G8)
+                                              When Aftertouch:
+                                                   0(C-2) to 127(G8)
+                                              When CC14 Bit:
+                                                   128 to 159; see dropdownlist for the commands(the order of the list 
+                                                   is the same as this numbering)
+                                              When CC:
+                                                   0 to 119; see dropdownlist for the commands(the order of the list 
+                                                   is the same as this numbering)
+                                              When Program Change:
+                                                   0
+                                              When Channel Pressure:
+                                                   0
+                                              When Pitch:
+                                                   0
+    ParmModTable["WINDOW_ALTERED"]         - false, if the windowposition hasn't been altered yet; true, if the window has been altered
+                                                Note: if true, this needs all WINDOW_-entries to be set
+    ParmModTable["WINDOW_ALTEREDOPEN"]     - if the position of the ParmMod-window is altered and currently open; 
+                                                nil, unchanged; 0, unopened; 1, open
+    ParmModTable["WINDOW_XPOS"]            - the x-position of the altered ParmMod-window in pixels; nil, default position
+    ParmModTable["WINDOW_YPOS"]            - the y-position of the altered ParmMod-window in pixels; nil, default position
+    ParmModTable["WINDOW_RIGHT"]           - the right-position of the altered ParmMod-window in pixels; 
+                                                nil, default position; only readable
+    ParmModTable["WINDOW_BOTTOM"]          - the bottom-position of the altered ParmMod-window in pixels; 
+                                                nil, default position; only readable
+</code></pre>
+<p>Some entries depend on each other, which is important to know:<br />
+If you've set AUDIOCONTROL=true then you need to set all AUDIOCONTROL_-entries as well as X2 and Y2 to useful values. Same goes for LFO=true -&gt; set all LFO_-entries to useful values, and PARMLINK=true, which needs all PARMLINK_-entries being set.<br />
+For PARMLINK you also need to keep in mind, that setting PARMLINK_LINKEDPLUGIN=-100(link to MIDI) means, that you need to set all MIDIPLINK-entries as well. But don't worry. If you set an entry to an invalid value or have invalid combinations, the ParmMod-functions, especially <a href="US_Api_Functions.html#IsValidParmModTable">IsValidParmModTable</a>, will return useful error-messages.<br />
+So just run SLEM() after calling one of the ParmMod-functions and it will tell you, what you did wrong.</p>
+<p>Note: If you commit a ParmModTable to a currently opened Parameter Modulation, some things may not be updated in the gui. If you change the state of the AUDIOCONTROL/LFO/PARMLINK-checkbox or the Track audio channel-dropdownlist, it will only be updated after closing and reopening the window again. This affects only the gui, so if i.e. you enable the LFO-checkbox, it will be recognized as activated, even though the gui does not reflect that.</p>
+<p>Take your time to toy around with it, as it's a little complex in the beginning but you will quickly get an idea of how it works.<br />
+To assist you with developing, there's a developer-tool ultraschall_developertool_MonitorParmModulation.lua, which shows the values of all ParmModTable-entries a certain Parameter Modulation of an fx in a certain track has.<br />
+Install it by running the ultraschall_Add_Developertools_To_Reaper.lua-action in the action-list.</p>
+<p>Now that you know about Parameter-Modulation, you probably want to know, how to code it.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterModulation_UsingParmModTables"></a>
+<div style="font-size:100%"><h4><a href="#FX_ParameterModulation_UsingParmModTables">^</a> <u>Parameter Modulation: Using ParmModTables</u></h4></div><p><p>Let's assume, there is no parameter-modulation yet in any track or take. The best way to start is to create a new ParmModTable, which you can alter to your needs.</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#CreateDefaultParmModTable">CreateDefaultParmModTable</a></strong></p>
+</blockquote>
+<pre><code>                    table ParmModTable = ultraschall.CreateDefaultParmModTable()
+                    </code></pre>
+<blockquote>
+<p>This returns a new ParmModTable with all settings set to their defaults, as if you would add a completely new ParameterModulation to your project. You must enable either AudioControl, LFO and Parameter/MIDI Linking-sections by altering the following entries accordingly, or applying the ParmModTable has no effect: ParmModTable["AUDIOCONTROL"] - the checkbox for "Audio control signal (sidechain)" ParmModTable["LFO"] - the checkbox for "LFO" ParmModTable["PARMLINK"] - the checkbox for "Link from MIDI or FX parameter" ParmModTable["PARAM_NR"] - the index of the fx-parameter for which the parameter-modulation-table is intended</p>
+</blockquote>
+<p>this returned table can be altered to your needs. Now, if you have altered it, you probably want to check, if you changed it right or made some mistakes. For that, there's the function:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#IsValidParmModTable">IsValidParmModTable</a></strong></p>
+</blockquote>
+<pre><code>                    boolean retval = ultraschall.IsValidParmModTable(table ParmModTable)
+                    </code></pre>
+<blockquote>
+<p>This checks, if a table is a valid ParmModTable. If not(retval=false) then its error-message will give you a hint at what you set wrong.<br />
+Use SLEM() to get the error-message to correct the wrong entries.<br />
+It will also take care of dependencies. So if you set certain settings which depends on another setting being set to a certain value, the error-message will tell you exactly which one must be set as well.<br />
+Use this extensively while debugging or you risk creating invalid ParmModTables!</p>
+</blockquote>
+<p>Now the best ParmModTable doesn't do anything good, if you haven't put it to an FX. If you've read the previous chapters about LFOLearn or ParameterAliases, you might already know the drill:</p>
+<ol>
+<li>get the statechunk of a track or an item<br />
+</li>
+<li>you need to <a href="US_Api_Functions.html#GetFXStateChunk">get the FXStateChunk</a> from the statechunk, in which you want to add/get/set the parameter modulation<br />
+</li>
+<li>then you can commit the ParmModTable with <a href="US_Api_Functions.html#AddParmModulationTable">AddParmModulationTable</a> to add a new ParameterModulation for a parameter in the FXStateChunk<br />
+</li>
+<li>Set the FXStateChunk back into the original statechunk(TrackStateChunk or MediaItemStateChunk)<br />
+</li>
+<li>commit the statechunk to the original track/item</li>
+</ol>
+<p>There are more functions to deal with ParmModulation, like:</p>
+<ul>
+<li><a href="US_Api_Functions.html#CountParmModFromFXStateChunk">CountParmModFromFXStateChunk</a> - this counts all parameter modulations that exist for a specific fx in an FXStateChunk<br />
+</li>
+<li><a href="US_Api_Functions.html#GetParmModTable_FXStateChunk">GetParmModTable_FXStateChunk</a> - get the settings of an already existing parameter modulation as a ParmModTable<br />
+</li>
+<li><a href="US_Api_Functions.html#SetParmMod_ParmModTable">SetParmMod_ParmModTable</a> - set the settings of an already existing parameter modulation with the values stored in a ParmModTable<br />
+</li>
+<li><a href="US_Api_Functions.html#DeleteParmModFromFXStateChunk">DeleteParmModFromFXStateChunk</a> - this deletes a parameter modulation of a specifix fx in an FXStateChunk<br />
+</li>
+<li><a href="US_Api_Functions.html#GetParmModulationChunk_FXStateChunk">GetParmModulationChunk_FXStateChunk</a> - with this, you can get a parameter modulation as statechunk of an fx in an FXStateChunk</li>
+</ul>
+<p>Keep in mind, that you will not neccessarily be able to get a ParmModTable, alter it with one setting and set it again right away. As mentioned before in the previous chapter, some settings need other settings being set. So if you turn on LFO, you need to set all LFO_-entries of the ParmModTable as well before setting it, or it will not work!</p>
+<p>Let's do some basic-examples.</p>
+
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterModulation_ParmModTableExamples"></a>
+<div style="font-size:100%"><h4><a href="#FX_ParameterModulation_ParmModTableExamples">^</a> <u>Parameter Modulation: ParmModTable-examples</u></h4></div><p><p>Let's assume you have one track in your project with ReaEQ set as first fx in the FXChain and this ReaEQ is set to the factory default-preset.</p>
+<p>Let's add a parameter-modulation to the 13th parameter "bypass", which will be opened automatically and have LFO activated:</p>
+<pre><code>                    dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+
+                    -- let&#39;s create a default ParmModTable
+                    ParmModTable = ultraschall.CreateDefaultParmModTable()
+
+                    -- let&#39;s activate LFO; in the default ParmModTable, all LFO_-entries are set 
+                    -- to Reaper&#39;s default already, so setting them isn&#39;t necessary in this case
+                    ParmModTable[&quot;LFO&quot;]=true
+
+                    -- let&#39;s open the ParmModWindow
+                    ParmModTable[&quot;WINDOW_ALTERED&quot;]=true
+
+                    -- apply it to the 13th parameter, which is the bypass parameter
+                    ParmModTable[&quot;PARAM_NR&quot;]=13
+                    ParmModTable[&quot;PARAM_TYPE&quot;]=&quot;bypass&quot;
+
+                    -- Now, let&#39;s do the magic:
+
+                    -- get the TrackStateChunk from track 1
+                    retval, TrackStateChunk = ultraschall.GetTrackStateChunk_Tracknumber(1)
+                    -- get the FXStateChunk
+                    FXStateChunk = ultraschall.GetFXStateChunk(TrackStateChunk)
+                    -- add the new parameter modulation
+                    alteredFXStateChunk = ultraschall.AddParmMod_ParmModTable(FXStateChunk, 1, ParmModTable) 
+                    -- set the FXStateChunk back into the TrackStateChunk
+                    retval, TrackStateChunk = ultraschall.SetFXStateChunk(TrackStateChunk, alteredFXStateChunk)
+                    -- commit the TrackStateChunk back into the track 1
+                    retval=ultraschall.SetTrackStateChunk_Tracknumber(1, TrackStateChunk)</code></pre>
+<p>This should have added now the parameter modulation for track 1, FX1(ReaEQ), parameter 13(bypass) and have opened the parameter modulation window.</p>
+<p>Now, you may want to alter it, by enabling AudioControl. Here's how you do it:</p>
+<pre><code>                    dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+
+                    -- get the TrackStateChunk from track 1
+                    retval, TrackStateChunk = ultraschall.GetTrackStateChunk_Tracknumber(1)
+                    -- get the FXStateChunk
+                    FXStateChunk = ultraschall.GetFXStateChunk(TrackStateChunk)
+                    -- get the new parameter modulation
+                    ParmModTable = ultraschall.GetParmModTable_FXStateChunk(FXStateChunk, 1, 13)
+
+                    -- Let&#39;s enable AudioControl by setting the needed values of the ParmModTable.
+                    -- As they are not set yet, we need to fill them ourselves.
+                    -- In this example, I will fill them with Reaper&#39;s default values, but you can
+                    -- choose others as well, as long as they are in their valid valueranges.
+                    -- See description of CreateDefaultParmModTable() to get a list of Reaper&#39;s default values
+
+                    ParmModTable[&quot;AUDIOCONTROL&quot;]=true        -- enable AUDIOCONTROL
+                    ParmModTable[&quot;AUDIOCONTROL_CHAN&quot;]=1      -- use channel 1
+                    ParmModTable[&quot;AUDIOCONTROL_STEREO&quot;]=0    -- use only mono-channels
+                    ParmModTable[&quot;AUDIOCONTROL_ATTACK&quot;]=300  -- attack 300 ms
+                    ParmModTable[&quot;AUDIOCONTROL_RELEASE&quot;]=300 -- release 300 ms
+                    ParmModTable[&quot;AUDIOCONTROL_MINVOLUME&quot;]=-24 -- minvolume=-24dB
+                    ParmModTable[&quot;AUDIOCONTROL_MAXVOLUME&quot;]=0 -- maxvolume = 0dB
+                    ParmModTable[&quot;AUDIOCONTROL_STRENGTH&quot;]=1  -- strength = 1%
+                    ParmModTable[&quot;X2&quot;]=0.5 -- audio control signal shaping x-coordinate
+                    ParmModTable[&quot;Y2&quot;]=0.5 -- audio control signal shaping y-coordinate
+
+                    -- set the altered ParmModTable back into the FXStateChunk
+                    alteredFXStateChunk = ultraschall.SetParmMod_ParmModTable(FXStateChunk, 1, ParmModTable)
+
+                    -- set the FXStateChunk back into the TrackStateChunk
+                    retval, TrackStateChunk = ultraschall.SetFXStateChunk(TrackStateChunk, alteredFXStateChunk)
+                    -- commit the TrackStateChunk back into the track 1
+                    retval=ultraschall.SetTrackStateChunk_Tracknumber(1, TrackStateChunk)</code></pre>
+<p>And if you want to remove it again, you run the following example-code:</p>
+<pre><code>                    dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+
+                    -- get the TrackStateChunk from track 1
+                    retval, TrackStateChunk = ultraschall.GetTrackStateChunk_Tracknumber(1)
+                    -- get the FXStateChunk
+                    FXStateChunk = ultraschall.GetFXStateChunk(TrackStateChunk)
+
+                    -- delete the parameter modulation for fx=1, parameter=13(bypass) from the FXStateChunk
+                    alteredFXStateChunk = ultraschall.DeleteParmModFromFXStateChunk(FXStateChunk, 1, 13)
+
+                    -- set the FXStateChunk back into the TrackStateChunk
+                    retval, TrackStateChunk = ultraschall.SetFXStateChunk(TrackStateChunk, alteredFXStateChunk)
+
+                    -- commit the TrackStateChunk back into the track 1
+                    retval=ultraschall.SetTrackStateChunk_Tracknumber(1, TrackStateChunk)</code></pre>
+<p>And that's it. This should bring you through parameter modulation in every way you wish.</p>
+
 <table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Helper_Functions_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Helper_Functions_001_Introduction">^</a> <u>Helper_Functions: Introduction</u></h4></div><p><p>Beside all the concepts you just read about, I also added tons of functions and things to the API, that are helpful in one way or another in your everyday coding.<br />
 Manipulation of Lua's datastructures, clipboard-functions, stuff for undo-management, checking for the current system being either Mac, Windows or Other, Reaper's Configuration-Settings, User Interface-stuff, applying actions to MediaTracks and MediaItems and many other things.</p>
@@ -4231,6 +4797,24 @@ So I added functions to deal with that.</p>
                     </code></pre>
 <blockquote>
 <p>This is like reaper.CF_SetClipboard(), but is doing all the FastString-management for you in the background. In other words: it simply returns the string-contents from the clipboard.</p>
+</blockquote>
+<p>I also added some faster ones, like:</p>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#FromClip">FromClip</a></strong></p>
+</blockquote>
+<pre><code>                    string clipboard_string = FromClip()
+                    </code></pre>
+<blockquote>
+<p>This allows getting the current string stored in the clipboard. It's faster to type and takes care of all the SWS-management.</p>
+</blockquote>
+<blockquote>
+<p><strong><a href="US_Api_Functions.html#ToClip">ToClip</a></strong></p>
+</blockquote>
+<pre><code>                    ToClip(string toclipstring)
+                    </code></pre>
+<blockquote>
+<p>This allows setting the current string in the clipboard. It's faster to type and takes care of all the SWS-management.<br />
+Important: if you have \0-characters in them, you need to convert them to something else, as otherwise the string could be truncated at the \0-character. So everything after a \0-character will be thrown away. This is important, if you want to store binary-strings into the clipboard.</p>
 </blockquote>
 <p>When dealing with MediaItems, I also created functions for that. Let's put something into the clipboard.</p>
 <blockquote>
@@ -4469,4 +5053,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 004 - 109 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 005 - 121 chapters available</td></table><br><hr></div></body></html>

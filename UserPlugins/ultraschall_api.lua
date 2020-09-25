@@ -36,7 +36,7 @@
 local ReaperVersion=reaper.GetAppVersion()
 ReaperVersion=tonumber(ReaperVersion:match("(%d%.%d*)"))
 
-if ReaperVersion<6.02 then reaper.MB("Sorry, Reaper 6.02 or higher must be installed to use the API. \nGo to reaper.fm to get it.","Reaper version too old",0) return end
+if ReaperVersion<6.05 then reaper.MB("Sorry, Reaper 6.05 or higher must be installed to use the API. \nGo to reaper.fm to get it.","Reaper version too old",0) return end
 if reaper.CF_LocateInExplorer==nil then reaper.MB("Sorry, SWS 2.10.0.1 or higher must be installed to use the API. \nGo to sws-extension.org to get it.","SWS missing",0) return end
 if reaper.JS_ReaScriptAPI_Version==nil or reaper.JS_ReaScriptAPI_Version()<1.215 then reaper.MB("Sorry, JS-extension-plugin 1.215 or higher must be installed to use the API. \nGo to https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/ to get it.","JS-Extension plugin missing",0) return end
 

@@ -1676,6 +1676,8 @@
             Example:
                 variable=gmem[7]; // put the value from gmem with index 7 into variable
                 gmem[8]=project_time; // put the current project_time into gmem with index 8
+                
+            Note: you can have only one gmem-buffername attached per video-processor-script.
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
@@ -1688,7 +1690,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ui_get_state</slug>
         <title>ui_get_state</title>
-        <functioncall prog_lang="eel2">integer retval = ui_get_state(integer #ctx[, optional integer #mouse_x, optional integer #mouse_y, optional integer force_frame_in, optional integer #mouse_wheel_state, optional integer #mouse_hwheel_state])</functioncall>
+        <functioncall prog_lang="eel2">integer click_modifier_state = ui_get_state(integer #ctx[, optional integer #mouse_x, optional integer #mouse_y, optional integer force_frame_in, optional integer #mouse_wheel_state, optional integer #mouse_hwheel_state])</functioncall>
         <requires>
             Reaper=5.97
         </requires>
@@ -1704,7 +1706,9 @@
             If force_frame_in is specified and is positive, then the processor will be re-executed in this amount of time (even if no new video source is available), otherwise only updated during playback or change of the video.
         </description>
         <retvals>
-            integer retval - unknown
+            integer click_modifier_state - 1/2/4 are l/r/m mouse buttons, 
+                                         - 8/16/32 are ctrl/shift/alt, 
+                                         - 1024 is whether configuration for this processor is visible
         </retvals>
         <parameters>
             integer #ctx - -1, mouse is above video-processor; 1-24, mouse is changing knob 1-24; 0, mouse is outside the video-window

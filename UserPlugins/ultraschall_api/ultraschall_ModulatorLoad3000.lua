@@ -61,7 +61,8 @@ ultraschall.Modules_List={"ultraschall_functions_AudioManagement_Module.lua",
 "ultraschall_functions_TrackManagement_TrackStates_Module.lua",
 "ultraschall_functions_TrackManager_Module.lua",
 "ultraschall_functions_Ultraschall_Module.lua",
-"ultraschall_functions_WebInterface_Module.lua"}
+"ultraschall_functions_WebInterface_Module.lua",
+"VideoProcessor-Presets.RPL"}
 
 if ultraschall.US_BetaFunctions==true then
   -- if beta-functions are available, load all functions from all modules
@@ -602,6 +603,18 @@ else
     ultraschall.LM(8)
     return ultraschall.GetTakeEnvelopeUnderMouseCursor(table.unpack({...}))
   end
+  function ultraschall.IsAnyMuteEnvelopeVisible(...)
+    ultraschall.LM(8)
+    return ultraschall.IsAnyMuteEnvelopeVisible(table.unpack({...}))
+  end
+  function ultraschall.IsEnvelope_Track(...)
+    ultraschall.LM(8)
+    return ultraschall.IsEnvelope_Track(table.unpack({...}))
+  end
+  function ultraschall.IsTrackEnvelopeVisible_ArrangeView(...)
+    ultraschall.LM(8)
+    return ultraschall.IsTrackEnvelopeVisible_ArrangeView(table.unpack({...}))
+  end
   function ultraschall.EventManager_EnumerateStartupEvents(...)
     ultraschall.LM(9)
     return ultraschall.EventManager_EnumerateStartupEvents(table.unpack({...}))
@@ -934,18 +947,6 @@ else
     ultraschall.LM(11)
     return ultraschall.GetParmLFOLearn_MediaTrack(table.unpack({...}))
   end
-  function ultraschall.GetParmAudioControl_FXStateChunk(...)
-    ultraschall.LM(11)
-    return ultraschall.GetParmAudioControl_FXStateChunk(table.unpack({...}))
-  end
-  function ultraschall.GetParmLFO_FXStateChunk(...)
-    ultraschall.LM(11)
-    return ultraschall.GetParmLFO_FXStateChunk(table.unpack({...}))
-  end
-  function ultraschall.GetParmMIDIPLink_FXStateChunk(...)
-    ultraschall.LM(11)
-    return ultraschall.GetParmMIDIPLink_FXStateChunk(table.unpack({...}))
-  end
   function ultraschall.ScanDXPlugins(...)
     ultraschall.LM(11)
     return ultraschall.ScanDXPlugins(table.unpack({...}))
@@ -973,6 +974,10 @@ else
   function ultraschall.SetParmAlias_FXStateChunk(...)
     ultraschall.LM(11)
     return ultraschall.SetParmAlias_FXStateChunk(table.unpack({...}))
+  end
+  function ultraschall.SetParmAlias2_FXStateChunk(...)
+    ultraschall.LM(11)
+    return ultraschall.SetParmAlias2_FXStateChunk(table.unpack({...}))
   end
   function ultraschall.SetFXStateChunk(...)
     ultraschall.LM(11)
@@ -1057,6 +1062,50 @@ else
   function ultraschall.SetTakeFX_AlternativeName(...)
     ultraschall.LM(11)
     return ultraschall.SetTakeFX_AlternativeName(table.unpack({...}))
+  end
+  function ultraschall.GetFXSettingsString_FXLines(...)
+    ultraschall.LM(11)
+    return ultraschall.GetFXSettingsString_FXLines(table.unpack({...}))
+  end
+  function ultraschall.GetParmModTable_FXStateChunk(...)
+    ultraschall.LM(11)
+    return ultraschall.GetParmModTable_FXStateChunk(table.unpack({...}))
+  end
+  function ultraschall.CreateDefaultParmModTable(...)
+    ultraschall.LM(11)
+    return ultraschall.CreateDefaultParmModTable(table.unpack({...}))
+  end
+  function ultraschall.IsValidParmModTable(...)
+    ultraschall.LM(11)
+    return ultraschall.IsValidParmModTable(table.unpack({...}))
+  end
+  function ultraschall.AddParmMod_ParmModTable(...)
+    ultraschall.LM(11)
+    return ultraschall.AddParmMod_ParmModTable(table.unpack({...}))
+  end
+  function ultraschall.SetParmMod_ParmModTable(...)
+    ultraschall.LM(11)
+    return ultraschall.SetParmMod_ParmModTable(table.unpack({...}))
+  end
+  function ultraschall.DeleteParmModFromFXStateChunk(...)
+    ultraschall.LM(11)
+    return ultraschall.DeleteParmModFromFXStateChunk(table.unpack({...}))
+  end
+  function ultraschall.CountParmModFromFXStateChunk(...)
+    ultraschall.LM(11)
+    return ultraschall.CountParmModFromFXStateChunk(table.unpack({...}))
+  end
+  function ultraschall.GetAllParmAliasNames_FXStateChunk(...)
+    ultraschall.LM(11)
+    return ultraschall.GetAllParmAliasNames_FXStateChunk(table.unpack({...}))
+  end
+  function ultraschall.DeleteParmAlias2_FXStateChunk(...)
+    ultraschall.LM(11)
+    return ultraschall.DeleteParmAlias2_FXStateChunk(table.unpack({...}))
+  end
+  function ultraschall.GetParmAlias2_FXStateChunk(...)
+    ultraschall.LM(11)
+    return ultraschall.GetParmAlias2_FXStateChunk(table.unpack({...}))
   end
   function ultraschall.SplitStringAtLineFeedToArray(...)
     ultraschall.LM(12)
@@ -1501,6 +1550,18 @@ else
   function ultraschall.TimeToMeasures(...)
     ultraschall.LM(12)
     return ultraschall.TimeToMeasures(table.unpack({...}))
+  end
+  function ultraschall.Create2DTable(...)
+    ultraschall.LM(12)
+    return ultraschall.Create2DTable(table.unpack({...}))
+  end
+  function ultraschall.Create3DTable(...)
+    ultraschall.LM(12)
+    return ultraschall.Create3DTable(table.unpack({...}))
+  end
+  function ultraschall.CreateMultiDimTable(...)
+    ultraschall.LM(12)
+    return ultraschall.CreateMultiDimTable(table.unpack({...}))
   end
   function ultraschall.ResizePNG(...)
     ultraschall.LM(13)
@@ -2618,6 +2679,26 @@ else
     ultraschall.LM(22)
     return ultraschall.IsTimeSelectionActive(table.unpack({...}))
   end
+  function ultraschall.GetProject_Author(...)
+    ultraschall.LM(22)
+    return ultraschall.GetProject_Author(table.unpack({...}))
+  end
+  function ultraschall.AutoSave_SetMinutes(...)
+    ultraschall.LM(22)
+    return ultraschall.AutoSave_SetMinutes(table.unpack({...}))
+  end
+  function ultraschall.AutoSave_GetMinutes(...)
+    ultraschall.LM(22)
+    return ultraschall.AutoSave_GetMinutes(table.unpack({...}))
+  end
+  function ultraschall.AutoSave_SetOptions(...)
+    ultraschall.LM(22)
+    return ultraschall.AutoSave_SetOptions(table.unpack({...}))
+  end
+  function ultraschall.AutoSave_GetOptions(...)
+    ultraschall.LM(22)
+    return ultraschall.AutoSave_GetOptions(table.unpack({...}))
+  end
   function ultraschall.GetProjectState_NumbersOnly(...)
     ultraschall.LM(23)
     return ultraschall.GetProjectState_NumbersOnly(table.unpack({...}))
@@ -3565,6 +3646,10 @@ else
   function ultraschall.SetTimeUnit(...)
     ultraschall.LM(25)
     return ultraschall.SetTimeUnit(table.unpack({...}))
+  end
+  function ultraschall.ReturnAllChildHWND(...)
+    ultraschall.LM(25)
+    return ultraschall.ReturnAllChildHWND(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_FLAC(...)
     ultraschall.LM(26)
