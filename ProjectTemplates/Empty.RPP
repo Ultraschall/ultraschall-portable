@@ -1,4 +1,4 @@
-<REAPER_PROJECT 0.1 "6.14/OSX64" 1601401940
+<REAPER_PROJECT 0.1 "6.14/OSX64" 1601402322
   RIPPLE 0
   GROUPOVERRIDE 0 1 0
   AUTOXFADE 1
@@ -74,7 +74,7 @@
     SHOW 0
     LASTSEL 0
     DOCKED 1
-    BYPASS 0 0 0
+    BYPASS 1 0 0
     <JS loser/MGA_JSLimiter ""
       -4.000000 200.000000 -1.000000 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "Master -16 LUFS"
     >
