@@ -121,16 +121,15 @@ end
   ---------- TEXT -----------
 
 textPadding = 3
-
-if reaper.GetOS() == "OSX64" or reaper.GetOS() == "OSX32" then
+if reaper.GetOS():match("^Win") == nil then
   gfx.setfont(1, "Verdana", 9)
   gfx.setfont(2, "Verdana", 10)
-  gfx.setfont(3, "Tahoma", 10)             --<< To DO : OSX font matching
+  gfx.setfont(3, "Tahoma", 10)
   gfx.setfont(4, "Verdana", 14)
   gfx.setfont(5, "Tahoma", 11)
   gfx.setfont(11, "Verdana", 18)
   gfx.setfont(12, "Verdana", 20)
-  gfx.setfont(13, "Tahoma", 20)             --<< To DO : OSX font matching
+  gfx.setfont(13, "Tahoma", 20)
   gfx.setfont(14, "Verdana", 28)
   gfx.setfont(15, "Tahoma", 22)
 else
@@ -897,6 +896,7 @@ function themeCheck()
       _wrongTheme:onSize()
       redraw = 1
     else
+      indexParams()
       _wrongTheme.visible = false
       getDock() --it will decide which root to draw
       paramGet = 1

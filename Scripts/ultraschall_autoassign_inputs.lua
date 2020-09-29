@@ -82,6 +82,7 @@ end
 
 usedChannels = mapAllInputs()
 inputChannels = {}
+message = ""
 
 for i=0, numtracks-1 do
   track_object = reaper.GetTrack(0, i)
@@ -99,6 +100,10 @@ for i=0, numtracks-1 do
         reaper.SetMediaTrackInfo_Value(track_object, "I_RECINPUT", newInput)
         inputChannels[newInput] = true
         usedChannels[newInput] = true
+
+        txtInput = tostring(tonumber(newInput)+1)
+
+        message = message .. "Track "..tostring(i+1).." was assigned to Input: "..txtInput.."\n"
 
       else
 
@@ -118,8 +123,16 @@ for i=0, numtracks-1 do
 
   end
 
+end
+
+if message ~= "" then
+
+  message = "The following tracks were assigned to new inputs:\n\n" .. message
+  title = "Auto-Assigning Inputs Succesfull"
+  result = reaper.ShowMessageBox( message, title, 0 )
 
 end
+
 
 -- track_object = reaper.GetTrack(0, 0)
 -- input = reaper.GetMediaTrackInfo_Value(track_object, "I_RECINPUT")
