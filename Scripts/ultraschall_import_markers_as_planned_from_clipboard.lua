@@ -62,11 +62,9 @@ reaper.Undo_BeginBlock()
 color=ultraschall.ConvertColor(100,255,0)
 
 
-clipboard_string=ultraschall.GetStringFromClipboard_SWS()
+-- clipboard_string=ultraschall.GetStringFromClipboard_SWS()
 
--- clipboard_string==reaper.CF_GetClipboard("")
-
-
+clipboard_string = reaper.CF_GetClipboard("")
 
 
 --clipboard_string="0:00:02.050 Test1\n   Katze1\nKatze2   \n00:04:00 Test2"
