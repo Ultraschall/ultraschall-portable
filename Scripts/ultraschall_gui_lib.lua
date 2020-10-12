@@ -154,6 +154,23 @@ GUI.shadow = function (str)
 
 end
 
+GUI.shadow_white = function (str)
+
+  local x, y = gfx.x, gfx.y
+
+  GUI.color("shadow")
+  for i = 1, GUI.shadow_dist do
+    gfx.x, gfx.y = x + i, y + i
+    gfx.drawstr(str)
+  end
+
+  GUI.color("white")
+  gfx.x, gfx.y = x, y
+  gfx.drawstr(str)
+
+end
+
+
 
 -- Initialize some mouse values
 GUI.mouse = {
@@ -1517,7 +1534,7 @@ value     selected an/aus (numerischer Wert 0/1)
 
 -- Checklist - New
 local Checklist = {}
-function Checklist:new(x, y, w, h, caption, opts, pad, value, sectionName, limit)
+function Checklist:new(x, y, w, h, caption, opts, pad, value, sectionName, limit, color)
 
 
 
@@ -1525,6 +1542,7 @@ function Checklist:new(x, y, w, h, caption, opts, pad, value, sectionName, limit
   chk.type = "Checklist"
   chk.sectionname = sectionName
   chk.limit = limit or 255
+  chk.color = color or "txt"
 
   chk.x, chk.y, chk.w, chk.h = x * dpi_scale
   , y * dpi_scale
@@ -1577,15 +1595,21 @@ function Checklist:draw()
   GUI.font(2)
 
   -- Draw the caption
+  GUI.color(self.color)
   local str_w, str_h = gfx.measurestr(self.caption)
   self.capheight = str_h
   gfx.x = x + (w - str_w) / 2
   gfx.y = y * dpi_scale
-  GUI.shadow(self.caption)
+
+  if self.color == "white" then
+    GUI.shadow_white(self.caption)
+  else
+    GUI.shadow_white(self.caption)
+  end
 
 
   -- Draw the options
-  GUI.color("txt")
+  GUI.color(self.color)
   local optheight = (h - str_h - 2 * pad) / self.numopts
   local cur_y = y + str_h + pad
   local size = 20 * dpi_scale
@@ -1614,6 +1638,8 @@ function Checklist:draw()
     local str_w, str_h = gfx.measurestr(self.optarray[i])
     gfx.x = x + 2 * size
     gfx.y = cur_y + (optheight - str_h) / 2
+    GUI.color(self.color)
+
 
     if self.numopts == 1 then
 
@@ -1623,10 +1649,13 @@ function Checklist:draw()
         draw_txt = self.optarray[i]
       end
 
-      GUI.shadow(draw_txt)
+      if self.color == "white" then
+        GUI.shadow_white(draw_txt)
+      else
+        GUI.shadow(draw_txt)
+      end
 
     else
-      GUI.color("txt")
       gfx.drawstr(self.optarray[i])
     end
 

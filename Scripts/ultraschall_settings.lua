@@ -350,29 +350,33 @@ function show_devices()
 
       position = position+30  -- Y-position des Eintrags
 
+      if actual_device_name ~= device_name then -- kein Delete-Button beim gerade aktiven Gerät
+
+        -- Delete-Button
+        button_id = (#GUI["elms"])
+        delete = GUI.Btn:new(x_position + 500, position+3, 20, 20,         " X", remove_device, device_name)
+        table.insert(GUI.elms, delete)
+        color = "txt"
+
+      else
+        color = "white"
+        label_active = GUI.Lbl:new( x_position + 500, position+6,                  "active - cannot be deleted",          0, color)
+        table.insert(GUI.elms, label_active)
+
+      end
+
       if devices_blacklist[device_name] == 1 then -- das Gerät kann bekanntermaßen kein local monitoring
 
-        id = GUI.Lbl:new(          x_position + 40, position+7,                  device_name,          0)
+        id = GUI.Lbl:new(          x_position + 40, position+7,                  device_name,          0, color)
 
       else
 
-        id = GUI.Checklist:new(x_position, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")), sectionName, truncate)
+        id = GUI.Checklist:new(x_position, position, 240, 30,         "", device_name, 4, tonumber(ultraschall.GetUSExternalState(sectionName,device_name,"ultraschall-settings.ini")), sectionName, truncate, color)
       end
 
       table.insert(GUI.elms, id)
 
-      if actual_device_name ~= device_name then -- kein Delete-Button beim gerade aktiven Gerät
 
-      -- Delete-Button
-        button_id = (#GUI["elms"])
-        delete = GUI.Btn:new(x_position + 500, position+3, 20, 20,         " X", remove_device, device_name)
-        table.insert(GUI.elms, delete)
-
-      else
-        label_active = GUI.Lbl:new( x_position + 500, position+6,                  "active - cannot be deleted",          0, "white")
-        table.insert(GUI.elms, label_active)
-
-      end
     end
   end
 end
@@ -629,7 +633,7 @@ function SettingsPageDevices()
       table.insert(GUI.elms, label_table2)
 
 
-  devicetext = "This list shows all audio interfaces you ever connected. You can delete obsolete devices. If you can plug a headphone to your audio interface, it supports Local Monitoring. If you can not connect a headphone direct into your audio interface, make shure to uncheck the Local Monitoring box to get the audio routing right."
+  devicetext = "This list shows all audio interfaces you ever connected. If you can plug a headphone to your audio interface, it supports Local Monitoring. If you can not connect a headphone direct into your audio interface, make shure to uncheck the Local Monitoring box to get the audio routing right. You can delete obsolete devices."
 
   infotable = wrap(devicetext,100) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
 
