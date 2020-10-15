@@ -233,7 +233,27 @@ function string.split(str, delimiter)
 
 end
 
+function expandEventName(EventNameDisplay)
 
+  if EventNameDisplay == "Echo and distortion prevention" then
+    retval, actual_bsize = reaper.GetAudioDeviceInfo("BSIZE", "")
+
+    retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+    LocalMonitoringState = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-settings.ini")
+    if LocalMonitoringState == "1" then LocalMonitoringState = "On" else LocalMonitoringState = "Off" end
+    EventNameDisplay = EventNameDisplay .. " (Buffer: ".. actual_bsize .." - Local Monitoring: " .. LocalMonitoringState .. ")"
+
+  elseif EventNameDisplay == "Unknown sound interface" then
+
+    local retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+    local name_short = string.sub(actual_device_name, 1, 40)
+    EventNameDisplay = EventNameDisplay .. " (".. name_short .. ")"
+
+  end
+
+  return EventNameDisplay
+
+end
 
 
 
@@ -496,6 +516,7 @@ function buildGuiWarnings()
       block = GUI.Area:new(170,position-10,782, areaHeight,5,1,1,"section_bg")
       table.insert(GUI.elms, block)
 
+      EventNameDisplay = expandEventName(EventNameDisplay)
 
       id = GUI.Lbl:new(180, position-2, EventNameDisplay, 0, "txt", 2)
       table.insert(GUI.elms, id)
