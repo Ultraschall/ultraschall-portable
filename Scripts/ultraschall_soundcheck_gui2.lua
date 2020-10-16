@@ -358,15 +358,17 @@ function buildGuiWarnings()
 
   dockState, xpos, ypos, width, height = gfx.dock(-1, 0, 0, 0, 0) -- hole die aktuelle Position des GFX Fensters
 
+
   if firstrun == true then -- beim ersten Aufruf werden die bisherigen Werte genommen
     firstrun = false
+
   else
     if xpos ~= GUI.x or ypos ~= GUI.y then -- Fenster wurde verschoben, daher neue Werte holen
 
       GUI.x = xpos
       GUI.y = ypos
       retval = ultraschall.SetUSExternalState("ultraschall_soundcheck", "xpos", tostring(xpos)) -- schreibe die neue X-Position
-      retval = ultraschall.SetUSExternalState("ultraschall_soundcheck", "ypos", tostring(ypos)) -- schreibe die neue X-Position
+      retval = ultraschall.SetUSExternalState("ultraschall_soundcheck", "ypos", tostring(ypos)) -- schreibe die neue Y-Position
 
     end
   end
@@ -379,9 +381,12 @@ function buildGuiWarnings()
       WindowHeight = 220
     end
 
-    -- GUI.y = (screen_h - WindowHeight + 210 - warningCount*30) / 2
-    -- GUI.y = (screen_h - WindowHeight) - 150
-    -- GUI.y = 300
+    if WindowHeight ~= height and height ~= 0 then -- Anzahl der Elemente hat sich geändert also Neuberechnung der Y-Position anhand der neuen Höhe
+
+      GUI.y = GUI.y + (height - WindowHeight)
+
+    end
+
     gfx.init("", 1000, WindowHeight, 0, GUI.x, GUI.y)
 
     refresh_gui = false
