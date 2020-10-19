@@ -2620,3 +2620,129 @@ function ultraschall.GetTakeEnvelopeUnderMouseCursor()
 end
 
 
+function ultraschall.IsAnyNamedEnvelopeVisible(name)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>IsAnyMuteEnvelopeVisible</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.IsAnyMuteEnvelopeVisible(string name)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns, if any mute-envelopes are currently set to visible in the current project
+      
+      Visible=true does include mute-envelopes, who are scrolled outside of the arrangeview
+    </description>
+    <retvals>
+      boolean retval - true, there are visible mute-envelopes in the project; false, no mute-envelope visible
+    </retvals>
+    <parameters>
+      string name - the name of the envelope; case-sensitive, just take the one displayed in the envelope-lane
+                  - Standard-Envelopes are: 
+                  -      "Volume (Pre-FX)", "Pan (Pre-FX)", "Width (Pre-FX)", "Volume", "Pan", "Width", "Trim Volume", "Mute"
+                  - Plugin's envelopes can also be checked against, like
+                  -      "Freq-Band 1 / ReaEQ"
+    </parameters>
+    <chapter_context>
+      Envelope Management
+      Envelopes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, get, any mute envelope, envelope, visible</tags>
+  </US_DocBloc>
+  --]] 
+  -- todo: 
+  --   visible in viewable arrangeview only, but this is difficult, as I need to know first, how high the arrangeview is.
+  for i=0, reaper.CountTracks()-1 do
+    local Track=reaper.GetTrack(0,i)
+    local TrackEnvelope = reaper.GetTrackEnvelopeByName(Track, name)
+    if TrackEnvelope~=nil then
+      local Aretval2 = reaper.GetEnvelopeInfo_Value(TrackEnvelope, "I_TCPH_USED")
+      if Aretval2>0 then return true end
+    end
+  end
+  return false
+end
+
+function ultraschall.IsEnvelope_Track(TrackEnvelope)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>IsEnvelope_Track</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.IsEnvelope_Track(TrackEnvelope env)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns, if the envelope is a track envelope(true) or a take-envelope(false)
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      boolean retval - true, the envelope is a TrackEnvelope; false, the envelope is a TakeEnvelope
+    </retvals>
+    <parameters>
+      TrackEnvelope env - the envelope to check
+    </parameters>
+    <chapter_context>
+      Envelope Management
+      Envelopes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, check, track envelope, take envelope</tags>
+  </US_DocBloc>
+  --]] 
+  if ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("IsEnvelope_Track", "TrackEnvelope", "must be an envelope-object", -1) return end
+  if reaper.GetEnvelopeInfo_Value(Mute, "P_TRACK")==0 then return false else return true end
+end
+
+function ultraschall.IsTrackEnvelopeVisible_ArrangeView(TrackEnvelope)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>IsTrackEnvelopeVisible_ArrangeView</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.IsTrackEnvelopeVisible_ArrangeView(TrackEnvelope env)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns, if the envelope is currently visible within arrange-view
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      boolean retval - true, the envelope is a TrackEnvelope; false, the envelope is a TakeEnvelope
+    </retvals>
+    <parameters>
+      TrackEnvelope env - the envelope to check for visibility
+    </parameters>
+    <chapter_context>
+      Envelope Management
+      Envelopes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, check, track envelope, take envelope, visible, arrangeview</tags>
+  </US_DocBloc>
+  --]] 
+  if ultraschall.IsEnvelope_Track(TrackEnvelope)==false then ultraschall.AddErrorMessage("IsTrackEnvelopeVisible_ArrangeView", "TrackEnvelope", "must be a track-envelope-object", -1) return false end
+  if reaper.GetEnvelopeInfo_Value(TrackEnvelope, "I_TCPH_USED")==0 then return false end
+  local arrange_view = ultraschall.GetHWND_ArrangeViewAndTimeLine()
+  local retval, left, top, right, bottom = reaper.JS_Window_GetClientRect(arrange_view)
+  
+  local Item = reaper.GetMediaTrackInfo_Value(reaper.GetEnvelopeInfo_Value(Mute, "P_TRACK"), "P_ITEM")
+  local HeightTrackY = reaper.GetMediaTrackInfo_Value(reaper.GetEnvelopeInfo_Value(Mute, "P_TRACK"), "I_TCPY")
+  local HeightTrack = reaper.GetMediaTrackInfo_Value(reaper.GetEnvelopeInfo_Value(Mute, "P_TRACK"), "I_TCPH")
+  local HeightEnv = reaper.GetEnvelopeInfo_Value(Mute, "I_TCPH")
+  local A=HeightTrack+HeightTrackY+HeightEnv>0
+  local B=HeightTrackY+HeightEnv+top<bottom
+  return A==B
+end
+
+

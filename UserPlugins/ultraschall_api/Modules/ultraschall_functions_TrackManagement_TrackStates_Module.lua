@@ -4901,7 +4901,7 @@ function ultraschall.SetTrackStateChunk_Tracknumber(tracknumber, trackstatechunk
   if tracknumber==0 then Track=reaper.GetMasterTrack(0)
   else Track=reaper.GetTrack(0,tracknumber-1)
   end
-  A=reaper.SetTrackStateChunk(Track, trackstatechunk, undo)
+  local A=reaper.SetTrackStateChunk(Track, trackstatechunk, undo)
   return A
 end
 

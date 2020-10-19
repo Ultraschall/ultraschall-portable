@@ -262,7 +262,7 @@ function ultraschall.InsertTrack_TrackStateChunk(trackstatechunk)
   <tags>trackstring, track, create, trackstate, trackstatechunk, chunk, state</tags>
 </US_DocBloc>
 ]]--
-  if ultraschall.IsValidTrackStateChunk(trackstatechunk)==false then ultraschall.AddErrorMessage("InsertTrack_TrackStateChunk", "trackstatechunk", "Must be a valid TrackStateChunk", -1) return false end
+  if ultraschall.IsValidTrackStateChunk(trackstatechunk)==false then ultraschall.AddErrorMessage("InsertTrack_TrackStateChunk", "trackstatechunk", "Must be a valid TrackStateChunk", -1) return false end  
   reaper.InsertTrackAtIndex(reaper.CountTracks(0), true)
   local MediaTrack=reaper.GetTrack(0,reaper.CountTracks(0)-1)
   if MediaTrack==nil then ultraschall.AddErrorMessage("InsertTrack_TrackStateChunk", "", "Couldn't create new track.", -2) return false end

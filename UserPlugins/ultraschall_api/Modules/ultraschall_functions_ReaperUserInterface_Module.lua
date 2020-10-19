@@ -1022,19 +1022,19 @@ function ultraschall.MB(caption, title, mbtype, button1_caption, button2_caption
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>MB</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.977
-    JS=0.986
+    Ultraschall=4.1
+    Reaper=6.11
+    JS=1.215
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.MB(string msg, optional string title, optional integer type, optional string button1_caption, optional string button2_caption, optional string button3_caption)</functioncall>
   <description>
     Shows Messagebox with user-clickable buttons. Works like reaper.MB() but unlike reaper.MB, this function accepts omitting some parameters for quicker use.
     
-    Important: This works only on Windows, due some bug on Mac which I couldn't work out yet.
+    Important: This doesn't work on Mac, as you can not replace the button texts there in the first place. Sorry...
     
     You can change the text in the buttons with button1_caption, button2_caption and button3_caption.
-    
+        
     Returns -1 in case of an error
   </description>
   <parameters>
@@ -1068,7 +1068,7 @@ function ultraschall.MB(caption, title, mbtype, button1_caption, button2_caption
   <tags>user interface, user, interface, input, dialog, messagebox</tags>
 </US_DocBloc>
 --]]
-  if ultraschall.IsOS_Windows()==false then ultraschall.AddErrorMessage("MB", "", "works only on Windows, sorry", 0) return -1 end
+--  if ultraschall.IsOS_Windows()==false then ultraschall.AddErrorMessage("MB", "", "works only on Windows, sorry", 0) return -1 end
   if type(caption)~="string" then ultraschall.AddErrorMessage("MB", "caption", "must be a string", -1) return -1 end
   if title~=nil and type(title)~="string" then ultraschall.AddErrorMessage("MB", "title", "must be a string or nil", -2) return -1 end
   if mbtype~=nil and math.type(mbtype)~="integer" then ultraschall.AddErrorMessage("MB", "mbtype", "must be an integer or nil(defaults to 0)", -3) return -1 end
@@ -1380,7 +1380,7 @@ function ultraschall.GetReaScriptConsoleWindow()
   </retvals>
   <chapter_context>
     User Interface
-    Window Management
+    Reaper-Windowhandler
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
@@ -1687,9 +1687,10 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetUserInputs</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.980
-    JS=0.986
+    Ultraschall=4.1
+    Reaper=6.11
+    SWS=2.11.0
+    JS=1.215
     Lua=5.3
   </requires>
   <functioncall>boolean retval, integer number_of_inputfields, table returnvalues = ultraschall.GetUserInputs(string title, table caption_names, table default_retvals, optional integer values_length, optional integer caption_length, optional integer x_pos, optional integer y_pos)</functioncall>
@@ -1705,7 +1706,7 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
       caption_names[1]="*third caption name, which creates an inputfield for passwords, due the * at the beginning"
       
    The number of entries in the tables "caption_names" and "default_retvals" decide, how many inputfields are shown. Maximum is 16 inputfields.
-   You can safely pass "" as entry for a name, if you don't want to set it.
+   You can safely pass "" as table-entry for a name, if you don't want to set it.
       
       The following example shows an input-dialog with three fields, where the first two the have default-values:
       
@@ -1713,6 +1714,9 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
      
    Note: Don't use this function within defer-scripts or scripts that are started by defer-scripts, as this produces errors.
          This is due limitations in Reaper, sorry.
+
+   Note for Mac-Users: size of caption/retval-fields and positioning of the window doesn't work on Mac yet, but you can use these parameters anyways.
+                       This is due Mac's way of having y-coordinate starting at the bottom and I will fix it as soon as I figured that out.
 
    returns false in case of an error.
   </description>
@@ -1730,14 +1734,15 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
     table default_retvals - a table with all default retvals. All non-string-entries will be converted to string-entries.
                           - it can be up to 16 fields
                           - Only enter nil as default-retval, if no further default-retvals are existing, otherwise use "" for empty retvals.
+                          - for no default-retvals, write nil
     optional integer values_length - the extralength of the values-inputfield. With that, you can enhance the length of the inputfields. 
-                            - 1-500
-    optional integer caption_length - the length of the caption in pixels; inputfields and OK, Cancel-buttons will be moved accordingly.
-    optional integer x_pos - the x-position of the GetUserInputs-dialog; nil, to keep default position
-    optional integer y_pos - the y-position of the GetUserInputs-dialog; nil, to keep default position
+                            - 1-500(doesn't work on Mac yet)
+    optional integer caption_length - the length of the caption in pixels; inputfields and OK, Cancel-buttons will be moved accordingly.(doesn't work on Mac yet)
+    optional integer x_pos - the x-position of the GetUserInputs-dialog; nil, to keep default position(doesn't work on Mac yet)
+    optional integer y_pos - the y-position of the GetUserInputs-dialog; nil, to keep default position(doesn't work on Mac yet)
+  </parameters>
                            - keep in mind: on Mac, the y-position starts with 0 at the bottom, while on Windows and Linux, 0 starts at the top of the screen!
                            -               this is the standard-behavior of the operating-systems themselves.
-  </parameters>
   <chapter_context>
     User Interface
     Dialogs
@@ -1747,14 +1752,16 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
   <tags>userinterface, dialog, get, user input</tags>
 </US_DocBloc>
 --]]
-  if ultraschall.IsOS_Windows()==true then ultraschall.AddErrorMessage("GetUserInputs", "", "works only on Windows, sorry", 0) return false end
+--  if ultraschall.IsOS_Windows()==false then ultraschall.AddErrorMessage("GetUserInputs", "", "works only on Windows, sorry", 0) return false end
   local count33, autolength
   if type(title)~="string" then ultraschall.AddErrorMessage("GetUserInputs", "title", "must be a string", -1) return false end
-  if type(caption_names)~="table" then ultraschall.AddErrorMessage("GetUserInputs", "caption_names", "must be a table", -2) return false end
-  if type(default_retvals)~="table" then ultraschall.AddErrorMessage("GetUserInputs", "default_retvals", "must be a table", -3) return false end
+  if caption_names~=nil and type(caption_names)~="table" then ultraschall.AddErrorMessage("GetUserInputs", "caption_names", "must be a table", -2) return false end
+  if caption_names==nil then caption_names={""} end
+  if default_retvals~=nil and type(default_retvals)~="table" then ultraschall.AddErrorMessage("GetUserInputs", "default_retvals", "must be a table", -3) return false end
+  if default_retvals==nil then default_retvals={""} end
   if values_length~=nil and math.type(values_length)~="integer" then ultraschall.AddErrorMessage("GetUserInputs", "values_length", "must be an integer", -4) return false end
-  if values_length==nil then values_length=10 end
-  if (values_length>500 or values_length<1) and values_length~=-1 then ultraschall.AddErrorMessage("GetUserInputs", "values_length", "must be between 1 and 500, or -1 for autolength", -5) return false end
+  if values_length==nil then values_length=40 end
+  if (values_length>500 or values_length<1) and values_length~=-1 then ultraschall.AddErrorMessage("GetUserInputs", "values_length", "must be between 1 and 500", -5) return false end
   if values_length==-1 then values_length=1 autolength=true end
   local count = ultraschall.CountEntriesInTable_Main(caption_names)
   local count2 = ultraschall.CountEntriesInTable_Main(default_retvals)
@@ -1769,7 +1776,9 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
   if y_pos==nil then y_pos="keep" end
   
   if caption_length~=nil and math.type(caption_length)~="integer" then ultraschall.AddErrorMessage("GetUserInputs", "caption_length", "must be an integer or nil!", -9) return false end
-  if caption_length==nil then caption_length="keep" end
+  if caption_length==nil then caption_length=40 end
+  caption_length=(caption_length*2)+18
+  
   
   local captions=""
   local retvals=""  
@@ -1818,15 +1827,16 @@ function ultraschall.GetUserInputs(title, caption_names, default_retvals, values
   
   local temptitle="Tudelu"..reaper.genGuid()
   
-  ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/Scripts/GetUserInputValues_Helper_Script.lua", temptitle, title, 3, x_pos, y_pos, caption_length, "Tudelu", table.unpack(concatenated_table))
-
-  local retval, retvalcsv = reaper.GetUserInputs(temptitle, count33, captions, "")
+  
+  ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/Scripts/GetUserInputValues_Helper_Script.lua", temptitle, title, 3, x_pos, y_pos, caption_length, values_length, "Tudelu", table.unpack(concatenated_table))
+  
+  local retval, retvalcsv = reaper.GetUserInputs(temptitle, count33, "A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16")
   if retval==false then reaper.DeleteExtState(ultraschall.ScriptIdentifier, "values", false) return false end
   local Values=reaper.GetExtState(ultraschall.ScriptIdentifier, "values")
   --print2(Values)
   reaper.DeleteExtState(ultraschall.ScriptIdentifier, "values", false)
   local count2,Values=ultraschall.CSV2IndividualLinesAsArray(Values ,"\n")
-  for i=count+1, 17 do
+  for i=count2, 17 do
     Values[i]=nil
   end
   return retval, count33, Values
@@ -4314,3 +4324,45 @@ function ultraschall.SetTimeUnit(transport_unit, ruler_unit, ruler_unit2)
   return true
 end
 
+function ultraschall.ReturnAllChildHWND(hwnd)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ReturnAllChildHWND</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.965    
+    JS=0.962
+    Lua=5.3
+  </requires>
+  <functioncall>integer count_of_hwnds, table hwnds = ultraschall.ReturnAllChildHWND(HWND hwnd)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns all child-window-handler of hwnd.
+    
+    Returns -1 in case of an error
+  </description>
+  <retvals>
+    integer count_of_hwnds - the number of found child-window-handler
+    table hwnds - the found child-window-handler of hwnd
+  </retvals>
+  <parameters>
+    HWND hwnd - the HWND-handler to check for
+  </parameters>
+  <chapter_context>
+    User Interface
+    Window Management
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>window, hwnd, get, all, child</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidHWND(hwnd)==false then ultraschall.AddErrorMessage("ReturnAllChildHWND", "hwnd", "must be a valid hwnd", -1) return -1 end
+  local Aretval, Alist = reaper.JS_Window_ListAllChild(hwnd)
+  local HWND={}
+  local count=0
+  for k in string.gmatch(Alist..",", "(.-),") do
+    count=count+1
+    HWND[count]=reaper.JS_Window_HandleFromAddress(k)
+  end
+  return count, HWND
+end

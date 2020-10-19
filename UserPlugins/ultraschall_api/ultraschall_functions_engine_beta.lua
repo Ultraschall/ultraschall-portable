@@ -1283,32 +1283,31 @@ end
 
 --A,B,C,D,E=ultraschall.ReadSubtitles_VTT("c:\\test.vtt")
 
-function ultraschall.BatchConvertFiles(filelist, RenderTable, BWFStart, PadStart, PadEnd, FXChain)
+function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTable, BWFStart, PadStart, PadEnd, FXStateChunk, MetaDataStateChunk)
 -- Todo:
 -- Check on Mac and Linux
 --    Linux saves outfile into wrong directory -> lastcwd not OUTPATH for some reason
 -- Check all parameters for correct typings
--- Test FXChain-capability
+-- Test FXStateChunk-capability
   local BatchConvertData=""
   --local ExeFile, filename, path
-  if FXChain==nil then FXChain="" end
+  if FXStateChunk~=nil and FXStateChunk~="" and ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("BatchConvertFiles", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if FXStateChunk==nil then FXStateChunk="" end
+  if MetaDataStateChunk==nil then MetaDataStateChunk="" end
   if BWFStart==true then BWFStart="    USERCSTART 1\n" else BWFStart="" end
   if PadStart~=nil  then PadStart="    PAD_START "..PadStart.."\n" else PadStart="" end
   if PadEnd~=nil  then PadEnd="    PAD_END "..PadEnd.."\n" else PadEnd="" end
   local i=1
-  while filelist[i]~=nil do
-    path, filename = ultraschall.GetPath(filelist[i])
-    filename2=filename:match("(.-)%.")
-    if filename2==nil then filename2=filename end
-    BatchConvertData=BatchConvertData..filelist[i].."\t"..filelist[i]:match("(.*)%.").."\n"
+  local outputfile
+  while inputfilelist[i]~=nil do
+    if ultraschall.type(inputfilelist[i])=="string" then
+      if outputfilelist[i]==nil then outputfile="" else outputfile=outputfilelist[i] end
+      BatchConvertData=BatchConvertData..inputfilelist[i].."\t"..outputfile.."\n"
+    end
     i=i+1
   end
   BatchConvertData=BatchConvertData..[[
 <CONFIG
-]]..FXChain..[[
-  <OUTFMT 
-    ]]      ..RenderTable["RenderString"]..[[
-    
     SRATE ]]..RenderTable["SampleRate"]..[[
     
     NCH ]]..RenderTable["Channels"]..[[
@@ -1323,12 +1322,20 @@ function ultraschall.BatchConvertFiles(filelist, RenderTable, BWFStart, PadStart
     OUTPATH ]]..RenderTable["RenderFile"]..[[
     
     OUTPATTERN ']]..[['
+  <OUTFMT 
+    ]]      ..RenderTable["RenderString"]..[[
+
   >
+  ]]..FXStateChunk..[[
+  ]]..string.gsub(MetaDataStateChunk, "<RENDER_METADATA", "<METADATA")..[[
+
 >
 ]]
 
   ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/filelist.txt", BatchConvertData)
 print3(BatchConvertData)
+--if ll==nil then return end
+
   if ultraschall.IsOS_Windows()==true then
     ExeFile=reaper.GetExePath().."\\reaper.exe"
     AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert "..string.gsub(ultraschall.API_TempPath, "/", "\\").."\\filelist.txt", -1)
@@ -1404,8 +1411,584 @@ function ultraschall.GetAllSelectedRegions_Project()
   return regionscnt, regions
 end
 
+function ultraschall.VideoProcessor_SetText(text, font, fontsize, x, y, r, g, b, a)
+  -- needs modules/additionals/VideoProcessor-Presets.RPL to be imported somehow
+  local OldName=ultraschall.Gmem_GetCurrentAttachedName()
+  local fontnameoffset=50
+  local textoffset=font:len()+20
+  reaper.gmem_attach("Ultraschall_VideoProcessor_Settings")
+  reaper.gmem_write(0, 0)           -- type: 0, Text
+  reaper.gmem_write(1, text:len())  -- length of text
+  reaper.gmem_write(2, textoffset)  -- at which gmem-index does the text start
+  reaper.gmem_write(3, font:len())  -- the length of the fontname
+  reaper.gmem_write(4, fontnameoffset) -- at which gmem-index does the fontname start
+  reaper.gmem_write(5, fontsize)    -- the size of the font 0-1
+  reaper.gmem_write(6, 0)           -- is the update-signal; 0, update text and fontname; 1, already updated
+  reaper.gmem_write(7, x)           -- x-position of the text
+  reaper.gmem_write(8, y)           -- y-position of the text
+  reaper.gmem_write(9,  r)          -- red color of the text
+  reaper.gmem_write(10, g)          -- green color of the text
+  reaper.gmem_write(11, b)          -- blue color of the text
+  reaper.gmem_write(12, a)          -- alpha of the text
+  for i=1, text:len() do
+    Byte=string.byte(text:sub(i,i))
+    reaper.gmem_write(i+textoffset, Byte)
+  end
+  
+  for i=1, font:len() do
+    Byte=string.byte(font:sub(i,i))
+    reaper.gmem_write(i+fontnameoffset, Byte)
+  end
+  
+  if OldName~=nil then
+    reaper.gmem_attach(OldName)
+  end
+end
+
+function ultraschall.VideoProcessor_SetTextPosition(x,y)
+-- needs modules/additionals/VideoProcessor-Presets.RPL to be imported somehow
+  local OldName=ultraschall.Gmem_GetCurrentAttachedName()
+  reaper.gmem_attach("Ultraschall_VideoProcessor_Settings")
+  reaper.gmem_write(7, x)
+  reaper.gmem_write(8, y)
+  if OldName~=nil then
+    reaper.gmem_attach(OldName)
+  end
+end
+
+function ultraschall.VideoProcessor_SetFontColor(r,g,b,a)
+-- needs modules/additionals/VideoProcessor-Presets.RPL to be imported somehow
+  local OldName=ultraschall.Gmem_GetCurrentAttachedName()
+  reaper.gmem_attach("Ultraschall_VideoProcessor_Settings")
+  
+  reaper.gmem_write(9,  r)
+  reaper.gmem_write(10, g)  
+  reaper.gmem_write(11, b)
+  reaper.gmem_write(12, a)
+  if OldName~=nil then
+    reaper.gmem_attach(OldName)
+  end  
+end
+
+function ultraschall.VideoProcessor_SetFontSize(fontsize)
+-- needs modules/additionals/VideoProcessor-Presets.RPL to be imported somehow
+  local OldName=ultraschall.Gmem_GetCurrentAttachedName()
+  reaper.gmem_attach("Ultraschall_VideoProcessor_Settings")
+  reaper.gmem_write(5, fontsize)
+  
+  if OldName~=nil then
+    reaper.gmem_attach(OldName)
+  end
+end
+
+function ultraschall.InputFX_GetInstrument()
+  -- undone, no idea how to do it. Maybe parsing reaper-hwoutfx.ini or checking fx-names from InputFX_GetFXName against being instruments?
+end
+
+
+function ultraschall.InputFX_SetNamedConfigParm(fxindex, parmname, value)
+  -- dunno, if this function works at all with monitoring fx...
+  return reaper.TrackFX_SetNamedConfigParm(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, parmname, value)
+end
+
+function ultraschall.print_BringReaScriptToFrontToggle(toggle)
+  -- what? What's the meaning of this?
+  if ultraschall.type(toggle)~="string" then ultraschall.AddErrorMessage("GetProject_RenderOutputPath", "projectfilename_with_path", "must be a string", -1) return nil end
+end
+
 -- These seem to work working:
 
+
+-- Ultraschall 4.1.006
+
+function ultraschall.InputFX_AddByName(fxname, always_new_instance)
+  if type(fxname)~="string" then ultraschall.AddErrorMessage("InputFX_AddByName", "fxname", "must be a string", -1) return -1 end
+  if math.type(always_new_instance)~="boolean" then ultraschall.AddErrorMessage("InputFX_AddByName", "always_new_instance", "must be a boolean", -2) return -1 end
+  if indexposition==nil then indexposition=0 end
+  if always_new_instance==true then instantiate=-1 else instantiate=1 end
+  
+  return reaper.TrackFX_AddByName(reaper.GetMasterTrack(), fxname, true, instantiate)
+end
+
+
+--A=ultraschall.InputFX_AddByName("ReaCast", false)
+
+function ultraschall.InputFX_QueryFirstFXIndex(fxname)
+  if type(fxname)~="string" then ultraschall.AddErrorMessage("InputFX_QueryFirstFXIndex", "fxname", "must be a string", -1) return -1 end
+  return reaper.TrackFX_AddByName(reaper.GetMasterTrack(), fxname, true, 0)
+end
+
+--A1=ultraschall.InputFX_QueryFirstFXIndex("ReaCast")
+
+function ultraschall.InputFX_MoveFX(old_fxindex, new_fxindex)
+  if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFX", "old_fxindex", "must be an integer", -1) return false end
+  if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFX", "new_fxindex", "must be an integer", -2) return false end
+  if old_fxindex<1 or old_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_MoveFX", "old_fxindex", "no such inputFX", -3) return false end
+  if new_fxindex<1 or new_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_MoveFX", "new_fxindex", "no such inputFX", -4) return false end
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1
+  reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, reaper.GetMasterTrack(0), new_fxindex+0x1000000, true)
+  return true
+end
+
+--ultraschall.InputFX_MoveFX(2, 1)
+
+function ultraschall.InputFX_CopyFX(old_fxindex, new_fxindex)
+  if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFX", "old_fxindex", "must be an integer", -1) return false end
+  if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFX", "new_fxindex", "must be an integer", -2) return false end
+  if old_fxindex<1 or old_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_CopyFX", "old_fxindex", "no such inputFX", -3) return false end
+  if new_fxindex<1 or new_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_CopyFX", "new_fxindex", "no such inputFX", -4) return false end
+  old_fxindex=old_fxindex-1
+  if old_fxindex<new_fxindex then new_fxindex=new_fxindex-2 else new_fxindex=new_fxindex-1 end
+  new_fxindex=new_fxindex
+  return reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, reaper.GetMasterTrack(0), new_fxindex+0x1000000, false)
+end
+
+--A=ultraschall.InputFX_CopyFX(9, 1)
+
+function ultraschall.InputFX_CopyFXFromTrackFX(track, old_fxindex, new_fxindex)
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1 
+  return reaper.TrackFX_CopyToTrack(track, old_fxindex, reaper.GetMasterTrack(0), new_fxindex+0x1000000, false)
+end
+
+--A=ultraschall.InputFX_CopyFXFromTrackFX(reaper.GetMasterTrack(), 1, 10)
+
+function ultraschall.InputFX_CopyFXToTrackFX(old_fxindex, track, new_fxindex)
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1 
+  return reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, track, new_fxindex, false)
+end
+
+--A=ultraschall.InputFX_CopyFXToTrackFX(1, reaper.GetMasterTrack(), 1)
+
+function ultraschall.InputFX_MoveFXFromTrackFX(track, old_fxindex, new_fxindex)
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1 
+  return reaper.TrackFX_CopyToTrack(track, old_fxindex, reaper.GetMasterTrack(0), new_fxindex+0x1000000, true)
+end
+
+--A=ultraschall.InputFX_CopyFXFromTrackFX(reaper.GetMasterTrack(), 1, 10)
+
+function ultraschall.InputFX_MoveFXToTrackFX(old_fxindex, track, new_fxindex)
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1 
+  return reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, track, new_fxindex, true)
+end
+
+--A=ultraschall.InputFX_MoveFXToTrackFX(1, reaper.GetMasterTrack(), 1)
+
+function ultraschall.InputFX_CopyFXToTrackFX(old_fxindex, dest_take, new_fxindex)
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1 
+  return reaper.TrackFX_CopyToTake(reaper.GetMasterTrack(0), old_fxindex+0x1000000, dest_take, new_fxindex, false)
+end
+
+--A=ultraschall.InputFX_CopyFXToTrackFX(1, reaper.GetMasterTrack(), 1)
+
+function ultraschall.CopyFromTakeFX(take, src_fx, dest_fx)
+  return reaper.TakeFX_CopyToTrack(take, src_fx-1, reaper.GetMasterTrack(0), 0x1000000+dest_fx-1, false)
+end
+
+--ultraschall.CopyFromTakeFX(reaper.GetMediaItemTake(reaper.GetMediaItem(0,0),0), 1, 1)
+
+function ultraschall.MoveFromTakeFX(take, src_fx, dest_fx)
+  return reaper.TakeFX_CopyToTrack(take, src_fx-1, reaper.GetMasterTrack(0), 0x1000000+dest_fx-1, true)
+end
+
+--ultraschall.MoveFromTakeFX(reaper.GetMediaItemTake(reaper.GetMediaItem(0,0),0), 1, 1)
+
+function ultraschall.InputFX_Delete(fxindex)
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_Delete", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_Delete", "fxindex", "must 1 or higher", -2) return false end
+  return reaper.TrackFX_Delete(reaper.GetMasterTrack(), 0x1000000+fxindex-1)
+end
+
+
+--ultraschall.InputFX_Delete(6)
+
+function ultraschall.InputFX_EndParamEdit(fxindex, paramindex)
+  return reaper.TrackFX_EndParamEdit(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+end
+
+--A=ultraschall.InputFX_EndParamEdit(14, 1)
+
+function ultraschall.InputFX_FormatParamValue(fxindex, paramindex, value)
+  return reaper.TrackFX_FormatParamValue(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, value, "")
+end
+
+--A,B,C=ultraschall.InputFX_FormatParamValue(2, 1, 0)
+
+function ultraschall.InputFX_FormatParamValueNormalized(fxindex, paramindex, value)
+  return reaper.TrackFX_FormatParamValueNormalized(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, value, "")
+end
+
+--A,B,C=ultraschall.InputFX_FormatParamValueNormalized(1, 2, -1)
+
+function ultraschall.InputFX_GetCount()
+  return reaper.TrackFX_GetRecCount(reaper.GetMasterTrack(0))
+end
+
+--A=ultraschall.InputFX_GetCount()
+
+function ultraschall.InputFX_GetChainVisible()
+  -- returns:
+  -- is inputfx-chain opened?
+  -- which fx is currently visible?
+  return reaper.TrackFX_GetRecChainVisible(reaper.GetMasterTrack(0))~=-1, reaper.TrackFX_GetRecChainVisible(reaper.GetMasterTrack(0))
+end
+
+--A, B=ultraschall.InputFX_GetChainVisible()
+
+
+function ultraschall.InputFX_GetEnabled(fxindex)
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEnabled", "fxindex", "must be an integer", -1) return nil end
+  if fxindex<1 or fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_GetEnabled", "fxindex", "no such input fx", -2) return nil end
+  return reaper.TrackFX_GetEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A=ultraschall.InputFX_GetEnabled(1)
+
+function ultraschall.InputFX_GetEQ(instantiate)
+  if instantiate==true then instantiate=1 else instantiate=0 end
+  return reaper.TrackFX_AddByName(reaper.GetMasterTrack(), "ReaEQ", true, instantiate)+1
+end
+
+--A1,B1=ultraschall.InputFX_GetEQ(true)
+
+function ultraschall.InputFX_GetEQBandEnabled(fxindex, bandtype, bandidx)
+  return reaper.TrackFX_GetEQBandEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, bandtype, bandidx)
+end
+
+--A,B,C,D,E=ultraschall.InputFX_GetEQBandEnabled(14, 2, 0)
+
+function ultraschall.InputFX_GetEQParam(fxindex, paramidx)
+  return reaper.TrackFX_GetEQParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramidx-1)
+end
+
+--A={ultraschall.InputFX_GetEQParam(14, 1)}
+
+
+function ultraschall.InputFX_GetFloatingWindow(fxindex)
+  -- buggy due Reaper bug?
+  return reaper.TrackFX_GetFloatingWindow(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A,B,C,D,E=ultraschall.InputFX_GetFloatingWindow(1)
+
+--A=reaper.TrackFX_GetFloatingWindow(reaper.GetMasterTrack(0), 0)
+
+function ultraschall.InputFX_GetFormattedParamValue(fxindex, paramindex)
+  return reaper.TrackFX_GetFormattedParamValue(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, "")
+end
+
+--A={ultraschall.InputFX_GetFormattedParamValue(2, 1)}
+
+function ultraschall.InputFX_GetFXGUID(fxindex)
+  return reaper.TrackFX_GetFXGUID(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A=ultraschall.InputFX_GetFXGUID(2)
+
+
+function ultraschall.InputFX_GetFXName(fxindex)
+  return reaper.TrackFX_GetFXName(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, "")
+end
+
+--A,B,C=ultraschall.InputFX_GetFXName(1)
+
+function ultraschall.InputFX_GetIOSize(fxindex)
+  return reaper.TrackFX_GetIOSize(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A={ultraschall.InputFX_GetIOSize(1)}
+
+function ultraschall.InputFX_GetNamedConfigParm(fxindex, parmname)
+  return reaper.TrackFX_GetNamedConfigParm(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, parmname)
+end
+
+--A3={ultraschall.InputFX_GetNamedConfigParm(2, "")}
+
+function ultraschall.InputFX_GetNumParams(fxindex)
+  return reaper.TrackFX_GetNumParams(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A=ultraschall.InputFX_GetNumParams(1)
+
+function ultraschall.InputFX_GetOffline(fxindex)
+  return reaper.TrackFX_GetOffline(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A=ultraschall.InputFX_GetOffline(1)
+
+
+function ultraschall.InputFX_GetOpen(fxindex)
+  return reaper.TrackFX_GetOpen(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A=ultraschall.InputFX_GetOpen(2)
+
+function ultraschall.InputFX_GetParam(fxindex, paramindex)
+  return reaper.TrackFX_GetParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+end
+
+--A={ultraschall.InputFX_GetParam(1, 4)}
+
+
+function ultraschall.InputFX_GetParameterStepSizes(fxindex, paramindex)
+  return reaper.TrackFX_GetParameterStepSizes(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+end
+
+--A={ultraschall.InputFX_GetParameterStepSizes(4, 2)}
+
+function ultraschall.InputFX_GetParamEx(fxindex, paramindex)
+  return reaper.TrackFX_GetParamEx(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+end
+
+--A={ultraschall.InputFX_GetParamEx(1, 3)}
+
+function ultraschall.InputFX_GetParamName(fxindex, paramindex)
+  return reaper.TrackFX_GetParamName(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, "")
+end
+
+--A={ultraschall.InputFX_GetParamName(4, 2)}
+
+
+function ultraschall.InputFX_GetParamNormalized(fxindex, paramindex)
+  return reaper.TrackFX_GetParamNormalized(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+end
+
+--A={ultraschall.InputFX_GetParamNormalized(1, 3)}
+
+function ultraschall.InputFX_GetPinMappings(fxindex, isoutput, pin)
+  return reaper.TrackFX_GetPinMappings(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, isoutput-1, pin-1)
+end
+
+--A={ultraschall.InputFX_GetPinMappings(1, 2, 1)}
+
+
+function ultraschall.InputFX_GetPreset(fxindex)
+  return reaper.TrackFX_GetPreset(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, "")
+end
+
+--A={ultraschall.InputFX_GetPreset(1)}
+
+function ultraschall.InputFX_GetPresetIndex(fxindex)
+  local presetindex, countpresets = reaper.TrackFX_GetPresetIndex(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+  if presetindex~=-1 then return presetindex+1, countpresets else return presetindex, countpresets end
+end
+
+--A1={ultraschall.InputFX_GetPresetIndex(1)}
+
+function ultraschall.InputFX_GetRecCount()
+  return reaper.TrackFX_GetRecCount(reaper.GetMasterTrack(0))
+end
+
+--A=ultraschall.InputFX_GetRecCount()
+
+function ultraschall.InputFX_GetUserPresetFilename(fxindex)
+  return reaper.TrackFX_GetUserPresetFilename(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, "")
+end  
+
+--A=ultraschall.InputFX_GetUserPresetFilename(1)
+
+
+function ultraschall.InputFX_NavigatePresets(fxindex, presetmove)
+  return reaper.TrackFX_NavigatePresets(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, presetmove)
+end
+
+
+--A,B=ultraschall.InputFX_NavigatePresets(1, 2)
+--A1={ultraschall.InputFX_GetPresetIndex(1)}
+
+function ultraschall.InputFX_SetEnabled(fxindex, enabled)
+  return reaper.TrackFX_SetEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, enabled)
+end
+
+--A=ultraschall.InputFX_SetEnabled(1, true)
+
+function ultraschall.InputFX_SetEQBandEnabled(fxindex, bandtype, bandidx, enable)
+  return reaper.TrackFX_SetEQBandEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, bandtype, bandidx, enable)
+end
+
+--A=ultraschall.InputFX_SetEQBandEnabled(1, 2, 1, true)
+
+
+function ultraschall.InputFX_SetEQParam(fxindex, bandtype, bandidx, paramtype, val, isnorm)
+  return reaper.TrackFX_SetEQParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, bandtype, bandidx, paramtype, val, isnorm)
+end
+
+--ultraschall.InputFX_SetEQParam(1, -1, 1, 1, -1, true)
+
+
+function ultraschall.InputFX_SetOffline(fxindex, offline)
+  return reaper.TrackFX_SetOffline(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, offline)
+end
+
+--A=ultraschall.InputFX_SetOffline(1, false)
+
+function ultraschall.InputFX_SetOpen(fxindex, open)
+  return reaper.TrackFX_SetOpen(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, open)
+end
+
+--ultraschall.InputFX_SetOpen(1, true)
+
+function ultraschall.InputFX_SetParam(fxindex, parameterindex, val)
+  return reaper.TrackFX_SetParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, parameterindex-1, val)
+end
+
+--A=ultraschall.InputFX_SetParam(1, 1, 1)
+
+
+function ultraschall.InputFX_SetParamNormalized(fxindex, parameterindex, val)
+  return reaper.TrackFX_SetParamNormalized(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, parameterindex-1, val)
+end
+
+--A=ultraschall.InputFX_SetParamNormalized(1, 2, 0)
+
+
+
+function ultraschall.InputFX_SetPinMappings(fxindex, isoutput, pin, low32bits, hi32bits)
+  return reaper.TrackFX_SetPinMappings(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, isoutput-1, pin-1, low32bits, hi32bits)
+end
+
+--A={ultraschall.InputFX_GetPinMappings(2, 1, 1)}
+--B=ultraschall.InputFX_SetPinMappings(2, 1, 1, 4, 3)
+
+function ultraschall.InputFX_SetPreset(fxindex, presetname)
+  return reaper.TrackFX_SetPreset(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, presetname)
+end
+
+--A=ultraschall.InputFX_SetPreset(2, "Ultraschall3")
+
+
+function ultraschall.InputFX_SetPresetByIndex(fxindex, presetindex)
+  return reaper.TrackFX_SetPresetByIndex(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, presetindex-1)
+end
+
+--A=ultraschall.InputFX_SetPresetByIndex(2, 1)
+
+function ultraschall.InputFX_Show(fxindex, showflag)
+  return reaper.TrackFX_Show(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, showflag)
+end
+
+--A=ultraschall.InputFX_Show(1, 3)
+
+function ultraschall.InputFX_GetFXChain(trackfx_or_takefx)
+  if math.type(trackfx_or_takefx)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFXChain", "trackfx_or_takefx", "must be an integer", -1) return nil end
+  if trackfx_or_takefx~=0 and trackfx_or_takefx~=1 then ultraschall.AddErrorMessage("InputFX_GetFXChain", "trackfx_or_takefx", "must be an integer", -2) return nil end
+  local FXStateChunk = ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-hwoutfx.ini")
+  FXStateChunk = FXStateChunk:match(".-(BYPASS.*)")
+  FXStateChunk = string.gsub(FXStateChunk, "FLOATPOS .-\n", "")
+  FXStateChunk = string.gsub(FXStateChunk, "FXID .-\n", "")
+  FXStateChunk = string.gsub(FXStateChunk, "(BYPASS %d- %d-) %d-\n", "%1\n")
+  
+  if trackfx_or_takefx==0 then FXChain="<FXCHAIN\n" else FXChain="<TAKEFX\n" end
+  
+  return FXChain.."  "..string.gsub(FXStateChunk, "\n", "\n  ").."\n>"
+end
+
+function ultraschall.InputFX_SetFXChain(FXStateChunk, replacefx)
+  if type(replacefx)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetFXChain", "replacefx", "must be a boolean", -1) return false end
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("InputFX_SetFXChain", "FXStateChunk", "not a valid FXStateChunk", -2) return false end
+  reaper.PreventUIRefresh(1)
+  FXStateChunk=string.gsub(FXStateChunk, "<TAKEFX", "<FXCHAIN")
+  local TSC=
+[[<TRACK
+  NAME ""
+  PEAKCOL 33530462
+  BEAT -1
+  AUTOMODE 0
+  VOLPAN 1 0 -1 -1 1
+  MUTESOLO 0 0 0
+  IPHASE 0
+  PLAYOFFS 0 1
+  ISBUS 0 0
+  BUSCOMP 0 0 0 0 0
+  SHOWINMIX 1 0.6667 0.5 1 0.5 0 0 0
+  FREEMODE 0
+  REC 0 0 1 0 0 0 0
+  VU 2
+  TRACKHEIGHT 0 0 0
+  INQ 0 0 0 0.5 100 0 0 100
+  NCHAN 2
+  FX 1
+  PERF 0
+  MIDIOUT -1
+  MAINSEND 1 0]]..
+"\n  "..string.gsub(FXStateChunk, "\n", "\n  ").."\n"
+..[[>
+]]
+  reaper.Undo_BeginBlock()
+  local retval, MediaTrack = ultraschall.InsertTrack_TrackStateChunk(TSC)
+  local count=ultraschall.InputFX_GetCount()
+  if replacefx==true then
+    count=0
+    for i=1, ultraschall.InputFX_GetCount() do
+      ultraschall.InputFX_Delete(1)
+    end
+  end
+  
+  for i=1, reaper.TrackFX_GetCount(MediaTrack) do
+    --print2(i)
+    ultraschall.InputFX_MoveFXFromTrackFX(MediaTrack, 1, i)
+  end
+  reaper.DeleteTrack(MediaTrack)
+  reaper.PreventUIRefresh(-1)
+  reaper.Undo_EndBlock("Changed InputFX", -1)
+  return true
+end
+
+
+function ultraschall.DeleteParmLearn2_FXStateChunk(FXStateChunk, fxid, parmidx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>DeleteParmLearn2_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string alteredFXStateChunk = ultraschall.DeleteParmLearn2_FXStateChunk(string FXStateChunk, integer fxid, integer parmidx)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Deletes a ParmLearn-entry from an FXStateChunk, by parameter index.
+    
+    Unlike [DeleteParmLearn\_FXStateChunk](#DeleteParmLearn_FXStateChunk), this indexes the parameters not the already existing parmlearns.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, if deletion was successful; false, if the function couldn't delete anything
+    string alteredFXStateChunk - the altered FXStateChunk
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, which you want to delete a ParmLearn from
+    integer fxid - the id of the fx, which holds the to-delete-ParmLearn-entry; beginning with 1
+    integer parmidx - the index of the parameter, whose parmlearn you want to delete; beginning with 1
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Learn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, parm, learn, delete, parm, learn, midi, osc, binding</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("DeleteParmLearn2_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return false end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("DeleteParmLearn2_FXStateChunk", "fxid", "must be an integer", -2) return false end
+  if math.type(parmidx)~="integer" then ultraschall.AddErrorMessage("DeleteParmLearn2_FXStateChunk", "parmidx", "must be an integer", -3) return false end
+    
+  local UseFX, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxid)
+  if UseFX==nil then ultraschall.AddErrorMessage("DeleteParmLearn2_FXStateChunk", "fxid", "no such fx", -4) return false end
+  
+  local ParmLearnEntry=UseFX:match("%s-PARMLEARN "..(parmidx-1).."[:]*%a* .-\n")
+  if ParmLearnEntry==nil then ultraschall.AddErrorMessage("DeleteParmLearn2_FXStateChunk", "parmidx", "no such parameter", -5) return false end
+    
+  local UseFX2=string.gsub(UseFX, ParmLearnEntry, "\n")
+
+  return true, FXStateChunk:sub(1, startoffset)..UseFX2:sub(2,-2)..FXStateChunk:sub(endoffset-1, -1)
+end
 
 
 ultraschall.ShowLastErrorMessage()

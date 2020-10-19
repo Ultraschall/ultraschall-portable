@@ -1,28 +1,29 @@
 --- @module Window
 -- The basis of any GUI. Scripts are limited to a single window at the moment,
 -- but this will hopefully change in the future.
+
 -- @option name string The window's title
 -- @option x number Horizontal distance from the left side of the overall screen
--- area, in pixels
+--          area, in pixels
 -- @option y number Vertical distance from the top of the overall screen area,
--- in pixels
+--          in pixels
 -- @option w number Width, in pixels
 -- @option h number Height, in pixels
 -- @option dock number Dock state, as per the API documentation for `gfx.dock`.
 -- @option anchor string Object that the window will be positioned relative to.
--- Can be "string" or "mouse". Defaults to "screen".
--- relative
+--            Can be "string" or "mouse". Defaults to "screen".
+--            relative
 -- @option corner string Origin point of the window itself, relative to its anchor.
--- Can be "C" (center), "T" (top), "R" (right), "B" (bottom), "L" (left), "TR"
--- , "TL", "BR", or "BL". Defaults to "C".
+-- Can be "C" (center), "T" (top), "R" (right), "B" (bottom), "L" (left), "TR", 
+--        "TL", "BR", or "BL". Defaults to "C".
 -- @option onResize function Script hook. See below.
 -- @option onMouseMove function Script hook. See below.
 
-local Table = require("public.table")
-local T = Table.T
-local Color = require("public.color")
-local Font = require("public.font")
-local Math = require("public.math")
+local Table  = require("public.table")
+local T      = Table.T
+local Color  = require("public.color")
+local Font   = require("public.font")
+local Math   = require("public.math")
 local Config = require("gui.config")
 
 local Window = T{}
@@ -40,7 +41,7 @@ Window.defaultProps = {
   corner = "C",
   isOpen = false,
   isRunning = true,
-  needsRedraw = false,
+  needsRedraw = true,
   onClose = function() Scythe.quit = true end,
 }
 
@@ -237,6 +238,15 @@ function Window:update()
   self:handleWindowEvents()
 
   self:updateInputEvents()
+  
+  self.currentW, self.currentH = gfx.w, gfx.h
+
+  --[[
+  x = 0,
+  y = 0,
+  w = 640,
+  h = 480,
+  --]]
 
   if self.layerCount > 0 and self.isOpen and self.isRunning then
     self:updateLayers()

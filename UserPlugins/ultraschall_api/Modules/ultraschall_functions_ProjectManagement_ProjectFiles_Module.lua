@@ -4059,7 +4059,7 @@ function ultraschall.GetProject_MetaDataStateChunk(projectfilename_with_path, Pr
     Reaper=6.11
     Lua=5.3
   </requires>
-  <functioncall>string ProjectBayStateChunk = ultraschall.GetProject_MetaDataStateChunk(string ProjectStateChunk, optional string ProjectStateChunk)</functioncall>
+  <functioncall>string MetaDataStateChunk = ultraschall.GetProject_MetaDataStateChunk(string ProjectStateChunk, optional string ProjectStateChunk)</functioncall>
   <description>
     returns the Metadata-StateChunk, that holds all Metadata-entries.
 
@@ -4072,7 +4072,7 @@ function ultraschall.GetProject_MetaDataStateChunk(projectfilename_with_path, Pr
     optional string ProjectStateChunk - a statechunk of a project, usually the contents of a rpp-project-file
   </parameters>
   <retvals>
-    string ProjectBayStateChunk - the statechunk of the metadata
+    string MetaDataStateChunk - the statechunk of the metadata
   </retvals>
   <chapter_context>
     Project-Management
