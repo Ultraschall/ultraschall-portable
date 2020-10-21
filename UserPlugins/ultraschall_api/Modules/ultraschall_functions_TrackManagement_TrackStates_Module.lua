@@ -3511,7 +3511,7 @@ function ultraschall.SetTrackLayoutNames(tracknumber, TCP_Layoutname, MCP_Layout
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetTrackLayoutNames</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.1
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -3565,7 +3565,7 @@ function ultraschall.SetTrackLayoutNames(tracknumber, TCP_Layoutname, MCP_Layout
   -- remove old state-entry from trackstatechunk
   local B1=AA:match("(.-)LAYOUTS")
   local B3=AA:match("LAYOUTS.-%c(.*)")
-  if B1==nil then B1=AA:match("(.-TRACK)") B3=AA:match(".-TRACK(.*)") end
+  if B1==nil then B1=AA:match("(.-PERF.-\n)") B3=AA:match(".-PERF.-\n(.*)") end
 
   -- insert new state-entry into statechunk
   if tracknumber~=-1 then
@@ -3574,7 +3574,7 @@ function ultraschall.SetTrackLayoutNames(tracknumber, TCP_Layoutname, MCP_Layout
     B=true
   end
 
-  return B, B1..""..str.."\n"..B3
+  return B, B1.."\n"..str.."\n"..B3
 end
 
 function ultraschall.SetTrackAutomodeState(tracknumber, automodestate, TrackStateChunk)
@@ -4901,7 +4901,7 @@ function ultraschall.SetTrackStateChunk_Tracknumber(tracknumber, trackstatechunk
   if tracknumber==0 then Track=reaper.GetMasterTrack(0)
   else Track=reaper.GetTrack(0,tracknumber-1)
   end
-  A=reaper.SetTrackStateChunk(Track, trackstatechunk, undo)
+  local A=reaper.SetTrackStateChunk(Track, trackstatechunk, undo)
   return A
 end
 

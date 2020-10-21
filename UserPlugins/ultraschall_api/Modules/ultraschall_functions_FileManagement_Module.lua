@@ -816,12 +816,14 @@ function ultraschall.GetAllDirectoriesInPath(path)
   -- check variables
   local Dirs={}
   local count=1
-  local string=""
+  local String=""
+  local sep=""
   
+  if path:sub(-1,-1)~="\\" and path:sub(-1,-1)~="/" then sep=ultraschall.Separator end
   -- get directorynames
-  while string~=nil do
-    string=reaper.EnumerateSubdirectories(path, count-1)
-    if string~=nil then Dirs[count]=path..string end
+  while String~=nil do
+    String=reaper.EnumerateSubdirectories(path, count-1)
+    if String~=nil then Dirs[count]=path..sep..String end
     count=count+1
   end
   
@@ -2106,6 +2108,10 @@ function ultraschall.CopyFile_AddFileToQueue(filename, targetfilename, overwrite
   if ultraschall.type(filename)~="string" then ultraschall.AddErrorMessage("CopyFile_AddFileToQueue", "filename", "must be a string", -1) return -1 end
   if ultraschall.type(targetfilename)~="string" then ultraschall.AddErrorMessage("CopyFile_AddFileToQueue", "targetfilename", "must be a string", -2) return -1 end
   if ultraschall.type(overwrite)~="boolean" then ultraschall.AddErrorMessage("CopyFile_AddFileToQueue", "overwrite", "must be a boolean", -3) return -1 end
+  filename=filename:match("^%s*(.-)%s*$")
+  targetfilename=targetfilename:match("^%s*(.-)%s*$") 
+  if string.gsub(filename, "\\", "/")==string.gsub(targetfilename, "\\", "/") then ultraschall.AddErrorMessage("CopyFile_AddFileToQueue", "targetfilename", "must be different from filename", -4) return -1 end
+  
   ultraschall.CopyFile_NumberOfFiles=ultraschall.CopyFile_NumberOfFiles+1  
   ultraschall.CopyFile_Files[ultraschall.CopyFile_NumberOfFiles]=filename
   ultraschall.CopyFile_FilesTarget[ultraschall.CopyFile_NumberOfFiles]=targetfilename
@@ -2324,12 +2330,5 @@ function ultraschall.CopyFile_GetRemainingFilesToCopy()
   <tags>filemanagement, background copy, get, number of files to be copied</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.CopyFile_NumberOfFiles==0 then return 0 end
-  local files={}
-  for i=1, ultraschall.CopyFile_NumberOfFiles-ultraschall.CopyFile_FilesOffset+1 do
-    files[i]=ultraschall.CopyFile_Files[i+ultraschall.CopyFile_FilesOffset-1]
-  end
-  return ultraschall.CopyFile_NumberOfFiles-ultraschall.CopyFile_FilesOffset+1, files
+  return ultraschall.CopyFile_NumberOfFiles
 end
-
-

@@ -35,29 +35,37 @@ num_params, params, caller_script_identifier = ultraschall.GetScriptParameters()
 
 function main2()
     -- replaces the button-texts with own ones
-    if tonumber(params[3])==0 then
-        if params[4]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,2), params[4]) end
-    elseif tonumber(params[3])==1 then
-        if params[4]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,1), params[4]) end
-        if params[5]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,2), params[5]) end
-    elseif tonumber(params[3])==2 then
-        if params[4]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,3), params[4]) end
-        if params[5]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,4), params[5]) end
-        if params[6]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,5), params[6]) end
-    elseif tonumber(params[3])==3 then
-        if params[4]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,2), params[4]) end
-        if params[5]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,6), params[5]) end
-        if params[6]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,7), params[6]) end
-    elseif tonumber(params[3])==4 then
-        if params[4]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,6), params[4]) end
-        if params[5]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,7), params[5]) end
-    elseif tonumber(params[3])==5 then
-        if params[4]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,2), params[5]) end
-        if params[5]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,4), params[4]) end
-    elseif tonumber(params[3])==6 then
-        if params[4]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,2), params[4]) end
-        if params[5]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,10), params[5]) end
-        if params[6]~="" then reaper.JS_Window_SetTitle(reaper.JS_Window_FindChildByID(hwnd,11), params[6]) end
+    B, B2=ultraschall.ReturnAllChildHWND(hwnd)
+
+    -- the following lines probably need a mac-derivate, to use the "topmost" insted of mostbottom
+    mostbottom=0
+    for i=1, B do
+      retval, left, top, right, bottom = reaper.JS_Window_GetClientRect(B2[i])
+      if top>mostbottom then mostbottom=top end
+    end
+    -- end of line, who need mac-derivate
+
+    count=0
+    HWND_sort={}
+    HWND_sort_names={}
+    for i=B, 1, -1 do
+      retval, left, top, right, bottom = reaper.JS_Window_GetClientRect(B2[i])
+      if top~=mostbottom then
+         table.remove(B2, i)
+         B=B-1
+      end
+    end
+
+    for i=B, 1, -1 do
+      retval, left, top, right, bottom = reaper.JS_Window_GetClientRect(B2[i])
+      HWND_sort[i]=left.." "..tostring(reaper.JS_Window_GetTitle(B2[i]))-- left
+    end
+
+    table.sort(HWND_sort)
+
+    for i=1, #HWND_sort do
+      hwnd2=reaper.JS_Window_FindChild(hwnd, HWND_sort[i]:match(" (.*)"), true)
+      if params[i+3]~="" then reaper.JS_Window_SetTitle(hwnd2, params[i+3]) end
     end
 end
 

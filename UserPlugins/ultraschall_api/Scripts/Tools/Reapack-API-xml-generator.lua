@@ -45,7 +45,7 @@ end
 --!!TODO
 -- script has issues with urls, that contain spaces and other characters in them, that aren't url-suitable.
 
-Docs={12,
+Docs={13,
 "ultraschall_Add_ExampleScripts_To_Reaper.lua",
 "ultraschall_Add_Developertools_To_Reaper.lua",
 "ultraschall_Help_Reaper_Api_Documentation.lua",
@@ -54,10 +54,12 @@ Docs={12,
 "ultraschall_Help_Reaper_ConfigVars_Documentation.lua",
 "ultraschall_Help_Ultraschall_Api_Functions_Reference.lua",
 "ultraschall_Help_Ultraschall_Api_Introduction_and_Concepts.lua",
+"ultraschall_Help_Lua_Reference_Manual.lua",
 "ultraschall_OpenFolder_Api_Documentation.lua",
 "ultraschall_OpenFolder_Api_ExampleScripts.lua",
 "ultraschall_Remove_ExampleScripts_From_Reaper.lua",
-"ultraschall_Remove_Developertools_From_Reaper.lua"
+"ultraschall_Remove_Developertools_From_Reaper.lua",
+"Ultraschall_API_Settings.lua"
 }
 
 -- remove all temp-files

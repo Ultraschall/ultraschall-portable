@@ -598,7 +598,7 @@ function contentindex()
   
       as first line into your script.<p>
       
-      For more details, read the docs in the <a href="US_Api_Introduction_and_Concepts">Introduction and Concepts</a>-area of this page.
+      For more details, read the docs in the <a href="US_Api_Introduction_and_Concepts.html">Introduction and Concepts</a>-area of this page.
   <table style=\"font-size:10pt; width:100%;\" >
   ]]
   reaper.ClearConsole()

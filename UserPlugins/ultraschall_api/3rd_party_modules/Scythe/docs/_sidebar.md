@@ -1,0 +1,42 @@
+- Getting Started
+  - [Installation](getting-started/installation.md)
+  - [Using Scythe in a script](getting-started/usage.md)
+  - [A basic script](getting-started/basic-script.md)
+- Working with the GUI
+  - _Overview (placeholder)_
+  - _User events (placeholder)_
+- GUI Modules
+    - [Element](gui/element.md)
+    - [Layer](gui/layer.md)
+    - [Window](gui/window.md)
+- GUI Elements
+    - [Button](gui/elements/Button.md)
+    - [Checklist](gui/elements/Checklist.md)
+    - [ColorPicker](gui/elements/ColorPicker.md)
+    - [Frame](gui/elements/Frame.md)
+    - [Knob](gui/elements/Knob.md)
+    - [Label](gui/elements/Label.md)
+    - [Listbox](gui/elements/Listbox.md)
+    - [Menubar](gui/elements/Menubar.md)
+    - [Menubox](gui/elements/Menubox.md)
+    - [Radio](gui/elements/Radio.md)
+    - [Slider](gui/elements/Slider.md)
+    - [Tabs](gui/elements/Tabs.md)
+    - [TextEditor](gui/elements/TextEditor.md)
+    - [Textbox](gui/elements/Textbox.md)
+- [Public Modules](/public/)
+    - [Buffer](public/buffer.md)
+    - [Color](public/color.md)
+    - [Error](public/error.md)
+    - [File](public/file.md)
+    - [Font](public/font.md)
+    - [GFX](public/gfx.md)
+    - [Image](public/image.md)
+    - [Math](public/math.md)
+    - [Sprite](public/sprite.md)
+    - [String](public/string.md)
+    - [Table](public/table.md)
+    - [Text](public/text.md)
+- Utilities
+  - [Testing](testing.md)
+  - [Doc Parser](doc-parser.md)
