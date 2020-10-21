@@ -1,5 +1,5 @@
 Parameter-Learn/Modulation/Alias-Chunk - documentation
-compiled by Meo Mespotine 07.05.2019
+compiled by Meo Mespotine 20.08.2020
 
 Thanks to Anton9 for helping me with that :)
 
@@ -32,15 +32,19 @@ parameters:
                                     usually only wet or bypass
                                     In most other parameters, this is omitted!
                                     
-     integer midi_note - the midinote, that is assigned to this; 
+     integer midi_note - the midinote, that is assigned to this; this is a multibyte value, with the first byte
+                         being the MIDI-mode, and the second byte the MIDI/CC-note
                              0,   OSC is used
-                             176, MIDI Chan 1 CC 0
+                             176, MIDI Chan 1 CC 0     (Byte1=176, Byte2=0)
                              ...
-                             432, MIDI Chan 1 CC 1
+                             432, MIDI Chan 1 CC 1     (Byte1=176, Byte2=1)
                              ...
-                             9360, MIDI Chan 1 Note 36
-                             9616, MIDI Chan 1 Note 37
-                             9872, MIDI Chan 1 Note 38
+                             144,  MIDI Chan 1 Note 1  (Byte1=144, Byte2=0)
+                             400,  MIDI Chan 1 Note 1  (Byte1=144, Byte2=1)
+                             ...
+                             9360, MIDI Chan 1 Note 36 (Byte1=144, Byte2=36)
+                             9616, MIDI Chan 1 Note 37 (Byte1=144, Byte2=37)
+                             9872, MIDI Chan 1 Note 38 (Byte1=144, Byte2=38)
                                ...
                                
                          CC Mode-dropdownlist:
@@ -117,20 +121,36 @@ FX-parameter-modulation:
       AUDIOCTLWT number AudioCTL_Strength_slider  integer AudioCTL_direction_radiobuttons
         number AudioCTL_Strength_slider - 0.0000(0%) to 1.000(100%); 0.493(49.3%); default is 1
         integer AudioCTL_direction_radiobuttons - -1, Negative; 0, Centered; 1, Positive
+        
+      MODWND integer opened  integer win_x_position  integer win_y_position  integer winright_readonly  integer winbottom_readonly
+      usually stored as last entry in the PROGRAMENV-statechunk
+      appears only, after the window has been moved but can be set as well, if not existing yet
+        integer opened - 0, ParmMod-window is closed; 1, ParmMod-window is opened; can be set to open/close ParmMod-window of this parmmodulation
+        integer win_x_position - the x-position in pixels of the ParmMod-window; can be set, when opened=0
+        integer win_y_position - the y-position in pixels of the ParmMod-window; can be set, when opened=0
+        integer winright_readonly - the position of the right side of the window in pixels; can't be set so set it to anything
+        integer winbottom_readonly - the position of the bottom side of the window in pixels; can't be set so set it to anything
       
 the following are only available, when Link from MIDI or FX parameter-checkbox is enabled
       PLINK  number Scale  integer midi_fx_idx[:fx_idx] integer parmidx  number offset
         number Scale - Scale-slider; -1.00(-100%) to 1.00(100%); default is 0(0%)
-        integer midi_fx_idx[:fx_idx] - the big MIDI/FX-button in the "Link from MIDI or FX parameter"-area; [:fx_idx] is only available, when FX-plugin is selected, otherwise(when using MIDI) this is omitted
+        integer midi_fx_idx[:relative_fx_idx] - the big MIDI/FX-button in the "Link from MIDI or FX parameter"-area; the part "[:fx_idx]" is only available, if you want to select a plugin relative to the current plugin, otherwise(when using MIDI or a specific plugin) this is omitted
+                
+              midi_fx_idx - the plugin to use; will be ignored if relative_fx_idx is used
                 -1, nothing selected
                 -100, MIDI-parameter-settings
-                0:0 - the first fx
-                1:1 - the second fx
-                2:2 - the third fx, etc
+                0, first plugin in the FXChain
+                1, second plugin in the FXChain
+                etc
+              
+              relative_fx_idx - the plugin used relative to the current plugin; use only if you want to select a plugin relative to the current one
+                0, use a parameter of the current plugin
+                negative, use a plugin above in the FXChain relative to the current one(-1, the one directly above; -2, two above, etc)
+                positive, use a plugin below in the FXChain relative to the current one(1, the one directly below; 2, two below, etc)
+                
                 
         integer parmidx - the parameter idx, that you want to link; 
-                    When MIDI:
-                        16
+                    When MIDI, this value is ignored and can be set to anything.
                     When FX-parameter:
                         0 to n; 0 for the first; 1, for the second, etc
                         
@@ -167,17 +187,18 @@ the following are only available, when Link from MIDI or FX parameter-checkbox i
                             
 The following are only available when LFO 1:
       LFOSHAPE  integer shape
-        integer shape - the shape of the LFO
-                    0, sine
-                    1, square
-                    2, saw L
-                    3, saw R
-                    4, triangle
-                    5, random
+        integer shape - the shape of the LFO/the old shape of LFO(if LFOSYNC -> lfo_shape_old=1)
+                    0, sine/sine(old)
+                    1, square/square(old)
+                    2, saw L/saw L(old)
+                    3, saw R/saw R(old)
+                    4, triangle/triangle(old)
+                    5, random/random(old)
       
-      LFOSYNC  integer tempo_sync_checkbox  integer unknown  integer phase_reset_dropdownlist
+      LFOSYNC  integer tempo_sync_checkbox  integer lfo_shape_old  integer phase_reset_dropdownlist
         integer tempo_sync_checkbox - 0, disabled; 1, enabled
-        integer unknown - unknown
+        integer lfo_shape_old - switches between old and new LFO-shape-versions; 0, new LFO-shapes; 1, old LFO-shapes
+                                must be turned on deliberatly using this parameter of they are not available in the dropdownlist                                
         integer phase_reset_dropdownlist - phase-reset-dropdownlist
                                    0, On seek/loop (deterministic output)
                                    1, Free-running (non-deterministic output)
@@ -185,6 +206,7 @@ The following are only available when LFO 1:
       LFOSPEED  number lfo_speed_slider  number lfo_phase
         number lfo_speed_slider - 0(0.0039Hz) to 1(8.0000Hz); higher values are possible, lower values go into negative; default is 0.124573(1.0000Hz)
         number lfo_phase - 0.000 to to 1.000; default is 0.5
+        
         
 The following are only available when AUDIOCTL 1:
       CHAN  integer Track_audio_channel_dropdownlist
@@ -245,12 +267,30 @@ LFOLearn:
                                     usually only wet or bypass
                                     In most other parameters, this is omitted!
                                     
-     integer midi_note - the midinote, that is assigned to this; 
-                             0,    OSC is used
-                             9360, MIDI Chan 1 Note 36
-                             9616, MIDI Chan 1 Note 37
-                             9872, MIDI Chan 1 Note 38
+     integer midi_note - the midinote, that is assigned to this; this is a multibyte value, with the first byte
+                         being the MIDI-mode, and the second byte the MIDI/CC-note
+                             0,   OSC is used
+                             176, MIDI Chan 1 CC 0     (Byte1=176, Byte2=0)
+                             ...
+                             432, MIDI Chan 1 CC 1     (Byte1=176, Byte2=1)
+                             ...
+                             144,  MIDI Chan 1 Note 1  (Byte1=144, Byte2=0)
+                             400,  MIDI Chan 1 Note 1  (Byte1=144, Byte2=1)
+                             ...
+                             9360, MIDI Chan 1 Note 36 (Byte1=144, Byte2=36)
+                             9616, MIDI Chan 1 Note 37 (Byte1=144, Byte2=37)
+                             9872, MIDI Chan 1 Note 38 (Byte1=144, Byte2=38)
                                ...
+                               
+                         CC Mode-dropdownlist:
+                            set the following flags to their specific values (0=0, 1=the value beginning &, like &65536 or &131072 or &262144)
+                            they seem not to work under some circumstances...
+                             &65536 &131072 &262144 
+                                0       0       0,      Absolute
+                                1       0       0,      Relative 1(127=-1, 1=+1)
+                                0       1       0,      Relative 2(63=-1, 65=+1)
+                                1       1       0,      Relative 3(65=-1, 1=+1)
+                                0       0       1,      Toggle (>0=toggle)
                                
      integer checkboxflags - the checkboxes checked in the MIDI/OSC-learn dialog
                               0, no checkboxes

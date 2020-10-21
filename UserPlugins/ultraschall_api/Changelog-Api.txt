@@ -1,26 +1,36 @@
 <TODO>
-        
-    For 4.01.004:
+    -- later releases
+        - EventManager - allow one-time-events, that unregister themselves, as soon as they hit the true-stage and have executed their actions.
+        - GetUserInputs - new implementation for captions and retvals BUT OK/Cancel Button buggy and length of captions/retvals buggy
+        - Hilfsfunktionen für Lokasenna's GuiLib v2, wie automatisches übertragen der Höhe/Breite/Position-Werte in die entsprechenden Gui-Vals
+        - BatchConvertFiles - maybe finishing it up?
         - Set Metadata from Project - still missing
-        
-        - IsFileUsedInProject - check, if a file is used in the current project, could allow deleting it, though getting if it's part of projectbay could be the issue here
+        - IsTakeEnvelopeVisible(könnt knifflig werden)
+        - Download files via Curl -> darf ich Curl mit ausliefern oder beisst sich das mit Lizenz? Auf Windows kann ich auch certutil nutzen.
+            function ultraschall.DownloadFile(fileurl, target)
+              -- certutil
+              Filename=fileurl:match(".*/(.*)")
+              if ultraschall.IsOS_Win()==true then
+                os.execute("certutil -urlcache -f \""..fileurl.."\" \""..target.."/"..Filename.."\" >NIL")
+              end
+
+              -- curl
+              BatchFile=[[
+            cd "]]..target..[[" >:NIL
+            ]]..reaper.GetResourcePath().."/UserPlugins/ultraschall_api/3rd_party_modules/curl/curl -s -O \""..fileurl..[[" >:NIL 
+              ]]
+              ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/Curl.Bat", BatchFile)
+              os.execute(ultraschall.API_TempPath.."/Curl.Bat")
+            end
+              - haben Linux und MacOS(speziell Catalina) curl?
+
         - MoveChildWithinParentHWND - hat wohl OffByOne error, wenn relative und width/height=0 gesetzt; tauchte bei Arrangeview auf
         - AddMediaItemStateChunk_in_TrackStateChunk
-        - BatchConvertFiles - maybe finishing it up?
-        - StateChunkLayouter - support different "target"-statechunks, so you can layout a statechunk for direct usage within ProjectStateChunks, etc
-                                probably by adding a "depth"-parameter, which allows stting the number of spaces*2, who indent the statechunk accordingly
-    
-        BUG REPORT: MB and GetUserInputs: Can't find ID of the buttons anymore. Changes in Reaper in recent versions? Mac(Linux?) only
     
         - ultraschall.Defer - can func==nil be used to use the function, in which Defer-was called?
                         And defer-identifier==nil should be no defer-identifier(defer default)
                         That way, it could be used as ultraschall.Defer()
 
-	
-    -- ToggleMute(_Object): state=2 toggelt relativ zum derzeitigen Mute-State, so dass man nicht erst extra den letzten state heraussuchen muss.
-				--Bugfixes!! NOCHMAL INTENSIVST TESTEN!!! 
-				-- RecArm on+Mute Button im TCP drücken toggelt nicht sauber. Man kann da den Track gemutet haben, auch wenn die MuteSpur auf unmuted steht. Da vielleicht den Mute-Button wieder auf unmuted stellen, wenn man unmuted macht?
-				state=2 kann vermutlich nicht so ohne Weiteres umgesetzt werden. Wär aber auch nicht schlimm.
     
 	How to get selection in category-list of Preferences?
 	Edgemeal's way:
@@ -110,43 +120,12 @@ Have fun!"
                    
                    solve them with removing the preset/filename using sub() NOT gsub()
     
-    ToDo: ReaPack-Github-URl is buggy.
     
     FX-Names with Reaper's own API-functions have three different types on Mac, for Studiolink On Air.
     I need functions, who take care of that in the API.
-
-    Add range before and after the position, so you can get markers, who aren't at the exact position
-    Use GetAllMarkersBetween/GetAllRegionsBetween to get them.
-       GetMarkerByScreenCoordinates 
-       GetMarkerByTime 
-       GetRegionByScreenCoordinates 
-       GetRegionByTime 
-       GetTimesignaturesByScreenCoordinates 
-       GetTimeSignaturesByTime 
    
         
         - TODO!! Defer   - registering of defer-using-running scripts into an extstate ultraschall->running_script_instance-> for monitoring purposes
-                         - Defer -> identifier management must be more stable, without possible nameconflicts
-                         - Um zu verhindern, dass ein Name doppelt verwendet wird:
-                                check mal den ScriptIdentifier des bereits registrierten Namens, 
-                                wenn die Defer-Funktion aufgerufen wird. 
-                                Wenn der unterschiedlich ist: Fehlermeldung "Identifier Namenskonflikt".
-                                Wenn der identisch ist: Supi, weitermachen.
-
-        - TODO!! ein EventManager-script, welches von normalen Usern benutzt werden kann:
-                    1. Es erlaubt Funktionen zu pasten, welche Andere für Einen geschrieben haben(eventuell auch editieren?).
-                    2. Es erlaubt Actions auszuwählen(inklusive Filter) und ne Liste zu erstellen.
-                    3. Es erlaubt das Ganze als Event/Startup Event hinzuzufügen.
-                    
-                 Darüberhinaus sollte das Script folgendes können:
-                    Events als Watchlist anzeigen
-                        Diese erlaubt es auch Events hinzuzufügen.
-                        Diese erlaubt es auch Events zu exportieren/importieren.
-                        Diese erlaubt es auch bestehende Events als StartUp-Events hinzuzufügen.
-                        Diese erlaubt es auch Events zu bearbeiten und Attribute zu ändern.
-                        Diese erlaubt es auch Events in ihrer Reihenfolge zu bearbeiten.
-                        Diese erlaubt es auch Events zu beenden, auch filterbar(Eventname, Eventidentifier, ScriptIdentifier).
-                        Diese erlaubt es auch den EventManager zu starten und zu beenden.
                         
         - TODO!! Event Manager: 
                         - Funktionen anstelle von Actions sollten auch hinzufügbar sein. Diese haben auch Zugriff auf den UserSpace
@@ -163,7 +142,6 @@ Have fun!"
                       tempfile2=string.gsub(tempfile2, " ", "%%20")
                       Notes: really tempfile2(!)? And, do I need to exchange only on source or also on target-file?
                       
-        - TODO!! reaper.GetLastTouchedFX, reaper.GetFocusedFX - high word/low word-management is too difficult, make new functions of them
         - TODO!!  - Get/SetProject-functions for
                   StateChunks:
                   - SetProject_AutomationItemStateChunk - gets an automation-item from a project/ProjectStateChunk
@@ -202,20 +180,14 @@ Have fun!"
                     - AutomationItems, ProjectBay, Metronome, MasterPlayspeed, Tempo, Extensions, MasterHWVolEnv, MasterFXList, MasterDualPanEnv
                       MasterDualPanEnv2, MasterDualPanEnvL, MasterDualPanEnvL2, MasterVolEnv, MasterVolEnv2, MasterVolEnv3, MasterHWPanEnv, TempoEnv_Ex   
          - TODO!! Add/Set/DeleteModulation
-         - TODO!! MB and GetUserInputs not working on Mac due unknown bug. 
-                 Can't find ID of the buttons anymore. Changes in Reaper in recent versions?
-         - TODO!! GetUserInputs - count doesn't match, if fewer inputboxes are filled than do exist.
-                        tested with 9 Inputboxes, 6 Captionboxes. There's somewhere a mismatch...
-                        Is this fixed? Can't reproduce anymore.
+
          - TODO!! GetUserInputs 
                 - set length of caption-textfields and move inputboxes accordingly, as well as the width of the DialogWindow AND
                   position it correctly centered
                 - Captions ending with \n shall be the full width of the window(for full readability of the caption), where the 
                   associated inputbox is moved into the next line,which means, that all lines must be moved downwards properly 
                   and height must be adjusted accordingly
-                - additional parameters, x,y, to set a position of the GetUserInput-window
-                - maybe auto_size, using caption length and input-box-default-value length to get the desired widths(needs GetLength of Text working somehow, using
-                  JS-extension-plugin)
+
     - TODO!! Monitor the rendering to file-dialog for queue-renders, to get the rendered filenames, using a background script, if possible at all
       TODO!! Default-Color-Theme-Colortables and loading ColorTable from Theme-functions
               Originally Posted by mespotine  View Post
@@ -239,7 +211,6 @@ Have fun!"
       TODO!! Lua-eigene Funktionen in die ultraschall-Table übernehmen, wie type, tostring, tonumber, etc. Dies könnten vom user überschrieben werden und dann
              produziert die API Fehler.
 
-      TODO!!  - totype(value, string type), converts a value to type and returns it, if impossible, returns nil; includes string, boolean, integer, float, hex, oct, base64, etc
       TODO!!  - SetStateChunk-functions: how to check for ProjectStateChunk/TrackStateChunk/ItemStateChunk/EnvStateChunk, when new parameters are added to the function?
                                          something with ... ? Otherwise, new added parameters will break old scripts...
       TODO!!  - create HTML-docs from all files in the functions-department of Ultraschall/3rd-party-functions
@@ -248,9 +219,6 @@ Have fun!"
       TODO!!  - ultraschall.gfx_getkey(integer buffer), allows pipe-ing of UserInput directly into a textbuffer. The textbuffer acts like a invisible textbox, which can be shown using drawstr or something
                                                         must support arrow, bspc, enter, return, copynpaste as well
 
-      TODO!!  - functions to setup the LICECAP-settings, before running it; a function to run LiceCap
-            set filename with .gif or .lcf to set the default filetype used!
-			Include LiceCap into Ultraschall-API, so you can use this version.
       TODO!!  - functions for native-colorstuff like, gradients, hue
             as well as the same functions for a colorarray, which has a number of colors inside of it, that can be contrasted, gradiented, etc
             they shall support gfx.init-color-values as output(boolean gfx.init-colorvalues (0 to 1)
@@ -258,43 +226,316 @@ Have fun!"
       TODO!!  - GetAllTakesFromMediaItem - returns an array with all takes from an item, objects as well as info_values
       TODO!!  - Get/SetProjectBay-functions
       TODO!!  - Envelope-StateChunk-functions
-
       TODO!!  - Mix-Snapshots, who store/retrieve the current/a former mix
 
-      TODO!! SaveProjectAs(ReaProject project, newfilename, relative_sourcefilenames, ProjectStateChunk)
-                 params:
-                    project - the project to save, either ReaProject or projecttab-nr;
-                              0, the currently opened project
-                              nil, use parameter ProjectStateChunk instead
-                    newfilename - the filename under which to store the Project
-                    relative_sourcefile_position - 0, keep absolute paths
-                                                 - 1, make paths relative
-                                                 - 2, make sourcefile-path+filenames relative to the project-folder(hardest option to code)
-                    ProjectStateChunk - a projectstatechunk to use for the save-operation
-                    
-                 retvals:
-                    retval - true, if saving succeeded
-                    projectfilename - the saved projectfilename+path
-                    sourcefiles - an array with all source/map-filenames[1] and their new filenames in relation of their new position[2]
-                                    can be used to copy/move all the sourcefiles into the projectfolder(needs MakeDir(path) as well!)
-              Note: could be doable, using the dialog and a background-script, that fills out the stuff from the back
-
-TODO!! buggy function
-        the line "reaper.JS_WindowMessage_Send(Textfield, "WM_SETFONT", styles[style] ,0,0,0)" seems to be the problem due WM_SETFONT
 		
 		
 #### readded from earlier development-builds
    - Developer: SetReaScriptConsole_FontStyle - sets the style of the font in the ReaConsole
    - LiceCap: SetLiceCapExe - sets the LiceCap-executable, which shall be used by Reaper
    - LiceCap: SetupLiceCap - sets up the LiceCap-executable settings of the currently chosen LiceCap-executable in Reaper
-   - ProjectManagement: SaveProjectAs - saves the current project under a new filename
    - RenderManagement: GetProject_RenderOutputPath - gets the render-output-path
    - RenderManagement: ResolveRenderPattern - resolves the render-pattern into its actual filename
    - Subtitles: ReadSubtitles\_VTT - imports a webvtt-subtitlefile
+   - FXManagement: DeleteParmLearn2\_FXStateChunk - like DeleteParmLearn\_FXStateChunk, but allows indexing by parameter-index, not by number of existing parameter learnings
+
    
 </TODO>
 
 ## Ultraschall Framework - Changelog
+
+### 4.1.007 - "Frank Zappa - Carolina Hard-Core Ecstasy" - 21st of October 2020
+
+Has now 1342 functions, with 48 new ones
+
+**new in this release:**  
+
+  - **Default v6-Theme-functions**  
+    Ever wanted to write scripts that do, what the theme-adjuster can? Here's your chance.  
+    42 functions give you life, themeiverse and all the rest needed.
+    
+  - **EditReaScript**  
+    Create new scripts and open them in the IDE right from a script. Or edit an existing one. Now possible with EditReaScript().
+    
+  - **GetFocusedFX and GetLastTouchedFX**  
+    Basically like Reaper's own ones BUT I improved the parameter-interface so it is actually useable for regular scripters.  
+    
+  - **SFEM**  
+    Sometimes, you want to get the first error-message that has happened in your script, which signals, what's the first thing that went wrong.  
+    SFEM(for Show First Error Message) is your way to go.  
+
+  - **IsItemVisible and IsTrackVisible**  
+    That's right, you can check now, if an item or track is visible in the arrangeview.  
+    You can check, whether they are fully in arrangeview or just partially.  
+    
+  - **Small Fixes and Docs**  
+    Small bugfixes here and there as well updates to the docs for Reaper 6.15 and SWS 2.12.1
+
+
+#### New features in 4.1.007
+   - Developer: EditReaScript - edits a ReaScript in Reaper's IDE; creates it, if not yet existing
+   - ErrorMessagingSystem: SFEM - returns the first error message from the current script-run
+   - FXManagement: GetFocusedFX - returns the focused FX(easier than Reaper's own API-function)
+   - FXManagement: GetLastTouchedFX - returns the last touched fx(easier than Reaper's own API-function)
+   - MediaItem-Management: IsItemVisible - returns, if a MediaItem is visible or not
+   - TrackManagement: IsTrackVisible - returns, if a track is visible or not
+   - ThemeManagement: Theme\_Defaultv6\_GetEnvFaderSize - gets the current size of the faders of envelopes when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetEnvNameSize - gets the current size of the name of envelopes when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetEnvSize - gets the current size of the envelope when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetEnvFolderIndent - gets the current indentation-related-to-trackfolder-setting when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetHideTCPElement - gets the current hidden-states of tcp-element when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetMCPAlignControls - gets the current alignement of controls in tcp when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetMCPBorderStyle - gets the current border-style of the mcp when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetMCPFolderIndent - gets the current folder indentation of mcp when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetMCPMeterExpansion - gets the current MCP meter expansion when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetMCPSizeAndLayout - gets the current MCP-size and layout when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetStyleMCPElement - gets the style of an mcp-element when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetTCPAlignControls - gets the current alignement of controls in tcp when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetTCPInputSize - gets the current size of the input-element when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetTCPFolderIndent - gets the new folder-indent-size of tcp when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetTCPMeterLocation - gets the current location of the meter-element when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetTCPMeterSize - gets the current size of the meter-element when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetTCPNameSize - gets the current size of the track-name-label when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetTCPSizeAndLayout - gets the current TCP-size and layout when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetTCPVolumeSize - gets the current size of the volume-element when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetTransPlayRateSize - gets the current size of the playrate-slider when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_GetTransSize - gets the current size of the transport when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetEnvFaderSize - sets the current size of the faders of envelopes when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetEnvNameSize - sets the new size of the name of envelopes when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetEnvSize - sets the new size of the envelope when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetEnvFolderIndent - sets the new indentation-related-to-trackfolder-setting when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetHideTCPElement - sets the hidden-states of tcp-element when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetMCPAlignControls - sets the new alignement of controls in tcp when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetMCPBorderStyle - sets the new border-style of the mcp when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetMCPFolderIndent - sets the new folder indentation of mcp when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetMCPMeterExpansion - sets the new MCP meter expansion when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetMCPSizeAndLayout - sets the new MCP-size and layout when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetStyleMCPElement - sets the style of an mcp-element when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetTCPAlignControls - sets the new alignement of controls in tcp when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetTCPInputSize - sets the new size of the input-element when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetTCPFolderIndent - sets the new folder-indent-size of tcp when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetTCPMeterLocation - sets the new location of the meter-element when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetTCPMeterSize - sets the new size of the meter-element when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetTCPNameSize - sets the new size of the track-name-label when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetTCPSizeAndLayout - sets the new TCP-size and layout when using default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetTCPVolumeSize - sets the new size of the volume-element when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetTransPlayRateSize - sets the new size of the playrate-slider when using the default v6-theme
+   - ThemeManagement: Theme\_Defaultv6\_SetTransSize - sets the new size of the transport when using the default v6-theme
+   
+   
+#### Changes from 4.1.006 to 4.1.007   
+   - Developer Tools: Theme Parameter Monitor - didn't stop script, when closed by close-window-button -> fixed
+   - ThemeManagement: Theme\_Defaultv6\_SetMCPSize - didn't work, when no layout was present already -> fixed
+   - TrackManagement: GetAllVisibleTracks\_Arrange - returns the found tracks now as MediaTrack-objects as well; didn't find master-track under certain circumstances -> fixed   
+   - UserInterface: TCP\_SetWidth - errors in the docs -> fixed
+   
+---
+
+### 4.1.006 - "Rage against the machine - Renegades of Funk" - 11th of October 2020
+
+Has now 1294 functions, with 54 new ones
+
+**new in this release:**  
+
+  - **InputFX/MonitoringFX**  
+    You can now code monitoringFX the same as you already could code TrackFX and TakeFX. Ever wanted to set a full FXChain into monitoring fx? Now you can.  
+    54 functions only for that. I must be insane...
+    
+  - **ParameterModulation**  
+    Fixed a bug and therefore added a new feature for parameter linking.  
+    ParmModTables have now two entries to set the index of the linked plugin:
+    PARMLINK\_LINKEDPLUGIN and PARMLINK\_LINKEDPLUGIN\_RELATIVE.  
+    To set an absolute plugin-index, set PARMLINK\_LINKEDPLUGIN=absolute-index and PARMLINK\_LINKEDPLUGIN\_RELATIVE=nil  
+    To set a relative plugin-index, set 
+      PARMLINK\_LINKEDPLUGIN=any number and  
+      PARMLINK\_LINKEDPLUGIN\_RELATIVE=0(current plugin), negative(higher in the FXChain), positive(lower in the FXChain)  
+    GetFunctions will usually have the linked plugin indexed in a relative-to-the-current-plugin-index(Reaper's standard behavior).
+    
+  - **RenderFixes**  
+    Renderfunctions sometimes created peak-files when not necessary. This is fixed now and speeds up the time between finished render and returning to the project.   
+
+#### New features in 4.1.006
+   - FXManagement: InputFX\_AddByName - adds an fx as monitoring fx
+   - FXManagement: InputFX\_CopyFX - copies a monitoring fx and inserts it at a new position
+   - FXManagement: InputFX\_CopyFXFromTakeFX - copies a monitoring fx to a takeFX
+   - FXManagement: InputFX\_CopyFXFromTrackFX - copies a trackfx into a monitoring fx
+   - FXManagement: InputFX\_CopyFXToTakeFX - copies a monitoring fx to a takeFX
+   - FXManagement: InputFX\_CopyFXToTrackFX - copies a monitoring fx into a track as trackfx
+   - FXManagement: InputFX\_Delete - deletes a certain monitoring-fx
+   - FXManagement: InputFX\_EndParamEdit - no idea what this function does, but it exists for trackFX and now for monitoring-fx too
+   - FXManagement: InputFX\_GetChainVisible - returns, if the current monitoring-fx-chain is visible and the index of the currently visible fx
+   - FXManagement: InputFX\_GetCount - returns the number of available monitoring-fx
+   - FXManagement: InputFX\_GetEnabled - returns, if a certain monitoring-fx is enabled or not
+   - FXManagement: InputFX\_GetEQ - returns the index of the first ReaEQ-instance in monitoring-fx; optionally creates an instance
+   - FXManagement: InputFX\_GetEQBandEnabled - returns the enabled/disabled state of a band of a ReaEQ-instance in monitoring-fx
+   - FXManagement: InputFX\_GetEQParam - returns the parameter-value of a ReaEQ-instance in monitoring-fx
+   - FXManagement: InputFX\_GetFloatingWindow - returns the hwnd of a floating monitoring-fx-window
+   - FXManagement: InputFX\_GetFormattedParamValue - returns the current value of a parameter of a monitoring fx formatted
+   - FXManagement: InputFX\_GetFXChain - gets the FXStateChunk of the current monitoring-fx-chain
+   - FXManagement: InputFX\_GetFXGUID - returns the guid of a monitoring-fx
+   - FXManagement: InputFX\_GetFXName - returns the name of a monitoring-fx
+   - FXManagement: InputFX\_GetIOSize - returns the plugin-type and the number of input/output pins(if available) for a monitoring-fx
+   - FXManagement: InputFX\_GetNamedConfigParm - returns the plug-in specific named configuration value of a monitoring-fx
+   - FXManagement: InputFX\_GetNumParams - returns the number of parameters of a monitoring-fx
+   - FXManagement: InputFX\_GetOffline - returns, if a certain monitoring-fx is offline or not
+   - FXManagement: InputFX\_GetOpen - returns, if a certain monitoring-fx is visible or not
+   - FXManagement: InputFX\_GetParam - returns the current, maximum and minimum value of a parameter of a monitoring-fx
+   - FXManagement: InputFX\_GetParamEx - returns the current, maximum, minimum and mid-values of a parameter of a monitoring-fx
+   - FXManagement: InputFX\_GetParameterStepSizes - returns the stepsizes of a parameter of a monitoring-fx
+   - FXManagement: InputFX\_GetParamName - returns the name of a parameter of a monitoring-fx
+   - FXManagement: InputFX\_GetParamNormalized - returns a normalized version of the current value of a parameter of a monitoring-fx
+   - FXManagement: InputFX\_GetPinMappings - returns the current pin-mappings of a monitoring-fx
+   - FXManagement: InputFX\_GetPreset - returns the name of the currently selected preset
+   - FXManagement: InputFX\_GetPresetIndex - returns the index of the currently selected monitoring-fx plus all available presets
+   - FXManagement: InputFX\_GetUserPresetFilename - gets the preset's-filename(which stores the presets) of a certain monitoring-fx
+   - FXManagement: InputFX\_FormatParamValue - formats a value in the style of a parameter
+   - FXManagement: InputFX\_FormatParamValueNormalized - formats a value in the style of a parameter as normalized
+   - FXManagement: InputFX\_MoveFX - moves a monitoring fx to a new position
+   - FXManagement: InputFX\_MoveFXFromTakeFX - moves a takeFX to the monitoring-fx-chain
+   - FXManagement: InputFX\_MoveFXToTakeFX - moves a monitoring-fx into take as takeFX
+   - FXManagement: InputFX\_MoveFXFromTrackFX - moves a trackFX to the monitoring-fx-chain
+   - FXManagement: InputFX\_MoveFXToTrackFX - moves a monitoring-fx into a track as trackFX
+   - FXManagement: InputFX\_NavigatePresets - navigates through the presets of a monitoring-fx
+   - FXManagement: InputFX\_SetEnabled - set a monitoring-fx enabled or disabled
+   - FXManagement: InputFX\_SetEQBandEnabled - sets a enable-state of a band of a ReaEQ-instance in monitoring-fx
+   - FXManagement: InputFX\_SetEQParam - sets new values of a band of a ReaEQ-instance in monitoring-fx
+   - FXManagement: InputFX\_SetFXChain - sets a FXStateChunk into the monitoring-fx-chain; optionally replaces it
+   - FXManagement: InputFX\_SetOffline - sets a monitoring-fx offline/online
+   - FXManagement: InputFX\_SetOpen - sets visibility of a monitoring fx visible/invisible
+   - FXManagement: InputFX\_SetParam - sets a parameter of a monitoring-fx
+   - FXManagement: InputFX\_SetParamNormalized - sets a parameter of a monitoring-fx as normalized value
+   - FXManagement: InputFX\_SetPinMappings - sets the pinmappings of a monitoring-fx
+   - FXManagement: InputFX\_SetPreset - sets a preset of a monitoring-fx by presetname
+   - FXManagement: InputFX\_SetPresetByIndex - sets a preset of a monitoring-fx by presetindex
+   - FXManagement: InputFX\_Show - sets visibility and floating-state of a monitoring-fx
+   - FXManagement: InputFX\_QueryFirstFXIndex - queries the first fx within monitoring fx with a certain fxname
+   - FXManagement: ParmModTable - new entry PARMLINK\_LINKEDPLUGIN\_RELATIVE, which allows indexing linked parameters relative to current fx(thanks to anton9 and Justin)
+   
+#### Changes from 4.1.005 to 4.1.006   
+   - Docs: ReaperAPIDocs - updated to JS-extension 1.217
+   - Docs: VideoProcessor - added default-value-descriptions for param
+   - FXManagement: AddParmMod\_ParmModTable - produced nil-error with invalid fx-index; didn't correctly set the linked-parameter index(thanks to anton9 and Justin)
+   - FXManagement: CreateDefaultParmModTable - didn't correctly return the linked-parameter index(thanks to anton9 and Justin)
+   - FXManagement: GetParmModTable\_FXStateChunk - didn't correctly return the linked-parameter index(thanks to anton9 and Justin)
+   - FXManagement: IsValidParmModTable - didn't correctly check the linked-parameter index(thanks to anton9 and Justin)
+   - FXManagement: SetParmMod\_ParmModTable - produced nil-error with invalid fx-index; didn't correctly set the linked-parameter index(thanks to anton9 and Justin)
+   - Rendering: Render\_Loop - created unneeded peakfiles under some circumstances -> fixed(thanks to pandabot)
+   - Rendering: RenderProject - created unneeded peakfiles under some circumstances -> fixed(thanks to pandabot)
+   - Rendering: RenderProject\_Regions - created unneeded peakfiles under some circumstances -> fixed(thanks to pandabot)
+   - Rendering: RenderProject\_RenderTable - created unneeded peakfiles under some circumstances -> fixed(thanks to pandabot)
+   
+
+---
+
+### 4.1.005 - "The Beatles - I want you(she's so heavy)" - 25th of September 2020
+
+Has now 1240 functions, with 25 new ones
+
+**new in this release:**
+  - **Parameter Modulation/Learn/Alias/LFOLearn**  
+    A long time feature-request finally fulfilled. You have full access to programmatically get/alter parameter-modulation, parameter aliases, LFOLearn or Learn in general.  
+    So anything you would want to do with parameter-modulation can now be scripted.  
+    I'm curious, what will happen because of that feature. Surprise me.  
+    Requested by so many.  
+    [Please consider donating](https://mespotin.uber.space/Mespotine/mespotine-unterstuetzen/), as this was a massive undertaking. Holy cow!
+        
+  - **SLEM**  
+    Allows now different output-targets, so outputting the last error-message to the ReaScript-console or even the clipboard is possible with that.  
+   
+  - **Lua-ReferenceManual**  
+    Now included is the Lua 5.3 reference-manual, so it's always at your hand when needed.  
+    
+  - **Ultraschall-API settings dialog**  
+    There's now an Ultraschall-API settings dialog. Not much in there yet, but you can already set, where SLEM() or 
+    ultraschall.ShowLastErrorMessage() shall output their error-messages.  
+    More to follow.  
+
+  - **Launchpad\_functions**
+    I wrote some launchpad 1st generation-functions, which you can find in the misc-folder. So if you want to be able to program its button's lights, you can do it.  
+    
+  - **Gmem functions**
+    For those of you, who want to use different gmem-names in your functions, you sometimes run into trouble, that you can't restore the old gmem-attachement again, as you can't get its old name.  
+    Now you can. Gmem\_GetCurrentAttachedName returns the last used gmem-attachname. Keep it to later attach the old gmem back.  
+    This works best, if you add the dofile-line to activate Ultraschall-API as first code-line in your script.  
+    
+  - **Filemanager demo**  
+    To showcase the background-copying-functions, I wrote a small filemanager demo, which is now available in the example-scripts.  
+    It shows you, how you can copy even large files in the background and still manage to run the UI of a script without having to code complex background-copying-routines.      
+
+  - **MB works again on Windows and Linux**
+    Broke in Reaper 6 but I could fix it so replacing the button-texts is possible again. Mac-users are out of luck, as the button-texts can't be replaced there in the first place. Sorry.  
+    
+  - **GetUserInputs on Mac**  
+    Also broke with Reaper 6 due some internal changes of Reaper. I finally managed to make it work again.  
+    So you can get and set the captions and retvals again of the GetUserInputs-dialog.  
+    Resizing of caption/retval-fields and the positioning of the GetUserInput-window doesn't work on Mac currently, but will return later.  
+    So you can use these parameters safely on Mac and one of the future updates will make it work out of a sudden. :)  
+
+#### New features in 4.1.005
+   - API: requirements - raised required Reaper-version to 6.05
+   - API: Settings-Dialog - allows you to set US-API-default-settings(currently the default output of ShowLastErrorMessage()/SLEM())   
+   - Docs: FXManagement - added chapters about Introduction, Manipulating individual effects, Working with FX-StateChunks, Working with FX-StateChunk's functions
+   - Docs: ParameterMod/Learn/Mapping - added chapters about Introduction, Parameter Alias, Parameter LFO Learn, Parameter Mapping Learn
+   - Docs: Lua Reference Manual - now added for Lua 5.3, so you have its manual right at hand   
+   - DeveloperTools: MonitorParmModulation.lua - monitors a certain parameter-modulation and shows the contents of its ParmModTable
+   - EnvelopeManagement: IsAnyNamedEnvelopeVisible - returns, if there's a specific named-envelope set to visible in any track
+   - EnvelopeManagement: IsEnvelope\_Track - returns, if an envelope is a TrackEnvelope(true) or a TakeEnvelope(false)
+   - EnvelopeManagement: IsTrackEnvelopeVisible\_ArrangeView - returns, if a TrackEnvelope is currently visible in arrangeview   
+   - Examplescript: US\_Api\_Examples\_FileManager\_example\_showcasing\_background\_copying.lua - a simple file-manager which showcases background-copying      
+   - FXManagement: AddParmMod\_ParmModTable - adds a new parameter-modulation of a specific FX in an FXStateChunk via a ParmModTable
+   - FXManagement: CountParmModFromFXStateChunk - counts the number of parameter-modulations of a specifix FX in an FXStateChunk
+   - FXManagement: CreateDefaultParmModTable - creates a ParameterModulationTable which holds Reaper's default values and can be altered
+   - FXManagement: DeleteParmAlias2\_FXStateChunk - like DeleteParmAlias\_FXStateChunk, but allows indexing by parameter-index, not by number of existing aliasnames
+   - FXManagement: DeleteParmModFromFXStateChunk - deletes a parameter-modulation of a specific FX in an FXStateChunk
+   - FXManagement: GetAllParmAliasNames\_FXStateChunk - gets all parameter-aliasnames of a specific fx from an FXStateChunk
+   - FXManagement: GetParmAlias2\_FXStateChunk - like GetParmAlias\_FXStateChunk but allows indexing by parameter-index instead
+   - FXManagement: GetParmModTable\_FXStateChunk - returns a table with all values of a certain parameter-modulation of an fx
+   - FXManagement: GetFXSettingsString\_FXLines - returns the statestring of an fx as base64 and decoded-binary string
+   - FXManagement: IsValidParmModTable - returns, if a table is a valid ParmModTable(used for altering Parameter-Modulations)
+   - FXManagement: SetParmAlias2\_FXStateChunk - like SetParmAlias\_FXStateChunk but indexes by parameterindex, not already existing aliases
+   - FXManagement: SetParmMod\_ParmModTable - sets a parameter-modulation of an fx in an FXStateChunk via a ParmModTable
+   - GFX-Management: GFX\_DrawEmbossedSquare - draws an embossed square with optional background
+   - GMEM: Gmem\_GetCurrentAttachedName - returns the name of the currently attached gmem
+   - Helper Functions: ActionsList\_GetAllActions - returns all actions and shortcuts currently visible in the opened actionlist   
+   - Helper Functions: Create2DTable - creates a 2-dimensional table, of which all fields are indexable right away; optionally set to a default value
+   - Helper Functions: Create3DTable - creates a 3-dimensional table, of which all fields are indexable right away; optionally set to a default value
+   - Helper Functions: CreateMultiDimTable - create an up to 10-dimensional table, of which all fields are indexable right away; optionally set to a default value
+   - Misc: Launchpad\_functions - if you have a first generation LaunchPad by Novation, you can program it via a function-library in the misc-folder
+   - ProjectManagement: AutoSave\_GetMinutes - returns the number of minutes, at which a new autosaved project shall be saved
+   - ProjectManagement: AutoSave\_GetOptions - gets several auto-save-options
+   - ProjectManagement: AutoSave\_SetMinutes - sets the number of minutes, at which a new autosaved project shall be saved
+   - ProjectManagement: AutoSave\_SetOptions - sets several auto-save-options
+   - ProjectManagement: GetProject\_Author - gets the author of a projectfile or ProjectStateChunk(requested by dragonetti)
+   
+   
+#### Changes from 4.1.004 to 4.1.005   
+   - API: print - replaces null-characters now with . when displaying strings containing them
+   - API: print2 - replaces null-characters now with . when displaying strings containing them
+   - API: print_alt - replaces null-characters now with . when displaying strings containing them
+   - API: print_update - replaces null-characters now with . when displaying strings containing them
+   - Docs: AddParmAlias\_FXStateChunk - was missing parameter in functioncall -> fixed
+   - Docs: ParmLearn-docs - corrected information and added missing stuff
+   - Docs: Reaper; GetUserInputs - added information about how to pass over default-retvals and its limitations
+   - Docs: Reaper Internals - updated to Reaper 6.14
+   - Error Messaging-System: ReadErrorMessage - allows now keeping error-message readstate as unread
+   - Error Messaging-System: ShowLastErrorMessage - additional parameters and retvals for more control of the output-target and messagetype returned
+   - Error Messaging-System: SLEM - additional parameters and retvals for more control of the output-target and messagetype returned
+   - EventManager: Eventmanager mainscript - always executed the checks-functions before updating externally sent states which could lead to race-condition-problems -> fixed(thanks to rstockm)
+   - File Management: CopyFile\_AddFileToQueue - basic check, if the target-file is the same as the source-file and throws an error in these cases
+   - File Management: GetAllDirectoriesInPath - omitted folderseparator in returned folders, if it hasn't been passed into parameter path
+   - File Management: CopyFile\_GetRemainingFilesToCopy - returned the wrong number of remaining files -> fixed
+   - FXManagement: GetFXFromFXStateChunk - returns now the start and endoffset of the returned lines, so they could be used for string substitution; didn't return anything under some circumstances -> fixed
+   - FXManagement: GetParmAudioControl\_FXStateChunk - deprecated  
+   - FXManagement: GetParmLFO\_FXStateChunk - deprecated
+   - FXManagement: GetParmMIDIPLink\_FXStateChunk - deprecated
+   - Helper Functions: ActionsList\_GetSelectedActions - returns now the shortcuts of the selected actions as well
+   - ParmAlias: AddParmLearn_FXStateChunk - did not add aliasnames with spaces correctly, added it to one parameter higher than requested -> fixed
+   - ParmAlias: SetParmLearn_FXStateChunk - did not set aliasnames with spaces correctly -> fixed
+   - TrackManagement: SetTrackStateChunk\_Tracknumber - had inner variable exposed -> fixed
+   - User Interface: GetUserInputs - workaround for Mac, so this should work again on Mac OS
+   - User Interface: MB - workaround for Mac, so this should work again on Mac OS
+
+---
 
 ### 4.1.004 - "I, E.T." - 21st of July 2020
 

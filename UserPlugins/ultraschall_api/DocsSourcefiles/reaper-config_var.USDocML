@@ -3,19 +3,19 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.13 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.15 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
-            >For Integer-values, use [SNM_GetIntConfigVar()](Reaper_Api_Documentation.html#SNM_GetIntConfigVar), [SNM_SetIntConfigVar()](Reaper_Api_Documentation.html#SNM_SetIntConfigVar),  
-             For Double/Float-values, use [SNM_GetDoubleConfigVar()](Reaper_Api_Documentation.html#SNM_SetIntConfigVar) and [SNM_SetDoubleConfigVar()](Reaper_Api_Documentation.html#SNM_SetDoubleConfigVar), 
+            >For Integer-values, use [SNM\_GetIntConfigVar()](Reaper_Api_Documentation.html#SNM_GetIntConfigVar), [SNM\_SetIntConfigVar()](Reaper_Api_Documentation.html#SNM_SetIntConfigVar),  
+             For Double/Float-values, use [SNM\_GetDoubleConfigVar()](Reaper_Api_Documentation.html#SNM_SetIntConfigVar) and [SNM\_SetDoubleConfigVar()](Reaper_Api_Documentation.html#SNM_SetDoubleConfigVar), 
 
          as well as the C++-only API-functions:
          
-            >For (Global) Configuration, use [get_config_var()](Reaper_Api_Documentation.html#get_config_var)  
-             For Project-configuration, use [projectconfig_var_addr()](Reaper_Api_Documentation.html#projectconfig_var_addr) and [projectconfig_var_getoffs()](Reaper_Api_Documentation.html#projectconfig_var_getoffs)  
+            >For (Global) Configuration, use [get\_config\_var()](Reaper_Api_Documentation.html#get_config_var)  
+             For Project-configuration, use [projectconfig\_var\_addr()](Reaper_Api_Documentation.html#projectconfig_var_addr) and [projectconfig\_var\_getoffs()](Reaper_Api_Documentation.html#projectconfig_var_getoffs)  
             
-         and Reaper's function:  [get_config_var_string()](Reaper_Api_Documentation.html#get_config_var_string)
+         and Reaper's function:  [get\_config\_var\_string()](Reaper_Api_Documentation.html#get_config_var_string)
           
          who change Reaper's configuration-variables at run time. Just pass the variable-name to the parameter "varname".
           
@@ -47,14 +47,14 @@
           
          I tried to retain the original names of dialogs, settings, menu-entries, checkboxes, etc, so you can search their names in this document to find their accompanying config-variable easier.  
          
-         Many variables are also influenced by actions, so refer to [Reaper-All_ConfigVars_as_toggled_by_Actions.txt](../misc/Reaper-All_ConfigVars_as_toggled_by_Actions.txt) to get a full list of which actions triggers which configvar.
+         Many variables are also influenced by actions, so refer to [Reaper-All\_ConfigVars\_as\_toggled\_by\_Actions.txt](../misc/Reaper-All_ConfigVars_as_toggled_by_Actions.txt) to get a full list of which actions triggers which configvar.
           
          Keep in mind: 
             
             >If you change settings, these changes might not be stored in Reaper's setting-files, so they may get lost, when Reaper is exited.  
             >If you want to retain settings, you need to set them in the corresponding ini-files as well(usually the reaper.ini) 
             >with BR_Win32_WritePrivateProfileString()
-            >Only exception I know of it is [edit_fontsize](#edit_fontsize), which sets the fontsize in Reaper's IDE. Changing this makes this setting immediately persisting.
+            >Only exception I know of it is [edit\_fontsize](#edit_fontsize), which sets the fontsize in Reaper's IDE. Changing this makes this setting immediately persisting.
           
             >Project-settings should be stored the next time a project is saved, but doublecheck that, if storing projectsettings into a projectfile is a must in your script!  
             >Some project-settings can be stored into the reaper.ini as default-project-settings. I documented that as well, when I could find that out.  
@@ -76,7 +76,7 @@
           
          Some variables I couldn't trigger, so the following 22 aren't documented and are unknown:  
          
-           >[ctrlcopyitem](#ctrlcopyitem), [disk_rdblksex](#disk_rdblksex), [itemdblclk](#itemdblclk), [itemprops](#itemprops), [itemprops_timemode](#itemprops_timemode), [maxspeakgain](#maxspeakgain), [metronome_flags](#metronome_flags), [midiins](#midiins), [midiins_cs](#midiins_cs), [mousemovemod](#mousemovemod), [newfnopt](#newfnopt), [projmidieditor](#projmidieditor), [renderqdelay](#renderqdelay), [rightclickemulate](#rightclickemulate), [scoreminnotelen](#scoreminnotelen), [scorequant](#scorequant), [selitemtop](#selitemtop), [titlebarreghide](#titlebarreghide), [tsmarker](#tsmarker), [vstfolder_settings](#vstfolder_settings), [projmeasoffsruler](#projmeasoffsruler), [miscopts](#miscopts)  
+           >[ctrlcopyitem](#ctrlcopyitem), [disk\_rdblksex](#disk_rdblksex), [itemdblclk](#itemdblclk), [itemprops](#itemprops), [itemprops\_timemode](#itemprops_timemode), [maxspeakgain](#maxspeakgain), [metronome\_flags](#metronome_flags), [midiins](#midiins), [midiins\_cs](#midiins_cs), [mousemovemod](#mousemovemod), [newfnopt](#newfnopt), [projmidieditor](#projmidieditor), [renderqdelay](#renderqdelay), [rightclickemulate](#rightclickemulate), [scoreminnotelen](#scoreminnotelen), [scorequant](#scorequant), [selitemtop](#selitemtop), [titlebarreghide](#titlebarreghide), [tsmarker](#tsmarker), [vstfolder\_settings](#vstfolder_settings), [projmeasoffsruler](#projmeasoffsruler), [miscopts](#miscopts)  
   
          The following variables can be triggered by actions only  
          
@@ -164,8 +164,8 @@
            >1, don't use audio driver reported latency(on) - checked  
            
           For other settings set in Preferences -> Recording, see [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts),   
-                                               [recfile_wildcards](#recfile_wildcards), [recupdatems](#recupdatems), [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts),   
+                                               [recfile\_wildcards](#recfile_wildcards), [recupdatems](#recupdatems), [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
           
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -188,7 +188,7 @@
            >0 to 2147483647; in samples  
            
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile\_wildcards](#recfile_wildcards),  
                                                [recupdatems](#recupdatems), [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
           
                     
@@ -212,7 +212,7 @@
            >0 to 2147483647; in samples  
            
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile\_wildcards](#recfile_wildcards),  
                                                [recupdatems](#recupdatems), [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
           
                     
@@ -266,7 +266,7 @@
            >0, don't show non standard stereo channel pairs(off) - unchecked  
            >1, show non standard stereo channel pairs(on) - checked  
             
-          For other settings in section Channel naming/mapping as set in Preferences -> Audio, see [metronome_defout](#metronome_defout), [useinnc](#useinnc)  
+          For other settings in section Channel naming/mapping as set in Preferences -> Audio, see [metronome\_defout](#metronome_defout), [useinnc](#useinnc)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -706,7 +706,7 @@
 
            >0 to 100000000000000.00000000; higher values are possible but produce weird values stored.  
            
-          For other settings set in Preferences -> Automation, see [autoreturntime_action](#autoreturntime_action), [env_autoadd](#env_autoadd), [env_options](#env_options), [env_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
+          For other settings set in Preferences -> Automation, see [autoreturntime\_action](#autoreturntime_action), [env\_autoadd](#env_autoadd), [env\_options](#env_options), [env\_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -728,7 +728,7 @@
 
            >0 to 100000000000000.00000000; higher values are possible but produce weird values stored.  
            
-          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [env_autoadd](#env_autoadd), [env_options](#env_options), [env_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
+          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [env\_autoadd](#env_autoadd), [env\_options](#env_options), [env\_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3268,8 +3268,8 @@
            >0, Don't allow memory mapping(off) - unchecked  
            >1, Allow memory mapping(on) - checked  
            
-          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk_rdmodeex](#disk_rdmodeex), [disk_rdsizeex](#disk_rdsizeex),   
-                                                      [disk_wrblks](#disk_wrblks), [disk_wrblks2](#disk_wrblks2), [disk_wrmode](#disk_wrmode), [disk_wrsize](#disk_wrsize)  
+          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk\_rdmodeex](#disk_rdmodeex), [disk\_rdsizeex](#disk_rdsizeex),   
+                                                      [disk\_wrblks](#disk_wrblks), [disk\_wrblks2](#disk_wrblks2), [disk\_wrmode](#disk_wrmode), [disk\_wrsize](#disk_wrsize)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3290,8 +3290,8 @@
           
             >0 to 2147483647 in kilobytes
            
-          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk_rdmodeex](#disk_rdmodeex), [disk_rdsizeex](#disk_rdsizeex),   
-                                                      [disk_wrblks](#disk_wrblks), [disk_wrblks2](#disk_wrblks2), [disk_wrmode](#disk_wrmode), [disk_wrsize](#disk_wrsize)  
+          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk\_rdmodeex](#disk_rdmodeex), [disk\_rdsizeex](#disk_rdsizeex),   
+                                                      [disk\_wrblks](#disk_wrblks), [disk\_wrblks2](#disk_wrblks2), [disk\_wrmode](#disk_wrmode), [disk\_wrsize](#disk_wrsize)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
@@ -3311,8 +3311,8 @@
           
             >0 to 2147483647 in kilobytes
            
-          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk_rdmodeex](#disk_rdmodeex), [disk_rdsizeex](#disk_rdsizeex),   
-                                                      [disk_wrblks](#disk_wrblks), [disk_wrblks2](#disk_wrblks2), [disk_wrmode](#disk_wrmode), [disk_wrsize](#disk_wrsize)  
+          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk\_rdmodeex](#disk_rdmodeex), [disk\_rdsizeex](#disk_rdsizeex),   
+                                                      [disk\_wrblks](#disk_wrblks), [disk\_wrblks2](#disk_wrblks2), [disk\_wrmode](#disk_wrmode), [disk\_wrsize](#disk_wrsize)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
@@ -3352,8 +3352,8 @@
            >1, Asynchronous buffered (default)  
            >2, Synchronous  
            
-          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk_peakmmap2](#disk_peakmmap2), [disk_rdsizeex](#disk_rdsizeex),   
-                                                      [disk_wrblks](#disk_wrblks), [disk_wrblks2](#disk_wrblks2), [disk_wrmode](#disk_wrmode), [disk_wrsize](#disk_wrsize)  
+          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk\_peakmmap2](#disk_peakmmap2), [disk\_rdsizeex](#disk_rdsizeex),   
+                                                      [disk\_wrblks](#disk_wrblks), [disk\_wrblks2](#disk_wrblks2), [disk\_wrmode](#disk_wrmode), [disk\_wrsize](#disk_wrsize)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
@@ -3386,13 +3386,13 @@
       <title>disk_wrblks</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Write buffers, as set in Preferences -> Buffering -> Advanced Disk I/O options...  
-          Influences disk_wrblks2 to size of [disk_wrblks](#disk_wrblks), when disk_wrblks>=[disk_wrblks2](#disk_wrblks2)  
+          Influences disk_wrblks2 to size of [disk\_wrblks](#disk_wrblks), when disk_wrblks>=[disk\_wrblks2](#disk_wrblks2)  
           It is an integer  
           
            >2 to 2147483647; number of buffers; default is 16  
            
-          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk_peakmmap2](#disk_peakmmap2), [disk_rdmodeex](#disk_rdmodeex), [disk_rdsizeex](#disk_rdsizeex),   
-                                                      [disk_wrblks2](#disk_wrblks2), [disk_wrmode](#disk_wrmode), [disk_wrsize](#disk_wrsize)  
+          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk\_peakmmap2](#disk_peakmmap2), [disk\_rdmodeex](#disk_rdmodeex), [disk\_rdsizeex](#disk_rdsizeex),   
+                                                      [disk\_wrblks2](#disk_wrblks2), [disk\_wrmode](#disk_wrmode), [disk\_wrsize](#disk_wrsize)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3409,13 +3409,13 @@
       <title>disk_wrblks2</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Write buffers (maximum), as set in Preferences -> Buffering -> Advanced Disk I/O options...  
-          Influenced by disk_wrblks to size of [disk_wrblks](#disk_wrblks), when disk_wrblks>=[disk_wrblks2](#disk_wrblks2)  
+          Influenced by disk_wrblks to size of [disk\_wrblks](#disk_wrblks), when disk_wrblks>=[disk\_wrblks2](#disk_wrblks2)  
           It is an integer  
           
            >2 to 2147483647; number of buffers; default is 128  
            
-          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk_peakmmap2](#disk_peakmmap2), [disk_rdmodeex](#disk_rdmodeex), [disk_rdsizeex](#disk_rdsizeex),   
-                                                      [disk_wrblks](#disk_wrblks), [disk_wrmode](#disk_wrmode), [disk_wrsize](#disk_wrsize)  
+          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk\_peakmmap2](#disk_peakmmap2), [disk\_rdmodeex](#disk_rdmodeex), [disk\_rdsizeex](#disk_rdsizeex),   
+                                                      [disk\_wrblks](#disk_wrblks), [disk\_wrmode](#disk_wrmode), [disk\_wrsize](#disk_wrsize)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3438,8 +3438,8 @@
            >1, Synchronous  
            >2, Asynchronous (write-through)  
            
-          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk_peakmmap2](#disk_peakmmap2), [disk_rdmodeex](#disk_rdmodeex), [disk_rdsizeex](#disk_rdsizeex),   
-                                                      [disk_wrblks](#disk_wrblks), [disk_wrblks2](#disk_wrblks2), [disk_wrsize](#disk_wrsize)  
+          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk\_peakmmap2](#disk_peakmmap2), [disk\_rdmodeex](#disk_rdmodeex), [disk\_rdsizeex](#disk_rdsizeex),   
+                                                      [disk\_wrblks](#disk_wrblks), [disk\_wrblks2](#disk_wrblks2), [disk\_wrsize](#disk_wrsize)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3460,8 +3460,8 @@
           
            >4096 to 2147483647; in bytes; default is 65536  
            
-          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk_peakmmap2](#disk_peakmmap2), [disk_rdmodeex](#disk_rdmodeex), [disk_rdsizeex](#disk_rdsizeex),   
-                                                      [disk_wrblks](#disk_wrblks), [disk_wrblks2](#disk_wrblks2), [disk_wrmode](#disk_wrmode)  
+          For other settings as set in Preferences -> Buffering -> Advanced Disk I/O options..., see [disk\_peakmmap2](#disk_peakmmap2), [disk\_rdmodeex](#disk_rdmodeex), [disk\_rdsizeex](#disk_rdsizeex),   
+                                                      [disk\_wrblks](#disk_wrblks), [disk\_wrblks2](#disk_wrblks2), [disk\_wrmode](#disk_wrmode)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3505,7 +3505,7 @@
            
           For the megabytes-inputbox(check free disk space on record start), see [diskcheckmb](#diskcheckmb)  
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile\_wildcards](#recfile_wildcards),  
                                                [recupdatems](#recupdatems), [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -3528,7 +3528,7 @@
            >0 to 2147483648; in megabytes; higher values become negative  
            
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile\_wildcards](#recfile_wildcards),  
                                                [recupdatems](#recupdatems), [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -3576,7 +3576,7 @@
            >&4=0, Hidden envelopes: Allow writing automation(off) - unchecked  
            >&4=1, Hidden envelopes: Allow writing automation(on) - checked  
             
-          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime_action](#autoreturntime_action), [env_options](#env_options), [env_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
+          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime\_action](#autoreturntime_action), [env\_options](#env_options), [env\_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3598,8 +3598,8 @@
            >0, don't set focus(off) - unchecked  
            >1, set focus(on) - checked  
            
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_ol_minh](#env_ol_minh),   
-                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_ol\_minh](#env_ol_minh),   
+                                                   [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3622,8 +3622,8 @@
            >0 to 2147483647, in pixels, When drawn over media, overlap envelopes if each line is less than-checkbox(off)  
            >-1 to -2147483648, in pixels, When drawn over media, overlap envelopes if each line is less than-checkbox(on)  
            
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc),   
-                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc),   
+                                                   [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
@@ -3644,7 +3644,7 @@
            >&1=0, Reset latch state when looping(on) - checked  
            >&1=1, Reset latch state when looping(off) - unchecked  
            
-          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime_action](#autoreturntime_action), [env_autoadd](#env_autoadd), [env_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
+          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime\_action](#autoreturntime_action), [env\_autoadd](#env_autoadd), [env\_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3695,9 +3695,9 @@
            >&1024=0, Prevent mouse edits of single envelope points from moving past other envelope points(Preferences -> Envelope Display)(off) - unchecked  
            >&1024=1, Prevent mouse edits of single envelope points from moving past other envelope points(Preferences -> Envelope Display)(on) - checked  
            
-          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime_action](#autoreturntime_action), [env_autoadd](#env_autoadd), [env_options](#env_options), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
+          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime\_action](#autoreturntime_action), [env\_autoadd](#env_autoadd), [env\_options](#env_options), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
           For other settings set in Options -> Envelope points, see [envattach](#envattach), [envclicksegmode](#envclicksegmode)  
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
                                                    [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -3720,7 +3720,7 @@
            >0, don't move points with item(off) - unchecked  
            >1, move points with item(on) - checked  
            
-          For other settings set in Options -> Envelope points, see [envclicksegmode](#envclicksegmode), [env_reduce](#env_reduce)  
+          For other settings set in Options -> Envelope points, see [envclicksegmode](#envclicksegmode), [env\_reduce](#env_reduce)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -3764,9 +3764,9 @@
            >&128=0, Automatically show affected envelopes when moving media items across tracks(off) - unchecked  
            >&128=1, Automatically show affected envelopes when moving media items across tracks(on) - checked  
            
-          For other settings set in Options -> Envelope points, see [envattach](#envattach), [env_reduce](#env_reduce)  
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
-                                                   [env_reduce](#env_reduce), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
+          For other settings set in Options -> Envelope points, see [envattach](#envattach), [env\_reduce](#env_reduce)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
+                                                   [env\_reduce](#env_reduce), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3805,13 +3805,13 @@
            >&64=0, Horizontal grid lines in automation layers(on) - checked  
            >&64=1, Horizontal grid lines in automation layers(off) - unchecked  
            
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
-                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
+                                                   [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
           For other settings in Preferences -> Appearance, see [rulerlabelspacing](#rulerlabelspacing), [tooltipdelay](#tooltipdelay), [custommenu](#custommenu), [griddot](#griddot), [gridinbg](#gridinbg), [gridinbg2](#gridinbg2), [guidelines2](#guidelines2),   
                                             [maxitemlanes](#maxitemlanes), [nativedrawtext](#nativedrawtext), [playcursormode](#playcursormode), [rulerlayout](#rulerlayout), [showlastundo](#showlastundo), [textflags](#textflags), [timeseledge](#timeseledge),   
                                             [tooltips](#tooltips), [trackitemgap](#trackitemgap), [vgrid](#vgrid)  
-          For other settings in Preferences -> Peaks/Waveforms, see [peaksedges](#peaksedges), [sampleedges](#sampleedges), [selitem_tintalpha](#selitem_tintalpha), [showpeaks](#showpeaks),   
-                                                 [unselitem_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
+          For other settings in Preferences -> Peaks/Waveforms, see [peaksedges](#peaksedges), [sampleedges](#sampleedges), [selitem\_tintalpha](#selitem_tintalpha), [showpeaks](#showpeaks),   
+                                                 [unselitem\_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3832,8 +3832,8 @@
           
            >0.0001 and higher; unlike in the Preferences, this value is in seconds NOT milliseconds  
            
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
-                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [pooledenvs](#pooledenvs)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
+                                                   [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
@@ -3857,7 +3857,7 @@
             >> 1 0, In read/write  
             >> 0 1, Never  
              
-          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime_action](#autoreturntime_action), [env_autoadd](#env_autoadd), [env_options](#env_options), [env_reduce](#env_reduce), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
+          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime\_action](#autoreturntime_action), [env\_autoadd](#env_autoadd), [env\_options](#env_options), [env\_reduce](#env_reduce), [envwritepasschg](#envwritepasschg), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3882,7 +3882,7 @@
            >3, Remain in write mode  
            >4, Switch to latch mode  
            
-          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime_action](#autoreturntime_action), [env_autoadd](#env_autoadd), [env_options](#env_options), [env_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [pooledenvs](#pooledenvs)  
+          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime\_action](#autoreturntime_action), [env\_autoadd](#env_autoadd), [env\_options](#env_options), [env\_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -3920,8 +3920,8 @@
            >&32=1, Warn when enabled MIDI devices are not present - unchecked  
             
           For other settings in Preferences -> Audio, see [audiocloseinactive](#audiocloseinactive), [audioclosestop](#audioclosestop), [hwfadex](#hwfadex), [optimizesilence](#optimizesilence)  
-          For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [manuallat](#manuallat), [recfile_wildcards](#recfile_wildcards),  
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems),   
+          For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [manuallat](#manuallat), [recfile\_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems),   
                                                [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -4267,7 +4267,7 @@
            >&2=0, down - unchecked  
            >&2=1, down - checked  
             
-          For other settings in Preferences -> Plugins, see [fxfloat_focus](#fxfloat_focus) and [maxrecentfx](#maxrecentfx)  
+          For other settings in Preferences -> Plugins, see [fxfloat\_focus](#fxfloat_focus) and [maxrecentfx](#maxrecentfx)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -4449,7 +4449,7 @@
            >0, don't reverse(off) - unchecked  
            >1, reverse(on) - checked  
            
-          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf_minheight](#itemlowerhalf_minheight), [itemclickmovecurs](#itemclickmovecurs), [pooledenvs](#pooledenvs), [scnotes](#scnotes)  
+          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf\_minheight](#itemlowerhalf_minheight), [itemclickmovecurs](#itemclickmovecurs), [pooledenvs](#pooledenvs), [scnotes](#scnotes)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
@@ -4637,7 +4637,7 @@
            >&256=0, When drawn above media items, treat item label area the same as empty track space(on)(Preferences -> Mouse Modifiers) - checked  
            >&256=1, When drawn above media items, treat item label area the same as empty track space(off)(Preferences -> Mouse Modifiers) - unchecked  
             
-          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf_minheight](#itemlowerhalf_minheight), [pooledenvs](#pooledenvs), [handzoom](#handzoom), [scnotes](#scnotes)  
+          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf\_minheight](#itemlowerhalf_minheight), [pooledenvs](#pooledenvs), [handzoom](#handzoom), [scnotes](#scnotes)  
           For other settings in Preferences -> Editing Behavior, see [locklooptotime](#locklooptotime), [relativeedges](#relativeedges), [ripplelockmode](#ripplelockmode), [splitautoxfade](#splitautoxfade),   
                                                   [vzoommode](#vzoommode), [zoommode](#zoommode)  
                     
@@ -4699,8 +4699,8 @@
           
            >0 to 2147483648; in pixels  
             
-          For the pixels wide-inputbox, see [itemfade_minwidth](#itemfade_minwidth)  
-          For other settings set in Preferences -> Fades/Crossfades, see [itemfade_minwidth](#itemfade_minwidth), [itemfadehandle_maxwidth](#itemfadehandle_maxwidth),   
+          For the pixels wide-inputbox, see [itemfade\_minwidth](#itemfade_minwidth)  
+          For other settings set in Preferences -> Fades/Crossfades, see [itemfade\_minwidth](#itemfade_minwidth), [itemfadehandle\_maxwidth](#itemfadehandle_maxwidth),   
                                                       [itemicons](#itemicons), [relativeedges](#relativeedges)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -4722,8 +4722,8 @@
           
            >0 to 2147483648; in pixels  
             
-          For the pixels tall-inputbox, see [itemfade_minheight](#itemfade_minheight)  
-          For other settings set in Preferences -> Fades/Crossfades, see [itemfade_minheight](#itemfade_minheight), [itemfadehandle_maxwidth](#itemfadehandle_maxwidth),   
+          For the pixels tall-inputbox, see [itemfade\_minheight](#itemfade_minheight)  
+          For other settings set in Preferences -> Fades/Crossfades, see [itemfade\_minheight](#itemfade_minheight), [itemfadehandle\_maxwidth](#itemfadehandle_maxwidth),   
                                                       [itemicons](#itemicons), [relativeedges](#relativeedges)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -4745,7 +4745,7 @@
           
            >0 to 2147483647; in pixels  
            
-          For other settings set in Preferences -> Fades/Crossfades, see [itemfade_minheight](#itemfade_minheight), [itemfade_minwidth](#itemfade_minwidth), [itemicons](#itemicons), [relativeedges](#relativeedges)  
+          For other settings set in Preferences -> Fades/Crossfades, see [itemfade\_minheight](#itemfade_minheight), [itemfade\_minwidth](#itemfade_minwidth), [itemicons](#itemicons), [relativeedges](#relativeedges)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -4836,7 +4836,7 @@
            
             >> 0 0, never  
             >> 0 1, always  
-            >> 1 0, when fade is less than(see [itemfadehandle_maxwidth](#itemfadehandle_maxwidth) for the inputbox)  
+            >> 1 0, when fade is less than(see [itemfadehandle\_maxwidth](#itemfadehandle_maxwidth) for the inputbox)  
             
            >&131072=0, Show crossfade handle when media items are not aligned vertically-radiobutton  
            >&131072=1, Show crossfade handle always-radiobutton  
@@ -4847,9 +4847,9 @@
            >&524288=0, No active envelopes(Preferences -> Media, section Media item buttons)(off) - unchecked  
            >&524288=1, No active envelopes(Preferences -> Media, section Media item buttons)(on) - checked  
             
-          To set the Show fade-in/out handle-inputbox, see [itemfadehandle_maxwidth](#itemfadehandle_maxwidth)  
-          For other settings set in Preferences -> Fades/Crossfades, see [itemfade_minheight](#itemfade_minheight), [itemfade_minwidth](#itemfade_minwidth), [itemfadehandle_maxwidth](#itemfadehandle_maxwidth), [relativeedges](#relativeedges)  
-          For other settings set in Preferences -> Media, see [itemlabel_minheight](#itemlabel_minheight), [labelitems2](#labelitems2), [peaksedges](#peaksedges), [itemicons_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
+          To set the Show fade-in/out handle-inputbox, see [itemfadehandle\_maxwidth](#itemfadehandle_maxwidth)  
+          For other settings set in Preferences -> Fades/Crossfades, see [itemfade\_minheight](#itemfade_minheight), [itemfade\_minwidth](#itemfade_minwidth), [itemfadehandle\_maxwidth](#itemfadehandle_maxwidth), [relativeedges](#relativeedges)  
+          For other settings set in Preferences -> Media, see [itemlabel\_minheight](#itemlabel_minheight), [labelitems2](#labelitems2), [peaksedges](#peaksedges), [itemicons\_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -4871,7 +4871,7 @@
           
            >0 to 2147483647; in pixels  
             
-          For other settings set in Preferences -> Media, see [itemlabel_minheight](#itemlabel_minheight), [labelitems2](#labelitems2), [peaksedges](#peaksedges), [itemicons](#itemicons), [itemvolmode](#itemvolmode)  
+          For other settings set in Preferences -> Media, see [itemlabel\_minheight](#itemlabel_minheight), [labelitems2](#labelitems2), [peaksedges](#peaksedges), [itemicons](#itemicons), [itemvolmode](#itemvolmode)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.      
@@ -4894,7 +4894,7 @@
           
            >0 to 2147483647; in pixels  
            
-          For other settings set in Preferences -> Media, see [labelitems2](#labelitems2), [peaksedges](#peaksedges), [itemicons](#itemicons), [itemicons_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
+          For other settings set in Preferences -> Media, see [labelitems2](#labelitems2), [peaksedges](#peaksedges), [itemicons](#itemicons), [itemicons\_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -5058,7 +5058,7 @@
            >0, Handle: +0dB is top of item  
            >1, Handle: +0dB is center of item  
            
-          For other settings set in Preferences -> Media, see [itemlabel_minheight](#itemlabel_minheight), [labelitems2](#labelitems2), [peaksedges](#peaksedges), [itemicons](#itemicons), [itemicons_minheight](#itemicons_minheight)  
+          For other settings set in Preferences -> Media, see [itemlabel\_minheight](#itemlabel_minheight), [labelitems2](#labelitems2), [peaksedges](#peaksedges), [itemicons](#itemicons), [itemicons\_minheight](#itemicons_minheight)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -5125,9 +5125,9 @@
            >>0 1 0, No thumbnail  
            >>1 0 0, Full height  
            >>0 0 1, Stretch image  
-           for more image-settings, see [video_defimglen](#video_defimglen)  
+           for more image-settings, see [video\_defimglen](#video_defimglen)  
            
-          For other settings set in Preferences -> Media, see [itemlabel_minheight](#itemlabel_minheight), [peaksedges](#peaksedges), [itemicons](#itemicons), [itemicons_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
+          For other settings set in Preferences -> Media, see [itemlabel\_minheight](#itemlabel_minheight), [peaksedges](#peaksedges), [itemicons](#itemicons), [itemicons\_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -5402,7 +5402,7 @@
            >0 to 2147483647; higher values become negative  
            
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile\_wildcards](#recfile_wildcards),  
                                                [recupdatems](#recupdatems), [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -5426,7 +5426,7 @@
            >0 to 2147483647; higher values become negative  
            
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile\_wildcards](#recfile_wildcards),  
                                                [recupdatems](#recupdatems), [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -5546,7 +5546,7 @@
           
            >0 to 199  
            
-          For other settings in Preferences -> Plugins, see [fxresize](#fxresize) and [fxfloat_focus](#fxfloat_focus)  
+          For other settings in Preferences -> Plugins, see [fxresize](#fxresize) and [fxfloat\_focus](#fxfloat_focus)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -5568,9 +5568,9 @@
           
            >0 to 2147483647; in megabytes; higher values become negative  
            
-          For the checkboxes surrounding the inputbox, see [maxrecsize_use](#maxrecsize_use)  
+          For the checkboxes surrounding the inputbox, see [maxrecsize\_use](#maxrecsize_use)  
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems), [recfile\_wildcards](#recfile_wildcards),  
                                                [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                                                
                     
@@ -5599,7 +5599,7 @@
             
           For the Megabytes-inputbox, see [maxrecsize](#maxrecsize).  
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems), [recfile\_wildcards](#recfile_wildcards),  
                                                [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -5664,7 +5664,7 @@
            >0 to 62, stereo pairs channel 1/2 to 63/64(maybe higher possible?)  
            >1024 to 1087, channel 1 to 64(maybe higher possible?)  
            
-          For other settings in section Channel naming/mapping as set in Preferences -> Audio, see [allstereopairs](#allstereopairs), [metronome_defout](#metronome_defout), [useinnc](#useinnc)  
+          For other settings in section Channel naming/mapping as set in Preferences -> Audio, see [allstereopairs](#allstereopairs), [metronome\_defout](#metronome_defout), [useinnc](#useinnc)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -5910,7 +5910,7 @@
       <title>midiins</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The number of MIDI-inserts currently available, as set in Preferences -> MIDI Devices -> MIDI inputs to make available -> contextmenu -> Enable Input/Input ID
-          Seems to be set like [midiins_cs](#midiins_cs), with the only difference being, that you need to check the "Enable input"-menuentry.
+          Seems to be set like [midiins\_cs](#midiins_cs), with the only difference being, that you need to check the "Enable input"-menuentry.
           It is an integer  
           
           >0(no MIDI-input) and higher
@@ -5976,7 +5976,7 @@
            >0, Enable output(off) - unchecked  
            >1, Enable output(on) - checked  
            
-          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts_clock](#midiouts_clock), [midiouts_clock_nospp](#midiouts_clock_nospp), [midiouts_llmode](#midiouts_llmode)  
+          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts\_clock](#midiouts_clock), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](#midiouts_llmode)  
            
                     
           Stored in reaper.ini under the same name in the section REAPER.      
@@ -6001,7 +6001,7 @@
            >0, Send clock to output(off) - unchecked  
            >1, Send clock to output(on) - checked  
            
-          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts_clock_nospp](#midiouts_clock_nospp), [midiouts_llmode](midiouts_llmode )   
+          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](midiouts_llmode )   
            
                     
           Stored in reaper.ini under the same name in the section REAPER.      
@@ -6026,7 +6026,7 @@
            >0, Do not send SPP to output(off) - unchecked  
            >1, Do not send SPP to output(on) - checked  
            
-          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts_clock](#midiouts_clock), [midiouts_llmode](midiouts_llmode )   
+          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock](#midiouts_clock), [midiouts\_llmode](midiouts_llmode )   
            
                     
           Stored in reaper.ini under the same name in the section REAPER.      
@@ -6051,7 +6051,7 @@
            >0, Low latency outut mode (low precision)(off) - unchecked  
            >1, Low latency outut mode (low precision)(on) - checked  
             
-          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts_clock](#midiouts_clock), [midiouts_clock_nospp](#midiouts_clock_nospp)  
+          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock](#midiouts_clock), [midiouts\_clock\_nospp](#midiouts_clock_nospp)  
            
                     
           Stored in reaper.ini under the same name in the section REAPER.      
@@ -6074,7 +6074,7 @@
            >0, don't restrict(off) - unchecked  
            >1, restrict(on) - checked  
            
-          For other settings in Preferences -> MIDI Devices, see [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts_clock](#midiouts_clock), [midiouts_clock_nospp](#midiouts_clock_nospp), [midiouts_llmode](midiouts_llmode )   
+          For other settings in Preferences -> MIDI Devices, see [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock](#midiouts_clock), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](midiouts_llmode )   
            
                     
           Stored in reaper.ini under the same name in the section REAPER.      
@@ -6137,7 +6137,7 @@
            >&256=0, Reset MIDI CC/pitch on: playback loop/skip(on) - checked  
            >&256=1, Reset MIDI CC/pitch on: playback loop/skip(off) - unchecked  
             
-          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midiouts](#midiouts), [midiouts_clock](#midiouts_clock), [midiouts_clock_nospp](#midiouts_clock_nospp), [midiouts_llmode](midiouts_llmode )   
+          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midiouts](#midiouts), [midiouts\_clock](#midiouts_clock), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](midiouts_llmode )   
           For other settings in section Playback settings, as set in Preferences -> Playback, see [loopstopfx](#loopstopfx), [runafterstop](#runafterstop), [runallonstop](#runallonstop),   
                                                                       [stopendofloop](#stopendofloop), [stopprojlen](#stopprojlen), [viewadvance](#viewadvance)  
                     
@@ -6511,7 +6511,7 @@
            >&1024=0, Reverse horizontal scroll(off) - unchecked  
            >&1024=1, Reverse horizontal scroll(on) - checked  
            
-          For other multitouch-settings, see [multitouch_zoom_gear](#multitouch_zoom_gear), [multitouch_rotate_gear](#multitouch_rotate_gear), [multitouch_ignore_ms](#multitouch_ignore_ms), [multitouch_ignorewheel_ms](#multitouch_ignorewheel_ms), [multitouch_swipe_gear](#multitouch_swipe_gear)  
+          For other multitouch-settings, see [multitouch\_zoom\_gear](#multitouch_zoom_gear), [multitouch\_rotate\_gear](#multitouch_rotate_gear), [multitouch\_ignore\_ms](#multitouch_ignore_ms), [multitouch\_ignorewheel\_ms](#multitouch_ignorewheel_ms), [multitouch\_swipe\_gear](#multitouch_swipe_gear)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -6572,7 +6572,7 @@
           
            >1.0 to 1e+255(a number with 255 times the 9)  
             
-          For other multitouch-settings, see [multitouch](#multitouch), [multitouch_zoom_gear](#multitouch_zoom_gear), [multitouch_ignore_ms](#multitouch_ignore_ms), [multitouch_ignorewheel_ms](#multitouch_ignorewheel_ms), [multitouch_swipe_gear](#multitouch_swipe_gear)  
+          For other multitouch-settings, see [multitouch](#multitouch), [multitouch\_zoom\_gear](#multitouch_zoom_gear), [multitouch\_ignore\_ms](#multitouch_ignore_ms), [multitouch\_ignorewheel\_ms](#multitouch_ignorewheel_ms), [multitouch\_swipe\_gear](#multitouch_swipe_gear)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -6594,7 +6594,7 @@
           
            >1.0 to 1e+255(a number with 255 times the 9)  
             
-          For other multitouch-settings, see [multitouch](#multitouch), [multitouch_zoom_gear](#multitouch_zoom_gear), [multitouch_rotate_gear](#multitouch_rotate_gear), [multitouch_ignore_ms](#multitouch_ignore_ms), [multitouch_ignorewheel_ms](#multitouch_ignorewheel_ms)  
+          For other multitouch-settings, see [multitouch](#multitouch), [multitouch\_zoom\_gear](#multitouch_zoom_gear), [multitouch\_rotate\_gear](#multitouch_rotate_gear), [multitouch\_ignore\_ms](#multitouch_ignore_ms), [multitouch\_ignorewheel\_ms](#multitouch_ignorewheel_ms)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -6616,7 +6616,7 @@
           
            >1.0 to 1e+255(a number with 255 times the 9)  
             
-          For other multitouch-settings, see [multitouch](#multitouch), [multitouch_rotate_gear](#multitouch_rotate_gear), [multitouch_ignore_ms](#multitouch_ignore_ms), [multitouch_ignorewheel_ms](#multitouch_ignorewheel_ms), [multitouch_swipe_gear](#multitouch_swipe_gear)  
+          For other multitouch-settings, see [multitouch](#multitouch), [multitouch\_rotate\_gear](#multitouch_rotate_gear), [multitouch\_ignore\_ms](#multitouch_ignore_ms), [multitouch\_ignorewheel\_ms](#multitouch_ignorewheel_ms), [multitouch\_swipe\_gear](#multitouch_swipe_gear)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -6663,7 +6663,7 @@
           
            >-9999989 to 9999999.0; in dB; 0 for 0dB  
             
-          To set other Master VU settings, see [projmastervuflags](#projmastervuflags), [mvu_rmssize](#mvu_rmssize), [mvu_rmsoffs2](#mvu_rmsoffs2), [mvu_rmsred](#mvu_rmsred), [mvu_rmsmode](#mvu_rmsmode)  
+          To set other Master VU settings, see [projmastervuflags](#projmastervuflags), [mvu\_rmssize](#mvu_rmssize), [mvu\_rmsoffs2](#mvu_rmsoffs2), [mvu\_rmsred](#mvu_rmsred), [mvu\_rmsmode](#mvu_rmsmode)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -6692,7 +6692,7 @@
            >&4=0, Top Label: Peak  
            >&4=1, Top Label: RMS  
            
-          To set other Master VU settings, see [projmastervuflags](#projmastervuflags), [mvu_rmssize](#mvu_rmssize), [mvu_rmsoffs2](#mvu_rmsoffs2), [mvu_rmsgain](#mvu_rmsgain), [mvu_rmsred](#mvu_rmsred)  
+          To set other Master VU settings, see [projmastervuflags](#projmastervuflags), [mvu\_rmssize](#mvu_rmssize), [mvu\_rmsoffs2](#mvu_rmsoffs2), [mvu\_rmsgain](#mvu_rmsgain), [mvu\_rmsred](#mvu_rmsred)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -6716,7 +6716,7 @@
           
            >-9999989 to 9999999.0; in dB; 0 for 0dB  
             
-          To set other Master VU settings, see [projmastervuflags](#projmastervuflags), [mvu_rmssize](#mvu_rmssize), [mvu_rmsgain](#mvu_rmsgain), [mvu_rmsred](#mvu_rmsred), [mvu_rmsmode](#mvu_rmsmode)  
+          To set other Master VU settings, see [projmastervuflags](#projmastervuflags), [mvu\_rmssize](#mvu_rmssize), [mvu\_rmsgain](#mvu_rmsgain), [mvu\_rmsred](#mvu_rmsred), [mvu\_rmsmode](#mvu_rmsmode)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -6740,7 +6740,7 @@
           
            >-9999989 to 9999999.0; in dB; 0 for 0dB  
             
-          To set other Master VU settings, see [projmastervuflags](#projmastervuflags), [mvu_rmssize](#mvu_rmssize), [mvu_rmsoffs2](#mvu_rmsoffs2), [mvu_rmsgain](#mvu_rmsgain), [mvu_rmsmode](#mvu_rmsmode)  
+          To set other Master VU settings, see [projmastervuflags](#projmastervuflags), [mvu\_rmssize](#mvu_rmssize), [mvu\_rmsoffs2](#mvu_rmsoffs2), [mvu\_rmsgain](#mvu_rmsgain), [mvu\_rmsmode](#mvu_rmsmode)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -6762,7 +6762,7 @@
           
            >0 to 9999999; milliseconds  
             
-          To set other Master VU settings, see [projmastervuflags](#projmastervuflags), [mvu_rmsoffs2](#mvu_rmsoffs2), [mvu_rmsgain](#mvu_rmsgain), [mvu_rmsred](#mvu_rmsred), [mvu_rmsmode](#mvu_rmsmode)  
+          To set other Master VU settings, see [projmastervuflags](#projmastervuflags), [mvu\_rmsoffs2](#mvu_rmsoffs2), [mvu\_rmsgain](#mvu_rmsgain), [mvu\_rmsred](#mvu_rmsred), [mvu\_rmsmode](#mvu_rmsmode)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -7236,7 +7236,7 @@
            >2, Manually  
            
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems), [recfile\_wildcards](#recfile_wildcards),  
                                                [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -7294,9 +7294,9 @@
            >&2048=0, Fill waveforms to zero line(Preferences -> Media)(off) - unchecked  
            >&2048=1, Fill waveforms to zero line(Preferences -> Media)(on) - checked  
            
-          For other settings set in Preferences -> Media, see [itemlabel_minheight](#itemlabel_minheight), [labelitems2](#labelitems2), [itemicons](#itemicons), [itemicons_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
-          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [sampleedges](#sampleedges), [selitem_tintalpha](#selitem_tintalpha), [showpeaks](#showpeaks),   
-                                                 [unselitem_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
+          For other settings set in Preferences -> Media, see [itemlabel\_minheight](#itemlabel_minheight), [labelitems2](#labelitems2), [itemicons](#itemicons), [itemicons\_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
+          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [sampleedges](#sampleedges), [selitem\_tintalpha](#selitem_tintalpha), [showpeaks](#showpeaks),   
+                                                 [unselitem\_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -7323,8 +7323,8 @@
              add 1280 for 5 cent-snap,  
              add 1537 for 1 cent-snap.  
             
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
-                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
+                                                   [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -7495,10 +7495,10 @@
            >&256=0, Trim content behind automation items when editing or writing automation(off) - unchecked  
            >&256=1, Trim content behind automation items when editing or writing automation(on) - checked  
            
-          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime_action](#autoreturntime_action), [env_autoadd](#env_autoadd), [env_options](#env_options), [env_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg)  
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
-                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime)  
-          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf_minheight](#itemlowerhalf_minheight), [itemclickmovecurs](#itemclickmovecurs), [handzoom](#handzoom), [scnotes](#scnotes)  
+          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime\_action](#autoreturntime_action), [env\_autoadd](#env_autoadd), [env\_options](#env_options), [env\_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
+                                                   [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime)  
+          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf\_minheight](#itemlowerhalf_minheight), [itemclickmovecurs](#itemclickmovecurs), [handzoom](#handzoom), [scnotes](#scnotes)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -7519,10 +7519,10 @@
           
             0 to 200(though higher values can be set)
            
-          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime_action](#autoreturntime_action), [env_autoadd](#env_autoadd), [env_options](#env_options), [env_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg)  
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
-                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime)  
-          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf_minheight](#itemlowerhalf_minheight), [itemclickmovecurs](#itemclickmovecurs), [handzoom](#handzoom), [scnotes](#scnotes)  
+          For other settings set in Preferences -> Automation, see [autoreturntime](#autoreturntime), [autoreturntime\_action](#autoreturntime_action), [env\_autoadd](#env_autoadd), [env\_options](#env_options), [env\_reduce](#env_reduce), [envtrimadjmode](#envtrimadjmode), [envwritepasschg](#envwritepasschg)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
+                                                   [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime)  
+          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf\_minheight](#itemlowerhalf_minheight), [itemclickmovecurs](#itemclickmovecurs), [handzoom](#handzoom), [scnotes](#scnotes)  
                     
           Stored in reaper.ini under the same name in the section REAPER, but with higher precision.  
             
@@ -7965,7 +7965,7 @@
            >&2=0, Multichannel peak metering-checkbox(off) - unchecked  
            >&2=1, Multichannel peak metering-checkbox(on) - checked  
             
-          To set other Master VU settings, see [mvu_rmssize](#mvu_rmssize), [mvu_rmsoffs2](#mvu_rmsoffs2), [mvu_rmsgain](#mvu_rmsgain), [mvu_rmsred](#mvu_rmsred), [mvu_rmsmode](#mvu_rmsmode)  
+          To set other Master VU settings, see [mvu\_rmssize](#mvu_rmssize), [mvu\_rmsoffs2](#mvu_rmsoffs2), [mvu\_rmsgain](#mvu_rmsgain), [mvu\_rmsred](#mvu_rmsred), [mvu\_rmsmode](#mvu_rmsmode)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
@@ -8271,7 +8271,7 @@
           
            >1.0(0dB) to 63.826348619055(36.1dB)  
             
-          For other Peaks Display Settings, see [showpeaks](#showpeaks), [specpeak_alpha](#specpeak_alpha)  
+          For other Peaks Display Settings, see [showpeaks](#showpeaks), [specpeak\_alpha](#specpeak_alpha)  
             
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -8717,8 +8717,8 @@
            >0 to 2147483647; 1000 = default  
            
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
-                                          [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
-                                          [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
+                                          [projsmpteresync\_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
+                                          [projsmptefw\_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -8740,7 +8740,7 @@
            >0 to 2147483647; higher values become negative ones; 0=never  
             
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpteahead](#projsmpteahead), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
-                                          [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
+                                          [projsmpteresync\_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
                                           [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
@@ -8768,9 +8768,8 @@
            
           For framerate-settings when projsmpteinput is set to LTC: Left and LTC: Right, see [projsmpterate](#projsmpterate)  
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpteahead](#projsmpteahead), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
-                                          [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
-
-                                          [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmptefw_rec](#projsmptefw_rec)  
+                                          [projsmpteresync\_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
+                                          [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmptefw\_rec](#projsmptefw_rec)  
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
       </description>  
@@ -8791,8 +8790,8 @@
            >0 to 2147483647; 0 = forever  
            
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
-                                          [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
-                                          [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
+                                          [projsmpteresync\_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
+                                          [projsmptefw\_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -8814,8 +8813,8 @@
            >0 to 1e+305; in seconds(yes, even though the inputbox in the dialog asks for milliseconds, this value is in seconds!)  
            
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmptemaxfree](#projsmptemaxfree),   
-                                          [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
-                                          [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
+                                          [projsmpteresync\_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
+                                          [projsmptefw\_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -8840,8 +8839,8 @@
            
           For setting, if the project's framerate or the LTC-framerate shall be used, see [projsmpterateuseproj](#projsmpterateuseproj)  
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
-                                          [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
-                                          [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
+                                          [projsmpteresync\_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
+                                          [projsmptefw\_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -8864,8 +8863,8 @@
            
           For setting the LTC-framerate, see [projsmpterate](#projsmpterate).  
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
-                                          [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
-                                          [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpteinput](#projsmpteinput)  
+                                          [projsmpteresync\_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
+                                          [projsmptefw\_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpteinput](#projsmpteinput)  
                                           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -8887,8 +8886,8 @@
            >0 to 2147483647; 0=never  
            
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
-                                          [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteskip](#projsmpteskip),   
-                                          [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
+                                          [projsmpteresync\_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteskip](#projsmpteskip),   
+                                          [projsmptefw\_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -8911,7 +8910,7 @@
            
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
                                           [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
-                                          [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
+                                          [projsmptefw\_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -8933,8 +8932,8 @@
            >0 to 2147483647; 0=never  
            
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [projsmptesync](#projsmptesync), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
-                                          [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync),   
-                                          [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
+                                          [projsmpteresync\_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync),   
+                                          [projsmptefw\_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -8978,8 +8977,8 @@
             >> 0 1, 24/30 fps MTC is 24/30 fps  
            
           For other settings in the Project -> Advanced, see [panlawflags](#panlawflags), [projsmpterate](#projsmpterate), [projsmptemaxfree](#projsmptemaxfree), [itemmixflag](#itemmixflag), [projmaxlenuse](#projmaxlenuse), [panmode](#panmode), [projintmix](#projintmix), [projsmpteoffs](#projsmpteoffs),   
-                                          [projsmpteresync_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
-                                          [projsmptefw_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
+                                          [projsmpteresync\_rec](#projsmpteresync_rec), [projmaxlen](#projmaxlen), [feedbackmode](#feedbackmode), [projsmpteahead](#projsmpteahead), [projsmpteresync](#projsmpteresync), [projsmpteskip](#projsmpteskip),   
+                                          [projsmptefw\_rec](#projsmptefw_rec), [panlaw](#panlaw), [projsmpterateuseproj](#projsmpterateuseproj), [projsmpteinput](#projsmpteinput)  
                                           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -9252,7 +9251,7 @@
            >&2=1, on punch-out/play(on) - checked  
            
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [recopts](#recopts), [recupdatems](#recupdatems), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [recopts](#recopts), [recupdatems](#recupdatems), [recfile\_wildcards](#recfile_wildcards),  
                                                [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -9690,7 +9689,7 @@
           It is a string  
             
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems),   
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems),   
                                                [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -9717,7 +9716,7 @@
            >&2=1, Record audio during pre-roll-checkbox(off) - unchecked  
             
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recfile\_wildcards](#recfile_wildcards),  
                                                [recupdatems](#recupdatems), [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -9742,7 +9741,7 @@
             
           For the checkbox, see [showrecitems](#showrecitems).  
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile_wildcards](#recfile_wildcards),  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recfile\_wildcards](#recfile_wildcards),  
                                                [showrecitems](#showrecitems), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -9807,7 +9806,7 @@
                                                       [altpeaks](#altpeaks), [showpeaks](#showpeaks), [peakcachegenrs](#peakcachegenrs), [offlineinact](#offlineinact), [insertmtrack](#insertmtrack), [opencopyprompt](#opencopyprompt)  
           For other settings in Preferences -> Editing Behavior, see [itemclickmovecurs](#itemclickmovecurs), [locklooptotime](#locklooptotime), [ripplelockmode](#ripplelockmode), [splitautoxfade](#splitautoxfade),   
                                                   [vzoommode](#vzoommode), [zoommode](#zoommode)  
-          For other settings set in Preferences -> Fades/Crossfades, see [itemfade_minheight](#itemfade_minheight), [itemfade_minwidth](#itemfade_minwidth), [itemfadehandle_maxwidth](#itemfadehandle_maxwidth), [itemicons](#itemicons)  
+          For other settings set in Preferences -> Fades/Crossfades, see [itemfade\_minheight](#itemfade_minheight), [itemfade\_minwidth](#itemfade_minwidth), [itemfadehandle\_maxwidth](#itemfadehandle_maxwidth), [itemicons](#itemicons)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -10401,8 +10400,8 @@
            >32, Sinc smoothed  
            >33, Dots and sinc  
            
-          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [peaksedges](#peaksedges), [selitem_tintalpha](#selitem_tintalpha), [showpeaks](#showpeaks),   
-                                                 [unselitem_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
+          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [peaksedges](#peaksedges), [selitem\_tintalpha](#selitem_tintalpha), [showpeaks](#showpeaks),   
+                                                 [unselitem\_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -10434,7 +10433,9 @@
            
            >&8=0, Save to timestamped file in additional directory(off) - unchecked  
            >&8=1, Save to timestamped file in additional directory(on) - checked  
-           
+      
+            The next option is only for Project Saving
+      
            >&16=0, Timestamp backup(off) - unchecked  
            >&16=1, Timestamp backup(on) - checked  
             
@@ -10558,7 +10559,7 @@
            >&64=0, Edit previous note within current grid division(MIDI Editor -> Options -> Velocity editing lane)  
            >&64=1, Edit only when mouse is over velocity bar(MIDI Editor -> Options -> Velocity editing lane)  
             
-          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf_minheight](#itemlowerhalf_minheight), [itemclickmovecurs](#itemclickmovecurs), [pooledenvs](#pooledenvs), [handzoom](#handzoom)  
+          For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf\_minheight](#itemlowerhalf_minheight), [itemclickmovecurs](#itemclickmovecurs), [pooledenvs](#pooledenvs), [handzoom](#handzoom)  
             
       </description>  
       <chapter_context>  
@@ -10885,7 +10886,7 @@
           
            >0 to 4  
             
-          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [peaksedges](#peaksedges), [sampleedges](#sampleedges), [showpeaks](#showpeaks), [unselitem_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
+          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [peaksedges](#peaksedges), [sampleedges](#sampleedges), [showpeaks](#showpeaks), [unselitem\_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -11021,9 +11022,9 @@
             
           For other Media-settings, set in the preferences -> Media, see [showpeaksbuild](#showpeaksbuild), [copyimpmedia](#copyimpmedia), [relativeedges](#relativeedges), [applyfxtail](#applyfxtail), [itemfxtail](#itemfxtail), [peakcachegenmode](#peakcachegenmode),   
                                                       [altpeaks](#altpeaks), [peakcachegenrs](#peakcachegenrs), [offlineinact](#offlineinact), [insertmtrack](#insertmtrack), [opencopyprompt](#opencopyprompt)  
-          For other Peaks Display Settings, see [projpeaksgain](#projpeaksgain), [specpeak_alpha](#specpeak_alpha)  
-          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [peaksedges](#peaksedges), [sampleedges](#sampleedges), [selitem_tintalpha](#selitem_tintalpha),   
-                                                 [unselitem_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
+          For other Peaks Display Settings, see [projpeaksgain](#projpeaksgain), [specpeak\_alpha](#specpeak_alpha)  
+          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [peaksedges](#peaksedges), [sampleedges](#sampleedges), [selitem\_tintalpha](#selitem_tintalpha),   
+                                                 [unselitem\_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -11071,8 +11072,8 @@
             
           For the inputbox, see [recupdatems](#recupdatems).  
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems),   
-                                               [recfile_wildcards](#recfile_wildcards), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems),   
+                                               [recfile\_wildcards](#recfile_wildcards), [viewadvance](#viewadvance), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -11326,7 +11327,7 @@
            >0 to 255; 192 for default  
            
           For other Peaks Display Settings, see [showpeaks](#showpeaks), [projpeaksgain](#projpeaksgain)  
-          For other settings for the Spectral Peaks Display-mode, see [specpeak_na](#specpeak_na), [specpeak_huel](#specpeak_huel), [specpeak_hueh](#specpeak_hueh), [specpeak_bv](#specpeak_bv), [specpeak_ftp](#specpeak_ftp), [specpeak_lo](#specpeak_lo)  
+          For other settings for the Spectral Peaks Display-mode, see [specpeak\_na](#specpeak_na), [specpeak\_huel](#specpeak_huel), [specpeak\_hueh](#specpeak_hueh), [specpeak\_bv](#specpeak_bv), [specpeak\_ftp](#specpeak_ftp), [specpeak\_lo](#specpeak_lo)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -11348,7 +11349,7 @@
           
            >0(for displayed value 0) to 256(for displayed value 1.00); default 96(for displayed value 0.38)  
            
-          For other settings for the Spectral Peaks Display-mode, see [specpeak_na](#specpeak_na), [specpeak_huel](#specpeak_huel), [specpeak_hueh](#specpeak_hueh), [specpeak_ftp](#specpeak_ftp), [specpeak_lo](#specpeak_lo)  
+          For other settings for the Spectral Peaks Display-mode, see [specpeak\_na](#specpeak_na), [specpeak\_huel](#specpeak_huel), [specpeak\_hueh](#specpeak_hueh), [specpeak\_ftp](#specpeak_ftp), [specpeak\_lo](#specpeak_lo)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -11370,7 +11371,7 @@
            >0, don't fade - unchecked  
            >1, fade - checked  
             
-          For other settings for the Spectral Peaks Display-mode, see [specpeak_na](#specpeak_na), [specpeak_huel](#specpeak_huel), [specpeak_hueh](#specpeak_hueh), [specpeak_bv](#specpeak_bv), [specpeak_lo](#specpeak_lo)  
+          For other settings for the Spectral Peaks Display-mode, see [specpeak\_na](#specpeak_na), [specpeak\_huel](#specpeak_huel), [specpeak\_hueh](#specpeak_hueh), [specpeak\_bv](#specpeak_bv), [specpeak\_lo](#specpeak_lo)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -11394,7 +11395,7 @@
            >0.513 is default settings; lower push the spectrum together; higher, stretch it apart until about 1.585(default value from specpeak_huel),   
              from which it's pushed together again  
             
-          For other settings for the Spectral Peaks Display-mode, see [specpeak_na](#specpeak_na), [specpeak_huel](#specpeak_huel), [specpeak_bv](#specpeak_bv), [specpeak_ftp](#specpeak_ftp), [specpeak_lo](#specpeak_lo)  
+          For other settings for the Spectral Peaks Display-mode, see [specpeak\_na](#specpeak_na), [specpeak\_huel](#specpeak_huel), [specpeak\_bv](#specpeak_bv), [specpeak\_ftp](#specpeak_ftp), [specpeak\_lo](#specpeak_lo)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -11418,7 +11419,7 @@
            >1.585 is default settings; higher push the spectrum together; lower, stretch it apart until about 0.513(default value from specpeak_hueh),   
              from which it's pushed together again  
             
-          For other settings for the Spectral Peaks Display-mode, see [specpeak_na](#specpeak_na), [specpeak_hueh](#specpeak_hueh), [specpeak_bv](#specpeak_bv), [specpeak_ftp](#specpeak_ftp), [specpeak_lo](#specpeak_lo)  
+          For other settings for the Spectral Peaks Display-mode, see [specpeak\_na](#specpeak_na), [specpeak\_hueh](#specpeak_hueh), [specpeak\_bv](#specpeak_bv), [specpeak\_ftp](#specpeak_ftp), [specpeak\_lo](#specpeak_lo)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -11441,7 +11442,7 @@
           
            >0(for displayed 14Hz to 3904Hz) to 200(14Hz to 7985Hz); default is 0  
            
-          For other settings for the Spectral Peaks Display-mode, see [specpeak_na](#specpeak_na), [specpeak_huel](#specpeak_huel), [specpeak_hueh](#specpeak_hueh), [specpeak_bv](#specpeak_bv), [specpeak_ftp](#specpeak_ftp)  
+          For other settings for the Spectral Peaks Display-mode, see [specpeak\_na](#specpeak_na), [specpeak\_huel](#specpeak_huel), [specpeak\_hueh](#specpeak_hueh), [specpeak\_bv](#specpeak_bv), [specpeak\_ftp](#specpeak_ftp)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -11464,7 +11465,7 @@
            >16(for displayed value 0.25) to 0.5(for displayed value 8.0); default is 257(for displayed value 1.0)  
            
           For other Peaks Display Settings, see [showpeaks](#showpeaks), [projpeaksgain](#projpeaksgain)  
-          For other settings for the Spectral Peaks Display-mode, see [specpeak_huel](#specpeak_huel), [specpeak_hueh](#specpeak_hueh), [specpeak_bv](#specpeak_bv), [specpeak_ftp](#specpeak_ftp), [specpeak_lo](#specpeak_lo)  
+          For other settings for the Spectral Peaks Display-mode, see [specpeak\_huel](#specpeak_huel), [specpeak\_hueh](#specpeak_hueh), [specpeak\_bv](#specpeak_bv), [specpeak\_ftp](#specpeak_ftp), [specpeak\_lo](#specpeak_lo)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -11731,8 +11732,8 @@
           
            >2 to 2147483647; in bpm; must be bigger than [tempoenvmin](#tempoenvmin)  
            
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
-                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
+                                                   [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -11754,8 +11755,8 @@
           
            >1 to 2147483647; in bpm  
            
-          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
-                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
+          For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
+                                                   [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -11909,7 +11910,7 @@
            
           For other settings in Preferences -> Track Control Panels, see [slidermaxv](#slidermaxv), [sliderminv](#sliderminv), [groupdispmode](#groupdispmode), [tcpalign](#tcpalign), [midivu](#midivu), [nometers](#nometers), [resetvuplay](#resetvuplay), [vuclipstick](#vuclipstick),   
                                                       [vudecay](#vudecay), [vumaxvol](#vumaxvol), [vuminvol](#vuminvol), [vuupdfreq](#vuupdfreq), [pandispmode](#pandispmode), [slidershex](#slidershex)  
-          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [peaksedges](#peaksedges), [sampleedges](#sampleedges), [selitem_tintalpha](#selitem_tintalpha), [showpeaks](#showpeaks), [unselitem_tintalpha](#unselitem_tintalpha)  
+          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [peaksedges](#peaksedges), [sampleedges](#sampleedges), [selitem\_tintalpha](#selitem_tintalpha), [showpeaks](#showpeaks), [unselitem\_tintalpha](#unselitem_tintalpha)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -12261,7 +12262,7 @@
           
            >0 to 4  
             
-          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [peaksedges](#peaksedges), [sampleedges](#sampleedges), [showpeaks](#showpeaks), [selitem_tintalpha](#selitem_tintalpha), [tinttcp](#tinttcp)  
+          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [peaksedges](#peaksedges), [sampleedges](#sampleedges), [showpeaks](#showpeaks), [selitem\_tintalpha](#selitem_tintalpha), [tinttcp](#tinttcp)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -12334,7 +12335,7 @@
            >&2=0, Input channel name aliasing/remapping-checkbox(off) - unchecked  
            >&2=1, Input channel name aliasing/remapping-checkbox(on) - checked  
             
-          For other settings in section Channel naming/mapping as set in Preferences -> Audio, see [allstereopairs](#allstereopairs), [metronome_defout](#metronome_defout)  
+          For other settings in section Channel naming/mapping as set in Preferences -> Audio, see [allstereopairs](#allstereopairs), [metronome\_defout](#metronome_defout)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -12471,7 +12472,7 @@
            >&1024=0, Disable high-resolution peaks for video items - unchecked  
            >&1024=1, Disable high-resolution peaks for video items - checked  
            
-          For other video-settings, see [video_decprio](#video_decprio), [video_delayms](#video_delayms)  
+          For other video-settings, see [video\_decprio](#video_decprio), [video\_delayms](#video_delayms)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -12490,7 +12491,7 @@
           Video decoder priority-inputbox, as set in section Video of Preferences -> Video/REX/Misc  
           It is a string  
             
-          For other video-settings, see [video_colorspace](#video_colorspace), [video_delayms](#video_delayms), [video_defimglen](#video_defimglen)
+          For other video-settings, see [video\_colorspace](#video_colorspace), [video\_delayms](#video_delayms), [video\_defimglen](#video_defimglen)
             
           Stored in reaper.ini under the same name in the section REAPER, but only if it differs from the default settings:   
           
@@ -12513,7 +12514,7 @@
           
            >0 to 2147483647  
             
-          For other video-settings, see [video_colorspace](#video_colorspace), [video_decprio](#video_decprio), [video_defimglen](#video_defimglen)
+          For other video-settings, see [video\_colorspace](#video_colorspace), [video\_decprio](#video_decprio), [video\_defimglen](#video_defimglen)
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -12538,7 +12539,7 @@
             
           Negative values set length in frames; positive values, set length in milliseconds.
           
-          For other video-settings, see [video_colorspace](#video_colorspace), [video_decprio](#video_decprio)  
+          For other video-settings, see [video\_colorspace](#video_colorspace), [video\_decprio](#video_decprio)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -12577,8 +12578,8 @@
           For other settings in section Playback settings, as set in Preferences -> Playback, see [loopstopfx](#loopstopfx), [midisendflags](#midisendflags), [runafterstop](#runafterstop), [runallonstop](#runallonstop),   
                                                                       [stopendofloop](#stopendofloop), [stopprojlen](#stopprojlen)  
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems),   
-                                               [recfile_wildcards](#recfile_wildcards), [showrecitems](#showrecitems), [zoomshowarm](#zoomshowarm)  
+                                               [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems),   
+                                               [recfile\_wildcards](#recfile_wildcards), [showrecitems](#showrecitems), [zoomshowarm](#zoomshowarm)  
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -12610,8 +12611,8 @@
           For other settings of section Tracks from Preferences -> Track/Send Defaults, see [defautomode](#defautomode), [errnowarn](#errnowarn), [defenvs](#defenvs), [deftrackrecflags](#deftrackrecflags), [deftrackvol](#deftrackvol),  
                                                                 [defvzoom](#defvzoom), [newtflag](#newtflag), [splitautoxfade](#splitautoxfade), [deftrackrecinput](#deftrackrecinput), [vzoom2](#vzoom2)  
                                                                   
-          For other settings as set in Preferences -> Envelope Display, see [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env_deffoc](#env_deffoc), [env_ol_minh](#env_ol_minh),   
-                                                   [env_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
+          For other settings as set in Preferences -> Envelope Display, see [pitchenvrange](#pitchenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
+                                                   [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -13125,7 +13126,7 @@
           
            >0 to 2147483647; higher values become negative  
             
-          To set process working set size to on/off, see [workset_use](#workset_use)  
+          To set process working set size to on/off, see [workset\_use](#workset_use)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -13147,7 +13148,7 @@
           
            >0 to 2147483647; higher values become negative  
            
-          To set process working set size to on/off, see [workset_use](#workset_use)  
+          To set process working set size to on/off, see [workset\_use](#workset_use)  
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -13260,8 +13261,8 @@
             > 1, don't show full track control panel on armed tracks(on) - checked  
             
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [errnowarn](#errnowarn), [manuallat](#manuallat),   
-                                              [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems),   
-                                              [recfile_wildcards](#recfile_wildcards), [showrecitems](#showrecitems), [viewadvance](#viewadvance)  
+                                              [manuallatin](#manuallatin), [maxrecsize](#maxrecsize), [maxrecsize\_use](#maxrecsize_use), [peakrecbm](#peakrecbm), [promptendrec](#promptendrec), [recopts](#recopts), [recupdatems](#recupdatems),   
+                                              [recfile\_wildcards](#recfile_wildcards), [showrecitems](#showrecitems), [viewadvance](#viewadvance)  
                     
           Stored in reaper.ini under the same name in the section REAPER.            
             

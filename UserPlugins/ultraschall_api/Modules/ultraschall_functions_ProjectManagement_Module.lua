@@ -682,3 +682,184 @@ function ultraschall.IsTimeSelectionActive()
   return true, Start, Endof
 end
 
+function ultraschall.GetProject_Author(projectfilename_with_path, ProjectStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetProject_Author</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>string projectauthor = ultraschall.GetProject_Author(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
+  <description>
+    Returns the author from an RPP-Projectfile or a ProjectStateChunk.
+    
+    It's the entry "  AUTHOR"
+    
+    Returns nil in case of error or if no such entry exists.
+  </description>
+  <parameters>
+    string projectfilename_with_path - filename with path for the rpp-projectfile; nil, if you want to use parameter ProjectStateChunk
+    optional string ProjectStateChunk - a ProjectStateChunk to use instead if a filename; only used, when projectfilename_with_path is nil
+  </parameters>
+  <retvals>
+    string author - the author of the project; "", if there's no author given
+  </retvals>
+  <chapter_context>
+    Project-Management
+    RPP-Files Get
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua</source_document>
+  <tags>projectfiles, rpp, state, get, author, projectstatechunk</tags>
+</US_DocBloc>
+]]
+  -- check parameters and prepare variable ProjectStateChunk
+  if projectfilename_with_path~=nil and type(projectfilename_with_path)~="string" then ultraschall.AddErrorMessage("GetProject_Author","projectfilename_with_path", "Must be a string or nil(the latter when using parameter ProjectStateChunk)!", -1) return nil end
+  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_Author","ProjectStateChunk", "No valid ProjectStateChunk!", -2) return nil end
+  if projectfilename_with_path~=nil then
+    if reaper.file_exists(projectfilename_with_path)==true then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path, false)
+    else ultraschall.AddErrorMessage("GetProject_Author","projectfilename_with_path", "File does not exist!", -3) return nil
+    end
+    if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("GetProject_Author", "projectfilename_with_path", "No valid RPP-Projectfile!", -4) return nil end
+  end
+  -- get the values and return them
+  return ProjectStateChunk:match("  AUTHOR [\"]*(.-)[\"]*\n") or ""
+end
+
+function ultraschall.AutoSave_SetMinutes(minutes)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutoSave_SetMinutes</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AutoSave_SetMinutes(integer minutes)</functioncall>
+  <description>
+    Sets the number of minutes, at which a new autosaved-project shall be saved.
+    
+    0 to turn it off
+    
+    Returns false in case of error
+  </description>
+  <parameters>
+    integer minutes - 0, turn off autosave; 1 to 2147483647, the number of minutes at which a new autosaved-project shall be saved
+  </parameters>
+  <retvals>
+    boolean retval - true, setting worked; false, setting didn't work
+  </retvals>
+  <chapter_context>
+    Project-Management
+    AutoSave
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
+  <tags>projectmanagement, autosave, set, minutes</tags>
+</US_DocBloc>
+]]
+  if math.type(minutes)~="integer" then ultraschall.AddErrorMessage("AutoSave_SetMinutes", "minutes", "must be an integer", -1) return false end
+  if minutes<0 or minutes>2147483647 then ultraschall.AddErrorMessage("AutoSave_SetMinutes", "minutes", "must be between 0 and 2147483647", -2) return false end
+  return reaper.SNM_SetIntConfigVar("autosaveint", minutes)
+end
+
+function ultraschall.AutoSave_GetMinutes()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutoSave_GetMinutes</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>integer minutes = ultraschall.AutoSave_GetMinutes()</functioncall>
+  <description>
+    Gets the currently set amount of minutes, at which a new autosave-project shall be saved
+  </description>
+  <retvals>
+    integer minutes - 0, autosave is turned off; 1 to 2147483647, the number of minutes at which a new autosaved-project shall be saved
+  </retvals>
+  <chapter_context>
+    Project-Management
+    AutoSave
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
+  <tags>projectmanagement, autosave, get, minutes</tags>
+</US_DocBloc>
+]]
+  return reaper.SNM_GetIntConfigVar("autosaveint", -1)
+end
+
+function ultraschall.AutoSave_SetOptions(timestamp_in_project, save_undo_history)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutoSave_SetOptions</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AutoSave_SetOptions(optional boolean timestamp_in_project, optional boolean save_undo_history)</functioncall>
+  <description>
+    Gets the current states of the Save to timestamped file in project directory and Save undo history (RPP-UNDO)(if enabled in general prefs)-settings.    
+  </description>
+  <retvals>
+    optional boolean timestamp_in_project - Save to timestamped file in project directory; true, set to on; false, set to off; nil, keep current setting
+    optional boolean save_undo_history - Save undo history (RPP-UNDO)(if enabled in general prefs); true, set to on; false, set to off; nil, keep current setting
+  </retvals>
+  <chapter_context>
+    Project-Management
+    AutoSave
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
+  <tags>projectmanagement, autosave, get, options, timestamped file, save undo history</tags>
+</US_DocBloc>
+--]]
+  if save_undo_history~=nil and type(save_undo_history)~="boolean" then ultraschall.AddErrorMessage("AutoSave_SetOptions", "save_undo_history", "must be a boolean", -1) return false end
+  if timestamp_in_project~=nil and type(timestamp_in_project)~="boolean" then ultraschall.AddErrorMessage("AutoSave_SetOptions", "timestamp_in_project", "must be a boolean", -2) return false end
+
+  local saveopts=reaper.SNM_GetIntConfigVar("saveopts", -1)
+  local saveundostatesproj=reaper.SNM_GetIntConfigVar("saveundostatesproj", -1)
+  
+  if timestamp_in_project==true  and saveopts&4==0 then saveopts=saveopts+4 reaper.SNM_SetIntConfigVar("saveopts", saveopts) end
+  if timestamp_in_project==false and saveopts&4==4 then saveopts=saveopts-4 reaper.SNM_SetIntConfigVar("saveopts", saveopts) end
+  
+  if save_undo_history==true  and saveundostatesproj&2==0 then saveundostatesproj=saveundostatesproj+2 reaper.SNM_SetIntConfigVar("saveundostatesproj", saveundostatesproj) end
+  if save_undo_history==false and saveundostatesproj&2==2 then saveundostatesproj=saveundostatesproj-2 reaper.SNM_SetIntConfigVar("saveundostatesproj", saveundostatesproj) end
+  
+  return true
+end
+
+function ultraschall.AutoSave_GetOptions()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutoSave_GetOptions</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolean timestamp_in_project, boolean save_undo_history = ultraschall.AutoSave_GetOptions()</functioncall>
+  <description>
+    Gets the current states of the Save to timestamped file in project directory and Save undo history (RPP-UNDO)(if enabled in general prefs)-settings.    
+  </description>
+  <retvals>
+    boolean timestamp_in_project - Save to timestamped file in project directory; true, set to on; false, set to off
+    boolean save_undo_history - Save undo history (RPP-UNDO)(if enabled in general prefs); true, set to on; false, set to off
+  </retvals>
+  <chapter_context>
+    Project-Management
+    AutoSave
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
+  <tags>projectmanagement, autosave, get, options, timestamped file, save undo history</tags>
+</US_DocBloc>
+]]
+  return reaper.SNM_GetIntConfigVar("saveopts", -1)&4==4, reaper.SNM_GetIntConfigVar("saveundostatesproj", -1)&2==2
+end
+

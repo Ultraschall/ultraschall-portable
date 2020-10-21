@@ -494,6 +494,8 @@ function main()
   -- this is, were all the magix happens
   current_state=nil  
   
+  CheckCommandsForEventManager()
+  
   for i=1, CountOfEvents do
     if EventTable[i]["Paused"]==false then
     --print2(i, EventTable[i]["Paused"])
@@ -564,7 +566,7 @@ function main()
     end
   end
   
-  CheckCommandsForEventManager()
+  
 
   if enditall~=true then 
     -- if StopEvent hasn't been called yet, keep the eventmanager going

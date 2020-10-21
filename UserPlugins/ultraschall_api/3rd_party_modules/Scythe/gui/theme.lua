@@ -1,4 +1,4 @@
-local Theme = {}
+Theme = {}
 
 Theme.colors = {
   background = {64, 64, 64, 255},

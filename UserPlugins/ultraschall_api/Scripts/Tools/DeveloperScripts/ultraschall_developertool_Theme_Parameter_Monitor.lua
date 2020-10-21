@@ -237,7 +237,7 @@ H - shows this help
 --  if refreshcounter>30 then refreshcounter=0 end
   -- show list
   gfx.update()
-  reaper.defer(main)
+  if Key~=-1 then reaper.defer(main) end
 end
 
 main()
