@@ -41,14 +41,14 @@ if state == 5 then -- is recording
 
   msgboxtype = 4
   title = "Stop Recording?"
-  msg = "Stop the currently running recording. No more audio will be recorded to disk."
+  msg = "Stop the currently running recording. No more audio will be recorded to disk. You may disable this check in the Ultraschall settings."
 
   -- Safe-Mode Toggle-Logic
-  SafeModeToggleState=ultraschall.GetUSExternalState("Ultraschall_Transport", "Safemode_Toggle") -- Get the Safemode-Toggle-State
-  
-  if SafeModeToggleState=="OFF" then -- If Safe-Mode is OFF, show no message-box
-      result = 6    
-  elseif SafeModeToggleState=="ON" or SafeModeToggleState=="" or SafeModeToggleState=="-1" then -- If Safe-Mode is ON or was never toggled, show the message-box
+  SafeModeToggleState=ultraschall.GetUSExternalState("ultraschall_settings_recording_safemode", "Value","ultraschall-settings.ini") -- Get the Safemode-Toggle-State
+
+  if SafeModeToggleState=="0" then -- If Safe-Mode is OFF, show no message-box
+      result = 6
+  elseif SafeModeToggleState=="1" then -- If Safe-Mode is ON or was never toggled, show the message-box
       result=reaper.ShowMessageBox( msg, title, msgboxtype )
   end
 
@@ -64,5 +64,3 @@ elseif state == 1  then -- playing
 else -- stop or pause
   reaper.OnPlayButton()
 end
-
-
