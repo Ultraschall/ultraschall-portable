@@ -134,12 +134,20 @@ FX-parameter-modulation:
 the following are only available, when Link from MIDI or FX parameter-checkbox is enabled
       PLINK  number Scale  integer midi_fx_idx[:fx_idx] integer parmidx  number offset
         number Scale - Scale-slider; -1.00(-100%) to 1.00(100%); default is 0(0%)
-        integer midi_fx_idx[:fx_idx] - the big MIDI/FX-button in the "Link from MIDI or FX parameter"-area; the part "[:fx_idx]" is only available, when FX-plugin is selected, otherwise(when using MIDI) this is omitted
+        integer midi_fx_idx[:relative_fx_idx] - the big MIDI/FX-button in the "Link from MIDI or FX parameter"-area; the part "[:fx_idx]" is only available, if you want to select a plugin relative to the current plugin, otherwise(when using MIDI or a specific plugin) this is omitted
+                
+              midi_fx_idx - the plugin to use; will be ignored if relative_fx_idx is used
                 -1, nothing selected
                 -100, MIDI-parameter-settings
-                0:0 - the first fx
-                1:1 - the second fx
-                2:2 - the third fx, etc
+                0, first plugin in the FXChain
+                1, second plugin in the FXChain
+                etc
+              
+              relative_fx_idx - the plugin used relative to the current plugin; use only if you want to select a plugin relative to the current one
+                0, use a parameter of the current plugin
+                negative, use a plugin above in the FXChain relative to the current one(-1, the one directly above; -2, two above, etc)
+                positive, use a plugin below in the FXChain relative to the current one(1, the one directly below; 2, two below, etc)
+                
                 
         integer parmidx - the parameter idx, that you want to link; 
                     When MIDI, this value is ignored and can be set to anything.

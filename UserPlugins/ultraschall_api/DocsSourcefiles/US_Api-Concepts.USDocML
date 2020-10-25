@@ -6249,16 +6249,21 @@
                 ParmModTable["PARMLINK"]               - the Link from MIDI or FX parameter-checkbox
                                                           true, checked; false, unchecked
                 ParmModTable["PARMLINK_LINKEDPLUGIN"]  - the selected plugin; nil, if not available
+                                                         Will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set.
                                                             -1, nothing selected yet
                                                             -100, MIDI-parameter-settings
                                                             1 - the first fx-plugin
                                                             2 - the second fx-plugin
                                                             3 - the third fx-plugin, etc
+                ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
+                                                               - 0, use parameter of the current fx-plugin
+                                                               - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                               - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                               - nil, uses only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
                 ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available
                                                             When MIDI, this is irrelevant.
                                                             When FX-parameter:
-                                                              0 to n; 0 for the first; 1, for the second, etc
-
+                                                              0 to n; 0 for the first; 1, for the second, etc                                                               
                 ParmModTable["PARMLINK_OFFSET"]        - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
                 ParmModTable["PARMLINK_SCALE"]         - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
 
@@ -6311,7 +6316,19 @@
         For PARMLINK you also need to keep in mind, that setting PARMLINK\_LINKEDPLUGIN=-100(link to MIDI) means, that you need to set all MIDIPLINK-entries as well. 
         But don't worry. If you set an entry to an invalid value or have invalid combinations, the ParmMod-functions, especially [IsValidParmModTable](usdocml://IsValidParmModTable), will return useful error-messages.  
         So just run SLEM() after calling one of the ParmMod-functions and it will tell you, what you did wrong.  
+
+        Another note on plugin-linking:  
+        You can index the linked plugin in two ways, absolute or relative.  
+        To link a plugin absolute(by its FXChain-index), set the following entries the following ways:  
         
+            ParmModTable["PARMLINK\_LINKEDPLUGIN"]=the index of the plugin in the FXChain  
+            ParmModTable["PARMLINK\_LINKEDPLUGIN\_RELATIVE"]=nil  
+    
+        To link a plugin relative to the current plugin's position, set the following entries the following way:  
+    
+            ParmModTable["PARMLINK\_LINKEDPLUGIN"]=any integer number  
+            ParmModTable["PARMLINK\_LINKEDPLUGIN\_RELATIVE"]=0 for a parameter of the current plugin; negative, to index a plugin above the current plugin; positive, to index a plugin below the current plugin in the FXChain.  
+            
         Note: If you commit a ParmModTable to a currently opened Parameter Modulation, some things may not be updated in the gui. If you change the state of the AUDIOCONTROL/LFO/PARMLINK-checkbox or the Track audio channel-dropdownlist, it will only be updated after closing and reopening the window again. This affects only the gui, so if i.e. you enable the LFO-checkbox, it will be recognized as activated, even though the gui does not reflect that.  
         
         Take your time to toy around with it, as it's a little complex in the beginning but you will quickly get an idea of how it works.  

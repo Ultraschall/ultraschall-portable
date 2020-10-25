@@ -40,13 +40,184 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.1.007 - "Frank Zappa - Carolina Hard-Core Ecstasy" - 21st of October 2020</h3>
+<p>Has now 1342 functions, with 48 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Default v6-Theme-functions</strong><br />
+Ever wanted to write scripts that do, what the theme-adjuster can? Here's your chance.<br />
+42 functions give you life, themeiverse and all the rest needed.</p></li>
+<li><p><strong>EditReaScript</strong><br />
+Create new scripts and open them in the IDE right from a script. Or edit an existing one. Now possible with EditReaScript().</p></li>
+<li><p><strong>GetFocusedFX and GetLastTouchedFX</strong><br />
+Basically like Reaper's own ones BUT I improved the parameter-interface so it is actually useable for regular scripters.</p></li>
+<li><p><strong>SFEM</strong><br />
+Sometimes, you want to get the first error-message that has happened in your script, which signals, what's the first thing that went wrong.<br />
+SFEM(for Show First Error Message) is your way to go.</p></li>
+<li><p><strong>IsItemVisible and IsTrackVisible</strong><br />
+That's right, you can check now, if an item or track is visible in the arrangeview.<br />
+You can check, whether they are fully in arrangeview or just partially.</p></li>
+<li><p><strong>Small Fixes and Docs</strong><br />
+Small bugfixes here and there as well updates to the docs for Reaper 6.15 and SWS 2.12.1</p></li>
+</ul>
+<h4>New features in 4.1.007</h4>
+<ul>
+<li>Developer: EditReaScript - edits a ReaScript in Reaper's IDE; creates it, if not yet existing</li>
+<li>ErrorMessagingSystem: SFEM - returns the first error message from the current script-run</li>
+<li>FXManagement: GetFocusedFX - returns the focused FX(easier than Reaper's own API-function)</li>
+<li>FXManagement: GetLastTouchedFX - returns the last touched fx(easier than Reaper's own API-function)</li>
+<li>MediaItem-Management: IsItemVisible - returns, if a MediaItem is visible or not</li>
+<li>TrackManagement: IsTrackVisible - returns, if a track is visible or not</li>
+<li>ThemeManagement: Theme_Defaultv6_GetEnvFaderSize - gets the current size of the faders of envelopes when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetEnvNameSize - gets the current size of the name of envelopes when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetEnvSize - gets the current size of the envelope when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetEnvFolderIndent - gets the current indentation-related-to-trackfolder-setting when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetHideTCPElement - gets the current hidden-states of tcp-element when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetMCPAlignControls - gets the current alignement of controls in tcp when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetMCPBorderStyle - gets the current border-style of the mcp when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetMCPFolderIndent - gets the current folder indentation of mcp when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetMCPMeterExpansion - gets the current MCP meter expansion when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetMCPSizeAndLayout - gets the current MCP-size and layout when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetStyleMCPElement - gets the style of an mcp-element when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetTCPAlignControls - gets the current alignement of controls in tcp when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetTCPInputSize - gets the current size of the input-element when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetTCPFolderIndent - gets the new folder-indent-size of tcp when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetTCPMeterLocation - gets the current location of the meter-element when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetTCPMeterSize - gets the current size of the meter-element when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetTCPNameSize - gets the current size of the track-name-label when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetTCPSizeAndLayout - gets the current TCP-size and layout when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetTCPVolumeSize - gets the current size of the volume-element when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetTransPlayRateSize - gets the current size of the playrate-slider when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_GetTransSize - gets the current size of the transport when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetEnvFaderSize - sets the current size of the faders of envelopes when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetEnvNameSize - sets the new size of the name of envelopes when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetEnvSize - sets the new size of the envelope when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetEnvFolderIndent - sets the new indentation-related-to-trackfolder-setting when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetHideTCPElement - sets the hidden-states of tcp-element when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetMCPAlignControls - sets the new alignement of controls in tcp when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetMCPBorderStyle - sets the new border-style of the mcp when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetMCPFolderIndent - sets the new folder indentation of mcp when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetMCPMeterExpansion - sets the new MCP meter expansion when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetMCPSizeAndLayout - sets the new MCP-size and layout when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetStyleMCPElement - sets the style of an mcp-element when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetTCPAlignControls - sets the new alignement of controls in tcp when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetTCPInputSize - sets the new size of the input-element when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetTCPFolderIndent - sets the new folder-indent-size of tcp when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetTCPMeterLocation - sets the new location of the meter-element when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetTCPMeterSize - sets the new size of the meter-element when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetTCPNameSize - sets the new size of the track-name-label when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetTCPSizeAndLayout - sets the new TCP-size and layout when using default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetTCPVolumeSize - sets the new size of the volume-element when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetTransPlayRateSize - sets the new size of the playrate-slider when using the default v6-theme</li>
+<li>ThemeManagement: Theme_Defaultv6_SetTransSize - sets the new size of the transport when using the default v6-theme</li>
+</ul>
+<h4>Changes from 4.1.006 to 4.1.007</h4>
+<ul>
+<li>Developer Tools: Theme Parameter Monitor - didn't stop script, when closed by close-window-button -&gt; fixed</li>
+<li>ThemeManagement: Theme_Defaultv6_SetMCPSize - didn't work, when no layout was present already -&gt; fixed</li>
+<li>TrackManagement: GetAllVisibleTracks_Arrange - returns the found tracks now as MediaTrack-objects as well; didn't find master-track under certain circumstances -&gt; fixed<br />
+</li>
+<li>UserInterface: TCP_SetWidth - errors in the docs -&gt; fixed</li>
+</ul>
+<hr />
+<h3>4.1.006 - "Rage against the machine - Renegades of Funk" - 11th of October 2020</h3>
+<p>Has now 1294 functions, with 54 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>InputFX/MonitoringFX</strong><br />
+You can now code monitoringFX the same as you already could code TrackFX and TakeFX. Ever wanted to set a full FXChain into monitoring fx? Now you can.<br />
+54 functions only for that. I must be insane...</p></li>
+<li><p><strong>ParameterModulation</strong><br />
+Fixed a bug and therefore added a new feature for parameter linking.<br />
+ParmModTables have now two entries to set the index of the linked plugin: PARMLINK_LINKEDPLUGIN and PARMLINK_LINKEDPLUGIN_RELATIVE.<br />
+To set an absolute plugin-index, set PARMLINK_LINKEDPLUGIN=absolute-index and PARMLINK_LINKEDPLUGIN_RELATIVE=nil<br />
+To set a relative plugin-index, set PARMLINK_LINKEDPLUGIN=any number and<br />
+PARMLINK_LINKEDPLUGIN_RELATIVE=0(current plugin), negative(higher in the FXChain), positive(lower in the FXChain)<br />
+GetFunctions will usually have the linked plugin indexed in a relative-to-the-current-plugin-index(Reaper's standard behavior).</p></li>
+<li><p><strong>RenderFixes</strong><br />
+Renderfunctions sometimes created peak-files when not necessary. This is fixed now and speeds up the time between finished render and returning to the project.</p></li>
+</ul>
+<h4>New features in 4.1.006</h4>
+<ul>
+<li>FXManagement: InputFX_AddByName - adds an fx as monitoring fx</li>
+<li>FXManagement: InputFX_CopyFX - copies a monitoring fx and inserts it at a new position</li>
+<li>FXManagement: InputFX_CopyFXFromTakeFX - copies a monitoring fx to a takeFX</li>
+<li>FXManagement: InputFX_CopyFXFromTrackFX - copies a trackfx into a monitoring fx</li>
+<li>FXManagement: InputFX_CopyFXToTakeFX - copies a monitoring fx to a takeFX</li>
+<li>FXManagement: InputFX_CopyFXToTrackFX - copies a monitoring fx into a track as trackfx</li>
+<li>FXManagement: InputFX_Delete - deletes a certain monitoring-fx</li>
+<li>FXManagement: InputFX_EndParamEdit - no idea what this function does, but it exists for trackFX and now for monitoring-fx too</li>
+<li>FXManagement: InputFX_GetChainVisible - returns, if the current monitoring-fx-chain is visible and the index of the currently visible fx</li>
+<li>FXManagement: InputFX_GetCount - returns the number of available monitoring-fx</li>
+<li>FXManagement: InputFX_GetEnabled - returns, if a certain monitoring-fx is enabled or not</li>
+<li>FXManagement: InputFX_GetEQ - returns the index of the first ReaEQ-instance in monitoring-fx; optionally creates an instance</li>
+<li>FXManagement: InputFX_GetEQBandEnabled - returns the enabled/disabled state of a band of a ReaEQ-instance in monitoring-fx</li>
+<li>FXManagement: InputFX_GetEQParam - returns the parameter-value of a ReaEQ-instance in monitoring-fx</li>
+<li>FXManagement: InputFX_GetFloatingWindow - returns the hwnd of a floating monitoring-fx-window</li>
+<li>FXManagement: InputFX_GetFormattedParamValue - returns the current value of a parameter of a monitoring fx formatted</li>
+<li>FXManagement: InputFX_GetFXChain - gets the FXStateChunk of the current monitoring-fx-chain</li>
+<li>FXManagement: InputFX_GetFXGUID - returns the guid of a monitoring-fx</li>
+<li>FXManagement: InputFX_GetFXName - returns the name of a monitoring-fx</li>
+<li>FXManagement: InputFX_GetIOSize - returns the plugin-type and the number of input/output pins(if available) for a monitoring-fx</li>
+<li>FXManagement: InputFX_GetNamedConfigParm - returns the plug-in specific named configuration value of a monitoring-fx</li>
+<li>FXManagement: InputFX_GetNumParams - returns the number of parameters of a monitoring-fx</li>
+<li>FXManagement: InputFX_GetOffline - returns, if a certain monitoring-fx is offline or not</li>
+<li>FXManagement: InputFX_GetOpen - returns, if a certain monitoring-fx is visible or not</li>
+<li>FXManagement: InputFX_GetParam - returns the current, maximum and minimum value of a parameter of a monitoring-fx</li>
+<li>FXManagement: InputFX_GetParamEx - returns the current, maximum, minimum and mid-values of a parameter of a monitoring-fx</li>
+<li>FXManagement: InputFX_GetParameterStepSizes - returns the stepsizes of a parameter of a monitoring-fx</li>
+<li>FXManagement: InputFX_GetParamName - returns the name of a parameter of a monitoring-fx</li>
+<li>FXManagement: InputFX_GetParamNormalized - returns a normalized version of the current value of a parameter of a monitoring-fx</li>
+<li>FXManagement: InputFX_GetPinMappings - returns the current pin-mappings of a monitoring-fx</li>
+<li>FXManagement: InputFX_GetPreset - returns the name of the currently selected preset</li>
+<li>FXManagement: InputFX_GetPresetIndex - returns the index of the currently selected monitoring-fx plus all available presets</li>
+<li>FXManagement: InputFX_GetUserPresetFilename - gets the preset's-filename(which stores the presets) of a certain monitoring-fx</li>
+<li>FXManagement: InputFX_FormatParamValue - formats a value in the style of a parameter</li>
+<li>FXManagement: InputFX_FormatParamValueNormalized - formats a value in the style of a parameter as normalized</li>
+<li>FXManagement: InputFX_MoveFX - moves a monitoring fx to a new position</li>
+<li>FXManagement: InputFX_MoveFXFromTakeFX - moves a takeFX to the monitoring-fx-chain</li>
+<li>FXManagement: InputFX_MoveFXToTakeFX - moves a monitoring-fx into take as takeFX</li>
+<li>FXManagement: InputFX_MoveFXFromTrackFX - moves a trackFX to the monitoring-fx-chain</li>
+<li>FXManagement: InputFX_MoveFXToTrackFX - moves a monitoring-fx into a track as trackFX</li>
+<li>FXManagement: InputFX_NavigatePresets - navigates through the presets of a monitoring-fx</li>
+<li>FXManagement: InputFX_SetEnabled - set a monitoring-fx enabled or disabled</li>
+<li>FXManagement: InputFX_SetEQBandEnabled - sets a enable-state of a band of a ReaEQ-instance in monitoring-fx</li>
+<li>FXManagement: InputFX_SetEQParam - sets new values of a band of a ReaEQ-instance in monitoring-fx</li>
+<li>FXManagement: InputFX_SetFXChain - sets a FXStateChunk into the monitoring-fx-chain; optionally replaces it</li>
+<li>FXManagement: InputFX_SetOffline - sets a monitoring-fx offline/online</li>
+<li>FXManagement: InputFX_SetOpen - sets visibility of a monitoring fx visible/invisible</li>
+<li>FXManagement: InputFX_SetParam - sets a parameter of a monitoring-fx</li>
+<li>FXManagement: InputFX_SetParamNormalized - sets a parameter of a monitoring-fx as normalized value</li>
+<li>FXManagement: InputFX_SetPinMappings - sets the pinmappings of a monitoring-fx</li>
+<li>FXManagement: InputFX_SetPreset - sets a preset of a monitoring-fx by presetname</li>
+<li>FXManagement: InputFX_SetPresetByIndex - sets a preset of a monitoring-fx by presetindex</li>
+<li>FXManagement: InputFX_Show - sets visibility and floating-state of a monitoring-fx</li>
+<li>FXManagement: InputFX_QueryFirstFXIndex - queries the first fx within monitoring fx with a certain fxname</li>
+<li>FXManagement: ParmModTable - new entry PARMLINK_LINKEDPLUGIN_RELATIVE, which allows indexing linked parameters relative to current fx(thanks to anton9 and Justin)</li>
+</ul>
+<h4>Changes from 4.1.005 to 4.1.006</h4>
+<ul>
+<li>Docs: ReaperAPIDocs - updated to JS-extension 1.217</li>
+<li>Docs: VideoProcessor - added default-value-descriptions for param</li>
+<li>FXManagement: AddParmMod_ParmModTable - produced nil-error with invalid fx-index; didn't correctly set the linked-parameter index(thanks to anton9 and Justin)</li>
+<li>FXManagement: CreateDefaultParmModTable - didn't correctly return the linked-parameter index(thanks to anton9 and Justin)</li>
+<li>FXManagement: GetParmModTable_FXStateChunk - didn't correctly return the linked-parameter index(thanks to anton9 and Justin)</li>
+<li>FXManagement: IsValidParmModTable - didn't correctly check the linked-parameter index(thanks to anton9 and Justin)</li>
+<li>FXManagement: SetParmMod_ParmModTable - produced nil-error with invalid fx-index; didn't correctly set the linked-parameter index(thanks to anton9 and Justin)</li>
+<li>Rendering: Render_Loop - created unneeded peakfiles under some circumstances -&gt; fixed(thanks to pandabot)</li>
+<li>Rendering: RenderProject - created unneeded peakfiles under some circumstances -&gt; fixed(thanks to pandabot)</li>
+<li>Rendering: RenderProject_Regions - created unneeded peakfiles under some circumstances -&gt; fixed(thanks to pandabot)</li>
+<li>Rendering: RenderProject_RenderTable - created unneeded peakfiles under some circumstances -&gt; fixed(thanks to pandabot)</li>
+</ul>
+<hr />
 <h3>4.1.005 - "The Beatles - I want you(she's so heavy)" - 25th of September 2020</h3>
 <p>Has now 1240 functions, with 25 new ones</p>
 <p><strong>new in this release:</strong> - <strong>Parameter Modulation/Learn/Alias/LFOLearn</strong><br />
 A long time feature-request finally fulfilled. You have full access to programmatically get/alter parameter-modulation, parameter aliases, LFOLearn or Learn in general.<br />
 So anything you would want to do with parameter-modulation can now be scripted.<br />
 I'm curious, what will happen because of that feature. Surprise me.<br />
-Requested by so many. <a href="https://mespotin.uber.space/Mespotine/mespotine-unterstuetzen/">Please consider donating</a>, as this was a massive undertaking. Holy cow!</p>
+Requested by so many.<br />
+<a href="https://mespotin.uber.space/Mespotine/mespotine-unterstuetzen/">Please consider donating</a>, as this was a massive undertaking. Holy cow!</p>
 <ul>
 <li><p><strong>SLEM</strong><br />
 Allows now different output-targets, so outputting the last error-message to the ReaScript-console or even the clipboard is possible with that.</p></li>

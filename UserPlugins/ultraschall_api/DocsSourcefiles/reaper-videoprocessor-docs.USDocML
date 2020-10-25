@@ -4,7 +4,7 @@
         <slug>Introduction</slug>
         <title>Introduction</title>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Since Reaper 5, Reaper has proper video-editing support. In addition to that, Reaper has a plugin, called "Video Processor Plugin", that is focused on video-effect handling.
@@ -30,7 +30,7 @@
         <slug>Coding Introduction</slug>
         <title>Coding Introduction</title>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description>            
             To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin.
@@ -100,7 +100,7 @@
         <title>project_time</title>
         <functioncall prog_lang="eel2">project_time</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             project time in seconds
@@ -118,7 +118,7 @@
         <title>project_tempo</title>
         <functioncall prog_lang="eel2">project_tempo</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             current tempo in BPM
@@ -136,7 +136,7 @@
         <title>project_ts_num</title>
         <functioncall prog_lang="eel2">project_ts_num</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             current time signature numerator
@@ -155,7 +155,7 @@
         <title>project_ts_denom</title>
         <functioncall prog_lang="eel2">project_ts_denom</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             current time signature denominator
@@ -173,7 +173,7 @@
         <title>project_time_qn</title>
         <functioncall prog_lang="eel2">project_time_qn</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             current project position in QN
@@ -191,7 +191,7 @@
         <title>time</title>
         <functioncall prog_lang="eel2">time</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             item time in seconds (if in item)
@@ -209,7 +209,7 @@
         <title>framerate</title>
         <functioncall prog_lang="eel2">framerate</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             project FPS (30.0, 29.97, etc)
@@ -227,7 +227,7 @@
         <title>project_w</title>
         <functioncall prog_lang="eel2">project_w</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             project preferred video width (code can override this before drawing)
@@ -245,7 +245,7 @@
         <title>project_h</title>
         <functioncall prog_lang="eel2">project_h</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             project preferred video height (code can override this before drawing)
@@ -263,7 +263,7 @@
         <title>project_wh_valid</title>
         <functioncall prog_lang="eel2">project_wh_valid</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)
@@ -281,7 +281,7 @@
         <title>colorspace</title>
         <functioncall prog_lang="eel2">colorspace</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             current rendering colorspace, e.g. 'RGBA', 'YV12', or 'YUY2'. 
@@ -304,7 +304,7 @@
         <title>param_wet</title>
         <functioncall prog_lang="eel2">param_wet</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             if in FX form, wet/dry mix of effect. 
@@ -322,7 +322,7 @@
         <title>param1..param24</title>
         <functioncall prog_lang="eel2">param1..param24</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Manage the knobs of your video-processor-script.
@@ -335,11 +335,11 @@
             @param X: - the parameter number, where X is a number between 1 and 24
             string ParameterVariableName - the variable, which holds the current setting of the knob 
             string "ParamShownName" - this will be shown at the knob
-            number default_value - the default-value, with which it will be initialized or reset to, when doubleclicking the knob; can be float and/or negative as well; should be between minimum_val and maximum_val
-            number minimum_val - the minimum value; can be any value, float and negative; should be lower than minimum_val
-            number maximum_val - the maximum value; can be any value, float and negative; should be bigger than minimum_val
-            number medium_value - the value that shall be the medium value, which is the value when the knobposition is at 12 o clock; must be bwetween minimum_val and maximum_val; can be float and negative
-            number step_size - the size of each step, when turning around the knob; can be float; negative values are interpreted as between 0 and 1
+            number default_value - the default-value, with which it will be initialized or reset to, when doubleclicking the knob; can be float and/or negative as well; should be between minimum_val and maximum_val; 0, if not given
+            number minimum_val - the minimum value; can be any value, float and negative; should be lower than minimum_val; 0, if not given
+            number maximum_val - the maximum value; can be any value, float and negative; should be bigger than minimum_val; 1, if not given
+            number medium_value - the value that shall be the medium value, which is the value when the knobposition is at 12 o clock; must be bwetween minimum_val and maximum_val; can be float and negative; middle between minimum_val and maximum_va, if not given
+            number step_size - the size of each step, when turning around the knob; can be float; negative values are interpreted as between 0 and 1; 0.005, if not given
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
@@ -355,7 +355,7 @@
         <title>gfx_r</title>
         <functioncall prog_lang="eel2">gfx_r</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             current drawing color (red 0..1)
@@ -373,7 +373,7 @@
         <title>gfx_g</title>
         <functioncall prog_lang="eel2">gfx_g</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             current drawing color (green 0..1)
@@ -391,7 +391,7 @@
         <title>gfx_b</title>
         <functioncall prog_lang="eel2">gfx_b</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             current drawing color (blue 0..1)
@@ -409,7 +409,7 @@
         <title>gfx_a</title>
         <functioncall prog_lang="eel2">gfx_a</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             current drawing color (alpha 0..1)
@@ -428,7 +428,7 @@
         <title>gfx_a2</title>
         <functioncall prog_lang="eel2">gfx_a2</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             current drawing color alpha channel value (RGB-only, 0..1, defaults to 1)
@@ -446,7 +446,7 @@
         <title>gfx_mode</title>
         <functioncall prog_lang="eel2">gfx_mode</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             drawing mode
@@ -476,7 +476,7 @@
         <title>gfx_dest</title>
         <functioncall prog_lang="eel2">gfx_dest</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             destination image handle, or -1 for main framebuffer
@@ -495,7 +495,7 @@
         <title>input_count</title>
         <functioncall prog_lang="eel2">integer count_inputs = input_count()</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Returns number of inputs available (total), range [0..n)
@@ -516,7 +516,7 @@
         <title>input_track_count</title>
         <functioncall prog_lang="eel2">integer count_tracks = input_track_count()</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Returns the number of available inputs on discrete tracks
@@ -537,7 +537,7 @@
         <title>input_track</title>
         <functioncall prog_lang="eel2">integer input = input_track(integer track)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Returns input for bottommost item or FX on discrete-track track (0 is first track with video item above current, etc)
@@ -560,7 +560,7 @@
         <title>input_track_exact_count</title>
         <functioncall prog_lang="eel2">nteger num_tracks = input_track_exact_count()</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Returns the number of tracks above the current track that could possibly contain video items.
@@ -581,7 +581,7 @@
         <title>input_track_exact</title>
         <functioncall prog_lang="eel2">integer inputs = input_track_exact(integer track)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Returns input for bottommost item or FX on track relative to current track. 
@@ -607,7 +607,7 @@
         <title>input_next_item</title>
         <functioncall prog_lang="eel2">integer next_input = input_next_item(integer input)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Returns the next_input after input which is on a different item or track
@@ -631,7 +631,7 @@
         <title>input_next_track</title>
         <functioncall prog_lang="eel2">integer next_input = input_next_track(integer input)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Returns the next_input after input which is on a different track.
@@ -655,7 +655,7 @@
         <title>input_ismaster</title>
         <functioncall prog_lang="eel2">float fx_position = input_ismaster()</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain
@@ -676,7 +676,7 @@
         <title>input_info</title>
         <functioncall prog_lang="eel2">integer retval = input_info(integer input, integer w, integer h[, double srctime, double wet, double parm1, ...])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Returns 1 if input is available, sets w/h to dimensions. 
@@ -709,7 +709,7 @@
         <title>input_get_name</title>
         <functioncall prog_lang="eel2">integer retval = input_get_name(integer input, string #str)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Gets the input take name or track name. returns >0 on success
@@ -734,7 +734,7 @@
         <title>gfx_img_alloc</title>
         <functioncall prog_lang="eel2">integer image_index = gfx_img_alloc([optional integer w, optional integer h, optional integer clear])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Returns an image index for drawing (can create up to 32 images). Contents of image undefined unless clear set.
@@ -761,7 +761,7 @@
         <title>gfx_img_resize</title>
         <functioncall prog_lang="eel2">integer image_handle = gfx_img_resize(integer handle, integer w, integer h[, optional integer clear])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Sets an image size (handle can be -1 for main framebuffer). 
@@ -794,7 +794,7 @@
         <title>gfx_img_hold</title>
         <functioncall prog_lang="eel2">gfx_img_hold(integer handle)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
             Retains (cheaply) a read-only copy of an image in handle. 
@@ -817,7 +817,7 @@
         <title>gfx_img_getptr</title>
         <functioncall prog_lang="eel2">integer unique_identifier = gfx_img_getptr(integer handle)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
             Gets a unique identifier for an image, valid for while the image is retained. 
@@ -843,7 +843,7 @@
         <title>gfx_img_free</title>
         <functioncall prog_lang="eel2">gfx_img_free(integer handle)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Releases an earlier allocated image index.
@@ -864,7 +864,7 @@
         <title>gfx_img_info</title>
         <functioncall prog_lang="eel2">integer retval = gfx_img_info(integer handle, integer #w, integer #h)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Gets dimensions of image, returns 1 if valid (resize it if it's inexplicably invalidated)
@@ -890,7 +890,7 @@
         <title>gfx_set</title>
         <functioncall prog_lang="eel2">gfx_set(float r,[optional float g, optional float b, optional float a=1, integer mode=0, optional integer dest, optional float a2=1])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Updates r/g/b/a/mode to values specified, dest is only updated if parameter specified.
@@ -917,7 +917,7 @@
         <title>gfx_blit</title>
         <functioncall prog_lang="eel2">integer retval = gfx_blit(integer input[, optional integer preserve_aspect=0, integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional integer srcw, optional integer srch])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Draws input to framebuffer. preserve_aspect=-1 for no fill in pad areas
@@ -950,7 +950,7 @@
         <title>gfx_fillrect</title>
         <functioncall prog_lang="eel2">integer retval = gfx_fillrect(integer x, integer y, integer w, integer h)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
             Fills a rectangle with the current color/mode/alpha set by [gfx\_set](#gfx_set)
@@ -977,7 +977,7 @@
         <title>gfx_procrect</title>
         <functioncall prog_lang="eel2">integer retval = gfx_procrect(integer x, integer y, integer w, integer h, table channel_tab[, optional integer mode])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Processes a rectangle with 768-entry channel table [256 items of 0..1 per channel]. 
@@ -1008,7 +1008,7 @@
         <title>gfx_evalrect</title>
         <functioncall prog_lang="eel2">integer retval = gfx_evalrect(integer x, integer y, integer w, integer h, string code_string[, optional integer flags, optional integer src, optional string init_code_string, optional string src2])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Processes a rectangle with code_string being executed for every pixel/pixel-group. 
@@ -1061,7 +1061,7 @@
         <title>gfx_gradrect</title>
         <functioncall prog_lang="eel2">integer retval = gfx_gradrect(integer x, integer y, integer w, integer h, float r, float g, float b, float a [, optional float drdx, optional float dgdx, optional float dbdx, optional float dadx, optional float drdy, optional float dgdy, optional float dbdy, optional float dady])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Fills rectangle. r/g/b/a supply color at top left corner, drdx (if specified) is amount red changes per X-pixel, etc.
@@ -1100,7 +1100,7 @@
         <title>gfx_rotoblit</title>
         <functioncall prog_lang="eel2">integer retval = gfx_rotoblit(integer srcidx, float angle [, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional integer w, optional integer h, optional integer cliptosrcrect, optional integer centxoffs, optional integer centyoffs])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
             Blits with rotate. This function behaves a bit odd when the source and destination sizes/aspect ratios differ, so [gfx\_deltablit()](#gfx_deltablit) is generally more useful.
@@ -1136,7 +1136,7 @@
         <title>gfx_deltablit</title>
         <functioncall prog_lang="eel2">integer retval = gfx_deltablit(integer srcidx, integer x, integer y, integer w, integer h, integer srcx, integer srcy, integer dsdx, integer dtdx, integer dsdy, integer dtdy, integer dsdxdy, integer dtdxdy[, optional integer dadx, optional integer dady, optional integer dadxdy])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Blits with source pixel transformation control. 
@@ -1181,7 +1181,7 @@
         <title>gfx_xformblit</title>
         <functioncall prog_lang="eel2">integer retval = gfx_xformblit(integer srcidx, integer x, integer y, integer w, integer h,  integer wdiv, integer hdiv, table tab[, optional integer wantalpha])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Blits with a transformation table. 
@@ -1216,7 +1216,7 @@
         <title>gfx_keyedblit</title>
         <functioncall prog_lang="eel2">integer retval = gfx_keyedblit(integer input[, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional float kv1, optional float kv2, optional float kv3, optional float kv4])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colorspace:
@@ -1260,7 +1260,7 @@
         <title>gfx_destkeyedblit</title>
         <functioncall prog_lang="eel2">integer retval = gfx_destkeyedblit(input input[, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional float kv1, optional float kv2, optional float kv3, optional float kv4])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
             Chroma-key blits, using destination color as key. ignores gfx\_a and gfx\_mode. 
@@ -1296,7 +1296,7 @@
         <title>gfx_setfont</title>
         <functioncall prog_lang="eel2">integer retval = gfx_setfont(integer pxsize[, optional string #fontname, optional integer flags)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Sets a font. flags are specified as a multibyte integer, using a combination of the following flags (specify multiple as 'BI' or 'OI' or 'OBI' etc):
@@ -1337,7 +1337,7 @@
         <title>gfx_str_measure</title>
         <functioncall prog_lang="eel2">integer string_length = gfx_str_measure(string #string[, optional integer #w, optional integer #h])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Measures the size of #string, returns width
@@ -1363,7 +1363,7 @@
         <title>gfx_str_draw</title>
         <functioncall prog_lang="eel2">integer retval = gfx_str_draw(string #string[, optional integer x, optional integer y, optional float fxc_r, optional float fxc_g, optional float fxc_b])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Draw string, fxc_r/g/b are the FX color if Shadow/Outline are set in the font
@@ -1392,7 +1392,7 @@
         <title>gfx_getpixel</title>
         <functioncall prog_lang="eel2">integer retval = gfx_getpixel(integer input, integer x, integer y, integer #v1, integer #v2, integer #v3[, optional integer #v4])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Gets the value of a pixel from input at x,y. 
@@ -1424,7 +1424,7 @@
         <title>rgb2yuv</title>
         <functioncall prog_lang="eel2">integer retval = rgb2yuv(float #r, float #g, float #b)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Converts r,g,b to YUV, does not clamp [0..1]
@@ -1450,7 +1450,7 @@
         <title>yuv2rgb</title>
         <functioncall prog_lang="eel2">integer retval = yuv2rgb(float #r, float #g, float #b)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Converts YUV to r,g,b, not clamping [0..1]
@@ -1476,7 +1476,7 @@
         <title>fft</title>
         <functioncall prog_lang="eel2">integer retval = fft(table buffer, integer size)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Performs a FFT on the data in the local memory buffer at the offset specified by the first parameter. 
@@ -1507,7 +1507,7 @@
         <title>ifft</title>
         <functioncall prog_lang="eel2">integer retval = ifft(table buffer, integer size)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Performs an inverse FFT. For more information see fft().
@@ -1532,7 +1532,7 @@
         <title>fft_real</title>
         <functioncall prog_lang="eel2">integer retval = fft_real(table buffer, integer size)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Performs a real FFT, taking size input samples and producing size/2 complex output pairs. Usually used along with fft_permute(size/2). 
@@ -1558,7 +1558,7 @@
         <title>ifft_real</title>
         <functioncall prog_lang="eel2">integer retval = ifft_real(table buffer, integer size)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Performs an inverse FFT, taking size/2 complex input pairs (the first being DC, nyquist) and producing size real output values. 
@@ -1584,7 +1584,7 @@
         <title>fft_permute</title>
         <functioncall prog_lang="eel2">integer retval = fft_permute(table buffer, integer size)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Permutes the output of fft() to have bands in-order.
@@ -1609,7 +1609,7 @@
         <title>fft_ipermute</title>
         <functioncall prog_lang="eel2">integer retval = fft_ipermute(buffer,size)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Permutes the input for ifft(), taking bands from in-order to the order ifft() requires. See fft() for more information.
@@ -1634,7 +1634,7 @@
         <title>convolve_c</title>
         <functioncall prog_lang="eel2">integer retval = convolve_c(table dest, table src, integer size)</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Multiplies each of size complex pairs in dest by the complex pairs in src. Often used for convolution.
@@ -1660,7 +1660,7 @@
         <title>gmem</title>
         <functioncall prog_lang="eel2">gmem</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             gmem[] can be used for a shared memory buffer (similar to JSFX) -- 
@@ -1692,7 +1692,7 @@
         <title>ui_get_state</title>
         <functioncall prog_lang="eel2">integer click_modifier_state = ui_get_state(integer #ctx[, optional integer #mouse_x, optional integer #mouse_y, optional integer force_frame_in, optional integer #mouse_wheel_state, optional integer #mouse_hwheel_state])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Gets UI state and context, only usable from Monitoring FX (returns 0 if used from track). 
@@ -1731,7 +1731,7 @@
         <title>time_precise</title>
         <functioncall prog_lang="eel2">integer retval = time_precise([optional float #val])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Sets the parameter (or a temporary buffer if omitted) to a system-local timestamp in seconds, and returns a reference to that value. 
@@ -1757,7 +1757,7 @@
         <title>on_parameter_change</title>
         <functioncall prog_lang="eel2">on_parameter_change(float pvar[, optional integer isdone])</functioncall>
         <requires>
-            Reaper=5.97
+            Reaper=6.13
         </requires>
         <description prog_lang="*">
             Notifies that the parameter pointed to by pvar (must be param1..param24 or a user-defined parameter) has changed. 

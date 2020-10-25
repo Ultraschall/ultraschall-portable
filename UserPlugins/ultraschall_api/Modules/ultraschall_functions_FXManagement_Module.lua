@@ -3065,11 +3065,16 @@ function ultraschall.GetParmModTable_FXStateChunk(FXStateChunk, fxindex, parmodi
                                                             1 - the first fx-plugin
                                                             2 - the second fx-plugin
                                                             3 - the third fx-plugin, etc
-                ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available
+                ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available; 
+                                                       - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
                                                             When MIDI, this is irrelevant.
                                                             When FX-parameter:
                                                               0 to n; 0 for the first; 1, for the second, etc
-
+                ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
+                                                               - 0, use parameter of the current fx-plugin
+                                                               - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                               - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                               - nil, uses only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
                 ParmModTable["PARMLINK_OFFSET"]        - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
                 ParmModTable["PARMLINK_SCALE"]         - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
 
@@ -3205,7 +3210,11 @@ function ultraschall.GetParmModTable_FXStateChunk(FXStateChunk, fxindex, parmodi
   ParmModTable["PARMLINK_SCALE"]=tonumber(ParmModTable["PARMLINK_SCALE"])
   if ParmModTable["PARMLINK_LINKEDPLUGIN"]~=nil then
     if ParmModTable["PARMLINK_LINKEDPLUGIN"]:match(":")~=nil then 
-      ParmModTable["PARMLINK_LINKEDPLUGIN"]=tonumber(ParmModTable["PARMLINK_LINKEDPLUGIN"]:match("(.-):"))+1
+      ParmModTable["PARMLINK_LINKEDPLUGIN"], ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]=ParmModTable["PARMLINK_LINKEDPLUGIN"]:match("(.-):(.*)")
+      ParmModTable["PARMLINK_LINKEDPLUGIN"]=tonumber(ParmModTable["PARMLINK_LINKEDPLUGIN"])
+      if ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]~=nil then
+        ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]=tonumber(ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"])
+      end
     else
       ParmModTable["PARMLINK_LINKEDPLUGIN"]=tonumber(ParmModTable["PARMLINK_LINKEDPLUGIN"])
     end
@@ -3357,16 +3366,22 @@ function ultraschall.CreateDefaultParmModTable()
                       ParmModTable["PARMLINK"]=false              - the Link from MIDI or FX parameter-checkbox
                                                                       true, checked; false, unchecked
                       ParmModTable["PARMLINK_LINKEDPLUGIN"]=-1    - the selected plugin; nil, if not available
+                                                                  - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
                                                                       -1, nothing selected yet
                                                                       -100, MIDI-parameter-settings
                                                                       1 - the first fx-plugin
                                                                       2 - the second fx-plugin
                                                                       3 - the third fx-plugin, etc
+                      ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]=nil - the linked plugin relative to the current one in the FXChain
+                                                                         - 0, use parameter of the current fx-plugin
+                                                                         - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                                         - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                                         - nil, uses only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)                                                                      
+                      
                       ParmModTable["PARMLINK_LINKEDPARMIDX"]=-1   - the id of the linked parameter; -1, if none is linked yet; nil, if not available
                                                                       When MIDI, this is irrelevant.
                                                                       When FX-parameter:
-                                                                        0 to n; 0 for the first; 1, for the second, etc
-      
+                                                                        0 to n; 0 for the first; 1, for the second, etc                      
                       ParmModTable["PARMLINK_OFFSET"]=0           - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
                       ParmModTable["PARMLINK_SCALE"]=1            - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
       
@@ -3432,6 +3447,7 @@ function ultraschall.CreateDefaultParmModTable()
   local ParmModTable={}
   ParmModTable["AUDIOCONTROL_RELEASE"]=300
   ParmModTable["PARMLINK_LINKEDPLUGIN"]=-1
+  ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]=nil
   ParmModTable["LFO_STRENGTH"]=1
   ParmModTable["LFO_SPEED"]=0.124573
   ParmModTable["WINDOW_ALTERED"]=false
@@ -3539,6 +3555,8 @@ function ultraschall.IsValidParmModTable(ParmModTable)
   if type(ParmModTable["PARMLINK"])~="boolean" then ultraschall.AddErrorMessage("IsValidParmModTable", "ParmModulationTable", "Entry PARMLINK must be a boolean", -29 ) return false end
   if ParmModTable["PARMLINK_LINKEDPARMIDX"]~=nil and math.type(ParmModTable["PARMLINK_LINKEDPARMIDX"])~="integer" then ultraschall.AddErrorMessage("IsValidParmModTable", "ParmModulationTable", "Entry PARMLINK_LINKEDPARMIDX must be either nil or an integer", -30 ) return false end
   if ParmModTable["PARMLINK_LINKEDPLUGIN"]~=nil and math.type(ParmModTable["PARMLINK_LINKEDPLUGIN"])~="integer" then ultraschall.AddErrorMessage("IsValidParmModTable", "ParmModulationTable", "Entry PARMLINK_LINKEDPLUGIN must be either nil or an integer", -31 ) return false end
+  --if ParmModTable["PARMLINK_LINKEDPLUGIN"]~=nil and ParmModTable["PARMLINK_LINKEDPLUGIN"]<1 then ultraschall.AddErrorMessage("IsValidParmModTable", "ParmModulationTable", "Entry PARMLINK_LINKEDPLUGIN must be bigger than 0", -50 ) return false end
+  if ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]~=nil and math.type(ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"])~="integer" then ultraschall.AddErrorMessage("IsValidParmModTable", "ParmModulationTable", "Entry PARMLINK_LINKEDPLUGIN_RELATIVE must be either nil or an integer", -49 ) return false end
   if ParmModTable["PARMLINK_OFFSET"]~=nil and type(ParmModTable["PARMLINK_OFFSET"])~="number" then ultraschall.AddErrorMessage("IsValidParmModTable", "ParmModulationTable", "Entry PARMLINK_OFFSET must be either nil or a number", -32 ) return false end
   if ParmModTable["PARMLINK_SCALE"]~=nil and type(ParmModTable["PARMLINK_SCALE"])~="number" then ultraschall.AddErrorMessage("IsValidParmModTable", "ParmModulationTable", "Entry PARMLINK_SCALE must be either nil or a number", -33 ) return false end
   if type(ParmModTable["WINDOW_ALTERED"])~="boolean" then ultraschall.AddErrorMessage("IsValidParmModTable", "ParmModulationTable", "Entry WINDOW_ALTERED must be boolean", -34 ) return false end
@@ -3691,11 +3709,17 @@ function ultraschall.AddParmMod_ParmModTable(FXStateChunk, fxindex, ParmModTable
                 ParmModTable["PARMLINK"]               - the Link from MIDI or FX parameter-checkbox
                                                           true, checked; false, unchecked
                 ParmModTable["PARMLINK_LINKEDPLUGIN"]  - the selected plugin; nil, if not available
+                                                       - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
                                                             -1, nothing selected yet
                                                             -100, MIDI-parameter-settings
                                                             1 - the first fx-plugin
                                                             2 - the second fx-plugin
-                                                            3 - the third fx-plugin, etc
+                                                            3 - the third fx-plugin, etc                                                            
+                ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
+                                                               - 0, use parameter of the current fx-plugin
+                                                               - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                               - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                               - nil, use only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
                 ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available
                                                             When MIDI, this is irrelevant.
                                                             When FX-parameter:
@@ -3793,9 +3817,17 @@ function ultraschall.AddParmMod_ParmModTable(FXStateChunk, fxindex, ParmModTable
     "      AUDIOCTLWT "..ParmModTable["AUDIOCONTROL_STRENGTH"].." "..ParmModTable["AUDIOCONTROL_DIRECTION"].."\n"
     
     -- if ParameterLinking is enabled, then add this line
+    local PARMLINK_LINKEDPLUGIN_RELATIVE, PARMLINK_LINKEDPLUGIN
     if ParmModTable["PARMLINK"]==true then 
       if ParmModTable["PARMLINK_LINKEDPLUGIN"]>=0 then
-        LinkedPlugin=(ParmModTable["PARMLINK_LINKEDPLUGIN"]-1)..":"..(ParmModTable["PARMLINK_LINKEDPLUGIN"]-1)
+        if ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]==nil then
+          PARMLINK_LINKEDPLUGIN_RELATIVE=""
+          PARMLINK_LINKEDPLUGIN=ParmModTable["PARMLINK_LINKEDPLUGIN"]-1
+        else
+          PARMLINK_LINKEDPLUGIN_RELATIVE=":"..(ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"])
+          PARMLINK_LINKEDPLUGIN=ParmModTable["PARMLINK_LINKEDPLUGIN"]-1
+        end
+        LinkedPlugin=PARMLINK_LINKEDPLUGIN..PARMLINK_LINKEDPLUGIN_RELATIVE
       else
         LinkedPlugin=tostring(ParmModTable["PARMLINK_LINKEDPLUGIN"])
       end
@@ -3847,14 +3879,14 @@ function ultraschall.AddParmMod_ParmModTable(FXStateChunk, fxindex, ParmModTable
   local cindex=0
 
   local FX,StartOFS,EndOFS=ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxindex)
-  
+  if FX==nil then ultraschall.AddErrorMessage("AddParmMod_ParmModTable", "fxindex", "no such index", -7) return nil end
   
   FX=FX:match("(.*\n%s-)%sWAK")..NewParmModTable..FX:match("%s-WAK.*")
   
   return string.gsub(FXStateChunk:sub(1,StartOFS)..FX.."\n"..FXStateChunk:sub(EndOFS, -1), "\n\n", "\n")
 end
 
-
+  
 function ultraschall.SetParmMod_ParmModTable(FXStateChunk, fxindex, ParmModTable)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -3918,11 +3950,17 @@ function ultraschall.SetParmMod_ParmModTable(FXStateChunk, fxindex, ParmModTable
                 ParmModTable["PARMLINK"]               - the Link from MIDI or FX parameter-checkbox
                                                           true, checked; false, unchecked
                 ParmModTable["PARMLINK_LINKEDPLUGIN"]  - the selected plugin; nil, if not available
+                                                         Will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set.
                                                             -1, nothing selected yet
                                                             -100, MIDI-parameter-settings
                                                             1 - the first fx-plugin
                                                             2 - the second fx-plugin
                                                             3 - the third fx-plugin, etc
+                ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
+                                                               - 0, use parameter of the current fx-plugin
+                                                               - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                               - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                               - nil, uses only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
                 ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available
                                                             When MIDI, this is irrelevant.
                                                             When FX-parameter:
@@ -4026,12 +4064,23 @@ function ultraschall.SetParmMod_ParmModTable(FXStateChunk, fxindex, ParmModTable
     "      AUDIOCTLWT "..ParmModTable["AUDIOCONTROL_STRENGTH"].." "..ParmModTable["AUDIOCONTROL_DIRECTION"].."\n"
     
     -- if ParameterLinking is enabled, then add this line
+    local PARMLINK_LINKEDPLUGIN_RELATIVE, PARMLINK_LINKEDPLUGIN
     if ParmModTable["PARMLINK"]==true then 
       if ParmModTable["PARMLINK_LINKEDPLUGIN"]>=0 then
-        LinkedPlugin=(ParmModTable["PARMLINK_LINKEDPLUGIN"]-1)..":"..(ParmModTable["PARMLINK_LINKEDPLUGIN"]-1)
+        if ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]==nil then
+          PARMLINK_LINKEDPLUGIN_RELATIVE=""
+          PARMLINK_LINKEDPLUGIN=ParmModTable["PARMLINK_LINKEDPLUGIN"]-1
+        else
+          PARMLINK_LINKEDPLUGIN_RELATIVE=":"..(ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"])
+          PARMLINK_LINKEDPLUGIN=ParmModTable["PARMLINK_LINKEDPLUGIN"]-1
+        end
+        LinkedPlugin=PARMLINK_LINKEDPLUGIN..PARMLINK_LINKEDPLUGIN_RELATIVE
       else
         LinkedPlugin=tostring(ParmModTable["PARMLINK_LINKEDPLUGIN"])
       end
+      
+      --print2(PARMLINK_LINKEDPLUGIN_RELATIVE, ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"])
+      
       if ParmModTable["PARMLINK_LINKEDPARMIDX"]==-1 then offset=0 else offset=1 end
       NewParmModTable=NewParmModTable..
     "      PLINK "..ParmModTable["PARMLINK_SCALE"].." "..LinkedPlugin.." "..(ParmModTable["PARMLINK_LINKEDPARMIDX"]-offset).." "..ParmModTable["PARMLINK_OFFSET"].."\n"
@@ -4041,6 +4090,7 @@ function ultraschall.SetParmMod_ParmModTable(FXStateChunk, fxindex, ParmModTable
         NewParmModTable=NewParmModTable.."      MIDIPLINK "..(ParmModTable["MIDIPLINK_BUS"]-1).." "..ParmModTable["MIDIPLINK_CHANNEL"].." "..ParmModTable["MIDIPLINK_MIDICATEGORY"].." "..ParmModTable["MIDIPLINK_MIDINOTE"].."\n"
       end
     end
+
     
     -- if LFO is turned on, add these lines
     if ParmModTable["LFO"]==true then
@@ -4080,6 +4130,7 @@ function ultraschall.SetParmMod_ParmModTable(FXStateChunk, fxindex, ParmModTable
   local cindex=0
 
   local FX,StartOFS,EndOFS=ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxindex)
+  if FX==nil then ultraschall.AddErrorMessage("SetParmMod_ParmModTable", "fxindex", "no such index", -7) return nil end  
   
   local Start, Middle, End = FX:match("()(<PROGRAMENV "..(tonumber(ParmModTable["PARAM_NR"])-1).."[:%s]+.-  >)()")
   if Middle==nil then ultraschall.AddErrorMessage("SetParmMod_ParmModTable", "Parameter: "..tonumber(ParmModTable["PARAM_NR"]), "no such parameter-modulation", -4) return FXStateChunk end
@@ -4352,3 +4403,2480 @@ function ultraschall.GetParmAlias2_FXStateChunk(FXStateChunk, fxid, parmidx)
   
   return aliasname
 end
+
+
+function ultraschall.InputFX_AddByName(fxname, always_new_instance)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_AddByName</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.InputFX_AddByName(string fxname, boolean always_new_instance)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Adds an FX as monitoring FX.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer retval - the index of the newly inserted fx or the index of the already existing fx; -1, in case of an error
+  </retvals>
+  <parameters>
+    string fxname - the name of the fx to be inserted
+    boolean always_new_instance - true, always add a new instance of the fx; false, only add if there's none yet
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, add, inputfx, byname</tags>
+</US_DocBloc>
+]]
+  if type(fxname)~="string" then ultraschall.AddErrorMessage("InputFX_AddByName", "fxname", "must be a string", -1) return -1 end
+  if type(always_new_instance)~="boolean" then ultraschall.AddErrorMessage("InputFX_AddByName", "always_new_instance", "must be a boolean", -2) return -1 end
+  if indexposition==nil then indexposition=0 end
+  if always_new_instance==true then instantiate=-1 else instantiate=1 end
+  
+  local retval = reaper.TrackFX_AddByName(reaper.GetMasterTrack(), fxname, true, instantiate)+1
+  if retval==0 then return -1 else return retval end
+end
+
+
+--A=ultraschall.InputFX_AddByName("ReaCast", false)
+
+function ultraschall.InputFX_QueryFirstFXIndex(fxname)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_QueryFirstFXIndex</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer fxindex = ultraschall.InputFX_QueryFirstFXIndex(string fxname)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Queries the fx-index of the first inputfx with fxname
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer fxindex - the index of the queried fx; 1-based; -1, in case of an error
+  </retvals>
+  <parameters>
+    string fxname - the name of the fx to be queried
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, query, inputfx, byname</tags>
+</US_DocBloc>
+]]
+  if type(fxname)~="string" then ultraschall.AddErrorMessage("InputFX_QueryFirstFXIndex", "fxname", "must be a string", -1) return -1 end
+  local retval=reaper.TrackFX_AddByName(reaper.GetMasterTrack(), fxname, true, 0)+1
+  if retval==0 then return -1 else return retval end
+end
+
+--A1=ultraschall.InputFX_QueryFirstFXIndex("ReaCast")
+
+function ultraschall.InputFX_MoveFX(old_fxindex, new_fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_MoveFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_MoveFX(integer old_fxindex, integer new_fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Moves a monitoring-fx from an old to a new position
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, moving was successful; false, moving was unsuccessful
+  </retvals>
+  <parameters>
+    integer old_fxindex - the index of the input-fx to be moved; 1-based
+    integer new_fxindex - the new position of the input-fx; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, move, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFX", "old_fxindex", "must be an integer", -1) return false end
+  if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFX", "new_fxindex", "must be an integer", -2) return false end
+  if old_fxindex<1 or old_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_MoveFX", "old_fxindex", "no such inputFX", -3) return false end
+  if new_fxindex<1 or new_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_MoveFX", "new_fxindex", "no such inputFX", -4) return false end
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1
+  reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, reaper.GetMasterTrack(0), new_fxindex+0x1000000, true)
+  return true
+end
+
+--ultraschall.InputFX_MoveFX(2, 1)
+
+function ultraschall.InputFX_CopyFX(old_fxindex, new_fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_CopyFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_CopyFX(integer old_fxindex, integer new_fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Copies a monitoring-fx and inserts it at a new position
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer retval - the index of the inserted fx(in case of being different from new_fxindex); -1, in case of an error; 1-based
+  </retvals>
+  <parameters>
+    integer old_fxindex - the index of the input-fx to be copied; 1-based
+    integer new_fxindex - the position of the newly inserted input-fx; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, copy, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFX", "old_fxindex", "must be an integer", -1) return -1 end
+  if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFX", "new_fxindex", "must be an integer", -2) return -1 end
+  if old_fxindex<1 or old_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_CopyFX", "old_fxindex", "no such inputFX", -3) return -1 end
+  if new_fxindex<1 then ultraschall.AddErrorMessage("InputFX_CopyFX", "new_fxindex", "no such inputFX", -4) return -1 end
+  old_fxindex=old_fxindex-1
+  local newfx
+  if old_fxindex<new_fxindex then newfx=new_fxindex new_fxindex=new_fxindex-2 else new_fxindex=new_fxindex-1 end
+  new_fxindex=new_fxindex
+  reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, reaper.GetMasterTrack(0), new_fxindex+0x1000000, false)
+  if new_fxindex>ultraschall.InputFX_GetCount()-1 then return ultraschall.InputFX_GetCount() else return newfx end
+end
+
+--A=ultraschall.InputFX_CopyFX(9, 1)
+
+function ultraschall.InputFX_CopyFXFromTrackFX(track, old_fxindex, new_fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_CopyFXFromTrackFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.InputFX_CopyFXFromTrackFX(MediaTrack track, integer old_fxindex, integer new_fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Copies a trackfx and inserts it as monitoring-fx at a certain position
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer retval - the index of the inserted fx(in case of being different from new_fxindex); -1, in case of an error; 1-based
+  </retvals>
+  <parameters>
+    MediaTrack track - the track from which you want to copy a trackfx
+    integer old_fxindex - the index of the track-fx to be copied; 1-based
+    integer new_fxindex - the position of the newly inserted input-fx; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, copy, inputfx, trackfx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTrackFX", "track", "must be a mediatrack", -1) return -1 end
+  if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTrackFX", "old_fxindex", "must be an integer", -2) return -1 end
+  if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTrackFX", "new_fxindex", "must be an integer", -3) return -1 end
+  local newfx=new_fxindex
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1 
+  reaper.TrackFX_CopyToTrack(track, old_fxindex, reaper.GetMasterTrack(0), new_fxindex+0x1000000, false)
+  if new_fxindex>ultraschall.InputFX_GetCount()-1 then return ultraschall.InputFX_GetCount() else return newfx end
+end
+
+--A=ultraschall.InputFX_CopyFXFromTrackFX(reaper.GetMasterTrack(), 1, 10)
+
+function ultraschall.InputFX_CopyFXToTrackFX(old_fxindex, track, new_fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_CopyFXToTrackFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.InputFX_CopyFXToTrackFX(integer old_fxindex, MediaTrack track, integer new_fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Copies a monitoring-fx and inserts it as trackfx at a certain position
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer retval - the index of the inserted fx(in case of being different from new_fxindex); -1, in case of an error
+  </retvals>
+  <parameters>
+    integer old_fxindex - the index of the monitoring-fx to be copied; 1-based
+    MediaTrack track - the track into which you want to insert the trackFX
+    integer new_fxindex - the position of the newly inserted track-fx; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, copy, inputfx, trackfx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("InputFX_CopyFXToTrackFX", "track", "must be a mediatrack", -1) return -1 end
+  if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXToTrackFX", "old_fxindex", "must be an integer", -2) return -1 end
+  if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXToTrackFX", "new_fxindex", "must be an integer", -3) return -1 end
+  if old_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_CopyFXToTrackFX", "old_fxindex", "no such monitoring-fx", -4) return -1 end
+  local newfx=new_fxindex
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1 
+  reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, track, new_fxindex, false)
+  if new_fxindex>reaper.TrackFX_GetCount(track)-1 then return reaper.TrackFX_GetCount(track) else return newfx end
+end
+
+--A=ultraschall.InputFX_CopyFXToTrackFX(1, reaper.GetMasterTrack(), 1)
+
+function ultraschall.InputFX_MoveFXFromTrackFX(track, old_fxindex, new_fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_MoveFXFromTrackFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.InputFX_MoveFXFromTrackFX(MediaTrack track, integer old_fxindex, integer new_fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Moves a trackfx to monitoring-fx at a certain position
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer retval - the index of the inserted fx(in case of being different from new_fxindex); -1, in case of an error
+  </retvals>
+  <parameters>
+    MediaTrack track - the track from which you want to copy a trackfx to monitoring-fx
+    integer old_fxindex - the index of the monitoring-fx to be moved; 1-based
+    integer new_fxindex - the position of the newly inserted input-fx; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, move, inputfx, trackfx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTrackFX", "track", "must be a mediatrack", -1) return -1 end
+  if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTrackFX", "old_fxindex", "must be an integer", -2) return -1 end
+  if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTrackFX", "new_fxindex", "must be an integer", -3) return -1 end
+  local newfx=new_fxindex
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1 
+  reaper.TrackFX_CopyToTrack(track, old_fxindex, reaper.GetMasterTrack(0), new_fxindex+0x1000000, true)
+  if new_fxindex>ultraschall.InputFX_GetCount()-1 then return ultraschall.InputFX_GetCount() else return newfx end
+end
+
+--A=ultraschall.InputFX_CopyFXFromTrackFX(reaper.GetMasterTrack(), 1, 10)
+
+function ultraschall.InputFX_MoveFXToTrackFX(old_fxindex, track, new_fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_MoveFXToTrackFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.InputFX_MoveFXToTrackFX(integer old_fxindex, MediaTrack track, integer new_fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    moves a monitoring-fx and inserts it as trackfx at a certain position
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer retval - the index of the inserted fx(in case of being different from new_fxindex); -1, in case of an error
+  </retvals>
+  <parameters>
+    integer old_fxindex - the index of the monitoring-fx to be moved; 1-based
+    MediaTrack track - the track into which you want to insert the trackFX
+    integer new_fxindex - the position of the newly inserted track-fx; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, move, inputfx, trackfx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("InputFX_MoveFXToTrackFX", "track", "must be a mediatrack", -1) return -1 end
+  if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXToTrackFX", "old_fxindex", "must be an integer", -2) return -1 end
+  if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXToTrackFX", "new_fxindex", "must be an integer", -3) return -1 end
+  if old_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_MoveFXToTrackFX", "old_fxindex", "no such monitoring-fx", -4) return -1 end
+  local newfx=new_fxindex
+  old_fxindex=old_fxindex-1
+  new_fxindex=new_fxindex-1 
+  reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, track, new_fxindex, true)
+  if new_fxindex>reaper.TrackFX_GetCount(track)-1 then return reaper.TrackFX_GetCount(track) else return newfx end
+end
+
+--A=ultraschall.InputFX_MoveFXToTrackFX(1, reaper.GetMasterTrack(), 1)
+
+
+
+--ultraschall.InputFX_MoveFXFromTakeFX(reaper.GetMediaItemTake(reaper.GetMediaItem(0,0),0), 1, 1)
+
+function ultraschall.InputFX_Delete(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_Delete</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_Delete(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    removes a certain monitoring-fx
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, removing was successful; false, removing was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx to be deleted; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, delete, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_Delete", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_Delete", "fxindex", "must 1 or higher", -2) return false end
+  return reaper.TrackFX_Delete(reaper.GetMasterTrack(), 0x1000000+fxindex-1)
+end
+
+
+--ultraschall.InputFX_Delete(6)
+
+function ultraschall.InputFX_EndParamEdit(fxindex, paramindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_EndParamEdit</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_EndParamEdit(integer fxindex, integer paramindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    moves a monitoring-fx and inserts it as trackfx at a certain position
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, unknown; false, unknown
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx
+    integer paramindex - the index of the parameter of the monitoring-fx
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, end, param edit, parameters, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_EndParamEdit", "fxindex", "must be an integer", -2) return -1 end
+  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_EndParamEdit", "paramindex", "must be an integer", -3) return -1 end
+  return reaper.TrackFX_EndParamEdit(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+end
+
+--A=ultraschall.InputFX_EndParamEdit(14, 1)
+
+
+
+function ultraschall.InputFX_GetCount()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetCount</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer monitoring_fx_count = ultraschall.InputFX_GetCount()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    counts the available monitoring-fx
+  </description>
+  <retvals>
+    integer monitoring_fx_count - the number of available monitoring-fx
+  </retvals>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, count, inputfx</tags>
+</US_DocBloc>
+]]
+  return reaper.TrackFX_GetRecCount(reaper.GetMasterTrack(0))
+end
+
+--A=ultraschall.InputFX_GetCount()
+
+function ultraschall.InputFX_GetChainVisible()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetChainVisible</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean inputfx_chain_visible, integer visible_inputfx = ultraschall.InputFX_GetChainVisible()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns if the monitoring-fx-chain is visible and index of the currently visible monitoring-fx
+  </description>
+  <retvals>
+    boolean inputfx_chain_visible - true, fxchain is visible; false, fxchain is not visible
+    integer visible_inputfx - the index of the currently visible monitoring-fx; -1, if nothing is visible; 1-based
+  </retvals>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, is visible, inputfx</tags>
+</US_DocBloc>
+]]
+  -- returns:
+  -- is inputfx-chain opened?
+  -- which fx is currently visible?
+  local A,B=reaper.TrackFX_GetRecChainVisible(reaper.GetMasterTrack(0))~=-1, reaper.TrackFX_GetRecChainVisible(reaper.GetMasterTrack(0))+1
+  if B==0 then B=-1 end
+  return A,B
+end
+
+--A, B=ultraschall.InputFX_GetChainVisible()
+
+
+function ultraschall.InputFX_GetEnabled(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetEnabled</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean inputfx_enabled = ultraschall.InputFX_GetEnabled(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns if a certain monitoring-fx is enabled
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    boolean inputfx_enabled - true, fx is enabled; false, fxchain is not enabled
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose enabled state you want to query; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, is enabled, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEnabled", "fxindex", "must be an integer", -1) return nil end
+  if fxindex<1 or fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_GetEnabled", "fxindex", "no such input fx", -2) return nil end
+  return reaper.TrackFX_GetEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A=ultraschall.InputFX_GetEnabled(1)
+
+function ultraschall.InputFX_GetFloatingWindow(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetFloatingWindow</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>HWND inputfx_floating_hwnd = ultraschall.InputFX_GetFloatingWindow(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the hwnd of a floating monitoring-fx-window
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    HWND inputfx_floating_hwnd - the hwnd of the floating montitoring fx; nil, if not available
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose floating-monitoring-fx-hwnd you want to get; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, hwnd, floating, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFloatingWindow", "fxindex", "must be an integer", -1) return nil end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetFloatingWindow", "fxindex", "no such fx", -2) return nil end
+  return reaper.TrackFX_GetFloatingWindow(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A,B,C,D,E=ultraschall.InputFX_GetFloatingWindow(1)
+
+--A=reaper.TrackFX_GetFloatingWindow(reaper.GetMasterTrack(0), 0)
+
+
+function ultraschall.InputFX_GetFXGUID(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetFXGUID</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>string fxguid = ultraschall.InputFX_GetFXGUID(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the guid of a monitoring-fx
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string fxguid - the guid of the monitoring-fx
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose guid you want to query; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, guid, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFXGUID", "fxindex", "must be an integer", -1) return nil end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetFXGUID", "fxindex", "no such fx", -2) return nil end
+  return reaper.TrackFX_GetFXGUID(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A=ultraschall.InputFX_GetFXGUID(2)
+
+
+function ultraschall.InputFX_GetFXName(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetFXName</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string fxname = ultraschall.InputFX_GetFXName(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the name of a monitoring-fx
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, monitoring fx exists; false, no such monitoring-fx exists
+    string fxname - the name of the monitoring-fx
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose name you want to query; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, name, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFXName", "fxindex", "must be an integer", -1) return false, "" end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetFXName", "fxindex", "no such fx", -2) return false, "" end
+  return reaper.TrackFX_GetFXName(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, "")
+end
+
+--A,B,C=ultraschall.InputFX_GetFXName(1)
+
+function ultraschall.InputFX_GetNumParams(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetNumParams</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer count_params = ultraschall.InputFX_GetNumParams(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the number of parameters of a monitoring-fx
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer count_params - the number of parameters of the monitoring-fx
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose number of parameters you want to query; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, count, parameters, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetNumParams", "fxindex", "must be an integer", -1) return -1 end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetNumParams", "fxindex", "no such fx", -2) return false end
+  return reaper.TrackFX_GetNumParams(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A=ultraschall.InputFX_GetNumParams(1)
+
+function ultraschall.InputFX_GetOffline(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetOffline</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean is_offline = ultraschall.InputFX_GetOffline(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the offline-state of a monitoring-fx
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean is_offline - true, fx is offline; false, fx is not offline
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose offline-state you want to query; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, offline, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetOffline", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetOffline", "fxindex", "no such fx", -2) return false end
+  return reaper.TrackFX_GetOffline(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A=ultraschall.InputFX_GetOffline(1)
+
+
+function ultraschall.InputFX_GetOpen(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetOpen</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean is_open = ultraschall.InputFX_GetOpen(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns if a monitoring-fx is open(currently visible)
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean is_open - true, fx is visible; false, fx is not visible
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose visibility-state you want to query; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, visible, open, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetOpen", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetOpen", "fxindex", "no such fx", -2) return false end
+  return reaper.TrackFX_GetOpen(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A=ultraschall.InputFX_GetOpen(2)
+
+
+function ultraschall.InputFX_GetPreset(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetPreset</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string preset = ultraschall.InputFX_GetPreset(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the currently selected preset of a monitoring-fx
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, fx exists; false, fx does not exist
+    string preset - the name of the currently selected preset; "", if no preset is selected
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose currently selected presetname-state you want to query; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, presetname, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetPreset", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetPreset", "fxindex", "no such fx", -2) return false end
+  return reaper.TrackFX_GetPreset(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, "")
+end
+
+--A={ultraschall.InputFX_GetPreset(1)}
+
+function ultraschall.InputFX_GetPresetIndex(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetPresetIndex</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer selected_preset, integer number_of_presets = ultraschall.InputFX_GetPresetIndex(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the index of the currently selected preset of a monitoring-fx as well as the number of available presets
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer selected_preset - the index of the currently selected preset; 0, if no preset is selected
+    integer number_of_presets - the number of presets available
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose currently selected preset-index you want to query; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, presetname, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetPresetIndex", "fxindex", "must be an integer", -1) return -1 end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetPresetIndex", "fxindex", "no such fx", -2) return -1 end
+  local presetindex, countpresets = reaper.TrackFX_GetPresetIndex(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+  if presetindex==countpresets then presetindex=-1 end
+  return presetindex+1, countpresets
+end
+
+--A1={ultraschall.InputFX_GetPresetIndex(1)}
+
+
+function ultraschall.InputFX_GetUserPresetFilename(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetUserPresetFilename</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>string preset_filename = ultraschall.InputFX_GetUserPresetFilename(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the filename of the presetfile, into which the preset's-settings are stored
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string preset_filename - the filename of the preset-file; nil, of not existing
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose preset's-filename you want to query; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, preset filename, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetUserPresetFilename", "fxindex", "must be an integer", -1) return nil end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetUserPresetFilename", "fxindex", "no such fx", -2) return nil end
+  return reaper.TrackFX_GetUserPresetFilename(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, "")
+end  
+
+--A=ultraschall.InputFX_GetUserPresetFilename(1)
+
+
+function ultraschall.InputFX_NavigatePresets(fxindex, presetmove)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_NavigatePresets</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_NavigatePresets(integer fxindex, integer presetmove)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    switches the preset of a monitoring-fx through, relative from its current preset-index.
+    You can move by multiple presets, so 1 moves one further, 2 moves 2 further, -3 moves 3 backwards.
+    
+    If you hit the first/last preset, it will go back to the last/first preset respectively.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, altering was successful; false, altering was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx, whose preset you want to switch through; 1-based
+    integer presetmove - positive, move forward by value of presetmove; negative, move backwards by value of presetmove
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, navigate, switch, preset, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_NavigatePresets", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_NavigatePresets", "fxindex", "no such fx", -2) return false end
+  if math.type(presetmove)~="integer" then ultraschall.AddErrorMessage("InputFX_NavigatePresets", "presetmove", "must be an integer", -3) return false end
+  return reaper.TrackFX_NavigatePresets(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, presetmove)
+end
+
+
+--A,B=ultraschall.InputFX_NavigatePresets(1, 2)
+--A1={ultraschall.InputFX_GetPresetIndex(1)}
+
+function ultraschall.InputFX_SetEnabled(fxindex, enabled)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetEnabled</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetEnabled(integer fxindex, boolean presetmove)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets a monitoring-fx to enabled.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx which you want to disable/enable; 1-based
+    boolean enabled - true, enable the monitoring-fx; false, disable the monitoring-fx
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, set, enabled, disabled, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEnabled", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_SetEnabled", "fxindex", "no such fx", -2) return false end
+  if type(enabled)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetEnabled", "enabled", "must be a boolean", -3) return false end
+  reaper.TrackFX_SetEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, enabled)
+  return true
+end
+
+--A=ultraschall.InputFX_SetEnabled(1, true)
+
+
+
+function ultraschall.InputFX_SetOffline(fxindex, offline)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetOffline</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetOffline(integer fxindex, boolean offline)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets a monitoring-fx to online/offline.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx which you want to set offline/online; 1-based
+    boolean offline - true, set the monitoring-fx offline; false, set the monitoring-fx online
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, set, online, offline, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetOffline", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_SetOffline", "fxindex", "no such fx", -2) return false end
+  if type(offline)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetOffline", "offline", "must be a boolean", -3) return false end
+  reaper.TrackFX_SetOffline(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, offline)
+  return true
+end
+
+--A=ultraschall.InputFX_SetOffline(1, false)
+
+function ultraschall.InputFX_SetOpen(fxindex, open)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetOpen</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetOpen(integer fxindex, boolean open)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets a monitoring-fx visible of invisible
+    
+    If you change the index while open=true, the visible fx will change to the new one.
+    
+    Setting open=false closes the monitoring-fx-chain, open=true will open the monitoring-fx-chain if not visible yet.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx which you want to visible/invisible; 1-based
+    boolean open - true, set the monitoring-fx visible; false, set the monitoring-fx invisible
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, set, visible, invisible, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetOpen", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_SetOpen", "fxindex", "no such fx", -2) return false end
+  if type(open)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetOpen", "open", "must be a boolean", -3) return false end
+  reaper.TrackFX_SetOpen(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, open)
+  return true
+end
+
+--ultraschall.InputFX_SetOpen(1, true)
+
+
+function ultraschall.InputFX_SetPreset(fxindex, presetname)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetPreset</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetPreset(integer fxindex, string presetname)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets the preset of a monitoring-fx by presetname.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx of which you want to set the preset; 1-based
+    string presetname - the name of the preset, that you want to select
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, set, preset, by name, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPreset", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_SetPreset", "fxindex", "no such fx", -2) return false end
+  if type(presetname)~="string" then ultraschall.AddErrorMessage("InputFX_SetPreset", "presetname", "must be a string", -3) return false end
+  return reaper.TrackFX_SetPreset(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, presetname)
+end
+
+--A=ultraschall.InputFX_SetPreset(2, "Ultraschall3")
+
+
+function ultraschall.InputFX_SetPresetByIndex(fxindex, presetindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetPresetByIndex</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetPresetByIndex(integer fxindex, integer presetindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets the preset of a monitoring-fx by preset-index.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx which you want to set the preset; 1-based
+    integer presetindex - the index of the preset, that you want to select; 0, for default; -1, for no preset; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, set, preset, by index, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPresetByIndex", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_SetPresetByIndex", "fxindex", "no such fx", -2) return false end
+  if math.type(presetindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPresetByIndex", "presetindex", "must be an integer", -3) return false end
+  return reaper.TrackFX_SetPresetByIndex(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, presetindex-1)
+end
+
+--A=ultraschall.InputFX_SetPresetByIndex(2, 1)
+
+function ultraschall.InputFX_Show(fxindex, showflag)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_Show</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_Show(integer fxindex, integer showflag)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets visibility and floating-state of a monitoring-fx
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx which you want to set the preset; 1-based
+    integer showflag - 0, for hidechain 
+                     - 1, for show chain(index valid)
+                     - 2, for hide floating window(index valid)
+                     - 3, for show floating window (index valid)
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, set, visibility, floating, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_Show", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_Show", "fxindex", "no such fx", -2) return false end
+  if math.type(showflag)~="integer" then ultraschall.AddErrorMessage("InputFX_Show", "showflag", "must be an integer", -3) return false end
+  reaper.TrackFX_Show(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, showflag)
+  return true
+end
+
+--A=ultraschall.InputFX_Show(1, 3)
+
+function ultraschall.InputFX_CopyFXToTakeFX(src_fx, dest_take, dest_fx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_CopyFXToTakeFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer dest_fx = ultraschall.InputFX_CopyFXToTakeFX(integer src_fx, MediaItem_Take take, integer dest_fx)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    copies a monitoring-fx to a takeFX
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer dest_fx - the index of the inserted FX, just in case it differs; 1-based
+  </retvals>
+  <parameters>
+    integer src_fx - the index inputFX that shall be copied; 1-based
+    MediaItem_Take take - the take, into which you want to insert the fx as takeFX
+    integer dest_fx - the index, at which you want to insert the fx; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, copy, fx, takefx, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(src_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "src_fx", "must be an integer", -1) return -1 end
+  if src_fx<1 or ultraschall.InputFX_GetCount()<src_fx then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "src_fx", "no such fx", -2) return -1 end
+  if math.type(dest_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "dest_fx", "must be an integer", -3) return -1 end  
+  if ultraschall.type(dest_take)~="MediaItem_Take" then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "dest_take", "must be a MediaItem_Take", -4) return -1 end  
+  local FinFX
+  if dest_fx>reaper.TakeFX_GetCount(dest_take) then FinFX=reaper.TakeFX_GetCount(dest_take)+1 else FinFX=dest_fx end
+  src_fx=src_fx-1
+  dest_fx=dest_fx-1 
+  
+  reaper.TrackFX_CopyToTake(reaper.GetMasterTrack(0), src_fx+0x1000000, dest_take, dest_fx, false)
+  return FinFX
+end
+
+--A=ultraschall.InputFX_CopyFXToTrackFX(1, reaper.GetMasterTrack(), 1)
+
+function ultraschall.InputFX_CopyFXFromTakeFX(src_take, src_fx, dest_fx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_CopyFXFromTakeFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer dest_fx = ultraschall.InputFX_CopyFXFromTakeFX(MediaItem_Take take, integer src_fx, integer dest_fx)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    copies a takeFX to monitoringFX
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer dest_fx - the index of the inserted FX, just in case it differs; 1-based
+  </retvals>
+  <parameters>
+    MediaItem_Take take - the take, from which you want to copy the takeFX
+    integer src_fx - the index takeFX that shall be copied; 1-based
+    integer dest_fx - the index, at which you want to insert the fx into the monitoring FXChain; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, copy, fx, takefx, inputfx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(src_take)~="MediaItem_Take" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "src_take", "must be a MediaItem_Take", -4) return -1 end  
+  if math.type(src_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "src_fx", "must be an integer", -1) return -1 end
+  if src_fx<1 or reaper.TakeFX_GetCount(src_take)<src_fx then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "src_fx", "no such fx", -2) return -1 end
+  if math.type(dest_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "dest_fx", "must be an integer", -3) return -1 end  
+  if dest_fx<1 then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "dest_fx", "must be bigger or equal 1", -5) return -1 end  
+  local FinFX
+  if dest_fx>ultraschall.InputFX_GetCount() then FinFX=ultraschall.InputFX_GetCount()+1 else FinFX=dest_fx end
+    
+  reaper.TakeFX_CopyToTrack(src_take, src_fx-1, reaper.GetMasterTrack(0), 0x1000000+dest_fx-1, false)
+  return FinFX
+end
+
+--ultraschall.InputFX_CopyFXFromTakeFX(reaper.GetMediaItemTake(reaper.GetMediaItem(0,0),0), 1, 1)
+
+function ultraschall.InputFX_MoveFXFromTakeFX(src_take, src_fx, dest_fx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_MoveFXFromTakeFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer dest_fx = ultraschall.InputFX_MoveFXFromTakeFX(MediaItem_Take take, integer src_fx, integer dest_fx)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    moves a takeFX to monitoringFX
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer dest_fx - the index of the inserted FX, just in case it differs; 1-based
+  </retvals>
+  <parameters>
+    MediaItem_Take take - the take, from which you want to move the takeFX
+    integer src_fx - the index takeFX that shall be movd; 1-based
+    integer dest_fx - the index, at which you want to insert the fx into the monitoring FXChain; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, move, fx, takefx, inputfx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(src_take)~="MediaItem_Take" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "src_take", "must be a MediaItem_Take", -4) return -1 end
+  if math.type(src_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "src_fx", "must be an integer", -1) return -1 end
+  if src_fx<1 or reaper.TakeFX_GetCount(src_take)<src_fx then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "src_fx", "no such fx", -2) return -1 end
+  if math.type(dest_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "dest_fx", "must be an integer", -3) return -1 end  
+  if dest_fx<1 then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "dest_fx", "must be bigger or equal 1", -5) return -1 end  
+  local FinFX
+  if dest_fx>ultraschall.InputFX_GetCount() then FinFX=ultraschall.InputFX_GetCount()+1 else FinFX=dest_fx end
+
+  reaper.TakeFX_CopyToTrack(src_take, src_fx-1, reaper.GetMasterTrack(0), 0x1000000+dest_fx-1, true)
+  return FinFX
+end
+
+function ultraschall.InputFX_MoveFXToTakeFX(src_fx, dest_take, dest_fx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_MoveFXToTakeFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer dest_fx = ultraschall.InputFX_MoveFXToTakeFX(integer src_fx, MediaItem_Take take, integer dest_fx)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    moves a monitoring-FX to a takeFX
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer dest_fx - the index of the inserted FX, just in case it differs; 1-based
+  </retvals>
+  <parameters>
+    integer src_fx - the index inputFX that shall be moved; 1-based
+    MediaItem_Take take - the take, into which you want to insert the fx as takeFX
+    integer dest_fx - the index, at which you want to insert the fx; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, move, fx, takefx, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(src_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "src_fx", "must be an integer", -1) return -1 end
+  if src_fx<1 or ultraschall.InputFX_GetCount()<src_fx then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "src_fx", "no such fx", -2) return -1 end
+  if math.type(dest_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "dest_fx", "must be an integer", -3) return -1 end  
+  if ultraschall.type(dest_take)~="MediaItem_Take" then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "dest_take", "must be a MediaItem_Take", -4) return -1 end  
+  local FinFX
+  if dest_fx>reaper.TakeFX_GetCount(dest_take) then FinFX=reaper.TakeFX_GetCount(dest_take)+1 else FinFX=dest_fx end
+  src_fx=src_fx-1
+  dest_fx=dest_fx-1 
+  
+  reaper.TrackFX_CopyToTake(reaper.GetMasterTrack(0), src_fx+0x1000000, dest_take, dest_fx, true)
+  return FinFX
+end
+
+function ultraschall.InputFX_GetFXChain(trackfx_or_takefx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetFXChain</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.InputFX_GetFXChain(integer trackfx_or_takefx)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Loads the FXStateChunk from the monitoring-fx-chain.
+  </description>
+  <retvals>
+    string FXStateChunk - the loaded FXStateChunk; nil, in case of an error
+  </retvals>
+  <parameters>
+    integer trackfx_or_takefx - 0, return the FXStateChunk as Track-FXStateChunk; 1, return the FXStateChunk as Take-FXStateChunk
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, load, fxstatechunk, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(trackfx_or_takefx)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFXChain", "trackfx_or_takefx", "must be an integer", -1) return nil end
+  if trackfx_or_takefx~=0 and trackfx_or_takefx~=1 then ultraschall.AddErrorMessage("InputFX_GetFXChain", "trackfx_or_takefx", "must be an integer", -2) return nil end
+  local FXStateChunk = ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-hwoutfx.ini")
+  FXStateChunk = FXStateChunk:match(".-(BYPASS.*)")
+  FXStateChunk = string.gsub(FXStateChunk, "FLOATPOS .-\n", "")
+  FXStateChunk = string.gsub(FXStateChunk, "FXID .-\n", "")
+  FXStateChunk = string.gsub(FXStateChunk, "(BYPASS %d- %d-) %d-\n", "%1\n")
+  
+  if trackfx_or_takefx==0 then FXChain="<FXCHAIN\n" else FXChain="<TAKEFX\n" end
+  
+  return FXChain.."  "..string.gsub(FXStateChunk, "\n", "\n  ").."\n>"
+end
+
+function ultraschall.InputFX_SetFXChain(FXStateChunk, replacefx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetFXChain</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetFXChain(string FXStateChunk, boolean replacefx)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Inserts an FXStateChunk into the monitoring-fx-chain. Allows replacing it as well.
+    
+    This could potentially create hiccups in the audio-engine of Reaper.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk that shall be set as monitoring fx-chain
+    boolean replacefx - true, replace the current monitoring-fx-chain with the new one; false, only insert the new fx
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fxstatechunk, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]
+  if type(replacefx)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetFXChain", "replacefx", "must be a boolean", -1) return false end
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("InputFX_SetFXChain", "FXStateChunk", "not a valid FXStateChunk", -2) return false end
+  reaper.PreventUIRefresh(1)
+  FXStateChunk=string.gsub(FXStateChunk, "<TAKEFX", "<FXCHAIN")
+  local TSC=
+[[<TRACK
+  NAME ""
+  PEAKCOL 33530462
+  BEAT -1
+  AUTOMODE 0
+  VOLPAN 1 0 -1 -1 1
+  MUTESOLO 0 0 0
+  IPHASE 0
+  PLAYOFFS 0 1
+  ISBUS 0 0
+  BUSCOMP 0 0 0 0 0
+  SHOWINMIX 1 0.6667 0.5 1 0.5 0 0 0
+  FREEMODE 0
+  REC 0 0 1 0 0 0 0
+  VU 2
+  TRACKHEIGHT 0 0 0
+  INQ 0 0 0 0.5 100 0 0 100
+  NCHAN 2
+  FX 1
+  PERF 0
+  MIDIOUT -1
+  MAINSEND 1 0]]..
+"\n  "..string.gsub(FXStateChunk, "\n", "\n  ").."\n"
+..[[>
+]]
+  reaper.Undo_BeginBlock()
+  local retval, MediaTrack = ultraschall.InsertTrack_TrackStateChunk(TSC)
+  local count=ultraschall.InputFX_GetCount()
+  if replacefx==true then
+    count=0
+    for i=1, ultraschall.InputFX_GetCount() do
+      ultraschall.InputFX_Delete(1)
+    end
+  end
+  
+  for i=1, reaper.TrackFX_GetCount(MediaTrack) do
+    --print2(i)
+    ultraschall.InputFX_MoveFXFromTrackFX(MediaTrack, 1, i)
+  end
+  reaper.DeleteTrack(MediaTrack)
+  reaper.PreventUIRefresh(-1)
+  reaper.Undo_EndBlock("Changed InputFX", -1)
+  return true
+end
+
+function ultraschall.InputFX_FormatParamValue(fxindex, paramindex, value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_FormatParamValue</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_FormatParamValue(integer fxindex, integer paramindex, number value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    You can take a value and format it in the style of the used format of a specific parameter, like the frequency(to Hz), gain(to dB) with ReaEQ or bypass(normal, bypasses), wet with ReaTune, etc.
+    
+    Note: only works with FX that support Cockos VST extensions.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, formatting was successful; false, formatting was unsuccessful(no such fx, parameter, no support for Cockos VST extension
+    string formatted_value - the value in the format of the parameter; "", if not available
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the fx; 1-based
+    integer paramindex - the parameter, whose formatting-style you want to applied to value; 1-based
+    number value - the value you want to have formatted in the style of the parameter
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, format, value, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "fxindex", "must 1 or higher", -2) return false end  
+  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "paramindex", "must be an integer", -3) return false end
+  if paramindex<1 then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "paramindex", "must 1 or higher", -4) return false end  
+  if type(value)~="number" then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "value", "must be a number", -5) return false end 
+
+  return reaper.TrackFX_FormatParamValue(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, value, "")
+end
+
+--A,B,C=ultraschall.InputFX_FormatParamValue(2, 1, 0)
+
+function ultraschall.InputFX_FormatParamValueNormalized(fxindex, paramindex, value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_FormatParamValueNormalized</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_FormatParamValueNormalized(integer fxindex, integer paramindex, number value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    You can take a value and format it in the style of the used format of a specific parameter, like the frequency(to Hz), gain(to dB) with ReaEQ or bypass(normal, bypasses), wet with ReaTune, etc.
+    The value will be normalized.
+    
+    Note: only works with FX that support Cockos VST extensions.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, formatting was successful; false, formatting was unsuccessful(no such fx, parameter, no support for Cockos VST extension
+    string formatted_value - the value in the format of the parameter; "", if not available
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the fx; 1-based
+    integer paramindex - the parameter, whose formatting-style you want to applied to value; 1-based
+    number value - the value you want to have formatted in the style of the parameter
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, format, value, normalized, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "fxindex", "must 1 or higher", -2) return false end  
+  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "paramindex", "must be an integer", -3) return false end
+  if paramindex<1 then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "paramindex", "must 1 or higher", -4) return false end  
+  if type(value)~="number" then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "value", "must be a number", -5) return false end
+
+  return reaper.TrackFX_FormatParamValueNormalized(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, value, "")
+end
+
+--A,B,C=ultraschall.InputFX_FormatParamValueNormalized(1, 2, -1)
+
+
+function ultraschall.InputFX_GetEQ(instantiate)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetEQ</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer index = ultraschall.InputFX_GetEQ(boolean instantiate)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Get the index of the first ReaEQ-instance in the monitoringFX, if available.
+    
+    Optionally add a new instance if ReaEQ isn't existing yet in the monitoring-fx-chain.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer index_of_reaeq - the index of the first instance of ReaEQ in the monitoringFX; 0, if no ReaEQ is in the monitoringFX; -1, in case of an error
+  </retvals>
+  <parameters>
+    boolean instantiate - true, add ReaEQ into monitoring-fx if not existing yet; false, don't add a ReaEQ-instance if not existing in monitoring-FXChain yet
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, eq instance, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]
+  if type(instantiate)~="boolean" then ultraschall.AddErrorMessage("InputFX_GetEQ", "instantiate", "must be a boolean", -1) return -1 end
+  if instantiate==true then instantiate=1 else instantiate=0 end
+  return reaper.TrackFX_AddByName(reaper.GetMasterTrack(), "ReaEQ", true, instantiate)+1
+end
+
+--A1,B1=ultraschall.InputFX_GetEQ(true)
+
+
+
+function ultraschall.InputFX_GetFormattedParamValue(fxindex, paramindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetFormattedParamValue</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_GetFormattedParamValue(integer fxindex, integer paramindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the current value of the monitoring-fx's parameter in its formatted style.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, getting was successful; false, getting was unsuccessful
+    string formatted_value - the value of the formatted parameter; "", if not available
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the fx; 1-based
+    integer paramindex - the parameter, whose formatted value you want to get; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, format, value, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFormattedParamValue", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetFormattedParamValue", "fxindex", "must 1 or higher", -2) return false end  
+  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFormattedParamValue", "paramindex", "must be an integer", -3) return false end
+  if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetFormattedParamValue", "paramindex", "must 1 or higher", -4) return false end  
+  
+  return reaper.TrackFX_GetFormattedParamValue(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, "")
+end
+
+--A={ultraschall.InputFX_GetFormattedParamValue(2, 1)}
+
+function ultraschall.InputFX_GetIOSize(fxindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetIOSize</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval, optional number inputPins, optional number outputPins = ultraschall.InputFX_GetIOSize(integer fxindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the plugin-type and the input/output-pins available for an inputFX
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer retval - the plugin-type
+                   - -1, no such plugin
+                   - 0, VSTi
+                   - 2, JSFX
+                   - 3, VST
+                   - 5, Mac AU
+                   - 6, Video Processor
+    optional number inputPins - the number of input-pins available
+    optional number outputPins - the number of output-pins available
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the fx; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, plugin type, input pins, output pins, pins, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetIOSize", "fxindex", "must be an integer", -1) return -1 end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetIOSize", "fxindex", "must 1 or higher", -2) return -1 end  
+  return reaper.TrackFX_GetIOSize(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+end
+
+--A={ultraschall.InputFX_GetIOSize(1)}
+
+function ultraschall.InputFX_GetNamedConfigParm(fxindex, parmname)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetNamedConfigParm</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string config_parm_name = ultraschall.InputFX_GetNamedConfigParm(integer fxindex, string parmname)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    gets plug-in specific named configuration value (returns true on success) of a monitoring-fx. 
+    
+    Special values: 
+    'pdc' returns PDC latency. 
+    'in_pin_0' returns name of first input pin (if available), 
+    'out_pin_0' returns name of first output pin (if available), etc.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, name is available; false, name is not available
+    string config_parm_name - the name of the config parameter
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the fx; 1-based
+    string parmname - the value of the named config parm you want to get
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, named configuration value, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetNamedConfigParm", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetNamedConfigParm", "fxindex", "must 1 or higher", -2) return false end  
+  if type(parmname)~="string" then ultraschall.AddErrorMessage("InputFX_GetNamedConfigParm", "parmname", "must be a string", -3) return false end
+
+  return reaper.TrackFX_GetNamedConfigParm(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, parmname)
+end
+
+--A3={ultraschall.InputFX_GetNamedConfigParm(2, "")}
+
+function ultraschall.InputFX_GetParam(fxindex, paramindex)
+  -- returns nil in case of an error
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetParam</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>number curval, number minval, number maxval = ultraschall.InputFX_GetParam(integer fxindex, integer paramindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the current, maximum and minimum value of a parameter of a monitoring-fx.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    number curval - the current value of the parameter
+    number minval - the minimum value of this parameter
+    number maxval - the maximum value of this parameter
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer paramindex - the parameter, whose value you want to retrieve; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, value, parameter, minimum, maximum, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]  
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParam", "fxindex", "must be an integer", -1) return end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetParam", "fxindex", "must 1 or higher", -2) return end  
+  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParam", "paramindex", "must be an integer", -3) return end
+  if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetParam", "paramindex", "must 1 or higher", -4) return end  
+  
+  return reaper.TrackFX_GetParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+end
+
+--A={ultraschall.InputFX_GetParam(1, 4)}
+
+
+function ultraschall.InputFX_GetParameterStepSizes(fxindex, paramindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetParameterStepSizes</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, number step, number smallstep, number largestep, boolean istoggle = ultraschall.InputFX_GetParameterStepSizes(integer fxindex, integer paramindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the stepsizes of a parameter of a monitoring-fx.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, stepsize is available; false; stepsize is not available; nil, in case of an error
+    number step - the stepsize of this parameter
+    number smallstep - the stepsize of a small step of this parameter
+    number largestep - the stepsize of a large step of this parameter
+    boolean istoggle - true, this parameter is a toggle parameter; false, this parameter is not a togle parameter
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer paramindex - the parameter, whose values you want to retrieve; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, stepsize, parameter, monitoring fx, inputfx</tags>
+</US_DocBloc>
+]]  
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParameterStepSizes", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetParameterStepSizes", "fxindex", "must 1 or higher", -2) return false end  
+  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParameterStepSizes", "paramindex", "must be an integer", -3) return false end
+  if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetParameterStepSizes", "paramindex", "must 1 or higher", -4) return false end  
+
+  return reaper.TrackFX_GetParameterStepSizes(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+end
+
+--A={ultraschall.InputFX_GetParameterStepSizes(4, 2)}
+
+function ultraschall.InputFX_GetParamEx(fxindex, paramindex)
+  -- returns nil in case of an error
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetParamEx</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>number curval, number minval, number maxval, number midval = ultraschall.InputFX_GetParamEx(integer fxindex, integer paramindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the current, maximum, minimum and mid-value of a parameter of a monitoring-fx.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    number curval - the current value of the parameter
+    number minval - the minimum value of this parameter
+    number maxval - the maximum value of this parameter
+    number midval - the mid-value of this parameter
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer paramindex - the parameter, whose value you want to retrieve; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, value, parameter, minimum, maximum, midvalue, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]  
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamEx", "fxindex", "must be an integer", -1) return end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamEx", "fxindex", "must 1 or higher", -2) return end  
+  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamEx", "paramindex", "must be an integer", -3) return end
+  if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamEx", "paramindex", "must 1 or higher", -4) return end  
+  
+  return reaper.TrackFX_GetParamEx(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+end
+
+--A={ultraschall.InputFX_GetParamEx(1, 3)}
+
+function ultraschall.InputFX_GetParamName(fxindex, paramindex)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetParamName</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string paramname = ultraschall.InputFX_GetParamName(integer fxindex, integer paramindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the name of a parameter of a monitoring-fx.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, name can be returned; false, name cannot be returned
+    string paramname - the name of the parameter
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer paramindex - the parameter, whose name you want to retrieve; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, name, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]  
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamName", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamName", "fxindex", "must 1 or higher", -2) return false end  
+  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamName", "paramindex", "must be an integer", -3) return false end
+  if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamName", "paramindex", "must 1 or higher", -4) return false end  
+
+  return reaper.TrackFX_GetParamName(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, "")
+end
+
+--A={ultraschall.InputFX_GetParamName(4, 2)}
+
+
+function ultraschall.InputFX_GetParamNormalized(fxindex, paramindex)
+  -- returns nil in case of an error
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetParamNormalized</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer normalized_value = ultraschall.InputFX_GetParamNormalized(integer fxindex, integer paramindex)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the value of a parameter of a monitoring-fx in a normalized state.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer normalized_value - the normalized version of the current value 
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer paramindex - the parameter, whose normalized value you want to retrieve; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, value, normalized, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]    
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamNormalized", "fxindex", "must be an integer", -1) return end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamNormalized", "fxindex", "must 1 or higher", -2) return end  
+  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamNormalized", "paramindex", "must be an integer", -3) return end
+  if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamNormalized", "paramindex", "must 1 or higher", -4) return end  
+  
+  return reaper.TrackFX_GetParamNormalized(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+end
+
+--A={ultraschall.InputFX_GetParamNormalized(1, 3)}
+
+function ultraschall.InputFX_GetPinMappings(fxindex, isoutput, pin)
+  -- returns nil in case of an error
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetPinMappings</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer pinmappings_Lo32Bit, integer pinmappings_Hi32Bit = ultraschall.InputFX_GetPinMappings(integer fxindex, integer isoutput, integer pin)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the pinmappings as bitfield of a parameter of a monitoring-fx.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer pinmappings_Lo32Bit - a bitmask for the first 32 connectors, where each bit represents, if this pin is connected(1) or not(0)
+    integer pinmappings_Hi32Bit - a bitmask for the second 32 connectors, where each bit represents, if this pin is connected(1) or not(0)
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer isoutput - 0, for querying input pins; 1, for querying output pins
+    integer pin - the pin requested, like 0(left), 1(right), etc.
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, pin mapping, inpin, outpin, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetPinMappings", "fxindex", "must be an integer", -1) return end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetPinMappings", "fxindex", "must 1 or higher", -2) return end  
+  if math.type(isoutput)~="integer" then ultraschall.AddErrorMessage("InputFX_GetPinMappings", "isoutput", "must be an integer", -3) return end  
+  if math.type(pin)~="integer" then ultraschall.AddErrorMessage("InputFX_GetPinMappings", "pin", "must be an integer", -4) return end
+  
+  return reaper.TrackFX_GetPinMappings(reaper.GetMasterTrack(0), fxindex-1, isoutput, pin)--)0x1000000+fxindex-1, isoutput-1, pin-1)
+end
+
+--A={ultraschall.InputFX_GetPinMappings(1, 2, 1)}
+
+function ultraschall.InputFX_SetEQBandEnabled(fxindex, bandtype, bandidx, enable)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetEQBandEnabled</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetEQBandEnabled(integer fxindex, integer bandtype, integer bandidx, boolean enable)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Enable or disable a ReaEQ band of a monitoring-fx.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer bandtype - the bandtype of the band to change;
+                     - 0, lhipass
+                     - 1, loshelf
+                     - 2, band
+                     - 3, notch
+                     - 4, hishelf
+                     - 5, lopass
+    integer bandidx - 0, first band matching bandtype; 1, 2nd band matching bandtype, etc.
+    boolean enable - true, enable band; false, disable band
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, reaeq, band, bandtype, enable, disable, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]    
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "fxindex", "must 1 or higher", -2) return false end
+  if math.type(bandtype)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "bandtype", "must be an integer", -3) return false end
+  if bandtype<0 then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "bandtype", "must 0 or higher", -4) return false end  
+  if math.type(bandidx)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "bandidx", "must be an integer", -4) return false end
+  if bandidx<0 then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "bandidx", "must 0 or higher", -5) return false end  
+  if type(enable)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "enable", "must be a boolean", -6) return false end
+  
+  return reaper.TrackFX_SetEQBandEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, bandtype, bandidx, enable)
+end
+
+--A=ultraschall.InputFX_SetEQBandEnabled(1, 2, 1, true)
+
+
+function ultraschall.InputFX_SetEQParam(fxindex, bandtype, bandidx, paramtype, val, isnorm)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetEQParam</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetEQParam(integer fxindex, integer bandtype, integer bandidx, integer paramtype, number val, boolean isnorm)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets an EQ-parameter of a ReaEQ-instance in monitoring-fx
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer bandtype - the bandtype of the band to change;
+                     - 0, lhipass
+                     - 1, loshelf
+                     - 2, band
+                     - 3, notch
+                     - 4, hishelf
+                     - 5, lopass
+    integer bandidx - 0, first band matching bandtype; 1, 2nd band matching bandtype, etc.
+    integer paramtype - 0, freq; 1, gain; 2, Q
+    number val - the new value for the paramtype of a bandidx
+    boolean isnorm - true, value is normalized; false, value is not normalized
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, reaeq, band, bandtype, gain, frequency, normalize, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]    
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQParam", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_SetEQParam", "fxindex", "must 1 or higher", -2) return false end
+  if math.type(bandtype)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQParam", "bandtype", "must be an integer", -3) return false end
+  if bandtype<0 then ultraschall.AddErrorMessage("InputFX_SetEQParam", "bandtype", "must 0 or higher", -4) return false end  
+  if math.type(bandidx)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQParam", "bandidx", "must be an integer", -5) return false end
+  if bandidx<0 then ultraschall.AddErrorMessage("InputFX_SetEQParam", "bandidx", "must 0 or higher", -6) return false end  
+  if math.type(paramtype)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQParam", "paramtype", "must be an integer", -7) return false end
+  if paramtype<0 then ultraschall.AddErrorMessage("InputFX_SetEQParam", "paramtype", "must 0 or higher", -8) return false end  
+  if type(val)~="number" then ultraschall.AddErrorMessage("InputFX_SetEQParam", "val", "must be a number", -9) return false end  
+  if type(isnorm)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetEQParam", "isnorm", "must be a boolean", -10) return false end
+  
+  return reaper.TrackFX_SetEQParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, bandtype, bandidx, paramtype, val, isnorm)
+end
+
+--ultraschall.InputFX_SetEQParam(1, -1, 1, 1, -1, true)
+
+function ultraschall.InputFX_SetParam(fxindex, parameterindex, val)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetParam</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetParam(integer fxindex, index parameterindex, number val)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets a new value of a parameter of a monitoring-fx
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    index parameterindex - the index of the parameter to be set; 1-based
+    number val - the new value to set
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, parameter, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]    
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetParam", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_SetParam", "fxindex", "must 1 or higher", -2) return false end
+  if math.type(parameterindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetParam", "parameterindex", "must be an integer", -3) return false end
+  if parameterindex<1 then ultraschall.AddErrorMessage("InputFX_SetParam", "parameterindex", "must 1 or higher", -4) return false end  
+  if type(val)~="number" then ultraschall.AddErrorMessage("InputFX_SetParam", "val", "must be a number", -5) return false end  
+  
+  return reaper.TrackFX_SetParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, parameterindex-1, val)
+end
+
+--A=ultraschall.InputFX_SetParam(1, 1, 1)
+
+
+function ultraschall.InputFX_SetParamNormalized(fxindex, parameterindex, val)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetParamNormalized</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetParamNormalized(integer fxindex, index parameterindex, number val)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets a new value as normalized of a parameter of a monitoring-fx
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    index parameterindex - the index of the parameter to be set; 1-based
+    number val - the new value to set
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, parameter, normalized, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]    
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "fxindex", "must 1 or higher", -2) return false end
+  if math.type(parameterindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "parameterindex", "must be an integer", -3) return false end
+  if parameterindex<1 then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "parameterindex", "must 1 or higher", -4) return false end  
+  if type(val)~="number" then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "val", "must be a number", -5) return false end  
+  
+  return reaper.TrackFX_SetParamNormalized(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, parameterindex-1, val)
+end
+
+--A=ultraschall.InputFX_SetParamNormalized(1, 2, 0)
+
+
+
+function ultraschall.InputFX_SetPinMappings(fxindex, isoutput, pin, low32bits, hi32bits)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_SetPinMappings</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_SetPinMappings(integer fxindex, integer isoutput, integer pin, integer low32bits, integer hi32bits)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    sets the pinmappings as bitfield of a parameter of a monitoring-fx.
+    
+    returns false in case of an error or if unsupported (not all types of plug-ins support this capability)
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer isoutput - 0, for querying input pins; 1, for querying output pins
+    integer pin - the pin requested, like 0(left), 1(right), etc.
+    integer pinmappings_Lo32Bit - a bitmask for the first 32 connectors, where each bit represents, if this pin is connected(1) or not(0)
+    integer pinmappings_Hi32Bit - a bitmask for the second 32 connectors, where each bit represents, if this pin is connected(1) or not(0)
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, pin mapping, inpin, outpin, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "fxindex", "must 1 or higher", -2) return false end
+  if math.type(isoutput)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "isoutput", "must be an integer", -3) return false end
+  if math.type(pin)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "pin", "must be an integer", -4) return false end
+  if math.type(low32bits)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "low32bits", "must be an integer", -4) return false end
+  if math.type(hi32bits)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "hi32bits", "must be an integer", -4) return false end
+  
+  
+  return reaper.TrackFX_SetPinMappings(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, isoutput, pin, low32bits, hi32bits)
+end
+
+--A={ultraschall.InputFX_GetPinMappings(2, 1, 1)}
+--B=ultraschall.InputFX_SetPinMappings(2, 1, 1, 4, 3)
+
+
+
+function ultraschall.InputFX_GetEQBandEnabled(fxindex, bandtype, bandidx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetEQBandEnabled</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean enabled = ultraschall.InputFX_GetEQBandEnabled(integer fxindex, integer bandtype, integer bandidx)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets the enable or disable-state of a ReaEQ band of a monitoring-fx.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean enabled - true, band is enabled; false, band is disabled
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer bandtype - the bandtype of the band to change;
+                     - 0, lhipass
+                     - 1, loshelf
+                     - 2, band
+                     - 3, notch
+                     - 4, hishelf
+                     - 5, lopass
+    integer bandidx - 0, first band matching bandtype; 1, 2nd band matching bandtype, etc.
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, reaeq, band, bandtype, enable, disable, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]    
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "fxindex", "must 1 or higher", -2) return false end  
+  if math.type(bandtype)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "bandtype", "must be an integer", -3) return false end
+  if bandtype<0 then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "bandtype", "must 0 or higher", -4) return false end  
+  if type(bandidx)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "bandidx", "must be an integer", -5) return false end
+  if bandidx<0 then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "bandidx", "must 0 or higher", -6) return false end  
+  
+  return reaper.TrackFX_GetEQBandEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, bandtype, bandidx)
+end
+
+--A,B,C,D,E=ultraschall.InputFX_GetEQBandEnabled(14, 2, 0)
+
+function ultraschall.InputFX_GetEQParam(fxindex, paramidx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetEQParam</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, number bandtype, number bandidx, number paramtype, number normval = ultraschall.InputFX_GetEQParam(integer fxindex, integer paramidx)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets the states and values of an EQ-parameter of a ReaEQ-instance in monitoring-fx
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, if it's a ReaEQ-instance; false, is not a ReaEQ-instance or in case of an error
+    integer bandtype - the bandtype of the band to change;
+                     - -1, master gain
+                     - 0, lhipass
+                     - 1, loshelf
+                     - 2, band
+                     - 3, notch
+                     - 4, hishelf
+                     - 5, lopass
+    integer bandidx - 0, first band matching bandtype; 1, 2nd band matching bandtype, etc.
+    number paramtype -  0, freq; 1, gain; 2, Q
+    number normval - the normalized value
+  </retvals>
+  <parameters>
+    integer fxindex - the index of the monitoring-fx; 1-based
+    integer paramidx - the parameter whose eq-states you want to retrieve; 1-based
+  </parameters>
+  <chapter_context>
+    FX-Management
+    InputFX
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, reaeq, band, bandtype, gain, frequency, normalize, monitoringfx, inputfx</tags>
+</US_DocBloc>
+]]    
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQParam", "fxindex", "must be an integer", -1) return false end
+  if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetEQParam", "fxindex", "must 1 or higher", -2) return false end  
+  if math.type(paramidx)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQParam", "paramidx", "must be an integer", -3) return false end
+  if paramidx<1 then ultraschall.AddErrorMessage("InputFX_GetEQParam", "paramidx", "must 1 or higher", -4) return false end  
+  
+  return reaper.TrackFX_GetEQParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramidx-1)
+end
+
+--A={ultraschall.InputFX_GetEQParam(14, 1)}
+
+function ultraschall.GetFocusedFX()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetFocusedFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval, integer tracknumber, integer fxidx, integer itemnumber, integer takeidx, MediaTrack track, optional MediaItem item, optional MediaItemTake take = ultraschall.GetFocusedFX()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the focused FX
+  </description>
+  <retvals>
+    integer retval -   0, if no FX window has focus
+                   -   1, if a track FX window has focus or was the last focused and still open
+                   -   2, if an item FX window has focus or was the last focused and still open
+    integer tracknumber - tracknumber; 0, master track; 1, track 1; etc.
+    integer fxidx - the index of the FX; 1-based
+    integer itemnumber - -1, if it's a track-fx; 1 and higher, the mediaitem-number
+    integer takeidx - -1, if it's a track-fx; 1 and higher, the take-number
+    MediaTrack track - the MediaTrack-object
+    optional MediaItem item - the MediaItem, if take-fx
+    optional MediaItemTake take - the MediaItem-Take, if take-fx
+  </retvals>
+  <chapter_context>
+    FX-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, focused, fx</tags>
+</US_DocBloc>
+]]    
+  local retval, tracknumber, itemnumber, fxnumber = reaper.GetFocusedFX()
+  if retval==0 then return 0 end
+  local FXID, TakeID, item, take, track
+  FXID=fxnumber+1
+  TakeID=-1
+  if itemnumber~=-1 then
+    FXID=fxnumber&1+(fxnumber&2)+(fxnumber&4)+(fxnumber&8)+(fxnumber&16)+(fxnumber&32)+(fxnumber&64)+(fxnumber&128)+
+         (fxnumber&256)+(fxnumber&512)+(fxnumber&1024)+(fxnumber&2048)+(fxnumber&4096)+(fxnumber&8192)+(fxnumber&16384)+(fxnumber&32768)
+    TakeID=fxnumber>>16
+    TakeID=TakeID+1
+    FXID=FXID+1
+    item=reaper.GetMediaItem(0, itemnumber)
+    take=reaper.GetMediaItemTake(reaper.GetMediaItem(0, itemnumber), TakeID-1)
+    itemnumber=itemnumber+1
+  end
+
+  if tracknumber>0 then 
+    track=reaper.GetTrack(0, tracknumber-1)
+  elseif tracknumber==0 then
+    track=reaper.GetMasterTrack(0)
+  end
+  return retval, tracknumber, FXID, itemnumber, TakeID, track, item, take
+end
+
+function ultraschall.GetLastTouchedFX()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetLastTouchedFX</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, integer sourcetype, integer track_take_number, integer fxnumber, integer paramnumber, integer takeID, optional MediaTrack track, optional MediaItemTake take = ultraschall.GetLastTouchedFX()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns the last touched FX
+    
+    Note: Does not return last touched monitoring-FX!
+  </description>
+  <retvals>
+    boolean retval - true, valid FX; false, no valid FX
+    integer sourcetype - 0, takeFX; 1, trackFX
+    integer track_take_number - the track or takenumber(see sourcetype-retval); 1-based
+    integer fxnumber - the number of the fx; 1-based
+    integer paramnumber - the number of the parameter; 1-based
+    integer takeID - the number of the take; 1-based; -1, if takeFX
+    optional MediaTrack track - the track of the TrackFX
+    optional MediaItemTake take - the take of the TakeFX
+  </retvals>
+  <chapter_context>
+    FX-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, last touched, fx</tags>
+</US_DocBloc>
+]]    
+  local retval, tracknumber, fxnumber, paramnumber = reaper.GetLastTouchedFX()
+  if retval==false then return false end
+  local FXID, TakeID, track
+  local inputfx=false
+  if tracknumber>65536 then
+    tracknumber=tracknumber&1+(tracknumber&2)+(tracknumber&4)+(tracknumber&8)+(tracknumber&16)+(tracknumber&32)+(tracknumber&64)+(tracknumber&128)+
+         (tracknumber&256)+(tracknumber&512)+(tracknumber&1024)+(tracknumber&2048)+(tracknumber&4096)+(tracknumber&8192)+(tracknumber&16384)+(tracknumber&32768)
+    FXID=fxnumber&1+(fxnumber&2)+(fxnumber&4)+(fxnumber&8)+(fxnumber&16)+(fxnumber&32)+(fxnumber&64)+(fxnumber&128)+
+         (fxnumber&256)+(fxnumber&512)+(fxnumber&1024)+(fxnumber&2048)+(fxnumber&4096)+(fxnumber&8192)+(fxnumber&16384)+(fxnumber&32768)
+    TakeID=fxnumber>>16           
+    TakeID=TakeID+1
+    Itemnumber=tracknumber
+    return retval, 0, Itemnumber,  FXID+1,     paramnumber+1, TakeID, nil,   reaper.GetMediaItemTake(reaper.GetMediaItem(0, tracknumber-1), TakeID-1)
+  else
+    if tracknumber>0 then 
+      track=reaper.GetTrack(0, tracknumber-1)
+    elseif tracknumber==0 then
+      track=reaper.GetMasterTrack(0)
+    end
+    return retval, 1, tracknumber, fxnumber+1, paramnumber+1, -1,     track, nil
+  end
+end
+

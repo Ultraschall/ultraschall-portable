@@ -4,7 +4,7 @@
         <slug>1.Introduction</slug>
         <title>1 Introduction to ReaScript</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            ## ReaScript API as of Reaper 6.14
+            ## ReaScript API as of Reaper 6.15
             
             REAPER provides an API (advanced programming interface) for users and third parties to create extended functionality. API functions can be called from a compiled C/C++ dynamic library that is loaded by REAPER, or at run-time by user-created ReaScripts that can be written using REAPER's own editor.
 
@@ -22897,13 +22897,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>BR_TrackFX_GetFXModuleName</slug>
         <title>BR_TrackFX_GetFXModuleName(SWS)</title>
-        <functioncall prog_lang="cpp">bool BR_TrackFX_GetFXModuleName(MediaTrack* track, int fx, char* nameOut, int nameOutSz)</functioncall>
-        <functioncall prog_lang="eel">bool extension_api("BR_TrackFX_GetFXModuleName", MediaTrack track, int fx, # name, int name)</functioncall>
+        <functioncall prog_lang="cpp">bool BR_TrackFX_GetFXModuleName(MediaTrack* track, int fx, char* nameOut, int nameOut_sz)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("BR_TrackFX_GetFXModuleName", MediaTrack track, int fx, #name)</functioncall>
         <functioncall prog_lang="lua">boolean retval, string name = reaper.BR_TrackFX_GetFXModuleName(MediaTrack track, integer fx)</functioncall>
-        <functioncall prog_lang="python">(Boolean retval, MediaTrack track, Int fx, String nameOut, Int nameOutSz) = BR_TrackFX_GetFXModuleName(track, fx, nameOut, nameOutSz)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, MediaTrack track, Int fx, String nameOut, Int nameOut_sz) = BR_TrackFX_GetFXModuleName(track, fx, nameOut, nameOut_sz)</functioncall>
         <requires>
             Reaper=5.62
-            SWS=2.9.7
+            SWS=2.12.0
             Lua=5.3
         </requires>
         <description prog_lang="*">
@@ -23034,25 +23034,21 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>CF_GetClipboard</slug>
         <title>CF_GetClipboard(SWS)</title>
-        <functioncall prog_lang="cpp">void CF_GetClipboard(char* bufNeedBig, int buf_sz)</functioncall>
-        <functioncall prog_lang="eel">extension_api("CF_GetClipboard", #buf, int buf_sz)</functioncall>
-        <functioncall prog_lang="lua">string buf = reaper.CF_GetClipboard(string buf, integer buf_sz)</functioncall>
-        <functioncall prog_lang="python">(String bufNeedBig, Int buf_sz) = CF_GetClipboard(bufNeedBig, buf_sz)</functioncall>
+        <functioncall prog_lang="cpp">void CF_GetClipboard(char* textOutNeedBig, int textOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">extension_api("CF_GetClipboard", #text)</functioncall>
+        <functioncall prog_lang="lua">string text = reaper.CF_GetClipboard()</functioncall>
+        <functioncall prog_lang="python">(String textOutNeedBig, Int textOutNeedBig_sz) = CF_GetClipboard(textOutNeedBig, textOutNeedBig_sz)</functioncall>
         <requires>
             Reaper=5.979
-            SWS=2.11.0
+            SWS=2.12.1
             Lua=5.3
         </requires>
         <description prog_lang="*">
             Read the contents of the system clipboard.
         </description>
         <retvals>
-            string buf - the content of the clipboard
-        </retvals>
-		<parameters>
-		    string buf - just pass "" in here
-			integer buf_sz - the number of characters you want to get from the clipboard
-		</parameters>
+            string text - the content of the clipboard
+        </retvals>		
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
         <chapter_context>
@@ -23673,11 +23669,11 @@
         <functioncall prog_lang="python">Float SNM_GetDoubleConfigVar(String varname, Float errvalue)</functioncall>
         <requires>
             Reaper=5.62
-            SWS=2.9.7
+            SWS=2.12.1
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            [S&amp;M] Returns a double preference (look in project prefs first, then in general prefs). Returns errvalue if failed (e.g. varname not found).
+            [S&amp;M] Returns a floating-point preference (look in project prefs first, then in general prefs). Returns errvalue if failed (e.g. varname not found).
             
             The settings can be from the Preferences, Project settings and Render-dialog, as well as numerous other settings, as e.g. set in the context menu of the transport-area.
             Some variables are bitfields, where each bit represents e.g a checkbox in the preferences.            
@@ -23781,6 +23777,38 @@
             string varname - the name of the config-variable to be read; not case sensitive
                     - see [Reaper\_Config\_Variables.html](Reaper_Config_Variables.html) for valid config-vars
             integer errvalue - the errorvalue that will be returned, if varname isn't a valid one
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+        </chapter_context>
+        <tags>reaper, project, config, preferences, variables, get, internal</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SNM_GetLongConfigVar</slug>
+        <title>SNM_GetLongConfigVar(SWS)</title>
+        <functioncall prog_lang="cpp">bool SNM_GetLongConfigVar(const char* varname, int* highOut, int* lowOut)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("SNM_GetLongConfigVar", "varname", int &high, int &low)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, number high, number low = reaper.SNM_GetLongConfigVar(string varname)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String varname, Int highOut, Int lowOut) = SNM_GetLongConfigVar(varname, highOut, lowOut)</functioncall>
+        <requires>
+            Reaper=5.80
+            SWS=2.12.1
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            [S&amp;M] Reads a 64-bit integer preference split in two 32-bit integers (look in project prefs first, then in general prefs). Returns false if failed (e.g. varname not found).
+        </description>
+        <retvals>
+            boolean retval - true, varname was found; false, varname wasn't found
+            number high - the high-32bits of the value
+            number low - the low-32bits of the value
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
+            string varname - the name of the config-variable to be read; not case sensitive
+                    - see [Reaper\_Config\_Variables.html](Reaper_Config_Variables.html) for valid config-vars
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -23960,11 +23988,11 @@
         <functioncall prog_lang="python">Boolean SNM_GetSourceType(MediaItem_Take take, WDL_FastString type)</functioncall>
         <requires>
             Reaper=5.62
-            SWS=2.9.7
+            SWS=2.12.1
             Lua=5.3
         </requires>
-        <description prog_lang="*">
-            [S&amp;M] Gets the source type of a take. Returns false if failed (e.g. take with empty source, etc..)
+        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
+            [S&amp;M] Deprecated, see [GetMediaSourceType](#GetMediaSourceType). Gets the source type of a take. Returns false if failed (e.g. take with empty source, etc..)
         </description>
         <retvals>
             boolean - 
@@ -24015,25 +24043,25 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>SNM_ReadMediaFileTag</slug>
         <title>SNM_ReadMediaFileTag(SWS)</title>
-        <functioncall prog_lang="cpp">bool SNM_ReadMediaFileTag(const char* fn, const char* tag, char* tagval, int tagval_sz)</functioncall>
+        <functioncall prog_lang="cpp">bool SNM_ReadMediaFileTag(const char* fn, const char* tag, char* tagvalOut, int tagvalOut_sz)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("SNM_ReadMediaFileTag", "fn", "tag", #tagval)</functioncall>
-        <functioncall prog_lang="lua">boolean retval, string tagval = reaper.SNM_ReadMediaFileTag(string fn, string tag, string tagval)</functioncall>
-        <functioncall prog_lang="python">(Boolean retval, String fn, String tag, String tagval, Int tagval_sz) = SNM_ReadMediaFileTag(fn, tag, tagval, tagval_sz)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string tagval = reaper.SNM_ReadMediaFileTag(string fn, string tag)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String fn, String tag, String tagvalOut, Int tagvalOut_sz) = SNM_ReadMediaFileTag(fn, tag, tagvalOut, tagvalOut_sz)</functioncall>
         <requires>
             Reaper=5.62
-            SWS=2.9.7
+            SWS=2.12.0
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
-            \[S&amp;M\] Reads a media file tag. Supported tags: "artist", "album", "genre", "comment", "title", or "year". Returns false if tag was not found. See [SNM\_TagMediaFile](#SNM_TagMediaFile).
+            \[S&amp;M\] Reads a media file tag. Supported tags: "artist", "album", "genre", "comment", "title", "track" (track number) or "year". Returns false if tag was not found. See [SNM\_TagMediaFile](#SNM_TagMediaFile).
         </description>
         <retvals>
-            retval - 
-            tagval - 
+            boolean retval - true, value could be read; false, value could not be read
+            string tagval - the value of the requested tag
         </retvals>
         <parameters>
-            fn - 
-            tag - 
+            string fn - the filename+path of the mediafile
+            string tag - the tag you want to request; "artist", "album", "genre", "comment", "title", "track", "year"
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -24141,11 +24169,11 @@
         <functioncall prog_lang="python">Boolean SNM_SetDoubleConfigVar(String varname, Float newvalue)</functioncall>
         <requires>
             Reaper=5.62
-            SWS=2.9.7
+            SWS=2.12.1
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            [S&amp;M] Sets a double preference (look in project prefs first, then in general prefs). Returns false if failed (e.g. varname not found).
+            [S&amp;M] Sets a floating-point preference (look in project prefs first, then in general prefs). Returns false if failed (e.g. varname not found or newvalue out of range).
         
             The settings can be from the Preferences, Project settings and Render-dialog, as well as numerous other settings, as e.g. set in the context menu of the transport-area.
             Some variables are bitfields, where each bit represents e.g a checkbox in the preferences.
@@ -24233,6 +24261,41 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SNM_SetLongConfigVar</slug>
+        <title>SNM_SetLongConfigVar(SWS)</title>
+        <functioncall prog_lang="cpp">bool SNM_SetLongConfigVar(const char* varname, int newHighValue, int newLowValue)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("SNM_SetLongConfigVar", "varname", int newHighValue, int newLowValue)</functioncall>
+        <functioncall prog_lang="lua">boolean reaper.SNM_SetLongConfigVar(string varname, integer newHighValue, integer newLowValue)</functioncall>
+        <functioncall prog_lang="python">Boolean SNM_SetLongConfigVar(String varname, Int newHighValue, Int newLowValue)</functioncall>
+        <requires>
+            Reaper=5.62
+            SWS=2.12.1
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            [S&amp;M] Sets a 64-bit integer preference from two 32-bit integers (look in project prefs first, then in general prefs). Returns false if failed (e.g. varname not found).
+            
+            Some variables are bitfields, where each bit represents e.g a checkbox in the preferences.
+            The changed settings are usually only changed within the running Reaper, but not stored in the config-files, so you need to do it manually or they get lost after Reaper is closed!
+        </description>
+        <retvals>
+            boolean retval - true, if setting was successful, false if not
+        </retvals>
+        <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
+            string varname - the name of the config-variable to be read; not case sensitive
+                    - see [Reaper\_Config\_Variables.html](Reaper_Config_Variables.html) for valid config-vars
+            integer newHighValue - the newly set value for varname of the high-32bits
+            integer newLowValue - the newly set value for varname of the low-32bits
+        </parameters>            
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+        </chapter_context>
+        <tags>reaper, project, config, preferences, variables, set, internal</tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>SNM_SetProjectMarker</slug>
         <title>SNM_SetProjectMarker(SWS)</title>
         <functioncall prog_lang="cpp">bool SNM_SetProjectMarker(ReaProject* proj, int num, bool isrgn, double pos, double rgnend, const char* name, int color)</functioncall>
@@ -24276,7 +24339,7 @@
         <functioncall prog_lang="python">Boolean SNM_TagMediaFile(String fn, String tag, String tagval)</functioncall>
         <requires>
             Reaper=5.62
-            SWS=2.9.7
+            SWS=2.12.0
             Lua=5.3
         </requires>
         <description prog_lang="*" markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -24286,9 +24349,9 @@
             boolean - true, if adding the tag worked; false, if adding didn't work.
         </retvals>
         <parameters>
-            fn - the mediafilename, in which to add the tag
-            tag - "artist", "album", "genre", "comment", "title", or "year"
-            tagval - the new value to be added
+            string fn - the mediafilename, in which to add the tag
+            string tag - "artist", "album", "genre", "comment", "title", "track" or "year"
+            string tagval - the new value to be added
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -24633,6 +24696,50 @@
         <parameters>
            identifier address - 
            integer offset - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
+  <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_File_Stat</slug>
+        <title>JS_File_Stat(JS)</title>
+        <functioncall prog_lang="cpp">int JS_File_Stat(const char* filePath, double* sizeOut, char* accessedTimeOut, char* modifiedTimeOut, char* cTimeOut, int* deviceIDOut, int* deviceSpecialIDOut, int* inodeOut, int* modeOut, int* numLinksOut, int* ownerUserIDOut, int* ownerGroupIDOut)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_File_Stat", "filePath", &size, #accessedTime, #modifiedTime, #cTime, int &deviceID, int &deviceSpecialID, int &inode, int &mode, int &numLinks, int &ownerUserID, int &ownerGroupID)</functioncall>
+        <functioncall prog_lang="lua">integer retval, number size, string accessedTime, string modifiedTime, string cTime, number deviceID, number deviceSpecialID, number inode, number mode, number numLinks, number ownerUserID, number ownerGroupID = reaper.JS_File_Stat(string filePath)</functioncall>
+        <functioncall prog_lang="python">(Int retval, String filePath, Float sizeOut, String accessedTimeOut, String modifiedTimeOut, String cTimeOut, Int deviceIDOut, Int deviceSpecialIDOut, Int inodeOut, Int modeOut, Int numLinksOut, Int ownerUserIDOut, Int ownerGroupIDOut) = JS_File_Stat(filePath, sizeOut, accessedTimeOut, modifiedTimeOut, cTimeOut, deviceIDOut, deviceSpecialIDOut, inodeOut, modeOut, numLinksOut, ownerUserIDOut, ownerGroupIDOut)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.217
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Returns information about a file.
+
+            cTime is not implemented on all systems. If it does return a time, the value may differ depending on the OS: on WindowsOS, it may refer to the time that the file was either created or copied, whereas on Linux and macOS, it may refer to the time of last status change.
+
+            retval is 0 if successful, negative if not.
+        </description>
+        <retvals>
+           integer retval - negative, if not retrievable; 0, if retrieving was successful
+           number size - the size of the file in bytes
+           string accessedTime - the last time the file was accessed
+           string modifiedTime - the last time the file was modified
+           string cTime - the time the file was created(Windows) or the last time its status had changed(Mac and Linux)
+           number deviceID - the ID of the device
+           number deviceSpecialID - the special ID of the file
+           number inode - the inode
+           number mode - the attributes set
+           number numLinks - the number of links
+           number ownerUserID - ID of the user the file belongs to
+           number ownerGroupID - ID of the group the file belongs to
+        </retvals>
+        <parameters>
+           string filePath - the file, whose file-stats you want to get
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -30092,6 +30199,42 @@
         <tags></tags>
     </US_DocBloc>
     
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_ListView_GetItemRect</slug>
+        <title>JS_ListView_GetItemRect(JS)</title>
+        <functioncall prog_lang="cpp">bool JS_ListView_GetItemRect(void* listviewHWND, int index, int* leftOut, int* topOut, int* rightOut, int* bottomOut)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("JS_ListView_GetItemRect", void* listviewHWND, int index, int &left, int &top, int &right, int &bottom)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, number left, number top, number right, number bottom = reaper.JS_ListView_GetItemRect(identifier listviewHWND, integer index)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, void listviewHWND, Int index, Int leftOut, Int topOut, Int rightOut, Int bottomOut) = JS_ListView_GetItemRect(listviewHWND, index, leftOut, topOut, rightOut, bottomOut)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.217
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            Returns client coordinates of the item.
+        </description>
+        <parameters>
+           identifier listviewHWND - 
+           integer index - 
+        </parameters>
+        <retvals>
+           boolean retval - 
+           number left - 
+           number top - 
+           number right - 
+           number bottom - 
+        </retvals>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+
+
 
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_ListView_GetItemState</slug>
@@ -30102,11 +30245,14 @@
         <functioncall prog_lang="python">Int JS_ListView_GetItemState(void listviewHWND, Int index)</functioncall>
         <requires>
             Reaper=5.974
-            JS=0.963
+            JS=1.217
             Lua=5.3
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            
+            State is a bitmask:
+            1 = selected, 2 = focused. On Windows only, cut-and-paste marked = 4, drag-and-drop highlighted = 8.
+
+            Warning: this function uses the Win32 bitmask values, which differ from the values used by WDL/swell.
         </description>
         <parameters>
            identifier listviewHWND - 
@@ -30187,6 +30333,69 @@
     
 
     <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_ListView_GetTopIndex</slug>
+        <title>JS_ListView_GetTopIndex(JS)</title>
+        <functioncall prog_lang="cpp">int JS_ListView_GetTopIndex(void* listviewHWND)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("JS_ListView_GetTopIndex", void* listviewHWND)</functioncall>
+        <functioncall prog_lang="lua">integer reaper.JS_ListView_GetTopIndex(identifier listviewHWND)</functioncall>
+        <functioncall prog_lang="python">Int JS_ListView_GetTopIndex(void listviewHWND)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.217
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            
+        </description>
+        <parameters>
+           identifier listviewHWND - 
+        </parameters>
+        <retvals>
+           integer retval - 
+        </retvals>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_ListView_HitTest</slug>
+        <title>JS_ListView_HitTest(JS)</title>
+        <functioncall prog_lang="cpp">void JS_ListView_HitTest(void* listviewHWND, int clientX, int clientY, int* indexOut, int* subItemOut, int* flagsOut)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_ListView_HitTest", void* listviewHWND, int clientX, int clientY, int &index, int &subItem, int &flags)</functioncall>
+        <functioncall prog_lang="lua">number index, number subItem, number flags = reaper.JS_ListView_HitTest(identifier listviewHWND, integer clientX, integer clientY)</functioncall>
+        <functioncall prog_lang="python">(void listviewHWND, Int clientX, Int clientY, Int indexOut, Int subItemOut, Int flagsOut) = JS_ListView_HitTest(listviewHWND, clientX, clientY, indexOut, subItemOut, flagsOut)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.217
+            Lua=5.3
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            
+        </description>
+        <parameters>
+           identifier listviewHWND - 
+           integer clientX - 
+           integer clientY - 
+        </parameters>
+        <retvals>
+           number index - 
+           number subItem - 
+           number flags - 
+        </retvals>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_ListView_ListAllSelItems</slug>
         <title>JS_ListView_ListAllSelItems(JS)</title>
         <functioncall prog_lang="cpp">int JS_ListView_ListAllSelItems(void* listviewHWND, char* itemsOutNeedBig, int itemsOutNeedBig_sz)</functioncall>
@@ -30216,6 +30425,70 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_ListView_SetItemState</slug>
+        <title>JS_ListView_SetItemState(JS)</title>
+        <functioncall prog_lang="cpp">void JS_ListView_SetItemState(void* listviewHWND, int index, int state, int mask)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_ListView_SetItemState", void* listviewHWND, int index, int state, int mask)</functioncall>
+        <functioncall prog_lang="lua">reaper.JS_ListView_SetItemState(identifier listviewHWND, integer index, integer state, integer mask)</functioncall>
+        <functioncall prog_lang="python">JS_ListView_SetItemState(void listviewHWND, Int index, Int state, Int mask)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.217
+            Lua=5.3
+        </requires>
+        <description>
+            The mask parameter specifies the state bits that must be set, and the state parameter specifies the new values for those bits.
+
+            1 = selected, 2 = focused. On Windows only, cut-and-paste marked = 4, drag-and-drop highlighted = 8.
+
+            Warning: this function uses the Win32 bitmask values, which differ from the values used by WDL/swell.
+        </description>
+        <parameters>
+           identifier listviewHWND - 
+           integer index - 
+           integer state - 
+           integer mask - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JS_ListView_SetItemText</slug>
+        <title>JS_ListView_SetItemText(JS)</title>
+        <functioncall prog_lang="cpp">void JS_ListView_SetItemText(void* listviewHWND, int index, int subItem, const char* text)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_ListView_SetItemText", void* listviewHWND, int index, int subItem, "text")</functioncall>
+        <functioncall prog_lang="lua">reaper.JS_ListView_SetItemText(identifier listviewHWND, integer index, integer subItem, string text)</functioncall>
+        <functioncall prog_lang="python">JS_ListView_SetItemText(void listviewHWND, Int index, Int subItem, String text)</functioncall>
+        <requires>
+            Reaper=5.974
+            JS=1.217
+            Lua=5.3
+        </requires>
+        <description>
+            Currently, this fuction only accepts ASCII text.
+        </description>
+        <parameters>
+           identifier listviewHWND - 
+           integer index - 
+           integer subItem - 
+           string text - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            JS_Plugin
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+
     
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>Xen_AudioWriter_Create</slug>
@@ -31796,13 +32069,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>CF_EnumerateActions</slug>
         <title>CF_EnumerateActions(SWS)</title>
-        <functioncall prog_lang="cpp">int CF_EnumerateActions(int section, int index, char* name, int name_sz)</functioncall>
+        <functioncall prog_lang="cpp">int CF_EnumerateActions(int section, int index, char* nameOut, int nameOut_sz)</functioncall>
         <functioncall prog_lang="eel">int extension_api("CF_EnumerateActions", int section, int index, #name)</functioncall>
-        <functioncall prog_lang="lua">integer retval, string name = reaper.CF_EnumerateActions(integer section, integer index, string name)</functioncall>
-        <functioncall prog_lang="python">(Int retval, Int section, Int index, String name, Int name_sz) = CF_EnumerateActions(section, index, name, name_sz)</functioncall>
+        <functioncall prog_lang="lua">integer retval, string name = reaper.CF_EnumerateActions(integer section, integer index)</functioncall>
+        <functioncall prog_lang="python">(Int retval, Int section, Int index, String nameOut, Int nameOut_sz) = CF_EnumerateActions(section, index, nameOut, nameOut_sz)</functioncall>
         <requires>
             Reaper=5.965
-            SWS=2.10.0.1
+            SWS=2.12.0
             Lua=5.3
         </requires>
         <description prog_lang="*">
@@ -32019,13 +32292,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>CF_GetMediaSourceRPP</slug>
         <title>CF_GetMediaSourceRPP(SWS)</title>
-        <functioncall prog_lang="cpp">bool CF_GetMediaSourceRPP(PCM_source* src, char* fn, int fn_sz)</functioncall>
+        <functioncall prog_lang="cpp">bool CF_GetMediaSourceRPP(PCM_source* src, char* fnOut, int fnOut_sz)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("CF_GetMediaSourceRPP", PCM_source src, #fn)</functioncall>
-        <functioncall prog_lang="lua">boolean retval, string fn = reaper.CF_GetMediaSourceRPP(PCM_source src, string fn)</functioncall>
-        <functioncall prog_lang="python">(Boolean retval, PCM_source src, String fn, Int fn_sz) = CF_GetMediaSourceRPP(src, fn, fn_sz)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string fn = reaper.CF_GetMediaSourceRPP(PCM_source src)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, PCM_source src, String fnOut, Int fnOut_sz) = CF_GetMediaSourceRPP(src, fnOut, fnOut_sz)</functioncall>
         <requires>
             Reaper=5.965
-            SWS=2.10.0.1
+            SWS=2.12.0
             Lua=5.3
         </requires>
         <description prog_lang="*">
@@ -32052,24 +32325,21 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>CF_GetSWSVersion</slug>
         <title>CF_GetSWSVersion(SWS)</title>
-        <functioncall prog_lang="cpp">void CF_GetSWSVersion(char* buf, int buf_sz)</functioncall>
-        <functioncall prog_lang="eel">extension_api("CF_GetSWSVersion", #buf)</functioncall>
-        <functioncall prog_lang="lua">string buf = reaper.CF_GetSWSVersion(string buf)</functioncall>
-        <functioncall prog_lang="python">(String buf, Int buf_sz) = CF_GetSWSVersion(buf, buf_sz)</functioncall>
+        <functioncall prog_lang="cpp">void CF_GetSWSVersion(char* versionOut, int versionOut_sz)</functioncall>
+        <functioncall prog_lang="eel">extension_api("CF_GetSWSVersion", #version)</functioncall>
+        <functioncall prog_lang="lua">string version = reaper.CF_GetSWSVersion()</functioncall>
+        <functioncall prog_lang="python">(String versionOut, Int versionOut_sz) = CF_GetSWSVersion(versionOut, versionOut_sz)</functioncall>
         <requires>
             Reaper=5.965
-            SWS=2.10.0.1
+            SWS=2.12.0
             Lua=5.3
         </requires>
         <description prog_lang="*">
             Return the current SWS version number.
         </description>
         <retvals>
-            string buf - 
+            string version - 
         </retvals>
-        <parameters>
-            string buf - 
-        </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
         <chapter_context>
@@ -32170,7 +32440,37 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
-    
+  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>CF_SelectTrackFX</slug>
+        <title>CF_SelectTrackFX(SWS)</title>
+        <functioncall prog_lang="cpp">bool CF_SelectTrackFX(MediaTrack* track, int index)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("CF_SelectTrackFX", MediaTrack track, int index)</functioncall>
+        <functioncall prog_lang="lua">boolean reaper.CF_SelectTrackFX(MediaTrack track, integer index)</functioncall>
+        <functioncall prog_lang="python">Boolean CF_SelectTrackFX(MediaTrack track, Int index)</functioncall>
+        <requires>
+            Reaper=5.965
+            SWS=2.12.0
+            Lua=5.3
+        </requires>
+        <description prog_lang="*">
+            Set which track effect is active in the track's FX chain. The FX chain window does not have to be open.
+
+        </description>
+        <retvals>
+            boolean - true, setting was successful; false, setting was unsuccessful
+        </retvals>
+        <parameters>
+            MediaTrack track - the track, whose active trackfx you want to set
+            integer index - the index of the fx, which you want to activate
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            User Interface
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>  
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>CF_SetMediaSourceOnline</slug>
@@ -32337,28 +32637,54 @@
         <tags></tags>
     </US_DocBloc>
     
-    
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>NF_GetSWSTrackNotes</slug>
         <title>NF_GetSWSTrackNotes(SWS)</title>
         <functioncall prog_lang="cpp">const char* NF_GetSWSTrackNotes(MediaTrack* track)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("NF_GetSWSTrackNotes", #retval, MediaTrack track)</functioncall>
-        <functioncall prog_lang="lua">string reaper.NF_GetSWSTrackNotes(MediaTrack track)</functioncall>
-        <functioncall prog_lang="python">String  NF_GetSWSTrackNotes(MediaTrack track)</functioncall>
+        <functioncall prog_lang="lua">string tracknotes - reaper.NF_GetSWSTrackNotes(MediaTrack track)</functioncall>
+        <functioncall prog_lang="python">String NF_GetSWSTrackNotes(MediaTrack track)</functioncall>
         <requires>
             Reaper=5.965
             SWS=2.10.0.1
             Lua=5.3
         </requires>
         <description prog_lang="*">
-            
+            Get the SWS tracknotes.
         </description>
         <retvals>
-            string - 
+            string tracknotes - the stored notes
         </retvals>
         <parameters>
-            MediaTrack track - 
+            MediaTrack track - the track, whose SWS-tracknotes you want to get
         </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Track Management
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>NF_GetSWS_RMSoptions</slug>
+        <title>NF_GetSWS_RMSoptions(SWS)</title>
+        <functioncall prog_lang="cpp">void NF_GetSWS_RMSoptions(double* targetOut, double* windowSizeOut)</functioncall>
+        <functioncall prog_lang="eel">extension_api("NF_GetSWS_RMSoptions", &target, &windowSize)</functioncall>
+        <functioncall prog_lang="lua">number target, number windowSize = reaper.NF_GetSWS_RMSoptions()</functioncall>
+        <functioncall prog_lang="python">(Float targetOut, Float windowSizeOut) = NF_GetSWS_RMSoptions(targetOut, windowSizeOut)</functioncall>
+        <requires>
+            Reaper=5.965
+            SWS=2.12.0
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Get SWS analysis/normalize options. See [NF\_SetSWS\_RMSoptions](#NF_SetSWS_RMSoptions).
+        </description>
+        <retvals>
+            number target - 
+            number windowSize - 
+        </retvals>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
         <chapter_context>
@@ -32370,13 +32696,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>NF_ReadID3v2Tag</slug>
         <title>NF_ReadID3v2Tag(SWS)</title>
-        <functioncall prog_lang="cpp">bool NF_ReadID3v2Tag(const char* fn, const char* tag, char* tagval, int tagval_sz)</functioncall>
+        <functioncall prog_lang="cpp">bool NF_ReadID3v2Tag(const char* fn, const char* tag, char* tagvalOut, int tagvalOut_sz)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("NF_ReadID3v2Tag", "fn", "tag", #tagval)</functioncall>
-        <functioncall prog_lang="lua">boolean retval, string tagval = reaper.NF_ReadID3v2Tag(string fn, string tag, string tagval)</functioncall>
-        <functioncall prog_lang="python">(Boolean retval, String fn, String tag, String tagval, Int tagval_sz) = NF_ReadID3v2Tag(fn, tag, tagval, tagval_sz)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string tagval = reaper.NF_ReadID3v2Tag(string fn, string tag)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String fn, String tag, String tagvalOut, Int tagvalOut_sz) = NF_ReadID3v2Tag(fn, tag, tagvalOut, tagvalOut_sz)</functioncall>
         <requires>
             Reaper=5.965
-            SWS=2.11.0
+            SWS=2.12.0
             Lua=5.3
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -32389,7 +32715,6 @@
         <parameters>
             string fn - the filename with path of the mp3-file, whose tag-value you want to request
 			string tag - the tag, which you want to retrieve, like TIT2(Title), TPE1(Artist), TPE2(Albumartist), TALB(Album), TRCK(Track), TCON(Genre), TYER(Year), TDRC(Recording time: YYYY-MM-DD), TKEY(Key), TBPM(Tempo), TSRC(International Standard Recording Code), COMM(Comment), COMM_LANG(Comment language, etc
-			string tagval - just pass "" in here
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -32460,7 +32785,39 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
-    
+  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>NF_SetSWS_RMSoptions</slug>
+        <title>NF_SetSWS_RMSoptions(SWS)</title>
+        <functioncall prog_lang="cpp">bool NF_SetSWS_RMSoptions(double targetLevel, double windowSize)</functioncall>
+        <functioncall prog_lang="eel">bool extension_api("NF_SetSWS_RMSoptions", targetLevel, windowSize)</functioncall>
+        <functioncall prog_lang="lua">boolean retval - reaper.NF_SetSWS_RMSoptions(number targetLevel, number windowSize)</functioncall>
+        <functioncall prog_lang="python">Boolean NF_SetSWS_RMSoptions(Float targetLevel, Float windowSize)</functioncall>
+        <requires>
+            Reaper=5.965
+            SWS=2.12.0
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Set SWS analysis/normalize options (same as running action 'SWS: Set RMS analysis/normalize options'). targetLevel: target RMS normalize level (dB), windowSize: window size for peak RMS (sec.)
+            
+            See [NF\_GetSWS\_RMSoptions](#NF_GetSWS_RMSoptions).
+        </description>
+        <retvals>
+            boolean retval - 
+        </retvals>
+        <parameters>
+            number targetLevel - 
+            number windowSize - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Track Management
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc>
+  
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>NF_TakeFX_GetModuleName</slug>
         <title>NF_TakeFX_GetModuleName(SWS)</title>
@@ -32519,7 +32876,54 @@
         </chapter_context>
         <tags></tags>
     </US_DocBloc>
-    
+ 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>NF_Win32_GetSystemMetrics</slug>
+        <title>NF_Win32_GetSystemMetrics(SWS)</title>
+        <functioncall prog_lang="cpp">int NF_Win32_GetSystemMetrics(int nIndex)</functioncall>
+        <functioncall prog_lang="eel">int extension_api("NF_Win32_GetSystemMetrics", int nIndex)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.NF_Win32_GetSystemMetrics(integer nIndex)</functioncall>
+        <functioncall prog_lang="python">Int NF_Win32_GetSystemMetrics(Int nIndex)</functioncall>
+        <requires>
+            Reaper=5.965
+            SWS=2.12.0
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            This function allows you to get various information about your display.
+        
+            Equivalent to [win32 API GetSystemMetrics()](https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-getsystemmetrics).
+        </description>
+        <retvals>
+            integer retval - the returned value
+        </retvals>
+        <parameters>
+            integer nIndex - the value to query, like:
+                           - 5, width of window-borders
+                           - 7, thickness of a frame around the perimeter of a window with caption but not resizeable
+                           - 10, width of "thumb box" in a horizontal scroll bar
+                           - 11, default icon width
+                           - 13, width of the cursor in pixels
+                           - 16, x-width of fullscreen
+                           - 21, width of arrow of the horizontal-scrollbar
+                           - 36, width of the rectangle, within double-clicks are detected
+                           - 43, number of mousebuttons or zero, if no mouse is installed
+                           - 45, width of a 3d-border
+                           - 56, flags how system arranges minimized windows
+                           - 67, (0, normal boot; 1, Fail-safe boot; 2, Fail-safe with network boot)
+                           - 68, the width of the area, that detects a mouse-drag
+                           - 80, number of display monitors
+                           - 83, width of left and right edges of focus rectangle drawn by DrawFocusRect-Win32-function
+                           - 0x2003, slate state of laptop; 0, slate mode; non-zero, otherwise
+                           - etc.
+        </parameter>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            User Interface
+        </chapter_context>
+        <tags></tags>
+    </US_DocBloc> 
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_abs</slug>
@@ -33759,7 +34163,9 @@
 
         Once the graphics window is open, [gfx\_update()](#eel_gfx_update) should be called periodically. 
 		
-		To resizes/reposition the window, call gfx.init again and pass an empty string as name-parameter.
+		To resizes/reposition the window, call gfx_init again and pass an empty string as name-parameter.
+        
+        To get the current window-states, dimensions, etc, you can use [gfx_dock](#eel_gfx_dock).
         </description>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -36345,12 +36751,14 @@
             Reaper=5.62
             Lua=5.3
         </requires>
-        <description indent="default">
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Initializes the graphics window with title name. Suggested width and height can be specified.Once the graphics window is open, gfx.update() should be called periodically. 
             
             Only one graphics-window can be opened per script! Calling gfx.ini after a window has been opened has no effect.
 			
 			To resizes/reposition the window, call gfx.init again and pass an empty string as name-parameter.
+            
+            To get the current window-states, dimensions, etc, you can use [gfx.dock](#lua_gfx.dock).            
         </description>
         <retvals>
             number retval - 1.0, if window is opened
