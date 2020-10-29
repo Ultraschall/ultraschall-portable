@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,12 @@
 ]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+reaper.Main_OnCommand(40026, 0) -- Save Project
+
+ultraschall.SetUSExternalState("ultraschall_gui", "donotopen_backupfolder", "true")
+
+reaper.Main_OnCommand(reaper.NamedCommandLookup("_Ultraschall_consolidate_backups"), 0) -- Move all Backups to Backup folder
 
 reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
 
