@@ -467,7 +467,6 @@ function buildGUI()
 
 	-- 4. - Image
 
-
 	images_offset = -18
 
 	changed, num_dropped_files, dropped_files, drop_mouseposition_x, drop_mouseposition_y = ultraschall.GFX_GetDropFile()
@@ -535,14 +534,14 @@ function buildGUI()
 
 	-- print(logo_path)
 
-	logo = GUI.Pic:new(784 + x_offset + images_offset, 390+y_offset, 80, 80, img_ratio, logo_path, runcommand, "_Ultraschall_Open_Project_Folder")
+	logo = GUI.Pic:new(784 + x_offset + images_offset, 390+y_offset, 80, 80, img_ratio, logo_path, runcommand, "")
 	table.insert (GUI.elms, logo)
 
 	if found then
 		logo_hover_path = header_path .. "dropzone_large_hover.png"
 		trash = header_path .. "trash.png"
 
-		logo2 = GUI.Pic:new(784 + x_offset + images_offset, 390+y_offset, 80, 80, 1, logo_hover_path, runcommand, "_Ultraschall_Open_Project_Folder")
+		logo2 = GUI.Pic:new(784 + x_offset + images_offset, 390+y_offset, 80, 80, 1, logo_hover_path, runcommand, "")
 		table.insert (GUI.elms, logo2)
 
 		trashbin = GUI.Pic:new(740 + x_offset, 449+y_offset, 25, 25, 1, trash, DeleteLogo, img_adress)
@@ -565,7 +564,7 @@ function buildGUI()
 
 		else
 
-			logo_slot = GUI.Pic:new(dropzone[i].x + images_offset, dropzone[i].y + y_offset, 38, 38, 1, logo_path, runcommand, "_Ultraschall_Open_Project_Folder")
+			logo_slot = GUI.Pic:new(dropzone[i].x + images_offset, dropzone[i].y + y_offset, 38, 38, 1, logo_path, runcommand, "")
 			table.insert (GUI.elms, logo_slot)
 			-- print (i..": ".. dropzone[i].x + images_offset.." - "..dropzone[i].y + y_offset)
 
@@ -618,7 +617,7 @@ if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed 
 					   -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
 
 	GUI.func = buildGUI
-	GUI.freq = 1     -- How often in seconds to run the function, so we can avoid clogging up the CPU.
+	GUI.freq = 0.5     -- How often in seconds to run the function, so we can avoid clogging up the CPU.
 
 	 buildGUI()
 	 GUI.Init()
