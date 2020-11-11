@@ -411,6 +411,7 @@ reaper.SetExtState("Ultraschall_Windows",GUI.name,windownumberint,true)
 
   -- Initialize any variables that are necessary
   GUI.last_time = 0
+  GUI.drawnow = true
 
   -- Convert color presets from 0..255 to 0..1
   for i, col in pairs(GUI.colors) do
@@ -445,10 +446,26 @@ function Main()
     reaper.defer(GUI.Main)
   end
 
+ ::rebuild_gui_now::
+
+-- print (#GUI.elms)
+
   -- Update each element
   for key, elm in pairs(GUI.elms) do
     GUI.Update(elm)
+    -- gfx.update()
+
   end
+
+  if rebuild_gui == true then
+    rebuild_gui = false
+    -- print ("redraw")
+    GUI.drawnow = true
+    goto rebuild_gui_now
+  end
+
+
+  GUI.drawnow = false
 
   -- If the user gave us a function to run, check
   -- to see if it needs to be run again, and do so.
@@ -483,6 +500,8 @@ function Update(elm)
 
   -- Left button down
   if GUI.mouse.cap&1==1 then
+
+    elm.drawnow = true
 
     -- If it wasn't down already...
     if not GUI.mouse.down then
@@ -529,14 +548,26 @@ function Update(elm)
     GUI.mouse.ox, GUI.mouse.oy = -1, -1
     GUI.mouse.lx, GUI.mouse.ly = -1, -1
     GUI.mouse.uptime = reaper.time_precise()
+    elm.drawnow = true
+    rebuild_gui = true
+    -- gfx.update()
 
   end
 
   -- If the element is in focus and the user typed something
   if elm.focus and char ~= 0 then elm:ontype(char) end
 
+
+  if elm.drawnow == true or GUI.drawnow == true then
   -- Draw the element
-  elm:draw()
+    elm:draw()
+    gfx.update()
+    -- print (tostring(key).." -- "..elm.type.." -- "..tostring(elm))
+    -- print (elm.type)
+    elm.drawnow = false
+    -- GUI.drawmode = true
+
+  end
 
 end
 

@@ -453,6 +453,8 @@ firstrun = true
 
 function buildGui()
 
+
+  rebuild_gui = true
   -------------------------
   -- Aufbau der Daten
   -------------------------

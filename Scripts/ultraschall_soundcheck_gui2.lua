@@ -376,7 +376,9 @@ function buildGuiWarnings()
 
   if refresh_gui == true then
 
-    WindowHeight = 140 + (paused_warning_count*60) + (active_warning_count*30) + description_lines*30
+    rebuild_gui = true -- Parameter für die GUI-Lib
+
+    WindowHeight = 125 + (paused_warning_count*60) + (active_warning_count*30) + description_lines*30
     if active_warning_count + paused_warning_count == 0 then
       WindowHeight = 220
     end
@@ -388,8 +390,10 @@ function buildGuiWarnings()
     end
 
     gfx.init("", 1000, WindowHeight, 0, GUI.x, GUI.y)
+    GUI.drawnow = true
+    rebuild_gui = true
 
-    refresh_gui = false
+    refresh_gui = true
 
   end
 
@@ -423,7 +427,7 @@ function buildGuiWarnings()
   -- Settings-Buttons
   -----------------------------------------------------------------
 
-  button_settings = GUI.Btn:new(870, 38, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings")
+  button_settings = GUI.Btn:new(870, 38, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings_Soundcheck")
   table.insert(GUI.elms, button_settings)
 
   -- button_all = GUI.Btn:new(770, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
@@ -448,6 +452,8 @@ function buildGuiWarnings()
     else
 
       gfx.init("", 1000, 220, 0, GUI.x, GUI.y)
+      GUI.drawnow = true
+      rebuild_gui = true
 
       block0 = GUI.Area:new(340,130,25, 55,7,1,1,"txt_green")
       table.insert(GUI.elms, block0)

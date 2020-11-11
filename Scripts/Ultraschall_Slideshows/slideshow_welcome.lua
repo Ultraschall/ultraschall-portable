@@ -106,6 +106,8 @@ function buildGui(slide_number)
 
   if slide_number == nil then slide_number = 1 end
 
+  rebuild_gui = true
+
   GUI.elms = {}
 
 

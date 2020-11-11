@@ -339,7 +339,7 @@ x_offset = -40
 
 
 GUI.name = "Ultraschall Export Assistant"
-GUI.w, GUI.h = 960, 700
+GUI.w, GUI.h = 960, 685
 
 -- position always in the centre of the screen
 
@@ -372,6 +372,9 @@ if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     separator = "
 -- Check if project has been saved
 
 function buildGUI()
+
+  GUI.drawnow = true
+  -- rebuild_gui = true
 
 	GUI.elms = {}
 
@@ -470,7 +473,11 @@ function buildGUI()
 	images_offset = -18
 
 	changed, num_dropped_files, dropped_files, drop_mouseposition_x, drop_mouseposition_y = ultraschall.GFX_GetDropFile()
-	if num_dropped_files > 0 and changed then -- es gibt ein drop-Event
+
+	-- print (num_dropped_files)
+
+	-- if num_dropped_files > 0 and changed then -- es gibt ein drop-Event
+	if num_dropped_files > 0 then -- es gibt ein drop-Event
 		-- print ("da: "..dropped_files[1])
 
 		-- print (drop_mouseposition_x/dpi_scale.."-".. (drop_mouseposition_y/dpi_scale)-y_offset)
@@ -498,6 +505,8 @@ function buildGUI()
 	else
 		-- print ("nix"..tostring(changed))
 	end
+
+	gfx.update()
 
 	found, img_adress, img_ratio = checkImage()
 
