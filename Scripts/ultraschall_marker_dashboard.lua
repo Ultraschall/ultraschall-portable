@@ -788,8 +788,8 @@ function buildGui()
       if mkrRgnSubOut == nil then
         mkrRgnSubOut = ""
       end
-      url_displayed = string.sub(mkrRgnSubOut,1,31)
-      if #mkrRgnSubOut > 31 then
+      url_displayed = string.sub(mkrRgnSubOut,1,26)
+      if #mkrRgnSubOut > 26 then
         url_displayed = url_displayed .. "..."
       end
 
