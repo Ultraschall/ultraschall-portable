@@ -93,46 +93,36 @@ end
 
 function ResizeJPG(filename_with_path, outputfilename_with_path, aspectratio, width, height, quality)
 
-    if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("ResizeJPG", "filename_with_path", "must be a string", -1) return false end
-    if type(outputfilename_with_path)~="string" then ultraschall.AddErrorMessage("ResizeJPG", "outputfilename_with_path", "must be a string", -2) return false end
-    if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("ResizeJPG", "filename_with_path", "file can not be opened", -3) return false end
-    if type(aspectratio)~="boolean" then ultraschall.AddErrorMessage("ResizeJPG", "aspectratio", "must be a boolean", -4) return false end
-    if math.type(width)~="integer" then ultraschall.AddErrorMessage("ResizeJPG", "width", "must be an integer", -5) return false end
-    if aspectratio==false and math.type(height)~="integer" then ultraschall.AddErrorMessage("ResizeJPG", "height", "must be an integer, when aspectratio==false", -6) return false end
-    if math.type(quality)~="integer" then ultraschall.AddErrorMessage("ResizeJPG", "quality", "must be an integer", -7) return false end
-    if quality<1 or quality>100 then ultraschall.AddErrorMessage("ResizeJPG", "quality", "must be between 1 and 100", -8) return false end
-
-    local Identifier, Identifier2, squaresize, NewWidth, NewHeight, Height, Width, Retval
+  local Identifier, Identifier2, squaresize, NewWidth, NewHeight, Height, Width, Retval, filetype
+  filetype = GetFileExtension(filename_with_path)
+  if filetype == ".png" then
+    Identifier=reaper.JS_LICE_LoadPNG(filename_with_path)
+  else
     Identifier=reaper.JS_LICE_LoadJPG(filename_with_path)
-    Width=reaper.JS_LICE_GetWidth(Identifier)
-    Height=reaper.JS_LICE_GetHeight(Identifier)
-    if aspectratio==true then
-
-     -- if Width==Height then
-     --   squaresize = width
-     --   NewWidth=squaresize
-     --   NewHeight=((100/Width)*Height)
-     --   NewHeight=NewHeight/100
-     --   NewHeight=math.floor(squaresize*NewHeight)
-     -- else
-        squaresize=height
-        NewHeight=squaresize
-        NewWidth=((100/Height)*Width)
-        NewWidth=NewWidth/100
-        NewWidth=math.floor(squaresize*NewWidth)
-      --end
-    else
-      NewHeight=height
-      NewWidth=width
-    end
-
-    Identifier2=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
-    reaper.JS_LICE_ScaledBlit(Identifier2, 0, 0, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, 1, "COPY")
-    Retval=reaper.JS_LICE_WriteJPG(outputfilename_with_path, Identifier2, quality)
-    reaper.JS_LICE_DestroyBitmap(Identifier)
-    reaper.JS_LICE_DestroyBitmap(Identifier2)
-    if Retval==false then ultraschall.AddErrorMessage("ResizeJPG", "outputfilename_with_path", "Can't write outputfile", -9) return false end
   end
+  Width=reaper.JS_LICE_GetWidth(Identifier)
+  Height=reaper.JS_LICE_GetHeight(Identifier)
+
+  if aspectratio==true then
+
+      squaresize=height
+      NewHeight=squaresize
+      NewWidth=((100/Height)*Width)
+      NewWidth=NewWidth/100
+      NewWidth=math.floor(squaresize*NewWidth)
+    --end
+  else
+    NewHeight=height
+    NewWidth=width
+  end
+
+  Identifier2=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
+  reaper.JS_LICE_ScaledBlit(Identifier2, 0, 0, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, 1, "COPY")
+  Retval=reaper.JS_LICE_WriteJPG(outputfilename_with_path, Identifier2, quality)
+  reaper.JS_LICE_DestroyBitmap(Identifier)
+  reaper.JS_LICE_DestroyBitmap(Identifier2)
+  if Retval==false then ultraschall.AddErrorMessage("ResizeJPG", "outputfilename_with_path", "Can't write outputfile", -9) return false end
+end
 
 
 
@@ -899,9 +889,9 @@ function buildGui()
 
       thumbURL = thumbsDir..separator..key..".jpg"
 
-      fileformat, supported_by_reaper, mediatype = ultraschall.CheckForValidFileFormats(thumbURL)
+      -- fileformat, supported_by_reaper, mediatype = ultraschall.CheckForValidFileFormats(thumbURL)
 
-      if supported_by_reaper == nil then
+      if reaper.file_exists(thumbURL) == false then
         retval = ResizeJPG(image, thumbURL, true, 50, 53, 90)
       end
 
