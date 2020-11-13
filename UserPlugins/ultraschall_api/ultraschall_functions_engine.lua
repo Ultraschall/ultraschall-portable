@@ -211,7 +211,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  return 410.005, "4.1","25th of September 2020", "005",  "\"The Beatles - I want you(she's so heavy)\"", ultraschall.hotfixdate, BuildNumber
+  return 410.007, "4.1","21st of October 2020", "007",  "\"Frank Zappa - Carolina Hard-Core Ecstasy\"", ultraschall.hotfixdate, BuildNumber
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -2416,6 +2416,164 @@ function ultraschall.BringReaScriptConsoleToFront()
   if HWND~=nil and OldHWND~=HWND then 
     reaper.JS_Window_SetForeground(HWND)
   end
+end
+
+function ultraschall.EditReaScript(filename)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>EditReaScript</slug>
+  <requires>
+    Ultraschall=4.1
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.EditReaScript(string filename)</functioncall>
+  <description>
+    Opens a script in Reaper's ReaScript-IDE.
+    
+    If the file does not exist yet, it will try to create it. If parameter filename doesn't contain a valid directory, it will try to create the script in the Scripts-folder of Reaper.
+    
+    returns false in case of an error
+  </description>
+  <parameters>
+    boolean flag - true, suppress error-messages; false, don't suppress error-messages
+  </parameters>
+  <retvals>
+    boolean retval - true, setting was successful; false, you didn't pass a boolean as parameter
+  </retvals>
+  <chapter_context>
+    Developer
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>developer, edit, reascript, ide</tags>
+</US_DocBloc>
+]]
+  if type(filename)~="string" then ultraschall.AddErrorMessage("EditReaScript", "filename", "must be a string", -1) return false end
+  if reaper.file_exists(filename)==false and ultraschall.DirectoryExists2(ultraschall.GetPath(filename))==false then
+    local Path, Filename=ultraschall.GetPath(filename)
+    filename=reaper.GetResourcePath().."/Scripts/"..Filename
+  end
+  if reaper.file_exists(filename)==false then
+    ultraschall.WriteValueToFile(filename, "")
+  end
+  local A, B, C
+  A=ultraschall.GetUSExternalState("REAPER", "lastscript", "reaper.ini")
+  B=ultraschall.SetUSExternalState("REAPER", "lastscript", filename, "reaper.ini")
+  reaper.Main_OnCommand(41931,0)
+  C=ultraschall.SetUSExternalState("REAPER", "lastscript", A, "reaper.ini")
+  return true
+end
+
+function SFEM()
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>SFEM</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=5.40
+      Lua=5.3
+    </requires>
+    <functioncall>requested_error_message = SFEM(optional integer dunk, optional integer target, optional integer message_type)</functioncall>
+    <description>
+      Displays the first error message in a messagebox, the ReaScript-Console, the clipboard, if error is existing and unread.
+    </description>
+    <retvals>
+      requested_error_message - the errormessage requested; 
+    </retvals>
+    <parameters>
+      optional integer dunk - allows to index the last x'ish message to be returned; nil or 0, the last one; 1, the one before the last one, etc.
+      optional integer target - the target, where the error-message shall be output to
+                              - 0 or nil, target is a message box
+                              - 1, target is the ReaScript-Console
+                              - 2, target is the clipboard
+                              - 3, target is a returned string
+      optional integer message_type - if target is set to 3, you can set, which part of the error-messageshall be returned as returnvalue
+                                    - nil or 1, returns true, if error has happened, false, if error didn't happen
+                                    - 2, returns the errcode
+                                    - 3, returns the functionname which caused the error
+                                    - 4, returns the parmname which caused the error
+                                    - 5, returns the errormessage
+                                    - 6, returns the lastreadtime
+                                    - 7, returns the err_creation_date
+                                    - 8, returns the err_creation_timestamp      
+    </parameters>
+    <chapter_context>
+      Developer
+      Error Handling
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>developer, error, show, message</tags>
+  </US_DocBloc>
+  --]]
+    local three
+    if dunk=="dunk" then three="Three points" end
+    dunk=math.tointeger(dunk)
+    if dunk==nil then dunk=ultraschall.ErrorCounter-1 end
+   
+    if target==nil then 
+      target=tonumber(reaper.GetExtState("ultraschall_api", "ShowLastErrorMessage_Target"))
+    end
+    
+    local CountErrMessage=ultraschall.CountErrorMessages()
+    if CountErrMessage<=0 then return end
+    if dunk<0 then dunk=CountErrMessage+dunk else dunk=CountErrMessage-dunk end
+    -- get the error-information
+    --local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage()
+      local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp = ultraschall.ReadErrorMessage(dunk, true)
+      --AAA=retval
+    -- if errormessage exists and message is unread
+    if retval==true and lastreadtime=="unread" then 
+      if target==nil or target==0 then
+        if parmname~="" then 
+          -- if error-causing-parameter was given, display this message
+          parmname="param: "..parmname 
+          reaper.MB(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode,"Ultraschall Api Error Message",0) 
+        else
+          -- if no error-causing-parameter was given, display that message
+          reaper.MB(functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode,"Ultraschall Api Error Message",0) 
+        end
+      elseif target==1 then
+        if parmname~="" then 
+          -- if error-causing-parameter was given, display this message
+          parmname="param: "..parmname 
+          reaper.ShowConsoleMsg("\n\nErrortime: "..os.date().."\n"..functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+        else
+          -- if no error-causing-parameter was given, display that message
+          reaper.ShowConsoleMsg("\n\nErrortime: "..os.date().."\n"..functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+        end
+      elseif target==2 then
+        if parmname~="" then 
+          -- if error-causing-parameter was given, display this message
+          parmname="param: "..parmname 
+          print3(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+        else
+          -- if no error-causing-parameter was given, display that message
+          print3(functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+        end  
+      elseif target==3 then
+        if      message_type==nil or message_type==1 then return retval
+        elseif  message_type==2 then return errcode
+        elseif  message_type==3 then return functionname
+        elseif  message_type==4 then return parmname
+        elseif  message_type==5 then return errormessage
+        elseif  message_type==6 then return lastreadtime
+        elseif  message_type==7 then return err_creation_date
+        elseif  message_type==8 then return err_creation_timestamp     
+        end
+      end
+    end
+    local retval
+    if parmname~="" then 
+      -- if error-causing-parameter was given, display this message
+      retval=functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode
+    else
+      -- if no error-causing-parameter was given, display that message
+      retval=functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode
+    end  
+    return retval, three
 end
 
 

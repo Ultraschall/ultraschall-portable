@@ -55,7 +55,7 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.1005 - "The Beatles - I want you(she's so heavy)" - 25th of September 2020 - Build: 43343</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.1007 - "Frank Zappa - Carolina Hard-Core Ecstasy" - 21st of October 2020 - Build: 43385</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
 <td><a href="#Introduction_002_How_to_Use">How to install and use the Ultraschall API</a></td>
 <td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
@@ -4580,16 +4580,21 @@ So if you want to know, which setting that you want to alter is stored in which 
     ParmModTable["PARMLINK"]               - the Link from MIDI or FX parameter-checkbox
                                               true, checked; false, unchecked
     ParmModTable["PARMLINK_LINKEDPLUGIN"]  - the selected plugin; nil, if not available
+                                             Will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set.
                                                 -1, nothing selected yet
                                                 -100, MIDI-parameter-settings
                                                 1 - the first fx-plugin
                                                 2 - the second fx-plugin
                                                 3 - the third fx-plugin, etc
+    ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
+                                                   - 0, use parameter of the current fx-plugin
+                                                   - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                   - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                   - nil, uses only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
     ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available
                                                 When MIDI, this is irrelevant.
                                                 When FX-parameter:
-                                                  0 to n; 0 for the first; 1, for the second, etc
-
+                                                  0 to n; 0 for the first; 1, for the second, etc                                                               
     ParmModTable["PARMLINK_OFFSET"]        - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
     ParmModTable["PARMLINK_SCALE"]         - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
 
@@ -4640,6 +4645,14 @@ So if you want to know, which setting that you want to alter is stored in which 
 If you've set AUDIOCONTROL=true then you need to set all AUDIOCONTROL_-entries as well as X2 and Y2 to useful values. Same goes for LFO=true -&gt; set all LFO_-entries to useful values, and PARMLINK=true, which needs all PARMLINK_-entries being set.<br />
 For PARMLINK you also need to keep in mind, that setting PARMLINK_LINKEDPLUGIN=-100(link to MIDI) means, that you need to set all MIDIPLINK-entries as well. But don't worry. If you set an entry to an invalid value or have invalid combinations, the ParmMod-functions, especially <a href="US_Api_Functions.html#IsValidParmModTable">IsValidParmModTable</a>, will return useful error-messages.<br />
 So just run SLEM() after calling one of the ParmMod-functions and it will tell you, what you did wrong.</p>
+<p>Another note on plugin-linking:<br />
+You can index the linked plugin in two ways, absolute or relative.<br />
+To link a plugin absolute(by its FXChain-index), set the following entries the following ways:</p>
+<p>ParmModTable["PARMLINK_LINKEDPLUGIN"]=the index of the plugin in the FXChain<br />
+ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]=nil</p>
+<p>To link a plugin relative to the current plugin's position, set the following entries the following way:</p>
+<p>ParmModTable["PARMLINK_LINKEDPLUGIN"]=any integer number<br />
+ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]=0 for a parameter of the current plugin; negative, to index a plugin above the current plugin; positive, to index a plugin below the current plugin in the FXChain.</p>
 <p>Note: If you commit a ParmModTable to a currently opened Parameter Modulation, some things may not be updated in the gui. If you change the state of the AUDIOCONTROL/LFO/PARMLINK-checkbox or the Track audio channel-dropdownlist, it will only be updated after closing and reopening the window again. This affects only the gui, so if i.e. you enable the LFO-checkbox, it will be recognized as activated, even though the gui does not reflect that.</p>
 <p>Take your time to toy around with it, as it's a little complex in the beginning but you will quickly get an idea of how it works.<br />
 To assist you with developing, there's a developer-tool ultraschall_developertool_MonitorParmModulation.lua, which shows the values of all ParmModTable-entries a certain Parameter Modulation of an fx in a certain track has.<br />
@@ -5053,4 +5066,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
 
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 005 - 121 chapters available</td></table><br><hr></div></body></html>
+<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 007 - 121 chapters available</td></table><br><hr></div></body></html>

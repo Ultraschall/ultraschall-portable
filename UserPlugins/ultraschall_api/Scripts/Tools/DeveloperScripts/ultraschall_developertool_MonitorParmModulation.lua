@@ -32,6 +32,7 @@ ParmTable={
 "PARMLINK",
 "PARMLINK_LINKEDPARMIDX",
 "PARMLINK_LINKEDPLUGIN",
+"PARMLINK_LINKEDPLUGIN_RELATIVE", 
 "PARMLINK_OFFSET",
 "PARMLINK_SCALE",
 "WINDOW_ALTERED",
@@ -43,7 +44,7 @@ ParmTable={
 "X2",
 "Y2"}
 
-gfx.init("Monitor ParmModTable - by Meo-Ada Mespotine", 350, 680)
+gfx.init("Monitor ParmModTable - by Meo-Ada Mespotine", 350, 690)
 gfx.setfont(1, "arial", 12,0)
 
 
@@ -55,21 +56,21 @@ parmmodindex=1
 
 Retval, TrackStateChunk = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber)
 FXStateChunk           = ultraschall.GetFXStateChunk(TrackStateChunk)
-OldParmModulationTable    = ultraschall.GetParmModulationTable(FXStateChunk, fxindex, parmmodindex)
+OldParmModulationTable    = ultraschall.GetParmModTable_FXStateChunk(FXStateChunk, fxindex, parmmodindex)
 
 function main()
   A=A+1
   if A==15 then
     Retval, TrackStateChunk = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber)
     FXStateChunk           = ultraschall.GetFXStateChunk(TrackStateChunk)
-    ParmModulationTable    = ultraschall.GetParmModulationTable(FXStateChunk, fxindex, parmmodindex)
+    ParmModulationTable    = ultraschall.GetParmModTable_FXStateChunk(FXStateChunk, fxindex, parmmodindex)
 --    print_update(FXStateChunk)
     gfx.x=0
     gfx.y=10
     gfx.set(1)
     gfx.drawstr("Track: "..tracknumber.." FXIdx: "..fxindex.." ParmIDX: "..parmmodindex.."\nClick to select new track, fx and modulation\n\nCURRENT VALUES:")
     gfx.y=gfx.y+gfx.texth+3
-    for i=1, 40 do
+    for i=1, #ParmTable do
       gfx.x=0
       gfx.y=gfx.y+gfx.texth+3
       if ParmModulationTable~=nil and ParmModulationTable[ParmTable[i]]~=OldParmModulationTable[ParmTable[i]] then
@@ -97,6 +98,9 @@ function main()
         tracknumber=A
         fxindex=B
         parmmodindex=C
+        Retval, TrackStateChunk = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber)
+        FXStateChunk           = ultraschall.GetFXStateChunk(TrackStateChunk)
+        OldParmModulationTable    = ultraschall.GetParmModTable_FXStateChunk(FXStateChunk, fxindex, parmmodindex)
       else
         reaper.MB("Only numbers are allowed!", "Error", 0)
       end

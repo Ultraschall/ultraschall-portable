@@ -4112,13 +4112,13 @@ end
 function ultraschall.TCP_SetWidth(width)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>SetThemeParameterIndexByDescription</slug>
+  <slug>TCP_SetWidth</slug>
   <requires>
     Ultraschall=4.1
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.SetThemeParameterIndexByDescription(integer width)</functioncall>
+  <functioncall>boolean retval = ultraschall.TCP_SetWidth(integer width)</functioncall>
   <description>
     allows setting the width of the tcp.
     

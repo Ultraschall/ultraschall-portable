@@ -4501,6 +4501,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     if AddToProj==nil then AddToProj=oldAddToProj end
     RenderTable["AddToProj"]=true
     
+    
     -- set the defaults for incrementing filenames and close rendering to file dialog after render, 
     -- if parameters got set to nil:
     local oldcloseafterrender=RenderTable["CloseAfterRender"]
@@ -4510,6 +4511,12 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     if SilentlyIncrementFilename~=nil then RenderTable["SilentlyIncrementFilename"]=SilentlyIncrementFilename end    
     if CloseAfterRender==nil and norendertable==true then RenderTable["CloseAfterRender"]=true end
     
+    local peakval
+    if AddToProj==false then
+    -- temporarily disable building peak-caches
+        peakval=reaper.SNM_GetIntConfigVar("peakcachegenmode", -99)
+        reaper.SNM_SetIntConfigVar("peakcachegenmode", 0)
+    end
     -- get the old number of tracks
     local OldTrackNumber=reaper.CountTracks(0)     
     
@@ -4546,6 +4553,8 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     -- temporarily prevent creation of bak-files and save project, as otherwise we couldn't close the tab
     oldSaveOpts=reaper.SNM_GetIntConfigVar("saveopts", -111)
     if oldSaveOpts&1==1 then reaper.SNM_SetIntConfigVar("saveopts", oldSaveOpts-1) end
+    
+    -- render
     reaper.Main_OnCommand(41824,0)    -- render using it with the last rendersettings(those, we inserted included)
     reaper.SNM_SetIntConfigVar("saveopts", oldSaveOpts) -- reset old bak-files-behavior    
     
@@ -4584,6 +4593,9 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     -- restore old settings, that I temporarily overwrite in the RenderTable
     RenderTable["CloseAfterRender"]=oldcloseafterrender
     RenderTable["SilentlyIncrementFilename"]=oldsilentlyincreasefilename
+    if AddToProj==false then
+      reaper.SNM_SetIntConfigVar("peakcachegenmode", peakval)
+    end
 
     if aborted == true then ultraschall.AddErrorMessage("RenderProject_RenderTable", "", "rendering aborted", -2) return -1 end
     
@@ -4684,8 +4696,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     
     -- get the individual filenames of all the rendered files
     local Filearray={}
-    for i=1, count do
-    
+    for i=1, count do    
       Filearray[i]=MediaItemStateChunkArray[i]:match("%<SOURCE.-FILE \"(.-)\"")
     end
     

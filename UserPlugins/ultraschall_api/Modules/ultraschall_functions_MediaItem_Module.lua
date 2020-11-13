@@ -5466,3 +5466,66 @@ function ultraschall.GetTake_ReverseState(MediaItem, takenumber)
   end
 end
 
+
+function ultraschall.IsItemVisible(item, completely_visible)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>IsItemVisible</slug>
+    <requires>
+      Ultraschall=4.1
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean visible, boolean parent_track_visible, boolean within_start_and_endtime  = ultraschall.IsItemVisible(MediaItem item, boolean completely_visible)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns if n item is currently visible in arrangeview
+
+      Note: Items who start above and end below the visible arrangeview will be treated as not completely visible!
+      
+      parent_track_visible and within_start_and_endtime will allow you to determine, if the item could be visible if scrolled in only x or y direction.
+        
+      returns nil in case of error
+    </description>
+    <retvals>
+      boolean visible - true, the item is visible; false, the item is not visible
+      boolean parent_track_visible - true, its parent-track is visible; false, its parent track is not visible
+      boolean within_start_and_endtime - true, the item is within start and endtime of the arrangeview; false, it is not
+    </retvals>
+    <parameters>
+      MediaTrack track - the track, whose visibility you want to query
+      boolean completely_visible - false, all tracks including partially visible ones; true, only fully visible tracks
+    </parameters>
+    <chapter_context>
+      MediaItem Management
+      Assistance functions
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+    <tags>track management, get, visible, item, arrangeview</tags>
+  </US_DocBloc>
+  --]]
+  if ultraschall.type(item)~="MediaTrack" then ultraschall.AddErrorMessage("IsItemVisible", "item", "must be a MediaItem", -1) return end
+  if type(completely_visible)~="boolean" then ultraschall.AddErrorMessage("IsItemVisible", "completely_visible", "must be a boolean", -2) return end
+  local MediaTrack=reaper.GetMediaItemInfo_Value(item, "P_TRACK")
+  local trackstring, tracktable_count, tracktable = ultraschall.GetAllVisibleTracks_Arrange(false, completely_visible)
+  local found=false
+  for i=1, tracktable_count do
+    if tracktable[i]==MediaTrack then found=true end
+  end
+  local start_item=reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+  local end_item=reaper.GetMediaItemInfo_Value(item, "D_LENGTH")+start_item
+  local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0)
+  local yeah=false
+  
+  if completely_visible==true then
+    if start_item>=start_time and end_item<=end_time then yeah=true else yeah=false end
+  else
+    if start_item>=start_time and end_item<=end_time then yeah=true end
+    if start_item<=end_time and end_item>=start_time then yeah=true end
+  end
+  return yeah==found, found, yeah
+end
+
+
+--A={ultraschall.IsItemVisible(reaper.GetMediaItem(0,0), false)}
+
