@@ -98,6 +98,16 @@ on_air_button_id = reaper.NamedCommandLookup("_Ultraschall_OnAir")
 reaper.SetToggleCommandState(sec, on_air_button_id, 0)
 reaper.RefreshToolbar2(sec, on_air_button_id)
 
+
+-----------------------------
+-- Add the Limiter Effect to the Master to end up at -16LUFS and deactivate ist
+-----------------------------
+
+mastertrack = reaper.GetMasterTrack(0)
+fx_slot = reaper.TrackFX_AddByName(mastertrack, "MGA_JSLimiter", false, 1) -- muss bei JS-Effekten der Filename sein O__o
+reaper.TrackFX_SetEnabled(mastertrack, fx_slot, false)
+
+
 -----------------------------
 -- Enable all sends to master for rendering
 -----------------------------
