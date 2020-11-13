@@ -558,10 +558,10 @@ function buildGui()
   -------------------------
 
   pos_status = 753
-  pos_url = 540
-  pos_image = 472
+  pos_url = 537
+  pos_image = 460
   pos_name = 55
-  pos_position = 400
+  pos_position = 380
   pos_headerlogo = 27
   pos_headertxt = pos_headerlogo + 70
   pos_number = 29
@@ -757,8 +757,8 @@ function buildGui()
 
     if name and name ~= "" then
 
-      name_displayed = string.sub(name,1,40)
-      if #name > 40 then
+      name_displayed = string.sub(name,1,38)
+      if #name > 38 then
         name_displayed = name_displayed .. "..."
       end
 
@@ -898,12 +898,12 @@ function buildGui()
 
       img_ratio = 0.5
 
-      imagepreview = GUI.Pic:new(pos_image, position-7, 25, 25, img_ratio, thumbURL, ultraschall.OpenURL, image)
+      imagepreview = GUI.Pic:new(pos_image-8, position-7, 25, 25, img_ratio, thumbURL, ultraschall.OpenURL, image)
       table.insert(GUI.elms, imagepreview)
 
     elseif name and name ~= "" then -- noch kein Bild zugeordnet
 
-      add_image = GUI.Pic:new(pos_image, position-5, 25, 25, 1, add, addImage, key)
+      add_image = GUI.Pic:new(pos_image-8, position-5, 25, 25, 1, add, addImage, key)
       table.insert(GUI.elms, add_image)
 
     end
