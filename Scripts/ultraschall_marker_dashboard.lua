@@ -62,12 +62,86 @@ function ConsolidateChapterImages()
 
   end
 
+
+
+function GetPath(str,sep)
+    return str:match("(.*"..sep..")")
+end
+
+function GetFileName(url)
+	return url:match("^.+/(.+)$")
+end
+
+function GetFileExtension(url)
+  return url:match("^.+(%..+)$")
+end
+
+
+function GetProjectPath()
+
+	retval, project_path_name = reaper.EnumProjects(-1, "")
+	if project_path_name ~= "" then
+		dir = GetPath(project_path_name, separator)
+		-- name = string.sub(project_path_name, string.len(dir) + 1)
+		-- name = string.sub(name, 1, -5)
+		-- name = name:gsub(dir, "")
+    return dir
+  end
+
+end
+
+
+function ResizeJPG(filename_with_path, outputfilename_with_path, aspectratio, width, height, quality)
+
+    if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("ResizeJPG", "filename_with_path", "must be a string", -1) return false end
+    if type(outputfilename_with_path)~="string" then ultraschall.AddErrorMessage("ResizeJPG", "outputfilename_with_path", "must be a string", -2) return false end
+    if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("ResizeJPG", "filename_with_path", "file can not be opened", -3) return false end
+    if type(aspectratio)~="boolean" then ultraschall.AddErrorMessage("ResizeJPG", "aspectratio", "must be a boolean", -4) return false end
+    if math.type(width)~="integer" then ultraschall.AddErrorMessage("ResizeJPG", "width", "must be an integer", -5) return false end
+    if aspectratio==false and math.type(height)~="integer" then ultraschall.AddErrorMessage("ResizeJPG", "height", "must be an integer, when aspectratio==false", -6) return false end
+    if math.type(quality)~="integer" then ultraschall.AddErrorMessage("ResizeJPG", "quality", "must be an integer", -7) return false end
+    if quality<1 or quality>100 then ultraschall.AddErrorMessage("ResizeJPG", "quality", "must be between 1 and 100", -8) return false end
+
+    local Identifier, Identifier2, squaresize, NewWidth, NewHeight, Height, Width, Retval
+    Identifier=reaper.JS_LICE_LoadJPG(filename_with_path)
+    Width=reaper.JS_LICE_GetWidth(Identifier)
+    Height=reaper.JS_LICE_GetHeight(Identifier)
+    if aspectratio==true then
+
+     -- if Width==Height then
+     --   squaresize = width
+     --   NewWidth=squaresize
+     --   NewHeight=((100/Width)*Height)
+     --   NewHeight=NewHeight/100
+     --   NewHeight=math.floor(squaresize*NewHeight)
+     -- else
+        squaresize=height
+        NewHeight=squaresize
+        NewWidth=((100/Height)*Width)
+        NewWidth=NewWidth/100
+        NewWidth=math.floor(squaresize*NewWidth)
+      --end
+    else
+      NewHeight=height
+      NewWidth=width
+    end
+
+    Identifier2=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
+    reaper.JS_LICE_ScaledBlit(Identifier2, 0, 0, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, 1, "COPY")
+    Retval=reaper.JS_LICE_WriteJPG(outputfilename_with_path, Identifier2, quality)
+    reaper.JS_LICE_DestroyBitmap(Identifier)
+    reaper.JS_LICE_DestroyBitmap(Identifier2)
+    if Retval==false then ultraschall.AddErrorMessage("ResizeJPG", "outputfilename_with_path", "Can't write outputfile", -9) return false end
+  end
+
+
+
   ------------------------------------------------------
   -- End of functions
   ------------------------------------------------------
 
 
-
+if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     separator = "\\" else separator = "/" end
 
   retval = ultraschall.DeleteProjExtState_Section("chapterimages") -- erst mal alles löschen
   retval2 = ultraschall.DeleteProjExtState_Section("lostimages") -- erst mal alles löschen
@@ -386,6 +460,19 @@ else
 end
 
 
+dir = GetProjectPath()
+
+-- lege ein thumbs Verzeichnis an für Vorschaubilder
+
+thumbsDir = dir.."thumbs"
+
+if ultraschall.DirectoryExists(dir, "thumbs") ~= true then
+
+  reaper.RecursiveCreateDirectory(thumbsDir, 0)
+
+end
+
+
 
 -- print(maxlines.."-"..rows)
 
@@ -481,7 +568,7 @@ function buildGui()
   -------------------------
 
   pos_status = 753
-  pos_url = 535
+  pos_url = 540
   pos_image = 472
   pos_name = 55
   pos_position = 400
@@ -806,9 +893,22 @@ function buildGui()
 
       end
 
+      -- print (key)
+      -- print (GetProjectPath())
+
+
+      thumbURL = thumbsDir..separator..key..".jpg"
+
+      fileformat, supported_by_reaper, mediatype = ultraschall.CheckForValidFileFormats(thumbURL)
+
+      if supported_by_reaper == nil then
+        retval = ResizeJPG(image, thumbURL, true, 50, 53, 90)
+      end
+
+
       img_ratio = 0.5
 
-      imagepreview = GUI.Pic:new(pos_image, position-5, 25, 25, img_ratio, placeholderimg, ultraschall.OpenURL, image)
+      imagepreview = GUI.Pic:new(pos_image, position-7, 25, 25, img_ratio, thumbURL, ultraschall.OpenURL, image)
       table.insert(GUI.elms, imagepreview)
 
     elseif name and name ~= "" then -- noch kein Bild zugeordnet
