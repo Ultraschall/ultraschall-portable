@@ -659,11 +659,11 @@ set trans.repeat * scale + trans_offset [325 5 36 36 0.25 0 0.25 0]
 set trans.rec * scale + trans_offset [360 5 36 36 0.25 0 0.25 0]
 
 ;Playrate Fader settings
-set trans.rate w<600 [0] ?trans_flags&2 * scale [889 13 64 13 0.5 0 0.5 0]
-set trans.rate.margin * scale [6 1 5 1]
+set trans.rate w<600 [0] ?trans_flags&2 * scale [886 12 64 18 0.5 0 0.5 0]
+set trans.rate.margin * scale [6 1 5 0]
 set trans.rate.color [150 150 150 100 155 155 155 1]
 set trans.rate.font [7]
-set trans.rate.fader w<600 [0] ?trans_flags&2 * scale [949 9 80 18 0.5 0 0.5 0]
+set trans.rate.fader w<600 [0] ?trans_flags&2 * scale [949 12 80 18 0.5 0 0.5 0]
 
 EndLayout ; end of "Ultraschall 2 Trans Retina"
 
