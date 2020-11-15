@@ -454,12 +454,13 @@ dir = GetProjectPath()
 
 -- lege ein thumbs Verzeichnis an für Vorschaubilder
 
-thumbsDir = dir.."thumbs"
+if reaper.GetProjectName(0, "") ~= "" then
 
-if ultraschall.DirectoryExists(dir, "thumbs") ~= true then
+  thumbsDir = dir.."thumbs"
 
-  reaper.RecursiveCreateDirectory(thumbsDir, 0)
-
+  if ultraschall.DirectoryExists(dir, "thumbs") ~= true then
+    reaper.RecursiveCreateDirectory(thumbsDir, 0)
+  end
 end
 
 
@@ -837,8 +838,20 @@ function buildGui()
     -- Image
     -------------------------
 
+
+
+
+
     image = markertable[tostring(key)]["adress"]
-    if image then
+
+    if image and reaper.GetProjectName(0, "") == "" and savewarning ~= true then
+
+      Message = "?;MarkerContext;".."Save your project to use chapter images."
+      reaper.SetExtState("ultraschall_messages", "message_0", Message, false)
+      reaper.SetExtState("ultraschall_messages", "message_count", "1", false)
+      savewarning = true
+
+    elseif image and reaper.GetProjectName(0, "") ~= "" then
 
       img_index = gfx.loadimg(0, placeholderimg)
 
