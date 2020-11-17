@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -52,6 +52,35 @@
 -- * various bugfixes
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+
+
+function count_all_warnings() -- zähle die Arten von Soundchecks aus
+
+  event_count = ultraschall.EventManager_CountRegisteredEvents()
+  local active_warning_count = 0
+  local paused_warning_count = 0
+  local passed_warning_count = 0
+
+  for i = 1, event_count do
+
+    local EventIdentifier = ""
+    EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
+    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+
+    if last_state == true and EventPaused ~= true then -- es ist eine Warnung und sie steht nicht auf ignored
+      active_warning_count = active_warning_count +1
+    elseif EventPaused == true then
+      paused_warning_count = paused_warning_count + 1
+    end
+
+  end
+  passed_warning_count = event_count - active_warning_count - paused_warning_count
+
+  return active_warning_count, paused_warning_count, passed_warning_count
+end
+
+
 
 
 function GetProjectLength()
@@ -115,19 +144,22 @@ function Init()
   -- Important: y-position>1 might be displayed outside of the window!
   txt_line={}
   for i=1,7 do txt_line[i]={} end -- create 2d array for 4 lines of text
-  txt_line[2]={y=0.0, size=0.28}    -- current date
-  txt_line[1]={y=0.10 , size=0.28}   -- current time
-  txt_line[3]={y=0.17, size=0.27}  -- current playstate
-  txt_line[4]={y=0.24, size=0.75}  -- current position
+  txt_line[2]={y=0.06, size=0.28}    -- current date
+  txt_line[1]={y=0.06 , size=0.28}   -- current time
+  txt_line[3]={y=0.13, size=0.20}  -- current playstate
+  txt_line[4]={y=0.19, size=0.75}  -- current position
 
-  txt_line[7]={y=0.515, size=0.20}     -- time-selection-text
-  txt_line[8]={y=0.58, size=0.25}  -- time-selection
+  txt_line[7]={y=0.43, size=0.20}     -- time-selection-text
+  txt_line[8]={y=0.50, size=0.25}  -- time-selection
 
-  txt_line[9]={y=0.68, size=0.20}  -- project-length-text
+  txt_line[9]={y=0.64, size=0.25}  -- project-length-text
   txt_line[10]={y=0.745, size=0.25} -- project-length
 
-  txt_line[5]={y=0.845, size=0.20}  -- markernames
-  txt_line[6]={y=0.915, size=0.25}   -- marker positions
+  txt_line[5]={y=0.78, size=0.20}  -- markernames
+  txt_line[6]={y=0.85, size=0.25}   -- marker positions
+
+  txt_line[11]={y=0.99, size=0.20}   -- Soundcheck
+
 
   txt_line_preset={} for i=1,7 do txt_line_preset[i]=copy(txt_line) end --copy STD Setting to all presets
 
@@ -183,13 +215,13 @@ function Init()
   uc_menu[7]={text="Show Remaining Time until next Marker/Region/Projectend", checked= (preset&64==64)}
 
   uc_menu[8]={text="", checked=false} -- separator
-  uc_menu[9]={text="Dock Ultraclock window to Docker", checked=docked}
+  uc_menu[9]={text="Dock Dashboard window to Docker", checked=docked}
   uc_menu[10]={text="Close Window",checked=false}
 end
 
 function InitGFX()
   gfx.clear=0x333333 --background color
-  gfx.init("Ultraclock",width,height,false) --create window
+  gfx.init("Dashboard",width,height,false) --create window
   if docked then d=1 else d=0 end
 
 -- Ralf: Das könnte das Problem sein, dass er versucht in Dock4 zu docken.
@@ -321,14 +353,14 @@ function drawClock()
 
   -- calculate fontsize and textpositions depending on aspect ratio of window
   if gfx.w/gfx.h < 4/3 then -- if narrower than 4:3 add empty space on top and bottom
-    fsize=gfx.w/4*3/font_divisor
-    border=(gfx.h-gfx.w/4*3)/2
-    height=gfx.w/4*3
-  else
+     fsize=gfx.w/4*3/font_divisor
+     border=(gfx.h-gfx.w/4*3)/2
+     height=gfx.w/4*3
+   else
     fsize=gfx.h/font_divisor
     border=0
-    height=gfx.h
-  end
+    height=gfx.h -100
+   end
 
   preset=0
   for i=1, 8 do
@@ -362,11 +394,19 @@ function drawClock()
   end
 
   if date~="" then
-    WriteAlignedText(date.."    ",0xb3b3b3, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,2) -- print realtime hh:mm:ss
+    WriteAlignedText(date.." ",0xb3b3b3, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,2) -- print realtime hh:mm:ss
   end
   if time~="" then
-    WriteAlignedText(time.."    ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
+    WriteAlignedText(" "..time,0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,1) -- print realtime hh:mm:ss
   end
+
+  active_warning_count, paused_warning_count, passed_warning_count = count_all_warnings()
+
+  WriteAlignedText(" Soundcheck:",0xb3b3b3, clockfont_bold, txt_line[11].size * fsize, gfx.h -70-gfx.w*0.01,1) -- print
+  if passed_warning_count > 0 then WriteAlignedText(" PASSED ("..passed_warning_count..")",0x77ff77, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,1) end --
+  if paused_warning_count > 0 then WriteAlignedText("IGNORED ("..paused_warning_count..")  ",0xffff77, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,0) end --
+  if active_warning_count > 0 then WriteAlignedText("WARNING ("..active_warning_count..") ",0xff5555, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,2) end --
+
 
   -- Projecttime and Play/RecState
   if uc_menu[3].checked then
@@ -382,21 +422,21 @@ function drawClock()
     start, end_loop = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
     length=end_loop-start
     if length > 0 then
-      WriteAlignedText("Time Selection",0xdddd00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
+      WriteAlignedText("Time Selection",0xffbb00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
       start=reaper.format_timestr_len(start, "", 0, 5):match("(.*):")
       end_loop=reaper.format_timestr_len(end_loop, "", 0, 5):match("(.*):")
       length=reaper.format_timestr_len(length, "", 0, 5):match("(.*):")
-      WriteAlignedText(start.." < (".. length..") > "..end_loop,0xdddd44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
+      WriteAlignedText(start.."   < (".. length..") >   "..end_loop,0xffbb00, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
     else
-      WriteAlignedText("Time Selection",0xaaaa00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
-      WriteAlignedText("-:--:-- < (".. "0:00:00"..") > -:--:--",0xaaaa44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
+      -- WriteAlignedText("Time Selection",0xaaaa00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
+      -- WriteAlignedText("-:--:-- < (".. "0:00:00"..") > -:--:--",0xaaaa44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
     end
   end
 
   -- Project Length
   if uc_menu[6].checked then
-    WriteAlignedText("Project Duration",0xb6b6bb, clockfont_bold, txt_line[9].size * fsize, txt_line[9].y*height+border,0) -- print date
-    WriteAlignedText(reaper.format_timestr_len(GetProjectLength(),"", 0,5):match("(.*):"),0xb6b6bb, clockfont_bold, txt_line[10].size * fsize, txt_line[10].y*height+border,0) -- print date
+    WriteAlignedText("Project Duration: "..reaper.format_timestr_len(GetProjectLength(),"", 0,5):match("(.*):"),0xb6b6bb, clockfont_bold, txt_line[9].size * fsize, txt_line[9].y*height+border,0) -- print date
+    -- WriteAlignedText(reaper.format_timestr_len(GetProjectLength(),"", 0,5):match("(.*):"),0xb6b6bb, clockfont_bold, txt_line[10].size * fsize, txt_line[10].y*height+border,0) -- print date
   end
 
   -- Next/Previous Marker/Region
@@ -408,14 +448,16 @@ function drawClock()
     prevelm=string.gsub(prevelm,"Region_.-:","R:")
     nextelm=string.gsub(nextelm,"Region_.-:","R:")
 
-    WriteAlignedText(prevelm:sub(1,22).."    ",0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,4) -- print previous marker/region/projectstart/end
-    WriteAlignedText("      "..nextelm:sub(1,20),0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,3) -- print next marker/region/projectstart/end
+    WriteAlignedText("  "..prevelm:sub(1,22),0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,1) -- print previous marker/region/projectstart/end
+    WriteAlignedText(nextelm:sub(1,20).."  ",0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,2) -- print next marker/region/projectstart/end
 
     prevtime=formattimestr(prevtime*(-1))
     nexttime=formattimestr(nexttime*(-1))
     string.gsub(prevelm,"Region_beg:","Reg: ")
     string.gsub(prevelm,"Region_end:","Reg: ")
-    WriteAlignedText(prevtime.." < Marker > "..nexttime,0xb6b6bb, clockfont_bold, txt_line[6].size * fsize ,txt_line[6].y*height+border,0) -- print date
+    WriteAlignedText(" "..prevtime,0xb6b6bb, clockfont_bold, txt_line[6].size * fsize ,txt_line[6].y*height+border,1) -- print date
+    WriteAlignedText("< Marker > ",0xb6b6bb, clockfont_bold, txt_line[6].size * fsize ,txt_line[6].y*height+border,0) -- print date
+    WriteAlignedText(nexttime.." ",0xb6b6bb, clockfont_bold, txt_line[6].size * fsize ,txt_line[6].y*height+border,2) -- print date
   end
   gfx.update()
   lasttime=reaper.time_precise()
@@ -444,14 +486,18 @@ function MainLoop()
   end
 
   if Triggered==nil then
-    if gfx.mouse_cap & 2 == 2 then
+    if gfx.mouse_cap & 2 == 2 then -- right mousecklick
       Triggered=true
-    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_x>=zahnradbutton_posx and gfx.mouse_x<=zahnradbutton_posx+(zahnradbutton_x*zahnradscale) and gfx.mouse_y>=zahnradbutton_posy and gfx.mouse_y<zahnradbutton_posy+(zahnradbutton_y*zahnradscale) then --right mouseclick
+    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_x>=zahnradbutton_posx and gfx.mouse_x<=zahnradbutton_posx+(zahnradbutton_x*zahnradscale) and gfx.mouse_y>=zahnradbutton_posy and gfx.mouse_y<zahnradbutton_posy+(zahnradbutton_y*zahnradscale) then --left mouseclick
       Triggered=true
       menuposition=1
       gfx.x=zahnradbutton_posx
       gfx.y=zahnradbutton_posy
       gfx.blit(zahnradbutton_clicked, zahnradscale, 0)
+
+    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-40 then -- Linksklick auf Soundcheck-Footer
+      id = reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui")
+      reaper.Main_OnCommand(id,0)
     end
   else
     Triggered=nil
