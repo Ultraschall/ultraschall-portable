@@ -170,10 +170,64 @@ EndLayout ; end of "Ultraschall 2 TCP Retina"-specific-TCP-layout
 
 
 
+; The following are the global-settings for Envelope-Tracks(envcp)
+
+Layout "Env Ultraschall 5"
+
+set scale 1
+
+clear envcp.* ;!
+set envcp.size * scale [400 100 160] ;! Size of Envelope-track
+set envcp.margin +:maxfolderdepth:1 * scale [13 0 0 0] ;! Envelope-Track-Button position incl folder tracks
+set envcp.margin +:folderdepth:1 * scale [-13 0 0 0] ;! Envelope-Track-Button position in folder-tracks-only
+set envcp.yanchor * scale h<51 * scale [0 20] [0 20] ;! Envelope-track-button position
+set envcp.label + envcp.yanchor * [scale scale scale scale 1 1 1 1] [10 20 130 18 0 0.5 1 0.5] ;size of envelope-label, when height of envcp is bigger than 67
+; set envcp.label.font [6]
+set envcp.label.margin * scale [3 2 3 4] ;Positioning of the Envelope-Label
+set envcp.label.color [150 150 150 0] ;Color of Envelope-Label
+set envcp.bypass + envcp.yanchor * [scale scale scale scale 1 1 1 1] [326 20 24 19 1 0.5 1 0.5] ;! Bypass-button in envelope track
+set envcp.hide + envcp.yanchor * [scale scale scale scale 1 1 1 1] [353 20 24 19 1 0.5 1 0.5] ;! Hide/Clear-button in envelope track
+set envcp.fader + envcp.yanchor * [scale scale scale scale 1 1 1 1] [125 20 126 18 0 0.5 1 0.5] ;Envelope Track Fader
+set envcp.value + envcp.yanchor * [scale scale scale scale 1 1 1 1] [262 19 56 20 1 0.5 1 0.5] ;! Value of Fader
+; set envcp.value.font [6]
+
+set envcp.value.margin * scale [0 0 0 0 1] ;! Position of Value
+set envcp.value.color [160 160 160] ;! Color of Value
 
 
+	;set envcp.mod + envcp.yanchor w>280 h<51 [0] [269 24 57 18 1 0.5 1 0.5] h<51 [0] [280 24 20 18 1 0.5 1 0.5] ;?
 
 
+	;set envcp.learn + envcp.yanchor w>280 h<51 [0] [332 24 43 18 1 0.5 1 0.5] h<51 [0] [306 24 19 18 1 0.5 1 0.5] ;?
+	; set envcp.fader + envcp.yanchor w<370 w<281 w<240 h<51 [0] [18 25 16 16 0 0.5 0 0.5] h<51 [0] envcp_type==4 [25 24 248 18 0 0.5 1 0.5] [25 24 299 18 0 0.5 1 0.5] h<51 [0] [25 24 238 18 0 0.5 1 0.5] [148 0 115 18 0.5 0.5 1 0.5]
+	; set envcp.fader.color [200 200 200] ;?
+	; set envcp.arm + envcp.yanchor [7 0 18 18 0 0.5 0 0.5]
+	;set envcp.label + envcp.yanchor w<370 w<281 h>40 [25 0 288 18 0 0.5 1 0.5] [25 0 238 18 0 0.5 1 0.5] [25 0 117 18 0 0.5 0.5 0.5]
+
+EndLayout
+
+Layout "Env Ultraschall 5 Retina" "200"
+
+  set scale 2
+clear envcp.* ;!
+set envcp.size * scale [400 100 160 30] ;! Size of Envelope-track
+set envcp.margin +:maxfolderdepth:1 * scale [13 0 0 0] ;! Envelope-Track-Button position incl folder tracks
+set envcp.margin +:folderdepth:1 * scale [-13 0 0 0] ;! Envelope-Track-Button position in folder-tracks-only
+set envcp.yanchor * scale h<51 * scale [0 20] [0 20] ;! Envelope-track-button position
+set envcp.label + envcp.yanchor * [scale scale scale scale 1 1 1 1] [10 20 130 18 0 0.5 1 0.5] ;size of envelope-label, when height of envcp is bigger than 67
+set envcp.label.font [6]
+set envcp.label.margin * scale [3 2 3 4] ;Positioning of the Envelope-Label
+set envcp.label.color [150 150 150 0] ;Color of Envelope-Label
+set envcp.bypass + envcp.yanchor * [scale scale scale scale 1 1 1 1] [326 20 24 19 1 0.5 1 0.5] ;! Bypass-button in envelope track
+set envcp.hide + envcp.yanchor * [scale scale scale scale 1 1 1 1] [353 20 24 19 1 0.5 1 0.5] ;! Hide/Clear-button in envelope track
+set envcp.fader + envcp.yanchor * [scale scale scale scale 1 1 1 1] [125 20 126 18 0 0.5 1 0.5] ;Envelope Track Fader
+set envcp.value + envcp.yanchor * [scale scale scale scale 1 1 1 1] [262 19 56 20 1 0.5 1 0.5] ;! Value of Fader
+set envcp.value.font [6]
+
+set envcp.value.margin * scale [0 0 0 0 1] ;! Position of Value
+set envcp.value.color [160 160 160] ;! Color of Value
+
+EndLayout ;
 
 
 
@@ -207,32 +261,6 @@ set master.tcp.label.color tcp.trackidx.color ;!Track Label color
 	 ;set master.tcp.fxparm [7 76 368 18 0 0 1 1] ;?
 
 
-
-; The following are the global-settings for Envelope-Tracks(envcp)
-
-clear envcp.* ;!
-set envcp.size [400 100 160] ;! Size of Envelope-track
-set envcp.margin +:maxfolderdepth:1 [13 0 0 0] ;! Envelope-Track-Button position incl folder tracks
-set envcp.margin +:folderdepth:1 [-13 0 0 0] ;! Envelope-Track-Button position in folder-tracks-only
-set envcp.yanchor h<51 [0 20] [0 20] ;! Envelope-track-button position
-	; set envcp.arm + envcp.yanchor [7 0 18 18 0 0.5 0 0.5]
-;set envcp.label + envcp.yanchor w<370 w<281 h>40 [25 0 288 18 0 0.5 1 0.5] [25 0 238 18 0 0.5 1 0.5] [25 0 117 18 0 0.5 0.5 0.5]
-set envcp.label + envcp.yanchor h>67 [25 0 232 18 0 0.5 1 0.5] ;size of envelope-label, when height of envcp is bigger than 67
-set envcp.label.margin [3 2 3 4] ;Positioning of the Envelope-Label
-set envcp.label.color [150 150 150 0] ;Color of Envelope-Label
-set envcp.bypass + envcp.yanchor [326 20 24 19 1 0.5 1 0.5] ;! Bypass-button in envelope track
-set envcp.hide + envcp.yanchor [353 20 24 19 1 0.5 1 0.5] ;! Hide/Clear-button in envelope track
-	;set envcp.mod + envcp.yanchor w>280 h<51 [0] [269 24 57 18 1 0.5 1 0.5] h<51 [0] [280 24 20 18 1 0.5 1 0.5] ;?
-	;set envcp.learn + envcp.yanchor w>280 h<51 [0] [332 24 43 18 1 0.5 1 0.5] h<51 [0] [306 24 19 18 1 0.5 1 0.5] ;?
-
-	; set envcp.fader + envcp.yanchor w<370 w<281 w<240 h<51 [0] [18 25 16 16 0 0.5 0 0.5] h<51 [0] envcp_type==4 [25 24 248 18 0 0.5 1 0.5] [25 24 299 18 0 0.5 1 0.5] h<51 [0] [25 24 238 18 0 0.5 1 0.5] [148 0 115 18 0.5 0.5 1 0.5]
-	; set envcp.fader.color [200 200 200] ;?
-
-set envcp.fader + envcp.yanchor [25 20 232 18 0 0.5 1 0.5] ;Envelope Track Fader
-set envcp.value + envcp.yanchor [259 19 56 20 1 0.5 1 0.5] ;! Value of Fader
-
-set envcp.value.margin [0 0 0 0 1] ;! Position of Value
-set envcp.value.color [160 160 160] ;! Color of Value
 
 
 
@@ -538,8 +566,8 @@ Layout "Ultraschall 2 Retina" "200"
 ; set mcp.recinput  + big_space h<med{x} [0] [5 126 53 17 0 0 0 0]
 
 	set mcp.recinput.color [160 160 160]
-	set mcp.recinput.margin  [5 1 36 0]
-	set mcp.recinput.font [6]
+	set mcp.recinput.margin  [5 1 30 0]
+	set mcp.recinput.font [8]
 	set mcp.recmode + mcp_bottom_anchor h<med{x} [0] [28 16 23 22 0 1 0 1]
 	set mcp.recmode ?1 [1]
 
@@ -672,6 +700,7 @@ EndLayout ; end of "Ultraschall 2 Trans Retina"
 
 layout_dpi_translate	'Ultraschall 2 Trans'		1.74	'Ultraschall 2 Trans Retina'
 layout_dpi_translate	'Ultraschall 2'		1.74	'Ultraschall 2 Retina'
+layout_dpi_translate	'Env Ultraschall 5'		1.74	'Env Ultraschall 5 Retina'
 misc_dpi_translate 174 200
 
 
