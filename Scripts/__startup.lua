@@ -207,7 +207,7 @@ end
 -- Lade das Theme
 ------------------------------------------
 
-themeadress = reaper.GetResourcePath() .. "/ColorThemes/Ultraschall_3.1.ReaperTheme"
+themeadress = reaper.GetResourcePath() .. "/ColorThemes/Ultraschall_5.ReaperTheme"
 reaper.OpenColorThemeFile(themeadress)
 -- end
 
