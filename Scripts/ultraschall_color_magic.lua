@@ -27,7 +27,7 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-numberOfTracks = reaper.CountTracks(0)
+
 
 function getNextColor (LastColor)
 
@@ -83,15 +83,52 @@ function countColoredStudioLinkTracks ()
   return count
 end
 
+function getAllTracksHeight ()
 
+  local height = 0
+
+  for i=0, numberOfTracks-1 do
+    local MediaTrack = reaper.GetTrack(0, i)
+    local retval = reaper.GetMediaTrackInfo_Value(MediaTrack, "I_WNDH")
+    -- print ("Höhe: "..retval)
+    height = height + retval
+  end
+  return height
+end
+
+
+function verticalZoom (maxheight)
+
+  local allTracksHeight = getAllTracksHeight()
+
+  if allTracksHeight < maxheight - 40 then -- muss Vergößert werden
+    while allTracksHeight < maxheight - 40 do
+      reaper.CSurf_OnZoom(0, 1)
+      allTracksHeight = getAllTracksHeight()
+    end
+  elseif allTracksHeight > maxheight - 40 then -- muss Verkleinert werden
+    while allTracksHeight > maxheight - 40 do
+      reaper.CSurf_OnZoom(0, -1)
+      allTracksHeight = getAllTracksHeight()
+    end
+  end
+end
 
 
 -- Init
 
 local _, left, top, right, bottom = reaper.JS_Window_GetClientRect( reaper.JS_Window_FindChildByID( reaper.GetMainHwnd(), 1000) )
-height = bottom - top
+ArrangeViewHeight = math.abs(bottom - top)
+numberOfTracks = reaper.CountTracks(0)
 
-print (height)
+verticalZoom (ArrangeViewHeight)
+
+
+--print (ArrangeViewHeight)
+--print ("Summe: "..allTracksHeight)
+-- retval = ultraschall.SetVerticalZoom(13) -- setze auf einen absoluten Zoom-Wert
+
+retval = ultraschall.ApplyActionToTrack("1,0", 40913) -- verschiebe den Arrangeview hoch zum ersten Track
 
 -----------------------
 -- Step 1 : get started
