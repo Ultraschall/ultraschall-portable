@@ -60,7 +60,7 @@ end
 
 function checkGuiStates()
 
-  A=IsAnyMuteOrVolumePreFXEnvelopeVisible(true)
+  A = IsAnyMuteOrVolumePreFXEnvelopeVisible(true)
 
   for i = 1, #GUIServices do
 
@@ -86,6 +86,17 @@ function checkGuiStates()
 
   end
 
+  -- Start Helper Scripts
+
+  for i = 1, #GUIHelpers do
+
+    commandid = reaper.NamedCommandLookup(GUIHelpers[i])
+    reaper.Main_OnCommand(commandid,0)
+
+  end
+
+
+
  -------------------------------------------------
  -- Defer-Schleife
  -------------------------------------------------
@@ -109,6 +120,11 @@ GUIServices = {
   "_Ultraschall_Set_View_Edit",
   "_Ultraschall_Set_View_Story",
   "_Ultraschall_toggle_item_labels",
+}
+
+GUIHelpers = {
+  "_Ultraschall_GUI_setmagiccolor",
+  "_Ultraschall_GUI_setmagictrackheight",
 }
 
 
