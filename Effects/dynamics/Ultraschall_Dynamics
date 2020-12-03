@@ -1,11 +1,11 @@
 desc:Ultraschall Dynamics (Ultraschall.fm)
-//tags: graphical processing compressor expander gate 
+//tags: graphical processing compressor expander gate
 // Copyright (C) 2016 Cockos Inc
 // License: LGPL - http://www.gnu.org/licenses/lgpl.html
 
 // Dynamics Code derived from Cockos General Dynamcis
 // Limiter Code from LOSERs "MGA JS Limiter"
-// modiefied by fernsehmuell (ultraschall.fm)
+// modiefied by fernsehmuell and rstockm (ultraschall.fm)
 
 slider1:slider_detect=0<0,1,1{main,aux (use with caution! can result in loud signals!),feedback (caution too!)}>-Detector Input
 slider2:0<-40,40,1>-Detector Gain (dB)
@@ -66,9 +66,9 @@ function amp_to_x(v) (
 );
 
 function gain_db_for_x(x) local(idx,p) (
-  idx=floor(x*=(tab.size-1));  
-  
-  idx < 0 ? tab[0] : 
+  idx=floor(x*=(tab.size-1));
+
+  idx < 0 ? tab[0] :
   idx >= tab.size-1 ? tab[tab.size-1] : (
     x-=idx;
     p=tab[idx];
@@ -81,7 +81,7 @@ function ms_to_slope(ms) global(srate) (
   ms < 1 ? 0 : exp(-1.0 / ms);
 );
 
-function parmchg.db_begin(idx,sv) 
+function parmchg.db_begin(idx,sv)
   instance(chg_splpos, val, tgtval, dval)
   global(samplesblock)
 (
@@ -93,16 +93,16 @@ function parmchg.db_begin(idx,sv)
     tgtval = sv<=-150?0:exp(sv*(0.05*log(10)));
     chg_splpos = samplesblock;
   );
-  dval=(tgtval-val)/chg_splpos;    
+  dval=(tgtval-val)/chg_splpos;
 );
 
-function parmchg.process(idx, sv) 
+function parmchg.process(idx, sv)
   instance(val, dval, chg_splpos, tgtval)
   global(at.cnt)
 (
   dval=0.0;
   chg_splpos=slider_next_chg(idx, tgtval);
-  chg_splpos > at.cnt ? 
+  chg_splpos > at.cnt ?
   (
     tgtval = tgtval<=-150 ? 0 : exp(tgtval*(0.05*log(10)));
     dval=(tgtval-val)/(chg_splpos-at.cnt);
@@ -112,7 +112,7 @@ function parmchg.process(idx, sv)
 function get_bez_y(x2, y1,y2,y3, x) local(a,it,t)
 (
   t = (a = 1 - (2 * x2)) == 0 ? x : ((sqrt(x2 * x2 + a * x)-x2) / a);
-  it = 1.0 - t; 
+  it = 1.0 - t;
   (it*it) * y1 + t*(2.0 * it * y2 + t * y3);
 );
 
@@ -122,7 +122,7 @@ function sample_tab(offs, sz) local(sum,cnt,sc,rd1,rd2) (
   sc=1;
   loop(sz,
     rd1>=0 && rd1 < tab.size ? ( cnt+=sc; sum+=tab[rd1]*sc; );
-    rd2>=0 && rd2 < tab.size ? ( cnt+=sc; sum+=tab[rd2]*sc; );    
+    rd2>=0 && rd2 < tab.size ? ( cnt+=sc; sum+=tab[rd2]*sc; );
     rd2-=1; rd1+=1; sc*=0.5;
   );
   cnt ? (tab[offs] * 0.5 + 0.5 * sum / cnt) : tab[offs];
@@ -131,12 +131,12 @@ function sample_tab(offs, sz) local(sum,cnt,sc,rd1,rd2) (
 function rms.init(buf, maxsz) global() (
   this.buf = buf;
   this.maxsz=maxsz|0;
-  this.size=this.suml=this.sumr=this.cnt=this.ptr=0;  
+  this.size=this.suml=this.sumr=this.cnt=this.ptr=0;
 );
 
-function rms.getmax(splsquarel, splsquarer) 
-  instance(buf suml sumr cnt ptr size maxsz) 
-  local(i) 
+function rms.getmax(splsquarel, splsquarer)
+  instance(buf suml sumr cnt ptr size maxsz)
+  local(i)
   global()
 (
   while (cnt >= size) (
@@ -146,9 +146,9 @@ function rms.getmax(splsquarel, splsquarer)
     cnt-=1;
   );
   cnt+=1;
-  buf[i=ptr*2]=splsquarel; 
-  buf[i+1]=splsquarer; 
-  (ptr+=1) >= maxsz ? ptr=0;  
+  buf[i=ptr*2]=splsquarel;
+  buf[i+1]=splsquarer;
+  (ptr+=1) >= maxsz ? ptr=0;
   (suml += splsquarel) < 0 ? suml=0;
   (sumr += splsquarer) < 0 ? sumr=0;
   sqrt(max(suml,sumr)/size);
@@ -163,7 +163,7 @@ function rms.set_size(sz) global() (
 function delay.init(buf, sz) global() (
   this.buf = buf;
   this.maxsz = sz;
-  this.size = this.ptr = this.cnt = 0;  
+  this.size = this.ptr = this.cnt = 0;
 );
 
 function delay.process(s) local(a) instance(maxsz cnt ptr buf size) global() (
@@ -295,14 +295,14 @@ at.cnt == wet.parmchg.chg_splpos ? wet.parmchg.process(12,slider12);
 at.cnt == dry.parmchg.chg_splpos ? dry.parmchg.process(13,slider13);
 
 rms.size > 1 ? (
-  at.mv = slider_detect ? 
+  at.mv = slider_detect ?
           slider_detect == 2 ? rms.getmax(sqr(at.lspl0*ingain.parmchg.val),sqr(at.lspl1*ingain.parmchg.val)) :
-            rms.getmax(sqr(spl2*ingain.parmchg.val),sqr(spl3*ingain.parmchg.val)) : 
+            rms.getmax(sqr(spl2*ingain.parmchg.val),sqr(spl3*ingain.parmchg.val)) :
             rms.getmax(sqr(spl0*ingain.parmchg.val),sqr(spl1*ingain.parmchg.val));
 ) : (
-  at.mv = slider_detect ? 
+  at.mv = slider_detect ?
           slider_detect == 2 ? max(abs(at.lspl0*ingain.parmchg.val),abs(at.lspl1*ingain.parmchg.val)) :
-            max(abs(spl2*ingain.parmchg.val),abs(spl3*ingain.parmchg.val)) : 
+            max(abs(spl2*ingain.parmchg.val),abs(spl3*ingain.parmchg.val)) :
             max(abs(spl0*ingain.parmchg.val),abs(spl1*ingain.parmchg.val));
 );
 at.env = at.mv + (at.mv > at.env ? attack_slope : release_slope)*(at.env-at.mv);
@@ -350,7 +350,7 @@ function view.zoom(xpos,ypos, amt) local(newsz) instance(zoom pan_x pan_y)
   newsz = exp(amt);
   zoom*newsz < 0.8 ? newsz = 0.8/zoom : zoom*newsz > 32.0 ? newsz=32.0/zoom;
   zoom *= newsz;
-  
+
   newsz=1/newsz;
   pan_x = min(1,max(-1,(pan_x-xpos)*newsz + xpos));
   pan_y = min(1,max(-1,(pan_y-ypos)*newsz + ypos));
@@ -387,23 +387,23 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
   last_h=gfx_h;
   gfx_set(0.125);
   gfx_rect(0,0,gfx_w,gfx_h);
-  
+
   gfx_set(0.5);
   gfx_line(left,bottom,right,bottom);
   gfx_line(right,bottom+gfx_texth+2,right,top);
   gfx_line(left,bottom+1,left,bottom);
-   
+
   gfx_a=0.25;
-  
+
   i=0;
   dbsc=3;
-  while (sz<24*(ndiv=((db_top-db_bottom)/dbsc)|0) && ndiv>1) ( 
+  while (sz<24*(ndiv=((db_top-db_bottom)/dbsc)|0) && ndiv>1) (
     dbsc = (dbsc==12?18:dbsc*2); // the == 12?18: is a bit 108-dB-range specific
   );
   gridsz = sz/ndiv;
   dbsc = (db_bottom-db_top)/ndiv;
   lx = -1000;
-  
+
   loop(ndiv,
     j = i*gridsz;
     gfx_x = left + j;
@@ -417,10 +417,10 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
       gfx_x+=2;
       gfx_printf("%+ddB",floor(db_bottom - i*dbsc + 0.5));
     );
-    
+
     i += 1;
     gfx_y=top+i*gridsz-gfx_texth*0.5+1;
-    right < gfx_w - 60 ? ( 
+    right < gfx_w - 60 ? (
       gfx_x=right+2;
     ) : (
       gfx_x=gfx_w-60;
@@ -428,19 +428,19 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
     );
     gfx_y < gfx_h-gfx_texth*2-4 ? gfx_printf("%+ddB",floor(db_top + i*dbsc + 0.5));
   );
-  
-  
+
+
   sprintf(#topstr,"%+ddB",db_top);
   gfx_measurestr(#topstr,gfx_x,0);
-  gfx_x=right -4 - gfx_x; 
+  gfx_x=right -4 - gfx_x;
   gfx_y = min(bottom + 2,gfx_h-gfx_texth-2);
-  gfx_drawstr(#topstr); 
-  
+  gfx_drawstr(#topstr);
+
   gfx_line(left,bottom,right,top);
   gfx_a=1;
   gfx_x=gfx_y=2;
-  
-  
+
+
   (mouse_cap&3) ? (
     ui.capmode == 4 ? (
       (mouse_cap & 8) ? (
@@ -451,22 +451,22 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
         view.pan_x = min(1,max(-1,view.pan_x - (mouse_x-last_mouse_x)/sz));
         view.pan_y = min(1,max(-1,view.pan_y - (mouse_y-last_mouse_y)/sz));
       );
-    ) 
+    )
 
     : (mouse_cap&2) ? (
        // right mouse down during other edits still pans
         view.pan_x = min(1,max(-1,view.pan_x - (mouse_x-last_mouse_x)/sz));
         view.pan_y = min(1,max(-1,view.pan_y - (mouse_y-last_mouse_y)/sz));
     ) : (
-      ui.last_a >= 0 && ui.a >= 0 ? ( 
-        ui.capmode == 0 ? memcpy(tab,tab+tab.size,tab.size);   
+      ui.last_a >= 0 && ui.a >= 0 ? (
+        ui.capmode == 0 ? memcpy(tab,tab+tab.size,tab.size);
         ui.wpos = min(ui.a,ui.last_a);
         ui.amt = ui.last_a - ui.a;
         ui.midpt = (ui.last_a-ui.curve_a)/ui.amt;
         ui.amt > 0 ? (
           ui.dwpos = -1;
           ui.wpos += ui.amt;
-        ) : (  
+        ) : (
           ui.amt = -ui.amt;
           ui.dwpos = 1;
         );
@@ -475,10 +475,10 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
           di=1/ui.amt;
           loop(ui.amt+1,
             tab[ui.wpos]=
-                  ui.capmode == 3 ? 0 : 
-                  ui.capmode == 2 ? sample_tab(ui.wpos,8) : 
+                  ui.capmode == 3 ? 0 :
+                  ui.capmode == 2 ? sample_tab(ui.wpos,8) :
                   (
-                    (ui.want_curve && ui.wpos != ui.a && ui.wpos != ui.last_a ? 
+                    (ui.want_curve && ui.wpos != ui.a && ui.wpos != ui.last_a ?
                             get_bez_y(ui.midpt, ui.last_v, ui.curve_v, ui.v, i) :
                             (ui.last_v + (ui.v-ui.last_v)*i)
                     )-((ui.wpos/(tab.size-1)*(db_top-db_bottom)) + db_bottom)
@@ -488,13 +488,13 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
           );
         );
       );
-      
+
       ui.capmode!=0 || ui.last_a < 0 ? (
-        ui.last_a=ui.a; 
-        ui.last_v=ui.v;    
+        ui.last_a=ui.a;
+        ui.last_v=ui.v;
       );
     );
-  ) 
+  )
 
   : (
     ui.last_a >= 0 ? (
@@ -503,7 +503,7 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
     );
     ui.a>=0 ? ui.a=-1;
   );
-  
+
   last_mouse_cap=mouse_cap;
   last_mouse_y=mouse_y;
   last_mouse_x=mouse_x;
@@ -513,25 +513,25 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
   i=max(0,-left);
   isz = 1/sz;
   Target_Line_Start=left;
-  
+
   loop(sz-i,
     gfx_x=i + left; // X-Coordinate starts with left+0
     dbo = (((db_top-db_bottom) * i + gain_db_for_x(i*isz)*(sz)) * db_i_range)|0; // get db-Output Value from LUT
     (abs(dbo - ( (slider_target_LUFS+108)/108 * sz) ) <1.5 ) && Target_Line_Start==left ? Target_Line_Start=i+left; // find Point for LUFS Line on curve
     gfx_r=1; gfx_g=1; gfx_b=0; // define Color yellow
-    
-    // if x= loudness of the live signal draw line and text etc. 
+
+    // if x= loudness of the live signal draw line and text etc.
     gfx_x==env_x && env_x>left ? (
       gfx_a=0.5;
       //gfx_rect(gfx_x,bottom-dbo,1,dbo); // yellow line (actual live level)
-      
+
       // draw red or green line to show amplification and render text "+x dB"
       gaindb < 0  ? (
         gfx_r=1; gfx_g=gfx_b=.3; gfx_a=1;
-        gfx_rect(gfx_x-2,bottom-i,5,-gaindby);       
+        gfx_rect(gfx_x-2,bottom-i,5,-gaindby);
       ) : (
         gfx_g=1; gfx_r=gfx_b=.3; gfx_a=1;
-        gfx_rect(gfx_x-2,bottom-i-gaindby,5,gaindby);       
+        gfx_rect(gfx_x-2,bottom-i-gaindby,5,gaindby);
       );
       gfx_x+=4;
       gfx_y=bottom-i-gfx_texth*.5;
@@ -541,12 +541,12 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
     ( // draw normal Curve value
       gfx_r=72/255; gfx_g=141/255; gfx_b=233/255; //blau
       gfx_a = gfx_x < env_x ? 1.00 : 0.33; // set alpha channel to mark parts left and right from live value
-      gfx_rect(gfx_x,bottom - dbo,1,dbo);  // draw rect to mark the value and draw the curve   
+      gfx_rect(gfx_x,bottom - dbo,1,dbo);  // draw rect to mark the value and draw the curve
     );
     i+=1;
   );
 
- 
+
   // draw Noisefloor Line and Circle
   Noisefloor_Level = (slider_noisefloor+108)/108 *  sz;
   dbo = (((db_top-db_bottom) * Noisefloor_Level + gain_db_for_x(Noisefloor_Level*isz)*(sz)) * db_i_range)|0;
@@ -559,7 +559,7 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
   Noisefloor_x=gfx_x;
   Noisefloor_y=bottom-dbo;
 
-  //draw Noisgate Line and Circle  
+  //draw Noisgate Line and Circle
   Noisegate_Level = (slider_noisefloor+108-slider_noisegate)/108 *  sz;
   dbo = (((db_top-db_bottom) * Noisegate_Level + gain_db_for_x(Noisegate_Level*isz)*(sz)) * db_i_range)|0;
   gfx_x=left+Noisegate_Level;
@@ -569,12 +569,12 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
   gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=0.75;
   gfx_circle(Noisegate_x, bottom-dbo+dbo,10,1,1);
 
-  //draw TARGET LUFS Line and Circle  
+  //draw TARGET LUFS Line and Circle
   Target_Level = (slider_target_LUFS+108)/108 *  sz;
   dbo = (((db_top-db_bottom) * Target_Level + gain_db_for_x(Target_Level*isz)*(sz)) * db_i_range)|0;
   gfx_x=left+sz;
   gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=0.75;
   gfx_circle(gfx_x,bottom-Target_Level,10,1,1);
   //gfx_rect(Target_Line_Start, bottom-Target_Level, left+sz - Target_Line_Start,1);
- 
+
 );
