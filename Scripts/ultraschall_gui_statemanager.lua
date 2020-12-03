@@ -90,11 +90,19 @@ function checkGuiStates()
 
   for i = 1, #GUIHelpers do
 
-    commandid = reaper.NamedCommandLookup(GUIHelpers[i])
-    reaper.Main_OnCommand(commandid,0)
+    helperActive = tonumber(ultraschall.GetUSExternalState("ultraschall_settings"..GUIHelpers[i],"value", "ultraschall-settings.ini"))
+
+    -- print (helperActive)
+
+    if helperActive == 1 then
+      -- print "huhu"
+      commandid = reaper.NamedCommandLookup(GUIHelpers[i])
+      reaper.Main_OnCommand(commandid,0)
+    end
 
   end
 
+  -- print ("--")
 
 
  -------------------------------------------------
