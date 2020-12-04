@@ -514,7 +514,7 @@ function SettingsPageSettings()
 
   x_offset = 55
 
-  block = GUI.Area:new(45,180,730, 400,5,1,1,"section_bg")
+  block = GUI.Area:new(45,180,730, 430,5,1,1,"section_bg")
     table.insert(GUI.elms, block)
 
 
@@ -526,7 +526,7 @@ function SettingsPageSettings()
 
     if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
 
-      position = 195 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 30) -- Feintuning notwendig
+      position = 175 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 30) -- Feintuning notwendig
       settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
 
       if settings_Type == "checkbox" then
