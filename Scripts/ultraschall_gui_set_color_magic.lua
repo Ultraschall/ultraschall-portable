@@ -156,7 +156,7 @@ for i=0, numberOfTracks-1 do
     elseif tracktype == "StudioLink" then
 
       colored = countColoredStudioLinkTracks() or 0
-      print (colored)
+      -- print (colored)
       StudioLinkColor = t[colored + 11]
       reaper.SetTrackColor(MediaTrack, swapColors(StudioLinkColor))
       StudioLinkNr = StudioLinkNr + 1
