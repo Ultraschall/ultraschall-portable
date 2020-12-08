@@ -73,7 +73,7 @@ front mcp.pan.label tcp.io tcp.fxin ;?
 
 ;Ultraschall Layout for the TCP, using the TCP-theme graphics from the theme-folder "black-tcp"
 
-Layout "Ultraschall 2" "black-tcp"
+Layout "Ultraschall 2" ""
 
 ; The following setup the TCP-elements used in the Ultraschall-Theme
 
@@ -417,7 +417,7 @@ EndLayout ; end of "Ultraschall 2" settings for Master-track in MCP
 
 
 ;Ultraschall-specific Mixer settings for Mixer Control Panel(MCP); all tracks EXCEPT master
-Layout "Ultraschall 2" "ultraschall"
+Layout "Ultraschall 2" ""
 
 	clear mcp.* ;!
 
@@ -473,7 +473,7 @@ Layout "Ultraschall 2" "ultraschall"
 ;Recording Buttons settings
 	set mcp.recmon h<big{x} [0] [33 113 17 14 0 0 0 0]
 	set mcp.recarm [4 271 23 22 0 1 0 1]
-	set mcp.recinput  + big_space h<med{x} [0] [5 126 53 17 0 0 0 0]
+	set mcp.recinput  + big_space h<med{x} [0] [5 126 53 19 0 0 0 0]
 	set mcp.recinput.color [160 160 160]
 	set mcp.recinput.margin [5 1 18 0]
 	set mcp.recmode + mcp_bottom_anchor h<med{x} [0] [28 16 23 22 0 1 0 1]
@@ -509,7 +509,7 @@ Layout "Ultraschall 2 Retina" "200"
 	set scale 2
 
 	set mcp.size [128 319] ;!
-	set mcp.margin [0 0 0 0] ;!
+	set mcp.margin [-1 0 0 0] ;!
 
 	front mcp.volume.label ;?
 	set med * scale [300] ;!
@@ -534,10 +534,10 @@ Layout "Ultraschall 2 Retina" "200"
 	set mcp.phase ?1 [0]
 	set mcp.phase ?1 [0]
 	set mcp.fxin ?1 [0]
-	set mcp.mute + big_space h<med{x} [0] [10 202 48 38 0 0 0 0]
-	set mcp.solo + big_space h<med{x} [0] [68 202 48 38 0 0 0 0]
-	set mcp.fx + big_space h<med{x} [10 8 48 38 0 0 0 0] [10 152 48 38 0 0 0 0]
-	set mcp.fxbyp + big_space h<med{x} [68 8 48 38 0 0 0 0] [68 152 48 38 0 0 0 0]
+	set mcp.mute + big_space h<big{x} [0] [10 202 48 38 0 0 0 0]
+	set mcp.solo + big_space h<big{x} [0] [68 202 48 38 0 0 0 0]
+	set mcp.fx + big_space h<med{x} [9 13 48 38 0 0 0 0] [9 152 48 38 0 0 0 0]
+	set mcp.fxbyp + big_space h<med{x} [70 13 48 38 0 0 0 0] [70 152 48 38 0 0 0 0]
 	set mcp.env h<big{x} [0] * scale [11 113 17 14 0 0 0 0]
 
 ;Volume Fader/Label settings
@@ -563,13 +563,12 @@ Layout "Ultraschall 2 Retina" "200"
 ;Recording Buttons settings
 	set mcp.recmon h<big{x} [0] * scale [33 113 17 14 0 0 0 0]
 	set mcp.recarm [8 225 46 44 0 1 0 1]
-	set mcp.recinput  + big_space h<med{x} [0] [10 252 106 34 0 0 0 0]
 
-; set mcp.recinput  + big_space h<med{x} [0] [5 126 53 17 0 0 0 0]
-
+	set mcp.recinput  + big_space h<med{x} [0] h<big{x} [9 199 109 38 0 0 0 0] [9 250 109 38 0 0 0 0]
 	set mcp.recinput.color [160 160 160]
 	set mcp.recinput.margin  [6 1 26 0]
 	set mcp.recinput.font [8]
+
 	set mcp.recmode + mcp_bottom_anchor h<med{x} [0] [28 16 23 22 0 1 0 1]
 	set mcp.recmode ?1 [1]
 
@@ -578,7 +577,7 @@ Layout "Ultraschall 2 Retina" "200"
 	set mcp.extmixer [0]
 
 ;VU Meter settings
-	set mcp.meter h<med{x} [52 56 60 168 0 0 0 1] h<big{x} [52 306 60 -90 0 0 0 1]  [52 436 60 -220 0 0 0 1]
+	set mcp.meter h<med{x} [52 70 60 168 0 0 0 1] h<big{x} [52 255 60 -39 0 0 0 1]  [52 436 60 -220 0 0 0 1]
 
 ; set mcp.meter h<med{x} [26 28 30 200 0 0 0 1] h<big{x} [26 153 30 114 0 0 0 1]  [26 206 30 61 0 0 0 1]
 
