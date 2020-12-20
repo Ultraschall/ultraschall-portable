@@ -84,8 +84,8 @@ Layout "Ultraschall 2" ""
 	set tcp.label + + reverse_margin tcp_label_fullmargin margin_to_width ;! More Track-label placement
 	set tcp.meter + tcp_yanchor w<211 [0]  [258 4 60 10 1 y_align 1 y_align] ;! VU-Meter placement
 	set tcp.label.color ?1 [180 180 180 100 250 250 250 200] ;! Color of Track-labels
-	set tcp.mute + tcp_yanchor w<211 [0] [326 0 24 19 1 y_align 1 y_align] ;! Mute Button Placement
-	set tcp.solo + tcp_yanchor w<211 [0] [354 0 24 19 1 y_align 1 y_align] ;! Solo Button Placement
+	set tcp.mute + tcp_yanchor w<211 [0] [326 -1 24 19 1 y_align 1 y_align] ;! Mute Button Placement
+	set tcp.solo + tcp_yanchor w<211 [0] [354 -1 24 19 1 y_align 1 y_align] ;! Solo Button Placement
 	set tcp.meter.readout.color [0] ;! No text in Vu-Meter
 	set tcp.label.margin [3 3 6 3] ;! Trackname-Label position
 	set tcp.trackidx [382 41 18 18 1 0.5 1 0.5] ;! Track number position
@@ -136,8 +136,8 @@ set tcp.margin +:folderdepth:1 [-26 0 0 0] ; ! Track Buttons only in folders - p
 	set tcp.label.font [6]
 	set tcp.meter + tcp_yanchor w<211 [0]  [108 4 120 28 1 y_align 1 y_align] ;! VU-Meter placement
 	set tcp.label.color ?1 [180 180 180 100 250 250 250 200] ;! Color of Track-labels
-	set tcp.mute + tcp_yanchor w<211 [0] [255 0 48 38 1 y_align 1 y_align] ;! Mute Button Placement
-	set tcp.solo + tcp_yanchor w<211 [0] [314 0 48 38 1 y_align 1 y_align] ;! Solo Button Placement
+	set tcp.mute + tcp_yanchor w<211 [0] [255 -1 48 38 1 y_align 1 y_align] ;! Mute Button Placement
+	set tcp.solo + tcp_yanchor w<211 [0] [314 -1 48 38 1 y_align 1 y_align] ;! Solo Button Placement
 	set tcp.label.margin [6 6 12 6] ;! Trackname-Label position
 	set tcp.trackidx [382 30 36 36 1 0.5 1 0.5] ;! Track number position
 	set tcp.trackidx.font [6]
@@ -209,18 +209,26 @@ EndLayout
 Layout "Env Ultraschall 5 Retina" "200"
 
   set scale 2
+	set min [600]
 clear envcp.* ;!
+
+
+
 set envcp.size * scale [400 100 160 30] ;! Size of Envelope-track
 set envcp.margin +:maxfolderdepth:1 * scale [13 0 0 0] ;! Envelope-Track-Button position incl folder tracks
 set envcp.margin +:folderdepth:1 * scale [-13 0 0 0] ;! Envelope-Track-Button position in folder-tracks-only
 set envcp.yanchor * scale h<51 * scale [0 20] [0 20] ;! Envelope-track-button position
-set envcp.label + envcp.yanchor * [scale scale scale scale 1 1 1 1] [10 20 130 18 0 0.5 1 0.5] ;size of envelope-label, when height of envcp is bigger than 67
+set envcp.label + envcp.yanchor * [scale scale scale scale 1 1 1 1] [10 20 130 18 0 0.5 0.2 0.5] ;size of envelope-label, when height of envcp is bigger than 67
 set envcp.label.font [6]
 set envcp.label.margin * scale [3 2 3 4] ;Positioning of the Envelope-Label
 set envcp.label.color [150 150 150 0] ;Color of Envelope-Label
-set envcp.bypass + envcp.yanchor * [scale scale scale scale 1 1 1 1] [326 20 24 19 1 0.5 1 0.5] ;! Bypass-button in envelope track
-set envcp.hide + envcp.yanchor * [scale scale scale scale 1 1 1 1] [353 20 24 19 1 0.5 1 0.5] ;! Hide/Clear-button in envelope track
-set envcp.fader + envcp.yanchor * [scale scale scale scale 1 1 1 1] [125 20 126 18 0 0.5 1 0.5] ;Envelope Track Fader
+set envcp.bypass + envcp.yanchor * [scale scale scale scale 1 1 1 1] [326 19 24 19 1 0.5 1 0.5] ;! Bypass-button in envelope track
+set envcp.hide + envcp.yanchor * [scale scale scale scale 1 1 1 1] [353 19 24 19 1 0.5 1 0.5] ;! Hide/Clear-button in envelope track
+
+;set envcp.fader + envcp.yanchor * [scale scale scale scale 1 1 1 1] [65 20 226 18 0 0.5 1 0.5] ;Envelope Track Fader
+
+set envcp.fader + envcp.yanchor w<min{x} [0] [210 48 272 18 0 0.5 1 0.5] ;Envelope Track Fader
+
 set envcp.value + envcp.yanchor * [scale scale scale scale 1 1 1 1] [262 19 56 20 1 0.5 1 0.5] ;! Value of Fader
 set envcp.value.font [6]
 
@@ -276,7 +284,7 @@ clear master.mcp.*
 ;Mixer-settings for Mixer Control Panel(MCP), using the theme graphics from theme-folder "ultraschall_master"
 
 
-Layout "Ultraschall 2" "ultraschall_master"
+Layout "Ultraschall 2" ""
 
 ;variables
 	set med [300]
@@ -417,6 +425,7 @@ EndLayout ; end of "Ultraschall 2" settings for Master-track in MCP
 
 
 ;Ultraschall-specific Mixer settings for Mixer Control Panel(MCP); all tracks EXCEPT master
+
 Layout "Ultraschall 2" ""
 
 	clear mcp.* ;!
@@ -449,14 +458,16 @@ Layout "Ultraschall 2" ""
 	set mcp.phase ?1 [0]
 	set mcp.phase ?1 [0]
 	set mcp.fxin ?1 [0]
-	set mcp.mute + big_space h<med{x} [0] [5 101 24 19 0 0 0 0]
-	set mcp.solo + big_space h<med{x} [0] [34 101 24 19 0 0 0 0]
-	set mcp.fx  + big_space h<med{x} [5 4 24 19 0 0 0 0] [5 76 24 19 0 0 0 0]
-	set mcp.fxbyp  + big_space h<med{x} [34 4 24 19 0 0 0 0] [34 76 24 19 0 0 0 0]
+
+	set mcp.mute + big_space h<big{x} [0] [5 101 24 19 0 0 0 0]
+	set mcp.solo + big_space h<big{x} [0] [34 101 24 19 0 0 0 0]
+
+	set mcp.fx  + big_space h<med{x} [5 9 24 19 0 0 0 0] [5 76 24 19 0 0 0 0]
+	set mcp.fxbyp  + big_space h<med{x} [34 9 24 19 0 0 0 0] [34 76 24 19 0 0 0 0]
 	set mcp.env h<big{x} [0] [11 113 17 14 0 0 0 0]
 
 ;Volume Fader/Label settings
-	set mcp.volume  h<med{x} [7 20 19 253 0 0 0 1] h<big{x} [7 170 19 100 0 0 0 1] [7 220 19 50 0 0 0 1]
+	set mcp.volume  h<med{x} [7 45 19 223 0 0 0 1] h<big{x} [7 125 19 150 0 0 0 1] [7 220 19 50 0 0 0 1]
 	set mcp.volume.label [27 271 32 22 0 1 0 1]
 	set mcp.volume.label.color [121 121 121]
 	set mcp.volume.label.margin [6 2 2 2 0]
@@ -473,9 +484,15 @@ Layout "Ultraschall 2" ""
 ;Recording Buttons settings
 	set mcp.recmon h<big{x} [0] [33 113 17 14 0 0 0 0]
 	set mcp.recarm [4 271 23 22 0 1 0 1]
-	set mcp.recinput  + big_space h<med{x} [0] [5 126 53 19 0 0 0 0]
+
+	set mcp.recinput  + big_space h<med{x} [0] h<big{x} [5 99 53 19 0 0 0 0] [5 124 53 19 0 0 0 0]
 	set mcp.recinput.color [160 160 160]
-	set mcp.recinput.margin [5 1 18 0]
+	set mcp.recinput.margin  [3 1 13 0]
+;	set mcp.recinput.font [8]
+
+
+
+
 	set mcp.recmode + mcp_bottom_anchor h<med{x} [0] [28 16 23 22 0 1 0 1]
 	set mcp.recmode ?1 [1]
 
@@ -484,7 +501,7 @@ Layout "Ultraschall 2" ""
 	set mcp.extmixer [0]
 
 ;VU Meter settings
-	set mcp.meter h<med{x} [26 28 30 260 0 0 0 1] h<big{x} [26 153 30 114 0 0 0 1]  [26 206 30 61 0 0 0 1]
+	set mcp.meter h<med{x} [26 38 30 232 0 0 0 1] h<big{x} [26 130 30 140 0 0 0 1]  [26 206 30 61 0 0 0 1]
 	set mcp.meter.readout.color [160 160 160 200 50 0 0 255]
 	set mcp.meter.rmsreadout.color [255 255 150 200]
 	set mcp.meter.scale.color.unlit.top [110 110 110 50 0 0 0 255]
@@ -502,6 +519,7 @@ EndLayout ; end of "Ultraschall 2" settings for tracks(except mastertrack) in Mi
 
 
 ;Ultraschall-specific Mixer settings for Mixer Control Panel(MCP); all tracks EXCEPT master
+
 Layout "Ultraschall 2 Retina" "200"
 
 	clear mcp.* ;!
@@ -536,12 +554,14 @@ Layout "Ultraschall 2 Retina" "200"
 	set mcp.fxin ?1 [0]
 	set mcp.mute + big_space h<big{x} [0] [10 202 48 38 0 0 0 0]
 	set mcp.solo + big_space h<big{x} [0] [68 202 48 38 0 0 0 0]
-	set mcp.fx + big_space h<med{x} [9 13 48 38 0 0 0 0] [9 152 48 38 0 0 0 0]
-	set mcp.fxbyp + big_space h<med{x} [70 13 48 38 0 0 0 0] [70 152 48 38 0 0 0 0]
+	set mcp.fx + big_space h<med{x} [9 13 48 38 0 0 0 0] [11 152 48 38 0 0 0 0]
+	set mcp.fxbyp + big_space h<med{x} [70 13 48 38 0 0 0 0] [68 152 48 38 0 0 0 0]
 	set mcp.env h<big{x} [0] * scale [11 113 17 14 0 0 0 0]
 
 ;Volume Fader/Label settings
-	set mcp.volume  h<med{x} [14 80 38 140 0 0 0 1] h<big{x} [14 320 38 -100 0 0 0 1] [14 480 38 -260 0 0 0 1]
+	set mcp.volume  h<med{x} [20 90 22 111 0 0 0 1] h<big{x} [20 280 22 -100 0 0 0 1] [20 480 22 -260 0 0 0 1]
+	; set mcp.volume  h<med{x} [7 45 19 223 0 0 0 1] h<big{x} [7 125 19 150 0 0 0 1] [7 220 19 50 0 0 0 1]
+
 
   ;set mcp.volume  h<med{x} [7 20 19 253 0 0 0 1] h<big{x} [7 170 19 100 0 0 0 1] [7 220 19 50 0 0 0 1]
 
@@ -564,7 +584,7 @@ Layout "Ultraschall 2 Retina" "200"
 	set mcp.recmon h<big{x} [0] * scale [33 113 17 14 0 0 0 0]
 	set mcp.recarm [8 225 46 44 0 1 0 1]
 
-	set mcp.recinput  + big_space h<med{x} [0] h<big{x} [9 199 109 38 0 0 0 0] [9 250 109 38 0 0 0 0]
+	set mcp.recinput  + big_space h<med{x} [0] h<big{x} [10 199 107 38 0 0 0 0] [11 250 107 38 0 0 0 0]
 	set mcp.recinput.color [160 160 160]
 	set mcp.recinput.margin  [6 1 26 0]
 	set mcp.recinput.font [8]
@@ -641,11 +661,11 @@ set trans.repeat * scale + trans_offset [325 5 36 36 0.5 0 0.5 0]
 set trans.rec * scale + trans_offset [360 5 36 36 0.5 0 0.5 0]
 
 ;Playrate Fader settings
-set trans.rate w<600 [0] ?trans_flags&2 * scale [889 13 64 13 1 0 1 0]
-set trans.rate.margin * scale [6 1 5 1]
+set trans.rate w<600 [0] ?trans_flags&2 * scale [889 12 64 17 1 0 1 0]
+set trans.rate.margin * scale [4 0 0 0]
 set trans.rate.color [150 150 150 100 155 155 155 1]
-set trans.rate.font * scale [8]
-set trans.rate.fader w<600 [0] ?trans_flags&2 * scale [949 9 80 18 1 0 1 0]
+; set trans.rate.font * scale [8]
+set trans.rate.fader w<600 [0] ?trans_flags&2 * scale [949 7 80 23 1 0 1 0]
 
 ; ultraschall _______________
 
@@ -674,17 +694,17 @@ set trans.sel ?1 [0]
 
 ;Time/Beats display
 set trans.status  * scale + trans_offset [394 5 244 31 0.25 0 0.25 0]
-set trans.status.color  ?recarm * scale [227 115 115]
+set trans.status.color  ?recarm [227 115 115]
 set trans.status.margin * scale [-60 3 30 4]
 set trans.status.font [8]
 
 ;Rec/Play/Button/Rew/Ffwd/etc-Buttons
-set trans.rew * scale + trans_offset [150 5 36 36 0.25 0 0.25 0]
-set trans.stop * scale + trans_offset [185 5 36 36 0.25 0 0.25 0]
-set trans.play * scale + trans_offset [220 5 36 36 0.25 0 0.25 0]
-set trans.pause * scale + trans_offset [255 5 36 36 0.25 0 0.25 0]
-set trans.fwd * scale + trans_offset [290 5 36 36 0.25 0 0.25 0]
-set trans.repeat * scale + trans_offset [325 5 36 36 0.25 0 0.25 0]
+set trans.rew * scale + trans_offset [144 5 36 36 0.25 0 0.25 0]
+set trans.stop * scale + trans_offset [180 5 36 36 0.25 0 0.25 0]
+set trans.play * scale + trans_offset [216 5 36 36 0.25 0 0.25 0]
+set trans.pause * scale + trans_offset [252 5 36 36 0.25 0 0.25 0]
+set trans.fwd * scale + trans_offset [288 5 36 36 0.25 0 0.25 0]
+set trans.repeat * scale + trans_offset [324 5 36 36 0.25 0 0.25 0]
 set trans.rec * scale + trans_offset [360 5 36 36 0.25 0 0.25 0]
 
 ;Playrate Fader settings
@@ -706,7 +726,7 @@ misc_dpi_translate 174 200
 
 
 ;Ultraschall layout for Notes; using theme-images from image-folder "black-tcp"
-Layout "Ultraschall 2 Notes" "black-tcp"
+Layout "Ultraschall 2 Notes" ""
 
 clear tcp.*
 set tcp.label.color [191 191 191]
