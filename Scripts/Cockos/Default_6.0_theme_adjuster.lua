@@ -241,14 +241,22 @@ function loadImage(idx, name)
   if gfx.loadimg(idx, str..name) == -1 then reaper.ShowConsoleMsg("image "..name.." not found") end
 end
 
-image_idx = {}
-function getImage(img)
-  for i, v in ipairs(image_idx) do
-    if v == img then return i end
+image_idx,image_idx_size = {},0
+function getImage(img,drawScale)
+  if drawScale ~= 2 then drawScale = 1 end -- snap to 1 if not 2, for now
+
+  local cache_rec = image_idx[img]
+  if cache_rec ~= nil then
+    if cache_rec.scale == drawScale then return cache_rec.idx end
+  else
+    cache_rec = { idx=image_idx_size }
+    image_idx[img] = cache_rec
+    image_idx_size = image_idx_size + 1
   end
-  loadImage(#image_idx+1, img..'.png')
-  image_idx[#image_idx+1] = img
-  return #image_idx
+  if drawScale == 2 then img = img .. "@2x" end
+  loadImage(cache_rec.idx,img .. ".png")
+  cache_rec.scale = drawScale
+  return cache_rec.idx
 end
 
 
@@ -312,7 +320,7 @@ function Spinner:new(parent,o)
   self.flow = o.flow
   self.border = o.border or ''
   local spinStyle = o.spinStyle or 'light'
-  local i = getImage(spinStyles[spinStyle].buttonLimage)
+  local i = getImage(spinStyles[spinStyle].buttonLimage,1)
   self.buttonW = gfx.getimgdim(i) /3
   if spinStyles[spinStyle].title ~= false then
     local topBar = Element:new(o,{x=self.buttonW/2,y=2,w=self.w-self.buttonW,h=spinStyles[spinStyle].title.h,color=spinStyles[spinStyle].label.col,interactive=false})
@@ -322,7 +330,7 @@ function Spinner:new(parent,o)
   end
   if o.spinStyle == 'image' then
     local ir = Readout:new(o,{x=self.buttonW,y=spinStyles[spinStyle].readout.y,w=self.w-(2*self.buttonW),h=spinStyles[spinStyle].readout.h,border='',
-                      valsImage = o.valsImage, action = o.action, param={'editPage'}})
+                      valsImage = o.valsImage, action = o.action, param={0}})
   else
     if spinStyles[spinStyle].readout ~= false then
       local r = Readout:new(o,{x=self.buttonW,y=spinStyles[spinStyle].readout.y,w=self.w-(2*self.buttonW),h=spinStyles[spinStyle].readout.h,border='',
@@ -518,6 +526,7 @@ function paramToVal(param,v)
   if param <= -1001 and param >= -1003 then val, suffix = v / 256, '' end
   if param == -1004 then val, suffix = math.floor(v / 2.56 + .5), ' %' end
   if param == -1005 then val, suffix = math.floor(v * 0.9375 - 180 + .5),' °' end
+  if param >= 0 then val, suffix = v, '' end
   return val, suffix
 end
 
@@ -527,6 +536,7 @@ function valToParam(param,v)
   if param <= -1001 and param >= -1003 then val = v * 256 end
   if param == -1004 then val = math.floor(v * 2.56 + .5) end
   if param == -1005 then val = math.floor((v + 180) / 0.9375 + .5) end
+  if param >= 0 then val = v end
   return val
 end
 
@@ -580,11 +590,20 @@ function Readout:doParamGet()
         else self.text.str = 'ERR '..p..' '..value
         end
       end
-    elseif self.action == doPageSpin then self.imgValueFrame = editPage-1
+    elseif self.action == doPageSpin then self.imgValueFrame = getEditPageIndex()-1
     elseif self.action == doFader then
       local tmp,tmp,value = reaper.ThemeLayout_GetParameter(self.param[1]) --< color faders have param as number, no need to lookup 
       local v, suffix = paramToVal(self.param[1],value)
       self.text.str = string.format(suffix == "" and "%.2f" or "%d%s",v,suffix);
+    elseif self.action == doGenericFader then
+      local tmp,desc,value = reaper.ThemeLayout_GetParameter(self.param[1])
+      if tmp ~= nil then
+        if self.userEntry ~= nil then
+          self.text.str = value
+        else
+          self.text.str = desc
+        end
+      end
     end
   end
 end
@@ -608,6 +627,14 @@ function doFlagParam(param) --param name, visFlag
   reaper.ThemeLayout_SetParameter(p, value ~ param[2], true)
   reaper.ThemeLayout_RefreshAll()
   paramGet = 1
+end
+
+function doGenericParams()
+  for i=2,#_themeParameterPage_und.children do
+    if reaper.ThemeLayout_GetParameter(i-1) ~= nil then _themeParameterPage_und.children[i].visible = true
+    else _themeParameterPage_und.children[i].visible = false
+    end
+  end
 end
 
 function paramToggle(p)
@@ -859,7 +886,10 @@ function measureEnvNames(trackCount)
       end
     end
   end
-  reaper.ThemeLayout_SetParameter(paramIdxGet('envcp_LabelMeasure'), envNamesWMax, true)
+  local l = paramIdxGet('envcp_LabelMeasure');
+  if l ~= nil then
+    reaper.ThemeLayout_SetParameter(l, envNamesWMax, true)
+  end
 end
 
 ------------- ACTIONS --------------
@@ -889,20 +919,18 @@ function themeCheck()
   if theme ~= oldTheme or theme == nil then
     last_theme_filename = reaper.GetLastColorThemeFile()
     last_theme_filename_check = reaper.time_precise()
-    if theme ~= 'defaultV6' or theme_version < 1 then --theme_version catch for later changes
-      _wrongTheme.visible, _dockedRoot.visible, _undockedRoot.visible = true, false, false
-      _theme.text.str = string.match(last_theme_filename, '[^\\/]*$')
-      if gfx.measurestr(_theme.text.str)<160 then _theme.w=160 else _theme.w=gfx.measurestr(_theme.text.str) end
-      _wrongTheme:onSize()
-      redraw = 1
+    indexParams()
+    getDock() --it will decide which root to draw
+    if theme ~= 'defaultV6' or theme_version < 1 then
+      isGenericTheme = true
+      _genericThemeTitle.text.str = string.match(string.match(last_theme_filename, '[^\\/]*$'),'(.*)%..*$')
     else
-      indexParams()
-      _wrongTheme.visible = false
-      getDock() --it will decide which root to draw
-      paramGet = 1
-      redraw = 1
+      isGenericTheme = false
     end
     oldTheme = theme
+    doActivePage()
+    paramGet = 1
+    redraw = 1
   else
     local now = reaper.time_precise()
     if now > last_theme_filename_check+1 then
@@ -946,12 +974,10 @@ function doDock()
 end
 
 function getDock()
-  if _wrongTheme.visible ~= true then
-   local d = gfx.dock(-1)
-    if d%2==0 then
-      _dockedRoot.visible, _undockedRoot.visible = false, true
-    else _dockedRoot.visible, _undockedRoot.visible = true, false
-    end
+ local d = gfx.dock(-1)
+  if d%2==0 then
+    _dockedRoot.visible, _undockedRoot.visible = false, true
+  else _dockedRoot.visible, _undockedRoot.visible = true, false
   end
 end
 
@@ -969,27 +995,32 @@ function getDpi()
   end
 end
 
-function getEditPage()
-  return menuBoxVals[editPage]
+function getEditPageIndex()
+  if isGenericTheme == true then
+    if editPage2 == 2 then return 4 end
+    if editPage2 == 3 then return 6 end
+    return 1
+  end
+  if editPage<1 or editPage>6 then return 1 end
+  return editPage
 end
 
 function doActivePage()
-  if editPage<1 or editPage>6 then editPage = 1 end
-
+  local ep = getEditPageIndex()
   if _dockedRoot.visible ~= false then
     for i, v in ipairs(_dockedRoot.children) do
       if i>0 and i<7 then -- ignore the last child (the undock button)
-        if i == editPage then v.visible = true
+        if i == ep then v.visible = true
         else v.visible = false end
       end
     end
   end
 
   if _undockedRoot.visible ~= false then
-    if editPage == 6 then editPage = 5 end
+    if isGenericTheme == false and ep == 6 then ep = 5 end
     for i, v in ipairs(_subPageContainer.children) do
       if i>0 and i<=(#_subPageContainer.children) then
-        if i == editPage then v.visible = true
+        if i == ep then v.visible = true
         else v.visible = false
         end
       end
@@ -1000,19 +1031,34 @@ end
 
 function doPageSpin(param)
   local val = param[2]
-  local limit = #menuBoxVals
 
   if val == 0 then return end
   if val > 0 then val = 1 else val = -1 end -- one at a time
 
-  if _undockedRoot.visible == true then limit = 5 end
-  if editPage>=limit and val==1 then
-    editPage = 1
+  local ep, limit
+  if isGenericTheme == true then
+    limit = 2
+    ep = editPage2
+    if _undockedRoot.visible == true then limit = 3 end
   else
-    if editPage==1 and val==-1 then editPage = limit
-    else editPage = editPage + val
+    limit = 6
+    ep = editPage
+    if _undockedRoot.visible == true then limit = 5 end
+  end
+  
+  if ep>=limit and val==1 then
+    ep = 1
+  else
+    if ep==1 and val==-1 then ep = limit
+    else ep = ep + val
     end
   end
+  if isGenericTheme == true then
+    editPage2 = ep
+  else
+    editPage = ep
+  end
+
   doActivePage()
   needReaperStateUpdate = 1
   paramGet = 1
@@ -1100,8 +1146,13 @@ function doFader(self,dX)
       paramGet = 1
       redraw = 1
     end
-  else --non-readout fader stuff 
+  else --see fader:mouseDown 
   end
+end
+
+function doGenericFader(self,dX)
+  doFader(self,dX)
+  reaper.ThemeLayout_RefreshAll()
 end
 
 
@@ -1216,8 +1267,7 @@ function Element:draw()
       if self.drawImg ~= nil then -- then this element's image isn't static
         img = self.drawImg
       end
-      if drawScale == 2 then img = img..'@2x' end
-      local i = getImage(img)                          --<< Refine getImage, it currently reloads the image whenever called
+      local i = getImage(img,drawScale)
       local iDw, iDh = gfx.getimgdim(i)
 
       if self.imgType ~= nil and iDw ~= nil and self.imgType == 3 then
@@ -1335,31 +1385,40 @@ function Fader:mouseDown(x,y)
   
   if dX ~= 0 then
     local v = math.floor(dX * ((maxvalue - minvalue)/(432 * drawScale)))
-    newValue = self.dragStartValue + v
-    if newValue < minvalue then newValue = minvalue end
-    if newValue > maxvalue then newValue = maxvalue end
-    reaper.ThemeLayout_SetParameter(self.param, newValue,false)
-    ctheme_param_needsave = { self.param }
-    self:doUpdateState()
-    self.parent:onSize()
-    redraw = 1
+    local newValue = math.max(math.min(self.dragStartValue + v,maxvalue),minvalue)
+    if newValue ~= value then
+      reaper.ThemeLayout_SetParameter(self.param, newValue,false)
+      ctheme_param_needsave = { self.param }
+      self:doUpdateState()
+      self.parent:onSize()
+      if self.onChange ~= nil then self:onChange() end
+      if self.readout ~= nil then self.readout:doParamGet() end
+      redraw = 1
+    end
   end
 end
 
 function FaderBg:mouseDown(x,y)
   local tmp,tmp,value,tmp,minvalue,maxvalue = reaper.ThemeLayout_GetParameter(self.param)
   local v = minvalue + math.floor(((x/drawScale-self.drawx-10)/432)*(maxvalue-minvalue))
-  reaper.ThemeLayout_SetParameter(self.param,v,false)
-  ctheme_param_needsave = { self.param }
-  self:doUpdateState()
-  self.parent:onSize()
-  redraw = 1
+  v = math.max(math.min(v,maxvalue),minvalue)
+  if v ~= value then
+    reaper.ThemeLayout_SetParameter(self.param,v,false)
+    ctheme_param_needsave = { self.param }
+    self:doUpdateState()
+    self.parent:onSize()
+    if self.onChange ~= nil then self:onChange() end
+    if self.readout ~= nil then self.readout:doParamGet() end
+    redraw = 1
+  end
 end
 
 function Fader:doubleClick() 
   local tmp,title,value,defValue = reaper.ThemeLayout_GetParameter(self.param)
   reaper.ThemeLayout_SetParameter(self.param,defValue, true)
   ctheme_param_needsave = nil
+  if self.onChange ~= nil then self:onChange() end
+  if self.readout ~= nil then self.readout:doParamGet() end
 end
 
 function Fader:mouseWheel(v)
@@ -1371,6 +1430,8 @@ function Fader:mouseWheel(v)
   ctheme_param_needsave = { self.param, reaper.time_precise() + .5 }
   self:doUpdateState()
   self.parent:onSize()
+  if self.onChange ~= nil then self:onChange() end
+  if self.readout ~= nil then self.readout:doParamGet() end
   redraw = 1
 end
 
@@ -1382,6 +1443,7 @@ function Readout:doubleClick()
     root:doUpdateState()
     resize = 1
     paramGet = 1
+    if self.onChange ~= nil then self:onChange() end
   end
 end
 
@@ -1447,7 +1509,6 @@ function Element:hitTest(x,y)
 end
 
 -- Spinner label values
-menuBoxVals = {'GLOBAL','TRACK','MIXER','COLORS','ENVELOPE','TRANSPORT'}
 folderIndentVals = {'NONE','1/8','1/4','1/2',1,2,'MAX' }
 tcpLabelVals = {'AUTO',20,50,80,110,140,170}
 tcpVolVals = {'KNOB',40,70,100,130,160,190}
@@ -1461,6 +1522,8 @@ dockedMcpMeterExpVals = {'NONE','+ 2 PIXELS','+ 4 PIXELS','+ 8 PIXELS'}
 undockPaletteNamesVals = {'REAPER v6', 'PRIDE','WARM','COOL','VICE','EEEK'}
 controlAlignVals = {'FOLDER INDENT','ALIGNED'}
 trackControlAlignVals = {'FOLDER INDENT','ALIGNED','EXTEND NAME'}
+seperateSendsVals = {'OFF','ON'}
+tcpMeterLocVals = {'LEFT','RIGHT','LEFT IF ARMED'}
 
 helpL_layout = 'These settings are automatically saved to your REAPER install, and '
              ..'will be used whenever you use this theme.'
@@ -1523,19 +1586,13 @@ help_playRate = 'If \'Show Play Rate\' is on, sets the size of the play rate con
 apply = {}
 root = Element:new(nil, {x=0,y=0,drawx=0,drawy=0,w=_gfxw,h=_gfxh,color={38,38,38}})
 
-_wrongTheme = Element:new(root, {flexW='100%',h=30,color={51,51,51}})
-Element:new(_wrongTheme, {x=6,y=2,w=26,h=26,img='icon_warning_on'})
-_theme = Element:new(_wrongTheme, {x=32,y=2,w=100,h=15,text={str='',align = 4,col={129,137,137}}})
-Element:new(_theme, {x=0,y=11,w=160,h=15,text={str='is not compatible with this script',align = 4,col={230,23,91}}})
-_switchTheme = Button:new(_wrongTheme, {flow=true,img='button_empty',imgType=3,y=2,w=92,border='x',action=switchTheme,text={str='Switch to the#Default v6 theme', align=5,lineSpacing=9,col={129,137,137}}})
-
 
   ------ DOCKED LAYOUT -------
 
 _dockedRoot = Element:new(root, {flexW='100%',h=_gfxh})
 
 _pageGlobal = Element:new(_dockedRoot, {flow=true,title='GLOBAL',y=0,flexW='fill',x=0,w=-16,h=_gfxh})
-Spinner:new(_pageGlobal, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin,readoutParam={editPage}})
+Spinner:new(_pageGlobal, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin})
 _gammaUnd = Element:new(_pageGlobal, {flow=true,x=0,y=6,w=453,h=19,color={90,94,94},helpR=helpR_colAdj,interactive=false})
 _gammaUndBg =  FaderBg:new(_gammaUnd, {x=1,y=1,w=451,h=17,img='faderbg_gamma',action=doFader,param=-1000,helpR=helpR_colAdj,interactive=false})
 Element:new(_gammaUndBg, {x=195,y=2,w=1,h=13,color={255,255,255,64}}) --zero line
@@ -1553,7 +1610,7 @@ Element:new(_saturationBox, {x=0,y=4,w=72,h=11,text={str='SATURATION',style=2,al
 Readout:new(_saturationBox,{x=0,y=16,w=52,h=11,userEntry=true,action=doFader,moColor={60,60,60},param={-1004},text={str='',align=4,col={129,137,137}}})
 
 _pageTrack = Element:new(_dockedRoot, {flow=true,title='TRACK',y=0,flexW='fill',x=0,w=-16,h=_gfxh})
-Spinner:new(_pageTrack, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin,readoutParam={editPage}})
+Spinner:new(_pageTrack, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin})
 Spinner:new(_pageTrack, {flow=true,w=92,title='INDENT',action=paramSet,param='tcp_indent',valsTable=folderIndentVals})
 Button:new(_pageTrack, {flow=true,w=45,img='layout_A',imgType=3,border='x',action=doActiveLayout,param={'tcp','A'}})
 Button:new(_pageTrack, {flow=true,w=43,img='layout_B',imgType=3,action=doActiveLayout,param={'tcp','B'}})
@@ -1569,7 +1626,7 @@ Spinner:new(_pageTrack, {flow=true,w=110,title='METER SIZE',border='x',action=pa
 Spinner:new(_pageTrack, {flow=true,w=110,title='INPUT SIZE',border='x',action=paramSet,param='tcp_InputSize',valsTable=tcpInVals})
 
 _pageMixer = Element:new(_dockedRoot, {flow=true,title='MIXER',y=0,flexW='fill',w=-16,h=_gfxh})
-Spinner:new(_pageMixer, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin,readoutParam={editPage}})
+Spinner:new(_pageMixer, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin})
 Spinner:new(_pageMixer, {flow=true,w=92,title='INDENT',border='',action=paramSet,param='mcp_indent',valsTable=folderIndentVals})
 Button:new(_pageMixer, {flow=true,w=45,img='layout_A',imgType=3,border='x',action=doActiveLayout,param={'mcp','A'}})
 Button:new(_pageMixer, {flow=true,w=43,img='layout_B',imgType=3,action=doActiveLayout,param={'mcp','B'}})
@@ -1586,7 +1643,7 @@ Button:new(_pageMixer, {flow=true,img='show_param',imgType=3,border='',action=ac
 Button:new(_pageMixer, {flow=true,img='show_send',imgType=3,border='',action=actionToggle,param=40557})
 
 _pageColors = Element:new(_dockedRoot, {flow=true,title='COLORS',x=0,y=0,flexW='fill',w=-16,h=_gfxh})
-Spinner:new(_pageColors, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin,readoutParam={editPage}})
+Spinner:new(_pageColors, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin})
 _palette = Palette:new(_pageColors, {flow=true,border='y',w=318,h=30,cellW=30,action=applyCustCol})
 Spinner:new(_pageColors, {flow=true,border='x',w=96,title='PALETTE',action=paletteChoose,value=getCurrentPalette})
 Button:new(_pageColors, {flow=true,img='color_apply_all',imgType=3,border='x',action=applyPalette})
@@ -1594,7 +1651,7 @@ Button:new(_pageColors, {flow=true,img='color_dim',imgType=3,border='x',action=r
 Button:new(_pageColors, {flow=true,img='color_dim_all',imgType=3,border='x',action=reduceCustCol,param=false})
 
 _pageEnv = Element:new(_dockedRoot, {flow=true,title='ENVELOPE',y=0,flexW='fill',w=-16,h=_gfxh})
-Spinner:new(_pageEnv, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin,readoutParam={editPage}})
+Spinner:new(_pageEnv, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin})
 _applyBoxEnv = Element:new(_pageEnv, {flow=true,w=188,h=30, color={51,51,51}})
 apply.envcp = {Button:new(_applyBoxEnv, {x=5,y=5,w=61,img='apply_100',imgType=3,action=applyLayout,param={'envcp',''}})}
 apply.envcp[2] = Button:new(_applyBoxEnv, {flow=true,w=61,img='apply_150',imgType=3,action=applyLayout,param={'envcp','150%_'}})
@@ -1604,7 +1661,7 @@ Spinner:new(_pageEnv, {flow=true,w=106,title='FADER SIZE',border='x',action=para
 Button:new(_pageEnv, {flow=true,img='match_folder_indent',imgType=3,border='x',action=paramToggle,param='envcp_folder_indent'})
 
 _pageTrans = Element:new(_dockedRoot, {flow=true,title='TRANSPORT',y=0,flexW='fill',w=-16,h=_gfxh})
-Spinner:new(_pageTrans, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin,readoutParam={editPage}})
+Spinner:new(_pageTrans, {flow=true,spinStyle='image',valsImage='page_titles_small',x=6,y=0,w=133,border='',action=doPageSpin})
 _applyBoxTrans = Element:new(_pageTrans, {flow=true,w=188,h=30, color={51,51,51}})
 apply.trans = {Button:new(_applyBoxTrans, {x=5,y=5,w=61,img='apply_100',imgType=3,action=applyLayout,param={'trans',''},helpL=helpL_applySize})}
 apply.trans[2] = Button:new(_applyBoxTrans, {flow=true,w=61,img='apply_150',imgType=3,action=applyLayout,param={'trans','150%_'},helpL=helpL_applySize})
@@ -1625,7 +1682,7 @@ _undockedRoot = Element:new(root, {flexW='100%',flexH='100%'})
 _pageContainer = Element:new(_undockedRoot, {positionX='center', positionY='center',x=0,y=0,w=513,h=679})
 
 _buttonHelp = Button:new(_pageContainer, {flow=false,x=0,y=0,w=30,img='help_on',imgType=3,w=30,action=toggleHelp,helpR=helpR_help})
-_unDpageSpin = Spinner:new(_pageContainer, {spinStyle='image',valsImage='page_titles',x=130,y=0,w=253,action=doPageSpin,readoutParam={editPage}})
+_unDpageSpin = Spinner:new(_pageContainer, {spinStyle='image',valsImage='page_titles',x=130,y=0,w=253,action=doPageSpin})
 Button:new(_pageContainer, {flow=false,x=483,y=0,img='dock',imgType=3,w=30,action=doDock,helpL=helpL_dock,helpR=helpR_dock})
 Element:new(_pageContainer, {x=0,y=39,w=513,h=1,color={0,0,0}}) -- black title div
 
@@ -1708,11 +1765,11 @@ Element:new(_applyBox_Track, {x=40,y=66,w=153,h=7,img='apply_to_sel'})
 
 _layoutTrack = Element:new(_layoutTrackStroke, {x=1,y=1,w=511,h=484,color={51,51,51},helpL=helpL_layout}) -- fill
 Spinner:new(_layoutTrack, {x=29,y=29,w=119,title='NAME SIZE',action=paramSet,param='tcp_LabelSize',valsTable=tcpLabelVals})
-Spinner:new(_layoutTrack, {x=71,y=70,w=163,title='METER SIZE',action=paramSet,param='tcp_MeterSize',valsTable=tcpMeterVals})
+Spinner:new(_layoutTrack, {x=29,y=70,w=119,title='METER SIZE',action=paramSet,param='tcp_MeterSize',valsTable=tcpMeterVals})
 Spinner:new(_layoutTrack, {x=363,y=29,w=119,title='INPUT SIZE',action=paramSet,param='tcp_InputSize',valsTable=tcpInVals})
 Spinner:new(_layoutTrack, {x=192,y=29,w=127,title='VOLUME SIZE',action=paramSet,param='tcp_vol_size',valsTable=tcpVolVals})
-tcpMeterLocVals = {'LEFT','RIGHT','LEFT IF ARMED'}
-Spinner:new(_layoutTrack, {x=278,y=70,w=163,title='METER LOCATION',action=paramSet,param='tcp_MeterLoc',valsTable=tcpMeterLocVals})
+Spinner:new(_layoutTrack, {x=182,y=70,w=147,title='METER LOCATION',action=paramSet,param='tcp_MeterLoc',valsTable=tcpMeterLocVals})
+Spinner:new(_layoutTrack, {x=363,y=70,w=119,title='SENDS LIST',action=paramSet,param='tcp_sepSends',valsTable=seperateSendsVals,helpL=helpL_layout})
 
 tcpTableVals = {img = 'cell_hide',
                 columns = {{visFlag=1,text={str='IF MIXER#IS VISIBLE'}},{visFlag=2,text={str='IF TRACK#NOT SELECTED'}},
@@ -1840,6 +1897,22 @@ Element:new(_transPrefs, {x=324,y=69,w=150,h=30,text={str='Use Home/End for Mark
 Button:new(_transPrefs, {x=285,y=112,img='play_text',imgType=3,action=actionToggle,param=40532})
 Element:new(_transPrefs, {x=324,y=112,w=150,h=30,text={str='Show play state as text',style=2,align=4,col={129,137,137}}})
 
+--THEME PARAMETERS
+
+_themeParameterPage_und = Element:new(_subPageContainer, {x=0,y=40,w=513,h=639})
+_genericThemeTitle = Element:new(_themeParameterPage_und, {x=158,y=-80,w=200,h=30,text={str='---',style=2,align=5,col={129,137,137}}})
+
+for i=1,10 do
+  local _genbox = Element:new(_themeParameterPage_und, {x=26,y=52*(i-1),w=451,h=42, visible=true})
+  local _genFadebg = FaderBg:new(_genbox, {x=0,y=0,w=451,h=17,color={71,73,73},action=doFader,param=i})
+  Element:new(_genFadebg, {x=226,y=2,w=1,h=13,color={255,255,255,64}}) --zero line
+  local f = Fader:new(_genFadebg, {x=1,y=-4,action=doFader,param=i})
+  f.onChange, _genFadebg.onChange = reaper.ThemeLayout_RefreshAll,reaper.ThemeLayout_RefreshAll
+  Readout:new(_genbox, {x=0,y=22,w=300,h=11,action=doGenericFader,param={i},text={str='---',style=2,align=4,col={129,137,137}}})
+  local ro = Readout:new(_genbox,{x=399,y=20,w=52,h=15,userEntry=true,action=doGenericFader,moColor={40,40,40},param={i},text={str='',align=6,col={129,137,137}}})
+  f.readout, _genFadebg.readout = ro,ro
+end
+
 --HELP
 _helpL = Element:new(_pageContainer, {x=-144,y=500,w=115,h=200,text={str='',style=2,align=2,wrap=true,vCenter=false,lineSpacing=14,col={129,137,137}}})
 Element:new(_helpL, {x=18,y=-25,w=97,h=19,img='helpHeader_l'})
@@ -1855,6 +1928,7 @@ redraw = 1
 lastchgidx = 0
 chgsel = 1
 oldTheme = nil
+isGenericTheme = true
 mouseXold = 0
 mouseYold = 0
 mouseWheelAccum = 0 -- accumulated unused wheeling
@@ -1867,6 +1941,7 @@ selectedTracks = {}
 activeMouseElement = nil
 _helpL.y, _helpR.y = 10000,10000
 editPage = tonumber(reaper.GetExtState(sTitle,'editPage')) or 1
+editPage2 = tonumber(reaper.GetExtState(sTitle,'editPage2')) or 1 -- for non-def themes
 dpi = 1
 drawScale = 1
 
@@ -1895,21 +1970,19 @@ function runloop()
     lastchgidx = chgidx
   end
 
-  if _wrongTheme.visible ~= true then
-    if needReaperStateUpdate == 1 then
-      doActivePage()
-      local trackCount = reaper.CountTracks(0)-1
-      measureTrackNames(trackCount)
-      measureEnvNames(trackCount)
-      redraw = 1
-    end
-    needReaperStateUpdate_cnt = (needReaperStateUpdate_cnt or 0) + 1
-    if needReaperStateUpdate == 1 or needReaperStateUpdate_cnt > 3 then
-      getReaperDpi()
-      root:doUpdateState()
-      needReaperStateUpdate_cnt = 0
-      needReaperStateUpdate = 0
-    end
+  if needReaperStateUpdate == 1 then
+    doActivePage()
+    local trackCount = reaper.CountTracks(0)-1
+    measureTrackNames(trackCount)
+    measureEnvNames(trackCount)
+    redraw = 1
+  end
+  needReaperStateUpdate_cnt = (needReaperStateUpdate_cnt or 0) + 1
+  if needReaperStateUpdate == 1 or needReaperStateUpdate_cnt > 3 then
+    getReaperDpi()
+    root:doUpdateState()
+    needReaperStateUpdate_cnt = 0
+    needReaperStateUpdate = 0
   end
 
   -- mouse stuff
@@ -1978,6 +2051,7 @@ function runloop()
 
   if paramGet == 1 then
     root:doParamGet()
+    if isGenericTheme == true then doGenericParams() end
     paramGet = 0
   end
 
@@ -2030,6 +2104,7 @@ function Quit()
   reaper.SetExtState(sTitle,"wndx",x,true)
   reaper.SetExtState(sTitle,"wndy",y,true)
   reaper.SetExtState(sTitle,'editPage',editPage,true)
+  reaper.SetExtState(sTitle,'editPage2',editPage2,true)
   reaper.SetExtState(sTitle,'paletteCurrent',palette.current,true)
   reaper.SetExtState(sTitle,'activeLayoutTcp',activeLayout.tcp,true)
   reaper.SetExtState(sTitle,'activeLayoutMcp',activeLayout.mcp,true)
