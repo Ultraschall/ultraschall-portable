@@ -59,10 +59,12 @@ function SoundcheckInputs(userspace)
     for i=0, numtracks-1 do
 
       track_object = reaper.GetTrack(0, i)
-      input = reaper.GetMediaTrackInfo_Value(track_object, "I_RECINPUT")
+      input = reaper.GetMediaTrackInfo_Value(track_object, "I_RECINPUT") -- hole den Input des Tracks
+      trackArmed = reaper.GetMediaTrackInfo_Value(track_object, "I_RECARM") -- prüfen den recArm state des Tracks
+
       -- print("Track: "..(i+1).." Input: "..input)
 
-      if input >= 0 and input < 1024 then
+      if input >= 0 and input < 1024 and trackArmed == 1 then
 
         -- input = input + offset
         if inputChannels[input] == true or (offset == 2 and input < 2) then -- der Input Kanal ist schon einmal belegt, oder es ist ein Zoom Gerät und Kanal 1/2 ist belegt
