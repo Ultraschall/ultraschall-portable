@@ -637,7 +637,7 @@ set scale 1
 front trans.rate.fader
 
 ;Transport settings
-set trans_offset * scale [50]
+set trans_offset * scale [30]
 set trans.size * scale [1041 85]
 set trans.size.minmax * scale [540 40 2048 200]
 set trans.size.dockedheight * scale [43]
@@ -646,19 +646,19 @@ set trans.margin * scale [230 2 2 2]
 set trans.sel ?1 [0]
 
 ;Time/Beats display
-set trans.status  * scale + trans_offset [394 5 244 31 0.5 0 0.5 0]
+set trans.status  * scale + trans_offset [409 5 244 31 0.5 0 0.5 0]
 set trans.status.color  ?recarm * scale [227 115 115]
 set trans.status.margin * scale [-60 3 30 4]
 set trans.status.font * scale [8]
 
 ;Rec/Play/Button/Rew/Ffwd/etc-Buttons
-set trans.rew * scale + trans_offset [150 5 36 36 0.5 0 0.5 0]
-set trans.stop * scale + trans_offset [185 5 36 36 0.5 0 0.5 0]
-set trans.play * scale + trans_offset [220 5 36 36 0.5 0 0.5 0]
-set trans.pause * scale + trans_offset [255 5 36 36 0.5 0 0.5 0]
-set trans.fwd * scale + trans_offset [290 5 36 36 0.5 0 0.5 0]
-set trans.repeat * scale + trans_offset [325 5 36 36 0.5 0 0.5 0]
-set trans.rec * scale + trans_offset [360 5 36 36 0.5 0 0.5 0]
+set trans.rew * scale + trans_offset [144 5 36 36 0.25 0 0.25 0]
+set trans.stop * scale + trans_offset [180 5 36 36 0.25 0 0.25 0]
+set trans.play * scale + trans_offset [216 5 36 36 0.25 0 0.25 0]
+set trans.pause * scale + trans_offset [252 5 36 36 0.25 0 0.25 0]
+set trans.fwd * scale + trans_offset [288 5 36 36 0.25 0 0.25 0]
+set trans.repeat * scale + trans_offset [324 5 36 36 0.25 0 0.25 0]
+set trans.rec * scale + trans_offset [360 5 36 36 0.25 0 0.25 0]
 
 ;Playrate Fader settings
 set trans.rate w<600 [0] ?trans_flags&2 * scale [889 12 64 17 1 0 1 0]
