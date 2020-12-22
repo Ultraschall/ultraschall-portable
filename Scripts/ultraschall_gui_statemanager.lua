@@ -104,6 +104,14 @@ function checkGuiStates()
 
   -- print ("--")
 
+  timecount = timecount + 1
+  if timecount == 600 then
+    -- print ("huhu")
+
+    commandid = reaper.NamedCommandLookup("_Ultraschall_Consolidate_Backups")
+    reaper.Main_OnCommand(commandid,0)
+    timecount = 0
+  end
 
  -------------------------------------------------
  -- Defer-Schleife
@@ -135,6 +143,7 @@ GUIHelpers = {
   "_Ultraschall_GUI_setmagictrackheight",
 }
 
+timecount = 0
 
 checkGuiStates()
 

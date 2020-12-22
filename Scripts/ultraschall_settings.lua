@@ -406,7 +406,7 @@ header_path = script_path.."/Ultraschall_Gfx/Headers/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall Settings"
-GUI.w, GUI.h = 820, 625   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 820, 607   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -455,13 +455,15 @@ function buildGUI()
   ------- Header Settings
   -----------------------------
 
-  header = GUI.Area:new(0,0,1000,90,0,1,1,"header_bg")
+  header_height = 42
+
+  header = GUI.Area:new(0,0,1000,header_height,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
 
   logo = GUI.Pic:new(          0,  0,   0,  0,    1,   header_path.."settings_logo.png")
   table.insert(GUI.elms, logo)
 
-  headertxt = GUI.Pic:new(          195,  34,   0,  0,    0.8,   header_path.."headertxt_settings.png")
+  headertxt = GUI.Pic:new(          74,  10,   0,  0,    0.8,   header_path.."headertxt_settings.png")
   table.insert(GUI.elms, headertxt)
 
 
@@ -479,7 +481,7 @@ function buildGUI()
       tab_image = "tab_settingsview_inactive_" .. i .. ".png"
     end
 
-    tab = GUI.Pic:new(tab_x_offset,  140,   150,  50,    0.5,   header_path..tab_image, changeTab, i)
+    tab = GUI.Pic:new(tab_x_offset,  header_height + 45,   150,  50,    0.5,   header_path..tab_image, changeTab, i)
     table.insert(GUI.elms, tab)
 
 
@@ -514,7 +516,7 @@ function SettingsPageSettings()
 
   x_offset = 55
 
-  block = GUI.Area:new(45,180,730, 430,5,1,1,"section_bg")
+  block = GUI.Area:new(45, header_height + 92,730, 430,5,1,1,"section_bg")
     table.insert(GUI.elms, block)
 
 
@@ -526,7 +528,7 @@ function SettingsPageSettings()
 
     if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
 
-      position = 175 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 30) -- Feintuning notwendig
+      position = header_height + 80 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 30) -- Feintuning notwendig
       settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
 
       if settings_Type == "checkbox" then
@@ -563,7 +565,7 @@ function SettingsPageSoundcheck()
 
   section_count = ultraschall.CountUSExternalState_sec("ultraschall-settings.ini")
 
-  position = 190
+  position = header_height + 102
 
   position_old = position +5
   y_offset = 80
@@ -620,7 +622,7 @@ function SettingsPageDevices()
   --  Info-Button für Devices
   ------------------------------------------------------
 
-  local position = 190
+  local position = header_height + 102
 
   block = GUI.Area:new(45,position-10,730, 400,5,1,1,"section_bg")
       table.insert(GUI.elms, block)

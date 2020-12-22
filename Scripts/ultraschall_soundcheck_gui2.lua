@@ -342,9 +342,10 @@ function buildGuiWarnings()
   local event_count = ultraschall.EventManager_CountRegisteredEvents()
   active_warning_count, paused_warning_count, description_lines = count_all_warnings(event_count)
 
-  ignored_position = 140 + (active_warning_count*43) + description_lines*24
-  warnings_position = 140
-  position = 140
+  header_height = 42
+  ignored_position = header_height + 50 + (active_warning_count*43) + description_lines*24
+  warnings_position = header_height + 50
+  position = header_height + 50
 
 
   if active_warning_count ~= lastWarningCount or paused_warning_count ~= lastPausedCount or active_warning_count + paused_warning_count == 0 or lastDescriptionLines ~= description_lines then
@@ -378,9 +379,9 @@ function buildGuiWarnings()
 
     rebuild_gui = true -- Parameter für die GUI-Lib
 
-    WindowHeight = 125 + (paused_warning_count*60) + (active_warning_count*30) + description_lines*30
+    WindowHeight = header_height + 45 + (paused_warning_count*60) + (active_warning_count*30) + description_lines*30
     if active_warning_count + paused_warning_count == 0 then
-      WindowHeight = 220
+      WindowHeight = 170
     end
 
     if WindowHeight ~= height and height ~= 0 then -- Anzahl der Elemente hat sich geändert also Neuberechnung der Y-Position anhand der neuen Höhe
@@ -412,14 +413,13 @@ function buildGuiWarnings()
 
   ------- Header
 
-
-  header = GUI.Area:new(0,0,1000,90,0,1,1,"header_bg")
+  header = GUI.Area:new(0,0,1000, header_height ,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
 
   logo = GUI.Pic:new(          0,  0,   0,  0,    1,   header_path.."soundcheck_logo.png")
   table.insert(GUI.elms, logo)
 
-  headertxt = GUI.Pic:new(          195,  34,   0,  0,    0.8,   header_path.."headertxt_soundcheck.png")
+  headertxt = GUI.Pic:new(          74,  10,   0,  0,    0.8,   header_path.."headertxt_soundcheck.png")
   table.insert(GUI.elms, headertxt)
 
 
@@ -427,7 +427,7 @@ function buildGuiWarnings()
   -- Settings-Buttons
   -----------------------------------------------------------------
 
-  button_settings = GUI.Btn:new(870, 38, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings_Soundcheck")
+  button_settings = GUI.Btn:new(870, 12, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings_Soundcheck")
   table.insert(GUI.elms, button_settings)
 
   -- button_all = GUI.Btn:new(770, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
@@ -451,17 +451,17 @@ function buildGuiWarnings()
       reaper.atexit(atexitClean)
     else
 
-      gfx.init("", 1000, 220, 0, GUI.x, GUI.y)
+      gfx.init("", 1000, 170, 0, GUI.x, GUI.y)
       GUI.drawnow = true
       rebuild_gui = true
 
-      block0 = GUI.Area:new(340,130,25, 55,7,1,1,"txt_green")
+      block0 = GUI.Area:new(340,80,25, 55,7,1,1,"txt_green")
       table.insert(GUI.elms, block0)
 
-      block2 = GUI.Area:new(375,130,190, 55,7,1,1,"section_bg")
+      block2 = GUI.Area:new(375,80,190, 55,7,1,1,"section_bg")
       table.insert(GUI.elms, block2)
 
-      well_txt = GUI.Pic:new(          400,  148,   0,  0,    0.5,   header_path.."all_is_well.png")
+      well_txt = GUI.Pic:new(          400,  98,   0,  0,    0.5,   header_path.."all_is_well.png")
       table.insert(GUI.elms, well_txt)
     end
   end
