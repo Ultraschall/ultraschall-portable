@@ -697,25 +697,28 @@ function buildGui()
   -- Navigations-Buttons
   -------------------------
 
-  if chapter_offset < #tablesort - chapter_pagelength + 1 then
-    buttonNext = GUI.Btn:new(415, WindowHeight - 30, 80, 20,         " Next >", nextPage, "")
-    table.insert(GUI.elms, buttonNext)
-  else
-    buttonNext = GUI.Btn:new(415, WindowHeight - 30, 80, 20,         " Next >", "", "")
-    table.insert(GUI.elms, buttonNext)
+  if #tablesort > 0 then
+
+    if chapter_offset < #tablesort - chapter_pagelength + 1 then
+      buttonNext = GUI.Btn:new(415, WindowHeight - 30, 80, 20,         " Next >", nextPage, "")
+      table.insert(GUI.elms, buttonNext)
+    else
+      buttonNext = GUI.Btn:new(415, WindowHeight - 30, 80, 20,         " Next >", "", "")
+      table.insert(GUI.elms, buttonNext)
+    end
+
+    if chapter_offset > chapter_pagelength then
+      buttonPrevious = GUI.Btn:new(325, WindowHeight - 30, 80, 20,         " < Previous", previousPage, "")
+      table.insert(GUI.elms, buttonPrevious)
+    else
+      buttonPrevious = GUI.Btn:new(325, WindowHeight - 30, 80, 20,         " < Previous", "", "")
+      table.insert(GUI.elms, buttonPrevious)
+    end
+
+    buttonExport = GUI.Btn:new(715, WindowHeight - 30, 80, 20,         " Export", exportChapters, "")
+    table.insert(GUI.elms, buttonExport)
+
   end
-
-  if chapter_offset > chapter_pagelength then
-    buttonPrevious = GUI.Btn:new(325, WindowHeight - 30, 80, 20,         " < Previous", previousPage, "")
-    table.insert(GUI.elms, buttonPrevious)
-  else
-    buttonPrevious = GUI.Btn:new(325, WindowHeight - 30, 80, 20,         " < Previous", "", "")
-    table.insert(GUI.elms, buttonPrevious)
-  end
-
-  buttonExport = GUI.Btn:new(715, WindowHeight - 30, 80, 20,         " Export", exportChapters, "")
-  table.insert(GUI.elms, buttonExport)
-
   ---------------------------------
   -- Schleife durch Marker der Page
   ---------------------------------
