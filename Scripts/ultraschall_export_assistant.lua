@@ -338,8 +338,11 @@ cover_path = script_path.."/Ultraschall_Gfx/Covers/"
 x_offset = -40
 
 
+header_height = 42
+header_y_offset = 90 - header_height
 GUI.name = "Ultraschall Export Assistant"
-GUI.w, GUI.h = 960, 685
+GUI.w, GUI.h = 960, 685 - header_y_offset
+
 
 -- position always in the centre of the screen
 
@@ -379,7 +382,7 @@ function buildGUI()
 	GUI.elms = {}
 
 
-	y_offset = 50  -- move all content up/down
+	y_offset = 2  -- move all content up/down
 	spacing = 10
 	no_button = false
 
@@ -389,13 +392,13 @@ function buildGUI()
   ------- Header
 	------------------
 
-  header = GUI.Area:new(0,0,1000,90,0,1,1,"header_bg")
+  header = GUI.Area:new(0,0,1000,header_height,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
 
   logo = GUI.Pic:new(          0,  0,   0,  0,    1,   header_path.."export_logo.png")
   table.insert(GUI.elms, logo)
 
-  headertxt = GUI.Pic:new(          195,  34,   0,  0,    0.8,   header_path.."headertxt_export.png")
+  headertxt = GUI.Pic:new(          74,  10,   0,  0,    0.8,   header_path.."headertxt_export.png")
   table.insert(GUI.elms, headertxt)
 
 

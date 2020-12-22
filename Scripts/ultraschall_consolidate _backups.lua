@@ -51,10 +51,6 @@ end
 
 
 if reaper.GetProjectName(0, "") == "" then
-
-  Message = "?;ExportContext;".."Save your project to use the consolidate backups feature."
-  reaper.SetExtState("ultraschall_messages", "message_0", Message, false)
-  reaper.SetExtState("ultraschall_messages", "message_count", "1", false)
 	goto exit -- abort
 end
 
@@ -102,11 +98,5 @@ for i = 1, #files_array do
 
 end
 
-
-if ultraschall.GetUSExternalState("ultraschall_gui", "donotopen_backupfolder") ~= "true" then
-  ultraschall.OpenURL(dir.."backup")
-else
-  ultraschall.SetUSExternalState("ultraschall_gui", "donotopen_backupfolder", "false")
-end
 
 ::exit::

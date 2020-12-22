@@ -124,7 +124,12 @@ function ResizeJPG(filename_with_path, outputfilename_with_path, aspectratio, wi
   if Retval==false then ultraschall.AddErrorMessage("ResizeJPG", "outputfilename_with_path", "Can't write outputfile", -9) return false end
 end
 
+function exportChapters()
 
+  commandid = reaper.NamedCommandLookup("_ULTRASCHALL_SAVE_CHAPTERS")
+  reaper.Main_OnCommand(commandid,0)
+
+end
 
   ------------------------------------------------------
   -- End of functions
@@ -471,7 +476,7 @@ end
 if rows < 4 then rows = 4 end -- Minimalhöhe
 if rows > maxlines then rows = maxlines end -- Maximalhöhe
 
-WindowHeight = 175 + (rows * 36)
+WindowHeight = 135 + (rows * 36)
 
 
 check_text = ""
@@ -570,6 +575,7 @@ function buildGui()
 
   -----------------
 
+  header_height = 42
 
   -----------------------------------------------------
   -- Die Höhe des Dashboard wurde von NutzerIn geändert
@@ -579,7 +585,7 @@ function buildGui()
 
     -- print(gfx.h/dpi_scale.."-"..WindowHeight)
 
-    maxlines = round2((gfx.h-(175*dpi_scale))/dpi_scale/36)
+    maxlines = round2((gfx.h-(135*dpi_scale))/dpi_scale/36)
     retval = ultraschall.SetUSExternalState("ultraschall_markerdashboard", "maxlines", tostring(maxlines)) -- schreibe die neue Höhe in die ultraschall.ini
     chapter_pagelength = maxlines
     refresh_gui = true
@@ -613,7 +619,7 @@ function buildGui()
     -- print(maxlines.."-"..rows)
     if rows < 4 then rows = 4 end -- Minimalhöhe
     if rows > maxlines then rows = maxlines end -- Maximalhöhe
-    WindowHeight = 175 + (rows * 36)
+    WindowHeight = 135 + (rows * 36)
 
     gfx.init("", 820, WindowHeight, 0, GUI.x, GUI.y)
 
@@ -632,13 +638,13 @@ function buildGui()
   -- Header
   ----------------
 
-  header = GUI.Area:new(0,0,820,90,0,1,1,"header_bg")
+  header = GUI.Area:new(0,0,820,header_height,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
 
   logo = GUI.Pic:new(0,  0,   0,  0,    1,   header_path.."chapters_logo.png")
   table.insert(GUI.elms, logo)
 
-  headertxt = GUI.Pic:new(195,  34,   0,  0,    0.8,   header_path.."headertxt_marker.png")
+  headertxt = GUI.Pic:new(74,  10,   0,  0,    0.8,   header_path.."headertxt_marker.png")
   table.insert(GUI.elms, headertxt)
 
 
@@ -653,14 +659,14 @@ function buildGui()
 
   if #tablesort == 0 then
 
-    id = GUI.Lbl:new(400, 180, "There are no chapters yet.", 0)
+    id = GUI.Lbl:new(400, 120, "There are no chapters yet.", 0)
     table.insert(GUI.elms, id)
-    id = GUI.Lbl:new(400, 195, "It is recommendet to have at least one", 0)
+    id = GUI.Lbl:new(400, 135, "It is recommendet to have at least one", 0)
     table.insert(GUI.elms, id)
-    id = GUI.Lbl:new(400, 210, "at the beginning of a podcast!", 0)
+    id = GUI.Lbl:new(400, 150, "at the beginning of a podcast!", 0)
     table.insert(GUI.elms, id)
 
-    id = GUI.Btn:new(230, 180, 150, 45, "Create Chapter", insertMarker, "0")
+    id = GUI.Btn:new(230, 120, 150, 45, "Create Chapter", insertMarker, "0")
     table.insert(GUI.elms, id)
 
   else
@@ -669,43 +675,46 @@ function buildGui()
   -- Tabellenköpfe
   ----------------
 
-    id = GUI.Lbl:new(pos_status, 120, "Status", 0, "white")
+    id = GUI.Lbl:new(pos_status, header_height + 20, "Status", 0, "white")
       table.insert(GUI.elms, id)
-    id = GUI.Lbl:new(pos_number, 120, "#", 0, "white")
+    id = GUI.Lbl:new(pos_number, header_height + 20, "#", 0, "white")
       table.insert(GUI.elms, id)
-    id = GUI.Lbl:new(pos_name, 120, "Name", 0, "white")
+    id = GUI.Lbl:new(pos_name, header_height + 20, "Name", 0, "white")
       table.insert(GUI.elms, id)
-    id = GUI.Lbl:new(pos_position, 120, "Position", 0, "white")
+    id = GUI.Lbl:new(pos_position, header_height + 20, "Position", 0, "white")
       table.insert(GUI.elms, id)
-    id = GUI.Lbl:new(pos_image-10, 120, "Image", 0, "white")
+    id = GUI.Lbl:new(pos_image-10, header_height + 20, "Image", 0, "white")
       table.insert(GUI.elms, id)
-    id = GUI.Lbl:new(pos_url-22, 120, "URL", 0, "white")
+    id = GUI.Lbl:new(pos_url-22, header_height + 20, "URL", 0, "white")
       table.insert(GUI.elms, id)
   end
 
   -------------
 
-  position = 130
+  position = header_height + 20
 
   -------------------------
   -- Navigations-Buttons
   -------------------------
 
   if chapter_offset < #tablesort - chapter_pagelength + 1 then
-    buttonNext = GUI.Btn:new(714, 38, 80, 20,         " Next", nextPage, "")
+    buttonNext = GUI.Btn:new(415, WindowHeight - 30, 80, 20,         " Next >", nextPage, "")
     table.insert(GUI.elms, buttonNext)
   else
-    buttonNext = GUI.Btn:new(714, 38, 80, 20,         " Next", "", "")
+    buttonNext = GUI.Btn:new(415, WindowHeight - 30, 80, 20,         " Next >", "", "")
     table.insert(GUI.elms, buttonNext)
   end
 
   if chapter_offset > chapter_pagelength then
-    buttonPrevious = GUI.Btn:new(610, 38, 80, 20,         " Previous", previousPage, "")
+    buttonPrevious = GUI.Btn:new(325, WindowHeight - 30, 80, 20,         " < Previous", previousPage, "")
     table.insert(GUI.elms, buttonPrevious)
   else
-    buttonPrevious = GUI.Btn:new(610, 38, 80, 20,         " Previous", "", "")
+    buttonPrevious = GUI.Btn:new(325, WindowHeight - 30, 80, 20,         " < Previous", "", "")
     table.insert(GUI.elms, buttonPrevious)
   end
+
+  buttonExport = GUI.Btn:new(715, WindowHeight - 30, 80, 20,         " Export", exportChapters, "")
+  table.insert(GUI.elms, buttonExport)
 
   ---------------------------------
   -- Schleife durch Marker der Page
