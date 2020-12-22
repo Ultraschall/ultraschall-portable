@@ -635,10 +635,10 @@ function buildGui()
   header = GUI.Area:new(0,0,820,90,0,1,1,"header_bg")
   table.insert(GUI.elms, header)
 
-  logo = GUI.Pic:new(pos_headerlogo,  25,   0,  0,    1,   header_path.."chapters_logo.png")
+  logo = GUI.Pic:new(0,  0,   0,  0,    1,   header_path.."chapters_logo.png")
   table.insert(GUI.elms, logo)
 
-  headertxt = GUI.Pic:new(pos_headertxt,  36,   0,  0,    0.8,   header_path.."headertxt_marker.png")
+  headertxt = GUI.Pic:new(195,  34,   0,  0,    0.8,   header_path.."headertxt_marker.png")
   table.insert(GUI.elms, headertxt)
 
 
