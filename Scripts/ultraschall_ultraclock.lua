@@ -403,9 +403,9 @@ function drawClock()
   active_warning_count, paused_warning_count, passed_warning_count = count_all_warnings()
 
   WriteAlignedText(" Soundcheck:",0xb3b3b3, clockfont_bold, txt_line[11].size * fsize, gfx.h -70-gfx.w*0.01,1) -- print
-  if passed_warning_count > 0 then WriteAlignedText(" PASSED ("..passed_warning_count..")",0x77ff77, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,1) end --
-  if paused_warning_count > 0 then WriteAlignedText("IGNORED ("..paused_warning_count..")  ",0xffff77, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,0) end --
-  if active_warning_count > 0 then WriteAlignedText("WARNING ("..active_warning_count..") ",0xff5555, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,2) end --
+  if passed_warning_count > 0 then WriteAlignedText(" PASSED ("..passed_warning_count..")",0x10A210, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,1) end --
+  if paused_warning_count > 0 then WriteAlignedText("IGNORED ("..paused_warning_count..")  ",0xFBD100, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,0) end --
+  if active_warning_count > 0 then WriteAlignedText("WARNING ("..active_warning_count..") ",0xD22828, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,2) end --
 
 
   -- Projecttime and Play/RecState
