@@ -78,7 +78,7 @@ Layout "Ultraschall 2" ""
 ; The following setup the TCP-elements used in the Ultraschall-Theme
 
 	set tcp_yanchor [0 40] ;! top position-anchor of all tcp-elements
-	set tcp.recarm.fullmargin + tcp_yanchor [7 0 19 19 0 y_align 0 y_align] ;! More RecArm Button placement
+	set tcp.recarm.fullmargin + tcp_yanchor [7 -1 20 20 0 y_align 0 y_align] ;! More RecArm Button placement
 	set tcp.recarm + reverse_margin tcp.recarm.fullmargin ;! More RecArm Button placement
 	set tcp_label_fullmargin + tcp_yanchor w<211 [26 0 349 18 0 y_align 1 y_align] [26 0 229 18 0 y_align 1 y_align] ;! Track-label placement
 	set tcp.label + + reverse_margin tcp_label_fullmargin margin_to_width ;! More Track-label placement
