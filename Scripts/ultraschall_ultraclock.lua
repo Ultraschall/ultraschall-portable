@@ -149,11 +149,11 @@ function Init()
   txt_line[3]={y=0.13, size=0.20}  -- current playstate
   txt_line[4]={y=0.19, size=0.75}  -- current position
 
-  txt_line[7]={y=0.43, size=0.20}     -- time-selection-text
-  txt_line[8]={y=0.50, size=0.25}  -- time-selection
+  txt_line[7]={y=0.48, size=0.20}     -- time-selection-text
+  txt_line[8]={y=0.55, size=0.25}  -- time-selection
 
-  txt_line[9]={y=0.64, size=0.25}  -- project-length-text
-  txt_line[10]={y=0.745, size=0.25} -- project-length
+  txt_line[9]={y=0.66, size=0.25}  -- project-length-text
+  txt_line[10]={y=0.5, size=0.25} -- project-length
 
   txt_line[5]={y=0.78, size=0.20}  -- markernames
   txt_line[6]={y=0.85, size=0.25}   -- marker positions
@@ -394,10 +394,10 @@ function drawClock()
   end
 
   if date~="" then
-    WriteAlignedText(date.." ",0xb3b3b3, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,2) -- print realtime hh:mm:ss
+    WriteAlignedText(date.." ",0xb3b3b3, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,1) -- print realtime hh:mm:ss
   end
   if time~="" then
-    WriteAlignedText(" "..time,0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,1) -- print realtime hh:mm:ss
+    WriteAlignedText(" "..time,0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
   end
 
   active_warning_count, paused_warning_count, passed_warning_count = count_all_warnings()
