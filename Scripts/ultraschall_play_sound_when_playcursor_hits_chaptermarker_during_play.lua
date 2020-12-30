@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +55,8 @@ oldPosition=reaper.GetPlayPosition()
 
 function main()
   newPosition=reaper.GetPlayPosition()
-  if reaper.GetPlayState()==1 then -- Play
+  isRendering = ultraschall.IsReaperRendering()
+  if reaper.GetPlayState()==1 and isRendering ~= true then -- Play
     if newPosition<oldPosition then
       oldPosition=newPosition-0.2
       if oldPosition<0 then
