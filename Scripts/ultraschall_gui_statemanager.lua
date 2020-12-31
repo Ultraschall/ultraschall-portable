@@ -27,6 +27,222 @@
 -- little helpers
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+
+-----------------------------
+-- Functions for trackheight
+-----------------------------
+
+
+function getAllTracksHeight ()
+
+  local height = 0
+  local numberOfTracks = reaper.CountTracks(0)
+
+  for i=0, numberOfTracks-1 do
+    local MediaTrack = reaper.GetTrack(0, i)
+    local retval = reaper.GetMediaTrackInfo_Value(MediaTrack, "I_WNDH")
+    -- print ("Höhe: "..retval)
+    height = height + retval
+  end
+  return height
+end
+
+function verticalZoom (maxheight)
+
+  local numberOfTracks = reaper.CountTracks(0)
+  local allTracksHeight = getAllTracksHeight()
+  local offset = 35
+  if numberOfTracks == 1 then offset = maxheight * 0.6 end
+  if numberOfTracks == 2 then offset = maxheight * 0.4 end
+  -- if numberOfTracks == 3 then offset = maxheight * 0.3 end
+
+  if allTracksHeight < maxheight - offset then -- muss Vergößert werden
+    while allTracksHeight < maxheight - offset do
+      reaper.CSurf_OnZoom(0, 1)
+      allTracksHeight = getAllTracksHeight()
+    end
+  elseif allTracksHeight > maxheight - offset then -- muss Verkleinert werden
+    while allTracksHeight > maxheight - offset do
+      reaper.CSurf_OnZoom(0, -1)
+      allTracksHeight = getAllTracksHeight()
+    end
+  end
+end
+
+function countAllEnvelopes ()
+
+  local count = 0
+  local numberOfTracks = reaper.CountTracks(0)
+
+  for i=0, numberOfTracks-1 do
+
+    local MediaTrack = reaper.GetTrack(0, i)
+    local numberOfEnvelopes = reaper.CountTrackEnvelopes(MediaTrack)
+
+    for j = 0, numberOfEnvelopes-1 do
+      TrackEnvelope = reaper.GetTrackEnvelope(MediaTrack, j)
+      BR_Envelope = reaper.BR_EnvAlloc(TrackEnvelope, false)
+
+      active, visible, armed, inLane, laneHeight, defaultShape, minValue, maxValue, centerValue, envType, faderScaling, automationItemsOptions = reaper.BR_EnvGetProperties(BR_Envelope)
+
+      if visible == true then
+        count = count + 1
+      end
+    end
+
+  end
+
+  return count
+end
+
+-- main trackheight function
+
+function _Ultraschall_GUI_setmagictrackheight()
+
+  local numberOfTracks = reaper.CountTracks(0)
+
+
+  if numberOfTracks > 0 and (lastNumberOfEnvelopes ~= tostring(numberOfEnvelopes) or lastNumberOfTracks ~= tostring(numberOfTracks)) then
+
+    -- print ("last number envelopes:"..lastNumberOfEnvelopes.."-"..tostring(numberOfEnvelopes))
+    -- print ("last number tracks:"..lastNumberOfTracks.."-"..tostring(numberOfTracks))
+
+    local _, left, top, right, bottom = reaper.JS_Window_GetClientRect( reaper.JS_Window_FindChildByID( reaper.GetMainHwnd(), 1000) )
+    ArrangeViewHeight = math.abs(bottom - top)
+
+    -------------------
+    -- Main
+    -------------------
+
+    verticalZoom (ArrangeViewHeight)
+    retval = ultraschall.ApplyActionToTrack("1,0", 40913) -- verschiebe den Arrangeview hoch zum ersten Track
+    reaper.SetExtState("ultraschall_gui", "numbertracks", numberOfTracks, true)
+    reaper.SetExtState("ultraschall_gui", "numberenvelopes", numberOfEnvelopes, true)
+    lastNumberOfTracks = tostring(numberOfTracks)
+    lastNumberOfEnvelopes = tostring(numberOfEnvelopes)
+
+  end
+end
+
+-------------------------------
+-- End of trackheight functions
+-------------------------------
+
+
+
+---------------------------------
+-- Functions for magic coloring
+---------------------------------
+
+function getNextColor (LastColor)
+
+  local ColorPosition = t_invert[LastColor]
+
+  -- print (ColorPosition)
+
+  if ColorPosition == nil then
+    ColorPosition = 0
+  elseif ColorPosition > 9 then
+    ColorPosition = ColorPosition - 9
+  else
+    ColorPosition = ColorPosition + 2
+  end
+
+  return t[ColorPosition]
+
+end
+
+
+function swapColors (color)
+
+  if string.match(os, "OSX") then
+    r, g, b = reaper.ColorFromNative(color)
+    -- print ("NewTrack: "..TrackColor.."-"..r.."-"..g.."-"..b)
+    color = reaper.ColorToNative(b, g, r)
+  end
+  return color
+
+end
+
+
+function countColoredStudioLinkTracks ()
+
+  local count = 0
+  local numberOfTracks = reaper.CountTracks(0)
+  for i=1, numberOfTracks do
+
+    local tracktype = ultraschall.GetTypeOfTrack(i)
+    -- print (tracktype)
+    if tracktype == "StudioLink" then
+
+      local MediaTrack = reaper.GetTrack(0, i-1)
+      local TrackColor = reaper.GetTrackColor(MediaTrack)
+      -- print (TrackColor)
+      if TrackColor ~= 0 then
+        count = count +1
+      end
+    end
+  end
+
+  return count
+end
+
+
+---------------------------
+-- Main magiccolor function
+---------------------------
+
+function _Ultraschall_GUI_setmagiccolor()
+
+  local numberOfTracks = reaper.CountTracks(0)
+  for i=0, numberOfTracks-1 do
+
+    MediaTrack = reaper.GetTrack(0, i)
+    TrackColor = reaper.GetTrackColor(MediaTrack)
+    TrackColor = swapColors(TrackColor)
+
+    -- print(TrackColor)
+    -- print(tostring(TrackColor))
+
+
+    if TrackColor == 0 then -- frische Spur, noch keine Farbe gesetzt
+
+      tracktype = ultraschall.GetTypeOfTrack(i+1)
+      -- print (tracktype)
+
+      if tracktype == "SoundBoard" then
+
+        soundboardColor = reaper.ColorToNative(100, 100, 100)
+        reaper.SetTrackColor(MediaTrack, soundboardColor)
+
+      elseif tracktype == "StudioLink" then
+
+        colored = countColoredStudioLinkTracks() or 0
+        -- print (colored)
+        StudioLinkColor = t[colored + 11]
+        reaper.SetTrackColor(MediaTrack, swapColors(StudioLinkColor))
+        StudioLinkNr = StudioLinkNr + 1
+
+      else -- normaler Track
+
+        NewTrackColor = getNextColor(LastColor)
+        r, g, b = reaper.ColorFromNative(NewTrackColor)
+        -- print ("NewTrack: "..NewTrackColor.."-"..r.."-"..g.."-"..b)
+        -- NewTrackColor = reaper.ColorToNative(b, g, r)
+
+        reaper.SetTrackColor(MediaTrack, swapColors(NewTrackColor))
+        TrackColor = NewTrackColor
+      end
+    end
+
+    LastColor = TrackColor
+
+  end
+end
+
+-- end color functions
+
+
 function IsAnyMuteOrVolumePreFXEnvelopeVisible(autotogglebutton)
   -- autotogglebutton
   -- true, set the state of the mute-envelope-button in Main toolbar accordingly
@@ -57,6 +273,8 @@ function IsAnyMuteOrVolumePreFXEnvelopeVisible(autotogglebutton)
   return false
 end
 
+
+-- defer Loop:
 
 function checkGuiStates()
 
@@ -96,8 +314,11 @@ function checkGuiStates()
 
     if helperActive == 1 then
       -- print "huhu"
-      commandid = reaper.NamedCommandLookup(GUIHelpers[i])
-      reaper.Main_OnCommand(commandid,0)
+
+      _G[GUIHelpers[i]]() -- rufe die jeweilige Funktion auf
+
+      -- commandid = reaper.NamedCommandLookup(GUIHelpers[i])
+      -- reaper.Main_OnCommand(commandid,0)
     end
 
   end
@@ -107,6 +328,7 @@ function checkGuiStates()
   timecount = timecount + 1
   if timecount == 600 then
     -- print ("huhu")
+
 
     commandid = reaper.NamedCommandLookup("_Ultraschall_Consolidate_Backups")
     reaper.Main_OnCommand(commandid,0)
@@ -144,6 +366,52 @@ GUIHelpers = {
 }
 
 timecount = 0
+
+-----------------
+-- Init color
+-----------------
+
+numberOfTracks = reaper.CountTracks(0)
+max_color = 20  -- Number of colors to cycle
+curtheme = reaper.GetLastColorThemeFile()
+os = reaper.GetOS()
+LastColor = 0
+StudioLinkNr = 0
+colored = 0
+
+---------------------------------------------------------
+-- Init: build table with color values from theme file
+---------------------------------------------------------
+
+t = {}   -- initiate table
+t_invert = {}
+file = io.open(curtheme, "r");
+
+for line in file:lines() do
+  index = string.match(line, "group_(%d+)")  -- use "Group" section
+  index = tonumber(index)
+    if index then
+      if index < max_color then
+      color_int = string.match(line, "=(%d+)")  -- get the color value
+      -- color_int = swapColors (color_int)
+      t[index] = tonumber(color_int)  -- put color into table
+      t_invert[tonumber(color_int)] = index
+    end
+  end
+end
+
+-- end init color
+
+-------------------
+-- Init trackheight
+-------------------
+
+numberOfEnvelopes = countAllEnvelopes()
+lastNumberOfTracks = reaper.GetExtState("ultraschall_gui", "numbertracks") or 0
+lastNumberOfEnvelopes = reaper.GetExtState("ultraschall_gui", "numberenvelopes") or 0
+
+
+-- start main defer loop:
 
 checkGuiStates()
 
