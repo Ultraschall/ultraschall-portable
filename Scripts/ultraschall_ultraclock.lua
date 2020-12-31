@@ -96,8 +96,10 @@ retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
 
 if dpi=="512" then
   gfx.ext_retina=1
+  retina_mod = 1
 else
   gfx.ext_retina=0
+  retina_mod = 0.5
 end
 
 
@@ -354,12 +356,12 @@ function drawClock()
   -- calculate fontsize and textpositions depending on aspect ratio of window
   if gfx.w/gfx.h < 4/3 then -- if narrower than 4:3 add empty space on top and bottom
      fsize=gfx.w/4*3/font_divisor
-     border=(gfx.h-gfx.w/4*3)/2
-     height=gfx.w/4*3
+     border=(gfx.h-gfx.w/4*3)/2 + (15 * retina_mod)
+     height=gfx.w/4*3 - (65 * retina_mod)
    else
     fsize=gfx.h/font_divisor
-    border=0
-    height=gfx.h -100
+    border=40 * retina_mod
+    height=gfx.h -(120 * retina_mod)
    end
 
   preset=0
@@ -402,10 +404,10 @@ function drawClock()
 
   active_warning_count, paused_warning_count, passed_warning_count = count_all_warnings()
 
-  WriteAlignedText(" Soundcheck:",0xb3b3b3, clockfont_bold, txt_line[11].size * fsize, gfx.h -70-gfx.w*0.01,1) -- print
-  if passed_warning_count > 0 then WriteAlignedText(" PASSED ("..passed_warning_count..")",0x10A210, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,1) end --
-  if paused_warning_count > 0 then WriteAlignedText("IGNORED ("..paused_warning_count..")  ",0xFBD100, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,0) end --
-  if active_warning_count > 0 then WriteAlignedText("WARNING ("..active_warning_count..") ",0xD22828, clockfont_bold, txt_line[11].size * fsize, gfx.h -40,2) end --
+  WriteAlignedText(" Soundcheck",0xb3b3b3, clockfont_bold, txt_line[11].size * fsize, gfx.h -(65*retina_mod)-gfx.w*0.01,1) -- print
+  if passed_warning_count > 0 then WriteAlignedText(" PASSED ("..passed_warning_count..")",0x10A210, clockfont_bold, txt_line[11].size * fsize, gfx.h -(retina_mod*40),1) end --
+  if paused_warning_count > 0 then WriteAlignedText("IGNORED ("..paused_warning_count..")  ",0xFBD100, clockfont_bold, txt_line[11].size * fsize, gfx.h -(retina_mod*40),0) end --
+  if active_warning_count > 0 then WriteAlignedText("WARNING ("..active_warning_count..") ",0xD22828, clockfont_bold, txt_line[11].size * fsize, gfx.h -(retina_mod*40),2) end --
 
 
   -- Projecttime and Play/RecState
