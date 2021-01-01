@@ -284,7 +284,7 @@ all_ignored = false
 
 ---- Window settings and user functions ----
 
-GUI.name = "Ultraschall Soundcheck"
+GUI.name = "Ultraschall 5 - Soundcheck"
 -- GUI.w, GUI.h = 800, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 GUI.w, GUI.h = 1000, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 

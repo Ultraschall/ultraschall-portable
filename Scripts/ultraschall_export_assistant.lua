@@ -340,7 +340,7 @@ x_offset = -40
 
 header_height = 42
 header_y_offset = 90 - header_height
-GUI.name = "Ultraschall Export Assistant"
+GUI.name = "Ultraschall 5 - Export Assistant"
 GUI.w, GUI.h = 960, 685 - header_y_offset
 
 

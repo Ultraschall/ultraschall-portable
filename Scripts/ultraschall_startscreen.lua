@@ -131,7 +131,7 @@ gfx_path=script_path.."/Ultraschall_Gfx/Startscreen/"
 
 ---- Window settings and user functions ----
 
-GUI.name = "Ultraschall 4"
+GUI.name = "Ultraschall 5 - Welcome!"
 GUI.w, GUI.h = 680, 700
 
 ------------------------------------------------------
