@@ -165,7 +165,7 @@ function Main(slot)
     script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
     GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
-    GUI.name = "Ultraschall Routing Snapshots"
+    GUI.name = "Ultraschall 5 - Routing Snapshots"
     GUI.w, GUI.h = 525, 332
 
     -- position always in the centre of the screen
@@ -620,5 +620,3 @@ function atexit()
 end
 
 reaper.atexit(atexit)
-
-

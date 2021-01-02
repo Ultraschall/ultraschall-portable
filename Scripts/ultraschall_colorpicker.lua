@@ -28,14 +28,14 @@ os = reaper.GetOS()
 
 t = {}   -- initiate table
 file = io.open(curtheme, "r");
-  
+
 for line in file:lines() do
   index = string.match(line, "group_(%d+)")  -- use "Group" section
   index = tonumber(index)
     if index then
       if index < max_color then
       color_int = string.match(line, "=(%d+)")  -- get the color value
-        if string.match(os, "OSX") then 
+        if string.match(os, "OSX") then
           r, g, b = reaper.ColorFromNative(color_int)
           color_int = reaper.ColorToNative(b, g, r) -- swap r and b for OSX
         end
@@ -48,14 +48,14 @@ end
 function gentle_rainboom(url)
 
   local id = reaper.NamedCommandLookup("_Ultraschall_Set_Colors_To_Sonic_Rainboom")
-    reaper.Main_OnCommand(id,0) 
+    reaper.Main_OnCommand(id,0)
 
 end
 
 function spread_rainboom(url)
 
   local id = reaper.NamedCommandLookup("_Ultraschall_Set_Colors_To_Sonic_Rainboom_Spread")
-    reaper.Main_OnCommand(id,0) 
+    reaper.Main_OnCommand(id,0)
 
 end
 
@@ -68,9 +68,9 @@ end
 
   -- body
   ---- GUI Elements ----
-  
+
 GUI.elms = {
-  
+
 --     name          = element type          x      y    w    h     caption               ...other params...
   colors      = GUI.ColorPic:new(    4, 4, 170, 170, t),
   col1      = GUI.Pic:new(      190,4, 42, 83, 1, gfx_path.."us_col1.png", gentle_rainboom, ""),
@@ -96,7 +96,7 @@ GUI.elms = {
 
    --testbtn2      = GUI.Btn:new(          450, 100, 100, 50,      "CLICK", userfunc, "This|#Is|A|!Menu"),
   -- newtext      = GUI.TxtBox:new(     340, 210, 200, 30,      "Favorite music player:", 4),
-    
+
 }
 
 
@@ -114,38 +114,36 @@ GUI.elms = {
   ---- Main loop ----
 
 --[[
-  
+
   If you want to run a function during the update loop, use the variable GUI.func prior to
   starting GUI.Main() loop:
-  
+
   GUI.func = my_function
   GUI.freq = 5     <-- How often in seconds to run the function, so we can avoid clogging up the CPU.
             - Will run once a second if no value is given.
             - Integers only, 0 will run every time.
-  
+
   GUI.Init()
   GUI.Main()
-  
+
 ]]--
 
 -- local startscreen = GUI.val("checkers")
 -- local startscreen = GUI.elms.checkers[GUI.Val()]
 
 -- Open Colorpicker, when it hasn't been opened yet
-    if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already). 
+    if reaper.GetExtState("Ultraschall_Windows", GUI.name) == "" then windowcounter=0 -- Check if window was ever opened yet(and external state for it exists already).
                                                                                       -- If yes, use temporarily 0 as opened windows-counter;will be changed by ultraschall_gui_lib.lua later
     else windowcounter=tonumber(reaper.GetExtState("Ultraschall_Windows", GUI.name)) end -- get number of opened windows
 
-    if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time. 
+    if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed to be opened at the same time.
                             -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
       GUI.Init()
       GUI.Main()
     end
-    
+
 function atexit()
   reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
 end
 
 reaper.atexit(atexit)
-
-

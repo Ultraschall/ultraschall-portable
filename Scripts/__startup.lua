@@ -175,11 +175,11 @@ reaper.RefreshToolbar2(0, on_air_button_id)
 --------------------------
 
 -- Reset the counter for already opened windows
-reaper.SetExtState("Ultraschall_Windows","Ultraschall Routing Snapshots",0.0, true)
-reaper.SetExtState("Ultraschall_Windows","Ultraschall Export Assistant",0.0, true)
+reaper.SetExtState("Ultraschall_Windows","Ultraschall 5 - Routing Snapshots",0.0, true)
+reaper.SetExtState("Ultraschall_Windows","Ultraschall 5 - Export Assistant",0.0, true)
 reaper.SetExtState("Ultraschall_Windows","Ultraschall Color Picker",0.0, true)
-reaper.SetExtState("Ultraschall_Windows","Ultraschall Soundcheck",0.0, true)
-reaper.SetExtState("Ultraschall_Windows","Ultraschall Settings",0.0, true)
+reaper.SetExtState("Ultraschall_Windows","Ultraschall 5 - Soundcheck",0.0, true)
+reaper.SetExtState("Ultraschall_Windows","Ultraschall 5 - Settings",0.0, true)
 
 
 ------------------------------------------

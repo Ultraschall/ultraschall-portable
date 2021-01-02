@@ -127,7 +127,7 @@ end
 
 reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "1", false)
 
-GUI.name = "Ultraschall Preroll Recording"
+GUI.name = "Ultraschall 5 - Preroll Recording"
 GUI.w, GUI.h = 350, 80
 
 ------------------------------------------------------
