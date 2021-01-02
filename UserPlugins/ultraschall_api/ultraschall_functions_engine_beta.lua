@@ -1327,7 +1327,7 @@ function ultraschall.DeleteParmLearn2_FXStateChunk(FXStateChunk, fxid, parmidx)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>DeleteParmLearn2_FXStateChunk</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
@@ -1372,8 +1372,50 @@ function ultraschall.DeleteParmLearn2_FXStateChunk(FXStateChunk, fxid, parmidx)
   return true, FXStateChunk:sub(1, startoffset)..UseFX2:sub(2,-2)..FXStateChunk:sub(endoffset-1, -1)
 end
 
--- Ultraschall 4.1.006
+-- Ultraschall 4.2.002
 
 
+
+
+function ultraschall.OpenReaperFunctionDoc(functionname)
+  if type(functionname)~="string" then ultraschall.AddErrorMessage("OpenReaperFunctionDoc", "functionname", "must be a string", -1) return false end
+  if reaper[functionname]==nil then ultraschall.AddErrorMessage("OpenReaperFunctionDoc", "functionname", "no such function", -2) return false end
+  local A=[[
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta http-equiv="refresh" content="0; url=]]..ultraschall.Api_Path.."/Documentation/Reaper_Api_Documentation.html#"..functionname..[[">
+    </head>
+    <body>
+    </body>
+  </html>
+  ]]
+  ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/start.html", A)
+  ultraschall.OpenURL(ultraschall.API_TempPath.."/start.html")
+  return true
+end
+
+
+--ultraschall.OpenReaperFunctionDoc("MB")
+
+function ultraschall.OpenUltraschallFunctionDoc(functionname)
+  if type(functionname)~="string" then ultraschall.AddErrorMessage("OpenUltraschallFunctionDoc", "functionname", "must be a string", -1) return false end
+  if ultraschall[functionname]==nil then ultraschall.AddErrorMessage("OpenUltraschallFunctionDoc", "functionname", "no such function", -2) return false end
+  local A=[[
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta http-equiv="refresh" content="0; url=]]..ultraschall.Api_Path.."/Documentation/US_Api_Functions.html#"..functionname..[[">
+    </head>
+    <body>
+    </body>
+  </html>
+  ]]
+  ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/start.html", A)
+  ultraschall.OpenURL(ultraschall.API_TempPath.."/start.html")
+  return true
+end
+
+--ultraschall.OpenUltraschallFunctionDoc("RenderProject")
 
 ultraschall.ShowLastErrorMessage()

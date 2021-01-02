@@ -107,6 +107,7 @@ end
 --B:Close()
 
 --P=0
+--[[
 function main()
   P=P+1
   if P==100 then
@@ -120,5 +121,5 @@ function main()
   print3(B["GuiIdentifier"])
   reaper.defer(main)
 end
-
+--]]
 --main()

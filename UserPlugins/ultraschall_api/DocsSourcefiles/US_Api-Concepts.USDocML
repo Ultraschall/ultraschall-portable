@@ -65,13 +65,13 @@
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-        <slug>Introduction_002_How_to_Use</slug>
-        <title>How to install and use the Ultraschall API</title>
+        <slug>Introduction_002_How_to_Install</slug>
+        <title>How to install Ultraschall API</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            Using the Ultraschall-API is quite easy.
+            Installing Ultraschall-API is quite easy.
             
-            First make sure, you use the right versions of Reaper and SWS:
-               [Reaper 6.02](https://www.reaper.fm), [SWS 2.10.0.1](https://www.sws-extension.org) and [Julian Sader's plugin 1.215.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
+            First make sure, you use the right versions of Reaper, SWS and JS-extension:
+               [Reaper 6.02 and higher](https://www.reaper.fm), [SWS 2.10.0.1 and higher](https://www.sws-extension.org) and [Julian Sader's plugin 1.215 and higher.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             You can download them at [reaper.fm](http://www.reaper.fm) and [sws-extension.org](http://www.sws-extension.org) respectively.
             Julian Sader's plugin can be installed using ReaPack or gotten from [his own github-site](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             
@@ -107,44 +107,12 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall_api4.1\_001.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.1_001.zip).  
+            1. Just download the zip-file of the current version from [ultraschall_api4.2\_001.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.2_001.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.
             
-            
-            **Check Installation**:
-            
-            After installation, you might want to check, whether installing the Ultraschall-API was successful.
-            
-            1. Create a new script, by opening the Actions-window (Menu: Actions -> Show action list) and clicking the New-button next to "ReaScript:", give it a name and hit save.  
-               Include the following line in your script at the beginning:   
-               
-                        dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-               
-            Now you can program with the Ultraschall-API. Just add the functions AFTER the dofile-line.
-            
-            2. To test, if it's successfully installed, add 
-                
-                        ultraschall.ApiTest()
-                
-            after the dofile-line and hit ctrl+s or cmd+s(on mac).
-                
-            The script should show a messagebox, that tells you, which of the Ultraschall-API-parts are activated. If it shows, everything works fine :)  
-            If not, it will probably show you a messagebox, which will tell you, which required extension or Reaper-version is missing and where to find it.  
-            
-            If you are already familiar with programming Reaper's own API-functions, you know, that all of Reaper's functions are placed in a table called "reaper."  
-                e.g. reaper.ShowConsoleMsg("msg")
-                
-            The Ultraschall-API is quite the same, but is using the table "ultraschall." instead.  
-                e.g. ultraschall.ApiTest()
-            
-            
-            Some functions need background-scripts be run first. Refer the [Introduction to background-scripts](#Background_Scripts_001_Introduction) for information about that.
-            
-            See the functions-reference for all available functions or read on in this documentation for a collection of concepts introduced by the Ultraschall-API.
-            
-            Oh, before I forget: The ultraschall\_api-folder holds a folder "Scripts\_Examples" in which you can find some demos and example-scripts using this API.
+            In the next chapter, I'll explain, how to use Ultraschall-API.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document>US_Api-Concepts.USDocML</source_document>
@@ -152,38 +120,56 @@
             Introduction
         </chapter_context>
         <previous_chapter>Introduction_001_Api</previous_chapter>
-        <next_chapter>Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes</next_chapter>
-        <tags>documentation, introduction, how to use</tags>
+        <next_chapter>Introduction_003_How_to_Use</next_chapter>
+        <tags>documentation, introduction, how to install</tags>
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-        <slug>Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes</slug>
-        <title>How to install hotfixes</title>
+        <slug>Introduction_003_How_to_Use</slug>
+        <title>Introduction: How to use Ultraschall API</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            Before a new version of the Ultraschall-API is finished, it is in beta-stage. But sometimes, bugs need to be fixed even before a new release is done or you may want to test new functions from the next release for bugs and quirks.  
-            So I added a way to deal with that.
+            Usage is really simple. First, create a new script. For this, go into the menu "Actions", hit "Show action list",
+            click the "New action"-button and select "New ReaScript".
+            In the file-requester, you enter a filename for the new script. Just test it by naming it "Test_Ultraschall_Api.lua"
+            Now an editor appears, in which you can enter the code.
             
-            Hotfixes  
-               Hotfixes are available at [ultraschall.fm/api](http://ultraschall.fm/api). They provide fixes for functions and bugs that came across after a release, but no new functions.  
-               Just download the ultraschall\_hotfixes.lua and put it into UserPlugins/ultraschall\_api-folder.  
-               The chance is high, that there is already an ultraschall\_hotfixes.lua-file in the folder. You can safely overwrite it.  
-               Voila, you have added the most recent bugfixes.  
-                   
-               To get the bugs back, just delete the ultraschall_hotfixes.lua.
-                   
-               All fixes in ultraschall\_hotfixes.lua will be part of the next full version of the Ultraschall-API.
-                   
-               Check again from time to time to get the latest hotfixes.
+            Add the following line at the beginning of your script:
+            
+                        dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+                        
+            and you can immediately use the functions of Ultraschall-API.
+            For instance, you can test now, if Ultraschall-API works and if installation went alright. Just add the following function
+            underneath the dofile-line:
+            
+                        ultraschall.ApiTest()
+
+            And hit Cmd+S/Ctrl+S.
+            A messagebox should appear, that tells you, that the API is up and running. If an error-message pops up,
+            please try installing again, according to [the manua](#Introduction_002_How_to_Install).
+            
+            If you are already familiar with programming Reaper's own API-functions, you know, that all of Reaper's functions are placed in a table called "reaper."  
+                e.g. reaper.ShowConsoleMsg("msg")
+                
+            The Ultraschall-API is quite the same, but is using the table "ultraschall." instead.  
+                e.g. ultraschall.ApiTest()
+            
+            See the [functions-reference](US_Api_Functions.html) for all available functions or read on in this documentation for a collection of concepts introduced by the Ultraschall-API.
+            
+            You can also find all documentations(including the Lua-Reference Manual) when searching for "Ultraschall Help" in the actionlist(when installed via ReaPack).
+            
+            Oh, before I forget: The ultraschall\_api-folder holds a folder "Scripts\_Examples" in which you can find some demos and example-scripts using this API.
+            If you have installed Ultraschall-API via ReaPack, you can also run the action "Script: ultraschall\_Add\_Developertools\_To\_Reaper.lua" to install them.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document>US_Api-Concepts.USDocML</source_document>
         <chapter_context>
             Introduction
         </chapter_context>
-        <previous_chapter>Introduction02_How_to_Use</previous_chapter>
+        <previous_chapter>Introduction_002_How_to_Install</previous_chapter>
         <next_chapter>Introduction_004_Bugreporting_FeatureRequests</next_chapter>
-        <tags>documentation, introduction, beta, hotfixes</tags>
+        <tags>documentation, introduction, how to use</tags>
     </US_DocBloc>
+    
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Introduction_004_Bugreporting_FeatureRequests</slug>

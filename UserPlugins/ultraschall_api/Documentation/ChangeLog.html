@@ -40,6 +40,111 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.2.002 - "Dave Brubeck - Take Five" - 25th of December 2020</h3>
+<p>Has now 1359 functions, with 8 new ones</p>
+<p><strong>new in this release:</strong><br />
+- <strong>Get/Set Comment-field of fx</strong><br />
+You can now get and set the comment-field of trackfx and takefx programmatically. Also gave me the chance to fix some bugs as well ;)</p>
+<ul>
+<li><p><strong>Linesorting script for clipboard-content</strong><br />
+Sometimes, you would love to sort the lines in the clipboard. Now you can, using the new developer-tool.</p></li>
+<li><p><strong>bugfixes and docs</strong><br />
+various bugfixes and update to Reaper Internals to Reaper 6.19, SWS 2.12.1.1, JS-extension 1.220</p></li>
+</ul>
+<h4>New features in 4.2.002</h4>
+<ul>
+<li>DeveloperTools: ultraschall_developertool_SortLinesInClipboardText.lua - sorts the lines of the string in the clipboard</li>
+<li>FX-Management: CountFXFromFXStateChunk - counts the number of fx in an FXStateChunk</li>
+<li>FX-Management: GetFXComment_FXStateChunk - allows getting the comment of an fx within an FXStateChunk(requested by en5ca)</li>
+<li>FX-Management: GetTrackFXComment - gets the text in the comment-field of a trackfx(requested by en5ca)</li>
+<li>FX-Management: GetTakeFXComment - gets the text in the comment-field of an itemfx(requested by en5ca)</li>
+<li>FX-Management: InputFX_GetComment - gets the text in the comment-field of an inputfx</li>
+<li>FX-Management: SetFXComment_FXStateChunk - allows setting the comment of an fx within an FXStateChunk(requested by en5ca)</li>
+<li>FX-Management: SetTrackFXComment - sets the text in the comment-field of a trackfx(requested by en5ca)</li>
+<li>FX-Management: SetTakeFXComment - sets the text in the comment-field of an itemfx(requested by en5ca)</li>
+</ul>
+<h4>Changes from 4.2.001 to 4.2.002</h4>
+<ul>
+<li>API: Settings - allows now turning on/off confirmation dialogs in certain devtools(for streamlined manipulation of strings); had some bug, when not set a value yet -&gt; fixed</li>
+<li>Docs: Reaper Internals - updated to Reaper 6.19 and SWS 2.12.1.1 and JS-extension 1.220</li>
+<li>File-Management: PreviewMediaFile - allows now setting the output-channel of the preview as well</li>
+<li>FX-Management: GetFXFromFXStateChunk - didn't return possible comment-field -&gt; fixed</li>
+<li>FX-Management: GetFXSettingsString_FXLines - didn't work due stupid bug on my side; crashed when an fx didn't have fx-lines available -&gt; both fixed(thanks to woodslanding)</li>
+<li>Helper functions: EditReaScript - allows now opening the last file you opened up with this function by passing nil; adding Ultraschall-API is now supported; optionally add this script to the actionlist; docs were wrong -&gt; fixed</li>
+<li>Helper functions: Base64_Decoder - fixed off-by-one-error that could mess up the last character in the Base-64-string under certain conditions</li>
+<li>Helper functions: Base64_Encoder - had inner variable exposed -&gt; fixed</li>
+<li>RenderManagement: ApplyRenderTable_Project - didn't always apply Mono-Media and Multi-Channel-checkboxes properly -&gt; fixed(thanks to aurelien)</li>
+<li>RenderManagement: ApplyRenderTable_ProjectFile - didn't always apply Mono-Media and Multi-Channel-checkboxes properly -&gt; fixed(thanks to aurelien)</li>
+</ul>
+<hr />
+<h3>4.2.001 - "Pink Floyd - High Hopes" - 1st of December 2020</h3>
+<p>Has now 1351 functions, with 9 new ones</p>
+<p><strong>new in this release:</strong><br />
+- ** StuffMIDIMessage and KB.ini-functions**<br />
+You can now convert the KEY-entry-codes of shortcuts(as stored in the reaper-kb.ini) into their text representation: CharacterCodes_ReverseLookup_KBIni<br />
+This is also possible, if you use StuffMIDIMessage to send control-messages, as these can be converted now into their text-representation as well: CharacterCodes_ReverseLookup<br />
+Multiple keymaps supported.<br />
+Oh, and did I mention, you can now also get all currently set shortcuts as a handy table? Optionally with factory-default shortcuts?<br />
+Now I did: KBIniGetAllShortcuts</p>
+<ul>
+<li><p>** Metadata for AIFF, APE and XMP**<br />
+As of Reaper 6.16, you can add metadata for AIFF, APE and XMP as well. I also updated the other metadata-functions to feature the lastest metadata-features Reaper can offer.<br />
+And yes, this includes also support for the new Media Explorer-tags.</p></li>
+<li><p>** ConfigVars support in StateInspector **<br />
+That's right: you can now monitor config-vars in the StateInspector as well. I also removed the fact that I accidentally deleted your saved slots with each updated.<br />
+How come, you didn't tell me that, huh? ;)</p></li>
+<li><p>** CleanUp and Speedup **<br />
+I made Ultraschall-API much smaller by removing tons of useless files and improving storage of other files by magnitude.<br />
+To give you a number: Ultraschall-API is 50% smaller compared to the previous release.<br />
+It also loads now 30% faster, so starting scripts using Ultraschall-API is now close to lightspeed.</p></li>
+<li><p>** Various Bugfixes **<br />
+The render-string-functions didn't work properly with floats. Mostly fps-settings were affected. Now it's working.<br />
+Also the StuffMIDIMessage-docs is improved now and more precise.</p></li>
+</ul>
+<h4>New features in 4.2.001</h4>
+<ul>
+<li>ConfigFile Management: KBIniGetAllShortcuts - returns all shortcuts of the currently running Reaper-instance as a handy table</li>
+<li>Helper functions: CharacterCodes_ReverseLookup - converts the StuffMIDIMessage-bytes(with parameter mode=1) into their character-representation</li>
+<li>Helper functions: CharacterCodes_ReverseLookup_KBIni - converts the first two bytes of the KEY-entries in reaper-kb.ini into their character-representation<br />
+</li>
+<li>Helper functions: RFR - (ReturnFirstRetvals) allows you to get only the first x return-values of a function</li>
+<li>Helper functions: RLR - (ReturnLastRetvals) allows you to get only the last x return-values of a function</li>
+<li>Helper functions: RRR - (ReturnRangeRetvals) allows you to get only a range of all return-values of a function</li>
+<li>Metadata: Metadata_AIFF_GetSet - gets/sets the AIFF-metadata of the current project</li>
+<li>Metadata: Metadata_APE_GetSet - gets/sets the APE-metadata of the current project</li>
+<li>Metadata: Metadata_XMP_GetSet - gets/sets the XMP-metadata of the current project</li>
+</ul>
+<h4>Changes from 4.1.007 to 4.2.001</h4>
+<ul>
+<li>API: Loadspeed - sped up loading-speed of API by 30%</li>
+<li>DeveloperTools: Config Var Displayer - improved layout for monospaced ReaScript-console-font</li>
+<li>Developer Tools: State Inspector - supports now config-vars; reduced needed files to save space; ini-file accidentally overwritten when updating API via ReaPack -&gt; fixed</li>
+<li>Docs: Concepts - split installation and usage of Ultraschall-API into two chapters; removed the hotfix-chapter(was outdated); corrected download-link</li>
+<li>Docs: Config-Vars - added mac-only-configvars(thanks to cfillion)</li>
+<li>Docs: Example-videos - removed</li>
+<li>Docs: Reaper Internals - updated to Reaper 6.17</li>
+<li>Docs: StuffMIDIMessage-docs - rewrote it as it contained many many errors</li>
+<li>Helper functions: LimitFractionOfFloat - removed roundit-parameter(if you need it, give me a hint); more stable now.</li>
+<li>IniFiles: Reaper-ActionList_v5_96.ini - removed, can be produced using developertool ultraschall_developertool_ActionlistToIni-Converter.lua</li>
+<li>Ini-Files: Reaper-factory-default-KEY-Codes_for_reaper-kb_ini.ini - corrected some mistakes</li>
+<li>Metadata: Metadata_BWF_GetSet - added new tags as of Reaper 6.16</li>
+<li>Metadata: Metadata_ID3_GetSet - added new tags as of Reaper 6.16</li>
+<li>Metadata: Metadata_INFO_GetSet - added new tags as of Reaper 6.16</li>
+<li>Metadata: Metadata_IXML_GetSet - added new tags as of Reaper 6.16</li>
+<li>Metadata: Metadata_VORBIS_GetSet - added new tags as of Reaper 6.16</li>
+<li>Misc: Docs-gfx - removed them from the misc-folder(were redundant)</li>
+<li>Misc: Developer-langpack removed - use ultraschall_developertool_LangPack2Developer_langpack_converter.lua to create one</li>
+<li>Misc: Reaper 5 developer translationpack - removed</li>
+<li>Misc: Notifications-sound - removed</li>
+<li>Misc: Reaper-KEY-Codes_for_reaper-kb_ini.ini - removed, use CharacterCodes_ReverseLookup instead to get the codes</li>
+<li>Misc: ShowVars_Toggle.txt - removed(was redundant)</li>
+<li>Misc: StuffMidiMessage-AllMessages_Englisch_Windows.ini - removed, use CharacterCodes_ReverseLookup instead to get the codes</li>
+<li>Rendering: CreateRenderCFG_OGG - didn't allow for 1.0 vbr-setting in certain edge-cases -&gt; fixed</li>
+<li>Rendering: CreateRenderCFG_Opus - didn't create correct bitrate in string -&gt; fixed</li>
+<li>Rendering: various create-render-cfg-function - parameter fps didn't always produce the correct fps-values -&gt; fixed</li>
+<li>Rendering: various functions - had parameter fps incorrectly documented as integer though it's number -&gt; fixed</li>
+</ul>
+<hr />
 <h3>4.1.007 - "Frank Zappa - Carolina Hard-Core Ecstasy" - 21st of October 2020</h3>
 <p>Has now 1342 functions, with 48 new ones</p>
 <p><strong>new in this release:</strong></p>

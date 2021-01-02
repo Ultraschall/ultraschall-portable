@@ -87,12 +87,12 @@ C2vers=string.gsub(C2," ","")
 C2vers=C2vers:lower()
 if C2vers~="" then C2vers="_"..C2vers end
 
-
+--if lol==nil then return end
 -- set this to the online-repo of the Ultraschall-API
 --Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API4.00-beta2.71/"
-Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-4.1."..beta.."/"
+Url="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-"..C.."."..beta.."/"
 --Url="file:///c:/Ultraschall-Api-Git-Repo/Ultraschall-Api-for-Reaper/" -- for reapindex-tests first
-Url2="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-4.1."..beta.."/"
+Url2="https://raw.githubusercontent.com/Ultraschall/ultraschall-lua-api-for-reaper/Ultraschall-API-"..C.."."..beta.."/"
 
 -- set this to the repository-folder of the api on your system
 --Target_Dir="c:\\Ultraschall-Api-Git-Repo\\Ultraschall-Api-for-Reaper\\"
@@ -110,6 +110,7 @@ end
 --remove unneeded files:
 for i=found_files, 1, -1 do
     if files_array[i]:match("EventManager_Startup.ini") then table.remove(files_array,i) found_files=found_files-1 end
+    if files_array[i]:match("Ultraschall-Inspector.ini") then table.remove(files_array,i) found_files=found_files-1 end
 end
 
 
@@ -120,7 +121,7 @@ L=ultraschall.MakeCopyOfFile_Binary(SourceDir.."/ultraschall_api_readme.txt", Ta
 ReadMe_Reaper_Internals=[[
 compiled by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
 
-Documentation for Reaper-Internals ]]..majorversion.."."..subversion..[[ and Ultraschall Api 4.00]]..beta..[[, SWS ]]..SWS..[[, JS-extension-plugin ]]..JS..[[ and ReaPack
+Documentation for Reaper-Internals ]]..majorversion.."."..subversion..[[ and Ultraschall Api 4.2]]..beta..[[, SWS ]]..SWS..[[, JS-extension-plugin ]]..JS..[[ and ReaPack
 
 Written and compiled by Meo Mespotine (mespotine.de) for the Ultraschall.FM-project.
 licensed under creative-commons by-sa-nc-license
@@ -136,8 +137,8 @@ ultraschall.WriteValueToFile(SourceDir.."/ultraschall_api/Reaper-Internals-readm
 Batter=[[
 cd ]]..SourceDir..[[
 
-del ]]..Target_Dir..[[\ultraschall_api4.1]]..C2vers..[[.zip
-zip.exe -r ]]..Target_Dir..[[\ultraschall_api4.1]]..C2vers..[[.zip *.lua *.txt ultraschall_api
+del ]]..Target_Dir..[[\ultraschall_api]]..C..C2vers..[[.zip
+zip.exe -r ]]..Target_Dir..[[\ultraschall_api]]..C..C2vers..[[.zip *.lua *.txt ultraschall_api
 
 del ultraschall_api\Reaper-Internals-readme.txt
 del ultraschall_api\Scripts\Tools\batter.bat

@@ -101,7 +101,7 @@ function ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxindex)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetFXFromFXStateChunk</slug>
     <requires>
-      Ultraschall=4.1
+      Ultraschall=4.2
       Reaper=6.10
       Lua=5.3
     </requires>
@@ -137,10 +137,21 @@ function ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxindex)
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetFXFromFXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return end
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("GetFXFromFXStateChunk", "fxindex", "must be an integer", -2) return end
   local index=0
-  for a,b,c in string.gmatch(FXStateChunk, "()(%s-BYPASS.-\n.-WAK.-)\n()") do
+  
+  for a,b,c in string.gmatch(FXStateChunk, "()(%s-BYPASS.-\n.-WAK.-)\n()") do    
     index=index+1
-    if index==fxindex then return b,a,c end
+    if index==fxindex then         
+      --print2(1,b:sub(1,1000))
+      local temp, offset=FXStateChunk:sub(c,-1):match("(    <COMMENT \n.-\n.->\n)()")
+      --print2(2,b:sub(1,1000),temp)
+      if offset==nil then offset=0 end
+      --print2(3,b:sub(1,1000))
+      if temp==nil then temp="\n" else temp="\n"..temp end
+      --print2(4,b:sub(1,1000))
+      return b..temp,a,c+offset
+    end
   end
+  
   return nil
 end
 
@@ -2950,7 +2961,7 @@ function ultraschall.GetFXSettingsString_FXLines(fx_lines)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetFXSettingsString_FXLines</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
@@ -2979,21 +2990,24 @@ function ultraschall.GetFXSettingsString_FXLines(fx_lines)
   <tags>fxmanagement, get, fxstatestring, base64</tags>
 </US_DocBloc>
 --]]
-  if ultraschall.type(FXLines)~="string" then ultraschall.AddErrorMessage("GetFXSettingsString_FXLines", "fx_lines" , "must be a string", -1) return nil end
-  if FXLines:match("    <VST")~=nil then
-    FXSettings=FXLines:match("<VST.-\n(.-)    >")
-  elseif FXLines:match("    <JS_SER")~=nil then
-    FXSettings=FXLines:match("<JS_SER.-\n(.-)    >")
-  elseif FXLines:match("    <DX")~=nil then
-    FXSettings=FXLines:match("<DX.-\n(.-)    >")
-  elseif FXLines:match("    <AU")~=nil then
-    FXSettings=FXLines:match("<AU.-\n(.-)    >")
-  elseif FXLines:match("    <VIDEO_EFFECT")~=nil then
-    return "", string.gsub(FXLines:match("<VIDEO_EFFECT.-      <CODE\n(.-)      >"), "%s-|", "\n")
+  
+  if ultraschall.type(fx_lines)~="string" then ultraschall.AddErrorMessage("GetFXSettingsString_FXLines", "fx_lines" , "must be a string", -1) return nil end
+  if fx_lines:match("    <VST")~=nil then
+    FXSettings=fx_lines:match("<VST.-\n(.-)    >")
+  elseif fx_lines:match("    <JS_SER")~=nil then
+    FXSettings=fx_lines:match("<JS_SER.-\n(.-)    >")
+  elseif fx_lines:match("    <DX")~=nil then
+    FXSettings=fx_lines:match("<DX.-\n(.-)    >")
+  elseif fx_lines:match("    <AU")~=nil then
+    FXSettings=fx_lines:match("<AU.-\n(.-)    >")
+  elseif fx_lines:match("    <VIDEO_EFFECT")~=nil then
+    return "", string.gsub(fx_lines:match("<VIDEO_EFFECT.-      <CODE\n(.-)      >"), "%s-|", "\n")  
   end
-    FXSettings=string.gsub(FXSettings, "[\n%s]*", "")
-    FXSettings_dec=ultraschall.Base64_Decoder(FXSettings)
-    return FXSettings, FXSettings_dec
+  
+  if FXSettings==nil then ultraschall.AddErrorMessage("GetFXSettingsString_FXLines", "fx_lines" , "fx has no base64-encoded fx-lines", -2) return nil end
+  FXSettings=string.gsub(FXSettings, "[\n%s]*", "")  
+  FXSettings_dec=ultraschall.Base64_Decoder(FXSettings)
+  return FXSettings, FXSettings_dec
 end
 
 -- ParmModulation:
@@ -5796,7 +5810,7 @@ function ultraschall.InputFX_GetFXChain(trackfx_or_takefx)
   
   if trackfx_or_takefx==0 then FXChain="<FXCHAIN\n" else FXChain="<TAKEFX\n" end
   
-  return FXChain.."  "..string.gsub(FXStateChunk, "\n", "\n  ").."\n>"
+  return ultraschall.StateChunkLayouter(FXChain.."  "..string.gsub(FXStateChunk, "\n", "\n  ").."\n>")
 end
 
 function ultraschall.InputFX_SetFXChain(FXStateChunk, replacefx)
@@ -6878,5 +6892,393 @@ function ultraschall.GetLastTouchedFX()
     end
     return retval, 1, tracknumber, fxnumber+1, paramnumber+1, -1,     track, nil
   end
+end
+
+function ultraschall.GetFXComment_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetFXComment_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string comment = ultraschall.GetFXComment_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the fx-comment of a specific fx from an FXStateChunk
+    
+    will return "" if no comment exists
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string comment - the comment as stored for this specific fx; "", if no comment exists
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from whose fx you want to return a specifix fx-comment
+    integer fxid - the fx, whose comment you want to return
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, fx, comment</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetFXComment_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("GetFXComment_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  ultraschall.SuppressErrorMessages(true)
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  if fx_lines==nil then ultraschall.SuppressErrorMessages(false) ultraschall.AddErrorMessage("GetFXComment_FXStateChunk", "fx_id", "no such fx", -4) return nil end
+  local Comment=fx_lines:match("\n    <COMMENT%s-\n%s*(.-)>\n")
+  if Comment==nil then return "" end
+  Comment=string.gsub(Comment,"[%s%c]","")
+  
+  if Comment~=nil then Comment=ultraschall.Base64_Decoder(Comment) else return "" end
+  ultraschall.SuppressErrorMessages(false)
+  return Comment
+end
+
+--A=ultraschall.GetFXComment_FXStateChunk(FXStateChunk, 4)
+--print2(A)
+
+
+function ultraschall.SetFXComment_FXStateChunk(FXStateChunk, fx_id, NewComment)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetFXComment_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetFXComment_FXStateChunk(string FXStateChunk, integer fxid, string NewComment)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    sets an fx-comment of a specific fx within an FXStateChunk
+    
+    Set to "" to remove the comment
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new comment
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new comment
+    integer fxid - the fx, whose comment you want to set
+    string NewComment - the new comment; "", to remove the currently set comment; newlines are allowed
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, comment</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetFXComment_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("SetFXComment_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  if type(NewComment)~="string" then ultraschall.AddErrorMessage("SetFXComment_FXStateChunk", "NewComment", "must be a string", -3) return nil end
+
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  if fx_lines==nil then ultraschall.SuppressErrorMessages(false) ultraschall.AddErrorMessage("SetFXComment_FXStateChunk", "fx_id", "no such fx", -4) return nil end
+  local Comment=fx_lines:match("()\n    <COMMENT%s-\n")
+  if NewComment=="" then 
+    FXStateChunk=FXStateChunk:sub(1, startoffset)..fx_lines:sub(1,Comment+1)..FXStateChunk:sub(endoffset, -1)
+    return FXStateChunk
+  end
+  if Comment==nil then Comment=fx_lines:len() end
+  --print2(fx_lines)
+  NewComment=ultraschall.Base64_Encoder(NewComment)
+  if NewComment:len()>280 then
+    local temp=NewComment
+    NewComment=""
+    while temp:len()>1 do
+      NewComment=NewComment.."      "..temp:sub(1,280).."\n"
+      temp=temp:sub(281,-1)
+    end
+  else
+    NewComment="      "..NewComment.."\n"
+  end
+  
+  fx_lines=fx_lines:sub(1,Comment)..[[
+    <COMMENT 
+]]..NewComment..[[
+    >
+ ]]    
+
+
+  FXStateChunk=FXStateChunk:sub(1, startoffset)..fx_lines..FXStateChunk:sub(endoffset, -1)
+  return FXStateChunk
+end
+
+--A=ultraschall.SetFXComment_FXStateChunk(FXStateChunk, "Alternative Text", 1)
+
+function ultraschall.CountFXFromFXStateChunk(FXStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CountFXFromFXStateChunk</slug>
+    <requires>
+      Ultraschall=4.2
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>integer count_of_fx= ultraschall.CountFXFromFXStateChunk(string FXStateChunk)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      count the number of fx available in an FXStateChunk
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      integer count_of_fx - the number of fx within the FXStateChunk
+    </retvals>
+    <parameters>
+      string FXStateChunk - the FXStateChunk in which you want to count the fx
+    </parameters>
+    <chapter_context>
+      FX-Management
+      FXStateChunks
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+    <tags>fxmanagement, count, fx, fxstatechunk</tags>
+  </US_DocBloc>
+  --]] 
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("CountFXFromFXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return end
+  local index=0
+  
+  for b in string.gmatch(FXStateChunk, "(%s-BYPASS.-\n.-WAK.-)\n") do
+    index=index+1
+  end
+  
+  return index
+end
+  
+--  retval, StateChunk=reaper.GetTrackStateChunk(reaper.GetTrack(0,0),"",false)
+--  FXStateChunk, linenumber = ultraschall.GetFXStateChunk(StateChunk)
+--  Count=ultraschall.CountFXFromFXStateChunk(FXStateChunk)
+  
+function ultraschall.GetTrackFXComment(track, fxid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrackFXComment</slug>
+    <requires>
+      Ultraschall=4.2
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>string comment = ultraschall.GetTrackFXComment(MediaTrack track, integer fxid)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns the comment of a track-fx
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      string comment - the comment of a track-fx
+    </retvals>
+    <parameters>
+      MediaTrack track - the mediatrack, of which you want to request a trackfx's comment
+      integer fxid - the id of the fx, whose comment you want to have
+    </parameters>
+    <chapter_context>
+      FX-Management
+      Get States
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+    <tags>fxmanagement, get, trackfx, comment</tags>
+  </US_DocBloc>
+  --]] 
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("GetTrackFXComment", "track", "must be a valid MediaTrack", -1) return nil end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("GetTrackFXComment", "fxid", "must be an integer", -2) return nil end
+  local retval, StateChunk=reaper.GetTrackStateChunk(track,"",false)
+  local FXStateChunk, linenumber = ultraschall.GetFXStateChunk(StateChunk)
+  if ultraschall.CountFXFromFXStateChunk(FXStateChunk)<fxid then ultraschall.AddErrorMessage("GetTrackFXComment", "fxid", "no such an fx", -3) return nil end
+  return ultraschall.GetFXComment_FXStateChunk(FXStateChunk, fxid)
+end
+
+--A=ultraschall.GetTrackFXComment(reaper.GetTrack(0,0), 1)
+
+
+function ultraschall.GetTakeFXComment(item, takeid, fxid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTakeFXComment</slug>
+    <requires>
+      Ultraschall=4.2
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>string comment = ultraschall.GetTakeFXComment(MediaItem item, integer takeid, integer fxid)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns the comment of a take-fx
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      string comment - the comment of a track-fx
+    </retvals>
+    <parameters>
+      MediaItem item - the mediaitem, whose takefx-comment you want to request
+      integer take_id - the id of the take, whose takefx-comment you want to request
+      integer fxid - the id of the fx, whose comment you want to have
+    </parameters>
+    <chapter_context>
+      FX-Management
+      Get States
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+    <tags>fxmanagement, get, takefx, comment</tags>
+  </US_DocBloc>
+  --]] 
+  if ultraschall.type(item)~="MediaItem" then ultraschall.AddErrorMessage("GetTakeFXComment", "item", "must be a valid MediaItem", -1) return nil end
+  if math.type(takeid)~="integer" then ultraschall.AddErrorMessage("GetTakeFXComment", "takeid", "must be an integer", -2) return nil end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("GetTakeFXComment", "fxid", "must be an integer", -3) return nil end
+  local retval, StateChunk=reaper.GetItemStateChunk(item,"",false)
+  local FXStateChunk, linenumber = ultraschall.GetFXStateChunk(StateChunk, takeid)
+  if FXStateChunk=="" then ultraschall.AddErrorMessage("GetTakeFXComment", "takeid", "no such take", -4) return nil end
+  if ultraschall.CountFXFromFXStateChunk(FXStateChunk)<fxid then ultraschall.AddErrorMessage("GetTakeFXComment", "fxid", "no such an fx", -5) return nil end
+  return ultraschall.GetFXComment_FXStateChunk(FXStateChunk, fxid)
+end
+
+--A=ultraschall.GetTakeFXComment(reaper.GetMediaItem(0,0), 1, 1)
+
+function ultraschall.InputFX_GetComment(fxid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_GetComment</slug>
+    <requires>
+      Ultraschall=4.2
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>string comment = ultraschall.InputFX_GetComment(integer fxid)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      returns the comment of an input-fx
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      string comment - the comment of a track-fx
+    </retvals>
+    <parameters>
+      integer fxid - the id of the fx, whose comment you want to have
+    </parameters>
+    <chapter_context>
+      FX-Management
+      InputFX
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+    <tags>fxmanagement, get, inputfx, comment</tags>
+  </US_DocBloc>
+  --]] 
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("InputFX_GetComment", "fxid", "must be an integer", -1) return nil end
+  local FXStateChunk = ultraschall.InputFX_GetFXChain(0)
+  return ultraschall.GetFXComment_FXStateChunk(FXStateChunk, fxid)
+end
+
+--A=ultraschall.InputFX_GetComment(1)
+--  print2(fx_lines)
+
+
+function ultraschall.SetTrackFXComment(track, fxid, Comment)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetTrackFXComment</slug>
+    <requires>
+      Ultraschall=4.2
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean retval = ultraschall.SetTrackFXComment(MediaTrack track, integer fxid, string Comment)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      sets the comment of a track-fx
+      
+      Note: you need to switch fxchain off/on or change the shown fx for the new comment to be displayed in Reaper's UI
+      
+      returns false in case of an error
+    </description>
+    <retvals>
+      boolean retval - true, setting was successful; false, setting was unsuccessful
+    </retvals>
+    <parameters>
+      MediaTrack track - the mediatrack, of which you want to set a trackfx's comment
+      integer fxid - the id of the fx, whose comment you want to set
+      string Comment - the new comment
+    </parameters>
+    <chapter_context>
+      FX-Management
+      Set States
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+    <tags>fxmanagement, set, trackfx, comment</tags>
+  </US_DocBloc>
+  --]] 
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("SetTrackFXComment", "track", "must be a valid MediaTrack", -1) return false end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("SetTrackFXComment", "fxid", "must be an integer", -2) return false end
+  if type(Comment)~="string" then ultraschall.AddErrorMessage("SetTrackFXComment", "Comment", "must be a string", -3) return false end
+
+  local retval, StateChunk=reaper.GetTrackStateChunk(track,"",false)
+  local FXStateChunk, linenumber = ultraschall.GetFXStateChunk(StateChunk)
+  if ultraschall.CountFXFromFXStateChunk(FXStateChunk)<fxid then ultraschall.AddErrorMessage("SetTrackFXComment", "fxid", "no such an fx", -4) return false end
+  local FXStateChunk = ultraschall.SetFXComment_FXStateChunk(FXStateChunk, fxid, Comment)
+  local retval, alteredStateChunk = ultraschall.SetFXStateChunk(StateChunk, FXStateChunk)
+  return reaper.SetTrackStateChunk(track, alteredStateChunk, false)
+end
+
+
+--A=ultraschall.SetTrackFXComment(reaper.GetTrack(0,0), 1, "Later with Jools Holland")
+
+function ultraschall.SetTakeFXComment(item, takeid, fxid, Comment)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetTakeFXComment</slug>
+    <requires>
+      Ultraschall=4.2
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>string comment = ultraschall.SetTakeFXComment(MediaItem item, integer takeid, integer fxid, string Comment)</functioncall>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+      sets the comment of a take-fx
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      string comment - the comment of a track-fx
+    </retvals>
+    <parameters>
+      MediaItem item - the mediaitem, whose takefx-comment you want to set
+      integer take_id - the id of the take, whose takefx-comment you want to set
+      integer fxid - the id of the fx, whose comment you want to set
+      string Comment - the new Comment for this takefx
+    </parameters>
+    <chapter_context>
+      FX-Management
+      Set States
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+    <tags>fxmanagement, set, takefx, comment</tags>
+  </US_DocBloc>
+  --]] 
+  if ultraschall.type(item)~="MediaItem" then ultraschall.AddErrorMessage("SetTakeFXComment", "item", "must be a valid MediaItem", -1) return nil end
+  if math.type(takeid)~="integer" then ultraschall.AddErrorMessage("SetTakeFXComment", "takeid", "must be an integer", -2) return nil end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("SetTakeFXComment", "fxid", "must be an integer", -3) return nil end
+  if type(Comment)~="string" then ultraschall.AddErrorMessage("SetTakeFXComment", "Comment", "must be a string", -4) return false end
+  
+  local retval, StateChunk=reaper.GetItemStateChunk(item,"",false)
+  local FXStateChunk, linenumber = ultraschall.GetFXStateChunk(StateChunk, takeid)
+  if FXStateChunk=="" then ultraschall.AddErrorMessage("SetTakeFXComment", "takeid", "no such take", -5) return nil end
+  if ultraschall.CountFXFromFXStateChunk(FXStateChunk)<fxid then ultraschall.AddErrorMessage("SetTakeFXComment", "fxid", "no such an fx", -6) return nil end
+  local FXStateChunk = ultraschall.SetFXComment_FXStateChunk(FXStateChunk, fxid, Comment)
+  local retval, alteredStateChunk = ultraschall.SetFXStateChunk(StateChunk, FXStateChunk, takeid)  
+  return reaper.SetItemStateChunk(item, alteredStateChunk, false)
 end
 

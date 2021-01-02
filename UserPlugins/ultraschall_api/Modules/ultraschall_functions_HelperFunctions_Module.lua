@@ -1319,8 +1319,6 @@ function ultraschall.IsOS_Other()
   return os, bits
 end
 
-
-
 function ultraschall.GetReaperAppVersion()
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -1351,6 +1349,7 @@ function ultraschall.GetReaperAppVersion()
 </US_DocBloc>
 --]]
   -- if exe-path and resource-path are the same, it is an portable-installation
+  local portable
   if reaper.GetExePath()==reaper.GetResourcePath() then portable=true else portable=false end
   -- separate the returned value from GetAppVersion
   local majvers=tonumber(reaper.GetAppVersion():match("(.-)%..-/"))
@@ -1360,21 +1359,87 @@ function ultraschall.GetReaperAppVersion()
   local beta=reaper.GetAppVersion():match("%.%d*(.-)/")
   return majvers, subvers, bits, OS, portable, beta
 end
+
+
+function ultraschall.unused_GetReaperAppVersion()
+--[[
+<\US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetReaperAppVersion</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.16
+    Lua=5.3
+  </requires>
+  <functioncall>integer majorversion, integer subversion, integer bits, string operating_system, boolean portable, string betaversion, boolean arm_cpu, string additional_architecture_info = ultraschall.GetReaperAppVersion()</functioncall>
+  <description>
+    Returns operating system and if it's a 64bit/32bit-operating system.
+  </description>
+  <retvals>
+    integer majorversion - the majorversion of Reaper. Can be used for comparisions like "if version<5 then ... end".
+    integer subversion - the subversion of Reaper. Can be used for comparisions like "if subversion<96 then ... end".
+    integer bits - the number of bits of the reaper-app
+    string operating_system - the operating system, either "Win", "OSX", "Linux" or "Other"(the latter on Reaper<6.16)
+    boolean portable - true, if it's a portable installation; false, if it isn't a portable installation
+    string betaversion - if you use a pre-release of Reaper, this contains the beta-version, like "rc9" or "+dev0423" or "pre6"
+    boolean arm_cpu - true, you use an ARM-cpu-version of Reaper; false, you don't use an ARM-cpu-version of Reaper
+    string additional_architecture_info - additional information about the architecture; currently "icc", "arm", "x86_64", "i686", "armv7l", "aarch64" or ""
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>helper functions, appversion, reaper, version, bits, majorversion, subversion, operating system</tags>
+<\/US_DocBloc>
+--]]
+  -- if exe-path and resource-path are the same, it is an portable-installation
+  local portable
+  if reaper.GetExePath()==reaper.GetResourcePath() then portable=true else portable=false end
+  
+  local version=reaper.GetAppVersion()  
+
+  --version=  "6.16/OSX64-icc"
+  --version="6.16/OSX32"
+  --version="6.16/OSX64-arm"
+  --version="6.16/linux-x86_64"
+  --version="6.16/linux-i686"
+  --version="6.16/linux-armv7l"
+  --version="6.16/linux-aarch64"
+  --version="6.16/win64"
+  --version="6.16/win32"
+  
+  -- separate the returned value from GetAppVersion
+  local majvers=tonumber(version:match("(.-)%..-/"))
+  local subvers=tonumber(version:match("%.(%d*)"))
+  local bits=version:match("/.-(64)")
+  if bits==nil then bits=version:match("/.-(32)") end
+  if bits==nil then if version:match("/.-i686")~=nil then bits=32 end end
+  if bits==nil then if version:match("/.-armv7l")~=nil then bits=32 end end
+  
+  --local OS=reaper.GetOS():match("(.-)%d")
+  local OS=(version.." "):match(".-/(%a*)")
+  if OS:len()<3 then OS=reaper.GetOS():match("%a*") end
+  local beta=version:match("%.%d*(.-)/")
+  local arm=version:match("arm") or version:match("aarch")
+  local additional_information=(version.."-"):match(".-/.-%-(.*)%-")
+  if additional_information==nil then additional_information="" end
+  return majvers, subvers, tonumber(bits), OS:sub(1,1):upper()..OS:sub(2,-1), portable, beta, arm~=nil, additional_information
+end
  
 
 --A,B,C,D,E,F=ultraschall.GetReaperAppVersion()
 --A,B,C,D,E,F,G=ultraschall.GetReaperAppVersion()
 
-function ultraschall.LimitFractionOfFloat(number, length_of_fraction, roundit)
+function ultraschall.LimitFractionOfFloat(number, length_of_fraction)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>LimitFractionOfFloat</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.77
+    Ultraschall=4.2
+    Reaper=6.16
     Lua=5.3
   </requires>
-  <functioncall>number altered_number = ultraschall.LimitFractionOfFloat(number number, integer length_of_fraction, boolean roundit)</functioncall>
+  <functioncall>number altered_number = ultraschall.LimitFractionOfFloat(number number, integer length_of_fraction)</functioncall>
   <description>
     limits the fraction of a float-number to a specific length of fraction(digits). You can also choose to round the value or not.
     
@@ -1383,7 +1448,6 @@ function ultraschall.LimitFractionOfFloat(number, length_of_fraction, roundit)
   <parameters>
     number number - the number, whose fraction shall be limited
     integer length_of_fraction - the number of digits in the fraction
-    boolean roundit - false, no rounding; true, rounds the fraction. Rounding-precision is only length_of_fraction+1, all the other digits will be ignored. If length_of_fraction+1>=5, it will be rounded up, otherwise down.
   </parameters>
   <retvals>
     number altered_number - the altered number with the new fraction-length. Will be equal to parameter number, if number was integer or fraction less digits than length_of_fraction
@@ -1398,9 +1462,9 @@ function ultraschall.LimitFractionOfFloat(number, length_of_fraction, roundit)
 </US_DocBloc>
 --]]
   if type(number)~="number" then ultraschall.AddErrorMessage("LimitFractionOfFloat", "number", "must be a number", -1) return end
-  if math.type(length_of_fraction)~="integer" then ultraschall.AddErrorMessage("LimitFractionOfFloat", "length_of_fraction", "must be an integer", -2) return end
-  if type(roundit)~="boolean" then ultraschall.AddErrorMessage("LimitFractionOfFloat", "roundit", "must be boolean", -3) return end
+  if math.type(length_of_fraction)~="integer" then ultraschall.AddErrorMessage("LimitFractionOfFloat", "length_of_fraction", "must be an integer", -2) return end 
   if math.floor(number)==number then return number end
+  --[[
   local adder, fraction, fraction2, int
   number=number+0.0
   int, fraction=tostring(number):match("(.-)%.(.*)")
@@ -1413,9 +1477,10 @@ function ultraschall.LimitFractionOfFloat(number, length_of_fraction, roundit)
   else 
     fraction2=fraction
   end
+  --]]
   
-  
-  return tonumber(int.."."..(fraction2))+adder
+  --return int.."."..(fraction2+adder)
+  return tonumber(tostring(tonumber(string.format("%."..length_of_fraction.."f", number))))
 end
 
 --AA=ultraschall.LimitFractionOfFloat(19999.12345, 4.1, true)
@@ -3530,7 +3595,7 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
   if remove_tabs~=nil and math.type(remove_tabs)~="integer" then ultraschall.AddErrorMessage("Base64_Encoder", "remove_tabs", "must be an integer", -3) return nil end
   if base64_type~=nil and math.type(base64_type)~="integer" then ultraschall.AddErrorMessage("Base64_Encoder", "base64_type", "must be an integer", -4) return nil end
   
-  tempstring={}
+  local tempstring={}
   local a=1
   local temp
   
@@ -3649,7 +3714,7 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
   local bitarray={}
   local count=1
   local temp
-  for i=1, source_string:len()-1 do
+  for i=1, source_string:len() do
     temp=base64_string:match(source_string:sub(i,i).."()")-2
     if temp&32~=0 then bitarray[count]=1 else bitarray[count]=0 end
     if temp&16~=0 then bitarray[count+1]=1 else bitarray[count+1]=0 end
@@ -3675,6 +3740,7 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
     if bitarray[i+8]==1 then temp2=temp2+1 end
     decoded_string=decoded_string..string.char(temp2)
   end
+  if decoded_string:sub(-1,-1)=="\0" then decoded_string=decoded_string:sub(1,-2) end
   return decoded_string
 end
 

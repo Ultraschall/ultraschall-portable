@@ -411,41 +411,43 @@ function ultraschall.Metadata_ID3_GetSet(Tag, Value)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Metadata_ID3_GetSet</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.11
+    Ultraschall=4.2
+    Reaper=6.16
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_ID3_GetSet(string Tag, optional string Value)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Gets/Sets a stored ID3-metadata-tag into the current project.
+    Gets/Sets a stored ID3-metadata-tag into the current project(for Wav or MP3).
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
     Note: APIC\_TYPE allows only specific values, as listed below!
     
     Supported tags are:
       TIT2 - Title
-      TPE1 - Artist
+      TIT3 - Subtitle/Description
       TPE2 - Album Artist
+      TPE1 - Artist
+      TCON - Genre
+      TKEY - Key      
+      TBPM - Tempo
+      TYER - Year, must be of the format yyyy, like 2020
+      TIME - Recording Time, like 22:15 or 08:21
+      COMM - Comment
+      TXXX - User defined(description=value)
+      TXXX:REAPER - Media Explorer Tags
+      TCOM - Composer
+      TIPL - Involved People
+      TEXT - Lyricist/Text Writer
+      TMCL - Musician Credits
       TALB - Album
       TRCK - Track
-      TCON - Genre
-      TYER - Year, must be of the format yyyy, like 2020
-      TDRC - Recording Time, must be of the format YYYY-MM-DD or YYYY-MM-DDThh:mm like 2020-06-27 or 2020-06-27T23:30
-      TKEY - Key
-      TBPM - Tempo
-      TCOM - Composer
-      TEXT - Lyricist/Text Writer
-      TIPL - Involved People
-      TMCL - Musician Credits
       TIT1 - Content Group
-      TIT3 - Subtitle/Description
       TRCK - Track number
-      TCOP - Copyright Message
       TSRC - International Standard Recording Code
-      TXXX - User defined(description=value)
-      COMM - Comment
+      TCOP - Copyright Message
       COMM\_LANG - Comment language, 3-character code like "eng"
-      APIC\_TYPE - the type of the cover-image
+      APIC\_TYPE - the type of the cover-image, which can be of the following:
+      
         "", unset
         0, Other
         1, 32x32 pixel file icon (PNG only)
@@ -468,6 +470,7 @@ function ultraschall.Metadata_ID3_GetSet(Tag, Value)
         18, Illustration
         19, Band/Artist logotype
         20, Publisher/Studiotype
+    
     APIC\_DESC - the description of the cover-image
     APIC\_FILE - the filename+absolute path of the cover-image; must be either png or jpg
     
@@ -516,8 +519,8 @@ function ultraschall.Metadata_BWF_GetSet(Tag, Value)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Metadata_BWF_GetSet</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.11
+    Ultraschall=4.2
+    Reaper=6.16
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_BWF_GetSet(string Tag, optional string Value)</functioncall>
@@ -528,11 +531,13 @@ function ultraschall.Metadata_BWF_GetSet(Tag, Value)
     
     Supported tags are:
       Description
+      OriginationDate
+      OriginationTime
       Originator
       OriginatorReference
-      AXML_ISRC - International Standard Recording Code
+      ISRC - International Standard Recording Code
       
-      Note: OriginationDate, OriginationTime and TimeReference are set by Reaper itself
+      Note: TimeReference is set by Reaper itself
       
     Returns nil in case of an error
   </description>
@@ -564,8 +569,8 @@ function ultraschall.Metadata_IXML_GetSet(Tag, Value)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Metadata_IXML_GetSet</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.11
+    Ultraschall=4.2
+    Reaper=6.16
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_IXML_GetSet(string Tag, optional string Value)</functioncall>
@@ -575,13 +580,15 @@ function ultraschall.Metadata_IXML_GetSet(Tag, Value)
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
     
     Supported tags are:
-      PROJECT
-      SCENE
-      TAPE
-      TAKE
-      CIRCLED - either TRUE or FALSE
+      PROJECT - title
+      NOTE - comment
+      USER - user-defined "Name=Value"
+      USER:REAPER - Media Explorer Tags
+      SCENE - Scene
+      CIRCLED - Circled Take; either TRUE or FALSE
+      TAPE - Sound Roll
+      TAKE - Take ID
       FILE_UID - unique identifier for the file
-      NOTE
       
     Returns nil in case of an error
   </description>
@@ -619,8 +626,8 @@ function ultraschall.Metadata_INFO_GetSet(Tag, Value)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Metadata_INFO_GetSet</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.11
+    Ultraschall=4.2
+    Reaper=6.16
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_INFO_GetSet(string Tag, optional string Value)</functioncall>
@@ -630,14 +637,17 @@ function ultraschall.Metadata_INFO_GetSet(Tag, Value)
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
     
     Supported tags are:
-      INAM - Name/Description
+      INAM - Title
+      ISBJ - Description
+      IKEY - Keywords
       IART - Artist
-      IPRD - Product(Album)
       IGNR - Genre
       ICRD - Creation Date, must be of the format yyyy-mm-dd like 2020-06-27
-      ISRC - Source
-      IKEY - Keywords
       ICMT - Comment
+      IENG - Engineer
+      IPRD - Product(Album)
+      ISRC - Source
+      ICOP - Copyright message
       
     Returns nil in case of an error
   </description>
@@ -689,15 +699,15 @@ function ultraschall.Metadata_CART_GetSet(Tag, Value)
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
     
     Supported tags are:
-      Title
-      Artist
-      CutID - Cut
-      ClientID - Client
-      Category
+      Title - Title
+      Artist - the Artist
+      Category - the genre
       StartDate - the start-date, must be of the following format, yyyy-mm-dd, like 2020-06-27
       EndDate - the end-date, must be of the following format, yyyy-mm-dd, like 2020-06-27
-      URL
       TagText - Text
+      URL - URL
+      ClientID - Client
+      CutID - Cut
       
     Note: INT1 is set by the INT1 marker; SEG1 is set by the SEG1-marker
       
@@ -740,13 +750,130 @@ end
 
 --A=ultraschall.Metadata_CART_GetSet("EndDate", "2020-06-27")
 
+function ultraschall.Metadata_AIFF_GetSet(Tag, Value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_AIFF_GetSet</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.16
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Metadata_AIFF_GetSet(string Tag, optional string Value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets/Sets a stored AIFF-metadata-tag into the current project.
+    
+    To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
+    
+    Supported tags are:
+        NAME - Title
+        ANNO - Description
+        AUTH - Artist
+        COPY - Copyright message
+      
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string value - the value of the specific tag
+  </retvals>
+  <parameters>
+    string Tag - the tag, whose value you want to get/set; see description for a list of supported AIFF-Tags
+    optional string Value - nil, only get the current value; any other value, set the value
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Tags
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, set, aiff, metadata, tags, tag</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Tag)~="string" then ultraschall.AddErrorMessage("Metadata_AIFF_GetSet", "Tag", "must be a string", -1) return end
+  if Value~=nil and ultraschall.type(Value)~="string" then ultraschall.AddErrorMessage("Metadata_AIFF_GetSet", "Value", "must be a string", -2) return end
+  if Value==nil then Value="" set=false else Value="|"..Value set=true end
+
+  if Tag=="StartDate" and Value~="" then
+    if Value:match("%d%d%d%d%-%d%d%-%d%d")==nil then
+      ultraschall.AddErrorMessage("Metadata_AIFF_GetSet", "Value", "StartDate: must be of the format \"yyyy-mm-dd\" like \"2020-06-27\"", -3) return 
+    end
+  end
+  if Tag=="EndDate" and Value~="" then
+    if Value:match("%d%d%d%d%-%d%d%-%d%d")==nil then
+      ultraschall.AddErrorMessage("Metadata_AIFF_GetSet", "Value", "EndDate: must be of the format \"yyyy-mm-dd\" like \"2020-06-27\"", -4) return 
+    end
+  end
+  
+  local a,b=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "IFF:"..Tag..Value, set)
+  return b
+end
+
+function ultraschall.Metadata_XMP_GetSet(Tag, Value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_XMP_GetSet</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.16
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Metadata_XMP_GetSet(string Tag, optional string Value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets/Sets a stored XMP-metadata-tag into the current project.
+    
+    To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
+    
+    Supported tags are:
+        dc/title - title
+        dc/description - description
+        dm/artist - the artist
+        dm/genre - the genre
+        dm/key - the key
+        dm/tempo - the tempo
+        dm/timeSignature - the time-signature
+        dc/date - the date
+        dm/logComment - Comment
+        dm/composer - the composer
+        dc/creator - the creator
+        dm/engineer - the engineer
+        dm/album - the album
+        dm/scene - the scene
+        dm/copyright - the copyright message
+        dc/language - the language
+        
+      
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string value - the value of the specific tag
+  </retvals>
+  <parameters>
+    string Tag - the tag, whose value you want to get/set; see description for a list of supported XMP-Tags
+    optional string Value - nil, only get the current value; any other value, set the value
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Tags
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, set, xmp, metadata, tags, tag</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Tag)~="string" then ultraschall.AddErrorMessage("Metadata_XMP_GetSet", "Tag", "must be a string", -1) return end
+  if Value~=nil and ultraschall.type(Value)~="string" then ultraschall.AddErrorMessage("Metadata_XMP_GetSet", "Value", "must be a string", -2) return end
+  if Value==nil then Value="" set=false else Value="|"..Value set=true end
+  local a,b=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "XMP:"..Tag..Value, set)
+  return b
+end
+
 function ultraschall.Metadata_VORBIS_GetSet(Tag, Value)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Metadata_VORBIS_GetSet</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.11
+    Ultraschall=4.2
+    Reaper=6.16
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_VORBIS_GetSet(string Tag, optional string Value)</functioncall>
@@ -757,42 +884,45 @@ function ultraschall.Metadata_VORBIS_GetSet(Tag, Value)
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
     
     Supported tags are:
-      ALBUM
-      ARTIST
-      ALBUMARTIST
-      PRODUCER
-      PUBLISHER
-      COPYRIGHT - Copyright holder
-      LABEL - Record label
-      DISCNUMBER
-      ISRC - International Standard Recording Code
-      EAN/UPN - Barcode
-      LABEL
-      LABELNO - Catalog Number
-      LICENSE
-      OPUS - Number of Work
-      SOURCEMEDIA - Original Recording Media
-      TITLE
-      TRACKNUMBER
-      VERSION
-      ENCODED-BY
-      ENCODING - Encoding Settings
-      COMPOSER
-      ARRANGER
-      LYRICIST
-      AUTHOR
-      CONDUCTOR
-      PERFORMER
-      ENSEMBLE
-      PART
-      PARTNUMBER
-      GENRE
-      DATE - follows the scheme YYYY-MM-DD like 2020-06-27
-      LOCATION
-      LANGUAGE
-      COMMENT
-      BPM - Tempo
-      KEY
+      TITLE - title
+      DESCRIPTION - description
+      ALBUMARTIST - album artist
+      ARTIST - artist
+      PERFORMER - performer
+      GENRE - genre
+      KEY - key
+      BPM - tempo
+      DATE - date
+      COMMENT - comment
+      USER - user defined (Name=Value)
+      REAPER - Media Explorer Tags
+      ARRANGER - arranger
+      AUTHOR - author
+      COMPOSER - composer
+      CONDUCTOR - conductor
+      ENSEMBLE - ensemble
+      LYRICIST - lyricist
+      PRODUCER - producer
+      PUBLISHER - publisher
+      ALBUM - album
+      LABEL - label
+      DISCNUMBER - disc number
+      OPUS - number of work
+      PART - part
+      PARTNUMBER - partnumber
+      TRACKNUMBER - tracknumber
+      VERSION - version
+      EAN/UPN - barcode
+      LABELNO - catalog number
+      ISRC - isrc
+      COPYRIGHT - copyright holder
+      LICENSE - license
+      ENCODED-BY - encoded by
+      ENCODING - encoding settings
+      LANGUAGE - language, 3-character-code like "eng"
+      LOCATION - location
+      SOURCEMEDIA - original recording media
+      
       
       Note: Chapters are added via marker with the name: "CHAP=chaptername"
     
@@ -844,11 +974,12 @@ function ultraschall.Metadata_CUE_GetSet(Tag, Value)
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
     
     Supported tags are:
-      DISC_TITLE
-      DISC_PERFORMER
-      DISC_SONGWRITER
-      DISC_CATALOG - UPC/EAN Code of the disc
+      DISC_TITLE - the title
+      DISC_PERFORMER - the performer
       DISC_REM - Comment
+      DISC_SONGWRITER - the songwriter      
+      DISC_CATALOG - UPC/EAN Code of the disc
+
       
     Note: TRACK_TITLE is added via render-settings, 
           TRACK_PERFORMER is added via a marker with a title of PERF=performername
@@ -870,7 +1001,7 @@ function ultraschall.Metadata_CUE_GetSet(Tag, Value)
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
-  <tags>metadata management, get, set, vorbis, metadata, tags, tag</tags>
+  <tags>metadata management, get, set, cue, metadata, tags, tag</tags>
 </US_DocBloc>
 ]]
   if ultraschall.type(Tag)~="string" then ultraschall.AddErrorMessage("Metadata_CUE_GetSet", "Tag", "must be a string", -1) return end
@@ -883,3 +1014,67 @@ function ultraschall.Metadata_CUE_GetSet(Tag, Value)
 end
 
 
+function ultraschall.Metadata_APE_GetSet(Tag, Value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_APE_GetSet</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.16
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Metadata_APE_GetSet(string Tag, optional string Value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets/Sets a stored APE-metadata-tag into the current project.
+    
+    To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
+    
+    Supported tags are:
+     Title - title
+     Subtitle - description
+     Artist - artist
+     Genre - genre
+     Key - key
+     BPM - tempo
+     Year - the date; following format: yyyy-mm-dd
+     Record Date - the recording date; following format: yyyy-mm-dd
+     Comment - comment
+     User Defined - user defined metadata
+     REAPER - Media Explorer Metadata
+     Composer - the composer
+     Conductor - the conductor
+     Publisher - the publisher
+     Album - the album
+     Track - the tracknumber
+     Catalog - the catalog
+     ISRC - the isrc
+     Copyright - the copyright holder
+     Language - the language, a three character code like "eng"
+     Record Location - the recording location
+
+
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string value - the value of the specific tag
+  </retvals>
+  <parameters>
+    string Tag - the tag, whose value you want to get/set; see description for a list of supported APE-Tags
+    optional string Value - nil, only get the current value; any other value, set the value
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Tags
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, set, ape, metadata, tags, tag</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Tag)~="string" then ultraschall.AddErrorMessage("Metadata_APE_GetSet", "Tag", "must be a string", -1) return end
+  if Value~=nil and ultraschall.type(Value)~="string" then ultraschall.AddErrorMessage("Metadata_APE_GetSet", "Value", "must be a string", -2) return end
+  if Value==nil then Value="" set=false else Value="|"..Value set=true end
+  
+  local a,b=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "APE:"..Tag..Value, set)
+  return b
+end

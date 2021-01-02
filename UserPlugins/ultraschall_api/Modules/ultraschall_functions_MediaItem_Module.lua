@@ -4237,17 +4237,17 @@ end
 
 
 
-function ultraschall.PreviewMediaFile(filename_with_path, gain, loop)
+function ultraschall.PreviewMediaFile(filename_with_path, gain, loop, outputChannel)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>PreviewMediaFile</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.92
     JS=0.986
     Lua=5.3
   </requires>
-  <functioncall>integer retval = ultraschall.PreviewMediaFile(string filename_with_path, optional number gain, optional boolean loop)</functioncall>
+  <functioncall>integer retval = ultraschall.PreviewMediaFile(string filename_with_path, optional number gain, optional boolean loop, optional outputChannel)</functioncall>
   <description>
     Plays a preview of a media-file. You can only play one file at a time.
     
@@ -4260,6 +4260,7 @@ function ultraschall.PreviewMediaFile(filename_with_path, gain, loop)
     string filename_with_path - the filename with path of the media-file to play
     optional number gain - the gain of the volume; nil, defaults to 1
     optional boolean loop - true, loop the previewed file; false or nil, don't loop the file
+    optional integer outputChannel - the outputChannel; for multichannel files, this is the first hardware-output-channel for e.g. left channel of a stereo file; default, 0
   </parameters>
   <chapter_context>
     MediaItem Management
@@ -4267,7 +4268,7 @@ function ultraschall.PreviewMediaFile(filename_with_path, gain, loop)
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
-  <tags>mediaitemmanagement, preview, play, audio, file</tags>
+  <tags>mediaitemmanagement, preview, play, audio, file, output channel</tags>
 </US_DocBloc>
 ]]
 
@@ -4276,12 +4277,14 @@ function ultraschall.PreviewMediaFile(filename_with_path, gain, loop)
 
   if type(loop)~="boolean" then loop=false end
   if type(gain)~="number" then gain=1 end
+  if outputChannel~=nil and math.type(outputChannel)~="integer" then ultraschall.AddErrorMessage("PreviewMediaItem", "outputChannel", "Must be nil or an integer.", -3) return false end
+  if outputChannel==nil then outputChannel=1 end
   --ultraschall.StopAnyPreview()
   reaper.Xen_StopSourcePreview(-1)
   --if ultraschall.PreviewPCMSource~=nil then reaper.PCM_Source_Destroy(ultraschall.PreviewPCMSource) end
   ultraschall.PreviewPCMSource=reaper.PCM_Source_CreateFromFile(filename_with_path)
   
-  local retval=reaper.Xen_StartSourcePreview(ultraschall.PreviewPCMSource, gain, loop)
+  local retval=reaper.Xen_StartSourcePreview(ultraschall.PreviewPCMSource, gain, loop, outputChannel)
   return retval
 end
 

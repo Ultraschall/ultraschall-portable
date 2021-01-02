@@ -1772,7 +1772,7 @@ function ultraschall.QueryKeyboardShortcutByKeyID(modifier, key)
     Lua=5.3
   </requires>
   <functioncall>string Shortcutname = ultraschall.QueryKeyboardShortcutByKeyID(integer modifier, integer key)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the name of the shortcut of the modifier-key-values, as stored in the KEY-entries within the reaper-kb.ini
     
     That way, you can take a KEY-entry from the reaper-kb.ini, like
@@ -1806,4 +1806,455 @@ function ultraschall.QueryKeyboardShortcutByKeyID(modifier, key)
   if math.type(key)~="integer" then ultraschall.AddErrorMessage("QueryKeyboardShortcutByKeyID", "key", "must be an integer", -2) return nil end
   local length_of_value, value = ultraschall.GetIniFileValue("Code", modifier.."_"..key, -999, ultraschall.Api_Path.."/IniFiles/Reaper-KEY-Codes_for_reaper-kb_ini.ini")
   return value
+end
+
+function ultraschall.CharacterCodes_ReverseLookup(byte1, byte2, byte3, lang, smm_kbini)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CharacterCodes_ReverseLookup</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string Character, optional boolean special_modifier, optional boolean shift, optional boolean control, optional boolean alt, optional boolean win, optional boolean opt, optional boolean cmd = ultraschall.CharacterCodes_ReverseLookup(integer byte1, integer byte2, integer byte3, optional integer lang)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the character-code+modifiers of a control-message-character as sent by reaper.StuffMIDIMessage with mode=1
+    they will be returned as shown in the add shortcut-dialog, though the keyboard-modifiers are returned as extra returnvalues.
+    
+    optionally, you can select a multitude of keymaps for localization
+    
+    Note: as there are many different language-keymaps out there, I tried to use some common ones. That also means, that they might be different in detail to your used one.
+    So the only keymap 100% reliable is the default-us-english one.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string Character - the character/midi-message associated with this character-code
+    optional boolean special_modifier - true, this is the special modifier(byte1=255); false, regular character/midimessage
+                                      - the special modifier stores multizoom, multirotate, multiswipe, mousewheel, mediakbd-buttons
+    optional boolean shift - true, shift-key is needed; false, shift-key is not needed
+    optional boolean control - true, ctrl-key is needed; false, ctrl-key is not needed
+    optional boolean alt - true, alt-key is needed; false, alt-key is not needed
+    optional boolean win - true, win-key is needed; false, win-key is not needed
+    optional boolean opt - true, opt-key is needed; false, opt-key is not needed - (mac only)
+    optional boolean cmd - true, cmd-key is needed; false, cmd-key is not needed - (mac only)
+  </retvals>
+  <parameters>
+    integer byte1 - the first byte of the StuffMIDIMessage, usually stores modifiers
+    integer byte2 - the first byte of the StuffMIDIMessage, usually stores character-codes
+    integer byte3 - the first byte of the StuffMIDIMessage, usually stores additional information
+    optional integer lang - the languagekeymap used. The following list includes the specific keymap supported
+                          - so they might differ in details. I used the ones supported by Windows 7
+                          - nil and 1, englisch(usa) default
+                          - 2, german
+                          - 3, arabian(saudi arabia)
+                          - 4, catalan(spain)
+                          - 5, greek(greece)
+                          - 6, french(france)
+                          - 7, hebrew(israel)
+                          - 8, icelandic(iceland)
+                          - 9, italian(italy)
+                          - 10, japanese(japan)
+                          - 11, russian(russian federation)
+                          - 12, turkish(turkey)
+                          - 13, indonesian(indonesia)
+                          - 14, hindi(india)
+                          - 15, punjabi(india)
+                          - 16, chinese_simplified(china)
+                          - 17, portuguese(portugal)
+                          - 18, spanish(spain)
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
+  <tags>helper functions, lookup, shortcutcode, modifiers, stuffmidimessage</tags>
+</US_DocBloc>
+]]
+  if math.type(byte1)~="integer" then ultraschall.AddErrorMessage("CharacterCodes_ReverseLookup", "byte1", "must be an integer", -1) return nil end
+  if math.type(byte2)~="integer" then ultraschall.AddErrorMessage("CharacterCodes_ReverseLookup", "byte2", "must be an integer", -2) return nil end
+  if math.type(byte3)~="integer" then ultraschall.AddErrorMessage("CharacterCodes_ReverseLookup", "byte3", "must be an integer", -3) return nil end
+  if lang~=nil and math.type(lang)~="integer" then ultraschall.AddErrorMessage("CharacterCodes_ReverseLookup", "lang", "must be an integer", -4) return nil end
+  if byte1<0 or byte1>255 then ultraschall.AddErrorMessage("CharacterCodes_ReverseLookup", "byte1", "must be between 0 and 255", -5) return nil end
+  if byte2<0 or byte2>255 then ultraschall.AddErrorMessage("CharacterCodes_ReverseLookup", "byte2", "must be between 0 and 255", -6) return nil end
+  if byte3<0 or byte3>255 then ultraschall.AddErrorMessage("CharacterCodes_ReverseLookup", "byte3", "must be between 0 and 255", -7) return nil end
+  
+  -- MIDI-messages
+  if (byte1>=160 and byte1<=175) or
+     (byte1>=208 and byte1<=223) or
+     (byte1>=240 and byte1<=254)
+  then
+    -- three hex-byte-midi-messages
+    byte1=string.format('%x', byte1):lower()
+    byte2=string.format('%x', byte2):lower()
+    byte3=string.format('%x', byte3):lower()
+    if byte1:len()==1 then byte1="0"..byte1 end
+    if byte2:len()==1 then byte2="0"..byte2 end
+    if byte3:len()==1 then byte3="0"..byte3 end
+    return "MIDI "..byte1.." "..byte2.." "..byte3
+  elseif byte1>=176 and byte1<=191 then
+    -- midi cc
+    return "MIDI Chan "..(byte1-175).." CC "..byte2
+  elseif byte1>=192 and byte1<=207 then
+    -- midi pc
+    return "MIDI Chan "..(byte1-191).." PC "..byte2
+  elseif byte1>=224 and byte1<=239 then
+    -- midi pitch
+    return "MIDI Chan "..(byte1-223).." Pitch"
+  
+  -- special modifier 255(byte1)
+  elseif byte1==255 then    
+    -- get the modifiers
+    local Modifier, Shift, Cmd, Opt, Control, Alt, Win, CharacterSet1, CharacterSet2
+    if byte2&4==4 then Shift=true byte2=byte2-4 else Shift=false end
+    if ultraschall.IsOS_Mac()==true then
+      if byte2&1==1 then Cmd=true byte2=byte2-1 else Cmd=false end
+      if byte2&2==2 then Opt=true byte2=byte2-2 else Opt=false end
+      if byte2&8==0 then Control=true else Control=false end
+      Win=false
+      Alt=false
+    else
+      if byte2&1==1 then Control=true byte2=byte2-1 else Control=false end
+      if byte2&2==2 then Alt=true byte2=byte2-2 else Alt=false end
+      if byte2&8==0 then Win=true else Win=false end
+      Opt=false
+      Cmd=false
+    end    
+    -- get the "character"
+    local Character=""
+    if byte2==24 and byte3&1==1 then Character="MultiRotate"
+    elseif byte2==40 and byte3&1==1 then Character="MultiHorz"
+    elseif byte2==56 and byte3&1==1 then Character="MultiVert"
+    elseif byte2==72 and byte3&1==1 then Character="MultiZoom"
+    elseif byte2==88 and byte3&1==1 then Character="HorizWheel"
+    elseif byte2==120 and byte3&1==1 then Character="MouseWheel"
+    elseif byte2==232 then
+      if byte3&1==1 then byte3=byte3-1 end
+      if byte3==2 then Character="MediaKbdBrowse-"
+      elseif byte3==4 then Character="MediaKbdBrowse+"
+      elseif byte3==6 then Character="MediaKbdBrowseRefr"
+      elseif byte3==8 then Character="MediaKbdBrowseStop"
+      elseif byte3==10 then Character="MediaKbdBrowseSrch"
+      elseif byte3==12 then Character="MediaKbdBrowseFav"
+      elseif byte3==14 then Character="MediaKbdBrowseHome"
+      elseif byte3==16 then Character="MediaKbdMute"
+      elseif byte3==18 then Character="MediaKbdVol-"
+      elseif byte3==20 then Character="MediaKbdVol+"
+      elseif byte3==22 then Character="MediaKbdTrack+"
+      elseif byte3==24 then Character="MediaKbdTrack-"
+      elseif byte3==26 then Character="MediaKbdStop"
+      elseif byte3==28 then Character="MediaKbdPlayPause"
+      elseif byte3==30 then Character="MediaKbdMail"
+      elseif byte3==32 then Character="MediaKbdMedia"
+      elseif byte3==34 then Character="MediaKbdApp1"
+      elseif byte3==36 then Character="MediaKbdApp2"
+      elseif byte3==38 then Character="MediaKbdBass-"
+      elseif byte3==40 then Character="MediaKbdBass++"
+      elseif byte3==42 then Character="MediaKbdBass+"
+      elseif byte3==44 then Character="MediaKbdTreble-"
+      elseif byte3==46 then Character="MediaKbdTreble+"
+      elseif byte3==48 then Character="MediaKbdMicMute"
+      elseif byte3==50 then Character="MediaKbdMic-"
+      elseif byte3==52 then Character="MediaKbdMic+"
+      elseif byte3==54 then Character="MediaKbdHelp"
+      elseif byte3==56 then Character="MediaKbdFind"
+      elseif byte3==58 then Character="MediaKbdNew"
+      elseif byte3==60 then Character="MediaKbdOpen"
+      elseif byte3==62 then Character="MediaKbdClose"
+      elseif byte3==64 then Character="MediaKbdSave"
+      elseif byte3==66 then Character="MediaKbdPrint"
+      elseif byte3==68 then Character="MediaKbdUndo"
+      elseif byte3==70 then Character="MediaKbdRedo"
+      elseif byte3==72 then Character="MediaKbdCopy"
+      elseif byte3==74 then Character="MediaKbdCut"
+      elseif byte3==76 then Character="MediaKbdPaste"
+      elseif byte3==78 then Character="MediaKbdReply"
+      elseif byte3==80 then Character="MediaKbdForward"
+      elseif byte3==82 then Character="MediaKbdSend"
+      elseif byte3==84 then Character="MediaKbdSpellChk"
+      elseif byte3==86 then Character="MediaKbdCmdCtl"
+      elseif byte3==88 then Character="MediaKbdMicOnOff"
+      elseif byte3==90 then Character="MediaKbdCorrect"
+      elseif byte3==92 then Character="MediaKbdPlay"
+      elseif byte3==94 then Character="MediaKbdPause"
+      elseif byte3==96 then Character="MediaKbdRecord"
+      elseif byte3==98 then Character="MediaKbdFF"
+      elseif byte3==100 then Character="MediaKbdRew"
+      elseif byte3==102 then Character="MediaKbdChan+"
+      elseif byte3==104 then Character="MediaKbdChan-"
+      else Character="MediaKbd??"
+      end
+    end
+    return Character, true, Shift, Control, Alt, Win, Opt, Cmd
+  -- normal characters
+  else    
+    -- get the language
+    if lang==1 then lang="english(usa)"
+    elseif lang==2 then lang="german"
+    elseif lang==3 then lang="arabian(saudi arabia)"
+    elseif lang==4 then lang="catalan(spain)"
+    elseif lang==5 then lang="greek(greece)"
+    elseif lang==6 then lang="french(france)"
+    elseif lang==7 then lang="hebrew(israel)"
+    elseif lang==8 then lang="icelandic(iceland)"
+    elseif lang==9 then lang="italian(italy)"
+    elseif lang==10 then lang="japanese(japan)"
+    elseif lang==11 then lang="russian(russian federation)"
+    elseif lang==12 then lang="turkish(turkey)"
+    elseif lang==13 then lang="indonesian(indonesia)"
+    elseif lang==14 then lang="hindi(india)"
+    elseif lang==15 then lang="punjabi(india)"
+    elseif lang==16 then lang="chinese_simplified(china)"
+    elseif lang==17 then lang="portuguese(portugal)"
+    elseif lang==18 then lang="spanish(spain)"
+    else lang="english(usa)"
+    end
+    -- get the modifiers
+    local Modifier, Shift, Cmd, Opt, Control, Alt, Win, CharacterSet1, CharacterSet2, Character
+    Shift=byte1&4==4
+    if ultraschall.IsOS_Mac()==true then
+      Cmd=byte1&8==8
+      Opt=byte1&16==16
+      Control=byte1&32==32
+      Alt=false
+      Win=false
+    else
+      Control=byte1&8==8
+      Alt=byte1&16==16    
+      Win=byte1&32==32    
+      Opt=false
+      Cmd=false
+    end
+    
+    -- get the character
+    CharacterSet1=byte1&1
+    CharacterSet2=byte3
+    Character=ultraschall.GetUSExternalState("Codes_"..lang, CharacterSet1.."_"..(byte2).."_"..CharacterSet2, "UserPlugins/ultraschall_api/IniFiles/StuffMidiMessage-CharacterCodes.ini")
+    Character=ultraschall.ConvertHex2Ascii(Character)
+    return Character, false, Shift, Control, Alt, Win, Opt, Cmd
+  end
+end
+
+function ultraschall.CharacterCodes_ReverseLookup_KBIni(byte1, byte2, lang)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CharacterCodes_ReverseLookup_KBIni</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string Character, optional boolean special_modifier, optional boolean shift, optional boolean control, optional boolean alt, optional boolean win, optional boolean opt, optional boolean cmd = ultraschall.CharacterCodes_ReverseLookup_KBIni(integer byte1, integer byte2, optional integer lang)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns the character-code+modifiers of a control-message-character as stored in the KEY-entries in the reaper-kb.ini
+    they will be returned as shown in the add shortcut-dialog, though the keyboard-modifiers are returned as extra returnvalues.
+    
+    optionally, you can select a multitude of keymaps for localization
+    
+    Note: as there are many different language-keymaps out there, I tried to use some common ones. That also means, that they might be different in detail to your used one.
+    So the only keymap 100% reliable is the default-us-english one.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string Character - the character/midi-message associated with this KEY-entry-character-code
+    optional boolean special_modifier - true, this is the special modifier(byte1=255); false, regular character/midimessage
+                                      - the special modifier stores multizoom, multirotate, multiswipe, mousewheel, mediakbd-buttons
+    optional boolean shift - true, shift-key is needed; false, shift-key is not needed
+    optional boolean control - true, ctrl-key is needed; false, ctrl-key is not needed
+    optional boolean alt - true, alt-key is needed; false, alt-key is not needed
+    optional boolean win - true, win-key is needed; false, win-key is not needed
+    optional boolean opt - true, opt-key is needed; false, opt-key is not needed - (mac only)
+    optional boolean cmd - true, cmd-key is needed; false, cmd-key is not needed - (mac only)
+  </retvals>
+  <parameters>
+    integer byte1 - the first byte of the kb.ini-KEY-entry, usually stores modifiers
+    integer byte2 - the first byte of the kb.ini-KEY-entry, usually stores character-codes
+    optional integer lang - the languagekeymap used. The following list includes the specific keymap supported
+                          - so they might differ in details. I used the ones supported by Windows 7
+                          - nil and 1, englisch(usa) default
+                          - 2, german
+                          - 3, arabian(saudi arabia)
+                          - 4, catalan(spain)
+                          - 5, greek(greece)
+                          - 6, french(france)
+                          - 7, hebrew(israel)
+                          - 8, icelandic(iceland)
+                          - 9, italian(italy)
+                          - 10, japanese(japan)
+                          - 11, russian(russian federation)
+                          - 12, turkish(turkey)
+                          - 13, indonesian(indonesia)
+                          - 14, hindi(india)
+                          - 15, punjabi(india)
+                          - 16, chinese_simplified(china)
+                          - 17, portuguese(portugal)
+                          - 18, spanish(spain)
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
+  <tags>helper functions, lookup, shortcutcode, modifiers, reaper-kb.ini, kb.ini, key</tags>
+</US_DocBloc>
+]]
+  if math.type(byte1)~="integer" then ultraschall.AddErrorMessage("CharacterCodes_ReverseLookup_KBIni", "byte1", "must be an integer", -1) return nil end
+  if math.type(byte2)~="integer" then ultraschall.AddErrorMessage("CharacterCodes_ReverseLookup_KBIni", "byte2", "must be an integer", -2) return nil end  
+  if lang~=nil and math.type(lang)~="integer" then ultraschall.AddErrorMessage("CharacterCodes_ReverseLookup_KBIni", "lang", "must be an integer", -3) return nil end
+  local Byte1, Byte2 = ultraschall.SplitIntegerIntoBytes(byte2)
+  if byte1==255 then 
+    if Byte1&128==128 then Byte1=Byte1-128 Byte2=1 end 
+    if Byte1==104 then Byte2=Byte2+1 end
+  end
+  return ultraschall.CharacterCodes_ReverseLookup(byte1, Byte1, Byte2, lang)
+end
+
+function ultraschall.KBIniGetAllShortcuts(exclude_factory_default, lang)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>KBIniGetAllShortcuts</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_shortcuts, table shortcut_attributes = ultraschall.KBIniGetAllShortcuts(optional boolean exclude_factory_default, optional integer lang)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns all shortcuts currently set in the current Reaper-installation(as stored in reaper-kb.ini) as a handy table.
+    
+    The table is of the following format:
+      KeyTable[shortcut_idx]["Code1"] - the first value in a KEY-entry
+      KeyTable[shortcut_idx]["Code2"] - the second value in a KEY-code
+      KeyTable[shortcut_idx]["ActionCommandID"] - the action-command id or command-id-number
+      KeyTable[shortcut_idx]["Section"] - the section: 0 - Main, 100 - Main (alt recording), 32060 - MIDI Editor, 32061 - MIDI Event List Editor, 32062 - MIDI Inline Editor, 32063 - Media Explorer
+      KeyTable[shortcut_idx]["ShortcutName"] - the keyname as shown in the Add shortcut-dialog; localization depending on language-parameter
+      KeyTable[shortcut_idx]["Modifier_SpecialModifier"] - true, the special modifier(for mediakbd, mousewheel, multitouch/zoom/swipe); false, midi or regular key
+      KeyTable[shortcut_idx]["Modifier_Shift"] - true, shift is needed; false, shift is not needed as modifier
+      KeyTable[shortcut_idx]["Modifier_Control"] - true, control is needed; false, control is not needed as modifier
+      KeyTable[shortcut_idx]["Modifier_Alt"] - true, alt is needed; false, alt is not needed as modifier
+      KeyTable[shortcut_idx]["Modifier_Win"] - true, win is needed; false, win is not needed as modifier(for windows)
+      KeyTable[shortcut_idx]["Modifier_Opt"] - true, opt is needed; false, opt is not needed as modifier(for mac)
+      KeyTable[shortcut_idx]["Modifier_Cmd"] - true, cmd is needed; false, cmd is not needed as modifier(for mac)
+      KeyTable[shortcut_idx]["Global_Scope"] - is this shortcut global; -1, no; 1, global; 101, global+textfields
+      KeyTable[shortcut_idx]["Global_Section"] - the section in which this shortcut is global; 102(main), 103(main alt.)
+    
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer number_of_shortcuts - the number of found shortcuts
+    table shortcut_attributes - a nice and handy table of all shortcut-attributes
+  </retvals>
+  <parameters>
+    optional boolean exclude_factory_default - true, will only return the custom shortcuts; false or nil, returns all shortcuts, including factory default ones(usually not stored in kb.ini)
+    optional integer lang - the languagekeymap used. The following list includes the specific keymap supported
+                          - so they might differ in details. I used the ones supported by Windows 7
+                          - nil and 1, englisch(usa) default
+                          - 2, german
+                          - 3, arabian(saudi arabia)
+                          - 4, catalan(spain)
+                          - 5, greek(greece)
+                          - 6, french(france)
+                          - 7, hebrew(israel)
+                          - 8, icelandic(iceland)
+                          - 9, italian(italy)
+                          - 10, japanese(japan)
+                          - 11, russian(russian federation)
+                          - 12, turkish(turkey)
+                          - 13, indonesian(indonesia)
+                          - 14, hindi(india)
+                          - 15, punjabi(india)
+                          - 16, chinese_simplified(china)
+                          - 17, portuguese(portugal)
+                          - 18, spanish(spain)
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
+  <tags>helper functions, get all, shortcutcode, modifiers, reaper-kb.ini, kb.ini, key, factory default</tags>
+</US_DocBloc>
+]]
+  if exclude_factory_default~=nil and type(exclude_factory_default)~="boolean" then ultraschall.AddErrorMessage("KBIniGetAllShortcuts", "exclude_factory_default", "must be nil or a boolean", -1) return -1 end
+  if lang~=nil and math.type(lang)~="integer" then ultraschall.AddErrorMessage("KBIniGetAllShortcuts", "lang", "must be nil or n integer", -2) return -1 end
+    
+  local A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-kb.ini")
+  
+  local KeyTable={}
+  local one, two, section, aid
+  
+  if exclude_factory_default~=true then 
+    local AB=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/Reaper-factory-default-KEY-Codes_for_reaper-kb_ini.aidfile")
+     
+    for k in string.gmatch(AB.."\n", "(.-)\n") do
+      one, two, section, aid=k:match("(.-)_(.-)_(.-)=(.*)")
+      local keyname, special_modifier, shift, control, alt, win, opt, cmd=ultraschall.CharacterCodes_ReverseLookup_KBIni(math.tointeger(one), math.tointeger(two), lang)
+      KeyTable[one.."_"..two.."_"..section]={}
+      KeyTable[one.."_"..two.."_"..section]["Code1"]=tonumber(one)
+      KeyTable[one.."_"..two.."_"..section]["Code2"]=tonumber(two)
+      KeyTable[one.."_"..two.."_"..section]["ActionCommandID"]=aid 
+      KeyTable[one.."_"..two.."_"..section]["Section"]=tonumber(section)
+      KeyTable[one.."_"..two.."_"..section]["ShortcutName"]=keyname
+      KeyTable[one.."_"..two.."_"..section]["Modifier_SpecialModifier"]=special_modifier
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Shift"]=shift
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Control"]=control
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Alt"]=alt
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Win"]=win
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Opt"]=opt
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Cmd"]=cmd
+      KeyTable[one.."_"..two.."_"..section]["Global_Scope"]=-1
+      KeyTable[one.."_"..two.."_"..section]["Global_Section"]=-1
+      if tonumber(aid)~=nil then
+        KeyTable[one.."_"..two.."_"..section]["ActionCommandID"]=tonumber(aid)
+      end    
+    end
+  end
+  
+  for one, two, aid, section in string.gmatch(A, "KEY (.-) (.-) (.-) (.-)\n") do
+    local keyname, special_modifier, shift, control, alt, win, opt, cmd=ultraschall.CharacterCodes_ReverseLookup_KBIni(math.tointeger(one), math.tointeger(two), lang)
+    if section~="102" and section~="103" then
+      if KeyTable[one.."_"..two.."_"..section]==nil then
+        KeyTable[one.."_"..two.."_"..section]={}
+      end
+      KeyTable[one.."_"..two.."_"..section]["Code1"]=tonumber(one)
+      KeyTable[one.."_"..two.."_"..section]["Code2"]=tonumber(two)
+      KeyTable[one.."_"..two.."_"..section]["ActionCommandID"]=aid 
+      KeyTable[one.."_"..two.."_"..section]["Section"]=tonumber(section)
+      KeyTable[one.."_"..two.."_"..section]["ShortcutName"]=keyname
+      KeyTable[one.."_"..two.."_"..section]["Modifier_SpecialModifier"]=special_modifier
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Shift"]=shift
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Control"]=control
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Alt"]=alt
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Win"]=win
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Opt"]=opt
+      KeyTable[one.."_"..two.."_"..section]["Modifier_Cmd"]=cmd
+      if KeyTable[one.."_"..two.."_"..section]["Global_Scope"]==nil then
+        KeyTable[one.."_"..two.."_"..section]["Global_Scope"]=-1
+        KeyTable[one.."_"..two.."_"..section]["Global_Section"]=-1
+      end
+    else
+      if KeyTable[one.."_"..two.."_"..section]==nil then
+        KeyTable[one.."_"..two.."_"..section]={}
+      end
+      KeyTable[one.."_"..two.."_"..section]["Global_Scope"]=tonumber(aid)
+      KeyTable[one.."_"..two.."_"..section]["Global_Section"]=tonumber(section)
+    end
+
+    if tonumber(aid)~=nil then
+      KeyTable[one.."_"..two.."_"..section]["ActionCommandID"]=tonumber(aid)
+    end    
+  end
+  
+  local KeyTable2={}
+  local KeyTable2_count=0
+  for i,k in pairs(KeyTable) do
+    KeyTable2_count=KeyTable2_count+1
+    KeyTable2[KeyTable2_count]=k
+  end
+  
+  return KeyTable2_count, KeyTable2
 end

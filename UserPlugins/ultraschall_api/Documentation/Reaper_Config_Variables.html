@@ -85,12 +85,12 @@ function onLoad() {
 <h2>The Configuration-Variables</h2>Configuration-variables hold many settings of Reaper, may it be from Preferences, Dialogs or Menus and Context-Menus.<br>Many of them can be read from and even set.<br>Some of them are integers, some numbers and some are integer-bitfields. In rare instances, it can be a string.<br><br>Read the <a href="#Introduction">Introduction to Config Variables</a> to get an idea how it works and how to work with them.<table style="font-size:10pt; width:100%;" ><table style="width:100%;" border="0"><tr><td><br><strong><u></u></strong><br><br>
 <b style="font-size:small;"> An Introduction  </b>
 </td></tr><tr><td style="width:25%; font-size:small;"><a href="#Introduction">Introduction</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><b style="font-size:small;"> Config Variables  </b>
-</td></tr><tr><td style="width:25%; font-size:small;"><a href="#__numcpu">__numcpu</a></td><td style="width:25%; font-size:small;"><a href="#acidimport">acidimport</a></td><td style="width:25%; font-size:small;"><a href="#actionmenu">actionmenu</a></td><td style="width:25%; font-size:small;"><a href="#adjreclat">adjreclat</a></td></tr><td style="width:25%; font-size:small;"><a href="#adjrecmanlat">adjrecmanlat</a></td><td style="width:25%; font-size:small;"><a href="#adjrecmanlatin">adjrecmanlatin</a></td><td style="width:25%; font-size:small;"><a href="#afxcfg">afxcfg</a></td><td style="width:25%; font-size:small;"><a href="#allstereopairs">allstereopairs</a></td></tr><td style="width:25%; font-size:small;"><a href="#altpeaks">altpeaks</a></td><td style="width:25%; font-size:small;"><a href="#altpeaksopathlist">altpeaksopathlist</a></td><td style="width:25%; font-size:small;"><a href="#altpeakspath">altpeakspath</a></td><td style="width:25%; font-size:small;"><a href="#alwaysallowkb">alwaysallowkb</a></td></tr><td style="width:25%; font-size:small;"><a href="#aot">aot</a></td><td style="width:25%; font-size:small;"><a href="#applyfxtail">applyfxtail</a></td><td style="width:25%; font-size:small;"><a href="#ara">ara</a></td><td style="width:25%; font-size:small;"><a href="#audioasync">audioasync</a></td></tr><td style="width:25%; font-size:small;"><a href="#audiocloseinactive">audiocloseinactive</a></td><td style="width:25%; font-size:small;"><a href="#audioclosestop">audioclosestop</a></td><td style="width:25%; font-size:small;"><a href="#audioprshift">audioprshift</a></td><td style="width:25%; font-size:small;"><a href="#audiothreadpr">audiothreadpr</a></td></tr><td style="width:25%; font-size:small;"><a href="#autoclosetrackwnds">autoclosetrackwnds</a></td><td style="width:25%; font-size:small;"><a href="#automute">automute</a></td><td style="width:25%; font-size:small;"><a href="#automuteflags">automuteflags</a></td><td style="width:25%; font-size:small;"><a href="#automuteval">automuteval</a></td></tr><td style="width:25%; font-size:small;"><a href="#autonbworkerthreads">autonbworkerthreads</a></td><td style="width:25%; font-size:small;"><a href="#autoreturntime">autoreturntime</a></td><td style="width:25%; font-size:small;"><a href="#autoreturntime_action">autoreturntime_action</a></td><td style="width:25%; font-size:small;"><a href="#autosaveint">autosaveint</a></td></tr><td style="width:25%; font-size:small;"><a href="#autosavemode">autosavemode</a></td><td style="width:25%; font-size:small;"><a href="#autoxfade">autoxfade</a></td><td style="width:25%; font-size:small;"><a href="#bigwndframes">bigwndframes</a></td><td style="width:25%; font-size:small;"><a href="#bouncecfg">bouncecfg</a></td></tr><td style="width:25%; font-size:small;"><a href="#bpminfnimport">bpminfnimport</a></td><td style="width:25%; font-size:small;"><a href="#copyimpmedia">copyimpmedia</a></td><td style="width:25%; font-size:small;"><a href="#cpuallowed">cpuallowed</a></td><td style="width:25%; font-size:small;"><a href="#csurfrate">csurfrate</a></td></tr><td style="width:25%; font-size:small;"><a href="#ctrlcopyitem">ctrlcopyitem</a></td><td style="width:25%; font-size:small;"><a href="#cueitems">cueitems</a></td><td style="width:25%; font-size:small;"><a href="#custommenu">custommenu</a></td><td style="width:25%; font-size:small;"><a href="#defautomode">defautomode</a></td></tr><td style="width:25%; font-size:small;"><a href="#defenvs">defenvs</a></td><td style="width:25%; font-size:small;"><a href="#deffadelen">deffadelen</a></td><td style="width:25%; font-size:small;"><a href="#deffadeshape">deffadeshape</a></td><td style="width:25%; font-size:small;"><a href="#defhwvol">defhwvol</a></td></tr><td style="width:25%; font-size:small;"><a href="#defpitchcfg">defpitchcfg</a></td><td style="width:25%; font-size:small;"><a href="#defrenderpath">defrenderpath</a></td><td style="width:25%; font-size:small;"><a href="#defsavepath">defsavepath</a></td><td style="width:25%; font-size:small;"><a href="#defsendflag">defsendflag</a></td></tr><td style="width:25%; font-size:small;"><a href="#defsendvol">defsendvol</a></td><td style="width:25%; font-size:small;"><a href="#defsplitxfadelen">defsplitxfadelen</a></td><td style="width:25%; font-size:small;"><a href="#defstretchmode">defstretchmode</a></td><td style="width:25%; font-size:small;"><a href="#deftrackrecflags">deftrackrecflags</a></td></tr><td style="width:25%; font-size:small;"><a href="#deftrackrecinput">deftrackrecinput</a></td><td style="width:25%; font-size:small;"><a href="#deftrackvol">deftrackvol</a></td><td style="width:25%; font-size:small;"><a href="#defvzoom">defvzoom</a></td><td style="width:25%; font-size:small;"><a href="#defxfadeshape">defxfadeshape</a></td></tr><td style="width:25%; font-size:small;"><a href="#disabledxscan">disabledxscan</a></td><td style="width:25%; font-size:small;"><a href="#disk_peakmmap2">disk_peakmmap2</a></td><td style="width:25%; font-size:small;"><a href="#disk_peaks_mmapkb">disk_peaks_mmapkb</a></td><td style="width:25%; font-size:small;"><a href="#disk_peaks_ramkb">disk_peaks_ramkb</a></td></tr><td style="width:25%; font-size:small;"><a href="#disk_rdblksex">disk_rdblksex</a></td><td style="width:25%; font-size:small;"><a href="#disk_rdmodeex">disk_rdmodeex</a></td><td style="width:25%; font-size:small;"><a href="#disk_rdsizeex">disk_rdsizeex</a></td><td style="width:25%; font-size:small;"><a href="#disk_wrblks">disk_wrblks</a></td></tr><td style="width:25%; font-size:small;"><a href="#disk_wrblks2">disk_wrblks2</a></td><td style="width:25%; font-size:small;"><a href="#disk_wrmode">disk_wrmode</a></td><td style="width:25%; font-size:small;"><a href="#disk_wrsize">disk_wrsize</a></td><td style="width:25%; font-size:small;"><a href="#diskcheck">diskcheck</a></td></tr><td style="width:25%; font-size:small;"><a href="#diskcheckmb">diskcheckmb</a></td><td style="width:25%; font-size:small;"><a href="#edit_fontsize">edit_fontsize</a></td><td style="width:25%; font-size:small;"><a href="#env_autoadd">env_autoadd</a></td><td style="width:25%; font-size:small;"><a href="#env_deffoc">env_deffoc</a></td></tr><td style="width:25%; font-size:small;"><a href="#env_ol_minh">env_ol_minh</a></td><td style="width:25%; font-size:small;"><a href="#env_options">env_options</a></td><td style="width:25%; font-size:small;"><a href="#env_reduce">env_reduce</a></td><td style="width:25%; font-size:small;"><a href="#envattach">envattach</a></td></tr><td style="width:25%; font-size:small;"><a href="#envclicksegmode">envclicksegmode</a></td><td style="width:25%; font-size:small;"><a href="#envlanes">envlanes</a></td><td style="width:25%; font-size:small;"><a href="#envtranstime">envtranstime</a></td><td style="width:25%; font-size:small;"><a href="#envtrimadjmode">envtrimadjmode</a></td></tr><td style="width:25%; font-size:small;"><a href="#envwritepasschg">envwritepasschg</a></td><td style="width:25%; font-size:small;"><a href="#errnowarn">errnowarn</a></td><td style="width:25%; font-size:small;"><a href="#fadeeditflags">fadeeditflags</a></td><td style="width:25%; font-size:small;"><a href="#fadeeditlink">fadeeditlink</a></td></tr><td style="width:25%; font-size:small;"><a href="#fadeeditpostsel">fadeeditpostsel</a></td><td style="width:25%; font-size:small;"><a href="#fadeeditpresel">fadeeditpresel</a></td><td style="width:25%; font-size:small;"><a href="#feedbackmode">feedbackmode</a></td><td style="width:25%; font-size:small;"><a href="#fullscreenrectb">fullscreenrectb</a></td></tr><td style="width:25%; font-size:small;"><a href="#fullscreenrectl">fullscreenrectl</a></td><td style="width:25%; font-size:small;"><a href="#fullscreenrectr">fullscreenrectr</a></td><td style="width:25%; font-size:small;"><a href="#fullscreenrectt">fullscreenrectt</a></td><td style="width:25%; font-size:small;"><a href="#fxdenorm">fxdenorm</a></td></tr><td style="width:25%; font-size:small;"><a href="#fxfloat_focus">fxfloat_focus</a></td><td style="width:25%; font-size:small;"><a href="#fxresize">fxresize</a></td><td style="width:25%; font-size:small;"><a href="#g_config_project">g_config_project</a></td><td style="width:25%; font-size:small;"><a href="#g_markerlist_updcnt">g_markerlist_updcnt</a></td></tr><td style="width:25%; font-size:small;"><a href="#griddot">griddot</a></td><td style="width:25%; font-size:small;"><a href="#gridinbg">gridinbg</a></td><td style="width:25%; font-size:small;"><a href="#gridinbg2">gridinbg2</a></td><td style="width:25%; font-size:small;"><a href="#groupdispmode">groupdispmode</a></td></tr><td style="width:25%; font-size:small;"><a href="#guidelines2">guidelines2</a></td><td style="width:25%; font-size:small;"><a href="#handzoom">handzoom</a></td><td style="width:25%; font-size:small;"><a href="#help">help</a></td><td style="width:25%; font-size:small;"><a href="#hwfadex">hwfadex</a></td></tr><td style="width:25%; font-size:small;"><a href="#hwoutfx_bypass">hwoutfx_bypass</a></td><td style="width:25%; font-size:small;"><a href="#ide_colors">ide_colors</a></td><td style="width:25%; font-size:small;"><a href="#insertmtrack">insertmtrack</a></td><td style="width:25%; font-size:small;"><a href="#isfullscreen">isfullscreen</a></td></tr><td style="width:25%; font-size:small;"><a href="#itemclickmovecurs">itemclickmovecurs</a></td><td style="width:25%; font-size:small;"><a href="#itemdblclk">itemdblclk</a></td><td style="width:25%; font-size:small;"><a href="#itemeditpr">itemeditpr</a></td><td style="width:25%; font-size:small;"><a href="#itemfade_minheight">itemfade_minheight</a></td></tr><td style="width:25%; font-size:small;"><a href="#itemfade_minwidth">itemfade_minwidth</a></td><td style="width:25%; font-size:small;"><a href="#itemfadehandle_maxwidth">itemfadehandle_maxwidth</a></td><td style="width:25%; font-size:small;"><a href="#itemfxtail">itemfxtail</a></td><td style="width:25%; font-size:small;"><a href="#itemicons">itemicons</a></td></tr><td style="width:25%; font-size:small;"><a href="#itemicons_minheight">itemicons_minheight</a></td><td style="width:25%; font-size:small;"><a href="#itemlabel_minheight">itemlabel_minheight</a></td><td style="width:25%; font-size:small;"><a href="#itemlowerhalf_minheight">itemlowerhalf_minheight</a></td><td style="width:25%; font-size:small;"><a href="#itemmixflag">itemmixflag</a></td></tr><td style="width:25%; font-size:small;"><a href="#itemprops">itemprops</a></td><td style="width:25%; font-size:small;"><a href="#itemprops_timemode">itemprops_timemode</a></td><td style="width:25%; font-size:small;"><a href="#itemsnap">itemsnap</a></td><td style="width:25%; font-size:small;"><a href="#itemtexthide">itemtexthide</a></td></tr><td style="width:25%; font-size:small;"><a href="#itemtimelock">itemtimelock</a></td><td style="width:25%; font-size:small;"><a href="#itemvolmode">itemvolmode</a></td><td style="width:25%; font-size:small;"><a href="#kbd_usealt">kbd_usealt</a></td><td style="width:25%; font-size:small;"><a href="#labelitems2">labelitems2</a></td></tr><td style="width:25%; font-size:small;"><a href="#lastthemefn5">lastthemefn5</a></td><td style="width:25%; font-size:small;"><a href="#loadlastproj">loadlastproj</a></td><td style="width:25%; font-size:small;"><a href="#locklooptotime">locklooptotime</a></td><td style="width:25%; font-size:small;"><a href="#loop">loop</a></td></tr><td style="width:25%; font-size:small;"><a href="#loopclickmode">loopclickmode</a></td><td style="width:25%; font-size:small;"><a href="#loopgran">loopgran</a></td><td style="width:25%; font-size:small;"><a href="#loopgranlen">loopgranlen</a></td><td style="width:25%; font-size:small;"><a href="#loopnewitems">loopnewitems</a></td></tr><td style="width:25%; font-size:small;"><a href="#loopselpr">loopselpr</a></td><td style="width:25%; font-size:small;"><a href="#loopstopfx">loopstopfx</a></td><td style="width:25%; font-size:small;"><a href="#manuallat">manuallat</a></td><td style="width:25%; font-size:small;"><a href="#manuallatin">manuallatin</a></td></tr><td style="width:25%; font-size:small;"><a href="#mastermutesolo">mastermutesolo</a></td><td style="width:25%; font-size:small;"><a href="#maxitemlanes">maxitemlanes</a></td><td style="width:25%; font-size:small;"><a href="#maxplayoffsrate">maxplayoffsrate</a></td><td style="width:25%; font-size:small;"><a href="#maxrecent">maxrecent</a></td></tr><td style="width:25%; font-size:small;"><a href="#maxrecentfx">maxrecentfx</a></td><td style="width:25%; font-size:small;"><a href="#maxrecsize">maxrecsize</a></td><td style="width:25%; font-size:small;"><a href="#maxrecsize_use">maxrecsize_use</a></td><td style="width:25%; font-size:small;"><a href="#maxsnaptrack">maxsnaptrack</a></td></tr><td style="width:25%; font-size:small;"><a href="#maxspeakgain">maxspeakgain</a></td><td style="width:25%; font-size:small;"><a href="#metronome_defout">metronome_defout</a></td><td style="width:25%; font-size:small;"><a href="#metronome_flags">metronome_flags</a></td><td style="width:25%; font-size:small;"><a href="#midiccdensity">midiccdensity</a></td></tr><td style="width:25%; font-size:small;"><a href="#midiccdensity">midiccdensity</a></td><td style="width:25%; font-size:small;"><a href="#midiccenv">midiccenv</a></td><td style="width:25%; font-size:small;"><a href="#midiccinterp">midiccinterp</a></td><td style="width:25%; font-size:small;"><a href="#midicctouchtimeout">midicctouchtimeout</a></td></tr><td style="width:25%; font-size:small;"><a href="#mididefcolormap">mididefcolormap</a></td><td style="width:25%; font-size:small;"><a href="#midieditor">midieditor</a></td><td style="width:25%; font-size:small;"><a href="#midiins">midiins</a></td><td style="width:25%; font-size:small;"><a href="#midiins_cs">midiins_cs</a></td></tr><td style="width:25%; font-size:small;"><a href="#midioctoffs">midioctoffs</a></td><td style="width:25%; font-size:small;"><a href="#midiouts">midiouts</a></td><td style="width:25%; font-size:small;"><a href="#midiouts_clock">midiouts_clock</a></td><td style="width:25%; font-size:small;"><a href="#midiouts_clock_nospp">midiouts_clock_nospp</a></td></tr><td style="width:25%; font-size:small;"><a href="#midiouts_llmode">midiouts_llmode</a></td><td style="width:25%; font-size:small;"><a href="#midioutthread">midioutthread</a></td><td style="width:25%; font-size:small;"><a href="#midipeaks">midipeaks</a></td><td style="width:25%; font-size:small;"><a href="#midisendflags">midisendflags</a></td></tr><td style="width:25%; font-size:small;"><a href="#miditicksperbeat">miditicksperbeat</a></td><td style="width:25%; font-size:small;"><a href="#midivu">midivu</a></td><td style="width:25%; font-size:small;"><a href="#miscopts">miscopts</a></td><td style="width:25%; font-size:small;"><a href="#mixerflag">mixerflag</a></td></tr><td style="width:25%; font-size:small;"><a href="#mixeruiflag">mixeruiflag</a></td><td style="width:25%; font-size:small;"><a href="#mixrowflags">mixrowflags</a></td><td style="width:25%; font-size:small;"><a href="#mousemovemod">mousemovemod</a></td><td style="width:25%; font-size:small;"><a href="#mousewheelmode">mousewheelmode</a></td></tr><td style="width:25%; font-size:small;"><a href="#multiprojopt">multiprojopt</a></td><td style="width:25%; font-size:small;"><a href="#multitouch">multitouch</a></td><td style="width:25%; font-size:small;"><a href="#multitouch_ignore_ms">multitouch_ignore_ms</a></td><td style="width:25%; font-size:small;"><a href="#multitouch_ignorewheel_ms">multitouch_ignorewheel_ms</a></td></tr><td style="width:25%; font-size:small;"><a href="#multitouch_rotate_gear">multitouch_rotate_gear</a></td><td style="width:25%; font-size:small;"><a href="#multitouch_swipe_gear">multitouch_swipe_gear</a></td><td style="width:25%; font-size:small;"><a href="#multitouch_zoom_gear">multitouch_zoom_gear</a></td><td style="width:25%; font-size:small;"><a href="#mutefadems10">mutefadems10</a></td></tr><td style="width:25%; font-size:small;"><a href="#mvu_rmsgain">mvu_rmsgain</a></td><td style="width:25%; font-size:small;"><a href="#mvu_rmsmode">mvu_rmsmode</a></td><td style="width:25%; font-size:small;"><a href="#mvu_rmsoffs2">mvu_rmsoffs2</a></td><td style="width:25%; font-size:small;"><a href="#mvu_rmsred">mvu_rmsred</a></td></tr><td style="width:25%; font-size:small;"><a href="#mvu_rmssize">mvu_rmssize</a></td><td style="width:25%; font-size:small;"><a href="#nativedrawtext">nativedrawtext</a></td><td style="width:25%; font-size:small;"><a href="#newfnopt">newfnopt</a></td><td style="width:25%; font-size:small;"><a href="#newprojdo">newprojdo</a></td></tr><td style="width:25%; font-size:small;"><a href="#newtflag">newtflag</a></td><td style="width:25%; font-size:small;"><a href="#nometers">nometers</a></td><td style="width:25%; font-size:small;"><a href="#norunmute">norunmute</a></td><td style="width:25%; font-size:small;"><a href="#offlineinact">offlineinact</a></td></tr><td style="width:25%; font-size:small;"><a href="#opencopyprompt">opencopyprompt</a></td><td style="width:25%; font-size:small;"><a href="#opennotes">opennotes</a></td><td style="width:25%; font-size:small;"><a href="#optimizesilence">optimizesilence</a></td><td style="width:25%; font-size:small;"><a href="#pandispmode">pandispmode</a></td></tr><td style="width:25%; font-size:small;"><a href="#panlaw">panlaw</a></td><td style="width:25%; font-size:small;"><a href="#panlawflags">panlawflags</a></td><td style="width:25%; font-size:small;"><a href="#panmode">panmode</a></td><td style="width:25%; font-size:small;"><a href="#peakcachegenmode">peakcachegenmode</a></td></tr><td style="width:25%; font-size:small;"><a href="#peakcachegenrs">peakcachegenrs</a></td><td style="width:25%; font-size:small;"><a href="#peakrecbm">peakrecbm</a></td><td style="width:25%; font-size:small;"><a href="#peaksedges">peaksedges</a></td><td style="width:25%; font-size:small;"><a href="#pitchenvrange">pitchenvrange</a></td></tr><td style="width:25%; font-size:small;"><a href="#playcursormode">playcursormode</a></td><td style="width:25%; font-size:small;"><a href="#playrate">playrate</a></td><td style="width:25%; font-size:small;"><a href="#playresamplemode">playresamplemode</a></td><td style="width:25%; font-size:small;"><a href="#pmfol">pmfol</a></td></tr><td style="width:25%; font-size:small;"><a href="#pooledenvattach">pooledenvattach</a></td><td style="width:25%; font-size:small;"><a href="#pooledenvs">pooledenvs</a></td><td style="width:25%; font-size:small;"><a href="#pooledenvtranstime">pooledenvtranstime</a></td><td style="width:25%; font-size:small;"><a href="#prebufperb">prebufperb</a></td></tr><td style="width:25%; font-size:small;"><a href="#preroll">preroll</a></td><td style="width:25%; font-size:small;"><a href="#prerollmeas">prerollmeas</a></td><td style="width:25%; font-size:small;"><a href="#projalignbeatsrate">projalignbeatsrate</a></td><td style="width:25%; font-size:small;"><a href="#projbpm">projbpm</a></td></tr><td style="width:25%; font-size:small;"><a href="#projfrbase">projfrbase</a></td><td style="width:25%; font-size:small;"><a href="#projfrdrop">projfrdrop</a></td><td style="width:25%; font-size:small;"><a href="#projgriddiv">projgriddiv</a></td><td style="width:25%; font-size:small;"><a href="#projgriddivsnap">projgriddivsnap</a></td></tr><td style="width:25%; font-size:small;"><a href="#projgridframe">projgridframe</a></td><td style="width:25%; font-size:small;"><a href="#projgridmin">projgridmin</a></td><td style="width:25%; font-size:small;"><a href="#projgridsnapmin">projgridsnapmin</a></td><td style="width:25%; font-size:small;"><a href="#projgridswing">projgridswing</a></td></tr><td style="width:25%; font-size:small;"><a href="#projgroupover">projgroupover</a></td><td style="width:25%; font-size:small;"><a href="#projgroupsel">projgroupsel</a></td><td style="width:25%; font-size:small;"><a href="#projintmix">projintmix</a></td><td style="width:25%; font-size:small;"><a href="#projmasternch">projmasternch</a></td></tr><td style="width:25%; font-size:small;"><a href="#projmastervuflags">projmastervuflags</a></td><td style="width:25%; font-size:small;"><a href="#projmaxlen">projmaxlen</a></td><td style="width:25%; font-size:small;"><a href="#projmaxlenuse">projmaxlenuse</a></td><td style="width:25%; font-size:small;"><a href="#projmeaslen">projmeaslen</a></td></tr><td style="width:25%; font-size:small;"><a href="#projmeasoffs">projmeasoffs</a></td><td style="width:25%; font-size:small;"><a href="#projmeasoffsruler">projmeasoffsruler</a></td><td style="width:25%; font-size:small;"><a href="#projmetrobeatlen">projmetrobeatlen</a></td><td style="width:25%; font-size:small;"><a href="#projmetroclick">projmetroclick</a></td></tr><td style="width:25%; font-size:small;"><a href="#projmetrocountin">projmetrocountin</a></td><td style="width:25%; font-size:small;"><a href="#projmetroen">projmetroen</a></td><td style="width:25%; font-size:small;"><a href="#projmetrof1">projmetrof1</a></td><td style="width:25%; font-size:small;"><a href="#projmetrof2">projmetrof2</a></td></tr><td style="width:25%; font-size:small;"><a href="#projmetrov1">projmetrov1</a></td><td style="width:25%; font-size:small;"><a href="#projmetrov2">projmetrov2</a></td><td style="width:25%; font-size:small;"><a href="#projmidieditor">projmidieditor</a></td><td style="width:25%; font-size:small;"><a href="#projpeaksgain">projpeaksgain</a></td></tr><td style="width:25%; font-size:small;"><a href="#projrecforopencopy">projrecforopencopy</a></td><td style="width:25%; font-size:small;"><a href="#projrecmode">projrecmode</a></td><td style="width:25%; font-size:small;"><a href="#projrelpath">projrelpath</a></td><td style="width:25%; font-size:small;"><a href="#projrenderaddtoproj">projrenderaddtoproj</a></td></tr><td style="width:25%; font-size:small;"><a href="#projrenderdither">projrenderdither</a></td><td style="width:25%; font-size:small;"><a href="#projrenderlimit">projrenderlimit</a></td><td style="width:25%; font-size:small;"><a href="#projrendernch">projrendernch</a></td><td style="width:25%; font-size:small;"><a href="#projrenderqdelay">projrenderqdelay</a></td></tr><td style="width:25%; font-size:small;"><a href="#projrenderrateinternal">projrenderrateinternal</a></td><td style="width:25%; font-size:small;"><a href="#projrenderresample">projrenderresample</a></td><td style="width:25%; font-size:small;"><a href="#projrendersrate">projrendersrate</a></td><td style="width:25%; font-size:small;"><a href="#projrenderstems">projrenderstems</a></td></tr><td style="width:25%; font-size:small;"><a href="#projripedit">projripedit</a></td><td style="width:25%; font-size:small;"><a href="#projsellock">projsellock</a></td><td style="width:25%; font-size:small;"><a href="#projshowgrid">projshowgrid</a></td><td style="width:25%; font-size:small;"><a href="#projsmpteahead">projsmpteahead</a></td></tr><td style="width:25%; font-size:small;"><a href="#projsmptefw_rec">projsmptefw_rec</a></td><td style="width:25%; font-size:small;"><a href="#projsmpteinput">projsmpteinput</a></td><td style="width:25%; font-size:small;"><a href="#projsmptemaxfree">projsmptemaxfree</a></td><td style="width:25%; font-size:small;"><a href="#projsmpteoffs">projsmpteoffs</a></td></tr><td style="width:25%; font-size:small;"><a href="#projsmpterate">projsmpterate</a></td><td style="width:25%; font-size:small;"><a href="#projsmpterateuseproj">projsmpterateuseproj</a></td><td style="width:25%; font-size:small;"><a href="#projsmpteresync">projsmpteresync</a></td><td style="width:25%; font-size:small;"><a href="#projsmpteresync_rec">projsmpteresync_rec</a></td></tr><td style="width:25%; font-size:small;"><a href="#projsmpteskip">projsmpteskip</a></td><td style="width:25%; font-size:small;"><a href="#projsmptesync">projsmptesync</a></td><td style="width:25%; font-size:small;"><a href="#projsrate">projsrate</a></td><td style="width:25%; font-size:small;"><a href="#projsrateuse">projsrateuse</a></td></tr><td style="width:25%; font-size:small;"><a href="#projtakelane">projtakelane</a></td><td style="width:25%; font-size:small;"><a href="#projtimemode">projtimemode</a></td><td style="width:25%; font-size:small;"><a href="#projtimemode2">projtimemode2</a></td><td style="width:25%; font-size:small;"><a href="#projtimeoffs">projtimeoffs</a></td></tr><td style="width:25%; font-size:small;"><a href="#projtrackgroupdisabled">projtrackgroupdisabled</a></td><td style="width:25%; font-size:small;"><a href="#projtsdenom">projtsdenom</a></td><td style="width:25%; font-size:small;"><a href="#projvidflags">projvidflags</a></td><td style="width:25%; font-size:small;"><a href="#projvidh">projvidh</a></td></tr><td style="width:25%; font-size:small;"><a href="#projvidw">projvidw</a></td><td style="width:25%; font-size:small;"><a href="#promptendrec">promptendrec</a></td><td style="width:25%; font-size:small;"><a href="#psmaxv">psmaxv</a></td><td style="width:25%; font-size:small;"><a href="#psminv">psminv</a></td></tr><td style="width:25%; font-size:small;"><a href="#quantflag">quantflag</a></td><td style="width:25%; font-size:small;"><a href="#quantolms">quantolms</a></td><td style="width:25%; font-size:small;"><a href="#quantolms2">quantolms2</a></td><td style="width:25%; font-size:small;"><a href="#quantsize2">quantsize2</a></td></tr><td style="width:25%; font-size:small;"><a href="#rbn">rbn</a></td><td style="width:25%; font-size:small;"><a href="#reamote_maxblock">reamote_maxblock</a></td><td style="width:25%; font-size:small;"><a href="#reamote_maxlat_render">reamote_maxlat_render</a></td><td style="width:25%; font-size:small;"><a href="#reamote_maxpkt">reamote_maxpkt</a></td></tr><td style="width:25%; font-size:small;"><a href="#reamote_smplfmt">reamote_smplfmt</a></td><td style="width:25%; font-size:small;"><a href="#reascript">reascript</a></td><td style="width:25%; font-size:small;"><a href="#reascripttimeout">reascripttimeout</a></td><td style="width:25%; font-size:small;"><a href="#recaddatloop">recaddatloop</a></td></tr><td style="width:25%; font-size:small;"><a href="#reccfg">reccfg</a></td><td style="width:25%; font-size:small;"><a href="#recfile_wildcards">recfile_wildcards</a></td><td style="width:25%; font-size:small;"><a href="#recopts">recopts</a></td><td style="width:25%; font-size:small;"><a href="#recupdatems">recupdatems</a></td></tr><td style="width:25%; font-size:small;"><a href="#relativeedges">relativeedges</a></td><td style="width:25%; font-size:small;"><a href="#relsnap">relsnap</a></td><td style="width:25%; font-size:small;"><a href="#renderaheadlen">renderaheadlen</a></td><td style="width:25%; font-size:small;"><a href="#renderaheadlen2">renderaheadlen2</a></td></tr><td style="width:25%; font-size:small;"><a href="#renderbsnew">renderbsnew</a></td><td style="width:25%; font-size:small;"><a href="#rendercfg">rendercfg</a></td><td style="width:25%; font-size:small;"><a href="#renderclosewhendone">renderclosewhendone</a></td><td style="width:25%; font-size:small;"><a href="#rendermetadataflags">rendermetadataflags</a></td></tr><td style="width:25%; font-size:small;"><a href="#renderqdelay">renderqdelay</a></td><td style="width:25%; font-size:small;"><a href="#rendertail">rendertail</a></td><td style="width:25%; font-size:small;"><a href="#rendertaillen">rendertaillen</a></td><td style="width:25%; font-size:small;"><a href="#rendertails">rendertails</a></td></tr><td style="width:25%; font-size:small;"><a href="#resetvuplay">resetvuplay</a></td><td style="width:25%; font-size:small;"><a href="#restrictcpu">restrictcpu</a></td><td style="width:25%; font-size:small;"><a href="#rewireslave">rewireslave</a></td><td style="width:25%; font-size:small;"><a href="#rewireslavedelay">rewireslavedelay</a></td></tr><td style="width:25%; font-size:small;"><a href="#reximport">reximport</a></td><td style="width:25%; font-size:small;"><a href="#rfprojfirst">rfprojfirst</a></td><td style="width:25%; font-size:small;"><a href="#rightclickemulate">rightclickemulate</a></td><td style="width:25%; font-size:small;"><a href="#ripplelockmode">ripplelockmode</a></td></tr><td style="width:25%; font-size:small;"><a href="#rulerlabelspacing">rulerlabelspacing</a></td><td style="width:25%; font-size:small;"><a href="#rulerlayout">rulerlayout</a></td><td style="width:25%; font-size:small;"><a href="#runafterstop">runafterstop</a></td><td style="width:25%; font-size:small;"><a href="#runallonstop">runallonstop</a></td></tr><td style="width:25%; font-size:small;"><a href="#sampleedges">sampleedges</a></td><td style="width:25%; font-size:small;"><a href="#saveopts">saveopts</a></td><td style="width:25%; font-size:small;"><a href="#saveundostatesproj">saveundostatesproj</a></td><td style="width:25%; font-size:small;"><a href="#scnameedit">scnameedit</a></td></tr><td style="width:25%; font-size:small;"><a href="#scnotes">scnotes</a></td><td style="width:25%; font-size:small;"><a href="#scoreminnotelen">scoreminnotelen</a></td><td style="width:25%; font-size:small;"><a href="#scorequant">scorequant</a></td><td style="width:25%; font-size:small;"><a href="#screenset_as_views">screenset_as_views</a></td></tr><td style="width:25%; font-size:small;"><a href="#screenset_as_win">screenset_as_win</a></td><td style="width:25%; font-size:small;"><a href="#screenset_autosave">screenset_autosave</a></td><td style="width:25%; font-size:small;"><a href="#scrubloopend">scrubloopend</a></td><td style="width:25%; font-size:small;"><a href="#scrubloopstart">scrubloopstart</a></td></tr><td style="width:25%; font-size:small;"><a href="#scrubmode">scrubmode</a></td><td style="width:25%; font-size:small;"><a href="#scrubrelgain">scrubrelgain</a></td><td style="width:25%; font-size:small;"><a href="#seekmodes">seekmodes</a></td><td style="width:25%; font-size:small;"><a href="#selitem_tintalpha">selitem_tintalpha</a></td></tr><td style="width:25%; font-size:small;"><a href="#selitemtop">selitemtop</a></td><td style="width:25%; font-size:small;"><a href="#showctinmix">showctinmix</a></td><td style="width:25%; font-size:small;"><a href="#showlastundo">showlastundo</a></td><td style="width:25%; font-size:small;"><a href="#showmaintrack">showmaintrack</a></td></tr><td style="width:25%; font-size:small;"><a href="#showpeaks">showpeaks</a></td><td style="width:25%; font-size:small;"><a href="#showpeaksbuild">showpeaksbuild</a></td><td style="width:25%; font-size:small;"><a href="#showrecitems">showrecitems</a></td><td style="width:25%; font-size:small;"><a href="#slidermaxv">slidermaxv</a></td></tr><td style="width:25%; font-size:small;"><a href="#sliderminv">sliderminv</a></td><td style="width:25%; font-size:small;"><a href="#slidershex">slidershex</a></td><td style="width:25%; font-size:small;"><a href="#smoothseek">smoothseek</a></td><td style="width:25%; font-size:small;"><a href="#smoothseekmeas">smoothseekmeas</a></td></tr><td style="width:25%; font-size:small;"><a href="#snapextrad">snapextrad</a></td><td style="width:25%; font-size:small;"><a href="#snapextraden">snapextraden</a></td><td style="width:25%; font-size:small;"><a href="#solodimdb10">solodimdb10</a></td><td style="width:25%; font-size:small;"><a href="#solodimen">solodimen</a></td></tr><td style="width:25%; font-size:small;"><a href="#soloip">soloip</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_alpha">specpeak_alpha</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_bv">specpeak_bv</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_ftp">specpeak_ftp</a></td></tr><td style="width:25%; font-size:small;"><a href="#specpeak_hueh">specpeak_hueh</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_huel">specpeak_huel</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_lo">specpeak_lo</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_na">specpeak_na</a></td></tr><td style="width:25%; font-size:small;"><a href="#splitautoxfade">splitautoxfade</a></td><td style="width:25%; font-size:small;"><a href="#stopendofloop">stopendofloop</a></td><td style="width:25%; font-size:small;"><a href="#stopprojlen">stopprojlen</a></td><td style="width:25%; font-size:small;"><a href="#syncsmpmax2">syncsmpmax2</a></td></tr><td style="width:25%; font-size:small;"><a href="#syncsmpuse">syncsmpuse</a></td><td style="width:25%; font-size:small;"><a href="#tabtotransflag">tabtotransflag</a></td><td style="width:25%; font-size:small;"><a href="#takelanes">takelanes</a></td><td style="width:25%; font-size:small;"><a href="#tcpalign">tcpalign</a></td></tr><td style="width:25%; font-size:small;"><a href="#templateditcursor">templateditcursor</a></td><td style="width:25%; font-size:small;"><a href="#tempoenvmax">tempoenvmax</a></td><td style="width:25%; font-size:small;"><a href="#tempoenvmin">tempoenvmin</a></td><td style="width:25%; font-size:small;"><a href="#tempoenvtimelock">tempoenvtimelock</a></td></tr><td style="width:25%; font-size:small;"><a href="#textflags">textflags</a></td><td style="width:25%; font-size:small;"><a href="#threadpr">threadpr</a></td><td style="width:25%; font-size:small;"><a href="#timeseledge">timeseledge</a></td><td style="width:25%; font-size:small;"><a href="#tinttcp">tinttcp</a></td></tr><td style="width:25%; font-size:small;"><a href="#titlebarreghide">titlebarreghide</a></td><td style="width:25%; font-size:small;"><a href="#tooltipdelay">tooltipdelay</a></td><td style="width:25%; font-size:small;"><a href="#tooltips">tooltips</a></td><td style="width:25%; font-size:small;"><a href="#trackitemgap">trackitemgap</a></td></tr><td style="width:25%; font-size:small;"><a href="#trackselonmouse">trackselonmouse</a></td><td style="width:25%; font-size:small;"><a href="#transflags">transflags</a></td><td style="width:25%; font-size:small;"><a href="#transientsensitivity">transientsensitivity</a></td><td style="width:25%; font-size:small;"><a href="#transientthreshold">transientthreshold</a></td></tr><td style="width:25%; font-size:small;"><a href="#trimmidionsplit">trimmidionsplit</a></td><td style="width:25%; font-size:small;"><a href="#tsmarker">tsmarker</a></td><td style="width:25%; font-size:small;"><a href="#uiscale">uiscale</a></td><td style="width:25%; font-size:small;"><a href="#undomask">undomask</a></td></tr><td style="width:25%; font-size:small;"><a href="#undomaxmem">undomaxmem</a></td><td style="width:25%; font-size:small;"><a href="#unselitem_tintalpha">unselitem_tintalpha</a></td><td style="width:25%; font-size:small;"><a href="#use_reamote">use_reamote</a></td><td style="width:25%; font-size:small;"><a href="#usedxplugs">usedxplugs</a></td></tr><td style="width:25%; font-size:small;"><a href="#useinnc">useinnc</a></td><td style="width:25%; font-size:small;"><a href="#userewire">userewire</a></td><td style="width:25%; font-size:small;"><a href="#verchk">verchk</a></td><td style="width:25%; font-size:small;"><a href="#vgrid">vgrid</a></td></tr><td style="width:25%; font-size:small;"><a href="#video_colorspace">video_colorspace</a></td><td style="width:25%; font-size:small;"><a href="#video_decprio">video_decprio</a></td><td style="width:25%; font-size:small;"><a href="#video_defimglen">video_defimglen</a></td><td style="width:25%; font-size:small;"><a href="#video_delayms">video_delayms</a></td></tr><td style="width:25%; font-size:small;"><a href="#viewadvance">viewadvance</a></td><td style="width:25%; font-size:small;"><a href="#volenvrange">volenvrange</a></td><td style="width:25%; font-size:small;"><a href="#vstbr64">vstbr64</a></td><td style="width:25%; font-size:small;"><a href="#vstfolder_settings">vstfolder_settings</a></td></tr><td style="width:25%; font-size:small;"><a href="#vstfullstate">vstfullstate</a></td><td style="width:25%; font-size:small;"><a href="#vuclipstick">vuclipstick</a></td><td style="width:25%; font-size:small;"><a href="#vudecay">vudecay</a></td><td style="width:25%; font-size:small;"><a href="#vumaxvol">vumaxvol</a></td></tr><td style="width:25%; font-size:small;"><a href="#vuminvol">vuminvol</a></td><td style="width:25%; font-size:small;"><a href="#vuupdfreq">vuupdfreq</a></td><td style="width:25%; font-size:small;"><a href="#vzoom2">vzoom2</a></td><td style="width:25%; font-size:small;"><a href="#vzoommode">vzoommode</a></td></tr><td style="width:25%; font-size:small;"><a href="#warnmaxram64">warnmaxram64</a></td><td style="width:25%; font-size:small;"><a href="#windowflags">windowflags</a></td><td style="width:25%; font-size:small;"><a href="#wiring_options">wiring_options</a></td><td style="width:25%; font-size:small;"><a href="#workbehvr">workbehvr</a></td></tr><td style="width:25%; font-size:small;"><a href="#workbuffxuims">workbuffxuims</a></td><td style="width:25%; font-size:small;"><a href="#workbufmsex">workbufmsex</a></td><td style="width:25%; font-size:small;"><a href="#workrender">workrender</a></td><td style="width:25%; font-size:small;"><a href="#workset_max">workset_max</a></td></tr><td style="width:25%; font-size:small;"><a href="#workset_min">workset_min</a></td><td style="width:25%; font-size:small;"><a href="#workset_use">workset_use</a></td><td style="width:25%; font-size:small;"><a href="#workthreads">workthreads</a></td><td style="width:25%; font-size:small;"><a href="#zoom">zoom</a></td></tr><td style="width:25%; font-size:small;"><a href="#zoommode">zoommode</a></td><td style="width:25%; font-size:small;"><a href="#zoomshowarm">zoomshowarm</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><b style="font-size:small;"> Reaper Ini-Only</b>
+</td></tr><tr><td style="width:25%; font-size:small;"><a href="#__numcpu">__numcpu</a></td><td style="width:25%; font-size:small;"><a href="#acidimport">acidimport</a></td><td style="width:25%; font-size:small;"><a href="#actionmenu">actionmenu</a></td><td style="width:25%; font-size:small;"><a href="#adjreclat">adjreclat</a></td></tr><td style="width:25%; font-size:small;"><a href="#adjrecmanlat">adjrecmanlat</a></td><td style="width:25%; font-size:small;"><a href="#adjrecmanlatin">adjrecmanlatin</a></td><td style="width:25%; font-size:small;"><a href="#afxcfg">afxcfg</a></td><td style="width:25%; font-size:small;"><a href="#allstereopairs">allstereopairs</a></td></tr><td style="width:25%; font-size:small;"><a href="#altpeaks">altpeaks</a></td><td style="width:25%; font-size:small;"><a href="#altpeaksopathlist">altpeaksopathlist</a></td><td style="width:25%; font-size:small;"><a href="#altpeakspath">altpeakspath</a></td><td style="width:25%; font-size:small;"><a href="#alwaysallowkb">alwaysallowkb</a></td></tr><td style="width:25%; font-size:small;"><a href="#aot">aot</a></td><td style="width:25%; font-size:small;"><a href="#applyfxtail">applyfxtail</a></td><td style="width:25%; font-size:small;"><a href="#ara">ara</a></td><td style="width:25%; font-size:small;"><a href="#audioasync">audioasync</a></td></tr><td style="width:25%; font-size:small;"><a href="#audiocloseinactive">audiocloseinactive</a></td><td style="width:25%; font-size:small;"><a href="#audioclosestop">audioclosestop</a></td><td style="width:25%; font-size:small;"><a href="#audioprshift">audioprshift</a></td><td style="width:25%; font-size:small;"><a href="#audiothreadpr">audiothreadpr</a></td></tr><td style="width:25%; font-size:small;"><a href="#autoclosetrackwnds">autoclosetrackwnds</a></td><td style="width:25%; font-size:small;"><a href="#automute">automute</a></td><td style="width:25%; font-size:small;"><a href="#automuteflags">automuteflags</a></td><td style="width:25%; font-size:small;"><a href="#automuteval">automuteval</a></td></tr><td style="width:25%; font-size:small;"><a href="#autonbworkerthreads">autonbworkerthreads</a></td><td style="width:25%; font-size:small;"><a href="#autoreturntime">autoreturntime</a></td><td style="width:25%; font-size:small;"><a href="#autoreturntime_action">autoreturntime_action</a></td><td style="width:25%; font-size:small;"><a href="#autosaveint">autosaveint</a></td></tr><td style="width:25%; font-size:small;"><a href="#autosavemode">autosavemode</a></td><td style="width:25%; font-size:small;"><a href="#autoxfade">autoxfade</a></td><td style="width:25%; font-size:small;"><a href="#bigwndframes">bigwndframes</a></td><td style="width:25%; font-size:small;"><a href="#bouncecfg">bouncecfg</a></td></tr><td style="width:25%; font-size:small;"><a href="#bpminfnimport">bpminfnimport</a></td><td style="width:25%; font-size:small;"><a href="#copyimpmedia">copyimpmedia</a></td><td style="width:25%; font-size:small;"><a href="#cpuallowed">cpuallowed</a></td><td style="width:25%; font-size:small;"><a href="#csurfrate">csurfrate</a></td></tr><td style="width:25%; font-size:small;"><a href="#ctrlcopyitem">ctrlcopyitem</a></td><td style="width:25%; font-size:small;"><a href="#cueitems">cueitems</a></td><td style="width:25%; font-size:small;"><a href="#custommenu">custommenu</a></td><td style="width:25%; font-size:small;"><a href="#defautomode">defautomode</a></td></tr><td style="width:25%; font-size:small;"><a href="#defenvs">defenvs</a></td><td style="width:25%; font-size:small;"><a href="#deffadelen">deffadelen</a></td><td style="width:25%; font-size:small;"><a href="#deffadeshape">deffadeshape</a></td><td style="width:25%; font-size:small;"><a href="#defhwvol">defhwvol</a></td></tr><td style="width:25%; font-size:small;"><a href="#defpitchcfg">defpitchcfg</a></td><td style="width:25%; font-size:small;"><a href="#defrenderpath">defrenderpath</a></td><td style="width:25%; font-size:small;"><a href="#defsavepath">defsavepath</a></td><td style="width:25%; font-size:small;"><a href="#defsendflag">defsendflag</a></td></tr><td style="width:25%; font-size:small;"><a href="#defsendvol">defsendvol</a></td><td style="width:25%; font-size:small;"><a href="#defsplitxfadelen">defsplitxfadelen</a></td><td style="width:25%; font-size:small;"><a href="#defstretchmode">defstretchmode</a></td><td style="width:25%; font-size:small;"><a href="#deftrackrecflags">deftrackrecflags</a></td></tr><td style="width:25%; font-size:small;"><a href="#deftrackrecinput">deftrackrecinput</a></td><td style="width:25%; font-size:small;"><a href="#deftrackvol">deftrackvol</a></td><td style="width:25%; font-size:small;"><a href="#defvzoom">defvzoom</a></td><td style="width:25%; font-size:small;"><a href="#defxfadeshape">defxfadeshape</a></td></tr><td style="width:25%; font-size:small;"><a href="#disabledxscan">disabledxscan</a></td><td style="width:25%; font-size:small;"><a href="#disk_peakmmap2">disk_peakmmap2</a></td><td style="width:25%; font-size:small;"><a href="#disk_peaks_mmapkb">disk_peaks_mmapkb</a></td><td style="width:25%; font-size:small;"><a href="#disk_peaks_ramkb">disk_peaks_ramkb</a></td></tr><td style="width:25%; font-size:small;"><a href="#disk_rdblksex">disk_rdblksex</a></td><td style="width:25%; font-size:small;"><a href="#disk_rdmodeex">disk_rdmodeex</a></td><td style="width:25%; font-size:small;"><a href="#disk_rdmodeexmac">disk_rdmodeexmac</a></td><td style="width:25%; font-size:small;"><a href="#disk_rdsizeex">disk_rdsizeex</a></td></tr><td style="width:25%; font-size:small;"><a href="#disk_wrblks">disk_wrblks</a></td><td style="width:25%; font-size:small;"><a href="#disk_wrblks2">disk_wrblks2</a></td><td style="width:25%; font-size:small;"><a href="#disk_wrmode">disk_wrmode</a></td><td style="width:25%; font-size:small;"><a href="#disk_wrsize">disk_wrsize</a></td></tr><td style="width:25%; font-size:small;"><a href="#diskcheck">diskcheck</a></td><td style="width:25%; font-size:small;"><a href="#diskcheckmb">diskcheckmb</a></td><td style="width:25%; font-size:small;"><a href="#edit_fontsize">edit_fontsize</a></td><td style="width:25%; font-size:small;"><a href="#env_autoadd">env_autoadd</a></td></tr><td style="width:25%; font-size:small;"><a href="#env_deffoc">env_deffoc</a></td><td style="width:25%; font-size:small;"><a href="#env_ol_minh">env_ol_minh</a></td><td style="width:25%; font-size:small;"><a href="#env_options">env_options</a></td><td style="width:25%; font-size:small;"><a href="#env_reduce">env_reduce</a></td></tr><td style="width:25%; font-size:small;"><a href="#envattach">envattach</a></td><td style="width:25%; font-size:small;"><a href="#envclicksegmode">envclicksegmode</a></td><td style="width:25%; font-size:small;"><a href="#envlanes">envlanes</a></td><td style="width:25%; font-size:small;"><a href="#envtranstime">envtranstime</a></td></tr><td style="width:25%; font-size:small;"><a href="#envtrimadjmode">envtrimadjmode</a></td><td style="width:25%; font-size:small;"><a href="#envwritepasschg">envwritepasschg</a></td><td style="width:25%; font-size:small;"><a href="#errnowarn">errnowarn</a></td><td style="width:25%; font-size:small;"><a href="#fadeeditflags">fadeeditflags</a></td></tr><td style="width:25%; font-size:small;"><a href="#fadeeditlink">fadeeditlink</a></td><td style="width:25%; font-size:small;"><a href="#fadeeditpostsel">fadeeditpostsel</a></td><td style="width:25%; font-size:small;"><a href="#fadeeditpresel">fadeeditpresel</a></td><td style="width:25%; font-size:small;"><a href="#feedbackmode">feedbackmode</a></td></tr><td style="width:25%; font-size:small;"><a href="#fullscreenrectb">fullscreenrectb</a></td><td style="width:25%; font-size:small;"><a href="#fullscreenrectl">fullscreenrectl</a></td><td style="width:25%; font-size:small;"><a href="#fullscreenrectr">fullscreenrectr</a></td><td style="width:25%; font-size:small;"><a href="#fullscreenrectt">fullscreenrectt</a></td></tr><td style="width:25%; font-size:small;"><a href="#fxdenorm">fxdenorm</a></td><td style="width:25%; font-size:small;"><a href="#fxfloat_focus">fxfloat_focus</a></td><td style="width:25%; font-size:small;"><a href="#fxresize">fxresize</a></td><td style="width:25%; font-size:small;"><a href="#g_config_project">g_config_project</a></td></tr><td style="width:25%; font-size:small;"><a href="#g_markerlist_updcnt">g_markerlist_updcnt</a></td><td style="width:25%; font-size:small;"><a href="#griddot">griddot</a></td><td style="width:25%; font-size:small;"><a href="#gridinbg">gridinbg</a></td><td style="width:25%; font-size:small;"><a href="#gridinbg2">gridinbg2</a></td></tr><td style="width:25%; font-size:small;"><a href="#groupdispmode">groupdispmode</a></td><td style="width:25%; font-size:small;"><a href="#guidelines2">guidelines2</a></td><td style="width:25%; font-size:small;"><a href="#handzoom">handzoom</a></td><td style="width:25%; font-size:small;"><a href="#help">help</a></td></tr><td style="width:25%; font-size:small;"><a href="#hwfadex">hwfadex</a></td><td style="width:25%; font-size:small;"><a href="#hwoutfx_bypass">hwoutfx_bypass</a></td><td style="width:25%; font-size:small;"><a href="#ide_colors">ide_colors</a></td><td style="width:25%; font-size:small;"><a href="#insertmtrack">insertmtrack</a></td></tr><td style="width:25%; font-size:small;"><a href="#isfullscreen">isfullscreen</a></td><td style="width:25%; font-size:small;"><a href="#itemclickmovecurs">itemclickmovecurs</a></td><td style="width:25%; font-size:small;"><a href="#itemdblclk">itemdblclk</a></td><td style="width:25%; font-size:small;"><a href="#itemeditpr">itemeditpr</a></td></tr><td style="width:25%; font-size:small;"><a href="#itemfade_minheight">itemfade_minheight</a></td><td style="width:25%; font-size:small;"><a href="#itemfade_minwidth">itemfade_minwidth</a></td><td style="width:25%; font-size:small;"><a href="#itemfadehandle_maxwidth">itemfadehandle_maxwidth</a></td><td style="width:25%; font-size:small;"><a href="#itemfxtail">itemfxtail</a></td></tr><td style="width:25%; font-size:small;"><a href="#itemicons">itemicons</a></td><td style="width:25%; font-size:small;"><a href="#itemicons_minheight">itemicons_minheight</a></td><td style="width:25%; font-size:small;"><a href="#itemlabel_minheight">itemlabel_minheight</a></td><td style="width:25%; font-size:small;"><a href="#itemlowerhalf_minheight">itemlowerhalf_minheight</a></td></tr><td style="width:25%; font-size:small;"><a href="#itemmixflag">itemmixflag</a></td><td style="width:25%; font-size:small;"><a href="#itemprops">itemprops</a></td><td style="width:25%; font-size:small;"><a href="#itemprops_timemode">itemprops_timemode</a></td><td style="width:25%; font-size:small;"><a href="#itemsnap">itemsnap</a></td></tr><td style="width:25%; font-size:small;"><a href="#itemtexthide">itemtexthide</a></td><td style="width:25%; font-size:small;"><a href="#itemtimelock">itemtimelock</a></td><td style="width:25%; font-size:small;"><a href="#itemvolmode">itemvolmode</a></td><td style="width:25%; font-size:small;"><a href="#kbd_usealt">kbd_usealt</a></td></tr><td style="width:25%; font-size:small;"><a href="#labelitems2">labelitems2</a></td><td style="width:25%; font-size:small;"><a href="#lastthemefn5">lastthemefn5</a></td><td style="width:25%; font-size:small;"><a href="#loadlastproj">loadlastproj</a></td><td style="width:25%; font-size:small;"><a href="#locklooptotime">locklooptotime</a></td></tr><td style="width:25%; font-size:small;"><a href="#loop">loop</a></td><td style="width:25%; font-size:small;"><a href="#loopclickmode">loopclickmode</a></td><td style="width:25%; font-size:small;"><a href="#loopgran">loopgran</a></td><td style="width:25%; font-size:small;"><a href="#loopgranlen">loopgranlen</a></td></tr><td style="width:25%; font-size:small;"><a href="#loopnewitems">loopnewitems</a></td><td style="width:25%; font-size:small;"><a href="#loopselpr">loopselpr</a></td><td style="width:25%; font-size:small;"><a href="#loopstopfx">loopstopfx</a></td><td style="width:25%; font-size:small;"><a href="#manuallat">manuallat</a></td></tr><td style="width:25%; font-size:small;"><a href="#manuallatin">manuallatin</a></td><td style="width:25%; font-size:small;"><a href="#mastermutesolo">mastermutesolo</a></td><td style="width:25%; font-size:small;"><a href="#maxitemlanes">maxitemlanes</a></td><td style="width:25%; font-size:small;"><a href="#maxplayoffsrate">maxplayoffsrate</a></td></tr><td style="width:25%; font-size:small;"><a href="#maxrecent">maxrecent</a></td><td style="width:25%; font-size:small;"><a href="#maxrecentfx">maxrecentfx</a></td><td style="width:25%; font-size:small;"><a href="#maxrecsize">maxrecsize</a></td><td style="width:25%; font-size:small;"><a href="#maxrecsize_use">maxrecsize_use</a></td></tr><td style="width:25%; font-size:small;"><a href="#maxsnaptrack">maxsnaptrack</a></td><td style="width:25%; font-size:small;"><a href="#maxspeakgain">maxspeakgain</a></td><td style="width:25%; font-size:small;"><a href="#metronome_defout">metronome_defout</a></td><td style="width:25%; font-size:small;"><a href="#metronome_flags">metronome_flags</a></td></tr><td style="width:25%; font-size:small;"><a href="#midiccdensity">midiccdensity</a></td><td style="width:25%; font-size:small;"><a href="#midiccdensity">midiccdensity</a></td><td style="width:25%; font-size:small;"><a href="#midiccenv">midiccenv</a></td><td style="width:25%; font-size:small;"><a href="#midiccinterp">midiccinterp</a></td></tr><td style="width:25%; font-size:small;"><a href="#midicctouchtimeout">midicctouchtimeout</a></td><td style="width:25%; font-size:small;"><a href="#mididefcolormap">mididefcolormap</a></td><td style="width:25%; font-size:small;"><a href="#midieditor">midieditor</a></td><td style="width:25%; font-size:small;"><a href="#midiins">midiins</a></td></tr><td style="width:25%; font-size:small;"><a href="#midiins_cs">midiins_cs</a></td><td style="width:25%; font-size:small;"><a href="#midioctoffs">midioctoffs</a></td><td style="width:25%; font-size:small;"><a href="#midiouts">midiouts</a></td><td style="width:25%; font-size:small;"><a href="#midiouts_clock">midiouts_clock</a></td></tr><td style="width:25%; font-size:small;"><a href="#midiouts_clock_nospp">midiouts_clock_nospp</a></td><td style="width:25%; font-size:small;"><a href="#midiouts_llmode">midiouts_llmode</a></td><td style="width:25%; font-size:small;"><a href="#midioutthread">midioutthread</a></td><td style="width:25%; font-size:small;"><a href="#midipeaks">midipeaks</a></td></tr><td style="width:25%; font-size:small;"><a href="#midisendflags">midisendflags</a></td><td style="width:25%; font-size:small;"><a href="#miditicksperbeat">miditicksperbeat</a></td><td style="width:25%; font-size:small;"><a href="#midivu">midivu</a></td><td style="width:25%; font-size:small;"><a href="#miscopts">miscopts</a></td></tr><td style="width:25%; font-size:small;"><a href="#mixerflag">mixerflag</a></td><td style="width:25%; font-size:small;"><a href="#mixeruiflag">mixeruiflag</a></td><td style="width:25%; font-size:small;"><a href="#mixrowflags">mixrowflags</a></td><td style="width:25%; font-size:small;"><a href="#mousemovemod">mousemovemod</a></td></tr><td style="width:25%; font-size:small;"><a href="#mousewheelmode">mousewheelmode</a></td><td style="width:25%; font-size:small;"><a href="#multiprojopt">multiprojopt</a></td><td style="width:25%; font-size:small;"><a href="#multitouch">multitouch</a></td><td style="width:25%; font-size:small;"><a href="#multitouch_ignore_ms">multitouch_ignore_ms</a></td></tr><td style="width:25%; font-size:small;"><a href="#multitouch_ignorewheel_ms">multitouch_ignorewheel_ms</a></td><td style="width:25%; font-size:small;"><a href="#multitouch_rotate_gear">multitouch_rotate_gear</a></td><td style="width:25%; font-size:small;"><a href="#multitouch_swipe_gear">multitouch_swipe_gear</a></td><td style="width:25%; font-size:small;"><a href="#multitouch_zoom_gear">multitouch_zoom_gear</a></td></tr><td style="width:25%; font-size:small;"><a href="#mutefadems10">mutefadems10</a></td><td style="width:25%; font-size:small;"><a href="#mvu_rmsgain">mvu_rmsgain</a></td><td style="width:25%; font-size:small;"><a href="#mvu_rmsmode">mvu_rmsmode</a></td><td style="width:25%; font-size:small;"><a href="#mvu_rmsoffs2">mvu_rmsoffs2</a></td></tr><td style="width:25%; font-size:small;"><a href="#mvu_rmsred">mvu_rmsred</a></td><td style="width:25%; font-size:small;"><a href="#mvu_rmssize">mvu_rmssize</a></td><td style="width:25%; font-size:small;"><a href="#nativedrawtext">nativedrawtext</a></td><td style="width:25%; font-size:small;"><a href="#nativedrawtext2">nativedrawtext2</a></td></tr><td style="width:25%; font-size:small;"><a href="#newfnopt">newfnopt</a></td><td style="width:25%; font-size:small;"><a href="#newprojdo">newprojdo</a></td><td style="width:25%; font-size:small;"><a href="#newtflag">newtflag</a></td><td style="width:25%; font-size:small;"><a href="#nometers">nometers</a></td></tr><td style="width:25%; font-size:small;"><a href="#norunmute">norunmute</a></td><td style="width:25%; font-size:small;"><a href="#offlineinact">offlineinact</a></td><td style="width:25%; font-size:small;"><a href="#opencopyprompt">opencopyprompt</a></td><td style="width:25%; font-size:small;"><a href="#opennotes">opennotes</a></td></tr><td style="width:25%; font-size:small;"><a href="#optimizesilence">optimizesilence</a></td><td style="width:25%; font-size:small;"><a href="#osxnomiddlemancocoa">osxnomiddlemancocoa</a></td><td style="width:25%; font-size:small;"><a href="#pandispmode">pandispmode</a></td><td style="width:25%; font-size:small;"><a href="#panlaw">panlaw</a></td></tr><td style="width:25%; font-size:small;"><a href="#panlawflags">panlawflags</a></td><td style="width:25%; font-size:small;"><a href="#panmode">panmode</a></td><td style="width:25%; font-size:small;"><a href="#peakcachegenmode">peakcachegenmode</a></td><td style="width:25%; font-size:small;"><a href="#peakcachegenrs">peakcachegenrs</a></td></tr><td style="width:25%; font-size:small;"><a href="#peakrecbm">peakrecbm</a></td><td style="width:25%; font-size:small;"><a href="#peaksedges">peaksedges</a></td><td style="width:25%; font-size:small;"><a href="#pitchenvrange">pitchenvrange</a></td><td style="width:25%; font-size:small;"><a href="#playcursormode">playcursormode</a></td></tr><td style="width:25%; font-size:small;"><a href="#playrate">playrate</a></td><td style="width:25%; font-size:small;"><a href="#playresamplemode">playresamplemode</a></td><td style="width:25%; font-size:small;"><a href="#pmfol">pmfol</a></td><td style="width:25%; font-size:small;"><a href="#pooledenvattach">pooledenvattach</a></td></tr><td style="width:25%; font-size:small;"><a href="#pooledenvs">pooledenvs</a></td><td style="width:25%; font-size:small;"><a href="#pooledenvtranstime">pooledenvtranstime</a></td><td style="width:25%; font-size:small;"><a href="#prebufperb">prebufperb</a></td><td style="width:25%; font-size:small;"><a href="#preroll">preroll</a></td></tr><td style="width:25%; font-size:small;"><a href="#prerollmeas">prerollmeas</a></td><td style="width:25%; font-size:small;"><a href="#projalignbeatsrate">projalignbeatsrate</a></td><td style="width:25%; font-size:small;"><a href="#projbpm">projbpm</a></td><td style="width:25%; font-size:small;"><a href="#projfrbase">projfrbase</a></td></tr><td style="width:25%; font-size:small;"><a href="#projfrdrop">projfrdrop</a></td><td style="width:25%; font-size:small;"><a href="#projgriddiv">projgriddiv</a></td><td style="width:25%; font-size:small;"><a href="#projgriddivsnap">projgriddivsnap</a></td><td style="width:25%; font-size:small;"><a href="#projgridframe">projgridframe</a></td></tr><td style="width:25%; font-size:small;"><a href="#projgridmin">projgridmin</a></td><td style="width:25%; font-size:small;"><a href="#projgridsnapmin">projgridsnapmin</a></td><td style="width:25%; font-size:small;"><a href="#projgridswing">projgridswing</a></td><td style="width:25%; font-size:small;"><a href="#projgroupover">projgroupover</a></td></tr><td style="width:25%; font-size:small;"><a href="#projgroupsel">projgroupsel</a></td><td style="width:25%; font-size:small;"><a href="#projintmix">projintmix</a></td><td style="width:25%; font-size:small;"><a href="#projmasternch">projmasternch</a></td><td style="width:25%; font-size:small;"><a href="#projmastervuflags">projmastervuflags</a></td></tr><td style="width:25%; font-size:small;"><a href="#projmaxlen">projmaxlen</a></td><td style="width:25%; font-size:small;"><a href="#projmaxlenuse">projmaxlenuse</a></td><td style="width:25%; font-size:small;"><a href="#projmeaslen">projmeaslen</a></td><td style="width:25%; font-size:small;"><a href="#projmeasoffs">projmeasoffs</a></td></tr><td style="width:25%; font-size:small;"><a href="#projmeasoffsruler">projmeasoffsruler</a></td><td style="width:25%; font-size:small;"><a href="#projmetrobeatlen">projmetrobeatlen</a></td><td style="width:25%; font-size:small;"><a href="#projmetroclick">projmetroclick</a></td><td style="width:25%; font-size:small;"><a href="#projmetrocountin">projmetrocountin</a></td></tr><td style="width:25%; font-size:small;"><a href="#projmetroen">projmetroen</a></td><td style="width:25%; font-size:small;"><a href="#projmetrof1">projmetrof1</a></td><td style="width:25%; font-size:small;"><a href="#projmetrof2">projmetrof2</a></td><td style="width:25%; font-size:small;"><a href="#projmetrov1">projmetrov1</a></td></tr><td style="width:25%; font-size:small;"><a href="#projmetrov2">projmetrov2</a></td><td style="width:25%; font-size:small;"><a href="#projmidieditor">projmidieditor</a></td><td style="width:25%; font-size:small;"><a href="#projpeaksgain">projpeaksgain</a></td><td style="width:25%; font-size:small;"><a href="#projrecforopencopy">projrecforopencopy</a></td></tr><td style="width:25%; font-size:small;"><a href="#projrecmode">projrecmode</a></td><td style="width:25%; font-size:small;"><a href="#projrelpath">projrelpath</a></td><td style="width:25%; font-size:small;"><a href="#projrenderaddtoproj">projrenderaddtoproj</a></td><td style="width:25%; font-size:small;"><a href="#projrenderdither">projrenderdither</a></td></tr><td style="width:25%; font-size:small;"><a href="#projrenderlimit">projrenderlimit</a></td><td style="width:25%; font-size:small;"><a href="#projrendernch">projrendernch</a></td><td style="width:25%; font-size:small;"><a href="#projrenderqdelay">projrenderqdelay</a></td><td style="width:25%; font-size:small;"><a href="#projrenderrateinternal">projrenderrateinternal</a></td></tr><td style="width:25%; font-size:small;"><a href="#projrenderresample">projrenderresample</a></td><td style="width:25%; font-size:small;"><a href="#projrendersrate">projrendersrate</a></td><td style="width:25%; font-size:small;"><a href="#projrenderstems">projrenderstems</a></td><td style="width:25%; font-size:small;"><a href="#projripedit">projripedit</a></td></tr><td style="width:25%; font-size:small;"><a href="#projsellock">projsellock</a></td><td style="width:25%; font-size:small;"><a href="#projshowgrid">projshowgrid</a></td><td style="width:25%; font-size:small;"><a href="#projsmpteahead">projsmpteahead</a></td><td style="width:25%; font-size:small;"><a href="#projsmptefw_rec">projsmptefw_rec</a></td></tr><td style="width:25%; font-size:small;"><a href="#projsmpteinput">projsmpteinput</a></td><td style="width:25%; font-size:small;"><a href="#projsmptemaxfree">projsmptemaxfree</a></td><td style="width:25%; font-size:small;"><a href="#projsmpteoffs">projsmpteoffs</a></td><td style="width:25%; font-size:small;"><a href="#projsmpterate">projsmpterate</a></td></tr><td style="width:25%; font-size:small;"><a href="#projsmpterateuseproj">projsmpterateuseproj</a></td><td style="width:25%; font-size:small;"><a href="#projsmpteresync">projsmpteresync</a></td><td style="width:25%; font-size:small;"><a href="#projsmpteresync_rec">projsmpteresync_rec</a></td><td style="width:25%; font-size:small;"><a href="#projsmpteskip">projsmpteskip</a></td></tr><td style="width:25%; font-size:small;"><a href="#projsmptesync">projsmptesync</a></td><td style="width:25%; font-size:small;"><a href="#projsrate">projsrate</a></td><td style="width:25%; font-size:small;"><a href="#projsrateuse">projsrateuse</a></td><td style="width:25%; font-size:small;"><a href="#projtakelane">projtakelane</a></td></tr><td style="width:25%; font-size:small;"><a href="#projtimemode">projtimemode</a></td><td style="width:25%; font-size:small;"><a href="#projtimemode2">projtimemode2</a></td><td style="width:25%; font-size:small;"><a href="#projtimeoffs">projtimeoffs</a></td><td style="width:25%; font-size:small;"><a href="#projtrackgroupdisabled">projtrackgroupdisabled</a></td></tr><td style="width:25%; font-size:small;"><a href="#projtsdenom">projtsdenom</a></td><td style="width:25%; font-size:small;"><a href="#projvidflags">projvidflags</a></td><td style="width:25%; font-size:small;"><a href="#projvidh">projvidh</a></td><td style="width:25%; font-size:small;"><a href="#projvidw">projvidw</a></td></tr><td style="width:25%; font-size:small;"><a href="#promptendrec">promptendrec</a></td><td style="width:25%; font-size:small;"><a href="#psmaxv">psmaxv</a></td><td style="width:25%; font-size:small;"><a href="#psminv">psminv</a></td><td style="width:25%; font-size:small;"><a href="#quantflag">quantflag</a></td></tr><td style="width:25%; font-size:small;"><a href="#quantolms">quantolms</a></td><td style="width:25%; font-size:small;"><a href="#quantolms2">quantolms2</a></td><td style="width:25%; font-size:small;"><a href="#quantsize2">quantsize2</a></td><td style="width:25%; font-size:small;"><a href="#rbn">rbn</a></td></tr><td style="width:25%; font-size:small;"><a href="#reamote_maxblock">reamote_maxblock</a></td><td style="width:25%; font-size:small;"><a href="#reamote_maxlat_render">reamote_maxlat_render</a></td><td style="width:25%; font-size:small;"><a href="#reamote_maxpkt">reamote_maxpkt</a></td><td style="width:25%; font-size:small;"><a href="#reamote_smplfmt">reamote_smplfmt</a></td></tr><td style="width:25%; font-size:small;"><a href="#reascript">reascript</a></td><td style="width:25%; font-size:small;"><a href="#reascripttimeout">reascripttimeout</a></td><td style="width:25%; font-size:small;"><a href="#recaddatloop">recaddatloop</a></td><td style="width:25%; font-size:small;"><a href="#reccfg">reccfg</a></td></tr><td style="width:25%; font-size:small;"><a href="#recfile_wildcards">recfile_wildcards</a></td><td style="width:25%; font-size:small;"><a href="#recopts">recopts</a></td><td style="width:25%; font-size:small;"><a href="#recupdatems">recupdatems</a></td><td style="width:25%; font-size:small;"><a href="#relativeedges">relativeedges</a></td></tr><td style="width:25%; font-size:small;"><a href="#relsnap">relsnap</a></td><td style="width:25%; font-size:small;"><a href="#renderaheadlen">renderaheadlen</a></td><td style="width:25%; font-size:small;"><a href="#renderaheadlen2">renderaheadlen2</a></td><td style="width:25%; font-size:small;"><a href="#renderbsnew">renderbsnew</a></td></tr><td style="width:25%; font-size:small;"><a href="#rendercfg">rendercfg</a></td><td style="width:25%; font-size:small;"><a href="#renderclosewhendone">renderclosewhendone</a></td><td style="width:25%; font-size:small;"><a href="#rendermetadataflags">rendermetadataflags</a></td><td style="width:25%; font-size:small;"><a href="#renderqdelay">renderqdelay</a></td></tr><td style="width:25%; font-size:small;"><a href="#rendertail">rendertail</a></td><td style="width:25%; font-size:small;"><a href="#rendertaillen">rendertaillen</a></td><td style="width:25%; font-size:small;"><a href="#rendertails">rendertails</a></td><td style="width:25%; font-size:small;"><a href="#resetvuplay">resetvuplay</a></td></tr><td style="width:25%; font-size:small;"><a href="#restrictcpu">restrictcpu</a></td><td style="width:25%; font-size:small;"><a href="#rewireslave">rewireslave</a></td><td style="width:25%; font-size:small;"><a href="#rewireslavedelay">rewireslavedelay</a></td><td style="width:25%; font-size:small;"><a href="#reximport">reximport</a></td></tr><td style="width:25%; font-size:small;"><a href="#rfprojfirst">rfprojfirst</a></td><td style="width:25%; font-size:small;"><a href="#rightclickemulate">rightclickemulate</a></td><td style="width:25%; font-size:small;"><a href="#ripplelockmode">ripplelockmode</a></td><td style="width:25%; font-size:small;"><a href="#rulerlabelspacing">rulerlabelspacing</a></td></tr><td style="width:25%; font-size:small;"><a href="#rulerlayout">rulerlayout</a></td><td style="width:25%; font-size:small;"><a href="#runafterstop">runafterstop</a></td><td style="width:25%; font-size:small;"><a href="#runallonstop">runallonstop</a></td><td style="width:25%; font-size:small;"><a href="#sampleedges">sampleedges</a></td></tr><td style="width:25%; font-size:small;"><a href="#saveopts">saveopts</a></td><td style="width:25%; font-size:small;"><a href="#saveundostatesproj">saveundostatesproj</a></td><td style="width:25%; font-size:small;"><a href="#scnameedit">scnameedit</a></td><td style="width:25%; font-size:small;"><a href="#scnotes">scnotes</a></td></tr><td style="width:25%; font-size:small;"><a href="#scoreminnotelen">scoreminnotelen</a></td><td style="width:25%; font-size:small;"><a href="#scorequant">scorequant</a></td><td style="width:25%; font-size:small;"><a href="#screenset_as_views">screenset_as_views</a></td><td style="width:25%; font-size:small;"><a href="#screenset_as_win">screenset_as_win</a></td></tr><td style="width:25%; font-size:small;"><a href="#screenset_autosave">screenset_autosave</a></td><td style="width:25%; font-size:small;"><a href="#scrubloopend">scrubloopend</a></td><td style="width:25%; font-size:small;"><a href="#scrubloopstart">scrubloopstart</a></td><td style="width:25%; font-size:small;"><a href="#scrubmode">scrubmode</a></td></tr><td style="width:25%; font-size:small;"><a href="#scrubrelgain">scrubrelgain</a></td><td style="width:25%; font-size:small;"><a href="#seekmodes">seekmodes</a></td><td style="width:25%; font-size:small;"><a href="#selitem_tintalpha">selitem_tintalpha</a></td><td style="width:25%; font-size:small;"><a href="#selitemtop">selitemtop</a></td></tr><td style="width:25%; font-size:small;"><a href="#showctinmix">showctinmix</a></td><td style="width:25%; font-size:small;"><a href="#showlastundo">showlastundo</a></td><td style="width:25%; font-size:small;"><a href="#showmaintrack">showmaintrack</a></td><td style="width:25%; font-size:small;"><a href="#showpeaks">showpeaks</a></td></tr><td style="width:25%; font-size:small;"><a href="#showpeaksbuild">showpeaksbuild</a></td><td style="width:25%; font-size:small;"><a href="#showrecitems">showrecitems</a></td><td style="width:25%; font-size:small;"><a href="#slidermaxv">slidermaxv</a></td><td style="width:25%; font-size:small;"><a href="#sliderminv">sliderminv</a></td></tr><td style="width:25%; font-size:small;"><a href="#slidershex">slidershex</a></td><td style="width:25%; font-size:small;"><a href="#smoothseek">smoothseek</a></td><td style="width:25%; font-size:small;"><a href="#smoothseekmeas">smoothseekmeas</a></td><td style="width:25%; font-size:small;"><a href="#snapextrad">snapextrad</a></td></tr><td style="width:25%; font-size:small;"><a href="#snapextraden">snapextraden</a></td><td style="width:25%; font-size:small;"><a href="#solodimdb10">solodimdb10</a></td><td style="width:25%; font-size:small;"><a href="#solodimen">solodimen</a></td><td style="width:25%; font-size:small;"><a href="#soloip">soloip</a></td></tr><td style="width:25%; font-size:small;"><a href="#specpeak_alpha">specpeak_alpha</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_bv">specpeak_bv</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_ftp">specpeak_ftp</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_hueh">specpeak_hueh</a></td></tr><td style="width:25%; font-size:small;"><a href="#specpeak_huel">specpeak_huel</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_lo">specpeak_lo</a></td><td style="width:25%; font-size:small;"><a href="#specpeak_na">specpeak_na</a></td><td style="width:25%; font-size:small;"><a href="#splitautoxfade">splitautoxfade</a></td></tr><td style="width:25%; font-size:small;"><a href="#stopendofloop">stopendofloop</a></td><td style="width:25%; font-size:small;"><a href="#stopprojlen">stopprojlen</a></td><td style="width:25%; font-size:small;"><a href="#syncsmpmax2">syncsmpmax2</a></td><td style="width:25%; font-size:small;"><a href="#syncsmpuse">syncsmpuse</a></td></tr><td style="width:25%; font-size:small;"><a href="#tabtotransflag">tabtotransflag</a></td><td style="width:25%; font-size:small;"><a href="#takelanes">takelanes</a></td><td style="width:25%; font-size:small;"><a href="#tcpalign">tcpalign</a></td><td style="width:25%; font-size:small;"><a href="#templateditcursor">templateditcursor</a></td></tr><td style="width:25%; font-size:small;"><a href="#tempoenvmax">tempoenvmax</a></td><td style="width:25%; font-size:small;"><a href="#tempoenvmin">tempoenvmin</a></td><td style="width:25%; font-size:small;"><a href="#tempoenvtimelock">tempoenvtimelock</a></td><td style="width:25%; font-size:small;"><a href="#textflags">textflags</a></td></tr><td style="width:25%; font-size:small;"><a href="#threadpr">threadpr</a></td><td style="width:25%; font-size:small;"><a href="#timeseledge">timeseledge</a></td><td style="width:25%; font-size:small;"><a href="#tinttcp">tinttcp</a></td><td style="width:25%; font-size:small;"><a href="#titlebarreghide">titlebarreghide</a></td></tr><td style="width:25%; font-size:small;"><a href="#tooltipdelay">tooltipdelay</a></td><td style="width:25%; font-size:small;"><a href="#tooltips">tooltips</a></td><td style="width:25%; font-size:small;"><a href="#trackitemgap">trackitemgap</a></td><td style="width:25%; font-size:small;"><a href="#trackselonmouse">trackselonmouse</a></td></tr><td style="width:25%; font-size:small;"><a href="#transflags">transflags</a></td><td style="width:25%; font-size:small;"><a href="#transientsensitivity">transientsensitivity</a></td><td style="width:25%; font-size:small;"><a href="#transientthreshold">transientthreshold</a></td><td style="width:25%; font-size:small;"><a href="#trimmidionsplit">trimmidionsplit</a></td></tr><td style="width:25%; font-size:small;"><a href="#tsmarker">tsmarker</a></td><td style="width:25%; font-size:small;"><a href="#uiscale">uiscale</a></td><td style="width:25%; font-size:small;"><a href="#undomask">undomask</a></td><td style="width:25%; font-size:small;"><a href="#undomaxmem">undomaxmem</a></td></tr><td style="width:25%; font-size:small;"><a href="#unselitem_tintalpha">unselitem_tintalpha</a></td><td style="width:25%; font-size:small;"><a href="#use_reamote">use_reamote</a></td><td style="width:25%; font-size:small;"><a href="#usedxplugs">usedxplugs</a></td><td style="width:25%; font-size:small;"><a href="#useinnc">useinnc</a></td></tr><td style="width:25%; font-size:small;"><a href="#userewire">userewire</a></td><td style="width:25%; font-size:small;"><a href="#verchk">verchk</a></td><td style="width:25%; font-size:small;"><a href="#vgrid">vgrid</a></td><td style="width:25%; font-size:small;"><a href="#video_colorspace">video_colorspace</a></td></tr><td style="width:25%; font-size:small;"><a href="#video_decprio">video_decprio</a></td><td style="width:25%; font-size:small;"><a href="#video_defimglen">video_defimglen</a></td><td style="width:25%; font-size:small;"><a href="#video_delayms">video_delayms</a></td><td style="width:25%; font-size:small;"><a href="#viewadvance">viewadvance</a></td></tr><td style="width:25%; font-size:small;"><a href="#volenvrange">volenvrange</a></td><td style="width:25%; font-size:small;"><a href="#vst_scan">vst_scan</a></td><td style="width:25%; font-size:small;"><a href="#vstbr32">vstbr32</a></td><td style="width:25%; font-size:small;"><a href="#vstbr64">vstbr64</a></td></tr><td style="width:25%; font-size:small;"><a href="#vstfolder_settings">vstfolder_settings</a></td><td style="width:25%; font-size:small;"><a href="#vstfullstate">vstfullstate</a></td><td style="width:25%; font-size:small;"><a href="#vuclipstick">vuclipstick</a></td><td style="width:25%; font-size:small;"><a href="#vudecay">vudecay</a></td></tr><td style="width:25%; font-size:small;"><a href="#vumaxvol">vumaxvol</a></td><td style="width:25%; font-size:small;"><a href="#vuminvol">vuminvol</a></td><td style="width:25%; font-size:small;"><a href="#vuupdfreq">vuupdfreq</a></td><td style="width:25%; font-size:small;"><a href="#vzoom2">vzoom2</a></td></tr><td style="width:25%; font-size:small;"><a href="#vzoommode">vzoommode</a></td><td style="width:25%; font-size:small;"><a href="#warnmaxram64">warnmaxram64</a></td><td style="width:25%; font-size:small;"><a href="#windowflags">windowflags</a></td><td style="width:25%; font-size:small;"><a href="#wiring_options">wiring_options</a></td></tr><td style="width:25%; font-size:small;"><a href="#workbehvr">workbehvr</a></td><td style="width:25%; font-size:small;"><a href="#workbuffxuims">workbuffxuims</a></td><td style="width:25%; font-size:small;"><a href="#workbufmsex">workbufmsex</a></td><td style="width:25%; font-size:small;"><a href="#workrender">workrender</a></td></tr><td style="width:25%; font-size:small;"><a href="#workset_max">workset_max</a></td><td style="width:25%; font-size:small;"><a href="#workset_min">workset_min</a></td><td style="width:25%; font-size:small;"><a href="#workset_use">workset_use</a></td><td style="width:25%; font-size:small;"><a href="#workthreads">workthreads</a></td></tr><td style="width:25%; font-size:small;"><a href="#zoom">zoom</a></td><td style="width:25%; font-size:small;"><a href="#zoommode">zoommode</a></td><td style="width:25%; font-size:small;"><a href="#zoomshowarm">zoomshowarm</a></td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><b style="font-size:small;"> Reaper Ini-Only</b>
  REAPER
-</td></tr><tr><td style="width:25%; font-size:small;"><a href="#REAPER->pspage_last">REAPER->pspage_last</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><b style="font-size:small;"> Reaper Ini-Only</b>
+</td></tr><tr><td style="width:25%; font-size:small;"><a href="#REAPER->autoclosekeymap">REAPER->autoclosekeymap</a></td><td style="width:25%; font-size:small;"><a href="#REAPER->pspage_last">REAPER->pspage_last</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><b style="font-size:small;"> Reaper Ini-Only</b>
  reaper_video
 </td></tr><tr><td style="width:25%; font-size:small;"><a href="#reaper_video->fx_mode">reaper_video->fx_mode</a></td><td style="width:25%; font-size:small;"><a href="#reaper_video->misc_flags">reaper_video->misc_flags</a></td><td style="width:25%; font-size:small;"><a href="#reaper_video->playback_cache">reaper_video->playback_cache</a></td><td style="width:25%; font-size:small;"><a href="#reaper_video->smp">reaper_video->smp</a></td></tr><td style="width:25%; font-size:small;"><a href="#reaper_video->vdprefetch_srcs">reaper_video->vdprefetch_srcs</a></td><td style="width:25%; font-size:small;"><a href="#reaper_video->vdprefetch_threads">reaper_video->vdprefetch_threads</a></td><td style="width:25%; font-size:small;"><a href="#reaper_video->visible">reaper_video->visible</a></td><td style="width:25%;">&nbsp;</td></tr></table><br><hr><a id="Introduction"></a>
-&nbsp;<a href="#Introduction"><b>Introduction to Config Variables</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>List of all Config Variables as of Reaper 6.15 and probably are missing some, but should be fairly complete anyway.<br />
+&nbsp;<a href="#Introduction"><b>Introduction to Config Variables</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>List of all Config Variables as of Reaper 6.19 and probably are missing some, but should be fairly complete anyway.<br />
 These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.<br />
 To change them, you can use the following ReaScript API-functions(requires SWS being installed):</p>
 <blockquote>
@@ -164,7 +164,7 @@ It is an integer</p>
 </blockquote>
 </td></tr></table></divl><hr><a id="acidimport"></a>
 &nbsp;<a href="#acidimport"><b>acidimport</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>When importing media-dropdownlist, as set in the Media with embedded tempo information-section in Preferences -&gt; Video/REX/Misc<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, Adjust media to project tempo<br />
 1, Import media at source tempo<br />
@@ -173,7 +173,7 @@ It is an integer.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="actionmenu"></a>
 &nbsp;<a href="#actionmenu"><b>actionmenu</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Show recent actions-entry, as set in the Actions-menu.<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, don’t show recent actions - unchecked<br />
 1, show recent actions - checked</p>
@@ -213,7 +213,7 @@ It is an integer</p>
 </td></tr></table></divl><hr><a id="afxcfg"></a>
 &nbsp;<a href="#afxcfg"><b>afxcfg</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The audioformat for “Apply FX, Glue, Freeze, etc”, as set in the Project Settings-&gt;Media-dialog<br />
 Only includes the format, not the individual format-settings(like bitrate, etc)<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>1179012432, Video (ffmpeg/libav encoder)<br />
 1195984416, Video (GIF)<br />
@@ -241,7 +241,7 @@ It is an integer</p>
 </td></tr></table></divl><hr><a id="altpeaks"></a>
 &nbsp;<a href="#altpeaks"><b>altpeaks</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Some peak-settings, as set in the Waveform media peak caching settings in Preferences -&gt; Media, as well as in Preferences -&gt; Paths.<br />
 This is not(!) located in Preferences -&gt; Appearances-Media!<br />
-It is an integer bitfield.</p>
+It is an integer-bitfield.</p>
 <blockquote>
 <p>&amp;1=0, Store all peak caches (.reapeaks) in alternate path(Preferences -&gt; Path)(off) - unchecked<br />
 &amp;1=1, Store all peak caches (.reapeaks) in alternate path(Preferences -&gt; Path)(on) - checked</p>
@@ -287,7 +287,7 @@ It is an integer</p>
 </td></tr></table></divl><hr><a id="applyfxtail"></a>
 &nbsp;<a href="#applyfxtail"><b>applyfxtail</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Tail length when using Apply FX to items in milliseconds, as set in Preferences -&gt; Media<br />
 This is not(!) located in Preferences -&gt; Appearances-Media!<br />
-The accompanying entry in the reaper.ini is always config-var-setting+1. It is an integer.</p>
+The accompanying entry in the reaper.ini is always config-var-setting+1. It is an integer</p>
 <blockquote>
 <p>0 to 2147483647; higher values become negative</p>
 </blockquote>
@@ -295,7 +295,7 @@ The accompanying entry in the reaper.ini is always config-var-setting+1. It is a
 <a href="#altpeaks">altpeaks</a>, <a href="#showpeaks">showpeaks</a>, <a href="#peakcachegenrs">peakcachegenrs</a>, <a href="#offlineinact">offlineinact</a>, <a href="#insertmtrack">insertmtrack</a>, <a href="#opencopyprompt">opencopyprompt</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="ara"></a>
-&nbsp;<a href="#ara"><b>ara</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>It is an integer.<br />
+&nbsp;<a href="#ara"><b>ara</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>It is an integer<br />
 Enable ARA for VST3 plug-ins that support it(requires restarting REAPER) in section VST compatibility, as set in Preferences -&gt; VST</p>
 <blockquote>
 <p>0, enable ARA(on) - checked<br />
@@ -343,7 +343,7 @@ It is an integer-bitfield.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="audiocloseinactive"></a>
 &nbsp;<a href="#audiocloseinactive"><b>audiocloseinactive</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Several settings regarding closing audio-devices, as set in Preferences -&gt; Audio<br />
-It’s an integer bitfield</p>
+It’s an integer-bitfield</p>
 <blockquote>
 <p>&amp;1=0, Close audio device when stopped and application is inactive(off) - unchecked<br />
 &amp;1=1, Close audio device when stopped and application is inactive(on) - checked</p>
@@ -373,7 +373,7 @@ It’s an integer</p>
 <p>Stored in reaper.ini under the same in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="audioprshift"></a>
 &nbsp;<a href="#audioprshift"><b>audioprshift</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Preserve pitch in audio items when changing master playrate, as set in the contextmenu of the master-playrate in the transport-area as well as toggled by action 40671(all sections)<br />
-This is a project-setting. It is an integer.</p>
+This is a project-setting. It is an integer</p>
 <blockquote>
 <p>0, don’t preserve pitch - unchecked<br />
 1, preserve pitch - checked</p>
@@ -559,7 +559,7 @@ There are 32 cpus supported (0 to 31)</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="csurfrate"></a>
 &nbsp;<a href="#csurfrate"><b>csurfrate</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Control surface display update frequency in Hz, as set in the Preferences -&gt; Control/OSC/web.<br />
-It is an integer.<br />
+It is an integer<br />
 Default is 15</p>
 <blockquote>
 <p>1 to 2147483647</p>
@@ -625,7 +625,7 @@ It is an integer-bitfield</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="defautomode"></a>
 &nbsp;<a href="#defautomode"><b>defautomode</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The default automation mode-dropdownlist as well as the Arm new envelopes-checkbox in the section Tracks, as set in Preferences -&gt; Track/Send Defaults<br />
-It is an integer bitfield</p>
+It is an integer-bitfield</p>
 <blockquote>
 <p>&amp;1 and &amp;2 and &amp;4, Default automation mode-dropdownlist</p>
 </blockquote>
@@ -647,7 +647,7 @@ It is an integer bitfield</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="defenvs"></a>
 &nbsp;<a href="#defenvs"><b>defenvs</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The default visible envelopes-checkboxes and Default envelope shape-dropdownlist, as set in section Tracks in Preferences -&gt; Track/Send Defaults<br />
-It is an integer bitfield</p>
+It is an integer-bitfield</p>
 <blockquote>
 <p>&amp;1=0, Volume(pre-FX)(off) - unchecked<br />
 &amp;1=1, Volume(pre-FX)(on) - checked</p>
@@ -757,7 +757,7 @@ It is a double float</p>
 </td></tr></table></divl><hr><a id="defpitchcfg"></a>
 &nbsp;<a href="#defpitchcfg"><b>defpitchcfg</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Default Pitch Mode and Pitch shifter parameter-dropdownlists, as set in the Project Settings -&gt; Project Settings<br />
 This is the same, as the pitchmode-settings for items(as set in a MediaItemStateChunk).<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>SoundTouch:<br />
 0 - Default settings<br />
@@ -2798,6 +2798,8 @@ It is an integer</p>
 <p>For other settings as set in Preferences -&gt; Buffering -&gt; Advanced Disk I/O options…, see <a href="#disk_peakmmap2">disk_peakmmap2</a>, <a href="#disk_rdsizeex">disk_rdsizeex</a>,<br />
 <a href="#disk_wrblks">disk_wrblks</a>, <a href="#disk_wrblks2">disk_wrblks2</a>, <a href="#disk_wrmode">disk_wrmode</a>, <a href="#disk_wrsize">disk_wrsize</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
+</td></tr></table></divl><hr><a id="disk_rdmodeexmac"></a>
+&nbsp;<a href="#disk_rdmodeexmac"><b>disk_rdmodeexmac</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Unknown, probably diskmode on mac? It is an integer</p>
 </td></tr></table></divl><hr><a id="disk_rdsizeex"></a>
 &nbsp;<a href="#disk_rdsizeex"><b>disk_rdsizeex</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Read buffer size-inputbox, as set in Preferences -&gt; Buffering -&gt; Advanced Disk I/O options…<br />
 It is an integer</p>
@@ -2893,7 +2895,7 @@ It is an integer</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="edit_fontsize"></a>
 &nbsp;<a href="#edit_fontsize"><b>edit_fontsize</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The fontsize of the Reascript/JSFX-IDE.<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>negative values are treated like the positive value+1; 16 is default</p>
 </blockquote>
@@ -3149,7 +3151,7 @@ For other settings set in Preferences -&gt; Recording, see <a href="#adjreclat">
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="fadeeditflags"></a>
 &nbsp;<a href="#fadeeditflags"><b>fadeeditflags</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Several Fade-settings, as set in Menu View -&gt; Crossfade Editor<br />
-It is an integer bitfield</p>
+It is an integer-bitfield</p>
 <blockquote>
 <p>&amp;1=0, Units-dropdownlist: seconds<br />
 &amp;1=1, Units-dropdownlist: beats</p>
@@ -3274,7 +3276,7 @@ It is a double-float</p>
 <p>For other Crossfade-editor-settings, see <a href="#fadeeditflags">fadeeditflags</a>, <a href="#fadeeditpostsel">fadeeditpostsel</a> and <a href="#fadeeditlink">fadeeditlink</a></p>
 </td></tr></table></divl><hr><a id="feedbackmode"></a>
 &nbsp;<a href="#feedbackmode"><b>feedbackmode</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Allow feedback in routing (can result in lower performance, loud noises)-checkbox in Project Settings -&gt; Advanced<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, checkbox is unchecked(no feedback)<br />
 1, checkbox is checked(feedback allowed)</p>
@@ -3495,14 +3497,14 @@ It is an integer</p>
 </td></tr></table></divl><hr><a id="ide_colors"></a>
 &nbsp;<a href="#ide_colors"><b>ide_colors</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Stores some kind of color-theme-settings for Reaper’s IDE.<br />
 Seems not to store the colors themselves, but rather count up, when one or more colors are changed.<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0 to 2147483647; higher values become negative</p>
 </blockquote>
 </td></tr></table></divl><hr><a id="insertmtrack"></a>
 &nbsp;<a href="#insertmtrack"><b>insertmtrack</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>When importing multiple media items-dropdownlist, as set in the Preferences -&gt; Media<br />
 This is not(!) located in Preferences -&gt; Appearances-Media!<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, Insert in one track (advancing time)<br />
 1, Insert across tracks<br />
@@ -3611,7 +3613,7 @@ It is an integer</p>
 </td></tr></table></divl><hr><a id="itemfxtail"></a>
 &nbsp;<a href="#itemfxtail"><b>itemfxtail</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Take FX tail length in milliseconds, as set in Preferences -&gt; Media<br />
 This is not(!) located in Preferences -&gt; Appearances-Media!<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0 to 2147483647; higher values become negative</p>
 </blockquote>
@@ -3620,7 +3622,7 @@ It is an integer.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="itemicons"></a>
 &nbsp;<a href="#itemicons"><b>itemicons</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Several settings for appearance of items, as set in Preferences -&gt; Media as well as in Preferences -&gt; Fades/Crossfades<br />
-This is not(!) located in Preferences -&gt; Appearances-Media!<br />
+This is located in Preferences -&gt; Appearances-&gt;Media, NOT Media!<br />
 It is an integer-bitfield</p>
 <blockquote>
 <p>&amp;1=0, Locked(Preferences -&gt; Media, section Media item buttons)(off) - unchecked<br />
@@ -3680,10 +3682,14 @@ It is an integer-bitfield</p>
 </blockquote>
 <blockquote>
 <p>&amp;8192=0, Pooled MIDI(Preferences -&gt; Media, section Media item buttons)(on) - checked<br />
-&amp;8192=1, Pooled MIDI(Preferences -&gt; Media, section Media item buttons)(off) - unchecked<br />
-&amp;16384=0, Item volume control-dropdownlist: Knob(on) - checked<br />
-&amp;16384=1, Item volume control-dropdownlist: Knob(off) - unchecked<br />
-&amp;32768 and &amp;65536, Show fade-in/out handle-radiobuttons</p>
+&amp;8192=1, Pooled MIDI(Preferences -&gt; Media, section Media item buttons)(off) - unchecked</p>
+</blockquote>
+<blockquote>
+<p>&amp;16384=0, Item volume control-dropdownlist: Knob(on) - checked<br />
+&amp;16384=1, Item volume control-dropdownlist: Knob(off) - unchecked</p>
+</blockquote>
+<blockquote>
+<p>&amp;32768 and &amp;65536, Show fade-in/out handle-radiobuttons</p>
 </blockquote>
 <blockquote>
 <blockquote>
@@ -3697,8 +3703,8 @@ It is an integer-bitfield</p>
 &amp;131072=1, Show crossfade handle always-radiobutton</p>
 </blockquote>
 <blockquote>
-<p>&amp;262144=0, Automation envelopes(Preferences -&gt; Media, section Media item buttons)(off) - unchecked<br />
-&amp;262144=1, Automation envelopes(Preferences -&gt; Media, section Media item buttons)(on) - checked</p>
+<p>&amp;262144=0, Automation envelopes(Preferences -&gt; Media, section Media item buttons)(off) - checked<br />
+&amp;262144=1, Automation envelopes(Preferences -&gt; Media, section Media item buttons)(on) - unchecked</p>
 </blockquote>
 <blockquote>
 <p>&amp;524288=0, No active envelopes(Preferences -&gt; Media, section Media item buttons)(off) - unchecked<br />
@@ -3736,7 +3742,7 @@ It is an integer</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="itemmixflag"></a>
 &nbsp;<a href="#itemmixflag"><b>itemmixflag</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Stores the Item Mix Behavior-dropdownlist, as set in the Project Settings -&gt; Advanced<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, Enclosed items replace enclosing items<br />
 1, Items always mix<br />
@@ -4051,7 +4057,7 @@ Is an integer.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="maxrecentfx"></a>
 &nbsp;<a href="#maxrecentfx"><b>maxrecentfx</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Recently Added list max-inputbox, as set in Preferences -&gt; Plug-ins<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0 to 199</p>
 </blockquote>
@@ -4244,7 +4250,7 @@ The highest one that can be entered into the inputfield is 4294967295, which is 
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="midioctoffs"></a>
 &nbsp;<a href="#midioctoffs"><b>midioctoffs</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>MIDI octave name display offset-inputbox, as set in Preferences -&gt; MIDI<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0 to 2147483646; higher values become negative; 0 based, means 0=1 octaves, 1=2 octaves, 2=3 octaves, etc</p>
 </blockquote>
@@ -4303,8 +4309,14 @@ It is an integer</p>
 <p>For other settings in Preferences -&gt; MIDI Devices, see <a href="#midisendflags">midisendflags</a>, <a href="#midiouts">midiouts</a>, <a href="#midiouts_clock">midiouts_clock</a>, <a href="#midiouts_clock_nospp">midiouts_clock_nospp</a>, <a href="midiouts_llmode">midiouts_llmode</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="midipeaks"></a>
-&nbsp;<a href="#midipeaks"><b>midipeaks</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>unknown It is an integer</p>
-<p>Default is 0</p>
+&nbsp;<a href="#midipeaks"><b>midipeaks</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Display-settings as set in Preferences -&gt; Peaks/Waveforms It is an integer bitfield</p>
+<blockquote>
+<p>&amp;1=0, Program names - checked &amp;1=1, Program names - unchecked</p>
+</blockquote>
+<blockquote>
+<p>&amp;2=0, Text events - unchecked &amp;2=1, Text events - checked</p>
+</blockquote>
+<p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="midisendflags"></a>
 &nbsp;<a href="#midisendflags"><b>midisendflags</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Reset by/Reset on-checkboxes, as set in Preferences -&gt; MIDI Devices as well as in section Playback settings in Preferences -&gt; Playback<br />
 It is an integer-bitfield</p>
@@ -4350,7 +4362,7 @@ For other settings in section Playback settings, as set in Preferences -&gt; Pla
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="miditicksperbeat"></a>
 &nbsp;<a href="#miditicksperbeat"><b>miditicksperbeat</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Ticks per quarter note for new MIDI items-inputbox, as set in Preferences -&gt; MIDI<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>1 to 2147483647; default 960</p>
 </blockquote>
@@ -4547,6 +4559,9 @@ It is an integer-bitfield</p>
 <blockquote>
 <p>&amp;128=0, Allow space key to be used for navigation in various windows(off) - unchecked<br />
 &amp;128=1, Allow space key to be used for navigation in various windows(on) - checked</p>
+</blockquote>
+<blockquote>
+<p>&amp;256=0, Horizontal mousewheel over mixer scrolls tracks rather than arrangeview - unchecked &amp;256=1, Horizontal mousewheel over mixer scrolls tracks rather than arrangeview - checked</p>
 </blockquote>
 <p>For more settings set in Preferences -&gt; Mouse, see <a href="#transflags">transflags</a>, <a href="#trackselonmouse">trackselonmouse</a>, <a href="#loopclickmode">loopclickmode</a>, <a href="#scnameedit">scnameedit</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
@@ -4774,6 +4789,8 @@ It is an integer</p>
 <a href="#maxitemlanes">maxitemlanes</a>, <a href="#playcursormode">playcursormode</a>, <a href="#rulerlayout">rulerlayout</a>, <a href="#showlastundo">showlastundo</a>, <a href="#textflags">textflags</a>, <a href="#timeseledge">timeseledge</a>,<br />
 <a href="#tooltips">tooltips</a>, <a href="#trackitemgap">trackitemgap</a>, <a href="#vgrid">vgrid</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
+</td></tr></table></divl><hr><a id="nativedrawtext2"></a>
+&nbsp;<a href="#nativedrawtext2"><b>nativedrawtext2</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Unknown It is an integer</p>
 </td></tr></table></divl><hr><a id="newfnopt"></a>
 &nbsp;<a href="#newfnopt"><b>newfnopt</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>unknown<br />
 It is an integer-bitfield</p>
@@ -4895,13 +4912,16 @@ It is an integer-bitfield</p>
 <p>&amp;2=0, Automatically rebuild peaks - checked<br />
 &amp;2=1, Automatically rebuild peaks - unchecked</p>
 </blockquote>
+<blockquote>
+<p>&amp;4=0, Allow videos to go offline (slow) - unchecked &amp;4=1, Allow videos to go offline (slow) - checked</p>
+</blockquote>
 <p>For other settings, set in the preferences -&gt; Media, see <a href="#showpeaksbuild">showpeaksbuild</a>, <a href="#copyimpmedia">copyimpmedia</a>, <a href="#relativeedges">relativeedges</a>, <a href="#applyfxtail">applyfxtail</a>, <a href="#itemfxtail">itemfxtail</a>, <a href="#peakcachegenmode">peakcachegenmode</a>,<br />
 <a href="#altpeaks">altpeaks</a>, <a href="#showpeaks">showpeaks</a>, <a href="#peakcachegenrs">peakcachegenrs</a>, <a href="#insertmtrack">insertmtrack</a>, <a href="#opencopyprompt">opencopyprompt</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="opencopyprompt"></a>
 &nbsp;<a href="#opencopyprompt"><b>opencopyprompt</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Opening Midi-file-settings as well as some opening Media Items-settings, as set in Preferences -&gt; MIDI and Preferences -&gt; Media or the Consolidate Tracks-dialog.<br />
 This is not(!) located in Preferences -&gt; Appearances-Media!<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>&amp;1=0, Prompt to confirm filename on “open copy in editor” - unchecked<br />
 &amp;1=1, Prompt to confirm filename on “open copy in editor” - checked</p>
@@ -4956,7 +4976,7 @@ For other Media-settings, set in the Preferences -&gt; Media, see <a href="#copy
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="opennotes"></a>
 &nbsp;<a href="#opennotes"><b>opennotes</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>“Show notes on project load”-checkbox, as set in the Project Settings -&gt; Notes<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, checkbox unchecked (don’t show notes on project load)<br />
 1, checkbox checked (show notes on project load)</p>
@@ -4971,6 +4991,8 @@ It is an integer</p>
 </blockquote>
 <p>For other settings in Preferences -&gt; Audio, see <a href="#audiocloseinactive">audiocloseinactive</a>, <a href="#audioclosestop">audioclosestop</a>, <a href="#errnowarn">errnowarn</a>, <a href="#hwfadex">hwfadex</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
+</td></tr></table></divl><hr><a id="osxnomiddlemancocoa"></a>
+&nbsp;<a href="#osxnomiddlemancocoa"><b>osxnomiddlemancocoa</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>unknown, probably mac-related It is an integer</p>
 </td></tr></table></divl><hr><a id="pandispmode"></a>
 &nbsp;<a href="#pandispmode"><b>pandispmode</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Fader unit display-dropdownlist in section Volume/pan faders, as set in Preferences -&gt; Track Control Panels<br />
 It is an integer</p>
@@ -5031,7 +5053,7 @@ It is an integer-bitfield.</p>
 </td></tr></table></divl><hr><a id="peakcachegenrs"></a>
 &nbsp;<a href="#peakcachegenrs"><b>peakcachegenrs</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Desired cache resolution-inputbox, a set in Preferences -&gt; Media.<br />
 This is not(!) located in Preferences -&gt; Appearances-Media!<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0 to 2147483647; higher values become negative; default is 300</p>
 </blockquote>
@@ -5144,7 +5166,7 @@ This is a project-setting. It is a double-float.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="playresamplemode"></a>
 &nbsp;<a href="#playresamplemode"><b>playresamplemode</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Project Playback Resample Mode-dropdownlist, as set in the Project Settings -&gt; Project Settings<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, Medium (64pt Sinc)<br />
 1, Low (Linear Interpolation)<br />
@@ -5310,7 +5332,7 @@ It is an integer</p>
 &nbsp;<a href="#projfrdrop"><b>projfrdrop</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The default-framerates for videos in the project, as set in the Project-Settings -&gt; Video<br />
 Reflects the default-setting you chose in the dropdown-menu(without entering an individual one), that is not a “normal” integer one, like 23.076<br />
 Correspondents with settings in the variable <a href="#projfrbase">projfrbase</a><br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, integer framerate-settings<br />
 1, 29.97DF when projfrbase is set to 30<br />
@@ -5506,7 +5528,7 @@ Only integer allowed.</p>
 &nbsp;<a href="#projmeasoffs"><b>projmeasoffs</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Project Start Measure, as set in Project Settings -&gt; Project Settings.<br />
 This value is zero-based, means: if you want to set 1 as start measure, use 0, if you want to set 2 as start measure, use 1(always measure minus 1).<br />
 Negative values are allowed.<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>-2147483647(for -2147483648) to 2147483646(for 2147483647)</p>
 </blockquote>
@@ -5537,7 +5559,7 @@ Negative values are allowed</p>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projmetroen"></a>
 &nbsp;<a href="#projmetroen"><b>projmetroen</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Sets metronome-settings, as set in the options-menu and the “Metronome Preroll Settings”-dialog(also options-menu) as well as toggled by actions 40364<br />
-Its an integer bitfield.</p>
+Its an integer-bitfield.</p>
 <blockquote>
 <p>&amp;1=0, Metronome disabled<br />
 &amp;1=1, Metronome enabled</p>
@@ -5607,7 +5629,7 @@ It is a double-float</p>
 &nbsp;<a href="#projrecforopencopy"><b>projrecforopencopy</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The “Format for Apply FX, Glue, Freeze, etc”-dropdown list, as set in Project Settings -&gt; Media.<br />
 This is not(!) located in Preferences -&gt; Appearances-Media!<br />
 This will only select, but not set custom settings-media format. See <a href="#afxcfg">afxcfg</a> for that.<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, Automatic .wav (recommended)<br />
 1, Custom… (see <a href="#afxcfg">afxcfg</a> to set the custom-format)<br />
@@ -5617,7 +5639,7 @@ It is an integer.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projrecmode"></a>
 &nbsp;<a href="#projrecmode"><b>projrecmode</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The selected Record mode of the project, as set in the transport-context-menu as well as toggled by action 40076, 40252, 40253<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, Record mode: auto-punch selected items<br />
 1, Record mode: normal<br />
@@ -5643,7 +5665,7 @@ It’s an integer-bitfield</p>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projrenderdither"></a>
 &nbsp;<a href="#projrenderdither"><b>projrenderdither</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The dithering for the Master mix, as set in the checkboxes next to Master mix in the options-section of the Render to File-dialog<br />
-It’s an integer bitfield</p>
+It’s an integer-bitfield</p>
 <blockquote>
 <p>&amp;1=0, Dither isn’t checked<br />
 &amp;1=1, Dither is checked</p>
@@ -5877,7 +5899,7 @@ It is an integer-bitfield.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projsmpteahead"></a>
 &nbsp;<a href="#projsmpteahead"><b>projsmpteahead</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Synchronize by seeking ahead-inputbox, behind the accompanying Configure-button, as set in Project Settings -&gt; Advanced<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0 to 2147483647; 1000 = default</p>
 </blockquote>
@@ -5887,7 +5909,7 @@ It is an integer.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projsmptefw_rec"></a>
 &nbsp;<a href="#projsmptefw_rec"><b>projsmptefw_rec</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Stop recording on lack of time code after-inputbox, behind the accompanying Configure-button, as set in Project Settings -&gt; Advanced<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0 to 2147483647; higher values become negative ones; 0=never</p>
 </blockquote>
@@ -5912,7 +5934,7 @@ For other settings in the Project -&gt; Advanced, see <a href="#panlawflags">pan
 Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projsmptemaxfree"></a>
 &nbsp;<a href="#projsmptemaxfree"><b>projsmptemaxfree</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Freewheel on missing time code for up to-inputbox, behind the accompanying Configure-button, as set in Project Settings -&gt; Advanced<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0 to 2147483647; 0 = forever</p>
 </blockquote>
@@ -5945,7 +5967,7 @@ For other settings in the Project -&gt; Advanced, see <a href="#panlawflags">pan
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projsmpterateuseproj"></a>
 &nbsp;<a href="#projsmpterateuseproj"><b>projsmpterateuseproj</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Shall the LTC-framerate be used from project framerate or be individualized, as set in the Configure-timecode-settings in Project Settings -&gt; Advanced<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, use the framerate, as set in variable <a href="#projsmpterate">projsmpterate</a><br />
 1, use the project’s framerate</p>
@@ -6028,14 +6050,14 @@ It’s an integer-bitfield.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projsrate"></a>
 &nbsp;<a href="#projsrate"><b>projsrate</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The project’s sample-rate in Hertz, as set in the Project Settings -&gt; Project Settings<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>-2147483648 to 2147483647 Hz are allowed</p>
 </blockquote>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="projsrateuse"></a>
 &nbsp;<a href="#projsrateuse"><b>projsrateuse</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Use Project sample rate-checkbox, as set in the Project Settings -&gt; Project Settings<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, unchecked; don’t use project sample rate<br />
 1, checked; use project sample rate</p>
@@ -6278,7 +6300,7 @@ For other MIDI editor-settings, see <a href="#midivu">midivu</a>, <a href="#midi
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="reamote_maxblock"></a>
 &nbsp;<a href="#reamote_maxblock"><b>reamote_maxblock</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Network max. latency (playback)-slider, as set in Preferences -&gt; ReaMote<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>1, Synchronous<br />
 2 to 64, number of blocks</p>
@@ -6286,14 +6308,14 @@ It is an integer.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="reamote_maxlat_render"></a>
 &nbsp;<a href="#reamote_maxlat_render"><b>reamote_maxlat_render</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Render send-ahead-editbox in milliseconds, as set in the Preferences -&gt; ReaMote<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>-2147483648 to 2147483647</p>
 </blockquote>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="reamote_maxpkt"></a>
 &nbsp;<a href="#reamote_maxpkt"><b>reamote_maxpkt</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Max. packet size-editbox, in bytes, as set in Preferences -&gt; ReaMote<br />
-It is an integer.<br />
+It is an integer<br />
 Default is 32768</p>
 <blockquote>
 <p>256 to 50000</p>
@@ -6301,7 +6323,7 @@ Default is 32768</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="reamote_smplfmt"></a>
 &nbsp;<a href="#reamote_smplfmt"><b>reamote_smplfmt</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Sample format-dropdownlist, as set in Preferences -&gt; ReaMote<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, 64-bit (default) - Maximum quality<br />
 1, 32-bit - Reduced network bandwidth use</p>
@@ -6389,7 +6411,7 @@ Only includes the format, not the individual format-settings(like bitrate, etc)<
 Setting them changes the recording-format, though setting some will not update the Project Settings-&gt;Media-dialog properly (Video, GIF, AudioCD)<br />
 but will show WAV instead with the additional dialog-boxes for Video, GIF or AudioCD added.<br />
 If you change the audioformat, it will use the last used setting for the “new” format, as set in this project. Uses the default Reaper-settings for formats in new projects.<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>1179012432, Video (ffmpeg/libav encoder)<br />
 1195984416, Video (GIF)<br />
@@ -6545,7 +6567,7 @@ It is an integer</p>
 </td></tr></table></divl><hr><a id="rendercfg"></a>
 &nbsp;<a href="#rendercfg"><b>rendercfg</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The render-format set in the render-dialog<br />
 Only includes the format, not the individual format-settings(like bitrate, etc)<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>1179012432, Video (ffmpeg/libav encoder)<br />
 1195984416, Video (GIF)<br />
@@ -6562,8 +6584,7 @@ It is an integer.</p>
 </blockquote>
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked, but with more settings.</p>
 </td></tr></table></divl><hr><a id="renderclosewhendone"></a>
-&nbsp;<a href="#renderclosewhendone"><b>renderclosewhendone</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Some render-settings, as set in either the Render to File-dialog or in the Rendering to File-status window<br />
-It is an integer-bitfield.</p>
+&nbsp;<a href="#renderclosewhendone"><b>renderclosewhendone</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Some render-settings, as set in either the Render to File-dialog or in the Rendering to File-status window and the Project Render Metadata-dialog It is an integer-bitfield.</p>
 <blockquote>
 <p>&amp;1=0, Automatically close, when finished - checkbox in the Rendering to File-status-window - unchecked<br />
 &amp;1=1, Automatically close, when finished - checkbox in the Rendering to File-status-window - checked</p>
@@ -6583,6 +6604,12 @@ It is an integer-bitfield.</p>
 <blockquote>
 <p>&amp;16=0, Silently increment filenames to avoid overwriting - unchecked<br />
 &amp;16=1, Silently increment filenames to avoid overwriting - checked</p>
+</blockquote>
+<blockquote>
+<p>&amp;32=0, Always embed title/date/time - unchecked &amp;32=1, Always embed title/date/time - checked</p>
+</blockquote>
+<blockquote>
+<p>&amp;64=0, Always embed start offset (media position in project) - unchecked &amp;64=1, Always embed start offset (media position in project) - checked</p>
 </blockquote>
 <blockquote>
 <p>seems not to be available anymore as of Reaper 5.977:<br />
@@ -6611,7 +6638,7 @@ It is an integer</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="rendertaillen"></a>
 &nbsp;<a href="#rendertaillen"><b>rendertaillen</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The render-tail-length(in milliseconds)-inputbox, as set in the Render to File-dialog.<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0 to 2147483647; in milliseconds</p>
 </blockquote>
@@ -6665,7 +6692,7 @@ It is an integer-bitfield</p>
 </td></tr></table></divl><hr><a id="rewireslave"></a>
 &nbsp;<a href="#rewireslave"><b>rewireslave</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The checkboxes in the ReWire-Client-Settings, as set in the ReWire-section of Preferences -&gt; ReWire/DX as well as in Project Settings -&gt; Advanced<br />
 You must click the “ReWire client project settings”-button, to access the settings-dialog.<br />
-It is an integer bitfield.</p>
+It is an integer-bitfield.</p>
 <blockquote>
 <p>&amp;1=0, Ignore tempo change notifications from master-radiobutton selected<br />
 &amp;1=1, Build tempo map automatically as master plays-radiobutton selected</p>
@@ -6689,7 +6716,7 @@ For other ReWire-settings, see <a href="#userewire">userewire</a> and <a href="#
 <p>Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.</p>
 </td></tr></table></divl><hr><a id="reximport"></a>
 &nbsp;<a href="#reximport"><b>reximport</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The Import REX files as-dropdownlist, as set in the REX-section of Preferences -&gt; Video/REX/Misc<br />
-It is an integer bitfield.</p>
+It is an integer-bitfield.</p>
 <blockquote>
 <p>&amp;1=0, Beat slices that dynamically adjust to tempo changes<br />
 &amp;1=1, A single loopable media item<br />
@@ -6744,7 +6771,7 @@ It is an integer</p>
 </td></tr></table></divl><hr><a id="rulerlayout"></a>
 &nbsp;<a href="#rulerlayout"><b>rulerlayout</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The ruler layout-settings, as set in the Ruler layout-section of the Ruler context-menu as well as in Preferences -&gt; Appearance and<br />
 with actions in the actions-dialog<br />
-It is an integer bitfield</p>
+It is an integer-bitfield</p>
 <blockquote>
 <p>&amp;1=0, Display project regions in lanes(on) - checked<br />
 &amp;1=1, Display project regions in lanes(off) - unchecked</p>
@@ -7459,6 +7486,9 @@ It is an integer-bitfield</p>
 <p>&amp;16=0, Right click on crossfade sets fade shape for only one side of the crossfade(shift toggles)(off) - unchecked<br />
 &amp;16=1, Right click on crossfade sets fade shape for only one side of the crossfade(shift toggles)(on) - checked</p>
 </blockquote>
+<blockquote>
+<p>&amp;64=0, Use fade names instead of images for fade menus - unchecked &amp;64=1, Use fade names instead of images for fade menus - checked</p>
+</blockquote>
 <p>For other settings, as set in Preferences -&gt; Media Item Defaults, see <a href="#loopnewitems">loopnewitems</a>, <a href="#autoxfade">autoxfade</a>, <a href="#deffadeshape">deffadeshape</a>, <a href="#defxfadeshape">defxfadeshape</a>,<br />
 <a href="#deffadelen">deffadelen</a>, <a href="#defsplitxfadelen">defsplitxfadelen</a><br />
 For other settings in Preferences -&gt; Editing Behavior, see <a href="#itemclickmovecurs">itemclickmovecurs</a>, <a href="#locklooptotime">locklooptotime</a>, <a href="#relativeedges">relativeedges</a>, <a href="#ripplelockmode">ripplelockmode</a>,<br />
@@ -7505,7 +7535,7 @@ It is an integer</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="tabtotransflag"></a>
 &nbsp;<a href="#tabtotransflag"><b>tabtotransflag</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Several checkboxes, as set in Transient Detection Settings located in the View-menu or Preferences -&gt; Editing Behavior and in Preferences -&gt; Editing Behavior -&gt; Adjust sensitivity-Button<br />
-It is an integer bitfield</p>
+It is an integer-bitfield</p>
 <blockquote>
 <p>&amp;1=0, Tab through MIDI notes(Preferences -&gt; Editing Behavior)(off) - unchecked<br />
 &amp;1=1, Tab through MIDI notes(Preferences -&gt; Editing Behavior)(on) - checked</p>
@@ -7595,7 +7625,7 @@ It is an integer</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="tempoenvtimelock"></a>
 &nbsp;<a href="#tempoenvtimelock"><b>tempoenvtimelock</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Set the timebase for tempo/time signature envelopes, as set in the Project Settings -&gt; Project Settings<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, Time<br />
 1, Beats</p>
@@ -7887,7 +7917,7 @@ It is an integer</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="use_reamote"></a>
 &nbsp;<a href="#use_reamote"><b>use_reamote</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Enable Reamote processing-checkbox as set in Preferences -&gt; ReaMote<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0, checkbox unchecked(ReaMote disabled)<br />
 1, checkbox checked(ReaMote enabled)</p>
@@ -8028,7 +8058,7 @@ It is a string</p>
 <pre><code>  vlc ffmpeg qt:mov,qt,m4v,mp4 dshow:!mov,!mp4,!m4v,!qt (on Windows)  </code></pre>
 </td></tr></table></divl><hr><a id="video_delayms"></a>
 &nbsp;<a href="#video_delayms"><b>video_delayms</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Video output delay in milliseconds, as set in the Video-section of Preferences -&gt; Video/REX/Misc<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>0 to 2147483647</p>
 </blockquote>
@@ -8036,7 +8066,7 @@ It is an integer.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </td></tr></table></divl><hr><a id="video_defimglen"></a>
 &nbsp;<a href="#video_defimglen"><b>video_defimglen</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Still image thumbnail display mode -&gt; Default length(ms)-inputbox, as set in the Video-section of Preferences -&gt; Video/REX/Misc<br />
-It is an integer.</p>
+It is an integer</p>
 <blockquote>
 <p>-2147483647 to 2147483647</p>
 </blockquote>
@@ -8093,6 +8123,8 @@ For other settings set in Preferences -&gt; Recording, see <a href="#adjreclat">
 <p>For other settings as set in Preferences -&gt; Envelope Display, see <a href="#pitchenvrange">pitchenvrange</a>, <a href="#tempoenvmax">tempoenvmax</a>, <a href="#tempoenvmin">tempoenvmin</a>, <a href="#env_deffoc">env_deffoc</a>, <a href="#env_ol_minh">env_ol_minh</a>,<br />
 <a href="#env_reduce">env_reduce</a>, <a href="#envclicksegmode">envclicksegmode</a>, <a href="#envlanes">envlanes</a>, <a href="#envtranstime">envtranstime</a>, <a href="#pooledenvs">pooledenvs</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
+</td></tr></table></divl><hr><a id="vstbr32"></a>
+&nbsp;<a href="#vstbr32"><b>vstbr32</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>unknown, probably bridging for 32bit-vst-plugins? It is an integer</p>
 </td></tr></table></divl><hr><a id="vstbr64"></a>
 &nbsp;<a href="#vstbr64"><b>vstbr64</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The VST bridging/firewall-dropdownlist, as set in Preferences -&gt; Compatibility.<br />
 It is an integer</p>
@@ -8114,7 +8146,7 @@ It is an integer</p>
 </blockquote>
 </td></tr></table></divl><hr><a id="vstfullstate"></a>
 &nbsp;<a href="#vstfullstate"><b>vstfullstate</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The settings for VST-plugins, as set in Preferences -&gt; VST, as well as in Preferences -&gt; Compatibility as well as in the Add FX to Track-dialog -&gt; Options<br />
-It is an integer bitfield.</p>
+It is an integer-bitfield.</p>
 <blockquote>
 <p>&amp;1=0, Disable saving full plug-in state (not recommended, set minimal undo for the plug-in instead)(as set in Preferences -&gt; Compatibility) - checked(!)<br />
 &amp;1=1, Disable saving full plug-in state (not recommended, set minimal undo for the plug-in instead)(as set in Preferences -&gt; Compatibility) - unchecked(!)</p>
@@ -8198,6 +8230,8 @@ For other settings in Preferences -&gt; Compatibility, see <a href="#fxdenorm">f
 For Bridging and Firewall-Settings, as set in Preferences -&gt; Compatibility, see <a href="#vstbr64">vstbr64</a><br />
 For ARA-settings, see <a href="#ara">ara</a>.</p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
+</td></tr></table></divl><hr><a id="vst_scan"></a>
+&nbsp;<a href="#vst_scan"><b>vst_scan</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>unknown It is an integer</p>
 </td></tr></table></divl><hr><a id="vuclipstick"></a>
 &nbsp;<a href="#vuclipstick"><b>vuclipstick</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Sticky clip indicators, as set in Preferences -&gt; Track Control Panels<br />
 It is an integer</p>
@@ -8474,63 +8508,91 @@ It is an integer</p>
 &nbsp;<a href="#reaper_video->visible"><b>reaper_video->visible</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Visibility of the video-processor window.<br />
 This can’t be set, only read from reaper.ini -&gt; [reaper_video] !</p>
 <p>It is an integer</p>
+<blockquote>
 <ul>
 <li>0, video-processor-window is closed<br />
 </li>
 <li>1, video-processor-window is open</li>
 </ul>
+</blockquote>
+<p>Stored in reaper.ini -&gt; [reaper_video]</p>
 </td></tr></table></divl><hr><a id="reaper_video->smp"></a>
 &nbsp;<a href="#reaper_video->smp"><b>reaper_video->smp</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Video Processor multiprocessing, as set in the context-menu of the Video-Processor -&gt; Performance tweaks(experimental)<br />
 This can’t be set, only read from reaper.ini -&gt; [reaper_video] !</p>
 <p>It is an integer</p>
+<blockquote>
 <ul>
 <li>0, Disabled(default)</li>
 <li>1, 2 threads</li>
 <li>2, 3 threads</li>
 <li>3, 4 threads</li>
 </ul>
+</blockquote>
+<p>Stored in reaper.ini -&gt; [reaper_video]</p>
 </td></tr></table></divl><hr><a id="reaper_video->vdprefetch_threads"></a>
 &nbsp;<a href="#reaper_video->vdprefetch_threads"><b>reaper_video->vdprefetch_threads</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Video decoder pre-fetch-threads, as set in the context-menu of the Video-Processor -&gt; Performance tweaks(experimental) -&gt; Video decoder pre-fetch<br />
 This can’t be set, only read from reaper.ini -&gt; [reaper_video] !</p>
 <p>It is an integer</p>
+<blockquote>
 <ul>
 <li>0, Disabled(default)</li>
 <li>1, 2 threads</li>
-<li>2, 3 threads</li>
-<li>3, 4 threads</li>
+<li>2, 3 threads -3, 4 threads</li>
 </ul>
+</blockquote>
+<p>Stored in reaper.ini -&gt; [reaper_video]</p>
 </td></tr></table></divl><hr><a id="reaper_video->misc_flags"></a>
 &nbsp;<a href="#reaper_video->misc_flags"><b>reaper_video->misc_flags</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Misc settings as set in the context-menu of the Video-Processor -&gt; Performance tweaks(experimental)<br />
 This can’t be set, only read from reaper.ini -&gt; [reaper_video] !</p>
 <p>It is an integer-bitfield</p>
+<blockquote>
 <p>&amp;1=0, show underruns during playback as green frames - unchecked<br />
 &amp;1=1, show underruns during playback as green frames - checked</p>
+</blockquote>
+<blockquote>
 <p>&amp;2=0, Aggressively update video during arrange/edit scrolls - unchecked<br />
 &amp;2=1, Aggressively update video during arrange/edit scrolls - checked</p>
+</blockquote>
+<blockquote>
 <p>&amp;4=0, Send MIDI CC control messages [BB xx vv] when mouse dragging in video window - unchecked &amp;4=1, Send MIDI CC control messages [BB xx vv] when mouse dragging in video window - checked</p>
+</blockquote>
+<p>Stored in reaper.ini -&gt; [reaper_video]</p>
 </td></tr></table></divl><hr><a id="reaper_video->playback_cache"></a>
 &nbsp;<a href="#reaper_video->playback_cache"><b>reaper_video->playback_cache</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Rendered frame cache size, as set in the context-menu of the Video-Processor -&gt; Performance tweaks(experimental) -&gt; Rendered-frame cache size<br />
 This can’t be set, only read from reaper.ini -&gt; [reaper_video] !</p>
 <p>It is a double</p>
 <p>Given in seconds.</p>
-<p>The menu holds the values for: 0.100, 0.250, 0.500, 1.000(default), 1.500, 2.000</p>
+<p>The menu holds the values for: &gt;0.100, 0.250, 0.500, 1.000(default), 1.500, 2.000</p>
+<p>Stored in reaper.ini -&gt; [reaper_video]</p>
 </td></tr></table></divl><hr><a id="reaper_video->fx_mode"></a>
 &nbsp;<a href="#reaper_video->fx_mode"><b>reaper_video->fx_mode</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Monitoring/master FX-settings, as set in the context-menu of the Video-Processor -&gt; Performance tweaks(experimental) -&gt; Monitoring/master FX<br />
 This can’t be set, only read from reaper.ini -&gt; [reaper_video] !</p>
 <p>It is an integer</p>
+<blockquote>
 <p>0, Monitoring FX are low latency(default)<br />
 1, Monitoring FX and master FX are low latency<br />
 2, Monitoring FX and master FX are processed like track FX<br />
 3, All media and FX are not cached</p>
+</blockquote>
+<p>Stored in reaper.ini -&gt; [reaper_video]</p>
 </td></tr></table></divl><hr><a id="reaper_video->vdprefetch_srcs"></a>
 &nbsp;<a href="#reaper_video->vdprefetch_srcs"><b>reaper_video->vdprefetch_srcs</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>Video-decoder prefetch last x sourced, as set in the context-menu of the Video-Processor -&gt; Performance tweaks(experimental) -&gt; Video decoder pre-fetch<br />
 This can’t be set, only read from reaper.ini -&gt; [reaper_video] !</p>
 <p>It is an integer</p>
 <p>the number of last prefetched video sources, defaults are 2, 5, 10, 15</p>
+<p>Stored in reaper.ini -&gt; [reaper_video]</p>
 </td></tr></table></divl><hr><a id="REAPER->pspage_last"></a>
 &nbsp;<a href="#REAPER->pspage_last"><b>REAPER->pspage_last</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The last selected tab in the Project Settings-Dialog.</p>
 <p>It is an integer</p>
 <blockquote>
 <p>0, Project Settings-tab 1, Media-tab 2, Video-tab 3, Advanced-tab 4, Notes-tab</p>
 </blockquote>
-</td></tr></table></divl><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 007 - 444 configuration-variables available</td></table><br><hr></div></body></html>
+<p>Stored in reaper.ini -&gt; [REAPER]</p>
+</td></tr></table></divl><hr><a id="REAPER->autoclosekeymap"></a>
+&nbsp;<a href="#REAPER->autoclosekeymap"><b>REAPER->autoclosekeymap</b></a><br><br><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;"><p>The “Automatically close window on key/MIDI input”-checkbox in the Keyboard/MIDI/OSC-input-dialog.</p>
+<p>It is an integer</p>
+<blockquote>
+<p>0, unchecked 1, checked</p>
+</blockquote>
+<p>Can be set while Reaper is running and will be used the next time the dialog opens. Stored in reaper.ini -&gt; [REAPER]</p>
+</td></tr></table></divl><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.2 002 - 450 configuration-variables available</td></table><br><hr></div></body></html>

@@ -24,7 +24,7 @@
 ################################################################################
 ]]
 
--- Ultraschall State-Inspector 2.2.1 [Ultraschall-Developer Tools] 28.04.2020
+-- Ultraschall State-Inspector 2.3.0 [Ultraschall-Developer Tools] 1.12.2020
 --
 -- This Inspector monitors toggle-command-states or external-states of your choice.
 -- It's good for checking, if some toggling of states or changing of external-states
@@ -40,10 +40,32 @@ Aa,Ab,Ac,Ad,Ae=reaper.get_action_context()
 Path=Ab:match("(.*\\)")
 if Path==nil then Path=Ab:match("(.*/)") end
 
-version="2.2.1 - 28. 04. 2020"
+version="2.3.0 - 1. 12. 2020"
 
 gfx.init("Ultraschall State Inspector "..version, 560, 520)
 
+-- load configvars
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+if reaper.file_exists(Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.ini")==false then
+  os.rename(Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.inidef", Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.ini")
+end
+
+A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourceFiles/reaper-config_var.USDocML")
+found_usdocblocs, all_found_usdocblocs = ultraschall.Docs_GetAllUSDocBlocsFromString(A)
+table.remove(all_found_usdocblocs, 1)
+
+ConfigVars={}
+for i=1, found_usdocblocs-1 do
+  local vartype
+  local slug = ultraschall.Docs_GetUSDocBloc_Slug(all_found_usdocblocs[i])
+  local description = ultraschall.Docs_GetUSDocBloc_Description(all_found_usdocblocs[i], false, 1)
+  if description:match("is an integer") then vartype="integer"
+  elseif description:match("is a double float") then vartype="float"
+  elseif description:match("is a string") then vartype="string"
+  end
+  ConfigVars[slug]=vartype
+end
 
 function StateChunkLayouter(sc)
   local num_tabs=0
@@ -70,9 +92,6 @@ end
 
 KeyCodeIni_File=Path.."/Ultraschall_StateInspector/Ultraschall_Inspector_Gfx_GetKey_Codes.ini"
 InspectorIni_File=Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.ini"
-ActionlistReaper_File=Path.."/Ultraschall_StateInspector/ActionList_Reaper.ini"
-
-ultraschall={}
 
 timer=0
 refresh=3
@@ -92,7 +111,7 @@ function ultraschall.ReadFullFile(filename_with_path, binary)
   return filecontent, filecontent:len()
 end 
 
-ActionList_Reaper=ultraschall.ReadFullFile(Path.."ActionList_Reaper.txt", false)
+
 
 if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
     -- user_folder = buf --"C:\\Users\\[username]" -- need to be test
@@ -457,9 +476,9 @@ function ShowStates()
       if states[i][0]==true then gfx.x=row1-10 gfx.drawstr(">") gfx.x=row1 gfx.setfont(1,"Arial", 12, 86) end
       if states[i][1]=="toggle" then
         if states[i][3]=="0" then
-          retval, actionname= reaper.BR_Win32_GetPrivateProfileString("Main", tostring(states[i][2]), "", ActionlistReaper_File)
+          actionname = reaper.CF_GetCommandText(0, reaper.NamedCommandLookup(states[i][2]))
         else
-          retval, actionname= reaper.BR_Win32_GetPrivateProfileString("MIDI-Editor", tostring(states[i][2]), "", ActionlistReaper_File)
+          actionname = reaper.CF_GetCommandText(1, reaper.NamedCommandLookup(states[i][2]))
         end
         gfx.drawstr(i)
         gfx.set(0.3,0.3,0.3)
@@ -511,6 +530,23 @@ function ShowStates()
         t, value=reaper.GetProjExtState(0, states[i][2], states[i][3])
         gfx.drawstr(value.."\n")
         states[i][5]=tostring(value)
+    elseif states[i][1]=="configvar" then
+      --mespotine
+        gfx.drawstr(i)
+        gfx.set(0.3,0.3,0.3)
+        gfx.line(gfx.x,gfx.y+font_height,row3,gfx.y+font_height)
+        gfx.set(1,0.6,1)
+        gfx.x=row2
+        local val=""
+        if ConfigVars[states[i][2]]=="integer" then val=reaper.SNM_GetIntConfigVar(states[i][2], -100000000)
+        elseif ConfigVars[states[i][2]]=="float" then val=reaper.SNM_GetDoubleConfigVar(states[i][2], -100000000)
+        elseif ConfigVars[states[i][2]]=="string" then valretval, val=reaper.get_config_var_string(states[i][2]) end
+        gfx.drawstr(" | ConfigVar [\""..states[i][2].."\"] ("..ConfigVars[states[i][2]].."): ")
+        gfx.set(1,1,1)
+        if gfx.x>row3 then row3=gfx.x+50 end
+        gfx.x=row3
+        gfx.drawstr(val.."\n")
+        states[i][5]=tostring(val)      
       elseif states[i][1]=="usextstate" then
         t, value=ultraschall.GetUSExternalState(states[i][2], states[i][3])
         gfx.drawstr(i)
@@ -1535,6 +1571,18 @@ function AddGMEMState()
   altered="(altered)"
 end
 
+function AddConfigVarState()
+--mespotine
+  retval, retvals_csv = reaper.GetUserInputs("Give Me New ConfigVar", 1, "Configvar Name", "")
+  if retval==false then return end
+  if ConfigVars[retvals_csv]==nil then print2("Sorry, no such configvariable...") return end
+  counter=counter+1
+  states[counter]={}
+  states[counter][1]="configvar"
+  states[counter][2]=retvals_csv
+  altered="(altered)"
+end
+
 function AddExternalState()
   retval, retvals_csv = reaper.GetUserInputs("Give Me New ExternalState", 2, "Section:,Key:", "", "")
   if retval==false then return end
@@ -1615,6 +1663,7 @@ Use the menu or one of the command-letters to open a dialog, where you can enter
           Reaper or leave empty to open a open-file-dialog after 
           hitting OK.
 "G"   - will add a gmem-state
+"V"   - adds a config-variable
 "Shift+A" - adds all key-value-stores from a chosen ini-file at once(e.g reaper.ini)
 In the Menu - you can also add Reaper's own states, ordered by category
 
@@ -1708,6 +1757,11 @@ function SaveStateCollection(state)
       LL=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..1, states[i][1], Savefilename)
       LL2=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..2, states[i][2], Savefilename)
       LL3=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..3, states[i][3], Savefilename)
+    elseif states[i][1]=="configvar" then
+      temp= states[i][0]
+      if temp==true then reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..0, "true", Savefilename) end
+      LL=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..1, states[i][1], Savefilename)
+      LL=reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..2, states[i][2], Savefilename)
     else
       temp= states[i][0]
       if temp==true then reaper.BR_Win32_WritePrivateProfileString("collection"..slotnumber, "entry"..i.."_"..0, "true", Savefilename) end
@@ -1914,6 +1968,7 @@ function main()
       if A==117.0 then AddUSExternalState() end
       if A==97.0 then AddAnyExternalState() end
       if A==112 then AddProjExternalState() end
+      if A==118 then AddConfigVarState() end
       if A==109 then MoveEntry() end
       if A==100.0 then RemoveEntry() end
       if A==115.0 then SaveStateCollection() end
@@ -2021,7 +2076,7 @@ function main()
         Inverse_Rectangle(33,2,58,15, 1, 1, 1, 0.3, 0.3, 0.3, true)
         gfx.update()
         gfx.x=33 gfx.y=18
-        AddStatesMenu=gfx.showmenu("Add Action/Script|Add Toggle Command  T|Add External State   E|Add Ultraschall External State  U|Add Any External State  A|Add Project External State  P|Add All States from Ini-File  Shift+A|Add GMEM-State G|>Add Reaper State|"..ReaperMenuString)
+        AddStatesMenu=gfx.showmenu("Add Action/Script|Add Toggle Command  T|Add External State   E|Add Ultraschall External State  U|Add Any External State  A|Add Project External State  P|Add All States from Ini-File  Shift+A|Add GMEM-State G|Add ConfigVar V|>Add Reaper State|"..ReaperMenuString)
     elseif gfx.mouse_x>33 and gfx.mouse_x<60+33 and gfx.mouse_y>0 and gfx.mouse_y<15 then
         Inverse_Rectangle(33,2,58,15, 1, 1, 1, 0.3, 0.3, 0.3, false)
     end    
@@ -2033,7 +2088,8 @@ function main()
     if AddStatesMenu==6 then AddProjExternalState() AddStatesMenu=0 end
     if AddStatesMenu==7 then AddAllStatesFromIniFile() AddStatesMenu=0 end
     if AddStatesMenu==8 then AddGMEMState() AddStatesMenu=0 end
-    if AddStatesMenu>=9 then AddReaperStates(ReturnReaperMenuEntry(AddStatesMenu-2, ReaperMenu)) t,t2=ReturnReaperMenuEntry(AddStatesMenu, ReaperMenu) AddStatesMenu=0 end
+    if AddStatesMenu==9 then AddConfigVarState() AddStatesMenu=0 end
+    if AddStatesMenu>=10 then AddReaperStates(ReturnReaperMenuEntry(AddStatesMenu-3, ReaperMenu)) t,t2=ReturnReaperMenuEntry(AddStatesMenu, ReaperMenu) AddStatesMenu=0 end
 
     --Edit List Menu
    if gfx.mouse_x>93 and gfx.mouse_x<93+47 and gfx.mouse_y>0 and gfx.mouse_y<15 and gfx.mouse_cap==1 then

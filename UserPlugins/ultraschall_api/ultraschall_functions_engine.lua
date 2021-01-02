@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -211,17 +211,45 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  return 410.007, "4.1","21st of October 2020", "007",  "\"Frank Zappa - Carolina Hard-Core Ecstasy\"", ultraschall.hotfixdate, BuildNumber
+  return 420.002, "4.2","25th of December 2020", "002",  "\"Dave Brubeck - Take Five\"", ultraschall.hotfixdate, BuildNumber
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
 
 function ultraschall.IntToDouble(integer, selector)
   if selector==nil then
-    for c in io.lines(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int.ini") do
-      if c:match(integer)~=nil then return tonumber(c:match("(.-)=")) end
+    -- get the double-float-version of this integer-representation
+    -- as the file, in which I added the float-representation only has the last
+    -- 8 characters encoded, I need to strip it from anything not needed for the encoding
+    
+    -- subtract the redundant values, that I didn't store anyway
+    if integer>1099998167 then integer=integer-100000000 end
+    if integer>0 then integer=integer-1000000000 end
+    
+    -- now convert the 8 bytes into the 4-byte-sequence I have stored in double_to_int_2-inifile
+    integer=tostring(integer)
+    for i=1, 8 do
+      if integer:len()<8 then -- if the value i 0 then we need to fill up with padding 0
+        integer=(0)..integer
+      end
+    end
+    
+    -- create the final 4-byte-sequence, which we're looking for in the ini-file
+    local A=string.char(integer:sub(1,2)+1)..string.char(integer:sub(3,4)+1)..string.char(integer:sub(5,6)+1)..string.char(integer:sub(7,8)+1)
+    
+    -- read ini-file
+      --local B=ultraschall.ReadFullFile(ultraschall.Api_Path.."/IniFiles/double_to_int_2.ini", true)
+ B=UseMe -- debug
+    -- look for the byte-sequence in the ini-file. The (offset/4)/100 is the double-float-value
+    local i=-1
+    for k in string.gmatch(B, "....") do
+      i=i+1
+      if k==A then return ultraschall.LimitFractionOfFloat(i/100, 2, true)  end
     end
   else
+    -- convert integer-value to 14f-float, by reading it from the double_to_int_24bit-inifile
+    integer=integer-4000000 -- subtract the value I haven't stored in double_to_int_24bit-inifile as it was redundant
+    -- read through the whole file to get the correct entry and return the entry
     for c in io.lines(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int_24bit.ini") do
       if c:match(integer)~=nil then return tonumber(c:match("(.-)=")) end
     end  
@@ -230,20 +258,48 @@ end
 
 --A=ultraschall.IntToDouble(4595772,1)
 
+
+
 function ultraschall.DoubleToInt(float, selector)
   float=float+0.0
   float=ultraschall.LimitFractionOfFloat(float, 2, true)
   float=tostring(float)
   local String, retval
   if selector == nil then 
-    if (float:match("%.(.*)")):len()==1 then 
-      float=float.."0" 
+    -- get float
+    if (float:match("%.(.*)")):len()==1 then float=float.."0" end -- make float an indexable string
+    
+    -- prepare variables
+    local found=""
+    local one, two, three, four, A
+    local finalcounter=string.gsub(tostring(float), "%.", "")
+    finalcounter=tonumber(finalcounter)    
+ 
+    -- read byte-sequence, that we need to convert into the integer-value
+    -- from double_to_int_2.ini-file
+    local length, k = ultraschall.ReadBinaryFile_Offset(ultraschall.Api_Path.."/IniFiles/double_to_int_2.ini", finalcounter*4, 4)
+    
+    -- convert the bytesequence into the 8-character-byte-sequence
+    one = tostring(string.byte(k:sub(1,1))-1) if one:len()==1 then one="0"..one end
+    two = tostring(string.byte(k:sub(2,2))-1) if two:len()==1 then two="0"..two end
+    three=tostring(string.byte(k:sub(3,3))-1) if three:len()==1 then three="0"..three end
+    four =tostring(string.byte(k:sub(4,4))-1) if four:len()==1 then four="0"..four end
+    found=tonumber(one..two..three..four)
+    
+    -- add additional offsets(this is due saving space in the double_to_int_2.ini-file, as this information
+    -- was redundant in the first place, so I cropped it and reinsert it here)
+    if finalcounter>1808 then 
+      found=found+100000000 
     end
-    retval, String = reaper.BR_Win32_GetPrivateProfileString("FloatsInt", float, "-1", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int.ini")
+    if found>0 then found=found+1000000000 end    
+    return found --return the integer-value.
   else
-    retval, String = reaper.BR_Win32_GetPrivateProfileString("OpusFloatsInt", float, "-1", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int_24bit.ini")
+    -- for 14f-floats, use this file and read it like any regular ini-file
+    retval, String = reaper.BR_Win32_GetPrivateProfileString("OpusFloatsInt", math.tointeger(float), "-1", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int_24bit.ini")
+    -- add an offset(I removed it from the ini-file, as it was redundant. So I need to readd that value again in here)
+    String=tonumber(String)+4000000
   end
-  return tonumber(String)
+  return String
 end
 
 function ultraschall.SuppressErrorMessages(flag)
@@ -2418,28 +2474,41 @@ function ultraschall.BringReaScriptConsoleToFront()
   end
 end
 
-function ultraschall.EditReaScript(filename)
+function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionlist_section)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>EditReaScript</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.10
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.EditReaScript(string filename)</functioncall>
+  <functioncall>boolean retval, optional command_id = ultraschall.EditReaScript(optional string filename, optional boolean add_ultraschall_api, optional integer add_to_actionlist_section)</functioncall>
   <description>
     Opens a script in Reaper's ReaScript-IDE.
     
     If the file does not exist yet, it will try to create it. If parameter filename doesn't contain a valid directory, it will try to create the script in the Scripts-folder of Reaper.
     
+    Setting filename=nil will open the last one edited using this function.
+    
     returns false in case of an error
   </description>
   <parameters>
-    boolean flag - true, suppress error-messages; false, don't suppress error-messages
+    optional string filename - the filename of the new reascript-file to create(add .lua or .py or .eel to select the language).
+                             - nil, opens the last ReaScript-file you opened with this function
+    optional boolean add_ultraschall_api - true, add Ultraschall-API-call into the script(only in newly created ones!); false or nil, just open a blank script
+    optional integer add_to_actionlist_section - the section, into which you want to add the script
+                                               - nil, don't add, only open the script in IDE
+                                               - 0, Main
+                                               - 100, Main (alt recording) Note: If you already added to main(section 0), this function automatically adds the script to Main(alt) as well.
+                                               - 32060, MIDI Editor
+                                               - 32061, MIDI Event List Editor
+                                               - 32062, MIDI Inline Editor
+                                               - 32063, Media Explorer
   </parameters>
   <retvals>
-    boolean retval - true, setting was successful; false, you didn't pass a boolean as parameter
+    boolean retval - true, opening was successful; false, opening was unsuccessful
+    optional integer command_id - the command-id of the script, when it gets newly created
   </retvals>
   <chapter_context>
     Developer
@@ -2450,20 +2519,61 @@ function ultraschall.EditReaScript(filename)
   <tags>developer, edit, reascript, ide</tags>
 </US_DocBloc>
 ]]
-  if type(filename)~="string" then ultraschall.AddErrorMessage("EditReaScript", "filename", "must be a string", -1) return false end
+  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("EditReaScript", "filename", "must be a string", -1) return false end
+  if filename==nil then 
+    -- when user has not set a filename, use the last edited on(with this function) or 
+    -- the last created one(using the action-list-dialog), checked in that order
+    filename=reaper.GetExtState("ultraschall_api", "last_edited_script") 
+    if filename=="" then 
+        filename=ultraschall.GetUSExternalState("REAPER", "lastscript", "reaper.ini")
+    end
+  end
+  
+  local command_id
+  
   if reaper.file_exists(filename)==false and ultraschall.DirectoryExists2(ultraschall.GetPath(filename))==false then
+    -- if path does not exist, create filename in the scripts-folder
     local Path, Filename=ultraschall.GetPath(filename)
     filename=reaper.GetResourcePath().."/Scripts/"..Filename
   end
   if reaper.file_exists(filename)==false then
-    ultraschall.WriteValueToFile(filename, "")
+    -- create new file if not yet existing
+    local content  
+    if add_ultraschall_api==true then 
+      content="dofile(reaper.GetResourcePath()..\"/UserPlugins/ultraschall_api.lua\")\n\n"
+    else
+      content=""
+    end
+  
+    ultraschall.WriteValueToFile(filename, content)
+    if add_to_actionlist_section~=nil then
+      if add_to_actionlist_section~=0 and
+         add_to_actionlist_section~=100 and
+         add_to_actionlist_section~=32060 and
+         add_to_actionlist_section~=32061 and
+         add_to_actionlist_section~=32062 and
+         add_to_actionlist_section~=32063 then
+         add_to_actionlist_section=0
+      end
+
+      command_id = reaper.AddRemoveReaScript(true, add_to_actionlist_section, filename, true)
+    end
   end
+  
+  -- set script that shall be opened and run the action to Edit last edited script
   local A, B, C
   A=ultraschall.GetUSExternalState("REAPER", "lastscript", "reaper.ini")
   B=ultraschall.SetUSExternalState("REAPER", "lastscript", filename, "reaper.ini")
+  
   reaper.Main_OnCommand(41931,0)
+
+  -- reset old edited script in reaper.ini
   C=ultraschall.SetUSExternalState("REAPER", "lastscript", A, "reaper.ini")
-  return true
+  
+  -- store last created/edited file using this function, so it can be opened with filename=nil
+  reaper.SetExtState("ultraschall_api", "last_edited_script", filename, true)
+
+  return true, command_id
 end
 
 function SFEM()
@@ -2576,47 +2686,199 @@ function SFEM()
     return retval, three
 end
 
+function RFR(length, ...)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RFR</slug>
+    <requires>
+      Ultraschall=4.2
+      Reaper=5.40
+      Lua=5.3
+    </requires>
+    <functioncall>... = RFR(integer length, ...)</functioncall>
+    <description>
+      returns only the first x return-values, as given by length.
+      
+      You can put the return-values of another function and just get the first x ones. So if the function returns 10 returnvalues, 
+      but you only need the first two, set length=2 and add the function(with the 10 returnvalues) after it as second parameter.
+      
+      
+      For example:
+      
+      integer r, integer g, integer b = reaper.ColorFromNative(integer col)
+      
+      returns three colorvalues. If you only want the first one(r), use it this way:
+      
+      r=RFR(1, reaper.ColorFromNative(12739))
+      
+      
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      various ... - the requested first-n returnvalues
+    </retvals>
+    <parameters>
+      integer length - the number of the first return-values to return
+      various ... - further parameters, which can be multiple values or just the return-values of another function.
+    </parameters>
+    <chapter_context>
+      Developer
+      Helper functions
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>developer, return values, retval, only first</tags>
+  </US_DocBloc>
+  --]]
+  if math.type(length)~="integer" then ultraschall.AddErrorMessage("RFR", "length", "must be an integer", -1) return end
+  if length<1 then ultraschall.AddErrorMessage("RFR", "length", "must be bigger than 0", -2) return end
+  local Table={...}
+  if length>=#Table then return table.unpack(Table) end
+  local Table2={}
+  for i=1, length do
+    if Table[i]==nil then return table.unpack(Table2) end
+    Table2[i]=Table[i]
+  end
+  return table.unpack(Table2)
+end
 
 
-
-
-
-
-
-
+function RLR(length, ...)
 --[[
-dofile(script_path .. "Modules/ultraschall_functions_AudioManagement_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_AutomationItems_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_Clipboard_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_Color_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_ConfigurationFiles_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_ConfigurationSettings_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_DeferManagement_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_Envelope_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_EventManager.lua")
-dofile(script_path .. "Modules/ultraschall_functions_FileManagement_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_FXManagement_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_HelperFunctions_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_Localize_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_Markers_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_MediaItem_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_MetaData_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_MIDIManagement_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_Muting_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_Navigation_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_ProjectManagement_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_ReaMote_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_ReaperUserInterface_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_Render_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_TrackManagement_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_TrackManagement_Routing_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua")
-dofile(script_path .. "Modules/ultraschall_functions_Ultraschall_Module.lua")
---]]
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RLR</slug>
+    <requires>
+      Ultraschall=4.2
+      Reaper=5.40
+      Lua=5.3
+    </requires>
+    <functioncall>... = RLR(integer length, ...)</functioncall>
+    <description>
+      returns only the last x return-values, as given by length.
+      
+      You can put the return-values of another function and just get the last x ones. So if the function returns 10 returnvalues, 
+      but you only need the last two, set length=2 and add the function(with the 10 returnvalues) after it as second parameter.
+      
+      
+      For example:
+      
+      integer r, integer g, integer b = reaper.ColorFromNative(integer col)
+      
+      returns three colorvalues. If you only want the last one(b), use it this way:
+      
+      b=RLR(1, reaper.ColorFromNative(12739))
+      
+      
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      various ... - the requested last-n returnvalues
+    </retvals>
+    <parameters>
+      integer length - the number of the last return-values to return
+      various ... - further parameters, which can be multiple values or just the return-values of another function.
+    </parameters>
+    <chapter_context>
+      Developer
+      Helper functions
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>developer, return values, retval, only last</tags>
+  </US_DocBloc>
+  --]]
+  if math.type(length)~="integer" then ultraschall.AddErrorMessage("RLR", "length", "must be an integer", -1) return end
+  if length<1 then ultraschall.AddErrorMessage("RLR", "length", "must be bigger than 0", -2) return end
+  local Table={...}
+  if length>=#Table then return table.unpack(Table) end
+  local Table2={}
+  local a=0
+  for i=#Table-length+1, #Table do
+    if Table[i]~=nil then 
+      a=a+1
+      Table2[a]=Table[i]
+    end
+  end
+  return table.unpack(Table2)
+end
+
+function RRR(position, length, ...)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>RRR</slug>
+    <requires>
+      Ultraschall=4.2
+      Reaper=5.40
+      Lua=5.3
+    </requires>
+    <functioncall>... = RRR(integer position, integer length, ...)</functioncall>
+    <description>
+      returns only the x return-values between position and position+length.
+      
+      You can put the return-values of another function and just get the ones between position and position+length. So if the function returns 10 returnvalues, 
+      but you only need the third through the fifth, set position=3 and length=3 and add the function(with the 10 returnvalues) after it as third parameter.
+      
+      
+      For example:
+      
+      integer r, integer g, integer b = reaper.ColorFromNative(integer col)
+      
+      returns three colorvalues. If you only want the middle one(g), use it this way:
+      
+      g=RLR(2, 1, reaper.ColorFromNative(12739))
+      
+      
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      various ... - the requested n returnvalues between position and length+position
+    </retvals>
+    <parameters>
+      integer position - the first return-value to return
+      integer length - the number of return-values to return(position+length)
+      various ... - further parameters, which can be multiple values or just the return-values of another function.
+    </parameters>
+    <chapter_context>
+      Developer
+      Helper functions
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>ultraschall_functions_engine.lua</source_document>
+    <tags>developer, return values, retval, between</tags>
+  </US_DocBloc>
+  --]]
+  if math.type(position)~="integer" then ultraschall.AddErrorMessage("RFR", "position", "must be an integer", -1) return end
+  if position<1 then ultraschall.AddErrorMessage("RFR", "position", "must be bigger than 0", -2) return end
+  if math.type(length)~="integer" then ultraschall.AddErrorMessage("RFR", "length", "must be an integer", -3) return end
+  if length<0 then ultraschall.AddErrorMessage("RFR", "length", "must be bigger or equal 0", -4) return end
+  local Table={...}
+  local Table2={}
+  local a=0
+  if length>#Table then length=#Table end
+  for i=position, length do
+    if Table[i]~=nil then 
+      a=a+1
+      Table2[a]=Table[i]
+    end
+  end
+  return table.unpack(Table2)
+end
 
 
 
-dofile(script_path.."ultraschall_ModulatorLoad3000.lua")
+
+-- Load ModulatorLoad3000
+
+if ultraschall.US_BetaFunctions==false then
+  dofile(script_path.."ultraschall_ModulatorLoad3000.lua")
+else
+  for i=0, 1024 do
+    file=reaper.EnumerateFiles(script_path.."/Modules/", i)
+    if file==nil then break end
+    dofile(script_path.."/Modules/"..file)
+  end
+end
 ultraschall.ShowLastErrorMessage()

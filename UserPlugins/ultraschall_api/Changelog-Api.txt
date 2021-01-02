@@ -1,7 +1,5 @@
 <TODO>
     -- later releases
-        - EventManager - allow one-time-events, that unregister themselves, as soon as they hit the true-stage and have executed their actions.
-        - GetUserInputs - new implementation for captions and retvals BUT OK/Cancel Button buggy and length of captions/retvals buggy
         - Hilfsfunktionen für Lokasenna's GuiLib v2, wie automatisches übertragen der Höhe/Breite/Position-Werte in die entsprechenden Gui-Vals
         - BatchConvertFiles - maybe finishing it up?
         - Set Metadata from Project - still missing
@@ -135,7 +133,7 @@ Have fun!"
         - TODO!! in the eventmanager-script: 
             - CheckEveryXSeconds: mach Wert 0 zu permanent und negative Werte zu EveryXDeferCycle-Werten für mehr Kontrolle darüber(letzteres Kür)
             - CheckForXSeconds: mach Wert 0 zu dauerhaft und evtl negative Werte für Anzahl Defer-Cycles, die gecheckt werden soll(letzteres Kür)
-            
+            - One Time Events, who remove themselves after first event=true
         - TODO!! XML-generator has problems with spaces and & in filenames; use this to overcome this:
                       tempfile=files_array[i]
                       tempfile2=string.gsub(tempfile, "&", "%%26")
@@ -179,15 +177,6 @@ Have fun!"
                - IsValid-check functions for
                     - AutomationItems, ProjectBay, Metronome, MasterPlayspeed, Tempo, Extensions, MasterHWVolEnv, MasterFXList, MasterDualPanEnv
                       MasterDualPanEnv2, MasterDualPanEnvL, MasterDualPanEnvL2, MasterVolEnv, MasterVolEnv2, MasterVolEnv3, MasterHWPanEnv, TempoEnv_Ex   
-         - TODO!! Add/Set/DeleteModulation
-
-         - TODO!! GetUserInputs 
-                - set length of caption-textfields and move inputboxes accordingly, as well as the width of the DialogWindow AND
-                  position it correctly centered
-                - Captions ending with \n shall be the full width of the window(for full readability of the caption), where the 
-                  associated inputbox is moved into the next line,which means, that all lines must be moved downwards properly 
-                  and height must be adjusted accordingly
-
     - TODO!! Monitor the rendering to file-dialog for queue-renders, to get the rendered filenames, using a background script, if possible at all
       TODO!! Default-Color-Theme-Colortables and loading ColorTable from Theme-functions
               Originally Posted by mespotine  View Post
@@ -239,10 +228,145 @@ Have fun!"
    - Subtitles: ReadSubtitles\_VTT - imports a webvtt-subtitlefile
    - FXManagement: DeleteParmLearn2\_FXStateChunk - like DeleteParmLearn\_FXStateChunk, but allows indexing by parameter-index, not by number of existing parameter learnings
 
-   
+
+TODO:
+    - function for FXChain-entry MIDIPRESET: When using vst, click the +-button in FXChain and select Link to Midi Programchange
+    - function for WAK, which allows setting "Send all keyboard input to plug-in"-setting(also in FXChain->+-Button-menu)
+    - function for getting/setting comment-section of an fx(in FX-Chain the field above the preset-dropdownlist)
+        NOTE: This is stored AFTER the WAK-entry inside its own <COMMENT-statechunk as Base64-string
+            WAK 1 0
+            <COMMENT
+              SGVsbG8gV29ybGQ=
+            >
+    -   ALSO IMPORTANT:
+            Get/Set-FXChain-functions do not support yet the COMMENT-section, as they work with the idea of WAK being
+            the final entry of a plugin.
+            Which it's not, when the COMMENT-section is present!!!
+    - Markdown Converter: use 
+        A="Test[LULU[H[ULU](T\n\nudel)Kallo[Tudelu](Huch)"
+        B=A:match(".*(%[.-%]%(.-%))") -- URL-parsen!!!
+       to parse URLs
+    - InputFX_GetNamedConfigParm has markdownissues
+    - RenderProject - write nil as option for optional-parameters
 </TODO>
 
+
 ## Ultraschall Framework - Changelog
+
+### 4.2.002 - "Dave Brubeck - Take Five" - 25th of December 2020
+
+Has now 1359 functions, with 8 new ones
+
+**new in this release:**  
+  - **Get/Set Comment-field of fx**  
+  You can now get and set the comment-field of trackfx and takefx programmatically. Also gave me the chance to fix some bugs as well ;)
+  
+  - **Linesorting script for clipboard-content**  
+  Sometimes, you would love to sort the lines in the clipboard. Now you can, using the new developer-tool.  
+  
+  - **bugfixes and docs**  
+  various bugfixes and update to Reaper Internals to Reaper 6.19, SWS 2.12.1.1, JS-extension 1.220  
+
+#### New features in 4.2.002  
+   - DeveloperTools: ultraschall\_developertool\_SortLinesInClipboardText.lua - sorts the lines of the string in the clipboard
+   - FX-Management: CountFXFromFXStateChunk - counts the number of fx in an FXStateChunk
+   - FX-Management: GetFXComment\_FXStateChunk - allows getting the comment of an fx within an FXStateChunk(requested by en5ca)
+   - FX-Management: GetTrackFXComment - gets the text in the comment-field of a trackfx(requested by en5ca)
+   - FX-Management: GetTakeFXComment - gets the text in the comment-field of an itemfx(requested by en5ca)
+   - FX-Management: InputFX\_GetComment - gets the text in the comment-field of an inputfx
+   - FX-Management: SetFXComment\_FXStateChunk - allows setting the comment of an fx within an FXStateChunk(requested by en5ca)
+   - FX-Management: SetTrackFXComment - sets the text in the comment-field of a trackfx(requested by en5ca)
+   - FX-Management: SetTakeFXComment - sets the text in the comment-field of an itemfx(requested by en5ca)
+   
+#### Changes from 4.2.001 to 4.2.002  
+   - API: Settings - allows now turning on/off confirmation dialogs in certain devtools(for streamlined manipulation of strings); had some bug, when not set a value yet -> fixed
+   - Docs: Reaper Internals - updated to Reaper 6.19 and SWS 2.12.1.1 and JS-extension 1.220
+   - File-Management: PreviewMediaFile - allows now setting the output-channel of the preview as well
+   - FX-Management: GetFXFromFXStateChunk - didn't return possible comment-field -> fixed
+   - FX-Management: GetFXSettingsString\_FXLines - didn't work due stupid bug on my side; crashed when an fx didn't have fx-lines available -> both fixed(thanks to woodslanding)
+   - Helper functions: EditReaScript - allows now opening the last file you opened up with this function by passing nil; adding Ultraschall-API is now supported; optionally add this script to the actionlist; docs were wrong -> fixed
+   - Helper functions: Base64\_Decoder - fixed off-by-one-error that could mess up the last character in the Base-64-string under certain conditions
+   - Helper functions: Base64\_Encoder - had inner variable exposed -> fixed
+   - RenderManagement: ApplyRenderTable\_Project - didn't always apply Mono-Media and Multi-Channel-checkboxes properly -> fixed(thanks to aurelien)
+   - RenderManagement: ApplyRenderTable\_ProjectFile - didn't always apply Mono-Media and Multi-Channel-checkboxes properly -> fixed(thanks to aurelien)
+
+
+---
+
+### 4.2.001 - "Pink Floyd - High Hopes" - 1st of December 2020
+
+Has now 1351 functions, with 9 new ones
+
+**new in this release:**  
+  - ** StuffMIDIMessage and KB.ini-functions**  
+  You can now convert the KEY-entry-codes of shortcuts(as stored in the reaper-kb.ini) into their text representation: CharacterCodes\_ReverseLookup\_KBIni  
+  This is also possible, if you use StuffMIDIMessage to send control-messages, as these can be converted now into their 
+  text-representation as well: CharacterCodes\_ReverseLookup  
+  Multiple keymaps supported.  
+  Oh, and did I mention, you can now also get all currently set shortcuts as a handy table? Optionally with factory-default shortcuts?  
+  Now I did: KBIniGetAllShortcuts  
+
+  - ** Metadata for AIFF, APE and XMP**  
+  As of Reaper 6.16, you can add metadata for AIFF, APE and XMP as well. I also updated the other metadata-functions to 
+  feature the lastest metadata-features Reaper can offer.  
+  And yes, this includes also support for the new Media Explorer-tags.
+  
+  - ** ConfigVars support in StateInspector **  
+  That's right: you can now monitor config-vars in the StateInspector as well. I also removed the fact that I accidentally
+  deleted your saved slots with each updated.  
+  How come, you didn't tell me that, huh? ;)
+
+  - ** CleanUp and Speedup **  
+  I made Ultraschall-API much smaller by removing tons of useless files and improving storage of other files by magnitude.  
+  To give you a number: Ultraschall-API is 50% smaller compared to the previous release.  
+  It also loads now 30% faster, so starting scripts using Ultraschall-API is now close to lightspeed.  
+    
+  - ** Various Bugfixes **  
+  The render-string-functions didn't work properly with floats. Mostly fps-settings were affected. Now it's working.  
+  Also the StuffMIDIMessage-docs is improved now and more precise.  
+
+#### New features in 4.2.001
+   - ConfigFile Management: KBIniGetAllShortcuts - returns all shortcuts of the currently running Reaper-instance as a handy table
+   - Helper functions: CharacterCodes\_ReverseLookup - converts the StuffMIDIMessage-bytes(with parameter mode=1) into their character-representation
+   - Helper functions: CharacterCodes\_ReverseLookup\_KBIni - converts the first two bytes of the KEY-entries in reaper-kb.ini into their character-representation   
+   - Helper functions: RFR - (ReturnFirstRetvals) allows you to get only the first x return-values of a function
+   - Helper functions: RLR - (ReturnLastRetvals) allows you to get only the last x return-values of a function
+   - Helper functions: RRR - (ReturnRangeRetvals) allows you to get only a range of all return-values of a function
+   - Metadata: Metadata\_AIFF\_GetSet - gets/sets the AIFF-metadata of the current project
+   - Metadata: Metadata\_APE\_GetSet - gets/sets the APE-metadata of the current project
+   - Metadata: Metadata\_XMP\_GetSet - gets/sets the XMP-metadata of the current project
+   
+#### Changes from 4.1.007 to 4.2.001  
+   - API: Loadspeed - sped up loading-speed of API by 30%
+   - DeveloperTools: Config Var Displayer - improved layout for monospaced ReaScript-console-font
+   - Developer Tools: State Inspector - supports now config-vars; reduced needed files to save space; ini-file accidentally overwritten when updating API via ReaPack -> fixed
+   - Docs: Concepts - split installation and usage of Ultraschall-API into two chapters; removed the hotfix-chapter(was outdated); corrected download-link
+   - Docs: Config-Vars - added mac-only-configvars(thanks to cfillion)
+   - Docs: Example-videos - removed
+   - Docs: Reaper Internals - updated to Reaper 6.17
+   - Docs: StuffMIDIMessage-docs - rewrote it as it contained many many errors
+   - Helper functions: LimitFractionOfFloat - removed roundit-parameter(if you need it, give me a hint); more stable now.
+   - IniFiles: Reaper-ActionList\_v5\_96.ini - removed, can be produced using developertool ultraschall\_developertool\_ActionlistToIni-Converter.lua
+   - Ini-Files: Reaper-factory-default-KEY-Codes\_for\_reaper-kb\_ini.ini - corrected some mistakes
+   - Metadata: Metadata\_BWF\_GetSet - added new tags as of Reaper 6.16
+   - Metadata: Metadata\_ID3\_GetSet - added new tags as of Reaper 6.16
+   - Metadata: Metadata\_INFO\_GetSet - added new tags as of Reaper 6.16
+   - Metadata: Metadata\_IXML\_GetSet - added new tags as of Reaper 6.16
+   - Metadata: Metadata\_VORBIS\_GetSet - added new tags as of Reaper 6.16
+   - Misc: Docs-gfx - removed them from the misc-folder(were redundant)
+   - Misc: Developer-langpack removed - use ultraschall\_developertool\_LangPack2Developer\_langpack\_converter.lua to create one
+   - Misc: Reaper 5 developer translationpack - removed
+   - Misc: Notifications-sound - removed
+   - Misc: Reaper-KEY-Codes\_for\_reaper-kb\_ini.ini - removed, use CharacterCodes\_ReverseLookup instead to get the codes
+   - Misc: ShowVars\_Toggle.txt - removed(was redundant)
+   - Misc: StuffMidiMessage-AllMessages\_Englisch\_Windows.ini - removed, use CharacterCodes\_ReverseLookup instead to get the codes
+   - Rendering: CreateRenderCFG\_OGG - didn't allow for 1.0 vbr-setting in certain edge-cases -> fixed
+   - Rendering: CreateRenderCFG\_Opus - didn't create correct bitrate in string -> fixed
+   - Rendering: various create-render-cfg-function - parameter fps didn't always produce the correct fps-values -> fixed
+   - Rendering: various functions - had parameter fps incorrectly documented as integer though it's number -> fixed
+   
+   
+---
 
 ### 4.1.007 - "Frank Zappa - Carolina Hard-Core Ecstasy" - 21st of October 2020
 

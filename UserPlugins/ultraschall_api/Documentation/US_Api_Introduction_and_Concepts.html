@@ -55,9 +55,9 @@ Ultraschall API functions
         </div>
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.1007 - "Frank Zappa - Carolina Hard-Core Ecstasy" - 21st of October 2020 - Build: 43385</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
-<td><a href="#Introduction_002_How_to_Use">How to install and use the Ultraschall API</a></td>
-<td><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">How to install hotfixes</a></td>
+<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.2002 - "Dave Brubeck - Take Five" - 25th of December 2020 - Build: 43474</div><h3>Introduction and Concepts</h3><table style="font-size:10pt; width:100%;" ><tr><td>&nbsp;</td></tr><tr><td><b>Introduction</b></td></tr><tr><td><a href="#Introduction_001_Api">Introduction to the Ultraschall API</a></td>
+<td><a href="#Introduction_002_How_to_Install">How to install Ultraschall API</a></td>
+<td><a href="#Introduction_003_How_to_Use">Introduction: How to use Ultraschall API</a></td>
 <td><a href="#Introduction_004_Bugreporting_FeatureRequests">Introduction: Bugreporting and Feature Requests</a></td>
 </tr><tr><td><a href="#Introduction_005_License">Introduction: License</a></td>
 </tr><p><tr><td>&nbsp;</td></tr><tr><td><b>Datatypes</b></td></tr><tr><td><a href="#Datatypes_001_Introduction">Datatypes: Introduction</a></td>
@@ -216,10 +216,9 @@ Ultraschall API functions
 <p>Meo Mespotine (mespotine.de) (ultraschall.fm/api)</p>
 <p>For more information about Ultraschall itself, see <a href="http://www.ultraschall.fm">ultraschall.fm</a> and if you want to support us, see <a href="http://www.ultraschall.fm/danke">ultraschall.fm/danke</a> for donating to us.</p>
 <p>PS: In this documentation, I assume you have some basic knowledge in Lua and in using Reaper's own API-functions. Explaining both of these is beyond the scope of this doc.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_002_How_to_Use"></a>
-<div style="font-size:100%"><h4><a href="#Introduction_002_How_to_Use">^</a> <u>How to install and use the Ultraschall API</u></h4></div><p><p>Using the Ultraschall-API is quite easy.</p>
-<p>First make sure, you use the right versions of Reaper and SWS: <a href="https://www.reaper.fm">Reaper 6.02</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 1.215.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
+<hr><a id="Introduction_002_How_to_Install"></a>
+<div style="font-size:100%"><h4><a href="#Introduction_002_How_to_Install">^</a> <u>How to install Ultraschall API</u></h4></div><p><p>Installing Ultraschall-API is quite easy.</p>
+<p>First make sure, you use the right versions of Reaper, SWS and JS-extension: <a href="https://www.reaper.fm">Reaper 6.02 and higher</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1 and higher</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 1.215 and higher.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
 <p>To install the Ultraschall-API, just follow the following steps:</p>
 <p><strong>Installation via ReaPack</strong>:</p>
 <p>The easiest way is to install the Ultraschall-API using ReaPack. ReaPack is a package-manager for extensions and helper-stuff for Reaper, which allows you to easily install and update content done by the Reaper community. Many Scripts, Themes, JSFX-FX, etc are available through that.</p>
@@ -253,49 +252,30 @@ For more information on ReaPack and it's usage, refer <a href="https://reapack.c
 <p><strong>Manual Installation</strong>:</p>
 <p>If you can't or don't want to install ReaPack, you can also install it manually.</p>
 <ol>
-<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.1_001.zip">ultraschall_api4.1_001.zip</a>.<br />
+<li>Just download the zip-file of the current version from <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.2_001.zip">ultraschall_api4.2_001.zip</a>.<br />
 </li>
 <li>Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -&gt; Show REAPER resource path in explorer/finder...".<br />
 The folder UserPlugins should contain the folder ultraschall_api and the files ultraschall_api_readme.txt and ultraschall_api.lua after this step.<br />
 </li>
 <li>Restart Reaper.</li>
 </ol>
-<p><strong>Check Installation</strong>:</p>
-<p>After installation, you might want to check, whether installing the Ultraschall-API was successful.</p>
-<ol>
-<li><p>Create a new script, by opening the Actions-window (Menu: Actions -&gt; Show action list) and clicking the New-button next to "ReaScript:", give it a name and hit save.<br />
-Include the following line in your script at the beginning:</p>
-<pre><code>     dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)</code></pre></li>
-</ol>
-<p>Now you can program with the Ultraschall-API. Just add the functions AFTER the dofile-line.</p>
-<ol>
-<li><p>To test, if it's successfully installed, add</p>
-<pre><code>     ultraschall.ApiTest()</code></pre></li>
-</ol>
-<p>after the dofile-line and hit ctrl+s or cmd+s(on mac).</p>
-<p>The script should show a messagebox, that tells you, which of the Ultraschall-API-parts are activated. If it shows, everything works fine :)<br />
-If not, it will probably show you a messagebox, which will tell you, which required extension or Reaper-version is missing and where to find it.</p>
+<p>In the next chapter, I'll explain, how to use Ultraschall-API.</p>
+<hr><a id="Introduction_003_How_to_Use"></a>
+<div style="font-size:100%"><h4><a href="#Introduction_003_How_to_Use">^</a> <u>Introduction: How to use Ultraschall API</u></h4></div><p><p>Usage is really simple. First, create a new script. For this, go into the menu "Actions", hit "Show action list", click the "New action"-button and select "New ReaScript". In the file-requester, you enter a filename for the new script. Just test it by naming it "Test<em>Ultraschall</em>Api.lua" Now an editor appears, in which you can enter the code.</p>
+<p>Add the following line at the beginning of your script:</p>
+<pre><code>        dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
+        </code></pre>
+<p>and you can immediately use the functions of Ultraschall-API. For instance, you can test now, if Ultraschall-API works and if installation went alright. Just add the following function underneath the dofile-line:</p>
+<pre><code>        ultraschall.ApiTest()</code></pre>
+<p>And hit Cmd+S/Ctrl+S. A messagebox should appear, that tells you, that the API is up and running. If an error-message pops up, please try installing again, according to <a href="#Introduction_002_How_to_Install">the manua</a>.</p>
 <p>If you are already familiar with programming Reaper's own API-functions, you know, that all of Reaper's functions are placed in a table called "reaper."<br />
 e.g. reaper.ShowConsoleMsg("msg")</p>
 <p>The Ultraschall-API is quite the same, but is using the table "ultraschall." instead.<br />
 e.g. ultraschall.ApiTest()</p>
-<p>Some functions need background-scripts be run first. Refer the <a href="#Background_Scripts_001_Introduction">Introduction to background-scripts</a> for information about that.</p>
-<p>See the functions-reference for all available functions or read on in this documentation for a collection of concepts introduced by the Ultraschall-API.</p>
-<p>Oh, before I forget: The ultraschall_api-folder holds a folder "Scripts_Examples" in which you can find some demos and example-scripts using this API.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes"></a>
-<div style="font-size:100%"><h4><a href="#Introduction_003_How_to_Use_Beta_Functions_And_Hotfixes">^</a> <u>How to install hotfixes</u></h4></div><p><p>Before a new version of the Ultraschall-API is finished, it is in beta-stage. But sometimes, bugs need to be fixed even before a new release is done or you may want to test new functions from the next release for bugs and quirks.<br />
-So I added a way to deal with that.</p>
-<p>Hotfixes<br />
-Hotfixes are available at <a href="http://ultraschall.fm/api">ultraschall.fm/api</a>. They provide fixes for functions and bugs that came across after a release, but no new functions.<br />
-Just download the ultraschall_hotfixes.lua and put it into UserPlugins/ultraschall_api-folder.<br />
-The chance is high, that there is already an ultraschall_hotfixes.lua-file in the folder. You can safely overwrite it.<br />
-Voila, you have added the most recent bugfixes.</p>
-<p>To get the bugs back, just delete the ultraschall_hotfixes.lua.</p>
-<p>All fixes in ultraschall_hotfixes.lua will be part of the next full version of the Ultraschall-API.</p>
-<p>Check again from time to time to get the latest hotfixes.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_004_Bugreporting_FeatureRequests"></a>
+<p>See the <a href="US_Api_Functions.html">functions-reference</a> for all available functions or read on in this documentation for a collection of concepts introduced by the Ultraschall-API.</p>
+<p>You can also find all documentations(including the Lua-Reference Manual) when searching for "Ultraschall Help" in the actionlist(when installed via ReaPack).</p>
+<p>Oh, before I forget: The ultraschall_api-folder holds a folder "Scripts_Examples" in which you can find some demos and example-scripts using this API. If you have installed Ultraschall-API via ReaPack, you can also run the action "Script: ultraschall_Add_Developertools_To_Reaper.lua" to install them.</p>
+<hr><a id="Introduction_004_Bugreporting_FeatureRequests"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_004_Bugreporting_FeatureRequests">^</a> <u>Introduction: Bugreporting and Feature Requests</u></h4></div><p><p>If you find any bugs or itches and want to report them, I suggest you the following procedure:</p>
 <ol>
 <li><p>Make notes of: what operating-system you use(Mac, Win, Linux), which Reaper-version, which SWS-Version and which Ultraschall-Framework-Version.</p></li>
@@ -310,8 +290,7 @@ Sendegate: <a href="http://www.sendegate.de">sendegate.de</a> into the Ultrascha
 Que sera, sera...</p>
 <p>For your comments just send a mail at: lspmp3@yahoo.de(for framework-related stuff only!!) or go to sendegate.de into the Ultraschall-section.</p>
 <p>PS: If you know how to implement impossible things or do things better than the current implementation, you are welcome to donate your improved codes. :)</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Introduction_005_License"></a>
+<hr><a id="Introduction_005_License"></a>
 <div style="font-size:100%"><h4><a href="#Introduction_005_License">^</a> <u>Introduction: License</u></h4></div><p><p>Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights o use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
@@ -323,8 +302,7 @@ Que sera, sera...</p>
 <p>Kudos to lokasenna, who suggested some cool things, that made some functions much faster and sparkled new ones. Cheers!<br />
 MakeCopyOfTable-function adapted from Tyler Neylon's (twitter.com/tylerneylon) function, found at <a href="https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value/26367080#26367080">Stack Overflow</a><br />
 Thanks to him for allowing me to use it :)</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_001_Introduction"></a>
+<hr><a id="Datatypes_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_001_Introduction">^</a> <u>Datatypes: Introduction</u></h4></div><p><p>Parameters and returnvalues are usually of specific types. Let's look at the following function:</p>
 <pre><code>        integer number_of_items, array MediaItemArray, array MediaItemStateChunkArray = ultraschall.GetMediaItemsAtPosition(number position, string trackstring)</code></pre>
 <p>The returnvalues number_of_items is of type integer, MediaItemArray is of type array/type, MediaItemStateChunkArray if of type array. The parameters position is of type number, trackstring is of type string. These parameters/returnvalues only accept/return data of these given types.</p>
@@ -364,8 +342,7 @@ Thanks to him for allowing me to use it :)</p>
 <li><a href="#Datatypes_007_ColorTable">ColorTable</a> - it's a table that holds multiple color-values; for i.e. gradients</li>
 </ul>
 <p>These Ultraschall-API-specific datatypes are described in more detail in the following chapters.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_002_trackstring"></a>
+<hr><a id="Datatypes_002_trackstring"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_002_trackstring">^</a> <u>Datatypes: Trackstrings</u></h4></div><p><p>Many functions allow you to process through multiple tracks. As good as this is, this provided some difficulty in telling a function, to which track it shall be applied to.<br />
 Hence the datatype: trackstring</p>
 <p>A trackstring is just a simple string with all tracknumbers that you want a certain function to be applied to.<br />
@@ -383,8 +360,7 @@ Examplecode:</p>
 <a href="US_Api_Functions.html#IsValidTrackString">IsValidTrackString</a></li>
 <li>Some of the functions who make use of trackstrings are: <a href="US_Api_Functions.html#GetAllMediaItemsBetween">GetAllMediaItemsBetween</a>, <a href="US_Api_Functions.html#GetAllMediaItemsInTimeSelection">GetAllMediaItemsInTimeSelection</a>, <a href="US_Api_Functions.html#DeleteMediaItems_Position">DeleteMediaItems_Position</a>, <a href="US_Api_Functions.html#IsItemInTrack3">IsItemInTrack3</a>, and more</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_003_MediaItemArray"></a>
+<hr><a id="Datatypes_003_MediaItemArray"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_003_MediaItemArray">^</a> <u>Datatypes: MediaItemArray</u></h4></div><p><p>Many functions allow you to process through multiple mediaitems. To be able to pass multiple mediaitems at once to a function, I added the datatype MediaItemArray.</p>
 <p>A MediaItemArray is an array with many MediaItems, indexed by an integer.<br />
 Examplecode:</p>
@@ -412,8 +388,7 @@ Examplecode:</p>
 <li>Some of the functions who make use of MediaItemArray are:<br />
 <a href="US_Api_Functions.html#DeleteMediaItemsFromArray">DeleteMediaItemsFromArray</a>, <a href="US_Api_Functions.html#DeselectMediaItems_MediaItemArray">DeselectMediaItems_MediaItemArray</a>, <a href="US_Api_Functions.html#GetAllLockedItemsFromMediaItemArray">GetAllLockedItemsFromMediaItemArray</a>, <a href="US_Api_Functions.html#InsertMediaItemArray">InsertMediaItemArray</a>, and more</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_004_MediaItemStateChunkArray"></a>
+<hr><a id="Datatypes_004_MediaItemStateChunkArray"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_004_MediaItemStateChunkArray">^</a> <u>Datatypes: MediaItemStateChunkArray</u></h4></div><p><p>Many functions allow you to process through multiple mediaitem-statechunks. To be able to pass multiple mediaitem-statechunks at once to a function, I added the datatype MediaItemStateChunkArray.</p>
 <p>A MediaItemStateChunkArray is an array with many MediaItemStateChunks, indexed by an integer.<br />
 Examplecode:</p>
@@ -447,8 +422,7 @@ Examplecode:</p>
 <li>Some of the functions who make use of MediaItemStateChunkArrays are:<br />
 <a href="US_Api_Functions.html#GetMediaItemStateChunkArrayLength">GetMediaItemStateChunkArrayLength</a>, <a href="US_Api_Functions.html#InsertMediaItemStateChunkArray">InsertMediaItemStateChunkArray</a>, <a href="US_Api_Functions.html#RippleInsert_MediaItemStateChunks">RippleInsert_MediaItemStateChunks</a>, <a href="US_Api_Functions.html#GetAllMediaItemsFromTrackStateChunk">GetAllMediaItemsFromTrackStateChunk</a> and more</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_005_EnvelopePointObject"></a>
+<hr><a id="Datatypes_005_EnvelopePointObject"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_005_EnvelopePointObject">^</a> <u>Datatypes: EnvelopePointObject</u></h4></div><p><p>When working with envelope-points, handling all the attributes such an envelope-point is quite unhandy. So I introduced the datatype EnvelopePointObject, containing all it's attributes.</p>
 <p>An EnvelopePointObject is an array with all attributes an envelope-point has.<br />
 Examplecode:</p>
@@ -476,8 +450,7 @@ Examplecode:</p>
 <li>You can check for valid EnvelopePointObjects using: <a href="US_Api_Functions.html#IsValidEnvelopePointObject">IsValidEnvelopePointObject</a></li>
 <li>Some of the functions who make use of EnvelopePointObjects are: <a href="US_Api_Functions.html#AddEnvelopePoints_EnvelopePointObject">AddEnvelopePoints_EnvelopePointObject</a>, <a href="US_Api_Functions.html#SetEnvelopePoints_EnvelopePointObject">SetEnvelopePoints_EnvelopePointObject</a>, <a href="US_Api_Functions.html#DeleteEnvelopePoints_EnvelopePointObject">DeleteEnvelopePoints_EnvelopePointObject</a> and more</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_006_EnvelopePointArray"></a>
+<hr><a id="Datatypes_006_EnvelopePointArray"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_006_EnvelopePointArray">^</a> <u>Datatypes: EnvelopePointArray</u></h4></div><p><p>When working with multiple EnvelopePointObjects, I introduced the datatype EnvelopePointArray, containing multiple EnvelopePointObjects.</p>
 <p>An EnvelopePointArray is an array with multiple EnvelopePointObjects, indexed by an integer.<br />
 Examplecode:</p>
@@ -499,8 +472,7 @@ Examplecode:</p>
 <li>You can check for valid EnvelopePointArrays using: <a href="US_Api_Functions.html#IsValidEnvelopePointArray">IsValidEnvelopePointArray</a></li>
 <li>Some of the functions who make use of EnvelopePointArrays are: <a href="US_Api_Functions.html#AddEnvelopePoints_EnvelopePointArray">AddEnvelopePoints_EnvelopePointArray</a>, <a href="US_Api_Functions.html#SetEnvelopePoints_EnvelopePointArray">SetEnvelopePoints_EnvelopePointArray</a>, <a href="US_Api_Functions.html#DeleteEnvelopePoints_EnvelopePointArray">DeleteEnvelopePoints_EnvelopePointArray</a> and more</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_007_ColorTable"></a>
+<hr><a id="Datatypes_007_ColorTable"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_007_ColorTable">^</a> <u>Datatypes: ColorTable</u></h4></div><p><p>When having to work with many colors, like MediaTrack-colors or the colors set to individual MediaItems, one may wish to have a proper datastructure to store these colorvalues. For that, I introduce the ColorTable.</p>
 <p>A ColorTable is an array containing the multiple colors, indexed by an integer.<br />
 Structure:</p>
@@ -518,8 +490,7 @@ Structure:</p>
 <li>You can check for valid ColorTables using: <a href="US_Api_Functions.html#IsValidColorTable">IsValidColorTable</a></li>
 <li>Some of the functions who make use of ColorTables are: <a href="US_Api_Functions.html#ApplyColorTableToTrackColors">ApplyColorTableToTrackColors</a></li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_008_RenderTable"></a>
+<hr><a id="Datatypes_008_RenderTable"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_008_RenderTable">^</a> <u>Datatypes: RenderTable</u></h4></div><p><p>When working with rendering, you have to deal with dozens of potential options. I tried to add all these options as parameters into the rendering-functions but, I failed miserably.<br />
 This is mostly because, there are so many.</p>
 <p>So I added a new construct, called: the RenderTable.</p>
@@ -608,8 +579,7 @@ This is mostly because, there are so many.</p>
 <li>You can check for valid RenderTables using: <a href="US_Api_Functions.html#IsValidRenderTable">IsValidRenderTable</a></li>
 <li>Some of the functions who make use of RenderTables are: <a href="US_Api_Functions.html#RenderProject_RenderTable">RenderProject_RenderTable</a></li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Datatypes_050_CheckingDatatypes"></a>
+<hr><a id="Datatypes_050_CheckingDatatypes"></a>
 <div style="font-size:100%"><h4><a href="#Datatypes_050_CheckingDatatypes">^</a> <u>Datatypes: Checking Datatypes</u></h4></div><p><p>When you work with data of different sources but need to work with data of a specific type, it would be handy to have ways of checking, whether a certain variable has data of a specific type.<br />
 Lua provides ways of checking for valid datatypes(type() and math.type()) as well as Reaper(ValidatePtr() and ValidatePtr2()).</p>
 <p>However, sometimes you want to have one function to check them all, and all these functions do not include Ultraschall-API-specific datatypes, so I added some stuff for that.</p>
@@ -659,8 +629,7 @@ These aren't datatypes, but you may want to check them for validity as well</p>
 <li><a href="US_Api_Functions.html#IsValidMatchingPattern">IsValidMatchingPattern</a> - checks, whether a string is a valid matching pattern for Lua's pattern-matching</li>
 </ul></li>
 </ol>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="API_Variables_001_Introduction"></a>
+<hr><a id="API_Variables_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#API_Variables_001_Introduction">^</a> <u>API-Variables</u></h4></div><p><p>When working with the Ultraschall-API or general programming in Reaper, some additional things may or may not be helpful to know.<br />
 So I added some API-variables, like:</p>
 <ol>
@@ -675,8 +644,7 @@ So I added some API-variables, like:</p>
     </code></pre>
 <p>which would put the current-scriptpath to the variable scriptpath.</p>
 <p>You could change them as well, but that would be pointless.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_001_Introduction"></a>
+<hr><a id="Rendering_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Rendering_001_Introduction">^</a> <u>Rendering: Introduction</u></h4></div><p><p>The Ultraschall-API provides functions for rendering your projects, without having to use the Rendering-dialog of Reaper. This gives you a wide range of possibilities to customize your rendering-needs.</p>
 <p>There are two basic ways to render a file.</p>
 <p>The easy way:</p>
@@ -713,8 +681,7 @@ So I added some API-variables, like:</p>
     rendered_files_count, rendered_files_MediaItemStateChunk, rendered_files_array 
                                                 = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, false, false)</code></pre>
 <p>Read the accompanying documentation-entries for <a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a> and <a href="US_Api_Functions.html#RenderProject">RenderProject</a> for more details and/or the following chapters.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_002_About_Renderstrings"></a>
+<hr><a id="Rendering_002_About_Renderstrings"></a>
 <div style="font-size:100%"><h4><a href="#Rendering_002_About_Renderstrings">^</a> <u>Rendering: About Renderstrings</u></h4></div><p><p>Render-strings(or render_cfg, as they are named in Reaper) are strings, that contain all settings for a specific Render-Output-format, as MP3, WAV, AIF, FLAC, etc.<br />
 They are usually stored into RPP-projectfiles and are quite cryptic(for those of you, who know what that means: BASE64-encoded).<br />
 These are essential for rendering a project using the provided rendering-functions, so the Ultraschall-API provides functions who create or analyze such render-strings.</p>
@@ -750,8 +717,7 @@ To make life easier, it also returns the analysed render-string. So if you want 
 <blockquote>
 <p><a href="US_Api_Functions.html#GetRenderCFG_Settings_AIFF">GetRenderCFG_Settings_AIFF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_AudioCD">GetRenderCFG_Settings_AudioCD</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_DDP">GetRenderCFG_Settings_DDP</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_FLAC">GetRenderCFG_Settings_FLAC</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_M4AMac">GetRenderCFG_Settings_M4AMac</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3">GetRenderCFG_Settings_MP3</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3ABR">GetRenderCFG_Settings_MP3ABR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3CBR">GetRenderCFG_Settings_MP3CBR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3MaxQuality">GetRenderCFG_Settings_MP3MaxQuality</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3VBR">GetRenderCFG_Settings_MP3VBR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_OGG">GetRenderCFG_Settings_OGG</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_OPUS">GetRenderCFG_Settings_OPUS</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WAV">GetRenderCFG_Settings_WAV</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WAVPACK">GetRenderCFG_Settings_WAVPACK</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_AVI_Video">GetRenderCFG_Settings_AVI_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_GIF">GetRenderCFG_Settings_GIF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_LCF">GetRenderCFG_Settings_LCF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MKV_Video">GetRenderCFG_Settings_MKV_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MOVMac_Video">GetRenderCFG_Settings_MOVMac_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP4Mac_Video">GetRenderCFG_Settings_MP4Mac_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_QTMOVMP4_Video">GetRenderCFG_Settings_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WebMVideo">GetRenderCFG_Settings_WebMVideo</a></p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_002a_About_RenderTables"></a>
+<hr><a id="Rendering_002a_About_RenderTables"></a>
 <div style="font-size:100%"><h4><a href="#Rendering_002a_About_RenderTables">^</a> <u>Rendering: About RenderTables</u></h4></div><p><p>RenderTables are tables, who hold all settings, that one can set in Reaper for the rendering-process. Most of the stuff about them, I've told already in the chapter <a href="#Datatypes_008_RenderTable">RenderTables</a>.<br />
 The main goal behind them is, to make passing the dozens of render-settings much easier and comfortable.</p>
 <p>But even then, creating one is very painful, so I made functions, who create valid RenderTables.</p>
@@ -785,8 +751,7 @@ After a RenderTable is created, you can safely alter it's settings to valid valu
 <li><strong><a href="US_Api_Functions.html#IsValidRenderTable">IsValidRenderTable</a></strong> - checks, whether a table is a valid RenderTable</li>
 </ul>
 <p>With that, you can interoperate with RenderTables and render-settings from/to projects, projectfiles and presets in any way you wish.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_003_About_Renderingfunctions"></a>
+<hr><a id="Rendering_003_About_Renderingfunctions"></a>
 <div style="font-size:100%"><h4><a href="#Rendering_003_About_Renderingfunctions">^</a> <u>Rendering: About Rendering-functions</u></h4></div><p><p>The rendering-functions let you render a project, either a stored rpp-project-file or the currently opened one.<br />
 They provide you with a wide range of functionality, so the rendering process should be quite close to Reaper's "official"-own-process using the Render to File-dialog.<br />
 They also return the filenames of the rendered files, as well as MediaItemStateChunks of all rendered files, so you can easily import them into your project.</p>
@@ -854,8 +819,7 @@ This gives you full control over the rendering-process and you can customize it 
                                    the master-track-rendered-file</code></pre>
 <p>With that, you should be able to successfully render your project and do some neat stuff afterwards.</p>
 <p>For more enhanced customization of projectfiles for Rendering, see <a href="#Rendering_004_Change_more_render_settings">Rendering: Change more render-settings in projectfiles</a>.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_004_Change_more_render_settings"></a>
+<hr><a id="Rendering_004_Change_more_render_settings"></a>
 <div style="font-size:100%"><h4><a href="#Rendering_004_Change_more_render_settings">^</a> <u>Rendering: Change more render-settings in projectfiles</u></h4></div><p><p>Sometimes, you want to alter Render-Settings in a projectfile by hand, without using RenderTables for that. So, the API has many useful functions as well, starting with SetProject_ You can alter a projectfile using the following Ultraschall-Framework-functions, that represent certain elements from Reaper's Render-Dialog:</p>
 <ul>
 <li><a href="US_Api_Functions.html#SetProject_RenderFilename">SetProject_RenderFilename</a> - to alter the output-filename</li>
@@ -871,8 +835,7 @@ This gives you full control over the rendering-process and you can customize it 
 <pre><code>        retval, projectfilename_with_path = reaper.EnumProjects(-1,&quot;&quot;)</code></pre>
 <p>to get the projectfilename_with_path of the current project as returnvalue. Use projectfilename_with_path as parameter for the SetProject-functions needed for you alterations.</p>
 <p>The functions are just a small selection of the functions to alter project-files, as provided by the Ultraschall-API. Browse through the functions in the "Project-Files"-section of the index of the Ultraschall-API-Functions-Reference for many more of them.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_005_RenderPresets"></a>
+<hr><a id="Rendering_005_RenderPresets"></a>
 <div style="font-size:100%"><h4><a href="#Rendering_005_RenderPresets">^</a> <u>Rendering: Render Presets</u></h4></div><p><p>Reaper has the concept of render-presets, who hold all render-settings you can set in the Render to File-dialog and you want to store for quick retrieval.<br />
 These can be reused within the Render to File-dialog, when clicking the Preset-button.<br />
 Render-presets are split into two main parts: Bounds and Options and Formats, who each hold parts of the full render-settings-package.</p>
@@ -926,8 +889,7 @@ TailMS=0, SilentlyIncrementFilename=false, AddToProj=false, SaveCopyOfProject=fa
 <p>Basically like <a href="US_Api_Functions.html#DeleteRenderPreset_Bounds">DeleteRenderPreset_Bounds</a>, but deletes an Options and Format-renderpreset. Just pass the Options and Format-presetname and it deletes it from the presets. If the preset does not exist, it returns false, otherwise it returns true.</p>
 </blockquote>
 <p>This should give you a lot of control over render-presets.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Rendering_006_RenderQueue"></a>
+<hr><a id="Rendering_006_RenderQueue"></a>
 <div style="font-size:100%"><h4><a href="#Rendering_006_RenderQueue">^</a> <u>Rendering: Render Queue</u></h4></div><p><p>Another way to render projects is using the RenderQueue, which is often practical. For that, I included some functions to deal with the render-queue:</p>
 <p><strong><a href="US_Api_Functions.html#GetRenderQueuedProjects">GetRenderQueuedProjects</a></strong></p>
 <pre><code>        integer Filecount, array Filearray = ultraschall.GetRenderQueuedProjects()</code></pre>
@@ -949,16 +911,14 @@ If you set index to -1, it will attempt rendering all projects in the render-que
 <p>If you have a project, which you want to add to the RenderQueue, but is not currently opened yet, you can use this function.<br />
 Just pass to it the projectfilename+path of the project, that you want to add to the RenderQueue and it will do what is needed for that.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Arrangeview_Snapshots_001_Introduction"></a>
+<hr><a id="Arrangeview_Snapshots_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Arrangeview_Snapshots_001_Introduction">^</a> <u>Arrangeview Snapshots: Introduction</u></h4></div><p><p>When working with big or complex projects:</p>
 <p>Sometimes it's a good thing to have quick access to certain parts of the project, certain view-settings, zoom-factors. Arrangeview-snapshots are meant to help with that.</p>
 <p>Arrangeview-Snapshots are snapshots that store the current position of the arrangeview as well as it's zoom-factor. You can decide, whether to store only the zoom-factor or the position. You can also give a short description to a ArrangeView-Snapshot, so you can store, what to expect from a certain snapshot.<br />
 They can be retrieved and the arrange-view can be set to these settings. That way, quick navigation through often accessed parts of the project is fast and easy.</p>
 <p>Arrangeview-Snapshots are stored as ProjExtStates, which means, that the settings are stored in the project itself and can be retrieved the next time the project is loaded.</p>
 <p>Due limitations with Reaper's own API, storing the vertical-scroll-position of the arrangeview isn't possible yet. This will change as soon as the limitation is raised from Reaper's own API.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Arrangeview_Snapshots_002_HowToStoreRetrieveDelete"></a>
+<hr><a id="Arrangeview_Snapshots_002_HowToStoreRetrieveDelete"></a>
 <div style="font-size:100%"><h4><a href="#Arrangeview_Snapshots_002_HowToStoreRetrieveDelete">^</a> <u>Arrangeview Snapshots: How to store, retrieve, delete</u></h4></div><p><p>If you want to store the current position and zoom-factor of the Arrangeview, you can use the function <a href="US_Api_Functions.html#StoreArrangeviewSnapshot">StoreArrangeviewSnapshot</a>.</p>
 <p>It accepts the following parameters:</p>
 <pre><code>        slot        - the slot for the snapshot, which must be an integer. The function will overwrite an already existing snapshot. To prevent that,
@@ -970,8 +930,7 @@ They can be retrieved and the arrange-view can be set to these settings. That wa
 <p>If you want to retrieve the settings of a certain Arrange-View-Snapshot, you can use <a href="US_Api_Functions.html#RetrieveArrangeviewSnapshot">RetrieveArrangeviewSnapshot</a>, which will return all settings from an Arrangeview-snapshot. The return-values of RetrieveArrangeviewSnapshot basically work the same as the parameters of StoreArrangeviewSnapshot.</p>
 <p>If you want to check, whether a slot is already used, you can use <a href="US_Api_Functions.html#IsValidArrangeviewSnapshot">IsValidArrangeviewSnapshot</a>, which will return true in that case and false, if the slot is unused.</p>
 <p>To delete a certain slot, just use <a href="US_Api_Functions.html#DeleteArrangeviewSnapshot">DeleteArrangeviewSnapshot</a>.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Arrangeview_Snapshots_003_HowToRestore"></a>
+<hr><a id="Arrangeview_Snapshots_003_HowToRestore"></a>
 <div style="font-size:100%"><h4><a href="#Arrangeview_Snapshots_003_HowToRestore">^</a> <u>Arrangeview Snapshots: How to restore</u></h4></div><p><p>When having stored an Arrangeview-Snapshot into a slot, you certainly want to restore it at one point. For that, use <a href="US_Api_Functions.html#RestoreArrangeviewSnapshot">RestoreArrangeviewSnapshot</a>.</p>
 <p>This function let's you restore an earlier arrange-view completely, but also allows you to individually set, what you want to restore, using the parameters:</p>
 <pre><code>        slot        - is the Arrangeview-Snapshot you want to restore</code></pre>
@@ -987,8 +946,7 @@ They can be retrieved and the arrange-view can be set to these settings. That wa
                          3, keeps in center of zoom, what is beneath the mousecursor
          </code></pre>
 <p>This should give you full control in what to restore from an Arrangeview-Snapshot and what to ignore.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Navigation_001_Introduction"></a>
+<hr><a id="Navigation_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Navigation_001_Introduction">^</a> <u>Navigation: Introduction</u></h4></div><p><p>When editing and postproducing a project, navigating through it is essential. For that, I added some functions that are not part of Reaper's own API, to help navigation, with functions for:</p>
 <ol>
 <li>more control about moving the playcursor and the editcursor</li>
@@ -997,8 +955,7 @@ They can be retrieved and the arrange-view can be set to these settings. That wa
 <li>Followmode, aka autoscrolling</li>
 </ol>
 <p>This should give you more control about programming faster and quicker navigation-capabilities.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Navigation_002_MovePlay_and_Editcursor"></a>
+<hr><a id="Navigation_002_MovePlay_and_Editcursor"></a>
 <div style="font-size:100%"><h4><a href="#Navigation_002_MovePlay_and_Editcursor">^</a> <u>Navigation: Move Play and Editcursor</u></h4></div><p><p>The Ultraschall-API provides you with many functions regarding changing the position of the playcursor and the editcursor.<br />
 For that we have numerous functions:</p>
 <ul>
@@ -1018,8 +975,7 @@ For that we have numerous functions:</p>
 <li><a href="US_Api_Functions.html#SetPlayAndEditCursor_WhenPlaying">SetPlayAndEditCursor_WhenPlaying</a> - sets play and editcursor to position during playback</li>
 </ul></li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Navigation_003_GotoMarkersRegionItemEdges"></a>
+<hr><a id="Navigation_003_GotoMarkersRegionItemEdges"></a>
 <div style="font-size:100%"><h4><a href="#Navigation_003_GotoMarkersRegionItemEdges">^</a> <u>Navigation: Go to markers, regionedges and itemedges</u></h4></div><p><p>Markers and items provide you with much additional helpful information regarding the project. They also provide you with an additional information: useful positions to navigate through.<br />
 To make use of that, I added some functions for that:</p>
 <ol>
@@ -1041,8 +997,7 @@ To make use of that, I added some functions for that:</p>
 <p>The Marker-functions (from 1) ) work the same, the Item-edge-functions (from 3) ) however have an additional parameter trackstring, with which you can set, from which tracks you want to get the next/previous closest item-edge-position.</p>
 <p>The function <a href="US_Api_Functions.html#GetClosestGoToPoints">GetClosestGoToPoints</a> is the combination of all of these functions, which let's you decide fully, which edges/positions you want to check for.<br />
 It will also check, if the next/previous closest edge is the beginning or the end of the project.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Navigation_004_CenterView"></a>
+<hr><a id="Navigation_004_CenterView"></a>
 <div style="font-size:100%"><h4><a href="#Navigation_004_CenterView">^</a> <u>Navigation: Center View</u></h4></div><p><p>Sometimes it's a good idea to center the arrangeview to a certain point, may it be different points of interests within your project or just to get back to the playcursor/editcursor out of the view.</p>
 <p>For that, I added the function <a href="US_Api_Functions.html#CenterViewToCursor">CenterViewToCursor</a>.<br />
 Let's have a look at it:</p>
@@ -1054,8 +1009,7 @@ Let's have a look at it:</p>
         4 - centers arrangeview around the position given with parameter position</code></pre>
 <p>The second parameter position is an optional one and only used, if cursortype is set to 4. It allows you to give a specific position in seconds, which the arrangeview shall be centered around.</p>
 <p>This functions only centers the given position/cursor-position to the arrangeview. It keeps the zoom-factor intact.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Navigation_005_Autoscroll_Followmode"></a>
+<hr><a id="Navigation_005_Autoscroll_Followmode"></a>
 <div style="font-size:100%"><h4><a href="#Navigation_005_Autoscroll_Followmode">^</a> <u>Navigation: Autoscroll and Followmode</u></h4></div><p><p>Reaper allows you to set autoscrolling during playback/recording. It allows you to set it to continuous scrolling or to "page-wise"-scrolling.<br />
 This is quite flexible but hidden somewhat within the actions of Reaper. So I added the function <a href="US_Api_Functions.html#ToggleScrollingDuringPlayback">ToggleScrollingDuringPlayback</a>.<br />
 It turns on autoscrolling for playback and recording AND continuous scrolling.<br />
@@ -1070,8 +1024,7 @@ The last parameter goto_playcursor allows you to change the view to the current 
         40262(View: Toggle auto-view-scroll while recording), </code></pre>
 <p>which means, it sets if a certain autoscrolling behavior is turned on or not.<br />
 If you have your own custom actions toggling these actions, you probably shouldn't use this function. Otherwise it probably messes up your workflows.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="GetSetStates_Project_Track_Item_Env_001_Introduction"></a>
+<hr><a id="GetSetStates_Project_Track_Item_Env_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#GetSetStates_Project_Track_Item_Env_001_Introduction">^</a> <u>Get/Set States for Project, Tracks and Items</u></h4></div><p><p>One of the long-term-goals of the Ultraschall-API is full access to all states within projects, tracks, items, envelopes, including all states only available in StateChunks.<br />
 As of the current version, all track-states and many project and item-states are get and settable.</p>
 <p>The functions all work after the same principle, with the first parameter being the object to get/set the state from/to (Projectfile, MediaItem-object, MediaTrack-object and TrackEnvelope-Object).</p>
@@ -1095,8 +1048,7 @@ Get Project-State:</p>
         boolean retval, string TrackStateChunk = ultraschall.SetTrackLockState(integer tracknumber, integer LockedState, optional string TrackStateChunk) </code></pre>
 <p>StateChunks can be gotten using reaper.GetTrackStateChunk(), reaper.SetTrackStateChunk(), reaper.GetItemStateChunk(), reaper.SetItemStateChunk(), reaper.GetEnvelopeStateChunk(), reaper.SetEnvelopeStateChunk().<br />
 To get ProjectStateChunks, you need to read the rpp-file, as currently there's no Get/SetProjectStateChunk-function in Reaper's own API.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_001_Introduction"></a>
+<hr><a id="Getting_Manipulating_Items_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_001_Introduction">^</a> <u>MediaItems: Introduction</u></h4></div><p><p>When working with MediaItems, it often was frustrating for me to code, how to get their MediaItem-objects. Especially when "mass-working" with dozens and more MediaItems.<br />
 So I wrote a set of functions to work with MediaItems more comfortably.</p>
 <p>These functions include getting MediaItem-objects by time AND track, <a href="#GetSetStates_Project_Track_Item_Env_001_Introduction">getting MediaItem-states</a>, editing, inserting, manipulating, spectral edit, previewing, RippleCut, RippleInsert, SectionCut, working with locked, selected items, applying Reaper-actions to MediaItems, etc.</p>
@@ -1104,8 +1056,7 @@ So I wrote a set of functions to work with MediaItems more comfortably.</p>
 When passing over the tracks wanted, I use the datatype <a href="#Datatypes_002_trackstring">trackstring</a>.</p>
 <p>All this stuff should help you getting and manipulating MediaItems much more easier.</p>
 <p>Let's begin with getting items by time(range) and tracks.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_002_GetMediaItems"></a>
+<hr><a id="Getting_Manipulating_Items_002_GetMediaItems"></a>
 <div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_002_GetMediaItems">^</a> <u>MediaItems: Getting MediaItems by Time and Tracks</u></h4></div><p><p>Let's face it, when editing items of a project in Reaper, you either click on the items or select them in a 2D-way, by drawing a boundary box around the items of your choice or using a time-selection.<br />
 What you do by that is selecting the items by time. What you also do is, selecting the items by track, as your boundary box may go over several tracks. Or you use a track-selection by clicking on the tracks you want.<br />
 In either way, you select them in a 2Dimensional way. Not with Reaper's own API. Sure, you can somehow choose the MediaItems by track or by project, but you can't select them by multiple tracks. And certainly not by a time-range.</p>
@@ -1141,8 +1092,7 @@ You can pass to the function a startposition and an endposition(which must be bi
 <li><a href="US_Api_Functions.html#GetSelectedMediaItemsAtPosition">GetSelectedMediaItemsAtPosition</a> - gets all selected MediaItems in given tracks from a time-position</li>
 <li><a href="US_Api_Functions.html#GetSelectedMediaItemsBetween">GetSelectedMediaItemsBetween</a> - gets all selected MediaITems in given tracks between start- and endposition</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_003_Splitting"></a>
+<hr><a id="Getting_Manipulating_Items_003_Splitting"></a>
 <div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_003_Splitting">^</a> <u>MediaItems: Splitting MediaItems by Time and Tracks</u></h4></div><p><p>Getting MediaItems by time and tracks is cool. Editing them by time and tracks is even better. For that, I also added some functions:<br />
 The easiest ones are <a href="US_Api_Functions.html#SplitMediaItems_Position">SplitMediaItems_Position</a> and <a href="US_Api_Functions.html#SplitItemsAtPositionFromArray">SplitItemsAtPositionFromArray</a><br />
 Let's have a look at:</p>
@@ -1171,8 +1121,7 @@ This function will split only items, that have the position in them somewhere. T
 <blockquote>
 <p>This function returns, if splitting was successful and the newly "created"-right-hand-split-items as an MediaItemAray. Only the right-hand-split-MediaItem of MediaItems, that could be split, will be returned. If a MediaItem could not be split(position outside MediaItemstart and MediaItemEnd), there will be no returned MediaItem for it then.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_004_Deleting"></a>
+<hr><a id="Getting_Manipulating_Items_004_Deleting"></a>
 <div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_004_Deleting">^</a> <u>MediaItems: Deleting MediaItems by Time and Tracks</u></h4></div><p><p>Deleting of MediaItems is often a useful thing. Unfortunately, this is inconvenient to do within the Reaper-API. The only such function is DeleteTrackMediaItem, but it requires you to give the function the track in which the MediaItem lies too. But often, you want to have a function that simply deletes a MediaItem-object or deletes items at position from numerous tracks, etc.<br />
 So I added some functions, that make life easier: <a href="US_Api_Functions.html#DeleteMediaItem">DeleteMediaItem</a>, <a href="US_Api_Functions.html#DeleteMediaItemsFromArray">DeleteMediaItemsFromArray</a>, <a href="US_Api_Functions.html#DeleteMediaItems_Position">DeleteMediaItems_Position</a> and <a href="US_Api_Functions.html#DeleteMediaItemsBetween">DeleteMediaItemsBetween</a></p>
 <p>In addition to deleting the MediaItems, all these functions return the statechunks of the deleted MediaItems. These statechunks contain an additional field</p>
@@ -1206,8 +1155,7 @@ Let's assume, you want to delete all MediaItems between position 33 and 98, with
 </blockquote>
 <pre><code>            retval, MediaItemStateChunkArray  = ultraschall.DeleteMediaItems_Between(33, 98, &quot;3,5,10,14&quot;, true)</code></pre>
 <p>With all these functions, deleting MediaItems is now comfortable to do.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_005_Section_And_Ripple_Cut"></a>
+<hr><a id="Getting_Manipulating_Items_005_Section_And_Ripple_Cut"></a>
 <div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_005_Section_And_Ripple_Cut">^</a> <u>MediaItems: SectionCut, RippleCut, RippleInsert</u></h4></div><p><p>One of Reaper's real great features is Ripple-Edit. On of the big shortcomings, it only allows Ripple Cut all tracks, Ripple Cut one track, no Ripple Cut.<br />
 But what if you want to RippleCut two or more tracks, but not all of them? What, if you want to RippleCut only selected tracks? What if you just want to cut a section without rippling?<br />
 Impossible you say!<br />
@@ -1272,8 +1220,7 @@ If you have a 10 minute project, but want to use only the audio from seconds 60 
 In addition to that, the function returns a MediaItemStateChunkArray for both, the items cut before startposition and one for the items cut after endposition.</p>
 </blockquote>
 <p>This should give you many additional use-cases into your hands.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_006_Moving_Manipulating"></a>
+<hr><a id="Getting_Manipulating_Items_006_Moving_Manipulating"></a>
 <div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_006_Moving_Manipulating">^</a> <u>MediaItems: Moving and Manipulating</u></h4></div><p><p>Getting, splitting, editing and deleting MediaItems isn't enough. In fact, you also want to manipulate them. And you also want to be able to manipulate many of them at once.<br />
 Hence, I added lots of functions to manipulate MediaItems, like:</p>
 <ul>
@@ -1408,8 +1355,7 @@ Example:</p>
 </li>
 <li><a href="US_Api_Functions.html#DeselectMediaItems_MediaItemArray">DeselectMediaItems_MediaItemArray</a> - sets MediaItems in MediaItemArray deselected</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_007_Inserting"></a>
+<hr><a id="Getting_Manipulating_Items_007_Inserting"></a>
 <div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_007_Inserting">^</a> <u>MediaItems: Inserting Items and Files</u></h4></div><p><p>Last, but not least, it would be nice to be able to insert MediaItems as well. And not just inserting them from a project, but also from files.<br />
 For that, I made: <a href="US_Api_Functions.html#InsertMediaItem_MediaItem">InsertMediaItem_MediaItem</a>, <a href="US_Api_Functions.html#InsertMediaItem_MediaItemStateChunk">InsertMediaItem_MediaItemStateChunk</a>, <a href="US_Api_Functions.html#InsertMediaItemArray">InsertMediaItemArray</a>, <a href="US_Api_Functions.html#InsertMediaItemStateChunkArray">InsertMediaItemStateChunkArray</a>, <a href="US_Api_Functions.html#InsertMediaItemFromFile">InsertMediaItemFromFile</a>, <a href="US_Api_Functions.html#InsertImageFile">InsertImageFile</a></p>
 <p>Lets have a look at inserting MediaItems.</p>
@@ -1477,8 +1423,7 @@ Example:</p>
 <p>This is a special function, focusing on inserting image-files into the project. You can set the track, position, length of the image-MediaItem and, if it shall be looped.<br />
 If you don't loop it(looped=false), the MediaItem will have the length anyway, but the image will be shown only for 1 second in the VideoProcessor-window.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_008_Spectral_Edit"></a>
+<hr><a id="Getting_Manipulating_Items_008_Spectral_Edit"></a>
 <div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_008_Spectral_Edit">^</a> <u>MediaItems: Programming Spectral Edit</u></h4></div><p><p>With Reaper v5.50c, the devs introduced a new feature, called, spectral editing, which is a cool feature to influence frequencies in a spectral view of a MediaItem.<br />
 But they didn't include some functions to program this feature. So I added them myself.</p>
 <p>The functions for using, manipulating, adding, deleting spectral-edits are: <a href="US_Api_Functions.html#AddItemSpectralEdit">AddItemSpectralEdit</a>, <a href="US_Api_Functions.html#CountItemSpectralEdits">CountItemSpectralEdits</a>, <a href="US_Api_Functions.html#DeleteItemSpectralEdit">DeleteItemSpectralEdit</a>, <a href="US_Api_Functions.html#GetItemSpectralConfig">GetItemSpectralConfig</a>, <a href="US_Api_Functions.html#GetItemSpectralEdit">GetItemSpectralEdit</a>, <a href="US_Api_Functions.html#GetItemSpectralVisibilityState">GetItemSpectralVisibilityState</a>, <a href="US_Api_Functions.html#SetItemSpectralConfig">SetItemSpectralConfig</a>, <a href="US_Api_Functions.html#SetItemSpectralEdit">SetItemSpectralEdit</a>, <a href="US_Api_Functions.html#SetItemSpectralVisibilityState">SetItemSpectralVisibilityState</a></p>
@@ -1567,8 +1512,7 @@ And you know the drill: when setting itemidx to -1, you can pass a MediaItemStat
 </li>
 <li><a href="US_Api_Functions.html#CountItemSpectralEdits">CountItemSpectralEdits</a> - to count the number of currently existing SpectralEdit-instances in a MediaItem</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Getting_Manipulating_Items_009_Miscellaneous"></a>
+<hr><a id="Getting_Manipulating_Items_009_Miscellaneous"></a>
 <div style="font-size:100%"><h4><a href="#Getting_Manipulating_Items_009_Miscellaneous">^</a> <u>MediaItems: Miscellaneous</u></h4></div><p><p>Still not enough? Well, I've added numerous other functions, and I want to introduce you to some of the gems included.<br />
 Feel free to browse through the <a href="US_Api_Functions.html">Functions-Reference</a> to find more.</p>
 <p>What about, previewing MediaItems and files? Use this:</p>
@@ -1654,8 +1598,7 @@ Keep in mind: if a parameter of functionname shall hold the MediaItem, you need 
 This function is especially helpful, when mass manipulating StateChunks and wanting to mass-apply the changed ones back.<br />
 Easy to do now.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FileManagement_001_Introduction"></a>
+<hr><a id="FileManagement_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#FileManagement_001_Introduction">^</a> <u>File Management: Introduction</u></h4></div><p><p>Even if file-management isn't that hard to program in Lua, it is quite inconvenient. Especially for "normal" use-cases, it is often a drag to always go through the four steps, checking if file exists, open file, read/write, close file.<br />
 Wouldn't it be cool, to have functions to do it for you?</p>
 <p>Well now, there are, as the Ultraschall-API includes 28 functions to do it for you.<br />
@@ -1663,8 +1606,7 @@ These functions include functions for reading and writing, copying them.<br />
 You can also check for valid filetypes, for valid directories, can count files and directories in paths, get paths and files in a path, and get length or number of lines in a file.</p>
 <p>With that, you can do a lot of file-operation quite easy, without having to dig through the little details of the Lua-Reference-Manual.</p>
 <p>Let's start with reading files.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FileManagement_002_Read"></a>
+<hr><a id="FileManagement_002_Read"></a>
 <div style="font-size:100%"><h4><a href="#FileManagement_002_Read">^</a> <u>File Management: Read</u></h4></div><p><p>To read files, I included some nice functions, like: <a href="US_Api_Functions.html#ReadFullFile">ReadFullFile</a>, <a href="US_Api_Functions.html#ReadBinaryFile">ReadBinaryFile</a>, <a href="US_Api_Functions.html#ReadBinaryFileFromPattern">ReadBinaryFileFromPattern</a>, <a href="US_Api_Functions.html#ReadBinaryFileUntilPattern">ReadBinaryFileUntilPattern</a>,<br />
 <a href="US_Api_Functions.html#ReadFileAsLines_Array">ReadFileAsLines_Array</a>, <a href="US_Api_Functions.html#ReadLinerangeFromFile">ReadLinerangeFromFile</a>, <a href="US_Api_Functions.html#ReadValueFromFile">ReadValueFromFile</a>, <a href="US_Api_Functions.html#ReadBinaryFile_Offset">ReadBinaryFile_Offset</a></p>
 <p>Let's start with the function probably used the most:</p>
@@ -1743,8 +1685,7 @@ If the linenumbers returned are fewer than you requested, correctnumberoflines w
 <p>This works basically the same as ReadFileAsLines_Array, but returns the found-lines as a newline-separated string.</p>
 </blockquote>
 <p>These functions should fulfill most of your daily file-read-usecases.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FileManagement_003_Write"></a>
+<hr><a id="FileManagement_003_Write"></a>
 <div style="font-size:100%"><h4><a href="#FileManagement_003_Write">^</a> <u>File Management: Write</u></h4></div><p><p>Reading files is cool, writing files is cool as well, so I added some for exactly that: <a href="US_Api_Functions.html#WriteValueToFile">WriteValueToFile</a>, <a href="US_Api_Functions.html#WriteValueToFile_Insert">WriteValueToFile_Insert</a>, <a href="US_Api_Functions.html#WriteValueToFile_Replace">WriteValueToFile_Replace</a>, <a href="US_Api_Functions.html#WriteValueToFile_InsertBinary">WriteValueToFile_InsertBinary</a>, <a href="US_Api_Functions.html#WriteValueToFile_ReplaceBinary">WriteValueToFile_ReplaceBinary</a></p>
 <p>Let's start with the function, that you'll probably use the most for writing:</p>
 <blockquote>
@@ -1792,8 +1733,7 @@ Default is, file will be stored as binary and value replaces the current content
 <p>This inserts parameter value between (including) startbyteposition and (including)endbyteposition. This works for binary-files and for textfiles(though textfiles may cause issues at some points).</p>
 </blockquote>
 <p>This should make saving files easier than having to code it completely yourself by hand.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FileManagement_004_Analyse"></a>
+<hr><a id="FileManagement_004_Analyse"></a>
 <div style="font-size:100%"><h4><a href="#FileManagement_004_Analyse">^</a> <u>File Management: Analyse</u></h4></div><p><p>Sometimes, you want to know more about the contents of a file. For that, I included some functions as well: <a href="US_Api_Functions.html#CountLinesInFile">CountLinesInFile</a>, <a href="US_Api_Functions.html#GetLengthOfFile">GetLengthOfFile</a>, <a href="US_Api_Functions.html#CheckForValidFileFormats">CheckForValidFileFormats</a>, <a href="US_Api_Functions.html#OnlyFilesOfCertainType">OnlyFilesOfCertainType</a></p>
 <p>For reading files, you probably want to know the length of the files or number of lines in it. For that you can use:</p>
 <blockquote>
@@ -1837,8 +1777,7 @@ Default is, file will be stored as binary and value replaces the current content
 <blockquote>
 <p>After that, the function returns an array with all files, that are of the filetype you gave to parameter filetype.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FileManagement_006_Background_Copying"></a>
+<hr><a id="FileManagement_006_Background_Copying"></a>
 <div style="font-size:100%"><h4><a href="#FileManagement_006_Background_Copying">^</a> <u>File Management: Background Copying</u></h4></div><p><p>If you have a defer-script and would like to copy files in the background while doing other stuff in the meantime, or if you want to copy huge files in Lua, you'll probably face the problem, that copying huge files may block Reaper.<br />
 This'll happen, when you have huge files and you try to copy the whole file at once. You can cirvumvent it by reading and writing the file piece by piece, which is programmable in Lua, which needs some kind of defer-loop as well to work on big files; every defer-cycle reading and writing a piece of the file.<br />
 But, as I'm too lazy to do that time and again(and you're probably too), I programmed a bunch of functions and mechanism, that'll do it for you.</p>
@@ -1962,8 +1901,7 @@ This will not affect background-copy, so if you want to stop processing the file
 <p>And this returns the number of files, who haven't been processed yet in the background-copy-queue.</p>
 </blockquote>
 <p>With that, doing extensive copying-work should be possible for you, even writing a file-manager if you wish.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FileManagement_005_Misc"></a>
+<hr><a id="FileManagement_005_Misc"></a>
 <div style="font-size:100%"><h4><a href="#FileManagement_005_Misc">^</a> <u>File Management: Misc</u></h4></div><p><p>Last, but not least, I added many other useful functions regarding file-management, like:</p>
 <ul>
 <li><a href="US_Api_Functions.html#CountDirectoriesAndFilesInPath">CountDirectoriesAndFilesInPath</a> - this counts all files and directories in a path</li>
@@ -1978,8 +1916,7 @@ This will not affect background-copy, so if you want to stop processing the file
 <li><a href="US_Api_Functions.html#GetReaperWorkDir">GetReaperWorkDir</a> - returns the current workdir of Reaper, where files(without a path) will be created in</li>
 <li><a href="US_Api_Functions.html#SetReaperWorkDir">SetReaperWorkDir</a> - sets the current workdir of Reaper, where files(without a path) will be created in(needs Reaper-restart)</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Project_Management_001_Introduction"></a>
+<hr><a id="Project_Management_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Project_Management_001_Introduction">^</a> <u>Project Management: Introduction</u></h4></div><p><p>Beside of many functions to <a href="#GetSetStates_Project_Track_Item_Env_001_Introduction">read and set project-states</a> in RPP-files and ProjectStateChunks, I also added some other things to work with projects.</p>
 <ul>
 <li><a href="US_Api_Functions.html#NewProjectTab">NewProjectTab</a> - creates a new project-tab</li>
@@ -1994,8 +1931,7 @@ This will not affect background-copy, so if you want to stop processing the file
 <li><a href="US_Api_Functions.html#IsValidProjectStateChunk">IsValidProjectStateChunk</a> - checks, whether a string is a valid ProjectStateChunk(i.e. you read an rpp-roject into a variable, you can check this)</li>
 <li><a href="US_Api_Functions.html#IsValidReaProject">IsValidReaProject</a> - checks, whether an object is a valid ReaProject-object</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Project_Management_002_Check_Changed_Projecttabs"></a>
+<hr><a id="Project_Management_002_Check_Changed_Projecttabs"></a>
 <div style="font-size:100%"><h4><a href="#Project_Management_002_Check_Changed_Projecttabs">^</a> <u>Project Management: Check for changed projecttabs</u></h4></div><p><p>Sometimes, you want to know, if projecttabs have been reordered, closed, opened, created. For this, I created the function</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#CheckForChangedProjectTabs">CheckForChangedProjectTabs</a></strong></p>
@@ -2029,8 +1965,7 @@ When you run this function, it will check this internal list and compare, if pro
 </blockquote>
 <p>When you want to update this internal list, you should set parameter update to true, otherwise set it to false.</p>
 <p>That way, you can for instance work with newly created projects, to automatically add things to projects, that can't be added using TemplateProjects.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ColorManagement_001_Introduction"></a>
+<hr><a id="ColorManagement_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#ColorManagement_001_Introduction">^</a> <u>Color Management: Introduction</u></h4></div><p><p>Reaper has a lot of cool themeing abilities, which allows you to customize most of the design of Reaper yourself.<br />
 One of these things is: customized colors.</p>
 <p>Unfortunately, Reaper has it's own way to deal with color. In fact there are two main ways of dealing with color:</p>
@@ -2056,8 +1991,7 @@ But you always need to add that |0x1000000 after the function, and I usually for
 <p>There's also some other nice stuff in many gfx-applications, that is completely missing from Reaper's own color-functions: adjusting brightness, saturation and contrast of colors, which would be helpful for adjusting track-colors and item-colors and such.</p>
 <p>And what about manipulating multiple colors at once?</p>
 <p>So I thought, why not adding functions, that make that stuff easier?</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ColorManagement_002_Native_Color_Conversion"></a>
+<hr><a id="ColorManagement_002_Native_Color_Conversion"></a>
 <div style="font-size:100%"><h4><a href="#ColorManagement_002_Native_Color_Conversion">^</a> <u>Color Management: Native Color Conversion</u></h4></div><p><p>For color-conversion into a system-dependent native-color, there are the functions:</p>
 <blockquote>
 <p><a href="US_Api_Functions.html#ConvertColor">ConvertColor</a>, <a href="US_Api_Functions.html#ConvertColorReverse">ConvertColorReverse</a>, <a href="US_Api_Functions.html#ConvertColorToMac">ConvertColorToMac</a>, <a href="US_Api_Functions.html#ConvertColorFromMac">ConvertColorFromMac</a>, <a href="US_Api_Functions.html#ConvertColorFromWin">ConvertColorToWin</a>, <a href="US_Api_Functions.html#ConvertColorFromWin">ConvertColorFromWin</a>, <a href="US_Api_Functions.html#ConvertGFXToColor">ConvertGFXToColor</a>, <a href="US_Api_Functions.html#ConvertColorToGFX">ConvertColorToGFX</a></p>
@@ -2129,8 +2063,7 @@ Will set returnvalue retval to false, if conversion failed; if conversion succee
 <p>This converts red, green, blue, alpha-values(0-255) into gfx-useable functions(0-1). Simply pass the values between 0 to 255 to the function.</p>
 </blockquote>
 <p>With that, you can convert color-values into all color-values you ever want to have.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ColorManagement_003_Brightness_Contrast_Saturation"></a>
+<hr><a id="ColorManagement_003_Brightness_Contrast_Saturation"></a>
 <div style="font-size:100%"><h4><a href="#ColorManagement_003_Brightness_Contrast_Saturation">^</a> <u>Color Management: Brightness, Contrast and Colorsaturation</u></h4></div><p><p>Sometimes, you want to alter brightness, contrast or saturation of a color but have no idea, how to do that. For that, I added three functions that do that for you: <a href="US_Api_Functions.html#ChangeColorBrightness">ChangeColorBrightness</a>, <a href="US_Api_Functions.html#ChangeColorContrast">ChangeColorContrast</a>, <a href="US_Api_Functions.html#ChangeColorSaturation">ChangeColorSaturation</a></p>
 <p>Let's start with adjusting the brightness:</p>
 <blockquote>
@@ -2188,13 +2121,11 @@ For desaturation: after that, it will add delta to values below median and subtr
 For saturation: after that, it will subtract delta from values below median and add delta to values above delta.</p>
 <p>By that, it will desaturate or saturate.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ColorManagement_004_ColorTables_Introduction"></a>
+<hr><a id="ColorManagement_004_ColorTables_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#ColorManagement_004_ColorTables_Introduction">^</a> <u>Color Management: Working with Colortables</u></h4></div><p><p>When working with multiple colors at once, you can use a <a href="#Datatypes_007_ColorTable">ColorTable</a>, which can hold multiple colors, as 0-255 integer- and 0-1 float-representation, as well as the current native-color. Such colortables can be used to apply colors to track-colors or item-colors. This is still work in progress but will become more elaborated over time.</p>
 <p>There are currently multiple color-table-functions available, like: <a href="US_Api_Functions.html#CreateColorTable">CreateColorTable</a>, <a href="US_Api_Functions.html#CreateSonicRainboomColorTable">CreateSonicRainboomColorTable</a>, <a href="US_Api_Functions.html#IsValidColorTable">IsValidColorTable</a>, <a href="US_Api_Functions.html#ApplyColorTableToTrackColors">ApplyColorTableToTrackColors</a></p>
 <p>Over time, I intend to add functions to these colortables as well, so adding, removing, altering and changing colors in the colortable(like brightness, saturation and such) is possible more easily.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ColorManagement_005_ColorTables_Creating_And_Checking"></a>
+<hr><a id="ColorManagement_005_ColorTables_Creating_And_Checking"></a>
 <div style="font-size:100%"><h4><a href="#ColorManagement_005_ColorTables_Creating_And_Checking">^</a> <u>Color Management: Creating Colortables</u></h4></div><p><p>Let's create such a new <a href="#Datatypes_007_ColorTable">ColorTable</a>:</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#CreateColorTable">CreateColorTable</a></strong></p>
@@ -2226,8 +2157,7 @@ After that, you'll have a ColorTable with number_of_steps-colors from startcolor
 <blockquote>
 <p>Simply pass a table to check for and it will return, whether it is a valid ColorTable(true) or nor(false)</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ColorManagement_006_ColorTables_Applying"></a>
+<hr><a id="ColorManagement_006_ColorTables_Applying"></a>
 <div style="font-size:100%"><h4><a href="#ColorManagement_006_ColorTables_Applying">^</a> <u>Color Management: Applying Colortables</u></h4></div><p><p>Now, that we've created a new ColorTable, we might want to apply it somewhere, like tracks or items. For that, we have: <a href="US_Api_Functions.html#ApplyColorTableToTrackColors">ApplyColorTableToTrackColors</a> and <a href="US_Api_Functions.html#ApplyColorTableToItemColors">ApplyColorTableToItemColors</a></p>
 <p>Let's bring some colors into our lives:</p>
 <blockquote>
@@ -2248,8 +2178,7 @@ The final parameters decide, to which tracks to apply this, starting from track 
 <p>This applies a ColorTable to MediaItems and works basically as the ApplyColorTableToTrackColors-function above, with the exception, that you pass MediaItems as MediaItemArray.<br />
 The rest is the same, pass to the function a ColorTable and in the parameter Spread, how to spread/cycle the colors over the MediaItems.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Background_Scripts_001_Introduction"></a>
+<hr><a id="Background_Scripts_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Background_Scripts_001_Introduction">^</a> <u>Background Scripts: Introduction</u></h4></div><p><p>Some things in Reaper can't be solved easily without having something monitoring in the background. So to include some new features otherwise impossible, I added some background-scripts, that can be easily run using:</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#RunBackgroundHelperFeatures">RunBackgroundHelperFeatures</a></strong></p>
@@ -2317,16 +2246,14 @@ Features that use these background-scripts are:</p>
     </code></pre>
 <p>This script displays into the ReaScript-console the message "Recording or Rec+Pause has stopped!" everytime recording and/or recording+pause changes to STOP It also displays playstate-changes in general, when they happen, into the ReaScript-console.</p>
 <p>Refer <a href="#DeferScripts_001_Introduction">DeferScripts: Introduction to Ultraschall's Defer-functions</a> for more information on the Defer1-function used in this demo-script.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Cough_Mute_Buttons_001_Introduction"></a>
+<hr><a id="Cough_Mute_Buttons_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Cough_Mute_Buttons_001_Introduction">^</a> <u>Cough and Mute Buttons/Actions: Introduction</u></h4></div><p><p>When recording over a long period of time, especially when recording interviews for podcasts, radio and such, you probably run into the issue that someone is coughing or drinking something. Though both of these things are important, a recording of it is usually not wished.<br />
 For that, Reaper provides a Mute-Envelope for each track, which allows to mute a track for a period of time and unmute it again. This muting can be recorded, so it will remain even after the recording is finished.<br />
 Problem is: You need to "arm" the mute-envelope first, otherwise any mute-information as send by e.g. MIDI-devices will not be added to the mute-envelope and therefor is lost after the recording.<br />
 In some cases, this behavior is a good thing and gives you flexibility when to record the mutes and when not, but for casual users, who do not want to have this kind of freedom, this can be really hard to use.</p>
 <p>So I added some functions, that add mute-points into a mute-envelope regardless of it's arming-state. This should make using the mute-envelope for your benefits much easier.</p>
 <p>Let's go into more detail.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Cough_Mute_Buttons_002_Toggling_Mute"></a>
+<hr><a id="Cough_Mute_Buttons_002_Toggling_Mute"></a>
 <div style="font-size:100%"><h4><a href="#Cough_Mute_Buttons_002_Toggling_Mute">^</a> <u>Cough and Mute Buttons/Actions: Toggling Mute</u></h4></div><p><p>The first and foremost thing you probably want is actually muting a mute-envelope of a track, for that there are the two functions: <a href="US_Api_Functions.html#ToggleMute">ToggleMute</a>, <a href="US_Api_Functions.html#ToggleMute_TrackObject">ToggleMute_TrackObject</a></p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#ToggleMute">ToggleMute</a></strong></p>
@@ -2347,8 +2274,7 @@ The state of muting can be either muted(0) or unmuted(1)</p>
 <blockquote>
 <p>This works the same as ToggleMute, but accepts a MediaTrack instead of a tracknumber. The rest is the same, position for the position of the new mutepoint and state for mute(0) or unmute(1).</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Cough_Mute_Buttons_003_FindingMutes"></a>
+<hr><a id="Cough_Mute_Buttons_003_FindingMutes"></a>
 <div style="font-size:100%"><h4><a href="#Cough_Mute_Buttons_003_FindingMutes">^</a> <u>Cough and Mute Buttons/Actions: Toggling Mute</u></h4></div><p><p>Toggling is cool, but you probably want to know, if toggling is even necessary of where the next/previous mute-object currently is.<br />
 For that, I added the functions: <a href="US_Api_Functions.html#IsMuteAtPosition">IsMuteAtPosition</a>, <a href="US_Api_Functions.html#IsMuteAtPosition_TrackObject">IsMuteAtPosition_TrackObject</a>, <a href="US_Api_Functions.html#GetNextMuteState">GetNextMuteState</a>, <a href="US_Api_Functions.html#GetNextMuteState_TrackObject">GetNextMuteState_TrackObject</a>, <a href="US_Api_Functions.html#GetPreviousMuteState">GetPreviousMuteState</a>, <a href="US_Api_Functions.html#GetPreviousMuteState_TrackObject">GetPreviousMuteState_TrackObject</a></p>
 <p>If you want to know, how many mute-points exist in a track, you can use:</p>
@@ -2398,8 +2324,7 @@ It will return -1, if no such mute-point exists</p>
 <li><a href="US_Api_Functions.html#GetPreviousMuteState_TrackObject">GetPreviousMuteState_TrackObject</a> - like GetPreviousMuteState, but uses a MediaTrack-object instead of a tracknumber</li>
 </ul>
 <p>With that, you should get a good overview over the mute-points in your project.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Cough_Mute_Buttons_004_DeletingMutes"></a>
+<hr><a id="Cough_Mute_Buttons_004_DeletingMutes"></a>
 <div style="font-size:100%"><h4><a href="#Cough_Mute_Buttons_004_DeletingMutes">^</a> <u>Cough and Mute Buttons/Actions: Toggling Mute</u></h4></div><p><p>Being able to set and toggle and find mute-points is quite good, but sometimes, you want to get rid of them as well.<br />
 For that, I added the functions: <a href="US_Api_Functions.html#DeleteMuteState">DeleteMuteState</a>, <a href="US_Api_Functions.html#DeleteMuteState_TrackObject">DeleteMuteState_TrackObject</a></p>
 <blockquote>
@@ -2419,8 +2344,7 @@ For that, I added the functions: <a href="US_Api_Functions.html#DeleteMuteState"
 <blockquote>
 <p>Works exactly like DeleteMuteState, but expects a MediaTrack-object instead of a tracknumber.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Error_Messaging_System_001_Introduction"></a>
+<hr><a id="Error_Messaging_System_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Error_Messaging_System_001_Introduction">^</a> <u>Error Messaging System: Introduction</u></h4></div><p><p>When coding, one of the most boring things, beside documentation, is debugging.<br />
 This is especially true, when the development-system used itself creates error- and bugmessages from hell, that just tell you that something went wrong, but not what.</p>
 <p>And as I'm known to be lazy, I thought "When creating many API-functions, they should be able to tell me, where I went wrong, what went wrong and when I'm holding it wrong."</p>
@@ -2428,8 +2352,7 @@ This is especially true, when the development-system used itself creates error- 
 And furthermore, I worked this error-messaging system out in a way, that it does not stop script-execution if you do not want to. In fact, if you want to reuse error-messages created by an Ultraschall-API-function you used, you can do that.<br />
 So using error checks from other Ultraschall-API-functions for your benefits is quite easy.</p>
 <p>Let's go into more details on that.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Error_Messaging_System_002_Creating_Error_Messages"></a>
+<hr><a id="Error_Messaging_System_002_Creating_Error_Messages"></a>
 <div style="font-size:100%"><h4><a href="#Error_Messaging_System_002_Creating_Error_Messages">^</a> <u>Error Messaging System: Creating Error Messages</u></h4></div><p><p>Before you can use error-messages, they need to be created first. For that, you can use the function: <a href="US_Api_Functions.html#AddErrorMessage">AddErrorMessage</a>.</p>
 <p>Let's create an error-message.</p>
 <blockquote>
@@ -2469,8 +2392,7 @@ Returnvalue errorcount tells you, which number the newly created errormessage ha
 After that, the function returns false and the index of the error-message, so the user can use this number to retrieve the error-message directly from the Ultraschall-API.</p>
 </blockquote>
 <p>Now, we've created a new error-message, which is now kept by the Ultraschall-API-instance locally within your script.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Error_Messaging_System_003_Getting_Error_Messages"></a>
+<hr><a id="Error_Messaging_System_003_Getting_Error_Messages"></a>
 <div style="font-size:100%"><h4><a href="#Error_Messaging_System_003_Getting_Error_Messages">^</a> <u>Error Messaging System: Getting Error Messages</u></h4></div><p><p>Now that we've created a new error-message, we probably want to retrieve it somehow.<br />
 For that, I added the following functions: <a href="US_Api_Functions.html#CountErrorMessages">CountErrorMessages</a>, <a href="US_Api_Functions.html#GetLastErrorMessage">GetLastErrorMessage</a>, <a href="US_Api_Functions.html#GetLastErrorMessage2">GetLastErrorMessage2</a>, <a href="US_Api_Functions.html#ReadErrorMessage">ReadErrorMessage</a>, <a href="US_Api_Functions.html#ShowLastErrorMessage">ShowLastErrorMessage</a></p>
 <blockquote>
@@ -2544,8 +2466,7 @@ When setread is set to true, ShowLastErrorMessage will not show this errormessag
 </li>
 <li><a href="US_Api_Functions.html#ShowErrorMessagesInReascriptConsole">ShowErrorMessagesInReascriptConsole</a> - prints the errormessages to the console, when they happen for "realtime"-debug-errorchecking</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Error_Messaging_System_004_Deleting_Error_Messages"></a>
+<hr><a id="Error_Messaging_System_004_Deleting_Error_Messages"></a>
 <div style="font-size:100%"><h4><a href="#Error_Messaging_System_004_Deleting_Error_Messages">^</a> <u>Error Messaging System: Deleting Error Messages</u></h4></div><p><p>If you want to get rid of old errormessages, you can delete them using: <a href="US_Api_Functions.html#DeleteLastErrorMessage">DeleteLastErrorMessage</a>, <a href="US_Api_Functions.html#DeleteAllErrorMessages">DeleteAllErrorMessages</a>, <a href="US_Api_Functions.html#DeleteErrorMessage">DeleteErrorMessage</a><br />
 These functions work in the same vein, as the read-functions.</p>
 <blockquote>
@@ -2573,8 +2494,7 @@ These functions work in the same vein, as the read-functions.</p>
 <p>This deletes a specific errormessage, as specified by errornumber. Remember, to get the current number of error-messages available, use <a href="US_Api_Functions.html#CountErrorMessages">CountErrorMessages</a>!</p>
 </blockquote>
 <p>And that's all you need to know about deleting errormessages.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Error_Messaging_System_005_TogglingIDEErrorMessages"></a>
+<hr><a id="Error_Messaging_System_005_TogglingIDEErrorMessages"></a>
 <div style="font-size:100%"><h4><a href="#Error_Messaging_System_005_TogglingIDEErrorMessages">^</a> <u>Error Messaging System: Toggling showing errors in IDE instead</u></h4></div><p><p>As cool, as the error-messaging-system is for debugging, you may prefer getting your errors like any other Lua/Reaper-API-error at the bottom of the IDE or in Reaper's error-window.<br />
 So I included toggling exactly that, using: <a href="US_Api_Functions.html#ToggleIDE_Errormessages">ToggleIDE_Errormessages</a></p>
 <blockquote>
@@ -2586,8 +2506,7 @@ So I included toggling exactly that, using: <a href="US_Api_Functions.html#Toggl
 <p>This toggles, whether to display error-messages at the bottom of the ReaScript-IDE-window/Reaper's error-window or if you prefer using Ultraschall-API's own functions for error-handling.<br />
 Optionally, you can set it by setting togglevalue to either true(show errormessages at the bottom of the IDE) or false(use the Ultraschall-API error-management-behavior).</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Error_Messaging_System_006_Helpers"></a>
+<hr><a id="Error_Messaging_System_006_Helpers"></a>
 <div style="font-size:100%"><h4><a href="#Error_Messaging_System_006_Helpers">^</a> <u>Error Messaging System: Other helpers for Error-Messaging-system</u></h4></div><p><p>For other use-cases, I'm adding other error-messaging-system-features as well. If you need more, feel free to ask me.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#ShowErrorMessagesInReascriptConsole">ShowErrorMessagesInReascriptConsole</a></strong></p>
@@ -2598,8 +2517,7 @@ Optionally, you can set it by setting togglevalue to either true(show errormessa
 <p>This toggles, whether error-messages shall be shown in the ReaScript-console, WHEN THEY HAPPEN.<br />
 That way you can immediately see, which functions complained and how often. This is more detailed, than <a href="US_Api_Functions.html#ShowLastErrorMessage">ShowLastErrorMessage()</a>, which only shows the last error that has happened.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Trackstate_Management_001_Introduction"></a>
+<hr><a id="Trackstate_Management_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Trackstate_Management_001_Introduction">^</a> <u>Trackstate Management: Introduction</u></h4></div><p><p>Many things in regards of customizations have also to do with influencing states of MediaTracks. So I added tons of stuff for that too.<br />
 I also thought, when I'm at it, I change some of the confusing behavior of Reaper's own API to something more viable.<br />
 For instance, when passing a tracknumber to a function, the first track will always be 1, the second always be 2, etc. The master-track, if applicable, will always be 0. That way, you can always be sure, which track in a function is which track.</p>
@@ -2621,8 +2539,7 @@ There are also many functions, who create you trackstrings, like for locked trac
 <li><a href="US_Api_Functions.html#GetTrackLength">GetTrackLength</a> - returns the length of a MediaTrack; similar to Reaper's GetProjectLength but for one track only</li>
 </ul>
 <p>and many more related to working with TrackStateChunks.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Routing_001_Introduction"></a>
+<hr><a id="Routing_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Routing_001_Introduction">^</a> <u>Routing: Introduction</u></h4></div><p><p>In the past, I had numerous situations, where I wanted to influence my routing-settings programmatically. But every time I started, I stumbled and shuddered. Not because it is impossible with Reaper's own API, but because it's so complicated, irritating, confusing and so far away from the way the routing is managed with the user-interface of Reaper, where you can see easily all individual sends/receives.<br />
 This problem applies with the whole management of HardwareOuts as well, which is also painful to program.<br />
 So I desired some functions that keep programming the routing simple and down to it's basic components while retaining the flexibility of the full routing.</p>
@@ -2639,8 +2556,7 @@ So I desired some functions that keep programming the routing simple and down to
 <li>counting all HWOuts/routings in a track</li>
 </ul>
 <p>In addition to that, I also added numerous functions, that allow "mass manipulation" of the Routings. Let's start with the routing.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Routing_002_Send_Receive"></a>
+<hr><a id="Routing_002_Send_Receive"></a>
 <div style="font-size:100%"><h4><a href="#Routing_002_Send_Receive">^</a> <u>Routing: Send and Receives</u></h4></div><p><p>Before we start, some basics, if you're not familiar with routing.</p>
 <p>Routing is a way to direct the output of one channel/track/fx to another channel/track/fx.<br />
 In our case of track-routing, that means, one track sends a signal and another track receives it. If you look into the routing-settings or routing-matrix of Reaper, you can exactly see that: one track sends a signal which can be received by one or many tracks.<br />
@@ -2720,8 +2636,7 @@ The other parameters are simply all other settings for this send/receive, like</
 <p>This returns the number of received tracks a the track tracknumber has.</p>
 </blockquote>
 <p>Another thing: Routing-settings of the master-track aren't possible that way. You need to use <a href="US_Api_Functions.html#GetTrackMainSendState">GetTrackMainSendState</a> and <a href="US_Api_Functions.html#SetTrackMainSendState">SetTrackMainSendState</a> to route the signal of a track to the master-channel. Unlike the former functions, MainSend must be set in the sending track!</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Routing_003_HWOuts"></a>
+<hr><a id="Routing_003_HWOuts"></a>
 <div style="font-size:100%"><h4><a href="#Routing_003_HWOuts">^</a> <u>Routing: Hardware Outs</u></h4></div><p><p>Send and Receive is one thing, but if you want to hear anything, you need to send the audiosignal to actual audiohardware. To do that, you can set HardwareOuts(HWOuts) to tracks, as well as the MasterTrack.<br />
 For that, I included the functions: <a href="US_Api_Functions.html#AddTrackHWOut">AddTrackHWOut</a>, <a href="US_Api_Functions.html#SetTrackHWOut">SetTrackHWOut</a>, <a href="US_Api_Functions.html#GetTrackHWOut">GetTrackHWOut</a>, <a href="US_Api_Functions.html#DeleteTrackHWOut">DeleteTrackHWOut</a>, <a href="US_Api_Functions.html#CountTrackHWOuts">CountTrackHWOuts</a></p>
 <blockquote>
@@ -2782,8 +2697,7 @@ The other options are to some extend familiar to the <a href="#Routing_002_Send_
 <p><strong><a href="US_Api_Functions.html#CountTrackHWOuts">CountTrackHWOuts</a></strong></p>
 </blockquote>
 <pre><code>                    integer count_HWOuts = ultraschall.CountTrackHWOuts(integer tracknumber, optional string TrackStateChunk)</code></pre>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Routing_004_RoutingMassManipulation"></a>
+<hr><a id="Routing_004_RoutingMassManipulation"></a>
 <div style="font-size:100%"><h4><a href="#Routing_004_RoutingMassManipulation">^</a> <u>Routing: Mass manipulation of Routings</u></h4></div><p><p>Sometimes, working with individual settings isn't enough. Sometimes, you want to work with all Routing-Settings at once.<br />
 For that, I included the functions: <a href="US_Api_Functions.html#ClearRoutingMatrix">ClearRoutingMatrix</a>, <a href="US_Api_Functions.html#GetAllHWOuts">GetAllHWOuts</a>, <a href="US_Api_Functions.html#ApplyAllHWOuts">ApplyAllHWOuts</a>, <a href="US_Api_Functions.html#AreHWOutsTablesEqual">AreHWOutsTablesEqual</a>, <a href="US_Api_Functions.html#GetAllAUXSendReceives">GetAllAUXSendReceives</a>, <a href="US_Api_Functions.html#ApplyAllAUXSendReceives">ApplyAllAUXSendReceives</a>, <a href="US_Api_Functions.html#AreAUXSendReceivesTablesEqual">AreAUXSendReceivesTablesEqual</a>, <a href="US_Api_Functions.html#GetAllMainSendStates">GetAllMainSendStates</a>, <a href="US_Api_Functions.html#ApplyAllMainSendStates">ApplyAllMainSendStates</a>, <a href="US_Api_Functions.html#AreMainSendsTablesEqual">AreMainSendsTablesEqual</a></p>
 <blockquote>
@@ -2895,8 +2809,7 @@ The routing-matrix could look something like this:</p>
 <p>This changes the main-send-states only at tracks A, B, C, D, E, leaving the newly inserted tracks untouched.</p>
 <p>The resulting routing-matrix will look like this:<br />
 <img src="gfx/Routing_004_RoutingMassManipulation_RoutingMatrix_after_option_2.png" alt="Routing Matrix - after, using option=2" /></p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_001_Introduction"></a>
+<hr><a id="ExtStateManagement_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#ExtStateManagement_001_Introduction">^</a> <u>ExtState Management: Introduction</u></h4></div><p><p>One of the concepts of Reaper to exchange data between scripts, functions, instances are so called extstates.<br />
 Such extstates are usually key-value-stores, in which you can store strings. They can be stored either as ini-files or in Reaper's memory itself.</p>
 <p>In the Ultraschall-API, I added numerous functions to get/set/enumerate values in ini-files as well as analyzing them for certain patterns and information.<br />
@@ -2905,8 +2818,7 @@ You can find all functions related to storing/analyzing ini-files in the index o
 That way, you can do things like storing additional metadata for items, without having to store them into the item-notes field.<br />
 You can find all these functions for item/track-extstates in the functions-reference-index under Metadata Management -&gt; Extension States(Guid) and Extension States</p>
 <p>Let's go into more detail on these concepts.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_002_IniFiles"></a>
+<hr><a id="ExtStateManagement_002_IniFiles"></a>
 <div style="font-size:100%"><h4><a href="#ExtStateManagement_002_IniFiles">^</a> <u>ExtState Management: Ini-Files</u></h4></div><p><p>Ini-files are an easy way to store information. Many of Reaper's own configuration-files are ini-files.<br />
 They all work under the same structural concept:</p>
 <pre><code>    [section]
@@ -2928,8 +2840,7 @@ You should avoid an = in a section name and brackets [ ] in a keyname, as this c
 <p>Note: Reaper's own configuration-files can be changed only, when Reaper isn't running. To be more precise: you can change them, but Reaper will ignore these changes until restart, sometimes even overwrite them.<br />
 Changing Reaper's config-files needs a restart of Reaper for the changes to take effect.<br />
 Some of the configuration-settings can be set also at runtime, but need another approach, which you can find on the Reaper-Internals-page for <a href="Reaper_Config_Variables.html">Configuration Variables</a></p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_003_IniFiles_Functions"></a>
+<hr><a id="ExtStateManagement_003_IniFiles_Functions"></a>
 <div style="font-size:100%"><h4><a href="#ExtStateManagement_003_IniFiles_Functions">^</a> <u>ExtState Management: Inifile-Functions</u></h4></div><p><p>Let's start with setting and getting key-values in ini-files.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#GetIniFileExternalState">GetIniFileExternalState</a></strong></p>
@@ -3083,8 +2994,7 @@ It is a comma-separated string of the format: [section1],key1=,value,key4=,value
 <p>Just like EnumerateKeysByPattern, but this enumerates through the values within a given section. It will return the value and it's corresponding keyname found.</p>
 </blockquote>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_004_Ultraschall_Ini"></a>
+<hr><a id="ExtStateManagement_004_Ultraschall_Ini"></a>
 <div style="font-size:100%"><h4><a href="#ExtStateManagement_004_Ultraschall_Ini">^</a> <u>ExtState Management: Ultraschall.ini</u></h4></div><p><p>The Ultraschall-Podcasting-Extension itself makes use of it's own configuration-file, called ultraschall.ini, which is located in the resourcesfolder of Reaper.<br />
 This file can be used by you as well, even if it's mainly intended for an installed Ultraschall-installation. The Ultraschall-API has some functions to deal with the ultraschall.ini.</p>
 <p>You need to know, however: sectionnames must contain a leading signature, that is used purely by you, like MaxMiller_sectionname.<br />
@@ -3100,8 +3010,7 @@ This is only for the ultraschall.ini-file, all other ini-files can be used by yo
 <li><a href="US_Api_Functions.html#EnumerateUSExternalState_key">EnumerateUSExternalState_key</a> - enumerates the keys of a section in the ultraschall.ini</li>
 <li><a href="US_Api_Functions.html#EnumerateUSExternalState_sec">EnumerateUSExternalState_sec</a> - enumerates the sections of the ultraschall.ini</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_005_TrackItemExtStates"></a>
+<hr><a id="ExtStateManagement_005_TrackItemExtStates"></a>
 <div style="font-size:100%"><h4><a href="#ExtStateManagement_005_TrackItemExtStates">^</a> <u>ExtState Management: Track and Item-Extstates</u></h4></div><p><p><strong>Note: This is deprecated, as Reaper will have the same feature in better in a future version!</strong></p>
 <p>Another concept, I introduce with the Ultraschall-API are Track and Item-Extstates.</p>
 <p>To store them, I make use of the fact, that tracks and items have their own guids. I use these guids as basis for the section-name, while the key and value can be freely chosen by you.<br />
@@ -3130,8 +3039,7 @@ You can choose, whether to overwrite it, if it already exists and if the state s
 <p>With these two functions as a base, I made variants for tracks and items.</p>
 <p>One important thing to mention: these extstates are bound to the project(if they aren't stored globally via parameter savelocation), so when copying an item with extstates into another project, the extstates will not be part of the new project.<br />
 I will look into that problem at some point.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_006_TrackExtStates"></a>
+<hr><a id="ExtStateManagement_006_TrackExtStates"></a>
 <div style="font-size:100%"><h4><a href="#ExtStateManagement_006_TrackExtStates">^</a> <u>ExtState Management: Track Extstates</u></h4></div><p><p>**Note: This is deprecated, use Reaper's own reaper.GetSetTrackSendInfo_String instead**</p>
 <p>Let's store some extstates for tracks. For that, I added the functions: <a href="US_Api_Functions.html#GetTrackExtState">GetTrackExtState</a>, <a href="US_Api_Functions.html#SetTrackExtState">SetTrackExtState</a><br />
 TrackExtStates are stored as ProjectExtState within the projectfile.</p>
@@ -3150,8 +3058,7 @@ TrackExtStates are stored as ProjectExtState within the projectfile.</p>
 <blockquote>
 <p>This returns a stored trackextstate. Just pass to it a MediaTrack-object and the key, whose value you want. It will return if getting the value was successful or not with return-value retval, as well as the value with value.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_007_ItemExtStates"></a>
+<hr><a id="ExtStateManagement_007_ItemExtStates"></a>
 <div style="font-size:100%"><h4><a href="#ExtStateManagement_007_ItemExtStates">^</a> <u>ExtState Management: Item Extstates</u></h4></div><p><p>**Note: This is deprecated, use Reaper's own reaper.GetSetMediaItemInfo_String instead**</p>
 <p>Let's store some extstates for items. For that, I added the functions: <a href="US_Api_Functions.html#GetItemExtState">GetItemExtState</a>, <a href="US_Api_Functions.html#SetItemExtState">SetItemExtState</a><br />
 ItemExtStates are stored as ProjectExtState within the projectfile. These functions work basically like the ones for TrackExtStates</p>
@@ -3170,8 +3077,7 @@ ItemExtStates are stored as ProjectExtState within the projectfile. These functi
 <blockquote>
 <p>This returns a stored itemextstate. Just pass to it a MediaItem-object and the key, whose value you want. It will return if getting the value was successful or not with return-value retval, as well as the value with value.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ExtStateManagement_008_MarkerExtStates"></a>
+<hr><a id="ExtStateManagement_008_MarkerExtStates"></a>
 <div style="font-size:100%"><h4><a href="#ExtStateManagement_008_MarkerExtStates">^</a> <u>ExtState Management: Marker Extstates</u></h4></div><p><p>Sometimes, you would love to store additional information into markers/regions, but you refrain from that, as you don't want to risk overcrowding the marker/regiontitle.<br />
 So I added some functions, who work like regular extstates, but: for markers/regions: <a href="US_Api_Functions.html#GetMarkerExtState">GetMarkerExtState</a>, <a href="US_Api_Functions.html#SetMarkerExtState">SetMarkerExtState</a></p>
 <blockquote>
@@ -3192,8 +3098,7 @@ Toy around with it, you quickly get the idea.</p>
 <blockquote>
 <p>This returns a stored markerextstate. Just pass to it the index of a marker/region and the key, whose value you want.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="MarkersAndRegions_001_Introduction"></a>
+<hr><a id="MarkersAndRegions_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#MarkersAndRegions_001_Introduction">^</a> <u>Markers and Regions: Introduction</u></h4></div><p><p>In the Ultraschall-extension, we make heavy use of markers and regions for all kinds of things. So, to simplify programming for markers, I added a number of functions to deal with them.</p>
 <p>The markers used by Ultraschall and represented in the Ultraschall-API, are: normal markers, chapter markers, planned chapter markers, edit-markers, edit-regions, time-markers and PodRangeRegions.</p>
 <ul>
@@ -3213,8 +3118,7 @@ Toy around with it, you quickly get the idea.</p>
 <li>custom-markers and custom-regions, where you can define yourself, what to include betweem _ and :, like "_foobar: markertext"</li>
 </ul>
 <p>These kind of markers get the most attention, though regular marker/region/tempo-time signature marker-management is part of this API as well.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="MarkersAndRegions_002_General_How_To"></a>
+<hr><a id="MarkersAndRegions_002_General_How_To"></a>
 <div style="font-size:100%"><h4><a href="#MarkersAndRegions_002_General_How_To">^</a> <u>Markers and Regions: General How To</u></h4></div><p><p>All functions for all kinds of markers settable in the Ultraschall-Api share the same basic subset of workflows.<br />
 All markers can be added, set, deleted, enumerated, counted, imported and exported from/to a file, checked for being a certain markertype and converted into a certain markertype(if possible).<br />
 Let's take edit-markers as an example, who have the functions: <a href="US_Api_Functions.html#AddEditMarker">AddEditMarker</a>, <a href="US_Api_Functions.html#SetEditMarker">SetEditMarker</a>, <a href="US_Api_Functions.html#DeleteEditMarker">DeleteEditMarker</a>, <a href="US_Api_Functions.html#EnumerateEditMarkers">EnumerateEditMarkers</a>, <a href="US_Api_Functions.html#CountEditMarkers">CountEditMarkers</a>, <a href="US_Api_Functions.html#ImportEditFromFile">ImportEditFromFile</a>, <a href="US_Api_Functions.html#ExportEditMarkersToFile">ExportEditMarkersToFile</a>, <a href="US_Api_Functions.html#IsMarkerEdit">IsMarkerEdit</a>, <a href="US_Api_Functions.html#MarkerToEditMarker">MarkerToEditMarker</a>, <a href="US_Api_Functions.html#EditToMarker">EditToMarker</a></p>
@@ -3313,8 +3217,7 @@ The markerindex is the one for all markers. It returns the overall-marker-indexn
 </blockquote>
 <p>The other marker-types follow the same lead, so if you understood it for this marker, you understood it for all others as well.<br />
 One limitation though, you can't (yet) export/import regions into/from an exportfile.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="MarkersAndRegions_003_Helpers_and_Manipulation"></a>
+<hr><a id="MarkersAndRegions_003_Helpers_and_Manipulation"></a>
 <div style="font-size:100%"><h4><a href="#MarkersAndRegions_003_Helpers_and_Manipulation">^</a> <u>Markers and Regions: Helpers and Manipulation</u></h4></div><p><p>Adding and getting markers is quite good, but sometimes, you want to do more with them. For that, I added numerous functions as well, like:</p>
 <ul>
 <li><a href="US_Api_Functions.html#CountMarkersAndRegions">CountMarkersAndRegions</a> - counts all markers and regions</li>
@@ -3346,8 +3249,7 @@ One limitation though, you can't (yet) export/import regions into/from an export
 <li><a href="US_Api_Functions.html#SetMarkerByIndex">SetMarkerByIndex</a> - allows you to set markers and regions on their own, without having to deal with differentiating between them</li>
 <li><a href="US_Api_Functions.html#GetNextFreeRegionIndex">GetNextFreeRegionIndex</a> - gets the next free region-shown-indexnumber So, with this, most of your wishes in regards of marker-management should be fulfilled.</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="MarkersAndRegions_004_Custom_Markers_and_Regions"></a>
+<hr><a id="MarkersAndRegions_004_Custom_Markers_and_Regions"></a>
 <div style="font-size:100%"><h4><a href="#MarkersAndRegions_004_Custom_Markers_and_Regions">^</a> <u>Markers and Regions: Custom-Markers and Custom-Regions</u></h4></div><p><p>Even if I already included many markertypes, sometimes this isn't enough. In fact, you might want to have other markertypes beside _Edit: or _PodRange:<br />
 For that, I added custom-markers and custom-regions.</p>
 <p>A custom-marker/custom-region is like a normal marker/region, but their name start with a certain signature. You may have seen it from edit-markers already.</p>
@@ -3406,15 +3308,13 @@ Now you can work, manipulate, and work with all foobar-custom-markers, without h
 </li>
 <li><a href="US_Api_Functions.html#IsRegionValidCustomRegion">IsRegionValidCustomRegion</a> - checks a marker, if it's a valid custom-region</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ChildScripts_001_Introduction"></a>
+<hr><a id="ChildScripts_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#ChildScripts_001_Introduction">^</a> <u>Child Scripts: Introduction</u></h4></div><p><p>One of the cool features in Reaper is the possibility to run scripts at your mouse- or keyclick. One of the biggest drawbacks though, is that you can't individualise the scripts, or better: you can pass parameters to scripts to tell them, how to behave.<br />
 There are some very limited ways of getting input, like some MIDI-values or current states of many Reaper-elements, but they are either very limited, or they involve a heavy load of guessing what the states mean and hoping, you guessed right.</p>
 <p>It also annoyed me, so I had for some time the idea of child-scripts in my mind.</p>
 <p>Child scripts in the sense of the Ultraschall-API, are scripts, that can be run from another script, BUT you can also pass parameters and returnvalues back and forth. Even better, if you run a child-script, you will also get a unique datastructure called ScriptIdentifier, which is an identifier for a script that can be used as extstate to pass over information back and forth. And as this identifier is unique, you can run two or more instances of a defer script and communicate with all of them individually, as they all have their own ScriptIdentifier that they can listen to. More on ScriptIdentifiers in the next chapter.</p>
 <p>With that, you can finally pass over as many parameters/returnvalues/other information over to a child-script as you want.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ChildScripts_002_The_Unique_Scriptidentifier"></a>
+<hr><a id="ChildScripts_002_The_Unique_Scriptidentifier"></a>
 <div style="font-size:100%"><h4><a href="#ChildScripts_002_The_Unique_Scriptidentifier">^</a> <u>Child Scripts: The unique ScriptIdentifier</u></h4></div><p><p>Every script, that uses the Ultraschall-API, gets its own ScriptIdentifier, that is something like a unique name that your script. Such a ScriptIdentifier can then be used to communicate with that given script. So, if you want to run multiple instances of a defer-script and this script uses the Ultraschall-API, you can use these script-identifiers to communicate with each of these instances without disturbing the other instances of the defer-script that are running at the same time.</p>
 <p>A ScriptIdentifier is of the following format:</p>
 <pre><code>    ScriptIdentifier:path/scriptname-{guid}.lua
@@ -3445,8 +3345,7 @@ That way you can be sure, that every script-instance that you create has their o
 <p>Now register this file as new script, run it using Reaper's own reaper.Main_OnCommand-function and unregister it again.</p>
 <p>When "testscript_that_displays_stuff-{A6A79CC4-9DE2-4791-A5F8-62EEF4ABEAC3}.lua" is using the Ultraschall-API, it will not only create a ScriptIdentifier, but one, that includes the guid you added to the filename. That way, you can decide, which ScriptIdentifier the script shall have, that you want to run, as the script knows the same ScriptIdentifier that you can now know, as you have the guid now.</p>
 <p>This is too difficult to do for you? No problem, I created functions that'll do that just for you.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ChildScripts_003_RunChildScripts"></a>
+<hr><a id="ChildScripts_003_RunChildScripts"></a>
 <div style="font-size:100%"><h4><a href="#ChildScripts_003_RunChildScripts">^</a> <u>Child Scripts: Running Childscripts</u></h4></div><p><p>Now that you know a lot about ScriptIdentifiers, you probably want to know, how to run such a child-script and get its ScriptIdentifier. For that, I added mainly two functions: <a href="US_Api_Functions.html#Main_OnCommandByFilename">Main_OnCommandByFilename</a> and <a href="US_Api_Functions.html#MIDI_OnCommandByFilename">MIDI_OnCommandByFilename</a></p>
 <p>These two functions allow you to run a script and get the corresponding ScriptIdentifier returned.<br />
 Let's have a look:</p>
@@ -3475,8 +3374,7 @@ You can pass more than one parameter and it must be a string.</p>
 <p>Like Main_OnCommandByFilename, this also returns a return value that signals if starting the script was successful. And the script-identifier for the started script as well.</p>
 </blockquote>
 <p>Now, let's have a closer look on passing parameters and returnvalues between caller-scripts and called child-scripts.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="ChildScripts_004_PassingParametersAndReturnvalues"></a>
+<hr><a id="ChildScripts_004_PassingParametersAndReturnvalues"></a>
 <div style="font-size:100%"><h4><a href="#ChildScripts_004_PassingParametersAndReturnvalues">^</a> <u>Child Scripts: Passing Parameters and Returnvalues</u></h4></div><p><p>Sometimes you want to pass parameters after you've started a script. Or you are a started script and want to return values to the script that started you.</p>
 <p>For that, I added the functions: <a href="US_Api_Functions.html#GetScriptParameters">GetScriptParameters</a>, <a href="US_Api_Functions.html#SetScriptParameters">SetScriptParameters</a>, <a href="US_Api_Functions.html#GetScriptReturnvalues">GetScriptReturnvalues</a>, <a href="US_Api_Functions.html#SetScriptReturnvalues">SetScriptReturnvalues</a>, <a href="US_Api_Functions.html#GetScriptReturnvalues_Sender">GetScriptReturnvalues_Sender</a></p>
 <p>If you remember from <a href="#ChildScripts_003_RunChildScripts">the previous chapter about running child-scripts</a>, the function returns a unique identifier for that started script.<br />
@@ -3534,8 +3432,7 @@ To do that, either set remove to nil or to true. If for some reason you need the
 <p>This returns the number of scripts, that have sent returnvalues and their corresponding ScriptIdentifier. As the ScriptIdentifier also includes the filename of the sender-script, you can use this to get, if a script that you've started, send you the returnvalues, if you don't have the ScriptIdentifier available.</p>
 </blockquote>
 <p>This should give you a lot to work with, when working with child-scripts.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="DeferScripts_001_Introduction"></a>
+<hr><a id="DeferScripts_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#DeferScripts_001_Introduction">^</a> <u>DeferScripts: Introduction to Ultraschall's Defer-functions</u></h4></div><p><p>Sometimes, when programming Lua-scripts in Reaper, you would love to have scripts, that run continuously. Normally, you would do that using a while-loop, but this blocks the userinterface of Reaper after a few seconds.<br />
 So the developers of Reaper added another structure, called defer-loops.</p>
 <p>These defer-loops create nodes in your script, that means: you pass over to the reaper.defer-function a function, that you would love to run continuously.<br />
@@ -3555,8 +3452,7 @@ You get the idea.</p>
 And if you have a condition, under which the defer-loop should end, you need to construct more or less complex structures to take care of that.<br />
 Rule of thumb: the decision-making of how often the deferred function shall be run, is complex. Quitting a defer-loop is complex as well(for beginners at least), especially, if you want to stop the defer-loop from the outside of the script-instance.</p>
 <p>For that, I created my own defer-loops, that take care of that.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API"></a>
+<hr><a id="DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API"></a>
 <div style="font-size:100%"><h4><a href="#DeferScripts_002_SpecialDeferloops_In_The_Ultraschall_API">^</a> <u>DeferScripts: Special Defer-loops in the Ultraschall-API</u></h4></div><p><p>It always bugged me, when I wanted to write a simple defer-loop that should run every 3 seconds or so, as the logic to do that is sometimes very annoying to code time and again, sometimes more than the actual code itself.<br />
 So, I added my own defer-loop-function, that takes care of that.</p>
 <p>Let's have a look at a regular defer-loop in Reaper:</p>
@@ -3649,8 +3545,7 @@ The parameter protected allows you to prevent this defer-loop from being stopped
 <p>This makes it much easier to run code of defer-scripts only when it is needed(and keep the code cleaner).<br />
 Save computer-resources, save electrical power, save the world!</p>
 <p>In the next chapter, I will show you, how to stop such a defer-loop from within and outside the current script-instance.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside"></a>
+<hr><a id="DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside"></a>
 <div style="font-size:100%"><h4><a href="#DeferScripts_003_Stopping_Defer_Loops_From_In_and_Outside">^</a> <u>DeferScripts: Stopping Defer-loops from in- and outside of scripts</u></h4></div><p><p>I was talking about being able to stop these Defer-loops I added to the Ultraschall-API.<br />
 For that, we should have another look at the functions-description of Defer.</p>
 <blockquote>
@@ -3696,8 +3591,7 @@ If we write now another script, that does the following:</p>
 <p>One last note: in the example above, we stopped the script from the outside, but you can stop that script from the inside of the script as well.<br />
 So, if you have two defer-loops and the second defer-loop shall control, if the first defer-loop is running or not:<br />
 Run the function, that shall be deferred, use ultraschall.Defer and pass to it your defer<em>identifier and stop it using StopDeferCycle and the defer</em>identifier.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="DeferScripts_004_Manipulating_and_Protecting_Defer_loops"></a>
+<hr><a id="DeferScripts_004_Manipulating_and_Protecting_Defer_loops"></a>
 <div style="font-size:100%"><h4><a href="#DeferScripts_004_Manipulating_and_Protecting_Defer_loops">^</a> <u>DeferScripts: Manipulating and protecting Defer-loops</u></h4></div><p><p>Sometimes you want to be able to alter the behavior of defer-loops from the outside. So if you have numerous defer-loops, you may want to have a central control-gui-script, with which you can set, how often to run a function, etc.<br />
 For this, I added a bunch of functions: <a href="US_Api_Functions.html#GetDeferCycleSettings">GetDeferCycleSettings</a> and <a href="US_Api_Functions.html#SetDeferCycleSettings">SetDeferCycleSettings</a></p>
 <pre><code>&gt;**[GetDeferCycleSettings](US_Api_Functions.html#GetDeferCycleSettings)**
@@ -3729,8 +3623,7 @@ Let&#39;s get back to [Defer](US_Api_Functions.html#Defer), specifically the par
         
 &gt;If you set the parameter protected to true, this defer-cycle can not be influenced from the outside. The only thing possible is 
 &gt;getting its current mode and timer-settings.</code></pre>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Localize_001_Introduction"></a>
+<hr><a id="Localize_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Localize_001_Introduction">^</a> <u>Localize Scripts: Introduction</u></h4></div><p><p>Reaper has (among thousands of others) one great thing: Localization. That means, you can translate the whole software into many languages.<br />
 Unfortunately, this isn't possible for scripts, or better: Not that easy.</p>
 <p>So I thought, that adding such functionalities for Lua-Scripts would be a good idea too.</p>
@@ -3741,8 +3634,7 @@ Unfortunately, this isn't possible for scripts, or better: Not that easy.</p>
 <li>The functions, with whom you can easily translate text within your scripts.</li>
 </ol>
 <p>Let's start with the first one, the translationfile.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Localize_002_LangPack_Fileformat"></a>
+<hr><a id="Localize_002_LangPack_Fileformat"></a>
 <div style="font-size:100%"><h4><a href="#Localize_002_LangPack_Fileformat">^</a> <u>Localize Scripts: Language-pack-fileformat</u></h4></div><p><p>A USLangPack-translationfile is a simple ini-file of the format:</p>
 <pre><code>            [section]
             key=value</code></pre>
@@ -3812,8 +3704,7 @@ So if you want to translate the texts for a script, try to make the translation 
 If there's no way to translate the text in any way, without clipped texts, etc, ask the scripter to modify the script for more flexibility.<br />
 So what I wrote for scripters is also valid for you: So keep your texts as short as possible(no novels please!).<br />
 This makes life easier for the user and the scripter.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Localize_003_Localize_Functions"></a>
+<hr><a id="Localize_003_Localize_Functions"></a>
 <div style="font-size:100%"><h4><a href="#Localize_003_Localize_Functions">^</a> <u>Localize Scripts: Functions</u></h4></div><p><p>Using a translationfile to localize texts in your script is very easy. There are only three functions to deal with that:<br />
 <a href="US_Api_Functions.html#Localize_UseFile">Localize_UseFile</a>, <a href="US_Api_Functions.html#Localize_RefreshFile">Localize_RefreshFile</a>, <a href="US_Api_Functions.html#Localize">Localize</a></p>
 <p>Let's go into more detail:</p>
@@ -3861,8 +3752,7 @@ If for one reason or another, no translation can be done(no loaded translationfi
 <p>For convenience, you can use Localize without ultraschall. at the beginning.</p>
 </blockquote>
 <p>This should make having your scripts localized an easy and convenient task.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_001_Introduction"></a>
+<hr><a id="EventManager_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_001_Introduction">^</a> <u>EventManager: Introduction</u></h4></div><p><p>Sometimes you run into the situation, where you want to run one or more actions when certain events happen.</p>
 <p>For instance, you want to output a warning when trying to start recording and project-playrate is set to higher than 1.x, maybe even stop recording immediately in that case.<br />
 This could be done, if you build custom actions for that case, but: if you have dozens of scripts dealing with recording-situations, you would need to update all of them or build custom actions for all of them, just to include this warning.<br />
@@ -3873,8 +3763,7 @@ And wouldn't it be nice, if you could decide, whether this check shall be run or
 <p>Wouldn't it be nice to have an EventManager in Reaper, that deals with all that stuff?</p>
 <p>Behold! It's here!</p>
 <p>The Ultraschall-Api-EventManager came to do all of that for you.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_The_Basic_Concept"></a>
+<hr><a id="EventManager_The_Basic_Concept"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_The_Basic_Concept">^</a> <u>EventManager: The Basic Concept</u></h4></div><p><p>The EventManager is a script I wrote. It runs in the background, after you've started it.<br />
 You can add events to it, which contain</p>
 <ol>
@@ -3892,8 +3781,7 @@ You can add events to it, which contain</p>
 <p>And if you don't want to add them all the time manually, you can even add the events as startup-events. That means, you can add events, who are added to the EventManager immediately after the EventManager has been started. So all you need in that case is simply starting the EventManager once, and it will check for the events, you've added as startup events right away.</p>
 <p>That's all nice and such, but: how to actually do it?</p>
 <p>Read on, my dear.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_BasicWorkflow"></a>
+<hr><a id="EventManager_BasicWorkflow"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_BasicWorkflow">^</a> <u>EventManager: Basic workflow</u></h4></div><p><p>The basic workflow to use the EventManager is quite simple:</p>
 <ol>
 <li><p>Write a checkingfunction, that returns true, if the event occured and false, if not. (No global variables are allowed!) This function can safely use Ultraschall-API-functions.</p></li>
@@ -3932,8 +3820,7 @@ This function allows you to stop all events registered by a different script, us
 <p>With that, you can populate the EventManager without a problem.<br />
 Now, let's go into more detail, what "events" means, how to build a proper statecheck-function and how to add events at startup of the EventManager.</p>
 <p>Let's start with the states, who can be checked.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_WhichEventsCanBeChecked"></a>
+<hr><a id="EventManager_WhichEventsCanBeChecked"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_WhichEventsCanBeChecked">^</a> <u>EventManager: Which events can be checked?</u></h4></div><p><p>Basically there are two types of events you can check for:</p>
 <ol>
 <li><p>True/False events, like "Is the mute-button of the master-track muted(true) or not(false)?"</p></li>
@@ -3947,8 +3834,7 @@ This kind of event is usually the best, if there are only two possible condition
 This kind of event is usually the best, if there are more than two conditions who could be met and you want to run actions only when transitioning between two specific conditions.<br />
 Like the playstate, who could be stop, play, playpause, rec, recpause. If you want to only run the actions when play changes from play to playpause, but not if play changes from play to stop, transitioning-events are the way to go.</p>
 <p>Now I'll explain to you, how to write a proper eventcheck-function, as you need to take some things into consideration for that.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_EventCheck_Function_For_True_False_Events"></a>
+<hr><a id="EventManager_EventCheck_Function_For_True_False_Events"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_EventCheck_Function_For_True_False_Events">^</a> <u>EventManager: the eventcheck-function for true/false-events</u></h4></div><p><p>The eventcheck-function for true/false-events can be made quite simply.<br />
 Let's take the aforementioned example, if the mastertrack is muted or not.</p>
 <pre><code>        function IsMasterTrackMuted()
@@ -3966,8 +3852,7 @@ Let's take the aforementioned example, if the mastertrack is muted or not.</p>
 <p>This would be fully sufficient as the check-function for such true/false-events and would be fully accepted by the EventManager.<br />
 Note, how I made the needed variable mutestate local by adding local before it. This is important to do, as you may risk to overwrite internal structures of the EventManager otherwise!</p>
 <p>Another important thing to do is: make the eventcheck-function as simple and fast as possible. Try to avoid resourceintensive operations like heavy patternmatching and such stuff. The longer your eventcheck-function needs to execute, the more laggy the EventManager becomes!</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_EventCheck_Function_For_Transitioning_Events"></a>
+<hr><a id="EventManager_EventCheck_Function_For_Transitioning_Events"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_EventCheck_Function_For_Transitioning_Events">^</a> <u>EventManager: Creating Events for transition-events</u></h4></div><p><p>The eventcheck-function for transition-events is a little more difficult to do.</p>
 <p>Let's take the other example, where I would do a eventcheck-function, which checks if playstate transitions from play to playpause happen.<br />
 For that, we need to store the old playstate. Usually, we would do that into a global variable, but as global variables are forbidden in the EventManager, I've added something else into the EventManager: UserSpaces.</p>
@@ -4043,8 +3928,7 @@ Feel free to modify and experiment with the code.</p>
 <p>Note here as well, how I made the variable current_playstate in the eventcheck-function "TransitionPlayToPlaypause" local, as this is important here as well!</p>
 <p>And for transition-events, we have the same performance-related mantra: make the eventcheck-function as simple and fast as possible. Try to avoid resourceintensive operations like heavy patternmatching and such stuff. The longer your eventcheck-function needs to execute, the more laggy the EventManager becomes!</p>
 <p>Now, that we have our eventcheck-function, we can add a new event to the EventManager.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_AddingEvents"></a>
+<hr><a id="EventManager_AddingEvents"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_AddingEvents">^</a> <u>EventManager: Adding events</u></h4></div><p><p>Now, as we have the play to playpause eventcheck-function, we should try to make something with it.<br />
 So, let's add a marker, everytime we change from play to playpause.<br />
 Before we start, we need to get the ActionCommandID of the action, we would love to run in these cases.<br />
@@ -4117,8 +4001,7 @@ In our case, we use:</p>
                                                     --       ActionCommandIDs with an underscore at the beginning are allowed.
                                                     --       like: _SWS_AWSELGROUPIFGROUP or _RS1234567890, etc
         )</code></pre>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_AlterRetrieve"></a>
+<hr><a id="EventManager_AlterRetrieve"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_AlterRetrieve">^</a> <u>EventManager: Alter Events and retrieve settings</u></h4></div><p><p>Now we've added a new event. But what about altering it? Well, this is as easy as adding an event.<br />
 So let's assume, you want to alter how often to check from 0(all the time) to 3(every third second) and you want to change the name from "Insert Marker When Play -&gt; PlayPause" to "Barracuda".<br />
 You can do it like this:</p>
@@ -4170,8 +4053,7 @@ You can do it like this:</p>
 </li>
 <li><a href="US_Api_Functions.html#EventManager_GetRegisteredEventID">EventManager_GetRegisteredEventID</a> - returns the id of an event, requested by the Eventidentifier. Needed by functions in DebugMode.</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_Debugging"></a>
+<hr><a id="EventManager_Debugging"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_Debugging">^</a> <u>EventManager: Debugging Events</u></h4></div><p><p>Ok, now you know, how to add, get and set the events in the EventManager. But sometimes, especially during development, this isn't enough. In fact, you want to have full insight in what's going on with your event.</p>
 <p>Does the eventcheck-function return the right returnvalues?</p>
 <p>Does the userspace contain the right values?</p>
@@ -4200,8 +4082,7 @@ You can do it like this:</p>
 <pre><code>            ultraschall.EventManager_DebugMode(true)
     </code></pre>
 <p>This should give you a lot power to make your events working.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="EventManager_StartupEvents"></a>
+<hr><a id="EventManager_StartupEvents"></a>
 <div style="font-size:100%"><h4><a href="#EventManager_StartupEvents">^</a> <u>EventManager: Working with startup events</u></h4></div><p><p>Adding events is great, but wouldn't it be awesome, if I could automatically add certain event to the EventManager as soon as I start it, without having to run dozens of event-adding-scripts?</p>
 <p>Yes it would be, so I added startup-events, who do this exact thing: being started and checked right away, as soon as you start the eventmanager.<br />
 So if you have a __startup.lua in your scripts-folder, which loads the Ultraschall-API and run the function</p>
@@ -4228,14 +4109,12 @@ That means, all rules for regular events also apply here, but you don't need to 
 <li><a href="US_Api_Functions.html#EventManager_CountStartupEvents">EventManager_CountStartupEvents</a> - counts all startup-events; works like the regular EventManager_CountRegisteredEvents-function</li>
 </ul>
 <p>With that in your pocket, you have a lot of possibilities to control your full event-based workflows.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_Introduction"></a>
+<hr><a id="FX_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#FX_Introduction">^</a> <u>FX-Management: Introduction</u></h4></div><p><p>When working with audio, it's almost impossible to not use FX on items and tracks, using parameter modulation and learn.<br />
 But sometimes, the way Reaper's user interface manages things is not enough. You want to code the stuff yourself to make it behave to your needs.</p>
 <p>So I simply had to implement a lot of features for manipulation of FX, including some stuff never been codeable before.</p>
 <p>So let's dive into the magical wonderful world of fx-management.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_Working_with_FXStateChunks"></a>
+<hr><a id="FX_Working_with_FXStateChunks"></a>
 <div style="font-size:100%"><h4><a href="#FX_Working_with_FXStateChunks">^</a> <u>FX-Management: Working with FX-StateChunks</u></h4></div><p><p>A lot of fx-possibilities are already possible with Reaper's native API-functions, but sometimes you need the real deal, the full control.<br />
 And Reaper has such a datastructure for that, called FXStateChunk.</p>
 <p>FXStateChunks are parts of either MediaItemStateChunks or TrackStateChunks. What they basically do is hold all information, settings, etc of all fx in the FXChain of the MediaItem or MediaTrack.<br />
@@ -4248,8 +4127,7 @@ These hold bypass-settings, state-binary strings, aliasnames of the fx, paramete
 <p>Now you can manipulate it to your needs. When you're finished manipulating the FXStateChunk, you can set it back into the original item or track-statechunk.</p>
 <p>To set it again, you go the path into the other direction 1. Set the FXStateChunk in the item/take-statechunk via <a href="US_Api_Functions.html#SetFXStateChunk">SetFXStateChunk</a> 2. Set the item/track-statechunk into the item/track, using <a href="US_Api_Functions.html#SetTrackStateChunk_Tracknumber">SetTrackStateChunk_Tracknumber</a>(for trackfx) or reaper.SetItemStateChunk(item/take-fx).</p>
 <p>That's the basic workflow to toy around with FXStateChunks. More details in the next chapters</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_Working_with_FXStateChunks_Functions"></a>
+<hr><a id="FX_Working_with_FXStateChunks_Functions"></a>
 <div style="font-size:100%"><h4><a href="#FX_Working_with_FXStateChunks_Functions">^</a> <u>FX-Management: Working with FX-StateChunk's functions</u></h4></div><p><p>Now let's go into more detail on numerous functions regarding FXStateChunks.</p>
 <p>The most important ones are the functions for getting and setting a FXStateChunk from/into track/item-statechunks.</p>
 <blockquote>
@@ -4326,8 +4204,7 @@ There's also an optional parameter TakeFXChain_id, which is helpful in item-stat
 <blockquote>
 <p>This saves an FXChain into an RFXChain-file. You can set the whole path to the target-file but if you only set the filename, it will store the RFXChain-file into the folder Resourcepath/FXChains/</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_Manipulating_Individual_Effects"></a>
+<hr><a id="FX_Manipulating_Individual_Effects"></a>
 <div style="font-size:100%"><h4><a href="#FX_Manipulating_Individual_Effects">^</a> <u>FX-Management: Manipulating individual effects</u></h4></div><p><p>Now that you have the FXStateChunk, you might want to manipulate individual FX. Problem is, you need to parse them out of the FXChain by hand.<br />
 Or you use the following way to manipulate individual effects because...you can already guess: I made some functions for that.</p>
 <p>Manipulating individual effects needs some special treatment, but don't be afraid, it's not that hard to manage.</p>
@@ -4386,8 +4263,7 @@ that this fx is not bypassed anymore.</p>
                     -- commit the TrackStateChunk to the first track so we actually toggle 
                     -- the bypass-state of the first fx of track 1
                     ultraschall.SetTrackStateChunk_Tracknumber(1, TrackStateChunk)</code></pre>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterModulationLearnAliasMapping_Introduction"></a>
+<hr><a id="FX_ParameterModulationLearnAliasMapping_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#FX_ParameterModulationLearnAliasMapping_Introduction">^</a> <u>Parameter Modulation/Learn/Alias: Introduction</u></h4></div><p><p>For those, who want more control on how fx are managed, Reaper has this feature called Parameter Modulation as well as Parameter Learn and Parameter Alias and there's a lot of stuff you can do with it.<br />
 But: it wasn't programmable yet.<br />
 And as you all know this: if it's not yet programmable and you're asking for it, I try to make it happen.<br />
@@ -4395,8 +4271,7 @@ Hence, Ladies and Gentlemen and varieties inbetween, please welcome: Parameter L
 <p>First things first: to influence one of these, you need to get FXStateChunks and, if needed, set them after your changes.<br />
 So if you don't know yet on how to work with FXStateChunks, read the chapters on <a href="#FX_Introduction">FXStateChunks</a></p>
 <p>Let's start with the easiest of the three: Parameter Alias</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterAlias"></a>
+<hr><a id="FX_ParameterAlias"></a>
 <div style="font-size:100%"><h4><a href="#FX_ParameterAlias">^</a> <u>Parameter Alias</u></h4></div><p><p>Parameter Aliases allow you to give new names to parameters. For instance, you have added ReaEQ as first effect in the FXChain and you have this parameter called "Freq-Band 1".<br />
 You may want to have a name, which describes more what the parameter does, like "Humming Removal".</p>
 <p>In that case, you can set parameter-alias-names.</p>
@@ -4453,8 +4328,7 @@ As there is no aliasname available yet, we need to add it:</p>
 <a href="US_Api_Functions.html#GetParmAlias2_FXStateChunk">GetParmAlias2_FXStateChunk</a> - this gets an aliasname of an fx within an FXStateChunk, indexed by parameterindex</p>
 </blockquote>
 <p>In the next chapter, we'll discuss, how to map MIDI and OSC by learning to parameters.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterMappingLearn"></a>
+<hr><a id="FX_ParameterMappingLearn"></a>
 <div style="font-size:100%"><h4><a href="#FX_ParameterMappingLearn">^</a> <u>Parameter Mapping Learn</u></h4></div><p><p>Another thing I implemented is Parameter-Mapping Learn. This is the dialog you can reach, when opening the FXChain, hitting the Param-menu -&gt; Learn -&gt; one of the parameters.<br />
 These work in principle with the same approach as ParmAlias in the previous chapter:</p>
 <p>To add a learn for a parameter, you</p>
@@ -4479,8 +4353,7 @@ So for the moment, if you want to set/delete a ParmLearn-entry for a specific pa
 For instance: if you want to delete a possibly existing ParmLearn-entry for parameter 16, check all existing ones, if you find one with parameter-index 16.<br />
 If that is the case with the second ParmLearn, you delete the second one. If you can't find one, then you don't need to delete it.<br />
 Will try to make this more convenient in the future. I promise.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterLFOLearn"></a>
+<hr><a id="FX_ParameterLFOLearn"></a>
 <div style="font-size:100%"><h4><a href="#FX_ParameterLFOLearn">^</a> <u>Parameter LFO Learn</u></h4></div><p><p>LFO-Learn is something, that can be set via the Learn Phase-button in the LFO-section of the ParameterModulation-dialog(more on that later).<br />
 And it can be set as well, in very much the same way, as ParmLearn in the previous chapter.</p>
 <p>To add a learn for a parameter, you</p>
@@ -4510,8 +4383,7 @@ So for the moment, if you want to set/delete an LFOLearn-entry for a specific pa
 For instance: if you want to delete a possibly existing LFOLearn-entry for parameter 16, check all existing ones, if you find one with parameter-index 16.<br />
 If that is the case with the second LFOLearn, you delete the second one. If you can't find one, then you don't need to delete it.<br />
 Will try to make this more convenient in the future. I promise.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterModulation_Introduction"></a>
+<hr><a id="FX_ParameterModulation_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#FX_ParameterModulation_Introduction">^</a> <u>Parameter Modulation Introduction</u></h4></div><p><p>You already learnt about Learn and LFO Learn. You also learnt about giving parameters different aliasnames.<br />
 But: you can do even more with parameter-modulation, which also allows linking of parameters.<br />
 This can be achieved by openeing the FXChain, hitting the Param-button -&gt; FX parameter list -&gt; Parameter modulation/MIDI link.</p>
@@ -4520,8 +4392,7 @@ This can be achieved by openeing the FXChain, hitting the Param-button -&gt; FX 
 <p>It's time to leave the "Up until now" in the past.</p>
 <p>Welcome to parameter-modulation!</p>
 <p>PS: It's good to have some experience in using ParameterModulation before attempting to script it.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterModulation_ParmModTable"></a>
+<hr><a id="FX_ParameterModulation_ParmModTable"></a>
 <div style="font-size:100%"><h4><a href="#FX_ParameterModulation_ParmModTable">^</a> <u>Parameter Modulation: the ParmModTable</u></h4></div><p><p>A ParmModTable is a table, which holds all settings of a parameter-modulation in one table.<br />
 This allows you to easily set settings the way you want. Just create one, alter it, commit it to a parameter.<br />
 Or get one from an already existing ParameterModulation.</p>
@@ -4658,8 +4529,7 @@ ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]=0 for a parameter of the current 
 To assist you with developing, there's a developer-tool ultraschall_developertool_MonitorParmModulation.lua, which shows the values of all ParmModTable-entries a certain Parameter Modulation of an fx in a certain track has.<br />
 Install it by running the ultraschall_Add_Developertools_To_Reaper.lua-action in the action-list.</p>
 <p>Now that you know about Parameter-Modulation, you probably want to know, how to code it.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterModulation_UsingParmModTables"></a>
+<hr><a id="FX_ParameterModulation_UsingParmModTables"></a>
 <div style="font-size:100%"><h4><a href="#FX_ParameterModulation_UsingParmModTables">^</a> <u>Parameter Modulation: Using ParmModTables</u></h4></div><p><p>Let's assume, there is no parameter-modulation yet in any track or take. The best way to start is to create a new ParmModTable, which you can alter to your needs.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#CreateDefaultParmModTable">CreateDefaultParmModTable</a></strong></p>
@@ -4707,8 +4577,7 @@ Use this extensively while debugging or you risk creating invalid ParmModTables!
 </ul>
 <p>Keep in mind, that you will not neccessarily be able to get a ParmModTable, alter it with one setting and set it again right away. As mentioned before in the previous chapter, some settings need other settings being set. So if you turn on LFO, you need to set all LFO_-entries of the ParmModTable as well before setting it, or it will not work!</p>
 <p>Let's do some basic-examples.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="FX_ParameterModulation_ParmModTableExamples"></a>
+<hr><a id="FX_ParameterModulation_ParmModTableExamples"></a>
 <div style="font-size:100%"><h4><a href="#FX_ParameterModulation_ParmModTableExamples">^</a> <u>Parameter Modulation: ParmModTable-examples</u></h4></div><p><p>Let's assume you have one track in your project with ReaEQ set as first fx in the FXChain and this ReaEQ is set to the factory default-preset.</p>
 <p>Let's add a parameter-modulation to the 13th parameter "bypass", which will be opened automatically and have LFO activated:</p>
 <pre><code>                    dofile(reaper.GetResourcePath()..&quot;/UserPlugins/ultraschall_api.lua&quot;)
@@ -4791,13 +4660,11 @@ Use this extensively while debugging or you risk creating invalid ParmModTables!
                     -- commit the TrackStateChunk back into the track 1
                     retval=ultraschall.SetTrackStateChunk_Tracknumber(1, TrackStateChunk)</code></pre>
 <p>And that's it. This should bring you through parameter modulation in every way you wish.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Helper_Functions_001_Introduction"></a>
+<hr><a id="Helper_Functions_001_Introduction"></a>
 <div style="font-size:100%"><h4><a href="#Helper_Functions_001_Introduction">^</a> <u>Helper_Functions: Introduction</u></h4></div><p><p>Beside all the concepts you just read about, I also added tons of functions and things to the API, that are helpful in one way or another in your everyday coding.<br />
 Manipulation of Lua's datastructures, clipboard-functions, stuff for undo-management, checking for the current system being either Mac, Windows or Other, Reaper's Configuration-Settings, User Interface-stuff, applying actions to MediaTracks and MediaItems and many other things.</p>
 <p>In this chapter, I want you to introduce you to some of these things.</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Helper_Functions_002_ClipboardManagement"></a>
+<hr><a id="Helper_Functions_002_ClipboardManagement"></a>
 <div style="font-size:100%"><h4><a href="#Helper_Functions_002_ClipboardManagement">^</a> <u>Helper_Functions: Clipboard Management</u></h4></div><p><p>Getting and setting things to the clipboard is really helpful in many ways. With SWS 2.9.7 we got clipboard-functions, Reaper itself has clipboard-functions for items and such.<br />
 But: it's in parts not really convenient to use.<br />
 reaper.CF_SetClipboard() needs an obscure datastructure called Faststrings to circumvent a Lua-restriction of strings with a length of only 1023 bytes. Inconvenient to use, as you always need to create and destroy these FastStrings or they'll eat up memory for no good.<br />
@@ -4850,8 +4717,7 @@ Why not the MediaItem-objects? Because, they only work within the current projec
 But what if you want to insert them into a project? Use <a href="US_Api_Functions.html#InsertMediaItem_MediaItemStateChunk">InsertMediaItem_MediaItemStateChunk</a> to insert a MediaItem into a project using it's StateChunk.<br />
 How does GetMediaItemsFromClipboard work? It inserts the Items from the clipboard at the end of the project, gets them, using <a href="US_Api_Functions.html#GetAllMediaItemsBetween">GetAllMediaItemsBetween</a> and deletes them again.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Helper_Functions_003_Data_Manipulation"></a>
+<hr><a id="Helper_Functions_003_Data_Manipulation"></a>
 <div style="font-size:100%"><h4><a href="#Helper_Functions_003_Data_Manipulation">^</a> <u>Helper_Functions: Data Manipulation</u></h4></div><p><p>One of the bread and butter things you have to do in your daily programming is to deal with data-structures of many kinds, be it tables, strings, integers, bits, etc.<br />
 Dealing with them can sometimes be a pain in the butt, when using pure Lua. And as I'm lazy(did I already mention that?), I wrote me some functions to make things easier to deal with, especially with datastructures existing and fundamental in Reaper.</p>
 <p><strong>Dealing with Numbers and Bits</strong></p>
@@ -4912,8 +4778,7 @@ Dealing with them can sometimes be a pain in the butt, when using pure Lua. And 
 </li>
 <li><a href="US_Api_Functions.html#ReverseTable">ReverseTable</a> - reversed the entries of a table</li>
 </ul>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Helper_Functions_004_UndoManagement"></a>
+<hr><a id="Helper_Functions_004_UndoManagement"></a>
 <div style="font-size:100%"><h4><a href="#Helper_Functions_004_UndoManagement">^</a> <u>Helper_Functions: Undo Management</u></h4></div><p><p>Undo-Management can be difficult to program in Reaper at times, so I added some things to deal with that to some extend.</p>
 <blockquote>
 <p><strong><a href="US_Api_Functions.html#PreventCreatingUndoPoint">PreventCreatingUndoPoint</a></strong></p>
@@ -4936,8 +4801,7 @@ You need to pass the function itself, an undo-message that is shown in the undo-
 The other parameters are all the parameters the function Func needs to run. Just write them in the order you would do, if you would run the function Func directly.<br />
 It will return a boolean(true for success), the current undo-message and alle the return-values returned by function Func.</p>
 </blockquote>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Helper_Functions_005_Miscellaneous"></a>
+<hr><a id="Helper_Functions_005_Miscellaneous"></a>
 <div style="font-size:100%"><h4><a href="#Helper_Functions_005_Miscellaneous">^</a> <u>Helper_Functions: Miscellaneous</u></h4></div><p><p>In this final chapter, I show you around some nice things that didn't fit anywhere else in the docs. They may or may not be of use for you.</p>
 <p><strong>Checking for the current operating system</strong></p>
 <ul>
@@ -5044,8 +4908,7 @@ It will return a boolean(true for success), the current undo-message and alle th
 <li><a href="US_Api_Functions.html#OpenURL">OpenURL</a> - opens an html-webpage in your browser</li>
 </ul>
 <p>and more and more and more....</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><hr><a id="Final_Words_001"></a>
+<hr><a id="Final_Words_001"></a>
 <div style="font-size:100%"><h4><a href="#Final_Words_001">^</a> <u>Final words</u></h4></div><p><p>I can't believe it, but after over one and a half years, I can finally write these last words for this mammoth-project.<br />
 But what can I say, what I haven't said in this docs?</p>
 <p>Feel free to use it. Feel free to code with it. Feel free to learn from the functions I wrote. Dig into the functions-reference, which holds much much more.</p>
@@ -5065,5 +4928,4 @@ Though, after not having seen the lights of the days for months now, I'm not sur
 <p>So, that's all for now. Feel free to work with it and have fun.</p>
 <p>I go to sleep now. I think, I deserved it :)</p>
 <p>Meo Mespotine, Leipzig(Germany) 30th of November 2018</p>
-
-<table style="margin-left:-4.1%; border-collapse: separate; border-spacing: 6px 2px;" border="0"></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.1 007 - 121 chapters available</td></table><br><hr></div></body></html>
+<br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.2 002 - 121 chapters available</td></table><br><hr></div></body></html>

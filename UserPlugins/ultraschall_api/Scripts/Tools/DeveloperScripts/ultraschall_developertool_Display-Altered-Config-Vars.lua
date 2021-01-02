@@ -75,9 +75,9 @@ OldShowString=""
 Filtermode=true
 
 reaper.ClearConsole() 
-reaper.ShowConsoleMsg("Reaper-Config-Variable-Inspector by Meo Mespotine(mespotine.de) 20th of August 2019 for Ultraschall.fm\n\n  This shows all altered Config-Variables and their bitwise-representation as well as the value in the reaper.ini,\n  that can be accessed at runtime through LUA using the SWS-functions: \n     SNM_GetIntConfigVar(), SNM_SetIntConfigVar(), SNM_GetDoubleConfigVar(), SNM_SetDoubleConfigVar() and Reaper's get_config_var_string(). \n\n  These variables cover the preferences window, project-settings, render-dialog, settings in the context-menu of \n  transportarea and numerous other things.\n\n  Just change some settings in the preferences and click apply to see, which variable is changed to which value, \n  shown in this Reascript-Console.\n\n  Keep in mind: certain variables use bit-wise-values, which means, that one variable may contain the settings for \n  numerous checkboxes; stored using a bitmask, which will be shown in here as well.\n\n") 
-reaper.ShowConsoleMsg("  Mismatch between int/double-values the currently set reaper.ini-value(as well as only int/double changing) is a hint\n  that the value is not stored into reaper.ini(e.g. only stored, when you set the current project's settings as default settings).\n\n")
-reaper.ShowConsoleMsg("  Keep in mind, that some values can't be set, unless they were set in the dialogs first, lika afxcfg. So if they don't appear after setting them through script, this isn't necessarily a bug!\n")
+reaper.ShowConsoleMsg("Reaper-Config-Variable-Inspector by Meo Mespotine(mespotine.de) 20th of August 2019 for Ultraschall.fm\n\n  This shows all altered Config-Variables and their bitwise-representation as well as the value in the reaper.ini,\n  that can be accessed at runtime through LUA using the SWS-functions: \n     SNM_GetIntConfigVar(), SNM_SetIntConfigVar(), SNM_GetDoubleConfigVar(), SNM_SetDoubleConfigVar() \n     and Reaper's get_config_var_string(). \n\n  These variables cover the preferences window, project-settings, render-dialog, settings in the context-menu of \n  transportarea and numerous other things.\n\n  Just change some settings in the preferences and click apply to see, which variable is changed to which value, \n  shown in this Reascript-Console.\n\n  Keep in mind: certain variables use bit-wise-values, which means, that one variable may contain the settings for \n  numerous checkboxes; stored using a bitmask, which will be shown in here as well.\n\n") 
+reaper.ShowConsoleMsg("  Mismatch between int/double-values the currently set reaper.ini-value(as well as only int/double changing) is a hint\n  that the value is not stored into reaper.ini(e.g. only stored, when you set the current project's settings \n  as default settings).\n\n")
+reaper.ShowConsoleMsg("  Keep in mind, that some values can't be set, unless they were set in the dialogs first, lika afxcfg. So if they don't \n  appear after setting them through script, this isn't necessarily a bug!\n")
 --gfx.init("Show Config Vars",900,187)
 gfx.setfont(1, "Arial", 15, 0)
 gfx.setfont(2, "Arial", 15, 16981)
@@ -141,7 +141,7 @@ function Update_ConfigVars()
        ConfigVars[i]["string"]=C
     end
   end
-  if update==true then print("\n-----------------------------------------------------------------------------------------------------------------------------------------------------------") update=nil end
+  if update==true then print("\n--------------------------------------------------------------------------------------------------------") update=nil end
   if ShowString~=OldShowString and ShowString~="" then OldShowString=ShowString end
 end
 

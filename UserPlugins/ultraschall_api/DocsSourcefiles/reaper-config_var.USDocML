@@ -3,7 +3,7 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.15 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.19 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -115,7 +115,7 @@
       <title>acidimport</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           When importing media-dropdownlist, as set in the Media with embedded tempo information-section in Preferences -> Video/REX/Misc  
-          It is an integer.  
+          It is an integer  
             
            >0, Adjust media to project tempo  
            >1, Import media at source tempo  
@@ -137,7 +137,7 @@
       <title>actionmenu</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Show recent actions-entry, as set in the Actions-menu.  
-          It is an integer.  
+          It is an integer  
             
            >0, don't show recent actions - unchecked  
            >1, show recent actions - checked  
@@ -232,7 +232,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The audioformat for "Apply FX, Glue, Freeze, etc", as set in the Project Settings->Media-dialog  
           Only includes the format, not the individual format-settings(like bitrate, etc)  
-          It is an integer.  
+          It is an integer  
 
            >1179012432, Video (ffmpeg/libav encoder)  
            >1195984416, Video (GIF)  
@@ -285,7 +285,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Some peak-settings, as set in the Waveform media peak caching settings in Preferences -> Media, as well as in Preferences -> Paths.  
           This is not(!) located in Preferences -> Appearances-Media!  
-          It is an integer bitfield.  
+          It is an integer-bitfield.  
 
            >&1=0, Store all peak caches (.reapeaks) in alternate path(Preferences -> Path)(off) - unchecked  
            >&1=1, Store all peak caches (.reapeaks) in alternate path(Preferences -> Path)(on) - checked  
@@ -397,7 +397,7 @@
           Tail length when using Apply FX to items in milliseconds, as set in Preferences -> Media  
           This is not(!) located in Preferences -> Appearances-Media!  
           The accompanying entry in the reaper.ini is always config-var-setting+1.
-          It is an integer.  
+          It is an integer  
 
            >0 to 2147483647; higher values become negative  
            
@@ -418,7 +418,7 @@
       <slug>ara</slug>  
       <title>ara</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          It is an integer.  
+          It is an integer  
           Enable ARA for VST3 plug-ins that support it(requires restarting REAPER) in section VST compatibility, as set in Preferences -> VST  
           
            >0, enable ARA(on) - checked  
@@ -486,7 +486,7 @@
       <title>audiocloseinactive</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Several settings regarding closing audio-devices, as set in Preferences -> Audio  
-          It's an integer bitfield  
+          It's an integer-bitfield  
           
            >&1=0, Close audio device when stopped and application is inactive(off) - unchecked  
            >&1=1, Close audio device when stopped and application is inactive(on) - checked  
@@ -542,7 +542,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Preserve pitch in audio items when changing master playrate, as set in the contextmenu of the master-playrate in the transport-area as well as toggled by action 40671(all sections)  
           This is a project-setting.
-          It is an integer.  
+          It is an integer  
 
            >0, don't preserve pitch - unchecked  
            >1, preserve pitch - checked  
@@ -945,7 +945,7 @@
       <title>csurfrate</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Control surface display update frequency in Hz, as set in the Preferences -> Control/OSC/web.  
-          It is an integer.  
+          It is an integer  
           Default is 15  
           
            >1 to 2147483647  
@@ -1052,7 +1052,7 @@
       <title>defautomode</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The default automation mode-dropdownlist as well as the Arm new envelopes-checkbox in the section Tracks, as set in Preferences -> Track/Send Defaults  
-          It is an integer bitfield  
+          It is an integer-bitfield  
 
            >&1 and &2 and &4, Default automation mode-dropdownlist  
             
@@ -1084,7 +1084,7 @@
       <title>defenvs</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The default visible envelopes-checkboxes and Default envelope shape-dropdownlist, as set in section Tracks in Preferences -> Track/Send Defaults  
-          It is an integer bitfield  
+          It is an integer-bitfield  
 
            >&1=0, Volume(pre-FX)(off) - unchecked  
            >&1=1, Volume(pre-FX)(on) - checked  
@@ -1228,7 +1228,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Default Pitch Mode and Pitch shifter parameter-dropdownlists, as set in the Project Settings -> Project Settings  
           This is the same, as the pitchmode-settings for items(as set in a MediaItemStateChunk).  
-          It is an integer.  
+          It is an integer  
             
            >SoundTouch:  
            >0 - Default settings  
@@ -3363,6 +3363,21 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>disk_rdmodeexmac</slug>  
+      <title>disk_rdmodeexmac</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Unknown, probably diskmode on mac?
+          It is an integer  
+
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>disk_rdsizeex</slug>  
@@ -3546,7 +3561,7 @@
       <title>edit_fontsize</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The fontsize of the Reascript/JSFX-IDE.  
-          It is an integer.  
+          It is an integer  
           
            >negative values are treated like the positive value+1; 16 is default  
            
@@ -3939,7 +3954,7 @@
       <title>fadeeditflags</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Several Fade-settings, as set in Menu View -> Crossfade Editor  
-          It is an integer bitfield  
+          It is an integer-bitfield  
           
            >&1=0, Units-dropdownlist: seconds  
            >&1=1, Units-dropdownlist: beats  
@@ -4087,7 +4102,7 @@
       <title>feedbackmode</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Allow feedback in routing (can result in lower performance, loud noises)-checkbox in Project Settings -> Advanced  
-          It is an integer.  
+          It is an integer  
           
            >0, checkbox is unchecked(no feedback)  
            >1, checkbox is checked(feedback allowed)  
@@ -4540,7 +4555,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Stores some kind of color-theme-settings for Reaper's IDE.  
           Seems not to store the colors themselves, but rather count up, when one or more colors are changed.  
-          It is an integer.  
+          It is an integer  
           
            >0 to 2147483647; higher values become negative  
            
@@ -4558,7 +4573,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           When importing multiple media items-dropdownlist, as set in the Preferences -> Media  
           This is not(!) located in Preferences -> Appearances-Media!  
-          It is an integer.  
+          It is an integer  
           
            >0, Insert in one track (advancing time)  
            >1, Insert across tracks  
@@ -4763,7 +4778,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Take FX tail length in milliseconds, as set in Preferences -> Media  
           This is not(!) located in Preferences -> Appearances-Media!  
-          It is an integer.  
+          It is an integer  
           
            >0 to 2147483647; higher values become negative  
            
@@ -4786,7 +4801,7 @@
       <title>itemicons</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Several settings for appearance of items, as set in Preferences -> Media as well as in Preferences -> Fades/Crossfades  
-          This is not(!) located in Preferences -> Appearances-Media!  
+          This is located in Preferences -> Appearances->Media, NOT Media!  
           It is an integer-bitfield  
           
            >&1=0, Locked(Preferences -> Media, section Media item buttons)(off) - unchecked  
@@ -4830,8 +4845,10 @@
            
            >&8192=0, Pooled MIDI(Preferences -> Media, section Media item buttons)(on) - checked  
            >&8192=1, Pooled MIDI(Preferences -> Media, section Media item buttons)(off) - unchecked  
+           
            >&16384=0, Item volume control-dropdownlist: Knob(on) - checked  
            >&16384=1, Item volume control-dropdownlist: Knob(off) - unchecked  
+           
            >&32768 and &65536, Show fade-in/out handle-radiobuttons  
            
             >> 0 0, never  
@@ -4841,8 +4858,8 @@
            >&131072=0, Show crossfade handle when media items are not aligned vertically-radiobutton  
            >&131072=1, Show crossfade handle always-radiobutton  
             
-           >&262144=0, Automation envelopes(Preferences -> Media, section Media item buttons)(off) - unchecked  
-           >&262144=1, Automation envelopes(Preferences -> Media, section Media item buttons)(on) - checked  
+           >&262144=0, Automation envelopes(Preferences -> Media, section Media item buttons)(off) - checked  
+           >&262144=1, Automation envelopes(Preferences -> Media, section Media item buttons)(on) - unchecked  
             
            >&524288=0, No active envelopes(Preferences -> Media, section Media item buttons)(off) - unchecked  
            >&524288=1, No active envelopes(Preferences -> Media, section Media item buttons)(on) - checked  
@@ -4935,7 +4952,7 @@
       <title>itemmixflag</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Stores the Item Mix Behavior-dropdownlist, as set in the Project Settings -> Advanced  
-          It is an integer.  
+          It is an integer  
           
            >0, Enclosed items replace enclosing items  
            >1, Items always mix  
@@ -5542,7 +5559,7 @@
       <title>maxrecentfx</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Recently Added list max-inputbox, as set in Preferences -> Plug-ins  
-          It is an integer.  
+          It is an integer  
           
            >0 to 199  
            
@@ -5948,7 +5965,7 @@
       <title>midioctoffs</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           MIDI octave name display offset-inputbox, as set in Preferences -> MIDI  
-          It is an integer.  
+          It is an integer  
           
            >0 to 2147483646; higher values become negative; 0 based, means 0=1 octaves, 1=2 octaves, 2=3 octaves, etc  
            
@@ -6091,10 +6108,16 @@
       <slug>midipeaks</slug>  
       <title>midipeaks</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown
-          It is an integer  
+          Display-settings as set in Preferences -> Peaks/Waveforms
+          It is an integer bitfield
           
-          Default is 0
+             >&1=0, Program names - checked
+             >&1=1, Program names - unchecked
+          
+             >&2=0, Text events - unchecked
+             >&2=1, Text events - checked
+            
+          Stored in reaper.ini under the same name in the section REAPER. 
       </description>  
       <chapter_context>  
          Config Variables  
@@ -6155,7 +6178,7 @@
       <title>miditicksperbeat</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Ticks per quarter note for new MIDI items-inputbox, as set in Preferences -> MIDI  
-          It is an integer.  
+          It is an integer  
           
            >1 to 2147483647; default 960  
            
@@ -6397,6 +6420,11 @@
            
            >&128=0, Allow space key to be used for navigation in various windows(off) - unchecked  
            >&128=1, Allow space key to be used for navigation in various windows(on) - checked  
+           
+           >&256=0, Horizontal mousewheel over mixer scrolls tracks rather than arrangeview - unchecked
+           >&256=1, Horizontal mousewheel over mixer scrolls tracks rather than arrangeview - checked
+           
+           
            
           For more settings set in Preferences -> Mouse, see [transflags](#transflags), [trackselonmouse](#trackselonmouse), [loopclickmode](#loopclickmode), [scnameedit](#scnameedit)  
             
@@ -6798,7 +6826,22 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
-  
+ 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>nativedrawtext2</slug>  
+      <title>nativedrawtext2</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Unknown
+          It is an integer  
+            
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+ 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>newfnopt</slug>  
       <title>newfnopt</title>  
@@ -6970,6 +7013,9 @@
            >&2=0, Automatically rebuild peaks - checked  
            >&2=1, Automatically rebuild peaks - unchecked  
            
+           >&4=0, Allow videos to go offline (slow) - unchecked
+           >&4=1, Allow videos to go offline (slow) - checked
+           
           For other settings, set in the preferences -> Media, see [showpeaksbuild](#showpeaksbuild), [copyimpmedia](#copyimpmedia), [relativeedges](#relativeedges), [applyfxtail](#applyfxtail), [itemfxtail](#itemfxtail), [peakcachegenmode](#peakcachegenmode),   
                                                 [altpeaks](#altpeaks), [showpeaks](#showpeaks), [peakcachegenrs](#peakcachegenrs), [insertmtrack](#insertmtrack), [opencopyprompt](#opencopyprompt)  
                     
@@ -6989,7 +7035,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Opening Midi-file-settings as well as some opening Media Items-settings, as set in Preferences -> MIDI and Preferences -> Media or the Consolidate Tracks-dialog.  
           This is not(!) located in Preferences -> Appearances-Media!  
-          It is an integer.  
+          It is an integer  
           
            >&1=0, Prompt to confirm filename on "open copy in editor" - unchecked  
            >&1=1, Prompt to confirm filename on "open copy in editor" - checked  
@@ -7041,7 +7087,7 @@
       <title>opennotes</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           "Show notes on project load"-checkbox, as set in the Project Settings -> Notes  
-          It is an integer.  
+          It is an integer  
           
            >0, checkbox unchecked (don't show notes on project load)  
            >1, checkbox checked (show notes on project load)  
@@ -7071,6 +7117,21 @@
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>osxnomiddlemancocoa</slug>  
+      <title>osxnomiddlemancocoa</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          unknown, probably mac-related
+          It is an integer  
+          
       </description>  
       <chapter_context>  
          Config Variables  
@@ -7207,7 +7268,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Desired cache resolution-inputbox, a set in Preferences -> Media.  
           This is not(!) located in Preferences -> Appearances-Media!  
-          It is an integer.  
+          It is an integer  
           
            >0 to 2147483647; higher values become negative; default is 300  
            
@@ -7386,7 +7447,7 @@
       <title>playresamplemode</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Project Playback Resample Mode-dropdownlist, as set in the Project Settings -> Project Settings  
-          It is an integer.  
+          It is an integer  
           
            >0, Medium (64pt Sinc)  
            >1, Low (Linear Interpolation)  
@@ -7679,7 +7740,7 @@
           The default-framerates for videos in the project, as set in the Project-Settings -> Video  
           Reflects the default-setting you chose in the dropdown-menu(without entering an individual one), that is not a "normal" integer one, like 23.076  
           Correspondents with settings in the variable [projfrbase](#projfrbase)  
-          It is an integer.  
+          It is an integer  
            
            >0, integer framerate-settings  
            >1, 29.97DF when projfrbase is set to 30  
@@ -8052,7 +8113,7 @@
           The Project Start Measure, as set in Project Settings -> Project Settings.  
           This value is zero-based, means: if you want to set 1 as start measure, use 0, if you want to set 2 as start measure, use 1(always measure minus 1).  
           Negative values are allowed.  
-          It is an integer.  
+          It is an integer  
           
            >-2147483647(for -2147483648) to 2147483646(for 2147483647)  
            
@@ -8143,7 +8204,7 @@
       <title>projmetroen</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Sets metronome-settings, as set in the options-menu and the "Metronome Preroll Settings"-dialog(also options-menu) as well as toggled by actions 40364  
-          Its an integer bitfield.  
+          Its an integer-bitfield.  
           
            >&1=0, Metronome disabled  
            >&1=1, Metronome enabled  
@@ -8289,7 +8350,7 @@
           The "Format for Apply FX, Glue, Freeze, etc"-dropdown list, as set in Project Settings -> Media.  
           This is not(!) located in Preferences -> Appearances-Media!  
           This will only select, but not set custom settings-media format. See [afxcfg](#afxcfg) for that.  
-          It is an integer.  
+          It is an integer  
           
            >0, Automatic .wav (recommended)  
            >1, Custom... (see [afxcfg](#afxcfg) to set the custom-format)  
@@ -8312,7 +8373,7 @@
       <title>projrecmode</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The selected Record mode of the project, as set in the transport-context-menu as well as toggled by action 40076, 40252, 40253  
-          It is an integer.  
+          It is an integer  
           
            >0, Record mode: auto-punch selected items  
            >1, Record mode: normal  
@@ -8378,7 +8439,7 @@
       <title>projrenderdither</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The dithering for the Master mix, as set in the checkboxes next to Master mix in the options-section of the Render to File-dialog  
-          It's an integer bitfield  
+          It's an integer-bitfield  
           
            >&1=0, Dither isn't checked  
            >&1=1, Dither is checked  
@@ -8712,7 +8773,7 @@
       <title>projsmpteahead</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Synchronize by seeking ahead-inputbox, behind the accompanying Configure-button, as set in Project Settings -> Advanced  
-          It is an integer.  
+          It is an integer  
           
            >0 to 2147483647; 1000 = default  
            
@@ -8735,7 +8796,7 @@
       <title>projsmptefw_rec</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Stop recording on lack of time code after-inputbox, behind the accompanying Configure-button, as set in Project Settings -> Advanced  
-          It is an integer.  
+          It is an integer  
           
            >0 to 2147483647; higher values become negative ones; 0=never  
             
@@ -8785,7 +8846,7 @@
       <title>projsmptemaxfree</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Freewheel on missing time code for up to-inputbox, behind the accompanying Configure-button, as set in Project Settings -> Advanced  
-          It is an integer.  
+          It is an integer  
           
            >0 to 2147483647; 0 = forever  
            
@@ -8856,7 +8917,7 @@
       <title>projsmpterateuseproj</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Shall the LTC-framerate be used from project framerate or be individualized, as set in the Configure-timecode-settings in Project Settings -> Advanced  
-          It is an integer.  
+          It is an integer  
           
            >0, use the framerate, as set in variable [projsmpterate](#projsmpterate)  
            >1, use the project's framerate  
@@ -8995,7 +9056,7 @@
       <title>projsrate</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The project's sample-rate in Hertz, as set in the Project Settings -> Project Settings  
-          It is an integer.  
+          It is an integer  
           
            >-2147483648 to 2147483647 Hz are allowed  
            
@@ -9014,7 +9075,7 @@
       <title>projsrateuse</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Use Project sample rate-checkbox, as set in the Project Settings -> Project Settings  
-          It is an integer.  
+          It is an integer  
           
            >0, unchecked; don't use project sample rate  
            >1, checked; use project sample rate  
@@ -9465,7 +9526,7 @@
       <title>reamote_maxblock</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Network max. latency (playback)-slider, as set in Preferences -> ReaMote  
-          It is an integer.  
+          It is an integer  
           
            >1, Synchronous  
            >2 to 64, number of blocks  
@@ -9486,7 +9547,7 @@
       <title>reamote_maxlat_render</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Render send-ahead-editbox in milliseconds, as set in the Preferences -> ReaMote  
-          It is an integer.  
+          It is an integer  
           
            >-2147483648 to 2147483647  
            
@@ -9506,7 +9567,7 @@
       <title>reamote_maxpkt</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Max. packet size-editbox, in bytes, as set in Preferences -> ReaMote  
-          It is an integer.  
+          It is an integer  
           Default is 32768  
           
            >256 to 50000  
@@ -9527,7 +9588,7 @@
       <title>reamote_smplfmt</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Sample format-dropdownlist, as set in Preferences -> ReaMote  
-          It is an integer.  
+          It is an integer  
           
            >0, 64-bit (default) - Maximum quality  
            >1, 32-bit - Reduced network bandwidth use  
@@ -9655,7 +9716,7 @@
           Setting them changes the recording-format, though setting some will not update the Project Settings->Media-dialog properly (Video, GIF, AudioCD)  
           but will show WAV instead with the additional dialog-boxes for Video, GIF or AudioCD added.  
           If you change the audioformat, it will use the last used setting for the "new" format, as set in this project. Uses the default Reaper-settings for formats in new projects.  
-          It is an integer.  
+          It is an integer  
           
            >1179012432, Video (ffmpeg/libav encoder)  
            >1195984416, Video (GIF)  
@@ -9914,7 +9975,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The render-format set in the render-dialog  
           Only includes the format, not the individual format-settings(like bitrate, etc)  
-          It is an integer.  
+          It is an integer  
           
            >1179012432, Video (ffmpeg/libav encoder)  
            >1195984416, Video (GIF)  
@@ -9942,7 +10003,7 @@
       <slug>renderclosewhendone</slug>  
       <title>renderclosewhendone</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Some render-settings, as set in either the Render to File-dialog or in the Rendering to File-status window  
+          Some render-settings, as set in either the Render to File-dialog or in the Rendering to File-status window and the Project Render Metadata-dialog
           It is an integer-bitfield.  
           
            >&1=0, Automatically close, when finished - checkbox in the Rendering to File-status-window - unchecked  
@@ -9959,6 +10020,12 @@
            
            >&16=0, Silently increment filenames to avoid overwriting - unchecked  
            >&16=1, Silently increment filenames to avoid overwriting - checked  
+           
+           >&32=0, Always embed title/date/time - unchecked
+           >&32=1, Always embed title/date/time - checked
+           
+           >&64=0, Always embed start offset (media position in project) - unchecked
+           >&64=1, Always embed start offset (media position in project) - checked
            
            >seems not to be available anymore as of Reaper 5.977:  
            >&65537=0, Save copy of project to outfile.wav.RPP - unchecked  
@@ -10034,7 +10101,7 @@
       <title>rendertaillen</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The render-tail-length(in milliseconds)-inputbox, as set in the Render to File-dialog.  
-          It is an integer.  
+          It is an integer  
           
            >0 to 2147483647; in milliseconds  
            
@@ -10131,7 +10198,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The checkboxes in the ReWire-Client-Settings, as set in the ReWire-section of Preferences -> ReWire/DX as well as in Project Settings -> Advanced  
             You must click the "ReWire client project settings"-button, to access the settings-dialog.  
-          It is an integer bitfield.  
+          It is an integer-bitfield.  
           
            >&1=0, Ignore tempo change notifications from master-radiobutton selected  
            >&1=1, Build tempo map automatically as master plays-radiobutton selected  
@@ -10179,7 +10246,7 @@
       <title>reximport</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The Import REX files as-dropdownlist, as set in the REX-section of Preferences -> Video/REX/Misc  
-          It is an integer bitfield.  
+          It is an integer-bitfield.  
           
            >&1=0, Beat slices that dynamically adjust to tempo changes  
            >&1=1, A single loopable media item  
@@ -10293,7 +10360,7 @@
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The ruler layout-settings, as set in the Ruler layout-section of the Ruler context-menu as well as in Preferences -> Appearance and   
             with actions in the actions-dialog  
-          It is an integer bitfield  
+          It is an integer-bitfield  
           
            >&1=0, Display project regions in lanes(on) - checked  
            >&1=1, Display project regions in lanes(off) - unchecked  
@@ -11501,6 +11568,9 @@
            >&16=0, Right click on crossfade sets fade shape for only one side of the crossfade(shift toggles)(off) - unchecked  
            >&16=1, Right click on crossfade sets fade shape for only one side of the crossfade(shift toggles)(on) - checked  
            
+           >&64=0, Use fade names instead of images for fade menus - unchecked
+           >&64=1, Use fade names instead of images for fade menus - checked
+           
           For other settings, as set in Preferences -> Media Item Defaults, see [loopnewitems](#loopnewitems), [autoxfade](#autoxfade), [deffadeshape](#deffadeshape), [defxfadeshape](#defxfadeshape),   
                                                        [deffadelen](#deffadelen), [defsplitxfadelen](#defsplitxfadelen)  
           For other settings in Preferences -> Editing Behavior, see [itemclickmovecurs](#itemclickmovecurs), [locklooptotime](#locklooptotime), [relativeedges](#relativeedges), [ripplelockmode](#ripplelockmode),   
@@ -11612,7 +11682,7 @@
       <title>tabtotransflag</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Several checkboxes, as set in Transient Detection Settings located in the View-menu or Preferences -> Editing Behavior and in Preferences -> Editing Behavior -> Adjust sensitivity-Button  
-          It is an integer bitfield  
+          It is an integer-bitfield  
           
            >&1=0, Tab through MIDI notes(Preferences -> Editing Behavior)(off) - unchecked  
            >&1=1, Tab through MIDI notes(Preferences -> Editing Behavior)(on) - checked  
@@ -11773,7 +11843,7 @@
       <title>tempoenvtimelock</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Set the timebase for tempo/time signature envelopes, as set in the Project Settings -> Project Settings  
-          It is an integer.  
+          It is an integer  
           
            >0, Time  
            >1, Beats  
@@ -12280,7 +12350,7 @@
       <title>use_reamote</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Enable Reamote processing-checkbox as set in Preferences -> ReaMote  
-          It is an integer.  
+          It is an integer  
           
            >0, checkbox unchecked(ReaMote disabled)  
            >1, checkbox checked(ReaMote enabled)  
@@ -12510,7 +12580,7 @@
       <title>video_delayms</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Video output delay in milliseconds, as set in the Video-section of Preferences -> Video/REX/Misc  
-          It is an integer.  
+          It is an integer  
           
            >0 to 2147483647  
             
@@ -12533,7 +12603,7 @@
       <title>video_defimglen</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Still image thumbnail display mode -> Default length(ms)-inputbox, as set in the Video-section of Preferences -> Video/REX/Misc  
-          It is an integer.  
+          It is an integer  
           
            >-2147483647 to 2147483647  
             
@@ -12624,6 +12694,21 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>vstbr32</slug>  
+      <title>vstbr32</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          unknown, probably bridging for 32bit-vst-plugins?
+          It is an integer              
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>vstbr64</slug>  
@@ -12674,7 +12759,7 @@
       <title>vstfullstate</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           The settings for VST-plugins, as set in Preferences -> VST, as well as in Preferences -> Compatibility as well as in the Add FX to Track-dialog -> Options  
-          It is an integer bitfield.  
+          It is an integer-bitfield.  
           
            >&1=0, Disable saving full plug-in state (not recommended, set minimal undo for the plug-in instead)(as set in Preferences -> Compatibility) - checked(!)  
            >&1=1, Disable saving full plug-in state (not recommended, set minimal undo for the plug-in instead)(as set in Preferences -> Compatibility) - unchecked(!)  
@@ -12740,6 +12825,21 @@
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>vst_scan</slug>  
+      <title>vst_scan</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          unknown
+          It is an integer
       </description>  
       <chapter_context>  
          Config Variables  
@@ -13283,9 +13383,10 @@
           
           It is an integer  
           
-          - 0, video-processor-window is closed  
-          - 1, video-processor-window is open
-            
+          >- 0, video-processor-window is closed  
+          >- 1, video-processor-window is open
+          
+          Stored in reaper.ini -> [reaper_video]
       </description>  
       <chapter_context>  
          Reaper Ini-Only
@@ -13304,10 +13405,12 @@
             
             It is an integer
 
-            - 0, Disabled(default)
-            - 1, 2 threads
-            - 2, 3 threads
-            - 3, 4 threads
+            >- 0, Disabled(default)
+            >- 1, 2 threads
+            >- 2, 3 threads
+            >- 3, 4 threads
+            
+            Stored in reaper.ini -> [reaper_video]
       </description>  
       <chapter_context>  
          Reaper Ini-Only
@@ -13326,11 +13429,12 @@
             
             It is an integer
             
-            - 0, Disabled(default)
-            - 1, 2 threads
-            - 2, 3 threads
-            - 3, 4 threads
+            >- 0, Disabled(default)
+            >- 1, 2 threads
+            >- 2, 3 threads
+            >-3, 4 threads
             
+            Stored in reaper.ini -> [reaper_video]
       </description>  
       <chapter_context>  
          Reaper Ini-Only
@@ -13349,14 +13453,16 @@
 
             It is an integer-bitfield
 
-            &1=0, show underruns during playback as green frames - unchecked  
-            &1=1, show underruns during playback as green frames - checked  
+            >&1=0, show underruns during playback as green frames - unchecked  
+            >&1=1, show underruns during playback as green frames - checked  
                 
-            &2=0, Aggressively update video during arrange/edit scrolls - unchecked  
-            &2=1, Aggressively update video during arrange/edit scrolls - checked  
+            >&2=0, Aggressively update video during arrange/edit scrolls - unchecked  
+            >&2=1, Aggressively update video during arrange/edit scrolls - checked  
             
-            &4=0, Send MIDI CC control messages [BB xx vv] when mouse dragging in video window - unchecked
-            &4=1, Send MIDI CC control messages [BB xx vv] when mouse dragging in video window - checked
+            >&4=0, Send MIDI CC control messages [BB xx vv] when mouse dragging in video window - unchecked
+            >&4=1, Send MIDI CC control messages [BB xx vv] when mouse dragging in video window - checked
+            
+            Stored in reaper.ini -> [reaper_video]
       </description>  
       <chapter_context>  
          Reaper Ini-Only
@@ -13378,7 +13484,9 @@
                 Given in seconds.
                 
                 The menu holds the values for:
-                0.100, 0.250, 0.500, 1.000(default), 1.500, 2.000
+                >0.100, 0.250, 0.500, 1.000(default), 1.500, 2.000
+                
+                Stored in reaper.ini -> [reaper_video]
       </description>  
       <chapter_context>  
          Reaper Ini-Only
@@ -13398,10 +13506,12 @@
                 
                 It is an integer
                     
-                0, Monitoring FX are low latency(default)  
-                1, Monitoring FX and master FX are low latency  
-                2, Monitoring FX and master FX are processed like track FX  
-                3, All media and FX are not cached
+                >0, Monitoring FX are low latency(default)  
+                >1, Monitoring FX and master FX are low latency  
+                >2, Monitoring FX and master FX are processed like track FX  
+                >3, All media and FX are not cached
+                
+                Stored in reaper.ini -> [reaper_video]
       </description>  
       <chapter_context>  
          Reaper Ini-Only
@@ -13422,6 +13532,8 @@
                 
             the number of last prefetched video sources, defaults are 2, 5, 10, 15
 
+
+            Stored in reaper.ini -> [reaper_video]
       </description>  
       <chapter_context>  
          Reaper Ini-Only
@@ -13444,6 +13556,30 @@
                >2, Video-tab
                >3, Advanced-tab
                >4, Notes-tab
+               
+            Stored in reaper.ini -> [REAPER]
+      </description>  
+      <chapter_context>  
+         Reaper Ini-Only
+         REAPER
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>REAPER->autoclosekeymap</slug>  
+      <title>REAPER->autoclosekeymap</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+            The "Automatically close window on key/MIDI input"-checkbox in the Keyboard/MIDI/OSC-input-dialog.    
+            
+            It is an integer
+                
+               >0, unchecked
+               >1, checked
+            
+            Can be set while Reaper is running and will be used the next time the dialog opens.
+            Stored in reaper.ini -> [REAPER]
       </description>  
       <chapter_context>  
          Reaper Ini-Only

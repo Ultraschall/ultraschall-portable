@@ -62,7 +62,7 @@ function ultraschall.ResizePNG(filename_with_path, outputfilename_with_path, asp
     JS=0.998
     Lua=5.3
   </requires>
-  <functioncall>integer count = ultraschall.ResizePNG(string filename_with_path, string outputfilename_with_path, boolean aspectratio, integer width, integer height)</functioncall>
+  <functioncall>boolean retval = ultraschall.ResizePNG(string filename_with_path, string outputfilename_with_path, boolean aspectratio, integer width, integer height)</functioncall>
   <description>
     resizes a png-file. It will stretch/shrink the picture by that. That means you can't crop or enhance pngs with this function.
     
@@ -275,7 +275,7 @@ function ultraschall.ResizeJPG(filename_with_path, outputfilename_with_path, asp
     JS=1.215
     Lua=5.3
   </requires>
-  <functioncall>integer count = ultraschall.ResizeJPG(string filename_with_path, string outputfilename_with_path, boolean aspectratio, integer width, integer height, integer quality)</functioncall>
+  <functioncall>boolean retval = ultraschall.ResizeJPG(string filename_with_path, string outputfilename_with_path, boolean aspectratio, integer width, integer height, integer quality)</functioncall>
   <description>
     resizes a jpg-file. It will stretch/shrink the picture by that. That means you can't crop or enhance jpgs with this function.
     
@@ -290,8 +290,8 @@ function ultraschall.ResizeJPG(filename_with_path, outputfilename_with_path, asp
     string filename_with_path - the jpg-file, that you want to resize
     string outputfilename_with_path - the output-file, where to store the resized jpg
     boolean aspectratio - true, keep aspect-ratio(use size of param width as base); false, don't keep aspect-ratio
-    integer width - the width of the newly created png in pixels
-    integer height - the height of the newly created png in pixels
+    integer width - the width of the newly created jpg in pixels
+    integer height - the height of the newly created jpg in pixels
     integer quality - the quality of the jpg in percent; 1 to 100
   </parameters>
   <retvals>
@@ -394,14 +394,14 @@ end
 function ultraschall.ConvertJPG2PNG(filename_with_path, outputfilename_with_path)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>ConvertPNG2JPG</slug>
+  <slug>ConvertJPG2PNG</slug>
   <requires>
     Ultraschall=4.1
     Reaper=6.02
     JS=1.215
     Lua=5.3
   </requires>
-  <functioncall>integer count = ultraschall.ConvertPNG2JPG(string filename_with_path, string outputfilename_with_path, integer quality)</functioncall>
+  <functioncall>integer count = ultraschall.ConvertJPG2PNG(string filename_with_path, string outputfilename_with_path, integer quality)</functioncall>
   <description>
     Converts a jpg to a png-imagefile.
     

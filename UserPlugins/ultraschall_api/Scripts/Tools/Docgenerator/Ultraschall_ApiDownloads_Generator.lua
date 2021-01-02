@@ -32,7 +32,7 @@ majorversion, subversion, bits, Os, portable = ultraschall.GetReaperAppVersion()
 SWS=reaper.CF_GetSWSVersion("")
 JS= reaper.JS_ReaScriptAPI_Version()
 
-A,B,C=reaper.GetAppVersion()
+--A,B,C=reaper.GetAppVersion()
 
 beta=beta:lower()
 beta=string.gsub(beta," ","")
@@ -80,7 +80,7 @@ Ultraschall API Impressum
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
     <h3>Download Ultraschall Package</h3>
-    <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.00_]]..beta..[[.zip">ultraschall_api4.00_]]..beta..[[.zip</a> - the downloadpackage of the ultraschall-api<p>
+    <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.2_]]..beta..[[.zip">ultraschall_api4.2_]]..beta..[[.zip</a> - the downloadpackage of the ultraschall-api<p>
     <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api_index.xml">ReaPack-installable</a>-index-file. See <a href="https://reapack.com/">ReaPack-Website</a> for more details on the ReaPack-package-manager.
     <h3>Download Reaper-Internals and Ultraschall-API-docs</h3>
     <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/Reaper-Internals-Ultraschall-Api-Docs.zip">Reaper-Internals-Ultraschall-Api-Docs.zip</a> - Docs: Reaper-Internals ]]..majorversion.."."..subversion..[[, SWS ]]..SWS..[[, JS-extension ]]..JS..[[, ReaPack and Ultraschall-Api 4.00-]]..beta..[[<p>

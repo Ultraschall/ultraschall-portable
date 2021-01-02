@@ -1,8 +1,9 @@
 Ultraschall Lua-Api for Reaper(reaper.fm)
 
-1. Put the contents of the repository into the "UserPlugins"-folder in the ressources-folder of Reaper
-2. Start Reaper and create a new script
-3. Type in the following lines:
+1. Install Reaper, SWS, JS-extension(latest version)
+2. Put the contents of the repository into the "UserPlugins"-folder in the ressources-folder of Reaper
+3. Start Reaper and create a new script
+4. Type in the following lines:
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 ultraschall.ApiTest()
@@ -17,6 +18,8 @@ ultraschall.ApiTest()
    
 Written by Meo Mespotine(mespotine.de) with contributions from Udo Sauer(https://twitter.com/rstockm) and Ralf Stockmann(https://twitter.com/rstockm)
 
+Other contributions by anton9, Edgemeal, X-Raym, lokasenna, Amagalma and other people in the Reaper and Podcast-community
+
 more information about the Ultraschall podcast extension at: ultraschall.fm
 more information on Reaper: reaper.fm
 
@@ -24,7 +27,7 @@ more information on Reaper: reaper.fm
 License:
 ################################################################################
 # 
-# Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-present Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -49,3 +52,5 @@ License:
 Reaper and the Reaper-Logo are trademarks of Cockos inc and can be found at reaper.fm
 
 The SWS-logo has been taken from the SWS-extension-project, which can be found at sws-extension.org
+
+The Lua-logo and the reference-manual has been taken from lua.org
