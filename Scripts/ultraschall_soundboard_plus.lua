@@ -36,14 +36,10 @@ for i=0, reaper.CountTracks(0)-1 do
   if ultraschall.IsTrackSoundboard(i+1) then
     tr = reaper.GetTrack(0, i)
     ok, vol, pan = reaper.GetTrackUIVolPan(tr, 0, 0)
-    -- print(vol)
     if vol < 0.005 then vol = 0.005 end
     if vol < 3 then
       reaper.SetMediaTrackInfo_Value(tr, "D_VOL", vol*1.2)
     end
-    -- print("Soundboard: "..i)
-  -- else
-    -- print("track: "..i)
   end
 end
 
