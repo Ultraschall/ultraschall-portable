@@ -195,6 +195,9 @@ end
 function _Ultraschall_GUI_setmagiccolor()
 
   local numberOfTracks = reaper.CountTracks(0)
+  if numberOfTracks == 0 then
+    LastColor = 0
+  end
   for i=0, numberOfTracks-1 do
 
     MediaTrack = reaper.GetTrack(0, i)
