@@ -50,7 +50,16 @@ function GetFileExtension(url)
   return url:match("^.+(%..+)$")
 end
 
-
+function CheckForMP3()
+	local retval, ProjectName = ultraschall.EnumProjects(0) -- hole Projektnamen
+	if ProjectName  then
+		ProjectName = string.sub(ProjectName, 1, -5)
+		FileName = ProjectName .. ".mp3" -- ersetze Endung durch MP3
+ 		return reaper.file_exists(FileName) -- gibt es die MP3?
+	else
+		return false
+	end
+end
 
 local function splitWords(Lines, limit)
   while #Lines[#Lines] > limit do
@@ -417,13 +426,18 @@ function buildGUI()
 	state_color = "txt_red"
 	status_txt = " Missing"
 
-	for i=1, filecount do
-		if ( string.sub( files[i], -3 ) ) == "mp3" then
-			state_color = "txt_yellow"
-			status_txt = " Unknown"
-
+	if CheckForMP3() then -- Liegt eine MP3 mit dem Namen des Projektes im Projektverzeichnis?
+		state_color = "txt_green"
+		status_txt = " OK"
+	else
+		for i=1, filecount do
+			if ( string.sub( files[i], -3 ) ) == "mp3" then -- gibt es irgendeine andere MP3 im Projektverzeichnis?
+				state_color = "txt_yellow"
+				status_txt = " Unknown"
+			end
 		end
 	end
+
 
 	areaHeight = 80
 	position = 90 + y_offset
