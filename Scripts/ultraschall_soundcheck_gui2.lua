@@ -334,10 +334,12 @@ end
 
 function buildGuiWarnings()
 
+--[[
+
   if all_ignored and reaper.time_precise() - all_ignored > 3 then
     gfx.quit()
   end
-
+]]
 
   local event_count = ultraschall.EventManager_CountRegisteredEvents()
   active_warning_count, paused_warning_count, description_lines = count_all_warnings(event_count)
