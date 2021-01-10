@@ -116,8 +116,8 @@ function _Ultraschall_GUI_setmagictrackheight()
 
     verticalZoom (ArrangeViewHeight)
     retval = ultraschall.ApplyActionToTrack("1,0", 40913) -- verschiebe den Arrangeview hoch zum ersten Track
-    reaper.SetExtState("ultraschall_gui", "numbertracks", numberOfTracks, true)
-    reaper.SetExtState("ultraschall_gui", "numberenvelopes", numberOfEnvelopes, true)
+    reaper.SetExtState("ultraschall_gui", "numbertracks", numberOfTracks, false)
+    reaper.SetExtState("ultraschall_gui", "numberenvelopes", numberOfEnvelopes, false)
     lastNumberOfTracks = tostring(numberOfTracks)
     lastNumberOfEnvelopes = tostring(numberOfEnvelopes)
 
@@ -155,13 +155,12 @@ end
 
 function swapColors (color)
 
-  if string.match(os, "OSX") then
+  -- if string.match(os, "OSX") then
     r, g, b = reaper.ColorFromNative(color)
     -- print ("NewTrack: "..TrackColor.."-"..r.."-"..g.."-"..b)
     color = reaper.ColorToNative(b, g, r)
-  end
+  -- end
   return color
-
 end
 
 
@@ -207,10 +206,11 @@ function _Ultraschall_GUI_setmagiccolor()
     -- print(TrackColor)
     -- print(tostring(TrackColor))
 
+    tracktype = ultraschall.GetTypeOfTrack(i+1)
 
     if TrackColor == 0 then -- frische Spur, noch keine Farbe gesetzt
 
-      tracktype = ultraschall.GetTypeOfTrack(i+1)
+
       -- print (tracktype)
 
       if tracktype == "SoundBoard" then
@@ -238,7 +238,11 @@ function _Ultraschall_GUI_setmagiccolor()
       end
     end
 
-    LastColor = TrackColor
+    --    print (tracktype)
+
+    if tracktype == "Other" then
+      LastColor = TrackColor
+    end
 
   end
 end
