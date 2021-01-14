@@ -334,12 +334,11 @@ function checkGuiStates()
 
   end
 
-  -- print ("--")
+  print ()
 
   timecount = timecount + 1
-  if timecount == 600 then
+  if timecount == 600 and reaper.GetPlayState() ~= 5 then -- alle 10 Minuten, und nur wenn kein Recording läuft werden Backup-Files verschoben
     -- print ("huhu")
-
 
     commandid = reaper.NamedCommandLookup("_Ultraschall_Consolidate_Backups")
     reaper.Main_OnCommand(commandid,0)
