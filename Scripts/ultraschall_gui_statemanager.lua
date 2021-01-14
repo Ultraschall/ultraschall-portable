@@ -334,8 +334,6 @@ function checkGuiStates()
 
   end
 
-  print ()
-
   timecount = timecount + 1
   if timecount == 600 and reaper.GetPlayState() ~= 5 then -- alle 10 Minuten, und nur wenn kein Recording läuft werden Backup-Files verschoben
     -- print ("huhu")
