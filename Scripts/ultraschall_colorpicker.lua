@@ -35,9 +35,9 @@ for line in file:lines() do
     if index then
       if index < max_color then
       color_int = string.match(line, "=(%d+)")  -- get the color value
-        if string.match(os, "OSX") then
+        if string.match(os, "OS") then
           r, g, b = reaper.ColorFromNative(color_int)
-          color_int = reaper.ColorToNative(b, g, r) -- swap r and b for OSX
+          color_int = reaper.ColorToNative(b, g, r) -- swap r and b for Mac
         end
       t[index] = tonumber(color_int)  -- put color into table
     end

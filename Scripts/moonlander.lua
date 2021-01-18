@@ -2,11 +2,11 @@
 
 -- the game is licensed under an MIT-license
 -- radio-communication, lunar-module-photo by NASA during the Apollo program and are public domain
--- svoe.mp3 and kkst10.mp3 are by Meo Mespotine from the Klangkonstellation-project and 
+-- svoe.mp3 and kkst10.mp3 are by Meo Mespotine from the Klangkonstellation-project and
 -- is licensed under a creative-commons-license cc-by-nc
 -- find more from Klangkonstellation at https://klangkonstellation.bandcamp.com/
 
--- TODO: 
+-- TODO:
 -- when changing length of window, the landscape doesn't move accordingly, unlike Apollo11
 -- crash, thruster-sounds still missing
 -- endless starfield, earth, sound, better collision detection, tilting the apollo-module when sideway-movements, endless lunar surface(currently ends at some point)
@@ -25,8 +25,8 @@ reaper.atexit(atexit)
 gfx.init("Moonlander", 1000, 600)
 
 scale=1
-AAaA=string.match(reaper.GetOS(), "OSX")
-if string.match( reaper.GetOS(), "OSX")~=nil then
+AAaA=string.match(reaper.GetOS(), "OS")
+if string.match( reaper.GetOS(), "OS")~=nil then
   scale = 1--math.floor(1 * 0.8)
   macoffset=-16
   winoffset=0
@@ -49,7 +49,7 @@ gfx.setfont(5,"arial",math.floor(15*scale),0)
   PCM_source2bgm=reaper.Xen_StartSourcePreview(PCM_sourcebgm1, 0.2, false)
   PCM_sourcebgm=reaper.PCM_Source_CreateFromFile(Path.."/moonlander/kkst10.mp3")
   PCM_source2bgm=reaper.Xen_StartSourcePreview(PCM_sourcebgm, 0.15, true)
-  
+
   PCM_sourcebgm=reaper.PCM_Source_CreateFromFile(Path.."/moonlander/onesmallstepforman.mp3")
   PCM_source2bgm=reaper.Xen_StartSourcePreview(PCM_sourcebgm, 0.1, false)
 
@@ -93,7 +93,7 @@ function Highscore()
   if temp==nil then temp=0 end
   if temp<level then
     a,b=reaper.GetUserInputs("Enter your name, stranger", 1, "Name", "")
-    
+
     if b==nil then b="" end
     if level<10 then nuller="00"
     elseif level<100 then nuller="0"
@@ -103,7 +103,7 @@ function Highscore()
     Add=1
   end
 
-  table.sort(Table)  
+  table.sort(Table)
   textstring="Level\t\tName"
   count=0
   for i=10+Add, 1+Add, -1 do
@@ -112,7 +112,7 @@ function Highscore()
     local b=Table[i]:match(",(.*)")
     if a==nil then a="" end
     if b==nil then b="" end
-    
+
     textstring=textstring.."\n"..a.."\t...\t"..b
     reaper.SetExtState("Mespotine's Moonlander", "Place"..count, Table[i], true)
   end
@@ -139,12 +139,12 @@ end
 
 function GenerateNewLandscape()
   Landscape={}
-  
+
   for i=1, 20000 do
     Landscape[i]=math.random(150)
     if i>1 and math.random(100)>60+level then Landscape[i]=Landscape[i-1] end
   end
-  
+
   Starfield={}
   for i=-100000, 100000 do
     Starfield[i]={}
@@ -203,13 +203,13 @@ function drawapollo()
   gfx.blit(11,0.14,0+shiprotate)
   gfx.set(1)
   if fuel>0 then
-    if bottom > 0 then 
+    if bottom > 0 then
       gfx.triangle((gfx.w/2)+7, fall+10,(gfx.w/2)+2, fall+10,(gfx.w/2)+5, fall+bottom+10)
     end
-    if left > 0 then 
+    if left > 0 then
       gfx.rect((gfx.w/2)+15, fall+3, left, 4)
     end
-    if right> 0 then 
+    if right> 0 then
       gfx.rect((gfx.w/2)-right-5, fall+3, right, 4)
     end
     gfx.set(1)
@@ -229,10 +229,10 @@ function collisiondetection()
         gfx.y=y
         gfx.drawstr(x)
         --]]
-  
+
   x2=gfx.w/2
   y2=fall+12
-  
+
   --debug points
   --gfx.rect(x,y,4,4,1)
   --gfx.rect(x2,y2,4,4,1)
@@ -267,7 +267,7 @@ function drawosd()
               "\nSpeed: "..
               tostring(thrust+1):match(".-%.%d")
                 )
-  
+
 end
 
 function drawlandscape()
@@ -282,8 +282,8 @@ function drawlandscape()
       gfx.line((a+side)/2, Landscape[i-100]/2+100-fall/2.3-50+offset, (a+20+side)/2, Landscape[i-99]/2+100-fall/2.3-50+offset)
       gfx.line((a+side)*2, Landscape[i-100]*2.5+350-fall+offset, (a+20+side)*2, Landscape[i-99]*2.5+350-fall+offset)
 
-      if a+side>(gfx.w/2)-10 and a+side<(gfx.w/2)+10 then 
-        floor=Landscape[i-1]+150-fall/1.8+offset floor2=Landscape[i]+150-fall/1.8+offset 
+      if a+side>(gfx.w/2)-10 and a+side<(gfx.w/2)+10 then
+        floor=Landscape[i-1]+150-fall/1.8+offset floor2=Landscape[i]+150-fall/1.8+offset
         floorbg=Landscape[i-100]/2+100-fall/2.3-50+offset floorbg2=Landscape[i-99]*2.5+350-fall+offset
       end
 
@@ -318,15 +318,15 @@ function main()
   if right<0 then right=0.0 end
   if right>8 then right=6.0 end
   if fall<-100 and thrust<-3 then lostinspace() end
-  
+
   if bottom>4 or top>4 or left>4 or right>4 then
    fuel=fuel-(0.1*(bottom+(0.5*top+left+right)))
   end
   if fuel<0 then fuel=0 end
   fall=(fall+1)+thrust*0.9
-  
+
   side=side+sidethrust
-  drawlandscape()  
+  drawlandscape()
   drawapollo()
   drawosd()
   collisiondetection() -- still buggy
@@ -341,7 +341,7 @@ deltadir=-1
 deltay=0
 
 function Titledrawstars()
-  if TitleStars==nil then 
+  if TitleStars==nil then
     TitleStars={}
     for i=1, 1000 do
       TitleStars[i]={}
@@ -355,7 +355,7 @@ function Titledrawstars()
     gfx.y=TitleStars[i]["y"]
     gfx.setpixel(TitleStars[i]["speed"]/10, TitleStars[i]["speed"]/10, TitleStars[i]["speed"]/10)
     TitleStars[i]["x"]=TitleStars[i]["x"]-TitleStars[i]["speed"]
-    if TitleStars[i]["x"]<0 then 
+    if TitleStars[i]["x"]<0 then
       TitleStars[i]["y"]=math.random(gfx.h)
       TitleStars[i]["x"]=gfx.w
       TitleStars[i]["speed"]=math.random(10)
@@ -433,9 +433,9 @@ function Titlemain()
   gfx.set(0.8)
   gfx.x=-titlerotate*300+gfx.w/2
   gfx.y=100-titlerotate*50+delta+deltay
-  if gfx.x<=-300 or gfx.y<=-350 or gfx.y>gfx.h+100 then titlerotate=-3 delta=math.random(math.floor(gfx.h*0.2))-300 
+  if gfx.x<=-300 or gfx.y<=-350 or gfx.y>gfx.h+100 then titlerotate=-3 delta=math.random(math.floor(gfx.h*0.2))-300
     deltay=math.random(10)
-    deltadir=math.random(3)-1.9 
+    deltadir=math.random(3)-1.9
   end
   titlerotate=titlerotate+0.015+(deltay*0.00001)
   deltay=deltay+(2*deltadir)

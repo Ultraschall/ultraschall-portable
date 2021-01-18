@@ -192,7 +192,7 @@ os = reaper.GetOS()
 
 --get the slot of the StudioLink effect.
 
-if string.match(os, "OSX") then
+if string.match(os, "OS") then
   fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir (ITSR)", false, 0)
 else  -- Windows
   fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)
@@ -235,7 +235,9 @@ end
 -- Check for internal Microphone
 --------------------------
 
-if string.sub(reaper.GetOS(),1,3) == "OSX"  then
+operationSystem = reaper.GetOS()
+if string.match(operationSystem, "OS") then
+
   handle = io.popen("system_profiler SPAudioDataType -xml | grep -B 1 'coreaudio_default_audio_input_device' | head -n 1") -- get default input device name
   result = handle:read("*a")
   handle:close()
