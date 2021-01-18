@@ -37,8 +37,9 @@ end
 -- ---
 
 function OpenURL(url)
-  local OS = reaper.GetOS()
-  if OS == "OSX32" or OS == "OSX64" then
+	local operationSystem = reaper.GetOS()
+	if string.match(operationSystem, "OS") then
+
     os.execute('open "" "' .. url .. '"')
   else
     reaper.CF_ShellExecute(url)

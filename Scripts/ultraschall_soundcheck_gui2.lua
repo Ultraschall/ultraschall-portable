@@ -34,8 +34,8 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function open_url(url)
 
-  local OS=reaper.GetOS()
-  if OS=="OSX32" or OS=="OSX64" then
+  local operationSystem = reaper.GetOS()
+  if string.match(operationSystem, "OS") then
     os.execute("open ".. url)
   else
     os.execute("start ".. url)

@@ -53,7 +53,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 reaper.Undo_BeginBlock()
 
 --os = reaper.GetOS()
---if string.match(os, "OSX") then
+--if string.match(os, "OS") then
 --  color = 0x00FF88|0x1000000
 --else
 --  color = 0x88FF00|0x1000000

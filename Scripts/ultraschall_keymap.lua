@@ -34,9 +34,9 @@ local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 url = "http://url.ultraschall-podcast.de/keymap4"
 
-  local OS=reaper.GetOS()
-  if OS=="OSX32" or OS=="OSX64" then
-  	os.execute("open ".. url)
-  else
-  	os.execute("start ".. url)
-  end
+local operationSystem = reaper.GetOS()
+if string.match(operationSystem, "OS") then
+  os.execute("open ".. url)
+else
+  os.execute("start ".. url)
+end

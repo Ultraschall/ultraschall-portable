@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-# 
+#
 # Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-# 
+#
 ################################################################################
 ]]
 
@@ -33,10 +33,10 @@ end
 
 function rgb_swap (color)
   os = reaper.GetOS()
-  if string.match(os, "OSX") then 
+  if string.match(os, "OS") then
     r, g, b = reaper.ColorFromNative(color)
     -- Msg(r .."-".. g .."-".. b.."-" ..color)
-    color = reaper.ColorToNative(b, g, r) -- swap r and b for OSX
+    color = reaper.ColorToNative(b, g, r) -- swap r and b for Mac
     -- Msg(" - "..color)
   end
   return color
@@ -64,16 +64,16 @@ end
 t = {}   -- initiate table
 t_invers = {}
 file = io.open(curtheme, "r");
-  
+
 for line in file:lines() do
   index = string.match(line, "group_(%d+)")  -- use "Group" section
   index = tonumber(index)
     if index then
       if index < max_color then
       color_int = string.match(line, "=(%d+)")  -- get the color value
-        if string.match(os, "OSX") then 
+        if string.match(os, "OS") then
           r, g, b = reaper.ColorFromNative(color_int)
-          color_int = reaper.ColorToNative(b, g, r) -- swap r and b for OSX
+          color_int = reaper.ColorToNative(b, g, r) -- swap r and b for Mac
         end
       t[index] = color_int  -- put color into table
       t_invers[rgb_swap(color_int)] = index -- build the inverted table
@@ -90,7 +90,7 @@ end
 ----------------------------------
 
 countTracks = reaper.CountSelectedTracks(0)
--- step = math.floor(max_color / countTracks + 0.5) 
+-- step = math.floor(max_color / countTracks + 0.5)
 -- if step == 0 then step = 1 end
 step = 1  -- smooth gradient
 
@@ -98,7 +98,7 @@ if countTracks > 0 then -- SELECTED TRACKS LOOP
   track = reaper.GetSelectedTrack(0, 0)
   color = reaper.GetTrackColor(track)
   color = rgb_swap(color)
-  if t_invers[color] and t_invers[color] > 0 then     
+  if t_invers[color] and t_invers[color] > 0 then
     k = t_invers[color]                   --start with a different color
   else
     k = 0

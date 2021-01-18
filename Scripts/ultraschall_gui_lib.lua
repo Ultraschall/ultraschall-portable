@@ -81,7 +81,9 @@ end
 
 ]]--
 
-if reaper.GetOS()=="OSX32" or reaper.GetOS()=="OSX64" then
+operationSystem = reaper.GetOS()
+
+if string.match(operationSystem, "OS") then
   font_size = 14 * dpi_scale
   font_size2 = 20 * dpi_scale
   font_face = "Helvetica"
@@ -1852,7 +1854,8 @@ function Btn:draw()
 
   GUI.font(4)
 
-  if reaper.GetOS() == "OSX64" then
+  operationSystem = reaper.GetOS()
+  if string.match(operationSystem, "OS") then
     btn_offset = 3 * dpi_scale
 
   else

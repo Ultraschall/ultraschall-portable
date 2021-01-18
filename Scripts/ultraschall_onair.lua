@@ -84,7 +84,7 @@ else
 
 
 	os = reaper.GetOS()
-	if string.match(os, "OSX") then
+	if string.match(os, "OS") then
 		--		fx_slot = reaper.TrackFX_GetByName(m, "ITSR: StudioLinkOnAir", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
 		-- fx_slot = reaper.TrackFX_GetByName(m, "2StudioLinkOnAir (ITSR)", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
 		-- fx_slot = reaper.TrackFX_AddByName(m, "ITSR: StudioLinkOnAir", false, 1)

@@ -82,7 +82,7 @@ sec=tonumber(sec)
 
 ::tryagain::
 
-if string.match(os, "OSX") then
+if string.match(os, "OS") then
   fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir (ITSR)", false, 0)
 else  -- Windows
   fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)

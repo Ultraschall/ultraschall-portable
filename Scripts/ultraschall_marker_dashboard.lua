@@ -210,8 +210,8 @@ end
 
 function open_url(url)
 
-  local OS=reaper.GetOS()
-  if OS=="OSX32" or OS=="OSX64" then
+  local operationSystem = reaper.GetOS()
+  if string.match(operationSystem, "OS") then -- Mac
     os.execute("open ".. '\"' .. url .. '\"')
   else
     os.execute("start ".. '\"' .. url .. '\"')
@@ -815,7 +815,7 @@ function buildGui()
       end
 
     elseif name and name == "" then -- es gibt einen Marker, der hat aber keinen Namen
-        id = GUI.Lbl:new(pos_name, position, "[Name missing - click to edit]", 0)
+        id = GUI.Lbl:new(pos_name, position, "[Name missing - click to edit]", 0, "txt_yellow")
         table.insert(GUI.elms, id)
         name_func = editMarker
 
@@ -823,7 +823,7 @@ function buildGui()
         check_text = "Chapters without Name will not be exported."
 
     else
-      id = GUI.Lbl:new(pos_name, position, "[Marker missing - click to create]", 0)
+      id = GUI.Lbl:new(pos_name, position, "[Marker missing - click to create]", 0, "txt_yellow")
       table.insert(GUI.elms, id)
       name_func = insertMarker
 

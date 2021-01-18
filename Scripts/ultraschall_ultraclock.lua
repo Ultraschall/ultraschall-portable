@@ -186,7 +186,10 @@ function Init()
   txt_line_preset[6][2].size=0.8
 
   --set font depending on os
-  if reaper.GetOS()=="OSX64" or reaper.GetOS()=="OSX32" then
+
+  operationSystem = reaper.GetOS()
+
+  if string.match(operationSystem, "OS") then -- es ist ein Mac System
     clockfont="Helvetica" clockfont_bold="Helvetica Bold"
     font_divisor=3.2 --window height / font_divisor = fontsize
   elseif reaper.GetOS()=="Win64" or reaper.GetOS()=="Win32" then

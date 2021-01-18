@@ -52,6 +52,8 @@ function ultraschall.GetAllTrackEnvelopes()
 --
 -- tracknumber of 0 is for the master track
 
+  print ("hallo")
+
   local TrackEnvelopeArray={}
   local FirstEnvelopeTrackNumber=-1
   local FirstEnvelopeMaster=-1

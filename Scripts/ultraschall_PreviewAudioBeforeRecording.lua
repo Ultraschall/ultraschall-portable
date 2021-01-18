@@ -53,7 +53,9 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
 if ultraschall.AnyTrackRecarmed()==false then reaper.MB("There is no track armed for recording", "No Recarmed track", 0) return end
 
-if reaper.GetOS()=="OSX32" or reaper.GetOS()=="OSX64" then
+operationSystem = reaper.GetOS()
+if string.match(operationSystem, "OS") then
+
   font_size = 14
   font_face = "Helvetica"
 else

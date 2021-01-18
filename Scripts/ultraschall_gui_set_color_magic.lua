@@ -52,7 +52,7 @@ end
 
 function swapColors (color)
 
-  if string.match(os, "OSX") then
+  if string.match(os, "OS") then
     r, g, b = reaper.ColorFromNative(color)
     -- print ("NewTrack: "..TrackColor.."-"..r.."-"..g.."-"..b)
     color = reaper.ColorToNative(b, g, r)

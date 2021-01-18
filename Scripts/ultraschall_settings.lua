@@ -135,8 +135,8 @@ devices_blacklist['CoreAudio Mic96K']=1
 
 function open_url(url)
 
-  local OS=reaper.GetOS()
-  if OS=="OSX32" or OS=="OSX64" then
+  local operationSystem = reaper.GetOS() -- Mac
+  if string.match(operationSystem, "OS") then
     os.execute("open ".. url)
   else
     os.execute("start ".. url)
