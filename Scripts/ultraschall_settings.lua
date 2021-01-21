@@ -336,7 +336,7 @@ function show_devices()
   retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "") -- gerade aktives device
   sectionName = "ultraschall_devices"
   key_count = ultraschall.CountUSExternalState_key(sectionName, "ultraschall-settings.ini")
-  position = 217
+  position = 170
   local x_position = 75
   truncate = 50 -- angezeigte maximale Länge des Devicenamens
 
@@ -354,13 +354,13 @@ function show_devices()
 
         -- Delete-Button
         button_id = (#GUI["elms"])
-        delete = GUI.Btn:new(x_position + 500, position+3, 20, 20,         " X", remove_device, device_name)
+        delete = GUI.Btn:new(x_position + 500, position+3, 60, 20,         " Delete", remove_device, device_name)
         table.insert(GUI.elms, delete)
         color = "txt"
 
       else
         color = "white"
-        label_active = GUI.Lbl:new( x_position + 500, position+6,                  "active - cannot be deleted",          0, color)
+        label_active = GUI.Lbl:new( x_position + 500, position+6,                  " Active - cannot be deleted",          0, color)
         table.insert(GUI.elms, label_active)
 
       end
@@ -582,7 +582,7 @@ function SettingsPageSoundcheck()
 
       position = position_old + (tonumber(ultraschall.GetUSExternalState(sectionName,"Position","ultraschall-settings.ini")) * 30) -- Feintuning notwendig
 
-      id = GUI.Checklist:new(20+x_offset, position, 240, 30,         "", "Soundcheck: "..ultraschall.GetUSExternalState(sectionName,"EventNameDisplay","ultraschall-settings.ini"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini")), sectionName)
+      id = GUI.Checklist:new(20+x_offset, position, 240, 30,         "", ""..ultraschall.GetUSExternalState(sectionName,"EventNameDisplay","ultraschall-settings.ini"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini")), sectionName)
       table.insert(GUI.elms, id)
 
       -- Info-Button
@@ -628,11 +628,11 @@ function SettingsPageDevices()
       table.insert(GUI.elms, block)
 
 
-  local label_table = GUI.Lbl:new( 85, position+20,                  "Local Monitoring",          0, "white")
+  local label_table = GUI.Lbl:new( 85, position+20,                  "Local Monitoring on-off",          0, "white")
       table.insert(GUI.elms, label_table)
 
-  local label_table2 = GUI.Lbl:new( 575, position+20,                  "Delete",          0, "white")
-      table.insert(GUI.elms, label_table2)
+  -- local label_table2 = GUI.Lbl:new( 575, position+20,                  "Delete",          0, "white")
+   --   table.insert(GUI.elms, label_table2)
 
 
   devicetext = "This list shows all audio interfaces you ever connected. If you can plug a headphone to your audio interface, it supports Local Monitoring. If you can not connect a headphone direct into your audio interface, make shure to uncheck the Local Monitoring box to get the audio routing right. You can delete obsolete devices."
