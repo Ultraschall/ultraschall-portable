@@ -106,7 +106,7 @@ GUI.colors = {
 
   wnd_bg = {44, 44, 44, 1},      -- Window BG
   elm_bg = {48, 48, 48, 1},      -- Element BG
-  sld_bg = {60, 60, 60, 1},    -- Slider Background
+  sld_bg = {70, 70, 70, 1},    -- Slider Background
   elm_frame = {90, 90, 90, 1},    -- Element Frame
   button = {80, 80, 80, 1},    -- Element Frame
   elm_highlight = {100, 100, 100, 1},    -- Element Highlight
@@ -1139,7 +1139,7 @@ function Sldr:draw()
 
   local str_w, str_h = gfx.measurestr(self.caption)
 
-  gfx.x = x - 218 * dpi_scale
+  gfx.x = x - 268 * dpi_scale
   gfx.y = y - 2 * dpi_scale
 
   gfx.drawstr(self.caption)
@@ -1151,10 +1151,25 @@ function Sldr:draw()
   GUI.font(4)
 
   local str_w, str_h = gfx.measurestr(self.retval)
-  gfx.x = x - 35 * dpi_scale
+  gfx.x = x - 95 * dpi_scale
   gfx.y = y -2 * dpi_scale
 
-  value_truncated = string.format("%." .. (1 or 0) .. "f", self.retval)
+  if tonumber(self.max) > 1 then
+
+    value_truncated = string.format("%." .. (1 or 0) .. "f", self.retval).." Seconds"
+
+  else
+
+    value_truncated = tonumber(self.retval)
+    value_truncated = value_truncated * 100
+    -- value_truncated = string.format("%." .. (1 or 0) .. "f", value_truncated).." %"
+    value_truncated = string.sub(value_truncated, 1, -3).." %"
+    gfx.x = gfx.x + 47 * dpi_scale
+
+  end
+
+
+
 
   gfx.drawstr(value_truncated)
 
