@@ -445,7 +445,7 @@ function buildGUI()
 	StepDescription = "Render your podcast to a MP3 file. Make use of our presets in the top right corner of the render-dialog."
 	warnings_position = position+30
 	button_txt = "Export MP3"
-	button_action = "_Ultraschall_Render_Check"
+	button_action = "_Ultraschall_RenderProject_As_MP3"
 
 	buildExportStep()
 
