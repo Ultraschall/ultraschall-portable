@@ -386,13 +386,13 @@ function drawClock()
     if reaper.GetSetRepeat(-1)==1 then repeat_txt=" (REPEAT)" else repeat_txt="" end
     if playstate == 1 then
       if repeat_txt~="" then txt_color=0x15729d else txt_color=0x2092c7 end
-      status="PLAY"..repeat_txt --play
-      elseif playstate == 5 then txt_color=0xf24949 status="REC" --record
+      status="PLAYING"..repeat_txt --play
+      elseif playstate == 5 then txt_color=0xf24949 status="RECORDING" --record
       elseif playstate == 2 then
         if repeat_txt~="" then txt_color=0xa86010 else txt_color=0xd17814 end
-        status="PAUSE"..repeat_txt --play/pause
-      elseif playstate == 6 then txt_color=0xff6b4d status="REC/PAUSE" --record/pause
-      elseif playstate == 0 then txt_color=0xeeeeee status="STOP" --record/pause
+        status="PAUSED"..repeat_txt --play/pause
+      elseif playstate == 6 then txt_color=0xff6b4d status="REC/PAUSED" --record/pause
+      elseif playstate == 0 then txt_color=0xeeeeee status="STOPPED" --record/pause
       else txt_color=0xb3b3b3 status=""
     end
     A=uc_menu[5].checked
