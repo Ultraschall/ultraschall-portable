@@ -194,18 +194,18 @@ function Init()
   -- Important: y-position>1 might be displayed outside of the window!
   txt_line={}
   for i=1,7 do txt_line[i]={} end -- create 2d array for 4 lines of text
-  txt_line[2]={y=0.06, size=0.28}    -- current date
-  txt_line[1]={y=0.06 , size=0.28}   -- current time
-  txt_line[3]={y=0.11, size=0.20}  -- current playstate
-  txt_line[4]={y=0.19, size=0.75}  -- current position
+  txt_line[2]={y=0.05, size=0.25}    -- current date
+  txt_line[1]={y=0.05 , size=0.25}   -- current time
+  txt_line[3]={y=0.11, size=0.16}  -- current playstate
+  txt_line[4]={y=0.17, size=0.9}  -- current position
 
-  txt_line[7]={y=0.47, size=0.20}     -- time-selection-text
+  txt_line[7]={y=0.485, size=0.16}     -- time-selection-text
   txt_line[8]={y=0.55, size=0.25}  -- time-selection
 
-  txt_line[9]={y=0.66, size=0.25}  -- project-length-text
-  txt_line[10]={y=0.5, size=0.25} -- project-length
+  txt_line[9]={y=0.69, size=0.16}  -- project-length-text
+  txt_line[10]={y=0.5, size=0.16} -- project-length
 
-  txt_line[5]={y=0.78, size=0.20}  -- markernames
+  txt_line[5]={y=0.79, size=0.16}  -- markernames
   txt_line[6]={y=0.86, size=0.25}   -- marker positions
 
   txt_line[11]={y=0.99, size=21 * retina_mod}   -- Soundcheck
@@ -429,7 +429,7 @@ function drawClock()
   oldpreset=preset
 
   if preset==0 or preset==8.0 then
-    WriteAlignedText("all displays are turned off :-(",0xbbbbbb, clockfont_bold, fsize/4,-1)
+    WriteAlignedText("All displays are turned off :-(",0xbbbbbb, clockfont_bold, fsize/4,-1)
   end
 
   --write text
@@ -448,10 +448,10 @@ function drawClock()
   end
 
   if date~="" then
-    WriteAlignedText(date.." ",0xb3b3b3, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,1) -- print realtime hh:mm:ss
+    WriteAlignedText(" "..date,0xb3b3b3, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,1) -- print realtime hh:mm:ss
   end
   if time~="" then
-    WriteAlignedText(" "..time,0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
+    WriteAlignedText(time.." ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
   end
 
 
@@ -572,7 +572,7 @@ function drawClock()
       start=reaper.format_timestr_len(start, "", 0, 5):match("(.*):")
       end_loop=reaper.format_timestr_len(end_loop, "", 0, 5):match("(.*):")
       length=reaper.format_timestr_len(length, "", 0, 5):match("(.*):")
-      WriteAlignedText(start.."   < (".. length..") >   "..end_loop,0xffbb00, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
+      WriteAlignedText(start.."     [".. length.."]     "..end_loop,0xffbb00, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
     else
       -- WriteAlignedText("Time Selection",0xaaaa00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0) -- print date
       -- WriteAlignedText("-:--:-- < (".. "0:00:00"..") > -:--:--",0xaaaa44, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0) -- print date
@@ -602,7 +602,7 @@ function drawClock()
     string.gsub(prevelm,"Region_beg:","Reg: ")
     string.gsub(prevelm,"Region_end:","Reg: ")
     WriteAlignedText(" "..prevtime,0xb6b6bb, clockfont_bold, txt_line[6].size * fsize ,txt_line[6].y*height+border,1) -- print date
-    WriteAlignedText("< Marker > ",0xb6b6bb, clockfont_bold, txt_line[6].size * fsize ,txt_line[6].y*height+border,0) -- print date
+    WriteAlignedText("[Marker]",0xb6b6bb, clockfont_bold, txt_line[6].size * fsize ,txt_line[6].y*height+border,0) -- print date
     WriteAlignedText(nexttime.." ",0xb6b6bb, clockfont_bold, txt_line[6].size * fsize ,txt_line[6].y*height+border,2) -- print date
   end
   gfx.update()
