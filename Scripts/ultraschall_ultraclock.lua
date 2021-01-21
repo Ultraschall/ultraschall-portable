@@ -53,6 +53,54 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+-- hole GUI Library
+
+local info = debug.getinfo(1,'S');
+script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
+GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
+
+
+function setColor (r,g,b)
+  gfx.set(r,g,b)
+end
+
+
+local function roundrect(x, y, w, h, r, antialias, fill)
+
+  local aa = antialias or 1
+  fill = fill or 0
+
+  if fill == 0 or false then
+    gfx.roundrect(x, y, w, h, r, aa)
+  elseif h >= 2 * r then
+
+    -- Corners
+    gfx.circle(x + r, y + r, r, 1, aa)      -- top-left
+    gfx.circle(x + w - r, y + r, r, 1, aa)    -- top-right
+    gfx.circle(x + w - r, y + h - r, r , 1, aa)  -- bottom-right
+    gfx.circle(x + r, y + h - r, r, 1, aa)    -- bottom-left
+
+    -- Ends
+    gfx.rect(x, y + r, r, h - r * 2)
+    gfx.rect(x + w - r, y + r, r + 1, h - r * 2)
+
+    -- Body + sides
+    gfx.rect(x + r, y, w - r * 2, h + 1)
+
+  else
+
+    r = h / 2 - 1
+
+    -- Ends
+    gfx.circle(x + r, y + r, r, 1, aa)
+    gfx.circle(x + w - r, y + r, r, 1, aa)
+
+    -- Body
+    gfx.rect(x + r, y, w - r * 2, h)
+
+  end
+
+end
 
 
 function count_all_warnings() -- zähle die Arten von Soundchecks aus
@@ -148,19 +196,19 @@ function Init()
   for i=1,7 do txt_line[i]={} end -- create 2d array for 4 lines of text
   txt_line[2]={y=0.06, size=0.28}    -- current date
   txt_line[1]={y=0.06 , size=0.28}   -- current time
-  txt_line[3]={y=0.13, size=0.20}  -- current playstate
+  txt_line[3]={y=0.11, size=0.20}  -- current playstate
   txt_line[4]={y=0.19, size=0.75}  -- current position
 
-  txt_line[7]={y=0.48, size=0.20}     -- time-selection-text
+  txt_line[7]={y=0.47, size=0.20}     -- time-selection-text
   txt_line[8]={y=0.55, size=0.25}  -- time-selection
 
   txt_line[9]={y=0.66, size=0.25}  -- project-length-text
   txt_line[10]={y=0.5, size=0.25} -- project-length
 
   txt_line[5]={y=0.78, size=0.20}  -- markernames
-  txt_line[6]={y=0.85, size=0.25}   -- marker positions
+  txt_line[6]={y=0.86, size=0.25}   -- marker positions
 
-  txt_line[11]={y=0.99, size=0.20}   -- Soundcheck
+  txt_line[11]={y=0.99, size=21 * retina_mod}   -- Soundcheck
 
 
   txt_line_preset={} for i=1,7 do txt_line_preset[i]=copy(txt_line) end --copy STD Setting to all presets
@@ -273,7 +321,7 @@ function showmenu(trigger)
   return ret
 end
 
-function WriteAlignedText(text, color, font, size, y, offset) -- if y<0 then center horizontally
+function WriteAlignedText(text, color, font, size, y, offset, fixed) -- if y<0 then center horizontally
   -- text - the text to display
   -- color - the color in which to display
   -- font - the font-style in which to display
@@ -286,6 +334,7 @@ function WriteAlignedText(text, color, font, size, y, offset) -- if y<0 then cen
   --          3, aligned right of center
   --          4, aligned left of center
 
+  fontsize_fixed = fixed or 0
   if type(offset)~="number" then offset=0 end
   gfx.r=(color & 0xff0000) / 0xffffff
   gfx.g=(color & 0x00ff00) / 0xffff
@@ -405,12 +454,104 @@ function drawClock()
     WriteAlignedText(" "..time,0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
   end
 
+
+  -- Soundcheck
+
+
+  soundcheck_y_offset = 70 * retina_mod
+
+
+
+  setColor(0.27,0.27,0.27)
+  -- gfx.roundrect(50, 50, 100, 50, 10, 1)
+
+  roundrect(10*retina_mod, gfx.h -(soundcheck_y_offset - 6*retina_mod), (gfx.w - 20*retina_mod), 41*retina_mod, 10*retina_mod, 1, 1)
+
   active_warning_count, paused_warning_count, passed_warning_count = count_all_warnings()
 
-  WriteAlignedText(" Soundcheck",0xb3b3b3, clockfont_bold, txt_line[11].size * fsize, gfx.h -(65*retina_mod)-gfx.w*0.01,1) -- print
-  if passed_warning_count > 0 then WriteAlignedText(" PASSED ("..passed_warning_count..")",0x10A210, clockfont_bold, txt_line[11].size * fsize, gfx.h -(retina_mod*40),1) end --
-  if paused_warning_count > 0 then WriteAlignedText("IGNORED ("..paused_warning_count..")  ",0xFBD100, clockfont_bold, txt_line[11].size * fsize, gfx.h -(retina_mod*40),0) end --
-  if active_warning_count > 0 then WriteAlignedText("WARNING ("..active_warning_count..") ",0xD22828, clockfont_bold, txt_line[11].size * fsize, gfx.h -(retina_mod*40),2) end --
+  WriteAlignedText("   Soundcheck",0x777777, clockfont_bold, txt_line[11].size , gfx.h -(soundcheck_y_offset + 24*retina_mod),1) -- print
+
+  -----------
+  -- passed
+  -----------
+
+  if passed_warning_count > 0 then
+    setColor(0.15,0.95,0.15)
+  else
+    setColor(0.5,0.5,0.5)
+  end
+
+    roundrect(17*retina_mod, gfx.h -(soundcheck_y_offset - 12*retina_mod), 14*retina_mod, 30*retina_mod, 5*retina_mod, 5, 1)
+    if retina_mod == 0.5 then
+      roundrect(19*retina_mod, gfx.h -(soundcheck_y_offset - 14*retina_mod), 10*retina_mod, 26*retina_mod, 0, 0, 1)
+    end
+
+    -- print (gfx.w)
+
+    if gfx.w > 480 * retina_mod then
+      WriteAlignedText("       PASSED: "..passed_warning_count.."",0xcccccc, clockfont_bold, txt_line[11].size, gfx.h -(soundcheck_y_offset - 18*retina_mod),1,1)
+    else
+      WriteAlignedText("        "..passed_warning_count.."",0xcccccc, clockfont_bold, txt_line[11].size, gfx.h -(soundcheck_y_offset - 18*retina_mod),1,1)
+    end
+
+  ------------------
+  -- PAUSED
+  ------------------
+
+  if paused_warning_count > 0 then
+    setColor(0.95,0.95,0.15)
+    sc_txt_color = 0xcccccc
+  else
+    setColor(0.5,0.5,0.5)
+    sc_txt_color = 0x888888
+  end
+
+  if gfx.w > 480 * retina_mod then
+    roundrect(gfx.w/2-79* retina_mod, gfx.h -(soundcheck_y_offset - 12*retina_mod), 14*retina_mod, 30*retina_mod, 5*retina_mod, 1, 1)
+
+    if retina_mod == 0.5 then
+      roundrect(gfx.w/2-79* retina_mod , gfx.h -(soundcheck_y_offset - 14*retina_mod), 10*retina_mod, 26*retina_mod, 0, 1, 1)
+    end
+
+    WriteAlignedText("    IGNORED: "..paused_warning_count.."  ",sc_txt_color, clockfont_bold, txt_line[11].size, gfx.h -(soundcheck_y_offset - 18*retina_mod),0)
+  else
+    roundrect(gfx.w/2-15* retina_mod, gfx.h -(soundcheck_y_offset - 12*retina_mod), 14*retina_mod, 30*retina_mod, 5*retina_mod, 1, 1)
+    if retina_mod == 0.5 then
+      roundrect(gfx.w/2-16* retina_mod , gfx.h -(soundcheck_y_offset - 14*retina_mod), 10*retina_mod, 26*retina_mod, 0, 0, 1)
+    end
+    WriteAlignedText("       "..paused_warning_count.."",sc_txt_color, clockfont_bold, txt_line[11].size, gfx.h -(soundcheck_y_offset - 18*retina_mod),0)
+  end
+  -- if active_warning_count > 0 then
+
+  -------------
+  -- WARNING
+  -------------
+
+
+  if active_warning_count > 0 then
+    setColor(0.95,0.15,0.15)
+    sc_txt_color = 0xcccccc
+  else
+    setColor(0.5,0.5,0.5)
+    sc_txt_color = 0x888888
+  end
+
+
+  if gfx.w > 480 * retina_mod then
+    roundrect(gfx.w - 166 * retina_mod , gfx.h -(soundcheck_y_offset - 12*retina_mod), 14*retina_mod, 30*retina_mod, 5*retina_mod, 1, 1)
+    if retina_mod == 0.5 then
+      roundrect(gfx.w - 164 * retina_mod , gfx.h -(soundcheck_y_offset - 14*retina_mod), 12*retina_mod, 26*retina_mod, 0, 0, 1)
+    end
+    WriteAlignedText("WARNING: "..active_warning_count.."   ",sc_txt_color, clockfont_bold, txt_line[11].size, gfx.h -(soundcheck_y_offset - 18*retina_mod),2)
+  else
+    roundrect(gfx.w - 59 * retina_mod , gfx.h -(soundcheck_y_offset - 12*retina_mod), 14*retina_mod, 30*retina_mod, 5*retina_mod, 1, 1)
+    if retina_mod == 0.5 then
+      roundrect(gfx.w - 57 * retina_mod , gfx.h -(soundcheck_y_offset - 14*retina_mod), 12*retina_mod, 26*retina_mod, 0, 0, 1)
+    end
+    WriteAlignedText(" "..active_warning_count.."   ",sc_txt_color, clockfont_bold, txt_line[11].size, gfx.h -(soundcheck_y_offset - 18*retina_mod),2)
+  end
+
+  -- end --
 
 
   -- Projecttime and Play/RecState
@@ -500,7 +641,7 @@ function MainLoop()
       gfx.y=zahnradbutton_posy
       gfx.blit(zahnradbutton_clicked, zahnradscale, 0)
 
-    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-40 then -- Linksklick auf Soundcheck-Footer
+    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-(80*retina_mod) then -- Linksklick auf Soundcheck-Footer
       id = reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui")
       reaper.Main_OnCommand(id,0)
     end
