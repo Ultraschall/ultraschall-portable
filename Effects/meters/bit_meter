@@ -1,0 +1,118 @@
+desc:Bit Meter
+//tags: analysis utility
+
+in_pin:left input
+in_pin:right input
+out_pin:none
+
+@init
+
+ext_nodenorm=1;
+
+attackms=50.0;
+decayms=300.0;
+mv=pow(2,63);
+
+bbuf=0;
+tbuf=64;
+
+
+@block
+
+dv=1.0/(sqrt(num_ch)*samplesblock);
+attack=exp(-log(2.0)*samplesblock/(srate*attackms*0.001));
+decay=exp(-log(2.0)*samplesblock/(srate*decayms*0.001));
+
+b=0;
+loop
+(
+  64,
+  bbuf[b] *= decay;
+  v=sqrt(min(tbuf[b],1.0));
+  v > bbuf[b] ?
+  (
+    bbuf[b]=bbuf[b]*attack+v*(1.0-attack);
+  ) : (
+    bbuf[b] < 0.001 ? bbuf[b]=0.0;
+  );
+  tbuf[b]=0.0;
+  b += 1;
+);
+
+
+@sample
+
+c=0;
+loop
+(
+  num_ch,
+  v=abs(spl(c))*mv;
+  b=0;
+  v > 0.0 ? loop
+  (
+    64,
+    nv=floor(v*0.5);
+    nv*2.0 != v ? tbuf[b] += dv;
+    v=nv;
+    b += 1;
+  );
+  c += 1;
+);
+
+
+@gfx 300 150
+
+resetx=gfx_w-gfx_texth*11/2;
+resety=gfx_texth*3/2;
+
+gfx_x=resetx;
+gfx_y=gfx_texth/2;
+gfx_r=gfx_g=gfx_b=1.0;
+gfx_drawstr("reset");
+
+mouse_cap && mouse_x >= resetx && mouse_y < resety ?
+(
+  memset(tbuf, 0, 64);
+  memset(bbuf, 0, 64);
+);
+
+mtstart=gfx_texth*3;
+mtrange=gfx_w-gfx_texth*6;
+mtvalstart=gfx_h-gfx_texth*3;
+mtvalrange=gfx_h-gfx_texth*4;
+
+i=0;
+loop
+(
+  65,
+
+  x=mtstart+mtrange*(i-1)/64;
+  y=mtvalstart;
+  tick=!(i&7);
+
+  tick ?
+  (
+    gfx_x=x-gfx_texth/(i < 10 ? 2 : 1);
+    gfx_y=y+gfx_texth;
+    gfx_r=gfx_g=gfx_b=1.0;
+    gfx_drawnumber(i,0);
+  );
+
+  i > 0 ?
+  (
+    val=bbuf[64-i];
+    val > 0.0 ?
+    (
+      gfx_r=gfx_b=0.25;
+      gfx_g = tick ? 1.0 : 0.625;
+    ) : (
+      gfx_r=gfx_g=gfx_b = tick ? 0.75 : 0.5;
+    );
+    gfx_x=x;
+    gfx_y=y;
+    gfx_lineto(x, y-2-mtvalrange*val);
+  );
+
+  i += 1;
+);
+

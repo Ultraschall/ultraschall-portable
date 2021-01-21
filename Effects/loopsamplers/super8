@@ -174,7 +174,7 @@ function setstate(st) instance(fpos_slope, sk_fpos2, rec) local(dt)
       
       (g_active_mask |= (1<<this.idx)) == (1<<this.idx) ? (
         st == 2 ? ( 
-          cfgp_gate[] > g_infthreshdb ? (
+          cfgp_gate[] > g_infthreshdb && cfgp_sync[] == 0 ? (
             g_recstart_gate = 10^(cfgp_gate[]/20);
             g_prevent_processing |= 1;
           ) : (
