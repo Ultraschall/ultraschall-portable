@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@
 -- checks, whether any track is muted and warns in that case before rendering
 -- user can abort before rendering in that case as well
 
--- 
+--
 
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
@@ -48,9 +48,9 @@ if A == false then
   cmd=reaper.NamedCommandLookup("40521")  -- set playrate to 1
   reaper.Main_OnCommand(cmd,0)
 
-  cmd=reaper.NamedCommandLookup("40296")  -- select all tracks
-  reaper.Main_OnCommand(cmd,0)
-  
+  -- cmd=reaper.NamedCommandLookup("40296")  -- select all tracks
+  -- reaper.Main_OnCommand(cmd,0)
+
   -- change render-preset to mp3 and open render-to-file-dialog
   retval = ultraschall.RunCommand("_Ultraschall_RenderProject_As_MP3")
 end
