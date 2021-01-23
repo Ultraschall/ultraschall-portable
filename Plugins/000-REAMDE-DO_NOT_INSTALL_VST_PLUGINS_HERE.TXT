@@ -3,3 +3,5 @@ DO NOT INSTALL PLUG-INS TO THIS DIRECTORY --- THIS IS AN INTERNAL REAPER PATH.
 Install VST plug-ins to another path and add that path to REAPER's preferences.
 
 Install 3rd party REAPER extensions to your AppData\Roaming\REAPER\UserPlugins\ path.
+
+(note: this file is not mistakenly named... ;)

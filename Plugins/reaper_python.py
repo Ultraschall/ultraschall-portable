@@ -722,6 +722,13 @@ def RPR_DeleteProjectMarkerByIndex(p0,p1):
   r=f(t[0],t[1])
   return r
 
+def RPR_DeleteTakeMarker(p0,p1):
+  a=_ft['DeleteTakeMarker']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1))
+  r=f(t[0],t[1])
+  return r
+
 def RPR_DeleteTakeStretchMarkers(p0,p1,p2):
   a=_ft['DeleteTakeStretchMarkers']
   f=CFUNCTYPE(c_int,c_uint64,c_int,c_void_p)(a)
@@ -1194,6 +1201,13 @@ def RPR_GetFocusedFX(p0,p1,p2):
   r=f(byref(t[0]),byref(t[1]),byref(t[2]))
   return (r,int(t[0].value),int(t[1].value),int(t[2].value))
 
+def RPR_GetFocusedFX2(p0,p1,p2):
+  a=_ft['GetFocusedFX2']
+  f=CFUNCTYPE(c_int,c_void_p,c_void_p,c_void_p)(a)
+  t=(c_int(p0),c_int(p1),c_int(p2))
+  r=f(byref(t[0]),byref(t[1]),byref(t[2]))
+  return (r,int(t[0].value),int(t[1].value),int(t[2].value))
+
 def RPR_GetFreeDiskSpaceForRecordPath(p0,p1):
   a=_ft['GetFreeDiskSpaceForRecordPath']
   f=CFUNCTYPE(c_int,c_uint64,c_int)(a)
@@ -1324,6 +1338,13 @@ def RPR_GetMaxMidiOutputs():
   f=CFUNCTYPE(c_int)(a)
   r=f()
   return r
+
+def RPR_GetMediaFileMetadata(p0,p1,p2,p3):
+  a=_ft['GetMediaFileMetadata']
+  f=CFUNCTYPE(c_int,c_uint64,c_char_p,c_char_p,c_int)(a)
+  t=(rpr_packp('PCM_source*',p0),rpr_packsc(p1),rpr_packs(p2),c_int(p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return (r,p0,p1,rpr_unpacks(t[2]),p3)
 
 def RPR_GetMediaItem(p0,p1):
   a=_ft['GetMediaItem']
@@ -1514,6 +1535,13 @@ def RPR_GetNumMIDIOutputs():
   a=_ft['GetNumMIDIOutputs']
   f=CFUNCTYPE(c_int)(a)
   r=f()
+  return r
+
+def RPR_GetNumTakeMarkers(p0):
+  a=_ft['GetNumTakeMarkers']
+  f=CFUNCTYPE(c_int,c_uint64)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),)
+  r=f(t[0])
   return r
 
 def RPR_GetNumTracks():
@@ -1915,6 +1943,13 @@ def RPR_GetTakeEnvelopeByName(p0,p1):
   r=f(t[0],t[1])
   return rpr_unpackp('TrackEnvelope*',r)
 
+def RPR_GetTakeMarker(p0,p1,p2,p3,p4):
+  a=_ft['GetTakeMarker']
+  f=CFUNCTYPE(c_double,c_uint64,c_int,c_char_p,c_int,c_void_p)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),rpr_packs(p2),c_int(p3),c_int(p4))
+  r=f(t[0],t[1],t[2],t[3],byref(t[4]))
+  return (r,p0,p1,rpr_unpacks(t[2]),p3,int(t[4].value))
+
 def RPR_GetTakeName(p0):
   a=_ft['GetTakeName']
   f=CFUNCTYPE(c_char_p,c_uint64)(a)
@@ -1963,6 +1998,13 @@ def RPR_GetTempoTimeSigMarker(p0,p1,p2,p3,p4,p5,p6,p7,p8):
   t=(rpr_packp('ReaProject*',p0),c_int(p1),c_double(p2),c_int(p3),c_double(p4),c_double(p5),c_int(p6),c_int(p7),c_byte(p8))
   r=f(t[0],t[1],byref(t[2]),byref(t[3]),byref(t[4]),byref(t[5]),byref(t[6]),byref(t[7]),byref(t[8]))
   return (r,p0,p1,float(t[2].value),int(t[3].value),float(t[4].value),float(t[5].value),int(t[6].value),int(t[7].value),int(t[8].value))
+
+def RPR_GetThemeColor(p0,p1):
+  a=_ft['GetThemeColor']
+  f=CFUNCTYPE(c_int,c_char_p,c_int)(a)
+  t=(rpr_packsc(p0),c_int(p1))
+  r=f(t[0],t[1])
+  return r
 
 def RPR_GetToggleCommandState(p0):
   a=_ft['GetToggleCommandState']
@@ -2412,6 +2454,13 @@ def RPR_LICE_ClipLine(p0,p1,p2,p3,p4,p5,p6,p7):
   t=(c_int(p0),c_int(p1),c_int(p2),c_int(p3),c_int(p4),c_int(p5),c_int(p6),c_int(p7))
   r=f(byref(t[0]),byref(t[1]),byref(t[2]),byref(t[3]),t[4],t[5],t[6],t[7])
   return (r,int(t[0].value),int(t[1].value),int(t[2].value),int(t[3].value),p4,p5,p6,p7)
+
+def RPR_LocalizeString(p0,p1,p2):
+  a=_ft['LocalizeString']
+  f=CFUNCTYPE(c_char_p,c_char_p,c_char_p,c_int)(a)
+  t=(rpr_packsc(p0),rpr_packsc(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return str(r.decode())
 
 def RPR_Loop_OnArrow(p0,p1):
   a=_ft['Loop_OnArrow']
@@ -3049,6 +3098,13 @@ def RPR_PreventUIRefresh(p0):
   t=(c_int(p0),)
   f(t[0])
 
+def RPR_PromptForAction(p0,p1,p2):
+  a=_ft['PromptForAction']
+  f=CFUNCTYPE(c_int,c_int,c_int,c_int)(a)
+  t=(c_int(p0),c_int(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
 def RPR_ReaScriptError(p0):
   a=_ft['ReaScriptError']
   f=CFUNCTYPE(None,c_char_p)(a)
@@ -3380,6 +3436,13 @@ def RPR_SetRegionRenderMatrix(p0,p1,p2,p3):
   t=(rpr_packp('ReaProject*',p0),c_int(p1),rpr_packp('MediaTrack*',p2),c_int(p3))
   f(t[0],t[1],t[2],t[3])
 
+def RPR_SetTakeMarker(p0,p1,p2,p3,p4):
+  a=_ft['SetTakeMarker']
+  f=CFUNCTYPE(c_int,c_uint64,c_int,c_char_p,c_void_p,c_void_p)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),rpr_packsc(p2),c_double(p3),c_int(p4))
+  r=f(t[0],t[1],t[2],byref(t[3]),byref(t[4]))
+  return (r,p0,p1,p2,float(t[3].value),int(t[4].value))
+
 def RPR_SetTakeStretchMarker(p0,p1,p2,p3):
   a=_ft['SetTakeStretchMarker']
   f=CFUNCTYPE(c_int,c_uint64,c_int,c_double,c_void_p)(a)
@@ -3399,6 +3462,13 @@ def RPR_SetTempoTimeSigMarker(p0,p1,p2,p3,p4,p5,p6,p7,p8):
   f=CFUNCTYPE(c_byte,c_uint64,c_int,c_double,c_int,c_double,c_double,c_int,c_int,c_byte)(a)
   t=(rpr_packp('ReaProject*',p0),c_int(p1),c_double(p2),c_int(p3),c_double(p4),c_double(p5),c_int(p6),c_int(p7),c_byte(p8))
   r=f(t[0],t[1],t[2],t[3],t[4],t[5],t[6],t[7],t[8])
+  return r
+
+def RPR_SetThemeColor(p0,p1,p2):
+  a=_ft['SetThemeColor']
+  f=CFUNCTYPE(c_int,c_char_p,c_int,c_int)(a)
+  t=(rpr_packsc(p0),c_int(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
   return r
 
 def RPR_SetToggleCommandState(p0,p1,p2):
