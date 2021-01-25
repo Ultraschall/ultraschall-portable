@@ -208,8 +208,11 @@ function Init()
   txt_line[5]={y=0.79, size=0.16}  -- markernames
   txt_line[6]={y=0.86, size=0.25}   -- marker positions
 
-  txt_line[11]={y=0.99, size=21 * retina_mod}   -- Soundcheck
-
+  if reaper.GetOS()=="Win64" or reaper.GetOS()=="Win32" then
+    txt_line[11]={y=0.99, size=22 * retina_mod}   -- Soundcheck
+  else
+    txt_line[11]={y=0.99, size=21 * retina_mod}   -- Soundcheck
+  end
 
   txt_line_preset={} for i=1,7 do txt_line_preset[i]=copy(txt_line) end --copy STD Setting to all presets
 
@@ -238,7 +241,7 @@ function Init()
   operationSystem = reaper.GetOS()
 
   if string.match(operationSystem, "OS") then -- es ist ein Mac System
-    clockfont="Helvetica" clockfont_bold="Helvetica Bold"
+    clockfont="Helvetica" clockfont_bold="Helvetica"
     font_divisor=3.2 --window height / font_divisor = fontsize
   elseif reaper.GetOS()=="Win64" or reaper.GetOS()=="Win32" then
     clockfont="Arial" clockfont_bold="Arial"
@@ -339,7 +342,7 @@ function WriteAlignedText(text, color, font, size, y, offset, fixed) -- if y<0 t
   gfx.r=(color & 0xff0000) / 0xffffff
   gfx.g=(color & 0x00ff00) / 0xffff
   gfx.b=(color & 0x0000ff) / 0xff
-  gfx.setfont(1, font, size)
+  gfx.setfont(1, font, size, 98) -- it's all bold, anyway
   local w, h=gfx.measurestr(text)
   if y<0 then y=(gfx.h-h)/2 end -- center if y<0
   if offset==nil or offset==0 then gfx.x=(gfx.w-w)/2+offset
