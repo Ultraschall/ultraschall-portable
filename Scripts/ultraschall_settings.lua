@@ -309,6 +309,7 @@ function remove_device(device_name)
     ultraschall.SetUSExternalState("ultraschall_devices", device_name, "2", "ultraschall-settings.ini")
   end
   show_devices()
+  SettingsPageDevices()
 
 end
 
