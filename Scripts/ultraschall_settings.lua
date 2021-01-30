@@ -407,7 +407,7 @@ header_path = script_path.."/Ultraschall_Gfx/Headers/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall 5 - Settings"
-GUI.w, GUI.h = 820, 607   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 820, 627   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -517,7 +517,7 @@ function SettingsPageSettings()
 
   x_offset = 55
 
-  block = GUI.Area:new(45, header_height + 92,730, 430,5,1,1,"section_bg")
+  block = GUI.Area:new(45, header_height + 92,730, 450,5,1,1,"section_bg")
     table.insert(GUI.elms, block)
 
 

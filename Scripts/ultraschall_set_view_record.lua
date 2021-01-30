@@ -56,7 +56,15 @@ reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_Set_View_Story", 0)
 -- reaper.RefreshToolbar2(sec, ID_2)
 -- reaper.RefreshToolbar2(sec, ID_3)
 -- reaper.RefreshToolbar2(sec, ID_4)
-reaper.Main_OnCommand(40455,0)      --(re)load Screenset)
+
+large_marker_manager = ultraschall.GetUSExternalState("ultraschall_settings_Ultraschall_GUI_largemarkermanager","value", "ultraschall-settings.ini")
+
+if large_marker_manager == "1" then
+	reaper.Main_OnCommand(40459,0)      --(re)load Windows Set 6
+else
+	reaper.Main_OnCommand(40455,0)      --(re)load Windows Set 2
+end
+
 runcommand("_Ultraschall_Clock")
 runcommand("_Ultraschall_Clock")
 
