@@ -80,9 +80,9 @@ function main()
 
   state, txt = check_items()
   if state == true then
-    commandid = reaper.NamedCommandLookup("_RSe090cf929492e7a90876c960566a6e94d97ca52d")
+    commandid = reaper.NamedCommandLookup("_X-Raym_align")
     reaper.Main_OnCommand(commandid,0)         
-    -- print ("Erfolg")
+    result = reaper.ShowMessageBox( count.." items were alligned.", "SUCCESS", 0 )
   else
     abort(txt)
   end
