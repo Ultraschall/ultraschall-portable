@@ -104,9 +104,32 @@ reaper.RefreshToolbar2(sec, on_air_button_id)
 -----------------------------
 
 mastertrack = reaper.GetMasterTrack(0)
-fx_slot = reaper.TrackFX_AddByName(mastertrack, "MGA_JSLimiter", false, 1) -- muss bei JS-Effekten der Filename sein O__o
-reaper.TrackFX_SetEnabled(mastertrack, fx_slot, false)
 
+dynamics_count = 0
+limiter_count = 0
+
+-- Gibt es irgendwo schon Dynamics und/oder Limiter-Effekte auf dem Master?
+
+for i = 0, reaper.TrackFX_GetCount(mastertrack) do
+	retval, fxName = reaper.TrackFX_GetFXName(mastertrack, 1, "")
+	if string.find(fxName, "Dynamics") then
+		dynamics_count = dynamics_count +1
+	elseif string.find(fxName, "Limiter") then
+		limiter_count = limiter_count +1
+	end
+end
+
+if dynamics_count == 0 then -- wenn schon was da ist: Finger weg
+	fx_slot = reaper.TrackFX_AddByName(mastertrack, "Ultraschall_Dynamics", false, 1) -- muss bei JS-Effekten der Filename sein O__o
+	reaper.TrackFX_SetEnabled(mastertrack, fx_slot, false)
+	reaper.TrackFX_SetPreset(mastertrack, fx_slot, "Master Just Limiter")
+end
+
+if limiter_count == 0 then -- wenn schon was da ist: Finger weg
+	fx_slot = reaper.TrackFX_AddByName(mastertrack, "MGA_JSLimiter", false, 1) 
+	reaper.TrackFX_SetEnabled(mastertrack, fx_slot, false)
+	reaper.TrackFX_SetPreset(mastertrack, fx_slot, "Master -16 LUFS")
+end
 
 -----------------------------
 -- Enable all sends to master for rendering
