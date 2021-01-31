@@ -111,8 +111,8 @@ limiter_count = 0
 -- Gibt es irgendwo schon Dynamics und/oder Limiter-Effekte auf dem Master?
 
 for i = 0, reaper.TrackFX_GetCount(mastertrack) do
-	retval, fxName = reaper.TrackFX_GetFXName(mastertrack, 1, "")
-	if string.find(fxName, "Dynamics") then
+	retval, fxName = reaper.TrackFX_GetFXName(mastertrack, i, "")
+	if string.find(fxName, "Dynamic") then
 		dynamics_count = dynamics_count +1
 	elseif string.find(fxName, "Limiter") then
 		limiter_count = limiter_count +1
