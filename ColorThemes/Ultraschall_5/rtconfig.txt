@@ -293,7 +293,7 @@ Layout "Ultraschall 2" ""
 	set mcp_bottom_anchor h<med{x} [7 273] [7 43]
 
 ;basic settings
-	set master.mcp.extmixer.mode h<1500 [1] [0] ;! Master Track in MCP as extended mixer when higher than 500px
+	set master.mcp.extmixer.mode h<2500 [1] [0] ;! Master Track in MCP as extended mixer when higher than 500px
 	set master.mcp.size [72 319] ;!size of the Master Track in MCP
 
 ;Track Labels settings
@@ -352,7 +352,7 @@ set scale 2
 	set mcp_bottom_anchor h<med{x} [7 273] [7 43]
 
 ;basic settings
-	set master.mcp.extmixer.mode h<1500 [1] [0] ;! Master Track in MCP as extended mixer when higher than 500px
+	set master.mcp.extmixer.mode h<2500 [1] [0] ;! Master Track in MCP as extended mixer when higher than 500px
 	set master.mcp.size [144 319] ;!size of the Master Track in MCP
   ; set master.mcp.size [72 319] ;!size of the Master Track in MCP
 
