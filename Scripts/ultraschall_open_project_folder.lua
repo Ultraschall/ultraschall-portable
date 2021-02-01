@@ -40,7 +40,8 @@ function OpenURL(url)
 	local operationSystem = reaper.GetOS()
 	if string.match(operationSystem, "OS") then
 
-    os.execute('open "" "' .. url .. '"')
+    --os.execute('open "" "' .. url .. '"')
+		reaper.CF_ShellExecute(url)
   else
     reaper.CF_ShellExecute(url)
   end
