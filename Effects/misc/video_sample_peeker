@@ -11,7 +11,7 @@ out_pin:none
 @init
 send_nch=2;
 pos=bufstart=16;
-bufend=bufstart+((2.0 /*seconds*/ *srate*send_nch)|0);
+bufend=bufstart+((2.0 /*seconds*/ *srate)|0)*send_nch;
 
 @slider
 pdc_delay=(lookahead_seconds*srate)|0;
@@ -22,7 +22,7 @@ gmem[1]=pos;
 gmem[2]=srate;
 gmem[3]=bufstart;
 gmem[4]=bufend;
-gmem[5]=send_nch; // stereo
+gmem[5]=send_nch;
   
 @sample
 gmem[pos]  =spl0;

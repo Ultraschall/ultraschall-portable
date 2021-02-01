@@ -6,7 +6,7 @@ Copyright (C) 2007 Cockos Incorporated
 License: LGPL - http://www.gnu.org/licenses/lgpl.html
 */
 
-slider1:6<0,9,1{16,32,64,128,256,512,1024,2048,4096,8192,16384,32768}>-FFT size
+slider1:6<0,11,1{16,32,64,128,256,512,1024,2048,4096,8192,16384,32768}>-FFT size
 slider2:-120<-450,-12,6>-floor
 slider3:0<0,1,1{disabled,enabled}>-show phase
 slider4:2<0,3,1{rectangular,hamming,blackman-harris,blackman}>-window
