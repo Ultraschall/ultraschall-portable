@@ -54,6 +54,7 @@ if A == false then
   RenderTable = ultraschall.GetRenderPreset_RenderTable("MP3", "MP3")
   retval, RenderTable["RenderPattern"] = reaper.GetSetProjectInfo_String(0, "RENDER_PATTERN", "", false)
   retval, RenderTable["RenderFile"] = reaper.GetSetProjectInfo_String(0, "RENDER_FILE", "", false)
+  retval, RenderTable["SilentlyIncrementFilename"] = false
 
   retval = ultraschall.ApplyRenderTable_Project(RenderTable, true)
 
