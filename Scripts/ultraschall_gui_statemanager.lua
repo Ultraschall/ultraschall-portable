@@ -33,6 +33,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -----------------------------
 
 
+
 function getAllTracksHeight ()
 
   local height = 0
@@ -100,6 +101,7 @@ end
 function _Ultraschall_GUI_setmagictrackheight()
 
   local numberOfTracks = reaper.CountTracks(0)
+  local numberOfEnvelopes = countAllEnvelopes()
 
 
   if numberOfTracks > 0 and (lastNumberOfEnvelopes ~= tostring(numberOfEnvelopes) or lastNumberOfTracks ~= tostring(numberOfTracks)) then
