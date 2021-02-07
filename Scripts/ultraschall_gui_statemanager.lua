@@ -37,6 +37,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 function getAllTracksHeight ()
 
   local height = 0
+  local singleheight = 0
   local numberOfTracks = reaper.CountTracks(0)
 
   for i=0, numberOfTracks-1 do
@@ -44,14 +45,23 @@ function getAllTracksHeight ()
     local retval = reaper.GetMediaTrackInfo_Value(MediaTrack, "I_WNDH")
     -- print ("Höhe: "..retval)
     height = height + retval
+    singleheight = retval
+    -- print (retval)
   end
-  return height
+  return height, singleheight
 end
 
 function verticalZoom (maxheight)
 
+
+  
+  
+
   local numberOfTracks = reaper.CountTracks(0)
-  local allTracksHeight = getAllTracksHeight()
+  local allTracksHeight, singleheight = getAllTracksHeight()
+  
+  -- print (singleheight)
+  
   local offset = 35
   if numberOfTracks == 1 then offset = maxheight * 0.6 end
   if numberOfTracks == 2 then offset = maxheight * 0.4 end
@@ -63,11 +73,13 @@ function verticalZoom (maxheight)
       allTracksHeight = getAllTracksHeight()
     end
   elseif allTracksHeight > maxheight - offset then -- muss Verkleinert werden
-    while allTracksHeight > maxheight - offset do
+    while allTracksHeight > maxheight - offset and singleheight > 24 do -- kleiner als 24 können Tracks nicht werden
       reaper.CSurf_OnZoom(0, -1)
-      allTracksHeight = getAllTracksHeight()
+      allTracksHeight, singleheight = getAllTracksHeight()
+      -- print (singleheight)
     end
   end
+
 end
 
 function countAllEnvelopes ()
@@ -100,30 +112,40 @@ end
 
 function _Ultraschall_GUI_setmagictrackheight()
 
-  local numberOfTracks = reaper.CountTracks(0)
-  local numberOfEnvelopes = countAllEnvelopes()
+  
 
-
+  numberOfTracks = reaper.CountTracks(0)
+  numberOfEnvelopes = countAllEnvelopes()
+  -- print ("tracks: "..numberOfTracks)
+  -- print ("lasttracks: "..lastNumberOfTracks)
+  -- print ("envelopes: "..numberOfEnvelopes)
+  -- print ("lastNumberOfEnvelopes: "..lastNumberOfEnvelopes)
+  
   if numberOfTracks > 0 and (lastNumberOfEnvelopes ~= tostring(numberOfEnvelopes) or lastNumberOfTracks ~= tostring(numberOfTracks)) then
-
+    
+    
+  
+  
     -- print ("last number envelopes:"..lastNumberOfEnvelopes.."-"..tostring(numberOfEnvelopes))
     -- print ("last number tracks:"..lastNumberOfTracks.."-"..tostring(numberOfTracks))
 
     local _, left, top, right, bottom = reaper.JS_Window_GetClientRect( reaper.JS_Window_FindChildByID( reaper.GetMainHwnd(), 1000) )
     ArrangeViewHeight = math.abs(bottom - top)
 
-    -------------------
-    -- Main
-    -------------------
-
     verticalZoom (ArrangeViewHeight)
+
+  
+
     retval = ultraschall.ApplyActionToTrack("1,0", 40913) -- verschiebe den Arrangeview hoch zum ersten Track
     reaper.SetExtState("ultraschall_gui", "numbertracks", numberOfTracks, false)
     reaper.SetExtState("ultraschall_gui", "numberenvelopes", numberOfEnvelopes, false)
     lastNumberOfTracks = tostring(numberOfTracks)
     lastNumberOfEnvelopes = tostring(numberOfEnvelopes)
 
+  
+
   end
+  
 end
 
 -------------------------------
@@ -290,8 +312,9 @@ end
 -- defer Loop:
 
 function checkGuiStates()
-
+  
   A = IsAnyMuteOrVolumePreFXEnvelopeVisible(true)
+
 
   for i = 1, #GUIServices do
 
@@ -326,7 +349,6 @@ function checkGuiStates()
     -- print (helperActive)
 
     if helperActive == 1 then
-      -- print "huhu"
 
       _G[GUIHelpers[i]]() -- rufe die jeweilige Funktion auf
 
