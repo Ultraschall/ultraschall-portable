@@ -1,0 +1,246 @@
+// MGA JS Limiter: Limits the maximum output volume of a audio signal
+// Copyright (C) 2008  Michael Gruhn
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+desc:Ultraschall Limiter
+options: gmem=limit
+import memorymanager.jsfx-inc
+import ebur128.jsfx-inc
+//tags: dynamics limiter
+//author: LOSER
+
+slider1:0<-15,0,0.1>Threshold (dB)
+slider2:200<0,500,1>Release (ms)
+slider3:-1<-6,0,0.1>Ceiling
+
+slider9:0<0,3,{2.0 Stereo,4.0 Surround,4.1 Surround,5.1 Surround}>-Channel Config
+slider10:2<0,4,{ML,SL,IL,RLA,TP Max}>-Mode
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+HOLDTIME = srate/128;
+gfx_ext_retina = 1;
+
+r1Timer = 0;
+r2Timer = HOLDTIME/2;
+
+gr_meter=1;
+gr_meter_decay = exp(1/(1*srate));
+
+// LUFS
+MM.MemMgr_Init(0);
+
+// EO@function
+
+EBUR128LM.LM_EBUR128_Init_MultiCh(srate);
+timer.EBU_Time_Init_Ms(100, srate);
+
+ext_noinit = 1;
+last_play_state = play_state;
+
+no_meters = 0;
+
+gmem[1] = -16;
+gmem[2] = -3;
+
+lufs_store = 100;
+loopcount = 1;
+position = 100;
+
+@slider
+
+thresh = 10^(slider1/20);
+ceiling = 10^(slider3/20);
+volume = ceiling/thresh;
+
+release = slider2/1000;
+r = exp(-3/(srate*max(release,0.05)));
+
+// LUFS
+
+channelconfig = slider9;
+metermode = slider10;
+
+@sample
+maxSpls=max(abs(spl0),abs(spl1));
+
+(r1Timer+=1) > HOLDTIME ? (r1Timer = 0; max1Block = 0; );
+max1Block = max(max1Block,maxSpls);
+(r2Timer+=1) > HOLDTIME ? (r2Timer = 0; max2Block = 0; );
+max2Block = max(max2Block,maxSpls);
+
+envT = max(max1Block,max2Block);
+
+env = env < envT ? envT : envT + r*(env-envT);
+
+(env > thresh) ? gain = (g_meter=(thresh / env))*volume : (g_meter=1; gain=volume;);
+
+spl0*=gain;
+spl1*=gain;
+
+// slider1 = gmem[2];
+
+g_meter < gr_meter ? gr_meter=g_meter : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+
+// LUFS
+
+  (play_state) ?
+  (
+    (last_play_state != play_state) ?
+      EBUR128LM.LM_EBUR128_Reset_MultiCh();
+  );
+  last_play_state = play_state;
+
+  play_state_tmp = (play_state == 1) || (play_state == 5);
+  EBUR128LM.LM_EBUR128_Process_MultiCh(spl0, spl1, spl2, spl3, spl4, spl5, channelconfig, (metermode == 4),(metermode == 3) && (play_state_tmp == 1));
+
+   gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
+
+@gfx 0 32 // request horizontal/vertical heights (0 means dont care)
+gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
+
+  gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
+  gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
+  
+  meter_bot=20;
+  meter_h=min(gfx_h,32);
+  xscale=gfx_w*20/meter_bot;
+
+  gfx_y=0;
+  gfx_x=gfx_w + log10(gr_meter)*xscale;
+  gfx_rectto(gfx_w,meter_h);
+
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+
+  s2=sqrt(2)/2;
+  g = s2;
+  while(
+    gfx_x=gfx_w + log10(g)*xscale;
+    gfx_x >= 0 ? 
+    (
+      gfx_y=0;
+      gfx_lineto(gfx_x,meter_h,0);
+      gfx_y=meter_h-gfx_texth;
+      gfx_x+=2;
+      gfx_drawnumber(log10(g)*20,0);
+      gfx_drawchar($'d');
+      gfx_drawchar($'B');
+    );
+    g*=s2;
+    gfx_x >=0;
+  );
+  gfx_a=1;
+
+  gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
+  gfx_drawnumber(log10(gr_meter)*20,1);
+  gfx_drawchar($'d');
+  gfx_drawchar($'B');
+
+  gfx_x=10; gfx_y=meter_h+420;
+  gfx_drawnumber(gmem[1],1);
+  gfx_drawchar($' ');
+  gfx_drawchar($'L');
+  gfx_drawchar($'U');
+  gfx_drawchar($'F');
+  gfx_drawchar($'S');
+
+
+
+lufs_store[position] = gmem[1];
+gfx_x = 10 + position; 
+gfx_y = meter_h-400;
+
+gfx_r = 0.7;
+gfx_g = 0.7;
+gfx_b = 0.7;
+gfx_a = 1;
+
+gfx_lineto(gfx_x,meter_h-610-50*gmem[1],0);
+
+ii = 100;
+loop(500, 
+         
+gfx_r = 0.4;
+gfx_g = 0.7;
+gfx_b = 1;
+gfx_a = 0.3;
+
+
+(lufs_store[ii] > -17) && (lufs_store[ii] <= -15.5) ? (
+  gfx_g = 1;
+  gfx_b = 0.7;
+);
+
+(lufs_store[ii] > -14.5) ? (
+  gfx_r = 1;
+  gfx_g = 0.4;
+  gfx_b = 0.7;
+);
+
+(lufs_store[ii] > -15.5) && (lufs_store[ii] <= -14.5) ? (
+  gfx_r = 1;
+  gfx_g = 1;
+  gfx_b = 0.4;
+);
+
+
+gfx_x = 10 + ii; 
+gfx_y = meter_h-400;
+
+gfx_lineto(gfx_x,meter_h-610-50*lufs_store[ii],0);
+
+gfx_a = 1;
+
+gfx_y = meter_h-610-50*lufs_store[ii-1];
+gfx_lineto(gfx_x-1,meter_h-610-50*lufs_store[ii],0);
+gfx_y = meter_h-400;
+gfx_circle(gfx_x,meter_h-610-50*lufs_store[ii],2,1,1) ;
+
+// gfx_rect(gfx_x,meter_h-610-50*lufs_store[ii],3,3) ;
+
+ii += 1;
+
+      );
+
+position += 1;
+position > 600? (
+  position = 100;
+);
+
+gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+
+
+resetx= gfx_w - gfx_texth * 11/2;
+resety=450;
+
+gfx_x=resetx;
+gfx_y=gfx_texth/2+400;
+gfx_r=gfx_g=gfx_b=1.0;
+gfx_drawstr("reset");
+
+doreset = 0;
+mouse_cap && mouse_x >= resetx && mouse_y < resety ?
+  (
+    doreset = 1; 
+  );
+  doreset ?
+  (
+      EBUR128LM.LM_EBUR128_Reset_MultiCh();
+  );
+

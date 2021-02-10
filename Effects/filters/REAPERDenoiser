@@ -1,0 +1,218 @@
+desc:Ratio Denoiser (github.com/nbickford/REAPERDenoiser)
+// That's the description of the plugin. This is how it'll show up in the effect
+// search dialog, as well as the text at the start of its user interface. We use
+// it as the first line of the script per the JSFX documentation's
+// recommendation (https://www.reaper.fm/sdk/js/js.php#js_file)
+
+// Define our user interface.
+// Our FFT size will always be the same, so we only need controls for
+// the noise collection mode and the noise scale (k).
+
+// This defines a combo box that allows the user to select "Denoise Input" or
+// "Record Noise Sample". The default value is 0 (Denoise Input). The maximum
+// value is 1 (Record Noise Sample), and it increases in steps of 1.
+slider1:0<0,1,1{Denoise Input, Record Noise Sample}>Noise Collection Mode
+
+// This defines a slider that can be varied between 0.0 and 10.0 in steps of
+// 0.001, with default value 1.0. (If slider2 is equal to 0.0, this plugin
+// shouldn't really do anything to the input audio.)
+slider2:1<0.0,10.0,0.001>Noise Scale
+
+// Here we can label our input and output pins. This also tells REAPER how many
+// channels we can handle. In this case, the plugin is stereo (a monophonic
+// plugin would be simpler, but I almost always use this to denoise stereo
+// audio), so we define two input and output pins.
+in_pin:Noisy Audio 1
+in_pin:Noisy Audio 2
+out_pin:Denoised Audio 1
+out_pin:Denoised Audio 2
+
+@init
+// On initialization, initialize all of our variables.
+
+// The FFT size will always be constant.
+SIZE = 16384;
+
+// We don't do any allocation in this plugin, since we know we start out with 8M
+// words of memory. So all we need to do is construct some pointers to memory,
+// where we'll store our data.
+// Since we have two channels, we'll have 10 buffers of length SIZE.
+bufferI1L = 0; // The left input tile 1 buffer starts at memory address 0.
+bufferI2L = SIZE; // The left input tile 2 buffer starts at memory address SIZE.
+bufferO1L = 2*SIZE; // The left output tile 1 buffer starts at address 2*SIZE.
+bufferO2L = 3*SIZE; // And so on
+noiseBufferL = 4*SIZE; // The noise buffer starts at memory address 4*SIZE
+bufferI1R = 5*SIZE; // Right channels
+bufferI2R = 6*SIZE;
+bufferO1R = 7*SIZE;
+bufferO2R = 8*SIZE;
+noiseBufferR = 9*SIZE;
+freembuf(10*SIZE + 1);
+
+// samplesCollected will be our position in the last of the two tiles.
+// As such, it'll range from 0 to (SIZE/2) - 1.
+// (In other words, our position in the first tile will be
+// samplesCollected + SIZE/2, and our position in the second tile will be
+// samplesCollected) 
+samplesCollected = 0;
+
+// Finally, the algorithm we use outputs modified audio SIZE samples after we
+// input it. If we tell REAPER that the plugin has a delay of SIZE samples,
+// REAPER can automatically compensate for this and make it appear as if there's
+// no delay at all.
+pdc_delay = SIZE; 
+pdc_bot_ch=0;
+pdc_top_ch=2;
+
+@sample
+// We'll use this function to compute the attenuation factor used in Norbert
+// Weiner's denoising algorithm,
+//   }Y(f)|^2/(|Y(f)|^2 + k^2 |N(f)|^2),
+// given the real and imaginary parts of Y(f), the real and imaginary parts of
+// N(f), and k^2. This also tells the JSFX compiler that we'll use two local
+// variables, yNorm and nNorm. This function also includes a factor of
+// 1/(2*SIZE) that we appear to need to normalize the FFT.
+function computeAttenuation(yReal yImag nReal nImag kSquared) local(yNorm nNorm)
+(
+  // Compute |Y(f)|^2 = real(Y(f))^2 + imaginary(Y(f))^2
+  yNorm = sqr(yReal) + sqr(yImag);
+  // The same for the noise component:
+  nNorm = sqr(nReal) + sqr(nImag);
+  // The function returns the last thing computed in it:
+  yNorm / (2.0 * SIZE * (yNorm + kSquared * nNorm));
+);
+
+// Read our input audio and write it into the input buffers.
+// Channels are zero-indexed.
+sampleLeft = spl0; // This might look like "sample 10", but it's "SamPLe 0",
+// i.e. the first (left) channel.
+sampleRight = spl1; // Similarly, this is sample 1, the second (right) channel.
+
+// Compute our positions in tile 1 and tile 2 for conciseness
+tilePos1 = samplesCollected + SIZE/2;
+tilePos2 = samplesCollected;
+
+// We'll apply each tile's envelope as we write the sample into
+// the tile's buffer.
+// See https://en.wikipedia.org/wiki/Window_function#Hann_and_Hamming_windows
+hannWindowTile1 = 0.5 - 0.5 * cos(2*$pi*tilePos1/SIZE);
+hannWindowTile2 = 0.5 - 0.5 * cos(2*$pi*tilePos2/SIZE);
+
+// Write into the input buffers:
+bufferI1L[tilePos1] = sampleLeft * hannWindowTile1;
+bufferI2L[tilePos2] = sampleLeft * hannWindowTile2;
+bufferI1R[tilePos1] = sampleRight * hannWindowTile1;
+bufferI2R[tilePos2] = sampleRight * hannWindowTile2;
+
+// For the output audio, read from the two tiles and sum their results.
+spl0 = bufferO1L[tilePos1] + bufferO2L[tilePos2];
+spl1 = bufferO1R[tilePos1] + bufferO2R[tilePos2];
+
+samplesCollected += 1;
+
+// When we finish a tile, samplesCollected is equal to SIZE/2.
+// When that happens, we transform the contents of tile 1 and write them to
+// output tile 1. Then we swap tiles 1 and 2 for both the input and output tiles
+// and set samplesCollected to 0, so that we're back to where we started.
+
+samplesCollected == SIZE/2 ? (
+  samplesCollected = 0;
+  // This computes the real FFT of each buffer in-place:
+  fft_real(bufferI1L, SIZE);
+  fft_real(bufferI1R, SIZE);
+  // The different frequency bins are now stored in permuted order. We need to
+  // call fft_permute to get them in order of their frequencies.
+  // See https://www.reaper.fm/sdk/js/advfunc.php#js_advanced for more info.
+  fft_permute(bufferI1L, SIZE/2);
+  fft_permute(bufferI1R, SIZE/2);
+  
+  // Our buffers now look like
+  // [band 0 amplitude, band SIZE/2 amplitude,
+  //    real part of band 1, imaginary part of band 1,
+  //    real part of band 2, imaginary part of band 2,
+  //    ...
+  //    real part of band SIZE/2-1, imaginary part of band SIZE/2-1]
+  
+  // If slider1 is greater than 0.5 (i.e. the user selected "Record Noise
+  // Sample", we store the FFTs of each of these buffers.
+  slider1 > 0.5? (
+  // memcpy(A, B, C) copies C words from the memory starting at B into the
+  // memory starting at A.
+    memcpy(noiseBufferL, bufferI1L, SIZE);
+    memcpy(noiseBufferR, bufferI1R, SIZE);
+  );
+
+  // Apply Norbert Weiner's filtering algorithm,
+  //   X(f) = Y(f) * (|Y(f)|^2)/(|Y(f)|^2 + k^2 |N(f)|^2)
+  // sqr() computes the square of a number, and abs() computes the absolute
+  // value of a number.
+  kSquared = sqr(slider2); // slider2 is the Noise Scale from above.
+  
+  // First, handle band 0 and band SIZE/2 separately, since as we've seen,
+  // they're laid out in memory differently than the rest of the bands.
+  // They also have zero imaginary part.
+  bufferO1L[0] = bufferI1L[0] * computeAttenuation(bufferI1L[0], 0, noiseBufferL[0], 0, kSquared);
+  bufferO1R[0] = bufferI1R[0] * computeAttenuation(bufferI1R[0], 0, noiseBufferR[0], 0, kSquared);
+  bufferO1L[1] = bufferI1L[1] * computeAttenuation(bufferI1L[1], 0, noiseBufferL[1], 0, kSquared);
+  bufferO1R[1] = bufferI1R[1] * computeAttenuation(bufferI1R[1], 0, noiseBufferR[1], 0, kSquared);
+  
+  // Now, loop over bands 1 to SIZE/2-1.
+  bandIndex = 1;
+  loop(SIZE/2-1,
+    // Compute output index
+    outIndex = bandIndex * 2;
+    
+    // Compute attenuation factor and apply it to the output:
+    attenuationFactor = computeAttenuation(
+      bufferI1L[outIndex], bufferI1L[outIndex+1],
+      noiseBufferL[outIndex], noiseBufferL[outIndex+1],
+      kSquared
+    );
+    bufferO1L[outIndex] = bufferI1L[outIndex] * attenuationFactor;
+    bufferO1L[outIndex+1] = bufferI1L[outIndex+1] * attenuationFactor;
+    
+    // Do the same thing again, but for the right channel:
+    attenuationFactor = computeAttenuation(
+      bufferI1R[outIndex], bufferI1R[outIndex+1],
+      noiseBufferR[outIndex], noiseBufferR[outIndex+1],
+      kSquared
+    );
+    bufferO1R[outIndex] = bufferI1R[outIndex] * attenuationFactor;
+    bufferO1R[outIndex+1] = bufferI1R[outIndex+1] * attenuationFactor;
+    
+    // Next band
+    bandIndex += 1;
+  );
+  
+  // Convert back from the frequency domain to the time domain:
+  fft_ipermute(bufferO1L, SIZE/2);
+  fft_ipermute(bufferO1R, SIZE/2);
+  ifft_real(bufferO1L, SIZE);
+  ifft_real(bufferO1R, SIZE);
+  
+  // Finally, swap our tiles:
+  temp = bufferI1L;
+  bufferI1L = bufferI2L;
+  bufferI2L = temp;
+  
+  temp = bufferI1R;
+  bufferI1R = bufferI2R;
+  bufferI2R = temp;
+  
+  temp = bufferO1L;
+  bufferO1L = bufferO2L;
+  bufferO2L = temp;
+  
+  temp = bufferO1R;
+  bufferO1R = bufferO2R;
+  bufferO2R = temp;
+)
+
+@serialize
+// Sliders are serialized automatically, so all we have to serialize is the two
+// noise buffers. JSFX's serialization works in a clever way: when reading the
+// state of the plugin from a serialized version, these functions copy data into
+// noiseBufferL and noiseBufferR. But when writing out the state of the plugin,
+// they work the other way, copying data out of noiseBufferL and noiseBufferR.
+file_mem(0, noiseBufferL, SIZE);
+file_mem(0, noiseBufferR, SIZE);
