@@ -113,7 +113,7 @@ g_meter < gr_meter ? gr_meter=g_meter : ( gr_meter*=gr_meter_decay; gr_meter>1?g
    gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
 
 @gfx 0 32 // request horizontal/vertical heights (0 means dont care)
-gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
+gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0);
 
   gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
   gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
@@ -152,18 +152,32 @@ gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0)
   gfx_drawchar($'d');
   gfx_drawchar($'B');
 
-  gfx_x=10; gfx_y=meter_h+420;
-  gfx_drawnumber(gmem[1],1);
-  gfx_drawchar($' ');
-  gfx_drawchar($'L');
-  gfx_drawchar($'U');
-  gfx_drawchar($'F');
-  gfx_drawchar($'S');
 
 
+gfx_a = 0.3;
+lufs_nr = -12;
+loop (12,
+  gfx_y = meter_h-625-(50*lufs_nr);
+  gfx_x = 10;
+  gfx_drawnumber(lufs_nr,1);
+  gfx_y = meter_h-610-(50*lufs_nr);
+  gfx_x = 100;
+  gfx_lineto(gfx_x+800,gfx_y,0);
+  lufs_nr -= 1;
+);
+
+gfx_x = 10;
+gfx_y = meter_h-630-(50*lufs_nr);
+gfx_drawstr(" LUFS");
+
+gfx_a = 1;
+gfx_x=10; 
+gfx_y=meter_h-625-(50*gmem[1]);
+gfx_drawnumber(gmem[1],1);
+  
 
 lufs_store[position] = gmem[1];
-gfx_x = 10 + position; 
+gfx_x = 5 + position; 
 gfx_y = meter_h-400;
 
 gfx_r = 0.7;
@@ -199,8 +213,7 @@ gfx_a = 0.3;
   gfx_b = 0.4;
 );
 
-
-gfx_x = 10 + ii; 
+gfx_x = 5+ii; 
 gfx_y = meter_h-400;
 
 gfx_lineto(gfx_x,meter_h-610-50*lufs_store[ii],0);
