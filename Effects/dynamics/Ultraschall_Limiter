@@ -61,12 +61,16 @@ no_meters = 0;
 
 gmem[1] = -16;
 gmem[2] = -3;
+gmem[3] = 0;
 
 lufs_store = 100;
 loopcount = 1;
 position = 100;
 
+////////////////////////////////////////////////
 @slider
+////////////////////////////////////////////////
+
 
 slider1 = 0 - slider5;
 thresh = 10^(slider1/20);
@@ -87,7 +91,11 @@ r = exp(-3/(srate*max(release,0.05)));
 channelconfig = slider9;
 metermode = slider10;
 
+///////////////////////////////////////////////////////////////////
 @sample
+///////////////////////////////////////////////////////////////////
+
+
 maxSpls=max(abs(spl0),abs(spl1));
 
 (r1Timer+=1) > HOLDTIME ? (r1Timer = 0; max1Block = 0; );
@@ -111,22 +119,25 @@ g_meter < gr_meter ? gr_meter=g_meter : ( gr_meter*=gr_meter_decay; gr_meter>1?g
 // LUFS
 
 
-  play_state == 1 ? (
+play_state == 1 ? (
 
-  (play_state) ?
-  (
-    (last_play_state != play_state) ?
-      EBUR128LM.LM_EBUR128_Reset_MultiCh();
-  );
-  last_play_state = play_state;
+(play_state) ?
+(
+  (last_play_state != play_state) ?
+    EBUR128LM.LM_EBUR128_Reset_MultiCh();
+);
+last_play_state = play_state;
 
-  play_state_tmp = (play_state == 1) || (play_state == 5);
-  EBUR128LM.LM_EBUR128_Process_MultiCh(spl0, spl1, spl2, spl3, spl4, spl5, channelconfig, (metermode == 4),(metermode == 3) && (play_state_tmp == 1));
+play_state_tmp = (play_state == 1) || (play_state == 5);
+EBUR128LM.LM_EBUR128_Process_MultiCh(spl0, spl1, spl2, spl3, spl4, spl5, channelconfig, (metermode == 4),(metermode == 3) && (play_state_tmp == 1));
 
-  gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
-  );
+gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
+);
 
+/////////////////////////////////////////////////////////////////////////////////
 @gfx 0 32 // request horizontal/vertical heights (0 means dont care)
+//////////////////////////////////////////////////////////////////////////////////
+
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0);
 
   gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
@@ -293,7 +304,21 @@ resety=450;
 gfx_x=resetx;
 gfx_y=gfx_texth/2+400;
 gfx_r=gfx_g=gfx_b=1.0;
-gfx_drawstr("reset");
+gfx_drawstr("Reset");
+
+//////////////////
+// Auto Gain Button
+//////////////////
+
+resetx= gfx_w - gfx_texth * 11/2;
+resety=470;
+
+gfx_x=resetx;
+gfx_y=gfx_texth/2+470;
+gfx_r=gfx_g=gfx_b=1.0;
+gfx_drawstr("Auto Gain");
+
+// Reset Code
 
 doreset = 0;
 mouse_cap && mouse_x >= resetx && mouse_y < resety ?
@@ -303,5 +328,35 @@ mouse_cap && mouse_x >= resetx && mouse_y < resety ?
   doreset ?
   (
       EBUR128LM.LM_EBUR128_Reset_MultiCh();
+      loop (1000, 
+        j = 100;
+        lufs_store[j] = 0;
+        j += 1;
+      );
+      position = 100;
   );
 
+dogain = 0;
+
+// Auto Gain Code
+
+mouse_cap && mouse_x >= resetx && mouse_y > resety ?
+  (
+    dogain = 1; 
+  );
+  dogain ?
+  (
+    gain_offset = lufs_target - gmem[1];
+    slider5 = slider5 + gain_offset;
+    slider1 = 0 - slider5;
+    thresh = 10^(slider1/20);
+    volume = ceiling/thresh;
+
+    EBUR128LM.LM_EBUR128_Reset_MultiCh();
+    loop (1000, 
+      j = 100;
+      lufs_store[j] = 0;
+      j += 1;
+    );
+    position = 200;
+  );
