@@ -14,16 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-desc:Ultraschall Limiter
+desc:LUFS-Limiter (Ultraschall)
 options: gmem=limit
 import memorymanager.jsfx-inc
 import ebur128.jsfx-inc
 //tags: dynamics limiter
 //author: LOSER
 
-slider1:0<-15,0,0.1>Threshold (dB)
-slider2:200<0,500,1>Release (ms)
-slider3:-1<-6,0,0.1>Ceiling
+slider1:0<-15,0,0.1>-Threshold (dB)
+slider2:200<0,500,1>-Release (ms)
+slider3:-1<-6,0,0.1>-Ceiling
+slider4:1<0,4,{-14 LUFS (Spotify),-16 LUFS (Podcasts),-18 LUFS,-20 LUFS,-23 LUFS (EBU R128)}>LUFS-Target
+slider5:0<-2,16,0.1>Gain (dB)
 
 slider9:0<0,3,{2.0 Stereo,4.0 Surround,4.1 Surround,5.1 Surround}>-Channel Config
 slider10:2<0,4,{ML,SL,IL,RLA,TP Max}>-Mode
@@ -34,6 +36,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+
 HOLDTIME = srate/128;
 gfx_ext_retina = 1;
 
@@ -65,9 +68,16 @@ position = 100;
 
 @slider
 
+slider1 = 0 - slider5;
 thresh = 10^(slider1/20);
 ceiling = 10^(slider3/20);
 volume = ceiling/thresh;
+
+lufs_target = -14 - 2*slider4;
+slider4 == 4? (
+  lufs_target = -23;
+);
+
 
 release = slider2/1000;
 r = exp(-3/(srate*max(release,0.05)));
@@ -100,6 +110,9 @@ g_meter < gr_meter ? gr_meter=g_meter : ( gr_meter*=gr_meter_decay; gr_meter>1?g
 
 // LUFS
 
+
+  play_state == 1 ? (
+
   (play_state) ?
   (
     (last_play_state != play_state) ?
@@ -110,7 +123,8 @@ g_meter < gr_meter ? gr_meter=g_meter : ( gr_meter*=gr_meter_decay; gr_meter>1?g
   play_state_tmp = (play_state == 1) || (play_state == 5);
   EBUR128LM.LM_EBUR128_Process_MultiCh(spl0, spl1, spl2, spl3, spl4, spl5, channelconfig, (metermode == 4),(metermode == 3) && (play_state_tmp == 1));
 
-   gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
+  gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
+  );
 
 @gfx 0 32 // request horizontal/vertical heights (0 means dont care)
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0);
@@ -154,14 +168,25 @@ gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0)
 
 
 
-gfx_a = 0.3;
-lufs_nr = -12;
+// LUFS ////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////
+// LUFS Scale
+/////////////
+
+lufs_nr = -12; // start at -12 LUFS
 loop (12,
+  gfx_a = 0.3;
   gfx_y = meter_h-625-(50*lufs_nr);
   gfx_x = 10;
   gfx_drawnumber(lufs_nr,1);
   gfx_y = meter_h-610-(50*lufs_nr);
   gfx_x = 100;
+  (lufs_nr == lufs_target -1) || (lufs_nr == lufs_target +1)? (
+    gfx_a = 0.7;
+  );
   gfx_lineto(gfx_x+800,gfx_y,0);
   lufs_nr -= 1;
 );
@@ -170,13 +195,26 @@ gfx_x = 10;
 gfx_y = meter_h-630-(50*lufs_nr);
 gfx_drawstr(" LUFS");
 
+////////////////////////
+// LUFS realtime reading
+////////////////////////
+
 gfx_a = 1;
 gfx_x=10; 
 gfx_y=meter_h-625-(50*gmem[1]);
 gfx_drawnumber(gmem[1],1);
   
 
+///////////////////////
+// Build Hist-Array
+///////////////////////
 lufs_store[position] = gmem[1];
+
+
+///////////////////////////////
+// Line at actual tim eposition
+///////////////////////////////
+
 gfx_x = 5 + position; 
 gfx_y = meter_h-400;
 
@@ -187,49 +225,55 @@ gfx_a = 1;
 
 gfx_lineto(gfx_x,meter_h-610-50*gmem[1],0);
 
-ii = 100;
+//////////////////////////////
+// draw hist graph from array
+//////////////////////////////
+
+ii = 100; // array index of histogram starts at 100
 loop(500, 
          
-gfx_r = 0.4;
-gfx_g = 0.7;
-gfx_b = 1;
-gfx_a = 0.3;
+  gfx_r = 0.4;
+  gfx_g = 0.7;
+  gfx_b = 1;
+  gfx_a = 0.3;
 
+  // collor the LUFS 
 
-(lufs_store[ii] > -17) && (lufs_store[ii] <= -15.5) ? (
-  gfx_g = 1;
-  gfx_b = 0.7;
+  (lufs_store[ii] > lufs_target-1) && (lufs_store[ii] <= lufs_target+1) ? (
+    gfx_r = 0.4;
+    gfx_g = 1;
+    gfx_b = 0.7;
+  );
+
+  (lufs_store[ii] > lufs_target+2) ? (
+    gfx_r = 1;
+    gfx_g = 0.4;
+    gfx_b = 0.7;
+  );
+
+  (lufs_store[ii] > lufs_target+1) && (lufs_store[ii] <= lufs_target+2) ? (
+    gfx_r = 1;
+    gfx_g = 1;
+    gfx_b = 0.4;
+  );
+
+  gfx_x = 5+ii; 
+  gfx_y = meter_h-400;
+
+  gfx_lineto(gfx_x,meter_h-610-50*lufs_store[ii],0);
+
+  gfx_a = 1;
+
+  gfx_y = meter_h-610-50*lufs_store[ii-1];
+  gfx_lineto(gfx_x-1,meter_h-610-50*lufs_store[ii],0); // connect last two dots 
+  gfx_y = meter_h-400;
+  gfx_circle(gfx_x,meter_h-610-50*lufs_store[ii],2,1,1) ; // actual dot
+
+  // gfx_rect(gfx_x,meter_h-610-50*lufs_store[ii],3,3) ;
+
+  ii += 1;
+
 );
-
-(lufs_store[ii] > -14.5) ? (
-  gfx_r = 1;
-  gfx_g = 0.4;
-  gfx_b = 0.7;
-);
-
-(lufs_store[ii] > -15.5) && (lufs_store[ii] <= -14.5) ? (
-  gfx_r = 1;
-  gfx_g = 1;
-  gfx_b = 0.4;
-);
-
-gfx_x = 5+ii; 
-gfx_y = meter_h-400;
-
-gfx_lineto(gfx_x,meter_h-610-50*lufs_store[ii],0);
-
-gfx_a = 1;
-
-gfx_y = meter_h-610-50*lufs_store[ii-1];
-gfx_lineto(gfx_x-1,meter_h-610-50*lufs_store[ii],0);
-gfx_y = meter_h-400;
-gfx_circle(gfx_x,meter_h-610-50*lufs_store[ii],2,1,1) ;
-
-// gfx_rect(gfx_x,meter_h-610-50*lufs_store[ii],3,3) ;
-
-ii += 1;
-
-      );
 
 position += 1;
 position > 600? (
@@ -238,6 +282,10 @@ position > 600? (
 
 gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
 
+
+//////////////////
+// Reset Button
+//////////////////
 
 resetx= gfx_w - gfx_texth * 11/2;
 resety=450;
