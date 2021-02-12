@@ -16,6 +16,7 @@
 
 desc:LUFS-Limiter (Ultraschall)
 options: gmem=limit
+options: no_meter
 import memorymanager.jsfx-inc
 import ebur128.jsfx-inc
 //tags: dynamics limiter
@@ -35,8 +36,9 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
+///////////////////////
 @init
-
+///////////////////////
 HOLDTIME = srate/128;
 gfx_ext_retina = 1;
 
@@ -59,11 +61,12 @@ last_play_state = play_state;
 
 no_meters = 0;
 
-gmem[1] = -16;
+gmem[1] = 0;
 gmem[2] = -3;
 gmem[3] = 0;
 
-lufs_store = 100;
+lufs_store = MM.MemMgr_Alloc(999);
+
 loopcount = 1;
 position = 100;
 
@@ -151,7 +154,7 @@ gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0)
   gfx_x=gfx_w + log10(gr_meter)*xscale;
   gfx_rectto(gfx_w,meter_h);
 
-  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.3;
 
   s2=sqrt(2)/2;
   g = s2;
@@ -173,10 +176,12 @@ gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0)
   gfx_a=1;
 
   gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
-  gfx_drawnumber(log10(gr_meter)*20,1);
-  gfx_drawchar($'d');
-  gfx_drawchar($'B');
-
+  
+  /*
+    gfx_drawnumber(log10(gr_meter)*20,1);
+    gfx_drawchar($'d');
+    gfx_drawchar($'B');
+  */
 
 
 // LUFS ////////////////////////////////////////////////////////////////////////////////////
@@ -188,22 +193,29 @@ gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0)
 /////////////
 
 lufs_nr = -12; // start at -12 LUFS
-loop (12,
+scale_steps = 12;
+scale_counter = 1;
+loop (scale_steps,
   gfx_a = 0.3;
-  gfx_y = meter_h-625-(50*lufs_nr);
-  gfx_x = 10;
-  gfx_drawnumber(lufs_nr,1);
-  gfx_y = meter_h-610-(50*lufs_nr);
-  gfx_x = 100;
+  gfx_x = 5*gfx_ext_retina;
+  stepsize = (gfx_h-(40*gfx_ext_retina)) / scale_steps;
+  gfx_y = stepsize * scale_counter;
+  gfx_h / gfx_ext_retina > 200 || lufs_nr %2 == 0? (
+    gfx_drawnumber(lufs_nr,1);
+  );
+  //gfx_y = meter_h-610-(50*lufs_nr);
+  gfx_x = 50*gfx_ext_retina;
   (lufs_nr == lufs_target -1) || (lufs_nr == lufs_target +1)? (
     gfx_a = 0.7;
   );
-  gfx_lineto(gfx_x+800,gfx_y,0);
+  gfx_y = gfx_y +(stepsize/2.8);
+  gfx_lineto(gfx_w-(10*gfx_ext_retina),gfx_y,0);
   lufs_nr -= 1;
+  scale_counter += 1;
 );
 
-gfx_x = 10;
-gfx_y = meter_h-630-(50*lufs_nr);
+gfx_x = 5*gfx_ext_retina;
+gfx_y = gfx_h-(20*gfx_ext_retina);
 gfx_drawstr(" LUFS");
 
 ////////////////////////
@@ -212,7 +224,13 @@ gfx_drawstr(" LUFS");
 
 gfx_a = 1;
 gfx_x=10; 
-gfx_y=meter_h-625-(50*gmem[1]);
+lufs_point = ((gmem[1]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
+
+
+lufs_point = lufs_point + ((stepsize/2)*gfx_ext_retina);
+
+gfx_y=lufs_point;
+
 gfx_drawnumber(gmem[1],1);
   
 
@@ -223,32 +241,36 @@ lufs_store[position] = gmem[1];
 
 
 ///////////////////////////////
-// Line at actual tim eposition
+// Line at actual time position
 ///////////////////////////////
 
 gfx_x = 5 + position; 
-gfx_y = meter_h-400;
+gfx_y = gfx_h;
 
 gfx_r = 0.7;
 gfx_g = 0.7;
 gfx_b = 0.7;
 gfx_a = 1;
 
-gfx_lineto(gfx_x,meter_h-610-50*gmem[1],0);
+lufs_point = lufs_point + ((stepsize/6)*gfx_ext_retina);
+
+gfx_lineto(gfx_x,lufs_point,0);
 
 //////////////////////////////
 // draw hist graph from array
 //////////////////////////////
 
+
 ii = 100; // array index of histogram starts at 100
-loop(500, 
+loop(gfx_w-(50*gfx_ext_retina), 
          
   gfx_r = 0.4;
   gfx_g = 0.7;
   gfx_b = 1;
-  gfx_a = 0.3;
+  gfx_a = 0.35;
 
   // collor the LUFS 
+
 
   (lufs_store[ii] > lufs_target-1) && (lufs_store[ii] <= lufs_target+1) ? (
     gfx_r = 0.4;
@@ -269,16 +291,34 @@ loop(500,
   );
 
   gfx_x = 5+ii; 
-  gfx_y = meter_h-400;
+  gfx_y = gfx_h;
 
-  gfx_lineto(gfx_x,meter_h-610-50*lufs_store[ii],0);
+  lufs_store[ii] != 0 ? (
+    lufs_point = ((lufs_store[ii]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
+    lufs_point = lufs_point + ((stepsize/1.5)*gfx_ext_retina);
+    lufs_point_last = ((lufs_store[ii-1]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
+    lufs_point_last = lufs_point_last + ((stepsize/1.5)*gfx_ext_retina);
+    
+    // gfx_lineto(gfx_x, lufs_point,0); // paint colored bar from bottom
+  
+    gfx_gradrect(gfx_x,lufs_point,1,gfx_h-lufs_point, gfx_r,gfx_g,gfx_b,gfx_a,0,0,0,0,0,0,0,-0.0005);
 
-  gfx_a = 1;
+// (gfx_x,gfx_h-lufs_point,1,gfx_h-lufs_point, gfx_r,gfx_g,gfx_b,gfx_a[, drdx, dgdx, dbdx, dadx, drdy, dgdy, dbdy, dady])
 
-  gfx_y = meter_h-610-50*lufs_store[ii-1];
-  gfx_lineto(gfx_x-1,meter_h-610-50*lufs_store[ii],0); // connect last two dots 
-  gfx_y = meter_h-400;
-  gfx_circle(gfx_x,meter_h-610-50*lufs_store[ii],2,1,1) ; // actual dot
+//Fills a gradient rectangle with the color and alpha specified. drdx-dadx reflect the adjustment (per-pixel) applied for each pixel moved to the right, drdy-dady are the adjustment applied for each pixel moved toward the bottom. Normally drdx=adjustamount/w, drdy=adjustamount/h, etc. 
+
+
+    gfx_a = 1;
+
+    gfx_y = lufs_point_last;
+    
+    ii > 101 ?(
+      gfx_lineto(gfx_x-1,lufs_point,0); // connect last two dots 
+    );
+    gfx_y = meter_h-400;
+    gfx_circle(gfx_x, lufs_point,2,1,1) ; // actual dot
+
+  );
 
   // gfx_rect(gfx_x,meter_h-610-50*lufs_store[ii],3,3) ;
 
@@ -287,8 +327,8 @@ loop(500,
 );
 
 position += 1;
-position > 600? (
-  position = 100;
+position > gfx_w-10*gfx_ext_retina? (
+  position = 50*gfx_ext_retina;
 );
 
 gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
@@ -298,30 +338,22 @@ gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
 // Reset Button
 //////////////////
 
-resetx= gfx_w - gfx_texth * 11/2;
-resety=450;
+resetx = 65 * gfx_ext_retina;
+resety = gfx_h - (20*gfx_ext_retina);
 
 gfx_x=resetx;
-gfx_y=gfx_texth/2+400;
+gfx_y=resety;
 gfx_r=gfx_g=gfx_b=1.0;
+gfx_a=0.9;
 gfx_drawstr("Reset");
 
-//////////////////
-// Auto Gain Button
-//////////////////
 
-resetx= gfx_w - gfx_texth * 11/2;
-resety=470;
-
-gfx_x=resetx;
-gfx_y=gfx_texth/2+470;
-gfx_r=gfx_g=gfx_b=1.0;
-gfx_drawstr("Auto Gain");
-
+/////////////////////////////////////
 // Reset Code
+/////////////////////////////////////
 
 doreset = 0;
-mouse_cap && mouse_x >= resetx && mouse_y < resety ?
+mouse_cap && mouse_x <= 110*gfx_ext_retina && mouse_y >= resety ?
   (
     doreset = 1; 
   );
@@ -336,27 +368,58 @@ mouse_cap && mouse_x >= resetx && mouse_y < resety ?
       position = 100;
   );
 
+//////////////////
+// Auto Gain Button
+//////////////////
+
+gain_x= gfx_w - (80*gfx_ext_retina);
+gain_y= gfx_h - (20*gfx_ext_retina);
+
+gfx_x=gain_x;
+gfx_y=gain_y;
+gfx_r=gfx_g=gfx_b=1.0;
+// gfx_drawstr("Auto Gain");
+
+////////////////////////////
+// Auto Gain Code
+////////////////////////////
+
 dogain = 0;
 
-// Auto Gain Code
+time_pressed ? ( // Counter is running
 
-mouse_cap && mouse_x >= resetx && mouse_y > resety ?
-  (
-    dogain = 1; 
+  time_pressed + 5 < time() ? (  // 5 seconds til pressed
+    time_pressed = 0;      
+  ):( // still time to go, paint grogress bar
+    gfx_r=gfx_g=gfx_b=1.0;
+    gfx_a=1;
+    gfx_drawstr("Auto Gain");
+    gfx_r=gfx_g=gfx_b=0;
+    gfx_a=0.5;
+    gfx_rectto(gfx_x - 140 + (time_precise() - time_pressed)*25 ,gfx_y + 30)
+  )
+):( // Bution can be pressed again
+  gfx_r=gfx_g=gfx_b=1.0;
+  gfx_a=0.9;
+  gfx_drawstr("Auto Gain");
+  mouse_cap && mouse_x >= gain_x && mouse_y > gain_y ? ( //Pressed?
+    dogain = 1;  
   );
-  dogain ?
-  (
-    gain_offset = lufs_target - gmem[1];
-    slider5 = slider5 + gain_offset;
-    slider1 = 0 - slider5;
-    thresh = 10^(slider1/20);
-    volume = ceiling/thresh;
+);
 
-    EBUR128LM.LM_EBUR128_Reset_MultiCh();
-    loop (1000, 
-      j = 100;
-      lufs_store[j] = 0;
-      j += 1;
-    );
-    position = 200;
+dogain ? (  // Adjust Gain
+  time_pressed = time();
+  gain_offset = lufs_target - gmem[1];
+  slider5 = slider5 + gain_offset;
+  slider1 = 0 - slider5;
+  thresh = 10^(slider1/20);
+  volume = ceiling/thresh;
+
+  EBUR128LM.LM_EBUR128_Reset_MultiCh();
+  loop (1000, 
+    j = 100;
+    lufs_store[j] = 0;
+    j += 1;
   );
+  position = 100;
+);
