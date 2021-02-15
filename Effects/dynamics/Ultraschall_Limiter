@@ -26,7 +26,7 @@ slider1:0<-15,0,0.1>-Threshold (dB)
 slider2:200<0,500,1>-Release (ms)
 slider3:-1<-6,0,0.1>-Ceiling
 slider4:1<0,4,{-14 LUFS (Spotify),-16 LUFS (Podcasts),-18 LUFS,-20 LUFS,-23 LUFS (EBU R128)}>LUFS-Target
-slider5:0<-2,16,0.1>Gain (dB)
+slider5:3.2<-2,16,0.1>Gain (dB)
 
 slider9:0<0,3,{2.0 Stereo,4.0 Surround,4.1 Surround,5.1 Surround}>-Channel Config
 slider10:2<0,4,{ML,SL,IL,RLA,TP Max}>-Mode
@@ -44,6 +44,8 @@ gfx_ext_retina = 1;
 
 r1Timer = 0;
 r2Timer = HOLDTIME/2;
+
+slider4_old = 1; // Preset is -16 LUFS
 
 gr_meter=1;
 gr_meter_decay = exp(1/(1*srate));
@@ -69,6 +71,29 @@ lufs_store = MM.MemMgr_Alloc(999);
 
 loopcount = 1;
 position = 100;
+
+function clearHistory()
+(
+  j = 100;
+  loop (1000, 
+    lufs_store[j] = 0;
+  j += 1;
+  );
+);
+
+function adjustGain()
+(  // Adjust Gain
+  time_pressed = time();
+  gain_offset = lufs_target - gmem[1];
+  slider5 = slider5 + gain_offset;
+  slider1 = 0 - slider5;
+  thresh = 10^(slider1/20);
+  volume = ceiling/thresh;
+  sliderchange(slider5);
+  EBUR128LM.LM_EBUR128_Reset_MultiCh();
+  clearHistory();
+  position = 100;
+);
 
 ////////////////////////////////////////////////
 @slider
@@ -97,7 +122,6 @@ metermode = slider10;
 ///////////////////////////////////////////////////////////////////
 @sample
 ///////////////////////////////////////////////////////////////////
-
 
 maxSpls=max(abs(spl0),abs(spl1));
 
@@ -137,9 +161,11 @@ EBUR128LM.LM_EBUR128_Process_MultiCh(spl0, spl1, spl2, spl3, spl4, spl5, channel
 gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
 );
 
+
 /////////////////////////////////////////////////////////////////////////////////
 @gfx 0 32 // request horizontal/vertical heights (0 means dont care)
 //////////////////////////////////////////////////////////////////////////////////
+
 
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0);
 
@@ -177,6 +203,8 @@ gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0)
 
   gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
   
+  
+    
   /*
     gfx_drawnumber(log10(gr_meter)*20,1);
     gfx_drawchar($'d');
@@ -353,19 +381,13 @@ gfx_drawstr("Reset");
 /////////////////////////////////////
 
 doreset = 0;
-mouse_cap && mouse_x <= 110*gfx_ext_retina && mouse_y >= resety ?
-  (
+mouse_cap && mouse_x <= 110*gfx_ext_retina && mouse_y >= resety ? (
     doreset = 1; 
   );
-  doreset ?
-  (
-      EBUR128LM.LM_EBUR128_Reset_MultiCh();
-      loop (1000, 
-        j = 100;
-        lufs_store[j] = 0;
-        j += 1;
-      );
-      position = 100;
+  doreset ? (
+    EBUR128LM.LM_EBUR128_Reset_MultiCh();
+    clearHistory();
+    position = 100;
   );
 
 //////////////////
@@ -393,33 +415,25 @@ time_pressed ? ( // Counter is running
   ):( // still time to go, paint grogress bar
     gfx_r=gfx_g=gfx_b=1.0;
     gfx_a=1;
-    gfx_drawstr("Auto Gain");
+    gfx_drawstr("Match Gain");
     gfx_r=gfx_g=gfx_b=0;
     gfx_a=0.5;
-    gfx_rectto(gfx_x - 140 + (time_precise() - time_pressed)*25 ,gfx_y + 30)
+    gfx_rectto(gfx_x - 160 + (time_precise() - time_pressed)*25 ,gfx_y + 30)
   )
 ):( // Bution can be pressed again
   gfx_r=gfx_g=gfx_b=1.0;
   gfx_a=0.9;
-  gfx_drawstr("Auto Gain");
-  mouse_cap && mouse_x >= gain_x && mouse_y > gain_y ? ( //Pressed?
+  gfx_drawstr("Match Gain");
+  (mouse_cap && mouse_x >= gain_x && mouse_y > gain_y)? ( //Pressed?
     dogain = 1;  
   );
-);
 
-dogain ? (  // Adjust Gain
-  time_pressed = time();
-  gain_offset = lufs_target - gmem[1];
-  slider5 = slider5 + gain_offset;
-  slider1 = 0 - slider5;
-  thresh = 10^(slider1/20);
-  volume = ceiling/thresh;
-
-  EBUR128LM.LM_EBUR128_Reset_MultiCh();
-  loop (1000, 
-    j = 100;
-    lufs_store[j] = 0;
-    j += 1;
+  slider4 != slider4_old? (
+    dogain = 1;
+    slider4_old = slider4;
   );
-  position = 100;
 );
+
+dogain ? (
+  adjustGain()
+)
