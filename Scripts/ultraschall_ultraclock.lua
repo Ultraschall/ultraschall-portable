@@ -380,18 +380,10 @@ function formattimestr(pos)
   return pos:match("(.*)%:")
 end
 
-function updateLUFS()
+function openWindowLUFS()
 
-    -- reaper.gmem_attach ("lufs")  
-    reaper.gmem_attach ("limit")  
-    lufs_now = reaper.gmem_read(1)
-    delta = -16 - lufs_now
-    thresh = reaper.gmem_read(2)
-    adjusted = thresh - delta
-    print (lufs_now.." # "..delta.." # "..thresh.." # "..adjusted)
+   print ("huhu")
     
-    reaper.gmem_write(2, adjusted)
-
 end
 
 
@@ -462,14 +454,16 @@ function drawClock()
       -- updateLUFS()
     -- end
     
-    if reaper.gmem_read(1) > -17 and reaper.gmem_read(1) < -15.5 then
+    target = reaper.gmem_read(2)
+
+    if reaper.gmem_read(1) > target-1 and reaper.gmem_read(1) <= target+1 then -- Grün
       date_color = 0x15ee15
-    elseif reaper.gmem_read(1) > -15.5 and reaper.gmem_read(1) < -14.5 then
+    elseif reaper.gmem_read(1) > target+1 and reaper.gmem_read(1) <= target+2 then -- Gelb
       date_color = 0xeeee15
-    elseif reaper.gmem_read(1) > -14.5 then
+    elseif reaper.gmem_read(1) > target+2 then -- Rot
       date_color = 0xee1515
     else
-      date_color = 0x2092c7
+      date_color = 0x2092c7 -- Blau
     end
   
     -- roundrect(17*retina_mod, txt_line[2].y*height+border-2, 14*retina_mod, 30*retina_mod, 5*retina_mod, 5, 1)
@@ -483,10 +477,6 @@ function drawClock()
     date = tostring(reaper.gmem_read(1)).." LUFS"
     if date == "0.0 LUFS" then date = "" end
     
-
-    
-    -- reaper.gmem_write(2,-23)
-    -- date = tostring(reaper.gmem_read(2)).." DB"
 
   else
     date=""
@@ -698,8 +688,7 @@ function MainLoop()
       reaper.Main_OnCommand(id,0)
     
     elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-(380*retina_mod) then -- Linksklick auf Soundcheck-Footer
-      updateLUFS()
-      print ("HUHU")
+      openWindowLUFS()
     end
     
   else

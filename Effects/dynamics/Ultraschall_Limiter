@@ -63,9 +63,8 @@ last_play_state = play_state;
 
 no_meters = 0;
 
-gmem[1] = 0;
-gmem[2] = -3;
-gmem[3] = 0;
+gmem[1] = 0; // LUFS integral
+gmem[2] = -16; // LUFS Target
 
 lufs_store = MM.MemMgr_Alloc(999);
 
@@ -106,6 +105,7 @@ ceiling = 10^(slider3/20);
 volume = ceiling/thresh;
 
 lufs_target = -14 - 2*slider4;
+gmem[2] = lufs_target;
 slider4 == 4? (
   lufs_target = -23;
 );
@@ -139,7 +139,6 @@ env = env < envT ? envT : envT + r*(env-envT);
 spl0*=gain;
 spl1*=gain;
 
-// slider1 = gmem[2];
 
 g_meter < gr_meter ? gr_meter=g_meter : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
 
@@ -394,7 +393,7 @@ mouse_cap && mouse_x <= 110*gfx_ext_retina && mouse_y >= resety ? (
 // Auto Gain Button
 //////////////////
 
-gain_x= gfx_w - (80*gfx_ext_retina);
+gain_x= gfx_w - (90*gfx_ext_retina);
 gain_y= gfx_h - (20*gfx_ext_retina);
 
 gfx_x=gain_x;
