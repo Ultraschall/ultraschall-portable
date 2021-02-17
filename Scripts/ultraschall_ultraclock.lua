@@ -461,7 +461,7 @@ function drawClock()
     elseif reaper.gmem_read(1) > target+1 and reaper.gmem_read(1) <= target+2 then -- Gelb
       date_color = 0xeeee15
     elseif reaper.gmem_read(1) > target+2 then -- Rot
-      date_color = 0xee1515
+      date_color = 0xee5599
     else
       date_color = 0x2092c7 -- Blau
     end
