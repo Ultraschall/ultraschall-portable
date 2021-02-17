@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -74,7 +74,7 @@ clipboard_string = reaper.CF_GetClipboard("")
 -- marker_table[3][markernummer] - der Name des Markers
 
 number_of_markerentries,marker_table=ultraschall.ParseMarkerString(clipboard_string, true)
-green_marker_num=-1
+green_marker_num = 0 -- die 0:00 frei lassen für einen Marker der da vielleicht schon liegt
 
 for i=1, number_of_markerentries do
   if marker_table[3][i]~="" and marker_table[2][i]~=-1 then
