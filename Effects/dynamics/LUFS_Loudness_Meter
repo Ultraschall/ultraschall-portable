@@ -12,15 +12,59 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>
+////////////////////////////////////////////////////////////////////////////////////////
+// Tiny EBU R128
+// by TBProAudio 2019 (www.tb-software.com)
+// Copyright 2019 , tb-software.com
+// 
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of tb-software.com may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+///////////////////////////////////////////////////////////////////////////////////////////
+// LUFS Loudness Metering (Ultraschall)
+// Copyright (c) 2021 Ultraschall (http://ultraschall.fm)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
-desc:LUFS-Limiter (Ultraschall)
-options: gmem=limit
+desc:LUFS Loudness Metering (Ultraschall)
+options: gmem=lufs
 options: no_meter
 import memorymanager.jsfx-inc
 import ebur128.jsfx-inc
-//tags: dynamics limiter
-//author: LOSER
 
 slider1:0<-15,0,0.1>-Threshold (dB)
 slider2:200<0,500,1>-Release (ms)
@@ -60,6 +104,8 @@ timer.EBU_Time_Init_Ms(100, srate);
 
 ext_noinit = 1;
 last_play_state = play_state;
+isRendering = 0;
+lastPlay_position = play_position;
 
 no_meters = 0;
 
@@ -119,9 +165,23 @@ r = exp(-3/(srate*max(release,0.05)));
 channelconfig = slider9;
 metermode = slider10;
 
+
+
+////////////////////////////////////////////////////
+@block
+////////////////////////////////////////////////////
+
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////
 @sample
 ///////////////////////////////////////////////////////////////////
+
+
+
 
 maxSpls=max(abs(spl0),abs(spl1));
 
@@ -142,22 +202,21 @@ spl1*=gain;
 
 g_meter < gr_meter ? gr_meter=g_meter : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
 
-// LUFS
+// LUFS //////////////////////////////////////////////////////////////
 
+play_state == 1 && isRendering != 1 ? (    // dont't calculate LUFS while rendering (cripples 50% renderspeed)
 
-play_state == 1 ? (
+  (play_state) ?
+  (
+    (last_play_state != play_state) ?
+      EBUR128LM.LM_EBUR128_Reset_MultiCh();
+  );
+  last_play_state = play_state;
 
-(play_state) ?
-(
-  (last_play_state != play_state) ?
-    EBUR128LM.LM_EBUR128_Reset_MultiCh();
-);
-last_play_state = play_state;
+  play_state_tmp = (play_state == 1) || (play_state == 5);
+  EBUR128LM.LM_EBUR128_Process_MultiCh(spl0, spl1, spl2, spl3, spl4, spl5, channelconfig, (metermode == 4),(metermode == 3) && (play_state_tmp == 1));
 
-play_state_tmp = (play_state == 1) || (play_state == 5);
-EBUR128LM.LM_EBUR128_Process_MultiCh(spl0, spl1, spl2, spl3, spl4, spl5, channelconfig, (metermode == 4),(metermode == 3) && (play_state_tmp == 1));
-
-gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
+  gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
 );
 
 
@@ -202,17 +261,29 @@ gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0)
 
   gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
   
-  
-    
+
+/////////////////////////
+// Check for render state
+/////////////////////////
+
+isRendering = 0;
+play_position - lastPlay_position >= 0.2? (  // speed faster than aprox. 4x - likely in render state
+  isRendering = 1;
+  gfx_x = (gfx_w/2) - 60*gfx_ext_retina ; gfx_y = gfx_h/2 ;
+  gfx_drawstr(" RENDERING - NO DATA");
+  );
+lastPlay_position = play_position;
+
+
+
+
   /*
     gfx_drawnumber(log10(gr_meter)*20,1);
     gfx_drawchar($'d');
     gfx_drawchar($'B');
   */
 
-
 // LUFS ////////////////////////////////////////////////////////////////////////////////////
-
 
 
 /////////////
@@ -296,8 +367,7 @@ loop(gfx_w-(50*gfx_ext_retina),
   gfx_b = 1;
   gfx_a = 0.35;
 
-  // collor the LUFS 
-
+  // color the LUFS 
 
   (lufs_store[ii] > lufs_target-1) && (lufs_store[ii] <= lufs_target+1) ? (
     gfx_r = 0.4;
@@ -325,18 +395,10 @@ loop(gfx_w-(50*gfx_ext_retina),
     lufs_point = lufs_point + ((stepsize/1.5)*gfx_ext_retina);
     lufs_point_last = ((lufs_store[ii-1]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
     lufs_point_last = lufs_point_last + ((stepsize/1.5)*gfx_ext_retina);
-    
-    // gfx_lineto(gfx_x, lufs_point,0); // paint colored bar from bottom
-  
+      
     gfx_gradrect(gfx_x,lufs_point,1,gfx_h-lufs_point, gfx_r,gfx_g,gfx_b,gfx_a,0,0,0,0,0,0,0,-0.0005);
 
-// (gfx_x,gfx_h-lufs_point,1,gfx_h-lufs_point, gfx_r,gfx_g,gfx_b,gfx_a[, drdx, dgdx, dbdx, dadx, drdy, dgdy, dbdy, dady])
-
-//Fills a gradient rectangle with the color and alpha specified. drdx-dadx reflect the adjustment (per-pixel) applied for each pixel moved to the right, drdy-dady are the adjustment applied for each pixel moved toward the bottom. Normally drdx=adjustamount/w, drdy=adjustamount/h, etc. 
-
-
     gfx_a = 1;
-
     gfx_y = lufs_point_last;
     
     ii > 101 ?(
@@ -346,8 +408,6 @@ loop(gfx_w-(50*gfx_ext_retina),
     gfx_circle(gfx_x, lufs_point,2,1,1) ; // actual dot
 
   );
-
-  // gfx_rect(gfx_x,meter_h-610-50*lufs_store[ii],3,3) ;
 
   ii += 1;
 
@@ -359,7 +419,6 @@ position > gfx_w-10*gfx_ext_retina? (
 );
 
 gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
-
 
 //////////////////
 // Reset Button
@@ -373,7 +432,6 @@ gfx_y=resety;
 gfx_r=gfx_g=gfx_b=1.0;
 gfx_a=0.9;
 gfx_drawstr("Reset");
-
 
 /////////////////////////////////////
 // Reset Code

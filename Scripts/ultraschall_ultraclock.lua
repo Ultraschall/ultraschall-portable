@@ -447,7 +447,7 @@ function drawClock()
   if uc_menu[1].checked then
     -- date=os.date("%d.%m.%Y")
     
-    reaper.gmem_attach ("limit")  
+    reaper.gmem_attach ("lufs")  
     -- reaper.gmem_attach ("limit")
     
     -- if reaper.gmem_read(1) < 15.9 or reaper.gmem_read(1) > 16.1 then
