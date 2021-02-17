@@ -261,7 +261,7 @@ function Init()
   --INIT Menu Items
   uc_menu={} for i=1,10 do uc_menu[i]={} end --create 2d array for 6 menu entries
 
-  uc_menu[1]={text="Show Date"    , checked= (preset&1==1)}
+  uc_menu[1]={text="Show LUFS (Master)"    , checked= (preset&1==1)}
   uc_menu[2]={text="Show Realtime", checked= (preset&2==2)}
   uc_menu[3]={text="Show Timecode", checked= (preset&4==4)}
 
@@ -380,6 +380,13 @@ function formattimestr(pos)
   return pos:match("(.*)%:")
 end
 
+function openWindowLUFS()
+
+   print ("huhu")
+    
+end
+
+
 function drawClock()
   gfx.x=zahnradbutton_posx
   gfx.y=zahnradbutton_posy
@@ -438,7 +445,39 @@ function drawClock()
   --write text
   -- Date
   if uc_menu[1].checked then
-    date=os.date("%d.%m.%Y")
+    -- date=os.date("%d.%m.%Y")
+    
+    reaper.gmem_attach ("lufs")  
+    -- reaper.gmem_attach ("limit")
+    
+    -- if reaper.gmem_read(1) < 15.9 or reaper.gmem_read(1) > 16.1 then
+      -- updateLUFS()
+    -- end
+    
+    target = reaper.gmem_read(2)
+
+    if reaper.gmem_read(1) > target-1 and reaper.gmem_read(1) <= target+1 then -- Grün
+      date_color = 0x15ee15
+    elseif reaper.gmem_read(1) > target+1 and reaper.gmem_read(1) <= target+2 then -- Gelb
+      date_color = 0xeeee15
+    elseif reaper.gmem_read(1) > target+2 then -- Rot
+      date_color = 0xee1515
+    else
+      date_color = 0x2092c7 -- Blau
+    end
+  
+    -- roundrect(17*retina_mod, txt_line[2].y*height+border-2, 14*retina_mod, 30*retina_mod, 5*retina_mod, 5, 1)
+    -- if retina_mod == 0.5 then
+    --   roundrect(19*retina_mod, txt_line[2].y*height+border-2, 10*retina_mod, 26*retina_mod, 0, 0, 1)
+    -- end
+
+
+
+
+    date = tostring(reaper.gmem_read(1)).." LUFS"
+    if date == "0.0 LUFS" then date = "" end
+    
+
   else
     date=""
   end
@@ -451,7 +490,7 @@ function drawClock()
   end
 
   if date~="" then
-    WriteAlignedText(" "..date,0xb3b3b3, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,1) -- print realtime hh:mm:ss
+    WriteAlignedText(" "..date, date_color, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,1) -- print realtime hh:mm:ss
   end
   if time~="" then
     WriteAlignedText(time.." ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
@@ -647,7 +686,11 @@ function MainLoop()
     elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-(80*retina_mod) then -- Linksklick auf Soundcheck-Footer
       id = reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui")
       reaper.Main_OnCommand(id,0)
+    
+    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-(380*retina_mod) then -- Linksklick auf Soundcheck-Footer
+      openWindowLUFS()
     end
+    
   else
     Triggered=nil
   end

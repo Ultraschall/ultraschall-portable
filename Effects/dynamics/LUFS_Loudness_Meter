@@ -1,0 +1,496 @@
+// MGA JS Limiter: Limits the maximum output volume of a audio signal
+// Copyright (C) 2008  Michael Gruhn
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>
+////////////////////////////////////////////////////////////////////////////////////////
+// Tiny EBU R128
+// by TBProAudio 2019 (www.tb-software.com)
+// Copyright 2019 , tb-software.com
+// 
+//Redistribution and use in source and binary forms, with or without modification, are permitted 
+//provided that the following conditions are met:
+//
+//Redistributions of source code must retain the above copyright notice, this list of conditions 
+//and the following disclaimer. 
+//
+//Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+//and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+//
+//The name of tb-software.com may not be used to endorse or 
+//promote products derived from this software without specific prior written permission. 
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR 
+//IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+//FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS 
+//BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+//PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+//STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+//THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+///////////////////////////////////////////////////////////////////////////////////////////
+// LUFS Loudness Metering (Ultraschall)
+// Copyright (c) 2021 Ultraschall (http://ultraschall.fm)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+desc:LUFS Loudness Metering (Ultraschall)
+options: gmem=lufs
+options: no_meter
+import memorymanager.jsfx-inc
+import ebur128.jsfx-inc
+
+slider1:0<-15,0,0.1>-Threshold (dB)
+slider2:200<0,500,1>-Release (ms)
+slider3:-1<-6,0,0.1>-Ceiling
+slider4:1<0,4,{-14 LUFS (Spotify),-16 LUFS (Podcasts),-18 LUFS,-20 LUFS,-23 LUFS (EBU R128)}>LUFS-Target
+slider5:3.2<-2,16,0.1>Gain (dB)
+
+slider9:0<0,3,{2.0 Stereo,4.0 Surround,4.1 Surround,5.1 Surround}>-Channel Config
+slider10:2<0,4,{ML,SL,IL,RLA,TP Max}>-Mode
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+///////////////////////
+@init
+///////////////////////
+HOLDTIME = srate/128;
+gfx_ext_retina = 1;
+
+r1Timer = 0;
+r2Timer = HOLDTIME/2;
+
+slider4_old = 1; // Preset is -16 LUFS
+
+gr_meter=1;
+gr_meter_decay = exp(1/(1*srate));
+
+// LUFS
+MM.MemMgr_Init(0);
+
+// EO@function
+
+EBUR128LM.LM_EBUR128_Init_MultiCh(srate);
+timer.EBU_Time_Init_Ms(100, srate);
+
+ext_noinit = 1;
+last_play_state = play_state;
+isRendering = 0;
+lastPlay_position = play_position;
+
+no_meters = 0;
+
+gmem[1] = 0; // LUFS integral
+gmem[2] = -16; // LUFS Target
+
+lufs_store = MM.MemMgr_Alloc(999);
+
+loopcount = 1;
+position = 100;
+
+function clearHistory()
+(
+  j = 100;
+  loop (1000, 
+    lufs_store[j] = 0;
+  j += 1;
+  );
+);
+
+function adjustGain()
+(  // Adjust Gain
+  time_pressed = time();
+  gain_offset = lufs_target - gmem[1];
+  slider5 = slider5 + gain_offset;
+  slider1 = 0 - slider5;
+  thresh = 10^(slider1/20);
+  volume = ceiling/thresh;
+  sliderchange(slider5);
+  EBUR128LM.LM_EBUR128_Reset_MultiCh();
+  clearHistory();
+  position = 100;
+);
+
+////////////////////////////////////////////////
+@slider
+////////////////////////////////////////////////
+
+
+slider1 = 0 - slider5;
+thresh = 10^(slider1/20);
+ceiling = 10^(slider3/20);
+volume = ceiling/thresh;
+
+lufs_target = -14 - 2*slider4;
+gmem[2] = lufs_target;
+slider4 == 4? (
+  lufs_target = -23;
+);
+
+
+release = slider2/1000;
+r = exp(-3/(srate*max(release,0.05)));
+
+// LUFS
+
+channelconfig = slider9;
+metermode = slider10;
+
+
+
+////////////////////////////////////////////////////
+@block
+////////////////////////////////////////////////////
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////
+@sample
+///////////////////////////////////////////////////////////////////
+
+
+
+
+maxSpls=max(abs(spl0),abs(spl1));
+
+(r1Timer+=1) > HOLDTIME ? (r1Timer = 0; max1Block = 0; );
+max1Block = max(max1Block,maxSpls);
+(r2Timer+=1) > HOLDTIME ? (r2Timer = 0; max2Block = 0; );
+max2Block = max(max2Block,maxSpls);
+
+envT = max(max1Block,max2Block);
+
+env = env < envT ? envT : envT + r*(env-envT);
+
+(env > thresh) ? gain = (g_meter=(thresh / env))*volume : (g_meter=1; gain=volume;);
+
+spl0*=gain;
+spl1*=gain;
+
+
+g_meter < gr_meter ? gr_meter=g_meter : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+
+// LUFS //////////////////////////////////////////////////////////////
+
+play_state == 1 && isRendering != 1 ? (    // dont't calculate LUFS while rendering (cripples 50% renderspeed)
+
+  (play_state) ?
+  (
+    (last_play_state != play_state) ?
+      EBUR128LM.LM_EBUR128_Reset_MultiCh();
+  );
+  last_play_state = play_state;
+
+  play_state_tmp = (play_state == 1) || (play_state == 5);
+  EBUR128LM.LM_EBUR128_Process_MultiCh(spl0, spl1, spl2, spl3, spl4, spl5, channelconfig, (metermode == 4),(metermode == 3) && (play_state_tmp == 1));
+
+  gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
+);
+
+
+/////////////////////////////////////////////////////////////////////////////////
+@gfx 0 32 // request horizontal/vertical heights (0 means dont care)
+//////////////////////////////////////////////////////////////////////////////////
+
+
+gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0);
+
+  gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
+  gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
+  
+  meter_bot=20;
+  meter_h=min(gfx_h,32);
+  xscale=gfx_w*20/meter_bot;
+
+  gfx_y=0;
+  gfx_x=gfx_w + log10(gr_meter)*xscale;
+  gfx_rectto(gfx_w,meter_h);
+
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.3;
+
+  s2=sqrt(2)/2;
+  g = s2;
+  while(
+    gfx_x=gfx_w + log10(g)*xscale;
+    gfx_x >= 0 ? 
+    (
+      gfx_y=0;
+      gfx_lineto(gfx_x,meter_h,0);
+      gfx_y=meter_h-gfx_texth;
+      gfx_x+=2;
+      gfx_drawnumber(log10(g)*20,0);
+      gfx_drawchar($'d');
+      gfx_drawchar($'B');
+    );
+    g*=s2;
+    gfx_x >=0;
+  );
+  gfx_a=1;
+
+  gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
+  
+
+/////////////////////////
+// Check for render state
+/////////////////////////
+
+isRendering = 0;
+play_position - lastPlay_position >= 0.2? (  // speed faster than aprox. 4x - likely in render state
+  isRendering = 1;
+  gfx_x = (gfx_w/2) - 60*gfx_ext_retina ; gfx_y = gfx_h/2 ;
+  gfx_drawstr(" RENDERING - NO DATA");
+  );
+lastPlay_position = play_position;
+
+
+
+
+  /*
+    gfx_drawnumber(log10(gr_meter)*20,1);
+    gfx_drawchar($'d');
+    gfx_drawchar($'B');
+  */
+
+// LUFS ////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////
+// LUFS Scale
+/////////////
+
+lufs_nr = -12; // start at -12 LUFS
+scale_steps = 12;
+scale_counter = 1;
+loop (scale_steps,
+  gfx_a = 0.3;
+  gfx_x = 5*gfx_ext_retina;
+  stepsize = (gfx_h-(40*gfx_ext_retina)) / scale_steps;
+  gfx_y = stepsize * scale_counter;
+  gfx_h / gfx_ext_retina > 200 || lufs_nr %2 == 0? (
+    gfx_drawnumber(lufs_nr,1);
+  );
+  //gfx_y = meter_h-610-(50*lufs_nr);
+  gfx_x = 50*gfx_ext_retina;
+  (lufs_nr == lufs_target -1) || (lufs_nr == lufs_target +1)? (
+    gfx_a = 0.7;
+  );
+  gfx_y = gfx_y +(stepsize/2.8);
+  gfx_lineto(gfx_w-(10*gfx_ext_retina),gfx_y,0);
+  lufs_nr -= 1;
+  scale_counter += 1;
+);
+
+gfx_x = 5*gfx_ext_retina;
+gfx_y = gfx_h-(20*gfx_ext_retina);
+gfx_drawstr(" LUFS");
+
+////////////////////////
+// LUFS realtime reading
+////////////////////////
+
+gfx_a = 1;
+gfx_x=10; 
+lufs_point = ((gmem[1]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
+
+
+lufs_point = lufs_point + ((stepsize/2)*gfx_ext_retina);
+
+gfx_y=lufs_point;
+
+gfx_drawnumber(gmem[1],1);
+  
+
+///////////////////////
+// Build Hist-Array
+///////////////////////
+lufs_store[position] = gmem[1];
+
+
+///////////////////////////////
+// Line at actual time position
+///////////////////////////////
+
+gfx_x = 5 + position; 
+gfx_y = gfx_h;
+
+gfx_r = 0.7;
+gfx_g = 0.7;
+gfx_b = 0.7;
+gfx_a = 1;
+
+lufs_point = lufs_point + ((stepsize/6)*gfx_ext_retina);
+
+gfx_lineto(gfx_x,lufs_point,0);
+
+//////////////////////////////
+// draw hist graph from array
+//////////////////////////////
+
+
+ii = 100; // array index of histogram starts at 100
+loop(gfx_w-(50*gfx_ext_retina), 
+         
+  gfx_r = 0.4;
+  gfx_g = 0.7;
+  gfx_b = 1;
+  gfx_a = 0.35;
+
+  // color the LUFS 
+
+  (lufs_store[ii] > lufs_target-1) && (lufs_store[ii] <= lufs_target+1) ? (
+    gfx_r = 0.4;
+    gfx_g = 1;
+    gfx_b = 0.7;
+  );
+
+  (lufs_store[ii] > lufs_target+2) ? (
+    gfx_r = 1;
+    gfx_g = 0.4;
+    gfx_b = 0.7;
+  );
+
+  (lufs_store[ii] > lufs_target+1) && (lufs_store[ii] <= lufs_target+2) ? (
+    gfx_r = 1;
+    gfx_g = 1;
+    gfx_b = 0.4;
+  );
+
+  gfx_x = 5+ii; 
+  gfx_y = gfx_h;
+
+  lufs_store[ii] != 0 ? (
+    lufs_point = ((lufs_store[ii]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
+    lufs_point = lufs_point + ((stepsize/1.5)*gfx_ext_retina);
+    lufs_point_last = ((lufs_store[ii-1]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
+    lufs_point_last = lufs_point_last + ((stepsize/1.5)*gfx_ext_retina);
+      
+    gfx_gradrect(gfx_x,lufs_point,1,gfx_h-lufs_point, gfx_r,gfx_g,gfx_b,gfx_a,0,0,0,0,0,0,0,-0.0005);
+
+    gfx_a = 1;
+    gfx_y = lufs_point_last;
+    
+    ii > 101 ?(
+      gfx_lineto(gfx_x-1,lufs_point,0); // connect last two dots 
+    );
+    gfx_y = meter_h-400;
+    gfx_circle(gfx_x, lufs_point,2,1,1) ; // actual dot
+
+  );
+
+  ii += 1;
+
+);
+
+position += 1;
+position > gfx_w-10*gfx_ext_retina? (
+  position = 50*gfx_ext_retina;
+);
+
+gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+
+//////////////////
+// Reset Button
+//////////////////
+
+resetx = 65 * gfx_ext_retina;
+resety = gfx_h - (20*gfx_ext_retina);
+
+gfx_x=resetx;
+gfx_y=resety;
+gfx_r=gfx_g=gfx_b=1.0;
+gfx_a=0.9;
+gfx_drawstr("Reset");
+
+/////////////////////////////////////
+// Reset Code
+/////////////////////////////////////
+
+doreset = 0;
+mouse_cap && mouse_x <= 110*gfx_ext_retina && mouse_y >= resety ? (
+    doreset = 1; 
+  );
+  doreset ? (
+    EBUR128LM.LM_EBUR128_Reset_MultiCh();
+    clearHistory();
+    position = 100;
+  );
+
+//////////////////
+// Auto Gain Button
+//////////////////
+
+gain_x= gfx_w - (90*gfx_ext_retina);
+gain_y= gfx_h - (20*gfx_ext_retina);
+
+gfx_x=gain_x;
+gfx_y=gain_y;
+gfx_r=gfx_g=gfx_b=1.0;
+// gfx_drawstr("Auto Gain");
+
+////////////////////////////
+// Auto Gain Code
+////////////////////////////
+
+dogain = 0;
+
+time_pressed ? ( // Counter is running
+
+  time_pressed + 5 < time() ? (  // 5 seconds til pressed
+    time_pressed = 0;      
+  ):( // still time to go, paint grogress bar
+    gfx_r=gfx_g=gfx_b=1.0;
+    gfx_a=1;
+    gfx_drawstr("Match Gain");
+    gfx_r=gfx_g=gfx_b=0;
+    gfx_a=0.5;
+    gfx_rectto(gfx_x - 160 + (time_precise() - time_pressed)*25 ,gfx_y + 30)
+  )
+):( // Bution can be pressed again
+  gfx_r=gfx_g=gfx_b=1.0;
+  gfx_a=0.9;
+  gfx_drawstr("Match Gain");
+  (mouse_cap && mouse_x >= gain_x && mouse_y > gain_y)? ( //Pressed?
+    dogain = 1;  
+  );
+
+  slider4 != slider4_old? (
+    dogain = 1;
+    slider4_old = slider4;
+  );
+);
+
+dogain ? (
+  adjustGain()
+)

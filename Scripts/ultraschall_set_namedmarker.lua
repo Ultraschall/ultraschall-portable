@@ -44,7 +44,10 @@ else
 	end
 end
 
-retval, retvals_csv = reaper.GetUserInputs("Insert chapter marker", 1, "Name of this chapter marker:", "") -- User input box
+retval, retvals_csv = reaper.GetUserInputs("Insert chapter marker", 1, "Name of this chapter marker:,extrawidth=264", "") -- User input box
+
+-- retval, result = reaper.GetUserInputs("Edit ID3 Podcast Metadata - Don't use ( ) ' or \" ", 6, "Episode Title:,Author:,Podcast:,Year:,Podcast Category:,Description:,extrawidth=300, separator=\n", oldnotes)
+
 
 if retval == true then -- User pressed ok
 	markername = retvals_csv
