@@ -69,7 +69,7 @@ import ebur128.jsfx-inc
 slider1:0<-15,0,0.1>-Threshold (dB)
 slider2:200<0,500,1>-Release (ms)
 slider3:-1<-6,0,0.1>-Ceiling
-slider4:1<0,4,{-14 LUFS (Spotify),-16 LUFS (Podcasts),-18 LUFS,-20 LUFS,-23 LUFS (EBU R128)}>LUFS-Target
+slider4:1<0,4,{-14 LUFS (Spotify),-16 LUFS (Podcast),-18 LUFS,-20 LUFS,-23 LUFS (EBU R128)}>LUFS-Target
 slider5:3.2<-2,16,0.1>Gain (dB)
 
 slider9:0<0,3,{2.0 Stereo,4.0 Surround,4.1 Surround,5.1 Surround}>-Channel Config
@@ -236,7 +236,7 @@ gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0)
 
   gfx_y=0;
   gfx_x=gfx_w + log10(gr_meter)*xscale;
-  gfx_rectto(gfx_w,meter_h);
+  gfx_rectto(gfx_w,meter_h/2*gfx_ext_retina);
 
   gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.3;
 
@@ -247,8 +247,9 @@ gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0)
     gfx_x >= 0 ? 
     (
       gfx_y=0;
-      gfx_lineto(gfx_x,meter_h,0);
-      gfx_y=meter_h-gfx_texth;
+      gfx_lineto(gfx_x,meter_h/2*gfx_ext_retina,0);
+      //gfx_y=meter_h-gfx_texth/2*gfx_ext_retina;
+      gfx_y=3;
       gfx_x+=2;
       gfx_drawnumber(log10(g)*20,0);
       gfx_drawchar($'d');
@@ -275,8 +276,6 @@ play_position - lastPlay_position >= 0.2? (  // speed faster than aprox. 4x - li
 lastPlay_position = play_position;
 
 
-
-
   /*
     gfx_drawnumber(log10(gr_meter)*20,1);
     gfx_drawchar($'d');
@@ -290,15 +289,16 @@ lastPlay_position = play_position;
 // LUFS Scale
 /////////////
 
-lufs_nr = -12; // start at -12 LUFS
+lufs_nr = -13; // start at -12 LUFS
 scale_steps = 12;
 scale_counter = 1;
 loop (scale_steps,
   gfx_a = 0.3;
   gfx_x = 5*gfx_ext_retina;
-  stepsize = (gfx_h-(40*gfx_ext_retina)) / scale_steps;
-  gfx_y = stepsize * scale_counter;
-  gfx_h / gfx_ext_retina > 200 || lufs_nr %2 == 0? (
+  // stepsize = (gfx_h-(40*gfx_ext_retina)) / scale_steps;
+  stepsize = gfx_h / scale_steps;
+  gfx_y = stepsize * scale_counter - (8*gfx_ext_retina);
+  (gfx_h / gfx_ext_retina > 200 || lufs_nr %2 == 0) && scale_counter != scale_steps? (
     gfx_drawnumber(lufs_nr,1);
   );
   //gfx_y = meter_h-610-(50*lufs_nr);
@@ -306,7 +306,7 @@ loop (scale_steps,
   (lufs_nr == lufs_target -1) || (lufs_nr == lufs_target +1)? (
     gfx_a = 0.7;
   );
-  gfx_y = gfx_y +(stepsize/2.8);
+  gfx_y = gfx_y + (8*gfx_ext_retina);
   gfx_lineto(gfx_w-(10*gfx_ext_retina),gfx_y,0);
   lufs_nr -= 1;
   scale_counter += 1;
@@ -321,13 +321,17 @@ gfx_drawstr(" LUFS");
 ////////////////////////
 
 gfx_a = 1;
-gfx_x=10; 
-lufs_point = ((gmem[1]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
+
+// lufs_point = ((gmem[1]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
 
 
-lufs_point = lufs_point + ((stepsize/2)*gfx_ext_retina);
 
-gfx_y=lufs_point;
+// lufs_point = lufs_point + ((stepsize/2)*gfx_ext_retina);
+
+lufs_point = ((gmem[1]/ -12)-1) * gfx_h;
+
+gfx_x = 5*gfx_ext_retina;
+gfx_y=lufs_point- (8*gfx_ext_retina);
 
 gfx_drawnumber(gmem[1],1);
   
@@ -342,7 +346,7 @@ lufs_store[position] = gmem[1];
 // Line at actual time position
 ///////////////////////////////
 
-gfx_x = 5 + position; 
+gfx_x = (5 + position)/2*gfx_ext_retina; 
 gfx_y = gfx_h;
 
 gfx_r = 0.7;
@@ -350,7 +354,7 @@ gfx_g = 0.7;
 gfx_b = 0.7;
 gfx_a = 1;
 
-lufs_point = lufs_point + ((stepsize/6)*gfx_ext_retina);
+// lufs_point = lufs_point + ((stepsize)*gfx_ext_retina);
 
 gfx_lineto(gfx_x,lufs_point,0);
 
@@ -360,12 +364,12 @@ gfx_lineto(gfx_x,lufs_point,0);
 
 
 ii = 100; // array index of histogram starts at 100
-loop(gfx_w-(50*gfx_ext_retina), 
+loop((gfx_w*2/gfx_ext_retina)-(10*gfx_ext_retina), 
          
   gfx_r = 0.4;
   gfx_g = 0.7;
   gfx_b = 1;
-  gfx_a = 0.35;
+  gfx_a = 0.35/2*gfx_ext_retina;
 
   // color the LUFS 
 
@@ -387,14 +391,14 @@ loop(gfx_w-(50*gfx_ext_retina),
     gfx_b = 0.4;
   );
 
-  gfx_x = 5+ii; 
+  gfx_x = ((1*gfx_ext_retina)+ii)/2*gfx_ext_retina; 
   gfx_y = gfx_h;
 
   lufs_store[ii] != 0 ? (
-    lufs_point = ((lufs_store[ii]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
-    lufs_point = lufs_point + ((stepsize/1.5)*gfx_ext_retina);
-    lufs_point_last = ((lufs_store[ii-1]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
-    lufs_point_last = lufs_point_last + ((stepsize/1.5)*gfx_ext_retina);
+    lufs_point = ((lufs_store[ii]/ -12)-1)  * gfx_h;
+    // lufs_point = lufs_point + ((stepsize/1.5)*gfx_ext_retina);
+    lufs_point_last = ((lufs_store[ii-1]/ -12)-1)  * gfx_h;
+    // lufs_point_last = lufs_point_last + ((stepsize/1.5)*gfx_ext_retina);
       
     gfx_gradrect(gfx_x,lufs_point,1,gfx_h-lufs_point, gfx_r,gfx_g,gfx_b,gfx_a,0,0,0,0,0,0,0,-0.0005);
 
@@ -402,10 +406,10 @@ loop(gfx_w-(50*gfx_ext_retina),
     gfx_y = lufs_point_last;
     
     ii > 101 ?(
-      gfx_lineto(gfx_x-1,lufs_point,0); // connect last two dots 
+      gfx_lineto(gfx_x+1*gfx_ext_retina,lufs_point,0); // connect last two dots 
     );
     gfx_y = meter_h-400;
-    gfx_circle(gfx_x, lufs_point,2,1,1) ; // actual dot
+    gfx_circle(gfx_x, lufs_point,1*gfx_ext_retina,1,1) ; // actual dot
 
   );
 
@@ -414,8 +418,8 @@ loop(gfx_w-(50*gfx_ext_retina),
 );
 
 position += 1;
-position > gfx_w-10*gfx_ext_retina? (
-  position = 50*gfx_ext_retina;
+position > gfx_w*2/gfx_ext_retina-(10*gfx_ext_retina)? (
+  position = 100;
 );
 
 gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
@@ -475,7 +479,7 @@ time_pressed ? ( // Counter is running
     gfx_drawstr("Match Gain");
     gfx_r=gfx_g=gfx_b=0;
     gfx_a=0.5;
-    gfx_rectto(gfx_x - 160 + (time_precise() - time_pressed)*25 ,gfx_y + 30)
+    gfx_rectto(gfx_x - (160/2*gfx_ext_retina) + (time_precise() - time_pressed)*(25/2*gfx_ext_retina) ,gfx_y + 30)
   )
 ):( // Bution can be pressed again
   gfx_r=gfx_g=gfx_b=1.0;
