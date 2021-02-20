@@ -111,6 +111,7 @@ no_meters = 0;
 
 gmem[1] = 0; // LUFS integral
 gmem[2] = -16; // LUFS Target
+gmem[3] = 0; // is FX active?
 
 lufs_store = MM.MemMgr_Alloc(999);
 
@@ -217,8 +218,10 @@ play_state == 1 && isRendering != 1 ? (    // dont't calculate LUFS while render
   EBUR128LM.LM_EBUR128_Process_MultiCh(spl0, spl1, spl2, spl3, spl4, spl5, channelconfig, (metermode == 4),(metermode == 3) && (play_state_tmp == 1));
 
   gmem[1] = EBUR128LM.LM_EBUR128_GetIL_LUFS();
+  gmem[3] = 1;
+):(
+  gmem[3] = 0;
 );
-
 
 /////////////////////////////////////////////////////////////////////////////////
 @gfx 0 32 // request horizontal/vertical heights (0 means dont care)
