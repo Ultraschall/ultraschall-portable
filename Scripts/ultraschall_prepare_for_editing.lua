@@ -107,6 +107,7 @@ mastertrack = reaper.GetMasterTrack(0)
 
 dynamics_count = 0
 limiter_count = 0
+lufs_count = 0
 
 -- Gibt es irgendwo schon Dynamics und/oder Limiter-Effekte auf dem Master?
 
@@ -116,8 +117,12 @@ for i = 0, reaper.TrackFX_GetCount(mastertrack) do
 		dynamics_count = dynamics_count +1
 	elseif string.find(fxName, "Limiter") then
 		limiter_count = limiter_count +1
+	elseif string.find(fxName, "LUFS") then
+		lufs_count = lufs_count +1
 	end
 end
+
+--[[]
 
 if dynamics_count == 0 then -- wenn schon was da ist: Finger weg
 	fx_slot = reaper.TrackFX_AddByName(mastertrack, "Ultraschall_Dynamics", false, 1) -- muss bei JS-Effekten der Filename sein O__o
@@ -129,6 +134,14 @@ if limiter_count == 0 then -- wenn schon was da ist: Finger weg
 	fx_slot = reaper.TrackFX_AddByName(mastertrack, "MGA_JSLimiter", false, 1) 
 	reaper.TrackFX_SetEnabled(mastertrack, fx_slot, false)
 	reaper.TrackFX_SetPreset(mastertrack, fx_slot, "Master -16 LUFS")
+end
+
+]]
+
+if lufs_count == 0 then -- wenn schon was da ist: Finger weg
+	fx_slot = reaper.TrackFX_AddByName(mastertrack, "LUFS_Loudness_Meter", false, 1) 
+	reaper.TrackFX_SetEnabled(mastertrack, fx_slot, false)
+	-- reaper.TrackFX_SetPreset(mastertrack, fx_slot, "Master -16 LUFS")
 end
 
 -----------------------------
