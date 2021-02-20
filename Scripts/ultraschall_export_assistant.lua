@@ -303,7 +303,7 @@ function CheckChapters()
 
 			if number_of_editmarkers > 0 then  -- es gibt nich Edit-Marker
 				state_color = "txt_yellow"
-				status_txt = " Edit markers"
+				status_txt = " "..tostring(number_of_editmarkers).." Edit markers"
 			else -- alles gut
 				state_color = "txt_green"
 				status_txt = " OK"
