@@ -128,7 +128,13 @@ function count_all_warnings() -- zähle die Arten von Soundchecks aus
   return active_warning_count, paused_warning_count, passed_warning_count
 end
 
-
+function showLUFSEffect()
+    
+  tr = reaper.GetMasterTrack(0)
+  reaper.SetTrackSelected(tr, true)   
+  runcommand("_S&M_SHOWFXCHAIN1")     -- zeige FX des Masters
+    
+end
 
 
 function GetProjectLength()
@@ -382,7 +388,22 @@ end
 
 function openWindowLUFS()
 
-   print ("huhu")
+  local mastertrack = reaper.GetMasterTrack(0)
+  local lufs_count = 0
+
+  for i = 0, reaper.TrackFX_GetCount(mastertrack) do
+    retval, fxName = reaper.TrackFX_GetFXName(mastertrack, i, "")
+    if string.find(fxName, "LUFS") then
+      lufs_count = lufs_count +1
+    end
+  end
+
+  if lufs_count == 0 then -- es gibt noch keinen LUFS-Effekt auf em Master, also hinzufügen. 
+    fx_slot = reaper.TrackFX_AddByName(mastertrack, "LUFS_Loudness_Meter", false, 1) 
+    reaper.TrackFX_SetEnabled(mastertrack, fx_slot, false)
+  end
+
+  showLUFSEffect() -- zeige den Effek
     
 end
 
@@ -471,11 +492,11 @@ function drawClock()
     --   roundrect(19*retina_mod, txt_line[2].y*height+border-2, 10*retina_mod, 26*retina_mod, 0, 0, 1)
     -- end
 
-
-
-
     date = tostring(reaper.gmem_read(1)).." LUFS"
-    if date == "0.0 LUFS" then date = "" end
+    if reaper.gmem_read(3) == 0 then 
+      date = "? LUFS" 
+      date_color = 0x777777
+    end
     
 
   else
@@ -490,7 +511,8 @@ function drawClock()
   end
 
   if date~="" then
-    WriteAlignedText(" "..date, date_color, clockfont_bold, txt_line[2].size * fsize,txt_line[2].y*height+border,1) -- print realtime hh:mm:ss
+    date_position_y = txt_line[2].y*height+border
+    WriteAlignedText(" "..date, date_color, clockfont_bold, txt_line[2].size * fsize, date_position_y,1) -- print realtime hh:mm:ss
   end
   if time~="" then
     WriteAlignedText(time.." ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
@@ -687,7 +709,7 @@ function MainLoop()
       id = reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui")
       reaper.Main_OnCommand(id,0)
     
-    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-(380*retina_mod) then -- Linksklick auf Soundcheck-Footer
+    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(120*retina_mod) then -- Linksklick auf Soundcheck-Footer
       openWindowLUFS()
     end
     
