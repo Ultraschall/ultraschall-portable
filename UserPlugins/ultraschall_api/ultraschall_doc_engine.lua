@@ -483,7 +483,7 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
     if counter==index then String=k found=true end
   end
   
-  if found~=true then return end
+  if found~=true then return 0 end
     
   local language=String:match("spok_lang=\"(.-)\"")
   if language==nil then language="" end
@@ -542,7 +542,7 @@ function ultraschall.Docs_GetUSDocBloc_Tags(String, index)
     if counter==index then String=k found=true end
   end  
   
-  if found~=true then return end
+  if found~=true then return 0 end
     
   local language=String:match("spok_lang=\"(.-)\"")
   if language==nil then language="" end
@@ -613,7 +613,7 @@ function ultraschall.Docs_GetUSDocBloc_Params(String, unindent_description, inde
     if counter==index then String=k found=true end
   end  
   
-  if found~=true then return end
+  if found~=true then return 0 end
   
   local parms=String:match("(<parameters.->.-)</parameters>")
   local count, split_string = ultraschall.SplitStringAtLineFeedToArray(parms)
@@ -711,7 +711,7 @@ function ultraschall.Docs_GetUSDocBloc_Retvals(String, unindent_description, ind
     if counter==index then String=k found=true end
   end  
   
-  if found~=true then return end
+  if found~=true then return 0 end
   
   local parms=String:match("(<retvals.->.-)</retvals>")
   local count, split_string = ultraschall.SplitStringAtLineFeedToArray(parms)

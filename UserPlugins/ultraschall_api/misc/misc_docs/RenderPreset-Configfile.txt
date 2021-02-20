@@ -1,6 +1,6 @@
-Render-Presets-docs as of Reaper 6.10
+Render-Presets-docs as of Reaper 6.20
 
-compiled by Meo Mespotine, 10th of May 2020
+compiled by Meo Mespotine, 22th of January 2021
 licensed under creative-commons cc-by-license
 
 The render-presets are stored into reaper-render.ini in the resources-folder of Reaper.
@@ -33,6 +33,7 @@ various_checkboxes2 - more various checkboxes in <RENDERPRESET
                                    &16, Tracks with only mono media to mono files
                                    &256, Embed stretch markers/transient guides
 								   &1024, Embed take markers
+                                   &2048, 2nd pass render
                                    
 offline_online_dropdownlist - keeps the offline/online-dropdownlist in <RENDERPRESET
                                    0, Full-speed Offline

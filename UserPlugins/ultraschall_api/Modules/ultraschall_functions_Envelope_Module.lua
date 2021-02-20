@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-#
+# 
 # Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
-#
+# 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-#
+# 
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-#
+# 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-#
+# 
 ################################################################################
 ]]
 
@@ -30,25 +30,25 @@
 ---        Envelope Module        ---
 -------------------------------------
 
-if type(ultraschall)~="table" then
+if type(ultraschall)~="table" then 
   -- update buildnumber and add ultraschall as a table, when programming within this file
   local retval, string3 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   local retval, string3 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Envelope-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string3=="" then string3=10000
-  else
-    string3=tonumber(string3)
+  if string3=="" then string3=10000 
+  else 
+    string3=tonumber(string3) 
     string3=string3+1
   end
-  if string2=="" then string2=10000
-  else
+  if string2=="" then string2=10000 
+  else 
     string2=tonumber(string2)
     string2=string2+1
-  end
+  end 
   reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string3, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  ultraschall={}
-
+  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
+  ultraschall={} 
+  
   ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
 end
 
@@ -65,7 +65,7 @@ function ultraschall.IsValidEnvStateChunk(statechunk)
   <functioncall>boolean valid = ultraschall.IsValidEnvStateChunk(string EnvelopeStateChunk)</functioncall>
   <description>
     returns, if a EnvelopeStateChunk is a valid statechunk
-
+    
     returns false, in case of an error
   </description>
   <parameters>
@@ -99,11 +99,11 @@ function ultraschall.MoveTrackEnvelopePointsBy(startposition, endposition, moveb
   </requires>
   <functioncall>integer retval = ultraschall.MoveTrackEnvelopePointsBy(number startposition, number endposition, number moveby, MediaTrack MediaTrack, boolean cut_at_border)</functioncall>
   <description>
-    Moves the envelopepoints between startposition and endposition by moveby in MediaTrack.
+    Moves the envelopepoints between startposition and endposition by moveby in MediaTrack. 
     It moves all trackenvelope-points for all track-envelopes available.
-
+    
     Does NOT move item-envelopepoints!
-
+    
     Returns -1 in case of failure.
   </description>
   <retvals>
@@ -137,7 +137,7 @@ function ultraschall.MoveTrackEnvelopePointsBy(startposition, endposition, moveb
   for a=0, EnvTrackCount-1 do
     local TrackEnvelope=reaper.GetTrackEnvelope(MediaTrack, a)
     local EnvCount=reaper.CountEnvelopePoints(TrackEnvelope)
-
+  
     for i=EnvCount, 0, -1 do
       local retval, time, value, shape, tension, selected = reaper.GetEnvelopePoint(TrackEnvelope, i)
       if time>=startposition and time<=endposition then
@@ -150,7 +150,7 @@ function ultraschall.MoveTrackEnvelopePointsBy(startposition, endposition, moveb
     end
     reaper.Envelope_SortPoints(TrackEnvelope)
   end
-
+  
 end
 
 
@@ -166,7 +166,7 @@ function ultraschall.GetEnvelopePoint(Tracknumber, EnvelopeName, idx)
   <functioncall>number time, number value, integer shape, number tension, boolean selected, number dBVal, array EnvelopePointObject = ultraschall.GetEnvelopePoint(integer Tracknumber, string EnvelopeName, integer idx)</functioncall>
   <description>
     Returns the values for the idxth envelope point in Tracknumber->EnvelopeName.
-
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -212,7 +212,7 @@ function ultraschall.GetEnvelopePoint(Tracknumber, EnvelopeName, idx)
   local EnvelopePointObject={}
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetEnvelopePoint","idx", "must be an integer", -2) return -1 end
   if Tracknumber<0 or Tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetEnvelopePoint", "track", "no such track", -3) return -1 end
-  if Tracknumber==0 then
+  if Tracknumber==0 then 
     MediaTrack=reaper.GetMasterTrack(0)
   else
     MediaTrack=reaper.GetTrack(0,Tracknumber-1)
@@ -274,10 +274,10 @@ function ultraschall.GetClosestEnvelopePointIDX_ByTime(Tracknumber, EnvelopeName
   if type(CheckTime)~="number" then ultraschall.AddErrorMessage("GetClosestEnvelopePointIDX_ByTime", "CheckTime", "must be a number", -7) return -1 end
 
   local MediaTrack, IDXpre, IDXpost, ding, EnvelopePointObjectPre, EnvelopePointObjectPost, value, shape, tension, selected, dBVal, time
-
+  
   if CheckTime<0 then ultraschall.AddErrorMessage("GetClosestEnvelopePointIDX_ByTime","CheckTime", "time must be 0 or higher", -3) return -1 end
   if Tracknumber<0 or Tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetClosestEnvelopePointIDX_ByTime","Tracknumber", "no such track", -4) return -1 end
-  if Tracknumber==0 then
+  if Tracknumber==0 then 
     MediaTrack=reaper.GetMasterTrack(0)
   else
     MediaTrack=reaper.GetTrack(0,Tracknumber-1)
@@ -295,7 +295,7 @@ function ultraschall.GetClosestEnvelopePointIDX_ByTime(Tracknumber, EnvelopeName
   if time==-1 then ultraschall.DeleteLastErrorMessage() end
   time, value, shape, tension, selected, dBVal, EnvelopePointObjectPost = ultraschall.GetEnvelopePoint(Tracknumber, EnvelopeName, IDXpost)
   if time==-1 then ultraschall.DeleteLastErrorMessage() end
-
+  
   return IDXpre, EnvelopePointObjectPre, IDXpost, EnvelopePointObjectPost
 end
 
@@ -347,7 +347,7 @@ function ultraschall.GetEnvelopePointIDX_Between(Tracknumber, EnvelopeName, star
   if startposition<0 then ultraschall.AddErrorMessage("GetEnvelopePointIDX_Between","startposition", "time must be 0 or higher", -4) return -1 end
   if endposition<=startposition then ultraschall.AddErrorMessage("GetEnvelopePointIDX_Between","endposition", "time must be equal or higher than startposition", -5) return -1 end
   if Tracknumber<0 or Tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("GetEnvelopePointIDX_Between","Tracknumber", "no such track", -6) return -1 end
-  if Tracknumber==0 then
+  if Tracknumber==0 then 
     MediaTrack=reaper.GetMasterTrack(0)
   else
     MediaTrack=reaper.GetTrack(0,Tracknumber-1)
@@ -357,7 +357,7 @@ function ultraschall.GetEnvelopePointIDX_Between(Tracknumber, EnvelopeName, star
 
   for i=0, reaper.CountEnvelopePoints(TrackEnvelope) do
     local retval, time, value, shape, tension, selected = reaper.GetEnvelopePoint(TrackEnvelope, i)
-    if time>=startposition and time<=endposition then
+    if time>=startposition and time<=endposition then 
       EnvelopePointObjectArray[count]={}
       EnvelopePointObjectArray[count][1]=TrackEnvelope
       EnvelopePointObjectArray[count][2]=i
@@ -367,8 +367,8 @@ function ultraschall.GetEnvelopePointIDX_Between(Tracknumber, EnvelopeName, star
       EnvelopePointObjectArray[count][6]=tension
       EnvelopePointObjectArray[count][7]=selected
       EnvelopePointObjectArray[count][8]=reaper.SLIDER2DB(value)
-      count=count+1
-      EnvelopeString=EnvelopeString..i..","
+      count=count+1 
+      EnvelopeString=EnvelopeString..i.."," 
     end
   end
   return EnvelopeString:sub(1,-2), EnvelopePointObjectArray
@@ -389,7 +389,7 @@ function ultraschall.CheckEnvelopePointObject(EnvelopePointObject)
   <functioncall>boolean retval = ultraschall.CheckEnvelopePointObject(array EnvelopePointObject)</functioncall>
   <description>
     Checks, if EnvelopePointObject is valid or not.
-
+    
     returns false in case of an error
   </description>
   <parameters>
@@ -433,7 +433,7 @@ function ultraschall.IsValidEnvelopePointObject(EnvelopePointObject)
   <functioncall>boolean retval = ultraschall.IsValidEnvelopePointObject(array EnvelopePointObject)</functioncall>
   <description>
     Checks, if EnvelopePointObject is valid or not.
-
+    
     returns false in case of an error
   </description>
   <parameters>
@@ -453,7 +453,7 @@ function ultraschall.IsValidEnvelopePointObject(EnvelopePointObject)
 ]]
   local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter0 = ultraschall.GetLastErrorMessage()
   local A=ultraschall.CheckEnvelopePointObject(EnvelopePointObject)
-  local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage()
+  local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage() 
   if errorcounter0~=errorcounter and functionname=="CheckEnvelopePointObject" then ultraschall.AddErrorMessage("IsValidEnvelopePointObject",parmname, errormessage, errcode) return false end
   return A
 end
@@ -472,7 +472,7 @@ function ultraschall.SetEnvelopePoints_EnvelopePointObject(EnvelopePointObject, 
   <functioncall>boolean retval = ultraschall.SetEnvelopePoints_EnvelopePointObject(array EnvelopePointObject, boolean sort_in)</functioncall>
   <description>
     Sets an envelope-point, as defined in EnvelopePointObject.
-
+    
     returns true in case of success, false in case of failure.
   </description>
   <parameters>
@@ -509,7 +509,7 @@ function ultraschall.SetEnvelopePoints_EnvelopePointArray(EnvelopePointArray, so
   <functioncall>boolean retval = ultraschall.SetEnvelopePoints_EnvelopePointArray(array EnvelopePointArray, boolean sort_in)</functioncall>
   <description>
     Sets envelope-points, as defined in the EnvelopePointObjects, in the EnvelopePointArray.
-
+    
     returns true in case of success, false in case of failure.
   </description>
   <parameters>
@@ -555,7 +555,7 @@ function ultraschall.DeleteEnvelopePoints_EnvelopePointObject(EnvelopePointObjec
   <functioncall>boolean retval = ultraschall.DeleteEnvelopePoints_EnvelopePointObject(array EnvelopePointObject)</functioncall>
   <description>
     Deletes an envelope-point, as defined in EnvelopePointObject.
-
+    
     returns true in case of success, false in case of failure.
   </description>
   <parameters>
@@ -696,7 +696,7 @@ function ultraschall.AddEnvelopePoints_EnvelopePointArray(EnvelopePointObjectArr
   if type(sort_in)~="boolean" then ultraschall.AddErrorMessage("AddEnvelopePoints_EnvelopePointArray","sort_in", "only boolean allowed", -1) return false end
   count=1
   while EnvelopePointObjectArray[count]~=nil do
-    if ultraschall.CheckEnvelopePointObject(EnvelopePointObjectArray)==false then
+    if ultraschall.CheckEnvelopePointObject(EnvelopePointObjectArray)==false then 
       reaper.InsertEnvelopePoint(EnvelopePointObjectArray[count][1], EnvelopePointObjectArray[count][3], EnvelopePointObjectArray[count][4], EnvelopePointObjectArray[count][5], EnvelopePointObjectArray[count][6], EnvelopePointObjectArray[count][7], sort_in)
     end
     count=count+1
@@ -717,7 +717,7 @@ function ultraschall.CreateEnvelopePointObject(TrackEnvelope, idx, time, value, 
   <functioncall>boolean retval, array EnvelopePointObject = ultraschall.CreateEnvelopePointObject(TrackEnvelope TrackEnvelope, integer idx, number time, number value, integer shape, number tension, boolean selected)</functioncall>
   <description>
     Creates a new EnvelopePointObject, that can be used by other ultraschall-api-envelope-functions
-
+    
     returns false in case of error
   </description>
   <parameters>
@@ -765,7 +765,7 @@ function ultraschall.CreateEnvelopePointObject(TrackEnvelope, idx, time, value, 
   if type(tension)~="number" then ultraschall.AddErrorMessage("CreateEnvelopePointObject", "tension", "not a valid tensionvalue. Must be a number.", -6) return false end
   if type(selected)~="boolean" then ultraschall.AddErrorMessage("CreateEnvelopePointObject", "selected", "not a valid selectedvalue. Must be a boolean.", -7) return false end
   local EnvelopePointObject={}
-  EnvelopePointObject[1]=TrackEnvelope
+  EnvelopePointObject[1]=TrackEnvelope  
   EnvelopePointObject[2]=idx
   EnvelopePointObject[3]=time
   EnvelopePointObject[4]=value
@@ -789,7 +789,7 @@ function ultraschall.CountEnvelopePoints(Tracknumber, EnvelopeName)
   <functioncall>integer envpoint_count = ultraschall.CountEnvelopePoints(integer Tracknumber, string EnvelopeName)</functioncall>
   <description>
     Counts and returns the number of envelope-points in track Tracknumber, envelopelane EnvelopeName.
-
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -813,14 +813,14 @@ function ultraschall.CountEnvelopePoints(Tracknumber, EnvelopeName)
   local MediaTrack
   local EnvelopePointObject={}
   if Tracknumber<0 or Tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("CountEnvelopePoints", "track", "no such track", -2) return -1 end
-  if Tracknumber==0 then
+  if Tracknumber==0 then 
     MediaTrack=reaper.GetMasterTrack(0)
   else
     MediaTrack=reaper.GetTrack(0,Tracknumber-1)
   end
   local TrackEnvelope=reaper.GetTrackEnvelopeByName(MediaTrack, EnvelopeName)
   if TrackEnvelope==nil then ultraschall.AddErrorMessage("CountEnvelopePoints","EnvelopeName", "no such envelope", -3) return -1 end
-
+  
   return reaper.CountEnvelopePoints(TrackEnvelope)
 end
 
@@ -839,7 +839,7 @@ function ultraschall.SetEnvelopeHeight(Height, Compacted, TrackEnvelope, TrackEn
   <functioncall>boolean retval, string TrackEnvelopeStateChunk = ultraschall.SetEnvelopeHeight(integer Height, boolean Compacted, TrackEnvelope TrackEnvelope, string TrackEnvelopeStateChunk)</functioncall>
   <description>
     Changes the Envelope-lane-height and compactible state of TrackEnvelope or TrackEnvelopeStateChunk.
-
+    
     returns false in case of an error
   </description>
   <parameters>
@@ -864,27 +864,27 @@ function ultraschall.SetEnvelopeHeight(Height, Compacted, TrackEnvelope, TrackEn
   local str, retval, newstr
   if type(Compacted)~="boolean" and Compacted~=nil then ultraschall.AddErrorMessage("SetEnvelopeHeight","Compacted", "only true, false or nil allowed", -1) return false end
   if math.type(Height)~="integer" and Height~=nil then ultraschall.AddErrorMessage("SetEnvelopeHeight","Height", "only integer(24-443) or nil allowed", -2) return false end
-  if TrackEnvelope~=nil then
+  if TrackEnvelope~=nil then 
     if reaper.ValidatePtr2(0, TrackEnvelope, "TrackEnvelope*")==false then ultraschall.AddErrorMessage("SetEnvelopeHeight", "TrackEnvelope", "not a valid TrackEnvelope", -3) return false end
     retval, str = ultraschall.GetEnvelopeStateChunk(TrackEnvelope, "", false)
-  else
+  else 
     if type(TrackEnvelopeStateChunk)~="string" then ultraschall.AddErrorMessage("SetEnvelopeHeight","TrackEnvelopeStateChunk", "not a valid TrackEnvelopeStateChunk", -4) return false end
     str=TrackEnvelopeStateChunk
   end
-
+  
   local part1=str:match("(.-)LANE")
   local height=str:match("LANEHEIGHT (.-) .-%c")
   local compacted=str:match("LANEHEIGHT .- (.-)%c")
   local part2=str:match("LANEHEIGHT.-%c(.*)")
-
+  
   if Height~=nil then height=Height end
   if Compacted==true then compacted="1"
   elseif Compacted==false then compacted="0"
   end
 
   newstr=part1.."LANEHEIGHT "..height.." "..compacted.."\n"..part2
-  if TrackEnvelope~=nil then
-    retval, str2 = reaper.SetEnvelopeStateChunk(TrackEnvelope, newstr, false)
+  if TrackEnvelope~=nil then 
+    retval, str2 = reaper.SetEnvelopeStateChunk(TrackEnvelope, newstr, false) 
   end
   return true, newstr
 end
@@ -925,18 +925,16 @@ function ultraschall.GetAllTrackEnvelopes()
 </US_DocBloc>
 ]]
 
-print ("hallo")
-
   local TrackEnvelopeArray={}
   local FirstEnvelopeTrackNumber=-1
   local FirstEnvelopeMaster=-1
   local trackcount=1
-
+  
   for i=0, reaper.CountTracks(0)-1 do
     local MediaTrack=reaper.GetTrack(0,i)
     TrackEnvelopeArray[i+1]={}
     TrackEnvelopeArray[i+1][1]={}
-
+    
     for a=0, reaper.CountTrackEnvelopes(MediaTrack)-1 do
       TrackEnvelopeArray[i+1][1][a]=reaper.GetTrackEnvelope(MediaTrack, a)
       if FirstEnvelopeTrackNumber==-1 then FirstEnvelopeTrackNumber=i+1 end
@@ -969,7 +967,7 @@ function ultraschall.IsValidEnvelopePointArray(EnvelopePointArray)
   <functioncall>boolean retval = ultraschall.IsValidEnvelopePointArray(EnvelopePointArray EnvelopePointArray)</functioncall>
   <description>
     Checks, if an EnvelopePointArray is a valid one.
-
+    
     Returns false in case of an error
   </description>
   <retvals>
@@ -1008,9 +1006,9 @@ function ultraschall.GetLastEnvelopePoint_TrackEnvelope(Envelope)
   <functioncall>boolean retval, optional integer envpointidx, optional number time, optional number value, optional integer shape, optional number tension, optional boolean selected =  ultraschall.GetLastEnvelopePoint_TrackEnvelope(TrackEnvelope Envelope)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Gets the values of the last envelope-point in TrackEnvelope/MediaItemEnvelope.
-
+    
     Note: there's a "hidden" last envelopepoint in every Envelope, which will be ignored by this function. It will return the last visible envelope-point instead!
-
+    
     Returns false in case of an error
   </description>
   <retvals>
@@ -1062,9 +1060,9 @@ function ultraschall.GetArmState_Envelope(TrackEnvelope, EnvelopeStateChunk)
   <functioncall>integer retval = ultraschall.GetArmState_Envelope(TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Returns the current armed-state of a TrackEnvelope-object.
-
+    
     It is the entry ARM
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -1082,11 +1080,11 @@ function ultraschall.GetArmState_Envelope(TrackEnvelope, EnvelopeStateChunk)
   <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
   <tags>envelope states, get, arm, envelopestatechunk</tags>
 </US_DocBloc>
-]]
+]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("GetArmState_Envelope", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return end
   if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("GetArmState_Envelope", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -2) return end
   local retval, str
-  if TrackEnvelope==nil then
+  if TrackEnvelope==nil then 
     str=EnvelopeStateChunk
   else
     retval, str = reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
@@ -1113,7 +1111,7 @@ function ultraschall.SetArmState_Envelope(TrackEnvelope, state, EnvelopeStateChu
   <functioncall>boolean retval, optional string EnvelopeStateChunk = ultraschall.SetArmState_Envelope(TrackEnvelope TrackEnvelope, integer state, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Sets the new armed-state of a TrackEnvelope-object.
-
+    
     returns false in case of error
   </description>
   <retvals>
@@ -1133,7 +1131,7 @@ function ultraschall.SetArmState_Envelope(TrackEnvelope, state, EnvelopeStateChu
   <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
   <tags>envelope states, set, arm, envelopestatechunk</tags>
 </US_DocBloc>
-]]
+]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("SetArmState_Envelope", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return false end
   if math.type(state)~="integer" then ultraschall.AddErrorMessage("SetArmState_Envelope", "state", "Must be an integer, either 1 or 0", -2) return false end
   if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("SetArmState_Envelope", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -3) return false end
@@ -1146,22 +1144,22 @@ function ultraschall.SetArmState_Envelope(TrackEnvelope, state, EnvelopeStateChu
 end
 
 
-function ultraschall.GetTrackEnvelope_ClickState()
+function ultraschall.GetTrackEnvelope_ClickState(mouse_button)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTrackEnvelope_ClickState</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.981
+    Ultraschall=4.2
+    Reaper=6.10
     SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>boolean clickstate, number position, MediaTrack track, TrackEnvelope envelope, integer EnvelopePointIDX = ultraschall.GetTrackEnvelope_ClickState()</functioncall>
+  <functioncall>boolean clickstate, number position, MediaTrack track, TrackEnvelope envelope, integer EnvelopePointIDX = ultraschall.GetTrackEnvelope_ClickState(integer mouse_button)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns the currently clicked Envelopepoint and TrackEnvelope, as well as the current timeposition.
-
+    
     Works only, if the mouse is above the EnvelopePoint while having it clicked!
-
+    
     Returns false, if no envelope is clicked at
   </description>
   <retvals>
@@ -1171,6 +1169,17 @@ function ultraschall.GetTrackEnvelope_ClickState()
     TrackEnvelope envelope - the TrackEnvelope, in which the clicked envelope-point lies
     integer EnvelopePointIDX - the id of the clicked EnvelopePoint
   </retvals>
+  <parameters>
+    integer mouse_button - the mousebutton, that shall be clicked at the envelope; you can combine them as flags
+                       - -1, get all states
+                       - &1, only left mouse button
+                       - &2, only right mouse button
+                       - &4, Ctrl/Cmd-key
+                       - &8, Shift-key
+                       - &16, Alt key
+                       - &32, Windows key
+                       - &64, Middle mouse button
+  </parameters>
   <chapter_context>
     Envelope Management
     Helper functions
@@ -1182,11 +1191,13 @@ function ultraschall.GetTrackEnvelope_ClickState()
 --]]
   -- TODO: Has an issue, if the mousecursor drags the item, but moves above or underneath the item(if item is in first or last track).
   --       Even though the item is still clicked, it isn't returned as such.
-  --       The ConfigVar uiscale supports dragging information, but the information which item has been clicked gets lost somehow
-  local B=reaper.SNM_GetDoubleConfigVar("uiscale", -999)
+
+  if math.type(mouse_button)~="integer" then ultraschall.AddErrorMessage("GetTrackEnvelope_ClickState", "mouse_button", "must be an integer", -1) return false end
+
   local X,Y=reaper.GetMousePosition()
   local Track, Info = reaper.GetTrackFromPoint(X,Y)
-  if tostring(B)=="-1.#QNAN" or Info==0 then
+  local A=reaper.JS_Mouse_GetState(mouse_button)
+  if A==0 or Info==0 then
     return false
   end
   reaper.BR_GetMouseCursorContext()
@@ -1209,10 +1220,10 @@ function ultraschall.GetEnvelopeState_NumbersOnly(state, EnvelopeStateChunk, fun
   <functioncall>table values = ultraschall.GetEnvelopeState_NumbersOnly(string state, optional string EnvelopeStateChunk, optional string functionname, optional boolean numbertoggle)</functioncall>
   <description>
     returns a state from an EnvelopeStateChunk.
-
+    
     It only supports single-entry-states with numbers/integers, separated by spaces!
     All other values will be set to nil and strings with spaces will produce weird results!
-
+    
     returns nil in case of an error
   </description>
   <parameters>
@@ -1237,7 +1248,7 @@ function ultraschall.GetEnvelopeState_NumbersOnly(state, EnvelopeStateChunk, fun
   if functionname==nil then functionname="GetEnvelopeState_NumbersOnly" end
   if type(state)~="string" then ultraschall.AddErrorMessage(functionname, "state", "Must be a string", -7) return nil end
   if projectfilename_with_path==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage(functionname,"TrackStateChunk", "No valid TrackStateChunk!", -2) return nil end
-
+  
   EnvelopeStateChunk=EnvelopeStateChunk:match(state.." (.-)\n")
   if EnvelopeStateChunk==nil then return end
   local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(EnvelopeStateChunk, " ")
@@ -1261,9 +1272,9 @@ function ultraschall.GetEnvelopeState_Act(TrackEnvelope, EnvelopeStateChunk)
   <functioncall>integer act, integer automation_settings = ultraschall.GetEnvelopeState_Act(TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Returns the current act-state of a TrackEnvelope-object or EnvelopeStateChunk.
-
+    
     It is the state entry ACT
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -1289,11 +1300,11 @@ function ultraschall.GetEnvelopeState_Act(TrackEnvelope, EnvelopeStateChunk)
   <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
   <tags>envelope states, get, act, envelopestatechunk</tags>
 </US_DocBloc>
-]]
+]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("GetEnvelopeState_Act", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return end
   if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("GetEnvelopeState_Act", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -2) return end
   local retval, str
-  if TrackEnvelope==nil then
+  if TrackEnvelope==nil then 
     str=EnvelopeStateChunk
   else
     retval, str = reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
@@ -1313,15 +1324,15 @@ function ultraschall.GetEnvelopeState_Vis(TrackEnvelope, EnvelopeStateChunk)
   <functioncall>integer visible, integer lane, integer unknown = ultraschall.GetEnvelopeState_Vis(TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Returns the current visibility-state of a TrackEnvelope-object or EnvelopeStateChunk.
-
+    
     It is the state entry VIS
-
+    
     returns nil in case of error
   </description>
   <retvals>
     integer visible - 1, envelope is visible
                     - 0, envelope is not visible
-    integer lane - 1, envelope is in it's own lane
+    integer lane - 1, envelope is in it's own lane 
                  - 0, envelope is in media-lane
     integer unknown - unknown; default=1
   </retvals>
@@ -1337,11 +1348,11 @@ function ultraschall.GetEnvelopeState_Vis(TrackEnvelope, EnvelopeStateChunk)
   <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
   <tags>envelope states, get, vis, envelopestatechunk</tags>
 </US_DocBloc>
-]]
+]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("GetEnvelopeState_Vis", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return end
   if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("GetEnvelopeState_Vis", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -2) return end
   local retval, str
-  if TrackEnvelope==nil then
+  if TrackEnvelope==nil then 
     str=EnvelopeStateChunk
   else
     retval, str = reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
@@ -1361,14 +1372,14 @@ function ultraschall.GetEnvelopeState_LaneHeight(TrackEnvelope, EnvelopeStateChu
   <functioncall>integer height, integer compacted = ultraschall.GetEnvelopeState_LaneHeight(TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Returns the current laneheight-state of a TrackEnvelope-object or EnvelopeStateChunk.
-
+    
     It is the state entry LANEHEIGHT
-
+    
     returns nil in case of error
   </description>
   <retvals>
     integer height - the height of this envelope in pixels; 24 - 263 pixels
-    integer compacted - 1, envelope-lane is compacted("normal" height is not shown but still stored in height);
+    integer compacted - 1, envelope-lane is compacted("normal" height is not shown but still stored in height); 
                       - 0, envelope-lane is "normal" height
   </retvals>
   <parameters>
@@ -1383,11 +1394,11 @@ function ultraschall.GetEnvelopeState_LaneHeight(TrackEnvelope, EnvelopeStateChu
   <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
   <tags>envelope states, get, laneheight, envelopestatechunk</tags>
 </US_DocBloc>
-]]
+]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("GetEnvelopeState_LaneHeight", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return end
   if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("GetEnvelopeState_LaneHeight", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -2) return end
   local retval, str
-  if TrackEnvelope==nil then
+  if TrackEnvelope==nil then 
     str=EnvelopeStateChunk
   else
     retval, str = reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
@@ -1407,9 +1418,9 @@ function ultraschall.GetEnvelopeState_DefShape(TrackEnvelope, EnvelopeStateChunk
   <functioncall>integer shape, integer pitch_custom_envelope_range_takes, integer pitch_snap_values = ultraschall.GetEnvelopeState_DefShape(TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Returns the current default-shape-state of a TrackEnvelope-object or EnvelopeStateChunk.
-
+    
     It is the state entry DEFSHAPE
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -1445,11 +1456,11 @@ function ultraschall.GetEnvelopeState_DefShape(TrackEnvelope, EnvelopeStateChunk
   <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
   <tags>envelope states, get, defshape, envelopestatechunk</tags>
 </US_DocBloc>
-]]
+]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("GetEnvelopeState_DefShape", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return end
   if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("GetEnvelopeState_DefShape", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -2) return end
   local retval, str
-  if TrackEnvelope==nil then
+  if TrackEnvelope==nil then 
     str=EnvelopeStateChunk
   else
     retval, str = reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
@@ -1469,9 +1480,9 @@ function ultraschall.GetEnvelopeState_Voltype(TrackEnvelope, EnvelopeStateChunk)
   <functioncall>integer voltype = ultraschall.GetEnvelopeState_Voltype(TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Returns the current voltype-state of a TrackEnvelope-object or EnvelopeStateChunk.
-
+    
     It is the state entry VOLTYPE
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -1489,11 +1500,11 @@ function ultraschall.GetEnvelopeState_Voltype(TrackEnvelope, EnvelopeStateChunk)
   <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
   <tags>envelope states, get, voltype, envelopestatechunk</tags>
 </US_DocBloc>
-]]
+]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("GetEnvelopeState_Voltype", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return end
   if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("GetEnvelopeState_Voltype", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -2) return end
   local retval, str
-  if TrackEnvelope==nil then
+  if TrackEnvelope==nil then 
     str=EnvelopeStateChunk
   else
     retval, str = reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
@@ -1514,9 +1525,9 @@ function ultraschall.GetEnvelopeState_PooledEnvInstance(index, TrackEnvelope, En
   <functioncall>integer id, number position, number length, number start_offset, number playrate, integer selected, number baseline, integer loopsource, integer i, number j, integer pool_id, integer mute = ultraschall.GetEnvelopeState_PooledEnvInstance(integer index, TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Returns the current state of a certain automation-item within a TrackEnvelope-object or EnvelopeStateChunk.
-
+    
     It is the state entry POOLEDENVINST
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -1547,21 +1558,21 @@ function ultraschall.GetEnvelopeState_PooledEnvInstance(index, TrackEnvelope, En
   <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
   <tags>envelope states, get, pooled env instance, automation items, envelopestatechunk</tags>
 </US_DocBloc>
-]]
+]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("GetEnvelopeState_PooledEnvInstance", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return end
   if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("GetEnvelopeState_PooledEnvInstance", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -2) return end
   if math.type(index)~="integer" then ultraschall.AddErrorMessage("GetEnvelopeState_PooledEnvInstance", "index", "Must be an integer", -3) return end
   local retval, str
-  if TrackEnvelope==nil then
+  if TrackEnvelope==nil then 
     str=EnvelopeStateChunk
   else
     retval, str = reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
   end
-
+  
   local count, individual_values, found
   count=0
   found=false
-
+  
   for k in string.gmatch(str, "(POOLEDENVINST.-)\n") do
     count=count+1
     if index==count then
@@ -1571,11 +1582,11 @@ function ultraschall.GetEnvelopeState_PooledEnvInstance(index, TrackEnvelope, En
       break
     end
   end
-
-  if found==false then
+  
+  if found==false then 
     ultraschall.AddErrorMessage("GetEnvelopeState_PooledEnvInstance", "index", "no such automation-item available", -4)
-    return
-  else
+    return 
+  else 
     for i=1, count do
       individual_values[i]=tonumber(individual_values[i])
     end
@@ -1595,9 +1606,9 @@ function ultraschall.GetEnvelopeState_PT(index, TrackEnvelope, EnvelopeStateChun
   <functioncall>number position, integer volume, integer point_shape_1, integer point_shape_2, integer selected, number bezier_tens1, number bezier_tens2 = ultraschall.GetEnvelopeState_PT(TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Returns the current state of a certain envelope-point within a TrackEnvelope-object or EnvelopeStateChunk.
-
+    
     It is the state entry PT
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -1613,7 +1624,7 @@ function ultraschall.GetEnvelopeState_PT(index, TrackEnvelope, EnvelopeStateChun
                         - 5 1, bezier
     integer selected - 1, selected; disappearing, unselected
     number unknown - disappears, if no bezier is set
-    number bezier_tens2 - disappears, if no bezier is set; -1 to 1
+    number bezier_tens2 - disappears, if no bezier is set; -1 to 1 
                         - 0, for no bezier tension
                         - -0.5, for fast-start-beziertension
                         - 0.5, for fast-end-beziertension
@@ -1632,21 +1643,21 @@ function ultraschall.GetEnvelopeState_PT(index, TrackEnvelope, EnvelopeStateChun
   <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
   <tags>envelope states, get, pt, envelope point, envelopestatechunk</tags>
 </US_DocBloc>
-]]
+]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("GetEnvelopeState_PT", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return end
   if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("GetEnvelopeState_PT", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -2) return end
   if math.type(index)~="integer" then ultraschall.AddErrorMessage("GetEnvelopeState_PT", "index", "Must be an integer", -3) return end
   local retval, str
-  if TrackEnvelope==nil then
+  if TrackEnvelope==nil then 
     str=EnvelopeStateChunk
   else
     retval, str = reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
   end
-
+  
   local count, individual_values, found
   count=0
   found=false
-
+  
   for k in string.gmatch(str, "(PT .-)\n") do
     count=count+1
     if index==count then
@@ -1656,11 +1667,11 @@ function ultraschall.GetEnvelopeState_PT(index, TrackEnvelope, EnvelopeStateChun
       break
     end
   end
-
-  if found==false then
+  
+  if found==false then 
     ultraschall.AddErrorMessage("GetEnvelopeState_PT", "index", "no such automation-item available", -4)
-    return
-  else
+    return 
+  else 
     for i=1, count do
       individual_values[i]=tonumber(individual_values[i])
     end
@@ -1680,9 +1691,9 @@ function ultraschall.GetEnvelopeState_EnvName(TrackEnvelope, EnvelopeStateChunk)
   <functioncall>string envelopename, optional integer fx_env_id, optional string wet_byp, optional number minimum_range, optional number maximum_range, optional number unknown = ultraschall.GetEnvelopeState_EnvName(TrackEnvelope TrackEnvelope, optional string EnvelopeStateChunk)</functioncall>
   <description>
     Returns the current envelope-name-state of a TrackEnvelope-object or EnvelopeStateChunk.
-
+    
     It is the opening <-tag of the EnvelopeStateChunk
-
+    
     returns nil in case of error
   </description>
   <retvals>
@@ -1714,16 +1725,16 @@ function ultraschall.GetEnvelopeState_EnvName(TrackEnvelope, EnvelopeStateChunk)
   <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
   <tags>envelope states, get, envelopename, name, minimum, maximum, range, wet, bypass, envelopestatechunk</tags>
 </US_DocBloc>
-]]
+]]  
   if TrackEnvelope~=nil and ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("GetEnvelopeState_EnvName", "TrackEnvelope", "Must be a valid TrackEnvelope-object", -1) return end
   if TrackEnvelope==nil and ultraschall.IsValidEnvStateChunk(EnvelopeStateChunk)==false then ultraschall.AddErrorMessage("GetEnvelopeState_EnvName", "EnvelopeStateChunk", "Must be a valid EnvelopeStateChunk", -2) return end
   local retval, str
-  if TrackEnvelope==nil then
+  if TrackEnvelope==nil then 
     str=EnvelopeStateChunk
   else
     retval, str = reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
   end
-
+  
   local Line=str:match("<(.-)\n")
   local Count, Individual_values = ultraschall.CSV2IndividualLinesAsArray(Line, " ")
   for i=3,Count do
@@ -1753,7 +1764,7 @@ function ultraschall.GetAllTrackEnvelopes(include_mastertrack)
   <functioncall>integer number_of_trackenvelopes, table TrackEnvelopes_Table = ultraschall.GetAllTrackEnvelopes()</functioncall>
   <description>
     Returns all TrackEnvelopes of all tracks from the current project as a handy table
-
+    
     The format of the table is as follows:
         TrackEnvelopes[trackenvelope_idx]["Track"] - the idx of the track; 0, for mastertrack, 1, for first track, etc
         TrackEnvelopes[trackenvelope_idx]["EnvelopeObject"] - the TrackEnvelope-object
@@ -1775,7 +1786,7 @@ function ultraschall.GetAllTrackEnvelopes(include_mastertrack)
   local TrackEnvelopesTable={}
   local TrackEnvelopes_Count=0
   local _temp
-
+  
   if include_mastertrack==true then
     local Track=reaper.GetMasterTrack(0)
     for a=0, reaper.CountTrackEnvelopes(Track)-1 do
@@ -1786,7 +1797,7 @@ function ultraschall.GetAllTrackEnvelopes(include_mastertrack)
       _temp, TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeName"]=reaper.GetEnvelopeName(TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeObject"])
     end
   end
-
+  
   for i=0, reaper.CountTracks(0)-1 do
     local Track=reaper.GetTrack(0, i)
     for a=0, reaper.CountTrackEnvelopes(Track)-1 do
@@ -1795,7 +1806,7 @@ function ultraschall.GetAllTrackEnvelopes(include_mastertrack)
       TrackEnvelopesTable[TrackEnvelopes_Count]["Track"]=i+1
       TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeObject"]=reaper.GetTrackEnvelope(Track, a)
       _temp, TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeName"]=reaper.GetEnvelopeName(TrackEnvelopesTable[TrackEnvelopes_Count]["EnvelopeObject"])
-    end
+    end    
   end
   return TrackEnvelopes_Count, TrackEnvelopesTable
 end
@@ -1814,7 +1825,7 @@ function ultraschall.GetAllTakeEnvelopes()
   <functioncall>integer number_of_takeenvelopes, table TakeEnvelopes_Table = ultraschall.GetAllTakeEnvelopes()</functioncall>
   <description>
     Returns all TakeEnvelopes of all MediaItems from the current project as a handy table
-
+    
     The format of the table is as follows:
         TakeEnvelopes[takeenvelope_idx]["MediaItem"] - the idx of the MediaItem
         TakeEnvelopes[takeenvelope_idx]["MediaItem_Take"] - the idx of the trake of the MediaItem
@@ -1838,7 +1849,7 @@ function ultraschall.GetAllTakeEnvelopes()
   local ItemEnvelopesTable={}
   local ItemEnvelopes_Count=0
   local _temp
-
+    
   for i=0, reaper.CountMediaItems(0)-1 do
     local MediaItem=reaper.GetMediaItem(0, i)
     for x=0, reaper.CountTakes(MediaItem)-1 do
@@ -1851,7 +1862,7 @@ function ultraschall.GetAllTakeEnvelopes()
         ItemEnvelopesTable[ItemEnvelopes_Count]["MediaItemTake_Name"]=reaper.GetTakeName(MediaItem_Take)
         ItemEnvelopesTable[ItemEnvelopes_Count]["EnvelopeObject"]=reaper.GetTakeEnvelope(MediaItem_Take, a)
         _temp, ItemEnvelopesTable[ItemEnvelopes_Count]["EnvelopeName"]=reaper.GetEnvelopeName(ItemEnvelopesTable[ItemEnvelopes_Count]["EnvelopeObject"])
-      end
+      end    
     end
   end
   return ItemEnvelopes_Count, ItemEnvelopesTable
@@ -1871,9 +1882,9 @@ function ultraschall.SetEnvelopeState_Vis(TrackEnvelope, visibility, lane, unkno
   <functioncall>boolean retval, string EnvelopeStateChunk = ultraschall.SetEnvelopeState_Vis(TrackEnvelope env, integer visibility, integer lane, integer unknown, optional string EnvelopeStateChunk)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
       sets the current visibility-state of a TrackEnvelope-object or EnvelopeStateChunk.
-
+      
       It is the state entry VIS
-
+      
       returns false in case of error
   </description>
   <retvals>
@@ -1884,7 +1895,7 @@ function ultraschall.SetEnvelopeState_Vis(TrackEnvelope, visibility, lane, unkno
     TrackEnvelope env - the envelope, in whose envelope you want set the visibility states; nil, to us parameter EnvelopeStateChunk instead
     integer visibility - the visibility of the envelope; 0, invisible; 1, visible
     integer lane - the position of the envelope in the lane; 0, envelope is in media-lane; 1, envelope is in it's own lane
-    integer unknown - unknown; default=1
+    integer unknown - unknown; default=1 
 	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
   </parameters>
   <chapter_context>
@@ -1925,9 +1936,9 @@ function ultraschall.SetEnvelopeState_Act(TrackEnvelope, act, automation_setting
   <functioncall>boolean retval = ultraschall.SetEnvelopeState_Act(TrackEnvelope env, integer act, integer automation_settings, optional string EnvelopeStateChunk)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
       sets the current bypass and automation-items-settings-state of a TrackEnvelope-object or EnvelopeStateChunk.
-
+      
       It is the state entry ACT
-
+      
       returns false in case of error
   </description>
   <retvals>
@@ -1936,16 +1947,16 @@ function ultraschall.SetEnvelopeState_Act(TrackEnvelope, act, automation_setting
   </retvals>
   <parameters>
     TrackEnvelope env - the envelope, in whose envelope you want set the bypass and automation-item-states; nil, to use parameter EnvelopeStateChunk instead
-    integer act - bypass-setting;
+    integer act - bypass-setting; 
 				-   0, bypass on
-				-   1, no bypass
+				-   1, no bypass 
     integer automation_settings - automation item-options for this envelope
 								- -1, project default behavior, outside of automation items
 								- 0, automation items do not attach underlying envelope
 								- 1, automation items attach to the underlying envelope on the right side
 								- 2, automation items attach to the underlying envelope on both sides
 								- 3, no automation item-options for this envelope
-								- 4, bypass underlying envelope outside of automation items
+								- 4, bypass underlying envelope outside of automation items 
 	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
   </parameters>
   <chapter_context>
@@ -1965,7 +1976,7 @@ function ultraschall.SetEnvelopeState_Act(TrackEnvelope, act, automation_setting
   if TrackEnvelope~=nil then
     A,EnvelopeStateChunk=reaper.GetEnvelopeStateChunk(TrackEnvelope, "", false)
   end
-
+  
   EnvelopeStateChunk=string.gsub(EnvelopeStateChunk, "ACT .-\n", "ACT "..act.." "..automation_settings.."\n")
   if TrackEnvelope~=nil then
     reaper.SetEnvelopeStateChunk(TrackEnvelope, EnvelopeStateChunk, false)
@@ -1985,9 +1996,9 @@ function ultraschall.SetEnvelopeState_DefShape(TrackEnvelope, shape, pitch_custo
   <functioncall>boolean retval, string EnvelopeStateChunk = ultraschall.SetEnvelopeState_DefShape(TrackEnvelope env, integer shape, integer pitch_custom_envelope_range, integer pitch_snap_values, optional string EnvelopeStateChunk)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
       sets the current default-shape-states and pitch-snap-settings of a TrackEnvelope-object or EnvelopeStateChunk.
-
+      
       It is the state entry DEFSHAPE
-
+      
       returns false in case of error
   </description>
   <retvals>
@@ -2002,7 +2013,7 @@ function ultraschall.SetEnvelopeState_DefShape(TrackEnvelope, shape, pitch_custo
 					- 2, slow start/end
 					- 3, fast start
 					- 4, fast end
-					- 5, bezier
+					- 5, bezier 
 	integer pitch_custom_envelope_range_takes - the custom envelope range as set in the Pitch Envelope Settings; only available in take-fx-envelope "Pitch"
 											  - -1, if unset or for non pitch-envelopes
 											  - 0, Custom envelope range-checkbox unchecked
@@ -2055,9 +2066,9 @@ function ultraschall.SetEnvelopeState_LaneHeight(TrackEnvelope, height, compacte
   <functioncall>boolean retval, string EnvelopeStateChunk = ultraschall.SetEnvelopeState_LaneHeight(TrackEnvelope env, integer height, integer compacted, optional string EnvelopeStateChunk)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
       sets the current height-states and compacted-settings of a TrackEnvelope-object or EnvelopeStateChunk.
-
+      
       It is the state entry LANEHEIGHT
-
+      
       returns false in case of error
   </description>
   <retvals>
@@ -2068,7 +2079,7 @@ function ultraschall.SetEnvelopeState_LaneHeight(TrackEnvelope, height, compacte
     TrackEnvelope env - the envelope, whose envelope you want set the height and compacted-states; nil, to us parameter EnvelopeStateChunk instead
     integer height - the height of the laneheight; the height of this envelope in pixels; 24 - 263 pixels
 	integer compacted - 1, envelope-lane is compacted("normal" height is not shown but still stored in height);
-					  - 0, envelope-lane is "normal" height
+					  - 0, envelope-lane is "normal" height 
 	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
 	</parameters>
   <chapter_context>
@@ -2096,9 +2107,9 @@ function ultraschall.ActivateEnvelope(Envelope, visible, bypass)
   <functioncall>boolean retval = ultraschall.ActivateEnvelope(TrackEnvelope env, optional boolean visible, optional boolean bypass)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Activates an envelope, so it can be displayed in the arrange-view.
-
+    
     Will add an envelope-point at position 0 in the envelope, if no point is in the envelope yet
-
+    
     returns false in case of an error
   </description>
   <retvals>
@@ -2154,7 +2165,7 @@ function ultraschall.ActivateTrackVolumeEnv(track)
     <functioncall>boolean retval = ultraschall.ActivateTrackVolumeEnv(integer track)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       activates a volume-envelope of a track
-
+        
       returns false in case of error
     </description>
     <retvals>
@@ -2178,7 +2189,7 @@ function ultraschall.ActivateTrackVolumeEnv(track)
   ultraschall.PreventUIRefresh()
   if env==nil then
     retval = ultraschall.ApplyActionToTrack(tostring(track), 40406)
-  else
+  else 
     retval=false ultraschall.AddErrorMessage("ActivateTrackVolumeEnv", "", "already activated", -3)
   end
   ultraschall.RestoreUIRefresh()
@@ -2199,7 +2210,7 @@ function ultraschall.ActivateTrackVolumeEnv_TrackObject(track)
     <functioncall>boolean retval = ultraschall.ActivateTrackVolumeEnv_TrackObject(MediaTrack track)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       activates a volume-envelope of a MediaTrack-object
-
+        
       returns false in case of error
     </description>
     <retvals>
@@ -2224,7 +2235,7 @@ function ultraschall.ActivateTrackVolumeEnv_TrackObject(track)
     local tracknumber=reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
     retval = ultraschall.ApplyActionToTrack(tostring(tracknumber), 40406)
     ultraschall.RestoreUIRefresh()
-  else
+  else 
     retval=false ultraschall.AddErrorMessage("ActivateTrackVolumeEnv_TrackObject", "", "already activated", -3)
   end
   return retval
@@ -2242,7 +2253,7 @@ function ultraschall.ActivateTrackPanEnv(track)
     <functioncall>boolean retval = ultraschall.ActivateTrackPanEnv(integer track)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       activates a pan-envelope of a track
-
+        
       returns false in case of error
     </description>
     <retvals>
@@ -2266,7 +2277,7 @@ function ultraschall.ActivateTrackPanEnv(track)
   ultraschall.PreventUIRefresh()
   if env==nil then
     retval = ultraschall.ApplyActionToTrack(tostring(track), 40407)
-  else
+  else 
     retval=false ultraschall.AddErrorMessage("ActivateTrackPanEnv", "", "already activated", -3)
   end
   ultraschall.RestoreUIRefresh()
@@ -2287,7 +2298,7 @@ function ultraschall.ActivateTrackPanEnv_TrackObject(track)
     <functioncall>boolean retval = ultraschall.ActivateTrackPanEnv_TrackObject(MediaTrack track)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       activates a pan-envelope of a MediaTrack-object
-
+        
       returns false in case of error
     </description>
     <retvals>
@@ -2312,7 +2323,7 @@ function ultraschall.ActivateTrackPanEnv_TrackObject(track)
     local tracknumber=reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
     retval = ultraschall.ApplyActionToTrack(tostring(tracknumber), 40407)
     ultraschall.RestoreUIRefresh()
-  else
+  else 
     retval=false ultraschall.AddErrorMessage("ActivateTrackPanEnv_TrackObject", "", "already activated", -3)
   end
   return retval
@@ -2330,7 +2341,7 @@ function ultraschall.ActivateTrackPreFXPanEnv(track)
     <functioncall>boolean retval = ultraschall.ActivateTrackPreFXPanEnv(integer track)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       activates a preFX-pan-envelope of a track
-
+        
       returns false in case of error
     </description>
     <retvals>
@@ -2354,7 +2365,7 @@ function ultraschall.ActivateTrackPreFXPanEnv(track)
   ultraschall.PreventUIRefresh()
   if env==nil then
     retval = ultraschall.ApplyActionToTrack(tostring(track), 40409)
-  else
+  else 
     retval=false ultraschall.AddErrorMessage("ActivateTrackPreFXPanEnv", "", "already activated", -3)
   end
   ultraschall.RestoreUIRefresh()
@@ -2375,7 +2386,7 @@ function ultraschall.ActivateTrackPreFXPanEnv_TrackObject(track)
     <functioncall>boolean retval = ultraschall.ActivateTrackPreFXPanEnv_TrackObject(MediaTrack track)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       activates a preFX-pan-envelope of a MediaTrack-object
-
+        
       returns false in case of error
     </description>
     <retvals>
@@ -2400,7 +2411,7 @@ function ultraschall.ActivateTrackPreFXPanEnv_TrackObject(track)
     local tracknumber=reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
     retval = ultraschall.ApplyActionToTrack(tostring(tracknumber), 40409)
     ultraschall.RestoreUIRefresh()
-  else
+  else 
     retval=false ultraschall.AddErrorMessage("ActivateTrackPreFXPanEnv_TrackObject", "", "already activated", -3)
   end
   return retval
@@ -2418,7 +2429,7 @@ function ultraschall.ActivateTrackPreFXVolumeEnv(track)
     <functioncall>boolean retval = ultraschall.ActivateTrackPreFXVolumeEnv(integer track)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       activates a preFX-volume-envelope of a track
-
+        
       returns false in case of error
     </description>
     <retvals>
@@ -2442,7 +2453,7 @@ function ultraschall.ActivateTrackPreFXVolumeEnv(track)
   ultraschall.PreventUIRefresh()
   if env==nil then
     retval = ultraschall.ApplyActionToTrack(tostring(track), 40408)
-  else
+  else 
     retval=false ultraschall.AddErrorMessage("ActivateTrackPreFXVolumeEnv", "", "already activated", -3)
   end
   ultraschall.RestoreUIRefresh()
@@ -2463,7 +2474,7 @@ function ultraschall.ActivateTrackPreFXVolumeEnv_TrackObject(track)
     <functioncall>boolean retval = ultraschall.ActivateTrackPreFXVolumeEnv_TrackObject(MediaTrack track)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       activates a preFX-volume-envelope of a MediaTrack-object
-
+        
       returns false in case of error
     </description>
     <retvals>
@@ -2488,7 +2499,7 @@ function ultraschall.ActivateTrackPreFXVolumeEnv_TrackObject(track)
     local tracknumber=reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
     retval = ultraschall.ApplyActionToTrack(tostring(tracknumber), 40408)
     ultraschall.RestoreUIRefresh()
-  else
+  else 
     retval=false ultraschall.AddErrorMessage("ActivateTrackPreFXVolumeEnv_TrackObject", "", "already activated", -3)
   end
   return retval
@@ -2506,7 +2517,7 @@ function ultraschall.ActivateTrackTrimVolumeEnv(track)
     <functioncall>boolean retval = ultraschall.ActivateTrackTrimVolumeEnv(integer track)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       activates a trim-volume-envelope of a track
-
+        
       returns false in case of error
     </description>
     <retvals>
@@ -2530,7 +2541,7 @@ function ultraschall.ActivateTrackTrimVolumeEnv(track)
   ultraschall.PreventUIRefresh()
   if env==nil then
     retval = ultraschall.ApplyActionToTrack(tostring(track), 42020)
-  else
+  else 
     retval=false ultraschall.AddErrorMessage("ActivateTrackTrimVolumeEnv", "", "already activated", -3)
   end
   ultraschall.RestoreUIRefresh()
@@ -2551,7 +2562,7 @@ function ultraschall.ActivateTrackTrimVolumeEnv_TrackObject(track)
     <functioncall>boolean retval = ultraschall.ActivateTrackTrimVolumeEnv_TrackObject(MediaTrack track)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       activates a trim-volume-envelope of a MediaTrack-object
-
+        
       returns false in case of error
     </description>
     <retvals>
@@ -2576,7 +2587,7 @@ function ultraschall.ActivateTrackTrimVolumeEnv_TrackObject(track)
     local tracknumber=reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
     retval = ultraschall.ApplyActionToTrack(tostring(tracknumber), 42020)
     ultraschall.RestoreUIRefresh()
-  else
+  else 
     retval=false ultraschall.AddErrorMessage("ActivateTrackTrimVolumeEnv_TrackObject", "", "already activated", -3)
   end
   return retval
@@ -2611,10 +2622,10 @@ function ultraschall.GetTakeEnvelopeUnderMouseCursor()
   </US_DocBloc>
   --]]
   -- todo: retval for position within the take
-
+  
   local Awindow, Asegment, Adetails = reaper.BR_GetMouseCursorContext()
   local retval, takeEnvelope = reaper.BR_GetMouseCursorContext_Envelope()
-  if takeEnvelope==true then
+  if takeEnvelope==true then 
     return retval, reaper.BR_GetMouseCursorContext_Position(), reaper.BR_GetMouseCursorContext_Item()
   else
     return nil, reaper.BR_GetMouseCursorContext_Position()
@@ -2634,7 +2645,7 @@ function ultraschall.IsAnyNamedEnvelopeVisible(name)
     <functioncall>boolean retval = ultraschall.IsAnyMuteEnvelopeVisible(string name)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       returns, if any mute-envelopes are currently set to visible in the current project
-
+      
       Visible=true does include mute-envelopes, who are scrolled outside of the arrangeview
     </description>
     <retvals>
@@ -2642,7 +2653,7 @@ function ultraschall.IsAnyNamedEnvelopeVisible(name)
     </retvals>
     <parameters>
       string name - the name of the envelope; case-sensitive, just take the one displayed in the envelope-lane
-                  - Standard-Envelopes are:
+                  - Standard-Envelopes are: 
                   -      "Volume (Pre-FX)", "Pan (Pre-FX)", "Width (Pre-FX)", "Volume", "Pan", "Width", "Trim Volume", "Mute"
                   - Plugin's envelopes can also be checked against, like
                   -      "Freq-Band 1 / ReaEQ"
@@ -2655,8 +2666,8 @@ function ultraschall.IsAnyNamedEnvelopeVisible(name)
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
     <tags>envelope management, get, any mute envelope, envelope, visible</tags>
   </US_DocBloc>
-  --]]
-  -- todo:
+  --]] 
+  -- todo: 
   --   visible in viewable arrangeview only, but this is difficult, as I need to know first, how high the arrangeview is.
   for i=0, reaper.CountTracks()-1 do
     local Track=reaper.GetTrack(0,i)
@@ -2681,7 +2692,7 @@ function ultraschall.IsEnvelope_Track(TrackEnvelope)
     <functioncall>boolean retval = ultraschall.IsEnvelope_Track(TrackEnvelope env)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       returns, if the envelope is a track envelope(true) or a take-envelope(false)
-
+      
       returns nil in case of an error
     </description>
     <retvals>
@@ -2698,7 +2709,7 @@ function ultraschall.IsEnvelope_Track(TrackEnvelope)
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
     <tags>envelope management, check, track envelope, take envelope</tags>
   </US_DocBloc>
-  --]]
+  --]] 
   if ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("IsEnvelope_Track", "TrackEnvelope", "must be an envelope-object", -1) return end
   if reaper.GetEnvelopeInfo_Value(Mute, "P_TRACK")==0 then return false else return true end
 end
@@ -2715,7 +2726,7 @@ function ultraschall.IsTrackEnvelopeVisible_ArrangeView(TrackEnvelope)
     <functioncall>boolean retval = ultraschall.IsTrackEnvelopeVisible_ArrangeView(TrackEnvelope env)</functioncall>
     <description markup_type="markdown" markup_version="1.0.1" indent="default">
       returns, if the envelope is currently visible within arrange-view
-
+      
       returns nil in case of an error
     </description>
     <retvals>
@@ -2732,12 +2743,12 @@ function ultraschall.IsTrackEnvelopeVisible_ArrangeView(TrackEnvelope)
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
     <tags>envelope management, check, track envelope, take envelope, visible, arrangeview</tags>
   </US_DocBloc>
-  --]]
+  --]] 
   if ultraschall.IsEnvelope_Track(TrackEnvelope)==false then ultraschall.AddErrorMessage("IsTrackEnvelopeVisible_ArrangeView", "TrackEnvelope", "must be a track-envelope-object", -1) return false end
   if reaper.GetEnvelopeInfo_Value(TrackEnvelope, "I_TCPH_USED")==0 then return false end
   local arrange_view = ultraschall.GetHWND_ArrangeViewAndTimeLine()
   local retval, left, top, right, bottom = reaper.JS_Window_GetClientRect(arrange_view)
-
+  
   local Item = reaper.GetMediaTrackInfo_Value(reaper.GetEnvelopeInfo_Value(Mute, "P_TRACK"), "P_ITEM")
   local HeightTrackY = reaper.GetMediaTrackInfo_Value(reaper.GetEnvelopeInfo_Value(Mute, "P_TRACK"), "I_TCPY")
   local HeightTrack = reaper.GetMediaTrackInfo_Value(reaper.GetEnvelopeInfo_Value(Mute, "P_TRACK"), "I_TCPH")
@@ -2746,3 +2757,5 @@ function ultraschall.IsTrackEnvelopeVisible_ArrangeView(TrackEnvelope)
   local B=HeightTrackY+HeightEnv+top<bottom
   return A==B
 end
+
+

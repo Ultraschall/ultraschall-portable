@@ -1704,8 +1704,8 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_RenderStems</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.10
+    Ultraschall=4.2
+    Reaper=6.20
     Lua=5.3
   </requires>
   <functioncall>integer render_stems = ultraschall.GetProject_RenderStems(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -1733,6 +1733,7 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
     - 128, Selected tracks via master
     - &256, Embed stretch markers/transient guides-checkbox
 	- &1024, Embed Take markers
+    - &2048, enable second pass rendering
   </retvals>
   <chapter_context>
     Project-Management
@@ -6009,8 +6010,8 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetProject_RenderStems</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.10
+    Ultraschall=4.2
+    Reaper=6.20
     Lua=5.3
   </requires>
   <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_RenderStems(string projectfilename_with_path, integer render_stems, optional string ProjectStateChunk)</functioncall>
@@ -6032,6 +6033,7 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
     - 128, Selected tracks via master
     - &256, Embed stretch markers/transient guides-checkbox 
 	- &1024, Embed Take markers
+    - &2048, enable second pass rendering
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>

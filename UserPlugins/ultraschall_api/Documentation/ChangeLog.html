@@ -40,12 +40,174 @@ Ultraschall API Changelog
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.2.003 - "Georg Friedrich Händel - Sarabande" - 6th of February 2021</h3>
+<p>Has now 1385 functions, with 26 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>BatchConvertFiles</strong><br />
+Ever fancied programming the batch-converter? Now you can, with BatchConvertFiles. No more fiddling around with command-line.</p></li>
+<li><p><strong>GetProjectStateChunk</strong><br />
+Is now improved and finally working stable. What a difficult birth, but now you can access all your project-states available.</p></li>
+<li><p><strong>FXStateChunk-functions</strong><br />
+Getting and setting FXStateChunk-entries should be fully supported now. Some can't be set at runtime in Reaper, due some quirks with setting statechunks, but nevertheless.</p></li>
+<li><p><strong>GetActionCommandIDByFilename</strong><br />
+So here's the story: you have this nice filename of a nice ReaScript and would like to call it for a date or just by Main_OnCommand, but:<br />
+you don't know the ActionCommandID. GetActionCommandIDByFilename will be your knight in shining armor and give you what you need.</p></li>
+<li><p><strong>M1-Mac support</strong><br />
+Now all scripts using Ultraschall-API run smooth on the new Arm-Macs as well. Dozens of fixes and bugreports made it possible.</p></li>
+<li><p><strong>SetUIScale</strong><br />
+Now you can scale your Reaper-window to planet-size, by setting its UI-scaling-factor. So if 2 isn't enough for your oldening eyes, set it to 100.</p></li>
+<li><p><strong>2nd pass rendering</strong><br />
+Also added, so you can use the new 2nd-pass-rendering-feature in your scripts. Loop Loop!</p></li>
+<li><p><strong>Custom Markers/Regions</strong><br />
+They can now be enumerated, set, deleted and count with "" as well. This will give you all custom-marker/regions instead of a specific one.</p></li>
+<li><p><strong>GetItem_ClickState and GetTrackEnvelope_ClickState</strong><br />
+Stopped working due bugfix in SWS, now returned back to working due bugfix in Ultraschall-API. So getting the currently clicked/dragged item/envelope-point is available again.</p></li>
+<li><p><strong>EditReaScript</strong><br />
+Open a specific ReaScript with a specific window-position and size. So arranging your ReaScript-IDE-windows is now real easy.<br />
+Under the assumption, you have a taste for a nice IDE-arrangement.</p></li>
+<li><p><strong>Bugfixes, improvements, speedups</strong><br />
+The usual cleanup of old functions that usually eliminate bugs and slow code.</p></li>
+</ul>
+<h4>New features in 4.2.003</h4>
+<ul>
+<li>Configuration-files: GetActionCommandIDByFilename - get the actioncommand-id of a registered script</li>
+<li>Docs: misc/USDocML-Specs1_0.txt - describes the USDocML-format I use for my Reaper/Ultraschall-API documentation</li>
+<li>File-Management: BatchConvertFiles - allows converting files using the batch-converter of Reaper<br />
+</li>
+<li>FX-Management: GetDocked_FXStateChunk - gets the docked state of an fxchain from an FXStateChunk</li>
+<li>FX-Management: GetFXBypass_FXStateChunk - returns the BYPASS-entry-values of an FXStateChunk(bypass and online/offline state)</li>
+<li>FX-Management: GetFXFloatPos_FXStateChunk - returns the float state and position of the fx-window of an fx in an FXStateChunk</li>
+<li>FX-Management: GetFXGuid_FXStateChunk - returns the guid of an fx in an FXStateChunk</li>
+<li>FX-Management: GetFXMidiPreset_FXStateChunk - returns the MIDIPRESET-entry-values of an FXStateChunk(link to midi program change)</li>
+<li>FX-Management: GetFXWak_FXStateChunk - returns the WAK-entry-values of an FXStateChunk(embed and send keyboardinput to fx)<br />
+</li>
+<li>FX-Management: GetLastSel_FXStateChunk - returns the last selected fx of an FXStateChunk</li>
+<li>FX-Management: GetShow_FXStateChunk - gets the state of visibility of the fxchain-window and a specific fx from an FXStateChunk</li>
+<li>FX-Management: GetWndRect_FXStateChunk - gets the position of the fxchain-window when floating from an FXStateChunk<br />
+</li>
+<li>FX-Management: SetDocked_FXStateChunk - sets the docked state of an fxchain from an FXStateChunk</li>
+<li>FX-Management: SetFXBypass_FXStateChunk - sets the BYPASS-entry-values of an FXStateChunk(bypass, online/offline-state)</li>
+<li>FX-Management: SetFXFloatPos_FXStateChunk - sets the float state and position of the fx-window of an fx in an FXStateChunk</li>
+<li>FX-Management: GetFXGuid_FXStateChunk - sets the new guid of an fx in an FXStateChunk</li>
+<li>FX-Management: SetFXMidiPreset_FXStateChunk - sets the MIDIPRESET-entry-values of an FXStateChunk(link to midi program change)</li>
+<li>FX-Management: SetFXWak_FXStateChunk - sets the WAK-entry-values of an FXStateChunk(embed and send keyboardinput to fx)<br />
+</li>
+<li>FX-Management: SetLastSel_FXStateChunk - sets the last selected fx of an FXStateChunk</li>
+<li>FX-Management: SetShow_FXStateChunk - sets the SHOW-entry-values of an FXStateChunk(the currently shown fx in the fxchain)</li>
+<li>FX-Management: SetWndRect_FXStateChunk - sets the position of the fxchain-window when floating from an FXStateChunk<br />
+</li>
+<li>ItemManagement: GetItemImage - gets the image, associated with an item in the item-notes-dialog</li>
+<li>ItemManagement: SetItemImage - sets the image, associated with an item in the item-notes-dialog</li>
+<li>MarkerManagement: GetAllCustomMarkerNames - returns all custom-marker-names available in the current project(requested by fernsehmuell)</li>
+<li>MarkerManagement: GetAllCustomRegionNames - returns all custom-region-names available in the current project(requested by fernsehmuell)</li>
+<li>Misc: Ultraschall_Api_List_Of_USDocML-Containing_Files.txt - a list of all Lua-files, that contain Ultraschall-API-related USDocBlocs(requested by gxray)<br />
+</li>
+<li>User Interface: GetUIScale - gets the scaling of Reaper's UI(requested by willpadgett)</li>
+<li>User Interface: SetUIScale - sets the scaling of Reaper's UI(requested by willpadgett)</li>
+</ul>
+<h4>Changes from 4.2.002 to 4.2.003</h4>
+<ul>
+<li>Automation Items: AutomationItem_Delete - didn't work due stupid bug, completely rewritten -&gt; fixed(thanks to XRaym)<br />
+</li>
+<li>Configuration-files: CountKBIniActions - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: CountKBIniKeys - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: CountKBIniScripts - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: DeleteKBIniActions - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: DeleteKBIniKeys - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: DeleteKBIniScripts - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: GetActionCommandIDByFilename - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: GetKBIniActions - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: GetKBIniActionsID_ByActionCommandID - setting filename<em>with</em>path=nil uses default reaper-kb.ini; rewritten and sped up by magnitudes; returns found indices as table now; didn't work with command-id-numbers -&gt; fixed(thanks to Aaron Cendan)</li>
+<li>Configuration-files: GetKBIniFilepath - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: GetKBIniKeys - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: GetKBIniKeys_ByActionCommandID - setting filename<em>with</em>path=nil uses default reaper-kb.ini; rewritten and sped up by magnitudes; returns found indices as table now; didn't work with command-id-numbers -&gt; fixed(thanks to Aaron Cendan)</li>
+<li>Configuration-files: GetKBIniScripts - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: GetKBIniScripts_ByActionCommandID - setting filename<em>with</em>path=nil uses default reaper-kb.ini; rewritten and sped up by magnitudes; returns found indices as table now; didn't work with command-id-numbers -&gt; fixed(thanks to Aaron Cendan)</li>
+<li>Configuration-files: QueryKeyboardShortcutByKeyID - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: SetKBIniActions - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: SetKBIniKeys - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Configuration-files: SetKBIniScripts - setting filename<em>with</em>path=nil uses default reaper-kb.ini</li>
+<li>Developer Tools: ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua - uses now the project active at script-start.</li>
+<li>Developer Tools: ultraschall_ShowProjectDiffs.lua - doesn't need to save the project anymore to show changes in the projectfile</li>
+<li>Docs: Reaper Internals - update to Reaper 6.20, SWS 2.12.1.3; added missing retvals and params, removed duplicated ones<br />
+</li>
+<li>Docs: Render-presetfile-docs - added 2nd pass render-option</li>
+<li>Doc-Engine: Docs_GetUSDocBloc_Params - returns now 0, when no retval is found</li>
+<li>Doc-Engine: Docs_GetUSDocBloc_Retvals - returns now 0, when no retval is found</li>
+<li>Developer: EditReaScript - allows now setting position and size of the to-open-IDE-window</li>
+<li>EnvelopeManagement: GetTrackEnvelope_ClickState - works now again</li>
+<li>File-Management: CountDirectoriesAndFilesInPath - flushes cache on Reaper 6.20+ to be more reliable</li>
+<li>File-Management: DirectoryExists - flushes cache on Reaper 6.20+ to be more reliable</li>
+<li>File-Management: GetAllDirectoriesInPath - flushes cache on Reaper 6.20+ to be more reliable</li>
+<li>File-Management: GetAllFilenamesInPath - flushes cache on Reaper 6.20+ to be more reliable<br />
+</li>
+<li>File-Management: GetAllRecursiveFilesAndSubdirectories - flushes cache on Reaper 6.20+ to be more reliable<br />
+</li>
+<li>HelperFunctions: CheckActionCommandIDFormat - returns now true, when the command-id-number is passed over as string as well; fixes some functions(thanks to Aaron Cendan)</li>
+<li>HelperFunctions: IsOS_Mac - works now on arm-macs as well(thanks to rstockm)</li>
+<li>MarkerManagement: AddEditMarker - works now on arm-macs as well(thanks to rstockm)</li>
+<li>MarkerManagement: AddEditRegion - works now on arm-macs as well(thanks to rstockm)</li>
+<li>MarkerManagement: AddPodRangeRegion - works now on arm-macs as well(thanks to rstockm)</li>
+<li>MarkerManagement: CountAllCustomMarkers - "" counts now all custom-markers, regardless of their name</li>
+<li>MarkerManagement: CountAllCustomRegions - "" counts now all custom-regions, regardless of their name</li>
+<li>MarkerManagement: DeleteCustomMarkers - "" deletes now over all custom-markers, regardless of their name</li>
+<li>MarkerManagement: DeleteCustomRegions - "" deletes now over all custom-regions, regardless of their name</li>
+<li>MarkerManagement: EnumerateCustomMarkers - "" enumerates now over all custom-markers, regardless of their name</li>
+<li>MarkerManagement: EnumerateCustomRegions - "" enumerates now over all custom-regions, regardless of their name</li>
+<li>MarkerManagement: GetAllCustomMarkers - "" returns now all custom-markers, regardless of their name(requested by fernsehmuell)<br />
+</li>
+<li>MarkerManagement: GetAllCustomRegions - "" returns now all custom-regions, regardless of their name</li>
+<li>MarkerManagement: IsMarkerValidCustomMarker - "" checks now over all custom-markers, regardless of their name</li>
+<li>MarkerManagement: IsRegionValidCustomRegion - "" checks now over all custom-regions, regardless of their name</li>
+<li>MarkerManagement: SetCustomMarker - "" sets now over all custom-markers, regardless of their name</li>
+<li>MarkerManagement: SetCustomRegion - "" sets now over all custom-regions, regardless of their name</li>
+<li>MarkerManagement: SetEditRegion - works now on arm-macs as well(thanks to rstockm)</li>
+<li>MediaItem Management: GetItem_ClickState - works now again</li>
+<li>Miscellaneous: OpenURL - works now on arm-macs as well</li>
+<li>ProjectManagement: GetProjectStateChunk - works now reliable in Reaper 6.20+; fixed some bugs that might improve stability on earlier Reaper-versions</li>
+<li>ProjectManagement: GetProject_RenderStems - supports now 2nd pass rendering(Reaper 6.20+)<br />
+</li>
+<li>ProjectManagement: IsValidProjectStateChunk - sped up by magnitudes, which is important for checking huge ProjectStateChunks</li>
+<li>ProjectManagement: SetProject_RenderStems - supports now 2nd pass rendering(Reaper 6.20+)</li>
+<li>RenderManagement: AddRenderPreset - supports now 2nd pass rendering(Reaper 6.20+)</li>
+<li>RenderManagement: ApplyRenderTable_Project - supports now 2nd pass rendering(Reaper 6.20+)</li>
+<li>RenderManagement: ApplyRenderTable_ProjectFile - supports now 2nd pass rendering(Reaper 6.20+)</li>
+<li>RenderManagement: CreateNewRenderTable - all parameters are optional and when passed nil, will be set with Reaper's factory defaults</li>
+<li>RenderManagement: GetRenderCFG_Settings_AIFF - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_AVI_Video - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_AudioCD - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_FLAC - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_GIF - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_LCF - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_MKV_Video - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_MP3 - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_MP3ABR - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_MP3CBR - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_MP3MaxQuality - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_MP3VBR - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_MP4Mac_Video - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_OGG - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_OPUS - stabilized some edgecases<br />
+</li>
+<li>RenderManagement: GetRenderCFG_Settings_QTMOVMP4_Video - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_WAV - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_WAVPACK - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderCFG_Settings_WebMVideo - stabilized some edgecases</li>
+<li>RenderManagement: GetRenderTable_Project - supports now 2nd pass rendering(Reaper 6.20+)</li>
+<li>RenderManagement: GetRenderTable_ProjectFile - supports now 2nd pass rendering(Reaper 6.20+); didn't return render-cfg and render-cfg2 as empty string when not set in project -&gt; fixed</li>
+<li>RenderManagement: GetRenderPreset_RenderTable - supports now 2nd pass rendering(Reaper 6.20+)</li>
+<li>RenderManagement: IsValidRenderTable - supports now 2nd pass rendering(Reaper 6.20+)</li>
+<li>RenderManagement: RenderProject_RenderTable - supports now 2nd pass rendering(Reaper 6.20+)</li>
+<li>RenderManagement: SetRenderPreset - supports now 2nd pass rendering(Reaper 6.20+)</li>
+</ul>
+<hr />
 <h3>4.2.002 - "Dave Brubeck - Take Five" - 25th of December 2020</h3>
 <p>Has now 1359 functions, with 8 new ones</p>
-<p><strong>new in this release:</strong><br />
-- <strong>Get/Set Comment-field of fx</strong><br />
-You can now get and set the comment-field of trackfx and takefx programmatically. Also gave me the chance to fix some bugs as well ;)</p>
+<p><strong>new in this release:</strong></p>
 <ul>
+<li><p><strong>Get/Set Comment-field of fx</strong><br />
+You can now get and set the comment-field of trackfx and takefx programmatically. Also gave me the chance to fix some bugs as well ;)</p></li>
 <li><p><strong>Linesorting script for clipboard-content</strong><br />
 Sometimes, you would love to sort the lines in the clipboard. Now you can, using the new developer-tool.</p></li>
 <li><p><strong>bugfixes and docs</strong><br />
@@ -79,25 +241,25 @@ various bugfixes and update to Reaper Internals to Reaper 6.19, SWS 2.12.1.1, JS
 <hr />
 <h3>4.2.001 - "Pink Floyd - High Hopes" - 1st of December 2020</h3>
 <p>Has now 1351 functions, with 9 new ones</p>
-<p><strong>new in this release:</strong><br />
-- ** StuffMIDIMessage and KB.ini-functions**<br />
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>StuffMIDIMessage and KB.ini-functions</strong><br />
 You can now convert the KEY-entry-codes of shortcuts(as stored in the reaper-kb.ini) into their text representation: CharacterCodes_ReverseLookup_KBIni<br />
 This is also possible, if you use StuffMIDIMessage to send control-messages, as these can be converted now into their text-representation as well: CharacterCodes_ReverseLookup<br />
 Multiple keymaps supported.<br />
 Oh, and did I mention, you can now also get all currently set shortcuts as a handy table? Optionally with factory-default shortcuts?<br />
-Now I did: KBIniGetAllShortcuts</p>
-<ul>
-<li><p>** Metadata for AIFF, APE and XMP**<br />
+Now I did: KBIniGetAllShortcuts</p></li>
+<li><p><strong>Metadata for AIFF, APE and XMP</strong><br />
 As of Reaper 6.16, you can add metadata for AIFF, APE and XMP as well. I also updated the other metadata-functions to feature the lastest metadata-features Reaper can offer.<br />
 And yes, this includes also support for the new Media Explorer-tags.</p></li>
-<li><p>** ConfigVars support in StateInspector **<br />
+<li><p><strong>ConfigVars support in StateInspector </strong><br />
 That's right: you can now monitor config-vars in the StateInspector as well. I also removed the fact that I accidentally deleted your saved slots with each updated.<br />
 How come, you didn't tell me that, huh? ;)</p></li>
-<li><p>** CleanUp and Speedup **<br />
+<li><p><strong>CleanUp and Speedup </strong><br />
 I made Ultraschall-API much smaller by removing tons of useless files and improving storage of other files by magnitude.<br />
 To give you a number: Ultraschall-API is 50% smaller compared to the previous release.<br />
 It also loads now 30% faster, so starting scripts using Ultraschall-API is now close to lightspeed.</p></li>
-<li><p>** Various Bugfixes **<br />
+<li><p><strong>Various Bugfixes </strong><br />
 The render-string-functions didn't work properly with floats. Mostly fps-settings were affected. Now it's working.<br />
 Also the StuffMIDIMessage-docs is improved now and more precise.</p></li>
 </ul>
@@ -317,13 +479,14 @@ Renderfunctions sometimes created peak-files when not necessary. This is fixed n
 <hr />
 <h3>4.1.005 - "The Beatles - I want you(she's so heavy)" - 25th of September 2020</h3>
 <p>Has now 1240 functions, with 25 new ones</p>
-<p><strong>new in this release:</strong> - <strong>Parameter Modulation/Learn/Alias/LFOLearn</strong><br />
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Parameter Modulation/Learn/Alias/LFOLearn</strong><br />
 A long time feature-request finally fulfilled. You have full access to programmatically get/alter parameter-modulation, parameter aliases, LFOLearn or Learn in general.<br />
 So anything you would want to do with parameter-modulation can now be scripted.<br />
 I'm curious, what will happen because of that feature. Surprise me.<br />
 Requested by so many.<br />
-<a href="https://mespotin.uber.space/Mespotine/mespotine-unterstuetzen/">Please consider donating</a>, as this was a massive undertaking. Holy cow!</p>
-<ul>
+<a href="https://mespotin.uber.space/Mespotine/mespotine-unterstuetzen/">Please consider donating</a>, as this was a massive undertaking. Holy cow!</p></li>
 <li><p><strong>SLEM</strong><br />
 Allows now different output-targets, so outputting the last error-message to the ReaScript-console or even the clipboard is possible with that.</p></li>
 <li><p><strong>Lua-ReferenceManual</strong><br />

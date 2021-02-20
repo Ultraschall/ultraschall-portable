@@ -1,0 +1,245 @@
+###USDocML-description 1.0
+
+Meo-Ada Mespotine - 2017-now
+licensed under MIT-license.
+
+##Introduction:
+    USDocML is a markup-format I use for documentation of my Reaper and Ultraschall-API related content.
+    It's basically a variant of an xml-file with additional benefits.
+
+    All documentation-chapters are written in their own datastructures called US_DocBloc, which is the description 
+    plus additional metadata like chapters, tags, slugs, etc.
+
+    You can use these US_DocBlocs in two different ways: as a standalone file or as inline docs within functions/methods 
+    inside your code.
+
+    The great benefit over other docsystems like luadoc or javadoc is the fact, that the structure is designed to be
+    readable, parseable and extendable.
+    So if you need additional tags for your own benefits, just add them.
+    To avoid possible namingconflicts with future elements of USDocML, add a prefix to the tag-names in UPPERCASE.
+    
+    Like:
+    
+    <APPLE_developer_id>foobar</APPLE_developer_id>
+
+
+    Some additional note: it's built for myself to benefit my own documentational needs, so not every single detail is
+    designed to work for everyone and all the time.
+    For it to be an official documentation-system, it would need a huge overhaul.
+    But still, it's more flexible than I originally thought myself, so maybe, you can use it for your advantage as well.
+    And feel free to take over the idea to develop a proper documentation-system out of it. 
+    Documentation with additional metadata is the future!
+    
+    Meo-Ada Mespotine
+    
+
+#Standalone file:
+    USDocML-standalone-files are just plain documentation containing solely one or more US_DocBlocs, encapsulated in <USDocBloc>-tags
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<USDocBloc>
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>slugname</slug>
+        <title>a title for this slug</title>
+        <description>
+            The description for slugname
+        </description>
+    </US_DocBloc>
+<USDocBloc>    
+
+#Inline-docs:
+    You can use US_DocBlocs also inside your own functions/sourcecode. In that case, the encapsulating USDocBloc and <?xml-tags are not needed.
+    The usual usecase is to add a multiline-comment below the function-definition and write the docs in there.
+    In Lua, it would look like this:
+    
+    function CoolFunction(freeze)
+    --[[
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>CoolFunction</slug>
+        <title>CoolFunction</title>
+        <functioncall>boolean freeze_state = CoolFunction(optional boolean freeze)</functioncall>
+        <description>
+            This function is so cool, it will freeze your computer, unless you run heating-benchmark on it.
+            
+            Returns false in case of an error
+        </description>
+        <parameters>
+            optional boolean freeze - true, freeze the computer down; false, let it heat up 
+                                    - when passing no value(nil), it will toggle between cooling and heating
+        </parameters>
+        <retvals>
+            boolean freeze_state - true, currently freezing down the computer; false, heating it up currently
+                                 - nil, an error occurred(i.e. hell froze over already)
+        </retvals>
+        <tags>set, toggle, freeze, computer</tags>
+    </US_DocBloc>
+    --]]    
+       
+       local freeze_state = operating_system.freeze(freeze) -- if freeze is nil, it will toggle freeze-state
+       
+       return freeze_state
+    end
+    
+    
+    That way, you can have your documentation available where you need it. And, as I said, you can add your own 
+    additional US_DocBloc-tags. So if you need more metadata in your docs, simply add it, as you need it.
+
+
+##Description of the US-DocBlocs
+
+#Example:
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>AddMediaItemToTrack</slug>
+        <title>AddMediaItemToTrack</title>
+        <functioncall prog_lang="cpp">MediaItem* item AddMediaItemToTrack(MediaTrack* tr)</functioncall>
+        <functioncall prog_lang="eel">MediaItem item AddMediaItemToTrack(MediaTrack tr)</functioncall>
+        <functioncall prog_lang="lua">MediaItem item = reaper.AddMediaItemToTrack(MediaTrack tr)</functioncall>
+        <functioncall prog_lang="python">MediaItem item RPR_AddMediaItemToTrack(MediaTrack tr)</functioncall>
+        <requires>
+            Ultraschall=4.2
+            Reaper=6.02
+            SWS=2.12.1.1
+            JS=1.220
+            Lua=5.3
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1">
+            Creates a new media item. It will be empty and therefore not be shown in the arrange-view, until you associate a mediafile(audio, picture, video, etc) or a length and position to it using [SetMediaItemInfo\_Value](#SetMediaItemInfo_Value)
+        </description>
+        <retvals markup_type="markdown" markup_version="1.0.1">
+            MediaItem item - the newly created MediaItem-object
+        </retvals>
+        <parameters>
+            MediaTrack tr - tracknumber(zero based), with 0 for track 1, 1 for track 2, etc.
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Mediaitem Management
+        </chapter_context>
+        <tags>mediaitemmanagement, mediaitem, item, track, empty</tags>
+    </US_DocBloc>
+
+##General description:
+    All indentation must be removed. If it's only a single line, the first character being neither tab or space is the 
+    first character in the line.
+    In the case of multiple lines, all lines after the first will remove all spaces/tabs up to the length of 
+    the indentation of the first line.
+    
+    For instance:
+    
+
+            This is a description line:
+                
+                    Followed by this text
+                And this one.
+                
+
+    Will result in
+
+
+This is a description line:
+    
+        Followed by this text
+    And this one.
+
+
+    So all lines are still offset relative to each other, as they were before removal of the indentation.
+
+
+
+##Description of all elements:
+
+#slug:
+    the slug of this documentation-chapter. This is usually a short version of the title used for anchors in html. No newlines.
+    Slugs are mandatory.
+
+#title:
+    a title for this documentation-chapter. This is usually shown as link-text in html. No newlines
+
+#functioncall:
+    This is optional. It will contain the functioncall for a function, including parameters and retvals.
+    The format is:
+        datatype retval, datatype retval2, optional datatype retval3 = functionname(datatype parameter, datatype parameter2, optional datatype parameter3)
+        
+    parameters and returnvalues can be mandatory (datatype name) or optional (optional datatype name).
+    
+    You can have multiple ones and separate them from each other by adding an attribute prog_lang, which signals the programminglanguage.
+    Currently natively supported: cpp python eel lua but you can use others as well.
+    
+    Omit it, if the docbloc contains a regular documentation-part, that is not a function-description.
+
+#requires:
+    This is optional and holds the needed 3rd-party extensions including their needed version, needed by a function.
+    
+    Currently supported:
+        Ultraschall=versionnumber - the Ultraschall-version needed
+        Reaper=versionnumber - the Reaper-version needed
+        SWS=versionnumber - SWS-extension
+        JS=versionnumber  - Julian Sader's extension
+        Lua=versionnumber - the Lua-version
+
+    You just omit, what you don't need. But the reaper-version is mandatory.
+
+#description:
+    A description of the chapter/functionname. This describes, what a function does or, includes a description for a certain
+    concept or documentation-page.
+    
+    All indentation is dependent on the first line. So, you count the number of tabs(4 spaces each) or spaces and take them away
+    for every other line in the description. So the first line defines the size of the indentation.
+    If following lines have more spaces/tabs, then these additional spaces/tabs will be kept.
+    
+    A description can be formatted in markup-languages, like markdown or plaintext(which is the default format when omitted).
+    Just add the according attributes markup_type and markup_version
+    
+        <description markup_type="markdown" markup_version="1.0.1">
+        
+    Newlines are allowed.
+    
+    Descriptions are mandatory.
+    
+#retvals and parameters:
+    They follow a certain scheme:
+        
+        datatype name  - description
+        datatype name2 - description for name 2
+                       - which needs additional
+                       - lines for additional
+                       - explanations
+                       
+    For instance, Reaper's own function adjustZoom has the following parameters:
+    
+        number amt         - the zoom factor, positive values=zoom in, negative values=zoom out, 0=no zoom
+        integer forceset   - forces one amt-zoomfactor(non zero) or allows repeatable zoom-in/zoomout(0)
+        boolean doupd      - true, updates the track-view instantly; false, or only when mouse hovers over trackview
+        integer centermode - decides, what shall be in the center of the view. The following are available:
+                           -  -1, default selection, as set in the reaper-prefs, 
+                           -   0, edit-cursor or playcursor(if it's in the current zoomfactor of the view during playback/recording) in center,
+                           -   1, keeps edit-cursor in center of zoom
+                           -   2, keeps center of view in the center during zoom
+                           -   3, keeps in center of zoom, what is beneath the mousecursor
+    Optional.
+                        
+#target_document:
+    the document, into which the formatted documentation shall be stored.
+    this is optional
+    
+#source_document:
+    the document, into which the formatted documentation shall be stored.
+    this is optional
+    
+#chapter_context:
+    The chapters and subchapters, into which the formatted docbloc shall be added. This influences the order of the
+    chapters as well as the format of the index.
+    
+        <chapter_context>
+            Main chapter
+            Subchapter in Main chapter
+            Subchapter2 in Subchapter
+        </chapter_context>
+        
+    Currently there are three allowed, though the format allows more.
+    
+#tags:
+    some words and phrases, that describe the content of the chapter. Can be used for tag-clouds, etc, to filter
+    relevant chapters by clicking a tag in the tag-cloud.

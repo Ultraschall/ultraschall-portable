@@ -63,7 +63,7 @@ function ultraschall.IsValidFXStateChunk(StateChunk)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.IsValidFXStateChunk(string StateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns, if a StateChunk is a valid FXStateChunk.
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
     
@@ -106,7 +106,7 @@ function ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxindex)
       Lua=5.3
     </requires>
     <functioncall>string fx_lines, integer startoffset, integer endoffset = ultraschall.GetFXFromFXStateChunk(string FXStateChunk, integer fxindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns the statechunk-lines of fx with fxindex from an FXStateChunk
       
       It also returns the start and endoffset of these lines, so you can manipulate these lines and replace them in the
@@ -178,7 +178,7 @@ function ultraschall.GetParmLearn_FXStateChunk(FXStateChunk, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a parameter-learn-setting from an FXStateChunk
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
     
@@ -279,7 +279,7 @@ function ultraschall.GetParmLearn_MediaItem(MediaItem, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLearn_MediaItem(MediaItem MediaItem, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a parameter-learn-setting from a MediaItem
     
     It is the PARMLEARN-entry
@@ -357,7 +357,7 @@ function ultraschall.GetParmLearn_MediaTrack(MediaTrack, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLearn_MediaTrack(MediaTrack MediaTrack, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a parameter-learn-setting from a MediaTrack
     
     It is the PARMLEARN-entry
@@ -438,7 +438,7 @@ function ultraschall.GetParmAlias_FXStateChunk(FXStateChunk, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parm_aliasname = ultraschall.GetParmAlias_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a parameter-alias-setting from an FXStateChunk
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
     
@@ -511,7 +511,7 @@ function ultraschall.GetParmAlias_MediaTrack(MediaTrack, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parm_aliasname = ultraschall.GetParmAlias_MediaTrack(MediaTrack MediaTrack, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a parameter-aliasname-setting from a MediaTrack
     
     It is the PARMALIAS-entry
@@ -558,7 +558,7 @@ function ultraschall.GetParmModulationChunk_FXStateChunk(FXStateChunk, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>string parm_modulation_chunk = ultraschall.GetParmModulationChunk_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a parameter-modulation-chunk from an FXStateChunk
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
     
@@ -617,7 +617,7 @@ function ultraschall.GetParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLFOLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a parameter-lfo-learn-setting from an FXStateChunk
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
     
@@ -718,7 +718,7 @@ function ultraschall.GetParmLFOLearn_MediaItem(MediaItem, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLFOLearn_MediaItem(MediaItem MediaItem, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a parameter-lfo-learn-setting from a MediaItem
     
     It is the LFOLEARN-entry
@@ -796,7 +796,7 @@ function ultraschall.GetParmLFOLearn_MediaTrack(MediaTrack, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLFOLearn_MediaTrack(MediaTrack MediaTrack, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a parameter-lfo-learn-setting from a MediaTrack
     
     It is the LFOLEARN-entry
@@ -1124,7 +1124,7 @@ function ultraschall.DeleteParmAlias_FXStateChunk(FXStateChunk, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string alteredFXStateChunk = ultraschall.DeleteParmAlias_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Deletes a ParmAlias-entry from an FXStateChunk.
     
     It's the PARMALIAS-entry
@@ -1191,7 +1191,7 @@ function ultraschall.DeleteParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string alteredFXStateChunk = ultraschall.DeleteParmLFOLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Deletes a ParmLFO-Learn-entry from an FXStateChunk.
     
     It's the LFOLEARN-entry
@@ -1259,7 +1259,7 @@ function ultraschall.SetParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id, midi_n
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmLFOLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id, integer midi_note, integer checkboxflags, optional string osc_message)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets an already existing ParmLFO-Learn-entry of an FX-plugin from an FXStateChunk.
     
     It's the LFOLEARN-entry
@@ -1367,7 +1367,7 @@ function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id, integer midi_note, integer checkboxflags, optional string osc_message)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets an already existing Parm-Learn-entry of an FX-plugin from an FXStateChunk.
     
     It's the PARMLEARN-entry
@@ -1548,7 +1548,7 @@ function ultraschall.SetParmAlias2_FXStateChunk(FXStateChunk, fxid, parmidx, par
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmAlias2_FXStateChunk(string FXStateChunk, integer fxid, integer parmidx, string parmalias)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets an already existing Parm-Learn-entry of an FX-plugin from an FXStateChunk.
     
     Unlike SetParmAlias_FXStateChunk, the parameter parmidx counts by parameter-order, not existing aliasnames. If a parameter has no aliasname yet, it will return false.
@@ -1618,7 +1618,7 @@ function ultraschall.SetFXStateChunk(StateChunk, FXStateChunk, TakeFXChain_id)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string alteredStateChunk = ultraschall.SetFXStateChunk(string StateChunk, string FXStateChunk, optional integer TakeFXChain_id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Adds/replaces FXStateChunk to/in a TrackStateChunk or a MediaItemStateChunk.
     
     returns false in case of an error
@@ -1676,7 +1676,7 @@ function ultraschall.GetFXStateChunk(StateChunk, TakeFXChain_id)
     Lua=5.3
   </requires>
   <functioncall>string FXStateChunk, integer linenumber = ultraschall.GetFXStateChunk(string StateChunk, optional integer TakeFXChain_id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns an FXStateChunk from a TrackStateChunk or a MediaItemStateChunk.
     
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
@@ -1772,7 +1772,7 @@ function ultraschall.AddParmLFOLearn_FXStateChunk(FXStateChunk, fxid, parmidx, p
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.AddParmLFOLearn_FXStateChunk(string FXStateChunk, integer fxid, integer parmidx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Adds a new Parm-LFOLearn-entry to an FX-plugin from an FXStateChunk.
     
     It's the LFOLEARN-entry
@@ -1878,7 +1878,7 @@ function ultraschall.AddParmLearn_FXStateChunk(FXStateChunk, fxid, parmidx, parm
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.AddParmLearn_FXStateChunk(string FXStateChunk, integer fxid, integer parmidx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Adds a new Parm-Learn-entry to an FX-plugin from an FXStateChunk.
     
     It's the PARMLEARN-entry
@@ -1981,7 +1981,7 @@ function ultraschall.AddParmAlias_FXStateChunk(FXStateChunk, fxid, parmidx, parm
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.AddParmAlias_FXStateChunk(string FXStateChunk, integer fxid, integer parmidx, string parmalias)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Adds a new Parm-Alias-entry to an FX-plugin from an FXStateChunk.
     
     It's the PARMALIAS-entry
@@ -2045,7 +2045,7 @@ function ultraschall.CountParmAlias_FXStateChunk(FXStateChunk, fxid)
     Lua=5.3
   </requires>
   <functioncall>integer count = ultraschall.CountParmAlias_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Counts already existing Parm-Alias-entries of an FX-plugin from an FXStateChunk.
     
     It's the PARMALIAS-entry
@@ -2097,7 +2097,7 @@ function ultraschall.CountParmLearn_FXStateChunk(FXStateChunk, fxid)
     Lua=5.3
   </requires>
   <functioncall>integer count = ultraschall.CountParmLearn_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Counts already existing Parm-Learn-entries of an FX-plugin from an FXStateChunk.
     
     It's the PARMLEARN-entry
@@ -2150,7 +2150,7 @@ function ultraschall.CountParmLFOLearn_FXStateChunk(FXStateChunk, fxid)
     Lua=5.3
   </requires>
   <functioncall>integer count = ultraschall.CountParmLFOLearn_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Counts already existing Parm-LFOLearn-entries of an FX-plugin from an FXStateChunk.
     
     It's the LFOLEARN-entry
@@ -2439,7 +2439,7 @@ function ultraschall.LoadFXStateChunkFromRFXChainFile(filename, trackfx_or_takef
     Lua=5.3
   </requires>
   <functioncall>string FXStateChunk = ultraschall.LoadFXStateChunkFromRFXChainFile(string filename, integer trackfx_or_takefx)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Loads an FXStateChunk from an RFXChain-file.
     
     If you don't give a path, it will try to load the file from the folder ResourcePath/FXChains.
@@ -2492,7 +2492,7 @@ function ultraschall.SaveFXStateChunkAsRFXChainfile(filename, FXStateChunk)
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.SaveFXStateChunkAsRFXChainfile(string filename, string FXStateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Loads an FXStateChunk from an RFXChain-file.
     
     If you don't give a path, it will try to load the file from the folder ResourcePath/FXChains.
@@ -2539,7 +2539,7 @@ function ultraschall.GetAllRFXChainfilenames()
     Lua=5.3
   </requires>
   <functioncall>integer count_of_RFXChainfiles, array RFXChainfiles = ultraschall.GetAllRFXChainfilenames()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns all available RFXChainfiles in the folder ResourcePath/FXChains
   </description>
   <retvals>
@@ -2574,7 +2574,7 @@ function ultraschall.GetRecentFX()
     Lua=5.3
   </requires>
   <functioncall>integer count_of_RecentFX, array RecentFX = ultraschall.GetRecentFX()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the recent fx-list
   </description>
   <retvals>
@@ -2611,7 +2611,7 @@ function ultraschall.GetTrackFX_AlternativeName(tracknumber, fx_id)
     Lua=5.3
   </requires>
   <functioncall>string alternative_fx_name = ultraschall.GetTrackFX_AlternativeName(integer tracknumber, integer fx_id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the alternative name of a specific trackfx.
     
     Returns nil in case of an error
@@ -2696,7 +2696,7 @@ function ultraschall.GetTakeFX_AlternativeName(item, take_id, fx_id)
     Lua=5.3
   </requires>
   <functioncall>string alternative_fx_name = ultraschall.GetTakeFX_AlternativeName(integer tracknumber, integer take_id, integer fx_id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the alternative name of a specific takefx.
     
     Returns nil in case of an error
@@ -2782,7 +2782,7 @@ function ultraschall.SetTrackFX_AlternativeName(tracknumber, fx_id, newname)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.SetTrackFX_AlternativeName(integer tracknumber, integer fx_id, string newname)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     sets the alternative name of a specific trackfx.
     
     Returns false in case of an error
@@ -2875,7 +2875,7 @@ function ultraschall.SetTakeFX_AlternativeName(item, take_id, fx_id, newname)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.SetTakeFX_AlternativeName(integer tracknumber, integer take_id, integer fx_id, string newname)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     sets the alternative name of a specific takefx.
     
     Returns false in case of an error
@@ -3510,7 +3510,7 @@ function ultraschall.IsValidParmModTable(ParmModTable)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.IsValidParmModTable(table ParmModTable)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       checks, if a ParmModTable is a valid one
       
       Does not check, if the value-ranges are valid, only if the datatypes are correct and if certain combinations are valid!
@@ -4164,7 +4164,7 @@ function ultraschall.DeleteParmModFromFXStateChunk(FXStateChunk, fxindex, parmid
       Lua=5.3
     </requires>
     <functioncall>string altered_FXStateChunk, boolean altered = ultraschall.DeleteParmModFromFXStateChunk(string FXStateChunk, integer fxindex, integer parmidx)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       deletes a parameter-modulation of a specific fx from an FXStateChunk
       
       retval altered returns false in case of an error
@@ -4214,7 +4214,7 @@ function ultraschall.CountParmModFromFXStateChunk(FXStateChunk, fxindex)
       Lua=5.3
     </requires>
     <functioncall>integer number_of_parmmodulations = ultraschall.CountParmModFromFXStateChunk(string FXStateChunk, integer fxindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns the number of parameter-modulations available for a specific fx in an FXStateChunk
       
       returns -1 in case of an error
@@ -4261,7 +4261,7 @@ function ultraschall.GetAllParmAliasNames_FXStateChunk(FXStateChunk, fxindex)
     Lua=5.3
   </requires>
   <functioncall>integer count_aliasnames, array parameteridx, array parameter_aliasnames = ultraschall.GetAllParmAliasNames_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns all aliasnames of a specific fx within an FXStateChunk
     
     returns false in case of an error
@@ -4312,7 +4312,7 @@ function ultraschall.DeleteParmAlias2_FXStateChunk(FXStateChunk, fxid, parmidx)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string alteredFXStateChunk = ultraschall.DeleteParmAlias2_FXStateChunk(string FXStateChunk, integer fxid, integer parmidx)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Deletes a ParmAlias-entry from an FXStateChunk.
     
     It's the PARMALIAS-entry
@@ -4374,7 +4374,7 @@ function ultraschall.GetParmAlias2_FXStateChunk(FXStateChunk, fxid, parmidx)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parm_aliasname = ultraschall.GetParmAlias2_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a parameter-alias-setting of a specific parameter from an FXStateChunk
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
     
@@ -4429,7 +4429,7 @@ function ultraschall.InputFX_AddByName(fxname, always_new_instance)
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.InputFX_AddByName(string fxname, boolean always_new_instance)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Adds an FX as monitoring FX.
     
     returns -1 in case of an error
@@ -4472,7 +4472,7 @@ function ultraschall.InputFX_QueryFirstFXIndex(fxname)
     Lua=5.3
   </requires>
   <functioncall>integer fxindex = ultraschall.InputFX_QueryFirstFXIndex(string fxname)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Queries the fx-index of the first inputfx with fxname
     
     returns -1 in case of an error
@@ -4509,7 +4509,7 @@ function ultraschall.InputFX_MoveFX(old_fxindex, new_fxindex)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_MoveFX(integer old_fxindex, integer new_fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Moves a monitoring-fx from an old to a new position
     
     returns false in case of an error
@@ -4552,7 +4552,7 @@ function ultraschall.InputFX_CopyFX(old_fxindex, new_fxindex)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_CopyFX(integer old_fxindex, integer new_fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Copies a monitoring-fx and inserts it at a new position
     
     returns -1 in case of an error
@@ -4597,7 +4597,7 @@ function ultraschall.InputFX_CopyFXFromTrackFX(track, old_fxindex, new_fxindex)
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.InputFX_CopyFXFromTrackFX(MediaTrack track, integer old_fxindex, integer new_fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Copies a trackfx and inserts it as monitoring-fx at a certain position
     
     returns -1 in case of an error
@@ -4641,7 +4641,7 @@ function ultraschall.InputFX_CopyFXToTrackFX(old_fxindex, track, new_fxindex)
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.InputFX_CopyFXToTrackFX(integer old_fxindex, MediaTrack track, integer new_fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Copies a monitoring-fx and inserts it as trackfx at a certain position
     
     returns -1 in case of an error
@@ -4686,7 +4686,7 @@ function ultraschall.InputFX_MoveFXFromTrackFX(track, old_fxindex, new_fxindex)
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.InputFX_MoveFXFromTrackFX(MediaTrack track, integer old_fxindex, integer new_fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Moves a trackfx to monitoring-fx at a certain position
     
     returns -1 in case of an error
@@ -4730,7 +4730,7 @@ function ultraschall.InputFX_MoveFXToTrackFX(old_fxindex, track, new_fxindex)
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.InputFX_MoveFXToTrackFX(integer old_fxindex, MediaTrack track, integer new_fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     moves a monitoring-fx and inserts it as trackfx at a certain position
     
     returns -1 in case of an error
@@ -4779,7 +4779,7 @@ function ultraschall.InputFX_Delete(fxindex)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_Delete(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     removes a certain monitoring-fx
     
     returns false in case of an error
@@ -4817,8 +4817,8 @@ function ultraschall.InputFX_EndParamEdit(fxindex, paramindex)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_EndParamEdit(integer fxindex, integer paramindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    moves a monitoring-fx and inserts it as trackfx at a certain position
+  <description>
+    This ends the capture of a parameter(e.g when finished writing automation)
     
     returns false in case of an error
   </description>
@@ -4857,7 +4857,7 @@ function ultraschall.InputFX_GetCount()
     Lua=5.3
   </requires>
   <functioncall>integer monitoring_fx_count = ultraschall.InputFX_GetCount()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     counts the available monitoring-fx
   </description>
   <retvals>
@@ -4887,7 +4887,7 @@ function ultraschall.InputFX_GetChainVisible()
     Lua=5.3
   </requires>
   <functioncall>boolean inputfx_chain_visible, integer visible_inputfx = ultraschall.InputFX_GetChainVisible()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns if the monitoring-fx-chain is visible and index of the currently visible monitoring-fx
   </description>
   <retvals>
@@ -4924,7 +4924,7 @@ function ultraschall.InputFX_GetEnabled(fxindex)
     Lua=5.3
   </requires>
   <functioncall>boolean inputfx_enabled = ultraschall.InputFX_GetEnabled(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns if a certain monitoring-fx is enabled
     
     returns nil in case of an error
@@ -4961,7 +4961,7 @@ function ultraschall.InputFX_GetFloatingWindow(fxindex)
     Lua=5.3
   </requires>
   <functioncall>HWND inputfx_floating_hwnd = ultraschall.InputFX_GetFloatingWindow(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the hwnd of a floating monitoring-fx-window
     
     returns nil in case of an error
@@ -5001,7 +5001,7 @@ function ultraschall.InputFX_GetFXGUID(fxindex)
     Lua=5.3
   </requires>
   <functioncall>string fxguid = ultraschall.InputFX_GetFXGUID(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the guid of a monitoring-fx
     
     returns nil in case of an error
@@ -5039,7 +5039,7 @@ function ultraschall.InputFX_GetFXName(fxindex)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string fxname = ultraschall.InputFX_GetFXName(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the name of a monitoring-fx
     
     returns false in case of an error
@@ -5077,7 +5077,7 @@ function ultraschall.InputFX_GetNumParams(fxindex)
     Lua=5.3
   </requires>
   <functioncall>integer count_params = ultraschall.InputFX_GetNumParams(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the number of parameters of a monitoring-fx
     
     returns -1 in case of an error
@@ -5114,7 +5114,7 @@ function ultraschall.InputFX_GetOffline(fxindex)
     Lua=5.3
   </requires>
   <functioncall>boolean is_offline = ultraschall.InputFX_GetOffline(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the offline-state of a monitoring-fx
     
     returns false in case of an error
@@ -5152,7 +5152,7 @@ function ultraschall.InputFX_GetOpen(fxindex)
     Lua=5.3
   </requires>
   <functioncall>boolean is_open = ultraschall.InputFX_GetOpen(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns if a monitoring-fx is open(currently visible)
     
     returns false in case of an error
@@ -5190,7 +5190,7 @@ function ultraschall.InputFX_GetPreset(fxindex)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string preset = ultraschall.InputFX_GetPreset(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the currently selected preset of a monitoring-fx
     
     returns false in case of an error
@@ -5228,7 +5228,7 @@ function ultraschall.InputFX_GetPresetIndex(fxindex)
     Lua=5.3
   </requires>
   <functioncall>integer selected_preset, integer number_of_presets = ultraschall.InputFX_GetPresetIndex(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the index of the currently selected preset of a monitoring-fx as well as the number of available presets
     
     returns -1 in case of an error
@@ -5269,7 +5269,7 @@ function ultraschall.InputFX_GetUserPresetFilename(fxindex)
     Lua=5.3
   </requires>
   <functioncall>string preset_filename = ultraschall.InputFX_GetUserPresetFilename(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the filename of the presetfile, into which the preset's-settings are stored
     
     returns nil in case of an error
@@ -5307,7 +5307,7 @@ function ultraschall.InputFX_NavigatePresets(fxindex, presetmove)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_NavigatePresets(integer fxindex, integer presetmove)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     switches the preset of a monitoring-fx through, relative from its current preset-index.
     You can move by multiple presets, so 1 moves one further, 2 moves 2 further, -3 moves 3 backwards.
     
@@ -5351,7 +5351,7 @@ function ultraschall.InputFX_SetEnabled(fxindex, enabled)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetEnabled(integer fxindex, boolean presetmove)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets a monitoring-fx to enabled.
     
     returns false in case of an error
@@ -5393,7 +5393,7 @@ function ultraschall.InputFX_SetOffline(fxindex, offline)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetOffline(integer fxindex, boolean offline)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets a monitoring-fx to online/offline.
     
     returns false in case of an error
@@ -5433,7 +5433,7 @@ function ultraschall.InputFX_SetOpen(fxindex, open)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetOpen(integer fxindex, boolean open)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets a monitoring-fx visible of invisible
     
     If you change the index while open=true, the visible fx will change to the new one.
@@ -5478,7 +5478,7 @@ function ultraschall.InputFX_SetPreset(fxindex, presetname)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetPreset(integer fxindex, string presetname)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the preset of a monitoring-fx by presetname.
     
     returns false in case of an error
@@ -5518,7 +5518,7 @@ function ultraschall.InputFX_SetPresetByIndex(fxindex, presetindex)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetPresetByIndex(integer fxindex, integer presetindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the preset of a monitoring-fx by preset-index.
     
     returns false in case of an error
@@ -5557,7 +5557,7 @@ function ultraschall.InputFX_Show(fxindex, showflag)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_Show(integer fxindex, integer showflag)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets visibility and floating-state of a monitoring-fx
     
     returns false in case of an error
@@ -5600,7 +5600,7 @@ function ultraschall.InputFX_CopyFXToTakeFX(src_fx, dest_take, dest_fx)
     Lua=5.3
   </requires>
   <functioncall>integer dest_fx = ultraschall.InputFX_CopyFXToTakeFX(integer src_fx, MediaItem_Take take, integer dest_fx)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     copies a monitoring-fx to a takeFX
     
     returns -1 in case of an error
@@ -5647,7 +5647,7 @@ function ultraschall.InputFX_CopyFXFromTakeFX(src_take, src_fx, dest_fx)
     Lua=5.3
   </requires>
   <functioncall>integer dest_fx = ultraschall.InputFX_CopyFXFromTakeFX(MediaItem_Take take, integer src_fx, integer dest_fx)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     copies a takeFX to monitoringFX
     
     returns -1 in case of an error
@@ -5693,7 +5693,7 @@ function ultraschall.InputFX_MoveFXFromTakeFX(src_take, src_fx, dest_fx)
     Lua=5.3
   </requires>
   <functioncall>integer dest_fx = ultraschall.InputFX_MoveFXFromTakeFX(MediaItem_Take take, integer src_fx, integer dest_fx)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     moves a takeFX to monitoringFX
     
     returns -1 in case of an error
@@ -5737,7 +5737,7 @@ function ultraschall.InputFX_MoveFXToTakeFX(src_fx, dest_take, dest_fx)
     Lua=5.3
   </requires>
   <functioncall>integer dest_fx = ultraschall.InputFX_MoveFXToTakeFX(integer src_fx, MediaItem_Take take, integer dest_fx)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     moves a monitoring-FX to a takeFX
     
     returns -1 in case of an error
@@ -5782,7 +5782,7 @@ function ultraschall.InputFX_GetFXChain(trackfx_or_takefx)
     Lua=5.3
   </requires>
   <functioncall>string FXStateChunk = ultraschall.InputFX_GetFXChain(integer trackfx_or_takefx)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Loads the FXStateChunk from the monitoring-fx-chain.
   </description>
   <retvals>
@@ -5823,7 +5823,7 @@ function ultraschall.InputFX_SetFXChain(FXStateChunk, replacefx)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetFXChain(string FXStateChunk, boolean replacefx)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Inserts an FXStateChunk into the monitoring-fx-chain. Allows replacing it as well.
     
     This could potentially create hiccups in the audio-engine of Reaper.
@@ -5906,7 +5906,7 @@ function ultraschall.InputFX_FormatParamValue(fxindex, paramindex, value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_FormatParamValue(integer fxindex, integer paramindex, number value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     You can take a value and format it in the style of the used format of a specific parameter, like the frequency(to Hz), gain(to dB) with ReaEQ or bypass(normal, bypasses), wet with ReaTune, etc.
     
     Note: only works with FX that support Cockos VST extensions.
@@ -5952,7 +5952,7 @@ function ultraschall.InputFX_FormatParamValueNormalized(fxindex, paramindex, val
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_FormatParamValueNormalized(integer fxindex, integer paramindex, number value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     You can take a value and format it in the style of the used format of a specific parameter, like the frequency(to Hz), gain(to dB) with ReaEQ or bypass(normal, bypasses), wet with ReaTune, etc.
     The value will be normalized.
     
@@ -6000,7 +6000,7 @@ function ultraschall.InputFX_GetEQ(instantiate)
     Lua=5.3
   </requires>
   <functioncall>integer index = ultraschall.InputFX_GetEQ(boolean instantiate)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Get the index of the first ReaEQ-instance in the monitoringFX, if available.
     
     Optionally add a new instance if ReaEQ isn't existing yet in the monitoring-fx-chain.
@@ -6041,7 +6041,7 @@ function ultraschall.InputFX_GetFormattedParamValue(fxindex, paramindex)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_GetFormattedParamValue(integer fxindex, integer paramindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the current value of the monitoring-fx's parameter in its formatted style.
     
     returns false in case of an error
@@ -6083,7 +6083,7 @@ function ultraschall.InputFX_GetIOSize(fxindex)
     Lua=5.3
   </requires>
   <functioncall>integer retval, optional number inputPins, optional number outputPins = ultraschall.InputFX_GetIOSize(integer fxindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the plugin-type and the input/output-pins available for an inputFX
     
     returns -1 in case of an error
@@ -6128,7 +6128,7 @@ function ultraschall.InputFX_GetNamedConfigParm(fxindex, parmname)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string config_parm_name = ultraschall.InputFX_GetNamedConfigParm(integer fxindex, string parmname)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     gets plug-in specific named configuration value (returns true on success) of a monitoring-fx. 
     
     Special values: 
@@ -6175,7 +6175,7 @@ function ultraschall.InputFX_GetParam(fxindex, paramindex)
     Lua=5.3
   </requires>
   <functioncall>number curval, number minval, number maxval = ultraschall.InputFX_GetParam(integer fxindex, integer paramindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the current, maximum and minimum value of a parameter of a monitoring-fx.
     
     returns nil in case of an error
@@ -6219,7 +6219,7 @@ function ultraschall.InputFX_GetParameterStepSizes(fxindex, paramindex)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, number step, number smallstep, number largestep, boolean istoggle = ultraschall.InputFX_GetParameterStepSizes(integer fxindex, integer paramindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the stepsizes of a parameter of a monitoring-fx.
     
     returns nil in case of an error
@@ -6265,7 +6265,7 @@ function ultraschall.InputFX_GetParamEx(fxindex, paramindex)
     Lua=5.3
   </requires>
   <functioncall>number curval, number minval, number maxval, number midval = ultraschall.InputFX_GetParamEx(integer fxindex, integer paramindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the current, maximum, minimum and mid-value of a parameter of a monitoring-fx.
     
     returns nil in case of an error
@@ -6309,7 +6309,7 @@ function ultraschall.InputFX_GetParamName(fxindex, paramindex)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string paramname = ultraschall.InputFX_GetParamName(integer fxindex, integer paramindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the name of a parameter of a monitoring-fx.
     
     returns false in case of an error
@@ -6353,7 +6353,7 @@ function ultraschall.InputFX_GetParamNormalized(fxindex, paramindex)
     Lua=5.3
   </requires>
   <functioncall>integer normalized_value = ultraschall.InputFX_GetParamNormalized(integer fxindex, integer paramindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the value of a parameter of a monitoring-fx in a normalized state.
     
     returns nil in case of an error
@@ -6395,7 +6395,7 @@ function ultraschall.InputFX_GetPinMappings(fxindex, isoutput, pin)
     Lua=5.3
   </requires>
   <functioncall>integer pinmappings_Lo32Bit, integer pinmappings_Hi32Bit = ultraschall.InputFX_GetPinMappings(integer fxindex, integer isoutput, integer pin)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the pinmappings as bitfield of a parameter of a monitoring-fx.
     
     returns nil in case of an error
@@ -6438,7 +6438,7 @@ function ultraschall.InputFX_SetEQBandEnabled(fxindex, bandtype, bandidx, enable
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetEQBandEnabled(integer fxindex, integer bandtype, integer bandidx, boolean enable)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Enable or disable a ReaEQ band of a monitoring-fx.
     
     returns false in case of an error
@@ -6491,7 +6491,7 @@ function ultraschall.InputFX_SetEQParam(fxindex, bandtype, bandidx, paramtype, v
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetEQParam(integer fxindex, integer bandtype, integer bandidx, integer paramtype, number val, boolean isnorm)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets an EQ-parameter of a ReaEQ-instance in monitoring-fx
     
     returns false in case of an error
@@ -6548,7 +6548,7 @@ function ultraschall.InputFX_SetParam(fxindex, parameterindex, val)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetParam(integer fxindex, index parameterindex, number val)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets a new value of a parameter of a monitoring-fx
     
     returns false in case of an error
@@ -6592,7 +6592,7 @@ function ultraschall.InputFX_SetParamNormalized(fxindex, parameterindex, val)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetParamNormalized(integer fxindex, index parameterindex, number val)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets a new value as normalized of a parameter of a monitoring-fx
     
     returns false in case of an error
@@ -6637,7 +6637,7 @@ function ultraschall.InputFX_SetPinMappings(fxindex, isoutput, pin, low32bits, h
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetPinMappings(integer fxindex, integer isoutput, integer pin, integer low32bits, integer hi32bits)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     sets the pinmappings as bitfield of a parameter of a monitoring-fx.
     
     returns false in case of an error or if unsupported (not all types of plug-ins support this capability)
@@ -6687,7 +6687,7 @@ function ultraschall.InputFX_GetEQBandEnabled(fxindex, bandtype, bandidx)
     Lua=5.3
   </requires>
   <functioncall>boolean enabled = ultraschall.InputFX_GetEQBandEnabled(integer fxindex, integer bandtype, integer bandidx)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the enable or disable-state of a ReaEQ band of a monitoring-fx.
     
     returns false in case of an error
@@ -6737,7 +6737,7 @@ function ultraschall.InputFX_GetEQParam(fxindex, paramidx)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, number bandtype, number bandidx, number paramtype, number normval = ultraschall.InputFX_GetEQParam(integer fxindex, integer paramidx)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the states and values of an EQ-parameter of a ReaEQ-instance in monitoring-fx
     
     returns false in case of an error
@@ -6789,7 +6789,7 @@ function ultraschall.GetFocusedFX()
     Lua=5.3
   </requires>
   <functioncall>integer retval, integer tracknumber, integer fxidx, integer itemnumber, integer takeidx, MediaTrack track, optional MediaItem item, optional MediaItemTake take = ultraschall.GetFocusedFX()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the focused FX
   </description>
   <retvals>
@@ -6847,7 +6847,7 @@ function ultraschall.GetLastTouchedFX()
     Lua=5.3
   </requires>
   <functioncall>boolean retval, integer sourcetype, integer track_take_number, integer fxnumber, integer paramnumber, integer takeID, optional MediaTrack track, optional MediaItemTake take = ultraschall.GetLastTouchedFX()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the last touched FX
     
     Note: Does not return last touched monitoring-FX!
@@ -6904,7 +6904,7 @@ function ultraschall.GetFXComment_FXStateChunk(FXStateChunk, fx_id)
     Lua=5.3
   </requires>
   <functioncall>string comment = ultraschall.GetFXComment_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the fx-comment of a specific fx from an FXStateChunk
     
     will return "" if no comment exists
@@ -6915,7 +6915,7 @@ function ultraschall.GetFXComment_FXStateChunk(FXStateChunk, fx_id)
     string comment - the comment as stored for this specific fx; "", if no comment exists
   </retvals>
   <parameters>
-    string FXStateChunk - the FXStateChunk, from whose fx you want to return a specifix fx-comment
+    string FXStateChunk - the FXStateChunk, from whose fx you want to return a specific fx-comment
     integer fxid - the fx, whose comment you want to return
   </parameters>
   <chapter_context>
@@ -6955,7 +6955,7 @@ function ultraschall.SetFXComment_FXStateChunk(FXStateChunk, fx_id, NewComment)
     Lua=5.3
   </requires>
   <functioncall>string FXStateChunk = ultraschall.SetFXComment_FXStateChunk(string FXStateChunk, integer fxid, string NewComment)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     sets an fx-comment of a specific fx within an FXStateChunk
     
     Set to "" to remove the comment
@@ -7027,7 +7027,7 @@ function ultraschall.CountFXFromFXStateChunk(FXStateChunk)
       Lua=5.3
     </requires>
     <functioncall>integer count_of_fx= ultraschall.CountFXFromFXStateChunk(string FXStateChunk)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       count the number of fx available in an FXStateChunk
       
       returns nil in case of an error
@@ -7071,7 +7071,7 @@ function ultraschall.GetTrackFXComment(track, fxid)
       Lua=5.3
     </requires>
     <functioncall>string comment = ultraschall.GetTrackFXComment(MediaTrack track, integer fxid)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns the comment of a track-fx
       
       returns nil in case of an error
@@ -7113,7 +7113,7 @@ function ultraschall.GetTakeFXComment(item, takeid, fxid)
       Lua=5.3
     </requires>
     <functioncall>string comment = ultraschall.GetTakeFXComment(MediaItem item, integer takeid, integer fxid)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns the comment of a take-fx
       
       returns nil in case of an error
@@ -7157,7 +7157,7 @@ function ultraschall.InputFX_GetComment(fxid)
       Lua=5.3
     </requires>
     <functioncall>string comment = ultraschall.InputFX_GetComment(integer fxid)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns the comment of an input-fx
       
       returns nil in case of an error
@@ -7196,7 +7196,7 @@ function ultraschall.SetTrackFXComment(track, fxid, Comment)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.SetTrackFXComment(MediaTrack track, integer fxid, string Comment)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       sets the comment of a track-fx
       
       Note: you need to switch fxchain off/on or change the shown fx for the new comment to be displayed in Reaper's UI
@@ -7245,7 +7245,7 @@ function ultraschall.SetTakeFXComment(item, takeid, fxid, Comment)
       Lua=5.3
     </requires>
     <functioncall>string comment = ultraschall.SetTakeFXComment(MediaItem item, integer takeid, integer fxid, string Comment)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       sets the comment of a take-fx
       
       returns nil in case of an error
@@ -7282,3 +7282,813 @@ function ultraschall.SetTakeFXComment(item, takeid, fxid, Comment)
   return reaper.SetItemStateChunk(item, alteredStateChunk, false)
 end
 
+function ultraschall.GetFXWak_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetFXWak_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer keyboard_input_2_plugin, integer unknown = ultraschall.GetFXWak_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description>
+    returns the WAK-entryvalues of a specific fx from an FXStateChunk, as set by the +-button->Send all keyboard input to plugin-menuentry in the FX-window of the visible plugin.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer keyboard_input_2_plugin - 0, don't send all the keyboard-input to plugin; 1, send all keyboard-input to plugin
+    integer unknown - unknown, usually 0
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from whose fx you want to return the WAK-entry
+    integer fxid - the fx, whose WAK-entryvalues you want to return
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, fx, wak, keyboard input, plugin</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetFXWak_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("GetFXWak_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  ultraschall.SuppressErrorMessages(true)
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  if fx_lines==nil then ultraschall.SuppressErrorMessages(false) ultraschall.AddErrorMessage("GetFXWak_FXStateChunk", "fx_id", "no such fx", -4) return nil end
+  local WAK=fx_lines:match("\n.-WAK (.-)\n")
+  
+  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(WAK.." ", " ")
+  for i=1, count do
+    individual_values[i]=tonumber(individual_values[i])
+  end
+  ultraschall.SuppressErrorMessages(false)
+  return table.unpack(individual_values)
+end
+
+function ultraschall.GetFXMidiPreset_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetFXMidiPreset_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer midi_preset = ultraschall.GetFXMidiPreset_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description>
+    returns the MIDIPRESET-entryvalues of a specific fx from an FXStateChunk as set by the +-button->Link to MIDI program change-menuentry in the FX-window of the visible plugin.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer midi_preset - 0, No Link; 17, Link all channels sequentially; 1-16, MIDI-channel 1-16
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from whose fx you want to return the MIDIPRESET-entry
+    integer fxid - the fx, whose MIDIPRESET-entryvalues you want to return
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, fx, midipreset, keyboard input, plugin</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetFXMidiPreset_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("GetFXMidiPreset_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  ultraschall.SuppressErrorMessages(true)
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  if fx_lines==nil then ultraschall.SuppressErrorMessages(false) ultraschall.AddErrorMessage("GetFXMidiPreset_FXStateChunk", "fx_id", "no such fx", -4) return nil end
+  local MIDIPreset=fx_lines:match("\n.-MIDIPRESET (.-)\n")
+  if MIDIPreset==nil then ultraschall.SuppressErrorMessages(false) return 0 end
+  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(MIDIPreset.." ", " ")
+  for i=1, count do
+    individual_values[i]=tonumber(individual_values[i])
+  end
+  ultraschall.SuppressErrorMessages(false)
+  return table.unpack(individual_values)
+end
+
+function ultraschall.SetFXWak_FXStateChunk(FXStateChunk, fx_id, send_all_keyboard_input_to_fx, fx_embed_state)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetFXWak_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.19
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetFXWak_FXStateChunk(string FXStateChunk, integer fxid, integer send_all_keyboard_input_to_fx, integer fx_embed_state)</functioncall>
+  <description>
+    sets the fx-WAK-entry of a specific fx within an FXStateChunk, which allows setting "sending all keyboard input to plugin"-option and "embed fx in tcp/mcp"-option of an fx
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new wak-state
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new wak-state
+    integer fxid - the fx, whose wak-state you want to set
+    integer send_all_keyboard_input_to_fx - state of sen all keyboard input to plug-in; 0, turned off; 1, turned on
+    integer fx_embed_state - set embedding of the fx; &amp;1=TCP, &amp;2=MCP
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, wak, embed fx in tcp mcp, send all keyboardinput to fx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetFXWak_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("SetFXWak_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  if math.type(send_all_keyboard_input_to_fx)~="integer" then ultraschall.AddErrorMessage("SetFXWak_FXStateChunk", "send_all_keyboard_input_to_fx", "must be an integer", -3) return nil end
+  if math.type(fx_embed_state)~="integer" then ultraschall.AddErrorMessage("SetFXWak_FXStateChunk", "fx_embed_state", "must be an integer", -4) return nil end
+  
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  fx_lines=string.gsub(fx_lines, "WAK.-\n", "WAK "..send_all_keyboard_input_to_fx.." "..fx_embed_state.."\n")
+  FXStateChunk=FXStateChunk:sub(1, startoffset-1)..fx_lines..FXStateChunk:sub(endoffset, -1)
+  return FXStateChunk
+end
+
+
+function ultraschall.SetFXMidiPreset_FXStateChunk(FXStateChunk, fx_id, midi_preset)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetFXMidiPreset_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetFXMidiPreset_FXStateChunk(string FXStateChunk, integer fxid, integer midi_preset)</functioncall>
+  <description>
+    sets the MIDIPRESET-entryvalues of a specific fx from an FXStateChunk as set by the +-button->Link to MIDI program change-menuentry in the FX-window of the visible plugin.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new comment
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new comment
+    integer fxid - the fx, whose comment you want to set
+    integer midi_preset - 0, No Link; 17, Link all channels sequentially; 1-16, MIDI-channel 1-16 
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, midi preset</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetFXMidiPreset_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("SetFXMidiPreset_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  if math.type(midi_preset)~="integer" then ultraschall.AddErrorMessage("SetFXMidiPreset_FXStateChunk", "midi_preset", "must be an integer", -3) return nil end
+  
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  if midi_preset==0 then midi_preset="" else midi_preset="MIDIPRESET "..midi_preset.."\n    " end
+  fx_lines=string.gsub(fx_lines, "\n( -MIDIPRESET.-\n)", "\n")
+  local offset=fx_lines:match("()PRESETNAME")
+  fx_lines=fx_lines:sub(1,offset-1)..midi_preset..fx_lines:sub(offset,-1)
+  FXStateChunk=FXStateChunk:sub(1, startoffset-1)..fx_lines..FXStateChunk:sub(endoffset, -1)
+  return FXStateChunk
+end
+
+function ultraschall.GetFXBypass_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetFXBypass_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer bypass, integer offline, integer unknown = ultraschall.GetFXBypass_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description>
+    returns the BYPASS-entryvalues of a specific fx from an FXStateChunk, like bypass and online-state..
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer bypass - 0, non-bypassed; 1, bypassed
+    integer offline - 0, online; 1, offline
+    integer unknown - unknown; default is 0
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from whose fx you want to return the BYPASS-entry
+    integer fxid - the fx, whose BYPASS-entryvalues you want to return
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, fx, bypass, online, offline</tags>
+</US_DocBloc>
+]]
+
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetFXBypass_FXStateChunk.GetFXWAK_FXStateChunk()", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("GetFXBypass_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  ultraschall.SuppressErrorMessages(true)
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  if fx_lines==nil then ultraschall.SuppressErrorMessages(false) ultraschall.AddErrorMessage("GetFXBypass_FXStateChunk", "fx_id", "no such fx", -4) return nil end
+  local BYPASS=fx_lines:match("\n.-BYPASS (.-)\n")
+  
+  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(BYPASS.." ", " ")
+  for i=1, count do
+    individual_values[i]=tonumber(individual_values[i])
+  end
+  ultraschall.SuppressErrorMessages(false)
+  return table.unpack(individual_values)
+end
+
+function ultraschall.GetFXFloatPos_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetFXFloatPos_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean floating, integer x, integer y, integer width, integer height = ultraschall.GetFXFloatPos_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description>
+    returns the FLOATPOS/FLOAT-entryvalues of a specific fx from an FXStateChunk, like float-state and float-coordinates.
+    
+    If all coordinates of the floating fx-window are 0, then the fx-window was never in float-state, yet.
+    
+    There is only one of the FLOATPOS/FLOAT-entries present at any time.
+    FLOATPOS, when the fx-window is not floating
+    FLOAT, when the fx-window is floating.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    boolean floating - true, fx-window is floating; false, fx-window isn't floating
+    integer x - the x-position of the floating window; 0, if it hasn't been floating yet
+    integer y - the y-position of the floating window; 0, if it hasn't been floating yet
+    integer width - the width of the floating window; 0, if it hasn't been floating yet
+    integer height - the height of the floating window; 0, if it hasn't been floating yet
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from whose fx you want to return the FLOAT/FLOATPOS-entry
+    integer fxid - the fx, whose FLOAT/FLOATPOS-entryvalues you want to return
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, fx, float, floatpos, floatstate</tags>
+</US_DocBloc>
+]]
+
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetFXFloatPos_FXStateChunk.GetFXWAK_FXStateChunk()", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("GetFXFloatPos_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  ultraschall.SuppressErrorMessages(true)
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  if fx_lines==nil then ultraschall.SuppressErrorMessages(false) ultraschall.AddErrorMessage("GetFXFloatPos_FXStateChunk", "fx_id", "no such fx", -4) return nil end
+  local float, FLOATPOS=fx_lines:match("\n.-FLOAT(%a-) (.-)\n")
+  
+  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(FLOATPOS.." ", " ")
+  for i=1, count do
+    individual_values[i]=tonumber(individual_values[i])
+  end
+  ultraschall.SuppressErrorMessages(false)
+  return float~="POS", table.unpack(individual_values)
+end
+
+function ultraschall.GetFXGuid_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetFXGuid_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string guid = ultraschall.GetFXGuid_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description>
+    returns the FXID-entryvalues of a specific fx from an FXStateChunk, which is the guid of the fx.
+
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string guid - the guid of the fx
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from whose fx you want to return the guid-entry
+    integer fxid - the fx, whose guid you want to return
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, fx, guid</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetFXGuid_FXStateChunk.GetFXWAK_FXStateChunk()", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("GetFXGuid_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  ultraschall.SuppressErrorMessages(true)
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  if fx_lines==nil then ultraschall.SuppressErrorMessages(false) ultraschall.AddErrorMessage("GetFXGuid_FXStateChunk", "fx_id", "no such fx", -4) return nil end
+  local GUID=fx_lines:match("\n.-FXID (.-)\n")
+
+  ultraschall.SuppressErrorMessages(false)
+  return GUID
+end
+
+function ultraschall.GetWndRect_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetWndRect_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer x, integer y, integer width, integer height = ultraschall.GetWndRect_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description>
+    returns the WNDRECT-entryvalues from an FXStateChunk.
+    
+    These are the window-positions of the fx-chain, when the window is floating.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer x - the x-position of the floating window; 0, if it hasn't been floating yet
+    integer y - the y-position of the floating window; 0, if it hasn't been floating yet
+    integer width - the width of the floating window; 0, if it hasn't been floating yet
+    integer height - the height of the floating window; 0, if it hasn't been floating yet
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, whose floating-window-position you want to get
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, wndrect, fxstatechunk, floating window position</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetWndRect_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  local WNDRect=FXStateChunk:match("\n.-WNDRECT (.-)\n")
+  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(WNDRect.." ", " ")
+  for i=1, count do
+    individual_values[i]=tonumber(individual_values[i])
+  end
+  
+  return table.unpack(individual_values)
+end
+
+function ultraschall.GetShow_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetShow_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer showstate = ultraschall.GetShow_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description>
+    returns the SHOW-entryvalues from an FXStateChunk.
+    
+    This shows, whether the fxchain is currently shown and which fx is visible in Reaper's UI.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer shownstate - 0, the fx-chain is not shown; 1, first fx is shown; 2, second fx is shown, etc
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, whose show-state you want to get
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, showstate</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetShow_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  local Show=FXStateChunk:match("\n.-SHOW (.-)\n")
+  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(Show.." ", " ")
+  for i=1, count do
+    individual_values[i]=tonumber(individual_values[i])
+  end
+  
+  return table.unpack(individual_values)
+end
+
+function ultraschall.GetLastSel_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetLastSel_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer last_selected_fx = ultraschall.GetLastSel_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description>
+    returns the LASTSEL-entryvalues from an FXStateChunk.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer last_selected_fx - the last selected fx; 1, the first fx; 2, the second fx; 3, the third fx
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, whose last-selected-fx you want to get
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, last selected fx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetLastSel_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  local LASTSEL=FXStateChunk:match("\n.-LASTSEL (.-)\n")
+  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(LASTSEL.." ", " ")
+  for i=1, count do
+    individual_values[i]=tonumber(individual_values[i])
+  end
+  individual_values[1]=individual_values[1]+1
+  return table.unpack(individual_values)
+end
+
+function ultraschall.GetDocked_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetDocked_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer dockstate = ultraschall.GetDocked_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description>
+    returns the DOCKED-entryvalues from an FXStateChunk.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer dockstate - 0, undocked; 1, docked
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, whose dockstate you want to get
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, dockstate</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetDocked_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  local GetDocked_FXStateChunk=FXStateChunk:match("\n.-DOCKED (.-)\n")
+  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(GetDocked_FXStateChunk.." ", " ")
+  for i=1, count do
+    individual_values[i]=tonumber(individual_values[i])
+  end
+  return table.unpack(individual_values)
+end
+
+
+function ultraschall.SetFXBypass_FXStateChunk(FXStateChunk, fx_id, bypass, online, unknown)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetFXBypass_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.19
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetFXBypass_FXStateChunk(string FXStateChunk, integer fxid, integer bypass, integer offline, integer unknown)</functioncall>
+  <description>
+    sets the fx-BYPASS-entry of a specific fx within an FXStateChunk, which allows setting online/offline and bypass-settings.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new BYPASS-state
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new bypass-state
+    integer fxid - the fx, whose bypass-state you want to set
+    integer bypass - 0, non-bypassed; 1, bypassed
+    integer offline - 0, online; 1, offline
+    integer unknown - unknown; default is 0
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, bypass, online/offline</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetFXBypass_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("SetFXBypass_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  if math.type(bypass)~="integer" then ultraschall.AddErrorMessage("SetFXBypass_FXStateChunk", "bypass", "must be an integer", -3) return nil end
+  if math.type(online)~="integer" then ultraschall.AddErrorMessage("SetFXBypass_FXStateChunk", "online", "must be an integer", -4) return nil end
+  if math.type(unknown)~="integer" then ultraschall.AddErrorMessage("SetFXBypass_FXStateChunk", "unknown", "must be an integer", -5) return nil end
+  
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  fx_lines=string.gsub(fx_lines, "BYPASS.-\n", "BYPASS "..bypass.." "..online.." "..unknown.."\n")
+  FXStateChunk=FXStateChunk:sub(1, startoffset-1)..fx_lines..FXStateChunk:sub(endoffset, -1)
+  return FXStateChunk
+end
+
+function ultraschall.SetShow_FXStateChunk(FXStateChunk, showstate)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetShow_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.19
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetShow_FXStateChunk(string FXStateChunk, integer showstate)</functioncall>
+  <description>
+    sets the shown-plugin of an FXStateChunk.
+    
+    It is the SHOW-entry
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new SHOW-state
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new shown-fx-state
+    integer showstate - the fx shown; 1, for the first fx; 2, for the second fx; etc
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, show fx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetShow_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(showstate)~="integer" then ultraschall.AddErrorMessage("SetShow_FXStateChunk", "showstate", "must be an integer", -2) return nil end
+  
+  FXStateChunk=string.gsub(FXStateChunk, "\n    SHOW .-\n", "\n    SHOW "..showstate.."\n")
+  return FXStateChunk
+end
+
+function ultraschall.SetWndRect_FXStateChunk(FXStateChunk, x, y, w, h)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetWndRect_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.19
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetWndRect_FXStateChunk(string FXStateChunk, integer x, integer y, integer w, integer h)</functioncall>
+  <description>
+    sets the docked-state of an FXStateChunk.
+    
+    It is the WNDRECT-entry
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new WNDRECT-state
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new undocked-windowposition-state
+    integer x - the x-position of the undocked window
+    integer y - the y-position of the undocked window
+    integer w - the width of the window-rectangle
+    integer h - the height of the window-rectangle
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, last selected</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetWndRect_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(x)~="integer" then ultraschall.AddErrorMessage("SetWndRect_FXStateChunk", "x", "must be an integer", -2) return nil end
+  if math.type(y)~="integer" then ultraschall.AddErrorMessage("SetWndRect_FXStateChunk", "y", "must be an integer", -3) return nil end
+  if math.type(w)~="integer" then ultraschall.AddErrorMessage("SetWndRect_FXStateChunk", "w", "must be an integer", -4) return nil end
+  if math.type(h)~="integer" then ultraschall.AddErrorMessage("SetWndRect_FXStateChunk", "h", "must be an integer", -5) return nil end
+  
+  FXStateChunk=string.gsub(FXStateChunk, "\n    WNDRECT .-\n", "\n    WNDRECT "..x.." "..y.." "..w.." "..h.."\n")
+  return FXStateChunk
+end
+
+function ultraschall.SetDocked_FXStateChunk(FXStateChunk, docked)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetDocked_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.19
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetDocked_FXStateChunk(string FXStateChunk, integer docked)</functioncall>
+  <description>
+    sets the docked-state of an FXStateChunk.
+    
+    It is the DOCKED-entry
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new DOCKED-state
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new last-selected-fx-state
+    integer docked - the docked-state of the fx-chain-window; 0, undocked; 1, docked
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, docked</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetDocked_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(docked)~="integer" then ultraschall.AddErrorMessage("SetDocked_FXStateChunk", "docked", "must be an integer", -2) return nil end
+  
+  FXStateChunk=string.gsub(FXStateChunk, "\n    DOCKED .-\n", "\n    DOCKED "..docked.."\n")
+  return FXStateChunk
+end
+
+function ultraschall.SetLastSel_FXStateChunk(FXStateChunk, lastsel)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetLastSel_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.19
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetLastSel_FXStateChunk(string FXStateChunk, integer lastsel)</functioncall>
+  <description>
+    sets the last selected-plugin of an FXStateChunk.
+    
+    It is the LASTSEL-entry
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new LASTSEL-state
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new last-selected-fx-state
+    integer lastsel - the last fx selected; 1, for the first fx; 2, for the second fx; etc
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, last selected</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetLastSel_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(lastsel)~="integer" then ultraschall.AddErrorMessage("SetLastSel_FXStateChunk", "lastsel", "must be an integer", -2) return nil end
+  lastsel=lastsel-1
+  
+  FXStateChunk=string.gsub(FXStateChunk, "\n    LASTSEL .-\n", "\n    LASTSEL "..lastsel.."\n")
+  return FXStateChunk
+end
+
+function ultraschall.SetFXGuid_FXStateChunk(FXStateChunk, floating, fx_id, guid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetFXGuid_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.19
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetFXGuid_FXStateChunk(string FXStateChunk, integer fxid, string guid)</functioncall>
+  <description>
+    sets the fx-FXID-entry of a specific fx within an FXStateChunk, which holds the guid for this fx.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new BYPASS-state
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new gui
+    integer fxid - the fx, whose guid you want to set
+    string guid - a guid for this fx; use reaper.genGuid to create one
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, guid</tags>
+</US_DocBloc>
+]]
+
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetFXGuid_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("SetFXGuid_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  if type(guid)~="string" then ultraschall.AddErrorMessage("SetFXGuid_FXStateChunk", "guid", "must be a string", -3) return nil end
+  if ultraschall.IsValidGuid(guid, true)==false then ultraschall.AddErrorMessage("SetFXGuid_FXStateChunk", "guid", "must be a valid guid; use reaper.genGuid to create one.", -4) return nil end
+  
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  fx_lines=string.gsub(fx_lines, "FXID.-\n", "FXID "..guid.."\n")
+  FXStateChunk=FXStateChunk:sub(1, startoffset-1)..fx_lines..FXStateChunk:sub(endoffset, -1)
+  return FXStateChunk
+end
+
+function ultraschall.SetFXFloatPos_FXStateChunk(FXStateChunk, fx_id, floating, x, y, w, h)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetFXFloatPos_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.19
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetFXFloatPos_FXStateChunk(string FXStateChunk, integer fxid, boolean floating, integer x, integer y, integer w, integer h)</functioncall>
+  <description>
+    sets the fx-FXID-entry of a specific fx within an FXStateChunk, which manages floatstate and position of the floating-fx-window.
+    
+    Note: when committing it to a track/item of an opened project, keep in mind that setting floating=false will have no effect.
+    You will also need to commit a TrackStateChunk/ItemStateChunk twice, as in the first commit, w and h will be ignored if the fx isn't already floating.
+    This is probably due a Reaper bug and I can't fix it in here, sorry.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new BYPASS-state
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new bypass-state
+    integer fxid - the fx, whose bypass-state you want to set
+    boolean floating - true, window is floating; false, window is not floating
+    integer x - the x-position of the floating-window
+    integer y - the y-position of the floating-window
+    integer w - the width of the window(will be ignored, when committing changed statechunk only once to current project's track/item)
+    integer h - the height of the window(will be ignored, when committing changed statechunk only once to current project's track/item) 
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, floatposition, x, y, w, g</tags>
+</US_DocBloc>
+]]
+
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetFXFloatPos_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("SetFXFloatPos_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  if type(floating)~="boolean" then ultraschall.AddErrorMessage("SetFXFloatPos_FXStateChunk", "floating", "must be a boolean", -3) return nil end
+  if math.type(x)~="integer" then ultraschall.AddErrorMessage("SetFXFloatPos_FXStateChunk", "x", "must be an integer", -4) return nil end
+  if math.type(y)~="integer" then ultraschall.AddErrorMessage("SetFXFloatPos_FXStateChunk", "y", "must be an integer", -5) return nil end
+  if math.type(w)~="integer" then ultraschall.AddErrorMessage("SetFXFloatPos_FXStateChunk", "w", "must be an integer", -6) return nil end
+  if math.type(h)~="integer" then ultraschall.AddErrorMessage("SetFXFloatPos_FXStateChunk", "h", "must be an integer", -7) return nil end
+  
+  if floating==true then floating="" else floating="POS" end
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  fx_lines=string.gsub(fx_lines, "FLOAT.- .-\n", "FLOAT"..floating.." "..x.." "..y.." "..w.." "..h.."\n")
+  FXStateChunk=FXStateChunk:sub(1, startoffset-1)..fx_lines..FXStateChunk:sub(endoffset, -1)
+  return FXStateChunk
+end

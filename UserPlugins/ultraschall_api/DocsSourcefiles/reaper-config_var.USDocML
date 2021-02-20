@@ -3,7 +3,7 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.19 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.23 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -29,8 +29,8 @@
          I documented bitfields differently than you usually use them. That means, &16384=1 is actually &16384=16384, while &16384=0 is &16384=0. This is only for better readability of the document, not for any technical reasons.  
          Some bitfields are documented as "unknown", though it's uncertain if they're unknown or just unused.  
           
-         Sometimes, variables seem not be existing and valid until they've been set somehow. For instance, [afxcfg](#afxcfg) appears only as valid, when an audio-format for "Apply FX, Glue, Freeze, etc" in the Project Settings -> Media-dialog has  
-         been set. So if you discover a variable as not functioning, keep in mind it might not be set(yet) and therefore not be available. Just set it and it should appear as existing.  
+         Sometimes, variables seem not be existing and valid until they've been set somehow. 
+         So if you discover a variable as not functioning, keep in mind it might not be set(yet) and therefore not be available. Just set it and it should appear as existing.  
           
          Some variables can't be set. Even if you can set them with new values using the SWS-functions, these new values have no effect on the setting behind them and therefore can only be used for getting their current setting.  
          So test this out beforehand, if you need to get/set a specific variable in your script.  
@@ -246,7 +246,9 @@
            >1869047670, OGG Vorbis  
            >2002876005, WAV  
            >2004250731, WavPack lossless compressor  
-            
+         
+          Note: doesn't seem to work anymore as of Reaper 6.xx
+         
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked..  
       </description>  
       <chapter_context>  
@@ -3574,6 +3576,29 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>edit_sug</slug>  
+      <title>edit_sug</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The max number of suggestion from autocomplete in the Reascript/JSFX-IDE.  
+          It is an integer  
+          
+           >0 to 2147483647 ; default is 50
+           
+          For general Reascript-settings, see [reascript](#reascript), [reascripttimeout](#reascripttimeout), [reascriptwatchms](#reascriptwatchms)
+           
+          Stored in reaper.ini under the same name in the section REAPER; is updated as soon as the variable is changed.  
+           
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+  
+  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>env_autoadd</slug>  
@@ -9252,6 +9277,13 @@
            >&4096 = 0, checked: Preserve aspect ratio(letterbox) when resizing  
            >&4096 = 1, unchecked: Preserve aspect ratio(letterbox) when resizing  
            
+           >&8192 = 0, unchecked: Video is affected by the solo state of other tracks
+           >&8192 = 1, checked: Video is affected by the solo state of other tracks
+           
+           >&16384 = 0, unchecked: Video is affected by muted parent tracks
+           >&16384 = 1, unchecked: Video is affected by muted parent tracks
+           
+           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>  
@@ -9620,7 +9652,7 @@
            >&4=0, Clear Console before running any ReaScript - unchecked  
            >&4=1, Clear Console before running any ReaScript - checked  
            
-          For the Reascript-timeout-setting, see [reascripttimeout](#reascripttimeout)  
+          For general Reascript-settings, see [reascripttimeout](#reascripttimeout), [reascriptwatchms](#reascriptwatchms), [edit\_sug](#edit_sug)
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -9641,7 +9673,7 @@
           It's a double float  
            >negative values are allowed, but what's the point?  
            
-          For general Reascript-settings, see [reascript](#reascript)  
+          For general Reascript-settings, see [reascript](#reascript), [reascriptwatchms](#reascriptwatchms), [edit\_sug](#edit_sug)
             
           Stored in reaper.ini under the same name in the section REAPER, with higher precision(!).  
       </description>  
@@ -9651,6 +9683,27 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+  
+      <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>reascriptwatchms</slug>  
+      <title>reascriptwatchms</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The Reascript-"IDE watch window update interval"-input-setting in milliseconds as set in Preferences -> ReaScript  
+          It's an integer
+           >1(0.001) to 2147483647(2147483.647); default is 500(0.50)
+           
+          For general Reascript-settings, see [reascript](#reascript), [reascripttimeout](#reascripttimeout), [edit\_sug](#edit_sug)
+            
+          Stored in reaper.ini under the same name in the section REAPER, with higher precision(!).  
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+  
+  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>recaddatloop</slug>  
@@ -12252,12 +12305,13 @@
       <slug>uiscale</slug>  
       <title>uiscale</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Changed by Reaper, when mouse-clicking on MediaItems, TrackEnvelopes and Automation Items
+          The ui-scaling of Reaper's UI, as set in Preferences->General->Advanced UI/system tweaks-dialog.
+          Setting this variable has only an effect, when the "Scale UI elements of track/mixer panels, transport, etc, by-checkbox is checked(usually, when the scaling-value in the inputfield is something else than 1.00).
           It is a double  
            
-           >either  
-           >-1.#QNAN(unclicked) or anything else(currently clicked)
-           
+           >0.3-3, the scaling value; other values are also supported(0, turns off tabs)
+          
+          Stored in reaper.ini under the same name in the section REAPER.
       </description>  
       <chapter_context>  
          Config Variables  

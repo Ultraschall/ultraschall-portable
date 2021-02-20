@@ -107,7 +107,7 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall_api4.2\_001.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.2_001.zip).  
+            1. Just download the zip-file of the current version from [ultraschall_api4.2\_003.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.2_003.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.
@@ -612,6 +612,7 @@
                                                                       &2, noise shaping master mix
                                                                       &4, dither stems
                                                                       &8, dither noise shaping
+                        RenderTable["Enable2ndPassRender"]     - true, 2nd pass render is enabled; false, 2nd pass render is disabled
                         RenderTable["Endposition"]             - the endposition of the rendering selection in seconds
                         RenderTable["EmbedStretchMarkers"]     - Embed stretch markers/transient guides
                                                                       true, checked; false, unchecked

@@ -39,12 +39,12 @@ This will display the changed lines(including line-number within the statechunk)
 
 It will ask you, whether to put the changed lines into the clipboard.
 
-Meo Mespotine mespotine.de - 3rd of June 2020
+Meo Mespotine mespotine.de - 21 of January 2021
 --]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-Proj, ProjFileName=reaper.EnumProjects(0)
+Proj, ProjFileName=reaper.EnumProjects(-1)
 
 P=0
 function main()
@@ -107,7 +107,7 @@ This will display the changed lines(including line-number within the statechunk)
 
 It will ask you, whether to put the changed lines into the clipboard.
 
-Meo Mespotine mespotine.de - 3rd of June 2020"]]
+Meo Mespotine mespotine.de - 21st of January 2021"]]
  
 reaper.MB(text, "Project-StateChunk Diff-monitor-tool 2.0", 0)
 

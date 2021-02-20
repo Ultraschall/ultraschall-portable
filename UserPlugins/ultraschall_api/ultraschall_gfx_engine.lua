@@ -1048,9 +1048,10 @@ function ultraschall.Lokasenna_LoadGuiLib_v2()
 </US_DocBloc>
 --]]
   loadfile(ultraschall.Api_Path.."/3rd_party_modules/Lokasenna_GUI v2/Library/Core.lua")()
-
+  
   local filename=""
   local i=0
+  reaper.EnumerateFiles(path, -1) -- flush cache
   while filename~=nil do
     filename=reaper.EnumerateFiles(ultraschall.Api_Path.."/3rd_party_modules/Lokasenna_GUI v2/Library/Classes/", i)
     if filename==nil then break end

@@ -1428,7 +1428,7 @@ end
 function ShowSelectedEnvelopeState()
  if oldstatechange2==nil then oldstatechange2=-1 end
  statechange=reaper.GetProjectStateChangeCount(0)
- if statechange~=oldstatechange2 then 
+-- if statechange~=oldstatechange2 then 
     str=""
     Env=reaper.GetSelectedTrackEnvelope(0)
     if Env~=nil then _h,str=reaper.GetEnvelopeStateChunk(Env,"",true) end
@@ -1441,7 +1441,7 @@ function ShowSelectedEnvelopeState()
     str=StateChunkLayouter(str)
     gfx.drawstr(str)
     oldstatechange=statechange
-  end  
+--  end  
   gfx.x=0
   gfx.y=20
   gfx.set(1,1,1,1,0,-1)
@@ -1453,7 +1453,7 @@ end
 function ShowSelectedItemState()
  if oldstatechange==nil then oldstatechange=-1 end
  statechange=reaper.GetProjectStateChangeCount(0)
- if statechange~=oldstatechange then 
+-- if statechange~=oldstatechange then 
    str=""
    MediaItem=reaper.GetSelectedMediaItem(0,0)
    if MediaItem~=nil then _h, str = reaper.GetItemStateChunk(MediaItem,"",false) end
@@ -1468,7 +1468,7 @@ function ShowSelectedItemState()
     oldstatechange=statechange
     --gfx.set(0.1,0.1,0.1,1,0,-1)
     --gfx.rect(0,20,gfx.w,gfx.h,true)
-  end  
+--  end  
   gfx.x=0
   gfx.y=20
   gfx.set(1,1,1,1,0,-1)
@@ -1478,7 +1478,8 @@ end
 function ShowSelectedTrackState()
  if oldstatechange==nil then oldstatechange=-1 end
  statechange=reaper.GetProjectStateChangeCount(0)
- if statechange~=oldstatechange then 
+-- statechange=statechange+1
+-- if statechange~=oldstatechange then 
    str=""
    MediaTrack=reaper.GetLastTouchedTrack()--reaper.GetSelectedTrack(0,0)
 --   if MediaTrack==nil then MediaTrack=reaper.GetMasterTrack
@@ -1494,7 +1495,7 @@ function ShowSelectedTrackState()
     oldstatechange=statechange
     --gfx.set(0.1,0.1,0.1,1,0,-1)
     --gfx.rect(0,20,gfx.w,gfx.h,true)
-  end  
+--  end  
   gfx.x=0
   gfx.y=20
   gfx.set(1,1,1,1,0,-1)

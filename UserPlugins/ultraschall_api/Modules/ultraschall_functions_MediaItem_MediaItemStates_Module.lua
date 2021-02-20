@@ -3363,3 +3363,108 @@ function ultraschall.SetItem_Video_IgnoreAudio(Item, take_index, checkbox_state,
 end
 
 
+function ultraschall.GetItemImage(MediaItem, MediaItemStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetItemImage</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>string filename = ultraschall.GetItemImage(MediaItem MediaItem, optional string MediaItemStateChunk)</functioncall>
+  <description>
+    Returns filename of an imagefile of an MediaItem or MediaItemStateChunk, as set in the item-notes-dialog.
+    
+    It is the entry RESOURCEFN
+    
+    Returns nil in case of error.
+  </description>
+  <parameters>
+    MediaItem MediaItem - the MediaItem, whose itemimage you want to know; nil, use parameter MediaItemStatechunk instead
+    optional string MediaItemStateChunk - an rpp-xml-statechunk, as created by reaper-api-functions like GetItemStateChunk
+  </parameters>
+  <retvals>
+    string filename - the filename of the item-image; "", if not image is associated with this item
+  </retvals>
+  <chapter_context>
+    MediaItem Management
+    Get MediaItem States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
+  <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, image, file</tags>
+</US_DocBloc>
+]]
+  if MediaItem~=nil and ultraschall.type(MediaItem)~="MediaItem" then ultraschall.AddErrorMessage("GetItemImage", "MediaItem", "must be a valid MediaItem or nil(when using MediaItemStateChunk instead)", -1) return nil end
+  if MediaItem==nil and type(MediaItemStateChunk)~="string" then ultraschall.AddErrorMessage("GetItemImage", "MediaItemStateChunk", "Must be a string, when working with MediaItemStateChunks", -2) return nil end
+  local retval, Filename, Resflags, count, individual_values, ResFlags
+  if MediaItem~=nil then retval, MediaItemStateChunk=reaper.GetItemStateChunk(MediaItem, "", false) end
+
+  Filename=MediaItemStateChunk:match("RESOURCEFN \"+(.-)\"+\n")
+  if Filename==nil then Filename="" end
+  return Filename
+end
+
+
+function ultraschall.SetItemImage(MediaItem, MediaItemStateChunk, imagefilename)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetItemImage</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>string MediaItemStateChunk = ultraschall.SetItemImage(MediaItem MediaItem, optional string MediaItemStateChunk, string imagefilename)</functioncall>
+  <description>
+    Sets the filename of an imagefile of an MediaItem or MediaItemStateChunk, as set in the item-notes-dialog.
+    
+    It is the entry RESOURCEFN
+    
+    Note: This function will not check, if the filename exists.
+    
+    Returns nil in case of error.
+  </description>
+  <parameters>
+    MediaItem MediaItem - the MediaItem, whose itemimage you want to set; nil, use parameter MediaItemStatechunk instead
+    optional string MediaItemStateChunk - an rpp-xml-statechunk, as created by reaper-api-functions like GetItemStateChunk; set to nil, if not needed
+    string filename - the filename of the item-image; "", if not image is associated with this item
+  </parameters>
+  <retvals>
+    string MediaItemStateChunk - the altered MediaItemStateChunk
+  </retvals>
+  <chapter_context>
+    MediaItem Management
+    Set MediaItem States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
+  <tags>mediaitemmanagement, tracks, media, item, statechunk, rppxml, state, chunk, set, image, file</tags>
+</US_DocBloc>
+]]
+  if MediaItem~=nil and ultraschall.type(MediaItem)~="MediaItem" then ultraschall.AddErrorMessage("SetItemImage", "MediaItem", "must be a valid MediaItem or nil(when using MediaItemStateChunk instead)", -1) return nil end
+  if MediaItem==nil and type(MediaItemStateChunk)~="string" then ultraschall.AddErrorMessage("SetItemImage", "MediaItemStateChunk", "Must be a string, when working with MediaItemStateChunks", -2) return nil end
+  if type(imagefilename)~="string" then ultraschall.AddErrorMessage("SetItemImage", "MediaItemStateChunk", "Must be a string, when working with MediaItemStateChunks", -2) return nil end
+
+  
+  local retval
+  if MediaItem~=nil then retval, MediaItemStateChunk=reaper.GetItemStateChunk(MediaItem, "", false) end
+  MediaItemStateChunk=ultraschall.StateChunkLayouter(MediaItemStateChunk)
+
+  MediaItemStateChunk=string.gsub(MediaItemStateChunk, "\n  RESOURCEFN .-\n", "")
+  local Insert="\n  RESOURCEFN \""..imagefilename.."\"\n"
+  local offset, imgrflags=MediaItemStateChunk:match("()  (IMGRESOURCEFLAGS)")
+  if imgrflags==nil then
+    Insert=Insert.."  IMGRESOURCEFLAGS 0"
+    offset=MediaItemStateChunk:len()-3
+  else
+    Insert=Insert.." "
+  end
+  MediaItemStateChunk=MediaItemStateChunk:sub(1,offset)..Insert..MediaItemStateChunk:sub(offset+1, -1)
+  if MediaItem~=nil then 
+    reaper.SetItemStateChunk(MediaItem, MediaItemStateChunk, false)
+  end
+  return MediaItemStateChunk
+end
+

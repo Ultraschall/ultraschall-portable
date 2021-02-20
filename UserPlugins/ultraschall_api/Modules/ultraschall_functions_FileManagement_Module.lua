@@ -704,13 +704,15 @@ function ultraschall.CountDirectoriesAndFilesInPath(path)
   local dircount=0
   
   -- count files
+  reaper.EnumerateFiles(path, -1) -- flush cache
   while string~=nil do
     string=reaper.EnumerateFiles(path, filecount)
     if string~=nil then filecount=filecount+1 end
   end
   local string=""
-  
+    
   -- count directories
+  reaper.EnumerateSubdirectories(path, -1) -- flush cache
   while string~=nil do
     string=reaper.EnumerateSubdirectories(path, dircount)
     if string~=nil then dircount=dircount+1 end
@@ -765,6 +767,7 @@ function ultraschall.GetAllFilenamesInPath(path)
   if path:sub(-1,-1)~="/" or path:sub(-1,-1)~="\\" then path=path.."/" end
   
   -- get all filenames in path
+  reaper.EnumerateFiles(path, -1) -- flush cache
   while String~=nil do
     String=reaper.EnumerateFiles(path, count-1)
     if String~=nil then Files[count]=path..String end
@@ -821,6 +824,7 @@ function ultraschall.GetAllDirectoriesInPath(path)
   
   if path:sub(-1,-1)~="\\" and path:sub(-1,-1)~="/" then sep=ultraschall.Separator end
   -- get directorynames
+  reaper.EnumerateSubdirectories(path, -1) -- flush cache
   while String~=nil do
     String=reaper.EnumerateSubdirectories(path, count-1)
     if String~=nil then Dirs[count]=path..sep..String end
@@ -959,6 +963,7 @@ function ultraschall.DirectoryExists(path, directory)
   local index=0
   local found=false
   if ultraschall.IsOS_Other()==false then path=path:lower() directory=directory:lower() end
+  reaper.EnumerateSubdirectories(path, -1) -- flush cache
   while reaper.EnumerateSubdirectories(path,index)~=nil do
 --  reaper.ShowConsoleMsg(reaper.EnumerateSubdirectories(path, index).."\n")
     if reaper.EnumerateSubdirectories(path, index):lower()==directory then found=true break end
@@ -1565,6 +1570,7 @@ function ultraschall.GetAllRecursiveFilesAndSubdirectories(path)
     local path=Dirs[dirscount]
     local temp=""
     local subdir=0
+    reaper.EnumerateSubdirectories("", -1) -- flush cache    
     while temp~=nil do
       temp=reaper.EnumerateSubdirectories(Dirs[dirscount],subdir)
       if temp~=nil then
@@ -1576,6 +1582,7 @@ function ultraschall.GetAllRecursiveFilesAndSubdirectories(path)
     dirscount=dirscount+1
   end
   
+  reaper.EnumerateFiles("", -1) -- flush cache
   local dircounter=1
   for i=1, dirsmaxcount do
     local counter=0

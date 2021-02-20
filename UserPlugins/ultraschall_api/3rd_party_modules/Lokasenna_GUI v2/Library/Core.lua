@@ -1432,7 +1432,7 @@ GUI.get_OS_fonts = function()
     local os = reaper.GetOS()
     if os:match("Win") then
         return GUI.OS_fonts.Windows
-    elseif os:match("OS") then
+    elseif os:match("OSX") then
         return GUI.OS_fonts.OSX
     else
         return GUI.OS_fonts.Linux

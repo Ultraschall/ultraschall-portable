@@ -1670,7 +1670,7 @@
             on a line by itself. 
             
             Note that when synchronizing with ReaScripts or JSFX, all processing is asynchronous, so your code will have to deal with 
-            synchronization issues (including vast differences between project_time and playback_position, and including race conditions).
+            synchronization issues (including vast differences between project_time and playback_position, and including race conditions). For Lua ReaScripts, see the function Lua-ReaScript function gmem_attach(), gmem_write() and gmem_read().
             
             To get/set values from gmem, use gmem[index].
             Example:

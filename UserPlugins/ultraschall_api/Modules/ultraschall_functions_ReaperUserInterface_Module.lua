@@ -4366,3 +4366,76 @@ function ultraschall.ReturnAllChildHWND(hwnd)
   end
   return count, HWND
 end
+
+function ultraschall.SetUIScale(scaling)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetUIScale</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.17
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetUIScale(number scaling)</functioncall>
+  <description>
+    Sets the UI-scaling of Reaper's UI.
+    
+    Works only, if the "Scale UI elements of track/mixer panels, tansport, etc, by:"-checkbox is enabled in Preferences -> General -> Advanced UI/system tweaks-dialog, 
+    by setting the value in the dialog to anything else than 1.0.
+    
+    returns false in case of an error.
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    number scaling - the scaling-factor; safe range is between 0.30 and 3.00, though 0 to 2000 is supported
+  </parameters>
+  <chapter_context>
+    User Interface
+    Miscellaneous
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>user interface, uiscaling, set</tags>
+</US_DocBloc>
+--]]
+  if type(scaling)~="number" then ultraschall.AddErrorMessage("SetUIScale", "scaling", "must be a number", -1) return false end
+  if scaling<0 or scaling>2000 then ultraschall.AddErrorMessage("SetUIScale", "scaling", "must be between 0 and 2000", -2) return false end
+  local B,BB=reaper.BR_Win32_GetPrivateProfileString("REAPER", "uiscale", "", reaper.get_ini_file())
+  if BB=="1.00000000" then ultraschall.AddErrorMessage("SetUIScale", "", "Works only, if the \n\n   \"Scale UI elements of track/mixer panels, tansport, etc, by:\"-checkbox \n\nis enabled in \n\n    Preferences -> General -> Advanced UI/system tweaks-dialog,\n\n by setting the value in the dialog to anything else than 1.0.", -3) return false end
+  local A=ultraschall.DoubleToInt(scaling)
+  return reaper.SNM_SetIntConfigVar("uiscale", A)
+end
+
+--B=ultraschall.SetUIScale(1)
+
+function ultraschall.GetUIScale()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetUIScale</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.17
+    Lua=5.3
+  </requires>
+  <functioncall>number uiscale = ultraschall.GetUIScale()</functioncall>
+  <description>
+    Gets the current UI-scaling of Reaper's UI.
+    
+    returns false in case of an error.
+  </description>
+  <retvals>
+    number uiscale - the current scaling-factor of Reaper's UI
+  </retvals>
+  <chapter_context>
+    User Interface
+    Miscellaneous
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>user interface, uiscaling, get</tags>
+</US_DocBloc>
+--]]
+  return reaper.SNM_GetDoubleConfigVar("uiscale", -1)
+end

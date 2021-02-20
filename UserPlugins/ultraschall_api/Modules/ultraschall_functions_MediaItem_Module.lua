@@ -4956,17 +4956,17 @@ function ultraschall.GetItem_HighestRecCounter()
  return recpass, found
 end
 
-function ultraschall.GetItem_ClickState()
+function ultraschall.GetItem_ClickState(mouse_button)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetItem_ClickState</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=6.02
+    Ultraschall=4.2
+    Reaper=6.10
     SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>boolean clickstate, number position, MediaItem item, MediaItem_Take take = ultraschall.GetItem_ClickState()</functioncall>
+  <functioncall>boolean clickstate, number position, MediaItem item, MediaItem_Take take = ultraschall.GetItem_ClickState(integer mouse_button)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns the currently clicked item and take, as well as the current timeposition.
     
@@ -4980,6 +4980,17 @@ function ultraschall.GetItem_ClickState()
     MediaItem item - the Item, which is currently clicked at
     MediaItem_Take take - the take found at clickposition
   </retvals>
+  <parameters>
+    integer mouse_button - the mousebutton, that shall be clicked at the item; you can combine them as flags
+                       - -1, get all states
+                       - &1, only left mouse button
+                       - &2, only right mouse button
+                       - &4, Ctrl/Cmd-key
+                       - &8, Shift-key
+                       - &16, Alt key
+                       - &32, Windows key
+                       - &64, Middle mouse button
+  </parameters>
   <chapter_context>
     MediaItem Management
     Assistance functions
@@ -4989,14 +5000,16 @@ function ultraschall.GetItem_ClickState()
   <tags>mediaitem management, get, clicked, item</tags>
 </US_DocBloc>
 --]]
-  local B=reaper.SNM_GetDoubleConfigVar("uiscale", -999)
+  if math.type(mouse_button)~="integer" then ultraschall.AddErrorMessage("GetItem_ClickState", "mouse_button", "must be an integer", -1) return false end
   local X,Y=reaper.GetMousePosition()
   local Item, ItemTake = reaper.GetItemFromPoint(X,Y, true)
   if Item==nil then Item=ultraschall.ItemClickState_OldItem end
   if Item~=nil then ultraschall.ItemClickState_OldItem=Item end
   if ItemTake==nil then ItemTake=ultraschall.ItemClickState_OldTake end
   if ItemTake~=nil then ultraschall.ItemClickState_OldTake=ItemTake end
-  if tostring(B)=="-1.#QNAN" or Item==nil then
+  local A=reaper.JS_Mouse_GetState(mouse_button)
+  if A==0 or Item==nil then
+    O=reaper.time_precise()
     ultraschall.ItemClickState_OldTake=nil
     ultraschall.ItemClickState_OldItem=nil
     return false

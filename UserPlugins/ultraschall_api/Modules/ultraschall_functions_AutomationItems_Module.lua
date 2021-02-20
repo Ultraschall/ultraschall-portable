@@ -233,7 +233,7 @@ function ultraschall.AutomationItem_Delete(TrackEnvelope, automationitem_idx, pr
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AutomationItem_Delete</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
@@ -249,7 +249,7 @@ function ultraschall.AutomationItem_Delete(TrackEnvelope, automationitem_idx, pr
   <parameters>
     TrackEnvelope env - the TrackEnvelope, in which the automation-item to be deleted is located
     integer automationitem_idx - the automationitem that shall be deleted; 0, for the first one
-    optional boolean preservepoints - true, keepthe envelopepoints and add them to the underlying envelope; nil or false, just delete the AutomationItem
+    optional boolean preservepoints - true, keep the envelopepoints and add them to the underlying envelope; nil or false, just delete the AutomationItem
   </parameters>
   <chapter_context>
     Automation Items
@@ -263,33 +263,42 @@ function ultraschall.AutomationItem_Delete(TrackEnvelope, automationitem_idx, pr
   if math.type(automationitem_idx)~="integer" then ultraschall.AddErrorMessage("AutomationItem_Delete", "automationitem_idx", "must be an integer", -2) return false end
   if automationitem_idx<0 then ultraschall.AddErrorMessage("AutomationItem_Delete", "automationitem_idx", "must be bigger or equal 0", -3) return false end
   if reaper.CountAutomationItems(TrackEnvelope)-1<automationitem_idx then ultraschall.AddErrorMessage("AutomationItem_Delete", "automationitem_idx", "no such automationitem in TrackEnvelope", -4) return false end
-  local AutomationItems_Count, AutomationItems=ultraschall.GetAllAutomationItems()
-  local found
   
   reaper.Undo_BeginBlock()
-  for i=AutomationItems_Count, 1, -1 do
-    if TrackEnvelope~=AutomationItems[i]["EnvelopeObject"] or
-       automationitem_idx~=AutomationItems[i]["AutomationItem_Index"] then
-       reaper.GetSetAutomationItemInfo(AutomationItems[i]["EnvelopeObject"], AutomationItems[i]["AutomationItem_Index"], "D_UISEL", 0, true)
-    else
-      reaper.GetSetAutomationItemInfo(AutomationItems[i]["EnvelopeObject"], AutomationItems[i]["AutomationItem_Index"], "D_UISEL", 1, true)
-      AutomationItems_Count=AutomationItems_Count-1
-      table.remove(AutomationItems,i)
-      found=true
-    end
+  
+  reaper.PreventUIRefresh(1)
+  visible, lane, unknown = ultraschall.GetEnvelopeState_Vis(TrackEnvelope)
+  if visible==0 then 
+    ultraschall.SetEnvelopeState_Vis(TrackEnvelope, 1, lane, unknown)
   end
+  
+  local AutomationItems_selectionstate={}
+  local AutomationItems_selectioncount=0
+  
+  for i=1, reaper.CountAutomationItems(TrackEnvelope) do
+    AutomationItems_selectionstate[i]=reaper.GetSetAutomationItemInfo(TrackEnvelope, i-1, "D_UISEL", 1, false)
+    reaper.GetSetAutomationItemInfo(TrackEnvelope, i-1, "D_UISEL", 0, true)
+  end
+  table.remove(AutomationItems_selectionstate, automationitem_idx+1)
+  
+  reaper.GetSetAutomationItemInfo(TrackEnvelope, automationitem_idx, "D_UISEL", 1, true)
+  
   if preserve_points==true then
     reaper.Main_OnCommand(42088,0)
   else
     reaper.Main_OnCommand(42086,0)
   end
-  for i=AutomationItems_Count, 1, -1 do
-    reaper.GetSetAutomationItemInfo(AutomationItems[i]["EnvelopeObject"], AutomationItems[i]["AutomationItem_Index"], "D_UISEL", AutomationItems[i]["AutomationItem_UISelect"], true)
+  
+  for i=1, reaper.CountAutomationItems(TrackEnvelope) do
+    reaper.GetSetAutomationItemInfo(TrackEnvelope, i-1, "D_UISEL", AutomationItems_selectionstate[i], true)
   end
   
+  if visible==0 then 
+    visible = ultraschall.SetEnvelopeState_Vis(TrackEnvelope, 0, lane, unknown)
+  end
+  reaper.PreventUIRefresh(-1)  
+
   reaper.Undo_EndBlock("Deleted Automation Item", -1)
-  -- following line necessary? Don't think so.
-  if found~=true then ultraschall.AddErrorMessage("AutomationItem_Delete", "automationitem_idx", "no such automation-item found", -5) return false end
   return true
 end
 

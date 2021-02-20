@@ -29,6 +29,9 @@ ultraschall.ShowErrorMessagesInReascriptConsole(true)
 
 NumFuncs=progresscounter()
 
+os.remove(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_ModulatorLoad3000.lua-")
+os.remove(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Documentation/Reaper_StateChunk_Docs.html")
+
 -- set this to the folder, that you want to create a reapack of
 SourceDir=reaper.GetResourcePath().."/UserPlugins/"--"c:/Ultraschall-Hackversion_3.2_alpha_Februar2019/UserPlugins/"
 
@@ -542,4 +545,4 @@ ultraschall.ShowLastErrorMessage()
 
 --os.execute("c:\\Ultraschall-Hackversion_3.2_alpha_Februar2019\\UserPlugins\\ultraschall_api\\Scripts\\Tools\\batter.bat")
 os.execute(SourceDir.."/ultraschall_api/Scripts/Tools/batter.bat")
-reaper.MB("Done", "", 0)
+reaper.MB("Done\n\n\nDeleted two files, statechunk-docs and modulator as well!!!", "", 0)

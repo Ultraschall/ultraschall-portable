@@ -1,18 +1,18 @@
 --[[
 ################################################################################
-#
+# 
 # Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
-#
+# 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-#
+# 
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-#
+# 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-#
+# 
 ################################################################################
 ]]
 
@@ -32,25 +32,25 @@
 
 
 
-if type(ultraschall)~="table" then
+if type(ultraschall)~="table" then 
   -- update buildnumber and add ultraschall as a table, when programming within this file
   local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Markers-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000
-  else
-    string=tonumber(string)
+  if string=="" then string=10000 
+  else 
+    string=tonumber(string) 
     string=string+1
   end
-  if string2=="" then string2=10000
-  else
+  if string2=="" then string2=10000 
+  else 
     string2=tonumber(string2)
     string2=string2+1
-  end
+  end 
   reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  ultraschall={}
-
+  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
+  ultraschall={} 
+  
   ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
 end
 
@@ -67,9 +67,9 @@ function ultraschall.AddNormalMarker(position, shown_number, markertitle)
   <functioncall>integer marker_number, string guid = ultraschall.AddNormalMarker(number position, integer shown_number, string markertitle)</functioncall>
   <description>
     Adds a normal marker. Returns the index of the marker as marker_number.
-
+    
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -114,14 +114,14 @@ function ultraschall.AddPodRangeRegion(startposition, endposition)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AddPodRangeRegion</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=6.02
+    Ultraschall=4.2
+    Reaper=6.19
     Lua=5.3
   </requires>
   <functioncall>integer marker_number, string guid = ultraschall.AddPodRangeRegion(number startposition, number endposition)</functioncall>
   <description>
     Adds a region, which shows the time-range from the beginning to the end of the podcast.
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -141,18 +141,15 @@ function ultraschall.AddPodRangeRegion(startposition, endposition)
   <tags>markermanagement, add, podrange, region, guid</tags>
 </US_DocBloc>
 --]]
-
+  
   -- prepare variables
   local color=0
   local noteID=0
-
+  
   -- prepare colorvalue
   local Os = reaper.GetOS()
-  if string.match(Os, "OS") then
-    color = 0xFFFFFF|0x1000000
-  else
-    color = 0xFFFFFF|0x1000000
-  end
+  
+  color = 0xFFFFFF|0x1000000
 
   local a,nummarkers,numregions=reaper.CountProjectMarkers(0)
   local count=0
@@ -161,20 +158,20 @@ function ultraschall.AddPodRangeRegion(startposition, endposition)
   if type(endposition)~="number" then ultraschall.AddErrorMessage("AddPodRangeRegion", "endposition", "must be a number", -2) return -1 end
   if startposition<0 then return -1 end
   if endposition<startposition then return -1 end
-
+  
   for i=nummarkers+numregions, 0, -1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
-    if name:sub(1,10)=="_PodRange:" and isrgn==true then count=count+1 reaper.DeleteProjectMarkerByIndex(0,i) end
+    if name:sub(1,10)=="_PodRange:" and isrgn==true then count=count+1 reaper.DeleteProjectMarkerByIndex(0,i) end 
   end
-
+  
   local Aretval, Acount, Amarkersstring, Amarkersarray = ultraschall.IsRegionAtPosition(startposition)
-
+  
   noteID=reaper.AddProjectMarker2(0, 1, startposition, endposition, "_PodRange:", 0, color)
-
+  
   local A1retval, Acount1, A1markersstring, A1markersarray = ultraschall.IsRegionAtPosition(startposition)
   local duplicate_count, duplicate_array, originalscount_array1, originals_array1, originalscount_array2, originals_array2 = ultraschall.GetDuplicatesFromArrays(A1markersarray, Amarkersarray)
   local retval, guid = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..originals_array1[1]-1, "", false)
-
+  
   return originals_array1[1]-1, guid
 end
 
@@ -190,7 +187,7 @@ function ultraschall.GetMarkerByName(searchname, searchisrgn)
   <functioncall>integer count_markers, array foundmarkers, array found_guids = ultraschall.GetMarkerByName(string searchname, boolean searchisrgn)</functioncall>
   <description>
     Get all markers/regions that have a certain name. This function is not case-sensitive.
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -214,7 +211,7 @@ function ultraschall.GetMarkerByName(searchname, searchisrgn)
   -- check parameters
   if type(searchname)~="string" then ultraschall.AddErrorMessage("GetMarkerByName", "searchname", "must be a string", -1) return -1 end
   if type(searchisrgn)~="boolean" then ultraschall.AddErrorMessage("GetMarkerByName", "searchisrgn", "must be boolean", -2) return -1 end
-
+  
   -- prepare variables
   local foundmarkers={}
   local guids={}
@@ -222,12 +219,12 @@ function ultraschall.GetMarkerByName(searchname, searchisrgn)
   local markercount=0
   local Aretval
   searchname=searchname:upper()
-
+  
   -- look for markers/regions
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if searchisrgn==isrgn then markercount=markercount+1 end -- count markers/region
-    if isrgn==searchisrgn and name:upper()==searchname:upper() then
+    if isrgn==searchisrgn and name:upper()==searchname:upper() then 
       foundmarkers[count]=markercount-1      -- if right marker/region has been found, add it to the foundmarkers-array
       Aretval, guids[count] = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..retval-1, "", false)
       count=count+1
@@ -249,7 +246,7 @@ function ultraschall.GetMarkerByName_Pattern(searchname, searchisrgn)
   <functioncall>integer count_markers, array foundmarkers, array foundguids = ultraschall.GetMarkerByName_Pattern(string searchname, boolean searchisrgn)</functioncall>
   <description>
     Get all markers/regions that have a certain character-sequence in their name. This function is not case-sensitive.
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -273,22 +270,22 @@ function ultraschall.GetMarkerByName_Pattern(searchname, searchisrgn)
   -- check parameters
   if type(searchname)~="string" then ultraschall.AddErrorMessage("GetMarkerByName_Pattern", "searchname", "must be a string", -1) return -1 end
   if type(searchisrgn)~="boolean" then ultraschall.AddErrorMessage("GetMarkerByName_Pattern", "searchisrgn", "must be boolean", -2) return -1 end
-
+  
   -- prepare variables
   local foundmarkers={}
   local count=1
   local markercount=0
   local guids={}
   local Aretval
-
+  
   searchname=searchname:upper()
-
+  
   -- look for markers/regions
   for i=0, reaper.CountProjectMarkers(0)-1 do
     retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
-    name=name:upper()
+    name=name:upper()    
     if searchisrgn==isrgn then markercount=markercount+1 end -- count marker/region
-    if searchisrgn==isrgn and name:match(searchname)~=nil then
+    if searchisrgn==isrgn and name:match(searchname)~=nil then 
       foundmarkers[count]=markercount-1  -- if right marker/region has been found add to foundmarkers-array
       Aretval, guids[count] = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..retval-1, "", false)
       count=count+1
@@ -309,7 +306,7 @@ function ultraschall.GetMarkerAndRegionsByIndex(idx, searchisrgn)
   <functioncall>string name, integer shown_number, integer color, number pos, optional number rgnend, string guid = ultraschall.GetMarkerAndRegionsByIndex(integer idx, boolean searchisrgn)</functioncall>
   <description>
     Returns the values of a certain marker/region. The numbering of idx is either only for the markers or for regions, depending on what you set with parameter searchisrgn.
-
+    
     returns nil in case of an error
   </description>
   <retvals>
@@ -339,7 +336,7 @@ function ultraschall.GetMarkerAndRegionsByIndex(idx, searchisrgn)
 
   -- prepare variable
   local markercount=0
-
+  
   -- look for the right marker/region
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
@@ -362,7 +359,7 @@ function ultraschall.SetMarkerByIndex(idx, searchisrgn, shown_number, pos, rgnen
   <functioncall>boolean retval = ultraschall.SetMarkerByIndex(integer idx, boolean searchisrgn, integer shown_number, number position, position rgnend, string name, integer color, integer flags)</functioncall>
   <description>
     Sets the values of a certain marker/region. The numbering of idx is either only for the markers or for regions, depending on what you set with parameter searchisrgn.
-
+    
     returns false in case of an error
   </description>
   <retvals>
@@ -399,11 +396,11 @@ function ultraschall.SetMarkerByIndex(idx, searchisrgn, shown_number, pos, rgnen
 
   -- prepare variable
   local markercount=0
-
+  
   -- search and set marker/region
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval2, isrgn, pos2, rgnend2, name2, markrgnindexnumber2, color2 = reaper.EnumProjectMarkers3(0,i)
-
+    
     -- count marker/region
     if searchisrgn==isrgn then markercount=markercount+1 end
     if searchisrgn==isrgn and isrgn==true and markercount==idx then
@@ -415,17 +412,17 @@ function ultraschall.SetMarkerByIndex(idx, searchisrgn, shown_number, pos, rgnen
       if color==nil then color=color2 end
       return reaper.SetProjectMarkerByIndex2(0, i, true, pos, rgnend, shown_number, name, color, 0)
     end
-    if searchisrgn==isrgn and isrgn==false and markercount==idx then
+    if searchisrgn==isrgn and isrgn==false and markercount==idx then 
       -- if the correct marker has been found, change it
       if shown_number==nil then shown_number=markrgnindexnumber2 end
       if pos==nil then pos=pos2 end
       if rgnend==nil then rgnend=rgnend2 end
       if name==nil then name=name2 end
       if color==nil then color=color2 end
-      return reaper.SetProjectMarker4(0, i, false, pos, rgnend, name, color, flags)
+      return reaper.SetProjectMarker4(0, i, false, pos, rgnend, name, color, flags) 
     end
   end
-
+  
   -- if no such marker/region has been found
   if searchisrgn==true then ultraschall.AddErrorMessage("SetMarkerByIndex", "idx", "no such region", -8) return false end
   if searchisrgn==false then ultraschall.AddErrorMessage("SetMarkerByIndex", "idx", "no such marker", -9) return false end
@@ -439,14 +436,14 @@ function ultraschall.AddEditMarker(position, shown_number, edittitle)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AddEditMarker</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=6.02
+    Ultraschall=4.2
+    Reaper=6.19
     Lua=5.3
   </requires>
   <functioncall> integer marker_number, string guid = ultraschall.AddEditMarker(number position, integer shown_number, string edittitle)</functioncall>
   <description>
-    Adds an Edit marker. Returns the index of the marker as marker_number.
-
+    Adds an Edit marker. Returns the index of the marker as marker_number. 
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -471,12 +468,12 @@ function ultraschall.AddEditMarker(position, shown_number, edittitle)
   local color=0
   local noteID=0
   local Os = reaper.GetOS()
-  if string.match(Os, "OS") then
-    color = 0xFF0000|0x1000000
-  else
+  if string.match(Os, "Win") then 
     color = 0x0000FF|0x1000000
+  else
+    color = 0xFF0000|0x1000000
   end
-
+  
   -- check parameters
   if type(position)~="number" then ultraschall.AddErrorMessage("AddEditMarker", "position", "must be a number", -1) return -1 end
   if math.type(shown_number)~="integer" then ultraschall.AddErrorMessage("AddEditMarker", "shown_number", "must be a integer", -2) return -1 end
@@ -507,7 +504,7 @@ function ultraschall.CountNormalMarkers()
   </requires>
   <functioncall> integer number_of_markers = ultraschall.CountNormalMarkers()</functioncall>
   <description>
-    Counts all normal markers.
+    Counts all normal markers. 
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
   </description>
   <retvals>
@@ -525,16 +522,16 @@ function ultraschall.CountNormalMarkers()
   -- prepare variables
   local a,nummarkers,b=reaper.CountProjectMarkers(0)
   local count=0
-
+  
   -- count normal-markers
   for i=0, a-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
     if name==nil then name="" end
-    if name:sub(1,10)=="_Shownote:" or name:sub(1,5)=="_Edit" or color == ultraschall.planned_marker_color then
+    if name:sub(1,10)=="_Shownote:" or name:sub(1,5)=="_Edit" or color == ultraschall.planned_marker_color then 
         -- if marker is shownote, chapter, edit or planned chapter
     elseif isrgn==false then count=count+1 -- elseif marker is no region, count up
     end
-  end
+  end 
 
   return count
 end
@@ -567,11 +564,11 @@ function ultraschall.CountEditMarkers()
   -- prepare variables
   local a,nummarkers,b=reaper.CountProjectMarkers(0)
   local count=0
-
+  
   -- count edit-markers
   for i=0, a-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
-    if name:sub(1,5)=="_Edit" and isrgn==false then count=count+1 end
+    if name:sub(1,5)=="_Edit" and isrgn==false then count=count+1 end 
   end
 
   return count
@@ -589,7 +586,7 @@ function ultraschall.GetPodRangeRegion()
   <functioncall> number start_position, number end_position, string guid = ultraschall.GetPodRangeRegion()</functioncall>
   <description>
     Gets the start_position and the end_position of the PodRangeRegion.
-
+    
     returns -1 if no PodRangeRegion exists
   </description>
   <retvals>
@@ -614,13 +611,13 @@ function ultraschall.GetPodRangeRegion()
   local endposition=-1
   local count=0
   local Aretval, guid
-
+  
   -- find _Podrange-regions
   for i=nummarkers+numregions, 0, -1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
-    if name:sub(1,10)=="_PodRange:" and isrgn==true then startposition=pos endposition=rgnend Aretval, guid = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..retval, "", false) count=count+1 end
+    if name:sub(1,10)=="_PodRange:" and isrgn==true then startposition=pos endposition=rgnend Aretval, guid = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..retval, "", false) count=count+1 end 
   end
-
+  
   -- return positions
   if count>1 then return -1, -1, ""
   else return startposition, endposition, guid
@@ -640,9 +637,9 @@ function ultraschall.EnumerateNormalMarkers(number)
   </requires>
   <functioncall>integer retnumber, integer retidxnum, number position, string markertitle, string guid = ultraschall.EnumerateNormalMarkers(integer number)</functioncall>
   <description>
-    Get the data of a normal marker.
+    Get the data of a normal marker. 
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
-
+    
     Returns -1 in case of error
   </description>
   <retvals>
@@ -668,7 +665,7 @@ function ultraschall.EnumerateNormalMarkers(number)
 --]]
   -- check parameter
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateNormalMarkers", "number", "must be an integer", -1) return -1 end
-
+  
   -- prepare variables
   local a,nummarkers,b=reaper.CountProjectMarkers(0)
   local number=number-1
@@ -679,21 +676,21 @@ function ultraschall.EnumerateNormalMarkers(number)
   local markername=""
   local position=0
   local Aretval, guid
-
+  
   -- find the right normal-marker
   for i=0, a-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color= reaper.EnumProjectMarkers3(0,i)
-
+	
     if isrgn==false then
-      if name:sub(1,10)~="_Shownote:" and
-		 name:sub(1,5)~="_Edit" and
-		 color~=ultraschall.planned_marker_color
-		 then
-			count=count+1
+      if name:sub(1,10)~="_Shownote:" and 
+		 name:sub(1,5)~="_Edit" and 
+		 color~=ultraschall.planned_marker_color 
+		 then 
+			count=count+1 
 	  end
     end
     if number>=0 and wentfine==0 and count==number then
-        retnumber=retval
+        retnumber=retval 
         markername=name
         retidxnum=markrgnindexnumber
         position=pos
@@ -701,7 +698,7 @@ function ultraschall.EnumerateNormalMarkers(number)
         Aretval, guid = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..retval-1, "", false)
     end
   end
-
+  
   -- return the found marker
   if wentfine==1 then return retnumber, retidxnum, position, markername, guid
   else return -1
@@ -723,7 +720,7 @@ function ultraschall.EnumerateEditMarkers(number)
   <functioncall>integer retnumber, integer shown_number, number position, string edittitle, string guid = ultraschall.EnumerateEditMarkers(integer edit_index)</functioncall>
   <description>
     Gets the data of an edit marker.
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -749,7 +746,7 @@ function ultraschall.EnumerateEditMarkers(number)
 --]]
   -- check parameter
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateEditMarkers", "edit_index", "must be an integer", -1) return -1 end
-
+  
   -- prepare variables
   local a,nummarkers,b=reaper.CountProjectMarkers(0)
   local number=number-1
@@ -760,14 +757,14 @@ function ultraschall.EnumerateEditMarkers(number)
   local editname=""
   local position=0
   local Aretval, guid
-
+  
   -- find the correct edit-marker
   for i=0, a-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if isrgn==false then
-      if name:sub(1,5)=="_Edit" then count=count+1 end
-      if number>=0 and wentfine==0 and count==number then
-          retnumber=retval
+      if name:sub(1,5)=="_Edit" then count=count+1 end 
+      if number>=0 and wentfine==0 and count==number then 
+          retnumber=retval 
           editname=name:sub(7,-1)
           retidxnum=markrgnindexnumber
           position=pos
@@ -776,7 +773,7 @@ function ultraschall.EnumerateEditMarkers(number)
       end
     end
   end
-
+  
   -- return the found edit-marker
   if wentfine==1 then return retnumber, retidxnum, position, editname, guid
   else return -1
@@ -796,12 +793,12 @@ function ultraschall.GetAllEditMarkers()
   <functioncall>integer number_of_editmarkers, array editmarkersarray = ultraschall.GetAllEditMarkers()</functioncall>
   <description>
     returns the number of editmarkers and an array with each editmarker in the format:
-
+    
         editmarkersarray[index][0] - position
         editmarkersarray[index][1] - name
         editmarkersarray[index][2] - idx
         editmarkersarray[index][3] - guid
-
+        
   </description>
   <retvals>
     integer number_of_editmarkers - the number of editmarkers returned
@@ -819,7 +816,7 @@ function ultraschall.GetAllEditMarkers()
   -- prepare variables
   local count=ultraschall.CountEditMarkers()
   local editmarkersarray = {}
-
+  
   -- find all edit-markers and add their attributes to the editmarkersarray
   for i=1, count do
     editmarkersarray[i]={}
@@ -848,14 +845,14 @@ function ultraschall.GetAllNormalMarkers()
   <functioncall>index number_of_normalmarkers, array normalmarkersarray = ultraschall.GetAllNormalMarkers()</functioncall>
   <description>
     returns the number of normalmarkers and an array with each normalmarker in the format:
-
+    
     normalmarkersarray[index][0] - position
     normalmarkersarray[index][1] - name
     normalmarkersarray[index][2] - idx of the marker within all markers in project
     normalmarkersarray[index][3] - the shown index number of the marker
     normalmarkersarray[index][4] - the guid of the marker
-
-
+    
+    
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
   </description>
   <retvals>
@@ -874,7 +871,7 @@ function ultraschall.GetAllNormalMarkers()
   -- prepare variables
   local count=ultraschall.CountNormalMarkers()
   local normalmarkersarray = {}
-
+  
   -- find all normal markers and add theyre attributes to normalmarkersarray
   for i=1, count do
     normalmarkersarray[i]={}
@@ -903,16 +900,16 @@ function ultraschall.GetAllMarkers()
   <description>
     To get all Markers in the project(normal, edit, chapter), regardless of their category.
     Doesn't return regions!
-
+    
     returns the number of markers and an array with each marker in the format:
-
+    
         markersarray[index][0] - position
         markersarray[index][1] - name
         markersarray[index][2] - indexnumber of the marker within all markers in the project
         markersarray[index][3] - the shown index-number
         markersarray[index][4] - the color of the marker
         markersarray[index][5] - the guid of the marker
-
+        
   </description>
   <retvals>
     integer number_of_allmarkers - the number of markers returned
@@ -959,9 +956,9 @@ function ultraschall.SetNormalMarker(number, position, shown_number, markertitle
   <functioncall> boolean retval = ultraschall.SetNormalMarker(integer number, number position, integer shown_number, string markertitle)</functioncall>
   <description>
      Sets values of a normal Marker(no _Chapter:, _Shownote:, etc). Returns true if successful and false if not(i.e. marker doesn't exist)
-
+     
      Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
-
+     
      returns false in case of an error
   </description>
   <parameters>
@@ -987,7 +984,7 @@ function ultraschall.SetNormalMarker(number, position, shown_number, markertitle
   if position==nil or position<0 then position=-1 end
   if tonumber(shown_number)==nil then shown_number=-1 end
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("SetNormalMarker", "number", "must be an integer", -2) return false end
-
+  
   -- prepare variable
   local color=0
   local c,nummarkers,b=reaper.CountProjectMarkers(0)
@@ -995,7 +992,7 @@ function ultraschall.SetNormalMarker(number, position, shown_number, markertitle
   local wentfine=0
   local count=-1
   local retnumber=0
-
+  
   -- find the right marker, that shall be changed
   for i=0, c-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
@@ -1010,9 +1007,9 @@ function ultraschall.SetNormalMarker(number, position, shown_number, markertitle
         wentfine=1
     end
   end
-
+  
   if markertitle==nil then markertitle="" end
-
+  
   -- alter marker, if existing
   if wentfine==1 then return reaper.SetProjectMarkerByIndex(0, retnumber, 0, position, 0, shown_number, markertitle, 0)
   else ultraschall.AddErrorMessage("SetNormalMarker", "number", "no such marker", -3) return false
@@ -1033,7 +1030,7 @@ function ultraschall.SetEditMarker(number, position, shown_number, edittitle)
   <functioncall> boolean retval = ultraschall.SetEditMarker(integer edit_index, number position, integer shown_number, string edittitle)</functioncall>
   <description>
     Sets values of an Edit Marker. Returns true if successful and false if not(i.e. marker doesn't exist)
-
+    
     returns false in case of an error
   </description>
   <parameters>
@@ -1054,7 +1051,7 @@ function ultraschall.SetEditMarker(number, position, shown_number, edittitle)
   <tags>markermanagement, marker, set, set edit, edit marker</tags>
 </US_DocBloc>
 --]]
-
+  
   -- check parameters
   if type(position)~="number" and position~=nil then ultraschall.AddErrorMessage("SetEditMarker", "position", "must be a number", -1) return false end
   if position==nil or position<0 then position=-1 end
@@ -1062,19 +1059,19 @@ function ultraschall.SetEditMarker(number, position, shown_number, edittitle)
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("SetEditMarker", "edit_index", "must be an integer", -2) return false end
 
   -- prepare variables
-  local color=ultraschall.ConvertColor(255,0,0)
+  local color=ultraschall.ConvertColor(255,0,0)  
   local c,nummarkers,b=reaper.CountProjectMarkers(0)
   number=tonumber(number)-1
   local wentfine=0
   local count=-1
   local retnumber=0
-
+  
   -- look for the right edit-marker to change
   for i=0, c-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if isrgn==false then
-      if name:sub(1,5)=="_Edit" then count=count+1 end
-      if number>=0 and wentfine==0 and count==number then
+      if name:sub(1,5)=="_Edit" then count=count+1 end 
+      if number>=0 and wentfine==0 and count==number then 
           if tonumber(position)==-1 or position==nil then position=pos end
           if tonumber(shown_number)<=-1 or shown_number==nil then shown_number=markrgnindexnumber end
           if edittitle==nil then edittitle=name:match("(_Edit:.*)") edittitle=edittitle:sub(7,-1) end
@@ -1083,9 +1080,9 @@ function ultraschall.SetEditMarker(number, position, shown_number, edittitle)
       end
     end
   end
-
+  
   if edittitle==nil then edittitle="" end
-
+  
   -- change edit-marker, if existing
   if wentfine==1 then return reaper.SetProjectMarkerByIndex(0, retnumber, 0, position, 0, shown_number, "_Edit:" .. edittitle, color)
   else ultraschall.AddErrorMessage("SetEditMarker", "edit_index", "no such edit-marker", -3) return false
@@ -1109,7 +1106,7 @@ function ultraschall.SetPodRangeRegion(startposition, endposition)
   <functioncall> integer retval = ultraschall.SetPodRangeRegion(number startposition, number endposition)</functioncall>
   <description>
     Sets "_PodRange:"-Region
-
+    
     returns -1 if it fails.
   </description>
   <parameters>
@@ -1144,8 +1141,8 @@ function ultraschall.DeletePodRangeRegion()
   </requires>
   <functioncall> integer retval = ultraschall.DeletePodRangeRegion()</functioncall>
   <description>
-    deletes the PodRange-Region.
-
+    deletes the PodRange-Region. 
+    
     Returns false if unsuccessful
   </description>
   <retvals>
@@ -1164,11 +1161,11 @@ function ultraschall.DeletePodRangeRegion()
   local a,nummarkers,numregions=reaper.CountProjectMarkers(0)
   local count=0
   local itworked=false
-
+  
   -- look for podrange-region and remove it when found
   for i=nummarkers+numregions, 0, -1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
-    if name:sub(1,10)=="_PodRange:" and isrgn==true then itworked=reaper.DeleteProjectMarkerByIndex(0,i) end
+    if name:sub(1,10)=="_PodRange:" and isrgn==true then itworked=reaper.DeleteProjectMarkerByIndex(0,i) end 
   end
   if itworked==false then ultraschall.AddErrorMessage("DeletePodRangeRegion", "", "no _Podrange-region found", -1) return false end
   return itworked
@@ -1187,9 +1184,9 @@ function ultraschall.DeleteNormalMarker(number)
   <functioncall> boolean retval = ultraschall.DeleteNormalMarker(integer number)</functioncall>
   <description>
     Deletes a Normal-Marker. Returns true if successful and false if not(i.e. marker doesn't exist) Use <a href="#EnumerateNormalMarkers">ultraschall.EnumerateNormalMarkers</a> to get the correct number.
-
+    
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
-
+    
     returns -1 in case of an error
   </description>
   <parameters>
@@ -1216,7 +1213,7 @@ function ultraschall.DeleteNormalMarker(number)
   local wentfine=0
   local count=-1
   local retnumber=0
-
+  
   -- look for the right normal marker
   for i=1, c-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
@@ -1228,7 +1225,7 @@ function ultraschall.DeleteNormalMarker(number)
         wentfine=1
     end
   end
-
+  
   -- remove the found normal-marker, if existing
   if wentfine==1 then return reaper.DeleteProjectMarkerByIndex(0, retnumber)
   else ultraschall.AddErrorMessage("DeleteNormalMarker", "number", "no such normal-marker found", -2) return false
@@ -1266,24 +1263,24 @@ function ultraschall.DeleteEditMarker(number)
 --]]
   -- check parameters
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("DeleteEditMarker", "edit_index", "must be integer", -1) return false end
-
+  
   -- prepare variables
   number=number-1
   local wentfine=0
   local count=-1
   local retnumber=0
   local c,nummarkers,b=reaper.CountProjectMarkers(0)
-
+  
   -- look for correct _Edit-marker
   for i=0, c-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
-    if name:sub(1,5)=="_Edit" then count=count+1 end
-    if number>=0 and wentfine==0 and count==number then
+    if name:sub(1,5)=="_Edit" then count=count+1 end 
+    if number>=0 and wentfine==0 and count==number then 
         retnumber=i
         wentfine=1
     end
   end
-
+  
   -- remove found _Edit-marker, if any
   if wentfine==1 then return reaper.DeleteProjectMarkerByIndex(0, retnumber)
   else ultraschall.AddErrorMessage("DeleteEditMarker", "edit_index", "no such _Edit-marker found", -2) return false
@@ -1302,12 +1299,12 @@ function ultraschall.ExportEditMarkersToFile(filename_with_path, PodRangeStart, 
   </requires>
   <functioncall> integer retval = ultraschall.ExportEditMarkersToFile(string filename_with_path, number PodRangeStart, number PodRangeEnd)</functioncall>
   <description>
-    Export Edit-Markers (not regions!) to filename_with_path.
-
+    Export Edit-Markers (not regions!) to filename_with_path. 
+    
     Each line in the exportfile contains an entry for such an edit-marker in the format:
-
+    
     hh:mm:ss.mss Title
-
+    
     Returns -1 in case of error.
   </description>
   <retvals>
@@ -1335,15 +1332,15 @@ function ultraschall.ExportEditMarkersToFile(filename_with_path, PodRangeStart, 
   if PodRangeStart<0 then ultraschall.AddErrorMessage("ExportEditMarkersToFile", "PodRangeStart", "must be a number>=0", -2) return -1 end
   if PodRangeEnd==nil then PodRangeEnd=reaper.GetProjectLength(0) end
   if PodRangeEnd<PodRangeStart then ultraschall.AddErrorMessage("ExportEditMarkersToFile", "PodRangeEnd", "must be bigger than PodRangeStart", -3) return -1 end
-
+  
   -- prepare variables
-  number=ultraschall.CountEditMarkers()
+  number=ultraschall.CountEditMarkers()  
   local timestring="00:00:00.000"
-
+  
   -- open exportfile
   local file=io.open(filename_with_path,"w")
   if file==nil then ultraschall.AddErrorMessage("ExportEditMarkersToFile", "filename_with_path", "exportfile can't be created", -4) return -1 end
-
+  
   -- write editmarkers to exportfile
   for i=1,number do
     local idx,shown_number,pos,name=ultraschall.EnumerateEditMarkers(i)
@@ -1353,7 +1350,7 @@ function ultraschall.ExportEditMarkersToFile(filename_with_path, PodRangeStart, 
       file:write(timestring.." "..name.."\n")
     end
   end
-
+  
   -- close file and return
   local fileclose=io.close(file)
   return 1
@@ -1372,9 +1369,9 @@ function ultraschall.ExportNormalMarkersToFile(filename_with_path, PodRangeStart
   <functioncall> integer retval = ultraschall.ExportNormalMarkersToFile(string filename_with_path, number PodRangeStart, number PodRangeEnd)</functioncall>
   <description>
     Export Normal-Markers to filename_with_path. Returns -1 in case of error.
-
+    
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -1402,15 +1399,15 @@ function ultraschall.ExportNormalMarkersToFile(filename_with_path, PodRangeStart
   if PodRangeStart<0 then ultraschall.AddErrorMessage("ExportNormalMarkersToFile", "PodRangeStart", "must be a number>=0", -2) return -1 end
   if PodRangeEnd==nil then PodRangeEnd=reaper.GetProjectLength(0) end
   if PodRangeEnd<PodRangeStart then ultraschall.AddErrorMessage("ExportNormalMarkersToFile", "PodRangeEnd", "must be bigger than PodRangeStart", -3) return -1 end
-
+  
   -- prepare variables
-  local number=ultraschall.CountNormalMarkers()
+  local number=ultraschall.CountNormalMarkers()    
   local timestring="00:00:00.000"
-
+  
   -- open file for write; return with error if impossible
-  local file=io.open(filename_with_path,"w")
+  local file=io.open(filename_with_path,"w")  
   if file==nil then ultraschall.AddErrorMessage("ExportNormalMarkersToFile", "filename_with_path", "file can't be opened", -4) return -1 end
-
+  
   -- write normal markers to fil
   for i=1,number do
     local idx,shown_number,pos,name, URL=ultraschall.EnumerateNormalMarkers(i)
@@ -1420,11 +1417,11 @@ function ultraschall.ExportNormalMarkersToFile(filename_with_path, PodRangeStart
       file:write(timestring.." "..name.."\n")
     end
   end
-
+  
   -- close file and return
   local fileclose=io.close(file)
   return 1
-end
+end 
 
 function ultraschall.ImportEditFromFile(filename_with_path,PodRangeStart)
 --[[
@@ -1438,7 +1435,7 @@ function ultraschall.ImportEditFromFile(filename_with_path,PodRangeStart)
   <functioncall> array editmarkers = ultraschall.ImportEditFromFile(string filename_with_path, PodRangestart)</functioncall>
   <description>
     Imports editentries from a file and returns an array of the imported values.
-
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -1462,12 +1459,12 @@ function ultraschall.ImportEditFromFile(filename_with_path,PodRangeStart)
   if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("ImportEditFromFile", "filename_with_path", "file does not exist", -2) return -1 end
   PodRangeStart=tonumber(PodRangeStart)
   if PodRangeStart==nil then PodRangeStart=0 end
-
+  
   -- prepare variables
   local markername=""
-  local entry=0
+  local entry=0  
   local table = {}
-
+      
   -- read entries from file and split them into time and name; add time and name to new entries in table
   for line in io.lines(filename_with_path) do
     entry=entry+1
@@ -1478,11 +1475,11 @@ function ultraschall.ImportEditFromFile(filename_with_path,PodRangeStart)
     else markername="_Edit:"..markername
     end
     if time<0 then return -1 end
-
+  
     table[entry][0]=time
     table[entry][1]=markername
   end
-
+  
   -- return resulting marker-table
   return table
 end
@@ -1499,7 +1496,7 @@ function ultraschall.ImportMarkersFromFile(filename_with_path,PodRangeStart)
   <functioncall> array markers = ultraschall.ImportMarkersFromFile(string filename_with_path, PodrangeStart)</functioncall>
   <description>
     Imports markerentries from a file and returns an array of the imported values.
-
+    
     returns -1 in case of error
   </description>
   <parameters>
@@ -1523,12 +1520,12 @@ function ultraschall.ImportMarkersFromFile(filename_with_path,PodRangeStart)
   if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("ImportMarkersFromFile", "filename_with_path", "file does not exist", -2) return -1 end
   PodRangeStart=tonumber(PodRangeStart)
   if PodRangeStart==nil then PodRangeStart=0 end
-
+  
   -- prepare variables
   local markername=""
-  local entry=0
+  local entry=0  
   local table = {}
-
+      
   -- read entries from file and split them into time and name; add time and name to new entries in table
   for line in io.lines(filename_with_path) do
     entry=entry+1
@@ -1538,11 +1535,11 @@ function ultraschall.ImportMarkersFromFile(filename_with_path,PodRangeStart)
     if markername==nil then markername=""
     end
     if time<0 then return -1 end
-
+  
     table[entry][0]=time
     table[entry][1]=markername:sub(2,-1)
   end
-
+  
   -- return resulting marker-table
   return table
 end
@@ -1559,9 +1556,9 @@ function ultraschall.MarkerToEditMarker(number)
   <functioncall> integer idx, integer shown_number, number position, string markertitle = ultraschall.MarkerToEditMarker(integer markerindex)</functioncall>
   <description>
     Converts a normal-marker to an edit-marker.
-
+    
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -1587,15 +1584,15 @@ function ultraschall.MarkerToEditMarker(number)
   -- check parameter
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("MarkerToEditMarker", "merkerindex", "must be an integer", -1) return -1 end
   if number<1 then ultraschall.AddErrorMessage("MarkerToEditMarker", "markerindex", "must be greater than 0", -2) return -1 end
-
+  
   -- prepare variables and get old marker-attributes
   local color = ultraschall.ConvertColor(255,0,0)
   local idx, shownmarker, position, markername = ultraschall.EnumerateNormalMarkers(number)
   if idx==-1 then  ultraschall.AddErrorMessage("MarkerToEditMarker", "markerindex", "no such normal marker", -3) return -1 end
-
+  
   -- change the found marker to edit
   local itworks=reaper.SetProjectMarkerByIndex(0, idx-1, false, position, 0, shownmarker, "_Edit: "..markername, color)
-
+  
   -- return the altered marker
   return idx, shownmarker, position, markername
 end
@@ -1615,7 +1612,7 @@ function ultraschall.EditToMarker(number)
   <functioncall> integer idx, integer shown_number, number position, string markertitle = ultraschall.EditToMarker(integer edit_index)</functioncall>
   <description>
     Converts an edit-marker to a normal marker.
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -1641,17 +1638,17 @@ function ultraschall.EditToMarker(number)
   -- check parameter
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("EditToMarker", "edit_index", "must be an integer", -1) return -1 end
   if number<1 then ultraschall.AddErrorMessage("EditToMarker", "edit_index", "must be greater than 0", -2) return -1 end
-
-  -- prepare variables and get old marker-attributes
-  local color = ultraschall.ConvertColor(100,100,100)
+  
+  -- prepare variables and get old marker-attributes  
+  local color = ultraschall.ConvertColor(100,100,100)  
   local idx, shownmarker, position, markername = ultraschall.EnumerateEditMarkers(number)
   if idx==-1 then ultraschall.AddErrorMessage("EditToMarker", "edit_index", "no such edit-marker", -3) return -1 end
 
   -- change the found edit-marker to a normal marker
-  if markername=="" then
+  if markername=="" then 
     reaper.DeleteProjectMarkerByIndex(0, number-1)
     reaper.AddProjectMarker2(0, false, position, 0, markername:match("%s%d*(.*)"), shownmarker, 0)
-  else
+  else 
     reaper.DeleteProjectMarkerByIndex(0, number-1)
     reaper.AddProjectMarker2(0, false, position, 0, markername:match("%s%d*(.*)"), shownmarker, 0)
   end
@@ -1673,13 +1670,13 @@ function ultraschall.GetMarkerByScreenCoordinates(xmouseposition)
   <description>
     returns the markers at a given absolute-x-pixel-position. It sees markers according their graphical representation in the arrange-view, not just their position! Returned string will be "Markeridx\npos\nName\nMarkeridx2\npos2\nName2\n...".
     Will return "", if no marker has been found.
-
+    
     Returns only markers, no time markers or regions!
-
+    
     returns nil in case of an error
   </description>
   <retvals>
-    string marker - a string with all markernumbers, markerpositions and markertitles, separated by a newline.
+    string marker - a string with all markernumbers, markerpositions and markertitles, separated by a newline. 
     -Can contain numerous markers, if there are more markers in one position.
   </retvals>
   <parameters>
@@ -1698,7 +1695,7 @@ function ultraschall.GetMarkerByScreenCoordinates(xmouseposition)
   local one,two,three,four,five,six,seven,eight,nine,ten,scale
   local retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
 
-  if dpi=="512" then scale=2 else scale=1 end
+  if dpi=="512" then scale=2 else scale=1 end 
   ten=84*scale
   nine=76*scale
   eight=68*scale
@@ -1709,10 +1706,10 @@ function ultraschall.GetMarkerByScreenCoordinates(xmouseposition)
   three=28*scale
   two=20*scale
   one=12*scale
-
+  
   local retstring=""
   local temp
-
+  
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
   for i=0, retval do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
@@ -1728,7 +1725,7 @@ function ultraschall.GetMarkerByScreenCoordinates(xmouseposition)
       elseif markrgnindexnumber>9 and markrgnindexnumber<100 then temp=two
       elseif markrgnindexnumber>-1 and markrgnindexnumber<10 then temp=one
       end
-      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition)
+      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition) 
       local ALABAMA=xmouseposition
       if pos>=Ax and pos<=AAx then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name end
     end
@@ -1747,19 +1744,19 @@ function ultraschall.GetMarkerByTime(position)
   </requires>
   <functioncall>string markers = ultraschall.GetMarkerByTime(number position)</functioncall>
   <description>
-    returns the markers at a given project-position in seconds.
-    It sees markers according their actual graphical representation in the arrange-view, not just their position.
+    returns the markers at a given project-position in seconds. 
+    It sees markers according their actual graphical representation in the arrange-view, not just their position. 
     If, for example, you pass to it the current playposition, the function will return the marker as long as the playcursor is behind the marker-graphics.
-
+    
     Returned string will be "Markeridx\npos\nName\nMarkeridx2\npos2\nName2\n...".
     Will return "", if no marker has been found.
-
+    
     Returns only markers, no time markers or regions!
-
+    
     returns nil in case of an error
   </description>
   <retvals>
-    string marker - a string with all markernumbers, markerpositions and markertitles, separated by a newline.
+    string marker - a string with all markernumbers, markerpositions and markertitles, separated by a newline. 
     -Can contain numerous markers, if there are more markers in one position.
   </retvals>
   <parameters>
@@ -1778,7 +1775,7 @@ function ultraschall.GetMarkerByTime(position)
   local one,two,three,four,five,six,seven,eight,nine,ten,scale
   local retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
 
-  if dpi=="512" then scale=2 else scale=1 end
+  if dpi=="512" then scale=2 else scale=1 end 
   ten=84*scale
   nine=76*scale
   eight=68*scale
@@ -1791,7 +1788,7 @@ function ultraschall.GetMarkerByTime(position)
   one=12*scale
   local retstring=""
   local temp
-
+  
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
   for i=0, retval do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
@@ -1806,11 +1803,11 @@ function ultraschall.GetMarkerByTime(position)
       elseif markrgnindexnumber>99 and markrgnindexnumber<1000 then temp=three
       elseif markrgnindexnumber>9 and markrgnindexnumber<100 then temp=two
       elseif markrgnindexnumber>-1 and markrgnindexnumber<10 then temp=one
-      end
+      end 
       local Aretval,ARetval2=ultraschall.GetIniFileValue("REAPER", "leftpanewid", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
-      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, ARetval2+57-temp,ARetval2+57)
+      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, ARetval2+57-temp,ARetval2+57) 
       local Bx=AAx-Ax
-      if Bx+pos>=position and pos<=position then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name end
+      if Bx+pos>=position and pos<=position then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name end      
     end
   end
   return retstring
@@ -1831,11 +1828,11 @@ function ultraschall.GetRegionByScreenCoordinates(xmouseposition)
     returns the regions at a given absolute-x-pixel-position. It sees regions according their graphical representation in the arrange-view, not just their position! Returned string will be "Regionidx\npos\nName\nRegionidx2\npos2\nName2\n...".
     Returns only regions, no time markers or other markers!
     Will return "", if no region has been found.
-
+        
     returns nil in case of an error
   </description>
   <retvals>
-    string marker - a string with all regionnumbers, regionpositions and regionnames, separated by a newline.
+    string marker - a string with all regionnumbers, regionpositions and regionnames, separated by a newline. 
     -Can contain numerous regions, if there are more regions in one position.
   </retvals>
   <parameters>
@@ -1854,7 +1851,7 @@ function ultraschall.GetRegionByScreenCoordinates(xmouseposition)
   local one,two,three,four,five,six,seven,eight,nine,ten,scale
   local retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
 
-  if dpi=="512" then scale=2 else scale=1 end
+  if dpi=="512" then scale=2 else scale=1 end 
   ten=84*scale
   nine=76*scale
   eight=68*scale
@@ -1865,7 +1862,7 @@ function ultraschall.GetRegionByScreenCoordinates(xmouseposition)
   three=28*scale
   two=20*scale
   one=12*scale
-
+  
   local retstring=""
   local temp
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
@@ -1884,8 +1881,8 @@ function ultraschall.GetRegionByScreenCoordinates(xmouseposition)
       elseif markrgnindexnumber>9 and markrgnindexnumber<100 then temp=two
       elseif markrgnindexnumber>-1 and markrgnindexnumber<10 then temp=one
       end
-      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition)
-      if pos>=Ax and pos<=AAx then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name.."\n"
+      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition) 
+      if pos>=Ax and pos<=AAx then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name.."\n" 
       elseif Ax>=pos and Ax<=rgnend then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name
       end
     end
@@ -1907,11 +1904,11 @@ function ultraschall.GetRegionByTime(position)
     returns the regions at a given absolute-x-pixel-position. It sees regions according their graphical representation in the arrange-view, not just their position! Returned string will be "Regionidx\npos\nName\nRegionidx2\npos2\nName2\n...".
     Returns only regions, no timesignature-markers or other markers!
     Will return "", if no region has been found.
-
+    
     returns nil in case of an error
   </description>
   <retvals>
-    string marker - a string with all regionnumbers, regionpositions and regionnames, separated by a newline.
+    string marker - a string with all regionnumbers, regionpositions and regionnames, separated by a newline. 
     -Can contain numerous regions, if there are more regions in one position.
   </retvals>
   <parameters>
@@ -1930,7 +1927,7 @@ function ultraschall.GetRegionByTime(position)
   local one,two,three,four,five,six,seven,eight,nine,ten,scale
   local retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
 
-  if dpi=="512" then scale=2 else scale=1 end
+  if dpi=="512" then scale=2 else scale=1 end 
   ten=84*scale
   nine=76*scale
   eight=68*scale
@@ -1941,7 +1938,7 @@ function ultraschall.GetRegionByTime(position)
   three=28*scale
   two=20*scale
   one=12*scale
-
+  
   local retstring=""
   local temp
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
@@ -1960,7 +1957,7 @@ function ultraschall.GetRegionByTime(position)
       elseif markrgnindexnumber>-1 and markrgnindexnumber<10 then temp=one
       end
       local Aretval,ARetval2=ultraschall.GetIniFileValue("REAPER", "leftpanewid", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
-      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, ARetval2+57-temp,ARetval2+57)
+      local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, ARetval2+57-temp,ARetval2+57) 
       local Bx=AAx-Ax
       if Bx+pos>=position and pos<=position then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name.."\n"
       elseif pos<=position and rgnend>=position then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name
@@ -1984,11 +1981,11 @@ function ultraschall.GetTimeSignaturesByScreenCoordinates(xmouseposition)
     returns the time-signature/tempo-marker at a given absolute-x-pixel-position. It sees time-signature/tempo-markers according their graphical representation in the arrange-view, not just their position! Returned string will be "tempomarkeridx\npos\ntempomarkeridx2\npos2\n...".
     Returns only time-signature-markers, no regions or other markers!
     Will return "", if no timesig-marker has been found.
-
+        
     returns nil in case of an error
   </description>
   <retvals>
-    string marker - a string with all markernumbers and markerpositions, separated by a newline.
+    string marker - a string with all markernumbers and markerpositions, separated by a newline. 
     -Can contain numerous markers, if there are more markers in one position.
   </retvals>
   <parameters>
@@ -2007,7 +2004,7 @@ function ultraschall.GetTimeSignaturesByScreenCoordinates(xmouseposition)
   local one,two,three,four,five,six,seven,eight,nine,ten,scale
   local retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
 
-  if dpi=="512" then scale=2 else scale=1 end
+  if dpi=="512" then scale=2 else scale=1 end 
   ten=84*scale
   nine=76*scale
   eight=68*scale
@@ -2018,16 +2015,16 @@ function ultraschall.GetTimeSignaturesByScreenCoordinates(xmouseposition)
   three=28*scale
   two=20*scale
   one=12*scale
-
+  
   local retstring=""
   local temp
-
+  
   local timeretval = reaper.CountTempoTimeSigMarkers(0)
   for i=0, timeretval-1 do
     local retval, timepos, measurepos, beatpos, bpm, timesig_num, timesig_denom, lineartempo = reaper.GetTempoTimeSigMarker(0, i)
     temp=one
-
-    local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition)
+    
+    local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition) 
     local ALABAMA=xmouseposition
     if timepos>=Ax and timepos<=AAx then retstring=retstring..i.."\n"..timepos.."\n" end
   end
@@ -2053,11 +2050,11 @@ function ultraschall.GetTimeSignaturesByTime(position)
     returns the time-signature/tempo-marker at a given absolute-x-pixel-position. It sees time-signature/tempo-markers according their graphical representation in the arrange-view, not just their position! Returned string will be "tempomarkeridx\npos\ntempomarkeridx2\npos2\n...".
     Returns only time-signature-markers, no other markers or regions!
     Will return "", if no timesig-marker has been found.
-
+    
     returns nil in case of an error
   </description>
   <retvals>
-    string marker - a string with all markernumbers and markerpositions, separated by a newline.
+    string marker - a string with all markernumbers and markerpositions, separated by a newline. 
     -Can contain numerous markers, if there are more markers in one position.
   </retvals>
   <parameters>
@@ -2076,7 +2073,7 @@ function ultraschall.GetTimeSignaturesByTime(position)
   local one,two,three,four,five,six,seven,eight,nine,ten,scale
   local retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
 
-  if dpi=="512" then scale=2 else scale=1 end
+  if dpi=="512" then scale=2 else scale=1 end 
   ten=84*scale
   nine=76*scale
   eight=68*scale
@@ -2087,16 +2084,16 @@ function ultraschall.GetTimeSignaturesByTime(position)
   three=28*scale
   two=20*scale
   one=12*scale
-
+  
   local retstring=""
   local temp
-
+  
   local timeretval = reaper.CountTempoTimeSigMarkers(0)
   for i=0, timeretval-1 do
     local retval, timepos, measurepos, beatpos, bpm, timesig_num, timesig_denom, lineartempo = reaper.GetTempoTimeSigMarker(0, i)
-    temp=one
+    temp=one    
     local Aretval,ARetval2=ultraschall.GetIniFileValue("REAPER", "leftpanewid", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
-    local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, ARetval2+57-temp,ARetval2+57)
+    local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, ARetval2+57-temp,ARetval2+57) 
     local Bx=AAx-Ax
     if Bx+timepos>=position and timepos<=position then retstring=retstring..i.."\n"..timepos.."\n" end
   end
@@ -2117,7 +2114,7 @@ function ultraschall.IsMarkerEdit(markerid)
   <description>
     returns true, if the marker is an edit-marker, false if not. Returns nil, if markerid is invalid.
     Markerid is the marker-number for all markers, as used by marker-functions from Reaper.
-
+    
     returns nil in case of an error
   </description>
   <retvals>
@@ -2140,7 +2137,7 @@ function ultraschall.IsMarkerEdit(markerid)
   local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, markerid)
   if retval>0 then
     if isrgn==false then
-      if name:sub(1, 5)=="_Edit" then return true
+      if name:sub(1, 5)=="_Edit" then return true      
       else return false
       end
     end
@@ -2162,7 +2159,7 @@ function ultraschall.IsMarkerNormal(markerid)
   <description>
     returns true, if the marker is a normal-marker, false if not. Returns nil, if markerid is invalid.
     Markerid is the marker-number for all markers, as used by marker-functions from Reaper.
-
+    
     returns nil in case of an error
   </description>
   <retvals>
@@ -2206,7 +2203,7 @@ function ultraschall.IsRegionPodrange(markerid)
   <description>
     returns true, if the marker is a Podrange-region, false if not. Returns nil, if markerid is invalid.
     Markerid is the marker-number for all markers, as used by marker-functions from Reaper.
-
+    
     returns nil in case of an error
   </description>
   <retvals>
@@ -2225,11 +2222,11 @@ function ultraschall.IsRegionPodrange(markerid)
 </US_DocBloc>
 ]]
   if math.type(markerid)~="integer" then ultraschall.AddErrorMessage("IsRegionPodrange","markerid", "must be an integer", -1) return nil end
-
+  
   local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, markerid)
   if retval>0 then
     if isrgn==true then
-     if name:sub(1, 10)=="_PodRange:" then return true
+     if name:sub(1, 10)=="_PodRange:" then return true      
      else return false
      end
     end
@@ -2250,7 +2247,7 @@ function ultraschall.IsRegionEditRegion(markerid)
   <description>
     returns true, if the marker is an Edit-region, false if not. Returns nil, if markerid is invalid.
     Markerid is the marker-number for all markers, as used by marker-functions from Reaper.
-
+    
     returns nil in case of an error
   </description>
   <retvals>
@@ -2269,11 +2266,11 @@ function ultraschall.IsRegionEditRegion(markerid)
 </US_DocBloc>
 ]]
   if math.type(markerid)~="integer" then ultraschall.AddErrorMessage("IsRegionEditRegion","markerid", "must be an integer", -1) return nil end
-
+  
   local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, markerid)
   if retval>0 then
     if isrgn==true then
-      if name:sub(1, 5)=="_Edit" then return true
+      if name:sub(1, 5)=="_Edit" then return true      
       else return false
       end
     end
@@ -2286,14 +2283,14 @@ function ultraschall.AddEditRegion(startposition, endposition, text)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AddEditRegion</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=6.02
+    Ultraschall=4.2
+    Reaper=6.19
     Lua=5.3
   </requires>
   <functioncall>integer markernr, string guid = ultraschall.AddEditRegion(number startposition, number endposition, string text)</functioncall>
   <description>
     Adds a new edit-region and returns index of the newly created edit-marker-region.
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -2322,14 +2319,14 @@ function ultraschall.AddEditRegion(startposition, endposition, text)
   local name=""
   local markrgnindexnumber=""
   local noteID=0
-
+  
   local Os = reaper.GetOS()
-  if string.match(Os, "OS") then
-    color = 0xFF0000|0x1000000
-  else
+  if string.match(Os, "Win") then 
     color = 0x0000FF|0x1000000
+  else
+    color = 0xFF0000|0x1000000
   end
-
+  
   local count=0
   if type(startposition)~="number" then ultraschall.AddErrorMessage("AddEditRegion", "startposition", "must be a number", -1) return -1 end
   if type(endposition)~="number" then ultraschall.AddErrorMessage("AddEditRegion", "endposition", "must be a number", -2) return -1 end
@@ -2337,16 +2334,16 @@ function ultraschall.AddEditRegion(startposition, endposition, text)
   if endposition<startposition then ultraschall.AddErrorMessage("AddEditRegion", "endposition", "must be bigger than startposition", -4) return -1 end
   if text~=nil and type(text)~="string" then ultraschall.AddErrorMessage("AddEditRegion", "text", "must be a string or nil", -5) return -1 end
   if text==nil then text="" end
-
+  
   local Aretval, Acount, Amarkersstring, Amarkersarray = ultraschall.IsRegionAtPosition(startposition)
-
+  
   noteID=reaper.AddProjectMarker2(0, 1, startposition, endposition, "_Edit:"..text, 0, color)
-
+  
   local A1retval, Acount1, A1markersstring, A1markersarray = ultraschall.IsRegionAtPosition(startposition)
   local duplicate_count, duplicate_array, originalscount_array1, originals_array1, originalscount_array2, originals_array2 = ultraschall.GetDuplicatesFromArrays(A1markersarray, Amarkersarray)
   if originals_array1[1]==nil then ultraschall.AddErrorMessage("AddEditRegion", "startposition", "there is already an edit-region at this position", -6) return -1 end
   local retval, guid = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..originals_array1[1]-1, "", false)
-
+  
   return originals_array1[1]-1, guid
 end
 
@@ -2357,8 +2354,8 @@ function ultraschall.SetEditRegion(number, position, endposition, edittitle)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetEditRegion</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.40
+    Ultraschall=4.2
+    Reaper=6.19
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.SetEditRegion(integer number, number position, number endposition, string edittitle)</functioncall>
@@ -2366,7 +2363,7 @@ function ultraschall.SetEditRegion(number, position, endposition, edittitle)
     Sets the values of an already existing edit-region. To retain an already set position, endposition and/or edittitle, use nil.
     Returns true in case of success, false if not.
     Note: if you set the new beginning of the region before another region, the indexnumber of the edit-region changes. So if you want to set an edit-region repeatedly, you should get the indexnumber using <a href="#EnumerateEditRegion">ultraschall.EnumerateEditRegion</a>, or you might accidently change another region!
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -2397,12 +2394,12 @@ function ultraschall.SetEditRegion(number, position, endposition, edittitle)
 
   local color=0
   local Os = reaper.GetOS()
-  if string.match(Os, "OS") then
-    color = 0xFF0000|0x1000000
-  else
+  if string.match(Os, "Win") then 
     color = 0x0000FF|0x1000000
+  else
+    color = 0xFF0000|0x1000000
   end
-
+  
   local shown_number=-1
   local c,nummarkers,b=reaper.CountProjectMarkers(0)
   number=tonumber(number)-1
@@ -2412,8 +2409,8 @@ function ultraschall.SetEditRegion(number, position, endposition, edittitle)
   for i=0, c-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if isrgn==true then
-      if name:sub(1,5)=="_Edit" then count=count+1 end
-      if number>=0 and wentfine==0 and count==number then
+      if name:sub(1,5)=="_Edit" then count=count+1 end 
+      if number>=0 and wentfine==0 and count==number then 
           if tonumber(position)==-1 or position==nil then position=pos end
           if tonumber(endposition)==-1 or position==nil then endposition=rgnend end
           if tonumber(shown_number)<=-1 or shown_number==nil then shown_number=markrgnindexnumber end
@@ -2423,9 +2420,9 @@ function ultraschall.SetEditRegion(number, position, endposition, edittitle)
       end
       end
   end
-
+  
   if edittitle==nil then edittitle="" end
-
+  
   if wentfine==1 then return reaper.SetProjectMarkerByIndex(0, retnumber, true, position, endposition, shown_number, "_Edit:" .. edittitle, color)
   else return false
   end
@@ -2461,9 +2458,9 @@ function ultraschall.DeleteEditRegion(number)
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
   <tags>markermanagement, navigation, delete, edit region, edit, region</tags>
 </US_DocBloc>
-]]
+]]   
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("DeleteEditRegion","number", "must be an integer", -1) return false end
-
+  
   local c,nummarkers,b=reaper.CountProjectMarkers(0)
   local number=tonumber(number)-1
   local wentfine=0
@@ -2472,14 +2469,14 @@ function ultraschall.DeleteEditRegion(number)
   for i=0, c-1 do
      local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if isrgn==true then
-      if name:sub(1,5)=="_Edit" then count=count+1
+      if name:sub(1,5)=="_Edit" then count=count+1 
         if count==number then retnumber=i end
-      end
+      end 
     end
   end
-
+  
   return reaper.DeleteProjectMarkerByIndex(0, retnumber)
-
+  
 end
 
 --A=ultraschall.DeleteEditRegion(1)
@@ -2497,7 +2494,7 @@ function ultraschall.EnumerateEditRegion(number)
   <functioncall>integer retval, number position, number endposition, string title, integer rgnindexnumber, string guid = ultraschall.EnumerateEditRegion(integer number)</functioncall>
   <description>
     Returns the values of an edit-region.
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -2519,9 +2516,9 @@ function ultraschall.EnumerateEditRegion(number)
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
   <tags>markermanagement, navigation, get, enumerate, edit region, edit, region, guid</tags>
 </US_DocBloc>
-]]
+]]   
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("EnumerateEditRegion","number", "must be an integer", -1) return -1 end
-
+  
   local c,nummarkers,b=reaper.CountProjectMarkers(0)
   number=tonumber(number)-1
   local wentfine=-1
@@ -2530,13 +2527,13 @@ function ultraschall.EnumerateEditRegion(number)
   for i=0, c-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if isrgn==true then
-      if name:sub(1,5)=="_Edit" then count=count+1
+      if name:sub(1,5)=="_Edit" then count=count+1  
         if count==number then wentfine=i end
       end
     end
   end
   local retval, isrgn, pos, rgnend, name, markrgnindexnumber=reaper.EnumProjectMarkers(wentfine)
-  local Aretval, guid=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..wentfine, "", false)
+  local Aretval, guid=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..wentfine, "", false) 
   if wentfine~=-1 then return retval, pos, rgnend, name, markrgnindexnumber, guid
   else return -1
   end
@@ -2566,12 +2563,12 @@ function ultraschall.CountEditRegions()
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
   <tags>markermanagement, navigation, count, edit region, edit, region</tags>
 </US_DocBloc>
-]]
+]]  
   local c,nummarkers,b=reaper.CountProjectMarkers(0)
   local count=0
   for i=0, c do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
-    if name:sub(1,6)=="_Edit:" and isrgn==true then count=count+1 end
+    if name:sub(1,6)=="_Edit:" and isrgn==true then count=count+1 end 
   end
   return count
 end
@@ -2590,16 +2587,16 @@ function ultraschall.GetAllMarkersBetween(startposition, endposition)
   <description>
     To get all Markers in the project(normal, edit, chapter), regardless of their category, between startposition and endposition.
     Doesn't return regions!
-
+    
     returns the number of markers and an array with each marker in the format:
-
+    
         markersarray[index][0] - position
         markersarray[index][1] - name
         markersarray[index][2] - indexnumber of the marker within all markers in the project
         markersarray[index][3] - the shown index-number
         markersarray[index][4] - the color of the marker
         markersarray[index][5] - the guid of the marker
-
+    
     returns -1 in case of error
   </description>
   <retvals>
@@ -2648,9 +2645,9 @@ function ultraschall.GetAllRegions()
   <description>
     To get all Regions in the project(normal, edit, chapter), regardless of their category.
     Doesn't return markers!
-
+    
     returns the number of markers and an array with each marker in the format:
-
+    
         regionarray[index][0] - position
         regionarray[index][1] - endposition
         regionarray[index][2] - name
@@ -2658,7 +2655,7 @@ function ultraschall.GetAllRegions()
         regionarray[index][4] - the shown index-number
         regionarray[index][5] - the color of the region
         regionarray[index][6] - the guid of the region
-
+        
     returns -1 in case of error
   </description>
   <retvals>
@@ -2687,7 +2684,7 @@ function ultraschall.GetAllRegions()
       RegionArray[RegCount][3]=retval
       RegionArray[RegCount][4]=markrgnindexnumber
       RegionArray[RegCount][5]=color
-      retval, RegionArray[RegCount][6]=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..i, "", false)
+      retval, RegionArray[RegCount][6]=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..i, "", false) 
       RegCount=RegCount+1
     end
   end
@@ -2711,9 +2708,9 @@ function ultraschall.GetAllRegionsBetween(startposition, endposition, partial)
     To get all Regions in the project(normal, edit, chapter), regardless of their category between start- and endposition.
     Set partial to true, if you want to get regions as well, that are only partially between start- and endposition
     Doesn't return markers!
-
+    
     returns the number of markers and an array with each marker in the format:
-
+    
         regionarray[index][0] - position
         regionarray[index][1] - endposition
         regionarray[index][2] - name
@@ -2721,7 +2718,7 @@ function ultraschall.GetAllRegionsBetween(startposition, endposition, partial)
         regionarray[index][4] - the shown index-number
         regionarray[index][5] - the color of the region
         regionarray[index][6] - the guid of the region
-
+    
     returns -1 in case of error
   </description>
   <retvals>
@@ -2751,7 +2748,7 @@ function ultraschall.GetAllRegionsBetween(startposition, endposition, partial)
   if startposition<0 then ultraschall.AddErrorMessage("GetAllRegionsBetween","startposition", "Must be bigger or equal 0!", -4) return -1 end
   if partial~=nil and type(partial)~="boolean" then ultraschall.AddErrorMessage("GetAllRegionsBetween","partial", "Must be boolean!", -4) return -1 end
   if partial==nil then partial=true end
-
+  
   local A,B=ultraschall.GetAllRegions()
   for i=A, 1, -1 do
     if partial==false then
@@ -2760,7 +2757,7 @@ function ultraschall.GetAllRegionsBetween(startposition, endposition, partial)
           table.remove(B,i)
           A=A-1
       end
-
+        
     elseif partial==true then
       if (B[i][0]>=startposition and B[i][0]<=endposition)
       or (B[i][1]>=startposition and B[i][1]<=endposition)
@@ -2789,11 +2786,11 @@ function ultraschall.ParseMarkerString(markerstring, strict)
     Parses the entries in markerstring for timestrings and markertitles.
     It returns the number of entries as well as a table with all marker-information.
     The table works as such:
-
+    
     markertable[1][markernumber] - the timestring of the marker, -1 if no time is available
     markertable[2][markernumber] - the time, converted into position in seconds, -1 if no time is available
     markertable[3][markernumber] - the name of the marker
-
+    
     returns -1 in case of an error
   </description>
   <parameters>
@@ -2824,7 +2821,7 @@ function ultraschall.ParseMarkerString(markerstring, strict)
   markertable[1]={}
   markertable[2]={}
   markertable[3]={}
-
+  
   while markerstring~=nil do
     markertable[1][counter]=markerstring:match("(.-)%s")
     if strict~=true then
@@ -2839,7 +2836,7 @@ function ultraschall.ParseMarkerString(markerstring, strict)
       markertable[2][counter]=-1
       markertable[3][counter]=markerstring:match("(.-)\n")
       if markertable[3][counter]==nil then markertable[3][counter]=markerstring:match(".*") end
-    else
+    else  
       markertable[3][counter]=markerstring:match("%s(.-)\n")
       if markertable[3][counter]==nil then markertable[3][counter]=markerstring:match("%s(.*)") end
     end
@@ -2864,9 +2861,9 @@ function ultraschall.RenumerateMarkers(colorvalue, startingnumber)
   <description>
     Renumbers the shown numbers of markers(not regions!) in the current project, that have the color colorvalue.
     The numbering starts with the number startingnumber.
-
+    
     The markers will be renumbered from the earliest marker in the project to the latest one.
-
+    
     returns -1 in case of an error
   </description>
   <parameters>
@@ -2900,7 +2897,7 @@ function ultraschall.RenumerateMarkers(colorvalue, startingnumber)
       counter=counter+1
     elseif isrgn==false and colorvalue==-1 then
       reaper.SetProjectMarkerByIndex2(0, i, isrgn, pos, rgnend, counter, name, color, 0)
-      counter=counter+1
+      counter=counter+1    
     end
   end
 end
@@ -2919,7 +2916,7 @@ function ultraschall.CountNormalMarkers_NumGap()
   <functioncall>integer number_normal_markers = ultraschall.CountNormalMarkers_NumGap()</functioncall>
   <description>
     Returns the first "gap" in shown marker-numbers. If you have markers with numbers "1, 2, 4" it will return 3, as this is the first number missing.
-
+    
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
   </description>
   <retvals>
@@ -2940,9 +2937,9 @@ function ultraschall.CountNormalMarkers_NumGap()
   for b=1, nummarkers do
     for i=0, a do
         local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color= reaper.EnumProjectMarkers3(0, i)
-        if markrgnindexnumber==b then
-            count=b
-            nix="hui"
+        if markrgnindexnumber==b then 
+            count=b 
+            nix="hui" 
             break
         end
     end
@@ -2951,7 +2948,7 @@ function ultraschall.CountNormalMarkers_NumGap()
   end
 
   return count+1
-end
+end  
 
 
 
@@ -2968,9 +2965,9 @@ function ultraschall.IsMarkerAtPosition(position)
   <functioncall>boolean retval, integer count, string markersstring, array markersarray = ultraschall.IsMarkerAtPosition(number position)</functioncall>
   <description>
     returns, if markers are at position and returns the marker-numbers.
-
+    
     The marker-numbers are numerated by order, not the shown marker-numbers!
-
+    
     returns false in case of error
   </description>
   <parameters>
@@ -2993,17 +2990,17 @@ function ultraschall.IsMarkerAtPosition(position)
 --]]
   if type(position)~="number" then ultraschall.AddErrorMessage("IsMarkerAtPosition","position", "only numbers are allowed", -1) return false end
   if position<0 then ultraschall.AddErrorMessage("IsMarkerAtPosition","position", "only positive numbers are allowed", -2) return false end
-
+  
   local markersstring=""
   local markersarray={}
   local counter=1
   local yes=false
   local localcount=0
-
+  
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
     if isrgn==false then localcount=localcount+1 end
-    if position==pos and isrgn==false then
+    if position==pos and isrgn==false then 
       markersstring=markersstring..","..localcount
       markersarray[counter]=localcount
       counter=counter+1
@@ -3027,9 +3024,9 @@ function ultraschall.IsRegionAtPosition(position)
   <functioncall>boolean retval, integer count, string regionsstring, array regionsarray = ultraschall.IsRegionAtPosition(number position)</functioncall>
   <description>
     returns, if regions are at position and returns the region-numbers.
-
+    
     The region-numbers are numerated by order, not the shown region-numbers!
-
+    
     returns false in case of error
   </description>
   <parameters>
@@ -3052,18 +3049,18 @@ function ultraschall.IsRegionAtPosition(position)
 --]]
   if type(position)~="number" then ultraschall.AddErrorMessage("IsRegionAtPosition","position", "only numbers are allowed", -1) return false end
   if position<0 then ultraschall.AddErrorMessage("IsRegionAtPosition","position", "only positive numbers are allowed", -2) return false end
-
+  
   local markersstring=""
   local markersarray={}
   local counter=1
   local yes=false
   local localcount=0
-
+  
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
     if isrgn==true then localcount=localcount+1 end
-    if position>=pos and position<=rgnend and isrgn==true then
-      markersstring=markersstring..","..localcount
+    if position>=pos and position<=rgnend and isrgn==true then 
+      markersstring=markersstring..","..localcount 
       markersarray[counter]=localcount
       counter=counter+1
       yes=true
@@ -3086,7 +3083,7 @@ function ultraschall.CountMarkersAndRegions()
   <description>
     Returns the position of the last projectmarker in the project(no regions or time-sig-markers!).
     Use <a href="#GetMarkerAndRegionsByIndex">GetMarkerAndRegionsByIndex</a> to enumerate markers or regions in particular.
-
+    
     Returns -1 in case of no markers available
   </description>
   <retvals>
@@ -3107,7 +3104,7 @@ function ultraschall.CountMarkersAndRegions()
   local regioncount=0
   for i=0, retval-1 do
     local retval, isrgn = reaper.EnumProjectMarkers2(0, i)
-    if isrgn==false then markercount=markercount+1
+    if isrgn==false then markercount=markercount+1 
     else regioncount=regioncount+1
     end
   end
@@ -3130,7 +3127,7 @@ function ultraschall.GetLastMarkerPosition()
   <functioncall>number position, integer marker_idx = ultraschall.GetLastMarkerPosition()</functioncall>
   <description>
     Returns the position of the last projectmarker in the project(no regions or time-sig-markers!).
-
+    
     Returns -1 in case of no markers available
   </description>
   <retvals>
@@ -3173,7 +3170,7 @@ function ultraschall.GetLastRegion()
   <description>
     Returns the position of the last region in the project(no markers or time-sig-markers!).
     Note: Last region means the last ending region in the project, even if it's the first starting.
-
+    
     Returns -1 in case of no regions available
   </description>
   <retvals>
@@ -3218,7 +3215,7 @@ function ultraschall.GetLastTimeSigMarkerPosition()
   <functioncall>number position, number measureposition, number beatposition, integer timesig_idx = ultraschall.GetLastTimeSigMarkerPosition()</functioncall>
   <description>
     Returns the position of the last time-signature-marker in the project(no markers or regions!).
-
+    
     Returns -1 in case of no time-signature-markers available
   </description>
   <retvals>
@@ -3259,7 +3256,7 @@ function ultraschall.GetMarkerUpdateCounter()
   <description>
     returns the number of times, a marker in any project has been updated since Reaper started.
     Counts up, if a marker is added, set, moved, deleted from any project opened in Reaper.
-
+    
     This counter includes already closed projects as well
   </description>
   <retvals>
@@ -3292,9 +3289,9 @@ function ultraschall.MoveTimeSigMarkersBy(startposition, endposition, moveby, cu
   <functioncall>integer retval = ultraschall.MoveTimeSigMarkersBy(number startposition, number endposition, number moveby, boolean cut_at_borders, boolean update_timeline)</functioncall>
   <description>
     Moves time-signature-markers between startposition and endposition by moveby.
-
+    
     Does NOT move normal projectmarkers or regions!
-
+    
     Returns -1 in case of failure.
   </description>
   <retvals>
@@ -3324,7 +3321,7 @@ function ultraschall.MoveTimeSigMarkersBy(startposition, endposition, moveby, cu
   if type(update_timeline)~="boolean" then ultraschall.AddErrorMessage("MoveTimeSigMarkersBy","update_timeline", "must be a boolean", -6) return -1 end
   if moveby==0 then return -1 end
   local numtimesigmarkers = reaper.CountTempoTimeSigMarkers(0)
-
+  
   local start, stop, step, boolean
   if moveby>0 then start=numtimesigmarkers stop=0 step=-1
   elseif moveby<0 then start=0 stop=numtimesigmarkers step=1
@@ -3347,7 +3344,7 @@ function ultraschall.MoveTimeSigMarkersBy(startposition, endposition, moveby, cu
         boolean = reaper.SetTempoTimeSigMarker(0, i, timepos+moveby, measurepos, beatpos, bpm, timesig_num, timesig_denom, lineartempo)
     end
   end
-
+  
   if update_timeline==true then reaper.UpdateTimeline() end
   return 1
 end
@@ -3366,7 +3363,7 @@ function ultraschall.GetAllTimeSigMarkers()
   <functioncall>integer num_timesig_markers, array TimeSigArray = ultraschall.GetAllTimeSigMarkers()</functioncall>
   <description>
     Returns the number of Tempo/Time-Signature-Markers in the project, as well as an array with all attributes of all these markers.
-
+    
     The array is of the format: TimeSigArray[markernumber(1-based)][attribute-idx]
     where attribute-idx is
     1, number timepos
@@ -3375,8 +3372,8 @@ function ultraschall.GetAllTimeSigMarkers()
     4, number bpm
     5, number timesig_num
     6, number timesig_denom
-    7, boolean lineartempo
-
+    7, boolean lineartempo 
+    
     returns -1 in case of error
   </description>
   <retvals>
@@ -3420,9 +3417,9 @@ function ultraschall.MoveMarkersBy(startposition, endposition, moveby, cut_at_bo
   <functioncall>integer retval = ultraschall.MoveMarkersBy(number startposition, number endposition, number moveby, boolean cut_at_borders)</functioncall>
   <description>
     Moves the markers between startposition and endposition by moveby.
-
+    
     Does NOT move regions and time-signature-markers!
-
+    
     Returns -1 in case of failure.
   </description>
   <retvals>
@@ -3451,7 +3448,7 @@ function ultraschall.MoveMarkersBy(startposition, endposition, moveby, cut_at_bo
 
   if moveby==0 then return -1 end
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
-
+  
   local start, stop, step, boolean
   if moveby>0 then start=retval-1 stop=0 step=-1
   elseif moveby<0 then start=0 stop=retval step=1
@@ -3474,7 +3471,7 @@ function ultraschall.MoveMarkersBy(startposition, endposition, moveby, cut_at_bo
         boolean=reaper.SetProjectMarker(markrgnindexnumber, isrgn, pos+moveby, rgnend, name)
     end
   end
-
+  
   return 1
 end
 
@@ -3494,9 +3491,9 @@ function ultraschall.MoveRegionsBy(startposition, endposition, moveby, cut_at_bo
   <description>
     Moves the regions between startposition and endposition by moveby.
     Will affect only regions, who start within start and endposition. It will not affect those, who end within start and endposition but start before startposition.
-
+    
     Does NOT move markers and time-signature-markers!
-
+    
     Returns -1 in case of failure.
   </description>
   <retvals>
@@ -3524,23 +3521,23 @@ function ultraschall.MoveRegionsBy(startposition, endposition, moveby, cut_at_bo
   if type(cut_at_borders)~="boolean" then ultraschall.AddErrorMessage("MoveRegionsBy","cut_at_borders", "must be a boolean", -5) return -1 end
   if moveby==0 then return -1 end
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
-
+  
   local start, stop, step, boolean
   if moveby>0 then start=retval stop=0 step=-1     -- if moveby is positive, count through the markers backwards
   elseif moveby<0 then start=0 stop=retval step=1  -- if moveby is positive, count through the markers forward
   end
   local markerdeleter={}
   local count=0
-
+  
   for i=start, stop, step do
     local sretval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
     -- debug line
     --reaper.MB("Pos:"..pos.." - Start:"..startposition.."  End: "..endposition.." "..tostring(isrgn),"",0)
-
+    
     if isrgn==true and (pos>=startposition and pos<=endposition) then
       -- only regions within start and endposition
       if cut_at_borders==true then
-        -- if cutting at the borders=true, with borders determined by start and endposition
+        -- if cutting at the borders=true, with borders determined by start and endposition 
         if pos+moveby>endposition and rgnend+moveby>endposition then
           -- when regions would move after endposition, put it into the markerdelete-array
           markerdeleter[count]=markrgnindexnumber
@@ -3597,7 +3594,7 @@ function ultraschall.RippleCut_Regions(startposition, endposition)
   <description>
     Ripplecuts regions, where applicable.
     It cuts all (parts of) regions between startposition and endposition and moves remaining parts plus all regions after endposition by endposition-startposition toward projectstart.
-
+    
     Returns false in case of an error.
   </description>
   <parameters>
@@ -3630,20 +3627,20 @@ function ultraschall.RippleCut_Regions(startposition, endposition)
   if type(startposition)~="number" then ultraschall.AddErrorMessage("RippleCut_Regions", "startposition", "must be a number", -1) return false end
   if type(endposition)~="number" then ultraschall.AddErrorMessage("RippleCut_Regions", "endposition", "must be a number", -2) return false end
   local dif=endposition-startposition
-
+  
   -- get all regions, that are candidates for a ripplecut
-  local number_of_all_regions, allregionsarray = ultraschall.GetAllRegionsBetween(startposition, reaper.GetProjectLength(0), true)
+  local number_of_all_regions, allregionsarray = ultraschall.GetAllRegionsBetween(startposition, reaper.GetProjectLength(0), true)  
   if number_of_all_regions==0 then ultraschall.AddErrorMessage("RippleCut_Regions", "", "no regions found within start and endit", -3) return false, regioncount, regionfound end
-
+  
   -- make startposition and endposition with less precision, or we can't check, if startposition=pos
   -- Reaper seems to work with greater precision for floats than shown
   local start = ultraschall.LimitFractionOfFloat(startposition, 10, true)
   local endit = ultraschall.LimitFractionOfFloat(endposition, 10, true)
-
+  
   -- some more preparation for variables, including localizing them
-  local pos, rgnend, name, retval, markrgnindexnumber, color
+  local pos, rgnend, name, retval, markrgnindexnumber, color  
   local regionfound={}
-
+  
   -- here comes the magic
   for i=number_of_all_regions, 1, -1 do
     -- get regionattributes from the allregionsarray we got before
@@ -3685,7 +3682,7 @@ function ultraschall.RippleCut_Regions(startposition, endposition)
       regionfound[i][7]=endit-dif
       regionfound[i][8]=rgnend-dif
       reaper.SetProjectMarker4(proj, markrgnindexnumber, true, endit-dif, rgnend-dif, name, color, 0)
-    elseif pos1>=endit and rgnend1>=endit then
+    elseif pos1>=endit and rgnend1>=endit then 
       -- if region is after endit, just move the region by difference of start and endit toward projectstart
       regionfound[i][6]="MOVED TOWARD PROJECTSTART"
       regionfound[i][7]=pos-dif
@@ -3714,35 +3711,36 @@ function ultraschall.GetAllCustomMarkers(custom_marker_name)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetAllCustomMarkers</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
   <functioncall>integer count, table marker_array = ultraschall.GetAllCustomMarkers(string custom_marker_name)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will return all custom-markers with a certain name.
-
-    A custom-marker has the naming-scheme
-
+    
+    A custom-marker has the naming-scheme 
+        
         \_customname: text for this marker
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
-
+      
        \_\_customname:: test for this marker
-
+        
     Example:
-
+    
     The custom-marker *VanillaChief* has the custom\_marker\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-markers.
-
+    
     Will not check custom-regions, use [GetAllCustomRegions](#GetAllCustomRegions) instead.
-
+    
     returns -1 in case of an error
   </description>
   <parameters>
     string custom_marker_name - the name of the custom-marker. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-marker is called "__CustomMarker::"
                               - Lua-pattern-matching-expressions are allowed. This parameter is NOT case-sensitive.
+                              - "" will return all custom marker
   </parameters>
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
     integer count - the number of found markers; -1, in case of an error
@@ -3768,18 +3766,19 @@ function ultraschall.GetAllCustomMarkers(custom_marker_name)
   if ultraschall.IsValidMatchingPattern(custom_marker_name)==false then ultraschall.AddErrorMessage("GetAllCustomMarkers", "custom_marker_name", "not a valid matching-pattern", -2) return -1 end
   local count=0
   local MarkerArray={}
+  if custom_marker_name=="" then custom_marker_name=".*" end
 
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
-    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then
-      count=count+1
+    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then 
+      count=count+1 
       MarkerArray[count]={}
       MarkerArray[count]["index"]=i
       MarkerArray[count]["pos"]=pos
       MarkerArray[count]["name"]=name:match(".-:%s-(.*)")
       MarkerArray[count]["shown_number"]=markrgnindexnumber
       MarkerArray[count]["color"]=color
-      retval, MarkerArray[count]["guid"]=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..i, "", false)
+      retval, MarkerArray[count]["guid"]=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..i, "", false) 
     end
   end
   return count, MarkerArray
@@ -3793,35 +3792,36 @@ function ultraschall.GetAllCustomRegions(custom_region_name)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetAllCustomRegions</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
   <functioncall>integer count, table marker_array = ultraschall.GetAllCustomRegions(string custom_region_name)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will return all custom-regions with a certain name.
-
-    A custom-region has the naming-scheme
-
+    
+    A custom-region has the naming-scheme 
+        
         \_customname: text for this region
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
-
+      
         \_\_customname:: test for this region
-
+        
     Example:
-
+    
     The custom-region *VanillaChief* has the custom\_region\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-regions.
-
+    
     Will not check custom-markers, use [GetAllCustomMarkers](#GetAllCustomMarkers) instead.
-
+    
     returns -1 in case of an error
   </description>
   <parameters>
     string custom_region_name - the name of the custom-region. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-region is called "__CustomRegion::"
                               - Lua-pattern-matching-expressions are allowed. This parameter is NOT case-sensitive.
+                              - "" will return all custom-regions
   </parameters>
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
     integer count - the number of found regions; -1, in case of an error
@@ -3845,14 +3845,15 @@ function ultraschall.GetAllCustomRegions(custom_region_name)
 </US_DocBloc>
 ]]
   if type(custom_region_name)~="string" then ultraschall.AddErrorMessage("GetAllCustomRegions", "custom_region_name", "must be a string", -1) return -1 end
+  if custom_region_name=="" then custom_region_name=".*" end
   if ultraschall.IsValidMatchingPattern(custom_region_name)==false then ultraschall.AddErrorMessage("GetAllCustomRegions", "custom_region_name", "not a valid matching-pattern", -2) return -1 end
   local count=0
   local MarkerArray={}
 
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
-    if isrgn==true and name:match("^_"..custom_region_name..":")~=nil then
-      count=count+1
+    if isrgn==true and name:match("^_"..custom_region_name..":")~=nil then 
+      count=count+1 
       MarkerArray[count]={}
       MarkerArray[count]["index"]=i
       MarkerArray[count]["pos"]=pos
@@ -3860,7 +3861,7 @@ function ultraschall.GetAllCustomRegions(custom_region_name)
       MarkerArray[count]["name"]=name:match(".-:%s*(.*)")
       MarkerArray[count]["shown_number"]=markrgnindexnumber
       MarkerArray[count]["color"]=color
-      retval, MarkerArray[count]["guid"]=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..i, "", false)
+      retval, MarkerArray[count]["guid"]=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..i, "", false) 
     end
   end
   return count, MarkerArray
@@ -3873,35 +3874,36 @@ function ultraschall.CountAllCustomMarkers(custom_marker_name)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountAllCustomMarkers</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.965
     Lua=5.3
   </requires>
   <functioncall>integer count = ultraschall.CountAllCustomMarkers(string custom_marker_name)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will count all custom-markers with a certain name.
-
-    A custom-marker has the naming-scheme
-
+    
+    A custom-marker has the naming-scheme 
+        
         \_customname: text for this marker
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
-
+      
        \_\_customname:: test for this marker
-
+        
     Example:
-
+    
     The custom-marker *VanillaChief* has the custom\_marker\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-markers.
-
+    
     Will not count custom-regions, use [CountAllCustomRegions](#CountAllCustomRegions) instead.
-
+    
     returns -1 in case of an error
   </description>
   <parameters>
     string custom_marker_name - the name of the custom-marker. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-marker is called "__CustomMarker::"
                               - Lua-pattern-matching-expressions are allowed. This parameter is NOT case-sensitive.
+                              - "" counts all custom markers, regardless of their name
   </parameters>
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
     integer count - the number of found markers; -1, in case of an error
@@ -3915,14 +3917,14 @@ function ultraschall.CountAllCustomMarkers(custom_marker_name)
   <tags>marker management, count, all, custom markers</tags>
 </US_DocBloc>
 ]]
-  if type(custom_marker_name)~="string" then ultraschall.AddErrorMessage("GetAllCustomMarkers", "custom_marker_name", "must be a string", -1) return -1 end
-  if ultraschall.IsValidMatchingPattern(custom_marker_name)==false then ultraschall.AddErrorMessage("GetAllCustomMarkers", "custom_marker_name", "not a valid matching-pattern", -2) return -1 end
+  if type(custom_marker_name)~="string" then ultraschall.AddErrorMessage("CountAllCustomMarkers", "custom_marker_name", "must be a string", -1) return -1 end
+  if ultraschall.IsValidMatchingPattern(custom_marker_name)==false then ultraschall.AddErrorMessage("CountAllCustomMarkers", "custom_marker_name", "not a valid matching-pattern", -2) return -1 end
   local count=0
-
+  if custom_marker_name=="" then custom_marker_name=".*" end
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
-    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then
-      count=count+1
+    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then 
+      count=count+1 
     end
   end
   return count
@@ -3936,35 +3938,36 @@ function ultraschall.CountAllCustomRegions(custom_region_name)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountAllCustomRegions</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.965
     Lua=5.3
   </requires>
   <functioncall>integer count = ultraschall.CountAllCustomRegions(string custom_region_name)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will count all custom-regions with a certain name.
-
-    A custom-region has the naming-scheme
-
+    
+    A custom-region has the naming-scheme 
+        
         \_customname: text for this region
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
-
+      
         \_\_customname:: test for this region
-
+        
     Example:
-
+    
     The custom-region *VanillaChief* has the custom\_region\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-regions.
-
+    
     Will not count custom-markers, use [CountAllCustomMarkers](#CountAllCustomMarkers) instead.
-
+    
     returns -1 in case of an error
   </description>
   <parameters>
     string custom_region_name - the name of the custom-region. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-region is called "__CustomRegion::"
                               - Lua-pattern-matching-expressions are allowed. This parameter is NOT case-sensitive.
+                              - "" will count all custom-regions, regardless of their names
   </parameters>
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
     integer count - the number of found regions; -1, in case of an error
@@ -3981,11 +3984,11 @@ function ultraschall.CountAllCustomRegions(custom_region_name)
   if type(custom_region_name)~="string" then ultraschall.AddErrorMessage("CountAllCustomRegions", "custom_region_name", "must be a string", -1) return -1 end
   if ultraschall.IsValidMatchingPattern(custom_region_name)==false then ultraschall.AddErrorMessage("CountAllCustomRegions", "custom_region_name", "not a valid matching-pattern", -2) return -1 end
   local count=0
-
+  if custom_region_name=="" then custom_region_name=".*" end
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
-    if isrgn==true and name:match("^_"..custom_region_name..":")~=nil then
-      count=count+1
+    if isrgn==true and name:match("^_"..custom_region_name..":")~=nil then 
+      count=count+1 
     end
   end
   return count
@@ -3999,35 +4002,36 @@ function ultraschall.EnumerateCustomMarkers(custom_marker_name, idx)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>EnumerateCustomMarkers</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
   <functioncall>boolean retval, integer marker_index, number pos, string name, integer shown_number, integer color = ultraschall.EnumerateCustomMarkers(string custom_marker_name, integer idx)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will return a specific custom-marker with a certain name.
-
-    A custom-marker has the naming-scheme
-
+    
+    A custom-marker has the naming-scheme 
+        
         \_customname: text for this marker
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
-
+      
        \_\_customname:: test for this marker
-
+        
     Example:
-
+    
     The custom-marker *VanillaChief* has the custom\_marker\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-markers.
-
+    
     Will not enumerate custom-regions, use [EnumerateCustomRegions](#EnumerateCustomRegions) instead.
-
+    
     returns false in case of an error
   </description>
   <parameters>
     string custom_marker_name - the name of the custom-marker. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-marker is called "__CustomMarker::"
                               - Lua-pattern-matching-expressions are allowed. This parameter is NOT case-sensitive.
+                              - "" will enumerate over all existing custom-markers
     integer idx - the index of the marker within all same-named custom-markers; 0, for the first custom-marker
   </parameters>
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -4052,11 +4056,12 @@ function ultraschall.EnumerateCustomMarkers(custom_marker_name, idx)
   if ultraschall.IsValidMatchingPattern(custom_marker_name)==false then ultraschall.AddErrorMessage("EnumerateCustomMarkers", "custom_marker_name", "not a valid matching-pattern", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("EnumerateCustomMarkers", "idx", "must be an integer", -3) return false end
   local count=0
+  if custom_marker_name=="" then custom_marker_name=".*" end
 
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
-    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then
-      count=count+1
+    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then 
+      count=count+1 
       local retval, guid = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..i, "", false)
       if idx==count-1 then return true, i, pos, name:match(".-:%s*(.*)"), markrgnindexnumber, color, guid end
     end
@@ -4072,30 +4077,30 @@ function ultraschall.EnumerateCustomRegions(custom_region_name, idx)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>EnumerateCustomRegions</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
   <functioncall>boolean retval, integer marker_index, number pos, number regionend, string name, integer shown_number, integer color, string guid = ultraschall.EnumerateCustomRegions(string custom_marker_name, integer idx)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will return a specific custom-region with a certain name.
-
-    A custom-region has the naming-scheme
-
+    
+    A custom-region has the naming-scheme 
+        
         \_customname: text for this region
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
-
+      
         \_\_customname:: test for this region
-
+        
     Example:
-
+    
     The custom-region *VanillaChief* has the custom\_region\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-regions.
-
+    
     Will not enumerate custom-markers, use [EnumerateCustomMarkers](#EnumerateCustomMarkers) instead.
-
+    
     returns false in case of an error
   </description>
   <parameters>
@@ -4126,11 +4131,12 @@ function ultraschall.EnumerateCustomRegions(custom_region_name, idx)
   if ultraschall.IsValidMatchingPattern(custom_region_name)==false then ultraschall.AddErrorMessage("EnumerateCustomRegions", "custom_region_name", "not a valid matching-pattern", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("EnumerateCustomRegions", "idx", "must be an integer", -3) return false end
   local count=0
+  if custom_region_name=="" then custom_region_name=".*" end
 
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
-    if isrgn==true and name:match("^_"..custom_region_name..":")~=nil then
-      count=count+1
+    if isrgn==true and name:match("^_"..custom_region_name..":")~=nil then 
+      count=count+1 
       local retval, guid = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..i, "", false)
       if idx==count-1 then return true, i, pos, rgnend, name:match(".-:%s*(.*)"), markrgnindexnumber, color, guid end
     end
@@ -4145,36 +4151,37 @@ function ultraschall.DeleteCustomMarkers(custom_marker_name, idx)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>DeleteCustomMarkers</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.965
     Lua=5.3
   </requires>
   <functioncall>boolean retval, integer marker_index, number pos, string name, integer shown_number, integer color = ultraschall.DeleteCustomMarkers(string custom_marker_name, integer idx)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will delete a specific custom-marker with a certain name.
-
-    A custom-marker has the naming-scheme
-
+    
+    A custom-marker has the naming-scheme 
+        
         \_customname: text for this marker
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
-
+      
        \_\_customname:: test for this marker
-
+        
     Example:
-
+    
     The custom-marker *VanillaChief* has the custom\_marker\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-markers.
-
+    
     Will not delete custom-regions, use [DeleteCustomRegions](#DeleteCustomRegions) instead.
-
+    
     returns false in case of an error
   </description>
   <parameters>
     string custom_marker_name - the name of the custom-marker. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-marker is called "__CustomMarker::"
                               - Lua-pattern-matching-expressions are allowed. This parameter is NOT case-sensitive.
-    integer idx - the index of the marker within all same-named custom-markers; 0, for the first custom-marker
+                              - "" will delete over all custom-markers available, regardless of their name
+    integer idx - the index of the marker within all same-named custom-markers; 0, for the first custom-marker    
   </parameters>
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
     boolean retval - true, if the custom-marker exists; false, if not or an error occurred
@@ -4197,14 +4204,15 @@ function ultraschall.DeleteCustomMarkers(custom_marker_name, idx)
   if ultraschall.IsValidMatchingPattern(custom_marker_name)==false then ultraschall.AddErrorMessage("DeleteCustomMarkers", "custom_marker_name", "not a valid matching-pattern", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("DeleteCustomMarkers", "idx", "must be an integer", -3) return false end
   local count=0
+  if custom_marker_name=="" then custom_marker_name=".*" end
 
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
-    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then
-      count=count+1
-      if idx==count-1 then
-        reaper.DeleteProjectMarkerByIndex(0, i)
-        return true, i, pos, name:match(".-:%s*(.*)"), markrgnindexnumber, color
+    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then 
+      count=count+1 
+      if idx==count-1 then 
+        reaper.DeleteProjectMarkerByIndex(0, i) 
+        return true, i, pos, name:match(".-:%s*(.*)"), markrgnindexnumber, color 
       end
     end
   end
@@ -4219,35 +4227,36 @@ function ultraschall.DeleteCustomRegions(custom_region_name, idx)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>DeleteCustomRegions</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.965
     Lua=5.3
   </requires>
   <functioncall>boolean retval, integer marker_index, number pos, number regionend, string name, integer shown_number, integer color = ultraschall.DeleteCustomRegions(string custom_marker_name, integer idx)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Deletes a specific custom-region with a certain name.
-
-    A custom-region has the naming-scheme
-
+    
+    A custom-region has the naming-scheme 
+        
         \_customname: text for this region
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
-
+      
         \_\_customname:: test for this region
-
+        
     Example:
-
+    
     The custom-region *VanillaChief* has the custom\_region\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-regions.
-
+    
     Will not delete custom-markers, use [DeleteCustomMarkers](#DeleteCustomMarkers) instead.
-
+    
     returns false in case of an error
   </description>
   <parameters>
     string custom_region_name - the name of the custom-region. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-region is called "__CustomRegion::"
                               - Lua-pattern-matching-expressions are allowed. This parameter is NOT case-sensitive.
+                              - "" will delete over all custom-regions available, regardless of their name
     integer idx - the index of the region within all same-named custom-regions; 0, for the first custom-region
   </parameters>
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -4272,14 +4281,15 @@ function ultraschall.DeleteCustomRegions(custom_region_name, idx)
   if ultraschall.IsValidMatchingPattern(custom_region_name)==false then ultraschall.AddErrorMessage("DeleteCustomRegions", "custom_region_name", "not a valid matching-pattern", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("DeleteCustomRegions", "idx", "must be an integer", -3) return false end
   local count=0
+  if custom_region_name=="" then custom_region_name=".*" end
 
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
-    if isrgn==true and name:match("^_"..custom_region_name..":")~=nil then
-      count=count+1
-      if idx==count-1 then
-        reaper.DeleteProjectMarkerByIndex(0, i)
-        return true, i, pos, rgnend, name:match(".-:%s*(.*)"), markrgnindexnumber, color
+    if isrgn==true and name:match("^_"..custom_region_name..":")~=nil then 
+      count=count+1 
+      if idx==count-1 then 
+        reaper.DeleteProjectMarkerByIndex(0, i) 
+        return true, i, pos, rgnend, name:match(".-:%s*(.*)"), markrgnindexnumber, color 
       end
     end
   end
@@ -4300,23 +4310,23 @@ function ultraschall.AddCustomMarker(custom_marker_name, pos, name, shown_number
   <functioncall>boolean retval, integer markernumber, string guid = ultraschall.AddCustomMarker(string custom_marker_name, number pos, string name, integer shown_number, integer color)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will add new custom-marker with a certain name.
-
-    A custom-marker has the naming-scheme
-
+    
+    A custom-marker has the naming-scheme 
+        
         \_customname: text for this marker
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
-
+      
        \_\_customname:: test for this marker
-
+        
     Example:
-
+    
     The custom-marker *VanillaChief* has the custom\_marker\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-markers.
-
+    
     Will not add custom-regions, use [AddCustomRegion](#AddCustomRegion) instead.
-
+    
     returns false in case of an error
   </description>
   <parameters>
@@ -4345,18 +4355,18 @@ function ultraschall.AddCustomMarker(custom_marker_name, pos, name, shown_number
   if type(pos)~="number" then ultraschall.AddErrorMessage("AddCustomMarker", "pos", "must be a number", -2) return false end
   if type(name)~="string" then ultraschall.AddErrorMessage("AddCustomMarker", "name", "must be a string", -3) return false end
   if math.type(shown_number)~="integer" then ultraschall.AddErrorMessage("AddCustomMarker", "shown_number", "must be an integer", -4) return false end
-  if math.type(color)~="integer" then ultraschall.AddErrorMessage("AddCustomMarker", "color", "must be an integer; 0, for default color", -5) return false end
-
+  if math.type(color)~="integer" then ultraschall.AddErrorMessage("AddCustomMarker", "color", "must be an integer; 0, for default color", -5) return false end  
+  
   if custom_marker_name==nil then custom_marker_name=name else custom_marker_name="_"..custom_marker_name..": "..name end
-
+  
   local Aretval, Acount, Amarkersstring, Amarkersarray = ultraschall.IsMarkerAtPosition(pos)
-
+  
   reaper.AddProjectMarker2(0, false, pos, 0, custom_marker_name, shown_number, color)
-
+  
   local A1retval, Acount1, A1markersstring, A1markersarray = ultraschall.IsMarkerAtPosition(pos)
   local duplicate_count, duplicate_array, originalscount_array1, originals_array1, originalscount_array2, originals_array2 = ultraschall.GetDuplicatesFromArrays(A1markersarray, Amarkersarray)
   local retval, guid = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..originals_array1[1]-1, "", false)
-
+  
   return true, originals_array1[1]-1, guid
 end
 --A,B,C=ultraschall.AddCustomMarker("vanillachief", 1, "Hulahoop", 987, 9865)
@@ -4374,23 +4384,23 @@ function ultraschall.AddCustomRegion(custom_region_name, pos, regionend, name, s
   <functioncall>boolean retval, integer shown_number, integer markerindex, string guid = ultraschall.AddCustomRegion(string custom_region_name, number pos, number regionend, string name, integer shown_number, integer color)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will add new custom-region with a certain name.
-
-    A custom-region has the naming-scheme
-
+    
+    A custom-region has the naming-scheme 
+        
         \_customname: text for this region
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
-
+      
         \_\_customname:: test for this region
-
+        
     Example:
-
+    
     The custom-region *VanillaChief* has the custom\_region\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-regions.
-
+    
     Will not add custom-markers, use [AddCustomMarker](#AddCustomMarker) instead.
-
+    
     returns false in case of an error
   </description>
   <parameters>
@@ -4422,21 +4432,21 @@ function ultraschall.AddCustomRegion(custom_region_name, pos, regionend, name, s
   if type(regionend)~="number" then ultraschall.AddErrorMessage("AddCustomRegion", "regionend", "must be a number", -6) return false end
   if type(name)~="string" then ultraschall.AddErrorMessage("AddCustomRegion", "name", "must be a string", -3) return false end
   if math.type(shown_number)~="integer" then ultraschall.AddErrorMessage("AddCustomRegion", "shown_number", "must be an integer", -4) return false end
-  if math.type(color)~="integer" then ultraschall.AddErrorMessage("AddCustomRegion", "color", "must be an integer; 0, for default color", -5) return false end
-
+  if math.type(color)~="integer" then ultraschall.AddErrorMessage("AddCustomRegion", "color", "must be an integer; 0, for default color", -5) return false end  
+  
   if custom_region_name==nil then custom_region_name=name else custom_region_name="_"..custom_region_name..": "..name end
-
+  
   local Aretval, Acount, Amarkersstring, Amarkersarray = ultraschall.IsRegionAtPosition(pos)
-
+  
   shown_number=reaper.AddProjectMarker2(0, true, pos, regionend, custom_region_name, shown_number, color)
-
+  
   local A1retval, Acount1, A1markersstring, A1markersarray = ultraschall.IsRegionAtPosition(pos)
   local duplicate_count, duplicate_array, originalscount_array1, originals_array1, originalscount_array2, originals_array2 = ultraschall.GetDuplicatesFromArrays(A1markersarray, Amarkersarray)
-
+  
   if originals_array1[1]==nil then ultraschall.AddErrorMessage("AddCustomRegion", "shown_number", "region with that number already exists", -6) return false end
-
+  
   local retval, guid = reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..originals_array1[1]-1, "", false)
-
+  
   return true, shown_number, originals_array1[1]-1, guid
 end
 
@@ -4449,34 +4459,35 @@ function ultraschall.SetCustomMarker(custom_marker_name, idx, pos, name, shown_n
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetCustomMarker</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.965
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.SetCustomMarker(string custom_marker_name, integer idx, number pos, string name, integer shown_number, integer color)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will set attributes of an already existing custom-marker with a certain name.
-
-    A custom-marker has the naming-scheme
-
+    
+    A custom-marker has the naming-scheme 
+        
         \_customname: text for this marker
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
-
+      
        \_\_customname:: test for this marker
-
+        
     Example:
-
+    
     The custom-marker *VanillaChief* has the custom\_marker\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-markers.
-
+    
     Will not set custom-regions, use [SetCustomRegion](#SetCustomRegion) instead.
-
+    
     returns false in case of an error
   </description>
   <parameters>
     string custom_marker_name - the name of the custom-marker. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-marker is called "__CustomMarker::"; nil, make it a normal marker
+                              - "" will use idx over all custom-markers, regardless of their name
     integer idx - the index-number of the custom-marker within all custom-markers
     number pos - the position of the marker in seconds
     string name - the name of the marker, exluding the custom-marker-name
@@ -4499,15 +4510,15 @@ function ultraschall.SetCustomMarker(custom_marker_name, idx, pos, name, shown_n
   if type(pos)~="number" then ultraschall.AddErrorMessage("SetCustomMarker", "pos", "must be a number", -2) return false end
   if type(name)~="string" then ultraschall.AddErrorMessage("SetCustomMarker", "name", "must be a string", -3) return false end
   if math.type(shown_number)~="integer" then ultraschall.AddErrorMessage("SetCustomMarker", "shown_number", "must be an integer", -4) return false end
-  if math.type(color)~="integer" then ultraschall.AddErrorMessage("SetCustomMarker", "color", "must be an integer; 0, for default color", -5) return false end
+  if math.type(color)~="integer" then ultraschall.AddErrorMessage("SetCustomMarker", "color", "must be an integer; 0, for default color", -5) return false end  
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("SetCustomMarker", "idx", "must be an integer", -6) return false end
-
+  
   local retval, markerindex = ultraschall.EnumerateCustomMarkers(custom_marker_name, idx)
-
+  
   if retval==false then ultraschall.AddErrorMessage("SetCustomMarker", "idx", "no such custom-marker", -7) return false end
-
+  
   custom_marker_name="_"..custom_marker_name..": "..name
-
+  
   return reaper.SetProjectMarkerByIndex2(0, markerindex, false, pos, 0, shown_number, custom_marker_name, color, 0)
 end
 
@@ -4519,34 +4530,35 @@ function ultraschall.SetCustomRegion(custom_region_name, idx, pos, regionend, na
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetCustomRegion</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.965
     Lua=5.3
   </requires>
   <functioncall>boolean retval, integer shown_number = ultraschall.SetCustomRegion(string custom_region_name, integer idx, number pos, number regionend, string name, integer shown_number, integer color)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will set an already existing custom-region with a certain name.
-
-    A custom-region has the naming-scheme
-
+    
+    A custom-region has the naming-scheme 
+        
         \_customname: text for this region
-
+        
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
-
+      
         \_\_customname:: test for this region
-
+        
     Example:
-
+    
     The custom-region *VanillaChief* has the custom\_region\_name *VanillaChief* and will be shown as *\_VanillaChief: text* in the project.
     So you pass VanillaChief to this function to get all \_VanillaChief:-regions.
-
+    
     Will not add custom-markers, use [AddCustomMarker](#AddCustomMarker) instead.
-
+    
     returns false in case of an error, like the desired shown_number is already taken by another region
   </description>
   <parameters>
     string custom_marker_name - the name of the custom-region. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-region is called "__CustomRegion::"
+                              - "" will use idx over all custom-markers, regardless of their name
     integer idx - the index of the custom region to change
     number pos - the position of the region in seconds
     string name - the name of the region, exluding the custom-region-name
@@ -4555,6 +4567,7 @@ function ultraschall.SetCustomRegion(custom_region_name, idx, pos, regionend, na
   </parameters>
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
     boolean retval - true, if adding the region was successful; false, if not or an error occurred
+                   - false could be an indicator, that there's already a region using the number passed over in shown_number
     integer shown_number - if the desired shown_number is already used by another region, this will hold the alternative number for the new custom-region
   </retvals>
   <chapter_context>
@@ -4571,15 +4584,15 @@ function ultraschall.SetCustomRegion(custom_region_name, idx, pos, regionend, na
   if type(regionend)~="number" then ultraschall.AddErrorMessage("SetCustomRegion", "regionend", "must be a number", -7) return false end
   if type(name)~="string" then ultraschall.AddErrorMessage("SetCustomRegion", "name", "must be a string", -3) return false end
   if math.type(shown_number)~="integer" then ultraschall.AddErrorMessage("SetCustomRegion", "shown_number", "must be an integer", -4) return false end
-  if math.type(color)~="integer" then ultraschall.AddErrorMessage("SetCustomRegion", "color", "must be an integer; 0, for default color", -5) return false end
+  if math.type(color)~="integer" then ultraschall.AddErrorMessage("SetCustomRegion", "color", "must be an integer; 0, for default color", -5) return false end  
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("SetCustomRegion", "idx", "must be an integer", -6) return false end
-
-  local retval, markerindex = ultraschall.EnumerateCustomRegions(custom_region_name, idx)
-
+  
+  retval, markerindex = ultraschall.EnumerateCustomRegions(custom_region_name, idx)
+  
   if retval==false then ultraschall.AddErrorMessage("SetCustomRegion", "idx", "no such custom-region", -7) return false end
-
+  
   custom_region_name="_"..custom_region_name..": "..name
-
+  
   return reaper.SetProjectMarkerByIndex2(0, markerindex, true, pos, regionend, shown_number, custom_region_name, color, 0)
 end
 --A,B,C=ultraschall.SetCustomRegion("vanillachief", 0, 10, 20, "HudelDudel", 2, 0)
@@ -4614,14 +4627,14 @@ function ultraschall.GetNextFreeRegionIndex()
   local numbertable={}
   for i=0, reaper.CountProjectMarkers(0)-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
-    if isrgn==true then
+    if isrgn==true then 
       count=count+1
       numbertable[count]=markrgnindexnumber
     end
   end
-
+  
   table.sort(numbertable)
-
+  
   for i=1, count do
     if numbertable[i]~=i-1 then return i-1 end
   end
@@ -4635,20 +4648,21 @@ function ultraschall.IsMarkerValidCustomMarker(custom_marker_name, markeridx)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>IsMarkerValidCustomMarker</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.965
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.IsMarkerValidCustomMarker(string custom_marker_name, integer markeridx)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     returns true, if the marker with id markeridx is a valid custom-marker of the type custom_marker_name
-
+    
     markeridx is the index of all markers and regions!
-
+    
     returns false in case of an error
   </description>
   <paramters>
     string custom_marker_name - the custom-marker-name to check against; can also be a Lua-pattern-matching-expression
+                              - "" checks, whether a marker is custom-marker in general, regardless of their name
     integer markeridx - the index of the marker to check; this is the index of all markers and regions!
   </parameters>
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -4681,20 +4695,21 @@ function ultraschall.IsRegionValidCustomRegion(custom_region_name, markeridx)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>IsRegionValidCustomRegion</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.965
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.IsRegionValidCustomRegion(string custom_region_name, integer markeridx)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     returns true, if the marker with id markeridx is a valid custom-region of the type custom_region_name
-
+    
     markeridx is the index of all markers and regions!
-
+    
     returns false in case of an error
   </description>
   <paramters>
     string custom_region_name - the custom-reion-name to check against; can also be a Lua-pattern-matching-expression
+                              - "" checks, whether a region is custom-region in general, regardless of their name
     integer markeridx - the index of the marker to check; this is the index of all markers and regions!
   </parameters>
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
@@ -4734,9 +4749,9 @@ function ultraschall.GetMarkerIDFromGuid(guid)
   <functioncall>integer index = ultraschall.GetMarkerIDFromGuid(string guid)</functioncall>
   <description>
     Gets the corresponding indexnumber of a marker-guid
-
+    
     The index is for all markers and regions, inclusive and 1-based
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -4777,10 +4792,10 @@ function ultraschall.GetGuidFromMarkerID(index)
   </requires>
   <functioncall>string guid = ultraschall.GetGuidFromMarkerID(integer index)</functioncall>
   <description>
-    Gets the corresponding marker-guid of a marker with a specific index
-
+    Gets the corresponding marker-guid of a marker with a specific index 
+    
     The index is for all markers and regions, inclusive and 1-based
-
+    
     returns -1 in case of an error
   </description>
   <retvals>
@@ -4816,7 +4831,7 @@ function ultraschall.IsTimeSigmarkerAtPosition(position, position_mode)
   <functioncall>boolean retval = ultraschall.IsTimeSigmarkerAtPosition(number position, optional integer position_mode)</functioncall>
   <description>
     returns, if at position is a time-signature marker
-
+	
 	returns false in case of an error
   </description>
   <retvals>
@@ -4825,7 +4840,7 @@ function ultraschall.IsTimeSigmarkerAtPosition(position, position_mode)
   <parameters>
     number position - the position to check, whether there's a timesignature marker
 	optional integer position_mode - nil or 0, use position in seconds; 1, use position in measures
-  </parameters>
+  </parameters>			
   <chapter_context>
     Markers
 	Time Signature Markers
@@ -4846,3 +4861,84 @@ function ultraschall.IsTimeSigmarkerAtPosition(position, position_mode)
   end
   return false
 end
+
+function ultraschall.GetAllCustomMarkerNames()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllCustomMarkerNames</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer count, table custom_marker_names = ultraschall.GetAllCustomMarkerNames()</functioncall>
+  <description>
+    Will return all names of all available custom-markers.
+  </description>  
+  <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
+    integer count - the number of found markers; -1, in case of an error
+    table custom_marker_names - a table with all found custom-markernames. 
+  </retvals>
+  <chapter_context>
+    Markers
+    Custom Markers
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, get, all, custom marker names</tags>
+</US_DocBloc>
+]]
+  local MarkerNames={}
+  local CountMarkerNames=0
+  for i=0, reaper.CountProjectMarkers(0)-1 do
+    local A,B,C,D,E,F=reaper.EnumProjectMarkers(i)
+    if B==false then
+      local name=E:match("%_(.-):")
+      if name~=nil then CountMarkerNames=CountMarkerNames+1 MarkerNames[CountMarkerNames]=name end
+    end
+  end
+  return CountMarkerNames, MarkerNames
+end
+
+--A1,B1=ultraschall.GetAllCustomMarkerNames()
+
+function ultraschall.GetAllCustomRegionNames()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllCustomRegionNames</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer count, table custom_region_names = ultraschall.GetAllCustomRegionNames()</functioncall>
+  <description>
+    Will return all names of all available custom-regions.
+  </description>  
+  <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
+    integer count - the number of found markers; -1, in case of an error
+    table custom_region_names - a table with all found custom-regionnames. 
+  </retvals>
+  <chapter_context>
+    Markers
+    Custom Markers
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, get, all, custom region names</tags>
+</US_DocBloc>
+]]
+  local MarkerNames={}
+  local CountMarkerNames=0
+  for i=0, reaper.CountProjectMarkers(0)-1 do
+    local A,B,C,D,E=reaper.EnumProjectMarkers(i)
+    if B==true then
+      local name=E:match("%_(.-):")
+      if name~=nil then CountMarkerNames=CountMarkerNames+1 MarkerNames[CountMarkerNames]=name end
+    end
+  end
+  return CountMarkerNames, MarkerNames
+end
+
+--A,B=ultraschall.GetAllCustomMarkerNames()
+

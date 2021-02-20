@@ -211,7 +211,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  return 420.002, "4.2","25th of December 2020", "002",  "\"Dave Brubeck - Take Five\"", ultraschall.hotfixdate, BuildNumber
+  return 420.003, "4.2","15th of January 2021", "003",  "\"Georg Friedrich Händel - Sarabande\"", ultraschall.hotfixdate, BuildNumber
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -2474,7 +2474,7 @@ function ultraschall.BringReaScriptConsoleToFront()
   end
 end
 
-function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionlist_section)
+function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionlist_section, x_pos, y_pos, width, height)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>EditReaScript</slug>
@@ -2483,7 +2483,7 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
     Reaper=6.10
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, optional command_id = ultraschall.EditReaScript(optional string filename, optional boolean add_ultraschall_api, optional integer add_to_actionlist_section)</functioncall>
+  <functioncall>boolean retval, optional command_id = ultraschall.EditReaScript(optional string filename, optional boolean add_ultraschall_api, optional integer add_to_actionlist_section, optional integer x_pos, optional integer y_pos, optional integer width, optional integer height)</functioncall>
   <description>
     Opens a script in Reaper's ReaScript-IDE.
     
@@ -2505,6 +2505,10 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
                                                - 32061, MIDI Event List Editor
                                                - 32062, MIDI Inline Editor
                                                - 32063, Media Explorer
+    optional integer x_pos - x-position of the ide-window in pixels; nil, use the last one used
+    optional integer y_pos - y-position of the ide-window in pixels; nil, use the last one used
+    optional integer width - width of the ide-window in pixels; nil, use the last one used
+    optional integer height - height of the ide-window in pixels; nil, use the last one used
   </parameters>
   <retvals>
     boolean retval - true, opening was successful; false, opening was unsuccessful
@@ -2520,6 +2524,11 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
 </US_DocBloc>
 ]]
   if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("EditReaScript", "filename", "must be a string", -1) return false end
+  if x_pos~=nil and math.type(x_pos)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "x_pos", "must be nil or an integer", -2) return false end
+  if y_pos~=nil and math.type(y_pos)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "y_pos", "must be nil or an integer", -3) return false end
+  if width~=nil and math.type(width)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "width", "must be nil or an integer", -4) return false end
+  if height~=nil and math.type(height)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "height", "must be nil or an integer", -5) return false end
+  
   if filename==nil then 
     -- when user has not set a filename, use the last edited on(with this function) or 
     -- the last created one(using the action-list-dialog), checked in that order
@@ -2565,10 +2574,46 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
   A=ultraschall.GetUSExternalState("REAPER", "lastscript", "reaper.ini")
   B=ultraschall.SetUSExternalState("REAPER", "lastscript", filename, "reaper.ini")
   
+  -- set IDE-window position within reaper.ini
+  if x_pos~=nil then
+    local retval, oldX = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_lx", "", reaper.get_ini_file())
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lx", x_pos, reaper.get_ini_file())
+  end
+  
+  if y_pos~=nil then
+    local retval, oldY = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_ly", "", reaper.get_ini_file())
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_ly", y_pos, reaper.get_ini_file())
+  end
+
+  if width~=nil then
+    local retval, oldWidth = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_lw", "", reaper.get_ini_file())
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lw", width, reaper.get_ini_file())
+  end
+
+  if height~=nil then
+    local retval, oldHeight = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_lh", "", reaper.get_ini_file())
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lh", height, reaper.get_ini_file())
+  end
+  
+  
   reaper.Main_OnCommand(41931,0)
 
   -- reset old edited script in reaper.ini
   C=ultraschall.SetUSExternalState("REAPER", "lastscript", A, "reaper.ini")
+  
+  -- reset old IDE-window-position in reaper.ini
+  if x_pos~=nil then
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lx", oldX, reaper.get_ini_file())
+  end
+  if y_pos~=nil then
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_ly", oldY, reaper.get_ini_file())
+  end
+  if width~=nil then
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lw", oldWidth, reaper.get_ini_file())
+  end  
+  if height~=nil then
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lh", oldHeight, reaper.get_ini_file())
+  end  
   
   -- store last created/edited file using this function, so it can be opened with filename=nil
   reaper.SetExtState("ultraschall_api", "last_edited_script", filename, true)

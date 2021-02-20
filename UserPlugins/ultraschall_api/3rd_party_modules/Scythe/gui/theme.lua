@@ -29,7 +29,7 @@ local osFonts = {
 
 local os = reaper.GetOS()
 local fonts = (os:match("Win") and osFonts.Windows)
-  or (os:match("OS") and osFonts.OSX)
+  or (os:match("OSX") and osFonts.OSX)
   or osFonts.Linux
 
 Theme.fonts = {

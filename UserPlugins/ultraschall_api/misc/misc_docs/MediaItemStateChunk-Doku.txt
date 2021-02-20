@@ -112,10 +112,13 @@ RESOURCEFN "graphics-filename.ext"
 IMGRESOURCEFLAGS integer flag
     influences, how the text of NOTES or the background-image is displayed, as set up in the Notes-dialog for an item.
     disappears, if no NOTES are given
-    The checkboxes "Use as item background" and "Stretch to fit item" can be influenced in here
-        integer flag - 0, no checkbox clicked
-                       1, "Use as item background" is clicked, so the image from RESOURCEFN will be displayed as item-background
-                       2, "Stretch to fit item" is clicked, means, the RESOURCEFN-image or NOTES-text will be stretched to image-size
+    The dropdownlist in the item-notes-window can be influenced in here
+        integer flag - 0, "Do not display image"
+                       1, "Center/tile image" is clicked, so the image from RESOURCEFN will be displayed as item-background
+                       2, "Stretch to fit item" is clicked, means, the RESOURCEFN-image or NOTES-text will be stretched to image-size(seems to be removed as option)
+                       3, "Stretch image/text" is selected in the dropdownlist
+                       5, "Full height image"
+                       
                        
 COMP integer comp_id integer take_id
     The comp of the item.
