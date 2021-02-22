@@ -1,4 +1,4 @@
-<REAPER_PROJECT 0.1 "6.23-beta/macOS-arm64" 1613870956
+<REAPER_PROJECT 0.1 "6.23-beta/macOS-arm64" 1614001595
   RIPPLE 0
   GROUPOVERRIDE 0 1 0
   AUTOXFADE 1
@@ -15,7 +15,7 @@
   PANMODE 3
   CURSOR 0
   ZOOM 4.59415082 0 0
-  VZOOMEX 17 0
+  VZOOMEX 16 0
   USE_REC_CFG 0
   RECMODE 1
   SMPTESYNC 0 25 100 40 1000 300 0 0 1 0 0
@@ -70,17 +70,16 @@
   MASTER_FX 1
   MASTER_SEL 0
   <MASTERFXLIST
-    WNDRECT 67 447 724 387
+    WNDRECT 67 681 400 153
     SHOW 0
     LASTSEL 0
     DOCKED 1
     BYPASS 1 0 0
-    <JS loser/MGA_JSLimiter ""
-      -4.000000 200.000000 -1.000000 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "Master -16 LUFS"
+    <JS dynamics/LUFS_Loudness_Meter ""
+      -3.200000 200.000000 -1.000000 1.000000 3.200000 - - - 0.000000 2.000000 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     >
-    PRESETNAME "Master -16 LUFS"
     FLOATPOS 0 0 0 0
-    FXID {01C1472E-A90A-4D41-96A2-4AA03B32C908}
+    FXID {43C3177A-5A79-2641-808A-CDD02A95F09F}
     WAK 0 0
   >
   <MASTERPLAYSPEEDENV
@@ -103,7 +102,7 @@
   >
   <TRACK {5C700F55-8FB9-1848-ADB0-B593576EC3D6}
     NAME "Speaker 1"
-    PEAKCOL 33530462
+    PEAKCOL 0
     BEAT -1
     AUTOMODE 0
     VOLPAN 1 0 -1 -1 1
@@ -198,7 +197,7 @@
   >
   <TRACK {0051C701-3E70-FA40-AAB3-DE530701E20E}
     NAME "Speaker 2"
-    PEAKCOL 32229210
+    PEAKCOL 0
     BEAT -1
     AUTOMODE 0
     VOLPAN 1 0 -1 -1 1
@@ -293,7 +292,7 @@
   >
   <TRACK {823E36CC-4BB7-A44C-AF47-17588496D1E3}
     NAME Soundboard
-    PEAKCOL 23356516
+    PEAKCOL 0
     BEAT -1
     AUTOMODE 0
     VOLPAN 1 0 -1 -1 1
@@ -349,22 +348,22 @@
       WAK 0 0
       BYPASS 1 0 0
       <JS dynamics/Ultraschall_Dynamics ""
-        0.000000 0.000000 188.000000 100.000000 5.000000 250.000000 - - - 0.000000 0.000000 0.000000 -150.000000 -20.000000 -40.000000 30.000000 0.266000 -113.438143 26.000000 5.000000 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "Input -23 output -20 LUFS"
+        0.000000 0.000000 188.000000 100.000000 5.000000 250.000000 - - - 0.000000 0.000000 0.000000 -150.000000 -16.000000 -20.000000 88.000000 0.266000 -113.206672 12.000000 1.000000 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "Just Limiter"
       >
       <JS_SER
-        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
+        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
       >
-      PRESETNAME "Input -23 output -20 LUFS"
+      PRESETNAME "Just Limiter"
       FLOATPOS 0 0 0 0
       FXID {AAA7601E-338E-9F46-96F2-0B9606851665}
       WAK 0 0

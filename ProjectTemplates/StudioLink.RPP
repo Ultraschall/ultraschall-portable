@@ -1,4 +1,4 @@
-<REAPER_PROJECT 0.1 "6.23-beta/macOS-arm64" 1613870895
+<REAPER_PROJECT 0.1 "6.23-beta/macOS-arm64" 1614001538
   RIPPLE 0
   GROUPOVERRIDE 0 1 0
   AUTOXFADE 1
@@ -16,7 +16,7 @@
   PANMODE 3
   CURSOR 17.19577852256927
   ZOOM 4.59415082 0 0
-  VZOOMEX 18 0
+  VZOOMEX 17 0
   USE_REC_CFG 0
   RECMODE 1
   SMPTESYNC 0 30 100 40 1000 300 0 0 1 0 0
@@ -76,12 +76,11 @@
     LASTSEL 0
     DOCKED 1
     BYPASS 1 0 0
-    <JS loser/MGA_JSLimiter ""
-      -4.000000 200.000000 -1.000000 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "Master -16 LUFS"
+    <JS dynamics/LUFS_Loudness_Meter ""
+      -3.200000 200.000000 -1.000000 1.000000 3.200000 - - - 0.000000 2.000000 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     >
-    PRESETNAME "Master -16 LUFS"
     FLOATPOS 0 0 0 0
-    FXID {D2D7C93E-52D9-C44D-BC6D-CDF362073AC0}
+    FXID {3476C566-ED46-074C-B5EF-80725B893B06}
     WAK 0 0
   >
   <MASTERPLAYSPEEDENV
@@ -104,7 +103,7 @@
   >
   <TRACK {F8763CC9-B3F1-F542-91C2-4D5BCF129E86}
     NAME StudioLink
-    PEAKCOL 20877567
+    PEAKCOL 0
     BEAT -1
     AUTOMODE 0
     VOLPAN 1 0 -1 -1 1
@@ -215,7 +214,7 @@
   >
   <TRACK {B5CCB37D-8330-BC49-A200-BF6833038012}
     NAME "Speaker 1"
-    PEAKCOL 33530462
+    PEAKCOL 0
     BEAT -1
     AUTOMODE 0
     VOLPAN 1 0 -1 -1 1
