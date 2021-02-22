@@ -1277,7 +1277,7 @@ function ultraschall.IsOS_Mac()
   local Os, bits
   
   -- check for os and bits
-  if retval:match("OSX")~=nil or retval:match("macOS-arm64")~=nil then Os=true 
+  if retval:match("OSX")~=nil or retval:match("macOS")~=nil then Os=true 
   else
     Os=false
   end
