@@ -51,7 +51,9 @@ if A == false then
   RenderTable = ultraschall.GetRenderPreset_RenderTable("Auphonic Multichannel", "Auphonic Multichannel")
   retval, RenderTable["RenderPattern"] = reaper.GetSetProjectInfo_String(0, "RENDER_PATTERN", "", false)
   retval, RenderTable["RenderFile"] = reaper.GetSetProjectInfo_String(0, "RENDER_FILE", "", false)
-  retval, RenderTable["SilentlyIncrementFilename"] = false
+  RenderTable["SilentlyIncrementFilename"] = false
+  RenderTable["OnlyMonoMedia"] = true
+  RenderTable["RenderPattern"] = "$project-$tracknumber-$track"
 
   retval = ultraschall.ApplyRenderTable_Project(RenderTable, true)
 
