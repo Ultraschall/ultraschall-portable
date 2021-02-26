@@ -52,19 +52,14 @@ function getAllTracksHeight ()
 end
 
 function verticalZoom (maxheight)
-
-
   
-  
-
   local numberOfTracks = reaper.CountTracks(0)
   local allTracksHeight, singleheight = getAllTracksHeight()
-  
   -- print (singleheight)
   
-  local offset = 35
+  local offset = maxheight * 0.05 -- ca. 10% der Arangevie Höhe sollen frei bleiben )
   if numberOfTracks == 1 then offset = maxheight * 0.6 end
-  if numberOfTracks == 2 then offset = maxheight * 0.4 end
+  if numberOfTracks == 2 then offset = maxheight * 0.3 end
   -- if numberOfTracks == 3 then offset = maxheight * 0.3 end
 
   if allTracksHeight < maxheight - offset then -- muss Vergößert werden
@@ -72,14 +67,14 @@ function verticalZoom (maxheight)
       reaper.CSurf_OnZoom(0, 1)
       allTracksHeight = getAllTracksHeight()
     end
-  elseif allTracksHeight > maxheight - offset then -- muss Verkleinert werden
+  end
+  if allTracksHeight > maxheight - offset then -- muss Verkleinert werden
     while allTracksHeight > maxheight - offset and singleheight > 24 do -- kleiner als 24 können Tracks nicht werden
       reaper.CSurf_OnZoom(0, -1)
       allTracksHeight, singleheight = getAllTracksHeight()
       -- print (singleheight)
     end
   end
-
 end
 
 function countAllEnvelopes ()
@@ -112,8 +107,6 @@ end
 
 function _Ultraschall_GUI_setmagictrackheight()
 
-  
-
   numberOfTracks = reaper.CountTracks(0)
   numberOfEnvelopes = countAllEnvelopes()
   -- print ("tracks: "..numberOfTracks)
@@ -123,9 +116,6 @@ function _Ultraschall_GUI_setmagictrackheight()
   
   if numberOfTracks > 0 and (lastNumberOfEnvelopes ~= tostring(numberOfEnvelopes) or lastNumberOfTracks ~= tostring(numberOfTracks)) then
     
-    
-  
-  
     -- print ("last number envelopes:"..lastNumberOfEnvelopes.."-"..tostring(numberOfEnvelopes))
     -- print ("last number tracks:"..lastNumberOfTracks.."-"..tostring(numberOfTracks))
 
@@ -134,18 +124,13 @@ function _Ultraschall_GUI_setmagictrackheight()
 
     verticalZoom (ArrangeViewHeight)
 
-  
-
     retval = ultraschall.ApplyActionToTrack("1,0", 40913) -- verschiebe den Arrangeview hoch zum ersten Track
     reaper.SetExtState("ultraschall_gui", "numbertracks", numberOfTracks, false)
     reaper.SetExtState("ultraschall_gui", "numberenvelopes", numberOfEnvelopes, false)
     lastNumberOfTracks = tostring(numberOfTracks)
     lastNumberOfEnvelopes = tostring(numberOfEnvelopes)
 
-  
-
-  end
-  
+  end  
 end
 
 -------------------------------
@@ -371,7 +356,7 @@ function checkGuiStates()
  -- Defer-Schleife
  -------------------------------------------------
 
-  ultraschall.Defer(checkGuiStates, "Check GUI Defer", 2, 1) -- alle 2 Sekunden
+  ultraschall.Defer(checkGuiStates, "Check GUI Defer", 1, 1) -- alle 1 Sekunden
 	return "Check GUI Defer"
 
 end
