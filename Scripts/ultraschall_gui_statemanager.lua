@@ -199,6 +199,24 @@ function countColoredStudioLinkTracks ()
   return count
 end
 
+function getUsedColors()
+  local usedColors = {}
+  local numberOfTracks = reaper.CountTracks(0)
+  if numberOfTracks > 0 then
+    for i=0, numberOfTracks-1 do
+      MediaTrack = reaper.GetTrack(0, i)
+      TrackColor = reaper.GetTrackColor(MediaTrack)
+      TrackColor = swapColors(TrackColor)
+      if usedColors[TrackColor] then 
+        usedColors[TrackColor] = usedColors[TrackColor] + 1 
+      else 
+        usedColors[TrackColor] = 1 
+      end
+    end
+  end
+  return usedColors
+end
+
 
 ---------------------------
 -- Main magiccolor function
@@ -206,23 +224,24 @@ end
 
 function _Ultraschall_GUI_setmagiccolor()
 
+  local used_colors = getUsedColors()
   local numberOfTracks = reaper.CountTracks(0)
+
   if numberOfTracks == 0 then
     LastColor = 0
   end
+
+local processedColors = {}
+
   for i=0, numberOfTracks-1 do
 
     MediaTrack = reaper.GetTrack(0, i)
     TrackColor = reaper.GetTrackColor(MediaTrack)
     TrackColor = swapColors(TrackColor)
 
-    -- print(TrackColor)
-    -- print(tostring(TrackColor))
+    if TrackColor == 0 or (used_colors[TrackColor] > 1 and processedColors[TrackColor] == 1) then -- frische Spur, oder Farbe schon vorhanden
 
-    tracktype = ultraschall.GetTypeOfTrack(i+1)
-
-    if TrackColor == 0 then -- frische Spur, noch keine Farbe gesetzt
-
+      tracktype = ultraschall.GetTypeOfTrack(i+1)
 
       -- print (tracktype)
 
@@ -235,9 +254,8 @@ function _Ultraschall_GUI_setmagiccolor()
 
         colored = countColoredStudioLinkTracks() or 0
         -- print (colored)
-        StudioLinkColor = t[colored + 11]
+        StudioLinkColor = t[colored + 11] or t[12]
         reaper.SetTrackColor(MediaTrack, swapColors(StudioLinkColor))
-        StudioLinkNr = StudioLinkNr + 1
 
       else -- normaler Track
 
@@ -256,6 +274,8 @@ function _Ultraschall_GUI_setmagiccolor()
     if tracktype == "Other" then
       LastColor = TrackColor
     end
+
+  processedColors[TrackColor] = 1
 
   end
 end
@@ -356,7 +376,7 @@ function checkGuiStates()
  -- Defer-Schleife
  -------------------------------------------------
 
-  ultraschall.Defer(checkGuiStates, "Check GUI Defer", 1, 1) -- alle 1 Sekunden
+  ultraschall.Defer(checkGuiStates, "Check GUI Defer", 1, 10) -- alle 0.2 Sekunden
 	return "Check GUI Defer"
 
 end
@@ -393,7 +413,6 @@ max_color = 20  -- Number of colors to cycle
 curtheme = reaper.GetLastColorThemeFile()
 os = reaper.GetOS()
 LastColor = 0
-StudioLinkNr = 0
 colored = 0
 
 ---------------------------------------------------------
