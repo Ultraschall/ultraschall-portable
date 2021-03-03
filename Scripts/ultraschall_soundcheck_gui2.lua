@@ -241,7 +241,7 @@ function expandEventName(EventNameDisplay)
     retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
     LocalMonitoringState = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-settings.ini")
     if LocalMonitoringState == "1" then LocalMonitoringState = "On" else LocalMonitoringState = "Off" end
-    EventNameDisplay = EventNameDisplay .. " (Buffer: ".. actual_bsize .." - Local Monitoring: " .. LocalMonitoringState .. ")"
+    EventNameDisplay = EventNameDisplay .. " (Buffer: ".. actual_bsize .." - Direct Monitoring: " .. LocalMonitoringState .. ")"
 
   elseif EventNameDisplay == "Unknown sound interface" then
 

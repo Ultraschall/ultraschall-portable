@@ -308,18 +308,6 @@ function SoundcheckChangedInterface(userspace)
 
     if known_device_status == "" then
 
-      --[[
-
-      name_short = string.sub(actual_device_name, 1, 17)
-      device_string = "Unknown interface: "..name_short
-      warning_string = "You connected this sound interface for the first time:|"..actual_device_name.."|Please specify whether or nor you are using local monitoring on this device.|If your headphones are connected to the sound interface - choose local monitoring.|If your headphones are connected to the phones-jack of your computer: choose no local monitoring."
-
-      local update = ultraschall.SetUSExternalState("ultraschall_soundcheck_changed_interface", "EventNameDisplay", device_string, "ultraschall-settings.ini")
-
-      local update = ultraschall.SetUSExternalState("ultraschall_soundcheck_changed_interface", "DescriptionWarning", warning_string, "ultraschall-settings.ini")
-
-      ]]
-
       return true
 
     else

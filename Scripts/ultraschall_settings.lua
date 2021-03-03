@@ -95,11 +95,11 @@ Enthält alle Einträge, die in dem Abschnitt
 [ultraschall_devices]
 liegen.
 
-Über die EInträge werden zum einen Devices verwaltet, die gängig sind und von denen wir wissen, ob sie local monitoring können, etwa das Zoom H6:
+Über die EInträge werden zum einen Devices verwaltet, die gängig sind und von denen wir wissen, ob sie Direct Monitoring können, etwa das Zoom H6:
 
 CoreAudio H6=2
 
-Zum anderen werden dort alle bisher unbekannten Devices mit ihrem Namen eingetragen, die NutzerIn anschließt. Wenn ein bisher unbekanntes Device (noch kein Eintrag in diesen Settings) angeschlossen wird, meldet sich ein Soundcheck mit der Abfrage, ob local monitoring möglich ist oder nicht. Der Wert wird dann eingetragen.
+Zum anderen werden dort alle bisher unbekannten Devices mit ihrem Namen eingetragen, die NutzerIn anschließt. Wenn ein bisher unbekanntes Device (noch kein Eintrag in diesen Settings) angeschlossen wird, meldet sich ein Soundcheck mit der Abfrage, ob direct monitoring möglich ist oder nicht. Der Wert wird dann eingetragen.
 
 Wird ein Device über die GUI "gelöscht", so verbleibt der Eintrag in den Settings, wird aber auf unsichtbar geschaltet (Wert 2 oder 3). Wenn das Gerät doch noch einmal angeschlossen wird, erscheint dann kein Soundcheck sondern der entsprechende Wert wird auf 0 oder 1 gesetzt.
 
@@ -366,7 +366,7 @@ function show_devices()
 
       end
 
-      if devices_blacklist[device_name] == 1 then -- das Gerät kann bekanntermaßen kein local monitoring
+      if devices_blacklist[device_name] == 1 then -- das Gerät kann bekanntermaßen kein direct monitoring
 
         id = GUI.Lbl:new(          x_position + 40, position+7,                  device_name,          0, color)
 
@@ -629,14 +629,14 @@ function SettingsPageDevices()
       table.insert(GUI.elms, block)
 
 
-  local label_table = GUI.Lbl:new( 85, position+20,                  "Local Monitoring on-off",          0, "white")
+  local label_table = GUI.Lbl:new( 85, position+20,                  "Direct Monitoring on/off",          0, "white")
       table.insert(GUI.elms, label_table)
 
   -- local label_table2 = GUI.Lbl:new( 575, position+20,                  "Delete",          0, "white")
    --   table.insert(GUI.elms, label_table2)
 
 
-  devicetext = "This list shows all audio interfaces you ever connected. If you can plug a headphone to your audio interface, it supports Local Monitoring. If you can not connect a headphone direct into your audio interface, make shure to uncheck the Local Monitoring box to get the audio routing right. You can delete obsolete devices."
+  devicetext = "This list shows all audio interfaces you ever connected. If you can plug a headphone to your audio interface, it supports Direct Monitoring. If you can not connect a headphone direct into your audio interface, make shure to uncheck the Direct Monitoring box to get the audio routing right. You can delete obsolete devices."
 
   infotable = wrap(devicetext,100) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
 
