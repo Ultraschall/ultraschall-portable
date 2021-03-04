@@ -45,7 +45,6 @@ function triggermagicrouting()
 	-- local retval, deviceInfo = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 	-- print (deviceInfo)
 
-
 	if currentCountTracks == 0 then -- es gibt keine Tracks also kein Bedarf
 	-- reaper.SetProjExtState(0, "ultraschall_magicrouting", "lastCountTracks", "0")
 		return needsTrigger
@@ -55,16 +54,16 @@ function triggermagicrouting()
 		reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "off") -- einmal Neuaufbau der Matrix reicht
 		return needsTrigger
 
-	elseif currentCountTracks ~= tonumber(lastCountTracks) then -- es gibt mindestens eine neue Spur oder Spuren 	wurden gelöscht
+	elseif currentCountTracks ~= tonumber(lastCountTracks) and ultraschall.GetItem_ClickState(-1) == false then -- es gibt mindestens eine neue Spur oder Spuren 	wurden gelöscht
 		needsTrigger = true
 		reaper.SetProjExtState(0, "ultraschall_magicrouting", "lastCountTracks", currentCountTracks)
 		return needsTrigger
 
 	else
 		return needsTrigger
-
 	end
 
+	return needsTrigger
 end
 
 
