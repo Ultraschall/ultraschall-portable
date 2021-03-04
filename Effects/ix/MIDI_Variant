@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  Copyright 2007 - 2011, Philip S. Considine                                  *
+*  Copyright 2007 - 2021, Philip S. Considine                                  *
 *  This program is free software: you can redistribute it and/or modify        *
 *  it under the terms of the GNU General Public License as published by        *
 *  the Free Software Foundation, either version 3 of the License, or           *
@@ -48,7 +48,11 @@ statNoteOff = $x80;
 statNoteOn = $x90;
 
 // File change flags
-scaleFile = seqFile -1;
+scaleFile = seqFile = -1;
+
+step = 0;
+
+memset(inputTracker,0,128);
 
 ////////////////////////////////////////////////////////////////////////////////
 @slider
@@ -152,7 +156,7 @@ while
               );
               
               // Advance/reset step counter
-              (step += 1) >= seqSize ?
+              (step += 1) > seqSize ?
               (
                 step = 0;
               );

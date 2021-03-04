@@ -32,7 +32,7 @@ bbBBBBBBBBbb--------bbBBBBBB
 */
 
 @init
-gfx_ext_retina=1;
+gfx_ext_retina == 0 ? gfx_ext_retina = 1;
 fftsize=32768;
 recpos=0;
 gfx_clear=-1;

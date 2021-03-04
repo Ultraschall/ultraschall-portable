@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  Copyright 2007 - 2011, Philip S. Considine                                  *
+*  Copyright 2007 - 2021, Philip S. Considine                                  *
 *  This program is free software: you can redistribute it and/or modify        *
 *  it under the terms of the GNU General Public License as published by        *
 *  the Free Software Foundation, either version 3 of the License, or           *
@@ -18,9 +18,9 @@ desc: MIDI Map To Key v2 [IXix]
 
 slider1:0<0,15,1{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}>Input Channel
 slider2:/ix_keymaps:none:Mapping File
-slider3:0<0,127,1{0: C0,1: C#0,2: D0,3: Eb0,4: E0,5: F0,6: F#0,7: G0,8: G#0,9: A0,10: Bb0,11: B0,12: C1,13: C#1,14: D1,15: Eb1,16: E1,17: F1,18: F#1,19: G1,20: G#1,21: A1,22: Bb1,23: B1,24: C2,25: C#2,26: D2,27: Eb2,28: E2,29: F2,30: F#2,31: G2,32: G#2,33: A2,34: Bb2,35: B2,36: C3,37: C#3,38: D3,39: Eb3,40: E3,41: F3,42: F#3,43: G3,44: G#3,45: A3,46: Bb3,47: B3,48: C4,49: C#4,50: D4,51: Eb4,52: E4,53: F4,54: F#4,55: G4,56: G#4,57: A4,58: Bb4,59: B4,60: C5,61: C#5,62: D5,63: Eb5,64: E5,65: F5,66: F#5,67: G5,68: G#5,69: A5,70: Bb5,71: B5,72: C6,73: C#6,74: D6,75: Eb6,76: E6,77: F6,78: F#6,79: G6,80: G#6,81: A6,82: Bb6,83: B6,84: C7,85: C#7,86: D7,87: Eb7,88: E7,89: F7,90: F#7,91: G7,92: G#7,93: A7,94: Bb7,95: B7,96: C8,97: C#8,98: D8,99: Eb8,100: E8,101: F8,102: F#8,103: G8,104: G#8,105: A8,106: Bb8,107: B8,108: C9,109: C#9,110: D9,111: Eb9,112: E9,113: F9,114: F#9,115: G9,116: G#9,117: A9,118: Bb9,119: B9,120: C10,121: C#10,122: D10,123: Eb10,124: E10,125: F10,126: F#10,127: G10}>Note In
-slider4:0<0,127,1{0: C0,1: C#0,2: D0,3: Eb0,4: E0,5: F0,6: F#0,7: G0,8: G#0,9: A0,10: Bb0,11: B0,12: C1,13: C#1,14: D1,15: Eb1,16: E1,17: F1,18: F#1,19: G1,20: G#1,21: A1,22: Bb1,23: B1,24: C2,25: C#2,26: D2,27: Eb2,28: E2,29: F2,30: F#2,31: G2,32: G#2,33: A2,34: Bb2,35: B2,36: C3,37: C#3,38: D3,39: Eb3,40: E3,41: F3,42: F#3,43: G3,44: G#3,45: A3,46: Bb3,47: B3,48: C4,49: C#4,50: D4,51: Eb4,52: E4,53: F4,54: F#4,55: G4,56: G#4,57: A4,58: Bb4,59: B4,60: C5,61: C#5,62: D5,63: Eb5,64: E5,65: F5,66: F#5,67: G5,68: G#5,69: A5,70: Bb5,71: B5,72: C6,73: C#6,74: D6,75: Eb6,76: E6,77: F6,78: F#6,79: G6,80: G#6,81: A6,82: Bb6,83: B6,84: C7,85: C#7,86: D7,87: Eb7,88: E7,89: F7,90: F#7,91: G7,92: G#7,93: A7,94: Bb7,95: B7,96: C8,97: C#8,98: D8,99: Eb8,100: E8,101: F8,102: F#8,103: G8,104: G#8,105: A8,106: Bb8,107: B8,108: C9,109: C#9,110: D9,111: Eb9,112: E9,113: F9,114: F#9,115: G9,116: G#9,117: A9,118: Bb9,119: B9,120: C10,121: C#10,122: D10,123: Eb10,124: E10,125: F10,126: F#10,127: G10}>Note Out
-slider5:0<0,1,1{No,Reload Now}>Reload Mapping
+slider3:0<0,127,1{0: C0,1: C#0,2: D0,3: Eb0,4: E0,5: F0,6: F#0,7: G0,8: G#0,9: A0,10: Bb0,11: B0,12: C1,13: C#1,14: D1,15: Eb1,16: E1,17: F1,18: F#1,19: G1,20: G#1,21: A1,22: Bb1,23: B1,24: C2,25: C#2,26: D2,27: Eb2,28: E2,29: F2,30: F#2,31: G2,32: G#2,33: A2,34: Bb2,35: B2,36: C3,37: C#3,38: D3,39: Eb3,40: E3,41: F3,42: F#3,43: G3,44: G#3,45: A3,46: Bb3,47: B3,48: C4,49: C#4,50: D4,51: Eb4,52: E4,53: F4,54: F#4,55: G4,56: G#4,57: A4,58: Bb4,59: B4,60: C5,61: C#5,62: D5,63: Eb5,64: E5,65: F5,66: F#5,67: G5,68: G#5,69: A5,70: Bb5,71: B5,72: C6,73: C#6,74: D6,75: Eb6,76: E6,77: F6,78: F#6,79: G6,80: G#6,81: A6,82: Bb6,83: B6,84: C7,85: C#7,86: D7,87: Eb7,88: E7,89: F7,90: F#7,91: G7,92: G#7,93: A7,94: Bb7,95: B7,96: C8,97: C#8,98: D8,99: Eb8,100: E8,101: F8,102: F#8,103: G8,104: G#8,105: A8,106: Bb8,107: B8,108: C9,109: C#9,110: D9,111: Eb9,112: E9,113: F9,114: F#9,115: G9,116: G#9,117: A9,118: Bb9,119: B9,120: C10,121: C#10,122: D10,123: Eb10,124: E10,125: F10,126: F#10,127: G10}>-Note In
+slider4:0<0,127,1{0: C0,1: C#0,2: D0,3: Eb0,4: E0,5: F0,6: F#0,7: G0,8: G#0,9: A0,10: Bb0,11: B0,12: C1,13: C#1,14: D1,15: Eb1,16: E1,17: F1,18: F#1,19: G1,20: G#1,21: A1,22: Bb1,23: B1,24: C2,25: C#2,26: D2,27: Eb2,28: E2,29: F2,30: F#2,31: G2,32: G#2,33: A2,34: Bb2,35: B2,36: C3,37: C#3,38: D3,39: Eb3,40: E3,41: F3,42: F#3,43: G3,44: G#3,45: A3,46: Bb3,47: B3,48: C4,49: C#4,50: D4,51: Eb4,52: E4,53: F4,54: F#4,55: G4,56: G#4,57: A4,58: Bb4,59: B4,60: C5,61: C#5,62: D5,63: Eb5,64: E5,65: F5,66: F#5,67: G5,68: G#5,69: A5,70: Bb5,71: B5,72: C6,73: C#6,74: D6,75: Eb6,76: E6,77: F6,78: F#6,79: G6,80: G#6,81: A6,82: Bb6,83: B6,84: C7,85: C#7,86: D7,87: Eb7,88: E7,89: F7,90: F#7,91: G7,92: G#7,93: A7,94: Bb7,95: B7,96: C8,97: C#8,98: D8,99: Eb8,100: E8,101: F8,102: F#8,103: G8,104: G#8,105: A8,106: Bb8,107: B8,108: C9,109: C#9,110: D9,111: Eb9,112: E9,113: F9,114: F#9,115: G9,116: G#9,117: A9,118: Bb9,119: B9,120: C10,121: C#10,122: D10,123: Eb10,124: E10,125: F10,126: F#10,127: G10}>-Note Out
+slider5:0<0,1,1{---,Reload Now}>Reload Mapping
 
 in_pin:none
 out_pin:none
@@ -66,6 +66,15 @@ mapFile != slider2 | 0 || reload == 1 ?
     );
     file_close(fileHandle);
   );
+  numMappings = 0;
+  i = 0;
+  loop
+  (
+    128,
+    map[i] != i ? numMappings += 1;
+    i += 1;
+  );
+    
   slider4 = map[inputNote];
 );
 
@@ -101,13 +110,11 @@ while
 
         // Substitute note value and pass on modified message
         midisend(offset, msg1, (msg23 & $xFF00) | map[note]);
-        
       )
       :
       (
         midisend(offset, msg1, msg23); // Not a note, pass thru
       );
-      
     )
     :
     (
@@ -118,3 +125,90 @@ while
   );
 );
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+@gfx 360 360
+
+// Set up note name table
+function InitNoteNames()
+  local(s, n, o)
+(
+  // Set these up so we can get the note string by (note % 12) + 128
+  strcpy(128, "C");
+  strcpy(129, "C#");
+  strcpy(130, "D");
+  strcpy(131, "D#");
+  strcpy(132, "E");
+  strcpy(133, "F");
+  strcpy(134, "F#");
+  strcpy(135, "G");
+  strcpy(136, "G#");
+  strcpy(137, "A");
+  strcpy(138, "A#");
+  strcpy(139, "B");
+  
+  s = 0;
+  loop
+  (
+    128,
+    n = s % 12;
+    o = (s / 12) | 0;
+    sprintf(s, "%s%d", n + 128, o); // n + 128 is the base string "C", "C#" etc. defined above
+    s += 1;
+  );
+);
+
+!gfxInitDone ?
+(
+  InitNoteNames();
+  gfx_a = 1;
+  gfx_r = gfx_g = gfx_b = 1;
+  rowHeight = gfx_texth * 1.5;
+  colWidth = 100;
+  
+  gfxInitDone = 1;
+);
+
+count = 0;
+marginL = 5;
+marginT = 15;
+
+gfx_x = marginL;
+gfx_y = 5;
+
+gfx_drawstr("Mapping");
+
+marginT = 20;
+gfx_line(marginL, marginT, gfx_w - 2 * marginL, marginT);
+
+marginT = 30;
+numMappings > 0 ?
+(
+  i = 0;
+  loop
+  (
+    128,
+    
+    noteRow = count % 12;
+    oct = (count / 12) | 0;
+
+    octRow = ((oct / 5) | 0) * (rowHeight * 13) |  0; // 13 for spacing
+    octCol = oct % 5;
+
+    gfx_x = octCol * colWidth + marginL;
+    gfx_y = octRow + noteRow * rowHeight + marginT;
+    
+    map[i] != i ?
+    (
+      count += 1;
+      gfx_printf("%s -> %s\n", i, map[i]); // This pulls the note names from numbered strings 0-127
+    );
+    
+    i += 1;
+  );
+)
+:
+(
+  gfx_x = marginL;
+  gfx_y = marginT;
+  gfx_drawstr("Nothing to see here.");
+);

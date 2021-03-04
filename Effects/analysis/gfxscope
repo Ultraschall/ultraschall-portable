@@ -15,7 +15,7 @@ in_pin:right input
 options:no_meter
 
 @init
-gfx_ext_retina=1;
+gfx_ext_retina == 0 ? gfx_ext_retina = 1;
 ext_nodenorm=1;
 recpos=0;
 gfx_clear=-1;

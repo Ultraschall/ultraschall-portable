@@ -35,7 +35,7 @@ out_pin:main R
 @init
 e=2.718281828459;
 gfx_clear=-1;
-gfx_ext_retina = 1;
+gfx_ext_retina == 0 ? gfx_ext_retina = 1;
 tab=0; // gain amount in dB, evenly divided over db_bottom..db_top
 tab.size == 0 ? (
   // first-time initialization
