@@ -109,12 +109,13 @@ function _Ultraschall_GUI_setmagictrackheight()
 
   numberOfTracks = reaper.CountTracks(0)
   numberOfEnvelopes = countAllEnvelopes()
+  override = reaper.GetExtState("ultraschall_gui", "adjustvzoom")
   -- print ("tracks: "..numberOfTracks)
   -- print ("lasttracks: "..lastNumberOfTracks)
   -- print ("envelopes: "..numberOfEnvelopes)
   -- print ("lastNumberOfEnvelopes: "..lastNumberOfEnvelopes)
   
-  if numberOfTracks > 0 and (lastNumberOfEnvelopes ~= tostring(numberOfEnvelopes) or lastNumberOfTracks ~= tostring(numberOfTracks)) then
+  if numberOfTracks > 0 and (lastNumberOfEnvelopes ~= tostring(numberOfEnvelopes) or lastNumberOfTracks ~= tostring(numberOfTracks)) or override == "1" then
     
     -- print ("last number envelopes:"..lastNumberOfEnvelopes.."-"..tostring(numberOfEnvelopes))
     -- print ("last number tracks:"..lastNumberOfTracks.."-"..tostring(numberOfTracks))
@@ -127,6 +128,7 @@ function _Ultraschall_GUI_setmagictrackheight()
     retval = ultraschall.ApplyActionToTrack("1,0", 40913) -- verschiebe den Arrangeview hoch zum ersten Track
     reaper.SetExtState("ultraschall_gui", "numbertracks", numberOfTracks, false)
     reaper.SetExtState("ultraschall_gui", "numberenvelopes", numberOfEnvelopes, false)
+    reaper.SetExtState("ultraschall_gui", "adjustvzoom", "0", false)
     lastNumberOfTracks = tostring(numberOfTracks)
     lastNumberOfEnvelopes = tostring(numberOfEnvelopes)
 
