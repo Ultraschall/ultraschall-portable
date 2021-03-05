@@ -33,16 +33,22 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
 
 zoomfactor=reaper.GetHZoomLevel() -- get current zoom-level
+vertical_zoom_factor = ultraschall.GetVerticalZoom()
 selected_items_count = reaper.CountSelectedMediaItems(0)
 init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(0, 0, 0, 0, 0)  -- get information wether or not a time selection is set
 
 if (init_end_timesel ~= init_start_timesel) or selected_items_count > 0 then    -- there is a time selection or selected items
   ultraschall.SetUSExternalState("ultraschall_view","zoom_toggle_select",tostring(zoomfactor))
+  ultraschall.SetUSExternalState("ultraschall_view","zoom_toggle_select_vertical",tostring(vertical_zoom_factor))
   reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_ZOOMSIT"), 0) -- Zoom to selection
   reaper.Main_OnCommand(reaper.NamedCommandLookup("_Ultraschall_Unselect_All"), 0) -- Zoom to selection
 else
   oldzoomfactor=ultraschall.GetUSExternalState("ultraschall_view","zoom_toggle_select")
   reaper.adjustZoom(tonumber(oldzoomfactor), 1, true, 0)
+  oldzoomfactorVertical=ultraschall.GetUSExternalState("ultraschall_view","zoom_toggle_select_vertical")
+  ultraschall.SetVerticalZoom(tonumber(oldzoomfactorVertical))
+  retval = ultraschall.ApplyActionToTrack("1,0", 40913) -- verschiebe den Arrangeview hoch zum ersten Track
+
 end
 
 
