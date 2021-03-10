@@ -1,18 +1,45 @@
-// MGA JS Limiter: Limits the maximum output volume of a audio signal
-// Copyright (C) 2008  Michael Gruhn
+///////////////////////////////////////////////////////////////////////////////////////////
+// LUFS Loudness Metering (Ultraschall)
+// Copyright (c) 2021 Ultraschall (http://ultraschall.fm)
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+///////////////////////////////////////////////////////////////////////////////////////////
+// Smooth Limiter (by Geraint Luff)
+// Copyright (c) Geraint Luff (https://geraintluff.github.io/jsfx/)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////////////
 // Tiny EBU R128
 // by TBProAudio 2019 (www.tb-software.com)
@@ -38,39 +65,26 @@
 //PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
 //STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
 //THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-///////////////////////////////////////////////////////////////////////////////////////////
-// LUFS Loudness Metering (Ultraschall)
-// Copyright (c) 2021 Ultraschall (http://ultraschall.fm)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
 
 desc:LUFS Loudness Metering (Ultraschall)
 options: gmem=lufs
 options: no_meter
 import memorymanager.jsfx-inc
 import ebur128.jsfx-inc
+import ui-lib.jsfx-inc
 
-slider1:0<-15,0,0.1>-Threshold (dB)
-slider2:200<0,500,1>-Release (ms)
-slider3:-1<-6,0,0.1>-Ceiling
-slider4:1<0,4,{-14 LUFS (Spotify),-16 LUFS (Podcast),-18 LUFS,-20 LUFS,-23 LUFS (EBU R128)}>LUFS-Target
-slider5:3.2<-2,16,0.1>Gain (dB)
+slider1:-1<-20,0.1,0.1>-limit (dB)
+slider2:10<0.1,100,0.1>-anticipation (ms)
+slider3:50<1,100,0.1>-release (ms)
+slider4:0<0,1,0.01>-distortion
+
+//slider5:0<-12,12,0.1>-pre-gain (dB)
+// slider1:0<-15,0,0.1>-Threshold (dB)
+// slider2:200<0,500,1>-Release (ms)
+// slider3:-1<-6,0,0.1>-Ceiling
+
+slider5:4<-2,16,0.1>Gain (dB)
+slider7:1<0,4,{-14 LUFS (Spotify),-16 LUFS (Podcast),-18 LUFS,-20 LUFS,-23 LUFS (EBU R128)}>LUFS-Target
 
 slider9:0<0,3,{2.0 Stereo,4.0 Surround,4.1 Surround,5.1 Surround}>-Channel Config
 slider10:2<0,4,{ML,SL,IL,RLA,TP Max}>-Mode
@@ -80,22 +94,102 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
+in_pin:Left
+in_pin:Right
+out_pin:Left
+out_pin:Right
+
 ///////////////////////
 @init
 ///////////////////////
+// LUFS
+MM.MemMgr_Init(0);
+
 HOLDTIME = srate/128;
 gfx_ext_retina = 1;
 
 r1Timer = 0;
 r2Timer = HOLDTIME/2;
 
-slider4_old = 1; // Preset is -16 LUFS
+slider7_old = 1; // Preset is -16 LUFS
 
-gr_meter=1;
+gr_meter = 1;
 gr_meter_decay = exp(1/(1*srate));
 
-// LUFS
-MM.MemMgr_Init(0);
+/////////////////////////
+// smooth limiter
+/////////////////////////
+
+bufferlength = ceil(srate*1);
+
+
+buffer0 = MM.MemMgr_Alloc(1000000);
+
+//  buf0 = MM.MemMgr_Alloc(100);
+
+buffer1 = buffer0 + bufferlength;
+bufferpeak = buffer1 + bufferlength;
+// freemem = bufferpeak + bufferlength;
+
+overcorrect_factor = 1.002; // about 0.02dB
+
+// freemem = ui_setup(freemem);
+
+function tanh(x) (
+  x >= 20 ? (
+    1;
+  ) : x <= -20 ? (
+    -1;
+  ) : (
+    (exp(2*x) - 1)/(exp(2*x) + 1);
+  );
+);
+function atanh(x) (
+  x >= 1 ? (
+    20;
+  ) ? (x <= -1) ? (
+    -20;
+  ) : (
+    log((1 + x)/(1 - x))*0.5;
+  );
+);
+
+writepos = 10;
+delaysamples = 10;
+attacksamples = 10;
+releasesamples = 100;
+limit = 1;
+
+releasestartvalue = 1;
+releaseindex = srate;
+
+function update() (
+  attacksamples = ceil(slider2*srate/1000);
+  releasesamples = ceil(slider3*srate/1000);
+  delaysamples = ceil(attacksamples);
+  limit = pow(10, slider1/20);
+  pregain_factor = pow(10, slider5/20);
+);
+// Starts at 0, goes to 1
+function attackwindow(ratio) (
+  0.5 - 0.5*cos(ratio*$pi);
+);
+function releasewindow(ratio) (
+  0.5 + 0.5*cos(ratio*$pi);
+);
+
+A = 0;
+B = 1;
+function dist(x) (
+  B*x/(A*abs(x) + 1);
+);
+function distortion_for_peak(peak, limit) (
+  A = (1 - pow(limit/oldpeak, 0))/limit;
+);
+function scaling_for_peak(peak, limit) (
+  pow(limit/peak, 1 - 0);
+);
+
 
 // EO@function
 
@@ -132,10 +226,12 @@ function adjustGain()
   time_pressed = time();
   gain_offset = lufs_target - gmem[1];
   slider5 = slider5 + gain_offset;
-  slider1 = 0 - slider5;
-  thresh = 10^(slider1/20);
-  volume = ceiling/thresh;
+  // slider1 = 0 - slider5;
+  // thresh = 10^(slider1/20);
+  // volume = ceiling/thresh;
+
   sliderchange(slider5);
+  update();
   EBUR128LM.LM_EBUR128_Reset_MultiCh();
   clearHistory();
   position = 100;
@@ -146,14 +242,14 @@ function adjustGain()
 ////////////////////////////////////////////////
 
 
-slider1 = 0 - slider5;
-thresh = 10^(slider1/20);
-ceiling = 10^(slider3/20);
-volume = ceiling/thresh;
+// slider1 = 0 - slider5;
+// thresh = 10^(slider1/20);
+// ceiling = 10^(slider3/20);
+// volume = ceiling/thresh;
 
-lufs_target = -14 - 2*slider4;
+lufs_target = -14 - 2*slider7;
 gmem[2] = lufs_target;
-slider4 == 4? (
+slider7 == 4? (
   lufs_target = -23;
 );
 
@@ -166,42 +262,132 @@ r = exp(-3/(srate*max(release,0.05)));
 channelconfig = slider9;
 metermode = slider10;
 
-
+update();
 
 ////////////////////////////////////////////////////
 @block
 ////////////////////////////////////////////////////
 
 
-
-
+pdc_bot_ch = 0;
+pdc_top_ch = 2;
+pdc_delay = delaysamples - 1;
 
 
 ///////////////////////////////////////////////////////////////////
 @sample
 ///////////////////////////////////////////////////////////////////
 
+spl0 *= pregain_factor;
+spl1 *= pregain_factor;
+truepeak = max(abs(spl0), abs(spl1));
+releasepeak = limit;
+releaseindex < releasesamples ? (
+  releasepeak = limit + (releasestartvalue - limit)*releasewindow(releaseindex/releasesamples);
+  releaseindex += 1;
+);
+peak = max(releasepeak, truepeak);
+//peak = max(peak - releasegradient, truepeak);
 
+peak < limit ? (
+  peak = limit;
+  releasestartvalue = limit;
+  releaseindex = srate;
+) : (truepeak == peak) ? (
+  // It's a new peak
+  peak *= overcorrect_factor; // Add just a little bit extra, in the hopes that we don't have to do this again soon
 
+  // For future decay
+  //releasegradient = (peak - limit)/releasesamples;
+  releasestartvalue = peak;
+  releaseindex = 0;
+  // Attempt to extend an existing attack
+  i = 1;
+  startpeak = limit;
+  foundabove = 0;
+  foundintersection = 0;
 
-maxSpls=max(abs(spl0),abs(spl1));
+  intersectionindex = -1;
+  bestcorrection = -1;
+  bestindex = delaysamples - 1;
+  beststartpeak = limit;
+  while (i < attacksamples && !foundintersection) (
+    window = attackwindow(1 - i/attacksamples);
 
-(r1Timer+=1) > HOLDTIME ? (r1Timer = 0; max1Block = 0; );
-max1Block = max(max1Block,maxSpls);
-(r2Timer+=1) > HOLDTIME ? (r2Timer = 0; max2Block = 0; );
-max2Block = max(max2Block,maxSpls);
+    readpos = writepos - i;
+    readpos < 0 ? readpos += bufferlength;
+    oldpeak = bufferpeak[readpos];
 
-envT = max(max1Block,max2Block);
+    newstartpeak = peak + (oldpeak - peak)/(1 - window);
+    newstartpeak > startpeak ? (
+      // Keep track of the smallest alteration,
+      //  but with a bias towards f
+      diff = (newstartpeak - startpeak)*(1 - window);
+      (bestcorrection < 0 || diff < bestcorrection) ? (
+        bestcorrection = diff;
+        bestindex = i;
+        beststartpeak = newstartpeak;
+      );
 
-env = env < envT ? envT : envT + r*(env-envT);
+      startpeak = newstartpeak;
+      intersectionindex = i;
+      foundabove = 1;
+    ) : (foundabove) ? (
+      foundintersection = 1;
+    );
+    i += 1;
+  );
 
-(env > thresh) ? gain = (g_meter=(thresh / env))*volume : (g_meter=1; gain=volume;);
+  foundintersection ? (
+    i = 0;
+    while (i < intersectionindex) (
+      window = attackwindow(1 - i/attacksamples);
 
-spl0*=gain;
-spl1*=gain;
+      readpos = writepos - i;
+      readpos < 0 ? readpos += bufferlength;
+      newpeak = startpeak + (peak - startpeak)*window;
+      bufferpeak[readpos] = newpeak;
+      i += 1;
+    );
+  ) : (
+    i = 0;
+    while (i < bestindex) (
+      window = attackwindow(1 - i/attacksamples);
 
+      readpos = writepos - i;
+      readpos < 0 ? readpos += bufferlength;
+      newpeak = beststartpeak + (peak - beststartpeak)*window;
 
-g_meter < gr_meter ? gr_meter=g_meter : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+      faderatio = (1 - i/bestindex);
+      fadewindow = 1 - (1 - faderatio)*(1 - faderatio);
+      bufferpeak[readpos] += (newpeak - bufferpeak[readpos])*fadewindow;
+      i += 1;
+    );
+  );
+);
+
+buffer0[writepos] = spl0;
+buffer1[writepos] = spl1;
+bufferpeak[writepos] = peak;
+
+writepos += 1;
+writepos >= bufferlength ? (
+  writepos = 0;
+);
+
+readpos = writepos - delaysamples;
+readpos < 0 ? readpos += bufferlength;
+reduction = limit/bufferpeak[readpos];
+
+oldpeak = bufferpeak[readpos];
+B = scaling_for_peak(oldpeak, limit);
+A = distortion_for_peak(oldpeak, limit);
+
+spl0 = dist(buffer0[readpos]);
+spl1 = dist(buffer1[readpos]);
+
+spl_lufs0 = spl0;
+spl_lufs1 = spl1;
 
 // LUFS //////////////////////////////////////////////////////////////
 
@@ -223,6 +409,10 @@ play_state == 1 && isRendering != 1 ? (    // dont't calculate LUFS while render
   gmem[3] = 0;
 );
 
+spl0 = spl_lufs0;
+spl1 = spl_lufs1;
+
+
 /////////////////////////////////////////////////////////////////////////////////
 @gfx 0 32 // request horizontal/vertical heights (0 means dont care)
 //////////////////////////////////////////////////////////////////////////////////
@@ -230,12 +420,14 @@ play_state == 1 && isRendering != 1 ? (    // dont't calculate LUFS while render
 
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0);
 
+
+  gr_meter = reduction;
   gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
   gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
   
-  meter_bot=20;
+  meter_bot=10;
   meter_h=min(gfx_h,32);
-  xscale=gfx_w*20/meter_bot;
+  xscale=gfx_w*10/meter_bot;
 
   gfx_y=0;
   gfx_x=gfx_w + log10(gr_meter)*xscale;
@@ -254,7 +446,7 @@ gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0)
       //gfx_y=meter_h-gfx_texth/2*gfx_ext_retina;
       gfx_y=3;
       gfx_x+=2;
-      gfx_drawnumber(log10(g)*20,0);
+      gfx_drawnumber(log10(g)*10,0);
       gfx_drawchar($'d');
       gfx_drawchar($'B');
     );
@@ -278,12 +470,10 @@ play_position - lastPlay_position >= 0.2? (  // speed faster than aprox. 4x - li
   );
 lastPlay_position = play_position;
 
-
-  /*
-    gfx_drawnumber(log10(gr_meter)*20,1);
-    gfx_drawchar($'d');
-    gfx_drawchar($'B');
-  */
+    // gfx_drawnumber(log10(gr_meter)*20,1);
+    // gfx_drawnumber(log10(reduction)*10,1);
+    // gfx_drawchar($'d');
+    // gfx_drawchar($'B');  
 
 // LUFS ////////////////////////////////////////////////////////////////////////////////////
 
@@ -326,9 +516,6 @@ gfx_drawstr(" LUFS");
 gfx_a = 1;
 
 // lufs_point = ((gmem[1]/ -12)-1) * (gfx_h-(40*gfx_ext_retina)); 
-
-
-
 // lufs_point = lufs_point + ((stepsize/2)*gfx_ext_retina);
 
 lufs_point = ((gmem[1]/ -12)-1) * gfx_h;
@@ -492,9 +679,9 @@ time_pressed ? ( // Counter is running
     dogain = 1;  
   );
 
-  slider4 != slider4_old? (
+  slider7 != slider7_old? (
     dogain = 1;
-    slider4_old = slider4;
+    slider7_old = slider7;
   );
 );
 
