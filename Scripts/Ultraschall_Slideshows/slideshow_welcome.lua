@@ -121,6 +121,21 @@ function buildGui(slide_number)
 
   table.insert(GUI.elms, picture)
 
+
+  -----------------------------------------------------------------
+  -- Blätterpfeile je nach OS unterschiedlich
+  -----------------------------------------------------------------
+
+  os = reaper.GetOS()
+  if string.match(os, "OS") then -- unter Windiows Klammern statt Pfeile nehmen
+    arrow1 = " ⬅"
+    arrow2 = " ⮕"
+  else
+    arrow1 = " <"
+    arrow2 = " >"
+  end
+
+
   -----------------------------------------------------------------
   -- Zurück-Button
   -----------------------------------------------------------------
@@ -129,7 +144,7 @@ function buildGui(slide_number)
 
     previous_slide_number = slide_number -1
 
-    button_settings = GUI.Btn:new(555, 663, 35, 39,         " ⬅", buildGui, previous_slide_number)
+    button_settings = GUI.Btn:new(555, 663, 35, 39,         arrow1, buildGui, previous_slide_number)
     table.insert(GUI.elms, button_settings)
 
   end
@@ -141,7 +156,7 @@ function buildGui(slide_number)
   if slide_number ~= #slideshow_table then
 
     next_slide_number = slide_number +1
-    button_settings = GUI.Btn:new(592, 663, 35, 40,         " ⮕", buildGui, next_slide_number)
+    button_settings = GUI.Btn:new(592, 663, 35, 40,         arrow2, buildGui, next_slide_number)
     table.insert(GUI.elms, button_settings)
 
   else
