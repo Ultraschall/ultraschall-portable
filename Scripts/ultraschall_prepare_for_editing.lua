@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,24 @@
 ]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+tracks_count = reaper.CountTracks(0)
+if tracks_count > 0 then
+	numberOfSLTracks = 0
+	for i = 0, tracks_count+1 do 
+		if ultraschall.IsTrackStudioLink(i) then
+			numberOfSLTracks = numberOfSLTracks +1
+		end
+	end
+end
+
+if numberOfSLTracks > 0 then
+	if numberOfSLTracks > 1 then addon = "s" else addon = "" end
+	result = reaper.ShowMessageBox( "Please make shure to end all calls in the StudioLink webbrowser interface BEFORE you proceed!", "Warning: "..numberOfSLTracks.." StudioLink Track"..addon, 1 )
+	if result == 2 then
+		goto ending
+	end  -- Info window
+end
 
 reaper.Main_OnCommand(40026, 0) -- Save Project
 
@@ -59,7 +77,7 @@ if tracks_count > 0 then
 		count_fx = reaper.TrackFX_GetCount(track)
 		for j = 0, count_fx - 1 do
 			fx_name_retval, fx_name = reaper.TrackFX_GetFXName(track, j, "")
-			if ((fx_name) == "AUi: Ultraschall: Soundboard") or ((fx_name) == "VSTi: Soundboard (Ultraschall)") then     -- this is a track with StudioLink Plugin
+			if ((fx_name) == "AUi: Ultraschall: Soundboard") or ((fx_name) == "VSTi: Soundboard (Ultraschall)") then     -- this is a track with Soundboard Plugin
 				--Msg(fx_name)
 				reaper.SNM_MoveOrRemoveTrackFX(track, j, 0)  --remove Soundboard Effect
 			end
@@ -170,10 +188,6 @@ reaper.Main_OnCommand(commandid,0)         -- update Matrix
 -- Display Info
 -----------------------------
 
-
-
-
-
 txt = "- Automation mode of all tracks is set to trim/read\n- All tracks and envelopes are disarmed for recording\n- All sends to StudioLink tracks (if existent) have been removed\n- All StudioLink FX (if existent) have been removed\n- All Soundboard FX (if existent) have been removed\n- Studio Link OnAir Streaming (if active) has been stopped\n- All sends to Master have been enabled\n- Routing is set to editing stage\n\nYou may proceed editing your project!"
 title = "OK! Your project is now ready for editing:"
 result = reaper.ShowMessageBox( txt, title, 0 )
@@ -182,6 +196,7 @@ result = reaper.ShowMessageBox( txt, title, 0 )
 
 reaper.Undo_EndBlock("Prepare all tracks for editing", -1) -- End of the undo block. Leave it at the bottom of your main function.
 
+::ending::
 
 
 -- local info = debug.getinfo(1,'S');
