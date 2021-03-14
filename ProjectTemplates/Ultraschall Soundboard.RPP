@@ -1,4 +1,4 @@
-<REAPER_PROJECT 0.1 "6.23-beta/macOS-arm64" 1614001595
+<REAPER_PROJECT 0.1 "6.25-beta/macOS-arm64" 1615704330
   RIPPLE 0
   GROUPOVERRIDE 0 1 0
   AUTOXFADE 1
@@ -15,8 +15,8 @@
   PANMODE 3
   CURSOR 0
   ZOOM 4.59415082 0 0
-  VZOOMEX 16 0
-  USE_REC_CFG 0
+  VZOOMEX 18 0
+  USE_REC_CFG 1
   RECMODE 1
   SMPTESYNC 0 25 100 40 1000 300 0 0 1 0 0
   MIDIEDITOR -91635556 0 0
@@ -27,6 +27,7 @@
     Y2FsZhAAAAAFAAAA
   >
   <APPLYFX_CFG
+    a3B2dwEAAAANAAAAAAAAAAAAAAA=
   >
   RENDER_FILE ""
   RENDER_PATTERN ""
@@ -76,7 +77,7 @@
     DOCKED 1
     BYPASS 1 0 0
     <JS dynamics/LUFS_Loudness_Meter ""
-      -3.200000 200.000000 -1.000000 1.000000 3.200000 - - - 0.000000 2.000000 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+      -3.200000 200.000000 -1.000000 1.000000 3.200000 - 1.000000 - 0.000000 2.000000 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     >
     FLOATPOS 0 0 0 0
     FXID {43C3177A-5A79-2641-808A-CDD02A95F09F}
