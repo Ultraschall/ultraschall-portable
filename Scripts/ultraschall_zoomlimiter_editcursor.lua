@@ -53,7 +53,7 @@ if length<180 then length=180 end   -- zoomlimit does not apply under 3 minutes
 
     start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
         
-    if val<0 and end_time-start_time>length then
+    if val<0 and end_time-start_time-((end_time-start_time)/5)>length then
         -- reaper.Main_OnCommand(40295,0)
         reaper.SetExtState("ultraschall_follow", "started", "started", false)
     else
