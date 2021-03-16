@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,34 +28,49 @@
 -- little helpers
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-
 reaper.Undo_BeginBlock()
 
-for i=0, reaper.CountTracks(0)-1 do
+---------------------------------------------
+-- Funktionen
+---------------------------------------------
 
-  if ultraschall.IsTrackSoundboard(i+1) then
-    tr = reaper.GetTrack(0, i)
-    runcommand(40297)                   -- deselect all tracks
-    reaper.SetTrackSelected(tr, true)   -- selektiere Soundboard
-    runcommand("_S&M_SHOWFXCHAIN1")     -- zeige FX des Soundboards Slot 1
-    return                              -- nur das des ersten wird angezeigt
+function GetSoundboardTrack()
+
+  for i=0, reaper.CountTracks(0)-1 do
+    if ultraschall.IsTrackSoundboard(i+1) then
+      tr = reaper.GetTrack(0, i)
+      return tr                              -- nur das des ersten wird angezeigt
+    end
   end
+  return tr
+end
+
+function ShowSoundBoardFX (track)
+
+  runcommand(40297)                     -- deselect all tracks
+  reaper.SetTrackSelected(track, true)  -- selektiere Soundboard
+  runcommand("_S&M_SHOWFXCHAIN1")       -- zeige FX des Soundboards Slot 1 - ist dort immer der Soundboard-Effekt
 end
 
 ---------------------------------------------
--- Es ist noch kein Soundboard geladen:
+-- Main
 ---------------------------------------------
+
+tr = GetSoundboardTrack()
 
 if tr == nil then -- oben wurde kein Soundboard gefunden
 
   Retval=reaper.MB("Do you want to create one?", "There is no Soundboard track in your project.", 4) -- No/Yes Dialog
   -- print (Retval)
-
   if Retval==6 then -- Yes ausgewählt
     soundboard_path = reaper.GetResourcePath().."/TrackTemplates/Insert Ultraschall-Soundboard track.RTrackTemplate"
     reaper.Main_openProject(soundboard_path)    -- erstellt einen Sondboard-Track am Ende des Projektes
-
+    tr = GetSoundboardTrack()
   end
 end
 
-reaper.Undo_EndBlock("Ultraschall lower Soundboard volume", -1)
+if tr then 
+  ShowSoundBoardFX(tr)
+end
+
+reaper.Undo_EndBlock("Ultraschall show Soundboard", -1)
