@@ -44,12 +44,13 @@ if (init_end_timesel ~= init_start_timesel) or selected_items_count > 0 then    
   reaper.Main_OnCommand(reaper.NamedCommandLookup("_Ultraschall_Unselect_All"), 0) -- Zoom to selection
 else
   oldzoomfactor=ultraschall.GetUSExternalState("ultraschall_view","zoom_toggle_select")
-  reaper.adjustZoom(tonumber(oldzoomfactor), 1, true, 0)
-  oldzoomfactorVertical=ultraschall.GetUSExternalState("ultraschall_view","zoom_toggle_select_vertical")
-  ultraschall.SetVerticalZoom(tonumber(oldzoomfactorVertical))
-  retval = ultraschall.ApplyActionToTrack("1,0", 40913) -- verschiebe den Arrangeview hoch zum ersten Track
-
+  if oldzoomfactor then -- wurde je schon mal ein zoomfaktor über die Funktion gesetzt?
+    reaper.adjustZoom(tonumber(oldzoomfactor), 1, true, 0)
+    oldzoomfactorVertical=ultraschall.GetUSExternalState("ultraschall_view","zoom_toggle_select_vertical")
+    ultraschall.SetVerticalZoom(tonumber(oldzoomfactorVertical))
+    retval = ultraschall.ApplyActionToTrack("1,0", 40913) -- verschiebe den Arrangeview hoch zum ersten Track
+  end
 end
 
 
-reaper.Undo_EndBlock("Ultraschall AMP", -1) -- End of the undo block. Leave it at the bottom of your main function.
+reaper.Undo_EndBlock("Ultraschall toggle zoom selection", -1) -- End of the undo block. Leave it at the bottom of your main function.
