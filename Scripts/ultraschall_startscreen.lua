@@ -174,6 +174,8 @@ checkers = GUI.Checklist:new(20, 665, 240, 30,"","Show this Screen on Start", 4,
 id = GUI.Btn:new(487, 663, 175, 40, "QUICK TUTORIAL >", startTutorial, "1")
   table.insert(GUI.elms, id)
 
+link_url = GUI.Pic:new(350, 265, 300, 60, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us5releasenotes")
+  table.insert(GUI.elms, link_url) 
 link_url = GUI.Pic:new(133, 593, 86, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-twitter")
   table.insert(GUI.elms, link_url)
 link_url = GUI.Pic:new(223, 593, 88, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-forum")
@@ -189,19 +191,19 @@ link_url = GUI.Pic:new(435, 305, 84, 30, 1, blankimg, ultraschall.OpenURL, "http
 link_url = GUI.Pic:new(20, 365, 300, 60, 1, blankimg, startTutorial, "2") -- Routing
   table.insert(GUI.elms, link_url)
 
-link_url = GUI.Pic:new(20, 440, 300, 60, 1, blankimg, startTutorial, "3") -- Soundcheck
+-- link_url = GUI.Pic:new(20, 440, 300, 60, 1, blankimg, startTutorial, "3") -- Soundcheck
+--  table.insert(GUI.elms, link_url)
+
+link_url = GUI.Pic:new(20, 515, 300, 60, 1, blankimg, startTutorial, "11")
+ table.insert(GUI.elms, link_url)
+
+link_url = GUI.Pic:new(350, 365, 300, 60, 1, blankimg, startTutorial, "9") -- Settings
   table.insert(GUI.elms, link_url)
 
--- link_url = GUI.Pic:new(20, 515, 300, 60, 1, blankimg, startTutorial, "4")
-  -- table.insert(GUI.elms, link_url)
-
-  link_url = GUI.Pic:new(350, 365, 300, 60, 1, blankimg, startTutorial, "5") -- Settings
+link_url = GUI.Pic:new(350, 440, 300, 60, 1, blankimg, startTutorial, "10") -- Editing
   table.insert(GUI.elms, link_url)
 
-link_url = GUI.Pic:new(350, 440, 300, 60, 1, blankimg, startTutorial, "4") -- Editing
-  table.insert(GUI.elms, link_url)
-
-link_url = GUI.Pic:new(350, 515, 300, 60, 1, blankimg, startTutorial, "10") -- Export
+link_url = GUI.Pic:new(350, 515, 300, 60, 1, blankimg, startTutorial, "12") -- Export
   table.insert(GUI.elms, link_url)
 
 
