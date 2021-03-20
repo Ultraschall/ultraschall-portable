@@ -30,6 +30,41 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+
+function GetAllTrackEnvelopes()
+  
+    local TrackEnvelopeArray={}
+    local FirstEnvelopeTrackNumber=-1
+    local FirstEnvelopeMaster=-1
+    local trackcount=1
+    
+    for i=0, reaper.CountTracks(0)-1 do
+      local MediaTrack=reaper.GetTrack(0,i)
+      TrackEnvelopeArray[i+1]={}
+      TrackEnvelopeArray[i+1][1]={}
+      
+      for a=0, reaper.CountTrackEnvelopes(MediaTrack)-1 do
+        TrackEnvelopeArray[i+1][1][a]=reaper.GetTrackEnvelope(MediaTrack, a)
+        if FirstEnvelopeTrackNumber==-1 then FirstEnvelopeTrackNumber=i+1 end
+      end
+      TrackEnvelopeArray[i+1][0]=reaper.CountTrackEnvelopes(MediaTrack)-1
+    end
+  
+    local MediaTrack=reaper.GetMasterTrack(0)
+    TrackEnvelopeArray[0]={}
+    TrackEnvelopeArray[0][1]={}
+    for a=0, reaper.CountTrackEnvelopes(MediaTrack)-1 do
+      TrackEnvelopeArray[0][1][a]=reaper.GetTrackEnvelope(MediaTrack, a)
+      FirstEnvelopeMaster=0
+    end
+    TrackEnvelopeArray[0][0]=reaper.CountTrackEnvelopes(MediaTrack)-1
+  
+    return TrackEnvelopeArray, reaper.CountTracks(0), FirstEnvelopeTrackNumber, FirstEnvelopeMaster
+  end
+
+
+
+
 -- now, we set the minimum height of all envelopes in the project
 -- set to nil, to use the user settings instead
   defheight=24
@@ -59,7 +94,7 @@ end
 
 
 --get all current envelopes
-  TEnvAr, CountTracks, FstTrack, MstTrack=ultraschall.GetAllTrackEnvelopes()
+  TEnvAr, CountTracks, FstTrack, MstTrack=GetAllTrackEnvelopes()
 
 -- now we check the first trackenvelope(either from a track or master-track), if it is compacted or not
 -- this will be the basis for setting all other envelope's-compactible states
