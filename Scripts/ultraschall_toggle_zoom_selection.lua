@@ -44,7 +44,7 @@ if (init_end_timesel ~= init_start_timesel) or selected_items_count > 0 then    
   reaper.Main_OnCommand(reaper.NamedCommandLookup("_Ultraschall_Unselect_All"), 0) -- Zoom to selection
 else
   oldzoomfactor=ultraschall.GetUSExternalState("ultraschall_view","zoom_toggle_select")
-  if oldzoomfactor then -- wurde je schon mal ein zoomfaktor über die Funktion gesetzt?
+  if oldzoomfactor ~= "" then -- wurde je schon mal ein zoomfaktor über die Funktion gesetzt?
     reaper.adjustZoom(tonumber(oldzoomfactor), 1, true, 0)
     oldzoomfactorVertical=ultraschall.GetUSExternalState("ultraschall_view","zoom_toggle_select_vertical")
     ultraschall.SetVerticalZoom(tonumber(oldzoomfactorVertical))
