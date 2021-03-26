@@ -709,10 +709,11 @@ function MainLoop()
       id = reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui")
       reaper.Main_OnCommand(id,0)
     
-    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(120*retina_mod) then -- Linksklick auf Soundcheck-Footer
-      openWindowLUFS()
+    elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
+      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(120*retina_mod) then -- Linksklick auf LUFS-Bereich
+        openWindowLUFS()
+      end
     end
-    
   else
     Triggered=nil
   end
