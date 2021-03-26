@@ -37,7 +37,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 function getAllTracksHeight ()
 
   local height = 0
-  local singleheight = 0
+  local singleheight = 1000
   local numberOfTracks = reaper.CountTracks(0)
 
   for i=0, numberOfTracks-1 do
@@ -45,7 +45,9 @@ function getAllTracksHeight ()
     local retval = reaper.GetMediaTrackInfo_Value(MediaTrack, "I_WNDH")
     -- print ("Höhe: "..retval)
     height = height + retval
-    singleheight = retval
+    if retval < singleheight then
+      singleheight = retval
+    end
     -- print (retval)
   end
   return height, singleheight
@@ -65,16 +67,20 @@ function verticalZoom (maxheight)
   if allTracksHeight < maxheight - offset then -- muss Vergößert werden
     while allTracksHeight < maxheight - offset do
       reaper.CSurf_OnZoom(0, 1)
-      allTracksHeight = getAllTracksHeight()
+      allTracksHeight, singleheight = getAllTracksHeight()
     end
   end
+  
   if allTracksHeight > maxheight - offset then -- muss Verkleinert werden
-    while allTracksHeight > maxheight - offset and singleheight > 24 do -- kleiner als 24 können Tracks nicht werden
+    shrinkCount = 0
+    while allTracksHeight > maxheight - offset and singleheight > 24 and shrinkCount < 20 do -- kleiner als 24 können Tracks nicht werden, hartes Limit von 20 Verkleinerungen für Edge-Cases
       reaper.CSurf_OnZoom(0, -1)
       allTracksHeight, singleheight = getAllTracksHeight()
-      -- print (singleheight)
+      shrinkCount = shrinkCount +1
+      -- print (singleheight.."-"..shrinkCount)
     end
   end
+  
 end
 
 function countAllEnvelopes ()
