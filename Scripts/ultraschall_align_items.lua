@@ -80,7 +80,7 @@ function main()
     countAligned = string.sub(tostring(reaper.CountSelectedMediaItems(0) / 2), 1, -3)
     commandid = reaper.NamedCommandLookup("_X-Raym_align")
     reaper.Main_OnCommand(commandid,0)         
-    result = reaper.ShowMessageBox( countAligned .." items were aligned.", "SUCCESS", 0 )
+    result = reaper.ShowMessageBox( countAligned .." items have been aligned.", "SUCCESS", 0 )
   else
     abort(txt)
   end
