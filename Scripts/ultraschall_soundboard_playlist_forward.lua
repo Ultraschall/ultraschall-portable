@@ -24,7 +24,7 @@
   ################################################################################
   --]]
 
--- starts playing of the sounds in the SoundBoard index by index forwards
+-- starts play/pause of the sounds in the SoundBoard index by index forwards
 -- track, which holds Soundboard, must be recarmed and recinput must be set to MIDI or VirtualMidiKeyboard
 
 --reaper.SetProjExtState(0, "ultraschall_soundboard", "playlistindex", -1)
