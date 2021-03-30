@@ -30,6 +30,10 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- local serialize = require (reaper.GetResourcePath().."/Scripts/ser")
 
 
+-- string buf = reaper.GetTrackName(MediaTrack track)
+-- trackname = ultraschall.GetTrackName(integer tracknumber, optional string TrackStateChunk)
+
+
 function buildRoutingMatrix ()
 
 	local AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates()
@@ -40,7 +44,26 @@ function buildRoutingMatrix ()
 
   retval = ultraschall.ApplyAllMainSendStates(AllMainSends)	-- setze alle Sends zum Master
 
+  for i=1, number_of_tracks do
+
+    if ultraschall.GetTrackName(i) == "Soundboard" then
+
+      -- retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
+
+      if ultraschall.GetUSExternalState("ultraschall_settings_soundboard_ducking_editing","Value", "ultraschall-settings.ini") == "1" then -- Ducking ist in den Settings aktiviert
+
+        for j=1, number_of_tracks do
+          if ultraschall.GetTrackName(j) ~= "Soundboard" then -- jeder Track der nicht Soundboard ist schickt sein Signal auf den 3/4 Kanal des Soundboards
+
+            setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, 1, 0, 0, 0, 0, 0, 2, -1, 0, 0, false)
+            -- print(i.j)
+          end
+        end
+      end
+    end
+  end
 end
+  
 
 
 retval = ultraschall.ClearRoutingMatrix(true, true, true, true, false)

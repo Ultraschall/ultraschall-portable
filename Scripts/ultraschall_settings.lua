@@ -407,7 +407,7 @@ header_path = script_path.."/Ultraschall_Gfx/Headers/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall 5 - Settings"
-GUI.w, GUI.h = 820, 627   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 820, 657   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -440,15 +440,6 @@ function buildGUI()
   end
 
   GUI.elms = {
-
-  --     name          = element type          x    y    w   h  zoom    caption                                                              ...other params...
-
-    -- label_table      = GUI.Lbl:new(          450, 122,                  "Local Monitoring                                           Delete",          0),
-
-    -- checkers         = GUI.Checklist:new(     20, 380, 240, 30,         "",                                                                   "Show this Screen on Start", 4),
-    -- checkers2        = GUI.Checklist:new(    405, 380, 240, 30,         "",                                                                   "Automatically check for updates", 4),
-
-    -- tutorials        = GUI.Btn:new(           30, 320, 190, 40,         "Tutorials",                                                          open_url, "http://ultraschall.fm/tutorials/"),
 
   }
 
@@ -517,7 +508,7 @@ function SettingsPageSettings()
 
   x_offset = 55
 
-  block = GUI.Area:new(45, header_height + 92,730, 450,5,1,1,"section_bg")
+  block = GUI.Area:new(45, header_height + 92,730, 480,5,1,1,"section_bg")
     table.insert(GUI.elms, block)
 
 
