@@ -24,7 +24,7 @@
   ################################################################################
   --]]
 
--- returns playlist to first sound in the SoundBoard index by index backwards
+-- returns playlist to first sound in the SoundBoard
 -- track, which holds Soundboard, must be recarmed and recinput must be set to MIDI or VirtualMidiKeyboard
 
 
