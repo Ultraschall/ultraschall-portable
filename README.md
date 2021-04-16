@@ -1,8 +1,8 @@
 # ultraschall-portable
 Portable ULTRASCHALL Podcasting Extensions including the REAPER DAW 
 
-## Ultraschall 4.1 - development version  
-Needs currently Reaper 6.12c to work, later versions are untested!
+## Ultraschall 5.0.3 - development version  
+Needs currently Reaper 6.27 to work, later versions are untested!
 
 To test it:
 1. Clone the repository to your computer
