@@ -1237,6 +1237,8 @@ MM_CTX_MIDI_PIANOROLL_CLK=1<br>
 MM_CTX_ARRANGE_MMOUSE=1<br>
 MM_CTX_CURSORHANDLE=1<br>
 MM_CTX_ARRANGE_MMOUSE_CLK=1<br>
+MM_CTX_AREASEL_CLK=1<br>
+MM_CTX_AREASEL=1<br>
 </div>
                     <p>              
                     The individual [sections] with the behavior-settings work after the following principle:<p>
@@ -1305,53 +1307,6 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 15 </i> - Add stretch marker <br>
  <i> 16 </i> - and higher: refer to CommandIDs for Main-section <br>
  </div>
- <br>
- <strong> [MM_CTX_POOLEDENV] </strong>- Automation Items - left drag <br> <br>
- <div style="padding-left:4%;">
- <i> -1 </i> - default behavior<br>
- <i> 0 </i> - No action <br>
- <i> 1 </i> - Move automation item - just snap <br>
- <i> 2 </i> - Move automation item - ignoring snap <br>
- <i> 3 </i> - Copy automation item and pool it<br>
- <i> 4 </i> - Copy automation item and pool it, ignoring snap<br>
- <i> 5 </i> - Copy automation item - just copy<br>
- <i> 6 </i> - Copy automation item - ignoring snap<br>
- <i> 7 </i> - Copy automation item and pool it, ignoring time selection<br>
- <i> 8 </i> - Copy automation item and pool it, ignoring snap and time selection<br>
- <i> 9 </i> - Copy automation item - ignoring time-selection<br>
- </div>
- 
- <br>
- 
- <strong> [MM_CTX_POOLEDENV_DBLCLICK] </strong>- Automation Items - double click<br> <br>
- <div style="padding-left:4%;">
- <i> -1 </i> - default behavior<br>
- <i> 0 </i> - No action <br>
- <i> 1 </i> - Show automation item properties<br>
- <i> 2 </i> - Set time selection to item<br>
- <i> 3 </i> - Set loop-points to item<br>
- <i> 4 </i> - Load automation item<br>
- <i> 5 </i> - and higher or _ActionCommandID: refer to CommandIDs for Main-section <br>
- </div>
- 
- <br>
- 
- <strong> [MM_CTX_POOLEDENVEDGE] </strong>- Automation Items Edge- left drag <br> <br>
- <div style="padding-left:4%;">
- <i> -1 </i> - default behavior<br>
- <i> 0 </i> - No action <br>
- <i> 1 </i> - Move automation item edge - just move <br>
- <i> 2 </i> - Move automation item edge - ignoring snap <br>
- <i> 3 </i> - Stretch automation item edge<br>
- <i> 4 </i> - Stretch automation item edge - ignoring snap<br>
- <i> 5 </i> - Collect points into automation item<br>
- <i> 6 </i> - Collect points into automation item - ignoring snap<br>
- <i> 7 </i> - Stretch automation item edge - relative to other selected items<br>
- <i> 8 </i> - Stretch automation item edge - relative to other selected items ignoring snap<br>
- <i> 9 </i> - Move automation item edge - relative to other selected items <br>
- <i> 10 </i> - Move automation item edge - relative to other selected items ignoring snap<br>
- </div>
- 
  <br>
  
  <strong> [MM_CTX_ITEM] </strong>- Media Item - left drag <br> <br>
@@ -1779,6 +1734,54 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 3 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
+  <strong> [MM_CTX_POOLEDENV] </strong>- Automation Items - left drag <br> <br>
+ <div style="padding-left:4%;">
+ <i> -1 </i> - default behavior<br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Move automation item - just snap <br>
+ <i> 2 </i> - Move automation item - ignoring snap <br>
+ <i> 3 </i> - Copy automation item and pool it<br>
+ <i> 4 </i> - Copy automation item and pool it, ignoring snap<br>
+ <i> 5 </i> - Copy automation item - just copy<br>
+ <i> 6 </i> - Copy automation item - ignoring snap<br>
+ <i> 7 </i> - Copy automation item and pool it, ignoring time selection<br>
+ <i> 8 </i> - Copy automation item and pool it, ignoring snap and time selection<br>
+ <i> 9 </i> - Copy automation item - ignoring time-selection<br>
+ </div>
+ 
+ <br>
+ 
+ <strong> [MM_CTX_POOLEDENV_DBLCLICK] </strong>- Automation Items - double click<br> <br>
+ <div style="padding-left:4%;">
+ <i> -1 </i> - default behavior<br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Show automation item properties<br>
+ <i> 2 </i> - Set time selection to item<br>
+ <i> 3 </i> - Set loop-points to item<br>
+ <i> 4 </i> - Load automation item<br>
+ <i> 5 </i> - and higher or _ActionCommandID: refer to CommandIDs for Main-section <br>
+ </div>
+ 
+ <br>
+ 
+ <strong> [MM_CTX_POOLEDENVEDGE] </strong>- Automation Items Edge- left drag <br> <br>
+ <div style="padding-left:4%;">
+ <i> -1 </i> - default behavior<br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Move automation item edge - just move <br>
+ <i> 2 </i> - Move automation item edge - ignoring snap <br>
+ <i> 3 </i> - Stretch automation item edge<br>
+ <i> 4 </i> - Stretch automation item edge - ignoring snap<br>
+ <i> 5 </i> - Collect points into automation item<br>
+ <i> 6 </i> - Collect points into automation item - ignoring snap<br>
+ <i> 7 </i> - Stretch automation item edge - relative to other selected items<br>
+ <i> 8 </i> - Stretch automation item edge - relative to other selected items ignoring snap<br>
+ <i> 9 </i> - Move automation item edge - relative to other selected items <br>
+ <i> 10 </i> - Move automation item edge - relative to other selected items ignoring snap<br>
+ </div>
+ 
+ <br>
+
  <strong> [MM_CTX_ENVPT] </strong>- Envelope Point - left drag <br> <br>
  <div style="padding-left:4%;">
  <i> -1 </i> - default Reaper-builtin-behavior <br>
@@ -1833,7 +1836,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 3 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
- <strong> [MM_CTX_TRACK_CLK] </strong>- Track 0 left click <br> <br>
+ <strong> [MM_CTX_TRACK_CLK] </strong>- Track - left click <br> <br>
  <div style="padding-left:4%;">
  <i> _ActionCommandID </i> - for Actions from the section Main <br>
  <i> -1 </i> - default Reaper-builtin-behavior <br>
@@ -1849,7 +1852,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 9 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
- <strong> [MM_CTX_TRACK] </strong>- Track 0 left drag <br> <br>
+ <strong> [MM_CTX_TRACK] </strong>- Track - left drag <br> <br>
  <div style="padding-left:4%;">
  <i> -1 </i> - default Reaper-builtin-behavior <br>
  <i> 0 </i> - No action <br>
@@ -1879,7 +1882,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 23 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
- <strong> [MM_CTX_TRACK_DBLCLK] </strong>- Track 0 double click <br> <br>
+ <strong> [MM_CTX_TRACK_DBLCLK] </strong>- Track - double click <br> <br>
  <div style="padding-left:4%;">
  <i> _ActionCommandID </i> - for Actions from the section Main <br>
  <i> -1 </i> - default Reaper-builtin-behavior <br>
@@ -1922,7 +1925,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 2 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
- <strong> [MM_CTX_RULER_CLK] </strong>- Ruler 0 left click <br> <br>
+ <strong> [MM_CTX_RULER_CLK] </strong>- Ruler - left click <br> <br>
  <div style="padding-left:4%;">
  <i> _ActionCommandID </i> - for Actions from the section Main <br>
  <i> -1 </i> - default Reaper-builtin-behavior <br>
@@ -1980,6 +1983,89 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 11 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
+ <strong> [MM_CTX_REGION] </strong>- Project region - left drag <br> <br>
+ <div style="padding-left:4%;">
+ <i> -1 </i> - default Reaper-builtin-behavior <br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Move contents of project region <br>
+ <i> 2 </i> - Move contents of project region ignoring snap <br>
+ <i> 3 </i> - Copy contents of project regions<br>
+ <i> 4 </i> - Copy contents of project regions ignoring snap <br>
+ <i> 5 </i> - Move project regions but not contents<br>
+ <i> 6 </i> - Move project regions but not contents ignoring snap<br>
+ <i> 7 </i> - Copy project regions but not contents<br>
+ <i> 8 </i> - Copy project regions but not contents ignoring snap<br>
+ <i> 9 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
+ </div>
+ <br>
+ <strong> [MM_CTX_MARKER_REGIONEDGE] </strong>- Project marker/region edge - left drag <br> <br>
+ <div style="padding-left:4%;">
+ <i> -1 </i> - default Reaper-builtin-behavior <br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Move project marker/region edge<br>
+ <i> 2 </i> - Move project marker/region edge ignoring snap<br> 
+ <i> 3 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
+ </div>
+ <br>
+ <strong> [MM_CTX_TEMPOMARKER] </strong>- Project tempo/time signature marker - left drag <br> <br>
+ <div style="padding-left:4%;">
+ <i> -1 </i> - default Reaper-builtin-behavior <br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Move project tempo/time signature marker<br>
+ <i> 2 </i> - Move project tempo/time signature marker ignoring snap<br>
+ <i> 3 </i> - Move project tempo/time signature marker, adjusting previous tempo<br>
+ <i> 4 </i> - Move project tempo/time signature marker, adjusting previous and current tempo<br>
+ <i> 5 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
+ </div> 
+ <br>
+ <strong> [MM_CTX_AREASEL_CLK] </strong>- Razor edit area - left click <br> <br>
+ <div style="padding-left:4%;">
+ <i> _ActionCommandID </i> - for Actions from the section Main <br>
+ <i> -1 </i> - default Reaper-builtin-behavior <br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Remove one area <br>
+ <i> 2 </i> - Delete areas contents<br>
+ <i> 3 </i> - Remove areas <br>
+ <i> 4 </i> - Split media items at area edges<br>
+ <i> 5 </i> - Move areas backwards <br>
+ <i> 6 </i> - Move areas forwards<br>
+ <i> 7 </i> - and higher -> Reaper Command IDs from Main section <br>
+ </div>
+ <br>
+ <strong> [MM_CTX_AREASEL] </strong>- Razor edit area - left drag <br> <br>
+ <div style="padding-left:4%;">
+ <i> -1 </i> - default Reaper-builtin-behavior <br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Move areas<br>
+ <i> 2 </i> - Move areas ignoring snap<br>
+ <i> 3 </i> - Copy areas<br>
+ <i> 4 </i> - Copy areas ignoring snap<br>
+ <i> 5 </i> - Move areas without contents<br>
+ <i> 6 </i> - Move areas without contents ignoring snap<br>
+ <i> 7 </i> - Move areas vertically<br>
+ <i> 8 </i> - Move areas on one axis only<br>
+ <i> 9 </i> - Copy areas vertically<br>
+ <i> 10 </i> - Move areas horizontally<br>
+ <i> 11 </i> - Move areas on one axis only ignoring snap<br>
+ <i> 12 </i> - Copy areas horizontally<br>
+ <i> 13 </i> - Move areas horizontally ignoring snap<br>
+ <i> 14 </i> - Copy areas horizontally ignoring snap<br>
+ <i> 15 </i> - Copy areas on one axis only<br>
+ <i> 16 </i> - Copy areas on one axis only ignoring snap<br> 
+ <i> 17 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
+ </div> 
+ <br>
+ <strong> [MM_CTX_AREASEL_EDGE] </strong>- Razor edit edge - left drag <br> <br>
+ <div style="padding-left:4%;">
+ <i> -1 </i> - default Reaper-builtin-behavior <br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Move edges<br>
+ <i> 2 </i> - Move edges ignoring snap<br>
+ <i> 3 </i> - Stretch areas<br>
+ <i> 4 </i> - Stretch areas ignoring snap<br>
+ <i> 5 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
+ </div> 
+ <br>
  <strong> [MM_CTX_ARRANGE_RMOUSE] </strong>- Arrange view - right drag <br> <br>
  <div style="padding-left:4%;">
  <i> -1 </i> - default Reaper-builtin-behavior <br>
@@ -1998,13 +2084,19 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 12 </i> - Scrub audio (looped-segmant mode) <br>
  <i> 13 </i> - Jog audio (looped-segment mode) <br>
  <i> 14 </i> - Marquee zoom <br>
-  <br>
  <i> 15 </i> - Hand scroll and horizontal zoom <br> <br>
  <i> 17 </i> - Horizontal zoom <br>
  <i> 19 </i> - Set edit cursor and horizontal zoom <br>
  <i> 21 </i> - Set edit cursor and hand scroll <br>
  <i> 22 </i> - Set edit cursor, hand scroll and horizontal zoom <br>
- <i> 23 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
+ <i> 23 </i> - <br>
+ <i> 24 </i> - Create razor edit area<br>
+ <i> 25 </i> - Select razor edit area ignoring snap<br>
+ <i> 26 </i> - Add to razor edit area <br>
+ <i> 27 </i> - Add to razor edit area ignoring snap<br>
+ <i> 28 </i> - Create razor edit area from cursor<br>
+ <i> 29 </i> - Create razor edit area from cursor ignoring snap<br>
+ <i> 30 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_ARRANGE_MMOUSE_CLK] </strong>- Arrange view - middle click <br> <br>
@@ -2205,6 +2297,30 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 1 </i> - Insert CC event <br>
  <i> 2 </i> - Insert CC event ignoring snap <br>
  </div>
+ <br>
+ <strong> [MM_CTX_MIDI_CCSEG] </strong>- MIDI CC segment - left click/drag <br> <br>
+ <div style="padding-left:4%;">
+ <i> _ActionCommandID </i> - from MIDI-editor section <br>
+ <i> -1 </i> - default Reaper-builtin-behavior <br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Move CC segment ignoring time selection<br>
+ <i> 2 </i> - Insert CC event<br>
+ <i> 3 </i> - Insert CC event ignoring snap<br>
+ <i> 4 </i> - Draw/edit CC events ignoring selection<br>
+ <i> 5 </i> - Draw/edit CC events ignoring snap and selection<br>
+ <i> 7 </i> - Edit CC segment curvature<br>
+ </div>
+ <br>
+ <strong> [MM_CTX_MIDI_CCSEG_DBLCLK] </strong>- MIDI CC segment - double click <br> <br>
+ <div style="padding-left:4%;">
+ <i> _ActionCommandID </i> - from MIDI-editor section <br>
+ <i> -1 </i> - default Reaper-builtin-behavior <br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Reset CC segment curvature<br>
+ <i> 2 </i> - Add CC event<br>
+ <i> 3 </i> - Add CC event ignoring snap<br>
+ <i> 4 </i> - and higher: refer to CommandIDs for MIDI Editor<br>
+ </div> 
  <br>
  <strong> [MM_CTX_MIDI_ENDPTR] </strong>- MIDI source loop end marker - left drag <br> <br>
  <div style="padding-left:4%;">

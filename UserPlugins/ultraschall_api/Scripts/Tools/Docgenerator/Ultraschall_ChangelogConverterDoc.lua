@@ -148,7 +148,22 @@ retval, script_identifier = ultraschall.Main_OnCommandByFilename(ultraschall.Api
 --]]
 reaper.SetExtState("ultraschall", "doc", "", false)
 if reaper.MB("Create Ultraschall-Docs ?", "Reaper-Docs", 4)==6 then pp=1 end
-if reaper.MB("Create Reaper-Docs as well?", "Reaper-Docs", 4)==6 then p=1 end
+if reaper.MB("Create Reaper-Docs as well?", "Reaper-Docs", 4)==6 then p=1 
+  versionnumbering=reaper.GetExtState("ultraschall_api", "ReaperVerNr")
+  tagline=reaper.GetExtState("ultraschall_api", "Tagline")
+  
+  A,B = reaper.GetUserInputs("",2,"versionnr, tagline", versionnumbering..","..tagline)
+  
+  versionnumbering, tagline=B:match("(.-),(.*)")
+  
+  reaper.SetExtState("ultraschall_api", "ReaperVerNr", versionnumbering, true)
+  reaper.SetExtState("ultraschall_api", "Tagline", tagline, true)
+  
+--  print2(versionnumbering, tagline)
+end
+
+--if LOLOL==nil then return end
+
 if p~=1 and pp~=1 then ultraschall.CloseReaScriptConsole() return end
  -- introduction-concepts
 A=0

@@ -864,20 +864,18 @@ function ultraschall.GetKBIniActions(filename_with_path, idx)
   </parameters>
   <retvals>
     integer consolidate - consolidate-state
-    -1 consolidate undo points, 
-    -2 show in Actions-Menu, 
-    -3 consolidate undo points AND show in Actions Menu; 
-    -maybe 4 and higher?
-    
+            -1 consolidate undo points, 
+            -2 show in Actions-Menu, 
+            -3 consolidate undo points AND show in Actions Menu; 
+            -maybe 4 and higher?    
     integer section - the section, in which this action is executed
-    -0 - Main
-    -1 - action stays invisible but is kept, if Reaper rewrites the reaper-kb.ini. Menu-buttons with this action associated appear but don't work.
-    -100 - Main (alt recording)
-    -32060 - MIDI Editor
-    -32061 - MIDI Event List Editor
-    -32062 - MIDI Inline Editor
-    -32063 - Media Explorer
-    
+            -0 - Main
+            -1 - action stays invisible but is kept, if Reaper rewrites the reaper-kb.ini. Menu-buttons with this action associated appear but don't work.
+            -100 - Main (alt recording)
+            -32060 - MIDI Editor
+            -32061 - MIDI Event List Editor
+            -32062 - MIDI Inline Editor
+            -32063 - Media Explorer    
     string ActionCommandID - the ActionCommandID given to this Action
     string description - the description of this action
     string ActionsToBeExecuted - the actions that are run, the ActionCommandIDs beginning with _, multiple ActionCommandIDs are separated by whitespaces
@@ -933,19 +931,17 @@ function ultraschall.GetKBIniScripts(filename_with_path, idx)
   </parameters>
   <retvals>
     integer terminateinstance - the state of terminating instances
-    -4 - Dialogwindow appears(Terminate, New Instance, Abort), if another instance of a given script is started, that's already running
-    -260 - always Terminate Instances, when an instance of the script is already running
-    -516 - always start a New Instance of the script already running
-    
+            -4 - Dialogwindow appears(Terminate, New Instance, Abort), if another instance of a given script is started, that's already running
+            -260 - always Terminate Instances, when an instance of the script is already running
+            -516 - always start a New Instance of the script already running
     integer section - the section, in which this action is executed
-    -0 - Main
-    -1 - action stays invisible but is kept, if Reaper rewrites the reaper-kb.ini. Menu-buttons with this action associated appear but don't work.
-    -100 - Main (alt recording)
-    -32060 - MIDI Editor
-    -32061 - MIDI Event List Editor
-    -32062 - MIDI Inline Editor
-    -32063 - Media Explorer
-    
+            -0 - Main
+            -1 - action stays invisible but is kept, if Reaper rewrites the reaper-kb.ini. Menu-buttons with this action associated appear but don't work.
+            -100 - Main (alt recording)
+            -32060 - MIDI Editor
+            -32061 - MIDI Event List Editor
+            -32062 - MIDI Inline Editor
+            -32063 - Media Explorer    
     string ActionCommandID - the ActionCommandID given to this Action
     string description - the description of this action
     string scriptfile - the filename of the script that shall be run
@@ -1008,16 +1004,15 @@ function ultraschall.GetKBIniKeys(filename_with_path, idx)
     integer keytype_modifier_midichan - Type of Keytype, modifier or midichannel
                                       - For a detailed description in how keytype/modifier in KEY-entries work, refer to <a href="Reaper-Filetype-Descriptions.html#Reaper-kb.ini">Reaper-Filetype-Descriptions.html#Reaper-kb.ini</a>.
     integer key_midinote - the key(like ASCII-Codes) or midinote. 
-                                      - For a detailed description in how key/midinotes in KEY-entries work, refer to <a href="Reaper-Filetype-Descriptions.html#Reaper-kb.ini">Reaper-Filetype-Descriptions.html#Reaper-kb.ini</a>.
-    
+                                      - For a detailed description in how key/midinotes in KEY-entries work, refer to <a href="Reaper-Filetype-Descriptions.html#Reaper-kb.ini">Reaper-Filetype-Descriptions.html#Reaper-kb.ini</a>.    
     string ActionCommandID - the ActionCommandID associated with this shortcut.
     integer section - the section, in which this shortcut is used
-    -0 - Main
-    -100 - Main (alt recording)
-    -32060 - MIDI Editor
-    -32061 - MIDI Event List Editor
-    -32062 - MIDI Inline Editor
-    -32063 - Media Explorer
+                    -0 - Main
+                    -100 - Main (alt recording)
+                    -32060 - MIDI Editor
+                    -32061 - MIDI Event List Editor
+                    -32062 - MIDI Inline Editor
+                    -32063 - Media Explorer
   </retvals>
   <chapter_context>
     Configuration-Files Management
@@ -1250,20 +1245,18 @@ function ultraschall.SetKBIniActions(filename_with_path, consolidate, section, A
   <parameters>
     string filename_with_path - filename with path for the reaper-kb.ini
     integer consolidate - consolidation state of this action
-    -1 consolidate undo points, 
-    -2 show in Actions-Menu, 
-    -3 consolidate undo points AND show in Actions Menu; 
-    -maybe 4 and higher?
-    
+                        -1 consolidate undo points, 
+                        -2 show in Actions-Menu, 
+                        -3 consolidate undo points AND show in Actions Menu; 
+                        -maybe 4 and higher?    
     integer section - section, in which this action is started
-    -0 - Main
-    -1 - action stays invisible but is kept, if Reaper rewrites the reaper-kb.ini. Menu-buttons with this action associated appear but don't work.
-    -100 - Main (alt recording)
-    -32060 - MIDI Editor
-    -32061 - MIDI Event List Editor
-    -32062 - MIDI Inline Editor
-    -32063 - Media Explorer
-    
+                    -0 - Main
+                    -1 - action stays invisible but is kept, if Reaper rewrites the reaper-kb.ini. Menu-buttons with this action associated appear but don't work.
+                    -100 - Main (alt recording)
+                    -32060 - MIDI Editor
+                    -32061 - MIDI Event List Editor
+                    -32062 - MIDI Inline Editor
+                    -32063 - Media Explorer
     string ActionCommandID - the ActionCommandID of this action
     string Description - a description for this action
     string ActionCommandIDs - the ActionCommandIDs for the actions, that are triggered by this action; unlike CommandID-numbers, every ActionCommandID must begin with _ ; will not be checked vor valid ones!
@@ -1350,19 +1343,17 @@ function ultraschall.SetKBIniScripts(filename_with_path, terminate_state, sectio
   <parameters>
     string filename_with_path - filename with path for the reaper-kb.ini
     integer terminate_state - state of handling mulitple running scripts
-    -4 - Dialogwindow appears(Terminate, New Instance, Abort), if another instance of a given script is started, that's already running
-    -260 - always Terminate Instances, when an instance of the script is already running
-    -516 - always start a New Instance of the script already running
-    
+                            -4 - Dialogwindow appears(Terminate, New Instance, Abort), if another instance of a given script is started, that's already running
+                            -260 - always Terminate Instances, when an instance of the script is already running
+                            -516 - always start a New Instance of the script already running
     integer section - section, in which this script is started
-    -0 - Main
-    -1 - action stays invisible but is kept, if Reaper rewrites the reaper-kb.ini. Menu-buttons with this action associated appear but don't work.
-    -100 - Main (alt recording)
-    -32060 - MIDI Editor
-    -32061 - MIDI Event List Editor
-    -32062 - MIDI Inline Editor
-    -32063 - Media Explorer
-    
+                    -0 - Main
+                    -1 - action stays invisible but is kept, if Reaper rewrites the reaper-kb.ini. Menu-buttons with this action associated appear but don't work.
+                    -100 - Main (alt recording)
+                    -32060 - MIDI Editor
+                    -32061 - MIDI Event List Editor
+                    -32062 - MIDI Inline Editor
+                    -32063 - Media Explorer
     string ActionCommandID - the ActionCommandID of this action
     string Description - a description for this script
     string Scriptname - the name of the ReaScript, like .lua or .eel or .py
@@ -1461,13 +1452,12 @@ function ultraschall.SetKBIniKeys(filename_with_path, KeyType, KeyNote, ActionCo
                                       - For a detailed description in how key/midinotes in KEY-entries work, refer to <a href="Reaper-Filetype-Descriptions.html#Reaper-kb.ini">Reaper-Filetype-Descriptions.html#Reaper-kb.ini</a>.
     string ActionCommandID - the ActionCommandID associated with this shortcut.
     integer section - the section, in which this shortcut is used
-    -0 - Main
-    -100 - Main (alt recording)
-    -32060 - MIDI Editor
-    -32061 - MIDI Event List Editor
-    -32062 - MIDI Inline Editor
-    -32063 - Media Explorer
-    
+                    -0 - Main
+                    -100 - Main (alt recording)
+                    -32060 - MIDI Editor
+                    -32061 - MIDI Event List Editor
+                    -32062 - MIDI Inline Editor
+                    -32063 - Media Explorer
     boolean replace - true if an already existing entry shall be replaced, false if not
   </parameters>
   <retvals>

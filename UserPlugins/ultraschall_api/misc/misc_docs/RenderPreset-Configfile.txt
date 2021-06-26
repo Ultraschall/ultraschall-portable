@@ -1,6 +1,6 @@
-Render-Presets-docs as of Reaper 6.20
+Render-Presets-docs as of Reaper 6.26
 
-compiled by Meo Mespotine, 22th of January 2021
+compiled by Meo Mespotine, 26th of March 2021
 licensed under creative-commons cc-by-license
 
 The render-presets are stored into reaper-render.ini in the resources-folder of Reaper.
@@ -69,6 +69,8 @@ source_dropdownlist_and_checkboxes - keeps: Source dropdownlist in RENDERPRESET_
                                    32,  Selected media items
                                    64,  Selected media items via master
                                    128, Selected tracks via master
+                                   4096, Razor Edit Areas
+                                   4096+128, Razor Edit Areas via Master
 
 
 Some general notes on the Render-Presets:

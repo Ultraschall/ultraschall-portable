@@ -3410,8 +3410,8 @@ function ultraschall.MoveMarkersBy(startposition, endposition, moveby, cut_at_bo
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>MoveMarkersBy</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.40
+    Ultraschall=4.2
+    Reaper=6.20
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.MoveMarkersBy(number startposition, number endposition, number moveby, boolean cut_at_borders)</functioncall>
@@ -3446,7 +3446,7 @@ function ultraschall.MoveMarkersBy(startposition, endposition, moveby, cut_at_bo
   if type(moveby)~="number" then ultraschall.AddErrorMessage("MoveMarkersBy","moveby", "must be a number", -4) return -1 end
   if type(cut_at_borders)~="boolean" then ultraschall.AddErrorMessage("MoveMarkersBy","cut_at_borders", "must be a boolean", -5) return -1 end
 
-  if moveby==0 then return -1 end
+    if moveby==0 then return -1 end
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
   
   local start, stop, step, boolean
@@ -3465,11 +3465,20 @@ function ultraschall.MoveMarkersBy(startposition, endposition, moveby, cut_at_bo
     end
   end
 
+  local MarkerGuids={}
+  local MarkerGuids_count=0
   for i=start, stop, step do
     local sretval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
-    if pos>=startposition and pos<=endposition then
-        boolean=reaper.SetProjectMarker(markrgnindexnumber, isrgn, pos+moveby, rgnend, name)
+
+    if pos>=startposition and pos<=endposition and isrgn==false then
+        MarkerGuids_count=MarkerGuids_count+1
+        MarkerGuids[MarkerGuids_count]=ultraschall.GetGuidFromMarkerID(sretval)
     end
+  end
+  for i=1, MarkerGuids_count do
+    local sretval=ultraschall.GetMarkerIDFromGuid(MarkerGuids[i])
+    local sretval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, sretval-1)
+    reaper.SetProjectMarkerByIndex(0, sretval-1, isrgn, pos+moveby, rgnend, markrgnindexnumber, name, color)
   end
   
   return 1

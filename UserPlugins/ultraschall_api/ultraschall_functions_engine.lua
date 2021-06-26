@@ -211,7 +211,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  return 420.003, "4.2","15th of January 2021", "003",  "\"Georg Friedrich Händel - Sarabande\"", ultraschall.hotfixdate, BuildNumber
+  return 420.004, "4.2","12th of June 2021", "004",  "\"Grandma - kl\"", ultraschall.hotfixdate, BuildNumber
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -2621,12 +2621,12 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
   return true, command_id
 end
 
-function SFEM()
+function SFEM(dunk, target, message_type)
   --[[
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>SFEM</slug>
     <requires>
-      Ultraschall=4.1
+      Ultraschall=4.2
       Reaper=5.40
       Lua=5.3
     </requires>

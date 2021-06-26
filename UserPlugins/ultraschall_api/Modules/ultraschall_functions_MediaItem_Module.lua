@@ -3352,7 +3352,7 @@ function ultraschall.GetItemSourceFile_Take(MediaItem, take_nr)
   </retvals>
   <chapter_context>
     MediaItem Management
-    Get MediaItem-Takes
+    MediaItem-Takes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
@@ -4319,7 +4319,7 @@ function ultraschall.GetMediaItemTake(MediaItem, TakeNr)
   </parameters>
   <chapter_context>
     MediaItem Management
-    Get MediaItem-Takes
+    MediaItem-Takes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
@@ -5457,7 +5457,7 @@ function ultraschall.GetTake_ReverseState(MediaItem, takenumber)
   </parameters>
   <chapter_context>
     MediaItem Management
-    Get MediaItem-Takes
+    MediaItem-Takes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -5545,3 +5545,385 @@ end
 
 --A={ultraschall.IsItemVisible(reaper.GetMediaItem(0,0), false)}
 
+function ultraschall.ApplyActionToMediaItemTake(MediaItemTake, actioncommandid, repeat_action)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ApplyActionToMediaItemTake</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=5.77
+    JS=0.962
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.ApplyActionToMediaItemTake(MediaItem MediaItem, integer takeid, string actioncommandid, integer repeat_action)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Applies an action to a MediaItemTake, in the main section-context.
+    The action given must support applying itself to selected item-takes, other actions might do weird things.    
+    
+    Returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, if running the action was successful; false, if not or an error occured
+  </retvals>
+  <parameters>
+    MediaItem MediaItem - the MediaItem, that holds the take
+    integer takeid - the id of the take, at which the actions shall be applied to; 1-based; 0, use currently active take
+    string actioncommandid - the commandid-number or ActionCommandID, that shall be run.
+    integer repeat_action - the number of times this action shall be applied to each take; minimum value is 1
+  </parameters>
+  <chapter_context>
+    MediaItem Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitemmanagement, run, action, main, item, mediaitem, take, mediaitemtake</tags>
+</US_DocBloc>
+]]
+  -- check parameters
+  if reaper.ValidatePtr2(0, MediaItemTake, "MediaItemTake*")==false then ultraschall.AddErrorMessage("ApplyActionToMediaItemTake","MediaItem", "Must be a MediaItemTake!", -1) return false end
+  if ultraschall.CheckActionCommandIDFormat2(actioncommandid)==false then ultraschall.AddErrorMessage("ApplyActionToMediaItemTake","actioncommandid", "No such action registered!", -3) return false end
+  if math.type(repeat_action)~="integer" then ultraschall.AddErrorMessage("ApplyActionToMediaItemTake","repeat_action", "Must be an integer!", -5) return false end
+  if repeat_action<1 then ultraschall.AddErrorMessage("ApplyActionToMediaItemTake","repeat_action", "Must be bigger than 0!", -6) return false end
+  --  if type(midi)~="boolean" then ultraschall.AddErrorMessage("ApplyActionToMediaItemTake","midi", "Must be boolean!", -4) return false end
+  --  if midi==true and ultraschall.IsValidHWND(MIDI_hwnd)==false then ultraschall.AddErrorMessage("ApplyActionToMediaItemTake","MIDI_hwnd", "must be a valid hwnd of a Midi-Editor", -7) return false end
+  midi=false
+
+  -- get current active take of MediaItem in question, so we can reset the active take, if needed
+  local MediaItem=reaper.GetMediaItemTake_Item(MediaItemTake)
+  local TakeOld=reaper.GetMediaItemTake(MediaItem, -1)
+  local CompareTakes=Take==TakeOld
+  
+  reaper.PreventUIRefresh(1)
+  reaper.SetActiveTake(MediaItemTake)
+  for i=1, repeat_action do
+    if midi==true then 
+      -- is this necessary? Is there take-access in the midi-editor possible?
+      reaper.MIDIEditor_OnCommand(MIDI_hwnd, actioncommandid)
+    else
+      reaper.Main_OnCommand(actioncommandid, 0)
+    end
+  end
+  if CompareTakes==false then
+    reaper.SetActiveTake(TakeOld)
+  end
+  reaper.PreventUIRefresh(-1)
+  reaper.UpdateArrange()
+  return true
+end
+
+function ultraschall.CountMediaItemTake_StateChunk(MediaItemStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CountMediaItemTake_StateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.24
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_takes = ultraschall.CountMediaItemTake_StateChunk(string MediaItemStateChunk)</functioncall>
+  <description>
+    Counts the number of available takes in a MediaItemStateChunk.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer number_of_takes - the number of takes in this MediaItemStateChunk    
+  </retvals>
+  <parameters>
+    string MediaItemStateChunk - the statechunk of the mediaitem, whose takes you want to count
+  </parameters>
+  <chapter_context>
+    MediaItem Management
+    MediaItem-Takes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem, take, count, mediaitemstatechunk</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidMediaItemStateChunk(MediaItemStateChunk)==false then ultraschall.AddErrorMessage("CountMediaItemTake_StateChunk", "MediaItemStateChunk", "must be a valid MediaItemStateChunk", -1) return -1 end
+  local count=0
+  if MediaItemStateChunk:match("\n  NAME")==nil then return 0 end
+  MediaItemStateChunk="TAKE\n"..MediaItemStateChunk:sub(6,-4).."\nTAKE\n"
+  for k in string.gmatch(MediaItemStateChunk, "(\nTAKE[%s%c])") do
+    count=count+1
+  end
+  return count 
+end
+
+function ultraschall.GetMediaItemTake_StateChunk(MediaItemStateChunk, takeid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetMediaItemTake_StateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.24
+    Lua=5.3
+  </requires>
+  <functioncall>string TakeStateChunk = ultraschall.GetMediaItemTake_StateChunk(string MediaItemStateChunk, integer takeid)</functioncall>
+  <description>
+    Returns the statechunk-entries of takes from a MediaItemStateChunk.
+    
+    Note: takeid>0 will never return statechunk-entries as selected, even if they are.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string TakeStateChunk - the statechunk-entries of the requested take
+  </retvals>
+  <parameters>
+    string MediaItemStateChunk - the statechunk of the mediaitem, whose take you want to get
+    integer takeid - the number of the take, whose statechunk-entries you want; 0, get selected take
+  </parameters>
+  <chapter_context>
+    MediaItem Management
+    MediaItem-Takes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem, take, get, takestatechunk, mediaitemstatechunk</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidMediaItemStateChunk(MediaItemStateChunk)==false then ultraschall.AddErrorMessage("GetMediaItemTake_StateChunk", "MediaItemStateChunk", "must be a valid MediaItemStateChunk", -1) return end
+  if math.type(takeid)~="integer" then ultraschall.AddErrorMessage("GetMediaItemTake_StateChunk", "MediaItemStateChunk", "must be an integer", -2) return end
+  if takeid<0 then ultraschall.AddErrorMessage("GetMediaItemTake_StateChunk", "takeid", "must be bigger than 0", -3) return end
+  local count=0
+  -- layout statechunk, if needed
+  if MediaItemStateChunk:sub(1,8)~="<ITEM\n  " then
+    MediaItemStateChunk=ultraschall.StateChunkLayouter(MediaItemStateChunk)
+  end
+  -- set first take as selected, if no other take is selected
+  local TakeSel
+  if MediaItemStateChunk:match("  TAKE SEL\n")==nil then
+    TakeSel="\n  TAKE SEL"
+  else
+    TakeSel="\n  TAKE"
+  end
+  if MediaItemStateChunk:match("\n  NAME")==nil then ultraschall.AddErrorMessage("GetMediaItemTake_StateChunk", "takeid", "no take available", -5) return end
+  -- prepare statechunk to be easily parseable
+  MediaItemStateChunk=TakeSel..MediaItemStateChunk:match("(\n  NAME.*)>").."\n  TAKE\n"
+  
+  -- return selected take, if takeid==0
+  if takeid==0 then
+    return MediaItemStateChunk:match("\n(  TAKE SEL\n.-)\n  TAKE\n")
+  end
+  
+  -- return take with takeid
+  
+  -- first, set all takes unselected, 
+  local MISC=string.gsub(MediaItemStateChunk, "  TAKE SEL\n", "  TAKE\n")
+  local k=""
+  local offset
+  
+  -- second, go through all takes, until we found the right one and return it
+  -- otherwise leave loop and return nil
+  while k~=nil do
+    k, offset=MISC:match("(  TAKE\n.-)\n()  TAKE\n")
+    if k==nil then break end
+    count=count+1
+    if count==takeid then return k end
+    MISC=MISC:sub(offset, -1)
+  end
+  ultraschall.AddErrorMessage("GetMediaItemTake_StateChunk", "takeid", "no such take", -4)
+end
+
+function ultraschall.GetItemSpectralConfig2(Item, take_id, MediaItemStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetItemSpectralConfig2</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.22
+    Lua=5.3
+  </requires>
+  <functioncall>integer item_spectral_config = ultraschall.GetItemSpectralConfig(MediaItem Item, integer take_id, optional string MediaItemStateChunk)</functioncall>
+  <description>
+    returns the item-spectral-config, which is the fft-size of the spectral view for this item.
+    
+    It's the entry SPECTRAL_CONFIG
+    
+    set itemidx to -1 to use the optional parameter MediaItemStateChunk to alter a MediaItemStateChunk instead of an item directly.
+    
+    use take_id==0 for the active take
+    
+    returns -2 in case of an error 
+  </description>
+  <parameters>
+    MediaItem Item - the item, whose spectral-config-attribute you want to get; nil, to use the parameter MediaItemStateChunk
+    integer take_id - the id of the take; 1-based; 0, for active take
+    optional string MediaItemStateChunk - you can give a MediaItemStateChunk to process, if itemidx is set to -1
+  </parameters>
+  <retvals>
+    integer item_spectral_config - the fft-size in points for the spectral-view; 16, 32, 64, 128, 256, 512, 1024(default), 2048, 4096, 8192; -1, if not existing
+  </retvals>
+  <chapter_context>
+    MediaItem Management
+    Spectral Edit
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitemmanagement, get, item, take, spectral edit, fft, size</tags>
+</US_DocBloc>
+--]]
+  if Item~=nil and ultraschall.type(Item)~="MediaItem" then ultraschall.AddErrorMessage("GetItemSpectralConfig2", "Item", "must be a MediaItem", -1) return -2 end
+  if math.type(take_id)~="integer" then ultraschall.AddErrorMessage("GetItemSpectralConfig2", "take_id", "must be an integer", -2) return -2 end
+  if take_id<0 then ultraschall.AddErrorMessage("GetItemSpectralConfig2", "take_id", "must be bigger or equal 0", -3) return -2 end
+  if Item==nil and ultraschall.IsValidItemStateChunk(MediaItemStateChunk)==false then ultraschall.AddErrorMessage("GetItemSpectralConfig2", "MediaItemStateChunk", "must be a string", -4) return -2 end
+  
+  local retval
+  if Item~=nil then
+    retval, MediaItemStateChunk = reaper.GetItemStateChunk(Item, "", false)
+  end
+  local Spectral_Config=ultraschall.GetMediaItemTake_StateChunk(MediaItemStateChunk, take_id)
+  if Spectral_Config==nil then ultraschall.AddErrorMessage("GetItemSpectralConfig2", "take_id", "no such take", 5) return -2 end
+  Spectral_Config=Spectral_Config.."\n"
+  Spectral_Config=Spectral_Config:match("SPECTRAL_CONFIG (.-)\n")
+  
+  if Spectral_Config==nil then Spectral_Config=-1 end
+  
+  return tonumber(Spectral_Config)
+end
+
+function ultraschall.GetItemSpectralEdit2(Item, take_id, spectral_idx, MediaItemStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetItemSpectralEdit2</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.22
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, number start_pos, number length, number gain, number fade, number freq_fade, number freq_range_bottom, number freq_range_top, integer h, integer byp_solo, number gate_thres, number gate_floor, number comp_thresh, number comp_exp_ratio, number n, number o, number fade2, number freq_fade2 = ultraschall.GetItemSpectralEdit2(MediaItem Item, integer take_id, integer spectralidx, optional string MediaItemStateChunk)</functioncall>
+  <description>
+    returns the settings of a specific SPECTRAL_EDIT in a given MediaItem/MediaItemStateChunk.
+    The SPECTRAL_EDITs are the individual edit-boundary-boxes in the spectral-view.
+    If itemidx is set to nil, you can give the function a MediaItemStateChunk to look in, instead.
+    
+    returns -1 in case of error
+  </description>
+  <parameters>
+    MediaItem Item - the MediaItem to look in for the spectral-edit; nil, to use the parameter MediaItemStateChunk instead
+    integer take_id - the index of the take, whose spectral-edit-information you want to retrieve; 1-based; 0, active take
+    integer spectralidx - the number of the spectral-edit to return; 1 for the first, 2 for the second, etc
+    optional string MediaItemStateChunk - if itemidx is -1, this can be a MediaItemStateChunk to use, otherwise this will be ignored
+  </parameters>
+  <retvals>
+    boolean retval - true, getting states was successful; false, getting states was unsuccessful
+    number start_pos - the startposition of the spectral-edit-region in seconds
+    number length - the length of the spectral-edit-region in seconds
+    number gain - the gain as slider-value; 0(-224dB) to 98350.1875(99.68dB); 1 for 0dB
+    number fade - 0(0%)-0.5(100%); adjusting this affects also parameter fade2!
+    number freq_fade - 0(0%)-0.5(100%); adjusting this affects also parameter freq_fade2!
+    number freq_range_bottom - the bottom of the edit-region, but can be moved to be top as well! 0 to device-samplerate/2 (e.g 96000 for 192kHz)
+    number freq_range_top - the top of the edit-region, but can be moved to be bottom as well! 0 to device-samplerate/2 (e.g 96000 for 192kHz)
+    integer h - unknown
+    integer byp_solo - sets the solo and bypass-state. 0, no solo, no bypass; 1, bypass only; 2, solo only; 3, bypass and solo
+    number gate_thres - sets the threshold of the gate; 0(-224dB)-98786.226563(99.89dB)
+    number gate_floor - sets the floor of the gate; 0(-224dB)-99802.171875(99.98dB)
+    number comp_thresh - sets the threshold for the compressor; 0(-224dB)-98842.484375(99.90dB); 1(0dB)is default
+    number comp_exp_ratio - sets the ratio of the compressor/expander; 0.1(1:10.0)-100(100:1.0); 1(1.0:1) is default
+    number n - unknown
+    number o - unknown
+    number fade2 - negative with fade_in set; positive with fadeout-set
+    number freq_fade2 - negative with low frequency-fade, positive with high-frequency-fade
+  </retvals>
+  <chapter_context>
+    MediaItem Management
+    Spectral Edit
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitemmanagement, get, item, take, spectral edit</tags>
+</US_DocBloc>
+--]]
+
+  if Item~=nil and ultraschall.type(Item)~="MediaItem" then ultraschall.AddErrorMessage("GetItemSpectralEdit2", "Item", "must be a MediaItem", -1) return false end
+  if math.type(take_id)~="integer" then ultraschall.AddErrorMessage("GetItemSpectralEdit2", "take_id", "must be an integer", -2) return false end
+  if math.type(spectral_idx)~="integer" then ultraschall.AddErrorMessage("GetItemSpectralEdit2", "spectral_idx", "must be an integer", -3) return false end
+  if take_id<0 then ultraschall.AddErrorMessage("GetItemSpectralEdit2", "take_id", "must be bigger or equal 0", -5) return false end
+  if spectral_idx<1 then ultraschall.AddErrorMessage("GetItemSpectralEdit2", "spectral_idx", "must be bigger than 0", -6) return false end
+  if Item==nil and ultraschall.IsValidItemStateChunk(MediaItemStateChunk)==false then ultraschall.AddErrorMessage("GetItemSpectralEdit2", "MediaItemStateChunk", "must be a string", -4) return false end
+  local retval
+  if Item~=nil then
+    retval, MediaItemStateChunk = reaper.GetItemStateChunk(Item, "", false)
+  end
+  local TSC=ultraschall.GetMediaItemTake_StateChunk(MediaItemStateChunk, take_id)
+  if TSC==nil then ultraschall.AddErrorMessage("GetItemSpectralEdit2", "take_id", "no such take", 7) return false end
+  
+  local count=0
+  local k=""
+  local retval=false
+  local found, count2
+  for k in string.gmatch(TSC, "SPECTRAL_EDIT (.-)\n") do
+    count=count+1
+    if count==spectral_idx then 
+      found=k
+      count2, found = ultraschall.CSV2IndividualLinesAsArray(k, " ")
+      for i=1, count2 do
+        found[i]=tonumber(found[i])
+      end
+      retval=true
+    end
+  end
+  
+  return retval, table.unpack(found)
+end
+
+function ultraschall.CountItemSpectralEdit2(Item, take_id, MediaItemStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetItemSpectralConfig2</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.22
+    Lua=5.3
+  </requires>
+  <functioncall>integer item_spectral_config = ultraschall.CountItemSpectralEdit2(MediaItem Item, integer take_id, optional string MediaItemStateChunk)</functioncall>
+  <description>
+    counts the number of spectral-edit-entries in a take, which is the fft-size of the spectral view for this item.
+    
+    It's the entry SPECTRAL_EDIT
+    
+    use take_id==0 for the active take
+    
+    returns -2 in case of an error 
+  </description>
+  <parameters>
+    MediaItem Item - the item, whose spectral-edits you want to count; nil, to use the parameter MediaItemStateChunk
+    integer take_id - the id of the take; 1-based; 0, for active take
+    optional string MediaItemStateChunk - you can give a MediaItemStateChunk to process, if itemidx is set to -1
+  </parameters>
+  <retvals>
+    integer item_spectral_config - the fft-size in points for the spectral-view; 16, 32, 64, 128, 256, 512, 1024(default), 2048, 4096, 8192; -1, if not existing
+  </retvals>
+  <chapter_context>
+    MediaItem Management
+    Spectral Edit
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitemmanagement, get, item, take, spectral edit, fft, size</tags>
+</US_DocBloc>
+--]]
+  if Item~=nil and ultraschall.type(Item)~="MediaItem" then ultraschall.AddErrorMessage("CountItemSpectralEdit2", "Item", "must be a MediaItem", -1) return -1 end
+  if math.type(take_id)~="integer" then ultraschall.AddErrorMessage("CountItemSpectralEdit2", "take_id", "must be an integer", -2) return -1 end
+  if take_id<0 then ultraschall.AddErrorMessage("CountItemSpectralEdit2", "take_id", "must be bigger or equal 0", -3) return -1 end
+  if Item==nil and ultraschall.IsValidItemStateChunk(MediaItemStateChunk)==false then ultraschall.AddErrorMessage("CountItemSpectralEdit2", "MediaItemStateChunk", "must be a string", -4) return -1 end
+  local retval
+  if Item~=nil then
+    retval, MediaItemStateChunk = reaper.GetItemStateChunk(Item, "", false)
+  end
+  local TSC=ultraschall.GetMediaItemTake_StateChunk(MediaItemStateChunk, take_id)
+  if TSC==nil then ultraschall.AddErrorMessage("CountItemSpectralEdit2", "take_id", "no such take", 5) return -1 end
+  
+  local count=0
+  local k=""
+  local retval=false
+  local found, count2
+  for k in string.gmatch(TSC, "SPECTRAL_EDIT (.-)\n") do
+    count=count+1
+  end
+  
+  return count
+end

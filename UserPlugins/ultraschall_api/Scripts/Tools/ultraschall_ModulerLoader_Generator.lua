@@ -115,8 +115,13 @@ OutPutFile=OutPutFile.."end\ncollectgarbage(\"collect\")"
 
 print_update("Creating Moduleloader\nWrite Moduleloader")
 
-ultraschall.WriteValueToFile(ultraschall.Api_Path.."/ultraschall_ModulatorLoad3000.lua-", OutPutFile)
+ultraschall.WriteValueToFile(ultraschall.Api_Path.."/ultraschall_ModulatorLoad3000.lua", OutPutFile)
 
+--[[
+-- this code would convert ultraschall_ModulatorLoad3000 into binary chunk, which loads even faster. 
+-- Unfortunately, this breaks when Ultraschall-API is stored in paths with Umlauts, so loadfile doesn't 
+-- find the other Ultraschall-API-files anymore.
+-- So, until this is resolved by the devs of Reaper, I have to deactivate it :(
 
 ultraschall={}
 
@@ -126,3 +131,4 @@ B=string.dump(A)
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 ultraschall.WriteValueToFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_ModulatorLoad3000.lua", B)
+--]]

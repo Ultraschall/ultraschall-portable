@@ -3,7 +3,7 @@
       <slug>Introduction</slug>  
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.23 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.24 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -438,6 +438,30 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>areasel</slug>  
+      <title>areasel</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          It is an integer  
+          Stretching razor edit area adds stretch markers to audio items-checkbox, as set in Preferences -> Editing Behavior  
+          
+           >0, checkbox is on
+           >1, checkbox is off
+           
+          For other settings in Preferences -> Editing Behavior, see [locklooptotime](#locklooptotime), [relativeedges](#relativeedges), [ripplelockmode](#ripplelockmode), [splitautoxfade](#splitautoxfade),   
+                                                  [vzoommode](#vzoommode), [zoommode](#zoommode) 
+            
+
+          Stored in reaper.ini under the same name in the section REAPER.  
+            
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc> 
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>audioasync</slug>  
@@ -4679,7 +4703,7 @@
             
           For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf\_minheight](#itemlowerhalf_minheight), [pooledenvs](#pooledenvs), [handzoom](#handzoom), [scnotes](#scnotes)  
           For other settings in Preferences -> Editing Behavior, see [locklooptotime](#locklooptotime), [relativeedges](#relativeedges), [ripplelockmode](#ripplelockmode), [splitautoxfade](#splitautoxfade),   
-                                                  [vzoommode](#vzoommode), [zoommode](#zoommode)  
+                                                  [vzoommode](#vzoommode), [zoommode](#zoommode), [areasel](#areasel)
                     
           Stored in reaper.ini under the same name in the section REAPER.  
            
@@ -5423,6 +5447,34 @@
            
           For other settings in section Playback settings, as set in Preferences -> Playback, see [midisendflags](#midisendflags), [runafterstop](#runafterstop), [runallonstop](#runallonstop),   
                                                                       [stopendofloop](#stopendofloop), [stopprojlen](#stopprojlen), [viewadvance](#viewadvance)  
+                    
+          Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>  
+         Config Variables  
+      </chapter_context>  
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>lv2_opts</slug>  
+      <title>lv2_opts</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          LV2-plugin names-checkbox, as set in Preferences -> LV2  
+          It is an integer  
+           
+           >&1=0, Append (Mono) for plug-ins with single input/output - unchecked
+           >&1=1, Append (Mono) for plug-ins with single input/output - checked
+           
+           >&2=0, Append (Xch) for plug-ins with non-stereo I/O - unchecked
+           >&2=1, Append (Xch) for plug-ins with non-stereo I/O - checked
+           
+           >&4=0, Append (Maintainer name) - unchecked
+           >&4=1, Append (Maintainer name) - checked
+           
+           >&8=0, Append (MIDI) for plug-ins with no audio I/O - unchecked
+           >&8=1, Append (MIDI) - checked           
                     
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
@@ -9919,7 +9971,7 @@
           For other Media-settings, set in the preferences -> Media, see [showpeaksbuild](#showpeaksbuild), [copyimpmedia](#copyimpmedia), [applyfxtail](#applyfxtail), [itemfxtail](#itemfxtail), [peakcachegenmode](#peakcachegenmode),   
                                                       [altpeaks](#altpeaks), [showpeaks](#showpeaks), [peakcachegenrs](#peakcachegenrs), [offlineinact](#offlineinact), [insertmtrack](#insertmtrack), [opencopyprompt](#opencopyprompt)  
           For other settings in Preferences -> Editing Behavior, see [itemclickmovecurs](#itemclickmovecurs), [locklooptotime](#locklooptotime), [ripplelockmode](#ripplelockmode), [splitautoxfade](#splitautoxfade),   
-                                                  [vzoommode](#vzoommode), [zoommode](#zoommode)  
+                                                  [vzoommode](#vzoommode), [zoommode](#zoommode), [areasel](#areasel)
           For other settings set in Preferences -> Fades/Crossfades, see [itemfade\_minheight](#itemfade_minheight), [itemfade\_minwidth](#itemfade_minwidth), [itemfadehandle\_maxwidth](#itemfadehandle_maxwidth), [itemicons](#itemicons)  
             
                     
@@ -10373,7 +10425,7 @@
            >3, Locked items are affected by ripple (lock ignored)  
             
           For other settings in Preferences -> Editing Behavior, see [itemclickmovecurs](#itemclickmovecurs), [locklooptotime](#locklooptotime), [relativeedges](#relativeedges), [splitautoxfade](#splitautoxfade),   
-                                                  [vzoommode](#vzoommode), [zoommode](#zoommode)  
+                                                  [vzoommode](#vzoommode), [zoommode](#zoommode), [areasel](#areasel)
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -10654,7 +10706,7 @@
       <title>scnotes</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
           Use all MIDI inputs-checkbox, as set Scale Finder located in View -> Scale Finder as well as in   
-            Preferences -> Mouse Modifiers(only MIDI CC event and MIDI CC lane-Modifiers) and in MIDI Editor -> Options -> Velocity editing lane and  
+            Preferences -> Mouse Modifiers(only MIDI CC event, MIDI CC lane and MIDI CC segment-Modifiers ) and in MIDI Editor -> Options -> Velocity editing lane and  
             in MIDI Editor -> Options -> CC events in multiple media items.
           It is an integer-bitfield  
           
@@ -10678,6 +10730,12 @@
            
            >&64=0, Edit previous note within current grid division(MIDI Editor -> Options -> Velocity editing lane)  
            >&64=1, Edit only when mouse is over velocity bar(MIDI Editor -> Options -> Velocity editing lane)  
+           
+           >&128=0, Right click deletes CC events-checkbox(Preferences -> Mouse modifiers -> MIDI CC segment - left click/drag) -> checked
+           >&128=1, Right click deletes CC events-checkbox(Preferences -> Mouse modifiers -> MIDI CC segment - left click/drag) -> unchecked
+           
+           >&256=0, Draw/edit immediately on mouse click-checkbox(Preferences -> Mouse modifiers -> MIDI CC segment - left click/drag) -> unchecked
+           >&256=1, Draw/edit immediately on mouse click-checkbox(Preferences -> Mouse modifiers -> MIDI CC segment - left click/drag) -> checked
             
           For other settings, as set in Preferences -> Mouse Modifiers, see [itemlowerhalf\_minheight](#itemlowerhalf_minheight), [itemclickmovecurs](#itemclickmovecurs), [pooledenvs](#pooledenvs), [handzoom](#handzoom)  
             
@@ -11627,7 +11685,7 @@
           For other settings, as set in Preferences -> Media Item Defaults, see [loopnewitems](#loopnewitems), [autoxfade](#autoxfade), [deffadeshape](#deffadeshape), [defxfadeshape](#defxfadeshape),   
                                                        [deffadelen](#deffadelen), [defsplitxfadelen](#defsplitxfadelen)  
           For other settings in Preferences -> Editing Behavior, see [itemclickmovecurs](#itemclickmovecurs), [locklooptotime](#locklooptotime), [relativeedges](#relativeedges), [ripplelockmode](#ripplelockmode),   
-                                                  [vzoommode](#vzoommode), [zoommode](#zoommode)  
+                                                  [vzoommode](#vzoommode), [zoommode](#zoommode), [areasel](#areasel)
                     
           Stored in reaper.ini under the same name in the section REAPER.  
            

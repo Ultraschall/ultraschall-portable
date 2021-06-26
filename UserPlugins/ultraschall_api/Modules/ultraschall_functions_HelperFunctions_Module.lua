@@ -1277,7 +1277,7 @@ function ultraschall.IsOS_Mac()
   local Os, bits
   
   -- check for os and bits
-  if retval:match("OSX")~=nil or retval:match("macOS")~=nil then Os=true 
+  if retval:match("OSX")~=nil or retval:match("macOS%-arm64")~=nil then Os=true 
   else
     Os=false
   end
@@ -3824,16 +3824,16 @@ function ultraschall.StateChunkLayouter(statechunk)
 </US_DocBloc>
 ]]
 
-  if type(statechunk)~="string" then ultraschall.AddErrorMessage("StateChunkLayouter","statechunk", "must be a string", -1) return nil end  
+  if type(statechunk)~="string" then ultraschall.AddErrorMessage("StateChunkLayouter","statechunk", "must be a string", -1) return nil end    
   local num_tabs=0
   local newsc=""
-  for k in string.gmatch(statechunk, "(.-\n)") do
+  for k in string.gmatch(statechunk.."\n", "(.-\n)") do
     if k:sub(1,1)==">" then num_tabs=num_tabs-1 end
     for i=0, num_tabs-1 do
-      newsc=newsc.."  "
+      newsc=newsc.."  "      
     end
     if k:sub(1,1)=="<" then num_tabs=num_tabs+1 end
-    newsc=newsc..k
+    newsc=newsc..k    
   end
   return newsc
 end
@@ -6209,3 +6209,145 @@ end
 --max=1
 
 --A=ultraschall.CreateMultiDimTable(33, max, max, max, max, max, max, max, max, max, max)
+
+function ultraschall.GMem_Read_ValueRange(startindex, number_of_indices, use_gmem_indices_for_table, gmemname)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GMem_Read_ValueRange</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>table gmem_values = ultraschall.GMem_Read_ValueRange(integer startindex, integer number_of_indices, optional boolean use_gmem_indices_for_table, optional string gmem_attachname)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns a table with all values of a gmem between startindex and startindex+number_of_indices.
+    You can optionally set a specific gmem-attachname or leave it blank to get the values from the currently attached gmem.
+    
+    Set use_gmem_indices_for_table=true, so have the index of the table reflect the index of the gmems.
+    
+    Note: Keep in mind, that requesting tons of gmem-values will use up a lot of resources, so to to just get, what you need to avoid hanging gui.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    table gmem_values - the requested values.
+  </retvals>
+  <parameters>
+    integer startindex - the first index you want to request; must be 0 or higher
+    integer number_of_indices - the number of values to request, from startindex onwards
+    optional boolean use_gmem_indices_for_table - true, index the table according to gmem-index; false or nil, just index from 1 onwards
+    optional string gmem_attachname - the attached gmem, from which you want to get the values; nil, use the currently attached gmem
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>helper functions, get, gmem, values</tags>
+</US_DocBloc>
+]]
+  if math.type(startindex)~="integer" then ultraschall.AddErrorMessage("GMem_Read_ValueRange", "startindex", "must be an integer", -1) return nil end
+  if math.type(number_of_indices)~="integer" then ultraschall.AddErrorMessage("GMem_Read_ValueRange", "number_of_indices", "must be an integer", -2) return nil end
+  if use_gmem_indices_for_table~=nil and type(use_gmem_indices_for_table)~="boolean" then ultraschall.AddErrorMessage("GMem_Read_ValueRange", "use_gmem_indices_for_table", "must be a boolean or nil(for false)", -3) return nil end  
+  if gmem_attachname~=nil and type(gmem_attachname)~="string" then ultraschall.AddErrorMessage("GMem_Read_ValueRange", "gmem_attachname", "must be a string or nil(for currently attached gmem)", -3) return nil end  
+  
+  local oldgmemname=ultraschall.Gmem_GetCurrentAttachedName()
+  if gmemname~=nil then
+    reaper.gmem_attach(gmemname)
+  end
+  local Values={}
+  local a=0
+  local index
+  for i=startindex, startindex+number_of_indices do
+    a=a+1
+    if use_gmem_indices_for_table==true then index=i else index=a end
+    Values[index]=reaper.gmem_read(i)
+  end
+  if oldgmemname==nil then oldgmemname="" end
+  if gmemname~=nil then
+    reaper.gmem_attach(oldgmemname)
+  end
+  return Values
+end
+
+function ultraschall.GMem_GetValues_VideoSamplePeeker(samplesize)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GMem_GetValues_VideoSamplePeeker</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>number play_pos, integer samplerate, integer num_channels, integer requested_samplebuffer_length, table samplebuffer = ultraschall.GMem_GetValues_VideoSamplePeeker(optional integer samplesize)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    For usage together with the JSFX-fx- "Video Sample Peeker", which sends samples to a gmem, that can be used(for instance by video processor's presets "Synthesis: Decorative Oscilloscope with Blitter" and "Synthesis: Decorative Spectrum Analyzer").
+    
+    Ths returns all important values and the samples-values.
+
+    You need to use the samples according to samplerate and number of channels to be able to do something with it.
+    
+    The overall maximum sample-buffer provided by the JSFX is 2 seconds.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    number play_pos - the playposition, when the sample has been re
+    integer samplerate - the samplerate of the sampledata
+    integer num_channels - the number of channels within the sampledata
+    integer requested_samplebuffer_length - the length of the requested buffer; maximum is the number of values for about 2 seconds
+    table samplebuffer - the values themselves
+  </retvals>
+  <parameters>
+    optional integer samplesize - the samplesize you want to get; nil, return the whole 2-seconds-samplebuffer(takes a lot of resources)
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>helper functions, get, gmem, values, video sample peeker, samples, sample buffer</tags>
+</US_DocBloc>
+]]
+  if samplesize~=nil and math.type(samplesize)~="integer" then ultraschall.AddErrorMessage("GMem_GetValues_VideoSamplePeeker", "samplesize", "must be an integer or nil to get full 2-seconds-sample-buffer", -1) return nil end
+  local Values=ultraschall.GMem_Read_ValueRange(0, 16, true, "jsfx_to_video")
+  --                       GMem_Read_ValueRange(startindex, number_of_indices, use_gmem_indices_for_table, gmemname)
+  --if Values==nil then ultraschall.AddErrorMessage("GMem_GetValues_VideoSamplePeeker", "", "video sample peeker not yet loaded", -2) return nil end
+  if samplesize==nil then samplesize=Values[5] end
+  local samplesize2
+  
+  if samplesize>Values[5]-Values[2] then
+    samplesize2=Values[2]-Values[5]+samplesize
+    samplesize=Values[5]
+  else
+    samplesize2=0
+    samplesize=samplesize+Values[2]
+  end
+  
+  local Buf={}
+  local OldAttachname=ultraschall.Gmem_GetCurrentAttachedName()
+
+  reaper.gmem_attach("jsfx_to_video")
+  local a=0
+--  for i=Values[2], Values[5] do
+  for i=Values[2], samplesize do
+    a=a+1
+    Buf[a]=reaper.gmem_read(i)
+  end
+
+--  for i=16, Values[2] do
+  for i=16, samplesize2 do
+    P=i
+    a=a+1
+    Buf[a]=reaper.gmem_read(i)
+  end
+--]]
+  reaper.gmem_attach(OldAttachname)
+  
+  return Values[1], -- buf play pos
+         math.tointeger(Values[3]), -- buf samplerate
+         math.tointeger(Values[6]), -- number of channels
+         #Buf,  -- number of values of the sample-buffer
+         Buf   -- the values themselves of the sample-buffer
+end
