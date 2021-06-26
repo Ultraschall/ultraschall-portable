@@ -601,6 +601,7 @@
                                                                      3, Project regions
                                                                      4, Selected Media Items(in combination with Source 32)
                                                                      5, Selected regions
+                                                                     6, Razor Edit Areas(in combination with Source 4096 and 4224)
                         RenderTable["Channels"]                - the number of channels in the rendered file
                                                                      1, mono
                                                                      2, stereo
@@ -660,6 +661,8 @@
                                                                       32, Selected media items
                                                                       64, selected media items via master
                                                                       128, selected tracks via master
+                                                                      4096, Razor Edit Areas
+                                                                      4224, Razor Edit Ares via master
                         RenderTable["Startposition"]           - the startposition of the rendering selection in seconds
                         RenderTable["TailFlag"]                - in which bounds is the Tail-checkbox checked? 
                                                                        &1, custom time bounds

@@ -2436,8 +2436,8 @@ function ultraschall.GetOutputFormat_RenderCfg(Renderstring, ReaProject)
   <retvals>
     string outputformat - the outputformat, set in the render-cfg-string
     - The following are valid: 
-    - WAV, AIFF, AUDIOCD-IMAGE, DDP, FLAC, MP3, OGG, Opus, Video, Video (Mac), Video GIF, Video LCF, WAVPACK
-    string renderstring - the renderstringm which is either the renderstring you've passed or the one from the ReaProject you passed as second parameter
+    - "WAV", "AIFF", "AUDIOCD-IMAGE", "DDP", "FLAC", "MP3", "OGG", "Opus", "Video", "Video (Mac)", "Video GIF", "Video LCF", "WAVPACK", "Unknown"
+    string renderstring - the renderstring, which is either the renderstring you've passed or the one from the ReaProject you passed as second parameter
   </retvals>
   <parameters>
     string Renderstring - the render-cfg-string from a rpp-projectfile or the reaper-render.ini
@@ -2921,7 +2921,7 @@ function ultraschall.IsValidRenderTable(RenderTable)
   return true
 end
 
-function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_string)
+function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_string, dirtyness)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyRenderTable_Project</slug>
@@ -2932,7 +2932,7 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
     JS=0.972
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.ApplyRenderTable_Project(RenderTable RenderTable, optional boolean apply_rendercfg_string)</functioncall>
+  <functioncall>boolean retval, boolean dirty = ultraschall.ApplyRenderTable_Project(RenderTable RenderTable, optional boolean apply_rendercfg_string, optional boolean dirtyness)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets all stored render-settings from a RenderTable as the current project-settings.
 
@@ -2974,10 +2974,12 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   </description>
   <retvals>
     boolean retval - true, setting the render-settings was successful; false, it wasn't successful
+    boolean dirty - true, settings have been altered(project is dirty); false, settings haven't been altered(undirty)
   </retvals>
   <parameters>
     RenderTable RenderTable - a RenderTable, that contains all render-dialog-settings
     optional boolean apply_rendercfg_string - true or nil, apply it as well; false, don't apply it
+    optional boolean dirtyness - true, function set the project to dirty, if any project setting has been altered by RenderTable(only if dirty==true); false and nil, don't set to dirty, if anything changed
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -2988,46 +2990,51 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   <tags>projectfiles, set, project, rendertable</tags>
 </US_DocBloc>
 ]]
-	
-  if ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("ApplyRenderTable_Project", "RenderTable", "not a valid RenderTable", -1) return false end
+  if ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("ApplyRenderTable_Project", "RenderTable", "not a valid RenderTable", -1) return false end  
+  if dirtyness==true then
+    local RenderTable2=ultraschall.GetRenderTable_Project()
+    if ultraschall.AreRenderTablesEqual(RenderTable, RenderTable2)==true then return true, false end
+  end
+  
   if apply_rendercfg_string~=nil and type(apply_rendercfg_string)~="boolean" then ultraschall.AddErrorMessage("ApplyRenderTable_Project", "apply_rendercfg_string", "must be boolean", -2) return false end
   local _temp, retval, hwnd, AddToProj, ProjectSampleRateFXProcessing, ReaProject, SaveCopyOfProject, retval
   if ReaProject==nil then ReaProject=0 end
+  local Source=RenderTable["Source"]
   
   if RenderTable["EmbedStretchMarkers"]==true then 
-	if RenderTable["Source"]&256==0 then RenderTable["Source"]=RenderTable["Source"]+256 end
+	if Source&256==0 then Source=Source+256 end
   else 
-	if RenderTable["Source"]&256~=0 then RenderTable["Source"]=RenderTable["Source"]-256 end
+	if Source&256~=0 then Source=Source-256 end
   end
   
   if RenderTable["EmbedMetaData"]==true then 
-	if RenderTable["Source"]&512==0 then RenderTable["Source"]=RenderTable["Source"]+512 end
+	if Source&512==0 then Source=Source+512 end
   else 
-	if RenderTable["Source"]&512~=0 then RenderTable["Source"]=RenderTable["Source"]-512 end
+	if Source&512~=0 then Source=Source-512 end
   end
   
   if RenderTable["EmbedTakeMarkers"]==true then 
-	if RenderTable["Source"]&1024==0 then RenderTable["Source"]=RenderTable["Source"]+1024 end
+	if Source&1024==0 then Source=Source+1024 end
   else 
-	if RenderTable["Source"]&1024~=0 then RenderTable["Source"]=RenderTable["Source"]-1024 end
+	if Source&1024~=0 then Source=Source-1024 end
   end
   
   if RenderTable["Enable2ndPassRender"]==true then 
-	if RenderTable["Source"]&2048==0 then RenderTable["Source"]=RenderTable["Source"]+2048 end
+	if Source&2048==0 then Source=Source+2048 end
   else 
-	if RenderTable["Source"]&2048~=0 then RenderTable["Source"]=RenderTable["Source"]-2048 end
+	if Source&2048~=0 then Source=Source-2048 end
   end
   
-  if RenderTable["MultiChannelFiles"]==true and RenderTable["Source"]&4==0 then 
-    RenderTable["Source"]=RenderTable["Source"]+4 
-  elseif RenderTable["MultiChannelFiles"]==false and RenderTable["Source"]&4==4 then 
-    RenderTable["Source"]=RenderTable["Source"]-4 
+  if RenderTable["MultiChannelFiles"]==true and Source&4==0 then 
+    Source=Source+4 
+  elseif RenderTable["MultiChannelFiles"]==false and Source&4==4 then 
+    Source=Source-4 
   end
   
-  if RenderTable["OnlyMonoMedia"]==true and RenderTable["Source"]&16==0 then 
-    RenderTable["Source"]=RenderTable["Source"]+16 
-  elseif RenderTable["OnlyMonoMedia"]==false and RenderTable["Source"]&16==16 then 
-    RenderTable["Source"]=RenderTable["Source"]-16 
+  if RenderTable["OnlyMonoMedia"]==true and Source&16==0 then 
+    Source=Source+16 
+  elseif RenderTable["OnlyMonoMedia"]==false and Source&16==16 then 
+    Source=Source-16 
   end
   
   reaper.GetSetProjectInfo(ReaProject, "RENDER_SETTINGS", RenderTable["Source"], true)
@@ -3086,7 +3093,11 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
     local temp = reaper.SNM_GetIntConfigVar("renderclosewhendone",-199)-1
     reaper.SNM_SetIntConfigVar("renderclosewhendone", temp)
   end
-  return true
+  if dirtyness==true then
+    reaper.MarkProjectDirty(0)
+    return true, true
+  end
+  return true, false
 end
 
 --A=ultraschall.GetRenderTable_Project(0)
@@ -3174,57 +3185,57 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
   if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("ApplyRenderTable_ProjectFile", "projectfilename_with_path", "not a valid rpp-projectfile", -4) return false end
   if apply_rendercfg_string~=nil and type(apply_rendercfg_string)~="boolean" then ultraschall.AddErrorMessage("ApplyRenderTable_ProjectFile", "apply_rendercfg_string", "must be boolean", -5) return false end
   
+  local Source=RenderTable["Source"]
   
-  
-  if RenderTable["MultiChannelFiles"]==true and RenderTable["Source"]&4==0 then 
-    RenderTable["Source"]=RenderTable["Source"]+4 
-  elseif RenderTable["MultiChannelFiles"]==false and RenderTable["Source"]&4==4 then 
-    RenderTable["Source"]=RenderTable["Source"]-4 
+  if RenderTable["MultiChannelFiles"]==true and Source&4==0 then 
+    Source=Source+4 
+  elseif RenderTable["MultiChannelFiles"]==false and Source&4==4 then 
+    Source=Source-4 
   end
   
-  if RenderTable["OnlyMonoMedia"]==true and RenderTable["Source"]&16==0 then 
-    RenderTable["Source"]=RenderTable["Source"]+16 
-  elseif RenderTable["OnlyMonoMedia"]==false and RenderTable["Source"]&16==16 then 
-    RenderTable["Source"]=RenderTable["Source"]-16 
+  if RenderTable["OnlyMonoMedia"]==true and Source&16==0 then 
+    Source=Source+16 
+  elseif RenderTable["OnlyMonoMedia"]==false and Source&16==16 then 
+    Source=Source-16 
   end
   
   if RenderTable["EmbedStretchMarkers"]==true then 
-    if RenderTable["Source"]&256==0 then 
-       RenderTable["Source"]=RenderTable["Source"]+256
+    if Source&256==0 then 
+       Source=Source+256
     end
   else
-    if RenderTable["Source"]&256~=0 then 
-       RenderTable["Source"]=RenderTable["Source"]-256
+    if Source&256~=0 then 
+       Source=Source-256
     end
   end
     
   if RenderTable["EmbedMetaData"]==true then 
-    if RenderTable["Source"]&512==0 then 
-       RenderTable["Source"]=RenderTable["Source"]+512
+    if Source&512==0 then 
+       Source=Source+512
     end
   else
-    if RenderTable["Source"]&512~=0 then 
-       RenderTable["Source"]=RenderTable["Source"]-512
+    if Source&512~=0 then 
+       Source=Source-512
     end
   end
   
   if RenderTable["EmbedTakeMarkers"]==true then 
-    if RenderTable["Source"]&1024==0 then 
-       RenderTable["Source"]=RenderTable["Source"]+1024
+    if Source&1024==0 then 
+       Source=Source+1024
     end
   else
-    if RenderTable["Source"]&1024~=0 then 
-       RenderTable["Source"]=RenderTable["Source"]-1024
+    if Source&1024~=0 then 
+       Source=Source-1024
     end
   end
   
   if RenderTable["Enable2ndPassRender"]==true then 
-    if RenderTable["Source"]&2048==0 then 
-       RenderTable["Source"]=RenderTable["Source"]+2048
+    if Source&2048==0 then 
+       Source=Source+2048
     end
   else
-    if RenderTable["Source"]&2048~=0 then 
-       RenderTable["Source"]=RenderTable["Source"]-2048
+    if Source&2048~=0 then 
+       Source=Source-2048
     end
   end
   
@@ -6904,3 +6915,67 @@ function ultraschall.SetRender_TailLength(taillength)
   reaper.GetSetProjectInfo(0, "RENDER_TAILMS", taillength, true)
   return true
 end
+
+function ultraschall.AreRenderTablesEqual(RenderTable1, RenderTable2)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AreRenderTablesEqual</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, optional integer count_differentEntries1, optional table differentEntries1, optional integer count_differentEntries2, optional table differentEntries2 = ultraschall.AreRenderTablesEqual(RenderTable RenderTable1, RenderTable RenderTable2)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    compares two RenderTables and returns true, if they are equal.
+    
+    Returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, RenderTables are equal; false, RenderTables aren't equal
+    optional integer count_differentEntries1 - the number of different table-entries in RenderTable1
+    optional table differentEntries1 - the table-entry-names, that are different in RenderTable1
+    optional integer count_differentEntries2 - the number of different table-entries in RenderTable2
+    optional table differentEntries2 - the table-entry-names, that are different in RenderTable2
+  </retvals>
+  <parameters>
+    RenderTable RenderTable1 - the first RenderTable, that you want to compare
+    RenderTable RenderTable2 - the second RenderTable, that you want to compare
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>projectfiles, compare, rendertable</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidRenderTable(RenderTable1)==false then ultraschall.AddErrorMessage("AreRenderTablesEqual", "RenderTable1", "must be a valid RenderTable", -1) return false end
+  if ultraschall.IsValidRenderTable(RenderTable2)==false then ultraschall.AddErrorMessage("AreRenderTablesEqual", "RenderTable2", "must be a valid RenderTable", -2) return false end
+  local equal=true
+  local entries={}
+  local entries_count=0
+  local entries2={}
+  local entries_count2=0
+  for k, v in pairs(RenderTable1) do
+    --print_alt(k,v,RenderTable2[k])
+    if RenderTable2[k]~=v then
+      entries_count=entries_count+1
+      entries[entries_count]=k
+      equal=false
+    end
+  end
+  for k, v in pairs(RenderTable2) do
+    --print_alt(k,v,RenderTable2[k])
+    if RenderTable1[k]~=v then
+      entries_count2=entries_count2+1
+      entries2[entries_count2]=k
+      equal=false
+    end
+  end
+  return equal, entries_count, entries, entries_count2, entries2
+end
+
+
+--A={ultraschall.AreRenderTablesEqual(B,C)}

@@ -335,13 +335,21 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
       
   -- if Projectlength=0 or CountofTracks==0, set render-settings for empty projects(workaround for that edgecase)
   -- old settings will be restored later
-  if reaper.CountTracks()==0 or reaper.GetProjectLength()==0 then
+  local oldsource2   = reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", 1, false)  
+  local oldsource
+  if reaper.CountTracks()==0 or reaper.GetProjectLength()==0 or oldsource2&4096~=0 then
+  --  print2("Tudel")
     -- get old settings
     oldbounds   =reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", 0, false)
     oldstartpos =reaper.GetSetProjectInfo(0, "RENDER_STARTPOS", 0, false)
     oldendpos   =reaper.GetSetProjectInfo(0, "RENDER_ENDPOS", 1, false)  
+    oldsource   =reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", 1, false)  
        
     -- set useful defaults that'll make adding the project to the render-queue possible always
+    if oldsource&4096~=0 then
+      
+      reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", 0, true)
+    end
     reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", 0, true)
     reaper.GetSetProjectInfo(0, "RENDER_STARTPOS", 0, true)
     reaper.GetSetProjectInfo(0, "RENDER_ENDPOS", 1, true)
@@ -355,17 +363,17 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
   reaper.EnumerateFiles(reaper.GetResourcePath().."/ColorThemes", 1)
   filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/QueuedRenders")
   filecount2, files2 = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/QueuedRenders")
-  
+
   -- add current project to render-queue
   reaper.Main_OnCommand(41823,0)    
-  
   -- reset old hwnd-focus-state 
   reaper.JS_Window_SetFocus(oldfocushwnd)
   
   -- wait, until 
   local timer=reaper.time_precise()  
   while filecount2==filecount do
-    if timer+20000<reaper.time_precise() then ultraschall.AddErrorMessage("GetProjectStateChunk", "", "timeout: Getting the ProjectStateChunk didn't work within 20 seconds for some reasons, please report this as bug to me and include the projectfile with which this happened!", -2) return end --end
+    --print(os.date())
+    if timer+2<reaper.time_precise() then ultraschall.AddErrorMessage("GetProjectStateChunk", "", "timeout: Getting the ProjectStateChunk didn't work within 20 seconds for some reasons, please report this as bug to me and include the projectfile with which this happened!", -2) return end --end
     reaper.EnumerateFiles(reaper.GetResourcePath().."/QueuedRenders", -1)
     filecount2, files2 = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/QueuedRenders")
   end
@@ -383,7 +391,10 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
     reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", oldbounds, true)
     reaper.GetSetProjectInfo(0, "RENDER_STARTPOS", oldstartpos, true)
     reaper.GetSetProjectInfo(0, "RENDER_ENDPOS", oldendpos, true)
-    retval, ProjectStateChunk = ultraschall.SetProject_RenderRange(nil, math.floor(oldbounds), math.floor(oldstartpos), math.floor(oldendpos), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILFLAG", 0, false)), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILMS", 0, false)), ProjectStateChunk)    
+    reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", oldsource, true)  
+    retval, ProjectStateChunk = ultraschall.SetProject_RenderRange(nil, math.floor(oldbounds), math.floor(oldstartpos), math.floor(oldendpos), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILFLAG", 0, false)), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILMS", 0, false)), ProjectStateChunk)
+    retval, ProjectStateChunk = ultraschall.SetProject_RenderStems(nil, math.floor(oldsource), ProjectStateChunk)
+    SLEM()
   end
      
   -- remove QUEUED_RENDER_ORIGINAL_FILENAME and QUEUED_RENDER_OUTFILE-entries, if keepqrender==true

@@ -1,4 +1,6 @@
 <TODO>
+    -- SPectral Edit: supports takes, but do the functions support takes too?
+
     -- later releases
         - Hilfsfunktionen für Lokasenna's GuiLib v2, wie automatisches übertragen der Höhe/Breite/Position-Werte in die entsprechenden Gui-Vals
         - BatchConvertFiles - maybe finishing it up?
@@ -109,8 +111,6 @@ Have fun!"
 
     GetProjectLength - should return the last envelope-point-position as well(how to do that for pooled items?)
     
-    SetMediaItemTake_Reverse - sets a MediaItemTake reversed/normal -> not existing in normal Reaper-API
-    
     OpenURL muss noch url umwandeln auf Ansi Codepage 1252 auf Windows?. Also mit Bat-Datei arbeiten.
     
     RenderPresets: Presetnames with spaces are buggy in GetRenderPreset_Names and deleting-functions
@@ -177,7 +177,6 @@ Have fun!"
                - IsValid-check functions for
                     - AutomationItems, ProjectBay, Metronome, MasterPlayspeed, Tempo, Extensions, MasterHWVolEnv, MasterFXList, MasterDualPanEnv
                       MasterDualPanEnv2, MasterDualPanEnvL, MasterDualPanEnvL2, MasterVolEnv, MasterVolEnv2, MasterVolEnv3, MasterHWPanEnv, TempoEnv_Ex   
-    - TODO!! Monitor the rendering to file-dialog for queue-renders, to get the rendered filenames, using a background script, if possible at all
       TODO!! Default-Color-Theme-Colortables and loading ColorTable from Theme-functions
               Originally Posted by mespotine  View Post
               A second action focusing on only random-strong colors would be useful, I think. Should be scriptable as well though.
@@ -261,12 +260,297 @@ TODO:
     -- Tracks can have rec-fxchains(click on Arm-button and on the bottom of the menu), who are stored beside the FXCHAIN-Statechunk.
     -- Add them AND a trackindex to the inputfx-functions
 
+- IsItem/Track/Envelope/etc still existing-functions.
+
+function DoesItemExist(Item)
+  -- kannst auch Validate Pointer stattdessen für nehmen...
+  return pcall (reaper.IsMediaItemSelected, Item)
+end
+
+- Did any item change?
+--dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+
+function AreThereAlteredItems()
+  if Items==nil then 
+    Items={} -- this stores all the item's statechunks, who hold all states of a 
+  end
+  if ItemsTracks==nil then
+    ItemsTracks={}
+  end
+
+  local Count=reaper.GetProjectStateChangeCount(0) -- get current count of changes in project
+  local ItemCount=reaper.CountMediaItems(0)        -- get current count of MediaItems to get item additions/deletions
+  local retval=false
+  local retval2
+  
+  if Count~=Items["OldCount"] then
+    -- if the change-count is different from the old one, check all items for changes
+    for i=0, reaper.CountMediaItems(0) do -- go through all items
+      local item=reaper.GetMediaItem(0,i) -- get the mediaitem
+      if item~=nil then             -- if at least an item exists, check for item's contents
+        -- check, if an item has moved from one track to another
+        if ItemsTracks[item]~=reaper.GetMediaItem_Track(item) then
+          ItemsTracks[item]=reaper.GetMediaItem_Track(item)
+          retval=true
+        end
+        
+        -- check, if states have changed.
+        local Aretval, statechunk = reaper.GetItemStateChunk(item, "", false) -- get the statechunk(who hold all item-states)
+        -- if the table Items holds this item, check, if the stored ItemStateChunk has changed(altered item) or not(no altered item)
+        if Items[item]~=statechunk then
+          retval=true
+          -- put the statechunk into the table, when it changed
+          Items[item]=statechunk
+        end
+      end
+    end
+    Items["OldCount"]=Count
+  end
+  -- check, if the number of items changed due deletion or addition of items
+  if ItemCount~=Items["OldItemCount"] then 
+    retval=true
+  end
+  Items["OldItemCount"]=ItemCount
+  return retval
+end
+
+function main()
+  retvals, item = AreThereAlteredItems()
+  if retvals==true then
+    reaper.ShowConsoleMsg("An Item has changed at: "..os.date().."\n")
+  end
+  reaper.defer(main)
+end
+
+main()
+
+No idea, whether this is a good idea.
+
+
+BGCopy: Adapt buffer-size automatically(prototyped for XRaym, but this could do the trick in the actual US-API as well:
+
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+ultraschall["CopyFiles_XRaym_Buffersize-MaxBuffer"]=16777216 -- set to maximum-buffer size of 16MB
+
+function XRayms_Buffer_Size_Manipulator3000()
+  if ultraschall["CopyFiles_XRaym_Buffersize-OldTime"]==nil then
+    ultraschall["CopyFiles_XRaym_Buffersize-OldTime"]=reaper.time_precise()
+  end
+  if ultraschall["CopyFiles_XRaym_Buffersize-NewTime"]==nil then
+    ultraschall["CopyFiles_XRaym_Buffersize-NewTime"]=reaper.time_precise()
+  end
+  if ultraschall["CopyFiles_XRaym_Buffersize-Counter"]==nil then
+    ultraschall["CopyFiles_XRaym_Buffersize-Counter"]=0
+  end
+  if ultraschall["CopyFiles_XRaym_Buffersize-MaxBuffer"]==nil then
+    ultraschall["CopyFiles_XRaym_Buffersize-MaxBuffer"]=16777216
+  end
+  
+  local Counter=ultraschall["CopyFiles_XRaym_Buffersize-Counter"]
+  local NewTime=ultraschall["CopyFiles_XRaym_Buffersize-NewTime"]
+  local OldTime=ultraschall["CopyFiles_XRaym_Buffersize-OldTime"]
+  local MaxBuffer=ultraschall["CopyFiles_XRaym_Buffersize-MaxBuffer"]
+  
+  local NewTime=reaper.time_precise()
+  Counter=Counter+1
+  
+  if OldTime+1<=NewTime then
+    -- A=Counter -- debug
+    OldTime=NewTime
+    
+    if Counter>=33 then
+      -- if the defer-loops perform nicely, add to the buffer size til maximum-buffer size by a factor of 2.2
+      local buffer_size = ultraschall.CopyFile_GetBufferSize()
+      -- B=buffer_size -- debug
+      if buffer_size<100 then buffer_size=100 end
+      if buffer_size>=MaxBuffer then 
+        buffer_size=MaxBuffer -- maximum buffer-size set to 16MB/defer-loop
+      else 
+        buffer_size=math.floor(buffer_size*2.2) 
+      end
+      ultraschall.CopyFile_SetBufferSize(buffer_size)
+    else
+      -- if the defer-loops lag, subtract from buffer size by a factor that depends on how few
+      -- defer-loops/second are done.
+      -- Minimum buffer is 100.
+      local buffer_size = ultraschall.CopyFile_GetBufferSize()
+      -- C=buffer_size -- debug
+      if buffer_size<100 then buffer_size=100 end
+      local factor=100/30*Counter/100
+      ultraschall.CopyFile_SetBufferSize(math.floor(buffer_size*factor))
+    end
+    Counter=0
+  end
+  
+  ultraschall["CopyFiles_XRaym_Buffersize-Counter"]=Counter
+  ultraschall["CopyFiles_XRaym_Buffersize-NewTime"]=NewTime
+  ultraschall["CopyFiles_XRaym_Buffersize-OldTime"]=OldTime
+end
+  
+function main()  
+  XRayms_Buffer_Size_Manipulator3000()
+  reaper.defer(main)
+end
+
+main()
+
+**Is Reaper Quitting??
+Ok, I'll add the EnumProjects-approach as "IsReaperQuitting()"-function to my API. I think it would be practical.
+Doesn't work on Windows 7???
+
 </TODO>
 
 
 ## Ultraschall Framework - Changelog
 
-### 4.2.003 - "Georg Friedrich Händel - Sarabande" - 6th of February 2021
+### 4.2.004 - "Grandma - kl" - 12th of June 2021
+
+Has now 1400 functions, with 15 new ones
+
+**new in this release:**  
+
+  - **Automation Items**  
+  You can get now the automation items by time and you can split them.  
+  
+  - **State Inspector**  
+  Allows now using Ctrl+C and Ctrl+V to copy n paste statechunks from the statechunk-views. That way, you can easily get
+  and set statechunks for easier debugging.  
+  
+  - **Rendering**  
+  Razor Edits-rendering is now supported.  
+  
+  - **InputFX**  
+  All inputFX-functions allow now adressing inputfx of specific tracks.  
+  
+  - **GMEM**  
+  You can get now all gmems from a specific gmem-name. You can also get all values from the Video-Sample-Peeker-JSFX to do something with it, like visualizing.
+ 
+  - **Razor Edit**  
+  You can get all razor-edits from the current project as well as checking, whether there's any razor-edit at all.
+  
+  - **MetaData Presets**  
+  You can get now all metadata-entries from the metadata-presets. Will be enhanced in the future with additional functions.  
+  
+  - **Developer Tools**  
+  Get now the statechunk of items/envelopes/tracks underneath the mouse directly into the clipboard and put the statechunks from clipboard back into it.  
+  
+  - **BatchConverter**  
+  Works now, now that I fixed this stupid bug..cough...cough...
+  
+  - **Docs updates**  
+  Updated Docs to Reaper 6.29 and added ReaImGui, ReaBlink.
+  
+  - **Tons of bugfixes and stuff**  
+  
+#### New features in 4.2.004  
+  - Automation Items: AutomationItems\_GetByTime - gets all automation-items from an envelope at position(requested by AZpercussion)
+  - Automation Items: AutomationItem\_Split - splits a specific automation-item from an envelope at position(requested by AZpercussion)
+  - Developer Tools: EnvelopeStateChunk\_from\_Clipboard\_envelope\_to\_under\_mouse.lua - gets envelopestatechunk from clipboard to envelope under the mouse
+  - Developer Tools: EnvelopeStateChunk\_from\_Clipboard\_to\_selected\_envelope.lua - gets envelope statechunk from clipboard to selected envelope
+  - Developer Tools: EnvelopeStateChunk\_to\_Clipboard\_selected\_envelope - puts statechunk of selected envelope into clipboard
+  - Developer Tools: Find\_Duplicated\_Lines\_In\_Clipboard - shows duplicated lines in the string in the clipboard
+  - Developer Tools: ItemStateChunk\_from\_Clipboard\_to\_first\_selected\_item.lua - gets trackstatechunk from clipboard to first selected track
+  - Developer Tools: ItemStateChunk\_from\_Clipboard\_to\_item\_mouse.lua - gets itemstatechunk from clipboard to item under the mouse
+  - Developer Tools: ItemStateChunk\_to\_Clipboard\_first\_selected\_item - puts statechunk of first selected item into clipboard
+  - Developer Tools: ItemStateChunk\_to\_Clipboard\_item\_under\_mouse - puts statechunk of item under the mouse into clipboard
+  - Developer Tools: TrackStateChunk\_to\_Clipboard\_first\_selected\_track - puts statechunk of first selected track into clipboard
+  - Developer Tools: TrackStateChunk\_to\_Clipboard\_track\_under\_mouse - puts statechunk of track under the mouse into clipboard   
+  - Developer Tools: EnvelopeStateChunk\_to\_Clipboard\_envelope\_under\_mouse - puts statechunk of envelope under the mouse into clipboard
+  - Docs: Reaper API-docs - added ReaImGui 0.4.1, OSARA 2021, ReaBlink 0.4.0
+  - Examplescript: US\_Api\_Examples\_Visualize\_VideoSamplePeekerJSFX.lua - displays the Video Sample Peeker-JSFX-values in a gfx-window
+  - GMem: GMem\_Read\_ValueRange - returns a value-range from gmem-values as a handy table
+  - GMem: GMem\_GetValues\_VideoSamplePeeker - returns the samples as provided by the jsfx "video sample peeker", whose values are used by certain video processor presets
+  - MediaItem-Management: ApplyActionToMediaItemTake - allows applying actions to MediaItemTakes
+  - MediaItem-Management: CountMediaItemTake\_StateChunk - counts all takes in a MediaItemStateChunk
+  - MediaItem-Management: GetMediaItemTake\_StateChunk - gets a TakeStateChunk from a MediaItemStateChunk  
+  - Metadata-Management: Metadata\_GetAllPresetNames - returns all metadata-presetnames
+  - Metadata-Management: Metadata\_GetMetaDataTable\_Presets - returns all metadata-presetnames
+  - Razor Edit: RazorEdit\_GetAllRazorEdits - returns a table with all razor-edits available in the current project
+  - Razor Edit: RazorEdit\_ProjectHasRazorEdit - returns, if the currently opened project contains any Razor Edits
+  - Rendering: AreRenderTablesEqual - compares, if two RenderTables are equal
+  - Spectral Edit: CountItemSpectralEdit2 - counts all spectral-edits within a take(requested by Fabian)
+  - Spectral Edit: GetItemSpectralConfig2 - gets the spectral-config of a take(requested by Fabian)
+  - Spectral Edit: GetItemSpectralEdit2 - gets all spectral-edit-states of a take(requested by Fabian)
+  
+  
+#### Changes from 4.2.003 to 4.2.004    
+  - API: Modulator3000 - reverted binary-chunk back to source-code, due Reaper-path-encoding problems with Umlauts in resourcepath(thanks to rstockm)
+  - API-HelperFunctions: SFEM - parameters didn't work as I..ehrm....forgot to add them.... -> fixed
+  - ConfigurationManagement: KB-ini-functions - parameter/retval-descriptions were missing information -> fixed
+  - Developer Tools: State Inspector - the show item/track/envelope-statechunk modes allow now copy'n'pasting of statechunks from/to clipboard
+  - Docs: Filetype Descriptions - added missing descriptions and mouse modifiers for reaper-mouse.ini
+  - Docs: Reaper Internals - updated to Reaper 6.29
+  - File-Management: BatchConvertFiles - added, as I had forgotten to add it in the last release -> fixed
+  - FXManagement: InputFX\_AddByName - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_CopyFX - couldn't copy fx to the end of the fx-chain -> fixed; supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_CopyFXFromTakeFX - supports now inputFX of individual tracks as well(thanks to X-Raym)  
+  - FXManagement: InputFX\_CopyFXFromTrackFX - supports now inputFX of individual tracks as well(thanks to X-Raym)  
+  - FXManagement: InputFX\_CopyFXToTakeFX - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_CopyFXToTrackFX - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetCount - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_Delete - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_EndParamEdit - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_FormatParamValue - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_FormatParamValueNormalized - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetChainVisible - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetEnabled - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetEQ - supports now inputFX of individual tracks as well(thanks to X-Raym)  
+  - FXManagement: InputFX\_GetEQBandEnabled - supports now inputFX of individual tracks as well(thanks to X-Raym)    
+  - FXManagement: InputFX\_GetEQParam - supports now inputFX of individual tracks as well(thanks to X-Raym)      
+  - FXManagement: InputFX\_GetFloatingWindow - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetFormattedParamValue - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetFXChain - readded global monitoring-fxchain-entries; supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetFXGUID - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetFXName - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetIOSize - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetNamedConfigParm - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetOffline - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetOpen - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetParam - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetParameterStepSizes - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetParamEx - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetParamName - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetParamNormalized - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetPinMappings - didn't work due bug -> fixed, supports now inputFX of individual tracks as well(thanks to X-Raym)  
+  - FXManagement: InputFX\_GetPreset - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_GetUserPresetFilename - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_MoveFX - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_MoveFXFromTakeFX - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_MoveFXFromTrackFX - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_MoveFXToTakeFX - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_MoveFXToTrackFX - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_NavigatePresets - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_QueryFirstFXIndex - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_SetEnabled - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_SetEQBandEnabled - supports now inputFX of individual tracks as well(thanks to X-Raym)  
+  - FXManagement: InputFX\_SetEQParam - supports now inputFX of individual tracks as well(thanks to X-Raym)  
+  - FXManagement: InputFX\_SetFXChain - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_SetOffline - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_SetOpen - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_SetParam - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_SetParamNormalized - supports now inputFX of individual tracks as well(thanks to X-Raym)  
+  - FXManagement: InputFX\_SetPinMappings - supports now inputFX of individual tracks as well(thanks to X-Raym)  
+  - FXManagement: InputFX\_SetPreset - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_SetPresetByIndex - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: InputFX\_Show - supports now inputFX of individual tracks as well(thanks to X-Raym)
+  - FXManagement: IsValidFXStateChunk - supports now inputFX-FXChains as well(thanks to X-Raym)
+  - Helper functions: IsOS\_Mac - didn't work on arm-macs due stupid typo -> fixed(thanks to rstockm)
+  - Helper functions: StateChunkLayouter - corrected edge-case that could cause missing > at the end -> fixed
+  - Parameter-Modulation: CountParmModFromFXStateChunk - didn't return correct error-retvals -> fixed
+  - ProjectManagement: GetProjectStateChunk - had trouble with Razor-Edit-render-options activated in Reaper 6.26 -> fixed
+  - Rendering: all functions - support now Razor Area rendering
+  - Rendering: ApplyRenderTable\_Project - allows now setting project to dirty, if RenderTable is different from the current project's render settings; changed a value of the provided RenderTable, which shouldn't happen -> fixed
+  - Rendering: ApplyRenderTable\_ProjectFile - changed a value of the provided RenderTable, which shouldn't happen -> fixed
+  - TrackManagement: GetTrackGroupFlagsState - returns now the table with all 23-entries, even if some checkboxes aren't set in any group
+  - TrackManagement: GetTrackGroupFlags\_HighState  - returns now the table with all 23-entries, even if some checkboxes aren't set in any group
+  
+  
+  
+---
+
+### 4.2.003 - "Georg Friedrich Handel - Sarabande" - 6th of February 2021
 
 Has now 1385 functions, with 26 new ones
 
@@ -339,24 +623,24 @@ Has now 1385 functions, with 26 new ones
        
 #### Changes from 4.2.002 to 4.2.003  
   - Automation Items: AutomationItem\_Delete - didn't work due stupid bug, completely rewritten -> fixed(thanks to XRaym)  
-  - Configuration-files: CountKBIniActions - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: CountKBIniKeys - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: CountKBIniScripts - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: DeleteKBIniActions - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: DeleteKBIniKeys - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: DeleteKBIniScripts - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: GetActionCommandIDByFilename - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: GetKBIniActions - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: GetKBIniActionsID\_ByActionCommandID - setting filename_with_path=nil uses default reaper-kb.ini; rewritten and sped up by magnitudes; returns found indices as table now; didn't work with command-id-numbers -> fixed(thanks to Aaron Cendan)
-  - Configuration-files: GetKBIniFilepath - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: GetKBIniKeys - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: GetKBIniKeys\_ByActionCommandID - setting filename_with_path=nil uses default reaper-kb.ini; rewritten and sped up by magnitudes; returns found indices as table now; didn't work with command-id-numbers -> fixed(thanks to Aaron Cendan)
-  - Configuration-files: GetKBIniScripts - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: GetKBIniScripts\_ByActionCommandID - setting filename_with_path=nil uses default reaper-kb.ini; rewritten and sped up by magnitudes; returns found indices as table now; didn't work with command-id-numbers -> fixed(thanks to Aaron Cendan)
-  - Configuration-files: QueryKeyboardShortcutByKeyID - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: SetKBIniActions - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: SetKBIniKeys - setting filename_with_path=nil uses default reaper-kb.ini
-  - Configuration-files: SetKBIniScripts - setting filename_with_path=nil uses default reaper-kb.ini
+  - Configuration-files: CountKBIniActions - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: CountKBIniKeys - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: CountKBIniScripts - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: DeleteKBIniActions - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: DeleteKBIniKeys - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: DeleteKBIniScripts - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: GetActionCommandIDByFilename - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: GetKBIniActions - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: GetKBIniActionsID\_ByActionCommandID - setting filename\_with\_path=nil uses default reaper-kb.ini; rewritten and sped up by magnitudes; returns found indices as table now; didn't work with command-id-numbers -> fixed(thanks to Aaron Cendan)
+  - Configuration-files: GetKBIniFilepath - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: GetKBIniKeys - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: GetKBIniKeys\_ByActionCommandID - setting filename\_with\_path=nil uses default reaper-kb.ini; rewritten and sped up by magnitudes; returns found indices as table now; didn't work with command-id-numbers -> fixed(thanks to Aaron Cendan)
+  - Configuration-files: GetKBIniScripts - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: GetKBIniScripts\_ByActionCommandID - setting filename\_with\_path=nil uses default reaper-kb.ini; rewritten and sped up by magnitudes; returns found indices as table now; didn't work with command-id-numbers -> fixed(thanks to Aaron Cendan)
+  - Configuration-files: QueryKeyboardShortcutByKeyID - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: SetKBIniActions - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: SetKBIniKeys - setting filename\_with\_path=nil uses default reaper-kb.ini
+  - Configuration-files: SetKBIniScripts - setting filename\_with\_path=nil uses default reaper-kb.ini
   - Developer Tools: ultraschall\_functions\_ProjectManagement\_ProjectFiles\_Module.lua - uses now the project active at script-start.
   - Developer Tools: ultraschall\_ShowProjectDiffs.lua - doesn't need to save the project anymore to show changes in the projectfile
   - Docs: Reaper Internals - update to Reaper 6.20, SWS 2.12.1.3; added missing retvals and params, removed duplicated ones    
@@ -750,10 +1034,10 @@ Has now 1240 functions, with 25 new ones
     ultraschall.ShowLastErrorMessage() shall output their error-messages.  
     More to follow.  
 
-  - **Launchpad\_functions**
+  - **Launchpad\_functions**  
     I wrote some launchpad 1st generation-functions, which you can find in the misc-folder. So if you want to be able to program its button's lights, you can do it.  
     
-  - **Gmem functions**
+  - **Gmem functions**  
     For those of you, who want to use different gmem-names in your functions, you sometimes run into trouble, that you can't restore the old gmem-attachement again, as you can't get its old name.  
     Now you can. Gmem\_GetCurrentAttachedName returns the last used gmem-attachname. Keep it to later attach the old gmem back.  
     This works best, if you add the dofile-line to activate Ultraschall-API as first code-line in your script.  
@@ -762,7 +1046,7 @@ Has now 1240 functions, with 25 new ones
     To showcase the background-copying-functions, I wrote a small filemanager demo, which is now available in the example-scripts.  
     It shows you, how you can copy even large files in the background and still manage to run the UI of a script without having to code complex background-copying-routines.      
 
-  - **MB works again on Windows and Linux**
+  - **MB works again on Windows and Linux**  
     Broke in Reaper 6 but I could fix it so replacing the button-texts is possible again. Mac-users are out of luck, as the button-texts can't be replaced there in the first place. Sorry.  
     
   - **GetUserInputs on Mac**  

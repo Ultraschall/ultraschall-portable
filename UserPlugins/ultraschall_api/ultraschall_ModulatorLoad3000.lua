@@ -52,6 +52,7 @@ ultraschall.Modules_List={"ultraschall_functions_AudioManagement_Module.lua",
 "ultraschall_functions_Navigation_Module.lua",
 "ultraschall_functions_ProjectManagement_Module.lua",
 "ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua",
+"ultraschall_functions_RazorEdit_Module.lua",
 "ultraschall_functions_ReaMote_Module.lua",
 "ultraschall_functions_ReaperUserInterface_Module.lua",
 "ultraschall_functions_Render_Module.lua",
@@ -106,6 +107,14 @@ else
   function ultraschall.AutomationItem_Delete(...)
     ultraschall.LM(2)
     return ultraschall.AutomationItem_Delete(table.unpack({...}))
+  end
+  function ultraschall.AutomationItems_GetByTime(...)
+    ultraschall.LM(2)
+    return ultraschall.AutomationItems_GetByTime(table.unpack({...}))
+  end
+  function ultraschall.AutomationItem_Split(...)
+    ultraschall.LM(2)
+    return ultraschall.AutomationItem_Split(table.unpack({...}))
   end
   function ultraschall.GetMediaItemsFromClipboard(...)
     ultraschall.LM(3)
@@ -1915,6 +1924,14 @@ else
     ultraschall.LM(12)
     return ultraschall.CreateMultiDimTable(table.unpack({...}))
   end
+  function ultraschall.GMem_Read_ValueRange(...)
+    ultraschall.LM(12)
+    return ultraschall.GMem_Read_ValueRange(table.unpack({...}))
+  end
+  function ultraschall.GMem_GetValues_VideoSamplePeeker(...)
+    ultraschall.LM(12)
+    return ultraschall.GMem_GetValues_VideoSamplePeeker(table.unpack({...}))
+  end
   function ultraschall.ResizePNG(...)
     ultraschall.LM(13)
     return ultraschall.ResizePNG(table.unpack({...}))
@@ -2775,6 +2792,30 @@ else
     ultraschall.LM(17)
     return ultraschall.IsItemVisible(table.unpack({...}))
   end
+  function ultraschall.ApplyActionToMediaItemTake(...)
+    ultraschall.LM(17)
+    return ultraschall.ApplyActionToMediaItemTake(table.unpack({...}))
+  end
+  function ultraschall.CountMediaItemTake_StateChunk(...)
+    ultraschall.LM(17)
+    return ultraschall.CountMediaItemTake_StateChunk(table.unpack({...}))
+  end
+  function ultraschall.GetMediaItemTake_StateChunk(...)
+    ultraschall.LM(17)
+    return ultraschall.GetMediaItemTake_StateChunk(table.unpack({...}))
+  end
+  function ultraschall.GetItemSpectralConfig2(...)
+    ultraschall.LM(17)
+    return ultraschall.GetItemSpectralConfig2(table.unpack({...}))
+  end
+  function ultraschall.GetItemSpectralEdit2(...)
+    ultraschall.LM(17)
+    return ultraschall.GetItemSpectralEdit2(table.unpack({...}))
+  end
+  function ultraschall.GetItemSpectralConfig2(...)
+    ultraschall.LM(17)
+    return ultraschall.GetItemSpectralConfig2(table.unpack({...}))
+  end
   function ultraschall.DeleteProjExtState_Section(...)
     ultraschall.LM(18)
     return ultraschall.DeleteProjExtState_Section(table.unpack({...}))
@@ -2842,6 +2883,14 @@ else
   function ultraschall.Metadata_APE_GetSet(...)
     ultraschall.LM(18)
     return ultraschall.Metadata_APE_GetSet(table.unpack({...}))
+  end
+  function ultraschall.Metadata_GetMetaDataTable_Presets(...)
+    ultraschall.LM(18)
+    return ultraschall.Metadata_GetMetaDataTable_Presets(table.unpack({...}))
+  end
+  function ultraschall.Metadata_GetAllPresetNames(...)
+    ultraschall.LM(18)
+    return ultraschall.Metadata_GetAllPresetNames(table.unpack({...}))
   end
   function ultraschall.ZoomVertical_MidiEditor(...)
     ultraschall.LM(19)
@@ -3719,1608 +3768,1620 @@ else
     ultraschall.LM(23)
     return ultraschall.SetProject_MasterTrackView(table.unpack({...}))
   end
-  function ultraschall.AutoSearchReaMoteClients(...)
+  function ultraschall.RazorEdit_ProjectHasRazorEdit(...)
     ultraschall.LM(24)
+    return ultraschall.RazorEdit_ProjectHasRazorEdit(table.unpack({...}))
+  end
+  function ultraschall.RazorEdit_GetAllRazorEdits(...)
+    ultraschall.LM(24)
+    return ultraschall.RazorEdit_GetAllRazorEdits(table.unpack({...}))
+  end
+  function ultraschall.AutoSearchReaMoteClients(...)
+    ultraschall.LM(25)
     return ultraschall.AutoSearchReaMoteClients(table.unpack({...}))
   end
   function ultraschall.GetVerticalZoom(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetVerticalZoom(table.unpack({...}))
   end
   function ultraschall.SetVerticalZoom(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetVerticalZoom(table.unpack({...}))
   end
   function ultraschall.StoreArrangeviewSnapshot(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.StoreArrangeviewSnapshot(table.unpack({...}))
   end
   function ultraschall.IsValidArrangeviewSnapshot(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.IsValidArrangeviewSnapshot(table.unpack({...}))
   end
   function ultraschall.RetrieveArrangeviewSnapshot(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.RetrieveArrangeviewSnapshot(table.unpack({...}))
   end
   function ultraschall.RestoreArrangeviewSnapshot(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.RestoreArrangeviewSnapshot(table.unpack({...}))
   end
   function ultraschall.DeleteArrangeviewSnapshot(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.DeleteArrangeviewSnapshot(table.unpack({...}))
   end
   function ultraschall.SetIDEFontSize(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetIDEFontSize(table.unpack({...}))
   end
   function ultraschall.GetIDEFontSize(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetIDEFontSize(table.unpack({...}))
   end
   function ultraschall.GetPlayCursorWidth(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetPlayCursorWidth(table.unpack({...}))
   end
   function ultraschall.SetPlayCursorWidth(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetPlayCursorWidth(table.unpack({...}))
   end
   function ultraschall.GetScreenWidth(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetScreenWidth(table.unpack({...}))
   end
   function ultraschall.GetScreenHeight(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetScreenHeight(table.unpack({...}))
   end
   function ultraschall.ShowMenu(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowMenu(table.unpack({...}))
   end
   function ultraschall.IsValidHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.IsValidHWND(table.unpack({...}))
   end
   function ultraschall.BrowseForOpenFiles(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.BrowseForOpenFiles(table.unpack({...}))
   end
   function ultraschall.HasHWNDChildWindowNames(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.HasHWNDChildWindowNames(table.unpack({...}))
   end
   function ultraschall.CloseReaScriptConsole(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.CloseReaScriptConsole(table.unpack({...}))
   end
   function ultraschall.MB(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.MB(table.unpack({...}))
   end
   function ultraschall.GetTopmostHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetTopmostHWND(table.unpack({...}))
   end
   function ultraschall.GetReaperWindowAttributes(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetReaperWindowAttributes(table.unpack({...}))
   end
   function ultraschall.Windows_Find(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.Windows_Find(table.unpack({...}))
   end
   function ultraschall.GetAllReaScriptIDEWindows(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetAllReaScriptIDEWindows(table.unpack({...}))
   end
   function ultraschall.GetReaScriptConsoleWindow(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetReaScriptConsoleWindow(table.unpack({...}))
   end
   function ultraschall.GetHWND_ArrangeViewAndTimeLine(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetHWND_ArrangeViewAndTimeLine(table.unpack({...}))
   end
   function ultraschall.GetVerticalScroll(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetVerticalScroll(table.unpack({...}))
   end
   function ultraschall.SetVerticalScroll(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetVerticalScroll(table.unpack({...}))
   end
   function ultraschall.SetVerticalRelativeScroll(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetVerticalRelativeScroll(table.unpack({...}))
   end
   function ultraschall.GetUserInputs(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetUserInputs(table.unpack({...}))
   end
   function ultraschall.GetRenderToFileHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetRenderToFileHWND(table.unpack({...}))
   end
   function ultraschall.GetActionsHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetActionsHWND(table.unpack({...}))
   end
   function ultraschall.GetVideoHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetVideoHWND(table.unpack({...}))
   end
   function ultraschall.GetRenderQueueHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetRenderQueueHWND(table.unpack({...}))
   end
   function ultraschall.GetProjectSettingsHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetProjectSettingsHWND(table.unpack({...}))
   end
   function ultraschall.GetPreferencesHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetPreferencesHWND(table.unpack({...}))
   end
   function ultraschall.GetSaveLiveOutputToDiskHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetSaveLiveOutputToDiskHWND(table.unpack({...}))
   end
   function ultraschall.GetConsolidateTracksHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetConsolidateTracksHWND(table.unpack({...}))
   end
   function ultraschall.GetExportProjectMIDIHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetExportProjectMIDIHWND(table.unpack({...}))
   end
   function ultraschall.GetProjectDirectoryCleanupHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetProjectDirectoryCleanupHWND(table.unpack({...}))
   end
   function ultraschall.GetBatchFileItemConverterHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetBatchFileItemConverterHWND(table.unpack({...}))
   end
   function ultraschall.SetReaScriptConsole_FontStyle(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetReaScriptConsole_FontStyle(table.unpack({...}))
   end
   function ultraschall.MoveChildWithinParentHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.MoveChildWithinParentHWND(table.unpack({...}))
   end
   function ultraschall.GetChildSizeWithinParentHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetChildSizeWithinParentHWND(table.unpack({...}))
   end
   function ultraschall.GetCheckboxState(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetCheckboxState(table.unpack({...}))
   end
   function ultraschall.SetCheckboxState(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetCheckboxState(table.unpack({...}))
   end
   function ultraschall.GetRenderingToFileHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetRenderingToFileHWND(table.unpack({...}))
   end
   function ultraschall.ConvertScreen2ClientXCoordinate_ReaperWindow(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ConvertScreen2ClientXCoordinate_ReaperWindow(table.unpack({...}))
   end
   function ultraschall.ConvertClient2ScreenXCoordinate_ReaperWindow(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ConvertClient2ScreenXCoordinate_ReaperWindow(table.unpack({...}))
   end
   function ultraschall.SetReaperWindowToSize(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetReaperWindowToSize(table.unpack({...}))
   end
   function ultraschall.ConvertYCoordsMac2Win(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ConvertYCoordsMac2Win(table.unpack({...}))
   end
   function ultraschall.GetMediaExplorerHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetMediaExplorerHWND(table.unpack({...}))
   end
   function ultraschall.GetTimeByMouseXPosition(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetTimeByMouseXPosition(table.unpack({...}))
   end
   function ultraschall.ShowTrackInputMenu(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowTrackInputMenu(table.unpack({...}))
   end
   function ultraschall.ShowTrackPanelMenu(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowTrackPanelMenu(table.unpack({...}))
   end
   function ultraschall.ShowTrackAreaMenu(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowTrackAreaMenu(table.unpack({...}))
   end
   function ultraschall.ShowTrackRoutingMenu(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowTrackRoutingMenu(table.unpack({...}))
   end
   function ultraschall.ShowRulerMenu(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowRulerMenu(table.unpack({...}))
   end
   function ultraschall.ShowMediaItemMenu(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowMediaItemMenu(table.unpack({...}))
   end
   function ultraschall.ShowEnvelopeMenu(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowEnvelopeMenu(table.unpack({...}))
   end
   function ultraschall.ShowEnvelopePointMenu(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowEnvelopePointMenu(table.unpack({...}))
   end
   function ultraschall.ShowEnvelopePointMenu_AutomationItem(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowEnvelopePointMenu_AutomationItem(table.unpack({...}))
   end
   function ultraschall.ShowAutomationItemMenu(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ShowAutomationItemMenu(table.unpack({...}))
   end
   function ultraschall.GetSaveProjectAsHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetSaveProjectAsHWND(table.unpack({...}))
   end
   function ultraschall.SetHelpDisplayMode(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetHelpDisplayMode(table.unpack({...}))
   end
   function ultraschall.GetHelpDisplayMode(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetHelpDisplayMode(table.unpack({...}))
   end
   function ultraschall.WiringDiagram_SetOptions(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.WiringDiagram_SetOptions(table.unpack({...}))
   end
   function ultraschall.WiringDiagram_GetOptions(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.WiringDiagram_GetOptions(table.unpack({...}))
   end
   function ultraschall.GetTCPWidth(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetTCPWidth(table.unpack({...}))
   end
   function ultraschall.VideoWindow_FullScreenToggle(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.VideoWindow_FullScreenToggle(table.unpack({...}))
   end
   function ultraschall.PreventUIRefresh(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.PreventUIRefresh(table.unpack({...}))
   end
   function ultraschall.RestoreUIRefresh(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.RestoreUIRefresh(table.unpack({...}))
   end
   function ultraschall.GetPreventUIRefreshCount(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetPreventUIRefreshCount(table.unpack({...}))
   end
   function ultraschall.SetItemButtonsVisible(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetItemButtonsVisible(table.unpack({...}))
   end
   function ultraschall.GetItemButtonsVisible(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetItemButtonsVisible(table.unpack({...}))
   end
   function ultraschall.TCP_SetWidth(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.TCP_SetWidth(table.unpack({...}))
   end
   function ultraschall.GetTrackManagerHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetTrackManagerHWND(table.unpack({...}))
   end
   function ultraschall.SetTimeUnit(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetTimeUnit(table.unpack({...}))
   end
   function ultraschall.ReturnAllChildHWND(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.ReturnAllChildHWND(table.unpack({...}))
   end
   function ultraschall.SetUIScale(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.SetUIScale(table.unpack({...}))
   end
   function ultraschall.GetUIScale(...)
-    ultraschall.LM(25)
+    ultraschall.LM(26)
     return ultraschall.GetUIScale(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_FLAC(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_FLAC(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_AIFF(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_AIFF(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_AudioCD(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_AudioCD(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_MP3(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_MP3(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_MP3MaxQuality(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_MP3MaxQuality(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_MP3CBR(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_MP3CBR(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_MP3VBR(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_MP3VBR(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_MP3ABR(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_MP3ABR(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_OGG(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_OGG(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_OPUS(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_OPUS(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_GIF(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_GIF(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_LCF(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_LCF(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_WAV(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_WAV(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_WAVPACK(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_WAVPACK(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_WebMVideo(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_WebMVideo(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_MKV_Video(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_MKV_Video(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_AVI_Video(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_AVI_Video(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_DDP(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_DDP(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_GIF(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_GIF(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_LCF(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_LCF(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_WebMVideo(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_WebMVideo(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_MKV_Video(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_MKV_Video(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_QTMOVMP4_Video(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_QTMOVMP4_Video(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_AVI_Video(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_AVI_Video(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_MP4Mac_Video(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_MP4Mac_Video(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_MOVMac_Video(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_MOVMac_Video(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_M4AMac(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderCFG_Settings_M4AMac(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_MP4MAC_Video(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_MP4MAC_Video(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_M4AMAC(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_M4AMAC(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_MOVMAC_Video(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_MOVMAC_Video(table.unpack({...}))
   end
   function ultraschall.GetRenderTable_Project(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderTable_Project(table.unpack({...}))
   end
   function ultraschall.GetRenderTable_ProjectFile(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderTable_ProjectFile(table.unpack({...}))
   end
   function ultraschall.GetOutputFormat_RenderCfg(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetOutputFormat_RenderCfg(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_Opus(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_Opus(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_OGG(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_OGG(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_DDP(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_DDP(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_FLAC(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_FLAC(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_WAVPACK(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_WAVPACK(table.unpack({...}))
   end
   function ultraschall.IsValidRenderTable(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.IsValidRenderTable(table.unpack({...}))
   end
   function ultraschall.ApplyRenderTable_Project(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.ApplyRenderTable_Project(table.unpack({...}))
   end
   function ultraschall.ApplyRenderTable_ProjectFile(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.ApplyRenderTable_ProjectFile(table.unpack({...}))
   end
   function ultraschall.CreateNewRenderTable(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateNewRenderTable(table.unpack({...}))
   end
   function ultraschall.GetRender_SaveCopyOfProject(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_SaveCopyOfProject(table.unpack({...}))
   end
   function ultraschall.SetRender_QueueDelay(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_QueueDelay(table.unpack({...}))
   end
   function ultraschall.SetRender_SaveCopyOfProject(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_SaveCopyOfProject(table.unpack({...}))
   end
   function ultraschall.GetRender_QueueDelay(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_QueueDelay(table.unpack({...}))
   end
   function ultraschall.SetRender_ProjectSampleRateForMix(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_ProjectSampleRateForMix(table.unpack({...}))
   end
   function ultraschall.GetRender_ProjectSampleRateForMix(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_ProjectSampleRateForMix(table.unpack({...}))
   end
   function ultraschall.SetRender_AutoIncrementFilename(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_AutoIncrementFilename(table.unpack({...}))
   end
   function ultraschall.GetRender_AutoIncrementFilename(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_AutoIncrementFilename(table.unpack({...}))
   end
   function ultraschall.GetRenderPreset_Names(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderPreset_Names(table.unpack({...}))
   end
   function ultraschall.GetRenderPreset_RenderTable(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderPreset_RenderTable(table.unpack({...}))
   end
   function ultraschall.DeleteRenderPreset_Bounds(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.DeleteRenderPreset_Bounds(table.unpack({...}))
   end
   function ultraschall.DeleteRenderPreset_FormatOptions(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.DeleteRenderPreset_FormatOptions(table.unpack({...}))
   end
   function ultraschall.AddRenderPreset(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.AddRenderPreset(table.unpack({...}))
   end
   function ultraschall.SetRenderPreset(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRenderPreset(table.unpack({...}))
   end
   function ultraschall.RenderProject_RenderTable(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.RenderProject_RenderTable(table.unpack({...}))
   end
   function ultraschall.GetRenderQueuedProjects(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRenderQueuedProjects(table.unpack({...}))
   end
   function ultraschall.AddProjectFileToRenderQueue(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.AddProjectFileToRenderQueue(table.unpack({...}))
   end
   function ultraschall.RenderProject_RenderQueue(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.RenderProject_RenderQueue(table.unpack({...}))
   end
   function ultraschall.RenderProject(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.RenderProject(table.unpack({...}))
   end
   function ultraschall.RenderProject_Regions(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.RenderProject_Regions(table.unpack({...}))
   end
   function ultraschall.AddSelectedItemsToRenderQueue(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.AddSelectedItemsToRenderQueue(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_MP3MaxQuality(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_MP3MaxQuality(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_MP3VBR(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_MP3VBR(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_MP3ABR(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_MP3ABR(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_MP3CBR(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_MP3CBR(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_WAV(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_WAV(table.unpack({...}))
   end
   function ultraschall.GetLastUsedRenderPatterns(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetLastUsedRenderPatterns(table.unpack({...}))
   end
   function ultraschall.GetLastRenderPaths(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetLastRenderPaths(table.unpack({...}))
   end
   function ultraschall.IsReaperRendering(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.IsReaperRendering(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_AIFF(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_AIFF(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_AudioCD(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.CreateRenderCFG_AudioCD(table.unpack({...}))
   end
   function ultraschall.GetRender_EmbedStretchMarkers(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_EmbedStretchMarkers(table.unpack({...}))
   end
   function ultraschall.SetRender_EmbedStretchMarkers(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_EmbedStretchMarkers(table.unpack({...}))
   end
   function ultraschall.Render_Loop(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.Render_Loop(table.unpack({...}))
   end
   function ultraschall.GetRender_EmbedMetaData(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_EmbedMetaData(table.unpack({...}))
   end
   function ultraschall.SetRender_EmbedMetaData(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_EmbedMetaData(table.unpack({...}))
   end
   function ultraschall.SetRender_OfflineOnlineMode(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_OfflineOnlineMode(table.unpack({...}))
   end
   function ultraschall.GetRender_OfflineOnlineMode(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_OfflineOnlineMode(table.unpack({...}))
   end
   function ultraschall.GetRender_ResampleMode(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_ResampleMode(table.unpack({...}))
   end
   function ultraschall.SetRender_ResampleMode(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_ResampleMode(table.unpack({...}))
   end
   function ultraschall.GetRender_NoSilentFiles(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_NoSilentFiles(table.unpack({...}))
   end
   function ultraschall.SetRender_NoSilentFiles(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_NoSilentFiles(table.unpack({...}))
   end
   function ultraschall.GetRender_AddRenderedFilesToProject(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_AddRenderedFilesToProject(table.unpack({...}))
   end
   function ultraschall.SetRender_AddRenderedFilesToProject(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_AddRenderedFilesToProject(table.unpack({...}))
   end
   function ultraschall.GetRender_TailLength(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.GetRender_TailLength(table.unpack({...}))
   end
   function ultraschall.SetRender_TailLength(...)
-    ultraschall.LM(26)
+    ultraschall.LM(27)
     return ultraschall.SetRender_TailLength(table.unpack({...}))
   end
-  function ultraschall.GetAllThemeLayoutNames(...)
+  function ultraschall.AreRenderTablesEqual(...)
     ultraschall.LM(27)
+    return ultraschall.AreRenderTablesEqual(table.unpack({...}))
+  end
+  function ultraschall.GetAllThemeLayoutNames(...)
+    ultraschall.LM(28)
     return ultraschall.GetAllThemeLayoutNames(table.unpack({...}))
   end
   function ultraschall.GetAllThemeLayoutParameters(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.GetAllThemeLayoutParameters(table.unpack({...}))
   end
   function ultraschall.ApplyAllThemeLayoutParameters(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.ApplyAllThemeLayoutParameters(table.unpack({...}))
   end
   function ultraschall.GetThemeParameterIndexByName(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.GetThemeParameterIndexByName(table.unpack({...}))
   end
   function ultraschall.SetThemeParameterIndexByName(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.SetThemeParameterIndexByName(table.unpack({...}))
   end
   function ultraschall.GetThemeParameterIndexByDescription(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.GetThemeParameterIndexByDescription(table.unpack({...}))
   end
   function ultraschall.SetThemeParameterIndexByDescription(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.SetThemeParameterIndexByDescription(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetHideTCPElement(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetHideTCPElement(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetHideTCPElement(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetHideTCPElement(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetTCPNameSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetTCPNameSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetTCPNameSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetTCPNameSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetTCPVolumeSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetTCPVolumeSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetTCPVolumeSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetTCPVolumeSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetTCPInputSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetTCPInputSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetTCPInputSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetTCPInputSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetTCPMeterSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetTCPMeterSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetTCPMeterSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetTCPMeterSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetTCPMeterLocation(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetTCPMeterLocation(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetTCPMeterLocation(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetTCPMeterLocation(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetTCPFolderIndent(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetTCPFolderIndent(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetTCPFolderIndent(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetTCPFolderIndent(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetTCPAlignControls(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetTCPAlignControls(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetTCPAlignControls(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetTCPAlignControls(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetMCPAlignControls(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetMCPAlignControls(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetMCPAlignControls(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetMCPAlignControls(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetTransSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetTransSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetTransSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetTransSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetTransPlayRateSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetTransPlayRateSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetTransPlayRateSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetTransPlayRateSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetEnvNameSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetEnvNameSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetEnvNameSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetEnvNameSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetEnvFaderSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetEnvFaderSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetEnvFaderSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetEnvFaderSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetEnvFolderIndent(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetEnvFolderIndent(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetEnvFolderIndent(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetEnvFolderIndent(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetEnvSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetEnvSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetEnvSize(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetEnvSize(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetMCPFolderIndent(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetMCPFolderIndent(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetMCPFolderIndent(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetMCPFolderIndent(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetStyleMCPElement(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetStyleMCPElement(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetStyleMCPElement(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetStyleMCPElement(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetMCPBorderStyle(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetMCPBorderStyle(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetMCPBorderStyle(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetMCPBorderStyle(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetMCPMeterExpansion(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetMCPMeterExpansion(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetMCPMeterExpansion(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetMCPMeterExpansion(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetMCPSizeAndLayout(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetMCPSizeAndLayout(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_SetTCPSizeAndLayout(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_SetTCPSizeAndLayout(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetTCPSizeAndLayout(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetTCPSizeAndLayout(table.unpack({...}))
   end
   function ultraschall.Theme_Defaultv6_GetMCPSizeAndLayout(...)
-    ultraschall.LM(27)
+    ultraschall.LM(28)
     return ultraschall.Theme_Defaultv6_GetMCPSizeAndLayout(table.unpack({...}))
   end
   function ultraschall.IsValidTrackString(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.IsValidTrackString(table.unpack({...}))
   end
   function ultraschall.IsValidTrackStateChunk(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.IsValidTrackStateChunk(table.unpack({...}))
   end
   function ultraschall.CreateTrackString(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.CreateTrackString(table.unpack({...}))
   end
   function ultraschall.CreateTrackString_SelectedTracks(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.CreateTrackString_SelectedTracks(table.unpack({...}))
   end
   function ultraschall.InsertTrack_TrackStateChunk(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.InsertTrack_TrackStateChunk(table.unpack({...}))
   end
   function ultraschall.RemoveDuplicateTracksInTrackstring(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.RemoveDuplicateTracksInTrackstring(table.unpack({...}))
   end
   function ultraschall.IsTrackObjectTracknumber(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.IsTrackObjectTracknumber(table.unpack({...}))
   end
   function ultraschall.InverseTrackstring(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.InverseTrackstring(table.unpack({...}))
   end
   function ultraschall.CountItemsInTrackStateChunk(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.CountItemsInTrackStateChunk(table.unpack({...}))
   end
   function ultraschall.GetItemStateChunkFromTrackStateChunk(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.GetItemStateChunkFromTrackStateChunk(table.unpack({...}))
   end
   function ultraschall.AddMediaItemStateChunk_To_TrackStateChunk(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.AddMediaItemStateChunk_To_TrackStateChunk(table.unpack({...}))
   end
   function ultraschall.RemoveMediaItem_TrackStateChunk(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.RemoveMediaItem_TrackStateChunk(table.unpack({...}))
   end
   function ultraschall.RemoveMediaItemByIGUID_TrackStateChunk(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.RemoveMediaItemByIGUID_TrackStateChunk(table.unpack({...}))
   end
   function ultraschall.RemoveMediaItemByGUID_TrackStateChunk(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.RemoveMediaItemByGUID_TrackStateChunk(table.unpack({...}))
   end
   function ultraschall.OnlyTracksInBothTrackstrings(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.OnlyTracksInBothTrackstrings(table.unpack({...}))
   end
   function ultraschall.OnlyTracksInOneTrackstring(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.OnlyTracksInOneTrackstring(table.unpack({...}))
   end
   function ultraschall.SetMediaItemStateChunk_in_TrackStateChunk(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.SetMediaItemStateChunk_in_TrackStateChunk(table.unpack({...}))
   end
   function ultraschall.GetAllMediaItemsFromTrackStateChunk(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.GetAllMediaItemsFromTrackStateChunk(table.unpack({...}))
   end
   function ultraschall.CreateTrackString_AllTracks(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.CreateTrackString_AllTracks(table.unpack({...}))
   end
   function ultraschall.GetTrackLength(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.GetTrackLength(table.unpack({...}))
   end
   function ultraschall.GetLengthOfAllMediaItems_Track(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.GetLengthOfAllMediaItems_Track(table.unpack({...}))
   end
   function ultraschall.ApplyActionToTrack(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.ApplyActionToTrack(table.unpack({...}))
   end
   function ultraschall.InsertTrackAtIndex(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.InsertTrackAtIndex(table.unpack({...}))
   end
   function ultraschall.MoveTracks(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.MoveTracks(table.unpack({...}))
   end
   function ultraschall.CreateTrackString_ArmedTracks(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.CreateTrackString_ArmedTracks(table.unpack({...}))
   end
   function ultraschall.CreateTrackString_UnarmedTracks(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.CreateTrackString_UnarmedTracks(table.unpack({...}))
   end
   function ultraschall.CreateTrackStringByGUID(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.CreateTrackStringByGUID(table.unpack({...}))
   end
   function ultraschall.CreateTrackStringByTracknames(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.CreateTrackStringByTracknames(table.unpack({...}))
   end
   function ultraschall.CreateTrackStringByMediaTracks(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.CreateTrackStringByMediaTracks(table.unpack({...}))
   end
   function ultraschall.GetTracknumberByGuid(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.GetTracknumberByGuid(table.unpack({...}))
   end
   function ultraschall.DeleteTracks_TrackString(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.DeleteTracks_TrackString(table.unpack({...}))
   end
   function ultraschall.AnyTrackMute(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.AnyTrackMute(table.unpack({...}))
   end
   function ultraschall.AnyTrackRecarmed(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.AnyTrackRecarmed(table.unpack({...}))
   end
   function ultraschall.AnyTrackPhased(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.AnyTrackPhased(table.unpack({...}))
   end
   function ultraschall.AnyTrackRecMonitored(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.AnyTrackRecMonitored(table.unpack({...}))
   end
   function ultraschall.AnyTrackHiddenTCP(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.AnyTrackHiddenTCP(table.unpack({...}))
   end
   function ultraschall.AnyTrackHiddenMCP(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.AnyTrackHiddenMCP(table.unpack({...}))
   end
   function ultraschall.AnyTrackFreeItemPositioningMode(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.AnyTrackFreeItemPositioningMode(table.unpack({...}))
   end
   function ultraschall.AnyTrackFXBypass(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.AnyTrackFXBypass(table.unpack({...}))
   end
   function ultraschall.SetTrack_LastTouched(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.SetTrack_LastTouched(table.unpack({...}))
   end
   function ultraschall.GetTrackByTrackName(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.GetTrackByTrackName(table.unpack({...}))
   end
   function ultraschall.CollapseTrackHeight(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.CollapseTrackHeight(table.unpack({...}))
   end
   function ultraschall.SetTrack_Trackheight_Force(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.SetTrack_Trackheight_Force(table.unpack({...}))
   end
   function ultraschall.GetAllVisibleTracks_Arrange(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.GetAllVisibleTracks_Arrange(table.unpack({...}))
   end
   function ultraschall.IsTrackVisible(...)
-    ultraschall.LM(28)
+    ultraschall.LM(29)
     return ultraschall.IsTrackVisible(table.unpack({...}))
   end
   function ultraschall.GetTrackHWOut(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.GetTrackHWOut(table.unpack({...}))
   end
   function ultraschall.GetTrackAUXSendReceives(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.GetTrackAUXSendReceives(table.unpack({...}))
   end
   function ultraschall.CountTrackHWOuts(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.CountTrackHWOuts(table.unpack({...}))
   end
   function ultraschall.CountTrackAUXSendReceives(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.CountTrackAUXSendReceives(table.unpack({...}))
   end
   function ultraschall.AddTrackHWOut(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.AddTrackHWOut(table.unpack({...}))
   end
   function ultraschall.AddTrackAUXSendReceives(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.AddTrackAUXSendReceives(table.unpack({...}))
   end
   function ultraschall.DeleteTrackHWOut(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.DeleteTrackHWOut(table.unpack({...}))
   end
   function ultraschall.DeleteTrackAUXSendReceives(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.DeleteTrackAUXSendReceives(table.unpack({...}))
   end
   function ultraschall.SetTrackHWOut(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.SetTrackHWOut(table.unpack({...}))
   end
   function ultraschall.SetTrackAUXSendReceives(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.SetTrackAUXSendReceives(table.unpack({...}))
   end
   function ultraschall.ClearRoutingMatrix(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.ClearRoutingMatrix(table.unpack({...}))
   end
   function ultraschall.ClearRoutingMatrix(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.ClearRoutingMatrix(table.unpack({...}))
   end
   function ultraschall.GetAllHWOuts(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.GetAllHWOuts(table.unpack({...}))
   end
   function ultraschall.ApplyAllHWOuts(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.ApplyAllHWOuts(table.unpack({...}))
   end
   function ultraschall.GetAllAUXSendReceives(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.GetAllAUXSendReceives(table.unpack({...}))
   end
   function ultraschall.ApplyAllAUXSendReceives(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.ApplyAllAUXSendReceives(table.unpack({...}))
   end
   function ultraschall.GetAllMainSendStates(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.GetAllMainSendStates(table.unpack({...}))
   end
   function ultraschall.ApplyAllMainSendStates(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.ApplyAllMainSendStates(table.unpack({...}))
   end
   function ultraschall.AreHWOutsTablesEqual(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.AreHWOutsTablesEqual(table.unpack({...}))
   end
   function ultraschall.AreMainSendsTablesEqual(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.AreMainSendsTablesEqual(table.unpack({...}))
   end
   function ultraschall.AreAUXSendReceivesTablesEqual(...)
-    ultraschall.LM(29)
+    ultraschall.LM(30)
     return ultraschall.AreAUXSendReceivesTablesEqual(table.unpack({...}))
   end
   function ultraschall.GetTrackStateChunk_Tracknumber(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackStateChunk_Tracknumber(table.unpack({...}))
   end
   function ultraschall.GetTrackState_NumbersOnly(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackState_NumbersOnly(table.unpack({...}))
   end
   function ultraschall.GetTrackName(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackName(table.unpack({...}))
   end
   function ultraschall.GetTrackPeakColorState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackPeakColorState(table.unpack({...}))
   end
   function ultraschall.GetTrackBeatState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackBeatState(table.unpack({...}))
   end
   function ultraschall.GetTrackAutoRecArmState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackAutoRecArmState(table.unpack({...}))
   end
   function ultraschall.GetTrackMuteSoloState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackMuteSoloState(table.unpack({...}))
   end
   function ultraschall.GetTrackIPhaseState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackIPhaseState(table.unpack({...}))
   end
   function ultraschall.GetTrackIsBusState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackIsBusState(table.unpack({...}))
   end
   function ultraschall.GetTrackBusCompState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackBusCompState(table.unpack({...}))
   end
   function ultraschall.GetTrackShowInMixState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackShowInMixState(table.unpack({...}))
   end
   function ultraschall.GetTrackFreeModeState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackFreeModeState(table.unpack({...}))
   end
   function ultraschall.GetTrackRecState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackRecState(table.unpack({...}))
   end
   function ultraschall.GetTrackVUState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackVUState(table.unpack({...}))
   end
   function ultraschall.GetTrackHeightState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackHeightState(table.unpack({...}))
   end
   function ultraschall.GetTrackINQState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackINQState(table.unpack({...}))
   end
   function ultraschall.GetTrackNChansState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackNChansState(table.unpack({...}))
   end
   function ultraschall.GetTrackBypFXState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackBypFXState(table.unpack({...}))
   end
   function ultraschall.GetTrackPerfState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackPerfState(table.unpack({...}))
   end
   function ultraschall.GetTrackMIDIOutState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackMIDIOutState(table.unpack({...}))
   end
   function ultraschall.GetTrackMainSendState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackMainSendState(table.unpack({...}))
   end
   function ultraschall.GetTrackGroupFlagsState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackGroupFlagsState(table.unpack({...}))
   end
   function ultraschall.GetTrackGroupFlags_HighState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackGroupFlags_HighState(table.unpack({...}))
   end
   function ultraschall.GetTrackLockState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackLockState(table.unpack({...}))
   end
   function ultraschall.GetTrackLayoutNames(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackLayoutNames(table.unpack({...}))
   end
   function ultraschall.GetTrackAutomodeState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackAutomodeState(table.unpack({...}))
   end
   function ultraschall.GetTrackIcon_Filename(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackIcon_Filename(table.unpack({...}))
   end
   function ultraschall.GetTrackRecCFG(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackRecCFG(table.unpack({...}))
   end
   function ultraschall.GetTrackMidiInputChanMap(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackMidiInputChanMap(table.unpack({...}))
   end
   function ultraschall.GetTrackMidiCTL(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackMidiCTL(table.unpack({...}))
   end
   function ultraschall.GetTrackWidth(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackWidth(table.unpack({...}))
   end
   function ultraschall.GetTrackPanMode(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackPanMode(table.unpack({...}))
   end
   function ultraschall.GetTrackMidiColorMapFn(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackMidiColorMapFn(table.unpack({...}))
   end
   function ultraschall.GetTrackMidiBankProgFn(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackMidiBankProgFn(table.unpack({...}))
   end
   function ultraschall.GetTrackMidiTextStrFn(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackMidiTextStrFn(table.unpack({...}))
   end
   function ultraschall.GetTrackID(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackID(table.unpack({...}))
   end
   function ultraschall.GetTrackScore(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackScore(table.unpack({...}))
   end
   function ultraschall.GetTrackVolPan(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackVolPan(table.unpack({...}))
   end
   function ultraschall.SetTrackName(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackName(table.unpack({...}))
   end
   function ultraschall.SetTrackPeakColorState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackPeakColorState(table.unpack({...}))
   end
   function ultraschall.SetTrackBeatState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackBeatState(table.unpack({...}))
   end
   function ultraschall.SetTrackAutoRecArmState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackAutoRecArmState(table.unpack({...}))
   end
   function ultraschall.SetTrackMuteSoloState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackMuteSoloState(table.unpack({...}))
   end
   function ultraschall.SetTrackIPhaseState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackIPhaseState(table.unpack({...}))
   end
   function ultraschall.SetTrackIsBusState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackIsBusState(table.unpack({...}))
   end
   function ultraschall.SetTrackBusCompState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackBusCompState(table.unpack({...}))
   end
   function ultraschall.SetTrackShowInMixState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackShowInMixState(table.unpack({...}))
   end
   function ultraschall.SetTrackFreeModeState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackFreeModeState(table.unpack({...}))
   end
   function ultraschall.SetTrackRecState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackRecState(table.unpack({...}))
   end
   function ultraschall.SetTrackVUState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackVUState(table.unpack({...}))
   end
   function ultraschall.SetTrackHeightState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackHeightState(table.unpack({...}))
   end
   function ultraschall.SetTrackINQState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackINQState(table.unpack({...}))
   end
   function ultraschall.SetTrackNChansState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackNChansState(table.unpack({...}))
   end
   function ultraschall.SetTrackBypFXState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackBypFXState(table.unpack({...}))
   end
   function ultraschall.SetTrackPerfState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackPerfState(table.unpack({...}))
   end
   function ultraschall.SetTrackMIDIOutState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackMIDIOutState(table.unpack({...}))
   end
   function ultraschall.SetTrackMainSendState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackMainSendState(table.unpack({...}))
   end
   function ultraschall.SetTrackLockState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackLockState(table.unpack({...}))
   end
   function ultraschall.SetTrackLayoutNames(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackLayoutNames(table.unpack({...}))
   end
   function ultraschall.SetTrackAutomodeState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackAutomodeState(table.unpack({...}))
   end
   function ultraschall.SetTrackIcon_Filename(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackIcon_Filename(table.unpack({...}))
   end
   function ultraschall.SetTrackMidiInputChanMap(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackMidiInputChanMap(table.unpack({...}))
   end
   function ultraschall.SetTrackMidiCTL(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackMidiCTL(table.unpack({...}))
   end
   function ultraschall.SetTrackID(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackID(table.unpack({...}))
   end
   function ultraschall.SetTrackMidiColorMapFn(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackMidiColorMapFn(table.unpack({...}))
   end
   function ultraschall.SetTrackMidiBankProgFn(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackMidiBankProgFn(table.unpack({...}))
   end
   function ultraschall.SetTrackMidiTextStrFn(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackMidiTextStrFn(table.unpack({...}))
   end
   function ultraschall.SetTrackPanMode(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackPanMode(table.unpack({...}))
   end
   function ultraschall.SetTrackWidth(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackWidth(table.unpack({...}))
   end
   function ultraschall.SetTrackScore(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackScore(table.unpack({...}))
   end
   function ultraschall.SetTrackVolPan(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackVolPan(table.unpack({...}))
   end
   function ultraschall.SetTrackRecCFG(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackRecCFG(table.unpack({...}))
   end
   function ultraschall.GetAllLockedTracks(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetAllLockedTracks(table.unpack({...}))
   end
   function ultraschall.GetAllSelectedTracks(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetAllSelectedTracks(table.unpack({...}))
   end
   function ultraschall.GetTrackSelection_TrackStateChunk(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.GetTrackSelection_TrackStateChunk(table.unpack({...}))
   end
   function ultraschall.SetTrackSelection_TrackStateChunk(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackSelection_TrackStateChunk(table.unpack({...}))
   end
   function ultraschall.SetAllTracksSelected(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetAllTracksSelected(table.unpack({...}))
   end
   function ultraschall.SetTracksSelected(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTracksSelected(table.unpack({...}))
   end
   function ultraschall.SetTracksToLocked(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTracksToLocked(table.unpack({...}))
   end
   function ultraschall.SetTracksToUnlocked(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTracksToUnlocked(table.unpack({...}))
   end
   function ultraschall.SetTrackStateChunk_Tracknumber(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackStateChunk_Tracknumber(table.unpack({...}))
   end
   function ultraschall.SetTrackGroupFlagsState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackGroupFlagsState(table.unpack({...}))
   end
   function ultraschall.SetTrackGroupFlags_HighState(...)
-    ultraschall.LM(30)
+    ultraschall.LM(31)
     return ultraschall.SetTrackGroupFlags_HighState(table.unpack({...}))
   end
   function ultraschall.TrackManager_ClearFilter(...)
-    ultraschall.LM(31)
+    ultraschall.LM(32)
     return ultraschall.TrackManager_ClearFilter(table.unpack({...}))
   end
   function ultraschall.TrackManager_ShowAll(...)
-    ultraschall.LM(31)
+    ultraschall.LM(32)
     return ultraschall.TrackManager_ShowAll(table.unpack({...}))
   end
   function ultraschall.TrackManager_SelectionFromProject(...)
-    ultraschall.LM(31)
+    ultraschall.LM(32)
     return ultraschall.TrackManager_SelectionFromProject(table.unpack({...}))
   end
   function ultraschall.TrackManager_SelectionFromList(...)
-    ultraschall.LM(31)
+    ultraschall.LM(32)
     return ultraschall.TrackManager_SelectionFromList(table.unpack({...}))
   end
   function ultraschall.TrackManager_SetFilter(...)
-    ultraschall.LM(31)
+    ultraschall.LM(32)
     return ultraschall.TrackManager_SetFilter(table.unpack({...}))
   end
   function ultraschall.TrackManager_OpenClose(...)
-    ultraschall.LM(31)
+    ultraschall.LM(32)
     return ultraschall.TrackManager_OpenClose(table.unpack({...}))
   end
   function ultraschall.pause_follow_one_cycle(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.pause_follow_one_cycle(table.unpack({...}))
   end
   function ultraschall.IsTrackSoundboard(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.IsTrackSoundboard(table.unpack({...}))
   end
   function ultraschall.IsTrackStudioLink(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.IsTrackStudioLink(table.unpack({...}))
   end
   function ultraschall.IsTrackStudioLinkOnAir(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.IsTrackStudioLinkOnAir(table.unpack({...}))
   end
   function ultraschall.GetTypeOfTrack(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.GetTypeOfTrack(table.unpack({...}))
   end
   function ultraschall.GetAllAUXSendReceives2(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.GetAllAUXSendReceives2(table.unpack({...}))
   end
   function ultraschall.GetAllHWOuts2(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.GetAllHWOuts2(table.unpack({...}))
   end
   function ultraschall.GetAllMainSendStates2(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.GetAllMainSendStates2(table.unpack({...}))
   end
   function ultraschall.SetUSExternalState(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SetUSExternalState(table.unpack({...}))
   end
   function ultraschall.GetUSExternalState(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.GetUSExternalState(table.unpack({...}))
   end
   function ultraschall.CountUSExternalState_sec(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.CountUSExternalState_sec(table.unpack({...}))
   end
   function ultraschall.CountUSExternalState_key(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.CountUSExternalState_key(table.unpack({...}))
   end
   function ultraschall.EnumerateUSExternalState_sec(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.EnumerateUSExternalState_sec(table.unpack({...}))
   end
   function ultraschall.EnumerateUSExternalState_key(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.EnumerateUSExternalState_key(table.unpack({...}))
   end
   function ultraschall.DeleteUSExternalState(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.DeleteUSExternalState(table.unpack({...}))
   end
   function ultraschall.SoundBoard_StopAllSounds(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SoundBoard_StopAllSounds(table.unpack({...}))
   end
   function ultraschall.SoundBoard_TogglePlayPause(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SoundBoard_TogglePlayPause(table.unpack({...}))
   end
   function ultraschall.SoundBoard_TogglePlayStop(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SoundBoard_TogglePlayStop(table.unpack({...}))
   end
   function ultraschall.SoundBoard_Play(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SoundBoard_Play(table.unpack({...}))
   end
   function ultraschall.SoundBoard_Stop(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SoundBoard_Stop(table.unpack({...}))
   end
   function ultraschall.SoundBoard_TogglePlay_FadeOutStop(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SoundBoard_TogglePlay_FadeOutStop(table.unpack({...}))
   end
   function ultraschall.SoundBoard_PlayList_CurrentIndex(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SoundBoard_PlayList_CurrentIndex(table.unpack({...}))
   end
   function ultraschall.SoundBoard_PlayList_SetIndex(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SoundBoard_PlayList_SetIndex(table.unpack({...}))
   end
   function ultraschall.SoundBoard_PlayList_Next(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SoundBoard_PlayList_Next(table.unpack({...}))
   end
   function ultraschall.SoundBoard_PlayList_Previous(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.SoundBoard_PlayList_Previous(table.unpack({...}))
   end
   function ultraschall.Soundboard_PlayFadeIn(...)
-    ultraschall.LM(32)
+    ultraschall.LM(33)
     return ultraschall.Soundboard_PlayFadeIn(table.unpack({...}))
   end
   function ultraschall.WebInterface_GetInstalledInterfaces(...)
-    ultraschall.LM(33)
+    ultraschall.LM(34)
     return ultraschall.WebInterface_GetInstalledInterfaces(table.unpack({...}))
   end
 end

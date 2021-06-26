@@ -303,3 +303,125 @@ function ultraschall.AutomationItem_Delete(TrackEnvelope, automationitem_idx, pr
 end
 
 
+function ultraschall.AutomationItems_GetByTime(Env, position)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutomationItems_GetByTime</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>integer found_automation_items, table automation_item_indices = ultraschall.AutomationItems_GetByTime(TrackEnvelope Env, number position)</functioncall>
+  <description>
+    returns all automation-items at a given position in an Envelope
+    
+    returns -1 in case of an error
+  </description>
+  <parameters>
+    TrackEnvelope Env - the envelope, whose automation-items you want to get
+    number position - the position in seconds from wich you want to get the automation items
+  </parameters>
+  <retvals>
+    integer found_automation_items - the number of automation-items found; -1, in case of an error
+    table automation_item_indices - the indices of the found automation-items
+  </retvals>
+  <chapter_context>
+    Automation Items
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
+  <tags>automationitems, get, at, position</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Env)~="TrackEnvelope" then ultraschall.AddErrorMessage("AutomationItems_GetByTime", "Env", "must be an Envelope", -1) return -1 end
+  if type(position)~="number" then ultraschall.AddErrorMessage("AutomationItems_GetByTime", "position", "must be a number", -2) return -1 end
+  local AItems={}
+  local AItems_Count=0
+  for i=0, reaper.CountAutomationItems(Env)-1 do
+    local startposition=reaper.GetSetAutomationItemInfo(Env, i, "D_POSITION", 0, false)
+    local length=reaper.GetSetAutomationItemInfo(Env, i, "D_LENGTH", 0, false)
+    if position>=startposition and position<=startposition+length then
+      AItems_Count=AItems_Count+1
+      AItems[AItems_Count]=i
+    end
+  end
+  return AItems_Count, AItems
+end
+
+
+
+function ultraschall.AutomationItem_Split(Env, position, index, selected)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutomationItem_Split</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AutomationItem_Split(TrackEnvelope Env, number position, integer index, integer selected)</functioncall>
+  <description>
+    splits an automation-item at position in Env
+    
+    returns false in case of an error
+  </description>
+  <parameters>
+    TrackEnvelope Env - the envelope, whose automation-item you want to split
+    number position - the position in seconds at wich you want to split the automation item
+    integer index - the index of the automation-item, that you want to split
+    integer selected - 0, set the newly created automation item unselected
+                     - 1, set it selected
+                     - 2, use selection-state of the original automation-item
+  </parameters>
+  <retvals>
+    boolean retval - true, splitting was successful; false, splitting was unsuccessful
+  </retvals>
+  <chapter_context>
+    Automation Items
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
+  <tags>automationitems, split, at, position</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Env)~="TrackEnvelope" then ultraschall.AddErrorMessage("AutomationItem_Split", "Env", "must be an Envelope", -1) return false end
+  if type(position)~="number" then ultraschall.AddErrorMessage("GetAutomationItemsByTime", "position", "must be a number", -2) return false end
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("GetAutomationItemsByTime", "index", "must be an integer", -3) return false end
+  if index<0 or index>reaper.CountAutomationItems(Env)-1 then ultraschall.AddErrorMessage("GetAutomationItemsByTime", "index", "no such automation-item available", -4) return false end
+  if math.type(selected)~="integer" then ultraschall.AddErrorMessage("GetAutomationItemsByTime", "selected", "must be an integer", -5) return false end
+  if selected<0 or selected>2 then ultraschall.AddErrorMessage("GetAutomationItemsByTime", "selected", "must be 0(unselected), 1(selected) or 2(use automation-item-selectstate)", -6) return false end
+
+  local startposition=reaper.GetSetAutomationItemInfo(Env, index, "D_POSITION", 0, false)
+  local length=reaper.GetSetAutomationItemInfo(Env, index, "D_LENGTH", 0, false)
+  if position<=startposition or position>=startposition+length then
+    ultraschall.AddErrorMessage("GetAutomationItemsByTime", "position", "position is outside of automation-item", -7) 
+    return false
+  end
+
+  index=index+1
+  local Selections={}
+  for i=0, reaper.CountAutomationItems(Env)-1 do
+    Selections[i]=reaper.GetSetAutomationItemInfo(Env, i, "D_UISEL", 0, false)
+  end
+  if selected==2 then selected=Selections[index-1] end
+  table.insert(Selections, index, selected)
+  reaper.PreventUIRefresh(1)
+  for i=0, reaper.CountAutomationItems(Env)-1 do
+    if i~=index-1 then
+      reaper.GetSetAutomationItemInfo(Env, i, "D_UISEL", 0, true)
+    else
+      reaper.GetSetAutomationItemInfo(Env, i, "D_UISEL", 1, true)
+    end
+  end  
+  local oldpos=reaper.GetCursorPosition()
+  reaper.SetEditCurPos(position, false, false)
+  reaper.Main_OnCommand(42087, 0)
+  reaper.SetEditCurPos(oldpos, false, false)
+  for i=0, reaper.CountAutomationItems(Env)-1 do
+    reaper.GetSetAutomationItemInfo(Env, i, "D_UISEL", Selections[i], true)
+  end 
+  reaper.PreventUIRefresh(0)
+  return true
+end
+
