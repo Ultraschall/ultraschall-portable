@@ -624,7 +624,7 @@ function ultraschall.GFX_GetWindowHWND()
     it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."
   </description>
   <retvals>
-     HWND hwnd - the window-handler of the opened gfx-window; will contain a helpermessage, if you didn't use [ultraschall.GFX_Init()](#GFX_Init) for window creation.
+     HWND hwnd - the window-handler of the opened gfx-window; will contain a helpermessage, if you didn't use ultraschall.GFX_Init() for window creation.
   </retvals>
   <chapter_context>
     Window Handling
@@ -1051,7 +1051,7 @@ function ultraschall.Lokasenna_LoadGuiLib_v2()
   
   local filename=""
   local i=0
-  reaper.EnumerateFiles(path, -1) -- flush cache
+  reaper.EnumerateFiles("", -1) -- flush cache
   while filename~=nil do
     filename=reaper.EnumerateFiles(ultraschall.Api_Path.."/3rd_party_modules/Lokasenna_GUI v2/Library/Classes/", i)
     if filename==nil then break end

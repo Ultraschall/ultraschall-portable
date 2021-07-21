@@ -39,6 +39,17 @@ function set_ask_val()
     reaper.SetExtState("ultraschall_api", "dontask_developertools", num1, true)
 end
 
+function SwitchBeta()
+  if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/beta.txt")==true then
+    os.remove(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/beta.txt", "")  
+    beta=false
+    GUI.elms.Target3.caption="Beta Functions: "..tostring(beta)
+  else
+    ultraschall.WriteValueToFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/beta.txt", "")
+    beta=true
+    GUI.elms.Target3.caption="Beta Functions: "..tostring(beta)
+  end
+end
 
 
 GUI.name = "Ultraschall API - settings"
@@ -58,6 +69,11 @@ if dontask=="false" then dontask=0 else dontask=1 end
 GUI.New("DontAsk",   "Radio",     6, 200,  26, 160, 95, "   Ask in Devtools?\n", "don't ask, ask", "v", 4)
 GUI.Val("DontAsk", dontask+1)
 GUI.New("Target2", "Button",  1, 280,  85, 64, 24, "Confirm", set_ask_val)
+
+-- Allow Beta functions?
+beta=reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/beta.txt")
+if dontask==false then dontask=0 else dontask=1 end
+GUI.New("Target3", "Button",  1, 220,  158, 140, 24, "Beta Functions: "..tostring(beta), SwitchBeta)
 
 GUI.Init()
 GUI.Main()

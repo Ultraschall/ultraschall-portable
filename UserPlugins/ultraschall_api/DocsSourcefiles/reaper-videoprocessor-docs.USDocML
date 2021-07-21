@@ -32,60 +32,59 @@
         <requires>
             Reaper=6.13
         </requires>
-        <description>            
+        <description markup_type="markdown" markup_version="1.0.1">  
             To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin.
             Next to it, on the left side of the editor-field, your parameter-knobs will appear(if you've defined some). 
             Code for the Video-Processor-Plugin must be written in EEL, not in Lua or Python.
             
             Example code, with a knob for turning the video on the current track on and off(use this as track-fx!):
-                    <pre><code>
-                            // A small demo-script that turns video of the current track on&off
-                            //@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
 
-                            frame=1; // variable frame set with the videoframe from the first 
-                                                                              // videoitem in the project at a given position
+                                                
+                                                //A small demo-script that turns video of the current track on and off
+                //@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
+
+                frame=1; // variable frame set with the videoframe from the first 
+                         // videoitem in the project at a given position
                                                   
-                            gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
-                                                                                               // to prevent from having the last frame(s) be shown indefinately
+                gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
+                                                       // to prevent from having the last frame(s) be shown indefinately
 
-                            //Now, put the picture to the framebuffer -> outputting the video
-                            gfx_blit(frame,  // the current video-frame
-                                     1,   // don't preserve aspect-ratio
-                                     0,0, // put upper right corner of the video at position 0,0
-                                     project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
-                                          //   multiplied by the VideoOnOff-Parameter
-                                          //   1=video squeezed to 100% height & width 
-                                          //   0=video squeezed to 0% height & width
+                //Now, put the picture to the framebuffer -> outputting the video
+                gfx_blit(frame,  // the current video-frame
+                                 1,  // don't preserve aspect-ratio
+                                 0,0, // put upper right corner of the video at position 0,0
+                              project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
+                                                                        //   multiplied by the VideoOnOff-Parameter
+                                                                        //   1=video squeezed to 100% height and width 
+                                                                        //   0=video squeezed to 0% height and width
                                                                     );
-                      </code></pre>
+
 
             The following code allows turning the video of the track above(!) the current track on/off and allows moving it and turning it on and off
 
-                    <pre><code>
-                            // A small demo-script that turns video of the current track on&off
-                            //@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
-                            //@param 2:MoveX 'Move X' 0 0 2048 1024 1
-                            //@param 3:MoveY 'Move Y' 0 0 2048 1024 1
 
-                            frame=input_track(0); // variable frame set with the videoframe from the first 
-                                                   // videoitem in the project at a given position above the current one
+                                                // A small demo-script that turns video of the current track on and off
+                //@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
+                //@param 2:MoveX 'Move X' 0 0 2048 1024 1
+                //@param 3:MoveY 'Move Y' 0 0 2048 1024 1
+
+                frame=input_track(0); // variable frame set with the videoframe from the first 
+                                      // videoitem in the project at a given position above the current one
                                                   
-                            gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
-                                                                                               // to prevent from having the last frame(s) be shown indefinately
+                gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
+                                                       // to prevent from having the last frame(s) be shown indefinately
 
-                            //Now, put the picture to the framebuffer -> outputting the video
-                            gfx_blit(frame,            // the current video-frame
-                                     1,                // don't preserve aspect-ratio
-                                     0+MoveX,0+MoveY,  // put upper right corner of the video at position 0,0
-                                                       // and add the knob-value of MoveX and MoveY to the position
-                                                       // so changing position is possible
-                                     project_w*VideoOnOff, project_h*VideoOnOff // size of the video width, height, 
+                //Now, put the picture to the framebuffer -> outputting the video
+                gfx_blit(frame,            // the current video-frame
+                         1,                // don't preserve aspect-ratio
+                         0+MoveX,0+MoveY,  // put upper right corner of the video at position 0,0
+                                           // and add the knob-value of MoveX and MoveY to the position
+                                           // so changing position is possible
+                         project_w*VideoOnOff, project_h*VideoOnOff // size of the video width, height, 
                                           //   multiplied by the VideoOnOff-Parameter
-                                          //   1=video squeezed to 100% height & width 
-                                          //   0=video squeezed to 0% height & width
-                                                                    );
-                      </code></pre>
-
+                                          //   1=video squeezed to 100% height and width 
+                                          //   0=video squeezed to 0% height and width
+                                                            );
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
@@ -98,7 +97,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>project_time</slug>
         <title>project_time</title>
-        <functioncall prog_lang="eel2">project_time</functioncall>
+        <functioncall prog_lang="eel">project_time</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -116,7 +115,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>project_tempo</slug>
         <title>project_tempo</title>
-        <functioncall prog_lang="eel2">project_tempo</functioncall>
+        <functioncall prog_lang="eel">project_tempo</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -134,7 +133,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>project_ts_num</slug>
         <title>project_ts_num</title>
-        <functioncall prog_lang="eel2">project_ts_num</functioncall>
+        <functioncall prog_lang="eel">project_ts_num</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -153,7 +152,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>project_ts_denom</slug>
         <title>project_ts_denom</title>
-        <functioncall prog_lang="eel2">project_ts_denom</functioncall>
+        <functioncall prog_lang="eel">project_ts_denom</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -171,7 +170,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>project_time_qn</slug>
         <title>project_time_qn</title>
-        <functioncall prog_lang="eel2">project_time_qn</functioncall>
+        <functioncall prog_lang="eel">project_time_qn</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -189,7 +188,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>time</slug>
         <title>time</title>
-        <functioncall prog_lang="eel2">time</functioncall>
+        <functioncall prog_lang="eel">time</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -207,7 +206,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>framerate</slug>
         <title>framerate</title>
-        <functioncall prog_lang="eel2">framerate</functioncall>
+        <functioncall prog_lang="eel">framerate</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -225,7 +224,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>project_w</slug>
         <title>project_w</title>
-        <functioncall prog_lang="eel2">project_w</functioncall>
+        <functioncall prog_lang="eel">project_w</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -243,7 +242,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>project_h</slug>
         <title>project_h</title>
-        <functioncall prog_lang="eel2">project_h</functioncall>
+        <functioncall prog_lang="eel">project_h</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -261,7 +260,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>project_wh_valid</slug>
         <title>project_wh_valid</title>
-        <functioncall prog_lang="eel2">project_wh_valid</functioncall>
+        <functioncall prog_lang="eel">project_wh_valid</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -279,7 +278,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>colorspace</slug>
         <title>colorspace</title>
-        <functioncall prog_lang="eel2">colorspace</functioncall>
+        <functioncall prog_lang="eel">colorspace</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -302,7 +301,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>param_wet</slug>
         <title>param_wet</title>
-        <functioncall prog_lang="eel2">param_wet</functioncall>
+        <functioncall prog_lang="eel">param_wet</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -320,7 +319,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>param1..param24</slug>
         <title>param1..param24</title>
-        <functioncall prog_lang="eel2">param1..param24</functioncall>
+        <functioncall prog_lang="eel">param1..param24</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -329,6 +328,7 @@
             param1 hold the value for parameter 1 .. param24 for parameter 24.
             
             used as:
+            
             //@param X:ParameterVariableName "ParamShownName" default_value minimum_val maximum_val medium_value step_size
         </description>
         <parameters>
@@ -353,7 +353,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_r</slug>
         <title>gfx_r</title>
-        <functioncall prog_lang="eel2">gfx_r</functioncall>
+        <functioncall prog_lang="eel">gfx_r</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -371,7 +371,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_g</slug>
         <title>gfx_g</title>
-        <functioncall prog_lang="eel2">gfx_g</functioncall>
+        <functioncall prog_lang="eel">gfx_g</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -389,7 +389,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_b</slug>
         <title>gfx_b</title>
-        <functioncall prog_lang="eel2">gfx_b</functioncall>
+        <functioncall prog_lang="eel">gfx_b</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -407,7 +407,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_a</slug>
         <title>gfx_a</title>
-        <functioncall prog_lang="eel2">gfx_a</functioncall>
+        <functioncall prog_lang="eel">gfx_a</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -426,7 +426,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_a2</slug>
         <title>gfx_a2</title>
-        <functioncall prog_lang="eel2">gfx_a2</functioncall>
+        <functioncall prog_lang="eel">gfx_a2</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -444,7 +444,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_mode</slug>
         <title>gfx_mode</title>
-        <functioncall prog_lang="eel2">gfx_mode</functioncall>
+        <functioncall prog_lang="eel">gfx_mode</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -474,7 +474,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_dest</slug>
         <title>gfx_dest</title>
-        <functioncall prog_lang="eel2">gfx_dest</functioncall>
+        <functioncall prog_lang="eel">gfx_dest</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -493,7 +493,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>input_count</slug>
         <title>input_count</title>
-        <functioncall prog_lang="eel2">integer count_inputs = input_count()</functioncall>
+        <functioncall prog_lang="eel">integer count_inputs = input_count()</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -514,7 +514,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>input_track_count</slug>
         <title>input_track_count</title>
-        <functioncall prog_lang="eel2">integer count_tracks = input_track_count()</functioncall>
+        <functioncall prog_lang="eel">integer count_tracks = input_track_count()</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -535,7 +535,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>input_track</slug>
         <title>input_track</title>
-        <functioncall prog_lang="eel2">integer input = input_track(integer track)</functioncall>
+        <functioncall prog_lang="eel">integer input = input_track(integer track)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -558,7 +558,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>input_track_exact_count</slug>
         <title>input_track_exact_count</title>
-        <functioncall prog_lang="eel2">nteger num_tracks = input_track_exact_count()</functioncall>
+        <functioncall prog_lang="eel">nteger num_tracks = input_track_exact_count()</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -579,7 +579,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>input_track_exact</slug>
         <title>input_track_exact</title>
-        <functioncall prog_lang="eel2">integer inputs = input_track_exact(integer track)</functioncall>
+        <functioncall prog_lang="eel">integer inputs = input_track_exact(integer track)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -605,7 +605,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>input_next_item</slug>
         <title>input_next_item</title>
-        <functioncall prog_lang="eel2">integer next_input = input_next_item(integer input)</functioncall>
+        <functioncall prog_lang="eel">integer next_input = input_next_item(integer input)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -629,7 +629,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>input_next_track</slug>
         <title>input_next_track</title>
-        <functioncall prog_lang="eel2">integer next_input = input_next_track(integer input)</functioncall>
+        <functioncall prog_lang="eel">integer next_input = input_next_track(integer input)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -653,7 +653,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>input_ismaster</slug>
         <title>input_ismaster</title>
-        <functioncall prog_lang="eel2">float fx_position = input_ismaster()</functioncall>
+        <functioncall prog_lang="eel">float fx_position = input_ismaster()</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -674,7 +674,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>input_info</slug>
         <title>input_info</title>
-        <functioncall prog_lang="eel2">integer retval = input_info(integer input, integer w, integer h[, double srctime, double wet, double parm1, ...])</functioncall>
+        <functioncall prog_lang="eel">integer retval = input_info(integer input, integer w, integer h[, double srctime, double wet, double parm1, ...])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -707,7 +707,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>input_get_name</slug>
         <title>input_get_name</title>
-        <functioncall prog_lang="eel2">integer retval = input_get_name(integer input, string #str)</functioncall>
+        <functioncall prog_lang="eel">integer retval = input_get_name(integer input, string #str)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -732,7 +732,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_img_alloc</slug>
         <title>gfx_img_alloc</title>
-        <functioncall prog_lang="eel2">integer image_index = gfx_img_alloc([optional integer w, optional integer h, optional integer clear])</functioncall>
+        <functioncall prog_lang="eel">integer image_index = gfx_img_alloc([optional integer w, optional integer h, optional integer clear])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -759,7 +759,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_img_resize</slug>
         <title>gfx_img_resize</title>
-        <functioncall prog_lang="eel2">integer image_handle = gfx_img_resize(integer handle, integer w, integer h[, optional integer clear])</functioncall>
+        <functioncall prog_lang="eel">integer image_handle = gfx_img_resize(integer handle, integer w, integer h[, optional integer clear])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -792,7 +792,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_img_hold</slug>
         <title>gfx_img_hold</title>
-        <functioncall prog_lang="eel2">gfx_img_hold(integer handle)</functioncall>
+        <functioncall prog_lang="eel">gfx_img_hold(integer handle)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -815,7 +815,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_img_getptr</slug>
         <title>gfx_img_getptr</title>
-        <functioncall prog_lang="eel2">integer unique_identifier = gfx_img_getptr(integer handle)</functioncall>
+        <functioncall prog_lang="eel">integer unique_identifier = gfx_img_getptr(integer handle)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -841,7 +841,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_img_free</slug>
         <title>gfx_img_free</title>
-        <functioncall prog_lang="eel2">gfx_img_free(integer handle)</functioncall>
+        <functioncall prog_lang="eel">gfx_img_free(integer handle)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -862,7 +862,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_img_info</slug>
         <title>gfx_img_info</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_img_info(integer handle, integer #w, integer #h)</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_img_info(integer handle, integer #w, integer #h)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -888,7 +888,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_set</slug>
         <title>gfx_set</title>
-        <functioncall prog_lang="eel2">gfx_set(float r,[optional float g, optional float b, optional float a=1, integer mode=0, optional integer dest, optional float a2=1])</functioncall>
+        <functioncall prog_lang="eel">gfx_set(float r,[optional float g, optional float b, optional float a=1, integer mode=0, optional integer dest, optional float a2=1])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -915,7 +915,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_blit</slug>
         <title>gfx_blit</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_blit(integer input[, optional integer preserve_aspect=0, integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional integer srcw, optional integer srch])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_blit(integer input[, optional integer preserve_aspect=0, integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional integer srcw, optional integer srch])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -948,7 +948,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_fillrect</slug>
         <title>gfx_fillrect</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_fillrect(integer x, integer y, integer w, integer h)</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_fillrect(integer x, integer y, integer w, integer h)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -975,7 +975,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_procrect</slug>
         <title>gfx_procrect</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_procrect(integer x, integer y, integer w, integer h, table channel_tab[, optional integer mode])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_procrect(integer x, integer y, integer w, integer h, table channel_tab[, optional integer mode])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1006,7 +1006,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_evalrect</slug>
         <title>gfx_evalrect</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_evalrect(integer x, integer y, integer w, integer h, string code_string[, optional integer flags, optional integer src, optional string init_code_string, optional string src2])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_evalrect(integer x, integer y, integer w, integer h, string code_string[, optional integer flags, optional integer src, optional string init_code_string, optional string src2])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1059,7 +1059,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_gradrect</slug>
         <title>gfx_gradrect</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_gradrect(integer x, integer y, integer w, integer h, float r, float g, float b, float a [, optional float drdx, optional float dgdx, optional float dbdx, optional float dadx, optional float drdy, optional float dgdy, optional float dbdy, optional float dady])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_gradrect(integer x, integer y, integer w, integer h, float r, float g, float b, float a [, optional float drdx, optional float dgdx, optional float dbdx, optional float dadx, optional float drdy, optional float dgdy, optional float dbdy, optional float dady])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1098,7 +1098,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_rotoblit</slug>
         <title>gfx_rotoblit</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_rotoblit(integer srcidx, float angle [, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional integer w, optional integer h, optional integer cliptosrcrect, optional integer centxoffs, optional integer centyoffs])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_rotoblit(integer srcidx, float angle [, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional integer w, optional integer h, optional integer cliptosrcrect, optional integer centxoffs, optional integer centyoffs])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1134,7 +1134,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_deltablit</slug>
         <title>gfx_deltablit</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_deltablit(integer srcidx, integer x, integer y, integer w, integer h, integer srcx, integer srcy, integer dsdx, integer dtdx, integer dsdy, integer dtdy, integer dsdxdy, integer dtdxdy[, optional integer dadx, optional integer dady, optional integer dadxdy])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_deltablit(integer srcidx, integer x, integer y, integer w, integer h, integer srcx, integer srcy, integer dsdx, integer dtdx, integer dsdy, integer dtdy, integer dsdxdy, integer dtdxdy[, optional integer dadx, optional integer dady, optional integer dadxdy])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1179,7 +1179,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_xformblit</slug>
         <title>gfx_xformblit</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_xformblit(integer srcidx, integer x, integer y, integer w, integer h,  integer wdiv, integer hdiv, table tab[, optional integer wantalpha])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_xformblit(integer srcidx, integer x, integer y, integer w, integer h,  integer wdiv, integer hdiv, table tab[, optional integer wantalpha])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1214,7 +1214,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_keyedblit</slug>
         <title>gfx_keyedblit</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_keyedblit(integer input[, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional float kv1, optional float kv2, optional float kv3, optional float kv4])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_keyedblit(integer input[, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional float kv1, optional float kv2, optional float kv3, optional float kv4])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1258,7 +1258,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_destkeyedblit</slug>
         <title>gfx_destkeyedblit</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_destkeyedblit(input input[, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional float kv1, optional float kv2, optional float kv3, optional float kv4])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_destkeyedblit(input input[, optional integer x, optional integer y, optional integer w, optional integer h, optional integer srcx, optional integer srcy, optional float kv1, optional float kv2, optional float kv3, optional float kv4])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1294,7 +1294,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_setfont</slug>
         <title>gfx_setfont</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_setfont(integer pxsize[, optional string #fontname, optional integer flags)</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_setfont(integer pxsize[, optional string #fontname, optional integer flags)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1335,7 +1335,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_str_measure</slug>
         <title>gfx_str_measure</title>
-        <functioncall prog_lang="eel2">integer string_length = gfx_str_measure(string #string[, optional integer #w, optional integer #h])</functioncall>
+        <functioncall prog_lang="eel">integer string_length = gfx_str_measure(string #string[, optional integer #w, optional integer #h])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1361,7 +1361,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_str_draw</slug>
         <title>gfx_str_draw</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_str_draw(string #string[, optional integer x, optional integer y, optional float fxc_r, optional float fxc_g, optional float fxc_b])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_str_draw(string #string[, optional integer x, optional integer y, optional float fxc_r, optional float fxc_g, optional float fxc_b])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1390,7 +1390,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gfx_getpixel</slug>
         <title>gfx_getpixel</title>
-        <functioncall prog_lang="eel2">integer retval = gfx_getpixel(integer input, integer x, integer y, integer #v1, integer #v2, integer #v3[, optional integer #v4])</functioncall>
+        <functioncall prog_lang="eel">integer retval = gfx_getpixel(integer input, integer x, integer y, integer #v1, integer #v2, integer #v3[, optional integer #v4])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1422,7 +1422,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>rgb2yuv</slug>
         <title>rgb2yuv</title>
-        <functioncall prog_lang="eel2">integer retval = rgb2yuv(float #r, float #g, float #b)</functioncall>
+        <functioncall prog_lang="eel">integer retval = rgb2yuv(float #r, float #g, float #b)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1448,7 +1448,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>yuv2rgb</slug>
         <title>yuv2rgb</title>
-        <functioncall prog_lang="eel2">integer retval = yuv2rgb(float #r, float #g, float #b)</functioncall>
+        <functioncall prog_lang="eel">integer retval = yuv2rgb(float #r, float #g, float #b)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1474,7 +1474,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>fft</slug>
         <title>fft</title>
-        <functioncall prog_lang="eel2">integer retval = fft(table buffer, integer size)</functioncall>
+        <functioncall prog_lang="eel">integer retval = fft(table buffer, integer size)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1505,7 +1505,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ifft</slug>
         <title>ifft</title>
-        <functioncall prog_lang="eel2">integer retval = ifft(table buffer, integer size)</functioncall>
+        <functioncall prog_lang="eel">integer retval = ifft(table buffer, integer size)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1530,7 +1530,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>fft_real</slug>
         <title>fft_real</title>
-        <functioncall prog_lang="eel2">integer retval = fft_real(table buffer, integer size)</functioncall>
+        <functioncall prog_lang="eel">integer retval = fft_real(table buffer, integer size)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1556,7 +1556,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ifft_real</slug>
         <title>ifft_real</title>
-        <functioncall prog_lang="eel2">integer retval = ifft_real(table buffer, integer size)</functioncall>
+        <functioncall prog_lang="eel">integer retval = ifft_real(table buffer, integer size)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1582,7 +1582,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>fft_permute</slug>
         <title>fft_permute</title>
-        <functioncall prog_lang="eel2">integer retval = fft_permute(table buffer, integer size)</functioncall>
+        <functioncall prog_lang="eel">integer retval = fft_permute(table buffer, integer size)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1607,7 +1607,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>fft_ipermute</slug>
         <title>fft_ipermute</title>
-        <functioncall prog_lang="eel2">integer retval = fft_ipermute(buffer,size)</functioncall>
+        <functioncall prog_lang="eel">integer retval = fft_ipermute(buffer,size)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1632,7 +1632,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>convolve_c</slug>
         <title>convolve_c</title>
-        <functioncall prog_lang="eel2">integer retval = convolve_c(table dest, table src, integer size)</functioncall>
+        <functioncall prog_lang="eel">integer retval = convolve_c(table dest, table src, integer size)</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1658,7 +1658,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>gmem</slug>
         <title>gmem</title>
-        <functioncall prog_lang="eel2">gmem</functioncall>
+        <functioncall prog_lang="eel">gmem</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1690,7 +1690,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ui_get_state</slug>
         <title>ui_get_state</title>
-        <functioncall prog_lang="eel2">integer click_modifier_state = ui_get_state(integer #ctx[, optional integer #mouse_x, optional integer #mouse_y, optional integer force_frame_in, optional integer #mouse_wheel_state, optional integer #mouse_hwheel_state])</functioncall>
+        <functioncall prog_lang="eel">integer click_modifier_state = ui_get_state(integer #ctx[, optional integer #mouse_x, optional integer #mouse_y, optional integer force_frame_in, optional integer #mouse_wheel_state, optional integer #mouse_hwheel_state])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1729,7 +1729,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>time_precise</slug>
         <title>time_precise</title>
-        <functioncall prog_lang="eel2">integer retval = time_precise([optional float #val])</functioncall>
+        <functioncall prog_lang="eel">integer retval = time_precise([optional float #val])</functioncall>
         <requires>
             Reaper=6.13
         </requires>
@@ -1755,7 +1755,7 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>on_parameter_change</slug>
         <title>on_parameter_change</title>
-        <functioncall prog_lang="eel2">on_parameter_change(float pvar[, optional integer isdone])</functioncall>
+        <functioncall prog_lang="eel">on_parameter_change(float pvar[, optional integer isdone])</functioncall>
         <requires>
             Reaper=6.13
         </requires>

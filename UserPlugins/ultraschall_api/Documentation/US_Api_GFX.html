@@ -1,83 +1,690 @@
 <html><head><title>
-Ultraschall API functions
+Ultraschall API GFX-Functions
 </title>
-
-</head><body>
-    <div style=" position: absolute; padding-left:4%; ">
-        <div style="background-color:#282828;width:95%; font-family:tahoma; font-size:16;">
-
-
-           <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
-           <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
-         <img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
-           <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
-           <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
-           <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
-           <div style="padding-top:2.5%">
-           <table border="0" style="color:#aaaaaa; width:100%;">
-                <tr>
-                    <td style="width:10%;">
-                        <a href="http://www.ultraschall.fm"><img style="width:120%;" src="gfx/US-header.png" alt="Ultraschall-logo"></a>
-                    </td>
-                    <td width="1%;"><u>Functions Engine</u></td>
-                    <td width="1%;"><u>GFX Engine</u></td>
-                    <td width="1%;"><u>GUI Engine</u></td>
-                    <td width="1%;"><u>Video Engine</u></td>
-                    <td width="1%;"><u>Audio Engine</u></td>
-                    <td width="1%;"><u>Doc Engine</u></td>
-                    <td width="1%;">&nbsp;<u></u></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Introduction_and_Concepts.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;Introduction/Concepts</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GUI.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_VID.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_AUD.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_DOC.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Functions.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions</a></td>
-                    <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_GUI.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_VID.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_AUD.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_DOC.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
-                </tr>
-                <tr><td></td><tr>
-                </table>
-           </div>
-        </div>
-    </div>
-    <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
-<br><br><img src="gfx/us.png"><div style="padding-left:0%;"><br>4.2.004 - "Grandma - kl" - 12th of June 2021 - Build: 43631</div><h3>Functions Reference</h3><table style="font-size:10pt; width:100%;" ><table style="width:100%;" border="0"><tr><td><br><strong><u>Basic Shapes</u></strong><br><br>
-</td></tr><tr><td style="width:25%; font-size:small;"><a href="#GFX_DrawEmbossedSquare">GFX_DrawEmbossedSquare</a></td><td style="width:25%; font-size:small;"><a href="#GFX_DrawThickRoundRect">GFX_DrawThickRoundRect</a></td><td style="width:25%; font-size:small;"><a href="#"></a></td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><br><strong><u>Blitting</u></strong><br><br>
-</td></tr><tr><td style="width:25%; font-size:small;"><a href="#GFX_BlitFramebuffer">GFX_BlitFramebuffer</a></td><td style="width:25%; font-size:small;"><a href="#GFX_BlitImageCentered">GFX_BlitImageCentered</a></td><td style="width:25%; font-size:small;"><a href="#"></a></td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><br><strong><u>Font Handling</u></strong><br><br>
-</td></tr><tr><td style="width:25%; font-size:small;"><a href="#GFX_SetFont">GFX_SetFont</a></td><td style="width:25%; font-size:small;"><a href="#"></a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><br><strong><u>Mouse Handling</u></strong><br><br>
-</td></tr><tr><td style="width:25%; font-size:small;"><a href="#GFX_GetMouseCap">GFX_GetMouseCap</a></td><td style="width:25%; font-size:small;"><a href="#"></a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><br><strong><u>User Interface</u></strong><br><br>
-<b style="font-size:small;"> Lokasenna Gui Lib v2</b>
-</td></tr><tr><td style="width:25%; font-size:small;"><a href="#Lokasenna_LoadGuiLib_v2">Lokasenna_LoadGuiLib_v2</a></td><td style="width:25%; font-size:small;"><a href="#"></a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table style="width:100%;" border="0"><tr><td><br><strong><u>Window Handling</u></strong><br><br>
-</td></tr><tr><td style="width:25%; font-size:small;"><a href="#GFX_GetDropFile">GFX_GetDropFile</a></td><td style="width:25%; font-size:small;"><a href="#GFX_GetWindowHWND">GFX_GetWindowHWND</a></td><td style="width:25%; font-size:small;"><a href="#GFX_Init">GFX_Init</a></td><td style="width:25%; font-size:small;"><a href="#"></a></td></tr></table><br><hr><a id="GFX_DrawThickRoundRect"></a>
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><img width="3%" src="gfx/lua5.3.png" alt="Lua version 5.3"> <a href="#GFX_DrawThickRoundRect"><b>GFX_DrawThickRoundRect</b></a><p style="padding-left:0.3%;"><u>Functioncall:</u><div style="padding-left:4%;font-size:100%"><i style="color:#0000ff;">boolean</i> retval = <b>ultraschall.GFX_DrawThickRoundRect(</b><i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">number</i> thickness, <i style="color:#0000ff;">number</i> roundness, <i style="color:#0000ff;">boolean</i> antialias<b>)</b></div><p><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;">draws a round-rectangle with a custom thickness.<br><br>You shouldn't redraw with it too often, as it eats many ressources<br><br>returns false in case of an error<br><br></td></tr></table></divl><tr><td style=""><u>Returnvalues:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">boolean</i> retval</i>&nbsp;</td><td style="vertical-align:top; ">true, drawing was successful; false, drawing wasn't successful&nbsp;</td></tr></table><br><tr><td style=""><u>Parameters:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> x</i>&nbsp;</td><td style="vertical-align:top;">the x position of the rectangle&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> y</i>&nbsp;</td><td style="vertical-align:top;">the y position of the rectangle&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> w</i>&nbsp;</td><td style="vertical-align:top;">the width of the rectangle&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> h</i>&nbsp;</td><td style="vertical-align:top;">the height of the rectangle&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">number</i> thickness</i>&nbsp;</td><td style="vertical-align:top;">the thickness of the rectangle's edges&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">number</i> roundness</i>&nbsp;</td><td style="vertical-align:top;">the angle of the rectangle's corners&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">boolean</i> antialias</i>&nbsp;</td><td style="vertical-align:top;">true, draw antialiased; false, simply draw aliased&nbsp;</td></tr></table><br><hr><a id="GFX_BlitFramebuffer"></a>
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><img width="3%" src="gfx/lua5.3.png" alt="Lua version 5.3"> <a href="#GFX_BlitFramebuffer"><b>GFX_BlitFramebuffer</b></a><p style="padding-left:0.3%;"><u>Functioncall:</u><div style="padding-left:4%;font-size:100%"><i style="color:#0000ff;">boolean</i> retval = <b>ultraschall.GFX_BlitFramebuffer(</b><i style="color:#0000ff;">integer</i> framebufferidx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">boolean</i> showidx<b>)</b></div><p><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;">blits a framebuffer at position 0,0. If the gfx-window is smaller than the contents of the framebuffer, it will resize it before blitting to window size, retaining the correct aspect-ratio.<br><br>Mostly intended for debugging-purposes, when you want to track, if a certain framebuffer contains, what you expect it to contain.<br><br>returns false in case of an error<br><br></td></tr></table></divl><tr><td style=""><u>Returnvalues:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">boolean</i> retval</i>&nbsp;</td><td style="vertical-align:top; ">true, drawing was successful; false, drawing wasn't successful&nbsp;</td></tr></table><br><tr><td style=""><u>Parameters:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> framebufferidx</i>&nbsp;</td><td style="vertical-align:top;">the indexnumber of the framebuffer to blit; 0 to 1023; -1 is the displaying framebuffer&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">boolean</i> showidx</i>&nbsp;</td><td style="vertical-align:top;">true, displays the id-number of the framebuffer in the top-left corner; false, does not display framebuffer-idx&nbsp;</td></tr></table><br><hr><a id="GFX_Init"></a>
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><img width="3%" src="gfx/JS_0.964.png" alt="Julian Sader's plugin version 0.964"><img width="3%" src="gfx/lua5.3.png" alt="Lua version 5.3"> <a href="#GFX_Init"><b>GFX_Init</b></a><p style="padding-left:0.3%;"><u>Functioncall:</u><div style="padding-left:4%;font-size:100%"><i style="color:#0000ff;">integer</i> retval, <i style="color:#0000ff;">HWND</i> hwnd = <b>ultraschall.GFX_Init(</b><i style="color:#0000ff;">string</i> "name", <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> width, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> height, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> dockstate, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> xpos, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> ypos<b>)</b></div><p><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;">Opens a new graphics window and returns its HWND-windowhandler object.<br><br></td></tr></table></divl><tr><td style=""><u>Returnvalues:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">number</i> retval</i>&nbsp;</td><td style="vertical-align:top; ">1.0, if window is opened&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">HWND</i> hwnd</i>&nbsp;</td><td style="vertical-align:top; ">the window-handler of the newly created window; can be used with JS_Window_xxx-functions of the JS-extension-plugin&nbsp;</td></tr></table><br><tr><td style=""><u>Parameters:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">string</i> "name"</i>&nbsp;</td><td style="vertical-align:top;">the name of the window, which will be shown in the title of the window&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> width</i>&nbsp;</td><td style="vertical-align:top;">the width of the window; minmum is 50&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> height</i>&nbsp;</td><td style="vertical-align:top;">the height of the window; minimum is 16&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> dockstate</i>&nbsp;</td><td style="vertical-align:top;">&1=0, undocked; &1=1, docked&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> xpos</i>&nbsp;</td><td style="vertical-align:top;">x-position of the window in pixels; minimum is -80; nil, to center it horizontally&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> ypos</i>&nbsp;</td><td style="vertical-align:top;">y-position of the window in pixels; minimum is -15; nil, to center it vertically&nbsp;</td></tr></table><br><hr><a id="GFX_GetWindowHWND"></a>
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><img width="3%" src="gfx/lua5.3.png" alt="Lua version 5.3"> <a href="#GFX_GetWindowHWND"><b>GFX_GetWindowHWND</b></a><p style="padding-left:0.3%;"><u>Functioncall:</u><div style="padding-left:4%;font-size:100%"><i style="color:#0000ff;">HWND</i> hwnd = <b>ultraschall.GFX_GetWindowHWND(</b><b>)</b></div><p><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;">Returns the HWND of the currently opened gfx-window. You need to use <a href="#GFX_Init">ultraschall.GFX_Init()</a>, otherwise <br> it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."<br> <br>
-</td></tr></table></divl><tr><td style=""><u>Returnvalues:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">HWND</i> hwnd</i>&nbsp;</td><td style="vertical-align:top; ">the window-handler of the opened gfx-window; will contain a helpermessage, if you didn't use <a href="#GFX_Init">ultraschall.GFX_Init()</a> for window creation.
-&nbsp;</td></tr></table><br></table><br><hr><a id="GFX_GetMouseCap"></a>
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><img width="3%" src="gfx/lua5.3.png" alt="Lua version 5.3"> <a href="#GFX_GetMouseCap"><b>GFX_GetMouseCap</b></a><p style="padding-left:0.3%;"><u>Functioncall:</u><div style="padding-left:4%;font-size:100%"><i style="color:#0000ff;">string</i> clickstate, <i style="color:#0000ff;">string</i> specific_clickstate, <i style="color:#0000ff;">integer</i> mouse_cap, <i style="color:#0000ff;">integer</i> click_x, <i style="color:#0000ff;">integer</i> click_y, <i style="color:#0000ff;">integer</i> drag_x, <i style="color:#0000ff;">integer</i> drag_y, <i style="color:#0000ff;">integer</i> mouse_wheel, <i style="color:#0000ff;">integer</i> mouse_hwheel = <b>ultraschall.GFX_GetMouseCap(</b><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> doubleclick_wait, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> drag_wait<b>)</b></div><p><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;">Checks mouseclick/wheel-behavior, since last time calling this function and returns it's state.<br>Allows you to get click, doubleclick, dragging, including the appropriate coordinates and mousewheel-states.<br><br>Much more convenient, than fiddling around with gfx.mouse_cap<br><br>Note: After doubleclicked, this will not return mouse-clicked-states, until the mouse-button is released. So any mouse-clicks during that can be only gotten from the retval mouse_cap.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is to prevent automatic mouse-dragging after double-clicks.<br><br></td></tr></table></divl><tr><td style=""><u>Returnvalues:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">string</i> clickstate</i>&nbsp;</td><td style="vertical-align:top; ">"", if not clicked, "CLK" for clicked and "FirstCLK", if the click is a first-click.&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">string</i> specific_clickstate</i>&nbsp;</td><td style="vertical-align:top; ">either "" for not clicked, "CLK" for clicked, "DBLCLK" for doubleclick or "DRAG" for dragging&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> mouse_cap</i>&nbsp;</td><td style="vertical-align:top; ">the mouse_cap, a bitfield of mouse and keyboard modifier states<br>&nbsp;&nbsp; 1: left mouse button<br>&nbsp;&nbsp; 2: right mouse button<br>&nbsp;&nbsp; 4: Control key<br>&nbsp;&nbsp; 8: Shift key<br>&nbsp;&nbsp; 16: Alt key<br>&nbsp;&nbsp; 32: Windows key<br>&nbsp;&nbsp; 64: middle mouse button&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> click_x</i>&nbsp;</td><td style="vertical-align:top; ">the x position, when the mouse has been clicked the last time&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> click_y</i>&nbsp;</td><td style="vertical-align:top; ">the y position, when the mouse has been clicked the last time&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> drag_x</i>&nbsp;</td><td style="vertical-align:top; ">the x-position of the mouse-dragging-coordinate; is like click_x for non-dragging mousestates&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> drag_y</i>&nbsp;</td><td style="vertical-align:top; ">the y-position of the mouse-dragging-coordinate; is like click_y for non-dragging mousestates&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> mouse_wheel</i>&nbsp;</td><td style="vertical-align:top; ">the mouse_wheel-delta, since the last time calling this function&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> mouse_hwheel</i>&nbsp;</td><td style="vertical-align:top; ">the mouse_horizontal-wheel-delta, since the last time calling this function&nbsp;</td></tr></table><br><tr><td style=""><u>Parameters:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> doubleclick_wait</i>&nbsp;</td><td style="vertical-align:top;">the timeframe, in which a second click is recognized as double-click, in defer-cycles. 30 is approximately 1 second; nil, will use 15(default)&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> drag_wait</i>&nbsp;</td><td style="vertical-align:top;">the timeframe, after which a mouseclick without moving the mouse is recognized as dragging, in defer-cycles. 30 is approximately 1 second; nil, will use 5(default)&nbsp;</td></tr></table><br><hr><a id="GFX_SetFont"></a>
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><img width="3%" src="gfx/lua5.3.png" alt="Lua version 5.3"> <a href="#GFX_SetFont"><b>GFX_SetFont</b></a><p style="padding-left:0.3%;"><u>Functioncall:</u><div style="padding-left:4%;font-size:100%"><b>ultraschall.GFX_SetFont(</b><i style="color:#0000ff;">integer</i> fontindex, <i style="color:#0000ff;">string</i> font, <i style="color:#0000ff;">integer</i> size, <i style="color:#0000ff;">string</i> flagStr<b>)</b></div><p><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;">Sets the font of the gfx-window.<br><br>As Mac and Windows have different visible font-sizes for the same font-size, this function adapts the font-size correctly(unlike Reaper's own native gfx.setfont-function).<br><br>returns false in case of an error<br><br></td></tr></table></divl></table><br><tr><td style=""><u>Parameters:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> fontindex</i>&nbsp;</td><td style="vertical-align:top;">the font-id; idx=0 for default bitmapped font, no configuration is possible for this font. idx=1..16 for a configurable font&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">string</i> font</i>&nbsp;</td><td style="vertical-align:top;">the name of the font&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> size</i>&nbsp;</td><td style="vertical-align:top;">the size of the font&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">string</i> flagStr</i>&nbsp;</td><td style="vertical-align:top;">a string, which holds the desired font-styles. You can combine multiple ones, up to 4.<br> The following are valid:<br> B - bold<br> i - italic<br> o - white outline<br> r - blurred<br> s - sharpen<br> u - underline<br> v - inverse&nbsp;</td></tr></table><br><hr><a id="GFX_BlitImageCentered"></a>
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><img width="3%" src="gfx/lua5.3.png" alt="Lua version 5.3"> <a href="#GFX_BlitImageCentered"><b>GFX_BlitImageCentered</b></a><p style="padding-left:0.3%;"><u>Functioncall:</u><div style="padding-left:4%;font-size:100%"><i style="color:#0000ff;">boolean</i> retval = <b>ultraschall.GFX_BlitImageCentered(</b><i style="color:#0000ff;">integer</i> image, <i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">number</i> scale, <i style="color:#0000ff;">number</i> rotate, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> srcx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> srcy, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> srcw, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> srch, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> destx, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> desty, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> destw, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> desth, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> rotxoffs, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> rotyoffs<b>)</b></div><p><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;">Blits a centered image at the position given by parameter x and y. That means, the center of the image will be at x and y.<br><br>All the rest basically works like the regular gfx.blit-function.<br><br>returns false in case of an error<br><br></td></tr></table></divl><tr><td style=""><u>Returnvalues:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">boolean</i> retval</i>&nbsp;</td><td style="vertical-align:top; ">true, blitting was successful; false, blitting was unsuccessful&nbsp;</td></tr></table><br><tr><td style=""><u>Parameters:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> source</i>&nbsp;</td><td style="vertical-align:top;">the source-image/framebuffer to blit; -1 to 1023; -1 for the currently displayed framebuffer.&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> x</i>&nbsp;</td><td style="vertical-align:top;">the x-position of the center of the image&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> y</i>&nbsp;</td><td style="vertical-align:top;">the y-position of the center of the image&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">number</i> scale</i>&nbsp;</td><td style="vertical-align:top;">the scale-factor; 1, for normal size; smaller or bigger than 1 make image smaller or bigger<br> has no effect, when destx, desty, destw, desth are given&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">number</i> rotation</i>&nbsp;</td><td style="vertical-align:top;">the rotation-factor; 0 to 6.28; 3.14 for 180 degrees.&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> srcx</i>&nbsp;</td><td style="vertical-align:top;">the x-coordinate-offset in the source-image&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> srcy</i>&nbsp;</td><td style="vertical-align:top;">the y-coordinate-offset in the source-image&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> srcw</i>&nbsp;</td><td style="vertical-align:top;">the width-offset in the source-image&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> srch</i>&nbsp;</td><td style="vertical-align:top;">the height-offset in the source-image&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> destx</i>&nbsp;</td><td style="vertical-align:top;">the x-coordinate of the blitting destination&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> desty</i>&nbsp;</td><td style="vertical-align:top;">the y-coordinate of the blitting destination&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> destw</i>&nbsp;</td><td style="vertical-align:top;">the width of the blitting destination; may lead to stretched images&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> desth</i>&nbsp;</td><td style="vertical-align:top;">the height of the blitting destination; may lead to stretched images&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> rotxoffs</i>&nbsp;</td><td style="vertical-align:top;">influences rotation&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">number</i> rotyoffs</i>&nbsp;</td><td style="vertical-align:top;">influences rotation&nbsp;</td></tr></table><br><hr><a id="GFX_GetDropFile"></a>
-<img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><img width="3%" src="gfx/lua5.3.png" alt="Lua version 5.3"> <a href="#GFX_GetDropFile"><b>GFX_GetDropFile</b></a><p style="padding-left:0.3%;"><u>Functioncall:</u><div style="padding-left:4%;font-size:100%"><i style="color:#0000ff;">boolean</i> changed, <i style="color:#0000ff;">integer</i> num_dropped_files, <i style="color:#0000ff;">array</i> dropped_files, <i style="color:#0000ff;">integer</i> drop_mouseposition_x, <i style="color:#0000ff;">integer</i> drop_mouseposition_y = <b>ultraschall.GFX_GetDropFile(</b><b>)</b></div><p><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;">returns the files drag'n'dropped into a gfx-window, including the mouseposition within the gfx-window, where the files have been dropped.<br> <br> if changed==true, then the filelist is updated, otherwise this function returns the last dropped files again.<br> Note: when the same files will be dropped, changed==true will also be dropped with only the mouse-position updated.<br> That way, dropping the same files in differen places is recognised by this function.<br> <br> Call repeatedly in every defer-cycle to get the latest files and coordinates.<br> <br> Important: Don't use Reaper's own gfx.dropfile while using this, as this could intefere with this function.<br> <br>
-</td></tr></table></divl><tr><td style=""><u>Returnvalues:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">boolean</i> changed</i>&nbsp;</td><td style="vertical-align:top; ">true, new files have been dropped since last time calling this function; false, no new files have been dropped
-&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> num_dropped_files</i>&nbsp;</td><td style="vertical-align:top; ">the number of dropped files; -1, if no files have beend dropped at all
-&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">array</i> dropped_files</i>&nbsp;</td><td style="vertical-align:top; ">an array with all filenames+path of the dropped files
-&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> drop_mouseposition_x</i>&nbsp;</td><td style="vertical-align:top; ">the x-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet
-&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> drop_mouseposition_y</i>&nbsp;</td><td style="vertical-align:top; ">the y-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet
-&nbsp;</td></tr></table><br></table><br><hr><a id="Lokasenna_LoadGuiLib_v2"></a>
-<img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><img width="3%" src="gfx/lua5.3.png" alt="Lua version 5.3"> <a href="#Lokasenna_LoadGuiLib_v2"><b>Lokasenna_LoadGuiLib_v2</b></a><p style="padding-left:0.3%;"><u>Functioncall:</u><div style="padding-left:4%;font-size:100%"><b>ultraschall.Lokasenna_LoadGuiLib_v2(</b><b>)</b></div><p><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;">loads Lokasenna's Gui Lib v2 into the current script, so you can make your own guis.<br><br>This prevents the need to use dofile, require, loadfile to load Lokasenna's Gui Lib, so you can code the actual Gui right after calling this function.<br><br>It gives you access to all classes immediately.<br><br>It uses a version of Lokasenna's Gui Lib v2 included with Ultraschall-API, so it doesn't get into conflict with other installed versions on your system.<br><br>You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GUI%20v2/Developer%20Tools/Documentation.html">at this location.</a><br><br></td></tr></table></divl></table><br></table><br><hr><a id="GFX_DrawEmbossedSquare"></a>
-<img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><img width="3%" src="gfx/lua5.3.png" alt="Lua version 5.3"> <a href="#GFX_DrawEmbossedSquare"><b>GFX_DrawEmbossedSquare</b></a><p style="padding-left:0.3%;"><u>Functioncall:</u><div style="padding-left:4%;font-size:100%"><i style="color:#0000ff;">boolean</i> retval = <b>ultraschall.GFX_DrawEmbossedSquare(</b><i style="color:#0000ff;">integer</i> x, <i style="color:#0000ff;">integer</i> y, <i style="color:#0000ff;">integer</i> w, <i style="color:#0000ff;">integer</i> h, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> rgb, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> gbg, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> bbg, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> r, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> g, <i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> b<b>)</b></div><p><table style="width:100%;"><tr><td><u>Description:</u></td></tr><tr><td style="vertical-align:top; padding-left:4%;">draws an embossed rectangle, optionally with a background-color<br><br>returns false in case of an error<br><br></td></tr></table></divl><tr><td style=""><u>Returnvalues:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">boolean</i> retval</i>&nbsp;</td><td style="vertical-align:top; ">true, drawing was successful; false, drawing wasn't successful&nbsp;</td></tr></table><br><tr><td style=""><u>Parameters:</u></td><td> </td><td> </td></tr><table style="padding-left:4%;"border="0"><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> x</i>&nbsp;</td><td style="vertical-align:top;">the x position of the rectangle&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> y</i>&nbsp;</td><td style="vertical-align:top;">the y position of the rectangle&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> w</i>&nbsp;</td><td style="vertical-align:top;">the width of the rectangle&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">integer</i> h</i>&nbsp;</td><td style="vertical-align:top;">the height of the rectangle&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> rgb</i>&nbsp;</td><td style="vertical-align:top;">the red-color of the background-rectangle; set to nil for no background-color&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> gbg</i>&nbsp;</td><td style="vertical-align:top;">the green-color of the background-rectangle; set to nil for no background-color/uses rbg if gbg and bbg are set to nil&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> bbg</i>&nbsp;</td><td style="vertical-align:top;">the blue-color of the background-rectangle; set to nil for no background-color/uses rbg if gbg and bbg are set to nil&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> r</i>&nbsp;</td><td style="vertical-align:top;">the red-color of the embossed-rectangle; nil, to use 1&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> g</i>&nbsp;</td><td style="vertical-align:top;">the green-color of the embossed-rectangle; nil, to use 1&nbsp;</td></tr><tr style="background:#EEEEEE;"><td style="vertical-align:top; white-space:pre;">&nbsp;<i><i style="color:#0000ff;">optional</i> <i style="color:#0000ff;">integer</i> b</i>&nbsp;</td><td style="vertical-align:top;">the blue-color of the embossed-rectangle; nil, to use 1&nbsp;</td></tr></table><br><br><hr><table width="100%"><td style="position:absolute; right:0;">Automatically generated by Ultraschall-API 4.2 004 - 1400 functions and 6 Api-variables available</td></table><br><hr></div></body></html>
+<link href="style.css" rel="stylesheet">
+</head>
+<body>    
+<a class="anchor" id="This-is-the-TopOfTheWorld"></a>
+<div style="position: sticky; top:0; padding-left:4%; z-index:100;">
+<div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
+<a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
+<a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
+<img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
+<img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
+<img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
+<img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
+<img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
+<a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
+<a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
+<a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
+<div style="padding-top:2.5%">
+<table border="0" style="color:#aaaaaa; width:101%;">
+<tr>
+<td style="width:27.2%; padding-top:2; ">
+<a href="http://www.ultraschall.fm"><img style="width:118%;" src="gfx/US-header.png" alt="Ultraschall-logo"></a>
+</td>
+<td style="position: absolute; padding-top:5; width:10%;"><u>Functions Engine</u></td>
+<td style="padding-top:5; width:10%;"><u>GFX Engine</u></td>
+<td style="padding-top:5; width:10%;"><u>Doc Engine</u></td>
+<td style="padding-top:5; width:10%;"><u>Video Engine</u></td>
+<td width="10%;">&nbsp;<u></u></td>
+<td width="10%;">&nbsp;<u></u></td>
+<td width="10%;">&nbsp;<u></u></td>
+</tr>
+<tr>
+<td></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Introduction_and_Concepts.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;Introduction/Concepts&nbsp;&nbsp;</a></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_DOC.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_VID.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
+</tr>
+<tr>
+<td></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Functions.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions</a></td>
+<td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_DOC.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_VID.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</table><hr color="#444444">
+<div style="position:absolute; right:6%; top:80%;"><a style="color:#CCCCCC;" href="#This-is-the-TopOfTheWorld">Jump to Index</a></div>
+</div>
+</div>
+</div>
+<div class="ch"><p></p>
+<!-- Clipboard Button -->
+<script src="./scripts/clipboard.min.js.Download"></script>
+<!-- External Script -->
+<script src="./scripts/scripts.js.Download"></script>
+<table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Basic Shapes"><a href="#Basic Shapes">^</a></a><strong> <u>Basic Shapes</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_DrawEmbossedSquare">GFX_DrawEmbossedSquare</a></td><td class="tdsm"><a href="#GFX_DrawThickRoundRect">GFX_DrawThickRoundRect</a></td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Blitting"><a href="#Blitting">^</a></a><strong> <u>Blitting</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_BlitFramebuffer">GFX_BlitFramebuffer</a></td><td class="tdsm"><a href="#GFX_BlitImageCentered">GFX_BlitImageCentered</a></td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Font Handling"><a href="#Font Handling">^</a></a><strong> <u>Font Handling</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_SetFont">GFX_SetFont</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Mouse Handling"><a href="#Mouse Handling">^</a></a><strong> <u>Mouse Handling</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_GetMouseCap">GFX_GetMouseCap</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="User Interface"><a href="#User Interface">^</a></a><strong> <u>User Interface</u></strong><br><br>
+<b style="font-size:small;"><br><a class="inpad" id=" Lokasenna Gui Lib v2"><a href="# Lokasenna Gui Lib v2">^</a></a>  Lokasenna Gui Lib v2</b>
+</td></tr><tr><td class="tdsm"><a href="#Lokasenna_LoadGuiLib_v2">Lokasenna_LoadGuiLib_v2</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Window Handling"><a href="#Window Handling">^</a></a><strong> <u>Window Handling</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_GetDropFile">GFX_GetDropFile</a></td><td class="tdsm"><a href="#GFX_GetWindowHWND">GFX_GetWindowHWND</a></td><td class="tdsm"><a href="#GFX_Init">GFX_Init</a></td></tr></table><br></div><div class="ch">
+<hr>
+<a class="anch" id="GFX_DrawEmbossedSquare"></a>
+<a href="#GFX_DrawEmbossedSquare"> ^</a> 
+<img width="3%" src="gfx/reaper5.95.png" alt="Reaper version 5.95">
+<img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><u><b>GFX_DrawEmbossedSquare</b></u><br>			<p>
+<div class="cc">
+<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.GFX_DrawEmbossedSquare</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>optional</i> <i>integer</i> rgb, <i>optional</i> <i>integer</i> gbg, <i>optional</i> <i>integer</i> bbg, <i>optional</i> <i>integer</i> r, <i>optional</i> <i>integer</i> g, <i>optional</i> <i>integer</i> b)</code></div>
+</div><p>
+<div class="ch">
+draws an embossed rectangle, optionally with a background-color<br/>
+<br/>
+returns false in case of an error              
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>boolean</i> retval</td>
+<td>true, drawing was successful; false, drawing wasn't successful</td>
+</tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> x</td>
+<td>the x position of the rectangle</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> y</td>
+<td>the y position of the rectangle</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> w</td>
+<td>the width of the rectangle</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> h</td>
+<td>the height of the rectangle</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> rgb</td>
+<td>the red-color of the background-rectangle; set to nil for no background-color</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> gbg</td>
+<td>the green-color of the background-rectangle; set to nil for no background-color/uses rbg if gbg and bbg are set to nil</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> bbg</td>
+<td>the blue-color of the background-rectangle; set to nil for no background-color/uses rbg if gbg and bbg are set to nil</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> r</td>
+<td>the red-color of the embossed-rectangle; nil, to use 1</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> g</td>
+<td>the green-color of the embossed-rectangle; nil, to use 1</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> b</td>
+<td>the blue-color of the embossed-rectangle; nil, to use 1</td>
+</tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_DrawThickRoundRect"></a>
+<a href="#GFX_DrawThickRoundRect"> ^</a> 
+<img width="3%" src="gfx/reaper5.95.png" alt="Reaper version 5.95">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_DrawThickRoundRect</b></u><br>			<p>
+<div class="cc">
+<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.GFX_DrawThickRoundRect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>number</i> thickness, <i>number</i> roundness, <i>boolean</i> antialias)</code></div>
+</div><p>
+<div class="ch">
+draws a round-rectangle with a custom thickness.<br/>
+<br/>
+You shouldn't redraw with it too often, as it eats many ressources<br/>
+<br/>
+returns false in case of an error              
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>boolean</i> retval</td>
+<td>true, drawing was successful; false, drawing wasn't successful</td>
+</tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> x</td>
+<td>the x position of the rectangle</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> y</td>
+<td>the y position of the rectangle</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> w</td>
+<td>the width of the rectangle</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> h</td>
+<td>the height of the rectangle</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>number</i> thickness</td>
+<td>the thickness of the rectangle's edges</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>number</i> roundness</td>
+<td>the angle of the rectangle's corners</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>boolean</i> antialias</td>
+<td>true, draw antialiased; false, simply draw aliased</td>
+</tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_BlitFramebuffer"></a>
+<a href="#GFX_BlitFramebuffer"> ^</a> 
+<img width="3%" src="gfx/reaper5.95.png" alt="Reaper version 5.95">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_BlitFramebuffer</b></u><br>			<p>
+<div class="cc">
+<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.GFX_BlitFramebuffer</em>(<i>integer</i> framebufferidx, <i>optional</i> <i>boolean</i> showidx)</code></div>
+</div><p>
+<div class="ch">
+blits a framebuffer at position 0,0. If the gfx-window is smaller than the contents of the framebuffer, it will resize it before blitting to window size, retaining the correct aspect-ratio.<br/>
+<br/>
+Mostly intended for debugging-purposes, when you want to track, if a certain framebuffer contains, what you expect it to contain.<br/>
+<br/>
+returns false in case of an error              
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>boolean</i> retval</td>
+<td>true, drawing was successful; false, drawing wasn't successful</td>
+</tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> framebufferidx</td>
+<td>the indexnumber of the framebuffer to blit; 0 to 1023; -1 is the displaying framebuffer</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>boolean</i> showidx</td>
+<td>true, displays the id-number of the framebuffer in the top-left corner; false, does not display framebuffer-idx</td>
+</tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_BlitImageCentered"></a>
+<a href="#GFX_BlitImageCentered"> ^</a> 
+<img width="3%" src="gfx/reaper5.99.png" alt="Reaper version 5.99">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_BlitImageCentered</b></u><br>			<p>
+<div class="cc">
+<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.GFX_BlitImageCentered</em>(<i>integer</i> image, <i>integer</i> x, <i>integer</i> y, <i>number</i> scale, <i>number</i> rotate, <i>optional</i> <i>number</i> srcx, <i>optional</i> <i>number</i> srcy, <i>optional</i> <i>number</i> srcw, <i>optional</i> <i>number</i> srch, <i>optional</i> <i>integer</i> destx, <i>optional</i> <i>integer</i> desty, <i>optional</i> <i>integer</i> destw, <i>optional</i> <i>integer</i> desth, <i>optional</i> <i>integer</i> rotxoffs, <i>optional</i> <i>integer</i> rotyoffs)</code></div>
+</div><p>
+<div class="ch">
+Blits a centered image at the position given by parameter x and y. That means, the center of the image will be at x and y.<br/>
+<br/>
+All the rest basically works like the regular gfx.blit-function.<br/>
+<br/>
+returns false in case of an error              
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>boolean</i> retval</td>
+<td>true, blitting was successful; false, blitting was unsuccessful</td>
+</tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> source</td>
+<td>the source-image/framebuffer to blit; -1 to 1023; -1 for the currently displayed framebuffer.</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> x</td>
+<td>the x-position of the center of the image</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> y</td>
+<td>the y-position of the center of the image</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>number</i> scale</td>
+<td>the scale-factor; 1, for normal size; smaller or bigger than 1 make image smaller or bigger<br/>
+has no effect, when destx, desty, destw, desth are given</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>number</i> rotation</td>
+<td>the rotation-factor; 0 to 6.28; 3.14 for 180 degrees.</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>number</i> srcx</td>
+<td>the x-coordinate-offset in the source-image</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>number</i> srcy</td>
+<td>the y-coordinate-offset in the source-image</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>number</i> srcw</td>
+<td>the width-offset in the source-image</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>number</i> srch</td>
+<td>the height-offset in the source-image</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> destx</td>
+<td>the x-coordinate of the blitting destination</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> desty</td>
+<td>the y-coordinate of the blitting destination</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> destw</td>
+<td>the width of the blitting destination; may lead to stretched images</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> desth</td>
+<td>the height of the blitting destination; may lead to stretched images</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>number</i> rotxoffs</td>
+<td>influences rotation</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>number</i> rotyoffs</td>
+<td>influences rotation</td>
+</tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_SetFont"></a>
+<a href="#GFX_SetFont"> ^</a> 
+<img width="3%" src="gfx/reaper5.965.png" alt="Reaper version 5.965">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_SetFont</b></u><br>			<p>
+<div class="cc">
+<div class="l"><span class='all_view'>Lua: </span><code> <em>ultraschall.GFX_SetFont</em>(<i>integer</i> fontindex, <i>string</i> font, <i>integer</i> size, <i>string</i> flagStr)</code></div>
+</div><p>
+<div class="ch">
+Sets the font of the gfx-window.<br/>
+<br/>
+As Mac and Windows have different visible font-sizes for the same font-size, this function adapts the font-size correctly(unlike Reaper's own native gfx.setfont-function).<br/>
+<br/>
+returns false in case of an error              
+</div><br>          <u>Parameters:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> fontindex</td>
+<td>the font-id; idx=0 for default bitmapped font, no configuration is possible for this font. idx=1..16 for a configurable font</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>string</i> font</td>
+<td>the name of the font</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> size</td>
+<td>the size of the font</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>string</i> flagStr</td>
+<td>a string, which holds the desired font-styles. You can combine multiple ones, up to 4.<br/>
+The following are valid:<br/>
+B - bold<br/>
+i - italic<br/>
+o - white outline<br/>
+r - blurred<br/>
+s - sharpen<br/>
+u - underline<br/>
+v - inverse</td>
+</tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_GetMouseCap"></a>
+<a href="#GFX_GetMouseCap"> ^</a> 
+<img width="3%" src="gfx/reaper5.965.png" alt="Reaper version 5.965">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_GetMouseCap</b></u><br>			<p>
+<div class="cc">
+<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> clickstate, <i>string</i> specific_clickstate, <i>integer</i> mouse_cap, <i>integer</i> click_x, <i>integer</i> click_y, <i>integer</i> drag_x, <i>integer</i> drag_y, <i>integer</i> mouse_wheel, <i>integer</i> mouse_hwheel = <em>ultraschall.GFX_GetMouseCap</em>(<i>optional</i> <i>integer</i> doubleclick_wait, <i>optional</i> <i>integer</i> drag_wait)</code></div>
+</div><p>
+<div class="ch">
+Checks mouseclick/wheel-behavior, since last time calling this function and returns it's state.<br/>
+Allows you to get click, doubleclick, dragging, including the appropriate coordinates and mousewheel-states.<br/>
+<br/>
+Much more convenient, than fiddling around with gfx.mouse_cap<br/>
+<br/>
+Note: After doubleclicked, this will not return mouse-clicked-states, until the mouse-button is released. So any mouse-clicks during that can be only gotten from the retval mouse_cap.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is to prevent automatic mouse-dragging after double-clicks.              
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>string</i> clickstate</td>
+<td>"", if not clicked, "CLK" for clicked and "FirstCLK", if the click is a first-click.</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>string</i> specific_clickstate</td>
+<td>either "" for not clicked, "CLK" for clicked, "DBLCLK" for doubleclick or "DRAG" for dragging</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> mouse_cap</td>
+<td>the mouse_cap, a bitfield of mouse and keyboard modifier states<br/>
+&nbsp;&nbsp;1: left mouse button<br/>
+&nbsp;&nbsp;2: right mouse button<br/>
+&nbsp;&nbsp;4: Control key<br/>
+&nbsp;&nbsp;8: Shift key<br/>
+&nbsp;&nbsp;16: Alt key<br/>
+&nbsp;&nbsp;32: Windows key<br/>
+&nbsp;&nbsp;64: middle mouse button</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> click_x</td>
+<td>the x position, when the mouse has been clicked the last time</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> click_y</td>
+<td>the y position, when the mouse has been clicked the last time</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> drag_x </td>
+<td>the x-position of the mouse-dragging-coordinate; is like click_x for non-dragging mousestates</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> drag_y </td>
+<td>the y-position of the mouse-dragging-coordinate; is like click_y for non-dragging mousestates</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> mouse_wheel</td>
+<td>the mouse_wheel-delta, since the last time calling this function</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> mouse_hwheel</td>
+<td>the mouse_horizontal-wheel-delta, since the last time calling this function</td>
+</tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> doubleclick_wait</td>
+<td>the timeframe, in which a second click is recognized as double-click, in defer-cycles. 30 is approximately 1 second; nil, will use 15(default)</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> drag_wait</td>
+<td>the timeframe, after which a mouseclick without moving the mouse is recognized as dragging, in defer-cycles. 30 is approximately 1 second; nil, will use 5(default)</td>
+</tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="Lokasenna_LoadGuiLib_v2"></a>
+<a href="#Lokasenna_LoadGuiLib_v2"> ^</a> 
+<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><u><b>Lokasenna_LoadGuiLib_v2</b></u><br>			<p>
+<div class="cc">
+<div class="l"><span class='all_view'>Lua: </span><code> <em>ultraschall.Lokasenna_LoadGuiLib_v2</em>()</code></div>
+</div><p>
+<div class="ch">
+loads Lokasenna's Gui Lib v2 into the current script, so you can make your own guis.<br/>
+<br/>
+This prevents the need to use dofile, require, loadfile to load Lokasenna's Gui Lib, so you can code the actual Gui right after calling this function.<br/>
+<br/>
+It gives you access to all classes immediately.<br/>
+<br/>
+It uses a version of Lokasenna's Gui Lib v2 included with Ultraschall-API, so it doesn't get into conflict with other installed versions on your system.<br/>
+<br/>
+You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GUI%20v2/Developer%20Tools/Documentation.html">at this location.</a>              
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_GetDropFile"></a>
+<a href="#GFX_GetDropFile"> ^</a> 
+<img width="3%" src="gfx/reaper6.05.png" alt="Reaper version 6.05">
+<img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><u><b>GFX_GetDropFile</b></u><br>			<p>
+<div class="cc">
+<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> changed, <i>integer</i> num_dropped_files, <i>array</i> dropped_files, <i>integer</i> drop_mouseposition_x, <i>integer</i> drop_mouseposition_y = <em>ultraschall.GFX_GetDropFile</em>()</code></div>
+</div><p>
+<div class="ch">
+<p>returns the files drag'n'dropped into a gfx-window, including the mouseposition within the gfx-window, where the files have been dropped.</p>
+<p>if changed==true, then the filelist is updated, otherwise this function returns the last dropped files again. Note: when the same files will be dropped, changed==true will also be dropped with only the mouse-position updated. That way, dropping the same files in differen places is recognised by this function.</p>
+<p>Call repeatedly in every defer-cycle to get the latest files and coordinates.</p>
+<p>Important: Don't use Reaper's own gfx.dropfile while using this, as this could intefere with this function.</p>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>boolean</i> changed</td>
+<td>true, new files have been dropped since last time calling this function; false, no new files have been dropped</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> num_dropped_files</td>
+<td>the number of dropped files; -1, if no files have beend dropped at all</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>array</i> dropped_files</td>
+<td>an array with all filenames+path of the dropped files</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> drop_mouseposition_x</td>
+<td>the x-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>integer</i> drop_mouseposition_y</td>
+<td>the y-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet</td>
+</tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_GetWindowHWND"></a>
+<a href="#GFX_GetWindowHWND"> ^</a> 
+<img width="3%" src="gfx/reaper5.965.png" alt="Reaper version 5.965">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_GetWindowHWND</b></u><br>			<p>
+<div class="cc">
+<div class="l"><span class='all_view'>Lua: </span><code> <i>HWND</i> hwnd = <em>ultraschall.GFX_GetWindowHWND</em>()</code></div>
+</div><p>
+<div class="ch">
+<p>Returns the HWND of the currently opened gfx-window. You need to use <a href="#GFX_Init">ultraschall.GFX_Init()</a>, otherwise it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."</p>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>HWND</i> hwnd</td>
+<td>the window-handler of the opened gfx-window; will contain a helpermessage, if you didn't use ultraschall.GFX_Init() for window creation.</td>
+</tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_Init"></a>
+<a href="#GFX_Init"> ^</a> 
+<img width="3%" src="gfx/reaper5.965.png" alt="Reaper version 5.965">
+<img width="3%" src="gfx/js_0.964.png" alt="JS version 0.964">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_Init</b></u><br>			<p>
+<div class="cc">
+<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> retval, <i>HWND</i> hwnd = <em>ultraschall.GFX_Init</em>(<i>string</i> "name", <i>optional</i> <i>integer</i> width, <i>optional</i> <i>integer</i> height, <i>optional</i> <i>integer</i> dockstate, <i>optional</i> <i>integer</i> xpos, <i>optional</i> <i>integer</i> ypos)</code></div>
+</div><p>
+<div class="ch">
+Opens a new graphics window and returns its HWND-windowhandler object.              
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>number</i> retval </td>
+<td>1.0, if window is opened</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>HWND</i> hwnd</td>
+<td>the window-handler of the newly created window; can be used with JS_Window_xxx-functions of the JS-extension-plugin</td>
+</tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr>
+<td class="pr"><i>string</i> "name"</td>
+<td>the name of the window, which will be shown in the title of the window</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> width</td>
+<td>the width of the window; minmum is 50</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> height</td>
+<td>the height of the window; minimum is 16</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> dockstate</td>
+<td>&1=0, undocked; &1=1, docked</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> xpos</td>
+<td>x-position of the window in pixels; minimum is -80; nil, to center it horizontally</td>
+</tr>
+</table>
+<table class="ch">
+<tr>
+<td class="pr"><i>optional</i> <i>integer</i> ypos</td>
+<td>y-position of the window in pixels; minimum is -15; nil, to center it vertically</td>
+</tr>
+</table>
+<br>
+</div>
+      <div class="ch">
+        <hr>
+                     
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 005 - 10 elements available <br></td></table>
+        <hr>
+      </div>
+      <br>
+      </body>
+  </html>
+  

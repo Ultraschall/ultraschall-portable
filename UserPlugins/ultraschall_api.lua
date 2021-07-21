@@ -48,7 +48,11 @@ ultraschall.temp, ultraschall.Script_Context=reaper.get_action_context()
 
 
 -- Beta-Functions On
-ultraschall.US_BetaFunctions=false
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/beta.txt")==true then
+    ultraschall.US_BetaFunctions=true
+else
+    ultraschall.US_BetaFunctions=false
+end
 
 ultraschall.temp1,ultraschall.temp=reaper.get_action_context()
 ultraschall.temp=string.gsub(ultraschall.temp,"\\","/")
@@ -91,21 +95,6 @@ ultraschall.ApiGFXTest=function()
   ultraschall.gfx_works="off"
 end
 
-ultraschall.ApiDataTest=function()
-  --reaper.MB("Ultraschall DataStructures-Engine is OFF","Ultraschall-API",0)
-  ultraschall.data_works="off"
-end
-
-ultraschall.ApiGUITest=function()
-  --reaper.MB("Ultraschall GUI-Engine is OFF","Ultraschall-API",0)
-  ultraschall.gui_works="off"
-end
-
-ultraschall.ApiSoundTest=function()
-  ultraschall.sound_works="off"
-  --reaper.MB("Ultraschall Sound-Engine is OFF","Ultraschall-API",0)
-end
-
 ultraschall.ApiVideoTest=function()
   ultraschall.video_works="off"
   --reaper.MB("Ultraschall Video-Engine is OFF","Ultraschall-API",0)
@@ -121,35 +110,14 @@ ultraschall.ApiTagTest=function()
   --reaper.MB("Ultraschall Tag-Engine is OFF","Ultraschall-API",0)
 end
 
-ultraschall.ApiNetworkTest=function()
-  ultraschall.network_works="off"
-  --reaper.MB("Ultraschall Network-Engine is OFF","Ultraschall-API",0)
-end
-
-
 ultraschall.ApiBetaFunctionsTest=function()
   ultraschall.functions_beta_works="off"
   --reaper.MB("BETA-Ultraschall Functions-Engine is OFF","Ultraschall-API (BETA)",0)
 end
 
-function ultraschall.ApiBetaDataTest()
-  ultraschall.data_beta_works="off"
-  --reaper.MB("BETA-Ultraschall DataStructures-Engine is OFF","Ultraschall-API (BETA)",0)
-end
-
 ultraschall.ApiBetaGFXTest=function()
   ultraschall.gfx_beta_works="off"
   --reaper.MB("BETA-Ultraschall GUI-Engine is OFF","Ultraschall-API (BETA)",0)
-end
-
-ultraschall.ApiBetaGUITest=function()
-  ultraschall.gui_beta_works="off"
-  --reaper.MB("BETA-Ultraschall GUI-Engine is OFF","Ultraschall-API (BETA)",0)
-end
-
-ultraschall.ApiBetaSoundTest=function()
-  ultraschall.sound_beta_works="off"
-  --reaper.MB("BETA-Ultraschall Sound-Engine is OFF","Ultraschall-API (BETA)",0)
 end
 
 ultraschall.ApiBetaVideoTest=function()
@@ -167,22 +135,14 @@ ultraschall.ApiBetaTagTest=function()
   --reaper.MB("BETA-Ultraschall Tag-Engine is OFF","Ultraschall-API (BETA)",0)
 end
 
-ultraschall.ApiBetaNetworkTest=function()
-  ultraschall.network_beta_works="off"
-  --reaper.MB("BETA-Ultraschall Network-Engine is OFF","Ultraschall-API (BETA)",0)
-end
 
 
 -- include the individual parts of the framework, if set to ON
 ultraschall.US_Functions_Engine = dofile(script_path .. "ultraschall_functions_engine.lua")
-if ultraschall.US_DataStructures~="OFF" then ultraschall.US_DataStructure_Engine = dofile(script_path .. "ultraschall_datastructures_engine.lua") end
 if ultraschall.US_GFX_Engine~="OFF" then ultraschall.US_GFX_Engine = dofile(script_path .. "ultraschall_gfx_engine.lua") end
-if ultraschall.US_GUI_Engine~="OFF" then ultraschall.US_GUI_Engine = dofile(script_path .. "ultraschall_gui_engine.lua") end
-if ultraschall.US_Sound_Engine~="OFF" then ultraschall.US_Sound_Engine = dofile(script_path .. "ultraschall_sound_engine.lua") end
 if ultraschall.US_Video_Engine~="OFF" then ultraschall.US_Video_Engine = dofile(script_path .. "ultraschall_video_engine.lua") end
 if ultraschall.US_Doc_Engine~="OFF" then ultraschall.US_Doc_Engine = dofile(script_path .. "ultraschall_doc_engine.lua") end
 if ultraschall.US_Tag_Engine~="OFF" then ultraschall.US_Tag_Engine = dofile(script_path .. "ultraschall_tag_engine.lua") end
-if ultraschall.US_Network_Engine~="OFF" then ultraschall.US_Network_Engine = dofile(script_path .. "ultraschall_network_engine.lua") end
 
 
 
@@ -191,37 +151,26 @@ if ultraschall.US_Network_Engine~="OFF" then ultraschall.US_Network_Engine = dof
 -- if betafunctions are set to ON
 if ultraschall.US_BetaFunctions==true then
   if reaper.file_exists(script_path.."ultraschall_functions_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_functions_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_functions_engine_beta.lua") end
-  if reaper.file_exists(script_path.."ultraschall_datastructures_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_datastructures_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_datastructures_engine_beta.lua") end
-  if reaper.file_exists(script_path.."ultraschall_gui_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_gui_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_gui_engine_beta.lua") end
-  if reaper.file_exists(script_path.."ultraschall_gfx_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_gfx_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_gfx_engine_beta.lua") end
-  if reaper.file_exists(script_path.."ultraschall_sound_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_sound_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_sound_engine_beta.lua") end
+  if reaper.file_exists(script_path.."ultraschall_gfx_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_gfx_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_gfx_engine_beta.lua") end 
   if reaper.file_exists(script_path.."ultraschall_video_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_video_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_video_engine_beta.lua") end
   if reaper.file_exists(script_path.."ultraschall_doc_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_doc_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_doc_engine_beta.lua") end
   if reaper.file_exists(script_path.."ultraschall_tag_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_tag_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_tag_engine_beta.lua") end
-  if reaper.file_exists(script_path.."ultraschall_network_engine_beta.lua")==true and ultraschall.Script_Context:match("ultraschall_network_engine_beta")==nil then ultraschall.BETA=dofile(script_path .. "ultraschall_network_engine_beta.lua") end
 end
 
 
 function ultraschall.ApiTest()
     -- show "Api Part-Engine"-messages, when calling ultraschall.ApiTest()
     ultraschall.ApiFunctionTest()
-    ultraschall.ApiDataTest()
-    ultraschall.ApiGUITest()
-    ultraschall.ApiSoundTest()
     ultraschall.ApiVideoTest()
     
     ultraschall.ApiDocTest()
     ultraschall.ApiTagTest()
-    ultraschall.ApiNetworkTest()
+
 
     ultraschall.ApiBetaFunctionsTest()
-    ultraschall.ApiBetaDataTest()
-    ultraschall.ApiBetaGUITest()
-    ultraschall.ApiBetaSoundTest()
     ultraschall.ApiBetaVideoTest()
     ultraschall.ApiBetaDocTest()
     ultraschall.ApiBetaTagTest()
-    ultraschall.ApiBetaNetworkTest()
     
 ultraschall.network_works="off"    
     

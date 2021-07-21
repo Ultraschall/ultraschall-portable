@@ -3727,6 +3727,7 @@ function ultraschall.IsItemInTrack2(MediaItem, tracknumber)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Various Check Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>

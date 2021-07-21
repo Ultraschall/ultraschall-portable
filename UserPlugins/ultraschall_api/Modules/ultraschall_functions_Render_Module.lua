@@ -2166,34 +2166,83 @@ function ultraschall.GetRenderTable_Project()
     Returns all stored render-settings for the current project, as a handy table.
             
             RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
-            RenderTable["Bounds"] - 0, Custom time range; 1, Entire project; 2, Time selection; 3, Project regions; 4, Selected Media Items(in combination with Source 32); 5, Selected regions
-            RenderTable["Channels"] - the number of channels in the rendered file; 1, mono; 2, stereo; higher, the number of channels
+            RenderTable["Bounds"] - 0, Custom time range; 
+                                    1, Entire project; 
+                                    2, Time selection; 
+                                    3, Project regions; 
+                                    4, Selected Media Items(in combination with Source 32); 
+                                    5, Selected regions
+            RenderTable["Channels"] - the number of channels in the rendered file; 
+                                      1, mono; 
+                                      2, stereo; 
+                                      higher, the number of channels
             RenderTable["CloseAfterRender"] - true, closes rendering to file-dialog after render; false, doesn't close it
-            RenderTable["Dither"] - &1, dither master mix; &2, noise shaping master mix; &4, dither stems; &8, dither noise shaping stems
+            RenderTable["Dither"] - &1, dither master mix; 
+                                    &2, noise shaping master mix; 
+                                    &4, dither stems; 
+                                    &8, dither noise shaping stems
             RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
             RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
 			RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds            
-            RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
+            RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
+            RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+            RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                           0, LUFS-I
+                           1, RMS-I
+                           2, Peak
+                           3, True Peak
+                           4, LUFS-M max
+                           5, LUFS-S max
+            RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target; false, don't normalize stems to master-target
+            RenderTable["Normalize_Target"] - the normalize-target as dB-value
 			RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
-            RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 0, Full-speed Offline; 1, 1x Offline; 2, Online Render; 3, Online Render(Idle); 4, Offline Render(Idle)
+            RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 
+                                                    0, Full-speed Offline
+                                                    1, 1x Offline
+                                                    2, Online Render
+                                                    3, Online Render(Idle)
+                                                    4, Offline Render(Idle)
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
             RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog
             RenderTable["RenderPattern"] - the render pattern as input into the File name-inputbox of the Render to File-dialog
             RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
             RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay
-            RenderTable["RenderResample"] - Resample mode-dropdownlist; 0, Medium (64pt Sinc); 1, Low (Linear Interpolation); 2, Lowest (Point Sampling); 3, Good (192pt Sinc); 4, Better (348 pt Sinc); 5, Fast (IIR + Linear Interpolation); 6, Fast (IIRx2 + Linear Interpolation); 7, Fast (16pt Sinc); 8, HQ (512 pt); 9, Extreme HQ(768pt HQ Sinc)
+            RenderTable["RenderResample"] - Resample mode-dropdownlist; 
+                                            0, Medium (64pt Sinc); 
+                                            1, Low (Linear Interpolation); 
+                                            2, Lowest (Point Sampling); 
+                                            3, Good (192pt Sinc); 
+                                            4, Better (348 pt Sinc); 
+                                            5, Fast (IIR + Linear Interpolation); 
+                                            6, Fast (IIRx2 + Linear Interpolation); 
+                                            7, Fast (16pt Sinc); 
+                                            8, HQ (512 pt); 
+                                            9, Extreme HQ(768pt HQ Sinc)
             RenderTable["RenderString"] - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
             RenderTable["RenderString2"] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
             RenderTable["RenderTable"]=true - signals, this is a valid render-table
             RenderTable["SampleRate"] - the samplerate of the rendered file(s)
             RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; true, checked; false, unchecked
             RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked
-            RenderTable["Source"] - 0, Master mix; 1, Master mix + stems; 3, Stems (selected tracks); 8, Region render matrix; 16, Tracks with only Mono-Media to Mono Files; 32, Selected media items; 64, selected media items via master; 128, selected tracks via master
+            RenderTable["Source"] - 0, Master mix; 
+                                    1, Master mix + stems; 
+                                    3, Stems (selected tracks); 
+                                    8, Region render matrix; 
+                                    16, Tracks with only Mono-Media to Mono Files; 
+                                    32, Selected media items; 
+                                    64, selected media items via master; 
+                                    128, selected tracks via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds
-            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? &1, custom time bounds; &2, entire project; &4, time selection; &8, all project regions; &16, selected media items; &32, selected project regions
+            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked
+                                      &1, custom time bounds; 
+                                      &2, entire project; 
+                                      &4, time selection; 
+                                      &8, all project regions; 
+                                      &16, selected media items; 
+                                      &32, selected project regions
             RenderTable["TailMS"] - the amount of milliseconds of the tail
     
     Returns nil in case of an error
@@ -2201,10 +2250,10 @@ function ultraschall.GetRenderTable_Project()
   <retvals>
     table RenderTable - a table with all of the current project's render-settings
   </retvals>
-        <parametersss>
-          ReaProject ReaProject - the project, whose render-settings you want; either a ReaProject-object or an integer, that signals the projecttab of the project
-                                - use 0, for the currently active project; 1, for the first project-tab; 2, for the second, etc; -1, for the currently rendering project
-        </parametersss>
+  <parameters>
+    ReaProject ReaProject - the project, whose render-settings you want; either a ReaProject-object or an integer, that signals the projecttab of the project
+                          - use 0, for the currently active project; 1, for the first project-tab; 2, for the second, etc; -1, for the currently rendering project
+  </parameters>
   <chapter_context>
     Rendering Projects
     Assistance functions
@@ -2277,7 +2326,19 @@ function ultraschall.GetRenderTable_Project()
     RenderTable["SaveCopyOfProject"]=reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd,1060), "BM_GETCHECK", 0,0,0,0)
   end
   if RenderTable["SaveCopyOfProject"]==1 then RenderTable["SaveCopyOfProject"]=true else RenderTable["SaveCopyOfProject"]=false end
-
+  
+  RenderTable["Normalize_Method"]=math.tointeger(reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE", 0, false))
+  RenderTable["Normalize_Enabled"]=reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE", 0, false)&1==1
+  if RenderTable["Normalize_Enabled"]==true then RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-1 end
+  if reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE_TARGET", 0, false)~="" then
+    RenderTable["Normalize_Target"]=ultraschall.MKVOL2DB(reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE_TARGET", 0, false))  
+  else
+    RenderTable["Normalize_Target"]=-24
+  end
+  RenderTable["Normalize_Stems_to_Master_Target"]=RenderTable["Normalize_Method"]&32==32
+  if RenderTable["Normalize_Stems_to_Master_Target"]==true then RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-32 end
+  RenderTable["Normalize_Method"]=math.tointeger(RenderTable["Normalize_Method"]/2)  
+  
   return RenderTable
 end
 
@@ -2299,36 +2360,85 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
     Returns all stored render-settings in a projectfile, as a handy table.
             
             RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
-            RenderTable["Bounds"] - 0, Custom time range; 1, Entire project; 2, Time selection; 3, Project regions; 4, Selected Media Items(in combination with Source 32); 5, Selected regions
-            RenderTable["Channels"] - the number of channels in the rendered file; 1, mono; 2, stereo; higher, the number of channels
-            RenderTable["CloseAfterRender"] - close rendering to file-dialog after render; always true, as this isn't stored in projectfiles
-            RenderTable["Dither"] - &1, dither master mix; &2, noise shaping master mix; &4, dither stems; &8, dither noise shaping stems
+            RenderTable["Bounds"] - 0, Custom time range; 
+                                    1, Entire project; 
+                                    2, Time selection; 
+                                    3, Project regions; 
+                                    4, Selected Media Items(in combination with Source 32); 
+                                    5, Selected regions
+            RenderTable["Channels"] - the number of channels in the rendered file; 
+                                      1, mono; 
+                                      2, stereo; 
+                                      higher, the number of channels
+            RenderTable["CloseAfterRender"] - true, closes rendering to file-dialog after render; always true, as this isn't stored in projectfiles
+            RenderTable["Dither"] - &1, dither master mix; 
+                                    &2, noise shaping master mix; 
+                                    &4, dither stems; 
+                                    &8, dither noise shaping stems
             RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
             RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
-			RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked
+			RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
-            RenderTable["Endposition"] - the endposition of the rendering selection in seconds
+            RenderTable["Endposition"] - the endposition of the rendering selection in seconds            
             RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
+            RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+            RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                                       0, LUFS-I
+                                       1, RMS-I
+                                       2, Peak
+                                       3, True Peak
+                                       4, LUFS-M max
+                                       5, LUFS-S max
+            RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target; false, don't normalize stems to master-target
+            RenderTable["Normalize_Target"] - the normalize-target as dB-value
 			RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
-            RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 0, Full-speed Offline; 1, 1x Offline; 2, Online Render; 3, Online Render(Idle); 4, Offline Render(Idle)
+            RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 
+                                                    0, Full-speed Offline; 
+                                                    1, 1x Offline; 
+                                                    2, Online Render; 
+                                                    3, Online Render(Idle); 
+                                                    4, Offline Render(Idle)
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
             RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog
             RenderTable["RenderPattern"] - the render pattern as input into the File name-inputbox of the Render to File-dialog
-            RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checkbox is checked; false, checkbox is unchecked
+            RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
             RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay
-            RenderTable["RenderResample"] - Resample mode-dropdownlist; 0, Medium (64pt Sinc); 1, Low (Linear Interpolation); 2, Lowest (Point Sampling); 3, Good (192pt Sinc); 4, Better (348 pt Sinc); 5, Fast (IIR + Linear Interpolation); 6, Fast (IIRx2 + Linear Interpolation); 7, Fast (16pt Sinc); 8, HQ (512 pt); 9, Extreme HQ(768pt HQ Sinc)
+            RenderTable["RenderResample"] - Resample mode-dropdownlist; 
+                                            0, Medium (64pt Sinc); 
+                                            1, Low (Linear Interpolation); 
+                                            2, Lowest (Point Sampling); 
+                                            3, Good (192pt Sinc); 
+                                            4, Better (348 pt Sinc); 
+                                            5, Fast (IIR + Linear Interpolation); 
+                                            6, Fast (IIRx2 + Linear Interpolation); 
+                                            7, Fast (16pt Sinc); 
+                                            8, HQ (512 pt); 
+                                            9, Extreme HQ(768pt HQ Sinc)
             RenderTable["RenderString"] - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
             RenderTable["RenderString2"] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
             RenderTable["RenderTable"]=true - signals, this is a valid render-table
             RenderTable["SampleRate"] - the samplerate of the rendered file(s)
             RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; always true(checked), as this isn't stored in projectfiles
             RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; always false, as this is not stored in projectfiles
-            RenderTable["Source"] - 0, Master mix; 1, Master mix + stems; 3, Stems (selected tracks); 8, Region render matrix; 16, Tracks with only Mono-Media to Mono Files; 32, Selected media items; 64, selected media items via master; 128, selected tracks via master
+            RenderTable["Source"] - 0, Master mix; 
+                                    1, Master mix + stems; 
+                                    3, Stems (selected tracks); 
+                                    8, Region render matrix; 
+                                    16, Tracks with only Mono-Media to Mono Files; 
+                                    32, Selected media items; 
+                                    64, selected media items via master; 
+                                    128, selected tracks via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds
-            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? &1, custom time bounds; &2, entire project; &4, time selection; &8, all project regions; &16, selected media items; &32, selected project regions
+            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked
+                                      &1, custom time bounds; 
+                                      &2, entire project; 
+                                      &4, time selection; 
+                                      &8, all project regions; 
+                                      &16, selected media items; 
+                                      &32, selected project regions
             RenderTable["TailMS"] - the amount of milliseconds of the tail
-    
+               
     Returns nil in case of an error
   </description>
   <retvals>
@@ -2410,6 +2520,24 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
   
   RenderTable["SaveCopyOfProject"]=false
   RenderTable["CloseAfterRender"]=true
+  
+  RenderTable["Normalize_Method"], RenderTable["Normalize_Target"] = ultraschall.GetProject_Render_Normalize(nil, ProjectStateChunk)
+  if RenderTable["Normalize_Method"]==nil then
+    RenderTable["Normalize_Method"]=0
+    RenderTable["Normalize_Target"]=-24
+    RenderTable["Normalize_Enabled"]=false
+    RenderTable["Normalize_Stems_to_Master_Target"]=false
+  else
+    RenderTable["Normalize_Enabled"]=RenderTable["Normalize_Method"]&1==1
+    if RenderTable["Normalize_Enabled"]==true then RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-1 end
+    RenderTable["Normalize_Target"]=ultraschall.MKVOL2DB(RenderTable["Normalize_Target"])
+    RenderTable["Normalize_Stems_to_Master_Target"]=RenderTable["Normalize_Method"]&32==32
+
+    if RenderTable["Normalize_Stems_to_Master_Target"]==true then 
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-32 
+    end
+    RenderTable["Normalize_Method"]=math.tointeger(RenderTable["Normalize_Method"]/2)
+  end
   
   return RenderTable
 end
@@ -2862,10 +2990,10 @@ function ultraschall.IsValidRenderTable(RenderTable)
   <slug>IsValidRenderTable</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=6.20
+    Reaper=6.32
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.IsValidRenderTable(RenderTable RenderTable)</functioncall>
+  <functioncall>boolean retval = ultraschall.IsValidRenderTable(table RenderTable)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     returns, if the table RenderTable is a valid RenderTable.
     
@@ -2875,7 +3003,7 @@ function ultraschall.IsValidRenderTable(RenderTable)
     boolean retval - true, RenderTable is a valid RenderTable; false, it is not a valid RenderTable
   </retvals>
   <parameters>
-    RenderTable RenderTable - the table, that you want to check for validity
+    table RenderTable - the table, that you want to check for validity
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -2915,8 +3043,13 @@ function ultraschall.IsValidRenderTable(RenderTable)
   if type(RenderTable["RenderString2"])~="string" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"RenderString2\"] must be a string", -17) return false end 
   if type(RenderTable["EmbedTakeMarkers"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"EmbedTakeMarkers\"] must be a boolean", -18) return false end 
   if type(RenderTable["NoSilentRender"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"NoSilentRender\"] must be a boolean", -19) return false end 
-  if type(RenderTable["EmbedMetaData"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"EmbedMetaData\"] must be a boolean", -20) return false end   
-  if type(RenderTable["Enable2ndPassRender"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Enable2ndPassRender\"] must be a boolean", -21) return false end     
+  if type(RenderTable["EmbedMetaData"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"EmbedMetaData\"] must be a boolean", -20) return false end
+  if type(RenderTable["Enable2ndPassRender"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Enable2ndPassRender\"] must be a boolean", -21) return false end
+  
+  if type(RenderTable["Normalize_Enabled"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Normalize_Enabled\"] must be a boolean", -22) return false end
+  if type(RenderTable["Normalize_Stems_to_Master_Target"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Normalize_Stems_to_Master_Target\"] must be a boolean", -23) return false end
+  if type(RenderTable["Normalize_Target"])~="number" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Normalize_Target\"] must be a number", -24) return false end
+  if math.type(RenderTable["Normalize_Method"])~="integer" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Normalize_Method\"] must be a number", -25) return false end
 
   return true
 end
@@ -2927,12 +3060,12 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   <slug>ApplyRenderTable_Project</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=6.20
+    Reaper=6.32
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, boolean dirty = ultraschall.ApplyRenderTable_Project(RenderTable RenderTable, optional boolean apply_rendercfg_string, optional boolean dirtyness)</functioncall>
+  <functioncall>boolean retval, boolean dirty = ultraschall.ApplyRenderTable_Project(table RenderTable, optional boolean apply_rendercfg_string, optional boolean dirtyness)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets all stored render-settings from a RenderTable as the current project-settings.
 
@@ -2950,7 +3083,17 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds
             RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
-			RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
+            RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+            RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                                       0, LUFS-I
+                                       1, RMS-I
+                                       2, Peak
+                                       3, True Peak
+                                       4, LUFS-M max
+                                       5, LUFS-S max
+            RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target; false, don't normalize stems to master-target
+            RenderTable["Normalize_Target"] - the normalize-target as dB-value	
+            RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
             RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 0, Full-speed Offline; 1, 1x Offline; 2, Online Render; 3, Online Render(Idle); 4, Offline Render(Idle)
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
@@ -2977,7 +3120,7 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
     boolean dirty - true, settings have been altered(project is dirty); false, settings haven't been altered(undirty)
   </retvals>
   <parameters>
-    RenderTable RenderTable - a RenderTable, that contains all render-dialog-settings
+    table RenderTable - a RenderTable, that contains all render-dialog-settings
     optional boolean apply_rendercfg_string - true or nil, apply it as well; false, don't apply it
     optional boolean dirtyness - true, function set the project to dirty, if any project setting has been altered by RenderTable(only if dirty==true); false and nil, don't set to dirty, if anything changed
   </parameters>
@@ -3036,6 +3179,18 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   elseif RenderTable["OnlyMonoMedia"]==false and Source&16==16 then 
     Source=Source-16 
   end
+  
+  local normalize_method=RenderTable["Normalize_Method"]
+  normalize_method=normalize_method*2
+  local normalize_target=ultraschall.DB2MKVOL(RenderTable["Normalize_Target"])
+  if RenderTable["Normalize_Enabled"]==true and normalize_method&1==0 then normalize_method=normalize_method+1 end
+  if RenderTable["Normalize_Enabled"]==false and normalize_method&1==1 then normalize_method=normalize_method-1 end  
+
+  if RenderTable["Normalize_Stems_to_Master_Target"]==true and normalize_method&32==0 then normalize_method=normalize_method+32 end
+  if RenderTable["Normalize_Stems_to_Master_Target"]==false and normalize_method&32==32 then normalize_method=normalize_method-32 end
+  
+  reaper.GetSetProjectInfo(ReaProject, "RENDER_NORMALIZE", normalize_method, true)
+  reaper.GetSetProjectInfo(ReaProject, "RENDER_NORMALIZE_TARGET", normalize_target, true)
   
   reaper.GetSetProjectInfo(ReaProject, "RENDER_SETTINGS", RenderTable["Source"], true)
   reaper.GetSetProjectInfo(ReaProject, "RENDER_BOUNDSFLAG", RenderTable["Bounds"], true)
@@ -3116,10 +3271,10 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
   <slug>ApplyRenderTable_ProjectFile</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=6.20
+    Reaper=6.32
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string ProjectStateChunk = ultraschall.ApplyRenderTable_ProjectFile(RenderTable RenderTable, string projectfilename_with_path, optional boolean apply_rendercfg_string, optional string ProjectStateChunk)</functioncall>
+  <functioncall>boolean retval, string ProjectStateChunk = ultraschall.ApplyRenderTable_ProjectFile(table RenderTable, string projectfilename_with_path, optional boolean apply_rendercfg_string, optional string ProjectStateChunk)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets all stored render-settings from a RenderTable as the current project-settings.
             
@@ -3138,6 +3293,16 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
 			RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
             RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 0, Full-speed Offline; 1, 1x Offline; 2, Online Render; 3, Online Render(Idle); 4, Offline Render(Idle);  
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
+            RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+            RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                                       0, LUFS-I
+                                       1, RMS-I
+                                       2, Peak
+                                       3, True Peak
+                                       4, LUFS-M max
+                                       5, LUFS-S max
+            RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target; false, don't normalize stems to master-target
+            RenderTable["Normalize_Target"] - the normalize-target as dB-value
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
             RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog
             RenderTable["RenderPattern"] - the render pattern as input into the File name-inputbox of the Render to File-dialog
@@ -3162,7 +3327,7 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
     string ProjectStateChunk - the altered project/ProjectStateChunk as a string
   </retvals>
   <parameters>
-    RenderTable RenderTable - a RenderTable, that contains all render-dialog-settings
+    table RenderTable - a RenderTable, that contains all render-dialog-settings
     string projectfilename_with_path - the rpp-projectfile, to which you want to apply the RenderTable; nil, to use parameter ProjectStateChunk instead
     optional boolean apply_rendercfg_string - true or nil, apply it as well; false, don't apply it
     optional parameter ProjectStateChunk - the ProjectStateChunkk, to which you want to apply the RenderTable
@@ -3238,6 +3403,18 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
        Source=Source-2048
     end
   end
+
+  local normalize_method=RenderTable["Normalize_Method"]
+  normalize_method=normalize_method*2
+  local normalize_target=ultraschall.DB2MKVOL(RenderTable["Normalize_Target"])
+  if RenderTable["Normalize_Enabled"]==true and normalize_method&1==0 then normalize_method=normalize_method+1 end
+  if RenderTable["Normalize_Enabled"]==false and normalize_method&1==1 then normalize_method=normalize_method-1 end
+  
+  if RenderTable["Normalize_Stems_to_Master_Target"]==true and normalize_method&32==0 then normalize_method=normalize_method+32 end
+  if RenderTable["Normalize_Stems_to_Master_Target"]==false and normalize_method&32==32 then normalize_method=normalize_method-32 end
+  
+  retval, ProjectStateChunk = ultraschall.SetProject_Render_Normalize(nil, normalize_method, normalize_target, ProjectStateChunk)
+  
   
   retval, ProjectStateChunk = ultraschall.SetProject_RenderStems(nil, RenderTable["Source"], ProjectStateChunk)
   retval, ProjectStateChunk = ultraschall.SetProject_RenderRange(nil, RenderTable["Bounds"], RenderTable["Startposition"], RenderTable["Endposition"], RenderTable["TailFlag"], RenderTable["TailMS"], ProjectStateChunk)  
@@ -3291,16 +3468,16 @@ TailMS, RenderFile, RenderPattern, SampleRate, Channels,
 OfflineOnlineRendering, ProjectSampleRateFXProcessing, RenderResample, OnlyMonoMedia, MultiChannelFiles,
 Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, 
 RenderQueueDelay, RenderQueueDelaySeconds, CloseAfterRender, EmbedStretchMarkers, RenderString2, 
-EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender)
+EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender, Normalize_Enabled, Normalize_Method, Normalize_Stems_to_Master_Target, Normalize_Target)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateNewRenderTable</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=6.20
+    Reaper=6.32
     Lua=5.3
   </requires>
-  <functioncall>RenderTable RenderTable = ultraschall.CreateNewRenderTable(optional integer Source, optional integer Bounds, optional number Startposition, optional number Endposition, optional integer TailFlag, optional integer TailMS, optional string RenderFile, optional string RenderPattern, optional integer SampleRate, optional integer Channels, optional integer OfflineOnlineRendering, optional boolean ProjectSampleRateFXProcessing, optional integer RenderResample, optional boolean OnlyMonoMedia, optional boolean MultiChannelFiles, optional integer Dither, optional string RenderString, optional boolean SilentlyIncrementFilename, optional boolean AddToProj, optional boolean SaveCopyOfProject, optional boolean RenderQueueDelay, optional integer RenderQueueDelaySeconds, optional boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean DoNotSilentRender, optional boolean EmbedMetadata, optional boolean Enable2ndPassRender)</functioncall>
+  <functioncall>table RenderTable = ultraschall.CreateNewRenderTable(optional integer Source, optional integer Bounds, optional number Startposition, optional number Endposition, optional integer TailFlag, optional integer TailMS, optional string RenderFile, optional string RenderPattern, optional integer SampleRate, optional integer Channels, optional integer OfflineOnlineRendering, optional boolean ProjectSampleRateFXProcessing, optional integer RenderResample, optional boolean OnlyMonoMedia, optional boolean MultiChannelFiles, optional integer Dither, optional string RenderString, optional boolean SilentlyIncrementFilename, optional boolean AddToProj, optional boolean SaveCopyOfProject, optional boolean RenderQueueDelay, optional integer RenderQueueDelaySeconds, optional boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean DoNotSilentRender, optional boolean EmbedMetadata, optional boolean Enable2ndPassRender, optional boolean Normalize_Enabled, optional integer Normalize_Method, optional boolean Normalize_Stems_to_Master_Target, optional number Normalize_Target)</functioncall>
   <description>
     Creates a new RenderTable.
     
@@ -3318,6 +3495,10 @@ EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender)
               RenderTable["Enable2ndPassRender"]=false
               RenderTable["Endposition"]=0
               RenderTable["MultiChannelFiles"]=false
+              RenderTable["Normalize_Enabled"]=false
+              RenderTable["Normalize_Method"]=0
+              RenderTable["Normalize_Stems_to_Master_Target"]=false
+              RenderTable["Normalize_Target"]=-24
               RenderTable["NoSilentRender"]=false
               RenderTable["OfflineOnlineRendering"]=0
               RenderTable["OnlyMonoMedia"]=false
@@ -3341,7 +3522,7 @@ EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender)
     Returns nil in case of an error
   </description>
   <retvals>
-    RenderTable RenderTable - the created RenderTable
+    table RenderTable - the created RenderTable
   </retvals>
   <parameters>
     optional integer Source - The Source-dropdownlist; 
@@ -3415,6 +3596,16 @@ EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender)
 	optional boolean DoNotSilentRender - the "Do not render files that are likely silent"-checkbox; true, checked; false, unchecked(default)
     optional boolean EmbedMetadata - the "Embed metadata"-checkbox; true, checked; false, unchecked(default)
     optional boolean Enable2ndPassRender - true, 2nd pass render is enabled; false, 2nd pass render is disabled
+    optional boolean Normalize_Enabled - true, normalization enabled; false, normalization not enabled
+    optional integer Normalize_Method - the normalize-method-dropdownlist
+                                      - 0, LUFS-I
+                                      - 1, RMS-I
+                                      - 2, Peak
+                                      - 3, True Peak
+                                      - 4, LUFS-M max
+                                      - 5, LUFS-S max
+    optional boolean Normalize_Stems_to_Master_Target - true, normalize-stems to master target; false, don't normalize stems to master-target
+    optional number Normalize_Target - the normalize-target as dB-value
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -3460,6 +3651,12 @@ EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender)
   if EmbedMetadata~=nil and type(EmbedMetadata)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "CloseAfterRender", "#28: must be nil or a boolean", -30) return end
   if Enable2ndPassRender~=nil and type(Enable2ndPassRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Enable2ndPassRender", "#29: must be nil or a boolean", -31) return end
 
+  if Normalize_Enabled~=nil and type(Normalize_Enabled)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Normalize_Enabled", "#30: must be nil or a boolean", -32) return end
+  if Normalize_Method~=nil and math.type(Normalize_Method)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Normalize_Method", "#31: must be nil or a number", -33) return end
+  if Normalize_Stems_to_Master_Target~=nil and type(Normalize_Stems_to_Master_Target)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Normalize_Stems_to_Master_Target", "#32: must be nil or a boolean", -34) return end
+  if Normalize_Target~=nil and type(Normalize_Target)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Normalize_Target", "#33: must be nil or a number", -34) return end
+    
+
   -- create Reaper-vanilla default RenderTable
   local RenderTable={}  
   RenderTable["AddToProj"]=false
@@ -3492,6 +3689,10 @@ EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender)
   RenderTable["TailFlag"]=18
   RenderTable["TailMS"]=1000
   RenderTable["Enable2ndPassRender"]=false
+  RenderTable["Normalize_Enabled"]=false
+  RenderTable["Normalize_Method"]=0
+  RenderTable["Normalize_Stems_to_Master_Target"]=false
+  RenderTable["Normalize_Target"]=-24
 
   -- set all attributes passed via parameters
   if AddToProj~=nil           then RenderTable["AddToProj"]=AddToProj end
@@ -3523,8 +3724,11 @@ EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender)
   if TailFlag~=nil            then RenderTable["TailFlag"]=TailFlag end
   if TailMS~=nil              then RenderTable["TailMS"]=TailMS end
   if Enable2ndPassRender~=nil then RenderTable["Enable2ndPassRender"]=Enable2ndPassRender end
-  
-
+  if Normalize_Enabled~=nil then RenderTable["Normalize_Enabled"]=Normalize_Enabled end
+  if Normalize_Method~=nil then RenderTable["Normalize_Method"]=Normalize_Method end
+  if Normalize_Stems_to_Master_Target~=nil then RenderTable["Normalize_Stems_to_Master_Target"]=Normalize_Stems_to_Master_Target end
+  if Normalize_Target~=nil then RenderTable["Normalize_Target"]=Normalize_Target end
+ 
   return RenderTable
 end
 
@@ -4001,10 +4205,10 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
    <slug>GetRenderPreset_RenderTable</slug>
    <requires>
      Ultraschall=4.2
-     Reaper=6.20
+     Reaper=6.32
      Lua=5.3
    </requires>
-   <functioncall>RenderTable RenderTable = ultraschall.GetRenderPreset_RenderTable(string Bounds_Name, string Options_and_Format_Name)</functioncall>
+   <functioncall>table RenderTable = ultraschall.GetRenderPreset_RenderTable(string Bounds_Name, string Options_and_Format_Name)</functioncall>
    <description markup_type="markdown" markup_version="1.0.1" indent="default">
      returns a rendertable, that contains all settings of a specific render-preset.
     
@@ -4026,6 +4230,16 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
      RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
      RenderTable["Endposition"] - the endposition of the rendering selection in seconds
      RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
+     RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+     RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                                       0, LUFS-I
+                                       1, RMS-I
+                                       2, Peak
+                                       3, True Peak
+                                       4, LUFS-M max
+                                       5, LUFS-S max
+     RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target; false, don't normalize stems to master-target
+     RenderTable["Normalize_Target"] - the normalize-target as dB-value
      RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 0, Full-speed Offline; 1, 1x Offline; 2, Online Render; 3, Online Render(Idle); 4, Offline Render(Idle)
      RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
 	 RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; can't be set in render-presets, therefore always set to false
@@ -4054,7 +4268,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
      string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to get
    </parameters>
    <retvals>
-     RenderTable RenderTable - a render-table, which contains all settings from a render-preset
+     table RenderTable - a render-table, which contains all settings from a render-preset
    </retvals>
    <chapter_context>
       Rendering Projects
@@ -4077,8 +4291,9 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
   local Presetname2, Bounds_dropdownlist2, Start_position2, Endposition2
   local Source_dropdownlist_and_checkboxes2, Unknown2, Outputfilename_renderpattern2
   local Tail_checkbox2, Quote
-  local B, _temp
+  local B, _temp  
 
+  -- bounds-presets
   for A in string.gmatch(A, "(RENDERPRESET_OUTPUT .-)\n") do
     Quote=A:sub(21,21)
     if Quote=="\"" then
@@ -4104,10 +4319,10 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     if Presetname2==Bounds_Name then found=true break end
   end
   
-
   if found~=true then ultraschall.AddErrorMessage("GetRenderPreset_RenderTable", "Bounds_Name", "no such preset", -3) return end
   found=nil
 
+  -- options
   for A2 in string.gmatch(A, "<RENDERPRESET.->") do
     A2=A2.." "
     rendercfg=A2:match(".-\n%s*(.-)\n")
@@ -4137,6 +4352,25 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     if Presetname==Options_and_Format_Name then found=true break end
   end
   
+  --normalization-presets
+  local Normalize_Method=0
+  local Normalize_Target=-44
+  for A in string.gmatch(A, "(RENDERPRESET_EXT .-)\n") do
+    Quote=A:sub(21,21)
+    if Quote=="\"" then
+      Presetname2=A:match(" [\"](.-)[\"]")
+    else
+      Quote=""
+      Presetname2=A:match("%s(.-)%s")
+    end
+  
+	local A1, A2=A:match(".* (%d-) (.*)")
+    if A1~=nil and A2~=nil then 
+      Normalize_Method, Normalize_Target=tonumber(A1), tonumber(A2)
+    end
+    
+    if Presetname2==Options_and_Format_Name then found=true break end
+  end
   
   if found~=true then ultraschall.AddErrorMessage("GetRenderPreset_RenderTable", "Options_and_Format_Name", "no such preset", -4) return end
   found=nil
@@ -4155,7 +4389,6 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     end
     if Presetname==Options_and_Format_Name then found=true break end
   end
-  
   
   if found~=true then rendercfg2="" end
   
@@ -4191,6 +4424,12 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
   RenderTable["Dither"]=tonumber(Various_checkboxes)
   RenderTable["EmbedMetaData"]=tonumber(Various_checkboxes2)&512==512
   RenderTable["Enable2ndPassRender"]=tonumber(Various_checkboxes2)&2048==2048
+  RenderTable["Normalize_Enabled"]=Normalize_Method&1==1  
+  RenderTable["Normalize_Stems_to_Master_Target"]=Normalize_Method&32==32
+  if RenderTable["Normalize_Enabled"]==true then Normalize_Method=Normalize_Method-1 end
+  if RenderTable["Normalize_Stems_to_Master_Target"]==true then Normalize_Method=Normalize_Method-32 end
+  RenderTable["Normalize_Method"]=math.tointeger(Normalize_Method/2)
+  RenderTable["Normalize_Target"]=ultraschall.MKVOL2DB(Normalize_Target)
 
   return RenderTable
 end
@@ -4251,8 +4490,8 @@ function ultraschall.DeleteRenderPreset_FormatOptions(Options_and_Format_Name)
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>DeleteRenderPreset_FormatOptions</slug>
    <requires>
-     Ultraschall=4.00
-     Reaper=5.975
+     Ultraschall=4.2
+     Reaper=6.32
      Lua=5.3
    </requires>
    <functioncall>boolean retval = ultraschall.DeleteRenderPreset_FormatOptions(string Options_and_Format_Name)</functioncall>
@@ -4288,6 +4527,8 @@ function ultraschall.DeleteRenderPreset_FormatOptions(Options_and_Format_Name)
   if Options_and_Format_Name:match("%s") then Options_and_Format_Name="\""..Options_and_Format_Name.."\"" end
   B=string.gsub(A, "<RENDERPRESET "..Options_and_Format_Name.." (.-\n>)\n", "")
   B=string.gsub(B, "<RENDERPRESET2 "..Options_and_Format_Name.."(.-\n>)\n", "")
+  B=string.gsub(B, "RENDERPRESET_EXT "..Options_and_Format_Name.." .-\n", "")
+
   if A==B then ultraschall.AddErrorMessage("DeleteRenderPreset_FormatOptions", "Options_and_Format_Name", "no such Options and Format-preset", -2) return false end
   A=ultraschall.WriteValueToFile(reaper.GetResourcePath().."/reaper-render.ini", B)
   if A==-1 then ultraschall.AddErrorMessage("DeleteRenderPreset_FormatOptions", "", "can't access "..reaper.GetResourcePath().."/reaper-render.ini", -3) return false end
@@ -4302,10 +4543,10 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
    <slug>AddRenderPreset</slug>
    <requires>
      Ultraschall=4.2
-     Reaper=6.20
+     Reaper=6.32
      Lua=5.3
    </requires>
-   <functioncall>boolean retval = ultraschall.AddRenderPreset(string Bounds_Name, string Options_and_Format_Name, RenderTable RenderTable)</functioncall>
+   <functioncall>boolean retval = ultraschall.AddRenderPreset(string Bounds_Name, string Options_and_Format_Name, table RenderTable)</functioncall>
    <description>
      adds a new render-preset into reaper-render.ini. 
      
@@ -4336,15 +4577,14 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       32, Selected media items
                                       64, selected media items via master
                                       128, selected tracks via master
-              "0"    - unknown, default setting is 0
               RenderTable["RenderPattern"] - the renderpattern, which hold also the wildcards
               RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? 
-                                      &1, custom time bounds
-                                      &2, entire project
-                                      &4, time selection
-                                      &8, all project regions
-                                      &16, selected media items
-                                      &32, selected project regions 
+                                        &1, custom time bounds
+                                        &2, entire project
+                                        &4, time selection
+                                        &8, all project regions
+                                        &16, selected media items
+                                        &32, selected project regions 
      
      Options_and_Format_Name stores only:
               RenderTable["SampleRate"] - the samplerate, with which to render; 0, use project-settings
@@ -4373,6 +4613,16 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       &4, dither stems
                                       &8, dither noise shaping stems
               RenderTable["MultiChannelFiles"] - multichannel-files-checkbox
+              RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+              RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                                                0, LUFS-I
+                                                1, RMS-I
+                                                2, Peak
+                                                3, True Peak
+                                                4, LUFS-M max
+                                                5, LUFS-S max
+              RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target; false, don't normalize stems to master-target
+              RenderTable["Normalize_Target"] - the normalize-target as dB-value
               RenderTable["OnlyMonoMedia"] - only mono media-checkbox
               RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
               RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides-checkbox
@@ -4386,7 +4636,7 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
    <parameters>
      string Bounds_Name - the name of the Bounds-render-preset you want to add; nil, to not add a new Bounds-render-preset
      string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to add; to not add a new Render-Format-Options-render-preset
-     RenderTable RenderTable - the RenderTable, which holds all information for inclusion into the Render-Preset
+     table RenderTable - the RenderTable, which holds all information for inclusion into the Render-Preset
    </parameters>
    <retvals>
      boolean retval - true, adding was successful; false, adding was unsuccessful
@@ -4463,7 +4713,12 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
              "\n  "..RenderTable["RenderString2"].."\n>"
       else String2=""
       end
-      A=A..String..String2
+      local normalize_method=RenderTable["Normalize_Method"]*2
+      if RenderTable["Normalize_Enabled"]==true then normalize_method=normalize_method+1 end
+      if RenderTable["Normalize_Stems_to_Master_Target"]==true then normalize_method=normalize_method+32 end
+      local normalize_target=ultraschall.DB2MKVOL(RenderTable["Normalize_Target"])
+      local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name.." "..normalize_method.." "..normalize_target
+      A=A..String..String2..String3
   end
     
   
@@ -4482,10 +4737,10 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
    <slug>SetRenderPreset</slug>
    <requires>
      Ultraschall=4.2
-     Reaper=6.20
+     Reaper=6.32
      Lua=5.3
    </requires>
-   <functioncall>boolean retval = ultraschall.SetRenderPreset(string Bounds_Name, string Options_and_Format_Name, RenderTable RenderTable)</functioncall>
+   <functioncall>boolean retval = ultraschall.SetRenderPreset(string Bounds_Name, string Options_and_Format_Name, table RenderTable)</functioncall>
    <description>
      sets an already existing render-preset in reaper-render.ini. 
      
@@ -4518,7 +4773,6 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       32, Selected media items
                                       64, selected media items via master
                                       128, selected tracks via master
-              "0"    - unknown, default setting is 0
               RenderTable["RenderPattern"] - the renderpattern, which hold also the wildcards
               RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? 
                                       &1, custom time bounds
@@ -4560,13 +4814,22 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
               RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
               RenderTable["RenderString"] - the render-cfg-string, which holds the render-outformat-settings
               RenderTable["RenderString2"] - the render-cfg-string, which holds the secondary render-outformat-settings; "" to remove it from this preset
-      
+              RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+              RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                                                0, LUFS-I
+                                                1, RMS-I
+                                                2, Peak
+                                                3, True Peak
+                                                4, LUFS-M max
+                                                5, LUFS-S max
+              RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target; false, don't normalize stems to master-target
+              RenderTable["Normalize_Target"] - the normalize-target as dB-value
      Returns false in case of an error
    </description>
    <parameters>
      string Bounds_Name - the name of the Bounds-render-preset you want to add; nil, to not add a new Bounds-render-preset
      string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to add; to not add a new Render-Format-Options-render-preset
-     RenderTable RenderTable - the RenderTable, which holds all information for inclusion into the Render-Preset
+     table RenderTable - the RenderTable, which holds all information for inclusion into the Render-Preset
    </parameters>
    <retvals>
      boolean retval - true, setting was successful; false, setting was unsuccessful
@@ -4592,7 +4855,7 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
   if A==nil then A="" end
   
   Source=RenderTable["Source"]
-  MonoMultichannelEmbed=0
+  local MonoMultichannelEmbed=0
   if RenderTable["MultiChannelFiles"]==true then MonoMultichannelEmbed=MonoMultichannelEmbed+4 end
   if RenderTable["OnlyMonoMedia"]==true then MonoMultichannelEmbed=MonoMultichannelEmbed+16 end
   if RenderTable["EmbedStretchMarkers"]==true then MonoMultichannelEmbed=MonoMultichannelEmbed+256 end
@@ -4651,7 +4914,21 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
       if RenderFormatOptions~=nil then
         A=string.gsub(A, RenderFormatOptions, "")
       end
-    end
+    end    
+    
+      local normalize_method=RenderTable["Normalize_Method"]*2
+      if RenderTable["Normalize_Enabled"]==true then normalize_method=normalize_method+1 end
+      if RenderTable["Normalize_Stems_to_Master_Target"]==true then normalize_method=normalize_method+32 end
+      local normalize_target=ultraschall.DB2MKVOL(RenderTable["Normalize_Target"])
+      local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name.." "..normalize_method.." "..normalize_target
+      A=A.."\n"
+      local RenderNormalization=A:match("\nRENDERPRESET_EXT "..Options_and_Format_Name..".-\n")
+      if RenderNormalization~=nil then
+        A=string.gsub(A, RenderNormalization, String3.."\n"):sub(1,-2)
+      else
+        A=A:sub(1,-2)
+        A=A..String3
+      end
   end
     
   
@@ -4676,7 +4953,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     JS=0.972
     Lua=5.3
   </requires>
-  <functioncall>integer count, array MediaItemStateChunkArray, array Filearray = ultraschall.RenderProject_RenderTable(optional string projectfilename_with_path, optional RenderTable RenderTable, optional boolean AddToProj, optional boolean CloseAfterRender, optional boolean SilentlyIncrementFilename)</functioncall>
+  <functioncall>integer count, array MediaItemStateChunkArray, array Filearray = ultraschall.RenderProject_RenderTable(optional string projectfilename_with_path, optional table RenderTable, optional boolean AddToProj, optional boolean CloseAfterRender, optional boolean SilentlyIncrementFilename)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Renders a projectfile or the current active project, using the settings from a RenderTable.
             
@@ -4691,6 +4968,16 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds
             RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
+            RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+            RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                                       0, LUFS-I
+                                       1, RMS-I
+                                       2, Peak
+                                       3, True Peak
+                                       4, LUFS-M max
+                                       5, LUFS-S max
+            RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target; false, don't normalize stems to master-target
+            RenderTable["Normalize_Target"] - the normalize-target as dB-value
             RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 0, Full-speed Offline; 1, 1x Offline; 2, Online Render; 3, Online Render(Idle); 4, Offline Render(Idle)
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
@@ -4719,7 +5006,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
   </retvals>
   <parameters>
     optional string projectfilename_with_path - the projectfilename with path of the rpp-file that you want to render; nil, to render the current active project
-    optional RenderTable RenderTable - the RenderTable with all render-settings, that you want to apply; nil, use the project's existing settings
+    optional table RenderTable - the RenderTable with all render-settings, that you want to apply; nil, use the project's existing settings
     optional boolean AddToProj - true, add the rendered files to the project; nil or false, don't add them; 
                                - will overwrite the settings in the RenderTable; will default to true, if no RenderTable is passed
                                - only has an effect, when rendering the current active project
@@ -5480,7 +5767,7 @@ function ultraschall.AddSelectedItemsToRenderQueue(render_items_individually, re
     Reaper=5.979
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, integer num_queued_projects = ultraschall.AddSelectedItemsToRenderQueue(optional boolean render_items_individually, optional boolean render_items_through_master, optional RenderTable RenderTables)</functioncall>
+  <functioncall>boolean retval, integer num_queued_projects = ultraschall.AddSelectedItemsToRenderQueue(optional boolean render_items_individually, optional boolean render_items_through_master, optional table RenderTable)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Adds the selected MediaItems to the render-queue.
     
@@ -5493,7 +5780,7 @@ function ultraschall.AddSelectedItemsToRenderQueue(render_items_individually, re
   <parameters>
     optional boolean render_items_individually - false or nil, render all selected MediaItems in one render-queued-project; true, render all selected MediaItems individually as separate Queued-projects
     optional boolean render_items_through_master - false or nil, just render the MediaItems; true, render the MediaItems through the Master-channel
-    optional RenderTable RenderTables - a RenderTable to apply for the renders in the render-queue
+    optional table RenderTable - a RenderTable to apply for the renders in the render-queue
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -6925,7 +7212,7 @@ function ultraschall.AreRenderTablesEqual(RenderTable1, RenderTable2)
     Reaper=6.20
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, optional integer count_differentEntries1, optional table differentEntries1, optional integer count_differentEntries2, optional table differentEntries2 = ultraschall.AreRenderTablesEqual(RenderTable RenderTable1, RenderTable RenderTable2)</functioncall>
+  <functioncall>boolean retval, optional integer count_differentEntries1, optional table differentEntries1, optional integer count_differentEntries2, optional table differentEntries2 = ultraschall.AreRenderTablesEqual(table RenderTable1, table RenderTable2)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     compares two RenderTables and returns true, if they are equal.
     
@@ -6939,8 +7226,8 @@ function ultraschall.AreRenderTablesEqual(RenderTable1, RenderTable2)
     optional table differentEntries2 - the table-entry-names, that are different in RenderTable2
   </retvals>
   <parameters>
-    RenderTable RenderTable1 - the first RenderTable, that you want to compare
-    RenderTable RenderTable2 - the second RenderTable, that you want to compare
+    table RenderTable1 - the first RenderTable, that you want to compare
+    table RenderTable2 - the second RenderTable, that you want to compare
   </parameters>
   <chapter_context>
     Rendering Projects

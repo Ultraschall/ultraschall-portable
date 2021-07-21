@@ -153,6 +153,7 @@ function main()
   end
   if T==true then T=false reaper.ShowConsoleMsg("\n") end
   savepowercounter=savepowercounter+1
+  O=reaper.time_precise()
   reaper.defer(main)
 end
 

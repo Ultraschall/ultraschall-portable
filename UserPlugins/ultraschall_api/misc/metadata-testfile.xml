@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<MetaData version="1.0">
+    <MetaData_Entry language="Languagecode according to ISO639; mandatory">
+        <podcast>
+            <title></title>
+            <subtitle></subtitle>
+            <uri></uri>
+            <website_url>url to the podcast website</website_url>
+            <publisher uri="" name="" email=""/>
+            <feed_url mediatype="mimetype of the media" url=""/>
+            <feed_url mediatype="mimetype of the media" url=""/>
+            <feed_url mediatype="mimetype of the media" url=""/>
+            <explicit yes_no="yes or no"/>
+            <cover_url mimetype="" url="url to the cover-graphics"/>
+            <license license_name="" license_url=""/>
+            <copyright>legal copyright text for this podcast</copyright>
+            <category></category>
+            <donation_uri>uri for donating to this podcast, like patreon url, paypal-link, etc</donation_uri>
+        </podcast>
+        
+        <episode>
+            <number>episode nr</number>
+            <title>episode nr</title>
+            <subtitle>episode nr</subtitle>
+            <description>episode nr</description>
+            <genre>episode nr</genre>
+            <releasedatetime time="HH:MM:SS" date="YYYY-MM-DD"/>
+            <recordingdatetime time="HH:MM:SS" date="YYYY-MM-DD"/>
+            <explicit yes_no="yes or no"/>
+            <show_category name="the category or show it is connected to - needs more research!!"/>
+            <related_episode> 
+                <feed_url url="url to the feed" feed_episodenr="episode_nr of the linked episode"/>
+                <uri uri="if no feed can be named, uri to the episode directly"/>
+                <metadata_uri uri="uri to the metadata-file"/>
+            </related_episode>
+            <media_from_others_used_in_episode>
+                <uri>the uri to the used media that is done by someone else</uri>
+                <title></title>
+                <subtitle></subtitle>
+                <description></description>
+                <license license_name="" license_url="">
+                    legal license-text, that describes, why this media could be used by you and if it is allowed to be used by others
+                </license>
+            </media_from_others_used_in_episode>
+            <copyright>legal copyright text for this episode</copyright>
+        </episode>
+
+        <contributor>
+            <name>name of the </name>
+            <email>contact_mail_to_the_contributor</email>
+            <uri>uri to the contibutor</uri>
+            <support_uri>uri to the support-page/paypal-link/etc</support_uri>
+            <internet_presence uri="uri to the internetpresence of twitter/instagram/tiktok/github/etc"/>
+        </contributor>
+                   
+        <chapter guid="">
+            <title>Title of the Chapter</title>
+            <subtitle>Subtitle of the Chapter</subtitle>
+            <description>Description of the Chapter</description>
+            <position_media type="page|seconds">12345</position_media>
+            <chapterimage ref="optional uri of the image" alt_text_description="description for visually impaired people" source="image-source-uri" content="optional BASE64Imagefile"/>
+        </chapter>
+
+        <shownote identifier="guid">
+            <title>Title of the Shownote</title>
+            <subtitle>Subtitle of the Shownote</subtitle>
+            <description>Description of the Shownote</description>
+            <position_mediatime position="position within the media in seconds"/>
+            <position_mediapage position="position within the media in page"/>
+            <position_gps Date="" Time="" x="" y="" z="" s=""/>
+            <URI id="guid" ref="uri of the shownote" description="a short description, what to find there"/>
+            <URI id="guid" ref="uri of the shownote" description="a short description, what to find there"/>
+        </shownote>
+            
+        <shownote identifier="guid">
+            <title>Title of the Shownote</title>
+            <subtitle>Subtitle of the Shownote</subtitle>
+            <description>Description of the Shownote</description>
+            <position_mediatime position="position within the media in seconds"/>
+            <position_mediapage position="position within the media in page"/>
+            <position_gps Date="" Time="" x="" y="" z="" s=""/>
+            <URI id="guid" ref="uri of the shownote" description="a short description, what to find there"/>
+            <URI id="guid" ref="uri of the shownote" description="a short description, what to find there"/>
+        </shownote>
+            
+        <transcription identifier="" uri="url to the transkriptionfile, omitted when webvtt is within this tag" type="mimetype of transkription format">
+            &lt;/transkription &gt;
+        </transcription>
+    </MetaData_Entry>
+
+</MetaData>

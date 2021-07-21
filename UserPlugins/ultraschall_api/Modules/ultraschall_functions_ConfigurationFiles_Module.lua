@@ -1906,6 +1906,7 @@ function ultraschall.CharacterCodes_ReverseLookup(byte1, byte2, byte3, lang, smm
   </parameters>
   <chapter_context>
     API-Helper functions
+    Shortcut Related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
@@ -2134,6 +2135,7 @@ function ultraschall.CharacterCodes_ReverseLookup_KBIni(byte1, byte2, lang)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Shortcut related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>
@@ -2212,6 +2214,7 @@ function ultraschall.KBIniGetAllShortcuts(exclude_factory_default, lang)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Shortcut related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_ConfigurationFiles_Module.lua</source_document>

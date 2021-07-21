@@ -1,87 +1,82 @@
 <html><head><title>
 REAPER Filetype-descriptions
 </title>
-<script type="text/javascript">
-function set_class_style(c,s) { 
-  var list = document.getElementsByClassName(c);
-  for (i=0;i<list.length;i++) {
-    list[i].style.display = s; 
-  }
-}
-function set_class_innerHTML(c,s) { 
-  var list = document.getElementsByClassName(c);
-  for (i=0;i<list.length;i++) {
-    list[i].innerHTML = s; 
-  }
-}
-function setdocview(v) {
-  var list = new Array('c_doc', 'c_func', 'c_funcs',
-                       'l_doc', 'l_func', 'l_funcs',
-                       'e_doc', 'e_func', 'e_funcs',
-                       'p_doc', 'p_func', 'p_funcs');
-  var i;
-  set_class_style('all_view', v == '' ? 'inline' : 'none');
-  for (i=0;i<list.length;i++) {
-    set_class_style(list[i], (v == '' || list[i].slice(0,1) == v) ? 'block' : 'none'); 
-  }
-  set_class_innerHTML('aclick', v=='' ? 'all' : "<a href=\"#\" onClick=\"setdocview('')\">all</a>");
-  set_class_innerHTML('cclick', v=='c' ? 'C/C++' : "<a href=\"#c\" onClick=\"setdocview('c')\">C/C++</a>");
-  set_class_innerHTML('eclick', v=='e' ? 'EEL' : "<a href=\"#e\" onClick=\"setdocview('e')\">EEL</a>");
-  set_class_innerHTML('lclick', v=='l' ? 'Lua' : "<a href=\"#l\" onClick=\"setdocview('l')\">Lua</a>");
-  set_class_innerHTML('pclick', v=='p' ? 'Python' : "<a href=\"#p\" onClick=\"setdocview('p')\">Python</a>");
-}
-function onLoad() {
-  if (window.location.hash == '#c') setdocview('c');
-  else if (window.location.hash == '#e') setdocview('e');
-  else if (window.location.hash == '#l') setdocview('l');
-  else if (window.location.hash == '#p') setdocview('p');
-}
-</script>
-</head><body>
-    <div style=" position: absolute; padding-left:4%; ">
-        <div style="background-color:#282828;width:95%; font-family:tahoma; font-size:16;">
+    <style>
 
 
-           <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_Un.png" alt="Ultraschall Internals Documentation"></a>  
-           <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button.png" alt="Reaper Internals Documentation"></a>
-         <img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
-           <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
-           <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
-           <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
-           <div style="padding-top:2.5%">
-           <table border="0" style="color:#aaaaaa; width:100%;">
-                <tr>
-                    <td style="width:27.2%;">
-                      <a href="http://www.reaper.fm"><img style="width:118%;" src="gfx/Reaper_Internals.png" alt="Reaper internals logo"></a>
-                    </td>
-                    <td style="width:14%;"><u>Documentation</u></td>
-                    <td style="width:12.7%;"><u> </u></td>
-                    <td style="width:12.7%;"><u> </u></td>
-                    <td style="width:12%;"><u> </u></td>
-                    <td style="width:12%;"><u> </u></td>
-                    <td style="width:12%;"><u> </u></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper-Filetype-Descriptions.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Filetype Descriptions&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Config_Variables.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Config Variables&nbsp;</a></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Api_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;ReaScript-Api-Docs&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_API_Video_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;Video-Api-Docs&nbsp;</a></td>
-                    <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_API_Web_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;WebRC-Api-Docs&nbsp;</a></td>
-                </tr>
-                <tr><td></td><tr>
-           </table> 
-           </div>
+a {
+  color:#66aaff;
+}
+
+body{
+    color:#BBBBBB;
+    background-color:#090909;
+}
+
+em{
+    color:55EE55;
+}
+
+table{
+    margin-top: -0.3%;
+}
+
+td{
+    vertical-align:top;
+}
+
+u{
+  color:#FFFFFF;
+}
+    </style>
+  </head>
+    <body>
+        <a class="anchor" id="This-is-the-TopOfTheWorld"></a>
+        <div style="position: sticky; top:0; padding-left:4%; z-index:100;">
+            <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
+                <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_Un.png" alt="Ultraschall Internals Documentation"></a>  
+                <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button.png" alt="Reaper Internals Documentation"></a>
+                <img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
+                <img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
+                <img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
+                <img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
+                <img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
+                <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
+                <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
+                <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
+                <div style="padding-top:2.5%">                    
+                    <table border="0" style="color:#aaaaaa; width:100%;">
+                        <tr>
+                            <td style="width:27.2%; padding-top:2; ">
+                                <a href="http://www.reaper.fm"><img style="width:118%;" src="gfx/Reaper_Internals.png" alt="Reaper internals logo"></a>
+                            </td>
+                            <td style="position: absolute; padding-top:5; width:14%;"><u>Documentation:</u></td>
+                            <td style="width:12.7%;"><u> </u></td>
+                            <td style="width:12.7%;"><u> </u></td>
+                            <td style="width:12%;"><u> </u></td>
+                            <td style="width:12%;"><u> </u></td>
+                            <td style="width:12%;"><u> </u></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper-Filetype-Descriptions.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Filetype Descriptions&nbsp;</a></td>
+                            <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Config_Variables.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Config Variables&nbsp;</a></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Api_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;ReaScript-Api-Docs&nbsp;</a></td>
+                            <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_API_Video_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;Video-Api-Docs&nbsp;</a></td>
+                            <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_API_Web_Documentation.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;WebRC-Api-Docs&nbsp;</a></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                    </table><hr color="#444444">
+                    <div style="position:absolute; right:6%; top:80%;"><a style="color:#CCCCCC;" href="#This-is-the-TopOfTheWorld">Jump to Index</a></div>
+                </div>
+            </div>            
         </div>
-    </div>
-    <div style="position:absolute; top:17%; padding-left:5%; width:90%;"><p></p>    
+    <div style="position:static; top:17%; padding-left:5%; width:90%;"><p></p>    
             
                 <h2>Filetype Descriptions</h2>
                 <h3>Index</h3>
@@ -110,7 +105,7 @@ function onLoad() {
                 <p>
                 <div style="width: 95%;">
                     <hr>
-                <h2><a id="Introduction">Introduction</a></h2>
+                <h2><a id="Introduction"></a>Introduction</h2>
                 Reaper does manage and include a lot of human-readable files, that give you the chance to change Reaper even further. With many of them being changeable, you have more chances to customize(or even debug your configuration of) Reaper to your liking, beyond the menus and APIs that Reaper provides. <br> 
                 Most of them are stored as .ini-files, so they should be easily spotted. Others aren't as easily identified as customizeable and need more knowledge in how to dig into them.<p>  
                 They are covered in this section.<p>
@@ -120,7 +115,7 @@ function onLoad() {
                 </div>
             <div style="width: 95%;">
                                 <hr>
-                <a id="Reaper-kb.ini"><h2>Reaper-kb.ini (as of Reaper 6.18)</h2></a>
+                <a id="Reaper-kb.ini"></a><h2>Reaper-kb.ini (as of Reaper 6.18)</h2>
                 Stored in Reaper-ressources-folder or in the Reaper-Application-Folder(in portable installations)<p>
                     In the file Reaper-kb.ini, the custom shortcuts, scripts and acts, their descriptions, sections-association and Action-Command-IDs are defined.<p> 
                     The reaper-kb.ini does NOT store OSC-Keybindings or FX-shortcuts, they are stored in reaper-osc-actions.ini or reaper-fxoptions.ini respectively.<p>
@@ -145,7 +140,7 @@ function onLoad() {
                 <h3>Actions(ACT):</h3>
                 The "Action Command ID" for a defined ACT must be unique(for each section), or Reaper uses only the first ACT using a given Action Command ID; this goes for ACTs with the same actions([ActionCommandID]) defined.  If you have associated an "Action Command ID" to two different ACTS with different actions([ActionCommandID]) defined, both will be used, but only the first one keeps the given "Action Command ID", while the others will get new Action Command IDs associated by Reaper.<p>
                 
-                    <pre style="padding-left:3%;"><code style="background-color:#DDDDDD;"><i> ACT a b "Action Command ID" "Description" ActionCommandID [ActionCommandID] [ActionCommandID] ... </i></code></pre>
+                    <pre style="padding-left:3%;"><code><i> ACT a b "Action Command ID" "Description" ActionCommandID [ActionCommandID] [ActionCommandID] ... </i></code></pre>
                 
                 <div style="padding-left: 4%; width:85%;">
                     <i>a</i> - 1 consolidate undo points, 2 show in Actions-Menu, 3 consolidate undo points AND show in Actions Menu; maybe 4 and higher?
@@ -168,7 +163,7 @@ function onLoad() {
                 If you have given an ActionCommandID to more scripts(associated to only one section), the first script in the Reaper-kb.ini having the given ActionCommandID, will be used in Reaper.<br>
                 If you need to have a single script twice in Reaper within the same section, give it individual ActionCommandIDs.<br>
                 If you have given multiple scripts the same ActionCommandID, only the first gets the ActionCommandID, while the others will get a new one by Reaper!<p>
-                    <pre style="padding-left:3%;"><code style="background-color:#DDDDDD;"><i> SCR a b ActionCommandID "ScriptDescription*" Scriptname.lua|.py </i></code></pre>
+                    <pre style="padding-left:3%;"><code><i> SCR a b ActionCommandID "ScriptDescription*" Scriptname.lua|.py </i></code></pre>
                 <div style="padding-left: 4%; width:85%;">
                     <i>a</i> - leave it at 4 or one of the numbers below, as most other number makes this script unrunnable, though other settings seem to have an effect, though useless when the script doesn't run. 1 consolidate undo points, 2 show in Actions-Menu, 3 consolidate undo points AND show in Actions Menu, 4 shows a "Instance already running"-dialog-window(standardsetting), 200 and above (mostly) makes the entry disappear in Reaper and within the Reaper-kb.ini, if the file is rewritten by Reaper.<p>
                         <div style="padding-left:4%;">4 - Dialogwindow appears(Terminate, New Instance, Abort), if another instance of a given script is started, that's already running</div>
@@ -193,7 +188,7 @@ function onLoad() {
                 <h3>Keys and Shortcuts(KEY):</h3>
                 Defined Keys and Shortcuts must be unique within their section, or the last association of a given shortcut in the Reaper-kb.ini overwrites all prior given associations.<p>
 
-                <pre style="padding-left:3%;"><code style="background-color:#DDDDDD;"><i> KEY ModifierValue Key_Note_Value _ActionCommandID section </i></code></pre>                
+                <pre style="padding-left:3%;"><code><i> KEY ModifierValue Key_Note_Value _ActionCommandID section </i></code></pre>                
 
                 
                     
@@ -517,7 +512,7 @@ function onLoad() {
                 </div>
                 <div style="width: 95%;">
                     <hr>
-                    <a id="Reaper-presets.ini"><h2>Reaper-presets.ini</h2></a>
+                    <a id="Reaper-presets.ini"></a><h2>Reaper-presets.ini</h2>
                     They are stored in the Reaper-Ressources-Folder/presets or in Reaper-Application-Folder/presets(the latter in portable installations).<br>
                     Preset-Files are to store the individual settings of presets. It will only contain your own settings you've stored, not "factory-presets". Every plugin has one preset file, each file is named <i>"VST/JS/AU/Pluginname.ini"</i>.<p>
 
@@ -540,7 +535,7 @@ function onLoad() {
                 </div>
                 <div style="width: 95%;">
                     <hr>
-                    <a id="Reaper-vstplugins64.ini"><h2>Reaper-vstplugins[64].ini</h2></a>
+                    <a id="Reaper-vstplugins64.ini"></a><h2>Reaper-vstplugins[64].ini</h2>
                     Stored in Reaper-ressources-folder or in the Reaper-application-folder(in portable installations).<br>
                     Caches the information about VST-Plugins. Will be newly written, if you click the "Clear Cache/Rescan"-Button in the "Options->Preferences->VST" - Dialogue.<br>
                     Every plugin must be unique. If a given <i>plugin-filename</i> appears more than once, the first one will be used only.<p>
@@ -559,7 +554,7 @@ function onLoad() {
                 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="Reaper-dxplugins64.ini"><h2>Reaper-dxplugins[64].ini(Windows)</h2></a>
+                    <a id="Reaper-dxplugins64.ini"></a><h2>Reaper-dxplugins[64].ini(Windows)</h2>
                     Stored in the Reaper-ressources-folder or in the Reaper-application-folder(in portable installations).<br>
                     Caches the DirectX-Plugin information.<p>
 
@@ -574,7 +569,7 @@ function onLoad() {
             </div>
                 <div style="width: 95%;">
                     <hr>
-                    <a id="Reaper-fxfolders.ini"><h2>Reaper-fxfolders.ini</h2></a>
+                    <a id="Reaper-fxfolders.ini"></a><h2>Reaper-fxfolders.ini</h2>
                     Reaper-fxfolder.ini can be found in the Ressources-Folder of Reaper or in the Reaper-Application-Folder(with portable installations).<br>
                     This file manages the "My Folders" section of the FX-selection-dialogue in Reaper.<p>
 
@@ -627,7 +622,7 @@ function onLoad() {
                                 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="ReaperConfigZip"><h2>ReaperConfigZip - configuration-export-files</h2></a>
+                    <a id="ReaperConfigZip"></a><h2>ReaperConfigZip - configuration-export-files</h2>
                     Can be located anywhere. Standard-save folder is Configurations in the ressources-folder or the application-folder(the latter in portable installations).<p>
                     
                         ReaperConfigZip-files are to store an exported state of Reaper with all it's configurations, files and needed stuff.<p>
@@ -680,7 +675,7 @@ Files can be described in the reaper-configzip-info, but will be imported/export
                 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="ReaperKeyMap"><h2>ReaperKeyMap</h2></a>
+                    <a id="ReaperKeyMap"></a><h2>ReaperKeyMap</h2>
                     You can have this file anywhere. Standard-folder for export/import is KeyMaps in Ressources-folder of Reaper or in the application-folder of Reaper(the latter in portable installations).<p>
                 </div>This file is basically an exported selection of entries of the <a href="#Reaper-kb.ini">Reaper-kb.ini</a>, chosen for export in the Actions->Show Actions List-dialogue.<br>
                 In fact, the reaper-kb.ini works the same way as ReaperKeyMaps, ReaperKeyMaps just have .ReaperKeyMaps as a file extension. So you could take a reaper-kb.ini, rename it to reaper-kb.ReaperKeyMap and import it.<p>
@@ -688,7 +683,7 @@ Files can be described in the reaper-configzip-info, but will be imported/export
                 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="RfxChain"><h2>RfxChain</h2></a>
+                    <a id="RfxChain"></a><h2>RfxChain</h2>
                     You can place it anywhere. Standard folder is FXChains/ in the Reaper-ressources-folder or in the Reaper-application-folder(the latter in portable installations).<p>
 
                         <strong>This documentation is missing information, especially about MIDI and OSC linkings and LEARN! It's also missing information about DirectX as well as Apple-AU-plugins!</strong><p>
@@ -921,7 +916,7 @@ The following entry ends the entries for this plugin. After it, the next block o
 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="Reaper-menu.ini"><h2>Reaper-menu.ini</h2></a>
+                    <a id="Reaper-menu.ini"></a><h2>Reaper-menu.ini</h2>
                     This file is located in the root of the Reaper-ressources-folder or the Reaper-application-folder(the latter in portable installations).<p>
                         Reaper-menu.ini files are to store the customization of menus, context-menus as well as toolbars and floating toolbars. You can customize the toolbars and menus for the MIDI-Editor as well in here.<p>
                         Note: Keep it as ANSI-encoded file, as UNICODE might cause toolbars, mostly the first described in reaper-menu.ini, to disappear(mostly Floating toolbar 1, as some characters are added right before [Floating). Unicode without BOM seems to work, though.<p>
@@ -1171,7 +1166,7 @@ The entries below a header can be either item_ID, title or icon_ID(icons in tool
 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="Reaper-extstate.ini"><h2>reaper-extstate.ini</h2></a>
+                    <a id="Reaper-extstate.ini"></a><h2>reaper-extstate.ini</h2>
                     Stored in the Ressources-folder or the Reaper-application-folder(in portable installations).
                     
                     The <i>Reaper-extstate.ini</i> is to store persistent external states, that have been set by scripts, plugins, etc.<p>
@@ -1206,7 +1201,7 @@ The entries below a header can be either item_ID, title or icon_ID(icons in tool
 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="Reaper-mouse.ini"><h2>Reaper-mouse.ini</h2></a>
+                    <a id="Reaper-mouse.ini"></a><h2>Reaper-mouse.ini</h2>
                     You can find the Reaper-mouse.ini in the ressources-folder or the Reaper-Application-folder(in portable installations).<p>
                         The Reaper-mouse.ini is to store the settings for the Mouse-modifier-settings. <br>
                         Usually, you can change them within Reaper from the <i>Options->Preferences->Mouse modifiers</i>-dialogue, with the exception of the checkboxes below the "Modifier & Beavior"-section, that are stored into the <a href="#reaper.ini">Reaper.ini</a><p>
@@ -2468,7 +2463,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
 
          <div style="width: 95%;">
                     <hr>
-                    <a id="ReaperMouseMap"><h2>ReaperMouseMap</h2></a>
+                    <a id="ReaperMouseMap"></a><h2>ReaperMouseMap</h2>
                     Can be stored anywhere. Standardfolder is MouseMaps in ressources-folder or the Reaper-application-folder(in portable installations)<p>
                         A filename.ReaperMouseMap is a file, in which you can export your own mouse modifier for later reimport <i>(Preferences->Mouse Modifiers->Import/Export-Button).</i> <p>
                         It basically is a stripped-down-version of the <i>reaper-mouse.ini</i> with the [hasimported] section missing.<p>
@@ -2477,7 +2472,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="ReaperFileList"><h2>ReaperFileList</h2></a>
+                    <a id="ReaperFileList"></a><h2>ReaperFileList</h2>
                     You can find Filename.ReaperFileList-files in the MediaDB-folder in the ressources-folder or in the Reaper-application-folder(in portable installations).<p>
                         ReaperFileList-files are databases for the Media-Explorer (within Reaper-menu: View-> Media Explorer). They contain files you have associated with that given Media-Explorer-Database.<p>
                         The name of the Media-Explorer-Database is not stored into the files, but rather into reaper.ini, section:<p>
@@ -2525,7 +2520,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="ReaperIDETheme"><h2>ReaperIDETheme </h2></a>
+                    <a id="ReaperIDETheme"></a><h2>ReaperIDETheme </h2>
                     
                     Can be stored anywhere, standard is the ColorThemes-folder in the ressources-folder or in the Reaper-Application-folder(in portable installations).<p>
                         It is to store the information about the color-settings for the Reaper-Integrated-Development-Environment.<p>
@@ -2571,7 +2566,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="reaper-defpresets.ini"><h2>reaper-defpresets.ini</h2></a>
+                    <a id="reaper-defpresets.ini"></a><h2>reaper-defpresets.ini</h2>
                     Can be found in the Ressources-folder of the Reaper-application-folder(in portable installations)<p>
                         It is to store the default-preset for fx/instrument-plugins.<p>
                         It starts with the section [defaultpresets].<p>
@@ -2599,7 +2594,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
 
        <div style="width: 95%;">
                     <hr>
-                    <a id="MetadataCache"><h2>MetadataCache</h2></a>
+                    <a id="MetadataCache"></a><h2>MetadataCache</h2>
                     Stored in the folder MetadataCaches in the Ressources-folder or the Reaper-application-folder(in portable installations).<p>
                         String.MetadataCache is basically a variation of <a href="#ReaperFileList">ReaperFileList</a>, with fewer entries, one additional entry.<p>
                         The MetadataCache files contain only a handful of media-files from one folder only. That said, there are many MetadataCache-files in the MetadataCaches-folder, each having all media-file-entries for each folder that was scanned.<p>
@@ -2610,14 +2605,14 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="ReaperMenuSet"><h2>ReaperMenuSets </h2></a>
+                    <a id="ReaperMenuSet"></a><h2>ReaperMenuSets </h2>
                     Can be stored anywhere, standard folder is MenuSets in the Ressources-folder or the Reaper-application-folder(in portable installations).<p>
                         It is basically a 1:1 export of the <a href="#Reaper-menu.ini">reaper-menu.ini</a>.<p>
                 </div>
 
                 <div style="width: 95%;">
                     <hr>
-                    <a id="ReaperMenu"><h2>ReaperMenu </h2></a>
+                    <a id="ReaperMenu"></a><h2>ReaperMenu </h2>
                     Can be stored anywhere, standard folder is MenuSets in the Ressources-folder or the Reaper-application-folder(in portable installations).<p>
                         It is basically an export of one menu or one toolbar. The rules for this file are the same as for the <a href="#Reaper-menu.ini">reaper-menu.ini</a>.<p>
                 </div>
@@ -2627,7 +2622,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
 
        <div style="width: 95%;">
                     <hr>
-                    <a id="ReaperProjectList"><h2>ReaperProjectList-RPL  (SWS-Extension)</h2></a>
+                    <a id="ReaperProjectList"></a><h2>ReaperProjectList-RPL  (SWS-Extension)</h2></a>
                     <strong>Don't confuse with <a href="#ReaperPresetLibrary">Reaper Preset Librarys</a>, that are also .RPL-files</strong><p>
                     Can be stored anywhere. Needs SWS installed.<p>
                         Mostly used by menu: Extensions->Project Management<p>
@@ -2637,7 +2632,7 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
        
        <div style="width: 95%;">
                     <hr>
-                    <a id="ReaperChanMap"><h2>ReaperChanMap</h2></a>
+                    <a id="ReaperChanMap"></a><h2>ReaperChanMap</h2>
                     Filename.ReaperChanMap-files can be found anywhere; default is ChanMaps in the ressources-folder or the Reaper-application-folder(in portable installations).<p>
                     
                         It is to store Channel-aliases for input and output, as loaded and stored within Reaper by Options->Preferences->Audio->Channel naming/mapping->Edit Names/Map...<p>
@@ -2682,7 +2677,7 @@ Hardware-channels can be used by multiple alias-channels. You can also associate
 
             <div style="width: 95%;">
                     <hr>
-                    <a id="Reaper-Template"><h2> </h2></a>
+                    <a id="Reaper-Template"></a><h2> </h2>
                 </div>
 
             

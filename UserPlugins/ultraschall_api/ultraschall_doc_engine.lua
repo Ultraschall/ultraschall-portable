@@ -444,7 +444,7 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Docs_GetUSDocBloc_ChapterContext</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.978
     Lua=5.3
   </requires>
@@ -457,7 +457,7 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
   </description>
   <retvals>
     integer count - the number of chapters found
-    array chapters - the chapternams as an array
+    array chapters - the chapternames as an array
     string spok_lang - the language of the chapters; "", if no language is given
   </retvals>
   <parameters>
@@ -479,6 +479,7 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
   local counter=0
   local title, spok_lang, found
   for k in string.gmatch(String, "(<chapter_context.->.-</chapter_context>)") do
+  
     counter=counter+1
     if counter==index then String=k found=true end
   end
@@ -488,10 +489,10 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
   local language=String:match("spok_lang=\"(.-)\"")
   if language==nil then language="" end
   
-  local Chapters=String:match("<chapter_context.->.-\n(.-)\n.-</chapter_context>")
+  local Chapters=String:match("<chapter_context.->.-\n(.*)\n.-</chapter_context>")
   local count, split_string = ultraschall.SplitStringAtLineFeedToArray(Chapters)
   for i=1, count do
-    split_string[i]=split_string[i]:match("%s*(.*)")
+    split_string[i]=split_string[i]:match("%s*(.*)")    
   end
   return count, split_string, language
 end

@@ -62,18 +62,18 @@ function ultraschall.WebInterface_GetInstalledInterfaces()
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer reapers_count_of_webinterface, array reapers_webinterface_filenames_with_path, array reapers_webinterface_titles, integer users_count_of_webinterface, array users_webinterface_filenames_with_path, array users_webinterface_titles = ultraschall.WebInterface_GetInstalledInterfaces()</functioncall>
+  <functioncall>integer reapers_webinterface_count, array reapers_webinterface_filenames, array reapers_webinterface_titles, integer users_webinterface_count, array users_webinterface_filenames, array users_webinterface_titles = ultraschall.WebInterface_GetInstalledInterfaces()</functioncall>
   <description>
     Returns the currently installed web-interface-pages.
     
     Will return Reaper's default ones(resources-folder/Plugins/reaper_www_root/) as well as your customized ones(resources-folder/reaper_www_root/)
   </description>
-  <retvals>
-    integer reapers_count_of_webinterface - the number of factory-default webinterfaces, installed by Reaper
-    array reapers_webinterface_filenames_with_path - the filenames with path of the webinterfaces(can be .htm or .html)
+  <retvals>  
+    integer reapers_webinterface_count - the number of factory-default webinterfaces, installed by Reaper
+    array reapers_webinterface_filenames - the filenames with path of the webinterfaces(can be .htm or .html)
     array reapers_webinterface_titles - the titles of the webinterfaces, as shown in the titlebar of the browser
-    integer users_count_of_webinterface - the number of user-customized webinterfaces
-    array users_webinterface_filenames_with_path - the filenames with path of the webinterfaces(can be .htm or .html)
+    integer users_webinterface_count - the number of user-customized webinterfaces
+    array users_webinterface_filenames - the filenames with path of the webinterfaces(can be .htm or .html)
     array users_webinterface_titles - the titles of the webinterfaces, as shown in the titlebar of the browser
   </retvals>
   <chapter_context>

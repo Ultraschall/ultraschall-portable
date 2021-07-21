@@ -2340,16 +2340,16 @@ function ultraschall.CopyFile_GetRemainingFilesToCopy()
   return ultraschall.CopyFile_NumberOfFiles
 end
 
-function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTable, BWFStart, PadStart, PadEnd, FXStateChunk, MetaDataStateChunk)
+function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTable, BWFStart, PadStart, PadEnd, FXStateChunk, MetaDataStateChunk, UseRCMetaData)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>BatchConvertFiles</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=6.12
+    Reaper=6.32
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.BatchConvertFiles(table inputfilelist, table outputfilelist, table RenderTable, optional boolean BWFStart, optional integer PadStart, optional integer PadEnd, optional string FXStateChunk)</functioncall>
+  <functioncall>boolean retval = ultraschall.BatchConvertFiles(table inputfilelist, table outputfilelist, table RenderTable, optional boolean BWFStart, optional integer PadStart, optional integer PadEnd, optional string FXStateChunk, optional boolean UseRCMetaData)</functioncall>
   <description>
     Converts files using Reaper's own BatchConverter.
     
@@ -2370,6 +2370,7 @@ function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTabl
     optional integer PadStart - the start of the padding in seconds; nil, to omit it
     optional integer PadEnd - the end of the padding in seconds; nil, to omit it
     optional string FXStateChunk - an FXChain as FXStateChunk; with that you can add fx on top of the to-convert-files.
+    optional boolean UseRCMetaData - true, tries to retain the metadata from the sourcefile; false, doesn't try to retain metadata
   </retvals>
   <parameters>
     boolean retval - true, conversion was successfully started; false, conversion didn't start
@@ -2401,7 +2402,6 @@ function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTabl
   -- temporary solution:
   if type(MetaDataStateChunk)~="string" then MetaDataStateChunk="" end  
 
--- Todo:
 
   local BatchConvertData=""
   local ExeFile, filename, path
@@ -2411,6 +2411,7 @@ function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTabl
   if BWFStart==true then BWFStart="    USERCSTART 1\n" else BWFStart="" end
   if PadStart~=nil  then PadStart="    PAD_START "..PadStart.."\n" else PadStart="" end
   if PadEnd~=nil  then PadEnd="    PAD_END "..PadEnd.."\n" else PadEnd="" end
+  if UseRCMetaData==true then UseRCMetaData="    USERCMETADATA 1\n" else UseRCMetaData="" end
   local i=1
   local outputfile
   while inputfilelist[i]~=nil do
@@ -2432,6 +2433,7 @@ function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTabl
     DITHER ]]..RenderTable["Dither"]..[[
     
 ]]..BWFStart..[[
+]]..UseRCMetaData..[[
 ]]..PadStart..[[
 ]]..PadEnd..[[
     OUTPATH ]]..RenderTable["RenderFile"]..[[

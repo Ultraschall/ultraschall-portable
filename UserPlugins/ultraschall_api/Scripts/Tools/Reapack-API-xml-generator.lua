@@ -163,6 +163,9 @@ Markdown2RTF="c:\\Program Files\\Pandoc\\pandoc -f markdown -w plain -s -o c:\\t
 
 ChangeLog=ultraschall.ReadFullFile(SourceDir.."/ultraschall_api/Changelog-Api.txt")
 ChangeLog=string.gsub(ChangeLog, "<TODO>.-</TODO>", "")
+ChangeLog=ChangeLog:match("(.-)\n%-%-%-")
+--print2(ChangeLog)
+--if LOL==nil then return end
 
 --reaper.CF_SetClipboard(ChangeLog)
 ultraschall.WriteValueToFile("c:\\temp\\tempfile", ChangeLog)

@@ -211,7 +211,7 @@ function ultraschall.GetGuidExtState(guid, key, savelocation)
   </retvals>
   <chapter_context>
     Metadata Management
-    Extension States(Guid)
+    Extension States Guid
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>

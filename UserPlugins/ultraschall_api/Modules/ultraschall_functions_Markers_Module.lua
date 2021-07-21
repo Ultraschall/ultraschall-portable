@@ -3730,12 +3730,12 @@ function ultraschall.GetAllCustomMarkers(custom_marker_name)
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -3811,12 +3811,12 @@ function ultraschall.GetAllCustomRegions(custom_region_name)
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -3893,12 +3893,12 @@ function ultraschall.CountAllCustomMarkers(custom_marker_name)
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -3957,12 +3957,12 @@ function ultraschall.CountAllCustomRegions(custom_region_name)
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -4021,12 +4021,12 @@ function ultraschall.EnumerateCustomMarkers(custom_marker_name, idx)
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -4096,12 +4096,12 @@ function ultraschall.EnumerateCustomRegions(custom_region_name, idx)
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -4170,12 +4170,12 @@ function ultraschall.DeleteCustomMarkers(custom_marker_name, idx)
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -4246,12 +4246,12 @@ function ultraschall.DeleteCustomRegions(custom_region_name, idx)
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -4322,12 +4322,12 @@ function ultraschall.AddCustomMarker(custom_marker_name, pos, name, shown_number
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -4396,12 +4396,12 @@ function ultraschall.AddCustomRegion(custom_region_name, pos, regionend, name, s
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -4478,12 +4478,12 @@ function ultraschall.SetCustomMarker(custom_marker_name, idx, pos, name, shown_n
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -4549,12 +4549,12 @@ function ultraschall.SetCustomRegion(custom_region_name, idx, pos, regionend, na
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     

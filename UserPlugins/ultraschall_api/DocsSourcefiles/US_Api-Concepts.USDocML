@@ -130,7 +130,7 @@
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Usage is really simple. First, create a new script. For this, go into the menu "Actions", hit "Show action list",
             click the "New action"-button and select "New ReaScript".
-            In the file-requester, you enter a filename for the new script. Just test it by naming it "Test_Ultraschall_Api.lua"
+            In the file-requester, you enter a filename for the new script. Just test it by naming it "Test\_Ultraschall\_Api.lua"
             Now an editor appears, in which you can enter the code.
             
             Add the following line at the beginning of your script:
@@ -145,7 +145,7 @@
 
             And hit Cmd+S/Ctrl+S.
             A messagebox should appear, that tells you, that the API is up and running. If an error-message pops up,
-            please try installing again, according to [the manua](#Introduction_002_How_to_Install).
+            please try installing again, according to [the manual](#Introduction_002_How_to_Install).
             
             If you are already familiar with programming Reaper's own API-functions, you know, that all of Reaper's functions are placed in a table called "reaper."  
                 e.g. reaper.ShowConsoleMsg("msg")
@@ -210,26 +210,25 @@
         <slug>Introduction_005_License</slug>
         <title>Introduction: License</title>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-                         
-             Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+            Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
              
-             Permission is hereby granted, free of charge, to any person obtaining a copy
-             of this software and associated documentation files (the "Software"), to deal
-             in the Software without restriction, including without limitation the rights
-             to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-             copies of the Software, and to permit persons to whom the Software is
-             furnished to do so, subject to the following conditions:
+            Permission is hereby granted, free of charge, to any person obtaining a copy
+            of this software and associated documentation files (the "Software"), to deal
+            in the Software without restriction, including without limitation the rights
+            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+            copies of the Software, and to permit persons to whom the Software is
+            furnished to do so, subject to the following conditions:
              
-             The above copyright notice and this permission notice shall be included in
-             all copies or substantial portions of the Software.
+            The above copyright notice and this permission notice shall be included in
+            all copies or substantial portions of the Software.
              
-             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-             IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-             FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-             AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-             LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-             OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-             THE SOFTWARE.
+            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+            THE SOFTWARE.
              
             
 
@@ -261,7 +260,8 @@
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Parameters and returnvalues are usually of specific types. Let's look at the following function:
             
-                        integer number_of_items, array MediaItemArray, array MediaItemStateChunkArray = ultraschall.GetMediaItemsAtPosition(number position, string trackstring)
+                        integer number_of_items, array MediaItemArray, array MediaItemStateChunkArray = 
+                                                        ultraschall.GetMediaItemsAtPosition(number position, string trackstring)
             
             The returnvalues number\_of\_items is of type integer, MediaItemArray is of type array/type, MediaItemStateChunkArray if of type array.
             The parameters position is of type number, trackstring is of type string.
@@ -644,8 +644,10 @@
                                                                       7, Fast (16pt Sinc)
                                                                       8, HQ (512 pt)
                                                                       9, Extreme HQ(768pt HQ Sinc)
-                        RenderTable["RenderString"]            - the render-cfg-string, that holds all settings of the currently set render-ouput-format as BASE64 string
-                        RenderTable["RenderString2"]           - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
+                        RenderTable["RenderString"]            - the render-cfg-string, that holds all settings of the currently set 
+                                                                 render-ouput-format as BASE64 string
+                        RenderTable["RenderString2"]           - the render-cfg-string, that holds all settings of the currently set 
+                                                                 secondary-render-output-format as BASE64 string
                         RenderTable["RenderTable"]=true        - signals, this is a valid render-table
                         RenderTable["SampleRate"]              - the samplerate of the rendered file(s)
                         RenderTable["SaveCopyOfProject"]       - the "Save copy of project to outfile.wav.RPP"-checkbox
@@ -1780,7 +1782,8 @@
             **[RippleCut\_Reverse](usdocml://RippleCut_Reverse)**:
             
                             integer number_items, array MediaItemArray_StateChunk = 
-                                 ultraschall.RippleCut_Reverse(number startposition, number endposition, string trackstring, boolean moveenvelopepoints, boolean add_to_clipboard)
+                                 ultraschall.RippleCut_Reverse(number startposition, number endposition, string trackstring, 
+                                                               boolean moveenvelopepoints, boolean add_to_clipboard)
                 
             >With this function, you can RippleCut, but unlike RippleCut above, RippleCut_Reverse moves everything BEFORE the cut towards the end to fill the cut.  
             >Everything else is just the same as RippleCut.
@@ -1873,7 +1876,8 @@
             
             >**[MoveMediaItemsBetween\_To](usdocml://MoveMediaItemsBetween_To)**
             
-                            boolean retval = ultraschall.MoveMediaItemsBetween_To(number startposition, number endposition, number newposition, string trackstring, boolean inside)
+                            boolean retval = ultraschall.MoveMediaItemsBetween_To(number startposition, number endposition, number newposition, 
+                                                                                  string trackstring, boolean inside)
             
             >This also moves MediaItems, but the MediaItems between startposition and endposition. Unlike the functions above, you give the new position in seconds, at which the MediaItems shall start. The relative-positions of the MediaItems will stay intact.  
             >The parameter inside allows you to tell the function, whether to include only MediaItems completely within start and endposition(true) or also MediaItems that are partially within start and endposition(false).  
@@ -2017,31 +2021,32 @@
                             integer number_of_items, array MediaItemArray 
                                             = ultraschall.InsertMediaItemStateChunkArray(number position, array MediaItemStateChunkArray, string trackstring)
 
-           >This works like InsertMediaItemArray, but it's inserting MediaItemStateChunks from the MediaItemStateChunkArray instead.  
-           >In addition to that, it also lifts the track-limitation, when you insert the tracknumber into each MediaItemStateChunk using [SetItemUSTRackNumber\_StateChunk](usdocml://SetItemUSTRackNumber_StateChunk), which is automatically done by [GetItem-functions](#Getting_Manipulating_Items_002_GetMediaItems) from the Ultraschall-API.  
-           >The addition of the tracknumber is mandatory, otherwise the MediaItemStateChunk will not be inserted!  
+            >This works like InsertMediaItemArray, but it's inserting MediaItemStateChunks from the MediaItemStateChunkArray instead.  
+            >In addition to that, it also lifts the track-limitation, when you insert the tracknumber into each MediaItemStateChunk using [SetItemUSTRackNumber\_StateChunk](usdocml://SetItemUSTRackNumber_StateChunk), which is automatically done by [GetItem-functions](#Getting_Manipulating_Items_002_GetMediaItems) from the Ultraschall-API.  
+            >The addition of the tracknumber is mandatory, otherwise the MediaItemStateChunk will not be inserted!  
            
-           >**[InsertMediaItemFromFile](usdocml://InsertMediaItemFromFile)**
+            >**[InsertMediaItemFromFile](usdocml://InsertMediaItemFromFile)**
            
                             integer retval, MediaItem item, number endposition, integer numchannels, integer Samplerate, string Filetype
                                = ultraschall.InsertMediaItemFromFile(string filename, integer track, number position, number endposition, 
                                                                      integer editcursorpos, optional number offset)
                                
-           >This function allows you to insert a file as a new MediaItem into your project, including the tracknumber, position, endposition(if wanted), the editcursorposition and the offset, if wanted.  
-           >Example:
+            >This function allows you to insert a file as a new MediaItem into your project, including the tracknumber, position, endposition(if wanted), the editcursorposition and the offset, if wanted.  
+            >Example:
            
                             retval, item, endposition, numchannels, Samplerate, Filetype = ultraschall.InsertMediaItemFromFile("C:\\file.wav", 1, 20, -1, 2, 0)
            
-           >This example inserts the file file.wav into track 1, at position 20, with the length set to the length of the audio-file, the editcursorposition being put at the end of the new MediaItem and no offset-changes.  
+            >This example inserts the file file.wav into track 1, at position 20, with the length set to the length of the audio-file, the editcursorposition being put at the end of the new MediaItem and no offset-changes.  
            
-           >With that, you can easily insert files into your project.
+            >With that, you can easily insert files into your project.
            
-           >**[InsertImageFile](usdocml://InsertImageFile)**
+            >**[InsertImageFile](usdocml://InsertImageFile)**
            
-                            boolean retval, MediaItem item = ultraschall.InsertImageFile(string filename_with_path, integer track, number position, number length, boolean looped)
+                            boolean retval, MediaItem item = ultraschall.InsertImageFile(string filename_with_path, integer track, number position, 
+                                                                                         number length, boolean looped)
 
-           >This is a special function, focusing on inserting image-files into the project. You can set the track, position, length of the image-MediaItem and, if it shall be looped.  
-           >If you don't loop it(looped=false), the MediaItem will have the length anyway, but the image will be shown only for 1 second in the VideoProcessor-window.  
+            >This is a special function, focusing on inserting image-files into the project. You can set the track, position, length of the image-MediaItem and, if it shall be looped.  
+            >If you don't loop it(looped=false), the MediaItem will have the length anyway, but the image will be shown only for 1 second in the VideoProcessor-window.  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document>US_Api-Concepts.USDocML</source_document>
@@ -2116,7 +2121,8 @@
            
            >**[DeleteItemSpectralEdit](usdocml://DeleteItemSpectralEdit)**
            
-                            boolean retval, string MediaItemStateChunk = ultraschall.DeleteItemSpectralEdit(integer itemidx, integer spectralidx, string MediaItemStateChunk)
+                            boolean retval, string MediaItemStateChunk = ultraschall.DeleteItemSpectralEdit(integer itemidx, integer spectralidx, 
+                                                                                                            string MediaItemStateChunk)
                             
            >With that, you can easily delete a SpectralEdit-instance, by giving the item's idx(itemidx) and the number of the SpectralEdit-instance(spectralidx).  
            >And, as most of the functions before: when setting itemidx to -1, you can use the optional parameter MediaItemStateChunk  
@@ -2409,7 +2415,8 @@
             
             >**[WriteValueToFile\_ReplaceBinary](usdocml://WriteValueToFile_ReplaceBinary)**
             
-                            integer retval = ultraschall.WriteValueToFile_ReplaceBinary(string filename_with_path, integer startbyteposition, integer endbyteposition, string value)
+                            integer retval = ultraschall.WriteValueToFile_ReplaceBinary(string filename_with_path, integer startbyteposition, 
+                                                                                        integer endbyteposition, string value)
                             
             > This inserts parameter value between (including) startbyteposition and (including)endbyteposition. This works for binary-files and for textfiles(though textfiles may cause issues at some points).
             
@@ -2597,7 +2604,8 @@
             
             >**[CopyFile\_GetCurrentlyCopiedFile](usdocml://CopyFile_GetCurrentlyCopiedFile)**
             
-                            integer number_of_remaining_files, string filename, integer remaining_bytes_to_copy, integer percentage = ultraschall.CopyFile_GetCurrentlyCopiedFile()
+                            integer number_of_remaining_files, string filename, integer remaining_bytes_to_copy, integer percentage 
+                                                                                    = ultraschall.CopyFile_GetCurrentlyCopiedFile()
                   
             > This give you information about the file currently in processing. So you can get, how many files are remaining in the queue, the filename currently processed, the remaining bytes to copy of this file and a percentage of how far copying has progressed.  
             
@@ -3617,7 +3625,7 @@
                                     integer recv_tracknumber, integer post_pre_fader, number volume, 
                                     number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, 
                                     integer snd_chan, number pan_law, integer midichanflag, integer automation 
-                                                                        = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)
+                                              = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)
             
             >This receives all the settings of a receive of a track or a TrackStateChunk. The same rules for the former functions (AddTrackAUXSendReceives and SetTrackAUXSendReceives) apply also here.
             
@@ -3694,7 +3702,7 @@
             
                                     integer outputchannel, integer post_pre_fader, number volume, number pan, 
                                     integer mute, integer phase, integer source, number pan_law, integer automationmode 
-                                                                                = ultraschall.GetTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)
+                                                = ultraschall.GetTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)
                                                                                 
             >This returns the settings of a HWOut. The tracknumbers are the same, with 0 for the master-track; 1 and higher for track 1 and higher; -1 if you want to use the parameter TrackStateChunk.
             >The idx is the index of the HWOut-setting of the track.
@@ -4026,7 +4034,8 @@
               
               >>**[EnumerateValuesByPattern](usdocml://EnumerateValuesByPattern)**
               
-                                    string value, string keyname = ultraschall.EnumerateValuesByPattern(string pattern, string section, string id, string ini_filename_with_path)
+                                    string value, string keyname = ultraschall.EnumerateValuesByPattern(string pattern, string section, 
+                                                                                                        string id, string ini_filename_with_path)
               
               >>Just like EnumerateKeysByPattern, but this enumerates through the values within a given section. It will return the value and it's corresponding keyname found.
         </description>
@@ -4089,7 +4098,8 @@
             
             >**[SetGuidExtState](usdocml://SetGuidExtState)**
             
-                                  integer retval = ultraschall.SetGuidExtState(string guid, string key, string value, integer savelocation, boolean overwrite, boolean persists)
+                                  integer retval = ultraschall.SetGuidExtState(string guid, string key, string value, integer savelocation, 
+                                                                               boolean overwrite, boolean persists)
             
             >This sets an extstate using a guid. So if you have an object, that provides a guid, use that one. You can add additional characters before or after the guid, but it must contain a valid guid.  
             >After that, set the key and the value.  
@@ -4196,9 +4206,9 @@
             
                                   integer retval = ultraschall.SetMarkerExtState(integer index, string key, string value)
                                   
-            >This function allows you to store an extstate to a marker. Its usage is simple: pass to it the marker_region-index(1-based)
+            >This function allows you to store an extstate to a marker. Its usage is simple: pass to it the marker\_region-index(1-based)
             >a keyname and its associated value.  
-            >Important: the marker_region-index is the index, which covers all markers and regions at the same time.  
+            >Important: the marker\_region-index is the index, which covers all markers and regions at the same time.  
             >You can use functions like reaper.EnumProjectMarkers to get the appropriate marker-indices. You just need to increment the index by 1
             >for usage with SetMarkerExtState's parameter index.  
             >Toy around with it, you quickly get the idea.
@@ -4287,7 +4297,8 @@
             
             >**[EnumerateEditMarkers](usdocml://EnumerateEditMarkers)**
             
-                                  integer retnumber, integer shown_number, number position, string edittitle, string guid = ultraschall.EnumerateEditMarkers(integer edit_index)
+                                  integer retnumber, integer shown_number, number position, string edittitle, string guid 
+                                                                             = ultraschall.EnumerateEditMarkers(integer edit_index)
                                   
             >This enumerates an edit-marker and all of it's attributes. Just pass over to it the edit-index-number and it will return the overall marker-index-number(markers and regions)  
             >the shown-number as well as it's position and the title of the edit(without the \_edit: ) and the guid of the edit-marker.
@@ -4601,7 +4612,8 @@
             
             >**[MIDI\_OnCommandByFilename](usdocml://MIDI_OnCommandByFilename)**
             
-                                    boolean retval, string script_identifier = ultraschall.MIDI_OnCommandByFilename(string filename, optional HWND Midi_EditorHWND, string ...)
+                                    boolean retval, string script_identifier 
+                                            = ultraschall.MIDI_OnCommandByFilename(string filename, optional HWND Midi_EditorHWND, string ...)
                                     
             >This does the same, but runs the script in a MIDI-editor-context. To pass over a MIDI-Editor, you set the parameter Midi_EditorHWND using the HWND-object of the Midi-Editor of your choice.  
             >To select the last used open MidiEditor, set this parameter to nil. If no MidiEditor is opened, it will not(!) run the script.  
@@ -4637,7 +4649,8 @@
             
             >**[GetScriptParameters](usdocml://GetScriptParameters)**
             
-                    integer num_params, array params, string caller_script_identifier = ultraschall.GetScriptParameters(optional string script_identifier, optional boolean remove)
+                    integer num_params, array params, string caller_script_identifier 
+                           = ultraschall.GetScriptParameters(optional string script_identifier, optional boolean remove)
                     
             >If you've passed parameters to a child-script, you probably would want this child-script to actually get the parameters. And, of course, who they got them from.  
             >This function does all that. It returns an array with the parameters as string. It also returns the ScriptIdentifier of the script, that started the child-script.  
@@ -4802,7 +4815,8 @@
             
             >**[Defer](usdocml://Defer)**
             
-                        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter, optional boolean protected)
+                        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, 
+                                                           optional number timer_counter, optional boolean protected)
                     
             >This works like reaper.defer, but has additional benefits, like the parameters mode and timer\_counter, who allow you to specify, how often the defer-cycle shall be executed.  
             >Either all the time(mode=0), every nth-cycle(mode=1) or every nth-second(mode=2). If mode is 1 or 2, you should set timer\_counter to the amount of cycles/seconds to wait for the next execution of the defer-loop.  
@@ -4914,7 +4928,7 @@
             
             One last note: in the example above, we stopped the script from the outside, but you can stop that script from the inside of the script as well.  
             So, if you have two defer-loops and the second defer-loop shall control, if the first defer-loop is running or not:  
-            Run the function, that shall be deferred, use ultraschall.Defer and pass to it your defer_identifier and stop it using StopDeferCycle and the defer_identifier.  
+            Run the function, that shall be deferred, use ultraschall.Defer and pass to it your defer\_identifier and stop it using StopDeferCycle and the defer\_identifier.  
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document>US_Api-Concepts.USDocML</source_document>
@@ -4934,35 +4948,36 @@
             you may want to have a central control-gui-script, with which you can set, how often to run a function, etc.  
             For this, I added a bunch of functions: [GetDeferCycleSettings](usdocml://GetDeferCycleSettings) and [SetDeferCycleSettings](usdocml://SetDeferCycleSettings)
             
-                >**[GetDeferCycleSettings](usdocml://GetDeferCycleSettings)**
+            >**[GetDeferCycleSettings](usdocml://GetDeferCycleSettings)**
                 
                         integer mode, integer timer_counter = ultraschall.GetDeferCycleSettings(string deferidentifier)
                         
-                >This function allows you to get the current settings of a defer-cycle with a certain deferidentifier. Just
-                >pass to it the deferidentifier and you'll get the current mode(0, run always; 1, run every x cycle; 2, run every x second)
-                >as well as the counter/timer for the number of cycles/seconds to wait, until the function is called the next time.  
-                >To set things, you need to use:
+            >This function allows you to get the current settings of a defer-cycle with a certain deferidentifier. Just
+            >pass to it the deferidentifier and you'll get the current mode(0, run always; 1, run every x cycle; 2, run every x second)
+            >as well as the counter/timer for the number of cycles/seconds to wait, until the function is called the next time.  
+            >To set things, you need to use:
                 
-                >**[SetDeferCycleSettings](usdocml://SetDeferCycleSettings)**
+            >**[SetDeferCycleSettings](usdocml://SetDeferCycleSettings)**
                 
                         boolean retval = ultraschall.SetDeferCycleSettings(string deferidentifier, optional integer mode, optional number timer_counter)
                         
-                >With this function, you can set the new mode/timer-settings of a specific defer-cycle. You just need to pass to it the
-                >deferidentifier and optionally the mode(0, run always; 1, run every x cycle; 2, run every x second) and the counter/timer 
-                >for the number of cycles, seconds to wait until running the deferred-function the next time.  
-                >If you pass to both, you can reset the settings to the original ones, with which the defer-cycle has been called initially.
+            >With this function, you can set the new mode/timer-settings of a specific defer-cycle. You just need to pass to it the
+            >deferidentifier and optionally the mode(0, run always; 1, run every x cycle; 2, run every x second) and the counter/timer 
+            >for the number of cycles, seconds to wait until running the deferred-function the next time.  
+            >If you pass to both, you can reset the settings to the original ones, with which the defer-cycle has been called initially.
                 
-                This should give you ways of controlling, how often your deferred-functions shall be run and of saving computing-resources by that.
+            This should give you ways of controlling, how often your deferred-functions shall be run and of saving computing-resources by that.
                 
-                Now there's one thing still missing: What if I want to prevent my Defer-Loop from being influenced by the outside at all?  
-                Let's get back to [Defer](usdocml://Defer), specifically the parameter protected.
+            Now there's one thing still missing: What if I want to prevent my Defer-Loop from being influenced by the outside at all?  
+            Let's get back to [Defer](usdocml://Defer), specifically the parameter protected.
+               
+            >**[Defer](usdocml://Defer)**
                 
-                >**[Defer](usdocml://Defer)
-                
-                        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, optional number timer_counter, optional boolean protected)
+                        boolean retval = ultraschall.Defer(function func, string deferidentifier, optional integer mode, 
+                                                           optional number timer_counter, optional boolean protected)
                         
-                >If you set the parameter protected to true, this defer-cycle can not be influenced from the outside. The only thing possible is 
-                >getting its current mode and timer-settings.
+            >If you set the parameter protected to true, this defer-cycle can not be influenced from the outside. The only thing possible is 
+            >getting its current mode and timer-settings.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document>US_Api-Concepts.USDocML</source_document>
@@ -5711,7 +5726,7 @@
                 
             they are loaded at Reaper startup-time.
 
-            EventManager-startup-events are added into ResourcesFolder/UserPlugins/ultraschall_api/IniFiles/EventManager_Startup.ini  
+            EventManager-startup-events are added into ResourcesFolder/UserPlugins/ultraschall\_api/IniFiles/EventManager\_Startup.ini  
 
             You can populate the startup-events the same way, as events into a running EventManager.  
             That means, all rules for regular events also apply here, but you don't need to run the EventManager for adding startup-events.
@@ -6190,9 +6205,7 @@
             So if you want to know, which setting that you want to alter is stored in which ParmModTable-entry, just have a look at this picture to find it.  
             
             Now, what are the actual entries of the ParmModTable and their meanings? Glad you ask:
-            
-        <pre><code>
-                
+                            
                 ParmModTable["PARAM_NR"]               - the index of the parameter that you want to modulate; 1 for the first, 2 for the second, etc
                 ParmModTable["PARAM_TYPE"]             - the type of the parameter, usually "", "wet" or "bypass"
 
@@ -6299,33 +6312,34 @@
                                                             nil, default position; only readable
                 ParmModTable["WINDOW_BOTTOM"]          - the bottom-position of the altered ParmMod-window in pixels; 
                                                             nil, default position; only readable
-        </code></pre>
         
-        Some entries depend on each other, which is important to know:  
-        If you've set AUDIOCONTROL=true then you need to set all AUDIOCONTROL\_-entries as well as X2 and Y2 to useful values. Same goes for LFO=true -> set all LFO\_-entries to useful values, and PARMLINK=true, which needs all PARMLINK\_-entries being set.  
-        For PARMLINK you also need to keep in mind, that setting PARMLINK\_LINKEDPLUGIN=-100(link to MIDI) means, that you need to set all MIDIPLINK-entries as well. 
-        But don't worry. If you set an entry to an invalid value or have invalid combinations, the ParmMod-functions, especially [IsValidParmModTable](usdocml://IsValidParmModTable), will return useful error-messages.  
-        So just run SLEM() after calling one of the ParmMod-functions and it will tell you, what you did wrong.  
+            Some entries depend on each other, which is important to know:  
+            If you've set AUDIOCONTROL=true then you need to set all AUDIOCONTROL\_-entries as well as X2 and Y2 to useful values. Same goes for LFO=true -> set all LFO\_-entries to useful values, and PARMLINK=true, which needs all PARMLINK\_-entries being set.  
+            For PARMLINK you also need to keep in mind, that setting PARMLINK\_LINKEDPLUGIN=-100(link to MIDI) means, that you need to set all MIDIPLINK-entries as well. 
+            But don't worry. If you set an entry to an invalid value or have invalid combinations, the ParmMod-functions, especially [IsValidParmModTable](usdocml://IsValidParmModTable), will return useful error-messages.  
+            So just run SLEM() after calling one of the ParmMod-functions and it will tell you, what you did wrong.  
 
-        Another note on plugin-linking:  
-        You can index the linked plugin in two ways, absolute or relative.  
-        To link a plugin absolute(by its FXChain-index), set the following entries the following ways:  
-        
-            ParmModTable["PARMLINK\_LINKEDPLUGIN"]=the index of the plugin in the FXChain  
-            ParmModTable["PARMLINK\_LINKEDPLUGIN\_RELATIVE"]=nil  
-    
-        To link a plugin relative to the current plugin's position, set the following entries the following way:  
-    
-            ParmModTable["PARMLINK\_LINKEDPLUGIN"]=any integer number  
-            ParmModTable["PARMLINK\_LINKEDPLUGIN\_RELATIVE"]=0 for a parameter of the current plugin; negative, to index a plugin above the current plugin; positive, to index a plugin below the current plugin in the FXChain.  
+            Another note on plugin-linking:  
+            You can index the linked plugin in two ways, absolute or relative.  
+            To link a plugin absolute(by its FXChain-index), set the following entries the following ways:  
             
-        Note: If you commit a ParmModTable to a currently opened Parameter Modulation, some things may not be updated in the gui. If you change the state of the AUDIOCONTROL/LFO/PARMLINK-checkbox or the Track audio channel-dropdownlist, it will only be updated after closing and reopening the window again. This affects only the gui, so if i.e. you enable the LFO-checkbox, it will be recognized as activated, even though the gui does not reflect that.  
+                ParmModTable["PARMLINK_LINKEDPLUGIN"]=the index of the plugin in the FXChain  
+                ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]=nil  
         
-        Take your time to toy around with it, as it's a little complex in the beginning but you will quickly get an idea of how it works.  
-        To assist you with developing, there's a developer-tool ultraschall\_developertool\_MonitorParmModulation.lua, which shows the values of all ParmModTable-entries a certain Parameter Modulation of an fx in a certain track has.  
-        Install it by running the ultraschall\_Add\_Developertools\_To\_Reaper.lua-action in the action-list.  
-                        
-        Now that you know about Parameter-Modulation, you probably want to know, how to code it.
+            To link a plugin relative to the current plugin's position, set the following entries the following way:  
+        
+                ParmModTable["PARMLINK_LINKEDPLUGIN"]=any integer number  
+                ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]=0 for a parameter of the current plugin; 
+                                                               negative, to index a plugin above the current plugin; 
+                                                               positive, to index a plugin below the current plugin in the FXChain.  
+                
+            Note: If you commit a ParmModTable to a currently opened Parameter Modulation, some things may not be updated in the gui. If you change the state of the AUDIOCONTROL/LFO/PARMLINK-checkbox or the Track audio channel-dropdownlist, it will only be updated after closing and reopening the window again. This affects only the gui, so if i.e. you enable the LFO-checkbox, it will be recognized as activated, even though the gui does not reflect that.  
+            
+            Take your time to toy around with it, as it's a little complex in the beginning but you will quickly get an idea of how it works.  
+            To assist you with developing, there's a developer-tool ultraschall\_developertool\_MonitorParmModulation.lua, which shows the values of all ParmModTable-entries a certain Parameter Modulation of an fx in a certain track has.  
+            Install it by running the ultraschall\_Add\_Developertools\_To\_Reaper.lua-action in the action-list.  
+                            
+            Now that you know about Parameter-Modulation, you probably want to know, how to code it.
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document>US_Api-Concepts.USDocML</source_document>

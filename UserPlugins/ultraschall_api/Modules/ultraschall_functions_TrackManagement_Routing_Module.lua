@@ -63,10 +63,12 @@ function ultraschall.GetTrackHWOut(tracknumber, idx, TrackStateChunk)
     Lua=5.3
   </requires>
   <functioncall>integer outputchannel, integer post_pre_fader, number volume, number pan, integer mute, integer phase, integer source, number pan_law, integer automationmode = ultraschall.GetTrackHWOut(integer tracknumber, integer idx, optional string TrackStateChunk)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1">
     Returns the settings of the HWOUT-HW-destination, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber. There can be more than one, which you can choose with idx.
     
     It's the entry HWOUT
+    
+    see see [MKVOL2DB](#MKVOL2DB) to convert the volume-returnvalue into a dB-value
     
     returns -1 in case of failure
   </description>
@@ -78,7 +80,7 @@ function ultraschall.GetTrackHWOut(tracknumber, idx, TrackStateChunk)
   <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
     integer outputchannel - outputchannel, with 1024+x the individual hw-outputchannels, 0,2,4,etc stereo output channels
     integer post_pre_fader - 0-post-fader(post pan), 1-preFX, 3-pre-fader(Post-FX), as set in the Destination "Controls for Track"-dialogue
-    number volume - volume, as set in the Destination "Controls for Track"-dialogue; see [MKVOL2DB](#MKVOL2DB) to convert it into a dB-value
+    number volume - volume, as set in the Destination "Controls for Track"-dialogue
     number pan - pan, as set in the Destination "Controls for Track"-dialogue
     integer mute - mute, 1-on, 0-off, as set in the Destination "Controls for Track"-dialogue
     integer phase - Phase, 1-on, 0-off, as set in the Destination "Controls for Track"-dialogue
@@ -167,23 +169,25 @@ function ultraschall.GetTrackAUXSendReceives(tracknumber, idx, TrackStateChunk)
     Lua=5.3
   </requires>
   <functioncall>integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number pan_law, integer midichanflag, integer automation = ultraschall.GetTrackAUXSendReceives(integer tracknumber, integer idx, optional string TrackStateChunk)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns the settings of the Send/Receive, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber. There can be more than one, which you can choose with idx.
     Remember, if you want to get the sends of a track, you need to check the recv_tracknumber-returnvalues of the OTHER(!) tracks, as you can only get the receives. With the receives checked, you know, which track sends.
     
     It's the entry AUXRECV
     
+    see [MKVOL2DB](#MKVOL2DB) to convert returnvalue volume into a dB-value
+    
     returns -1 in case of failure
   </description>
-  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
+  <parameters>
     integer tracknumber - the number of the track, whose Send/Receive you want
     integer idx - the id-number of the Send/Receive, beginning with 1 for the first Send/Receive-Settings
     optional string TrackStateChunk - a TrackStateChunk, whose AUXRECV-entries you want to get
   </parameters>
-  <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
+  <retvals>
     integer recv_tracknumber - Tracknumber, from where to receive the audio from
     integer post_pre_fader - 0-PostFader, 1-PreFX, 3-Pre-Fader
-    number volume - Volume; see [MKVOL2DB](#MKVOL2DB) to convert it into a dB-value
+    number volume - Volume
     number pan - pan, as set in the Destination "Controls for Track"-dialogue; negative=left, positive=right, 0=center
     integer mute - Mute this send(1) or not(0)
     integer mono_stereo - Mono(1), Stereo(0)
@@ -409,9 +413,11 @@ function ultraschall.AddTrackHWOut(tracknumber, outputchannel, post_pre_fader, v
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string TrackStateChunk = ultraschall.AddTrackHWOut(integer tracknumber, integer outputchannel, integer post_pre_fader, number volume, number pan, integer mute, integer phase, integer source, number pan_law, integer automationmode, optional parameter TrackStateChunk)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Adds a setting of the HWOUT-HW-destination, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber.
     This function does not check the parameters for plausability, so check your settings twice!
+    
+    see [DB2MKVOL](#DB2MKVOL) to convert parameter volume from a dB-value
     
     returns false in case of failure
   </description>
@@ -419,7 +425,7 @@ function ultraschall.AddTrackHWOut(tracknumber, outputchannel, post_pre_fader, v
     integer tracknumber - the number of the track, whose HWOut you want. 0 for Master Track; -1, use parameter TrackStateChunk instead
     integer outputchannel - outputchannel, with 1024+x the individual hw-outputchannels, 0,2,4,etc stereo output channels
     integer post_pre_fader - 0-post-fader(post pan), 1-preFX, 3-pre-fader(Post-FX), as set in the Destination "Controls for Track"-dialogue
-    number volume - volume, as set in the Destination "Controls for Track"-dialogue; see [DB2MKVOL](#DB2MKVOL) to convert from a dB-value
+    number volume - volume, as set in the Destination "Controls for Track"-dialogue
     number pan - pan, as set in the Destination "Controls for Track"-dialogue
     integer mute - mute, 1-on, 0-off, as set in the Destination "Controls for Track"-dialogue
     integer phase - Phase, 1-on, 0-off, as set in the Destination "Controls for Track"-dialogue
@@ -512,18 +518,21 @@ function ultraschall.AddTrackAUXSendReceives(tracknumber, recv_tracknumber, post
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string TrackStateChunk = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number pan_law, integer midichanflag, integer automation, optional string TrackStateChunk)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Adds a setting of Send/Receive, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber. There can be more than one.
     Remember, if you want to set the sends of a track, you need to add it to the track, that shall receive, not the track that sends! Set recv_tracknumber in the track that receives with the tracknumber that sends, and you've set it successfully.
     
     Due to the complexity of send/receive-settings, this function does not check, whether the parameters are plausible. So check twice, whether the added sends/receives appear, as they might not appear!
+    
+    see [DB2MKVOL](#DB2MKVOL) to convert parameter volume from a dB-value
+    
     returns false in case of failure
   </description>
-  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
+  <parameters>
     integer tracknumber - the number of the track, whose Send/Receive you want; -1, if you want to use the parameter TrackStateChunk
     integer recv_tracknumber - Tracknumber, from where to receive the audio from
     integer post_pre_fader - 0-PostFader, 1-PreFX, 3-Pre-Fader
-    number volume - Volume, see [DB2MKVOL](#DB2MKVOL) to convert from a dB-value
+    number volume - Volume
     number pan - pan, as set in the Destination "Controls for Track"-dialogue; negative=left, positive=right, 0=center
     integer mute - Mute this send(1) or not(0)
     integer mono_stereo - Mono(1), Stereo(0)
@@ -791,19 +800,21 @@ function ultraschall.SetTrackHWOut(tracknumber, idx, outputchannel, post_pre_fad
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string TrackStateChunk = ultraschall.SetTrackHWOut(integer tracknumber, integer idx, integer outputchannel, integer post_pre_fader, number volume, number pan, integer mute, integer phase, integer source, number pan_law, integer automationmode, optional string TrackStateChunk)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets a setting of the HWOUT-HW-destination, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber. There can be more than one, so choose the one you want to change with idx.
     To retain old-settings, use nil with the accompanying parameters.
     This function does not check the parameters for plausability, so check your settings twice, or the HWOut-setting might disappear with faulty parameters!
     
+    see [DB2MKVOL](#DB2MKVOL) to convert volume from a dB-value
+    
     returns false in case of failure
   </description>
-  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
+  <parameters>
     integer tracknumber - the number of the track, whose HWOut you want. 0 for Master Track
     integer idx - the number of the HWOut-setting, you want to change
     integer outputchannel - outputchannel, with 1024+x the individual hw-outputchannels, 0,2,4,etc stereo output channels
     integer post_pre_fader - 0-post-fader(post pan), 1-preFX, 3-pre-fader(Post-FX), as set in the Destination "Controls for Track"-dialogue
-    number volume - volume, as set in the Destination "Controls for Track"-dialogue; see [DB2MKVOL](#DB2MKVOL) to convert from a dB-value
+    number volume - volume, as set in the Destination "Controls for Track"-dialogue
     number pan - pan, as set in the Destination "Controls for Track"-dialogue
     integer mute - mute, 1-on, 0-off, as set in the Destination "Controls for Track"-dialogue
     integer phase - Phase, 1-on, 0-off, as set in the Destination "Controls for Track"-dialogue
@@ -905,20 +916,23 @@ function ultraschall.SetTrackAUXSendReceives(tracknumber, idx, recv_tracknumber,
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string TrackStateChunk = ultraschall.SetTrackAUXSendReceives(integer tracknumber, integer idx, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number pan_law, integer midichanflag, integer automation, optional string TrackStateChunk)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Alters a setting of Send/Receive, as set in the routing-matrix, as well as in the Destination "Controls for Track"-dialogue, of tracknumber. There can be more than one, so choose the right one with idx.
     You can keep the old-setting by using nil as a parametervalue.
     Remember, if you want to set the sends of a track, you need to add it to the track, that shall receive, not the track that sends! Set recv_tracknumber in the track that receives with the tracknumber that sends, and you've set it successfully.
     
     Due to the complexity of send/receive-settings, this function does not check, whether the parameters are plausible. So check twice, whether the change sends/receives still appear, as they might disappear with faulty settings!
+    
+    see [DB2MKVOL](#DB2MKVOL) to convert parameter volume from a dB-value
+    
     returns false in case of failure
   </description>
-  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
+  <parameters>
     integer tracknumber - the number of the track, whose Send/Receive you want
     integer idx - the send/receive-setting, you want to set
     integer recv_tracknumber - Tracknumber, from where to receive the audio from
     integer post_pre_fader - 0-PostFader, 1-PreFX, 3-Pre-Fader
-    number volume - Volume; see [DB2MKVOL](#DB2MKVOL) to convert from a dB-value
+    number volume - Volume 
     number pan - pan, as set in the Destination "Controls for Track"-dialogue; negative=left, positive=right, 0=center
     integer mute - Mute this send(1) or not(0)
     integer mono_stereo - Mono(1), Stereo(0)

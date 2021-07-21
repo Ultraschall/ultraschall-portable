@@ -400,10 +400,84 @@ main()
 Ok, I'll add the EnumProjects-approach as "IsReaperQuitting()"-function to my API. I think it would be practical.
 Doesn't work on Windows 7???
 
+
+  - Rendering: CalculateLoudness - calculates loundness of tracks/items and returns its stats  
+
 </TODO>
 
 
 ## Ultraschall Framework - Changelog
+
+### 4.2.005 - "Anne Clark - Our Darkness" - 21st of July 2021
+
+Has now 1406 functions, with 6 new ones
+
+**new in this release:**  
+
+  - **Dark Mode in all documentation**  
+  Ever been blinded by the light...ehrm docs? Suffer no more. All docs are now in dark-mode, relayouted with a proper  
+  color scheme, smaller, faster to load.  
+  And I nicked some code from X-Raym's fantastic docs, so clicking on function-calls is now copying them into the  
+  clipboard.  
+  Also the index has now links that you can link to. So if you want to give somebody a list of all marker-functions,  
+  click on the ^ next to the category.  
+  The order of functions is also by category. So all marker-functions are next to each other. Endless scrolling to find  
+  that one other marker-related-function is now a thing of a past.  
+  The header on pages is also sticky now. Endless scrolling to switch page is also now a thing of the past.  
+  Enjoy Darkmode.  
+  No more sunburns from reading docs. Can you believe it?
+  
+  - **Normalization on Rendering**  
+  You can use now the new normalization-features of Reaper in all rendering-functions.  
+  
+  - **Parameter Learn**  
+  Some of the ParmLearn functions were hard to use, due some parameters being complex. I added variations of them, so  
+  setting them is now much more easier.  
+  
+  - **Toggle Beta-Functions**  
+  I almost never finish all new functions, but I deploy them anyway. Though they are not accessible directly, only  
+  when Ultraschall-API is set to Beta-Mode.  
+  This can now be done in the API-settings.  
+  Beta-functions can be found in ultraschall\_functions\_engine\_beta.lua for toying around with them.  
+  But keep in mind: they aren't released for a good reason. Be careful with them.
+  
+  - **Bugfixes**  
+  Bugfixes, Bugfixes...
+  
+  
+#### New features in 4.2.005  
+  - API: Settings - Beta-functions can now be activated via Ultraschall-API-Settings
+  - Docs: Darkmode - all docs are now relayouted and in darkmode! Clicking on functions copies them to the clipboard(thnx to X-Raym)
+  - Parameter/Learn/Mapping: AddParmLearn\_FXStateChunk2 - variation of AddParmLearn\_FXStateChunk that allows setting values more detailed(requested by DanielLumertz and TonE)
+  - Parameter/Learn/Mapping: GetParmLearn\_FXStateChunk2 - variation of GetParmLearn\_FXStateChunk2 that allows setting values more detailed(requested by DanielLumertz and TonE)  
+  - Parameter/Learn/Mapping: SetParmLearn\_FXStateChunk2 - variation of SetParmLearn\_FXStateChunk that allows setting values more detailed(requested by DanielLumertz and TonE)
+  - Project-Files: GetProject\_Render_Normalize - gets the render-normalize-settings from an rpp-file or ProjectStateChunk
+  - Project-Files: SetProject\_MasterTrackView - sets the master-track-view-settings in an rpp-file or ProjectStateChunk
+  - Project-Files: SetProject\_Render_Normalize - sets the render-normalize-settings in an rpp-file or ProjectStateChunk
+
+#### Changes from 4.2.004 to 4.2.005  
+  - BatchConverter: BatchConvertFiles - supports now retaining metadata from sourcefile
+  - Developer Tools: ultraschall\_developertool\_Display-Altered-Config-Vars.lua - fixed a bug, that omitted some config-vars  
+  - Docs: RenderPreset-Configfile.txt - added new normalization information
+  - Docs: Reaper Internals - updated to Reaper 6.32, ReaImGui 0.5.2
+  - Docs: Converter-Pipeline - largely rewritten, so it's now faster, better designed, streamlined
+  - DocsManagement: Docs\_GetUSDocBloc\_ChapterContext - didn't return all chapter-context-entries -> fixed
+  - GuiLib: Lokasenna\_LoadGuiLib\_v2 - didn't load due stupid typo -> fixed
+  - Helper functions: StateChunkLayouter - did add unnecessary newline at the end, which faulted IsValidTrackStateChunk -> fixed
+  - Markers: MoveMarkersBy - didn't work on markers with 0 in their index number -> fixed(thanks to GNetzer)    
+  - Parameter/Learn/Mapping: SetParmLearn\_FXStateChunk - added error-message, when no such parm-alias exists
+  - RenderManagement: AddRenderPreset - supports now render-normalization
+  - RenderManagement: ApplyRenderTable\_Project - supports now render-normalization
+  - RenderManagement: CreateNewRenderTable - supports now render-normalization
+  - RenderManagement: DeleteRenderPreset\_FormatOptions - supports now deleting presets with render-normalization
+  - RenderManagement: GetRenderPreset\_RenderTable - supports now render-normalization
+  - RenderManagement: GetRenderTable\_Project - supports now render-normalization
+  - RenderManagement: GetRenderTable\_ProjectFile  - supports now render-normalization
+  - RenderManagement: IsValidRenderTable - supports now render-tables with render-normalization-settings
+  - RenderManagement: SetRenderPreset - supports now render-normalization
+  
+  
+---
 
 ### 4.2.004 - "Grandma - kl" - 12th of June 2021
 
@@ -545,8 +619,7 @@ Has now 1400 functions, with 15 new ones
   - Rendering: ApplyRenderTable\_ProjectFile - changed a value of the provided RenderTable, which shouldn't happen -> fixed
   - TrackManagement: GetTrackGroupFlagsState - returns now the table with all 23-entries, even if some checkboxes aren't set in any group
   - TrackManagement: GetTrackGroupFlags\_HighState  - returns now the table with all 23-entries, even if some checkboxes aren't set in any group
-  
-  
+    
   
 ---
 
@@ -2312,10 +2385,10 @@ My apologies for any inconvenience.... :/**
    - Rendering: ApplyRenderTable_Project - stated nil as retval in case of an error, though it is false -> fixed
    - Rendering: ApplyRenderTable_ProjectFile - stated nil as retval in case of an error, though it is false -> fixed
    - Rendering: GetRenderPreset_RenderTable - stated false as retval in case of an error, though it is nil -> fixed
-   - Track Management: RemoveMediaItem_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
-   - Track Management: RemoveMediaItemByIGUID_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
-   - Track Management: RemoveMediaItemByGUID_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
-   - Track Management: SetMediaItemStateChunk_in_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - Track Management: RemoveMediaItem\_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - Track Management: RemoveMediaItemByIGUID\_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - Track Management: RemoveMediaItemByGUID\_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
+   - Track Management: SetMediaItemStateChunk\_in\_TrackStateChunk - docs incorrectly stated nil as retval in case of an error -> fixed
    - User Interface: GetVideoHWND - returned wrong retval in case of an error -> fixed
    - Video: VID_Pixels2VideoUIStateCoords - returned wrong retval in case of an error -> fixed
    - Video: VID_VideoUIStateCoords2Pixels - returned wrong retval in case of an error -> fixed
@@ -2809,7 +2882,6 @@ Might be a small donation for you, but a giant motivation leap for mankind(means
 
 
 #### Changes from 4.00beta2.72 to 4.00beta2.73
-
   - ChildScripts: Main\_OnCommandByFilename - fixed bug with Scriptidentifier-creation
   - ChildScripts:MIDI\_OnCommandByFilename - fixed bug with Scriptidentifier-creation
   - Config: GetIniFileValue - improved code
@@ -2817,9 +2889,8 @@ Might be a small donation for you, but a giant motivation leap for mankind(means
   - Docs: Reaper Api docs: Video Processor: corrected YET ANOTHER Markdown-f....p in the example code of chapter Coding Introduction
   - Docs: Reaper-Docs: updated to Reaper 5.972
   - Docs: Reaper-Api-docs: fixed further layout-problems with Markdown in some descriptions
-                     I really, really, really, really, really, really, really need to write my own MarkDown-dialect.
-                     It makes me nuts, having to deal with Markdown's ambiguities...
-
+    I really, really, really, really, really, really, really need to write my own MarkDown-dialect.
+    It makes me nuts, having to deal with Markdown's ambiguities...
   - Routing: CountTrackAUXSendReceives - when track isn't found, it returns now an error-message
   - Routing: DeleteTrackAUXSendReceives - allows now to delete all AuxSendReceives of a track at once, when idx=-1
   - Routing: DeleteTrackHWOut - allows now to delete all HWOuts of a track at once, when idx=-1
@@ -3175,7 +3246,7 @@ Might be a small donation for you, but a giant motivation leap for mankind(means
 
 Has now 700 functions, with about 250 new ones!
 
-#### New features in 4.00beta2.7
+#### New features in 4.00beta2.7  
   - SetEnvelopeHeight - set the height and compactible state of an envelope-lane/envelopestatechunk
   - GetTrackStateChunk_Tracknumber - get a TrackStateChunk without the hassle of creating a trackobject first  
   - SetTrackStateChunk_Tracknumber - set a TrackStateChunk without the hassle of creating a trackobject first
@@ -3354,9 +3425,8 @@ Has now 700 functions, with about 250 new ones!
   - GetTrackGroupFlags_HighState - gets the GroupFlagsState in a track or a TrackStateChunk for track-group 33-64
   - all(!) TrackStates are now get/settable(!)
   - all functions create now useful error-messages, who can be retrieved with the error-message-functions, 
-            refer to the Developer -> Error Handling-functions in the index of the functions-reference
-            
-            Good riddance, what a long term hard work to code that...
+    refer to the Developer -> Error Handling-functions in the index of the functions-reference
+    Good riddance, what a long term hard work to code that...
   - GetCurrentTimeLengthOfFrame - gets the length of a frame in seconds of a certain project; good for video/image-related functions like InsertImageFile
   - GetLengthOfFrames - gets the length of a number of frames in seconds of a certain project; good for video/image-related functions like InsertImageFile
   - GetStartNewFileRecSizeState - gets, if Reaper shall start a new file during recording, after XXX MBs, and the maximum size of a recorded file til restart
@@ -3458,13 +3528,13 @@ Has now 700 functions, with about 250 new ones!
   - Docs - added docs for ultraschall.Euro, which holds the €-currency symbol
   - Docs - added   - File Management: Read to the Introduction/Concepts-page
   - Added example-scripts:
-        ArrangeView\_Snapshots\_Example.lua
-        Changed\_Project\_Tab\_Example.lua
-        Color\_Example.lua
-        Render\_Current\_Project.lua
-        Render\_Project.lua
-        RippleCut\_Selected\_Tracks.lua
-        Shorten\_MediaItems\_In\_Selection_Example.lua
+    ArrangeView\_Snapshots\_Example.lua
+    Changed\_Project\_Tab\_Example.lua
+    Color\_Example.lua
+    Render\_Current\_Project.lua
+    Render\_Project.lua
+    RippleCut\_Selected\_Tracks.lua
+    Shorten\_MediaItems\_In\_Selection_Example.lua
   - GetProject_Length - gets the length of an rpp-projectfile
   - added new analyser-scripts for statechunks: Item\_State\_Diffs\_Monitor.lua, Track\_State\_Diffs\_Monitor.lua, Project\_State\_Diffs\_Monitor.lua, Env\_State\_Diffs\_Monitor.lua
   - Docs: File Management: Write - added to Introduction/Concepts-page

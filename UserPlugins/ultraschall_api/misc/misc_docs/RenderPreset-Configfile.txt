@@ -1,6 +1,6 @@
-Render-Presets-docs as of Reaper 6.26
+Render-Presets-docs as of Reaper 6.32
 
-compiled by Meo Mespotine, 26th of March 2021
+compiled by Meo Mespotine, 20th of July 2021
 licensed under creative-commons cc-by-license
 
 The render-presets are stored into reaper-render.ini in the resources-folder of Reaper.
@@ -13,7 +13,8 @@ When selecting "Options and format" or "All settings":
     <RENDERPRESET string presetname  integer SampleRate  integer channels  integer offline_online_dropdownlist  integer useprojectsamplerate_checkbox  integer resamplemode_dropdownlist  integer various_checkboxes integer various_checkboxes2
       string rendercfg
     >
-
+    RENDERPRESET_EXT string presetname integer normalize_mode  number normalize_target
+    
 When selecting "Bounds and Outputpattern filename" or "All settings":
     RENDERPRESET_OUTPUT  string presetname  integer bounds_dropdownlist  number start_position  number end_position  integer source_dropdownlist_and_checkboxes  integer unknown  string outputfilename_renderpattern  integer tail_checkbox
 
@@ -22,6 +23,23 @@ They will be shown in the Render-preset-menu accordingly.
 As soon, as they are in the reaper-render.ini, they will be shown the next time you click the Render-preset-button in the Render to File-dialog.
 
 Parameters:
+normalize_mode - the normalize method set with the "Normalize"-button 
+                    &1, Enable normalizing
+                        0, unchecked(off)
+                        1, checked(on)
+                    0, LUFS-I
+                    2, RMS-I
+                    4, Peak
+                    6, True Peak
+                    8, LUFS-M max
+                    10, LUFS-S max
+                    &32, Normalize stems to master target-checkbox
+                        0, unchecked(off)
+                        1, checked(on)
+                        
+normalize_target - the target as MKVOL-value. User ultraschall.MKVOL2DB to convert it to dB.
+                 
+
 various_checkboxes - keeps various checkboxes in <RENDERPRESET
                                    &1, Dither Master
                                    &2, Noise shape master

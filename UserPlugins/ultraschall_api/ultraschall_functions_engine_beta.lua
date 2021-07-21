@@ -1130,136 +1130,6 @@ end
 
 --A,B,C,D,E=ultraschall.ReadSubtitles_VTT("c:\\test.vtt")
 
-function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTable, BWFStart, PadStart, PadEnd, FXStateChunk, MetaDataStateChunk)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>BatchConvertFiles</slug>
-  <requires>
-    Ultraschall=4.2
-    Reaper=6.12
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval = ultraschall.BatchConvertFiles(table inputfilelist, table outputfilelist, table RenderTable, optional boolean BWFStart, optional integer PadStart, optional integer PadEnd, optional string FXStateChunk)</functioncall>
-  <description>
-    Converts files using Reaper's own BatchConverter.
-    
-    This function will open another instance of Reaper that runs the batchconverter, so it will still open the batch-converter-list for the time of conversion.
-    Though as it is another instance, you can safely go back to the old instance of Reaper.
-    
-    This function will probably NOT finish before the batch-converter is finished with conversion, keep this in mind.
-    
-    Will take away the focus from the currently focused window, as Reaper puts keyboard-focus to the newly started Reaper-instance that does the batch-conversion.    
-    
-    returns nil in case of an error
-  </description>
-  <retvals>
-    table inputfilelist - a table of filenames+path, that shall be converted
-    table outputfilelist - a table of the target filenames+path, where the first filename is the target for the first inputfilename, etc
-    table RenderTable - the settings for the conversion; just use the render-table-functions to create one
-    optional boolean BWFStart - true, include BWF-start; false or nil, don't include BWF-start
-    optional integer PadStart - the start of the padding in seconds; nil, to omit it
-    optional integer PadEnd - the end of the padding in seconds; nil, to omit it
-    optional string FXStateChunk - an FXChain as FXStateChunk; with that you can add fx on top of the to-convert-files.
-  </retvals>
-  <parameters>
-    boolean retval - true, conversion was successfully started; false, conversion didn't start
-  </parameters>
-  <chapter_context>
-    File Management
-    Misc
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>file management, convert, files, rendertable, fxchain</tags>
-</US_DocBloc>
---]]
-  if type(inputfilelist)~="table" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "must be a table of string", -1) return false end
-  
-  if #inputfilelist~=#outputfilelist then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist and outputfilelist", "both filelist-tables must have the same number of entries", -2) return false end
-  for i=1, #inputfilelist do
-    if type(inputfilelist[i])~="string" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be strings", -3) return false end
-    if reaper.file_exists(inputfilelist[i])==false then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be valid filenames", -4) return false end
-  end
-
-  if type(outputfilelist)~="table" then ultraschall.AddErrorMessage("BatchConvertFiles", "outputfilelist", "must be a table of string", -5) return false end
-  for i=1, #inputfilelist do
-    if type(inputfilelist[i])~="string" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be strings", -6) return false end
-  end
-  
-  if ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("BatchConvertFiles", "RenderTable", "must be a valid RenderTable", -7) return false end
-  
-  -- temporary solution:
-  if type(MetaDataStateChunk)~="string" then MetaDataStateChunk="" end  
-
--- Todo:
-
-  local BatchConvertData=""
-  local ExeFile, filename, path
-  if FXStateChunk~=nil and FXStateChunk~="" and ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("BatchConvertFiles", "FXStateChunk", "must be a valid FXStateChunk", -7) return false end
-  if FXStateChunk==nil then FXStateChunk="" end
-  if MetaDataStateChunk==nil then MetaDataStateChunk="" end
-  if BWFStart==true then BWFStart="    USERCSTART 1\n" else BWFStart="" end
-  if PadStart~=nil  then PadStart="    PAD_START "..PadStart.."\n" else PadStart="" end
-  if PadEnd~=nil  then PadEnd="    PAD_END "..PadEnd.."\n" else PadEnd="" end
-  local i=1
-  local outputfile
-  while inputfilelist[i]~=nil do
-    if ultraschall.type(inputfilelist[i])=="string" then
-      if outputfilelist[i]==nil then outputfile="" else outputfile=outputfilelist[i] end
-      BatchConvertData=BatchConvertData..inputfilelist[i].."\t"..outputfile.."\n"
-    end
-    i=i+1
-  end
-    
-  BatchConvertData=BatchConvertData..[[
-<CONFIG
-    SRATE ]]..RenderTable["SampleRate"]..[[
-    
-    NCH ]]..RenderTable["Channels"]..[[
-    
-    RSMODE ]]..RenderTable["RenderResample"]..[[
-    
-    DITHER ]]..RenderTable["Dither"]..[[
-    
-]]..BWFStart..[[
-]]..PadStart..[[
-]]..PadEnd..[[
-    OUTPATH ]]..RenderTable["RenderFile"]..[[
-    
-    OUTPATTERN ']]..[['
-  <OUTFMT 
-    ]]      ..RenderTable["RenderString"]..[[
-
-  >
-  ]]..FXStateChunk..[[
-  ]]..string.gsub(MetaDataStateChunk, "<RENDER_METADATA", "<METADATA")..[[
-
->
-]]
-
-  ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/filelist.txt", BatchConvertData)
-
-  local ExeFile, AAAA, AAAAAA
-  if ultraschall.IsOS_Windows()==true then
-    -- Batchconvert On Windows
-    ExeFile=reaper.GetExePath().."\\reaper.exe"
-    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "/", "\\").."\\filelist.txt\"", -1)
-  elseif ultraschall.IsOS_Mac()==true then
-    -- Batchconvert On Mac
-    ExeFile=reaper.GetExePath().."/Reaper64.app/Contents/MacOS/reaper"
-    if reaper.file_exists(ExeFile)==false then
-      ExeFile=reaper.GetExePath().."/Reaper.app/Contents/MacOS/reaper"
-    end
-    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt\"", -1)
-  else
-    -- Batchconvert On Linux
-    ExeFile=reaper.GetExePath().."/reaper"
-    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt\"", -1)
-  end
-  
-  return true
-end
-
 
 function ultraschall.GetTakeEnvelopeUnderMouseCursor()
   --[[
@@ -1481,4 +1351,419 @@ end
 
 
 
+function ultraschall.CalculateLoudness(mode, timeselection, trackstring)
+-- TODO!!
+-- multiple tracks, items can be returned by GetSetProjectInfo_String, when items/tracks are selected
+-- function currently only supports one, the first one. Please boost it up a little....
+--
+-- Check trackstring-management.
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CalculateLoudness</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.30
+    Lua=5.3
+  </requires>
+  <functioncall>string filename, string peak, string clip, string rms, string lrange, string lufs_i = ultraschall.CalculateLoudness(integer mode, boolean timeselection)</functioncall>
+  <description>
+    Calculates the loudness of items and tracks or returns the loundness of last render/dry-render.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string filename - the filename, that would be rendered
+    string peak - the peak of the rendered element
+    string clip - the clipping of the rendered element
+    string rms - the rms of the rendered element
+    string lrange - the lrange of the rendered element
+    string lufs_i - the lufs-i of the rendered element
+  </retvals>
+  <parameters>
+    integer mode - -1, return loundness-stats of the last render/dry render
+                 - 0, calculate loundness-stats of selected media items
+                 - 1, calculate loundness-stats of master track
+                 - 2, calculate loundness-stats of selected tracks
+    boolean timeselection - shall loundness calculation only be within time-selection?
+                          - only with mode 1 and 2; if no time-selection is given, use entire track
+                          - false, calculate loundness within the entire tracks;
+                          - true, calculate loudness-stats within time-selection
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Loudness Calculation
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>projectfiles, compare, rendertable</tags>
+</US_DocBloc>
+]]
+  -- FILE-management can be improved for dry-rendering, probably...
+  if math.type(mode)~="integer" then ultraschall.AddErrorMessage("CalculateLoudness", "mode", "must be an integer", -1) return end
+  if type(timeselection)~="boolean" then ultraschall.AddErrorMessage("CalculateLoudness", "timeselection", "must be a boolean", -2) return end
+  
+  if     mode==-1 then mode=""
+  elseif mode==0 then mode=42437
+  elseif mode==1 and timeselection==false then mode=42440
+  elseif mode==1 and timeselection==true  then mode=42441
+  elseif mode==2 and timeselection==false then mode=42438
+  elseif mode==2 and timeselection==true  then mode=42439
+  end  
+  
+  local oldtrackstring  
+  if mode==2 then
+    oldtrackstring = ultraschall.CreateTrackString_SelectedTracks()
+    ultraschall.SetTracksSelected(trackstring, true)
+  end
+  local retval, RenderStats=reaper.GetSetProjectInfo_String(0, "RENDER_STATS", mode, false)
+  RenderStats=RenderStats..";"
 
+  local FILE, PEAK, CLIP, RMSI, LRA, LUFSI
+  FILE=RenderStats:match("FILE:(.-);")
+  PEAK=RenderStats:match("PEAK:(.-);")
+  if PEAK==nil then PEAK="-inf" end
+  CLIP=RenderStats:match("CLIP:(.-);")
+  if CLIP==nil then CLIP="0" end
+  RMSI=RenderStats:match("RMSI:(.-);")
+  if RMSI==nil then RMSI="-inf" end
+  LRA=RenderStats:match("LRA:(.-);")
+  if LRA==nil then LRA="-inf" end
+  LUFSI=RenderStats:match("LUFSI:(.-);")
+  if LUFSI==nil then LUFSI="-inf" end
+
+  if mode==2 then
+    ultraschall.SetTracksSelected(oldtrackstring, true)
+  end
+
+  return FILE, PEAK, CLIP, RMSI, LRA, LUFSI
+end
+
+
+--A={ultraschall.CalculateLoudness(0, true)}
+
+function ultraschall.BubbleSortDocBlocTable_Slug(Table)
+  local count=1
+  while Table[count]~=nil and Table[count+1]~=nil do
+    if Table[count][1]>Table[count+1][1] then
+      temp=Table[count]
+      Table[count]=Table[count+1]
+      Table[count+1]=temp
+    end
+    count=count+1
+  end
+end
+
+-- Need to be documented, but are finished
+
+function ultraschall.AddParmLearn_FXStateChunk2(FXStateChunk, fxid, parmidx, parmname, input_mode, channel, cc_note, cc_mode, checkboxflags, osc_message)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AddParmLearn_FXStateChunk2</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.32
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.AddParmLearn_FXStateChunk2(string FXStateChunk, integer fxid, integer parmidx, string parmname, integer input_mode, integer channel, integer cc_note, integer cc_mode, integer checkboxflags, optional string osc_message)</functioncall>
+  <description>
+    Adds a new Parm-Learn-entry to an FX-plugin from an FXStateChunk.
+    Allows setting some values more detailed, unlike AddParmLearn_FXStateChunk.
+    
+    It's the PARMLEARN-entry
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, if setting new values was successful; false, if setting was unsuccessful(e.g. no such ParmLearn)
+    optional string alteredFXStateChunk - the altered FXStateChunk
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, in which you want to set a Parm-Learn-entry
+    integer fxid - the id of the fx, which holds the to-set-Parm-Learn-entry; beginning with 1
+    integer parmidx - the parameter, whose Parameter Learn you want to add
+    string parmname - the name of the parameter, usually \"\" or \"byp\" for bypass or \"wet\" for wet; when using wet or bypass, these are essential to give, otherwise just pass ""
+    integer input_mode - the input mode of this ParmLearn-entry
+                       - 0, OSC
+                       - 1, MIDI Note
+                       - 2, MIDI CC
+                       - 3, MIDI PC
+                       - 4, MIDI Pitch
+    integer channel - the midi-channel used; 1-16
+    integer cc_note - the midi/cc-note used; 0-127
+    integer cc_mode - the cc-mode-dropdownlist
+                    - 0, Absolute
+                    - 1, Relative 1(127=-1, 1=+1)
+                    - 2, Relative 2(63=-1, 65=+1)
+                    - 3, Relative 3(65=-1, 1=+1)
+                    - 4, Toggle (>0=toggle)
+    integer checkboxflags - the checkboxes checked in the MIDI/OSC-learn dialog
+                          -    0, no checkboxes
+                          -    1, enable only when track or item is selected
+                          -    2, Soft takeover (absolute mode only)
+                          -    3, Soft takeover (absolute mode only)+enable only when track or item is selected
+                          -    4, enable only when effect configuration is focused
+                          -    20, enable only when effect configuration is visible 
+    optional string osc_message - the osc-message, that triggers the ParmLearn, only when midi_note is set to 0!
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Learn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, add, parm, learn, midi, osc, binding</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "FXStateChunk", "no valid FXStateChunk", -1) return false end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "fxid", "must be an integer", -2) return false end
+
+  if osc_message~=nil and type(osc_message)~="string" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "osc_message", "must be either nil or a string", -3) return false end
+  if math.type(checkboxflags)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "checkboxflags", "must be an integer", -4) return false end
+  if math.type(parmidx)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "parmidx", "must be an integer", -5) return false end
+  if type(parmname)~="string" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "parmname", "must be a string, either \"\" or byp or wet", -6) return false 
+  elseif parmname~="" then parmname=":"..parmname
+  end
+  if math.type(input_mode)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "input_mode", "must be an integer", -7) return false end  
+  if math.type(channel)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "channel", "must be an integer", -8) return false end  
+  if math.type(cc_note)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_note", "must be an integer", -9) return false end  
+  if math.type(cc_mode)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_mode", "must be an integer", -10) return false end  
+  if input_mode<0 or input_mode>4 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "input_mode", "must be between 0 and 4", -11) return false end  
+  if channel<0 or channel>15 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "channel", "must be between 1 and 16", -12) return false end  
+  if cc_note<0 or cc_note>127 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_note", "must be between 0 and 127", -13) return false end  
+  if cc_mode<0 or cc_mode>4 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_mode", "must be between 1 and 4", -14) return false end  
+  channel=channel-1
+  if input_mode==0 then -- osc
+    channel=0 
+    cc_note=0 
+  elseif input_mode==1 then 
+    input_mode=144 -- midi note
+  elseif input_mode==2 then
+    input_mode=176 -- midi cc
+  elseif input_mode==3 then
+    input_mode=192 -- midi pc
+  elseif input_mode==4 then
+    input_mode=224 -- midi pitch
+  else
+  end
+  if cc_mode==1 then cc_mode=65536
+  elseif cc_mode==2 then cc_mode=131072
+  elseif cc_mode==3 then cc_mode=65536+131072
+  elseif cc_mode==4 then cc_mode=262144
+  end
+  input_mode=input_mode+channel
+  input_mode=ultraschall.CombineBytesToInteger(0, input_mode, cc_note)
+  input_mode=input_mode+cc_mode  
+  local errorcounter_old = ultraschall.CountErrorMessages()  
+  local A={ultraschall.AddParmLearn_FXStateChunk(FXStateChunk, fxid, parmidx, parmname, input_mode, checkboxflags, osc_message)}
+  if errorcounter_old ~= ultraschall.CountErrorMessages() then
+    local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage()
+    ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", parmname, errormessage, errcode-100)
+    return false
+  end
+    
+  return table.unpack(A)
+end
+
+function ultraschall.SetParmLearn_FXStateChunk2(FXStateChunk, fxid, parmidx, parmname, input_mode, channel, cc_note, cc_mode, checkboxflags, osc_message)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetParmLearn_FXStateChunk2</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.32
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmLearn_FXStateChunk2(string FXStateChunk, integer fxid, integer id, integer input_mode, integer checkboxflags, optional string osc_message)</functioncall>
+  <description>
+    Sets an already existing Parm-Learn-entry of an FX-plugin from an FXStateChunk.
+    Allows setting some values more detailed, unlike SetParmLearn_FXStateChunk.
+    
+    It's the PARMLEARN-entry
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, if setting new values was successful; false, if setting was unsuccessful(e.g. no such ParmLearn)
+    optional string alteredFXStateChunk - the altered FXStateChunk
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, in which you want to set a Parm-Learn-entry
+    integer fxid - the id of the fx, which holds the to-set-Parm-Learn-entry; beginning with 1
+    integer id - the id of the Parm-Learn-entry to set; beginning with 1
+    integer input_mode - the input mode of this ParmLearn-entry
+                       - 0, OSC
+                       - 1, MIDI Note
+                       - 2, MIDI CC
+                       - 3, MIDI PC
+                       - 4, MIDI Pitch
+    integer channel - the midi-channel used; 1-16
+    integer cc_note - the midi/cc-note used; 0-127
+    integer cc_mode - the cc-mode-dropdownlist
+                    - 0, Absolute
+                    - 1, Relative 1(127=-1, 1=+1)
+                    - 2, Relative 2(63=-1, 65=+1)
+                    - 3, Relative 3(65=-1, 1=+1)
+                    - 4, Toggle (>0=toggle)
+    integer checkboxflags - the checkboxes checked in the MIDI/OSC-learn dialog
+                          -    0, no checkboxes
+                          -    1, enable only when track or item is selected
+                          -    2, Soft takeover (absolute mode only)
+                          -    3, Soft takeover (absolute mode only)+enable only when track or item is selected
+                          -    4, enable only when effect configuration is focused
+                          -    20, enable only when effect configuration is visible 
+    optional string osc_message - the osc-message, that triggers the ParmLearn, only when midi_note is set to 0!
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Learn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, parm, learn, midi, osc, binding</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "FXStateChunk", "no valid FXStateChunk", -1) return false end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "fxid", "must be an integer", -2) return false end
+
+  if osc_message~=nil and type(osc_message)~="string" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "osc_message", "must be either nil or a string", -3) return false end
+  if math.type(checkboxflags)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "checkboxflags", "must be an integer", -4) return false end
+  if math.type(parmidx)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "parmidx", "must be an integer", -5) return false end
+  if type(parmname)~="string" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "parmname", "must be a string, either \"\" or byp or wet", -6) return false 
+  elseif parmname~="" then parmname=":"..parmname
+  end
+  if math.type(input_mode)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "input_mode", "must be an integer", -7) return false end  
+  if math.type(channel)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "channel", "must be an integer", -8) return false end  
+  if math.type(cc_note)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "cc_note", "must be an integer", -9) return false end  
+  if math.type(cc_mode)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "cc_mode", "must be an integer", -10) return false end  
+  if input_mode<0 or input_mode>4 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "input_mode", "must be between 0 and 4", -11) return false end  
+  if channel<1 or channel>16 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "channel", "must be between 1 and 16", -12) return false end  
+  if cc_note<0 or cc_note>127 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "cc_note", "must be between 0 and 127", -13) return false end  
+  if cc_mode<0 or cc_mode>4 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "cc_mode", "must be between 1 and 4", -14) return false end  
+  if osc_message~=nil and input_mode~=0 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "input_mode", "must be set to 0, when using parameter osc_message", -15) return false end
+  if osc_message==nil and input_mode==0 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "osc_message", "osc-message missing", -16) return false end
+  channel=channel-1
+  if input_mode==0 then -- osc
+    channel=0 
+    cc_note=0 
+  elseif input_mode==1 then 
+    input_mode=144 -- midi note
+  elseif input_mode==2 then
+    input_mode=176 -- midi cc
+  elseif input_mode==3 then
+    input_mode=192 -- midi pc
+  elseif input_mode==4 then
+    input_mode=224 -- midi pitch
+  else
+
+  end
+  if cc_mode==1 then cc_mode=65536
+  elseif cc_mode==2 then cc_mode=131072
+  elseif cc_mode==3 then cc_mode=65536+131072
+  elseif cc_mode==4 then cc_mode=262144
+  end
+  input_mode=input_mode+channel
+  input_mode=ultraschall.CombineBytesToInteger(0, input_mode, cc_note)
+  input_mode=input_mode+cc_mode  
+  local errorcounter_old = ultraschall.CountErrorMessages()
+  local A={ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, parmidx, input_mode, checkboxflags, osc_message )}
+  if errorcounter_old ~= ultraschall.CountErrorMessages() then
+    local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage()
+    ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", parmname, errormessage, errcode-100)
+    return false
+  end
+    
+  return table.unpack(A)
+end
+
+function ultraschall.GetParmLearn_FXStateChunk2(FXStateChunk, fxid, id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetParmLearn_FXStateChunk2</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.32
+    Lua=5.3
+  </requires>
+  <functioncall>integer parm_idx, string parmname, integer input_mode, integer channel, integer cc_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLearn_FXStateChunk2(string FXStateChunk, integer fxid, integer id)</functioncall>
+  <description>
+    Returns a parameter-learn-setting from an FXStateChunk
+    An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
+    
+    Returns some values more detailed, unlike GetParmLearn_FXStateChunk.
+    
+    It is the PARMLEARN-entry
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    integer parm_idx - the idx of the parameter; order is exactly like the order in the contextmenu of Parameter List -> Learn
+    string parmname - the name of the parameter, though usually only wet or bypass
+    integer input_mode - the input mode of this ParmLearn-entry
+                       - 0, OSC
+                       - 1, MIDI Note
+                       - 2, MIDI CC
+                       - 3, MIDI PC
+                       - 4, MIDI Pitch
+    integer channel - the midi-channel used; 1-16
+    integer cc_note - the midi/cc-note used; 0-127
+    integer cc_mode - the cc-mode-dropdownlist
+                    - 0, Absolute
+                    - 1, Relative 1(127=-1, 1=+1)
+                    - 2, Relative 2(63=-1, 65=+1)
+                    - 3, Relative 3(65=-1, 1=+1)
+                    - 4, Toggle (>0=toggle)
+    integer checkboxflags - the checkboxes checked in the MIDI/OSC-learn dialog
+                          - 0, no checkboxes
+                          - 1, enable only when track or item is selected
+                          - 2, Soft takeover (absolute mode only)
+                          - 3, Soft takeover (absolute mode only)+enable only when track or item is selected
+                          - 4, enable only when effect configuration is focused
+                          - 20, enable only when effect configuration is visible
+    optional string osc_message - the osc-message, that triggers the ParmLearn
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from which you want to retrieve the ParmLearn-settings
+    integer fxid - the fx, of which you want to get the parameter-learn-settings
+    integer id - the id of the ParmLearn-settings you want to have, starting with 1 for the first
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Learn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, parameter, learn, fxstatechunk, osc, midi</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk2", "StateChunk", "Not a valid FXStateChunk", -1) return nil end
+  if math.type(id)~="integer" then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk2", "id", "must be an integer", -2) return nil end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk2", "fxid", "must be an integer", -3) return nil end
+    
+  local channel, input_mode
+  local parm_idx, parmname, midi_note, checkboxflags, osc_message = ultraschall.GetParmLearn_FXStateChunk(FXStateChunk, fxid, id)
+  local Byte1, cc_note = ultraschall.SplitIntegerIntoBytes(midi_note)
+  if Byte1>=224 then input_mode=4 channel=Byte1-224     -- MIDI Pitch
+  elseif Byte1>=192 then input_mode=3 channel=Byte1-192 -- MIDI PC
+  elseif Byte1>=176 then input_mode=2 channel=Byte1-176 -- MIDI CC
+  elseif Byte1>=144 then input_mode=1 channel=Byte1-144 -- MIDI Note 
+  else 
+    input_mode=0 
+    channel=-1
+  end
+  
+  -- cc_mode
+  local cc_mode
+  channel=channel+1
+  if     midi_note&65536==0     and midi_note&131072==0      and midi_note&262144==0 then -- Absolute
+    cc_mode=0
+  elseif midi_note&65536==65536 and midi_note&131072==0      and midi_note&262144==0 then -- Relative 1(127=-1, 1=+1)
+    cc_mode=1
+  elseif midi_note&65536==0     and midi_note&131072==131072 and midi_note&262144==0 then -- Relative 2(63=-1, 65=+1)
+    cc_mode=2
+  elseif midi_note&65536==65536 and midi_note&131072==131072 and midi_note&262144==0 then -- Relative 3(65=-1, 1=+1)
+    cc_mode=3
+  elseif midi_note&65536==0     and midi_note&131072==0      and midi_note&262144==262144 then -- Toggle (>0=toggle) 
+    cc_mode=4
+  end
+  return parm_idx, parmname, input_mode, channel, cc_note, cc_mode, checkboxflags, osc_message
+end

@@ -988,8 +988,8 @@ function ultraschall.CloseReaScriptConsole()
     boolean retval - true, if there is a mute-point; false, if there isn't one
   </retvals>
   <chapter_context>
-    User Interface
-    Window Management
+    API-Helper functions
+    ReaScript Console
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
@@ -2526,8 +2526,8 @@ function ultraschall.MoveChildWithinParentHWND(parenthwnd, childhwnd, relative, 
       integer newheight - the new height of the childhwnd in pixels
     </retvals>
     <parameters>
-      hwnd parenthwnd - the parenthwnd of the childhwnd, within whose dimensions you want to move the childhwnd
-      hwnd childhwnd - the childhwnd, that you want to move
+      HWND parenthwnd - the parenthwnd of the childhwnd, within whose dimensions you want to move the childhwnd
+      HWND childhwnd - the childhwnd, that you want to move
       boolean relative - true, new position will be relative to the old position; false, new position will be absolute within the boundaries of the parenthwnd
       integer left - the new x-position of the childhwnd in pixels
       integer top - the new y-position of the childhwnd in pixels
@@ -2600,8 +2600,8 @@ function ultraschall.GetChildSizeWithinParentHWND(parenthwnd, childhwnd)
       integer height - the height of the childhwnd in pixels
     </retvals>
     <parameters>
-      hwnd parenthwnd - the parenthwnd of the childhwnd, whose position will be the base for position-calculation of the childhwnd
-      hwnd childhwnd - the childhwnd, whose dimensions you want to get, relative to the position of the parenthwnd
+      HWND parenthwnd - the parenthwnd of the childhwnd, whose position will be the base for position-calculation of the childhwnd
+      HWND childhwnd - the childhwnd, whose dimensions you want to get, relative to the position of the parenthwnd
     </parameters>
     <chapter_context>
       User Interface
