@@ -4330,7 +4330,7 @@ function ultraschall.ReturnAllChildHWND(hwnd)
   <slug>ReturnAllChildHWND</slug>
   <requires>
     Ultraschall=4.1
-    Reaper=5.965    
+    Reaper=5.965
     JS=0.962
     Lua=5.3
   </requires>
