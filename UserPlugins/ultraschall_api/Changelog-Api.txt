@@ -442,7 +442,7 @@ Has now 1406 functions, with 6 new ones
   But keep in mind: they aren't released for a good reason. Be careful with them.
   
   - **Bugfixes**  
-  Bugfixes, Bugfixes...
+  Bugfixes, Bugfixes, Bugfixes...
   
   
 #### New features in 4.2.005  
@@ -451,9 +451,9 @@ Has now 1406 functions, with 6 new ones
   - Parameter/Learn/Mapping: AddParmLearn\_FXStateChunk2 - variation of AddParmLearn\_FXStateChunk that allows setting values more detailed(requested by DanielLumertz and TonE)
   - Parameter/Learn/Mapping: GetParmLearn\_FXStateChunk2 - variation of GetParmLearn\_FXStateChunk2 that allows setting values more detailed(requested by DanielLumertz and TonE)  
   - Parameter/Learn/Mapping: SetParmLearn\_FXStateChunk2 - variation of SetParmLearn\_FXStateChunk that allows setting values more detailed(requested by DanielLumertz and TonE)
-  - Project-Files: GetProject\_Render_Normalize - gets the render-normalize-settings from an rpp-file or ProjectStateChunk
+  - Project-Files: GetProject\_Render\_Normalize - gets the render-normalize-settings from an rpp-file or ProjectStateChunk
   - Project-Files: SetProject\_MasterTrackView - sets the master-track-view-settings in an rpp-file or ProjectStateChunk
-  - Project-Files: SetProject\_Render_Normalize - sets the render-normalize-settings in an rpp-file or ProjectStateChunk
+  - Project-Files: SetProject\_Render\_Normalize - sets the render-normalize-settings in an rpp-file or ProjectStateChunk
 
 #### Changes from 4.2.004 to 4.2.005  
   - BatchConverter: BatchConvertFiles - supports now retaining metadata from sourcefile
@@ -465,6 +465,7 @@ Has now 1406 functions, with 6 new ones
   - GuiLib: Lokasenna\_LoadGuiLib\_v2 - didn't load due stupid typo -> fixed
   - Helper functions: StateChunkLayouter - did add unnecessary newline at the end, which faulted IsValidTrackStateChunk -> fixed
   - Markers: MoveMarkersBy - didn't work on markers with 0 in their index number -> fixed(thanks to GNetzer)    
+  - MediaItem-Management: InsertMediaItemFromFile - didn't insert media into the right track due Reaper API-limitations -> fixed(thanks to ??)
   - Parameter/Learn/Mapping: SetParmLearn\_FXStateChunk - added error-message, when no such parm-alias exists
   - RenderManagement: AddRenderPreset - supports now render-normalization
   - RenderManagement: ApplyRenderTable\_Project - supports now render-normalization

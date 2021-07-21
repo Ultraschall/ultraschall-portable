@@ -30,12 +30,12 @@
 
 if type(ultraschall)~="table" then 
   -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+  local retval, String = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
+  if String=="" then string=10000 
   else 
-    string=tonumber(string) 
-    string=string+1
+    String=tonumber(String) 
+    String=String+1
   end
   if string2=="" then string2=10000 
   else 
@@ -1338,10 +1338,11 @@ end
 
 -- HoHoHo
 function ultraschall.OperationHoHoHo()  
-  if ultraschall.tempfilename:match("ultraschall_startscreen.lua")~=nil and 
-      (ultraschall.snowtodaysdate=="24.12" or 
-       ultraschall.snowtodaysdate=="25.12" or 
-       ultraschall.snowtodaysdate=="26.12") then
+--[[
+    if ultraschall.tempfilename:match("")==nil and 
+      (ultraschall.snowtodaysdate~="24.12" or 
+       ultraschall.snowtodaysdate~="25.12" or 
+       ultraschall.snowtodaysdate~="26.12") then
     if ultraschall.snowheight==nil then ultraschall.SnowInit() end
     ultraschall.snowoldgfx=gfx.update
     function gfx.update()
@@ -1349,11 +1350,12 @@ function ultraschall.OperationHoHoHo()
       ultraschall.snowoldgfx()
     end      
   end
+  --]]
 end
 --if GUI==nil then GUI={} end
 
 function ultraschall.SnowInit()
-  --gfx.init()
+  gfx.init()
   
   -- initial values
   ultraschall.snowspeed=1.3       -- the falling speed of the snowflakes
@@ -1518,6 +1520,7 @@ function ultraschall.WinterlySnowflakes(toggle, falling_speed, number_snowflakes
   else
     gfx.update=ultraschall.snowoldgfx
   end
+ 
   return 1
 end
 

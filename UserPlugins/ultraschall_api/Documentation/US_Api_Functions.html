@@ -2162,7 +2162,7 @@ Returns -1 in case of an error.
 <u>Parameters:</u>
 <table class="ch">
 <tr>
-<td class="pr"><i>string</i> String</td>
+<td class="pr"><i>string</i> <i>String</i></td>
 <td>the string to convert into its integer representation</td>
 </tr>
 </table>
@@ -2287,7 +2287,7 @@ Returns -1 in case of an error
 <u>Parameters:</u>
 <table class="ch">
 <tr>
-<td class="pr"><i>string</i> String</td>
+<td class="pr"><i>string</i> <i>String</i></td>
 <td>the string to count the lines of</td>
 </tr>
 </table>
@@ -28750,7 +28750,7 @@ returns -1 in case of error
 <img width="3%" src="gfx/reaper5.40.png" alt="Reaper version 5.40">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>IsItemInTimerange</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.IsItemInTimerange</em>(<i>MediaItem</i> MediaItem, <i>number</i> startposiiton, <i>number</i> endposition, <i>boolean</i> inside)</code></div>
+<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.IsItemInTimerange</em>(<i>MediaItem</i> MediaItem, <i>number</i> startposition, <i>number</i> endposition, <i>boolean</i> inside)</code></div>
 </div><p>
 <div class="ch">
 checks, whether a given MediaItem is within startposition and endposition and returns the result.<br/>
@@ -33087,15 +33087,15 @@ If you have a MediaItemArray with items from track 1,2,3,4,5 and you give tracks
 <a href="#InsertMediaItemFromFile"> ^</a> 
 <img width="3%" src="gfx/reaper5.40.png" alt="Reaper version 5.40">
 <img width="3%" src="gfx/sws2.9.7.png" alt="SWS version 2.9.7">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>InsertMediaItemFromFile</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>InsertMediaItemFromFile</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> retval, <i>MediaItem</i> item, <i>number</i> endposition, <i>integer</i> numchannels, <i>integer</i> Samplerate, <i>string</i> Filetype, <i>number</i> editcursorposition, <i>MediaTrack</i> track = <em>ultraschall.InsertMediaItemFromFile</em>(<i>string</i> filename, <i>integer</i> track, <i>number</i> position, <i>number</i> endposition, <i>integer</i> editcursorpos, <i>optional</i> <i>number</i> offset)</code></div>
+<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> retval, <i>MediaItem</i> item, <i>number</i> endposition, <i>integer</i> numchannels, <i>integer</i> Samplerate, <i>string</i> Filetype, <i>number</i> editcursorposition, <i>MediaTrack</i> track = <em>ultraschall.InsertMediaItemFromFile</em>(<i>string</i> filename, <i>integer</i> track, <i>number</i> position, <i>number</i> length, <i>integer</i> editcursorpos, <i>optional</i> <i>number</i> offset)</code></div>
 </div><p>
 <div class="ch">
 Inserts the mediafile filename into the project at position in track<br/>
 When giving an rpp-projectfile, it will be rendered by Reaper and inserted as subproject!<br/>
 <br/>
-Due API-limitations, it creates two undo-points: one for inserting the MediaItem and one for changing the length(when endposition isn't -1).&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+Due API-limitations, it creates two undo-points: one for inserting the MediaItem and one for changing the length(when length isn't -1).&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 <br/>
 Returns -1 in case of failure              
 </div><br>      
@@ -33172,7 +33172,7 @@ Returns -1 in case of failure
 </table>
 <table class="ch">
 <tr>
-<td class="pr"><i>number</i> endposition</td>
+<td class="pr"><i>number</i> length</td>
 <td>the length of the newly created mediaitem; -1, use the length of the sourcefile</td>
 </tr>
 </table>
@@ -33180,9 +33180,9 @@ Returns -1 in case of failure
 <tr>
 <td class="pr"><i>integer</i> editcursorpos</td>
 <td>the position of the editcursor after insertion of the mediafile<br/>
-0 - the old editcursorposition<br/>
-1 - the position, at which the item was inserted<br/>
-2 - the end of the newly inserted item</td>
+0, the old editcursorposition<br/>
+1, the position, at which the item was inserted<br/>
+2, the end of the newly inserted item</td>
 </tr>
 </table>
 <table class="ch">

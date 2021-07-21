@@ -3759,7 +3759,7 @@ function ultraschall.IsItemInTimerange(MediaItem, startposition, endposition, in
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.IsItemInTimerange(MediaItem MediaItem, number startposiiton, number endposition, boolean inside)</functioncall>
+  <functioncall>boolean retval = ultraschall.IsItemInTimerange(MediaItem MediaItem, number startposition, number endposition, boolean inside)</functioncall>
   <description>
     checks, whether a given MediaItem is within startposition and endposition and returns the result.
     
@@ -4658,22 +4658,22 @@ end
 --ultraschall.RenderProject_Regions(nil, "c:\\testofon.lol", 1,true, true, true, true, nil)
 
 
-function ultraschall.InsertMediaItemFromFile(filename, track, position, endposition, editcursorpos, offset)
+function ultraschall.InsertMediaItemFromFile(filename, track, position, length, editcursorpos, offset)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InsertMediaItemFromFile</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.40
     SWS=2.9.7
     Lua=5.3
   </requires>
-  <functioncall>integer retval, MediaItem item, number endposition, integer numchannels, integer Samplerate, string Filetype, number editcursorposition, MediaTrack track = ultraschall.InsertMediaItemFromFile(string filename, integer track, number position, number endposition, integer editcursorpos, optional number offset)</functioncall>
+  <functioncall>integer retval, MediaItem item, number endposition, integer numchannels, integer Samplerate, string Filetype, number editcursorposition, MediaTrack track = ultraschall.InsertMediaItemFromFile(string filename, integer track, number position, number length, integer editcursorpos, optional number offset)</functioncall>
   <description>
     Inserts the mediafile filename into the project at position in track
     When giving an rpp-projectfile, it will be rendered by Reaper and inserted as subproject!
     
-    Due API-limitations, it creates two undo-points: one for inserting the MediaItem and one for changing the length(when endposition isn't -1).    
+    Due API-limitations, it creates two undo-points: one for inserting the MediaItem and one for changing the length(when length isn't -1).    
     
     Returns -1 in case of failure
   </description>
@@ -4683,11 +4683,11 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, endposit
                   -  0, insert the file into a newly inserted track after the last track
                   - -1, insert the file into a newly inserted track before the first track
     number position - the position of the newly inserted item
-    number endposition - the length of the newly created mediaitem; -1, use the length of the sourcefile
+    number length - the length of the newly created mediaitem; -1, use the length of the sourcefile
     integer editcursorpos - the position of the editcursor after insertion of the mediafile
-          - 0 - the old editcursorposition
-          - 1 - the position, at which the item was inserted
-          - 2 - the end of the newly inserted item
+          - 0, the old editcursorposition
+          - 1, the position, at which the item was inserted
+          - 2, the end of the newly inserted item
     optional number offset - an offset, to delay the insertion of the item, to overcome possible "too late"-starting of playback of item during recording
   </parameters>
   <retvals>
@@ -4714,8 +4714,8 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, endposit
   if reaper.file_exists(filename)==false then ultraschall.AddErrorMessage("InsertMediaItemFromFile", "filename", "file does not exist", -1) return -1 end
   if math.type(track)~="integer" then ultraschall.AddErrorMessage("InsertMediaItemFromFile","track", "must be an integer", -2) return -1 end
   if type(position)~="number" then ultraschall.AddErrorMessage("InsertMediaItemFromFile","position", "must be a number", -3) return -1 end
-  if type(endposition)~="number" then ultraschall.AddErrorMessage("InsertMediaItemFromFile","endposition", "must be a number", -4) return -1 end
-  if endposition<-1 then ultraschall.AddErrorMessage("InsertMediaItemFromFile","endposition", "must be bigger/equal 0; or -1 for sourcefilelength", -5) return -1 end
+  if type(length)~="number" then ultraschall.AddErrorMessage("InsertMediaItemFromFile","length", "must be a number", -4) return -1 end
+  if length<-1 then ultraschall.AddErrorMessage("InsertMediaItemFromFile","length", "must be bigger/equal 0; or -1 for sourcefilelength", -5) return -1 end
   if math.type(editcursorpos)~="integer" then ultraschall.AddErrorMessage("InsertMediaItemFromFile", "editcursorpos", "must be an integer between 0 and 2", -6) return -1 end
   if track<-1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("InsertMediaItemFromFile","track", "no such track available", -7) return -1 end  
   if offset~=nil and type(offset)~="number" then ultraschall.AddErrorMessage("InsertMediaItemFromFile","offset", "must be either nil or a number", -8) return -1 end  
@@ -4743,22 +4743,40 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, endposit
     track=1
     reaper.InsertTrackAtIndex(0,false)
   end
-  local SelectedTracks=ultraschall.CreateTrackString_SelectedTracks() -- get old track-selection
-  ultraschall.SetTracksSelected(tostring(track), true) -- set track selected, where we want to insert the item
+
+  reaper.PreventUIRefresh(1)
   reaper.SetEditCurPos(position+offset, false, false) -- change editcursorposition to where we want to insert the item
-  local CountMediaItems=reaper.CountMediaItems(0) -- the number of items available; the new one will be number of items + 1
-  local LLL=ultraschall.GetAllMediaItemGUIDs()
-  if LLL[1]==nil then LLL[1]="tudelu" end
-  local integer=reaper.InsertMedia(filename, mode)  -- insert item with file
-  local LLL2=ultraschall.GetAllMediaItemGUIDs()
-  local A,B=ultraschall.CompareArrays(LLL, LLL2)
-  local item=reaper.BR_GetMediaItemByGUID(0, A[1])
-  if endposition~=-1 then reaper.SetMediaItemInfo_Value(item, "D_LENGTH", endposition) end
   
-  reaper.SetEditCurPos(editcursor, false, false)  -- set editcursor to new position
+  -- insert media as new item and find out, what the item is
+  local integer=reaper.InsertMedia(filename, 1)  -- insert item with file
+  local Item=reaper.GetMediaItem(0, reaper.CountMediaItems(0)-1)
+    
+  if track>0 then 
+    -- move newly inserted item to target track and remove newly created track
+    local Boolean = reaper.MoveMediaItemToTrack(Item, reaper.GetTrack(0, track-1))
+    reaper.DeleteTrack(reaper.GetTrack(0,reaper.CountTracks(0)-1))
+  elseif track==-1 then
+    -- move newly created track to the top
+    local SelectedTracks=ultraschall.CreateTrackString_SelectedTracks() -- get old track-selection   
+    ultraschall.SetTracksSelected(tostring(track), true) -- set track selected, where we want to insert the item
+    reaper.ReorderSelectedTracks(0, 0)
+    ultraschall.SetTracksSelected(SelectedTracks, true) -- set track selected, where we want to insert the item
+  end
+    
+  -- alter length, if requested
+  if length~=-1 then reaper.SetMediaItemInfo_Value(Item, "D_LENGTH", length) end
+  -- reset cursorposition and arrangeview
+  if editcursorpos==0 then
+    reaper.SetEditCurPos(editcursor, false, false)  -- set editcursor to old position
+  elseif editcursorpos==1 then
+    reaper.SetEditCurPos(position+offset, false, false)  -- set editcursor to old position
+  elseif editcursorpos==2 then
+    reaper.SetEditCurPos(position+length+offset, false, false)  -- set editcursor to old position
+  end
+   
   reaper.BR_SetArrangeView(0, startTime, endTime) -- reset to old arrange-view-range
-  if SelectedTracks~="" then ultraschall.SetTracksSelected(SelectedTracks, true) end -- reset old trackselection
-  return 0, item, Length, Numchannels, Samplerate, Filetype, editcursor, reaper.GetMediaItem_Track(item)
+  reaper.PreventUIRefresh(-1)
+  return 0, item, Length, Numchannels, Samplerate, Filetype, editcursor, reaper.GetMediaItem_Track(Item)
 end
 
 --A,B,C,D,E,F,G,H,I,J=ultraschall.InsertMediaItemFromFile(ultraschall.Api_Path.."/misc/silence.flac", 0, 0, -1, 0)

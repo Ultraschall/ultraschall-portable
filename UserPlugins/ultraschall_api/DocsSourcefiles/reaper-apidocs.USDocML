@@ -10263,7 +10263,7 @@
         </requires>
         <description prog_lang="*">
             mode: 
-            0=add to current track
+            0=add to current track(last touched track when &512==0)
             1=add new track
             3=add to selected items as takes
             &amp;4=stretch/loop to fit time sel
@@ -10273,11 +10273,19 @@
             &amp;64=don't preserve pitch when matching tempo
             &amp;128=no loop/section if startpct/endpct set
             &amp;256=force loop regardless of global preference for looping imported items
-            &amp;512=use high word as absolute track index if mode&amp;3==0
+            &amp;512=use high word(&65536 and higher) as absolute track index if mode&amp;3==0
             &amp;1024=insert into reasamplomatic on a new track
             &amp;2048=insert into open reasamplomatic instance
             &amp;4096=move to BWF source preferred position(BWF start offset)
             &amp;8192=reverse
+            
+            Example:
+            To insert an item at a specific trackindex, use:
+            <pre><code>
+                TrackIndex=3              -- set this to the track you wanto
+                TrackIndex=TrackIndex<<16 -- move the index to high-word-destination for further use
+                reaper.InsertMedia("C:\\test3.mp3", 0+512+TrackIndex) -- insert at track; it is important to add 512 in this to mode!
+            </code></pre>
         </description>
         <retvals>
             integer - 0, inserting was unsuccessful; 1, inserting was successful
