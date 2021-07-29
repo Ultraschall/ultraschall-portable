@@ -3,7 +3,7 @@
       <slug>Introduction</slug>
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.32 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.33 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -3574,6 +3574,26 @@
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>edit_flags</slug>  
+      <title>edit_flags</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          IDE-settings, as set in Preferences -> ReaScript 
+          It is an integer-bitfield  
+          
+          >&1=0, Doubleclicking a function name jumps to function definition(control toggle)-checkbox(off) - unchecked  
+          >&1=1, Doubleclicking a function name jumps to function definition(control toggle)-checkbox(on) - checked  
+           
+          Stored in reaper.ini under the same name in the section REAPER; is updated as soon as the variable is changed.  
+           
       </description>  
       <chapter_context>
          Config Variables  

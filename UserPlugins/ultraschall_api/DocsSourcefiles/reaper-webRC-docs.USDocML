@@ -20,7 +20,7 @@
 
             You can place the files into the application-folder Plugins/reaper\_www\_root as well, but if you want to export them with the export-function within Reaper, they will simply be ignored.
         </description>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Introduction
@@ -68,7 +68,7 @@
                     </script>
 
         </description>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Introduction
@@ -91,7 +91,7 @@
 
             Example1
 
-                    <html>
+                     <html>
                         <head>
                             <script src="main.js"></script>
                             <script type="text/javascript">
@@ -104,8 +104,16 @@
                             </script>
                         </head>
                         <body>
+                            A value has been sent now to Reaper, via the extstate-mechanism.<p>
+                            Refer to the GetExtState()-function for getting it in ReaScript.<br>
+                            Use the contents of the variables section and key as parameters for GetExtState() to get the stored value.<br>
                         </body>
                     </html>
+
+            This extstate can now be read from ReaScript like this:
+            
+                    Value = reaper.GetExtState("IamASection", "IamAKey")
+                    reaper.MB(Value, "The Value, that has been sent from WebRC", 0)
 
             ####Receiving data from Reaper
             
@@ -116,7 +124,7 @@
             There are exceptions to this rule though(e.g. "MARKER", which starts with "MARKER\_LIST"), so, if in doubt, just check the "results"-variable using an alert-message and look for yourself, how the response starts. But relax, they keep the same, means: "MARKER" will always return "MARKER\_LIST" and not Jamboreepop out of a sudden or something like that.
             The second example in this chapter will show you how to do it.
 
-            Example1
+            Example1:  
             This is a simple example, that shows how to get data from Reaper using the wwr-request "TRANSPORT" and display it with the Javascript-alert-function. Feel free to modify and experiment in the wwr\_req()-line, by exchanging "TRANSPORT" with another request(more requests later in this documentation).
             This example uses code from the lyrics.html page, as included with Reaper.
             Always include the main.js!
@@ -145,7 +153,7 @@
                     </body>
                 </html>
 
-            Example2
+            Example2:  
             The next example shows you, what to do with the returned data, how to handle it, separate it(also multiline-requests) and putting it into global variables to be used later. It also displays you the content of the variables with an alert()-message.
             Press the button to execute the request again.
             Again, this example works with the "TRANSPORT"-request, but covers briefly the request "MARKER" as well. Feel free to experiment with other requests as well to get an idea.
@@ -226,7 +234,7 @@
                 </html>
             
         </description>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Introduction
@@ -245,7 +253,7 @@
             
             Note: If you create your own functions and variables, avoid names with a wwr or mk in it, as the Webinterface-functions and variables are named with them. That way, you can avoid name-conflicts with future versions of the Reaper-Webinterface.
         </description>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Introduction
@@ -263,7 +271,7 @@
         <description prog_lang="*">
             A global variable, that stores the timer-frequency for requests. Default is 100 for 100ms, but can be changed to any other value in milliseconds, before calling wwr_start(). Don't choose a too low value, as this could cause Reaper becoming stuck and unresponsive!
         </description>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Special Variables
@@ -281,7 +289,7 @@
         <description prog_lang="*">
             Starts the server. After that, requests can be send to Reaper.
         </description>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Functions
@@ -304,7 +312,7 @@
         <parameters>
             string request - The request to be sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.
         </parameters>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Functions
@@ -326,7 +334,7 @@
             string request - The request to be sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.
             float timer_frequency - the timer frequency in milliseconds, that decides, how often this request shall be repeated. Don't choose to low, or Reaper might get stuck and unresponsive!
         </parameters>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Functions
@@ -347,7 +355,7 @@
         <parameters>
             string request - The request to be stopped from being sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.
         </parameters>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Functions
@@ -371,7 +379,7 @@
         <retvals>
             string db_value - the converted value as dB
         </retvals>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Functions
@@ -395,7 +403,7 @@
         <retvals>
             string pan_percentage_value - the converted pan-value as percentage
         </retvals>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Functions
@@ -419,7 +427,7 @@
         <retvals>
             string unescaped_values - the string where all newlines, tabs and backslashes are unescaped
         </retvals>
-        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <target_document>Reaper_API_Web_Documentation</target_document>
         <source_document></source_document>
         <chapter_context>
             Functions

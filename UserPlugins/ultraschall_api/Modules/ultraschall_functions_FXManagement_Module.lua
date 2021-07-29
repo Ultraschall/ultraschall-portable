@@ -8419,7 +8419,7 @@ function ultraschall.AddParmLearn_FXStateChunk2(FXStateChunk, fxid, parmidx, par
   <parameters>
     string FXStateChunk - the FXStateChunk, in which you want to set a Parm-Learn-entry
     integer fxid - the id of the fx, which holds the to-set-Parm-Learn-entry; beginning with 1
-    integer parmidx - the parameter, whose Parameter Learn you want to add
+    integer parmidx - the parameter, whose Parameter Learn you want to add; 0-based
     string parmname - the name of the parameter, usually \"\" or \"byp\" for bypass or \"wet\" for wet; when using wet or bypass, these are essential to give, otherwise just pass ""
     integer input_mode - the input mode of this ParmLearn-entry
                        - 0, OSC
@@ -8467,7 +8467,7 @@ function ultraschall.AddParmLearn_FXStateChunk2(FXStateChunk, fxid, parmidx, par
   if math.type(cc_note)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_note", "must be an integer", -9) return false end  
   if math.type(cc_mode)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_mode", "must be an integer", -10) return false end  
   if input_mode<0 or input_mode>4 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "input_mode", "must be between 0 and 4", -11) return false end  
-  if channel<0 or channel>15 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "channel", "must be between 1 and 16", -12) return false end  
+  if channel<1 or channel>16 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "channel", "must be between 1 and 16", -12) return false end  
   if cc_note<0 or cc_note>127 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_note", "must be between 0 and 127", -13) return false end  
   if cc_mode<0 or cc_mode>4 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_mode", "must be between 1 and 4", -14) return false end  
   channel=channel-1
@@ -8512,7 +8512,7 @@ function ultraschall.SetParmLearn_FXStateChunk2(FXStateChunk, fxid, parmidx, par
     Reaper=6.32
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmLearn_FXStateChunk2(string FXStateChunk, integer fxid, integer id, integer input_mode, integer checkboxflags, optional string osc_message)</functioncall>
+  <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmLearn_FXStateChunk2(string FXStateChunk, integer fxid, integer parmidx, string parmname, integer input_mode, integer channel, integer cc_note, integer cc_mode, integer checkboxflags, optional string osc_message)</functioncall>
   <description>
     Sets an already existing Parm-Learn-entry of an FX-plugin from an FXStateChunk.
     Allows setting some values more detailed, unlike SetParmLearn_FXStateChunk.
@@ -8527,8 +8527,9 @@ function ultraschall.SetParmLearn_FXStateChunk2(FXStateChunk, fxid, parmidx, par
   </retvals>
   <parameters>
     string FXStateChunk - the FXStateChunk, in which you want to set a Parm-Learn-entry
-    integer fxid - the id of the fx, which holds the to-set-Parm-Learn-entry; beginning with 1
-    integer id - the id of the Parm-Learn-entry to set; beginning with 1
+    integer fxid - the id of the fx, which holds the to-set-Parm-Learn-entry; beginning with 1    
+    integer parmidx - the parameter, whose Parameter Learn you want to add; 0-based
+    string parmname - the name of the parameter, usually \"\" or \"byp\" for bypass or \"wet\" for wet; when using wet or bypass, these are essential to give, otherwise just pass ""
     integer input_mode - the input mode of this ParmLearn-entry
                        - 0, OSC
                        - 1, MIDI Note
@@ -8680,6 +8681,7 @@ function ultraschall.GetParmLearn_FXStateChunk2(FXStateChunk, fxid, id)
     
   local channel, input_mode
   local parm_idx, parmname, midi_note, checkboxflags, osc_message = ultraschall.GetParmLearn_FXStateChunk(FXStateChunk, fxid, id)
+  if parm_idx==nil then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk2", "id", "no such ParmLearn available", -4) return nil end
   local Byte1, cc_note = ultraschall.SplitIntegerIntoBytes(midi_note)
   if Byte1>=224 then input_mode=4 channel=Byte1-224     -- MIDI Pitch
   elseif Byte1>=192 then input_mode=3 channel=Byte1-192 -- MIDI PC

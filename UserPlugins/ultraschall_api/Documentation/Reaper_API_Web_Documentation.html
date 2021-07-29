@@ -4,9 +4,10 @@
 Web Remote Control Documentation
 </title>
 <link href="style.css" rel="stylesheet">
+<link href="custom.css" rel="stylesheet">
 </head>
 <body>
-<a class="anchor" id="This-is-the-TopOfTheWorld"></a>
+<a class="anch" id="This-is-the-TopOfTheWorld"></a>
 <div style="position: sticky; top:0; padding-left:4%; z-index:100;">
 <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_Un.png" alt="Ultraschall Internals Documentation"></a>  
@@ -59,11 +60,11 @@ End of Header
 <script src="./scripts/clipboard.min.js.Download"></script>
 <!-- External Script -->
 <script src="./scripts/scripts.js.Download"></script>
-<table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Introduction"><a href="#Introduction">^</a></a><strong> <u>Introduction</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#Introduction">Introduction</a></td></tr><td class="tdsm"><a href="#FunctionsIntro">How it works - basics</a></td></tr><td class="tdsm"><a href="#DataExchange">How to exchange data and get states from Reaper?</a></td></tr><td class="tdsm"><a href="#FunctionsandVariables">Functions and Variables</a></td></tr><td class="tdsm"><a href="#SecurityAspects">Security Aspects</a></td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Special Variables"><a href="#Special Variables">^</a></a><strong> <u>Special Variables</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#g_wwr_timer_freq">g_wwr_timer_freq</a></td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Functions"><a href="#Functions">^</a></a><strong> <u>Functions</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#wwr_start">wwr_start</a></td></tr><td class="tdsm"><a href="#wwr_req">wwr_req</a></td></tr><td class="tdsm"><a href="#wwr_req_recur">wwr_req_recur</a></td></tr><td class="tdsm"><a href="#wwr_req_recur_cancel">wwr_req_recur_cancel</a></td></tr><td class="tdsm"><a href="#mkvolstr">mkvolstr</a></td></tr><td class="tdsm"><a href="#mkpanstr">mkpanstr</a></td></tr><td class="tdsm"><a href="#simple_unescape">simple_unescape</a></td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="ReadMe"><a href="#ReadMe">^</a></a><strong> <u>ReadMe</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#Readme">Readme from Reaper\plugins\reaper_www_root\main.js</a></td></tr><td class="tdsm"><a href="#Reference">Reference</a></td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Valid Commands for wwr_req"><a href="#Valid Commands for wwr_req">^</a></a><strong> <u>Valid Commands for wwr_req</u></strong><br><br>
+<table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Introduction"><a href="#Introduction">^</a></a><strong> <u>Introduction</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#Introduction">Introduction</a></td></tr><td class="tdsm"><a href="#FunctionsIntro">How it works - basics</a></td></tr><td class="tdsm"><a href="#DataExchange">How to exchange data and get states from Reaper?</a></td></tr><td class="tdsm"><a href="#FunctionsandVariables">Functions and Variables</a></td></tr><td class="tdsm"><a href="#SecurityAspects">Security Aspects</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Special Variables"><a href="#Special Variables">^</a></a><strong> <u>Special Variables</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#g_wwr_timer_freq">g_wwr_timer_freq</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Functions"><a href="#Functions">^</a></a><strong> <u>Functions</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#wwr_start">wwr_start</a></td></tr><td class="tdsm"><a href="#wwr_req">wwr_req</a></td></tr><td class="tdsm"><a href="#wwr_req_recur">wwr_req_recur</a></td></tr><td class="tdsm"><a href="#wwr_req_recur_cancel">wwr_req_recur_cancel</a></td></tr><td class="tdsm"><a href="#mkvolstr">mkvolstr</a></td></tr><td class="tdsm"><a href="#mkpanstr">mkpanstr</a></td></tr><td class="tdsm"><a href="#simple_unescape">simple_unescape</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="ReadMe"><a href="#ReadMe">^</a></a><strong> <u>ReadMe</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#Readme">Readme from Reaper\plugins\reaper_www_root\main.js</a></td></tr><td class="tdsm"><a href="#Reference">Reference</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Valid Commands for wwr_req"><a href="#Valid Commands for wwr_req">^</a></a><strong> <u>Valid Commands for wwr_req</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#ValidCommands">Valid commands</a></td></tr><td class="tdsm"><a href="#numeric values 0-65535">numeric values 0-65535</a></td></tr><td class="tdsm"><a href="#TRANSPORT">TRANSPORT</a></td></tr><td class="tdsm"><a href="#BEATPOS">BEATPOS</a></td></tr><td class="tdsm"><a href="#NTRACK">NTRACK</a></td></tr><td class="tdsm"><a href="#TRACK or TRACK/index or TRACK/start-end">TRACK or TRACK/index or TRACK/start-end</a></td></tr><td class="tdsm"><a href="#GET/TRACK/x/SEND/y">GET/TRACK/x/SEND/y</a></td></tr><td class="tdsm"><a href="#GET/TRACK/index/xxxxxx">GET/TRACK/index/xxxxxx</a></td></tr><td class="tdsm"><a href="#GET/TRACK/1/I_RECINPUT">GET/TRACK/1/I_RECINPUT</a></td></tr><td class="tdsm"><a href="#SET/TRACK/index/xxxxx/value">SET/TRACK/index/xxxxx/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/index/VOL/value">SET/TRACK/index/VOL/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/index/PAN/value">SET/TRACK/index/PAN/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/index/WIDTH/value">SET/TRACK/index/WIDTH/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/index/MUTE/value">SET/TRACK/index/MUTE/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/index/SOLO/value">SET/TRACK/index/SOLO/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/index/FX/value">SET/TRACK/index/FX/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/index/RECARM/value">SET/TRACK/index/RECARM/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/index/RECMON/value">SET/TRACK/index/RECMON/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/index/SEL/value">SET/TRACK/index/SEL/value</a></td></tr><td class="tdsm"><a href="#SET/UNDO/message">SET/UNDO/message</a></td></tr><td class="tdsm"><a href="#SET/UNDO_BEGIN">SET/UNDO_BEGIN</a></td></tr><td class="tdsm"><a href="#SET/UNDO_END/message">SET/UNDO_END/message</a></td></tr><td class="tdsm"><a href="#SET/REPEAT/val">SET/REPEAT/val</a></td></tr><td class="tdsm"><a href="#GET/REPEAT">GET/REPEAT</a></td></tr><td class="tdsm"><a href="#GET/REPEAT \t val">GET/REPEAT \t val</a></td></tr><td class="tdsm"><a href="#SET/TRACK/x/SEND/y/MUTE/value">SET/TRACK/x/SEND/y/MUTE/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/x/SEND/y/VOL/value">SET/TRACK/x/SEND/y/VOL/value</a></td></tr><td class="tdsm"><a href="#SET/TRACK/x/SEND/y/PAN/value">SET/TRACK/x/SEND/y/PAN/value</a></td></tr><td class="tdsm"><a href="#SET/POS/value_in_seconds">SET/POS/value_in_seconds</a></td></tr><td class="tdsm"><a href="#SET/POS_STR/value_string">SET/POS_STR/value_string</a></td></tr><td class="tdsm"><a href="#LYRICS/trackindex">LYRICS/trackindex</a></td></tr><td class="tdsm"><a href="#SET/PROJEXTSTATE/section/key/value">SET/PROJEXTSTATE/section/key/value</a></td></tr><td class="tdsm"><a href="#GET/PROJEXTSTATE/section/key">GET/PROJEXTSTATE/section/key</a></td></tr><td class="tdsm"><a href="#GET/EXTSTATE/section/key">GET/EXTSTATE/section/key</a></td></tr><td class="tdsm"><a href="#SET/EXTSTATE/section/key/value">SET/EXTSTATE/section/key/value</a></td></tr><td class="tdsm"><a href="#SET/EXTSTATEPERSIST/section/key/value">SET/EXTSTATEPERSIST/section/key/value</a></td></tr><td class="tdsm"><a href="#GET/command_id">GET/command_id</a></td></tr><td class="tdsm"><a href="#OSC/oscstring[:value]">OSC/oscstring[:value]</a></td></tr><td class="tdsm"><a href="#MARKER">MARKER</a></td></tr><td class="tdsm"><a href="#REGION">REGION</a></td></tr></table><br></div><div class="ch">
 <hr>
 <a class="anch" id="Introduction"></a>
@@ -117,7 +118,7 @@ End of Header
 <h4>Sending data to Reaper</h4>
 <p>Sending messages to Reaper, using requests, is easy, as it is only a normal request, where you exchange the parameters with your own. The parameters can be written inside of the request or exchanged by variables. For instance, if you want to set a persistent external state, you could use the request SET/EXTSTATEPERSIST/section/key/value and it would look like the following example:</p>
 <p>Example1</p>
-<pre><code>    &lt;html&gt;
+<pre><code>     &lt;html&gt;
         &lt;head&gt;
             &lt;script src=&quot;main.js&quot;&gt;&lt;/script&gt;
             &lt;script type=&quot;text/javascript&quot;&gt;
@@ -130,11 +131,18 @@ End of Header
             &lt;/script&gt;
         &lt;/head&gt;
         &lt;body&gt;
+            A value has been sent now to Reaper, via the extstate-mechanism.&lt;p&gt;
+            Refer to the GetExtState()-function for getting it in ReaScript.&lt;br&gt;
+            Use the contents of the variables section and key as parameters for GetExtState() to get the stored value.&lt;br&gt;
         &lt;/body&gt;
     &lt;/html&gt;</code></pre>
+<p>This extstate can now be read from ReaScript like this:</p>
+<pre><code>    Value = reaper.GetExtState(&quot;IamASection&quot;, &quot;IamAKey&quot;)
+    reaper.MB(Value, &quot;The Value, that has been sent from WebRC&quot;, 0)</code></pre>
 <h4>Receiving data from Reaper</h4>
 <p>When you call a request, that returns data/values/states, like (TRANSPORT, MARKER or GET/EXTSTATE/section/key), the main.js automatically calls a function called wwr_onreply(results). This function isn't there by default but must be rather defined by you in your script. In that function, the variable "result" contains the response from Reaper, which can either be a one-liner(like with TRANSPORT) or multiliner(like when getting the data for all markers in your project with MARKER). Multiliners are separated by a newline "\n", the individual entries in each line are separated with tabs "\t". So if you want to get the individual values, newline and tab will make you very happy. Every line in the response starts with the exact request you've sent(a "TRANSPORT"-request returns a line, that begins with "TRANSPORT"), so you know exactly, from what request the response came-from. You can also differentiate between different kinds of requests that way, as different requests return different ways of data, states, etc. There are exceptions to this rule though(e.g. "MARKER", which starts with "MARKER_LIST"), so, if in doubt, just check the "results"-variable using an alert-message and look for yourself, how the response starts. But relax, they keep the same, means: "MARKER" will always return "MARKER_LIST" and not Jamboreepop out of a sudden or something like that. The second example in this chapter will show you how to do it.</p>
-<p>Example1 This is a simple example, that shows how to get data from Reaper using the wwr-request "TRANSPORT" and display it with the Javascript-alert-function. Feel free to modify and experiment in the wwr_req()-line, by exchanging "TRANSPORT" with another request(more requests later in this documentation). This example uses code from the lyrics.html page, as included with Reaper. Always include the main.js!</p>
+<p>Example1:<br />
+This is a simple example, that shows how to get data from Reaper using the wwr-request "TRANSPORT" and display it with the Javascript-alert-function. Feel free to modify and experiment in the wwr_req()-line, by exchanging "TRANSPORT" with another request(more requests later in this documentation). This example uses code from the lyrics.html page, as included with Reaper. Always include the main.js!</p>
 <pre><code>&lt;html&gt;
     &lt;head&gt;
         &lt;script src=&quot;main.js&quot;&gt;&lt;/script&gt;
@@ -158,7 +166,8 @@ End of Header
         Show the Transport-State-Response, when this page is (re-)loaded.
     &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-<p>Example2 The next example shows you, what to do with the returned data, how to handle it, separate it(also multiline-requests) and putting it into global variables to be used later. It also displays you the content of the variables with an alert()-message. Press the button to execute the request again. Again, this example works with the "TRANSPORT"-request, but covers briefly the request "MARKER" as well. Feel free to experiment with other requests as well to get an idea. This example uses code from the lyrics.html page, as included with Reaper. Always include the main.js!</p>
+<p>Example2:<br />
+The next example shows you, what to do with the returned data, how to handle it, separate it(also multiline-requests) and putting it into global variables to be used later. It also displays you the content of the variables with an alert()-message. Press the button to execute the request again. Again, this example works with the "TRANSPORT"-request, but covers briefly the request "MARKER" as well. Feel free to experiment with other requests as well to get an idea. This example uses code from the lyrics.html page, as included with Reaper. Always include the main.js!</p>
 <pre><code>&lt;html&gt;
     &lt;head&gt;
         &lt;script src=&quot;main.js&quot;&gt;&lt;/script&gt;
@@ -262,7 +271,7 @@ If the Web-Interface-API has any kind of https-support needs to be researched.
 <a href="#g_wwr_timer_freq"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>g_wwr_timer_freq</b></u><br>			<p>
 <div class="cc">
-<div class="j"><span class='all_view'>Javascript: </span><code><em> g_wwr_timer_freq</em></code></div>
+<div class="j">Javascript: <code><em> g_wwr_timer_freq</em></code></div>
 </div><p>
 <div class="ch">
 A global variable, that stores the timer-frequency for requests. Default is 100 for 100ms, but can be changed to any other value in milliseconds, before calling wwr_start(). Don't choose a too low value, as this could cause Reaper becoming stuck and unresponsive!              
@@ -274,7 +283,7 @@ A global variable, that stores the timer-frequency for requests. Default is 100 
 <a href="#wwr_start"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>wwr_start</b></u><br>			<p>
 <div class="cc">
-<div class="j"><span class='all_view'>Javascript: </span><code> <em>wwr_start</em>()</code></div>
+<div class="j">Javascript: <code> <em>wwr_start</em>()</code></div>
 </div><p>
 <div class="ch">
 Starts the server. After that, requests can be send to Reaper.              
@@ -286,17 +295,15 @@ Starts the server. After that, requests can be send to Reaper.
 <a href="#wwr_req"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>wwr_req</b></u><br>			<p>
 <div class="cc">
-<div class="j"><span class='all_view'>Javascript: </span><code> <em>wwr_req</em>(<i>string</i> request)</code></div>
+<div class="j">Javascript: <code> <em>wwr_req</em>(<i>string</i> request)</code></div>
 </div><p>
 <div class="ch">
 <p>Sends a one-time request to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter later below.</p>
 <p>If a request returns values, they can be accessed in the function <a href="#wwr_onreply">wwr_onreply</a>. Refer the <a href="#DataExchange">Receiving data from Reaper</a> earlier in this document.</p>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> request</td>
-<td>The request to be sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.</td>
-</tr>
+<tr><td class="pr"><i>string</i> request</td></tr>
+<tr><td class="ch2">The request to be sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.</td></tr>
 </table>
 <br>
 </div>
@@ -306,22 +313,18 @@ Starts the server. After that, requests can be send to Reaper.
 <a href="#wwr_req_recur"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>wwr_req_recur</b></u><br>			<p>
 <div class="cc">
-<div class="j"><span class='all_view'>Javascript: </span><code> <em>wwr_req_recur</em>(<i>string</i> request, <i>float</i> timer_frequency)</code></div>
+<div class="j">Javascript: <code> <em>wwr_req_recur</em>(<i>string</i> request, <i>float</i> timer_frequency)</code></div>
 </div><p>
 <div class="ch">
 <p>Just like <a href="#wwr_req">wwr_req()</a>, but resends the request automatically with a frequency set in timer_frequency. Must be stopped with <a href="#wwr_req_recur_cancel">wwr_req_recur_cancel()</a></p>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> request</td>
-<td>The request to be sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.</td>
-</tr>
+<tr><td class="pr"><i>string</i> request</td></tr>
+<tr><td class="ch2">The request to be sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> timer_frequency</td>
-<td>the timer frequency in milliseconds, that decides, how often this request shall be repeated. Don't choose to low, or Reaper might get stuck and unresponsive!</td>
-</tr>
+<tr><td class="pr"><i>float</i> timer_frequency</td></tr>
+<tr><td class="ch2">the timer frequency in milliseconds, that decides, how often this request shall be repeated. Don't choose to low, or Reaper might get stuck and unresponsive!</td></tr>
 </table>
 <br>
 </div>
@@ -331,16 +334,14 @@ Starts the server. After that, requests can be send to Reaper.
 <a href="#wwr_req_recur_cancel"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>wwr_req_recur_cancel</b></u><br>			<p>
 <div class="cc">
-<div class="j"><span class='all_view'>Javascript: </span><code> <em>wwr_req_recur_cancel</em>(<i>string</i> request)</code></div>
+<div class="j">Javascript: <code> <em>wwr_req_recur_cancel</em>(<i>string</i> request)</code></div>
 </div><p>
 <div class="ch">
 <p>Stops a recurring request, that has been started with <a href="#wwr_req_recur">wwr_req_recur</a>. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter later below.</p>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> request</td>
-<td>The request to be stopped from being sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.</td>
-</tr>
+<tr><td class="pr"><i>string</i> request</td></tr>
+<tr><td class="ch2">The request to be stopped from being sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.</td></tr>
 </table>
 <br>
 </div>
@@ -350,25 +351,21 @@ Starts the server. After that, requests can be send to Reaper.
 <a href="#mkvolstr"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>mkvolstr</b></u><br>			<p>
 <div class="cc">
-<div class="j"><span class='all_view'>Javascript: </span><code> <i>string</i> db_value = <em>mkvolstr</em>(<i>float</i> vol)</code></div>
+<div class="j">Javascript: <code> <i>string</i> db_value = <em>mkvolstr</em>(<i>float</i> vol)</code></div>
 </div><p>
 <div class="ch">
 <p>converts a volume-value(as returned by e.g. the request TRANSPORT") into a db-value and returns it. The string could be like "123.45 db" or "-inf db"(if the vol-value is too low).</p>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> db_value</td>
-<td>the converted value as dB</td>
-</tr>
+<tr><td class="pr"><i>string</i> db_value</td></tr>
+<tr><td class="ch2">the converted value as dB</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> vol</td>
-<td>a volume-number as returned from a request like e.g. TRANSPORT. Only positive values are allowed. Minimum 0.00000002980232. Lower returns -inf.</td>
-</tr>
+<tr><td class="pr"><i>float</i> vol</td></tr>
+<tr><td class="ch2">a volume-number as returned from a request like e.g. TRANSPORT. Only positive values are allowed. Minimum 0.00000002980232. Lower returns -inf.</td></tr>
 </table>
 <br>
 </div>
@@ -378,25 +375,21 @@ Starts the server. After that, requests can be send to Reaper.
 <a href="#mkpanstr"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>mkpanstr</b></u><br>			<p>
 <div class="cc">
-<div class="j"><span class='all_view'>Javascript: </span><code> <i>string</i> pan_percentage_value = <em>mkpanstr</em>(<i>float</i> pan)</code></div>
+<div class="j">Javascript: <code> <i>string</i> pan_percentage_value = <em>mkpanstr</em>(<i>float</i> pan)</code></div>
 </div><p>
 <div class="ch">
 <p>returns the pan value converted into percentage. The returned value could look like "10%L" or "25%R" or "center". The function allows values that produce more than 100% left or right, i.e. "1234%L". Keep that in mind!</p>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> pan_percentage_value</td>
-<td>the converted pan-value as percentage</td>
-</tr>
+<tr><td class="pr"><i>string</i> pan_percentage_value</td></tr>
+<tr><td class="ch2">the converted pan-value as percentage</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> pan</td>
-<td>a pan-number as returned from a request like e.g. TRANSPORT. Negative values=left, positive values=right. -1=100%left, 1-100%right, 0.001 to -0.001=center.</td>
-</tr>
+<tr><td class="pr"><i>float</i> pan</td></tr>
+<tr><td class="ch2">a pan-number as returned from a request like e.g. TRANSPORT. Negative values=left, positive values=right. -1=100%left, 1-100%right, 0.001 to -0.001=center.</td></tr>
 </table>
 <br>
 </div>
@@ -406,25 +399,21 @@ Starts the server. After that, requests can be send to Reaper.
 <a href="#simple_unescape"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>simple_unescape</b></u><br>			<p>
 <div class="cc">
-<div class="j"><span class='all_view'>Javascript: </span><code> <i>string</i> unescaped_values = <em>simple_unescape</em>(<i>string</i> v)</code></div>
+<div class="j">Javascript: <code> <i>string</i> unescaped_values = <em>simple_unescape</em>(<i>string</i> v)</code></div>
 </div><p>
 <div class="ch">
 unescapes \\n to \n and \\t to \t and \\ to \ within a string. Important, as some responses from requests escape tabs, newline and backslashes that way.              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> unescaped_values</td>
-<td>the string where all newlines, tabs and backslashes are unescaped</td>
-</tr>
+<tr><td class="pr"><i>string</i> unescaped_values</td></tr>
+<tr><td class="ch2">the string where all newlines, tabs and backslashes are unescaped</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> v</td>
-<td>a string, that contains not-yet-unescaped newlines, tabs and backslashes&nbsp;&nbsp;&nbsp;&nbsp;</td>
-</tr>
+<tr><td class="pr"><i>string</i> v</td></tr>
+<tr><td class="ch2">a string, that contains not-yet-unescaped newlines, tabs and backslashes&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 </table>
 <br>
 </div>
@@ -909,7 +898,7 @@ REGION_LIST_END
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 005 - 55 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 006 - 55 elements available <br></td></table>
         <hr>
       </div>
       <br>

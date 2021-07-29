@@ -18,6 +18,8 @@
             This documentation includes the functions provided by SWS: [sws-extension.org](https://www.sws-extension.org) as well as Julian Sader's plugin, that can be installed via ReaPack.
 
             The IDE in Reaper has some limitations, as every line must not exceed 4095 characters, or they will be split when the script is loaded the next time.
+            It also tries to obey the script's chose character for indentation. So if every line begins with a tab, hitting tab will insert 4 spaces, if every line begins with spaces, hitting tab will insert 2 spaces.
+            The IDE has known issues with Unicode-characters, especially when inserted via Alt+GR. So sometimes it's easier to use an external IDE/editor instead.
 
             The base-directory for files created from ReaScript can be read from the reaper.ini -> [REAPER] -> lastcwd=
             That means, if you create a new file without giving it a path, it will be created in the path set in lastcwd.
@@ -250,7 +252,6 @@
         <functioncall prog_lang="python">MediaItem item RPR_AddMediaItemToTrack(MediaTrack tr)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description markup_type="markdown" markup_version="1.0.1">
             Creates a new media item. It will be empty and therefore not be shown in the arrange-view, until you associate a mediafile(audio, picture, video, etc) or a length and position to it using [SetMediaItemInfo\_Value](#SetMediaItemInfo_Value)
@@ -34749,7 +34750,6 @@
         <functioncall prog_lang="eel">integer retval = gfx_getdropfile(integer idx[, string #filename])</functioncall>
         <requires>
             Reaper=5.91
-
         </requires>
         <description indent="default">
             Returns filenames, drag'n'dropped into a window created by gfx_init().
@@ -36266,7 +36266,6 @@
         <functioncall prog_lang="lua">reaper.atexit(function function)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Adds code to be executed when the script finishes or is ended by the user. Typically used to clean up after the user terminates defer() or runloop() code.
@@ -36301,7 +36300,6 @@
         <functioncall prog_lang="lua">boolean retval = reaper.defer(function function)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Adds code to be called back by REAPER. Used to create persistent ReaScripts that continue to run and respond to input, while the user does other tasks. Identical to runloop().Note that no undo point will be automatically created when the script finishes, unless you create it explicitly.
@@ -36328,7 +36326,6 @@
         <functioncall prog_lang="lua">boolean is_new_value, string filename_with_path, integer sectionID, integer cmdID, integer mode, integer resolution, integer val = reaper.get_action_context()</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Returns contextual information about the script, typically MIDI/OSC input values.val will be set to a relative or absolute value depending on mode (=0: absolute mode, &gt;0: relative modes). resolution=127 for 7-bit resolution, =16383 for 14-bit resolution.Notes: sectionID, and cmdID will be set to -1 if the script is not part of the action list. mode, resolution and val will be set to -1 if the script was not triggered via MIDI/OSC.
@@ -36336,7 +36333,7 @@
             For relative mode bindings, calling get_action_context() will return the accumulated relative value in decoded form (not 65 or 63, but +1/-1 etc), and clear the internal state. So if you call it multiple times, the first one will return the accumulated value, and the second will always return 0.
         </description>
         <retvals>
-            boolean is_new_value - 
+            boolean is_new_value - unknown
             string filename_with_path - the script's own filename with path
             integer sectionID - the section, in which this script was called
             integer cmdID - the command-id associated with this script
@@ -36407,7 +36404,6 @@
         <functioncall prog_lang="lua">gfx.arc(integer x, integer y, integer r, number ang1, number ang2, optional number antialias)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Draws an arc of the circle centered at x,y, with ang1/ang2 being specified in radians.
@@ -36434,7 +36430,6 @@
         <functioncall prog_lang="lua">integer source = gfx.blit(integer source, number scale, number rotation, optional number srcx, optional number srcy, optional number srcw, optional number srch, optional integer destx, optional integer desty, optional integer destw, optional integer desth, optional integer rotxoffs,  optional integer rotyoffs)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Blits(draws) the content of source-image to another source-image or an opened window.
@@ -36471,7 +36466,6 @@
         <functioncall prog_lang="lua">integer source = gfx.blit(integer source, number scale, number rotation)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Blits(draws) the content of source-image to another source-image or an opened window.
@@ -36499,7 +36493,6 @@
         <functioncall prog_lang="lua">gfx.blitext(source,coordinatelist,rotation)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Deprecated, use gfx.blit instead.
@@ -36523,7 +36516,6 @@
         <functioncall prog_lang="lua">gfx.blurto(integer x, integer y)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Blurs the region of the screen between gfx.x,gfx.y and x,y, and updates gfx.x,gfx.y to x,y.
@@ -36546,7 +36538,6 @@
         <functioncall prog_lang="lua">gfx.circle(integer x, integer y, integer r, optional number fill, optional number antialias)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Draws a circle, optionally filling/antialiasing. 
@@ -36572,7 +36563,6 @@
         <functioncall prog_lang="lua">int convx, int convy = gfx.clienttoscreen(integer x, integer y)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Converts the coordinates x,y to screen coordinates, returns those values.
@@ -36599,7 +36589,6 @@
         <functioncall prog_lang="lua">number retval = gfx.deltablit(integer srcimg, integer srcs, integer srct, integer srcw, integer srch, number destx, number desty, number destw, number desth, number dsdx, number dtdx, number dsdy, number dtdy, number dsdxdy, number dtdxdy,optional integer usecliprect)</functioncall>
         <requires>
             Reaper=5.95
-
         </requires>
         <description indent="default">
             Blits from srcimg(srcs,srct,srcw,srch) to destination (destx,desty,destw,desth). Source texture coordinates are s/t, dsdx represents the change in s coordinate for each x pixel, dtdy represents the change in t coordinate for each y pixel, etc. dsdxdy represents the change in dsdx for each line. If usecliprect is specified and 0, then srcw/srch are ignored.
@@ -36643,7 +36632,6 @@
         <functioncall prog_lang="lua">number querystate, optional integer window_x_position, optional integer window_y_position, optional integer window_width, optional integer window_height = gfx.dock(integer v, optional integer wx, optional integer wy, optional integer ww, optional integer wh)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Queries or sets the docking-state of the gfx.init()-window.
@@ -36684,7 +36672,6 @@
         <functioncall prog_lang="lua">integer char = gfx.drawchar(integer char)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Draws the character (can be a numeric ASCII code as well), to gfx.x, gfx.y, and moves gfx.x over by the size of the character.
@@ -36709,7 +36696,6 @@
         <functioncall prog_lang="lua">gfx.drawnumber(number n, integer ndigits)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Draws the number n with ndigits of precision to gfx.x, gfx.y, and updates gfx.x to the right side of the drawing. The text height is gfx.texth.
@@ -36732,7 +36718,6 @@
         <functioncall prog_lang="lua">gfx.drawstr(string str, optional integer flags, optional integer right, optional integer bottom)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Draws a string at gfx.x, gfx.y, and updates gfx.x/gfx.y so that subsequent draws will occur in a similar place.
@@ -36768,7 +36753,6 @@
         <functioncall prog_lang="lua">integer charactercode = gfx.getchar(optional integer character)</functioncall>
         <requires>
             Reaper=5.94
-
         </requires>
         <description>
             If char is 0 or omitted, returns a character from the keyboard queue, or 0 if no character is available, or -1 if the graphics window is not open. 
@@ -36827,7 +36811,6 @@
         <functioncall prog_lang="lua">integer retval, string filename = gfx.getdropfile(integer idx)</functioncall>
         <requires>
             Reaper=5.91
-
         </requires>
         <description indent="default">
             Returns filenames, drag'n'dropped into a window created by gfx.init().
@@ -36860,7 +36843,6 @@
         <functioncall prog_lang="lua">integer fontindex = gfx.getfont()</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Returns current font index, and the actual font face used by this font (if available).
@@ -36884,7 +36866,6 @@
         <functioncall prog_lang="lua">integer w, integer h = gfx.getimgdim(integer handle)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Retrieves the dimensions of an image specified by handle, returns w, h pair.
@@ -36911,7 +36892,6 @@
         <functioncall prog_lang="lua">integer r, integer g, integer b = gfx.getpixel()</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Returns r,g,b values [0..1] of the pixel at (gfx.x,gfx.y)
@@ -36935,7 +36915,6 @@
         <functioncall prog_lang="lua">gfx.gradrect(x,y,w,h, r,g,b,a[, drdx, dgdx, dbdx, dadx, drdy, dgdy, dbdy, dady])</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Fills a gradient rectangle with the color and alpha specified. drdx-dadx reflect the adjustment (per-pixel) applied for each pixel moved to the right, drdy-dady are the adjustment applied for each pixel moved toward the bottom. Normally drdx=adjustamount/w, drdy=adjustamount/h, etc.
@@ -36972,7 +36951,6 @@
         <functioncall prog_lang="lua">integer retval = gfx.init(string "name", optional integer width, optional integer height, optional integer dockstate, optional integer xpos, optional integer ypos)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Initializes the graphics window with title name. Suggested width and height can be specified.Once the graphics window is open, gfx.update() should be called periodically. 
@@ -37008,7 +36986,6 @@
         <functioncall prog_lang="lua">gfx.line(integer x, integer y, integer x2, integer y2, optional number aa)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Draws a line from x,y to x2,y2, and if aa is not specified or 0.5 or greater, it will be antialiased. 
@@ -37034,7 +37011,6 @@
         <functioncall prog_lang="lua">gfx.lineto(integer x, integer y, number aa)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Draws a line from gfx.x,gfx.y to x,y. If aa is 0.5 or greater, then antialiasing is used. Updates gfx.x and gfx.y to x,y.
@@ -37058,7 +37034,6 @@
         <functioncall prog_lang="lua">integer retval = gfx.loadimg(integer image, string filename)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Load image from filename into slot 0..1024-1 specified by image. Returns the image index if success, otherwise -1 if failure. The image will be resized to the dimensions of the image file. 
@@ -37084,7 +37059,6 @@
         <functioncall prog_lang="lua">integer width, integer height = gfx.measurechar(integer char)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
             Measures the drawing dimensions of a character with the current font (as set by [gfx.setfont](#lua_gfx.setfont)). Returns width and height of character.
@@ -37110,7 +37084,6 @@
         <functioncall prog_lang="lua">integer width, integer height = gfx.measurestr(string str)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Measures the drawing dimensions of a string with the current font (as set by [gfx.setfont](#lua_gfx.setfont)). Returns width and height of string.
@@ -37136,7 +37109,6 @@
         <functioncall prog_lang="lua">integer retval = gfx.muladdrect(integer x, integer y, integer w, integer h, number mul_r, number mul_g, number mul_b, optional number mul_a, optional number add_r, optional number add_g, optional number add_b, optional number add_a)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Multiplies each pixel within the given rectangle(x,y,w,h) by the mul_*-parameters and optionally adds add_*-parameters, and updates in-place. Useful for changing brightness/contrast, or other effects.
@@ -37174,7 +37146,6 @@
         <functioncall prog_lang="lua">gfx.printf(format[, ...])</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Formats and draws a string at gfx.x, gfx.y, and updates gfx.x/gfx.y accordingly (the latter only if the formatted string contains newline). For more information on format strings, see sprintf()
@@ -37223,7 +37194,6 @@
         <functioncall prog_lang="lua">integer retval = gfx.quit()</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Closes the graphics window.
@@ -37245,7 +37215,6 @@
         <functioncall prog_lang="lua">integer retval = gfx.rect(integer x, integer y, integer w, integer h, optional integer filled)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Fills a rectangle at x,y, w,h pixels in dimension, filled by default. 
@@ -37274,7 +37243,6 @@
         <functioncall prog_lang="lua">integer x_coordinate = gfx.rectto(integer x, integer y)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Fills a rectangle from gfx.x,gfx.y to x,y. Updates gfx.x,gfx.y to x,y. 
@@ -37300,7 +37268,6 @@
         <functioncall prog_lang="lua">integer retval = gfx.roundrect(integer x, integer y, integer w, integer h, number radius, optional integer antialias)</functioncall>
         <requires>
             Reaper=5.62
-
         </requires>
         <description indent="default">
             Draws a rectangle with rounded corners. 
@@ -41331,7 +41298,6 @@
         <functioncall prog_lang="cpp">int (*PlayPreviewEx)(preview_register_t* preview, int bufflags, double measure_align)</functioncall>
         <requires>
             Reaper=6.19
-
         </requires>
         <description indent="default">
             return nonzero on success. 
@@ -42438,7 +42404,6 @@
         <requires>
             Reaper=5.965
             ReaPack=1.2.2
-
         </requires>
         <description prog_lang="*">
             Show the about dialog of the given repository. Returns true if the repository exists in the user configuration.
@@ -42468,7 +42433,6 @@
         <requires>
             Reaper=5.965
             ReaPack=1.2.2
-
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Add or modify a repository. Set url to nullptr (or empty string in Lua) to keep the existing URL. Call [ReaPack\_ProcessQueue(true)](#ReaPack_ProcessQueue) when done to process the new list and update the GUI.
@@ -42506,7 +42470,6 @@
         <requires>
             Reaper=5.965
             ReaPack=1.2.2
-
         </requires>
         <description prog_lang="*">
             Opens the package browser with the given filter string.
@@ -42532,7 +42495,6 @@
         <requires>
             Reaper=5.965
             ReaPack=1.2.2
-
         </requires>
         <description prog_lang="*">
             Compares two versionnumbers. Versionnumbers must start with a number/digit, or they can't be compared.
@@ -42566,7 +42528,6 @@
         <requires>
             Reaper=5.965
             ReaPack=1.2.2
-
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Enumerate the files owned by the given package. Returns false when there is no more data.
@@ -42616,7 +42577,6 @@
         <requires>
             Reaper=5.965
             ReaPack=1.2.2
-
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Free resources allocated for the given package entry. Must be used to free PackageEntry-objects created by [ReaPack\_GetOwner](#ReaPack_GetOwner).
@@ -42691,7 +42651,6 @@
         <requires>
             Reaper=5.965
             ReaPack=1.2.2
-
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Returns the package entry owning the given file.
@@ -42722,7 +42681,6 @@
         <requires>
             Reaper=5.965
             ReaPack=1.2.2
-
         </requires>
         <description prog_lang="*">
             Get the infos of the given repository.
@@ -42757,7 +42715,6 @@
         <requires>
             Reaper=5.965
             ReaPack=1.2.2
-
         </requires>
         <description prog_lang="*">
             Run pending operations and save the configuration file. If refreshUI is true the browser and manager windows are guaranteed to be refreshed (otherwise it depends on which operations are in the queue).
@@ -43018,13 +42975,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ImGui_Begin</slug>
         <title>ImGui_Begin</title>
-        <functioncall prog_lang="cpp">bool ImGui_Begin(ImGui_Context* ctx, const char* name, bool* p_openOut, int* flagsInOptional)</functioncall>
+        <functioncall prog_lang="cpp">bool ImGui_Begin(ImGui_Context* ctx, const char* name, bool* p_openInOut, int* flagsInOptional)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("ImGui_Begin", ImGui_Context ctx, "name", bool &amp;p_open, optional int flagsIn)</functioncall>
         <functioncall prog_lang="lua">boolean retval, boolean p_open = reaper.ImGui_Begin(ImGui_Context ctx, string name, boolean p_open, optional number flagsIn)</functioncall>
-        <functioncall prog_lang="python">bool ImGui_Begin(ImGui_Context* ctx, const char* name, bool* p_openOut, int* flagsInOptional)</functioncall>
+        <functioncall prog_lang="python">bool ImGui_Begin(ImGui_Context* ctx, const char* name, bool* p_openInOut, int* flagsInOptional)</functioncall>
         <requires>
             Reaper=6.23
-            ReaImGui=0.5.2
+            ReaImGui=0.5.3
         </requires>
         <description>
             Push window to the stack and start appending to it. See <a href="#ImGui_End">ImGui_End</a>.
@@ -43462,13 +43419,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ImGui_BeginPopupModal</slug>
         <title>ImGui_BeginPopupModal</title>
-        <functioncall prog_lang="cpp">bool ImGui_BeginPopupModal(ImGui_Context* ctx, const char* name, bool* p_openOut, int* flagsInOptional)</functioncall>
+        <functioncall prog_lang="cpp">bool ImGui_BeginPopupModal(ImGui_Context* ctx, const char* name, bool* p_openInOut, int* flagsInOptional)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("ImGui_BeginPopupModal", ImGui_Context ctx, "name", bool &amp;p_open, optional int flagsIn)</functioncall>
         <functioncall prog_lang="lua">boolean retval, boolean p_open = reaper.ImGui_BeginPopupModal(ImGui_Context ctx, string name, boolean p_open, optional number flagsIn)</functioncall>
-        <functioncall prog_lang="python">bool ImGui_BeginPopupModal(ImGui_Context* ctx, const char* name, bool* p_openOut, int* flagsInOptional)</functioncall>
+        <functioncall prog_lang="python">bool ImGui_BeginPopupModal(ImGui_Context* ctx, const char* name, bool* p_openInOut, int* flagsInOptional)</functioncall>
         <requires>
             Reaper=6.23
-            ReaImGui=0.5.2
+            ReaImGui=0.5.3
         </requires>
         <description>
             Block every interactions behind the window, cannot be closed by user, add a dimming background, has a title bar. Return true if the modal is open, and you can start outputting to it. See <a href="#ImGui_BeginPopup">ImGui_BeginPopup</a>.
@@ -43528,13 +43485,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ImGui_BeginTabItem</slug>
         <title>ImGui_BeginTabItem</title>
-        <functioncall prog_lang="cpp">bool ImGui_BeginTabItem(ImGui_Context* ctx, const char* label, bool* p_openOut, int* flagsInOptional)</functioncall>
+        <functioncall prog_lang="cpp">bool ImGui_BeginTabItem(ImGui_Context* ctx, const char* label, bool* p_openInOut, int* flagsInOptional)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("ImGui_BeginTabItem", ImGui_Context ctx, "label", bool &amp;p_open, optional int flagsIn)</functioncall>
         <functioncall prog_lang="lua">boolean retval, boolean p_open = reaper.ImGui_BeginTabItem(ImGui_Context ctx, string label, boolean p_open, optional number flagsIn)</functioncall>
-        <functioncall prog_lang="python">bool ImGui_BeginTabItem(ImGui_Context* ctx, const char* label, bool* p_openOut, int* flagsInOptional)</functioncall>
+        <functioncall prog_lang="python">bool ImGui_BeginTabItem(ImGui_Context* ctx, const char* label, bool* p_openInOut, int* flagsInOptional)</functioncall>
         <requires>
             Reaper=6.23
-            ReaImGui=0.5.2
+            ReaImGui=0.5.3
         </requires>
         <description>
             Create a Tab. Returns true if the Tab is selected. Set 'p_open' to true to enable the close button.
@@ -45391,13 +45348,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ImGui_CollapsingHeader</slug>
         <title>ImGui_CollapsingHeader</title>
-        <functioncall prog_lang="cpp">bool ImGui_CollapsingHeader(ImGui_Context* ctx, const char* label, bool* p_visibleOut, int* flagsInOptional)</functioncall>
+        <functioncall prog_lang="cpp">bool ImGui_CollapsingHeader(ImGui_Context* ctx, const char* label, bool* p_visibleInOut, int* flagsInOptional)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("ImGui_CollapsingHeader", ImGui_Context ctx, "label", bool &amp;p_visible, optional int flagsIn)</functioncall>
         <functioncall prog_lang="lua">boolean retval, boolean p_visible = reaper.ImGui_CollapsingHeader(ImGui_Context ctx, string label, boolean p_visible, optional number flagsIn)</functioncall>
-        <functioncall prog_lang="python">bool ImGui_CollapsingHeader(ImGui_Context* ctx, const char* label, bool* p_visibleOut, int* flagsInOptional)</functioncall>
+        <functioncall prog_lang="python">bool ImGui_CollapsingHeader(ImGui_Context* ctx, const char* label, bool* p_visibleInOut, int* flagsInOptional)</functioncall>
         <requires>
             Reaper=6.23
-            ReaImGui=0.5.2
+            ReaImGui=0.5.3
         </requires>
         <description>
             Returns true when opened but do not indent nor push into the ID stack (because of the ImGui_TreeNodeFlags_NoTreePushOnOpen flag).
@@ -46853,14 +46810,14 @@
         <functioncall prog_lang="python">ImGui_Font* ImGui_CreateFont(const char* family_or_file, int size, int* flagsInOptional)</functioncall>
         <requires>
             Reaper=6.23
-            ReaImGui=0.5.2
+            ReaImGui=0.5.3
         </requires>
         <description>
             Load a font matching a font family name or from a font file. The font will remain valid while it's attached to a context. See <a href="#ImGui_AttachFont">ImGui_AttachFont</a>.
             
             The family name can be an installed font or one of the generic fonts: sans-serif, serif, monospace, cursive, fantasy.
             
-            If 'family_or_file' specifies a filename:
+            If 'family_or_file' specifies a path to a font file (contains a / or \\):
             - The first byte of 'flags' is used as the font index within the file
             - The font styles in 'flags' are simulated by the font renderer
             
@@ -53794,13 +53751,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ImGui_MenuItem</slug>
         <title>ImGui_MenuItem</title>
-        <functioncall prog_lang="cpp">bool ImGui_MenuItem(ImGui_Context* ctx, const char* label, const char* shortcutInOptional, bool* p_selectedOut, bool* enabledInOptional)</functioncall>
+        <functioncall prog_lang="cpp">bool ImGui_MenuItem(ImGui_Context* ctx, const char* label, const char* shortcutInOptional, bool* p_selectedInOut, bool* enabledInOptional)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("ImGui_MenuItem", ImGui_Context ctx, "label", optional "shortcutIn", bool &amp;p_selected, optional bool enabledIn)</functioncall>
         <functioncall prog_lang="lua">boolean retval, boolean p_selected = reaper.ImGui_MenuItem(ImGui_Context ctx, string label, optional string shortcutIn, boolean p_selected, optional boolean enabledIn)</functioncall>
-        <functioncall prog_lang="python">bool ImGui_MenuItem(ImGui_Context* ctx, const char* label, const char* shortcutInOptional, bool* p_selectedOut, bool* enabledInOptional)</functioncall>
+        <functioncall prog_lang="python">bool ImGui_MenuItem(ImGui_Context* ctx, const char* label, const char* shortcutInOptional, bool* p_selectedInOut, bool* enabledInOptional)</functioncall>
         <requires>
             Reaper=6.23
-            ReaImGui=0.5.2
+            ReaImGui=0.5.3
         </requires>
         <description>
             Return true when activated. Shortcuts are displayed for convenience but not processed by ImGui at the moment. Toggle state is written to 'selected' when provided.
@@ -55187,13 +55144,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ImGui_Selectable</slug>
         <title>ImGui_Selectable</title>
-        <functioncall prog_lang="cpp">bool ImGui_Selectable(ImGui_Context* ctx, const char* label, bool* p_selectedOut, int* flagsInOptional, double* size_wInOptional, double* size_hInOptional)</functioncall>
+        <functioncall prog_lang="cpp">bool ImGui_Selectable(ImGui_Context* ctx, const char* label, bool* p_selectedInOut, int* flagsInOptional, double* size_wInOptional, double* size_hInOptional)</functioncall>
         <functioncall prog_lang="eel">bool extension_api("ImGui_Selectable", ImGui_Context ctx, "label", bool &amp;p_selected, optional int flagsIn, optional size_wIn, optional size_hIn)</functioncall>
         <functioncall prog_lang="lua">boolean retval, boolean p_selected = reaper.ImGui_Selectable(ImGui_Context ctx, string label, boolean p_selected, optional number flagsIn, optional number size_wIn, optional number size_hIn)</functioncall>
-        <functioncall prog_lang="python">bool ImGui_Selectable(ImGui_Context* ctx, const char* label, bool* p_selectedOut, int* flagsInOptional, double* size_wInOptional, double* size_hInOptional)</functioncall>
+        <functioncall prog_lang="python">bool ImGui_Selectable(ImGui_Context* ctx, const char* label, bool* p_selectedInOut, int* flagsInOptional, double* size_wInOptional, double* size_hInOptional)</functioncall>
         <requires>
             Reaper=6.23
-            ReaImGui=0.5.2
+            ReaImGui=0.5.3
         </requires>
         <description>
             A selectable highlights when hovered, and can display another color when selected.
@@ -56456,13 +56413,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ImGui_ShowMetricsWindow</slug>
         <title>ImGui_ShowMetricsWindow</title>
-        <functioncall prog_lang="cpp">void ImGui_ShowMetricsWindow(ImGui_Context* ctx, bool* p_openOut)</functioncall>
+        <functioncall prog_lang="cpp">void ImGui_ShowMetricsWindow(ImGui_Context* ctx, bool* p_openInOut)</functioncall>
         <functioncall prog_lang="eel">extension_api("ImGui_ShowMetricsWindow", ImGui_Context ctx, bool &amp;p_open)</functioncall>
-        <functioncall prog_lang="lua">boolean p_open = reaper.ImGui_ShowMetricsWindow(ImGui_Context ctx)</functioncall>
-        <functioncall prog_lang="python">void ImGui_ShowMetricsWindow(ImGui_Context* ctx, bool* p_openOut)</functioncall>
+        <functioncall prog_lang="lua">boolean p_open = reaper.ImGui_ShowMetricsWindow(ImGui_Context ctx, boolean p_open)</functioncall>
+        <functioncall prog_lang="python">void ImGui_ShowMetricsWindow(ImGui_Context* ctx, bool* p_openInOut)</functioncall>
         <requires>
             Reaper=6.23
-            ReaImGui=0.5.2
+            ReaImGui=0.5.3
         </requires>
         <description>
             Create Metrics/Debugger window. Display Dear ImGui internals: windows, draw commands, various internal state, etc. Set p_open to true to enable the close button.
@@ -61257,31 +61214,6 @@
         </requires>
         <description>
             Disable drawing background color (WindowBg, etc.) and outside border. Similar as using ImGui_SetNextWindowBgAlpha(0.0).
-        </description>        
-        <retvals>
-            integer -
-        </retvals>                
-        <target_document>Reaper_Api_Documentation</target_document>
-        <source_document>reaper-apidocs.USDocML</source_document>
-        <chapter_context>
-            ReaImGui
-        </chapter_context>
-        <tags>reaimgui, gui, user interface</tags>
-    </US_DocBloc>
-    
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-        <slug>ImGui_WindowFlags_NoBringToFrontOnFocus</slug>
-        <title>ImGui_WindowFlags_NoBringToFrontOnFocus</title>
-        <functioncall prog_lang="cpp">int ImGui_WindowFlags_NoBringToFrontOnFocus()</functioncall>
-        <functioncall prog_lang="eel">int extension_api("ImGui_WindowFlags_NoBringToFrontOnFocus")</functioncall>
-        <functioncall prog_lang="lua">integer reaper.ImGui_WindowFlags_NoBringToFrontOnFocus()</functioncall>
-        <functioncall prog_lang="python">int ImGui_WindowFlags_NoBringToFrontOnFocus()</functioncall>
-        <requires>
-            Reaper=6.23
-            ReaImGui=0.5.2
-        </requires>
-        <description>
-            Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus).
         </description>        
         <retvals>
             integer -

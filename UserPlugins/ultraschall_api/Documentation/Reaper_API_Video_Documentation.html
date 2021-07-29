@@ -4,6 +4,7 @@
 Video Processor Documentation
 </title>
 <link href="style.css" rel="stylesheet">
+<link href="custom.css" rel="stylesheet">
 </head>
 <body>
 <a class="anchor" id="This-is-the-TopOfTheWorld"></a>
@@ -59,11 +60,11 @@ End of Header
 <script src="./scripts/clipboard.min.js.Download"></script>
 <!-- External Script -->
 <script src="./scripts/scripts.js.Download"></script>
-<table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="1. Introduction"><a href="#1. Introduction">^</a></a><strong> <u>1. Introduction</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#Coding Introduction">Coding Introduction</a></td><td class="tdsm"><a href="#Introduction">Introduction</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="2. Special Variables"><a href="#2. Special Variables">^</a></a><strong> <u>2. Special Variables</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#colorspace">colorspace</a></td><td class="tdsm"><a href="#framerate">framerate</a></td><td class="tdsm"><a href="#gfx_a">gfx_a</a></td><td class="tdsm"><a href="#gfx_a2">gfx_a2</a></td></tr><td class="tdsm"><a href="#gfx_b">gfx_b</a></td><td class="tdsm"><a href="#gfx_dest">gfx_dest</a></td><td class="tdsm"><a href="#gfx_g">gfx_g</a></td><td class="tdsm"><a href="#gfx_mode">gfx_mode</a></td></tr><td class="tdsm"><a href="#gfx_r">gfx_r</a></td><td class="tdsm"><a href="#param1..param24">param1..param24</a></td><td class="tdsm"><a href="#param_wet">param_wet</a></td><td class="tdsm"><a href="#project_h">project_h</a></td></tr><td class="tdsm"><a href="#project_tempo">project_tempo</a></td><td class="tdsm"><a href="#project_time">project_time</a></td><td class="tdsm"><a href="#project_time_qn">project_time_qn</a></td><td class="tdsm"><a href="#project_ts_denom">project_ts_denom</a></td></tr><td class="tdsm"><a href="#project_ts_num">project_ts_num</a></td><td class="tdsm"><a href="#project_w">project_w</a></td><td class="tdsm"><a href="#project_wh_valid">project_wh_valid</a></td><td class="tdsm"><a href="#time">time</a></td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="3. Specific Functions"><a href="#3. Specific Functions">^</a></a><strong> <u>3. Specific Functions</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#gfx_blit">gfx_blit</a></td><td class="tdsm"><a href="#gfx_deltablit">gfx_deltablit</a></td><td class="tdsm"><a href="#gfx_destkeyedblit">gfx_destkeyedblit</a></td><td class="tdsm"><a href="#gfx_evalrect">gfx_evalrect</a></td></tr><td class="tdsm"><a href="#gfx_fillrect">gfx_fillrect</a></td><td class="tdsm"><a href="#gfx_getpixel">gfx_getpixel</a></td><td class="tdsm"><a href="#gfx_gradrect">gfx_gradrect</a></td><td class="tdsm"><a href="#gfx_img_alloc">gfx_img_alloc</a></td></tr><td class="tdsm"><a href="#gfx_img_free">gfx_img_free</a></td><td class="tdsm"><a href="#gfx_img_getptr">gfx_img_getptr</a></td><td class="tdsm"><a href="#gfx_img_hold">gfx_img_hold</a></td><td class="tdsm"><a href="#gfx_img_info">gfx_img_info</a></td></tr><td class="tdsm"><a href="#gfx_img_resize">gfx_img_resize</a></td><td class="tdsm"><a href="#gfx_keyedblit">gfx_keyedblit</a></td><td class="tdsm"><a href="#gfx_procrect">gfx_procrect</a></td><td class="tdsm"><a href="#gfx_rotoblit">gfx_rotoblit</a></td></tr><td class="tdsm"><a href="#gfx_set">gfx_set</a></td><td class="tdsm"><a href="#gfx_setfont">gfx_setfont</a></td><td class="tdsm"><a href="#gfx_str_draw">gfx_str_draw</a></td><td class="tdsm"><a href="#gfx_str_measure">gfx_str_measure</a></td></tr><td class="tdsm"><a href="#gfx_xformblit">gfx_xformblit</a></td><td class="tdsm"><a href="#input_count">input_count</a></td><td class="tdsm"><a href="#input_get_name">input_get_name</a></td><td class="tdsm"><a href="#input_info">input_info</a></td></tr><td class="tdsm"><a href="#input_ismaster">input_ismaster</a></td><td class="tdsm"><a href="#input_next_item">input_next_item</a></td><td class="tdsm"><a href="#input_next_track">input_next_track</a></td><td class="tdsm"><a href="#input_track">input_track</a></td></tr><td class="tdsm"><a href="#input_track_count">input_track_count</a></td><td class="tdsm"><a href="#input_track_exact">input_track_exact</a></td><td class="tdsm"><a href="#input_track_exact_count">input_track_exact_count</a></td><td class="tdsm"><a href="#rgb2yuv">rgb2yuv</a></td></tr><td class="tdsm"><a href="#yuv2rgb">yuv2rgb</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="4. Advanced Functions"><a href="#4. Advanced Functions">^</a></a><strong> <u>4. Advanced Functions</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#convolve_c">convolve_c</a></td><td class="tdsm"><a href="#fft">fft</a></td><td class="tdsm"><a href="#fft_ipermute">fft_ipermute</a></td><td class="tdsm"><a href="#fft_permute">fft_permute</a></td></tr><td class="tdsm"><a href="#fft_real">fft_real</a></td><td class="tdsm"><a href="#gmem">gmem</a></td><td class="tdsm"><a href="#ifft">ifft</a></td><td class="tdsm"><a href="#ifft_real">ifft_real</a></td></tr><td class="tdsm"><a href="#on_parameter_change">on_parameter_change</a></td><td class="tdsm"><a href="#time_precise">time_precise</a></td><td class="tdsm"><a href="#ui_get_state">ui_get_state</a></td><td style="width:25%;">&nbsp;</td></tr></table><br></div><div class="ch">
+<table class="indexpad" border="0"><tr><td><br><a class="inpad" id="1. Introduction"><a href="#1. Introduction">^</a></a><strong> <u>1. Introduction</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#Coding Introduction">Coding Introduction</a></td><td class="tdsm"><a href="#Introduction">Introduction</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="2. Special Variables"><a href="#2. Special Variables">^</a></a><strong> <u>2. Special Variables</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#colorspace">colorspace</a></td><td class="tdsm"><a href="#framerate">framerate</a></td><td class="tdsm"><a href="#gfx_a">gfx_a</a></td><td class="tdsm"><a href="#gfx_a2">gfx_a2</a></td></tr><td class="tdsm"><a href="#gfx_b">gfx_b</a></td><td class="tdsm"><a href="#gfx_dest">gfx_dest</a></td><td class="tdsm"><a href="#gfx_g">gfx_g</a></td><td class="tdsm"><a href="#gfx_mode">gfx_mode</a></td></tr><td class="tdsm"><a href="#gfx_r">gfx_r</a></td><td class="tdsm"><a href="#param1..param24">param1..param24</a></td><td class="tdsm"><a href="#param_wet">param_wet</a></td><td class="tdsm"><a href="#project_h">project_h</a></td></tr><td class="tdsm"><a href="#project_tempo">project_tempo</a></td><td class="tdsm"><a href="#project_time">project_time</a></td><td class="tdsm"><a href="#project_time_qn">project_time_qn</a></td><td class="tdsm"><a href="#project_ts_denom">project_ts_denom</a></td></tr><td class="tdsm"><a href="#project_ts_num">project_ts_num</a></td><td class="tdsm"><a href="#project_w">project_w</a></td><td class="tdsm"><a href="#project_wh_valid">project_wh_valid</a></td><td class="tdsm"><a href="#time">time</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="3. Specific Functions"><a href="#3. Specific Functions">^</a></a><strong> <u>3. Specific Functions</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#gfx_blit">gfx_blit</a></td><td class="tdsm"><a href="#gfx_deltablit">gfx_deltablit</a></td><td class="tdsm"><a href="#gfx_destkeyedblit">gfx_destkeyedblit</a></td><td class="tdsm"><a href="#gfx_evalrect">gfx_evalrect</a></td></tr><td class="tdsm"><a href="#gfx_fillrect">gfx_fillrect</a></td><td class="tdsm"><a href="#gfx_getpixel">gfx_getpixel</a></td><td class="tdsm"><a href="#gfx_gradrect">gfx_gradrect</a></td><td class="tdsm"><a href="#gfx_img_alloc">gfx_img_alloc</a></td></tr><td class="tdsm"><a href="#gfx_img_free">gfx_img_free</a></td><td class="tdsm"><a href="#gfx_img_getptr">gfx_img_getptr</a></td><td class="tdsm"><a href="#gfx_img_hold">gfx_img_hold</a></td><td class="tdsm"><a href="#gfx_img_info">gfx_img_info</a></td></tr><td class="tdsm"><a href="#gfx_img_resize">gfx_img_resize</a></td><td class="tdsm"><a href="#gfx_keyedblit">gfx_keyedblit</a></td><td class="tdsm"><a href="#gfx_procrect">gfx_procrect</a></td><td class="tdsm"><a href="#gfx_rotoblit">gfx_rotoblit</a></td></tr><td class="tdsm"><a href="#gfx_set">gfx_set</a></td><td class="tdsm"><a href="#gfx_setfont">gfx_setfont</a></td><td class="tdsm"><a href="#gfx_str_draw">gfx_str_draw</a></td><td class="tdsm"><a href="#gfx_str_measure">gfx_str_measure</a></td></tr><td class="tdsm"><a href="#gfx_xformblit">gfx_xformblit</a></td><td class="tdsm"><a href="#input_count">input_count</a></td><td class="tdsm"><a href="#input_get_name">input_get_name</a></td><td class="tdsm"><a href="#input_info">input_info</a></td></tr><td class="tdsm"><a href="#input_ismaster">input_ismaster</a></td><td class="tdsm"><a href="#input_next_item">input_next_item</a></td><td class="tdsm"><a href="#input_next_track">input_next_track</a></td><td class="tdsm"><a href="#input_track">input_track</a></td></tr><td class="tdsm"><a href="#input_track_count">input_track_count</a></td><td class="tdsm"><a href="#input_track_exact">input_track_exact</a></td><td class="tdsm"><a href="#input_track_exact_count">input_track_exact_count</a></td><td class="tdsm"><a href="#rgb2yuv">rgb2yuv</a></td></tr><td class="tdsm"><a href="#yuv2rgb">yuv2rgb</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="4. Advanced Functions"><a href="#4. Advanced Functions">^</a></a><strong> <u>4. Advanced Functions</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#convolve_c">convolve_c</a></td><td class="tdsm"><a href="#fft">fft</a></td><td class="tdsm"><a href="#fft_ipermute">fft_ipermute</a></td><td class="tdsm"><a href="#fft_permute">fft_permute</a></td></tr><td class="tdsm"><a href="#fft_real">fft_real</a></td><td class="tdsm"><a href="#gmem">gmem</a></td><td class="tdsm"><a href="#ifft">ifft</a></td><td class="tdsm"><a href="#ifft_real">ifft_real</a></td></tr><td class="tdsm"><a href="#on_parameter_change">on_parameter_change</a></td><td class="tdsm"><a href="#time_precise">time_precise</a></td><td class="tdsm"><a href="#ui_get_state">ui_get_state</a></td><td class="inds">&nbsp;</td></tr></table><br></div><div class="ch">
 <hr>
 <a class="anch" id="Coding Introduction"></a>
 <a href="#Coding Introduction"> ^</a> 
@@ -138,7 +139,7 @@ This effect can be circumvented by putting the video-processor-plugin as item-FX
 <a href="#colorspace"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>colorspace</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> colorspace</em></code></div>
+<div class="e">EEL2: <code><em> colorspace</em></code></div>
 </div><p>
 <div class="ch">
 current rendering colorspace, e.g. 'RGBA', 'YV12', or 'YUY2'. <br/>
@@ -154,7 +155,7 @@ It will be automatically changed if 0 and a drawing operation occurs or an input
 <a href="#framerate"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>framerate</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> framerate</em></code></div>
+<div class="e">EEL2: <code><em> framerate</em></code></div>
 </div><p>
 <div class="ch">
 project FPS (30.0, 29.97, etc)              
@@ -166,7 +167,7 @@ project FPS (30.0, 29.97, etc)
 <a href="#gfx_a"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_a</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> gfx_a</em></code></div>
+<div class="e">EEL2: <code><em> gfx_a</em></code></div>
 </div><p>
 <div class="ch">
 current drawing color (alpha 0..1)              
@@ -178,7 +179,7 @@ current drawing color (alpha 0..1)
 <a href="#gfx_a2"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_a2</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> gfx_a2</em></code></div>
+<div class="e">EEL2: <code><em> gfx_a2</em></code></div>
 </div><p>
 <div class="ch">
 current drawing color alpha channel value (RGB-only, 0..1, defaults to 1)              
@@ -190,7 +191,7 @@ current drawing color alpha channel value (RGB-only, 0..1, defaults to 1)
 <a href="#gfx_b"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_b</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> gfx_b</em></code></div>
+<div class="e">EEL2: <code><em> gfx_b</em></code></div>
 </div><p>
 <div class="ch">
 current drawing color (blue 0..1)              
@@ -202,7 +203,7 @@ current drawing color (blue 0..1)
 <a href="#gfx_dest"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_dest</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> gfx_dest</em></code></div>
+<div class="e">EEL2: <code><em> gfx_dest</em></code></div>
 </div><p>
 <div class="ch">
 destination image handle, or -1 for main framebuffer              
@@ -214,7 +215,7 @@ destination image handle, or -1 for main framebuffer
 <a href="#gfx_g"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_g</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> gfx_g</em></code></div>
+<div class="e">EEL2: <code><em> gfx_g</em></code></div>
 </div><p>
 <div class="ch">
 current drawing color (green 0..1)              
@@ -226,7 +227,7 @@ current drawing color (green 0..1)
 <a href="#gfx_mode"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_mode</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> gfx_mode</em></code></div>
+<div class="e">EEL2: <code><em> gfx_mode</em></code></div>
 </div><p>
 <div class="ch">
 drawing mode<br/>
@@ -249,7 +250,7 @@ drawing mode<br/>
 <a href="#gfx_r"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_r</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> gfx_r</em></code></div>
+<div class="e">EEL2: <code><em> gfx_r</em></code></div>
 </div><p>
 <div class="ch">
 current drawing color (red 0..1)              
@@ -261,7 +262,7 @@ current drawing color (red 0..1)
 <a href="#param1..param24"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>param1..param24</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> param1..param24</em></code></div>
+<div class="e">EEL2: <code><em> param1..param24</em></code></div>
 </div><p>
 <div class="ch">
 Manage the knobs of your video-processor-script.<br/>
@@ -272,52 +273,36 @@ used as:<br/>
 //@param X:ParameterVariableName "ParamShownName" default_value minimum_val maximum_val medium_value step_size              
 </div><br>          <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr">@param X:</td>
-<td>the parameter number, where X is a number between 1 and 24</td>
-</tr>
+<tr><td class="pr">@param X:</td></tr>
+<tr><td class="ch2">the parameter number, where X is a number between 1 and 24</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> ParameterVariableName</td>
-<td>the variable, which holds the current setting of the knob </td>
-</tr>
+<tr><td class="pr"><i>string</i> ParameterVariableName</td></tr>
+<tr><td class="ch2">the variable, which holds the current setting of the knob </td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> "ParamShownName"</td>
-<td>this will be shown at the knob</td>
-</tr>
+<tr><td class="pr"><i>string</i> "ParamShownName"</td></tr>
+<tr><td class="ch2">this will be shown at the knob</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> default_value</td>
-<td>the default-value, with which it will be initialized or reset to, when doubleclicking the knob; can be float and/or negative as well; should be between minimum_val and maximum_val; 0, if not given</td>
-</tr>
+<tr><td class="pr"><i>number</i> default_value</td></tr>
+<tr><td class="ch2">the default-value, with which it will be initialized or reset to, when doubleclicking the knob; can be float and/or negative as well; should be between minimum_val and maximum_val; 0, if not given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> minimum_val</td>
-<td>the minimum value; can be any value, float and negative; should be lower than minimum_val; 0, if not given</td>
-</tr>
+<tr><td class="pr"><i>number</i> minimum_val</td></tr>
+<tr><td class="ch2">the minimum value; can be any value, float and negative; should be lower than minimum_val; 0, if not given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> maximum_val</td>
-<td>the maximum value; can be any value, float and negative; should be bigger than minimum_val; 1, if not given</td>
-</tr>
+<tr><td class="pr"><i>number</i> maximum_val</td></tr>
+<tr><td class="ch2">the maximum value; can be any value, float and negative; should be bigger than minimum_val; 1, if not given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> medium_value</td>
-<td>the value that shall be the medium value, which is the value when the knobposition is at 12 o clock; must be bwetween minimum_val and maximum_val; can be float and negative; middle between minimum_val and maximum_va, if not given</td>
-</tr>
+<tr><td class="pr"><i>number</i> medium_value</td></tr>
+<tr><td class="ch2">the value that shall be the medium value, which is the value when the knobposition is at 12 o clock; must be bwetween minimum_val and maximum_val; can be float and negative; middle between minimum_val and maximum_va, if not given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> step_size</td>
-<td>the size of each step, when turning around the knob; can be float; negative values are interpreted as between 0 and 1; 0.005, if not given</td>
-</tr>
+<tr><td class="pr"><i>number</i> step_size</td></tr>
+<tr><td class="ch2">the size of each step, when turning around the knob; can be float; negative values are interpreted as between 0 and 1; 0.005, if not given</td></tr>
 </table>
 <br>
 </div>
@@ -327,7 +312,7 @@ used as:<br/>
 <a href="#param_wet"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>param_wet</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> param_wet</em></code></div>
+<div class="e">EEL2: <code><em> param_wet</em></code></div>
 </div><p>
 <div class="ch">
 if in FX form, wet/dry mix of effect.               
@@ -339,7 +324,7 @@ if in FX form, wet/dry mix of effect.
 <a href="#project_h"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>project_h</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> project_h</em></code></div>
+<div class="e">EEL2: <code><em> project_h</em></code></div>
 </div><p>
 <div class="ch">
 project preferred video height (code can override this before drawing)              
@@ -351,7 +336,7 @@ project preferred video height (code can override this before drawing)
 <a href="#project_tempo"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>project_tempo</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> project_tempo</em></code></div>
+<div class="e">EEL2: <code><em> project_tempo</em></code></div>
 </div><p>
 <div class="ch">
 current tempo in BPM              
@@ -363,7 +348,7 @@ current tempo in BPM
 <a href="#project_time"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>project_time</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> project_time</em></code></div>
+<div class="e">EEL2: <code><em> project_time</em></code></div>
 </div><p>
 <div class="ch">
 project time in seconds              
@@ -375,7 +360,7 @@ project time in seconds
 <a href="#project_time_qn"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>project_time_qn</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> project_time_qn</em></code></div>
+<div class="e">EEL2: <code><em> project_time_qn</em></code></div>
 </div><p>
 <div class="ch">
 current project position in QN              
@@ -387,7 +372,7 @@ current project position in QN
 <a href="#project_ts_denom"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>project_ts_denom</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> project_ts_denom</em></code></div>
+<div class="e">EEL2: <code><em> project_ts_denom</em></code></div>
 </div><p>
 <div class="ch">
 current time signature denominator              
@@ -399,7 +384,7 @@ current time signature denominator
 <a href="#project_ts_num"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>project_ts_num</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> project_ts_num</em></code></div>
+<div class="e">EEL2: <code><em> project_ts_num</em></code></div>
 </div><p>
 <div class="ch">
 current time signature numerator              
@@ -411,7 +396,7 @@ current time signature numerator
 <a href="#project_w"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>project_w</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> project_w</em></code></div>
+<div class="e">EEL2: <code><em> project_w</em></code></div>
 </div><p>
 <div class="ch">
 project preferred video width (code can override this before drawing)              
@@ -423,7 +408,7 @@ project preferred video width (code can override this before drawing)
 <a href="#project_wh_valid"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>project_wh_valid</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> project_wh_valid</em></code></div>
+<div class="e">EEL2: <code><em> project_wh_valid</em></code></div>
 </div><p>
 <div class="ch">
 set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)              
@@ -435,7 +420,7 @@ set nonzero if project_w/project_h reflect actual project setting (otherwise cou
 <a href="#time"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>time</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> time</em></code></div>
+<div class="e">EEL2: <code><em> time</em></code></div>
 </div><p>
 <div class="ch">
 item time in seconds (if in item)              
@@ -447,79 +432,57 @@ item time in seconds (if in item)
 <a href="#gfx_blit"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_blit</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_blit</em>(<i>integer</i> input[, <i>optional</i> <i>integer</i> preserve_aspect=0, <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>integer</i> srcw, <i>optional</i> <i>integer</i> srch])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_blit</em>(<i>integer</i> input[, <i>optional</i> <i>integer</i> preserve_aspect=0, <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>integer</i> srcw, <i>optional</i> <i>integer</i> srch])</code></div>
 </div><p>
 <div class="ch">
 Draws input to framebuffer. preserve_aspect=-1 for no fill in pad areas              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>0, if blitting is impossible; 1, if blitting was successful</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">0, if blitting is impossible; 1, if blitting was successful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> input</td>
-<td>the input, that shall be blit into the framebuffer</td>
-</tr>
+<tr><td class="pr"><i>integer</i> input</td></tr>
+<tr><td class="ch2">the input, that shall be blit into the framebuffer</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> preserve_aspect</td>
-<td>0, preserve aspect ratio; -1, no fill in pad areas</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> preserve_aspect</td></tr>
+<tr><td class="ch2">0, preserve aspect ratio; -1, no fill in pad areas</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> x</td>
-<td>the x-position in pixels, at which the input shall be blit to</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position in pixels, at which the input shall be blit to</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> y</td>
-<td>the y-position in pixels, at which the input shall be blit to</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position in pixels, at which the input shall be blit to</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> w</td>
-<td>the width in pixels, with which the input shall be blit to</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> w</td></tr>
+<tr><td class="ch2">the width in pixels, with which the input shall be blit to</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> h</td>
-<td>the height in pixels, with which the input shall be blit to</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> h</td></tr>
+<tr><td class="ch2">the height in pixels, with which the input shall be blit to</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> srcx</td>
-<td>the x-offset in the source pixels, from which the input shall be blit from</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> srcx</td></tr>
+<tr><td class="ch2">the x-offset in the source pixels, from which the input shall be blit from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> srcy</td>
-<td>the y-offset in the source pixels, from which the input shall be blit from</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> srcy</td></tr>
+<tr><td class="ch2">the y-offset in the source pixels, from which the input shall be blit from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> srcw</td>
-<td>the width-offset in the source pixels, from which the input shall be blit from</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> srcw</td></tr>
+<tr><td class="ch2">the width-offset in the source pixels, from which the input shall be blit from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> srch</td>
-<td>the height-offset in the source pixels, from which the input shall be blit from</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> srch</td></tr>
+<tr><td class="ch2">the height-offset in the source pixels, from which the input shall be blit from</td></tr>
 </table>
 <br>
 </div>
@@ -529,7 +492,7 @@ Draws input to framebuffer. preserve_aspect=-1 for no fill in pad areas
 <a href="#gfx_deltablit"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_deltablit</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_deltablit</em>(<i>integer</i> srcidx, <i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>integer</i> srcx, <i>integer</i> srcy, <i>integer</i> dsdx, <i>integer</i> dtdx, <i>integer</i> dsdy, <i>integer</i> dtdy, <i>integer</i> dsdxdy, <i>integer</i> dtdxdy[, <i>optional</i> <i>integer</i> dadx, <i>optional</i> <i>integer</i> dady, <i>optional</i> <i>integer</i> dadxdy])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_deltablit</em>(<i>integer</i> srcidx, <i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>integer</i> srcx, <i>integer</i> srcy, <i>integer</i> dsdx, <i>integer</i> dtdx, <i>integer</i> dsdy, <i>integer</i> dtdy, <i>integer</i> dsdxdy, <i>integer</i> dtdxdy[, <i>optional</i> <i>integer</i> dadx, <i>optional</i> <i>integer</i> dady, <i>optional</i> <i>integer</i> dadxdy])</code></div>
 </div><p>
 <div class="ch">
 Blits with source pixel transformation control. <br/>
@@ -542,108 +505,74 @@ All of the S, T and A parameters accept negative values as well.
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> srcidx</td>
-<td>the index of the image, from which you want to deltablit</td>
-</tr>
+<tr><td class="pr"><i>integer</i> srcidx</td></tr>
+<tr><td class="ch2">the index of the image, from which you want to deltablit</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>the x-position of the blitted-image in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the blitted-image in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>the y-position of the blitted-image in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the blitted-image in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> w</td>
-<td>the width of the blitted-image in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> w</td></tr>
+<tr><td class="ch2">the width of the blitted-image in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> h</td>
-<td>the height of the blitted-image in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> h</td></tr>
+<tr><td class="ch2">the height of the blitted-image in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> srcx</td>
-<td>the x-offset in pixels of the source-image, that shall be blitted; use 0 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>integer</i> srcx</td></tr>
+<tr><td class="ch2">the x-offset in pixels of the source-image, that shall be blitted; use 0 for original picture position</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> srcy</td>
-<td>the y-offset in pixels of the source-image, that shall be blitted; use 0 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>integer</i> srcy</td></tr>
+<tr><td class="ch2">the y-offset in pixels of the source-image, that shall be blitted; use 0 for original picture position</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> dsdx</td>
-<td>the source X position change with each X destination pixel; use 1 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>float</i> dsdx</td></tr>
+<tr><td class="ch2">the source X position change with each X destination pixel; use 1 for original picture position</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> dtdx</td>
-<td>the source Y position change with each X destination pixel; use 0 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>float</i> dtdx</td></tr>
+<tr><td class="ch2">the source Y position change with each X destination pixel; use 0 for original picture position</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> dsdy</td>
-<td>the source X position change with each Y destination pixel; use 1 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>float</i> dsdy</td></tr>
+<tr><td class="ch2">the source X position change with each Y destination pixel; use 1 for original picture position</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> dtdy</td>
-<td>the source Y position change with each Y destination pixel; use 0 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>float</i> dtdy</td></tr>
+<tr><td class="ch2">the source Y position change with each Y destination pixel; use 0 for original picture position</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> dsdxdy</td>
-<td>affects x and y-direction at the same time and can be produced for curved images; use 0 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>float</i> dsdxdy</td></tr>
+<tr><td class="ch2">affects x and y-direction at the same time and can be produced for curved images; use 0 for original picture position</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> dtdxdy</td>
-<td>affects x and y-direction at the same time and can be produced for curved images; use 0 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>float</i> dtdxdy</td></tr>
+<tr><td class="ch2">affects x and y-direction at the same time and can be produced for curved images; use 0 for original picture position</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> dadx</td>
-<td>the source-alpha change with each X destination pixel; can be used for noise-effects; use 0 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> dadx</td></tr>
+<tr><td class="ch2">the source-alpha change with each X destination pixel; can be used for noise-effects; use 0 for original picture position</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> dady</td>
-<td>the source-alpha change with each Y destination pixel; can be used for noise-effects; use 0 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> dady</td></tr>
+<tr><td class="ch2">the source-alpha change with each Y destination pixel; can be used for noise-effects; use 0 for original picture position</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> dadxdy</td>
-<td>affects x and y-direction at the same time; can be used for noise-effects; use 0 for original picture position</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> dadxdy</td></tr>
+<tr><td class="ch2">affects x and y-direction at the same time; can be used for noise-effects; use 0 for original picture position</td></tr>
 </table>
 <br>
 </div>
@@ -653,7 +582,7 @@ All of the S, T and A parameters accept negative values as well.
 <a href="#gfx_destkeyedblit"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_destkeyedblit</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_destkeyedblit</em>(input input[, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>float</i> kv1, <i>optional</i> <i>float</i> kv2, <i>optional</i> <i>float</i> kv3, <i>optional</i> <i>float</i> kv4])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_destkeyedblit</em>(input input[, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>float</i> kv1, <i>optional</i> <i>float</i> kv2, <i>optional</i> <i>float</i> kv3, <i>optional</i> <i>float</i> kv4])</code></div>
 </div><p>
 <div class="ch">
 <p>Chroma-key blits, using destination color as key. ignores gfx_a and gfx_mode.</p>
@@ -661,78 +590,54 @@ All of the S, T and A parameters accept negative values as well.
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>unknown</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">unknown</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> input</td>
-<td>the image, to which the chroma-key shall be applied to</td>
-</tr>
+<tr><td class="pr"><i>integer</i> input</td></tr>
+<tr><td class="ch2">the image, to which the chroma-key shall be applied to</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> x</td>
-<td>the x-position of the chroma-key-area in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the chroma-key-area in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> y</td>
-<td>the y-position of the chroma-key-area in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the chroma-key-area in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> w</td>
-<td>the width-position of the chroma-key-area in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> w</td></tr>
+<tr><td class="ch2">the width-position of the chroma-key-area in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> h</td>
-<td>the height-position of the chroma-key-area in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> h</td></tr>
+<tr><td class="ch2">the height-position of the chroma-key-area in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> srcx</td>
-<td>the offset-x-position of the source-image</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> srcx</td></tr>
+<tr><td class="ch2">the offset-x-position of the source-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> srcy</td>
-<td>the offset-y-position of the source-image</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> srcy</td></tr>
+<tr><td class="ch2">the offset-y-position of the source-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> kv1</td>
-<td>U target(YV12/YUV2) / green(RGBA)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> kv1</td></tr>
+<tr><td class="ch2">U target(YV12/YUV2) / green(RGBA)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> kv2</td>
-<td>V target(YV12/YUV2) / blue(RGBA)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> kv2</td></tr>
+<tr><td class="ch2">V target(YV12/YUV2) / blue(RGBA)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> kv3</td>
-<td>closeness-factor(YV12/YUV2) / offset(RGBA)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> kv3</td></tr>
+<tr><td class="ch2">closeness-factor(YV12/YUV2) / offset(RGBA)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> kv4</td>
-<td>gain(YV12/YUV2) / spill removal(RGBA)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> kv4</td></tr>
+<tr><td class="ch2">gain(YV12/YUV2) / spill removal(RGBA)</td></tr>
 </table>
 <br>
 </div>
@@ -742,7 +647,7 @@ All of the S, T and A parameters accept negative values as well.
 <a href="#gfx_evalrect"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_evalrect</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_evalrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>string</i> code_string[, <i>optional</i> <i>integer</i> flags, <i>optional</i> <i>integer</i> src, <i>optional</i> <i>string</i> init_code_string, <i>optional</i> <i>string</i> src2])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_evalrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>string</i> code_string[, <i>optional</i> <i>integer</i> flags, <i>optional</i> <i>integer</i> src, <i>optional</i> <i>string</i> init_code_string, <i>optional</i> <i>string</i> src2])</code></div>
 </div><p>
 <div class="ch">
 Processes a rectangle with code_string being executed for every pixel/pixel-group. <br/>
@@ -770,66 +675,46 @@ Additional options:<br/>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>-1, in case of an error(compilation of the code_string was unsuccessful)</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">-1, in case of an error(compilation of the code_string was unsuccessful)</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>the x-position of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>the y-position of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> w</td>
-<td>the width of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> w</td></tr>
+<tr><td class="ch2">the width of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> h</td>
-<td>the height of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> h</td></tr>
+<tr><td class="ch2">the height of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> code_string</td>
-<td>a string with code, with which the rectangle shall be processed</td>
-</tr>
+<tr><td class="pr"><i>string</i> code_string</td></tr>
+<tr><td class="ch2">a string with code, with which the rectangle shall be processed</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> flags</td>
-<td>flags, that influence the processing</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> flags</td></tr>
+<tr><td class="ch2">flags, that influence the processing</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> src</td>
-<td>the source-image</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> src</td></tr>
+<tr><td class="ch2">the source-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>string</i> init_code_string</td>
-<td>a code-string, that shall be used during initialization</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>string</i> init_code_string</td></tr>
+<tr><td class="ch2">a code-string, that shall be used during initialization</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>string</i> src2</td>
-<td>a second source-image</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>string</i> src2</td></tr>
+<tr><td class="ch2">a second source-image</td></tr>
 </table>
 <br>
 </div>
@@ -839,43 +724,33 @@ Additional options:<br/>
 <a href="#gfx_fillrect"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_fillrect</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_fillrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_fillrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h)</code></div>
 </div><p>
 <div class="ch">
 <p>Fills a rectangle with the current color/mode/alpha set by <a href="#gfx_set">gfx_set</a></p>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>0, in case of an error; 1, in case of success</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">0, in case of an error; 1, in case of success</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>the x-position of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>the y-position of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> w</td>
-<td>the width of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> w</td></tr>
+<tr><td class="ch2">the width of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> h</td>
-<td>the height of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> h</td></tr>
+<tr><td class="ch2">the height of the rectangle in pixels</td></tr>
 </table>
 <br>
 </div>
@@ -885,7 +760,7 @@ Additional options:<br/>
 <a href="#gfx_getpixel"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_getpixel</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_getpixel</em>(<i>integer</i> input, <i>integer</i> x, <i>integer</i> y, <i>integer</i> #v1, <i>integer</i> #v2, <i>integer</i> #v3[, <i>optional</i> <i>integer</i> #v4])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_getpixel</em>(<i>integer</i> input, <i>integer</i> x, <i>integer</i> y, <i>integer</i> #v1, <i>integer</i> #v2, <i>integer</i> #v3[, <i>optional</i> <i>integer</i> #v4])</code></div>
 </div><p>
 <div class="ch">
 Gets the value of a pixel from input at x,y. <br/>
@@ -894,54 +769,38 @@ v1/v2/v3 will be YUV or RGB (v4 can be used to get Alphavalue), returns 1 on suc
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>0, getting the pixel wasn't successful; 1, getting the pixel was successful</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">0, getting the pixel wasn't successful; 1, getting the pixel was successful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> input</td>
-<td>the input-image from which to get the pixel</td>
-</tr>
+<tr><td class="pr"><i>integer</i> input</td></tr>
+<tr><td class="ch2">the input-image from which to get the pixel</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>the x-position of the pixel, whose color you want</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the pixel, whose color you want</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>the y-position of the pixel, whose color you want</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the pixel, whose color you want</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> #v1</td>
-<td>a pointer to a variable, into which gfx_getpixel writes the red-value</td>
-</tr>
+<tr><td class="pr"><i>integer</i> #v1</td></tr>
+<tr><td class="ch2">a pointer to a variable, into which gfx_getpixel writes the red-value</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> #v2</td>
-<td>a pointer to a variable, into which gfx_getpixel writes the green-value</td>
-</tr>
+<tr><td class="pr"><i>integer</i> #v2</td></tr>
+<tr><td class="ch2">a pointer to a variable, into which gfx_getpixel writes the green-value</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> #v3</td>
-<td>a pointer to a variable, into which gfx_getpixel writes the blue-value</td>
-</tr>
+<tr><td class="pr"><i>integer</i> #v3</td></tr>
+<tr><td class="ch2">a pointer to a variable, into which gfx_getpixel writes the blue-value</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> #v4</td>
-<td>a pointer to a variable, into which gfx_getpixel writes the alpha-value</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> #v4</td></tr>
+<tr><td class="ch2">a pointer to a variable, into which gfx_getpixel writes the alpha-value</td></tr>
 </table>
 <br>
 </div>
@@ -951,115 +810,81 @@ v1/v2/v3 will be YUV or RGB (v4 can be used to get Alphavalue), returns 1 on suc
 <a href="#gfx_gradrect"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_gradrect</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_gradrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>float</i> r, <i>float</i> g, <i>float</i> b, <i>float</i> a [, <i>optional</i> <i>float</i> drdx, <i>optional</i> <i>float</i> dgdx, <i>optional</i> <i>float</i> dbdx, <i>optional</i> <i>float</i> dadx, <i>optional</i> <i>float</i> drdy, <i>optional</i> <i>float</i> dgdy, <i>optional</i> <i>float</i> dbdy, <i>optional</i> <i>float</i> dady])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_gradrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>float</i> r, <i>float</i> g, <i>float</i> b, <i>float</i> a [, <i>optional</i> <i>float</i> drdx, <i>optional</i> <i>float</i> dgdx, <i>optional</i> <i>float</i> dbdx, <i>optional</i> <i>float</i> dadx, <i>optional</i> <i>float</i> drdy, <i>optional</i> <i>float</i> dgdy, <i>optional</i> <i>float</i> dbdy, <i>optional</i> <i>float</i> dady])</code></div>
 </div><p>
 <div class="ch">
 Fills rectangle. r/g/b/a supply color at top left corner, drdx (if specified) is amount red changes per X-pixel, etc.              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>unknown</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">unknown</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>the x-position of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>the y-position of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> w</td>
-<td>the width of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> w</td></tr>
+<tr><td class="ch2">the width of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> h</td>
-<td>the height of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> h</td></tr>
+<tr><td class="ch2">the height of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> r</td>
-<td>the red-color-value(0-1)</td>
-</tr>
+<tr><td class="pr"><i>float</i> r</td></tr>
+<tr><td class="ch2">the red-color-value(0-1)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> g</td>
-<td>the green-color-value(0-1)</td>
-</tr>
+<tr><td class="pr"><i>float</i> g</td></tr>
+<tr><td class="ch2">the green-color-value(0-1)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> b</td>
-<td>the blue-color-value(0-1)</td>
-</tr>
+<tr><td class="pr"><i>float</i> b</td></tr>
+<tr><td class="ch2">the blue-color-value(0-1)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> a</td>
-<td>the alpha-color-value(0-1)</td>
-</tr>
+<tr><td class="pr"><i>float</i> a</td></tr>
+<tr><td class="ch2">the alpha-color-value(0-1)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> drdx</td>
-<td>the amount of delta-value, how the red-color shall be changed each pixel in x-direction</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> drdx</td></tr>
+<tr><td class="ch2">the amount of delta-value, how the red-color shall be changed each pixel in x-direction</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> dgdx</td>
-<td>the amount of delta-value, how the green-color shall be changed each pixel in x-direction</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> dgdx</td></tr>
+<tr><td class="ch2">the amount of delta-value, how the green-color shall be changed each pixel in x-direction</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> dbdx</td>
-<td>the amount of delta-value, how the blue-color shall be changed each pixel in x-direction</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> dbdx</td></tr>
+<tr><td class="ch2">the amount of delta-value, how the blue-color shall be changed each pixel in x-direction</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> dadx</td>
-<td>the amount of delta-value, how the alpha-color shall be changed each pixel in x-direction</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> dadx</td></tr>
+<tr><td class="ch2">the amount of delta-value, how the alpha-color shall be changed each pixel in x-direction</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> drdy</td>
-<td>the amount of delta-value, how the red-color shall be changed each pixel in y-direction</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> drdy</td></tr>
+<tr><td class="ch2">the amount of delta-value, how the red-color shall be changed each pixel in y-direction</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> dgdy</td>
-<td>the amount of delta-value, how the green-color shall be changed each pixel in y-direction</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> dgdy</td></tr>
+<tr><td class="ch2">the amount of delta-value, how the green-color shall be changed each pixel in y-direction</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> dbdy</td>
-<td>the amount of delta-value, how the blue-color shall be changed each pixel in y-direction</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> dbdy</td></tr>
+<tr><td class="ch2">the amount of delta-value, how the blue-color shall be changed each pixel in y-direction</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> dady</td>
-<td>the amount of delta-value, how the alpha-color shall be changed each pixel in y-direction</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> dady</td></tr>
+<tr><td class="ch2">the amount of delta-value, how the alpha-color shall be changed each pixel in y-direction</td></tr>
 </table>
 <br>
 </div>
@@ -1069,37 +894,29 @@ Fills rectangle. r/g/b/a supply color at top left corner, drdx (if specified) is
 <a href="#gfx_img_alloc"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_img_alloc</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> image_index = <em>gfx_img_alloc</em>([<i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> clear])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> image_index = <em>gfx_img_alloc</em>([<i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> clear])</code></div>
 </div><p>
 <div class="ch">
 Returns an image index for drawing (can create up to 32 images). Contents of image undefined unless clear set.              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> image_index</td>
-<td>the index of the newly created image</td>
-</tr>
+<tr><td class="pr"><i>integer</i> image_index</td></tr>
+<tr><td class="ch2">the index of the newly created image</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> w</td>
-<td>set the width in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> w</td></tr>
+<tr><td class="ch2">set the width in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> h</td>
-<td>set the height in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> h</td></tr>
+<tr><td class="ch2">set the height in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> clear</td>
-<td>clear the image, before using it</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> clear</td></tr>
+<tr><td class="ch2">clear the image, before using it</td></tr>
 </table>
 <br>
 </div>
@@ -1109,16 +926,14 @@ Returns an image index for drawing (can create up to 32 images). Contents of ima
 <a href="#gfx_img_free"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_img_free</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <em>gfx_img_free</em>(<i>integer</i> handle)</code></div>
+<div class="e">EEL2: <code> <em>gfx_img_free</em>(<i>integer</i> handle)</code></div>
 </div><p>
 <div class="ch">
 Releases an earlier allocated image index.              
 </div><br>          <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> handle</td>
-<td>the image handle, that you want to delete from further use</td>
-</tr>
+<tr><td class="pr"><i>integer</i> handle</td></tr>
+<tr><td class="ch2">the image handle, that you want to delete from further use</td></tr>
 </table>
 <br>
 </div>
@@ -1128,7 +943,7 @@ Releases an earlier allocated image index.
 <a href="#gfx_img_getptr"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_img_getptr</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> unique_identifier = <em>gfx_img_getptr</em>(<i>integer</i> handle)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> unique_identifier = <em>gfx_img_getptr</em>(<i>integer</i> handle)</code></div>
 </div><p>
 <div class="ch">
 <p>Gets a unique identifier for an image, valid for while the image is retained.</p>
@@ -1136,18 +951,14 @@ Releases an earlier allocated image index.
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> unique_identifier</td>
-<td>the unique identifier for image "handle"</td>
-</tr>
+<tr><td class="pr"><i>integer</i> unique_identifier</td></tr>
+<tr><td class="ch2">the unique identifier for image "handle"</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> handle</td>
-<td>the image-handle, of which you want to have a unique identifier</td>
-</tr>
+<tr><td class="pr"><i>integer</i> handle</td></tr>
+<tr><td class="ch2">the image-handle, of which you want to have a unique identifier</td></tr>
 </table>
 <br>
 </div>
@@ -1157,17 +968,15 @@ Releases an earlier allocated image index.
 <a href="#gfx_img_hold"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_img_hold</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <em>gfx_img_hold</em>(<i>integer</i> handle)</code></div>
+<div class="e">EEL2: <code> <em>gfx_img_hold</em>(<i>integer</i> handle)</code></div>
 </div><p>
 <div class="ch">
 <p>Retains (cheaply) a read-only copy of an image in handle.</p>
 <p>This copy should be released using <a href="#gfx_img_free">gfx_img_free()</a> when finished. Up to 32 images can be held.</p>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> handle</td>
-<td>the handle, that you want to make read-only</td>
-</tr>
+<tr><td class="pr"><i>integer</i> handle</td></tr>
+<tr><td class="ch2">the handle, that you want to make read-only</td></tr>
 </table>
 <br>
 </div>
@@ -1177,37 +986,29 @@ Releases an earlier allocated image index.
 <a href="#gfx_img_info"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_img_info</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_img_info</em>(<i>integer</i> handle, <i>integer</i> #w, <i>integer</i> #h)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_img_info</em>(<i>integer</i> handle, <i>integer</i> #w, <i>integer</i> #h)</code></div>
 </div><p>
 <div class="ch">
 Gets dimensions of image, returns 1 if valid (resize it if it's inexplicably invalidated)              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>1, if it's a valid image-handle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">1, if it's a valid image-handle</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> handle</td>
-<td>the image-handle, whose dimensions you want to retrieve</td>
-</tr>
+<tr><td class="pr"><i>integer</i> handle</td></tr>
+<tr><td class="ch2">the image-handle, whose dimensions you want to retrieve</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> #w</td>
-<td>the pointer of a variable, into which the width in pixels shall be stored</td>
-</tr>
+<tr><td class="pr"><i>integer</i> #w</td></tr>
+<tr><td class="ch2">the pointer of a variable, into which the width in pixels shall be stored</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> #h</td>
-<td>the pointer of a variable, into which the height in pixels shall be stored</td>
-</tr>
+<tr><td class="pr"><i>integer</i> #h</td></tr>
+<tr><td class="ch2">the pointer of a variable, into which the height in pixels shall be stored</td></tr>
 </table>
 <br>
 </div>
@@ -1217,7 +1018,7 @@ Gets dimensions of image, returns 1 if valid (resize it if it's inexplicably inv
 <a href="#gfx_img_resize"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_img_resize</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> image_handle = <em>gfx_img_resize</em>(<i>integer</i> handle, <i>integer</i> w, <i>integer</i> h[, <i>optional</i> <i>integer</i> clear])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> image_handle = <em>gfx_img_resize</em>(<i>integer</i> handle, <i>integer</i> w, <i>integer</i> h[, <i>optional</i> <i>integer</i> clear])</code></div>
 </div><p>
 <div class="ch">
 Sets an image size (handle can be -1 for main framebuffer). <br/>
@@ -1230,36 +1031,26 @@ Returns the image handle (if handle is invalid, returns a newly-allocated image 
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> image_handle</td>
-<td>the image-handle of the resized image; will be a newly allocated one, if parameter handle was invalid</td>
-</tr>
+<tr><td class="pr"><i>integer</i> image_handle</td></tr>
+<tr><td class="ch2">the image-handle of the resized image; will be a newly allocated one, if parameter handle was invalid</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> handle</td>
-<td>the handle of the image, that you want to resize</td>
-</tr>
+<tr><td class="pr"><i>integer</i> handle</td></tr>
+<tr><td class="ch2">the handle of the image, that you want to resize</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> w</td>
-<td>the new width in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> w</td></tr>
+<tr><td class="ch2">the new width in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> h</td>
-<td>the new height in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> h</td></tr>
+<tr><td class="ch2">the new height in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> clear</td>
-<td>set to clear the image; -1, clears only, if resize has occurred.</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> clear</td></tr>
+<tr><td class="ch2">set to clear the image; -1, clears only, if resize has occurred.</td></tr>
 </table>
 <br>
 </div>
@@ -1269,7 +1060,7 @@ Returns the image handle (if handle is invalid, returns a newly-allocated image 
 <a href="#gfx_keyedblit"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_keyedblit</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_keyedblit</em>(<i>integer</i> input[, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>float</i> kv1, <i>optional</i> <i>float</i> kv2, <i>optional</i> <i>float</i> kv3, <i>optional</i> <i>float</i> kv4])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_keyedblit</em>(<i>integer</i> input[, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>float</i> kv1, <i>optional</i> <i>float</i> kv2, <i>optional</i> <i>float</i> kv3, <i>optional</i> <i>float</i> kv4])</code></div>
 </div><p>
 <div class="ch">
 Chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colorspace:<br/>
@@ -1286,78 +1077,54 @@ Chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colo
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>unknown</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">unknown</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> input</td>
-<td>the image, to which the chroma-key shall be applied to</td>
-</tr>
+<tr><td class="pr"><i>integer</i> input</td></tr>
+<tr><td class="ch2">the image, to which the chroma-key shall be applied to</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> x</td>
-<td>the x-position of the chroma-key-area in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the chroma-key-area in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> y</td>
-<td>the y-position of the chroma-key-area in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the chroma-key-area in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> w</td>
-<td>the width-position of the chroma-key-area in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> w</td></tr>
+<tr><td class="ch2">the width-position of the chroma-key-area in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> h</td>
-<td>the height-position of the chroma-key-area in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> h</td></tr>
+<tr><td class="ch2">the height-position of the chroma-key-area in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> srcx</td>
-<td>the offset-x-position of the source-image</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> srcx</td></tr>
+<tr><td class="ch2">the offset-x-position of the source-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> srcy</td>
-<td>the offset-y-position of the source-image</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> srcy</td></tr>
+<tr><td class="ch2">the offset-y-position of the source-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> kv1</td>
-<td>U target(YV12/YUV2) / green(RGBA)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> kv1</td></tr>
+<tr><td class="ch2">U target(YV12/YUV2) / green(RGBA)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> kv2</td>
-<td>V target(YV12/YUV2) / blue(RGBA)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> kv2</td></tr>
+<tr><td class="ch2">V target(YV12/YUV2) / blue(RGBA)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> kv3</td>
-<td>closeness-factor(YV12/YUV2) / offset(RGBA)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> kv3</td></tr>
+<tr><td class="ch2">closeness-factor(YV12/YUV2) / offset(RGBA)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> kv4</td>
-<td>gain(YV12/YUV2) / spill removal(RGBA)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> kv4</td></tr>
+<tr><td class="ch2">gain(YV12/YUV2) / spill removal(RGBA)</td></tr>
 </table>
 <br>
 </div>
@@ -1367,7 +1134,7 @@ Chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colo
 <a href="#gfx_procrect"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_procrect</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_procrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>table</i> channel_tab[, <i>optional</i> <i>integer</i> mode])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_procrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>table</i> channel_tab[, <i>optional</i> <i>integer</i> mode])</code></div>
 </div><p>
 <div class="ch">
 Processes a rectangle with 768-entry channel table [256 items of 0..1 per channel]. <br/>
@@ -1376,48 +1143,34 @@ Specify mode=1 to use Y value for U/V source channels (colorization mode).
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>unknown</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">unknown</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>the x-position of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>the y-position of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> w</td>
-<td>the width of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> w</td></tr>
+<tr><td class="ch2">the width of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> h</td>
-<td>the height of the rectangle in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> h</td></tr>
+<tr><td class="ch2">the height of the rectangle in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> channel_tab</td>
-<td>a 768-entry-table which will be used for the processing</td>
-</tr>
+<tr><td class="pr"><i>table</i> channel_tab</td></tr>
+<tr><td class="ch2">a 768-entry-table which will be used for the processing</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> mode</td>
-<td>1, to use Y-value for U/V-source-channels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> mode</td></tr>
+<tr><td class="ch2">1, to use Y-value for U/V-source-channels</td></tr>
 </table>
 <br>
 </div>
@@ -1427,97 +1180,69 @@ Specify mode=1 to use Y value for U/V source channels (colorization mode).
 <a href="#gfx_rotoblit"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_rotoblit</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_rotoblit</em>(<i>integer</i> srcidx, <i>float</i> angle [, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> cliptosrcrect, <i>optional</i> <i>integer</i> centxoffs, <i>optional</i> <i>integer</i> centyoffs])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_rotoblit</em>(<i>integer</i> srcidx, <i>float</i> angle [, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> cliptosrcrect, <i>optional</i> <i>integer</i> centxoffs, <i>optional</i> <i>integer</i> centyoffs])</code></div>
 </div><p>
 <div class="ch">
 <p>Blits with rotate. This function behaves a bit odd when the source and destination sizes/aspect ratios differ, so <a href="#gfx_deltablit">gfx_deltablit()</a> is generally more useful.</p>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> srcidx</td>
-<td>the source-image, that shall be blit as rotated image</td>
-</tr>
+<tr><td class="pr"><i>integer</i> srcidx</td></tr>
+<tr><td class="ch2">the source-image, that shall be blit as rotated image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> angle</td>
-<td>the angle by width the image shall be rotated</td>
-</tr>
+<tr><td class="pr"><i>float</i> angle</td></tr>
+<tr><td class="ch2">the angle by width the image shall be rotated</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> x</td>
-<td>the x-position in pixels, at which the blitting shall be put to</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position in pixels, at which the blitting shall be put to</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> y</td>
-<td>the y-position in pixels, at which the blitting shall be put to</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position in pixels, at which the blitting shall be put to</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> w</td>
-<td>the width in pixels of the rotated-blit-image; affects stretching of the image!</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> w</td></tr>
+<tr><td class="ch2">the width in pixels of the rotated-blit-image; affects stretching of the image!</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> h</td>
-<td>the height in pixels of the rotated-blit-image; affects stretching of the image!</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> h</td></tr>
+<tr><td class="ch2">the height in pixels of the rotated-blit-image; affects stretching of the image!</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> srcx</td>
-<td>the x-position in pixels in the source-image, from which to blit from</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> srcx</td></tr>
+<tr><td class="ch2">the x-position in pixels in the source-image, from which to blit from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> srcy</td>
-<td>the y-position in pixels in the source-image, from which to blit from</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> srcy</td></tr>
+<tr><td class="ch2">the y-position in pixels in the source-image, from which to blit from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> w</td>
-<td>the width in pixels of the source-image, from which to blit from; affects stretching of the image!</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> w</td></tr>
+<tr><td class="ch2">the width in pixels of the source-image, from which to blit from; affects stretching of the image!</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> h</td>
-<td>the height in pixels of the source-image, from which to blit from; affects stretching of the image!</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> h</td></tr>
+<tr><td class="ch2">the height in pixels of the source-image, from which to blit from; affects stretching of the image!</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> cliptosrcrect=0</td>
-<td>clips the source-image rectangle; 1, clip; 0, don't clip</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> cliptosrcrect=0</td></tr>
+<tr><td class="ch2">clips the source-image rectangle; 1, clip; 0, don't clip</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> centxoffs=0</td>
-<td>adds an offset to the center of the image at x-position in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> centxoffs=0</td></tr>
+<tr><td class="ch2">adds an offset to the center of the image at x-position in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> centyoffs=0</td>
-<td>adds an offset to the center of the image at x-position in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> centyoffs=0</td></tr>
+<tr><td class="ch2">adds an offset to the center of the image at x-position in pixels</td></tr>
 </table>
 <br>
 </div>
@@ -1527,52 +1252,38 @@ Specify mode=1 to use Y value for U/V source channels (colorization mode).
 <a href="#gfx_set"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_set</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <em>gfx_set</em>(<i>float</i> r,[<i>optional</i> <i>float</i> g, <i>optional</i> <i>float</i> b, <i>optional</i> <i>float</i> a=1, <i>integer</i> mode=0, <i>optional</i> <i>integer</i> dest, <i>optional</i> <i>float</i> a2=1])</code></div>
+<div class="e">EEL2: <code> <em>gfx_set</em>(<i>float</i> r,[<i>optional</i> <i>float</i> g, <i>optional</i> <i>float</i> b, <i>optional</i> <i>float</i> a=1, <i>integer</i> mode=0, <i>optional</i> <i>integer</i> dest, <i>optional</i> <i>float</i> a2=1])</code></div>
 </div><p>
 <div class="ch">
 Updates r/g/b/a/mode to values specified, dest is only updated if parameter specified.              
 </div><br>          <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> r</td>
-<td>the red-value(0 to 1); if set as the only parameter, this will be used for g and b as well</td>
-</tr>
+<tr><td class="pr"><i>float</i> r</td></tr>
+<tr><td class="ch2">the red-value(0 to 1); if set as the only parameter, this will be used for g and b as well</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> g</td>
-<td>the green-value(0 to 1); if unset, the value of r will be used</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> g</td></tr>
+<tr><td class="ch2">the green-value(0 to 1); if unset, the value of r will be used</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> b</td>
-<td>the blue-value(0 to 1); if unset, the value of r will be used</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> b</td></tr>
+<tr><td class="ch2">the blue-value(0 to 1); if unset, the value of r will be used</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> a=1</td>
-<td>the alpha-value(0 to 1); if unset, the value defaults to 1</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> a=1</td></tr>
+<tr><td class="ch2">the alpha-value(0 to 1); if unset, the value defaults to 1</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> mode</td>
-<td>see [gfx_mode](#gfx_mode) for the available modes; if unset, defaults to 0</td>
-</tr>
+<tr><td class="pr"><i>integer</i> mode</td></tr>
+<tr><td class="ch2">see [gfx_mode](#gfx_mode) for the available modes; if unset, defaults to 0</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> dest</td>
-<td>the destination, into which to draw</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> dest</td></tr>
+<tr><td class="ch2">the destination, into which to draw</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> a2</td>
-<td>the alpha2-value, see[gfx_a2](#gfx_a2); if unset, defaults to 1</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> a2</td></tr>
+<tr><td class="ch2">the alpha2-value, see[gfx_a2](#gfx_a2); if unset, defaults to 1</td></tr>
 </table>
 <br>
 </div>
@@ -1582,7 +1293,7 @@ Updates r/g/b/a/mode to values specified, dest is only updated if parameter spec
 <a href="#gfx_setfont"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_setfont</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_setfont</em>(<i>integer</i> pxsize[, <i>optional</i> <i>string</i> #fontname, <i>optional</i> <i>integer</i> flags)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_setfont</em>(<i>integer</i> pxsize[, <i>optional</i> <i>string</i> #fontname, <i>optional</i> <i>integer</i> flags)</code></div>
 </div><p>
 <div class="ch">
 Sets a font. flags are specified as a multibyte integer, using a combination of the following flags (specify multiple as 'BI' or 'OI' or 'OBI' etc):<br/>
@@ -1596,29 +1307,22 @@ Sets a font. flags are specified as a multibyte integer, using a combination of 
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>unknown</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">unknown</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> pxsize</td>
-<td>the size of the font in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> pxsize</td></tr>
+<tr><td class="ch2">the size of the font in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>string</i> #fontname</td>
-<td>the name of the font you want to use</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>string</i> #fontname</td></tr>
+<tr><td class="ch2">the name of the font you want to use</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> flags</td>
-<td>the flags, that can influence the design of the font. Just put one or more of the following into single quotes<br/>
+<tr><td class="pr"><i>optional</i> <i>integer</i> flags</td></tr>
+<tr><td class="ch2">the flags, that can influence the design of the font. Just put one or more of the following into single quotes<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;'B' - Bold<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;'I' - Italics<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;'R' - Blur<br/>
@@ -1626,8 +1330,7 @@ Sets a font. flags are specified as a multibyte integer, using a combination of 
 &nbsp;&nbsp;&nbsp;&nbsp;'M' - Mono<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;'S' - Shadow<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;'O' - Outline<br/>
-&nbsp;&nbsp; example: 'BI'</td>
-</tr>
+&nbsp;&nbsp; example: 'BI'</td></tr>
 </table>
 <br>
 </div>
@@ -1637,55 +1340,41 @@ Sets a font. flags are specified as a multibyte integer, using a combination of 
 <a href="#gfx_str_draw"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_str_draw</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_str_draw</em>(<i>string</i> #string[, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>float</i> fxc_r, <i>optional</i> <i>float</i> fxc_g, <i>optional</i> <i>float</i> fxc_b])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_str_draw</em>(<i>string</i> #string[, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>float</i> fxc_r, <i>optional</i> <i>float</i> fxc_g, <i>optional</i> <i>float</i> fxc_b])</code></div>
 </div><p>
 <div class="ch">
 Draw string, fxc_r/g/b are the FX color if Shadow/Outline are set in the font              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>unknown</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">unknown</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> #string</td>
-<td>the string, that shall be drawn into the video</td>
-</tr>
+<tr><td class="pr"><i>string</i> #string</td></tr>
+<tr><td class="ch2">the string, that shall be drawn into the video</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> x</td>
-<td>x-position of the string, in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> x</td></tr>
+<tr><td class="ch2">x-position of the string, in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> y</td>
-<td>y-position of the string, in pixels</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> y</td></tr>
+<tr><td class="ch2">y-position of the string, in pixels</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> fxc_r</td>
-<td>red-color-value for outline/shadow, if set in the current font(0-1)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> fxc_r</td></tr>
+<tr><td class="ch2">red-color-value for outline/shadow, if set in the current font(0-1)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> fxc_g</td>
-<td>green-color-value for outline/shadow, if set in the current font(0-1)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> fxc_g</td></tr>
+<tr><td class="ch2">green-color-value for outline/shadow, if set in the current font(0-1)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i> fxc_b</td>
-<td>blue-color-value for outline/shadow, if set in the current font(0-1)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i> fxc_b</td></tr>
+<tr><td class="ch2">blue-color-value for outline/shadow, if set in the current font(0-1)</td></tr>
 </table>
 <br>
 </div>
@@ -1695,37 +1384,29 @@ Draw string, fxc_r/g/b are the FX color if Shadow/Outline are set in the font
 <a href="#gfx_str_measure"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_str_measure</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> string_length = <em>gfx_str_measure</em>(<i>string</i> #string[, <i>optional</i> <i>integer</i> #w, <i>optional</i> <i>integer</i> #h])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> string_length = <em>gfx_str_measure</em>(<i>string</i> #string[, <i>optional</i> <i>integer</i> #w, <i>optional</i> <i>integer</i> #h])</code></div>
 </div><p>
 <div class="ch">
 Measures the size of #string, returns width              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> string_length</td>
-<td>the length of the string in pixels</td>
-</tr>
+<tr><td class="pr"><i>integer</i> string_length</td></tr>
+<tr><td class="ch2">the length of the string in pixels</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> #string</td>
-<td>the string, whose width/height you want to know; it depends on the currently set font and fontsize</td>
-</tr>
+<tr><td class="pr"><i>string</i> #string</td></tr>
+<tr><td class="ch2">the string, whose width/height you want to know; it depends on the currently set font and fontsize</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> #w</td>
-<td>a reference to a variable, that shall be set with the width in pixels by the function gfx_str_measure</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> #w</td></tr>
+<tr><td class="ch2">a reference to a variable, that shall be set with the width in pixels by the function gfx_str_measure</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> #h</td>
-<td>a reference to a variable, that shall be set with the height in pixels by the function gfx_str_measure</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> #h</td></tr>
+<tr><td class="ch2">a reference to a variable, that shall be set with the height in pixels by the function gfx_str_measure</td></tr>
 </table>
 <br>
 </div>
@@ -1735,7 +1416,7 @@ Measures the size of #string, returns width
 <a href="#gfx_xformblit"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gfx_xformblit</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>gfx_xformblit</em>(<i>integer</i> srcidx, <i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h,  <i>integer</i> wdiv, <i>integer</i> hdiv, <i>table</i> tab[, <i>optional</i> <i>integer</i> wantalpha])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_xformblit</em>(<i>integer</i> srcidx, <i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h,  <i>integer</i> wdiv, <i>integer</i> hdiv, <i>table</i> tab[, <i>optional</i> <i>integer</i> wantalpha])</code></div>
 </div><p>
 <div class="ch">
 Blits with a transformation table. <br/>
@@ -1745,66 +1426,46 @@ If wantalpha=1, tab is wdiv*hdiv*3 table of src points including alpha for each 
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> srcidx</td>
-<td>the index of the image, that you want to transformblit</td>
-</tr>
+<tr><td class="pr"><i>integer</i> srcidx</td></tr>
+<tr><td class="ch2">the index of the image, that you want to transformblit</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>x-position in pixels of the transform-blitted-image</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">x-position in pixels of the transform-blitted-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>y-position in pixels of the transform-blitted-image</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">y-position in pixels of the transform-blitted-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> w</td>
-<td>width in pixels of the transform-blitted-image</td>
-</tr>
+<tr><td class="pr"><i>integer</i> w</td></tr>
+<tr><td class="ch2">width in pixels of the transform-blitted-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> h</td>
-<td>height in pixels of the transform-blitted-image</td>
-</tr>
+<tr><td class="pr"><i>integer</i> h</td></tr>
+<tr><td class="ch2">height in pixels of the transform-blitted-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> wdiv</td>
-<td>the divisor of the table tab for width transformation</td>
-</tr>
+<tr><td class="pr"><i>integer</i> wdiv</td></tr>
+<tr><td class="ch2">the divisor of the table tab for width transformation</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> hdiv</td>
-<td>the divisor of the table tab for height transformation</td>
-</tr>
+<tr><td class="pr"><i>integer</i> hdiv</td></tr>
+<tr><td class="ch2">the divisor of the table tab for height transformation</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> tab</td>
-<td>a table with all the transform-values in them, who are float and can be negative as well</td>
-</tr>
+<tr><td class="pr"><i>table</i> tab</td></tr>
+<tr><td class="ch2">a table with all the transform-values in them, who are float and can be negative as well</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> wantalpha</td>
-<td>0, transform the image only; 1, transform on an alpha-level</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> wantalpha</td></tr>
+<tr><td class="ch2">0, transform the image only; 1, transform on an alpha-level</td></tr>
 </table>
 <br>
 </div>
@@ -1814,17 +1475,15 @@ If wantalpha=1, tab is wdiv*hdiv*3 table of src points including alpha for each 
 <a href="#input_count"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>input_count</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> count_inputs = <em>input_count</em>()</code></div>
+<div class="e">EEL2: <code> <i>integer</i> count_inputs = <em>input_count</em>()</code></div>
 </div><p>
 <div class="ch">
 Returns number of inputs available (total), range [0..n)              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> count_inputs</td>
-<td>the number of inputs available</td>
-</tr>
+<tr><td class="pr"><i>integer</i> count_inputs</td></tr>
+<tr><td class="ch2">the number of inputs available</td></tr>
 </table>
 <br>
 </div>
@@ -1834,31 +1493,25 @@ Returns number of inputs available (total), range [0..n)
 <a href="#input_get_name"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>input_get_name</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>input_get_name</em>(<i>integer</i> input, <i>string</i> #str)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>input_get_name</em>(<i>integer</i> input, <i>string</i> #str)</code></div>
 </div><p>
 <div class="ch">
 Gets the input take name or track name. returns >0 on success              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>>0, if name can be gotten</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">>0, if name can be gotten</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> input</td>
-<td>the input, whose name you want to query</td>
-</tr>
+<tr><td class="pr"><i>integer</i> input</td></tr>
+<tr><td class="ch2">the input, whose name you want to query</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> #str</td>
-<td>the pointer to a string-variable, into which the input-name shall be stored</td>
-</tr>
+<tr><td class="pr"><i>string</i> #str</td></tr>
+<tr><td class="ch2">the pointer to a string-variable, into which the input-name shall be stored</td></tr>
 </table>
 <br>
 </div>
@@ -1868,7 +1521,7 @@ Gets the input take name or track name. returns >0 on success
 <a href="#input_info"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>input_info</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>input_info</em>(<i>integer</i> input, <i>integer</i> w, <i>integer</i> h[, <i>double</i> srctime, <i>double</i> wet, <i>double</i> parm1, ...])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>input_info</em>(<i>integer</i> input, <i>integer</i> w, <i>integer</i> h[, <i>double</i> srctime, <i>double</i> wet, <i>double</i> parm1, ...])</code></div>
 </div><p>
 <div class="ch">
 Returns 1 if input is available, sets w/h to dimensions. <br/>
@@ -1879,48 +1532,34 @@ If input is a video processor in effect form, automated parameters can be querie
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>1, if input is available</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">1, if input is available</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> input</td>
-<td>the input, whose information you want</td>
-</tr>
+<tr><td class="pr"><i>integer</i> input</td></tr>
+<tr><td class="ch2">the input, whose information you want</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> w</td>
-<td>width-dimension in pixels; will be set, if input is available</td>
-</tr>
+<tr><td class="pr"><i>integer</i> w</td></tr>
+<tr><td class="ch2">width-dimension in pixels; will be set, if input is available</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> h</td>
-<td>height-dimension in pixels; will be set, if input is available</td>
-</tr>
+<tr><td class="pr"><i>integer</i> h</td></tr>
+<tr><td class="ch2">height-dimension in pixels; will be set, if input is available</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>double</i> srctime</td>
-<td></td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>double</i> srctime</td></tr>
+<tr><td class="ch2"></td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>double</i> wet</td>
-<td></td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>double</i> wet</td></tr>
+<tr><td class="ch2"></td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>double</i> parm1</td>
-<td></td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>double</i> parm1</td></tr>
+<tr><td class="ch2"></td></tr>
 </table>
 <br>
 </div>
@@ -1930,17 +1569,15 @@ If input is a video processor in effect form, automated parameters can be querie
 <a href="#input_ismaster"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>input_ismaster</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>float</i> fx_position = <em>input_ismaster</em>()</code></div>
+<div class="e">EEL2: <code> <i>float</i> fx_position = <em>input_ismaster</em>()</code></div>
 </div><p>
 <div class="ch">
 Returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> fx_position</td>
-<td>1.0, FX is on master chain; 2.0, FX is on monitoring FX chain</td>
-</tr>
+<tr><td class="pr"><i>float</i> fx_position</td></tr>
+<tr><td class="ch2">1.0, FX is on master chain; 2.0, FX is on monitoring FX chain</td></tr>
 </table>
 <br>
 </div>
@@ -1950,25 +1587,21 @@ Returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain
 <a href="#input_next_item"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>input_next_item</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> next_input = <em>input_next_item</em>(<i>integer</i> input)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> next_input = <em>input_next_item</em>(<i>integer</i> input)</code></div>
 </div><p>
 <div class="ch">
 Returns the next_input after input which is on a different item or track              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> next_input</td>
-<td>the next input after input</td>
-</tr>
+<tr><td class="pr"><i>integer</i> next_input</td></tr>
+<tr><td class="ch2">the next input after input</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> input</td>
-<td>the input whose next_input you want</td>
-</tr>
+<tr><td class="pr"><i>integer</i> input</td></tr>
+<tr><td class="ch2">the input whose next_input you want</td></tr>
 </table>
 <br>
 </div>
@@ -1978,25 +1611,21 @@ Returns the next_input after input which is on a different item or track
 <a href="#input_next_track"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>input_next_track</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> next_input = <em>input_next_track</em>(<i>integer</i> input)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> next_input = <em>input_next_track</em>(<i>integer</i> input)</code></div>
 </div><p>
 <div class="ch">
 Returns the next_input after input which is on a different track.              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> next_input</td>
-<td>the next input on a different track</td>
-</tr>
+<tr><td class="pr"><i>integer</i> next_input</td></tr>
+<tr><td class="ch2">the next input on a different track</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> input</td>
-<td>the input, whose next input on a different track you want</td>
-</tr>
+<tr><td class="pr"><i>integer</i> input</td></tr>
+<tr><td class="ch2">the input, whose next input on a different track you want</td></tr>
 </table>
 <br>
 </div>
@@ -2006,25 +1635,21 @@ Returns the next_input after input which is on a different track.
 <a href="#input_track"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>input_track</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> input = <em>input_track</em>(<i>integer</i> track)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> input = <em>input_track</em>(<i>integer</i> track)</code></div>
 </div><p>
 <div class="ch">
 Returns input for bottommost item or FX on discrete-track track (0 is first track with video item above current, etc)              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> input</td>
-<td>the input for bottomost item or FX</td>
-</tr>
+<tr><td class="pr"><i>integer</i> input</td></tr>
+<tr><td class="ch2">the input for bottomost item or FX</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> track</td>
-<td>the track, whose bottommost item or FX you want</td>
-</tr>
+<tr><td class="pr"><i>integer</i> track</td></tr>
+<tr><td class="ch2">the track, whose bottommost item or FX you want</td></tr>
 </table>
 <br>
 </div>
@@ -2034,17 +1659,15 @@ Returns input for bottommost item or FX on discrete-track track (0 is first trac
 <a href="#input_track_count"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>input_track_count</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> count_tracks = <em>input_track_count</em>()</code></div>
+<div class="e">EEL2: <code> <i>integer</i> count_tracks = <em>input_track_count</em>()</code></div>
 </div><p>
 <div class="ch">
 Returns the number of available inputs on discrete tracks              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> count_tracks</td>
-<td>the number of tracks available</td>
-</tr>
+<tr><td class="pr"><i>integer</i> count_tracks</td></tr>
+<tr><td class="ch2">the number of tracks available</td></tr>
 </table>
 <br>
 </div>
@@ -2054,7 +1677,7 @@ Returns the number of available inputs on discrete tracks
 <a href="#input_track_exact"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>input_track_exact</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> inputs = <em>input_track_exact</em>(<i>integer</i> track)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> inputs = <em>input_track_exact</em>(<i>integer</i> track)</code></div>
 </div><p>
 <div class="ch">
 Returns input for bottommost item or FX on track relative to current track. <br/>
@@ -2063,18 +1686,14 @@ Returns -1000 if track does not contain any video items at the current time, or 
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> inputs</td>
-<td>the input for bottommost item or FX</td>
-</tr>
+<tr><td class="pr"><i>integer</i> inputs</td></tr>
+<tr><td class="ch2">the input for bottommost item or FX</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> track</td>
-<td>the tracknumber, whose bottommost input you want</td>
-</tr>
+<tr><td class="pr"><i>integer</i> track</td></tr>
+<tr><td class="ch2">the tracknumber, whose bottommost input you want</td></tr>
 </table>
 <br>
 </div>
@@ -2084,17 +1703,15 @@ Returns -1000 if track does not contain any video items at the current time, or 
 <a href="#input_track_exact_count"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>input_track_exact_count</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> nteger num_tracks = <em>input_track_exact_count</em>()</code></div>
+<div class="e">EEL2: <code> nteger num_tracks = <em>input_track_exact_count</em>()</code></div>
 </div><p>
 <div class="ch">
 Returns the number of tracks above the current track that could possibly contain video items.              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> num_tracks</td>
-<td>the number of tracks above the current track, that could contain videoitems</td>
-</tr>
+<tr><td class="pr"><i>integer</i> num_tracks</td></tr>
+<tr><td class="ch2">the number of tracks above the current track, that could contain videoitems</td></tr>
 </table>
 <br>
 </div>
@@ -2104,37 +1721,29 @@ Returns the number of tracks above the current track that could possibly contain
 <a href="#rgb2yuv"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>rgb2yuv</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>rgb2yuv</em>(<i>float</i> #r, <i>float</i> #g, <i>float</i> #b)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>rgb2yuv</em>(<i>float</i> #r, <i>float</i> #g, <i>float</i> #b)</code></div>
 </div><p>
 <div class="ch">
 Converts r,g,b to YUV, does not clamp [0..1]              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>unknown</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">unknown</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> #r</td>
-<td>a pointer-variable; put the r-value into it, pass it to the function and it will replace the r-value with the y value</td>
-</tr>
+<tr><td class="pr"><i>float</i> #r</td></tr>
+<tr><td class="ch2">a pointer-variable; put the r-value into it, pass it to the function and it will replace the r-value with the y value</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> #g</td>
-<td>a pointer-variable; put the g-value into it, pass it to the function and it will replace the g-value with the u value</td>
-</tr>
+<tr><td class="pr"><i>float</i> #g</td></tr>
+<tr><td class="ch2">a pointer-variable; put the g-value into it, pass it to the function and it will replace the g-value with the u value</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> #b</td>
-<td>a pointer-variable; put the b-value into it, pass it to the function and it will replace the b-value with the v value</td>
-</tr>
+<tr><td class="pr"><i>float</i> #b</td></tr>
+<tr><td class="ch2">a pointer-variable; put the b-value into it, pass it to the function and it will replace the b-value with the v value</td></tr>
 </table>
 <br>
 </div>
@@ -2144,37 +1753,29 @@ Converts r,g,b to YUV, does not clamp [0..1]
 <a href="#yuv2rgb"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>yuv2rgb</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>yuv2rgb</em>(<i>float</i> #r, <i>float</i> #g, <i>float</i> #b)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>yuv2rgb</em>(<i>float</i> #r, <i>float</i> #g, <i>float</i> #b)</code></div>
 </div><p>
 <div class="ch">
 Converts YUV to r,g,b, not clamping [0..1]              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>unknown</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">unknown</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> #y</td>
-<td>a pointer-variable; put the y-value into it, pass it to the function and it will replace the y-value with the r value</td>
-</tr>
+<tr><td class="pr"><i>float</i> #y</td></tr>
+<tr><td class="ch2">a pointer-variable; put the y-value into it, pass it to the function and it will replace the y-value with the r value</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> #u</td>
-<td>a pointer-variable; put the u-value into it, pass it to the function and it will replace the u-value with the g value</td>
-</tr>
+<tr><td class="pr"><i>float</i> #u</td></tr>
+<tr><td class="ch2">a pointer-variable; put the u-value into it, pass it to the function and it will replace the u-value with the g value</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> #v</td>
-<td>a pointer-variable; put the v-value into it, pass it to the function and it will replace the v-value with the b value</td>
-</tr>
+<tr><td class="pr"><i>float</i> #v</td></tr>
+<tr><td class="ch2">a pointer-variable; put the v-value into it, pass it to the function and it will replace the v-value with the b value</td></tr>
 </table>
 <br>
 </div>
@@ -2184,37 +1785,29 @@ Converts YUV to r,g,b, not clamping [0..1]
 <a href="#convolve_c"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>convolve_c</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>convolve_c</em>(<i>table</i> dest, <i>table</i> src, <i>integer</i> size)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>convolve_c</em>(<i>table</i> dest, <i>table</i> src, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
 Multiplies each of size complex pairs in dest by the complex pairs in src. Often used for convolution.              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>unknown</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">unknown</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> dest</td>
-<td>the table, in which the function will write the destination-values</td>
-</tr>
+<tr><td class="pr"><i>table</i> dest</td></tr>
+<tr><td class="ch2">the table, in which the function will write the destination-values</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> src</td>
-<td>the table, from which the function will get the destination-values</td>
-</tr>
+<tr><td class="pr"><i>table</i> src</td></tr>
+<tr><td class="ch2">the table, from which the function will get the destination-values</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> size</td>
-<td>the size of the tables</td>
-</tr>
+<tr><td class="pr"><i>integer</i> size</td></tr>
+<tr><td class="ch2">the size of the tables</td></tr>
 </table>
 <br>
 </div>
@@ -2224,7 +1817,7 @@ Multiplies each of size complex pairs in dest by the complex pairs in src. Often
 <a href="#fft"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>fft</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>fft</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>fft</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
 Performs a FFT on the data in the local memory buffer at the offset specified by the first parameter. <br/>
@@ -2237,24 +1830,18 @@ Notes:<br/>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>value of buffer, if buffer is only one variable instead of a table</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">value of buffer, if buffer is only one variable instead of a table</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> buffer</td>
-<td>a table, with all values that shall be processed using the FFT</td>
-</tr>
+<tr><td class="pr"><i>table</i> buffer</td></tr>
+<tr><td class="ch2">a table, with all values that shall be processed using the FFT</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> size</td>
-<td>the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td>
-</tr>
+<tr><td class="pr"><i>integer</i> size</td></tr>
+<tr><td class="ch2">the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr>
 </table>
 <br>
 </div>
@@ -2264,31 +1851,25 @@ Notes:<br/>
 <a href="#fft_ipermute"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>fft_ipermute</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>fft_ipermute</em>(buffer,size)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>fft_ipermute</em>(buffer,size)</code></div>
 </div><p>
 <div class="ch">
 Permutes the input for ifft(), taking bands from in-order to the order ifft() requires. See fft() for more information.              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>value of buffer, if buffer is only one variable instead of a table</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">value of buffer, if buffer is only one variable instead of a table</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> buffer</td>
-<td>a table, with all values that shall be processed using the FFT</td>
-</tr>
+<tr><td class="pr"><i>table</i> buffer</td></tr>
+<tr><td class="ch2">a table, with all values that shall be processed using the FFT</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> size</td>
-<td>the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td>
-</tr>
+<tr><td class="pr"><i>integer</i> size</td></tr>
+<tr><td class="ch2">the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr>
 </table>
 <br>
 </div>
@@ -2298,31 +1879,25 @@ Permutes the input for ifft(), taking bands from in-order to the order ifft() re
 <a href="#fft_permute"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>fft_permute</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>fft_permute</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>fft_permute</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
 Permutes the output of fft() to have bands in-order.              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>value of buffer, if buffer is only one variable instead of a table</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">value of buffer, if buffer is only one variable instead of a table</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> buffer</td>
-<td>a table, with all values that shall be processed using the FFT</td>
-</tr>
+<tr><td class="pr"><i>table</i> buffer</td></tr>
+<tr><td class="ch2">a table, with all values that shall be processed using the FFT</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> size</td>
-<td>the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td>
-</tr>
+<tr><td class="pr"><i>integer</i> size</td></tr>
+<tr><td class="ch2">the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr>
 </table>
 <br>
 </div>
@@ -2332,7 +1907,7 @@ Permutes the output of fft() to have bands in-order.
 <a href="#fft_real"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>fft_real</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>fft_real</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>fft_real</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
 Performs a real FFT, taking size input samples and producing size/2 complex output pairs. Usually used along with fft_permute(size/2). <br/>
@@ -2340,24 +1915,18 @@ Inputs/outputs will need to be scaled by 0.5/size. The first output complex pair
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>value of buffer, if buffer is only one variable instead of a table</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">value of buffer, if buffer is only one variable instead of a table</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> buffer</td>
-<td>a table, with all values that shall be processed using the FFT</td>
-</tr>
+<tr><td class="pr"><i>table</i> buffer</td></tr>
+<tr><td class="ch2">a table, with all values that shall be processed using the FFT</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> size</td>
-<td>the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td>
-</tr>
+<tr><td class="pr"><i>integer</i> size</td></tr>
+<tr><td class="ch2">the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr>
 </table>
 <br>
 </div>
@@ -2367,7 +1936,7 @@ Inputs/outputs will need to be scaled by 0.5/size. The first output complex pair
 <a href="#gmem"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>gmem</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code><em> gmem</em></code></div>
+<div class="e">EEL2: <code><em> gmem</em></code></div>
 </div><p>
 <div class="ch">
 gmem[] can be used for a shared memory buffer (similar to JSFX) -- <br/>
@@ -2393,31 +1962,25 @@ Note: you can have only one gmem-buffername attached per video-processor-script.
 <a href="#ifft"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>ifft</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>ifft</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>ifft</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
 Performs an inverse FFT. For more information see fft().              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>value of buffer, if buffer is only one variable instead of a table</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">value of buffer, if buffer is only one variable instead of a table</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> buffer</td>
-<td>a table, with all values that shall be processed using the iFFT</td>
-</tr>
+<tr><td class="pr"><i>table</i> buffer</td></tr>
+<tr><td class="ch2">a table, with all values that shall be processed using the iFFT</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> size</td>
-<td>the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td>
-</tr>
+<tr><td class="pr"><i>integer</i> size</td></tr>
+<tr><td class="ch2">the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr>
 </table>
 <br>
 </div>
@@ -2427,7 +1990,7 @@ Performs an inverse FFT. For more information see fft().
 <a href="#ifft_real"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>ifft_real</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>ifft_real</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>ifft_real</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
 Performs an inverse FFT, taking size/2 complex input pairs (the first being DC, nyquist) and producing size real output values. <br/>
@@ -2435,24 +1998,18 @@ Usually used along with fft_ipermute(size/2).
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>value of buffer, if buffer is only one variable instead of a table</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">value of buffer, if buffer is only one variable instead of a table</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> buffer</td>
-<td>a table, with all values that shall be processed using the iFFT</td>
-</tr>
+<tr><td class="pr"><i>table</i> buffer</td></tr>
+<tr><td class="ch2">a table, with all values that shall be processed using the iFFT</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> size</td>
-<td>the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td>
-</tr>
+<tr><td class="pr"><i>integer</i> size</td></tr>
+<tr><td class="ch2">the size of the FFT, as a power of two between&nbsp;&nbsp;2^4(16) to 2^15(32768)</td></tr>
 </table>
 <br>
 </div>
@@ -2462,7 +2019,7 @@ Usually used along with fft_ipermute(size/2).
 <a href="#on_parameter_change"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>on_parameter_change</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <em>on_parameter_change</em>(<i>float</i> pvar[, <i>optional</i> <i>integer</i> isdone])</code></div>
+<div class="e">EEL2: <code> <em>on_parameter_change</em>(<i>float</i> pvar[, <i>optional</i> <i>integer</i> isdone])</code></div>
 </div><p>
 <div class="ch">
 Notifies that the parameter pointed to by pvar (must be param1..param24 or a user-defined parameter) has changed. <br/>
@@ -2470,16 +2027,12 @@ Notifies that the parameter pointed to by pvar (must be param1..param24 or a use
 Specify isdone=1 when done modifying parameter (e.g. releasing touch)              
 </div><br>          <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>float</i> pvar</td>
-<td>the parameter, whose parameter-change you want to notify</td>
-</tr>
+<tr><td class="pr"><i>float</i> pvar</td></tr>
+<tr><td class="ch2">the parameter, whose parameter-change you want to notify</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> isdone</td>
-<td>1, when done modifying parameter</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> isdone</td></tr>
+<tr><td class="ch2">1, when done modifying parameter</td></tr>
 </table>
 <br>
 </div>
@@ -2489,7 +2042,7 @@ Specify isdone=1 when done modifying parameter (e.g. releasing touch)
 <a href="#time_precise"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>time_precise</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> retval = <em>time_precise</em>([<i>optional</i> <i>float</i> #val])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> retval = <em>time_precise</em>([<i>optional</i> <i>float</i> #val])</code></div>
 </div><p>
 <div class="ch">
 Sets the parameter (or a temporary buffer if omitted) to a system-local timestamp in seconds, and returns a reference to that value. <br/>
@@ -2498,18 +2051,14 @@ The granularity of the value returned is system defined (but generally significa
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retval</td>
-<td>the precise time</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retval</td></tr>
+<tr><td class="ch2">the precise time</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>float</i></td>
-<td>a pointer to a variable, into which time_precise can write the current time</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>float</i></td></tr>
+<tr><td class="ch2">a pointer to a variable, into which time_precise can write the current time</td></tr>
 </table>
 <br>
 </div>
@@ -2519,7 +2068,7 @@ The granularity of the value returned is system defined (but generally significa
 <a href="#ui_get_state"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>ui_get_state</b></u><br>			<p>
 <div class="cc">
-<div class="e"><span class='all_view'>EEL2: </span><code> <i>integer</i> click_modifier_state = <em>ui_get_state</em>(<i>integer</i> #ctx[, <i>optional</i> <i>integer</i> #mouse_x, <i>optional</i> <i>integer</i> #mouse_y, <i>optional</i> <i>integer</i> force_frame_in, <i>optional</i> <i>integer</i> #mouse_wheel_state, <i>optional</i> <i>integer</i> #mouse_hwheel_state])</code></div>
+<div class="e">EEL2: <code> <i>integer</i> click_modifier_state = <em>ui_get_state</em>(<i>integer</i> #ctx[, <i>optional</i> <i>integer</i> #mouse_x, <i>optional</i> <i>integer</i> #mouse_y, <i>optional</i> <i>integer</i> force_frame_in, <i>optional</i> <i>integer</i> #mouse_wheel_state, <i>optional</i> <i>integer</i> #mouse_hwheel_state])</code></div>
 </div><p>
 <div class="ch">
 Gets UI state and context, only usable from Monitoring FX (returns 0 if used from track). <br/>
@@ -2534,57 +2083,43 @@ If force_frame_in is specified and is positive, then the processor will be re-ex
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> click_modifier_state</td>
-<td>1/2/4 are l/r/m mouse buttons, <br/>
+<tr><td class="pr"><i>integer</i> click_modifier_state</td></tr>
+<tr><td class="ch2">1/2/4 are l/r/m mouse buttons, <br/>
 8/16/32 are ctrl/shift/alt, <br/>
-1024 is whether configuration for this processor is visible</td>
-</tr>
+1024 is whether configuration for this processor is visible</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> #ctx</td>
-<td>-1, mouse is above video-processor; 1-24, mouse is changing knob 1-24; 0, mouse is outside the video-window</td>
-</tr>
+<tr><td class="pr"><i>integer</i> #ctx</td></tr>
+<tr><td class="ch2">-1, mouse is above video-processor; 1-24, mouse is changing knob 1-24; 0, mouse is outside the video-window</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> #mouse_x</td>
-<td>ui_get_state puts into this variable the current x-mouse-position(0-1)/knob-control area-xposition, when ctc>-1</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> #mouse_x</td></tr>
+<tr><td class="ch2">ui_get_state puts into this variable the current x-mouse-position(0-1)/knob-control area-xposition, when ctc>-1</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> #mouse_y</td>
-<td>ui_get_state puts into this variable the current y-mouse-position(0-1)/knob-control area-yposition, when ctc>-1</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> #mouse_y</td></tr>
+<tr><td class="ch2">ui_get_state puts into this variable the current y-mouse-position(0-1)/knob-control area-yposition, when ctc>-1</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>number</i> force_frame_in</td>
-<td>positive, update getting the ui-state even if no video is available; in seconds</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>number</i> force_frame_in</td></tr>
+<tr><td class="ch2">positive, update getting the ui-state even if no video is available; in seconds</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> #mouse_wheel_state</td>
-<td>ui_get_state puts into this variable the current mouse-wheel-state</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> #mouse_wheel_state</td></tr>
+<tr><td class="ch2">ui_get_state puts into this variable the current mouse-wheel-state</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> #mouse_hwheel_state</td>
-<td>ui_get_state puts into this variable the current horizontal-mouse-wheel-state</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> #mouse_hwheel_state</td></tr>
+<tr><td class="ch2">ui_get_state puts into this variable the current horizontal-mouse-wheel-state</td></tr>
 </table>
 <br>
 </div>
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 005 - 66 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 006 - 66 elements available <br></td></table>
         <hr>
       </div>
       <br>

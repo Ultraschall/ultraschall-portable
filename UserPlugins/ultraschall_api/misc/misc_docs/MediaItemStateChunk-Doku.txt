@@ -1,4 +1,4 @@
-MediaItemStateChunk Docs(work in progress) by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
+MediaItemStateChunk Docs(work in progress) by Meo-Ada Mespotine(mespotine.de) for the ultraschall.fm-project
         Note: <TAKEFX TAKEFX" still missing, as well as most of the MIDI-stuff like notes and the <SOURCE-tag for MIDI
               MIDI information included in here is probably still wrong!!!
               The rest should be fairly complete and correct, but if you find errors, drop me a note at mespotine@mespotine.de
@@ -1115,7 +1115,7 @@ RECPASS integer state
     STARTPOS 0.000                                          // Section start offset (in seconds)
     OVERLAP 0.010                                           // Section crossfade (in seconds)
     <SOURCE WAVE                                            // Source details. Appears alone if SOURCE SECTION not set
-        FILE "C:Path\To\AudioFile.wav"                      // Source file. 
+        FILE "C:Path\To\AudioFile.wav"                      // Source file. Will be enclosed in " when there's a space in name or path
     >                                                       // Source details end
 >                                                           // Source section end
             
