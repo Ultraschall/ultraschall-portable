@@ -191,7 +191,7 @@ function ultraschall.CSV2IndividualLinesAsArray(csv_line,separator)
   <description>
     convert a csv-string to an array of the individual values. If separator cannot be found, it'll return the original string
     
-    returns nil in case or error
+    returns nil in case of error
   </description>
   <retvals>
     integer count - the number of entries
@@ -1065,8 +1065,8 @@ function ultraschall.OpenURL(url)
   elseif OS=="Other" then
     os.execute("xdg-open "..url)
   else
-	--reaper.BR_Win32_ShellExecute("open", url, "", "", 0)
-	--ACHWAS,ACHWAS2 = reaper.ExecProcess("%WINDIR\\SysWow64\\cmd.exe \"Ultraschall-URL\" /B ".. url, 0)
+    --reaper.BR_Win32_ShellExecute("open", url, "", "", 0)
+    --ACHWAS,ACHWAS2 = reaper.ExecProcess("%WINDIR\\SysWow64\\cmd.exe \"Ultraschall-URL\" /B ".. url, 0)
     os.execute("start \"Ultraschall-URL\" /B ".. url)
   end
   return true
@@ -5812,18 +5812,18 @@ function ultraschall.Benchmark_GetStartTime(slot)
   </requires>
   <functioncall>number starttime = ultraschall.Benchmark_GetStartTime(optional integer slot)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-	This function is for benchmarking parts of your code.
-	It returns the starttime of the last benchmark-start.
-	
-	returns nil, if no benchmark has been made yet.
-	
-	Use [Benchmark_MeasureTime](#Benchmark_MeasureTime) to start/reset a new benchmark-measureing.
+    This function is for benchmarking parts of your code.
+    It returns the starttime of the last benchmark-start.
+    
+    returns nil, if no benchmark has been made yet.
+    
+    Use [Benchmark_MeasureTime](#Benchmark_MeasureTime) to start/reset a new benchmark-measureing.
   </description>
   <retvals>
     number starttime - the starttime of the currently running benchmark
   </retvals>
   <parameters>
-	optional integer slot - the slot, whose starttime you want to get
+    optional integer slot - the slot, whose starttime you want to get
   </parameters>
   <chapter_context>
     API-Helper functions
@@ -5841,34 +5841,34 @@ function ultraschall.Benchmark_GetStartTime(slot)
 end
 
 function ultraschall.Benchmark_GetAllStartTimesAndSlots()
-	--[[
-	<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-	  <slug>Benchmark_GetAllStartTimesAndSlots</slug>
-	  <requires>
-		Ultraschall=4.1
-		Reaper=5.975
-		Lua=5.3
-	  </requires>
-	  <functioncall>number starttime = ultraschall.Benchmark_GetStartTime()</functioncall>
-	  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-		This function is for benchmarking parts of your code.
-		It returns a table with all starttimes of all current benchmark-measurings. The index of the table reflects the slots.
-		
-		Use [Benchmark_MeasureTime](#Benchmark_MeasureTime) to start/reset a new benchmark-measureing.
-	  </description>
-	  <retvals>
-		table starttime_slots - a table with all starttimes of all current benchmark-measurings, where the index reflects the slots
-	  </retvals>
-	  <chapter_context>
-		API-Helper functions
+    --[[
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+      <slug>Benchmark_GetAllStartTimesAndSlots</slug>
+      <requires>
+        Ultraschall=4.1
+        Reaper=5.975
+        Lua=5.3
+      </requires>
+      <functioncall>number starttime = ultraschall.Benchmark_GetStartTime()</functioncall>
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">
+        This function is for benchmarking parts of your code.
+        It returns a table with all starttimes of all current benchmark-measurings. The index of the table reflects the slots.
+        
+        Use [Benchmark_MeasureTime](#Benchmark_MeasureTime) to start/reset a new benchmark-measureing.
+      </description>
+      <retvals>
+        table starttime_slots - a table with all starttimes of all current benchmark-measurings, where the index reflects the slots
+      </retvals>
+      <chapter_context>
+        API-Helper functions
         Benchmark
-	  </chapter_context>
-	  <target_document>US_Api_Functions</target_document>
-	  <source_document>ultraschall_functions_HelperFunctions_Module.lua</source_document>
-	  <tags>helper functions, get, all, slots, start, benchmark, time</tags>
-	</US_DocBloc>
-	--]]
-	return ultraschall.Benchmark_StartTime_Time
+      </chapter_context>
+      <target_document>US_Api_Functions</target_document>
+      <source_document>ultraschall_functions_HelperFunctions_Module.lua</source_document>
+      <tags>helper functions, get, all, slots, start, benchmark, time</tags>
+    </US_DocBloc>
+    --]]
+    return ultraschall.Benchmark_StartTime_Time
 end
 
 function ultraschall.Benchmark_MeasureTime(timeformat, reset, slot)
@@ -5882,33 +5882,35 @@ function ultraschall.Benchmark_MeasureTime(timeformat, reset, slot)
   </requires>
   <functioncall>number elapsed_time, string elapsed_time_string, string measure_evaluation = ultraschall.Benchmark_MeasureTime(optional integer time_mode, optional boolean reset, optional integer slot)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-	This function is for benchmarking parts of your code.
-	It returns the passed time, since last time calling this function.
-	
-	Use [Benchmark_GetStartTime](#Benchmark_GetStartTime) to start the benchmark.
+    This function is for benchmarking parts of your code.
+    It returns the passed time, since last time calling this function.
+    
+    Use [Benchmark_GetStartTime](#Benchmark_GetStartTime) to start the benchmark.
   </description>
   <retvals>
     number elapsed_time - the elapsed time in seconds
-	string elapsed_time_string - the elapsed time, formatted by parameter time_mode
-	string measure_evaluation - an evaluation of time, mostly starting with &lt; or &gt; an a number of +
-							  - 0, no time passed
-							  - >, for elapsed times greater than 1, the following + will show the number of integer digits; example: 12.927 -> ">++"
-							  - <, for elapsed times smaller than 1, the following + will show the number of zeros+1 in the fraction, until the first non-zero-digit appears; example: 0.0063 -> "<+++"
+    string elapsed_time_string - the elapsed time, formatted by parameter time_mode
+    string measure_evaluation - an evaluation of time, mostly starting with &lt; or &gt; an a number of +
+                              - 0, no time passed
+                              - >, for elapsed times greater than 1, the following + will show the number of integer digits; example: 12.927 -> ">++"
+                              - <, for elapsed times smaller than 1, the following + will show the number of zeros+1 in the fraction, until the first non-zero-digit appears; example: 0.0063 -> "<+++"
   </retvals>
   <parameters>
-	optional integer time_mode - the formatting of elapsed_time_string
-							   - 0=time
-							   - 1=measures.beats + time
-							   - 2=measures.beats
-							   - 3=seconds
-							   - 4=samples
-							   - 5=h:m:s:f
-	optional boolean reset - true, resets the starttime(for new measuring); false, keeps current measure-starttime(for continuing measuring)
-	optional integer slot - if you want to have multiple benchmark-measures at the same time, you can store them in different slots.
-						  - means, you can measure in slot 1 and slot 2, where you can occasionally reset slot 1 while having continuous measuring in slot 2.
-						  - this allows you to measure the execution time of the whole script(slot 2) and certain parts of the script on individual basis(slot 1).
-						  - you can use as many slots, as you want.
-	                      - nil, default slot is 0
+    optional integer time_mode - the formatting of elapsed_time_string
+                               - 0=time
+                               - 1=measures.beats + time
+                               - 2=measures.beats
+                               - 3=seconds
+                               - 4=samples
+                               - 5=h:m:s:f
+    optional boolean reset - true, resets the starttime(for new measuring); false, keeps current measure-starttime(for continuing measuring)
+    optional integer slot - if you want to have multiple benchmark-measures at the same time, you can store them in different slots.
+                          - means, you can measure in slot 1 and slot 2, where you can occasionally reset slot 1 while 
+                          - having continuous measuring in slot 2.
+                          - this allows you to measure the execution time of the whole script(slot 2) and certain parts of the script 
+                          - on individual basis(slot 1).
+                          - you can use as many slots, as you want.
+                          - nil, default slot is 0
   </parameters>
   <chapter_context>
     API-Helper functions
@@ -5945,7 +5947,7 @@ function ultraschall.Benchmark_MeasureTime(timeformat, reset, slot)
     valid="<"..string.gsub(valid, "0", "+").."+"
   end
   if timeformat==0 or timeformat==nil then
-	passed_time_string=tostring(passed_time) 
+    passed_time_string=tostring(passed_time) 
   else
     passed_time_string=reaper.format_timestr_len(passed_time, "", 0, timeformat-1)
   end
@@ -6412,4 +6414,45 @@ function ultraschall.GMem_GetValues_VideoSamplePeeker(samplesize)
          math.tointeger(Values[6]), -- number of channels
          #Buf,  -- number of values of the sample-buffer
          Buf   -- the values themselves of the sample-buffer
+end
+
+function ultraschall.ReturnReaperExeFile_With_Path()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ReturnReaperExeFile_With_Path</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.33
+    Lua=5.3
+  </requires>
+  <functioncall>string exefile_with_path = ultraschall.ReturnReaperExeFile_With_Path()</functioncall>
+  <description>
+    returns the reaper-exe-file with file-path
+  </description>
+  <retvals>
+    string exefile_with_path - the filename and path of the reaper-executable
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Various
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>helper functions, get, exe, filename, path</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.IsOS_Windows()==true then
+    -- On Windows
+    ExeFile=reaper.GetExePath().."\\reaper.exe"
+  elseif ultraschall.IsOS_Mac()==true then
+    -- On Mac
+    ExeFile=reaper.GetExePath().."/Reaper64.app/Contents/MacOS/reaper"
+    if reaper.file_exists(ExeFile)==false then
+      ExeFile=reaper.GetExePath().."/Reaper.app/Contents/MacOS/reaper"
+    end
+  else
+    -- On Linux
+    ExeFile=reaper.GetExePath().."/reaper"
+  end
+  return ExeFile
 end

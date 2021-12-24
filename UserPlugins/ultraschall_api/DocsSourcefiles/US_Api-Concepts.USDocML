@@ -596,6 +596,9 @@
                     RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; 
                                                 true, checked; 
                                                 false, unchecked
+                    RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
+                    RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
+                    RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
                     RenderTable["Bounds"]    - 0, Custom time range; 
                                                1, Entire project; 
                                                2, Time selection; 
@@ -627,8 +630,8 @@
                                                              3, True Peak
                                                              4, LUFS-M max
                                                              5, LUFS-S max
-                    RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target; 
-                                                                      false, don't normalize stems to master-target
+                    RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
+                                                              false, normalize each file individually
                     RenderTable["Normalize_Target"]       - the normalize-target as dB-value	
                     RenderTable["NoSilentRender"]         - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
                     RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 

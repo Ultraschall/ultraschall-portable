@@ -3,9 +3,6 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Introduction</slug>
         <title>Introduction</title>
-        <requires>
-            Reaper=6.13
-        </requires>
         <description markup_type="markdown" markup_version="1.0.1">  
             Reaper can be controlled via a web browser interface:
             Options->Preferences->Control/OSC/Web->Add->Web Browser Interface
@@ -31,9 +28,6 @@
     <US_DocBloc>
         <slug>FunctionsIntro</slug>
         <title>How it works - basics</title>
-        <requires>
-            Reaper=6.13
-        </requires>
         <description markup_type="markdown" markup_version="1.0.1">  
             The Web-Interface is programmed in JavaScript. You need to include main.js first, then call wwr\_start(), which tells the Reaper-Server to accept requests.
             You can now give Reaper requests, using commands like i.e. wwr\_req(ActionCommandID) for one time requests. The ActionCommandID tells Reaper, what you want to call, i.e. the ActionCommandID 1007 starts play in Reaper.
@@ -79,9 +73,6 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>DataExchange</slug>
         <title>How to exchange data and get states from Reaper?</title>
-        <requires>
-            Reaper=6.13
-        </requires>
         <description markup_type="markdown" markup_version="1.0.1">              
             ####Sending data to Reaper
             
@@ -117,12 +108,13 @@
 
             ####Receiving data from Reaper
             
-            When you call a request, that returns data/values/states, like (TRANSPORT, MARKER or GET/EXTSTATE/section/key), the main.js automatically calls a function called wwr\_onreply(results). This function isn't there by default but must be rather defined by you in your script.
-            In that function, the variable "result" contains the response from Reaper, which can either be a one-liner(like with TRANSPORT) or multiliner(like when getting the data for all markers in your project with MARKER).
-            Multiliners are separated by a newline "\n", the individual entries in each line are separated with tabs "\t". So if you want to get the individual values, newline and tab will make you very happy.
-            Every line in the response starts with the exact request you've sent(a "TRANSPORT"-request returns a line, that begins with "TRANSPORT"), so you know exactly, from what request the response came-from. You can also differentiate between different kinds of requests that way, as different requests return different ways of data, states, etc.
-            There are exceptions to this rule though(e.g. "MARKER", which starts with "MARKER\_LIST"), so, if in doubt, just check the "results"-variable using an alert-message and look for yourself, how the response starts. But relax, they keep the same, means: "MARKER" will always return "MARKER\_LIST" and not Jamboreepop out of a sudden or something like that.
-            The second example in this chapter will show you how to do it.
+            When you call a request, that returns data/values/states, like (TRANSPORT, MARKER or GET/EXTSTATE/section/key), the main.js automatically calls a function called wwr\_onreply(results).  
+            This function isn't there by default but must be rather defined by you in your script.  
+            In that function, the variable "result" contains the response from Reaper, which can either be a one-liner(like with TRANSPORT) or multiliner(like when getting the data for all markers in your project with MARKER).  
+            Multiliners are separated by a newline "\n", the individual entries in each line are separated with tabs "\t". So if you want to get the individual values, newline and tab will make you very happy.  
+            Every line in the response starts with the exact request you've sent(a "TRANSPORT"-request returns a line, that begins with "TRANSPORT"), so you know exactly, from what request the response came-from. You can also differentiate between different kinds of requests that way, as different requests return different ways of data, states, etc.  
+            There are exceptions to this rule though(e.g. "MARKER", which starts with "MARKER\_LIST"), so, if in doubt, just check the "results"-variable using an alert-message and look for yourself, how the response starts. But relax, they keep the same, means: "MARKER" will always return "MARKER\_LIST" and not something like Jamboreepop out of a sudden.  
+            The second example in this chapter will show you how to do it.  
 
             Example1:  
             This is a simple example, that shows how to get data from Reaper using the wwr-request "TRANSPORT" and display it with the Javascript-alert-function. Feel free to modify and experiment in the wwr\_req()-line, by exchanging "TRANSPORT" with another request(more requests later in this documentation).
@@ -243,11 +235,23 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+      <slug>SecurityAspects</slug>
+      <title>Security Aspects</title>
+      <description>
+		    The internal server in Reaper can be killed with a Denial of Service-Attack. It seems, as it can process 1000 requests in a short time without a problem. More requests than 1000 can lead Reaper to simply ignore them. An even higher amount of requests(i.e. 10.000 and more) could cause Reaper to hang for a few seconds(maybe even longer?). What effects this has during recording or playback, needs to be researched more.
+		    Setting a username and password in the Reaper-preferences for the Web-Interface is definately a good idea.
+		
+		    If the Web-Interface-API has any kind of https-support needs to be researched.
+		
+      </description>
+      <chapter_context>
+        Introduction
+      </chapter_context>
+    </US_DocBloc>    
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>FunctionsandVariables</slug>
         <title>Functions and Variables</title>
-        <requires>
-            Reaper=6.13
-        </requires>
         <description>
             The main.js-file, which manages the exchange of requests and data, includes some little helpers with it, that you can use.
             
@@ -1167,22 +1171,4 @@
         Valid Commands for wwr_req
       </chapter_context>
     </US_DocBloc>
-  
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-      <slug>SecurityAspects</slug>
-      <title>Security Aspects</title>
-      <requires>
-          Reaper=6.13
-      </requires>
-      <description>
-		    The internal server in Reaper can be killed with a Denial of Service-Attack. It seems, as it can process 1000 requests in a short time without a problem. More requests than 1000 can lead Reaper to simply ignore them. An even higher amount of requests(i.e. 10.000 and more) could cause Reaper to hang for a few seconds(maybe even longer?). What effects this has during recording or playback, needs to be researched more.
-		    Setting a username and password in the Reaper-preferences for the Web-Interface is definately a good idea.
-		
-		    If the Web-Interface-API has any kind of https-support needs to be researched.
-		
-      </description>
-      <chapter_context>
-        Introduction
-      </chapter_context>
-    </US_DocBloc>    
 </USDocBloc>

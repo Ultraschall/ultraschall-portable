@@ -3,7 +3,7 @@
       <slug>Introduction</slug>
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.33 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.41 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -136,11 +136,14 @@
       <slug>actionmenu</slug>  
       <title>actionmenu</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Show recent actions-entry, as set in the Actions-menu.  
+          Show recent actions-entry, as set in the Actions-menu and Preferences -> General.  
           It is an integer  
             
-           >0, don't show recent actions - unchecked  
-           >1, show recent actions - checked  
+           >&1=0, don't show recent actions - unchecked  
+           >&1=1, show recent actions - checked  
+           
+           >&2=0, Preferences -> General - show file part before path(unchecked)
+           >&2=1, Preferences -> General - show file part before path(checked)
            
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -891,10 +894,19 @@
       <slug>bpminfnimport</slug>  
       <title>bpminfnimport</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown
-          It is a double
+          Some settings as set in Preferences -> Video
+          It is an integer
+          
+            >&1=0, unknown
+            >&1=1, unknown
+          
+            >&2=0, Ignore tempo suggested by media -> When media suggests bpm-dropdownlist
+            >&2=1, Always prompt -> When media suggests bpm-dropdownlist
+          
+            >&4=0, After adjusting tempo, set imported media to auto-stretch at tempo changes-checkbox - unchecked
+            >&4=1, After adjusting tempo, set imported media to auto-stretch at tempo changes-checkbox - checked
             
-          Unknown, if it's stored in reaper.ini as well...
+          Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>
          Config Variables  
@@ -3041,8 +3053,13 @@
       <slug>defstretchmode</slug>  
       <title>defstretchmode</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          unknown 
+          Stretch marker mode-dropdownlist as set in Project Settings -> Project Settings 
           It is an integer  
+          
+          >0, Balanced
+          >1, Tonal-optimized
+          >2, Transient-optimized
+          >3, No pre-echo reduction
           
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -3798,11 +3815,14 @@
       <slug>envattach</slug>  
       <title>envattach</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Move envelope points with media items-menu entry, as set in Options -> Envelope points  
+          Move envelope points with media items-menu entry, as set in Options -> Envelope points or settings in the Project Settings -> Advanced 
           It is an integer  
           
-           >0, don't move points with item(off) - unchecked  
-           >1, move points with item(on) - checked  
+           >&1=0, don't move points with item(off) - unchecked  
+           >&1=1, move points with item(on) - checked  
+           
+           >&2=0, Bezier envelope segments are affected by surrounding non-bezier points(checked)
+           >&2=1, Bezier envelope segments are affected by surrounding non-bezier points(unchecked)
            
           For other settings set in Options -> Envelope points, see [envclicksegmode](#envclicksegmode), [env\_reduce](#env_reduce)  
             
@@ -4002,6 +4022,9 @@
            
            >&32=0, Warn when enabled MIDI devices are not present - checked  
            >&32=1, Warn when enabled MIDI devices are not present - unchecked  
+           
+           >&4096=0, Stop processing audio while warning of failed disk writes/disk full - unchecked
+           >&4096=1, Stop processing audio while warning of failed disk writes/disk full - checked
             
           For other settings in Preferences -> Audio, see [audiocloseinactive](#audiocloseinactive), [audioclosestop](#audioclosestop), [hwfadex](#hwfadex), [optimizesilence](#optimizesilence)  
           For other settings set in Preferences -> Recording, see [adjreclat](#adjreclat), [adjrecmanlat](#adjrecmanlat), [adjrecmanlatin](#adjrecmanlatin), [diskcheck](#diskcheck), [diskcheckmb](#diskcheckmb), [manuallat](#manuallat), [recfile\_wildcards](#recfile_wildcards),  
@@ -4319,11 +4342,29 @@
            >&256=0, Show current track FX in FX button right-click menu - checked  
            >&256=1, Show current track FX in FX button right-click menu - unchecked  
            
-           >&1024=0, Auto-position new FX chain windows - unchecked  
-           >&1024=1, Auto-position new FX chain windows - checked  
+           >&1024 and &131072, FXChain-positioning-dropdownlist
+            >> 0 0, Cascade
+            >> 1 0, Automatic
+            >> 0 1, Modal default
            
-           >&2048=0, Auto-position new floating FX windows - unchecked  
-           >&2048=1, Auto-position new floating FX windows - checked  
+           >&2048 and &262144, Floating FX positioning-dropdownlist
+            >> 0 0, Cascade
+            >> 1 0, Automatic
+            >> 0 1, Modal default
+           
+           >&8192=0, Show FX-list right side of FX Chain window-checkbox - unchecked
+           >&8192=1, Show FX-list right side of FX Chain window-checkbox - checked
+           
+           >&16384=0, Show FX chain buttons above FX list-checkbox - unchecked
+           >&16384=1, Show FX chain buttons above FX list-checkbox - checked
+           
+           >&32768=0, Show comment field above FX UI-checkbox - checked
+           >&32768=1, Show comment field above FX UI-checkbox - unchecked
+            
+           >&65536=0, Do not create undo points when closing FX windows-checkbox - unchecked
+           >&65536=1, Do not create undo points when closing FX windows-checkbox - checked
+           
+           
             
           For other settings in Preferences -> Plugins, see [fxresize](#fxresize) and [maxrecentfx](#maxrecentfx)  
             
@@ -6090,7 +6131,7 @@
            >0, Enable output(off) - unchecked  
            >1, Enable output(on) - checked  
            
-          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts\_clock](#midiouts_clock), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](#midiouts_llmode)  
+          For other settings in Preferences -> MIDI Devices, see [midiouts\_noreset](#midiouts_noreset), [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts\_clock](#midiouts_clock), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](#midiouts_llmode)  
            
                     
           Stored in reaper.ini under the same name in the section REAPER.      
@@ -6107,19 +6148,15 @@
       <slug>midiouts_clock</slug>  
       <title>midiouts_clock</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The context-menu of the MIDI outputs to make available-section, as set in Preferences -> MIDI Devices  
-          Doubleclick on a device in the list.  
-          Needs midiouts to be set to 1.  
-          It is an integer  
-          
-           >0, Send clock to output(off) - unchecked  
-           >1, Send clock to output(on) - checked  
+          The Send clock to output-contextmenu-entry as set in Preferences->MIDI Devices->MIDI output-devices->rightlick on the midi-devices
+          It is a string   
+
+          This string works like an integer-bitfield, means, you need to convert it to integer.
+          After that, each bit(1 through n) represents a MIDI-output-device. If the bit is set to 1, the "Send clock to output-contextmenu-entry"-option for this device is set to on, otherwise to off.
            
-          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](midiouts_llmode )   
+          For other settings in Preferences -> MIDI Devices, see [midiouts\_noreset](#midiouts_noreset), [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](midiouts_llmode )   
            
-                    
           Stored in reaper.ini under the same name in the section REAPER.      
-            
       </description>  
       <chapter_context>
          Config Variables  
@@ -6132,15 +6169,13 @@
       <slug>midiouts_clock_nospp</slug>  
       <title>midiouts_clock_nospp</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The context-menu of the MIDI outputs to make available-section, as set in Preferences -> MIDI Devices  
-          Doubleclick on a device in the list.  
-          Needs midiouts to be set to 1 and midiouts_clock to be set to 1.  
-          It is an integer  
-          
-           >0, Do not send SPP to output(off) - unchecked  
-           >1, Do not send SPP to output(on) - checked  
+          The Do not send SPP to output-contextmenu-entry as set in Preferences->MIDI Devices->MIDI output-devices->rightlick on the midi-devices
+          It is a string   
+
+          This string works like an integer-bitfield, means, you need to convert it to integer.
+          After that, each bit(1 through n) represents a MIDI-output-device. If the bit is set to 1, the "Do not send SPP to output"-option for this device is set to on, otherwise to off.
            
-          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock](#midiouts_clock), [midiouts\_llmode](midiouts_llmode )   
+          For other settings in Preferences -> MIDI Devices, see [midiouts\_noreset](#midiouts_noreset), [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock](#midiouts_clock), [midiouts\_llmode](midiouts_llmode )   
            
                     
           Stored in reaper.ini under the same name in the section REAPER.      
@@ -6157,15 +6192,13 @@
       <slug>midiouts_llmode</slug>  
       <title>midiouts_llmode</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The context-menu of the MIDI outputs to make available-section, as set in Preferences -> MIDI Devices  
-          Doubleclick on a device in the list.  
-          Needs midiouts to be set to 1.  
-          It is an integer  
-          
-           >0, Low latency outut mode (low precision)(off) - unchecked  
-           >1, Low latency outut mode (low precision)(on) - checked  
+          The Low latency mode(low precision)-contextmenu-entry as set in Preferences->MIDI Devices->MIDI output-devices->rightlick on the midi-devices
+          It is a string   
+
+          This string works like an integer-bitfield, means, you need to convert it to integer.
+          After that, each bit(1 through n) represents a MIDI-output-device. If the bit is set to 1, the "Low latency mode(low precision)"-option for this device is set to on, otherwise to off.
             
-          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock](#midiouts_clock), [midiouts\_clock\_nospp](#midiouts_clock_nospp)  
+          For other settings in Preferences -> MIDI Devices, see [midiouts\_noreset](#midiouts_noreset), [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock](#midiouts_clock), [midiouts\_clock\_nospp](#midiouts_clock_nospp)  
            
                     
           Stored in reaper.ini under the same name in the section REAPER.      
@@ -6177,6 +6210,28 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>midiouts_noreset</slug>  
+      <title>midiouts_noreset</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The Do not send reset messages-contextmenu-entry as set in Preferences->MIDI Devices->MIDI output-devices->rightlick on the midi-devices
+          It is a string   
+
+          This string works like an integer-bitfield, means, you need to convert it to integer.
+          After that, each bit(1 through n) represents a MIDI-output-device. If the bit is set to 1, the "Do not send reset messages"-option for this device is set to on, otherwise to off.
+          
+          For other settings in Preferences -> MIDI Devices, see [midiouts\_clock](#midiouts_clock), [midioutthread](#midioutthread), [midisendflags](#midisendflags), [midiouts](#midiouts), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](midiouts_llmode )   
+          
+          Stored in reaper.ini under the same name in the section REAPER.    
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>    
+    
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>midioutthread</slug>  
@@ -6257,7 +6312,7 @@
            >&256=0, Reset MIDI CC/pitch on: playback loop/skip(on) - checked  
            >&256=1, Reset MIDI CC/pitch on: playback loop/skip(off) - unchecked  
             
-          For other settings in Preferences -> MIDI Devices, see [midioutthread](#midioutthread), [midiouts](#midiouts), [midiouts\_clock](#midiouts_clock), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](midiouts_llmode )   
+          For other settings in Preferences -> MIDI Devices, see [midiouts\_noreset](#midiouts_noreset), [midioutthread](#midioutthread), [midiouts](#midiouts), [midiouts\_clock](#midiouts_clock), [midiouts\_clock\_nospp](#midiouts_clock_nospp), [midiouts\_llmode](midiouts_llmode )   
           For other settings in section Playback settings, as set in Preferences -> Playback, see [loopstopfx](#loopstopfx), [runafterstop](#runafterstop), [runallonstop](#runallonstop),   
                                                                       [stopendofloop](#stopendofloop), [stopprojlen](#stopprojlen), [viewadvance](#viewadvance)  
                     
@@ -8532,6 +8587,24 @@
     </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrenderbrickwall</slug>  
+      <title>projrenderbrickwall</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The "Brickwall"-db-value-inputbox as set in the Render to File-dialog.  
+          It is a double-float
+
+          See also [projrendernorm](#projrendernorm)
+
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>    
+  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>projrenderdither</slug>  
       <title>projrenderdither</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
@@ -8620,6 +8693,14 @@
             
            >&32=0, Nomalize stems to master target-checkbox(only available with source -> Master mix + stems) - unchecked  
            >&32=1, Nomalize stems to master target-checkbox(only available with source -> Master mix + stems) - checked  
+           
+           >&64=0, Brickwall Limit-checkbox - unchecked
+           >&64=1, Brickwall Limit-checkbox - checked
+           
+           >&128=0, Brickwall-Limit-dropdownlist - Peak
+           >&128=1, Brickwall-Limit-dropdownlist - True Peak
+           
+          See also [projrenderbrickwall](#projrenderbrickwall)
            
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -9160,7 +9241,7 @@
       <slug>projsmptesync</slug>  
       <title>projsmptesync</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The External timecode synchronization-settings and the settings behind the accompanying Configure-button, as set in Project Settings -> Advanced as well as toggled by action 40620  
+          The External timecode synchronization-settings and the settings behind the accompanying Configure-button, as set in Project Settings -> Advanced as well as toggled by action 40620 or left click on the play-button  
           It's an integer-bitfield.  
           
            >&1=0, External timecode synchronization/Enable synchronization to timecode - unchecked  
@@ -9180,6 +9261,12 @@
            
            >&32=0, Recording - checked  
            >&32=1, Recording - unchecked  
+           
+           >&64=0, on lack of timecode-dropdownlist -> Stop recording
+           >&64=1, on lack of timecode-dropdownlist -> Re-sync recording 
+           
+           >&128=0, if drift exceeds-dropdownlist -> Stop recording
+           >&128=1, if drift exceeds-dropdownlist -> Re-sync recording 
            
            >&256 and &512, the fps-settings, when MTC: All Inputs is set (see [projsmpteinput](#projsmpteinput) to set that)  
            
@@ -9408,6 +9495,8 @@
            >&16384 = 0, unchecked: Video is affected by muted parent tracks
            >&16384 = 1, unchecked: Video is affected by muted parent tracks
            
+           >&32768 = 0, Video processor automation-dropdownlist -> Evaluate at middle of frame
+           >&32768 = 1, Video processor automation-dropdownlist -> Evaluate at start of frame
            
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -10205,6 +10294,18 @@
            >&64=0, Always embed start offset (media position in project) - unchecked
            >&64=1, Always embed start offset (media position in project) - checked
            
+           >&128=0, Mark overs in render peaks display - checked
+           >&128=1, Mark overs in render peaks display - unchecked
+           
+           >&256=0, True Peak -> Calculate statistics when rendering-button - unchecked
+           >&256=1, True Peak -> Calculate statistics when rendering-button - checked
+           
+           >&512=0, LUFS-I, LUFS-M(integrated loudness, momentary loudness) -> Calculate statistics when rendering-button - checked
+           >&512=1, LUFS-I, LUFS-M(integrated loudness, momentary loudness) -> Calculate statistics when rendering-button - unchecked
+           
+           >&1024=0, LRA, LUFS-S (loudness range, short-term loudness) -> Calculate statistics when rendering-button - checked
+           >&1024=1, LRA, LUFS-S (loudness range, short-term loudness) -> Calculate statistics when rendering-button - unchecked
+                      
            >seems not to be available anymore as of Reaper 5.977:  
            >&65537=0, Save copy of project to outfile.wav.RPP - unchecked  
            >&65537=1, Save copy of project to outfile.wav.RPP - checked  
@@ -13403,6 +13504,9 @@
            
            >&8192=0, Rendering stems for time selection via action(Preferences -> Rendering)(off) - unchecked  
            >&8192=1, Rendering stems for time selection via action(Preferences -> Rendering)(on) - checked  
+           
+           >&65536=0, Freeze muted items into muted silent items -> unchecked
+           >&65536=1, Freeze muted items into muted silent items -> checked
            
           For other settings as set in Preferences -> Buffering, see [audioasync](#audioasync), [autonbworkerthreads](#autonbworkerthreads), [prebufperb](#prebufperb), [threadpr](#threadpr), [workbehvr](#workbehvr), [workbuffxuims](#workbuffxuims),   
                                                   [workbufmsex](#workbufmsex), [workthreads](#workthreads)  

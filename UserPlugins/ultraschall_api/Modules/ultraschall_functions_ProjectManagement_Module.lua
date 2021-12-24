@@ -472,8 +472,8 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers, i
     You can optimise the speed of the function, by setting the appropriate parameters to false.
     So if you don't need the last itemedge, setting return\_last\_itemedge=false speeds up execution massively.
     
-	If you want to have the full projectlength during recording, means, including items currently recorded, set include_rec=true
-	
+    If you want to have the full projectlength during recording, means, including items currently recorded, set include_rec=true
+    
     To do the same for projectfiles, use: [GetProject\_Length](#GetProject_Length)
   </description>
   <retvals>
@@ -487,7 +487,7 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers, i
     optional boolean return_last_itemedge - true or nil, return the last itemedge; false, don't return it
     optional boolean return_last_markerpos - true or nil, return the last marker/regionend-position; false, don't return it 
     optional boolean return_lat_timesigmarkerpos - true or nil, return the last timesignature-marker-position; false, don't return it
-	optional boolean include_rec - true, takes into account the projectlength during recording; nil or false, only the projectlength exluding currently recorded MediaItems
+    optional boolean include_rec - true, takes into account the projectlength during recording; nil or false, only the projectlength exluding currently recorded MediaItems
   </parameters>
   <chapter_context>
     Project-Management
@@ -528,7 +528,7 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers, i
     end
   end
   if include_rec==true and reaper.GetPlayState()&4~=0 and ultraschall.AnyTrackRecarmed()==true and reaper.GetPlayPosition()>reaper.GetProjectLength() then 
-	return reaper.GetPlayPosition(), Longest, Regionend, Markerend, TimeSigEnd
+    return reaper.GetPlayPosition(), Longest, Regionend, Markerend, TimeSigEnd
   end
   return reaper.GetProjectLength(), Longest, Regionend, Markerend, TimeSigEnd
 end
@@ -663,15 +663,15 @@ function ultraschall.IsTimeSelectionActive()
   </description>
   <retvals>
     boolean retval - true, there is a time-selection; false, there isn't a time-selection
-	optional number start_of_timeselection - start of the time-selection
-	optional number end_of_timeselection - end of the time-selection
+    optional number start_of_timeselection - start of the time-selection
+    optional number end_of_timeselection - end of the time-selection
   </retvals>
   <parameters>
     optional ReaProject Project - the project, whose time-selection-state you want to know; 0 or nil, the current project
   </parameters>
   <chapter_context>
     Project-Management
-	Helper functions
+    Helper functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>

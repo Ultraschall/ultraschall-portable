@@ -2,9 +2,10 @@
 Ultraschall API Video-Functions
 </title>
 <link href="style.css" rel="stylesheet">
+<link href="custom.css" rel="stylesheet">
 </head>
 <body>    
-<a class="anchor" id="This-is-the-TopOfTheWorld"></a>
+<a class="anch" id="This-is-the-TopOfTheWorld"></a>
 <div style="position: sticky; top:0; padding-left:4%; z-index:100;">
 <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
@@ -58,11 +59,11 @@ Ultraschall API Video-Functions
 <script src="./scripts/clipboard.min.js.Download"></script>
 <!-- External Script -->
 <script src="./scripts/scripts.js.Download"></script>
-<table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Project Settings"><a href="#Project Settings">^</a></a><strong> <u>Project Settings</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#ProjectSettings_GetVideoFramerate">ProjectSettings_GetVideoFramerate</a></td><td class="tdsm"><a href="#ProjectSettings_SetVideoFramerate">ProjectSettings_SetVideoFramerate</a></td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="User Interface"><a href="#User Interface">^</a></a><strong> <u>User Interface</u></strong><br><br>
+<table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Project Settings"><a href="#Project Settings">^</a></a><strong> <u>Project Settings</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#ProjectSettings_GetVideoFramerate">ProjectSettings_GetVideoFramerate</a></td><td class="tdsm"><a href="#ProjectSettings_SetVideoFramerate">ProjectSettings_SetVideoFramerate</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="User Interface"><a href="#User Interface">^</a></a><strong> <u>User Interface</u></strong><br><br>
 <b style="font-size:small;"><br><a class="inpad" id=" Coordinates"><a href="# Coordinates">^</a></a>  Coordinates</b>
-</td></tr><tr><td class="tdsm"><a href="#VID_Pixels2VideoUIStateCoords">VID_Pixels2VideoUIStateCoords</a></td><td class="tdsm"><a href="#VID_VideoUIStateCoords2Pixels">VID_VideoUIStateCoords2Pixels</a></td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id=" Window Management"><a href="# Window Management">^</a></a>  Window Management</b>
-</td></tr><tr><td class="tdsm"><a href="#GetVideoHWND">GetVideoHWND</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><br></div><div class="ch">
+</td></tr><tr><td class="tdsm"><a href="#VID_Pixels2VideoUIStateCoords">VID_Pixels2VideoUIStateCoords</a></td><td class="tdsm"><a href="#VID_VideoUIStateCoords2Pixels">VID_VideoUIStateCoords2Pixels</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id=" Window Management"><a href="# Window Management">^</a></a>  Window Management</b>
+</td></tr><tr><td class="tdsm"><a href="#GetVideoHWND">GetVideoHWND</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><br></div><div class="ch">
 <hr>
 <a class="anch" id="ProjectSettings_GetVideoFramerate"></a>
 <a href="#ProjectSettings_GetVideoFramerate"> ^</a> 
@@ -70,23 +71,19 @@ Ultraschall API Video-Functions
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="SWS version 2.10.0.1">
 <img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><u><b>ProjectSettings_GetVideoFramerate</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> framerate, <i>string</i> addnotes = <em>ultraschall.ProjectSettings_GetVideoFramerate</em>()</code></div>
+<div class="l">Lua: <code> <i>integer</i> framerate, <i>string</i> addnotes = <em>ultraschall.ProjectSettings_GetVideoFramerate</em>()</code></div>
 </div><p>
 <div class="ch">
 returns the video-framerate of the current project              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> framerate</td>
-<td>the framerate in fps from 1 to 999999999</td>
-</tr>
+<tr><td class="pr"><i>integer</i> framerate</td></tr>
+<tr><td class="ch2">the framerate in fps from 1 to 999999999</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> addnotes</td>
-<td>either "DF", "ND" or ""</td>
-</tr>
+<tr><td class="pr"><i>string</i> addnotes</td></tr>
+<tr><td class="ch2">either "DF", "ND" or ""</td></tr>
 </table>
 <br>
 </div>
@@ -98,7 +95,7 @@ returns the video-framerate of the current project
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="SWS version 2.10.0.1">
 <img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><u><b>ProjectSettings_SetVideoFramerate</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.ProjectSettings_SetVideoFramerate</em>(<i>integer</i> framerate, <i>boolean</i> persist)</code></div>
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.ProjectSettings_SetVideoFramerate</em>(<i>integer</i> framerate, <i>boolean</i> persist)</code></div>
 </div><p>
 <div class="ch">
 sets the video-framerate of the current project and optionally the default video-framerate for new projects<br/>
@@ -107,27 +104,21 @@ returns false in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> retval</td>
-<td>true, setting was successful; false, setting was unsuccessful</td>
-</tr>
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">true, setting was successful; false, setting was unsuccessful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> framerate</td>
-<td>the framerate in fps from 1 to 999999999;<br/>
+<tr><td class="pr"><i>integer</i> framerate</td></tr>
+<tr><td class="ch2">the framerate in fps from 1 to 999999999;<br/>
 0, 29.97 fps DF<br/>
 -1, 23.976 fp<br/>
--2, 29.97 fps ND</td>
-</tr>
+-2, 29.97 fps ND</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> persist</td>
-<td>true, set these values as default for new projects; false, don't set these values as defaults for </td>
-</tr>
+<tr><td class="pr"><i>boolean</i> persist</td></tr>
+<tr><td class="ch2">true, set these values as default for new projects; false, don't set these values as defaults for </td></tr>
 </table>
 <br>
 </div>
@@ -138,7 +129,7 @@ returns false in case of an error
 <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>VID_Pixels2VideoUIStateCoords</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>number</i> uistate_x, <i>number</i> uistate_y = <em>ultraschall.VID_Pixels2VideoUIStateCoords</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> videowindow_width, <i>integer</i> videowindow_height)</code></div>
+<div class="l">Lua: <code> <i>number</i> uistate_x, <i>number</i> uistate_y = <em>ultraschall.VID_Pixels2VideoUIStateCoords</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> videowindow_width, <i>integer</i> videowindow_height)</code></div>
 </div><p>
 <div class="ch">
 converts the ui_state-coordinates of the Video-Processor into pixel-coordinates within the Video Window<br/>
@@ -149,42 +140,30 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> x_coordinate</td>
-<td>the converted x-coordinate, that reflects the values within the video-processor function ui_get_state</td>
-</tr>
+<tr><td class="pr"><i>number</i> x_coordinate</td></tr>
+<tr><td class="ch2">the converted x-coordinate, that reflects the values within the video-processor function ui_get_state</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> y_coordinate</td>
-<td>the converted y-coordinate, that reflects the values within the video-processor function ui_get_state</td>
-</tr>
+<tr><td class="pr"><i>number</i> y_coordinate</td></tr>
+<tr><td class="ch2">the converted y-coordinate, that reflects the values within the video-processor function ui_get_state</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>the x-coordinate within the Video-Window</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-coordinate within the Video-Window</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>the y-coordinate within the Video-Window</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-coordinate within the Video-Window</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> videowindow_width</td>
-<td>the current width of the Video Window</td>
-</tr>
+<tr><td class="pr"><i>integer</i> videowindow_width</td></tr>
+<tr><td class="ch2">the current width of the Video Window</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> videowindow_height</td>
-<td>the current height of the Video Window</td>
-</tr>
+<tr><td class="pr"><i>integer</i> videowindow_height</td></tr>
+<tr><td class="ch2">the current height of the Video Window</td></tr>
 </table>
 <br>
 </div>
@@ -195,7 +174,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>VID_VideoUIStateCoords2Pixels</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> x_coordinate, <i>integer</i> y_coordinate = <em>ultraschall.VID_VideoUIStateCoords2Pixels</em>(<i>number</i> uistate_x, <i>number</i> uistate_y, <i>integer</i> videowindow_width, <i>integer</i> videowindow_height)</code></div>
+<div class="l">Lua: <code> <i>integer</i> x_coordinate, <i>integer</i> y_coordinate = <em>ultraschall.VID_VideoUIStateCoords2Pixels</em>(<i>number</i> uistate_x, <i>number</i> uistate_y, <i>integer</i> videowindow_width, <i>integer</i> videowindow_height)</code></div>
 </div><p>
 <div class="ch">
 converts the ui_state-coordinates of the Video-Processor into pixel-coordinates within the Video Window<br/>
@@ -206,42 +185,30 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x_coordinate</td>
-<td>the converted x-coordinate</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x_coordinate</td></tr>
+<tr><td class="ch2">the converted x-coordinate</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y_coordinate</td>
-<td>the converted y-coordinate</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y_coordinate</td></tr>
+<tr><td class="ch2">the converted y-coordinate</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> uistate_x</td>
-<td>the x-coordinate, that the function ui_get_state within the videoprocessor returns</td>
-</tr>
+<tr><td class="pr"><i>number</i> uistate_x</td></tr>
+<tr><td class="ch2">the x-coordinate, that the function ui_get_state within the videoprocessor returns</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> uistate_y</td>
-<td>the y-coordinate, that the function ui_get_state within the videoprocessor returns</td>
-</tr>
+<tr><td class="pr"><i>number</i> uistate_y</td></tr>
+<tr><td class="ch2">the y-coordinate, that the function ui_get_state within the videoprocessor returns</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> videowindow_width</td>
-<td>the current width of the Video Window</td>
-</tr>
+<tr><td class="pr"><i>integer</i> videowindow_width</td></tr>
+<tr><td class="ch2">the current width of the Video Window</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> videowindow_height</td>
-<td>the current height of the Video Window</td>
-</tr>
+<tr><td class="pr"><i>integer</i> videowindow_height</td></tr>
+<tr><td class="ch2">the current height of the Video Window</td></tr>
 </table>
 <br>
 </div>
@@ -253,7 +220,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/js_0.963.png" alt="JS version 0.963">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GetVideoHWND</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>HWND</i> hwnd = <em>ultraschall.GetVideoHWND</em>()</code></div>
+<div class="l">Lua: <code> <i>HWND</i> hwnd = <em>ultraschall.GetVideoHWND</em>()</code></div>
 </div><p>
 <div class="ch">
 returns the HWND of the Video window, if the window is opened.<br/>
@@ -262,17 +229,15 @@ returns nil if the Video Window is closed
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>HWND</i> hwnd</td>
-<td>the window-handler of the Video Window</td>
-</tr>
+<tr><td class="pr"><i>HWND</i> hwnd</td></tr>
+<tr><td class="ch2">the window-handler of the Video Window</td></tr>
 </table>
 <br>
 </div>
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 005 - 5 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 006 - 5 elements available <br></td></table>
         <hr>
       </div>
       <br>

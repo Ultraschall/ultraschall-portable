@@ -126,7 +126,7 @@ compiled by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
 
 Documentation for Reaper-Internals ]]..majorversion.."."..subversion..[[ and Ultraschall Api 4.2]]..beta..[[, SWS ]]..SWS..[[, JS-extension-plugin ]]..JS..[[ and ReaPack
 
-Written and compiled by Meo Mespotine (mespotine.de) for the Ultraschall.FM-project.
+Written and compiled by Meo-Ada Mespotine (mespotine.de) for the Ultraschall.FM-project.
 licensed under creative-commons by-sa-nc-license
 
 Some docs are enhanced versions of the original docs and the Reaper-logo is by the Cockos Inc.

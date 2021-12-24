@@ -32,10 +32,14 @@
 --    _S&M_DUMP_CUST_ACTION_LIST - "SWS/S&M: Dump action list (all but custom actions)"
 -- in the actions-list-dialog (needs SWS to be installed)
 --
--- change the filename-variables and run it
+-- will create the file in the same folder as the selected one, with .ini as extension
 
-filename="c:/Users/meo/Desktop/Reaper-Menu-Only-Actions.txt" -- the action-list
-filename_ini="c:/Users/meo/Desktop/Reaper-Menu-Only-Actions.ini" -- the ini-file to be created
+retval, filename = reaper.GetUserFileNameForRead("", "Select dumped actionlist", "*.txt")
+if retval==false then return end
+
+--filename="c:/Users/meo/Desktop/Reaper-Menu-Only-Actions.txt" -- the action-list
+
+filename_ini=filename:sub(1,-4).."ini" 
 
 for c in io.lines(filename) do
   section, action, description=c:match("(.-)\t(.-)\t(.*)")
@@ -51,3 +55,5 @@ for c in io.lines(filename) do
     reaper.BR_Win32_WritePrivateProfileString("MIDI Inline Editor", action, description, filename_ini)
   end
 end
+
+reaper.CF_LocateInExplorer(filename_ini)

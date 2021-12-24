@@ -67,6 +67,8 @@ FunctionList=[[
     </title>
 
     <link href="style.css" rel="stylesheet">
+    <link href="custom.css" rel="stylesheet">
+    
     <script type="text/javascript">
       function set_class_style(c,s) { 
         var list = document.getElementsByClassName(c);
@@ -81,21 +83,37 @@ FunctionList=[[
         }
       }
       function setdocview(v) {
-        var list = new Array('c_doc', 'c', 'c_funcs',
-                             'l_doc', 'l', 'l_funcs',
-                             'e_doc', 'e', 'e_funcs',
-                             'p_doc', 'p', 'p_funcs');
-        var i;
-        set_class_style('all_view', v == '' ? 'inline' : 'none');
-        for (i=0;i<list.length;i++) {
-          set_class_style(list[i], (v == '' || list[i].slice(0,1) == v) ? 'block' : 'none'); 
+          // this function goes through all class-names that are listed in "list" and shows them(block) or hides them(none)
+          
+          // create a list of classes to take care of
+          var list = new Array('c_doc', 'c', 'c_funcs',
+              'l_doc', 'l', 'l_funcs',
+              'e_doc', 'e', 'e_funcs',
+              'p_doc', 'p', 'p_funcs');
+          
+          // set the view
+          var i;
+          set_class_style('all_view', v == '' ? 'inline' : 'none');
+          //if 'all view' is clicked, show all entries
+          if (v=='all'){
+              for (i=0;i<list.length;i++) {
+                  set_class_style(list[i], 'block')
+              }; 
+          }
+          // else, show only those, that are selected
+          else{
+              for (i=0;i<list.length;i++) {
+                  set_class_style(list[i], (v == '' || list[i].slice(0,1) == v) ? 'block' : 'none'); 
+              }
+          }
+          
+          // update, which of the View-links are clickable(not selected) and which is not(currently selected)
+          set_class_innerHTML('aclick', v=='all' ? 'all' : "<a href=\"#all\" onClick=\"setdocview('all')\">all</a>");
+          set_class_innerHTML('cclick', v=='c' ? 'C/C++' : "<a href=\"#c\" onClick=\"setdocview('c')\">C/C++</a>");
+          set_class_innerHTML('eclick', v=='e' ? 'EEL2' : "<a href=\"#e\" onClick=\"setdocview('e')\">EEL2</a>");
+          set_class_innerHTML('lclick', v=='l' ? 'Lua' : "<a href=\"#l\" onClick=\"setdocview('l')\">Lua</a>");
+          set_class_innerHTML('pclick', v=='p' ? 'Python' : "<a href=\"#p\" onClick=\"setdocview('p')\">Python</a>");
         }
-        set_class_innerHTML('aclick', v=='' ? 'all' : "<a href=\"\" onClick=\"setdocview('')\">all</a>");
-        set_class_innerHTML('cclick', v=='c' ? 'C/C++' : "<a href=\"#c\" onClick=\"setdocview('c')\">C/C++</a>");
-        set_class_innerHTML('eclick', v=='e' ? 'EEL2' : "<a href=\"#e\" onClick=\"setdocview('e')\">EEL2</a>");
-        set_class_innerHTML('lclick', v=='l' ? 'Lua' : "<a href=\"#l\" onClick=\"setdocview('l')\">Lua</a>");
-        set_class_innerHTML('pclick', v=='p' ? 'Python' : "<a href=\"#p\" onClick=\"setdocview('p')\">Python</a>");
-      }
       function onLoad() {
         if (window.location.hash == '#c') setdocview('c');
         else if (window.location.hash == '#e') setdocview('e');
@@ -105,7 +123,7 @@ FunctionList=[[
     </script>
   </head>
     <body>
-        <a class="anchor" id="This-is-the-TopOfTheWorld"></a>
+        <a class="anch" id="This-is-the-TopOfTheWorld"></a>
         <div style="position: sticky; top:0; padding-left:4%; z-index:100;">
             <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
                 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_Un.png" alt="Ultraschall Internals Documentation"></a>  

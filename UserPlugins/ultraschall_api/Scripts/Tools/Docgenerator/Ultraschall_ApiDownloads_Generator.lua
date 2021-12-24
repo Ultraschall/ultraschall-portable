@@ -42,11 +42,12 @@ String=[[
 Ultraschall API Downloads
 </title>
 
-<link href="style.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <link href="custom.css" rel="stylesheet">
 
   </head>
     <body>    
-        <a class="anchor" id="This-is-the-TopOfTheWorld"></a>
+        <a class="anch" id="This-is-the-TopOfTheWorld"></a>
         <div style="position: sticky; top:0; padding-left:4%; z-index:100;">
             <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
                 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_un.png" alt="Ultraschall Internals Documentation"></a>  
@@ -70,7 +71,7 @@ Ultraschall API Downloads
             </div>
         </div>
       
-          <div class="chapterpad"><p></p>	
+          <div class="chapterpad"><p></p>    
            <table border="0" style="color:#aaaaaa; width:31%;">
                 <tr>
                     <td width="4%;">  </td>

@@ -143,15 +143,8 @@ function ultraschall.GetUSExternalState(section, key)
 end  
 
 function ultraschall.GetStringFromClipboard_SWS()
--- gets a big string from clipboard, using the 
--- CF_GetClipboardBig-function from SWS
--- and deals with all aspects necessary, that
--- surround using it.
-  local buf = reaper.CF_GetClipboard(buf)
-  local WDL_FastString=reaper.SNM_CreateFastString("HudelDudel")
-  local clipboardstring=reaper.CF_GetClipboardBig(WDL_FastString)
-  reaper.SNM_DeleteFastString(WDL_FastString)
-  return clipboardstring
+  -- returns contents of clipboard
+  return reaper.CF_GetClipboard(buf)
 end
 
 font_height=gfx.measurechar(65)+3
@@ -635,7 +628,7 @@ function ShowStates()
         gfx.set(1,1,1)
         if gfx.x>row3 then row3=gfx.x+50 end
         gfx.x=row3
-        retval, tracknumber, itemnumber, fxnumber = reaper.GetFocusedFX()
+        retval, tracknumber, itemnumber, fxnumber = reaper.GetFocusedFX2()
         if retval==1 then retval="track fx window: focused" end
         if retval==2 then retval="item fx window: focused" end
         if retval==0 then retval="no fx window focused" end

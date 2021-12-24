@@ -100,7 +100,7 @@ function ultraschall.GetStringFromClipboard_SWS()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetStringFromClipboard_SWS</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.52
     SWS=2.9.7
     Lua=5.3
@@ -120,11 +120,7 @@ function ultraschall.GetStringFromClipboard_SWS()
   <tags>copy and paste, clipboard, sws</tags>
 </US_DocBloc>
 ]]
-  local buf = reaper.CF_GetClipboard(buf)
-  local WDL_FastString=reaper.SNM_CreateFastString("HudelDudel")
-  local clipboardstring=reaper.CF_GetClipboardBig(WDL_FastString)
-  reaper.SNM_DeleteFastString(WDL_FastString)
-  return clipboardstring
+  return reaper.CF_GetClipboard()
 end
 
 function ultraschall.PutMediaItemsToClipboard_MediaItemArray(MediaItemArray)

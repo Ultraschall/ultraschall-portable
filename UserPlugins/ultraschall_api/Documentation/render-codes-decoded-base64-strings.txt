@@ -1,7 +1,9 @@
-Render_Codes as of Reaper 6.12 as decoded Base64-strings.
-On Windows: some settings need FFMPEG 4.1.3 installed or are unavaible otherwise
+Render_Codes as of Reaper 6.43.
 
-documented by Meo Mespotine, 21st of July 2020 - mespotine.de
+Render-strings are binary strings encoded in Base64-format or as HEX-string(reaper.ini only).
+On Windows: some settings need FFMPEG 4.1.3 installed or are unavailable otherwise
+
+documented by Meo Mespotine, 19th of December 2021 - mespotine.de
 licensed creative commons cc-by-nc.
 
 
@@ -72,6 +74,31 @@ AIFF:
         32, checked
     07: unused - value 0
 
+CAFF:
+    01: f - value 102 Header
+    02: f - value 102 Header
+    03: a - value 97 Header
+    04: c - value 99 Header
+    05: The bitdepth:
+            8, 8 bit PCM
+            16, 16 bit PCM
+            24, 24 bit PCM
+            32, 32 bit FP
+            33, 32 bit PCM
+            64, 32 bit FP
+    06: Embed tempo-checkbox and include markers-dropdownlist
+        &1, &2, &4 - unused
+        &8, &16, &64, &128 - the include-markers and regions dropdownlist options encoded as:
+         0,   0,   0,    0 - Do not include markers or regions
+         1,   0,   0,    0 - Markers + Regions
+         1,   1,   0,    0 - Markers + Regions starting with #
+         1,   0,   1,    0 - Markers only
+         1,   1,   1,    0 - Markers starting with # only
+         1,   0,   0,    1 - Regions only
+         1,   1,   0,    1 - Regions starting with # only
+        &32=0 - Embed tempo checkbox unchecked
+        &32=1 - Embed tempo checkbox checked
+    07: unused
     
 Audio CD:
     01: space - value 32 Header

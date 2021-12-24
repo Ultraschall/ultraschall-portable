@@ -2,9 +2,10 @@
 Ultraschall API GFX-Functions
 </title>
 <link href="style.css" rel="stylesheet">
+<link href="custom.css" rel="stylesheet">
 </head>
 <body>    
-<a class="anchor" id="This-is-the-TopOfTheWorld"></a>
+<a class="anch" id="This-is-the-TopOfTheWorld"></a>
 <div style="position: sticky; top:0; padding-left:4%; z-index:100;">
 <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
@@ -58,13 +59,14 @@ Ultraschall API GFX-Functions
 <script src="./scripts/clipboard.min.js.Download"></script>
 <!-- External Script -->
 <script src="./scripts/scripts.js.Download"></script>
-<table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Basic Shapes"><a href="#Basic Shapes">^</a></a><strong> <u>Basic Shapes</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#GFX_DrawEmbossedSquare">GFX_DrawEmbossedSquare</a></td><td class="tdsm"><a href="#GFX_DrawThickRoundRect">GFX_DrawThickRoundRect</a></td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Blitting"><a href="#Blitting">^</a></a><strong> <u>Blitting</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#GFX_BlitFramebuffer">GFX_BlitFramebuffer</a></td><td class="tdsm"><a href="#GFX_BlitImageCentered">GFX_BlitImageCentered</a></td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Font Handling"><a href="#Font Handling">^</a></a><strong> <u>Font Handling</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#GFX_SetFont">GFX_SetFont</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Mouse Handling"><a href="#Mouse Handling">^</a></a><strong> <u>Mouse Handling</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#GFX_GetMouseCap">GFX_GetMouseCap</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="User Interface"><a href="#User Interface">^</a></a><strong> <u>User Interface</u></strong><br><br>
+<table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Basic Shapes"><a href="#Basic Shapes">^</a></a><strong> <u>Basic Shapes</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_DrawEmbossedSquare">GFX_DrawEmbossedSquare</a></td><td class="tdsm"><a href="#GFX_DrawThickRoundRect">GFX_DrawThickRoundRect</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Blitting"><a href="#Blitting">^</a></a><strong> <u>Blitting</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_BlitFramebuffer">GFX_BlitFramebuffer</a></td><td class="tdsm"><a href="#GFX_BlitImageCentered">GFX_BlitImageCentered</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Font Handling"><a href="#Font Handling">^</a></a><strong> <u>Font Handling</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_SetFont">GFX_SetFont</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Key-Management"><a href="#Key-Management">^</a></a><strong> <u>Key-Management</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_GetChar">GFX_GetChar</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Mouse Handling"><a href="#Mouse Handling">^</a></a><strong> <u>Mouse Handling</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_GetMouseCap">GFX_GetMouseCap</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="User Interface"><a href="#User Interface">^</a></a><strong> <u>User Interface</u></strong><br><br>
 <b style="font-size:small;"><br><a class="inpad" id=" Lokasenna Gui Lib v2"><a href="# Lokasenna Gui Lib v2">^</a></a>  Lokasenna Gui Lib v2</b>
-</td></tr><tr><td class="tdsm"><a href="#Lokasenna_LoadGuiLib_v2">Lokasenna_LoadGuiLib_v2</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Window Handling"><a href="#Window Handling">^</a></a><strong> <u>Window Handling</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#Lokasenna_LoadGuiLib_v2">Lokasenna_LoadGuiLib_v2</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Window Handling"><a href="#Window Handling">^</a></a><strong> <u>Window Handling</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#GFX_GetDropFile">GFX_GetDropFile</a></td><td class="tdsm"><a href="#GFX_GetWindowHWND">GFX_GetWindowHWND</a></td><td class="tdsm"><a href="#GFX_Init">GFX_Init</a></td></tr></table><br></div><div class="ch">
 <hr>
 <a class="anch" id="GFX_DrawEmbossedSquare"></a>
@@ -72,7 +74,7 @@ Ultraschall API GFX-Functions
 <img width="3%" src="gfx/reaper5.95.png" alt="Reaper version 5.95">
 <img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><u><b>GFX_DrawEmbossedSquare</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.GFX_DrawEmbossedSquare</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>optional</i> <i>integer</i> rgb, <i>optional</i> <i>integer</i> gbg, <i>optional</i> <i>integer</i> bbg, <i>optional</i> <i>integer</i> r, <i>optional</i> <i>integer</i> g, <i>optional</i> <i>integer</i> b)</code></div>
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GFX_DrawEmbossedSquare</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>optional</i> <i>integer</i> rgb, <i>optional</i> <i>integer</i> gbg, <i>optional</i> <i>integer</i> bbg, <i>optional</i> <i>integer</i> r, <i>optional</i> <i>integer</i> g, <i>optional</i> <i>integer</i> b)</code></div>
 </div><p>
 <div class="ch">
 draws an embossed rectangle, optionally with a background-color<br/>
@@ -81,72 +83,50 @@ returns false in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> retval</td>
-<td>true, drawing was successful; false, drawing wasn't successful</td>
-</tr>
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">true, drawing was successful; false, drawing wasn't successful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>the x position of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x position of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>the y position of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y position of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> w</td>
-<td>the width of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> w</td></tr>
+<tr><td class="ch2">the width of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> h</td>
-<td>the height of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> h</td></tr>
+<tr><td class="ch2">the height of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> rgb</td>
-<td>the red-color of the background-rectangle; set to nil for no background-color</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> rgb</td></tr>
+<tr><td class="ch2">the red-color of the background-rectangle; set to nil for no background-color</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> gbg</td>
-<td>the green-color of the background-rectangle; set to nil for no background-color/uses rbg if gbg and bbg are set to nil</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> gbg</td></tr>
+<tr><td class="ch2">the green-color of the background-rectangle; set to nil for no background-color/uses rbg if gbg and bbg are set to nil</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> bbg</td>
-<td>the blue-color of the background-rectangle; set to nil for no background-color/uses rbg if gbg and bbg are set to nil</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> bbg</td></tr>
+<tr><td class="ch2">the blue-color of the background-rectangle; set to nil for no background-color/uses rbg if gbg and bbg are set to nil</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> r</td>
-<td>the red-color of the embossed-rectangle; nil, to use 1</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> r</td></tr>
+<tr><td class="ch2">the red-color of the embossed-rectangle; nil, to use 1</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> g</td>
-<td>the green-color of the embossed-rectangle; nil, to use 1</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> g</td></tr>
+<tr><td class="ch2">the green-color of the embossed-rectangle; nil, to use 1</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> b</td>
-<td>the blue-color of the embossed-rectangle; nil, to use 1</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> b</td></tr>
+<tr><td class="ch2">the blue-color of the embossed-rectangle; nil, to use 1</td></tr>
 </table>
 <br>
 </div>
@@ -157,7 +137,7 @@ returns false in case of an error
 <img width="3%" src="gfx/reaper5.95.png" alt="Reaper version 5.95">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_DrawThickRoundRect</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.GFX_DrawThickRoundRect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>number</i> thickness, <i>number</i> roundness, <i>boolean</i> antialias)</code></div>
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GFX_DrawThickRoundRect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>number</i> thickness, <i>number</i> roundness, <i>boolean</i> antialias)</code></div>
 </div><p>
 <div class="ch">
 draws a round-rectangle with a custom thickness.<br/>
@@ -168,54 +148,38 @@ returns false in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> retval</td>
-<td>true, drawing was successful; false, drawing wasn't successful</td>
-</tr>
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">true, drawing was successful; false, drawing wasn't successful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>the x position of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x position of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>the y position of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y position of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> w</td>
-<td>the width of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> w</td></tr>
+<tr><td class="ch2">the width of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> h</td>
-<td>the height of the rectangle</td>
-</tr>
+<tr><td class="pr"><i>integer</i> h</td></tr>
+<tr><td class="ch2">the height of the rectangle</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> thickness</td>
-<td>the thickness of the rectangle's edges</td>
-</tr>
+<tr><td class="pr"><i>number</i> thickness</td></tr>
+<tr><td class="ch2">the thickness of the rectangle's edges</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> roundness</td>
-<td>the angle of the rectangle's corners</td>
-</tr>
+<tr><td class="pr"><i>number</i> roundness</td></tr>
+<tr><td class="ch2">the angle of the rectangle's corners</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> antialias</td>
-<td>true, draw antialiased; false, simply draw aliased</td>
-</tr>
+<tr><td class="pr"><i>boolean</i> antialias</td></tr>
+<tr><td class="ch2">true, draw antialiased; false, simply draw aliased</td></tr>
 </table>
 <br>
 </div>
@@ -226,7 +190,7 @@ returns false in case of an error
 <img width="3%" src="gfx/reaper5.95.png" alt="Reaper version 5.95">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_BlitFramebuffer</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.GFX_BlitFramebuffer</em>(<i>integer</i> framebufferidx, <i>optional</i> <i>boolean</i> showidx)</code></div>
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GFX_BlitFramebuffer</em>(<i>integer</i> framebufferidx, <i>optional</i> <i>boolean</i> showidx)</code></div>
 </div><p>
 <div class="ch">
 blits a framebuffer at position 0,0. If the gfx-window is smaller than the contents of the framebuffer, it will resize it before blitting to window size, retaining the correct aspect-ratio.<br/>
@@ -237,24 +201,18 @@ returns false in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> retval</td>
-<td>true, drawing was successful; false, drawing wasn't successful</td>
-</tr>
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">true, drawing was successful; false, drawing wasn't successful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> framebufferidx</td>
-<td>the indexnumber of the framebuffer to blit; 0 to 1023; -1 is the displaying framebuffer</td>
-</tr>
+<tr><td class="pr"><i>integer</i> framebufferidx</td></tr>
+<tr><td class="ch2">the indexnumber of the framebuffer to blit; 0 to 1023; -1 is the displaying framebuffer</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>boolean</i> showidx</td>
-<td>true, displays the id-number of the framebuffer in the top-left corner; false, does not display framebuffer-idx</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>boolean</i> showidx</td></tr>
+<tr><td class="ch2">true, displays the id-number of the framebuffer in the top-left corner; false, does not display framebuffer-idx</td></tr>
 </table>
 <br>
 </div>
@@ -265,7 +223,7 @@ returns false in case of an error
 <img width="3%" src="gfx/reaper5.99.png" alt="Reaper version 5.99">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_BlitImageCentered</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> retval = <em>ultraschall.GFX_BlitImageCentered</em>(<i>integer</i> image, <i>integer</i> x, <i>integer</i> y, <i>number</i> scale, <i>number</i> rotate, <i>optional</i> <i>number</i> srcx, <i>optional</i> <i>number</i> srcy, <i>optional</i> <i>number</i> srcw, <i>optional</i> <i>number</i> srch, <i>optional</i> <i>integer</i> destx, <i>optional</i> <i>integer</i> desty, <i>optional</i> <i>integer</i> destw, <i>optional</i> <i>integer</i> desth, <i>optional</i> <i>integer</i> rotxoffs, <i>optional</i> <i>integer</i> rotyoffs)</code></div>
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GFX_BlitImageCentered</em>(<i>integer</i> image, <i>integer</i> x, <i>integer</i> y, <i>number</i> scale, <i>number</i> rotate, <i>optional</i> <i>number</i> srcx, <i>optional</i> <i>number</i> srcy, <i>optional</i> <i>number</i> srcw, <i>optional</i> <i>number</i> srch, <i>optional</i> <i>integer</i> destx, <i>optional</i> <i>integer</i> desty, <i>optional</i> <i>integer</i> destw, <i>optional</i> <i>integer</i> desth, <i>optional</i> <i>integer</i> rotxoffs, <i>optional</i> <i>integer</i> rotyoffs)</code></div>
 </div><p>
 <div class="ch">
 Blits a centered image at the position given by parameter x and y. That means, the center of the image will be at x and y.<br/>
@@ -276,103 +234,71 @@ returns false in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> retval</td>
-<td>true, blitting was successful; false, blitting was unsuccessful</td>
-</tr>
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">true, blitting was successful; false, blitting was unsuccessful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> source</td>
-<td>the source-image/framebuffer to blit; -1 to 1023; -1 for the currently displayed framebuffer.</td>
-</tr>
+<tr><td class="pr"><i>integer</i> source</td></tr>
+<tr><td class="ch2">the source-image/framebuffer to blit; -1 to 1023; -1 for the currently displayed framebuffer.</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> x</td>
-<td>the x-position of the center of the image</td>
-</tr>
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the center of the image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> y</td>
-<td>the y-position of the center of the image</td>
-</tr>
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the center of the image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> scale</td>
-<td>the scale-factor; 1, for normal size; smaller or bigger than 1 make image smaller or bigger<br/>
-has no effect, when destx, desty, destw, desth are given</td>
-</tr>
+<tr><td class="pr"><i>number</i> scale</td></tr>
+<tr><td class="ch2">the scale-factor; 1, for normal size; smaller or bigger than 1 make image smaller or bigger<br/>
+has no effect, when destx, desty, destw, desth are given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> rotation</td>
-<td>the rotation-factor; 0 to 6.28; 3.14 for 180 degrees.</td>
-</tr>
+<tr><td class="pr"><i>number</i> rotation</td></tr>
+<tr><td class="ch2">the rotation-factor; 0 to 6.28; 3.14 for 180 degrees.</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>number</i> srcx</td>
-<td>the x-coordinate-offset in the source-image</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>number</i> srcx</td></tr>
+<tr><td class="ch2">the x-coordinate-offset in the source-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>number</i> srcy</td>
-<td>the y-coordinate-offset in the source-image</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>number</i> srcy</td></tr>
+<tr><td class="ch2">the y-coordinate-offset in the source-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>number</i> srcw</td>
-<td>the width-offset in the source-image</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>number</i> srcw</td></tr>
+<tr><td class="ch2">the width-offset in the source-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>number</i> srch</td>
-<td>the height-offset in the source-image</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>number</i> srch</td></tr>
+<tr><td class="ch2">the height-offset in the source-image</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> destx</td>
-<td>the x-coordinate of the blitting destination</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> destx</td></tr>
+<tr><td class="ch2">the x-coordinate of the blitting destination</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> desty</td>
-<td>the y-coordinate of the blitting destination</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> desty</td></tr>
+<tr><td class="ch2">the y-coordinate of the blitting destination</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> destw</td>
-<td>the width of the blitting destination; may lead to stretched images</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> destw</td></tr>
+<tr><td class="ch2">the width of the blitting destination; may lead to stretched images</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> desth</td>
-<td>the height of the blitting destination; may lead to stretched images</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> desth</td></tr>
+<tr><td class="ch2">the height of the blitting destination; may lead to stretched images</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>number</i> rotxoffs</td>
-<td>influences rotation</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>number</i> rotxoffs</td></tr>
+<tr><td class="ch2">influences rotation</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>number</i> rotyoffs</td>
-<td>influences rotation</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>number</i> rotyoffs</td></tr>
+<tr><td class="ch2">influences rotation</td></tr>
 </table>
 <br>
 </div>
@@ -383,7 +309,7 @@ has no effect, when destx, desty, destw, desth are given</td>
 <img width="3%" src="gfx/reaper5.965.png" alt="Reaper version 5.965">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_SetFont</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <em>ultraschall.GFX_SetFont</em>(<i>integer</i> fontindex, <i>string</i> font, <i>integer</i> size, <i>string</i> flagStr)</code></div>
+<div class="l">Lua: <code> <em>ultraschall.GFX_SetFont</em>(<i>integer</i> fontindex, <i>string</i> font, <i>integer</i> size, <i>string</i> flagStr)</code></div>
 </div><p>
 <div class="ch">
 Sets the font of the gfx-window.<br/>
@@ -393,27 +319,20 @@ As Mac and Windows have different visible font-sizes for the same font-size, thi
 returns false in case of an error              
 </div><br>          <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> fontindex</td>
-<td>the font-id; idx=0 for default bitmapped font, no configuration is possible for this font. idx=1..16 for a configurable font</td>
-</tr>
+<tr><td class="pr"><i>integer</i> fontindex</td></tr>
+<tr><td class="ch2">the font-id; idx=0 for default bitmapped font, no configuration is possible for this font. idx=1..16 for a configurable font</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> font</td>
-<td>the name of the font</td>
-</tr>
+<tr><td class="pr"><i>string</i> font</td></tr>
+<tr><td class="ch2">the name of the font</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> size</td>
-<td>the size of the font</td>
-</tr>
+<tr><td class="pr"><i>integer</i> size</td></tr>
+<tr><td class="ch2">the size of the font</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> flagStr</td>
-<td>a string, which holds the desired font-styles. You can combine multiple ones, up to 4.<br/>
+<tr><td class="pr"><i>string</i> flagStr</td></tr>
+<tr><td class="ch2">a string, which holds the desired font-styles. You can combine multiple ones, up to 4.<br/>
 The following are valid:<br/>
 B - bold<br/>
 i - italic<br/>
@@ -421,8 +340,62 @@ o - white outline<br/>
 r - blurred<br/>
 s - sharpen<br/>
 u - underline<br/>
-v - inverse</td>
-</tr>
+v - inverse</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_GetChar"></a>
+<a href="#GFX_GetChar"> ^</a> 
+<img width="3%" src="gfx/reaper6.42.png" alt="Reaper version 6.42">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>GFX_GetChar</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>integer</i> first_typed_character, <i>integer</i> num_characters, <i>table</i> character_queue = <em>ultraschall.GFX_GetChar</em>(<i>optional</i> <i>integer</i> character, <i>optional</i> <i>boolean</i> manage_clipboard, <i>optional</i> <i>string</i> to_clipboard, <i>optional</i> <i>boolean</i> readable_characters)</code></div>
+</div><p>
+<div class="ch">
+<p>gets all characters from the keyboard-queue of gfx.getchar as a handy table.</p>
+<p>the returned table character_queue is of the following format:</p>
+<pre><code>character_queue[index][&quot;Code&quot;] - the character-code
+character_queue[index][&quot;Ansi&quot;] - the character-code converted into Ansi
+character_queue[index][&quot;UTF8&quot;] - the character-code converted into UTF8</code></pre>
+<p>When readable<em>characters=true, the entries of the character</em>queue for Ansi and UTF8 will hold readable strings for non-printable characters, like: "ins ", "del ", "home", "F1 "-"F12 ", "tab ", "esc ", "pgup", "pgdn", "up ", "down", "left", "rght", "bspc", "ente"</p>
+<p>You can optionally let this function manage clipboard. So hitting Ctrl+V will get put the content of the clipboard into the character<em>queue of Ansi/UTF8 in the specific position of the character-queue, while hitting Ctrl+C will put the contents of the parameter to</em>clipboard into the clipboard in this case.</p>
+<p>Retval first<em>typed</em>character behaves basically like the returned character of Reaper's native function gfx.getchar()</p>
+<p>returns -2 in case of an error</p>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> first_typed_character</td></tr>
+<tr><td class="ch2">the character-code of the first character found</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> num_characters</td></tr>
+<tr><td class="ch2">the number of characters in the queue</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>table</i> character_queue</td></tr>
+<tr><td class="ch2">the characters in the queue, within a table(see description for more details)</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>integer</i> character</td></tr>
+<tr><td class="ch2">a specific character-code to check for(will ignore all other keys)<br/>
+65536 queries special flags, like: &amp;1 (supported in this script), &amp;2=window has focus, &amp;4=window is visible&nbsp;&nbsp;</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> manage_clipboard</td></tr>
+<tr><td class="ch2">true, when user hits ctrl+v/cmd+v the character-queue will hold clipboard-contents in this position<br/>
+false, treat ctrl+v/cmd+v as regular typed character</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>string</i> to_clipboard</td></tr>
+<tr><td class="ch2">if get_paste_from_clipboard=true and user hits ctrl+c/cmd+c, the contents of this variable will be put into the clipboard</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> readable_characters</td></tr>
+<tr><td class="ch2">true, make non-printable characters readable; false, keep them in original state</td></tr>
 </table>
 <br>
 </div>
@@ -433,7 +406,7 @@ v - inverse</td>
 <img width="3%" src="gfx/reaper5.965.png" alt="Reaper version 5.965">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_GetMouseCap</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> clickstate, <i>string</i> specific_clickstate, <i>integer</i> mouse_cap, <i>integer</i> click_x, <i>integer</i> click_y, <i>integer</i> drag_x, <i>integer</i> drag_y, <i>integer</i> mouse_wheel, <i>integer</i> mouse_hwheel = <em>ultraschall.GFX_GetMouseCap</em>(<i>optional</i> <i>integer</i> doubleclick_wait, <i>optional</i> <i>integer</i> drag_wait)</code></div>
+<div class="l">Lua: <code> <i>string</i> clickstate, <i>string</i> specific_clickstate, <i>integer</i> mouse_cap, <i>integer</i> click_x, <i>integer</i> click_y, <i>integer</i> drag_x, <i>integer</i> drag_y, <i>integer</i> mouse_wheel, <i>integer</i> mouse_hwheel = <em>ultraschall.GFX_GetMouseCap</em>(<i>optional</i> <i>integer</i> doubleclick_wait, <i>optional</i> <i>integer</i> drag_wait)</code></div>
 </div><p>
 <div class="ch">
 Checks mouseclick/wheel-behavior, since last time calling this function and returns it's state.<br/>
@@ -446,79 +419,57 @@ Note: After doubleclicked, this will not return mouse-clicked-states, until the 
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> clickstate</td>
-<td>"", if not clicked, "CLK" for clicked and "FirstCLK", if the click is a first-click.</td>
-</tr>
+<tr><td class="pr"><i>string</i> clickstate</td></tr>
+<tr><td class="ch2">"", if not clicked, "CLK" for clicked and "FirstCLK", if the click is a first-click.</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> specific_clickstate</td>
-<td>either "" for not clicked, "CLK" for clicked, "DBLCLK" for doubleclick or "DRAG" for dragging</td>
-</tr>
+<tr><td class="pr"><i>string</i> specific_clickstate</td></tr>
+<tr><td class="ch2">either "" for not clicked, "CLK" for clicked, "DBLCLK" for doubleclick or "DRAG" for dragging</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> mouse_cap</td>
-<td>the mouse_cap, a bitfield of mouse and keyboard modifier states<br/>
+<tr><td class="pr"><i>integer</i> mouse_cap</td></tr>
+<tr><td class="ch2">the mouse_cap, a bitfield of mouse and keyboard modifier states<br/>
 &nbsp;&nbsp;1: left mouse button<br/>
 &nbsp;&nbsp;2: right mouse button<br/>
 &nbsp;&nbsp;4: Control key<br/>
 &nbsp;&nbsp;8: Shift key<br/>
 &nbsp;&nbsp;16: Alt key<br/>
 &nbsp;&nbsp;32: Windows key<br/>
-&nbsp;&nbsp;64: middle mouse button</td>
-</tr>
+&nbsp;&nbsp;64: middle mouse button</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> click_x</td>
-<td>the x position, when the mouse has been clicked the last time</td>
-</tr>
+<tr><td class="pr"><i>integer</i> click_x</td></tr>
+<tr><td class="ch2">the x position, when the mouse has been clicked the last time</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> click_y</td>
-<td>the y position, when the mouse has been clicked the last time</td>
-</tr>
+<tr><td class="pr"><i>integer</i> click_y</td></tr>
+<tr><td class="ch2">the y position, when the mouse has been clicked the last time</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> drag_x </td>
-<td>the x-position of the mouse-dragging-coordinate; is like click_x for non-dragging mousestates</td>
-</tr>
+<tr><td class="pr"><i>integer</i> drag_x </td></tr>
+<tr><td class="ch2">the x-position of the mouse-dragging-coordinate; is like click_x for non-dragging mousestates</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> drag_y </td>
-<td>the y-position of the mouse-dragging-coordinate; is like click_y for non-dragging mousestates</td>
-</tr>
+<tr><td class="pr"><i>integer</i> drag_y </td></tr>
+<tr><td class="ch2">the y-position of the mouse-dragging-coordinate; is like click_y for non-dragging mousestates</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> mouse_wheel</td>
-<td>the mouse_wheel-delta, since the last time calling this function</td>
-</tr>
+<tr><td class="pr"><i>integer</i> mouse_wheel</td></tr>
+<tr><td class="ch2">the mouse_wheel-delta, since the last time calling this function</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> mouse_hwheel</td>
-<td>the mouse_horizontal-wheel-delta, since the last time calling this function</td>
-</tr>
+<tr><td class="pr"><i>integer</i> mouse_hwheel</td></tr>
+<tr><td class="ch2">the mouse_horizontal-wheel-delta, since the last time calling this function</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> doubleclick_wait</td>
-<td>the timeframe, in which a second click is recognized as double-click, in defer-cycles. 30 is approximately 1 second; nil, will use 15(default)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> doubleclick_wait</td></tr>
+<tr><td class="ch2">the timeframe, in which a second click is recognized as double-click, in defer-cycles. 30 is approximately 1 second; nil, will use 15(default)</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> drag_wait</td>
-<td>the timeframe, after which a mouseclick without moving the mouse is recognized as dragging, in defer-cycles. 30 is approximately 1 second; nil, will use 5(default)</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> drag_wait</td></tr>
+<tr><td class="ch2">the timeframe, after which a mouseclick without moving the mouse is recognized as dragging, in defer-cycles. 30 is approximately 1 second; nil, will use 5(default)</td></tr>
 </table>
 <br>
 </div>
@@ -529,7 +480,7 @@ Note: After doubleclicked, this will not return mouse-clicked-states, until the 
 <img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
 <img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><u><b>Lokasenna_LoadGuiLib_v2</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <em>ultraschall.Lokasenna_LoadGuiLib_v2</em>()</code></div>
+<div class="l">Lua: <code> <em>ultraschall.Lokasenna_LoadGuiLib_v2</em>()</code></div>
 </div><p>
 <div class="ch">
 loads Lokasenna's Gui Lib v2 into the current script, so you can make your own guis.<br/>
@@ -550,7 +501,7 @@ You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GU
 <img width="3%" src="gfx/reaper6.05.png" alt="Reaper version 6.05">
 <img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><u><b>GFX_GetDropFile</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>boolean</i> changed, <i>integer</i> num_dropped_files, <i>array</i> dropped_files, <i>integer</i> drop_mouseposition_x, <i>integer</i> drop_mouseposition_y = <em>ultraschall.GFX_GetDropFile</em>()</code></div>
+<div class="l">Lua: <code> <i>boolean</i> changed, <i>integer</i> num_dropped_files, <i>array</i> dropped_files, <i>integer</i> drop_mouseposition_x, <i>integer</i> drop_mouseposition_y = <em>ultraschall.GFX_GetDropFile</em>()</code></div>
 </div><p>
 <div class="ch">
 <p>returns the files drag'n'dropped into a gfx-window, including the mouseposition within the gfx-window, where the files have been dropped.</p>
@@ -560,34 +511,24 @@ You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GU
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> changed</td>
-<td>true, new files have been dropped since last time calling this function; false, no new files have been dropped</td>
-</tr>
+<tr><td class="pr"><i>boolean</i> changed</td></tr>
+<tr><td class="ch2">true, new files have been dropped since last time calling this function; false, no new files have been dropped</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> num_dropped_files</td>
-<td>the number of dropped files; -1, if no files have beend dropped at all</td>
-</tr>
+<tr><td class="pr"><i>integer</i> num_dropped_files</td></tr>
+<tr><td class="ch2">the number of dropped files; -1, if no files have beend dropped at all</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>array</i> dropped_files</td>
-<td>an array with all filenames+path of the dropped files</td>
-</tr>
+<tr><td class="pr"><i>array</i> dropped_files</td></tr>
+<tr><td class="ch2">an array with all filenames+path of the dropped files</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> drop_mouseposition_x</td>
-<td>the x-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet</td>
-</tr>
+<tr><td class="pr"><i>integer</i> drop_mouseposition_x</td></tr>
+<tr><td class="ch2">the x-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> drop_mouseposition_y</td>
-<td>the y-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet</td>
-</tr>
+<tr><td class="pr"><i>integer</i> drop_mouseposition_y</td></tr>
+<tr><td class="ch2">the y-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet</td></tr>
 </table>
 <br>
 </div>
@@ -598,17 +539,15 @@ You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GU
 <img width="3%" src="gfx/reaper5.965.png" alt="Reaper version 5.965">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_GetWindowHWND</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>HWND</i> hwnd = <em>ultraschall.GFX_GetWindowHWND</em>()</code></div>
+<div class="l">Lua: <code> <i>HWND</i> hwnd = <em>ultraschall.GFX_GetWindowHWND</em>()</code></div>
 </div><p>
 <div class="ch">
 <p>Returns the HWND of the currently opened gfx-window. You need to use <a href="#GFX_Init">ultraschall.GFX_Init()</a>, otherwise it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."</p>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>HWND</i> hwnd</td>
-<td>the window-handler of the opened gfx-window; will contain a helpermessage, if you didn't use ultraschall.GFX_Init() for window creation.</td>
-</tr>
+<tr><td class="pr"><i>HWND</i> hwnd</td></tr>
+<tr><td class="ch2">the window-handler of the opened gfx-window; will contain a helpermessage, if you didn't use ultraschall.GFX_Init() for window creation.</td></tr>
 </table>
 <br>
 </div>
@@ -620,68 +559,52 @@ You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GU
 <img width="3%" src="gfx/js_0.964.png" alt="JS version 0.964">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_Init</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> retval, <i>HWND</i> hwnd = <em>ultraschall.GFX_Init</em>(<i>string</i> "name", <i>optional</i> <i>integer</i> width, <i>optional</i> <i>integer</i> height, <i>optional</i> <i>integer</i> dockstate, <i>optional</i> <i>integer</i> xpos, <i>optional</i> <i>integer</i> ypos)</code></div>
+<div class="l">Lua: <code> <i>integer</i> retval, <i>HWND</i> hwnd = <em>ultraschall.GFX_Init</em>(<i>string</i> "name", <i>optional</i> <i>integer</i> width, <i>optional</i> <i>integer</i> height, <i>optional</i> <i>integer</i> dockstate, <i>optional</i> <i>integer</i> xpos, <i>optional</i> <i>integer</i> ypos)</code></div>
 </div><p>
 <div class="ch">
 Opens a new graphics window and returns its HWND-windowhandler object.              
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>number</i> retval </td>
-<td>1.0, if window is opened</td>
-</tr>
+<tr><td class="pr"><i>number</i> retval </td></tr>
+<tr><td class="ch2">1.0, if window is opened</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>HWND</i> hwnd</td>
-<td>the window-handler of the newly created window; can be used with JS_Window_xxx-functions of the JS-extension-plugin</td>
-</tr>
+<tr><td class="pr"><i>HWND</i> hwnd</td></tr>
+<tr><td class="ch2">the window-handler of the newly created window; can be used with JS_Window_xxx-functions of the JS-extension-plugin</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> "name"</td>
-<td>the name of the window, which will be shown in the title of the window</td>
-</tr>
+<tr><td class="pr"><i>string</i> "name"</td></tr>
+<tr><td class="ch2">the name of the window, which will be shown in the title of the window</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> width</td>
-<td>the width of the window; minmum is 50</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> width</td></tr>
+<tr><td class="ch2">the width of the window; minmum is 50</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> height</td>
-<td>the height of the window; minimum is 16</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> height</td></tr>
+<tr><td class="ch2">the height of the window; minimum is 16</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> dockstate</td>
-<td>&1=0, undocked; &1=1, docked</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> dockstate</td></tr>
+<tr><td class="ch2">&1=0, undocked; &1=1, docked</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> xpos</td>
-<td>x-position of the window in pixels; minimum is -80; nil, to center it horizontally</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> xpos</td></tr>
+<tr><td class="ch2">x-position of the window in pixels; minimum is -80; nil, to center it horizontally</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>optional</i> <i>integer</i> ypos</td>
-<td>y-position of the window in pixels; minimum is -15; nil, to center it vertically</td>
-</tr>
+<tr><td class="pr"><i>optional</i> <i>integer</i> ypos</td></tr>
+<tr><td class="ch2">y-position of the window in pixels; minimum is -15; nil, to center it vertically</td></tr>
 </table>
 <br>
 </div>
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 005 - 10 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 006 - 11 elements available <br></td></table>
         <hr>
       </div>
       <br>

@@ -88,6 +88,9 @@ function ColorateFunctionnames(String)
   String=" "..String
   if String:match("extension_api") and String:match("\"")~=nil then
     offset1, offset2 = String:match("%(\"().-()\"")
+  elseif
+    String:match("%)%(")~=nil then
+    offset1, offset2 = String:match("()%(.-%)()%(")
   else
     offset1, offset2 = String:match(".* ().-()%(")
   end
@@ -140,6 +143,7 @@ function ultraschall.ColorateDatatypes(String)
   String=string.gsub(String, " HWND ", " <i>HWND</i> ")
   String=string.gsub(String, " ImGui_Context ", " <i>ImGui_Context</i> ")
   String=string.gsub(String, " ImGui_DrawList ", " <i>ImGui_DrawList</i> ")
+  
   String=string.gsub(String, " identifier ", " <i>identifier</i> ")
   String=string.gsub(String, " reaper.array ", " <i>reaper.array</i> ")
   String=string.gsub(String, " PackageEntry ", " <i>PackageEntry</i> ")  
@@ -326,13 +330,13 @@ function contentindex()
       FunctionsLister[FunctionsLister_Count]=Slugs[a]
       linebreaker=linebreaker+1
     end 
-    if linebreaker==1 then slugs=slugs.."<td style=\"width:25%;\">&nbsp;</td>" linebreaker=linebreaker+1 end
-    if linebreaker==2 and Index>1 then slugs=slugs.."<td style=\"width:25%;\">&nbsp;</td>" linebreaker=linebreaker+1 end
-    if linebreaker==3 and Index>2 then slugs=slugs.."<td style=\"width:25%;\">&nbsp;</td>" linebreaker=linebreaker+1 end
-    if linebreaker==4 and Index>3 then slugs=slugs.."<td style=\"width:25%;\">&nbsp;</td>" linebreaker=linebreaker+1 end
+    if linebreaker==1 then slugs=slugs.."<td class=\"inds\">&nbsp;</td>" linebreaker=linebreaker+1 end
+    if linebreaker==2 and Index>1 then slugs=slugs.."<td class=\"inds\">&nbsp;</td>" linebreaker=linebreaker+1 end
+    if linebreaker==3 and Index>2 then slugs=slugs.."<td class=\"inds\">&nbsp;</td>" linebreaker=linebreaker+1 end
+    if linebreaker==4 and Index>3 then slugs=slugs.."<td class=\"inds\">&nbsp;</td>" linebreaker=linebreaker+1 end
     slugs=slugs.."</tr>"
     
-    FunctionList=FunctionList.."<table class=\"indexpad\" style=\"width:100%;\" border=\"0\"><tr><td>"..Top..Second..Third.."</td></tr>"..slugs.."</table>"
+    FunctionList=FunctionList.."<table class=\"indexpad\" border=\"0\"><tr><td>"..Top..Second..Third.."</td></tr>"..slugs.."</table>"
   end
 
     FunctionList=FunctionList.."<br></div>"
@@ -501,19 +505,19 @@ function entries(start, stop)
           <div class="cc">
 ]]
         if functioncall["cpp"]~=nil then
-          FunctionList=FunctionList.."            <div class=\"c\"><span class='all_view'>C: </span><code>"..ColorateFunctionnames(ultraschall.ColorateDatatypes(functioncall["cpp"])).."</code></div>\n"
+          FunctionList=FunctionList.."            <div class=\"c\">C: <code>"..ColorateFunctionnames(ultraschall.ColorateDatatypes(functioncall["cpp"])).."</code></div>\n"
         end
         if functioncall["eel"]~=nil then
-          FunctionList=FunctionList.."            <div class=\"e\"><span class='all_view'>EEL2: </span><code>"..ColorateFunctionnames(ultraschall.ColorateDatatypes(functioncall["eel"])).."</code></div>\n"
+          FunctionList=FunctionList.."            <div class=\"e\">EEL2: <code>"..ColorateFunctionnames(ultraschall.ColorateDatatypes(functioncall["eel"])).."</code></div>\n"
         end
         if functioncall["lua"]~=nil then
-          FunctionList=FunctionList.."            <div class=\"l\"><span class='all_view'>Lua: </span><code>"..ColorateFunctionnames(ultraschall.ColorateDatatypes(functioncall["lua"])).."</code></div>\n"
+          FunctionList=FunctionList.."            <div class=\"l\">Lua: <code>"..ColorateFunctionnames(ultraschall.ColorateDatatypes(functioncall["lua"])).."</code></div>\n"
         end
         if functioncall["python"]~=nil then
-          FunctionList=FunctionList.."            <div class=\"p\"><span class='all_view'>Python: </span><code>"..ColorateFunctionnames(ultraschall.ColorateDatatypes(functioncall["python"])).."</code></div>\n"
+          FunctionList=FunctionList.."            <div class=\"p\">Python: <code>"..ColorateFunctionnames(ultraschall.ColorateDatatypes(functioncall["python"])).."</code></div>\n"
         end
         if functioncall["javascript"]~=nil then
-          FunctionList=FunctionList.."            <div class=\"j\"><span class='all_view'>Javascript: </span><code>"..ColorateFunctionnames(ultraschall.ColorateDatatypes(functioncall["javascript"])).."</code></div>\n"
+          FunctionList=FunctionList.."            <div class=\"j\">Javascript: <code>"..ColorateFunctionnames(ultraschall.ColorateDatatypes(functioncall["javascript"])).."</code></div>\n"
         end
         FunctionList=FunctionList.."\t\t  </div><p>\n"
       else
@@ -538,10 +542,8 @@ function entries(start, stop)
           Retvals[i][1]=ultraschall.ColorateDatatypes(Retvals[i][1])
           FunctionList=FunctionList..[[
           <table class="ch">
-            <tr>
-              <td class="pr">]]..Retvals[i][1]..[[</td>
-              <td>]]..Retvals[i][2]..[[</td>
-            </tr>
+            <tr><td class="pr">]]..Retvals[i][1]..[[</td></tr>
+            <tr><td class="ch2">]]..Retvals[i][2]..[[</td></tr>
           </table>
 ]]
         end 
@@ -557,10 +559,8 @@ function entries(start, stop)
           Params[i][1]=ultraschall.ColorateDatatypes(Params[i][1])
           FunctionList=FunctionList..[[
           <table class="ch">
-            <tr>
-              <td class="pr">]]..Params[i][1]..[[</td>
-              <td>]]..Params[i][2]..[[</td>
-            </tr>
+            <tr><td class="pr">]]..Params[i][1]..[[</td></tr>
+            <tr><td class="ch2">]]..Params[i][2]..[[</td></tr>
           </table>
 ]]
         end 
@@ -619,11 +619,11 @@ end
 mode=2
 FunctionList=FunctionList..[[<div class="ch"><p></p>
     <!-- Clipboard Button -->
-	<script src="./scripts/clipboard.min.js.Download"></script>
+    <script src="./scripts/clipboard.min.js.Download"></script>
 
 
-	<!-- External Script -->
-	<script src="./scripts/scripts.js.Download"></script>
+    <!-- External Script -->
+    <script src="./scripts/scripts.js.Download"></script>
 ]]
 contentindex()
 convertMarkdown()

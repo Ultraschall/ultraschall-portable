@@ -4664,7 +4664,7 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
   <slug>InsertMediaItemFromFile</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=5.40
+    Reaper=6.20
     SWS=2.9.7
     Lua=5.3
   </requires>
@@ -4731,7 +4731,7 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
   
   -- insert file
   local Length, Numchannels, Samplerate, Filetype = ultraschall.GetMediafileAttributes(filename) -- mediaattributes, like length
-  local startTime, endTime = reaper.BR_GetArrangeView(0) -- get current arrange-view-range
+  local startTime, endTime = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0) -- get current arrange-view-range
   local mode=0
   if track>=0 and track<reaper.CountTracks(0) then
     mode=0
@@ -4764,7 +4764,11 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
   end
     
   -- alter length, if requested
-  if length~=-1 then reaper.SetMediaItemInfo_Value(Item, "D_LENGTH", length) end
+  if length~=-1 then 
+    reaper.SetMediaItemInfo_Value(Item, "D_LENGTH", length)
+  elseif length==-1 then
+    length=reaper.GetMediaItemInfo_Value(Item, "D_LENGTH", length)     
+  end
   -- reset cursorposition and arrangeview
   if editcursorpos==0 then
     reaper.SetEditCurPos(editcursor, false, false)  -- set editcursor to old position
@@ -4773,8 +4777,8 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
   elseif editcursorpos==2 then
     reaper.SetEditCurPos(position+length+offset, false, false)  -- set editcursor to old position
   end
-   
-  reaper.BR_SetArrangeView(0, startTime, endTime) -- reset to old arrange-view-range
+  
+  reaper.GetSet_ArrangeView2(0, true, 0, 0, startTime, endTime) -- reset to old arrange-view-range
   reaper.PreventUIRefresh(-1)
   return 0, item, Length, Numchannels, Samplerate, Filetype, editcursor, reaper.GetMediaItem_Track(Item)
 end

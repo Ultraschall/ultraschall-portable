@@ -1681,9 +1681,9 @@ function ultraschall.GetProject_AddMediaToProjectAfterRender(projectfilename_wit
   <functioncall>integer state = ultraschall.GetProject_AddMediaToProjectAfterRender(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
   <description>
     Returns, if rendered media shall be added to the project afterwards as well as if likely silent files shall be rendered-state, from an RPP-Projectfile or a ProjectStateChunk.
-	
-	It's the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to file-dialog.
-	
+   
+    It's the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to file-dialog.
+   
     It's the entry RENDER_ADDTOPROJ
     
     Returns nil in case of error.
@@ -1694,8 +1694,8 @@ function ultraschall.GetProject_AddMediaToProjectAfterRender(projectfilename_wit
   </parameters>
   <retvals>
     integer state - the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox 
-				  - &1, rendered media shall be added to the project afterwards; 0, don't add
-				  - &2, don't render likely silent files; 0, render anyway
+                  - &1, rendered media shall be added to the project afterwards; 0, don't add
+                  - &2, don't render likely silent files; 0, render anyway
   </retvals>
   <chapter_context>
     Project-Management
@@ -1744,7 +1744,7 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
     - 64,  Selected media items via master
     - 128, Selected tracks via master
     - &256, Embed stretch markers/transient guides-checkbox
-	- &1024, Embed Take markers
+    - &1024, Embed Take markers
     - &2048, enable second pass rendering
   </retvals>
   <chapter_context>
@@ -5974,9 +5974,9 @@ function ultraschall.SetProject_AddMediaToProjectAfterRender(projectfilename_wit
   <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_AddMediaToProjectAfterRender(string projectfilename_with_path, integer state, optional string ProjectStateChunk)</functioncall>
   <description>
     Sets, if rendered media shall be added to the project afterwards as well as if likely silent files shall be rendered-state, from an RPP-Projectfile or a ProjectStateChunk.
-	
-	It's the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to file-dialog.
-	
+    
+    It's the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to file-dialog.
+    
     It's the entry RENDER_ADDTOPROJ
     
     Returns -1 in case of error.
@@ -5984,8 +5984,8 @@ function ultraschall.SetProject_AddMediaToProjectAfterRender(projectfilename_wit
   <parameters>
     string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
     integer state - the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox 
-				  - &1, rendered media shall be added to the project afterwards; 0, don't add
-				  - &2, don't render likely silent files; 0, render anyway
+                  - &1, rendered media shall be added to the project afterwards; 0, don't add
+                  - &2, don't render likely silent files; 0, render anyway
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>
@@ -6047,7 +6047,7 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
     - 64, Selected media items via master
     - 128, Selected tracks via master
     - &256, Embed stretch markers/transient guides-checkbox 
-	- &1024, Embed Take markers
+    - &1024, Embed Take markers
     - &2048, enable second pass rendering
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
@@ -8393,13 +8393,13 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
                       - markertable[id][5] = integer markrgnindexnumber - the shown number of the region/marker
                       - markertable[id][6] = integer color - the color-value of the marker
                       - markertable[id][7] = string guid - the guid of the marker
-					  - markertable[id][8] = if a region: true, region is selected; false, region is not selected
-					  - markertable[id][9] = if a region: true, region-render-matrix Master mix is selected; false, region-render-matrix Master mix is unselected
-					  - markertable[id][10]= if a region: true, region-render-matrix All tracks is selected; false, region-render-matrix All tracks is unselected
+                      - markertable[id][8] = if a region: true, region is selected; false, region is not selected
+                      - markertable[id][9] = if a region: true, region-render-matrix Master mix is selected; false, region-render-matrix Master mix is unselected
+                      - markertable[id][10]= if a region: true, region-render-matrix All tracks is selected; false, region-render-matrix All tracks is unselected
 
-					  MarkerArray[MarkerCount][8]=tonumber(isrgn)&8==8  -- is region selected?
-	MarkerArray[MarkerCount][9]=tonumber(isrgn)&4==4  -- is region-matrix-mastermix selected?
-MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks selected?
+                      MarkerArray[MarkerCount][8]=tonumber(isrgn)&8==8  -- is region selected?
+                      MarkerArray[MarkerCount][9]=tonumber(isrgn)&4==4  -- is region-matrix-mastermix selected?
+                      MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks selected?
   </retvals>
   <chapter_context>
     Project-Management
@@ -8460,9 +8460,9 @@ MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks
     MarkerArray[MarkerCount][5]=tonumber(shownnumber)
     MarkerArray[MarkerCount][6]=tonumber(color)
     MarkerArray[MarkerCount][7]=guid
-	MarkerArray[MarkerCount][8]=tonumber(isrgn)&8==8  -- is region selected?
-	MarkerArray[MarkerCount][9]=tonumber(isrgn)&4==4  -- is region-matrix-mastermix selected?
-	MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks selected?
+    MarkerArray[MarkerCount][8]=tonumber(isrgn)&8==8  -- is region selected?
+    MarkerArray[MarkerCount][9]=tonumber(isrgn)&4==4  -- is region-matrix-mastermix selected?
+    MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks selected?
   end
   return MarkerCount, NumMarker, NumRegions, MarkerArray
 end
@@ -10633,6 +10633,8 @@ function ultraschall.GetProject_Length(projectfilename_with_path, ProjectStateCh
     
     It's returning the position of the overall length, as well as the position of the last itemedge/regionedge/marker/time-signature-marker of the project.
     
+    It will not take the effect of stretch-markers and time-signature-markers and change of playrate into account!
+    
     To do the same for currently opened projects, use: [GetProjectLength](#GetProjectLength)
     
     Returns -1 in case of an error
@@ -11921,7 +11923,7 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
   <slug>GetProject_Render_Normalize</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=6.32
+    Reaper=6.42
     Lua=5.3
   </requires>
   <functioncall>integer render_normalize_mode, number normalize_target = ultraschall.GetProject_Render_Normalize(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -11950,7 +11952,14 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
                                     - &32, Normalize stems to master target-checkbox
                                     -     0, unchecked(off)
                                     -     1, checked(on)
+                                    - &64, Brickwall-enabled-checkbox
+                                    -     0, unchecked(off)
+                                    -     1, checked(on)
+                                    - &128, Brickwall-mode
+                                    -     0, Peak
+                                    -     1, True Peak
     number normalize_target - the normalize-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.
+    number brickwall_target - the normalize-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.
   </retvals>
   <chapter_context>
     Project-Management
@@ -11964,20 +11973,20 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
   return ultraschall.GetProjectState_NumbersOnly(projectfilename_with_path, "RENDER_NORMALIZE", ProjectStateChunk, "GetProject_Render_Normalize")
 end
 
-function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, render_normalize_method, normalize_target, ProjectStateChunk)
+function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, render_normalize_method, normalize_target, ProjectStateChunk, brickwall_target)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetProject_Render_Normalize</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=6.32
+    Reaper=6.43
     Lua=5.3
   </requires>
-  <functioncall>integer retval = ultraschall.SetProject_Render_Normalize(string projectfilename_with_path, integer render_normalize_method, number normalize_target, optional string ProjectStateChunk)</functioncall>
+  <functioncall>integer retval = ultraschall.SetProject_Render_Normalize(string projectfilename_with_path, integer render_normalize_method, number normalize_target, optional string ProjectStateChunk, optional number brickwall_target)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets the panmode for the master-track of an rpp-projectfile or a ProjectStateChunk.
     
-    It's the entry RENDER_NORMALIZE 
+    It's the entry RENDER_NORMALIZE
     
     Returns -1 in case of error.
   </description>
@@ -11996,8 +12005,15 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
                                     - &32, Normalize stems to master target-checkbox
                                     -     0, unchecked(off)
                                     -     1, checked(on)
+                                    - &64, Brickwall-enabled-checkbox
+                                    -     0, unchecked(off)
+                                    -     1, checked(on)
+                                    - &128, Brickwall-mode
+                                    -     0, Peak
+                                    -     1, True Peak
     number normalize_target - the normalize-target as amp-volume. Use ultraschall.DB2MKVOL to convert it from dB.
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
+    optional number brickwall_target - the brickwall-normalizatin-target as amp-volume. Use ultraschall.DB2MKVOL to convert it from dB.
   </parameters>
   <retvals>
     integer retval - -1 in case of error, 1 in case of success
@@ -12008,20 +12024,23 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua</source_document>
-  <tags>projectfiles, rpp, state, set, master track, panmode</tags>
+  <tags>projectfiles, rpp, state, set, render, normalize, brickwall</tags>
 </US_DocBloc>
 ]]  
   if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "ProjectStateChunk", "Must be a valid ProjectStateChunk", -1) return -1 end
   if projectfilename_with_path~=nil and reaper.file_exists(projectfilename_with_path)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "projectfilename_with_path", "File does not exist", -2) return -1 end
   if projectfilename_with_path~=nil then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path) end
   if projectfilename_with_path~=nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "projectfilename_with_path", "File is no valid RPP-Projectfile", -3) return -1 end
+
   if math.type(render_normalize_method)~="integer" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "render_normalize_method", "Must be an integer", -4) return -1 end
   if type(normalize_target)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "normalize_target", "Must be a number", -5) return -1 end
+  if brickwall_target~=nil and type(brickwall_target)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "brickwall_target", "Must be a number", -7) return -1 end
 
   if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "projectfilename_with_path", "No valid RPP-Projectfile!", -6) return -1 end
-  
+  if brickwall_target==nil then brickwall_target="" else brickwall_target=" "..brickwall_target end
   local ProjectEntry=""
-  ProjectEntry="  RENDER_NORMALIZE "..render_normalize_method.." "..normalize_target.."\n" 
+  
+  ProjectEntry="  RENDER_NORMALIZE "..render_normalize_method.." "..normalize_target..brickwall_target.."\n" 
   
   if ProjectStateChunk:match("RENDER_NORMALIZE")~=nil then
     ProjectStateChunk=string.gsub(ProjectStateChunk, "\n  RENDER_NORMALIZE .-%c", "\n"..ProjectEntry)

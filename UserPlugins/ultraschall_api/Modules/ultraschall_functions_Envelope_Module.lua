@@ -1430,19 +1430,19 @@ function ultraschall.GetEnvelopeState_DefShape(TrackEnvelope, EnvelopeStateChunk
                  - 3, fast start
                  - 4, fast end
                  - 5, bezier
-   	integer pitch_custom_envelope_range_takes - the custom envelope range as set in the Pitch Envelope Settings; only available in take-fx-envelope "Pitch"
-											  - -1, if unset or for non pitch-envelopes
-											  - 0, Custom envelope range-checkbox unchecked
-											  - 1-2147483647, the actual semitones
-	integer pitch_snap_values - the snap values-dropdownlist as set in the Pitch Envelope Settings-dialog; only available in take-fx-envelope "Pitch"
-					 -  -1, unset/Follow global default
-					 -  0, Off
-					 -  1, 1 Semitone
-					 -  2, 50 cent
-					 -  3, 25 cent
-					 -  4, 10 cent
-					 -  5, 5 cent
-					 -  6, 1 cent
+       integer pitch_custom_envelope_range_takes - the custom envelope range as set in the Pitch Envelope Settings; only available in take-fx-envelope "Pitch"
+                                              - -1, if unset or for non pitch-envelopes
+                                              - 0, Custom envelope range-checkbox unchecked
+                                              - 1-2147483647, the actual semitones
+    integer pitch_snap_values - the snap values-dropdownlist as set in the Pitch Envelope Settings-dialog; only available in take-fx-envelope "Pitch"
+                     -  -1, unset/Follow global default
+                     -  0, Off
+                     -  1, 1 Semitone
+                     -  2, 50 cent
+                     -  3, 25 cent
+                     -  4, 10 cent
+                     -  5, 5 cent
+                     -  6, 1 cent
   </retvals>
   <parameters>
     TrackEnvelope TrackEnvelope - the TrackEnvelope, whose state you want to know; nil, to use parameter EnvelopeStateChunk instead
@@ -1889,14 +1889,14 @@ function ultraschall.SetEnvelopeState_Vis(TrackEnvelope, visibility, lane, unkno
   </description>
   <retvals>
     boolean retval - true, setting was successful; false, setting was unsuccessful
-	string EnvelopeStateChunk - the altered EnvelopeStateChunk
+    string EnvelopeStateChunk - the altered EnvelopeStateChunk
   </retvals>
   <parameters>
     TrackEnvelope env - the envelope, in whose envelope you want set the visibility states; nil, to us parameter EnvelopeStateChunk instead
     integer visibility - the visibility of the envelope; 0, invisible; 1, visible
     integer lane - the position of the envelope in the lane; 0, envelope is in media-lane; 1, envelope is in it's own lane
     integer unknown - unknown; default=1 
-	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
+    optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
   </parameters>
   <chapter_context>
     Envelope Management
@@ -1943,21 +1943,21 @@ function ultraschall.SetEnvelopeState_Act(TrackEnvelope, act, automation_setting
   </description>
   <retvals>
     boolean retval - true, setting was successful; false, setting was unsuccessful
-	string EnvelopeStateChunk - the altered EnvelopeStateChunk
+    string EnvelopeStateChunk - the altered EnvelopeStateChunk
   </retvals>
   <parameters>
     TrackEnvelope env - the envelope, in whose envelope you want set the bypass and automation-item-states; nil, to use parameter EnvelopeStateChunk instead
     integer act - bypass-setting; 
-				-   0, bypass on
-				-   1, no bypass 
+                -   0, bypass on
+                -   1, no bypass 
     integer automation_settings - automation item-options for this envelope
-								- -1, project default behavior, outside of automation items
-								- 0, automation items do not attach underlying envelope
-								- 1, automation items attach to the underlying envelope on the right side
-								- 2, automation items attach to the underlying envelope on both sides
-								- 3, no automation item-options for this envelope
-								- 4, bypass underlying envelope outside of automation items 
-	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
+                                - -1, project default behavior, outside of automation items
+                                - 0, automation items do not attach underlying envelope
+                                - 1, automation items attach to the underlying envelope on the right side
+                                - 2, automation items attach to the underlying envelope on both sides
+                                - 3, no automation item-options for this envelope
+                                - 4, bypass underlying envelope outside of automation items 
+    optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
   </parameters>
   <chapter_context>
     Envelope Management
@@ -2003,31 +2003,31 @@ function ultraschall.SetEnvelopeState_DefShape(TrackEnvelope, shape, pitch_custo
   </description>
   <retvals>
     boolean retval - true, setting was successful; false, setting was unsuccessful
-	string EnvelopeStateChunk - the altered EnvelopeStateChunk
+    string EnvelopeStateChunk - the altered EnvelopeStateChunk
   </retvals>
   <parameters>
     TrackEnvelope env - the envelope, in whose envelope you want set the default shape and pitch-snap states; nil, to use parameter EnvelopeStateChunk instead
     integer shape - the default shape of envelope-points
-					- 0, linear
-					- 1, square
-					- 2, slow start/end
-					- 3, fast start
-					- 4, fast end
-					- 5, bezier 
-	integer pitch_custom_envelope_range_takes - the custom envelope range as set in the Pitch Envelope Settings; only available in take-fx-envelope "Pitch"
-											  - -1, if unset or for non pitch-envelopes
-											  - 0, Custom envelope range-checkbox unchecked
-											  - 1-2147483647, the actual semitones
-	integer pitch_snap_values - the snap values-dropdownlist as set in the Pitch Envelope Settings-dialog; only available in take-fx-envelope "Pitch"
-					 -  -1, unset/Follow global default
-					 -  0, Off
-					 -  1, 1 Semitone
-					 -  2, 50 cent
-					 -  3, 25 cent
-					 -  4, 10 cent
-					 -  5, 5 cent
-					 -  6, 1 cent
-	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
+                    - 0, linear
+                    - 1, square
+                    - 2, slow start/end
+                    - 3, fast start
+                    - 4, fast end
+                    - 5, bezier 
+    integer pitch_custom_envelope_range_takes - the custom envelope range as set in the Pitch Envelope Settings; only available in take-fx-envelope "Pitch"
+                                              - -1, if unset or for non pitch-envelopes
+                                              - 0, Custom envelope range-checkbox unchecked
+                                              - 1-2147483647, the actual semitones
+    integer pitch_snap_values - the snap values-dropdownlist as set in the Pitch Envelope Settings-dialog; only available in take-fx-envelope "Pitch"
+                     -  -1, unset/Follow global default
+                     -  0, Off
+                     -  1, 1 Semitone
+                     -  2, 50 cent
+                     -  3, 25 cent
+                     -  4, 10 cent
+                     -  5, 5 cent
+                     -  6, 1 cent
+    optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
   </parameters>
   <chapter_context>
     Envelope Management
@@ -2073,15 +2073,15 @@ function ultraschall.SetEnvelopeState_LaneHeight(TrackEnvelope, height, compacte
   </description>
   <retvals>
     boolean retval - true, setting was successful; false, setting was unsuccessful
-	string EnvelopeStateChunk - the altered EnvelopeStateChunk
+    string EnvelopeStateChunk - the altered EnvelopeStateChunk
   </retvals>
   <parameters>
     TrackEnvelope env - the envelope, whose envelope you want set the height and compacted-states; nil, to us parameter EnvelopeStateChunk instead
     integer height - the height of the laneheight; the height of this envelope in pixels; 24 - 263 pixels
-	integer compacted - 1, envelope-lane is compacted("normal" height is not shown but still stored in height);
-					  - 0, envelope-lane is "normal" height 
-	optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
-	</parameters>
+    integer compacted - 1, envelope-lane is compacted("normal" height is not shown but still stored in height);
+                      - 0, envelope-lane is "normal" height 
+    optional string EnvelopeStateChunk - an EnvelopeStateChunk, in which you want to set these settings
+    </parameters>
   <chapter_context>
     Envelope Management
     Set Envelope States
@@ -2091,7 +2091,7 @@ function ultraschall.SetEnvelopeState_LaneHeight(TrackEnvelope, height, compacte
   <tags>envelope management, set, envelope, envelope statechunk, height, compacted, visibility</tags>
 </US_DocBloc>
 --]]
-	return ultraschall.SetEnvelopeHeight(height, compacted==1, TrackEnvelope, EnvelopeStateChunk)
+    return ultraschall.SetEnvelopeHeight(height, compacted==1, TrackEnvelope, EnvelopeStateChunk)
 end
 
 

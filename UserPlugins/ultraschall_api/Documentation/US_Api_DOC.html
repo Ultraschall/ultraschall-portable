@@ -2,9 +2,10 @@
 Ultraschall API Docs-Functions
 </title>
 <link href="style.css" rel="stylesheet">
+<link href="custom.css" rel="stylesheet">
 </head>
 <body>    
-<a class="anchor" id="This-is-the-TopOfTheWorld"></a>
+<a class="anch" id="This-is-the-TopOfTheWorld"></a>
 <div style="position: sticky; top:0; padding-left:4%; z-index:100;">
 <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
@@ -59,16 +60,16 @@ Ultraschall API Docs-Functions
 <script src="./scripts/clipboard.min.js.Download"></script>
 <!-- External Script -->
 <script src="./scripts/scripts.js.Download"></script>
-<table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Helper functions"><a href="#Helper functions">^</a></a><strong> <u>Helper functions</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#Docs_ConvertPlainTextToHTML">Docs_ConvertPlainTextToHTML</a></td><td style="width:25%;">&nbsp;</td><td style="width:25%;">&nbsp;</td></tr></table><table class="indexpad" style="width:100%;" border="0"><tr><td><br><a class="inpad" id="Ultraschall DocML"><a href="#Ultraschall DocML">^</a></a><strong> <u>Ultraschall DocML</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#Docs_GetAllUSDocBlocsFromString">Docs_GetAllUSDocBlocsFromString</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_ChapterContext">Docs_GetUSDocBloc_ChapterContext</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Description">Docs_GetUSDocBloc_Description</a></td></tr><td class="tdsm"><a href="#Docs_GetUSDocBloc_Functioncall">Docs_GetUSDocBloc_Functioncall</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_NextChapter">Docs_GetUSDocBloc_NextChapter</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Params">Docs_GetUSDocBloc_Params</a></td></tr><td class="tdsm"><a href="#Docs_GetUSDocBloc_PreviousChapter">Docs_GetUSDocBloc_PreviousChapter</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Requires">Docs_GetUSDocBloc_Requires</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Retvals">Docs_GetUSDocBloc_Retvals</a></td></tr><td class="tdsm"><a href="#Docs_GetUSDocBloc_Slug">Docs_GetUSDocBloc_Slug</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_SourceDocument">Docs_GetUSDocBloc_SourceDocument</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Tags">Docs_GetUSDocBloc_Tags</a></td></tr><td class="tdsm"><a href="#Docs_GetUSDocBloc_TargetDocument">Docs_GetUSDocBloc_TargetDocument</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Title">Docs_GetUSDocBloc_Title</a></td><td class="tdsm"><a href="#Docs_RemoveIndent">Docs_RemoveIndent</a></td></tr></table><br></div><div class="ch">
+<table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Helper functions"><a href="#Helper functions">^</a></a><strong> <u>Helper functions</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#Docs_ConvertPlainTextToHTML">Docs_ConvertPlainTextToHTML</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Ultraschall DocML"><a href="#Ultraschall DocML">^</a></a><strong> <u>Ultraschall DocML</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#Docs_GetAllUSDocBlocsFromString">Docs_GetAllUSDocBlocsFromString</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Changelog">Docs_GetUSDocBloc_Changelog</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_ChapterContext">Docs_GetUSDocBloc_ChapterContext</a></td></tr><td class="tdsm"><a href="#Docs_GetUSDocBloc_Deprecated">Docs_GetUSDocBloc_Deprecated</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Description">Docs_GetUSDocBloc_Description</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Functioncall">Docs_GetUSDocBloc_Functioncall</a></td></tr><td class="tdsm"><a href="#Docs_GetUSDocBloc_LinkedTo">Docs_GetUSDocBloc_LinkedTo</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_NextChapter">Docs_GetUSDocBloc_NextChapter</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Params">Docs_GetUSDocBloc_Params</a></td></tr><td class="tdsm"><a href="#Docs_GetUSDocBloc_PreviousChapter">Docs_GetUSDocBloc_PreviousChapter</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Requires">Docs_GetUSDocBloc_Requires</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Retvals">Docs_GetUSDocBloc_Retvals</a></td></tr><td class="tdsm"><a href="#Docs_GetUSDocBloc_Slug">Docs_GetUSDocBloc_Slug</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_SourceDocument">Docs_GetUSDocBloc_SourceDocument</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Tags">Docs_GetUSDocBloc_Tags</a></td></tr><td class="tdsm"><a href="#Docs_GetUSDocBloc_TargetDocument">Docs_GetUSDocBloc_TargetDocument</a></td><td class="tdsm"><a href="#Docs_GetUSDocBloc_Title">Docs_GetUSDocBloc_Title</a></td><td class="tdsm"><a href="#Docs_RemoveIndent">Docs_RemoveIndent</a></td></tr></table><br></div><div class="ch">
 <hr>
 <a class="anch" id="Docs_ConvertPlainTextToHTML"></a>
 <a href="#Docs_ConvertPlainTextToHTML"> ^</a> 
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_ConvertPlainTextToHTML</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> html_text = <em>ultraschall.Docs_ConvertPlainTextToHTML</em>(<i>string</i> String)</code></div>
+<div class="l">Lua: <code> <i>string</i> html_text = <em>ultraschall.Docs_ConvertPlainTextToHTML</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
 Converts a plaintext into HTML.<br/>
@@ -78,18 +79,14 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> html_text</td>
-<td>the html-version of the text</td>
-</tr>
+<tr><td class="pr"><i>string</i> html_text</td></tr>
+<tr><td class="ch2">the html-version of the text</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> text</td>
-<td>the text, which shall be converted to html</td>
-</tr>
+<tr><td class="pr"><i>string</i> text</td></tr>
+<tr><td class="ch2">the text, which shall be converted to html</td></tr>
 </table>
 <br>
 </div>
@@ -100,7 +97,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetAllUSDocBlocsFromString</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> found_usdocblocs, <i>array</i> all_found_usdocblocs = <em>ultraschall.Docs_GetAllUSDocBlocsFromString</em>(<i>string</i> String)</code></div>
+<div class="l">Lua: <code> <i>integer</i> found_usdocblocs, <i>array</i> all_found_usdocblocs = <em>ultraschall.Docs_GetAllUSDocBlocsFromString</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
 returns all US_DocBloc-elements from a string.<br/>
@@ -109,24 +106,61 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> found_usdocblocs</td>
-<td>the number of found US_DocBlocs in the string</td>
-</tr>
+<tr><td class="pr"><i>integer</i> found_usdocblocs</td></tr>
+<tr><td class="ch2">the number of found US_DocBlocs in the string</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>array</i> all_found_usdocblocs</td>
-<td>the individual US_DocBlocs found in the string</td>
-</tr>
+<tr><td class="pr"><i>array</i> all_found_usdocblocs</td></tr>
+<tr><td class="ch2">the individual US_DocBlocs found in the string</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string, from which to retrieve the US_DocBlocs</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string, from which to retrieve the US_DocBlocs</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="Docs_GetUSDocBloc_Changelog"></a>
+<a href="#Docs_GetUSDocBloc_Changelog"> ^</a> 
+<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_Changelog</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>integer</i> changelogscount, <i>table</i> changelogs = <em>ultraschall.Docs_GetUSDocBloc_Changelog</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
+</div><p>
+<div class="ch">
+returns the changelog-entries of an US_DocBloc-entry<br/>
+<br/>
+this returns the version-number of the software and the changes introduced in that version inside a table.<br/>
+<br/>
+returns nil in case of an error              
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> changelogscount</td></tr>
+<tr><td class="ch2">the number of changelog-entries found</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>array</i> changelogs</td></tr>
+<tr><td class="ch2">all changelogs found, as an array<br/>
+&nbsp;&nbsp;changelogs[index][1] - software-version of the introduction of the change, like "Reaper 6.23" or "US_API 4.2.006"<br/>
+&nbsp;&nbsp;changelogs[index][2] - a description of the change</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the changelog-entry from</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> unindent_description</td></tr>
+<tr><td class="ch2">true, will remove indentation as given in the changelog-tag; false, return the text as it is</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> index</td></tr>
+<tr><td class="ch2">the index of the changelog-entries, starting with 1 for the first</td></tr>
 </table>
 <br>
 </div>
@@ -137,7 +171,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_ChapterContext</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> count, <i>array</i> chapters, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_ChapterContext</em>(<i>string</i> String, <i>integer</i> index)</code></div>
+<div class="l">Lua: <code> <i>integer</i> count, <i>array</i> chapters, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_ChapterContext</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
 returns the chapters and subchapters, in which the US_DocBloc shall be stored into<br/>
@@ -147,36 +181,65 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> count</td>
-<td>the number of chapters found</td>
-</tr>
+<tr><td class="pr"><i>integer</i> count</td></tr>
+<tr><td class="ch2">the number of chapters found</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>array</i> chapters</td>
-<td>the chapternames as an array</td>
-</tr>
+<tr><td class="pr"><i>array</i> chapters</td></tr>
+<tr><td class="ch2">the chapternames as an array</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> spok_lang</td>
-<td>the language of the chapters; "", if no language is given</td>
-</tr>
+<tr><td class="pr"><i>string</i> spok_lang</td></tr>
+<tr><td class="ch2">the language of the chapters; "", if no language is given</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the source-document-entry from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the source-document-entry from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> index</td>
-<td>the index of the chapter-entries, starting with 1 for the first</td>
-</tr>
+<tr><td class="pr"><i>integer</i> index</td></tr>
+<tr><td class="ch2">the index of the chapter-entries, starting with 1 for the first</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="Docs_GetUSDocBloc_Deprecated"></a>
+<a href="#Docs_GetUSDocBloc_Deprecated"> ^</a> 
+<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_Deprecated</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>string</i> what, <i>string</i> when, <i>string</i> alternative = <em>ultraschall.Docs_GetUSDocBloc_Deprecated</em>(<i>string</i> US_DocBloc)</code></div>
+</div><p>
+<div class="ch">
+returns the deprecated-tag of an US-DocBloc, which holds the information about, is a function is deprecated and what to use alternatively.<br/>
+<br/>
+returns nil in case of an error or if no such deprecated-tag exists for this US_DocBloc              
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> what</td></tr>
+<tr><td class="ch2">which software deprecated the function "Reaper" or "SWS" or "JS", etc</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> when</td></tr>
+<tr><td class="ch2">since which version is this function deprecated</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> alternative</td></tr>
+<tr><td class="ch2">what is a possible alternative to this function, if existing</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> removed</td></tr>
+<tr><td class="ch2">function got removed</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> US_DocBloc</td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the deprecated-tag-attributes from</td></tr>
 </table>
 <br>
 </div>
@@ -187,7 +250,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Description</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> description, <i>string</i> markup_type, <i>string</i> markup_version, <i>string</i> indent, <i>optional</i> <i>string</i> language, <i>optional</i> <i>string</i> prog_lang = <em>ultraschall.Docs_GetUSDocBloc_Description</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
+<div class="l">Lua: <code> <i>string</i> description, <i>string</i> markup_type, <i>string</i> markup_version, <i>string</i> indent, <i>optional</i> <i>string</i> language, <i>optional</i> <i>string</i> prog_lang = <em>ultraschall.Docs_GetUSDocBloc_Description</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
 returns the description-text from an US_DocBloc-element.<br/>
@@ -200,64 +263,46 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> description</td>
-<td>the description-text found in the USDocBloc in the string</td>
-</tr>
+<tr><td class="pr"><i>string</i> description</td></tr>
+<tr><td class="ch2">the description-text found in the USDocBloc in the string</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> markup_type</td>
-<td>the markup-type the description is written in</td>
-</tr>
+<tr><td class="pr"><i>string</i> markup_type</td></tr>
+<tr><td class="ch2">the markup-type the description is written in</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> markup_version</td>
-<td>the version of the markup-language, in which the description is written in</td>
-</tr>
+<tr><td class="pr"><i>string</i> markup_version</td></tr>
+<tr><td class="ch2">the version of the markup-language, in which the description is written in</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> indent</td>
-<td>the indentation of the text; can be either<br/>
+<tr><td class="pr"><i>string</i> indent</td></tr>
+<tr><td class="ch2">the indentation of the text; can be either<br/>
 &nbsp;&nbsp;as_typed - keeps the text, as it is<br/>
 &nbsp;&nbsp;minus_starts_line - will throw away everything from start of the line until(and including) the first - in it<br/>
 &nbsp;&nbsp;preceding_spaces - will remove all spaces/tabs in the beginning of each line<br/>
-&nbsp;&nbsp;default - will take the indentation of the first line and apply it to each of the following lines</td>
-</tr>
+&nbsp;&nbsp;default - will take the indentation of the first line and apply it to each of the following lines</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> language</td>
-<td>the language, in which the description is written in; "", if not set</td>
-</tr>
+<tr><td class="pr"><i>string</i> language</td></tr>
+<tr><td class="ch2">the language, in which the description is written in; "", if not set</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> prog_lang</td>
-<td>the programming-language, in which the description is written in; ", if not set</td>
-</tr>
+<tr><td class="pr"><i>string</i> prog_lang</td></tr>
+<tr><td class="ch2">the programming-language, in which the description is written in; ", if not set</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the description from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the description from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> unindent_description</td>
-<td>true, will remove indentation as given in the description-tag; false, return the text as it is</td>
-</tr>
+<tr><td class="pr"><i>boolean</i> unindent_description</td></tr>
+<tr><td class="ch2">true, will remove indentation as given in the description-tag; false, return the text as it is</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> index</td>
-<td>the index of the description to get, starting with 1 for the first description</td>
-</tr>
+<tr><td class="pr"><i>integer</i> index</td></tr>
+<tr><td class="ch2">the index of the description to get, starting with 1 for the first description</td></tr>
 </table>
 <br>
 </div>
@@ -268,7 +313,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Functioncall</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> functioncall, <i>string</i> prog_lang = <em>ultraschall.Docs_GetUSDocBloc_Functioncall</em>(<i>string</i> String, <i>integer</i> index)</code></div>
+<div class="l">Lua: <code> <i>string</i> functioncall, <i>string</i> prog_lang = <em>ultraschall.Docs_GetUSDocBloc_Functioncall</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
 returns the functioncall-entries from an US_DocBloc-element<br/>
@@ -279,30 +324,68 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> functioncall</td>
-<td>the functioncall, as stored in the USDocBloc</td>
-</tr>
+<tr><td class="pr"><i>string</i> functioncall</td></tr>
+<tr><td class="ch2">the functioncall, as stored in the USDocBloc</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> prog_lang</td>
-<td>the used programming language</td>
-</tr>
+<tr><td class="pr"><i>string</i> prog_lang</td></tr>
+<tr><td class="ch2">the used programming language</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the functioncall-entry from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the functioncall-entry from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> index</td>
-<td>the index of the functioncall, if there are multiple ones; beginning with 1</td>
-</tr>
+<tr><td class="pr"><i>integer</i> index</td></tr>
+<tr><td class="ch2">the index of the functioncall, if there are multiple ones; beginning with 1</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="Docs_GetUSDocBloc_LinkedTo"></a>
+<a href="#Docs_GetUSDocBloc_LinkedTo"> ^</a> 
+<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_LinkedTo</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>integer</i> linked_to_count, <i>table</i> links, <i>string</i> description = <em>ultraschall.Docs_GetUSDocBloc_LinkedTo</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
+</div><p>
+<div class="ch">
+returns the linked_to-tags of an US_DocBloc-entry<br/>
+<br/>
+returns nil in case of an error              
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> linked_to_count</td></tr>
+<tr><td class="ch2">the number of linked_to-entries found</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>array</i> links</td></tr>
+<tr><td class="ch2">all links found, as an array<br/>
+&nbsp;&nbsp;links[index]["location"] - the location of the link, either inline(for slugs inside the same document) or url(for links/urls/uris outside of it)<br/>
+&nbsp;&nbsp;links[index]["link"] - the slug to the element inside the document/the url or uri linking outside of the document<br/>
+&nbsp;&nbsp;links[index]["description"] - a description for this link</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> description</td></tr>
+<tr><td class="ch2">a description for this linked_to-tag</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the linked_to-entry from</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> unindent_description</td></tr>
+<tr><td class="ch2">true, will remove indentation as given in the changelog-tag; false, return the text as it is</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> index</td></tr>
+<tr><td class="ch2">the index of the linked_to-entries, starting with 1 for the first</td></tr>
 </table>
 <br>
 </div>
@@ -313,7 +396,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_NextChapter</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> next_chapter = <em>ultraschall.Docs_GetUSDocBloc_NextChapter</em>(<i>string</i> String)</code></div>
+<div class="l">Lua: <code> <i>string</i> next_chapter = <em>ultraschall.Docs_GetUSDocBloc_NextChapter</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
 returns the slug of the next chapter of an US_DocBloc-element<br/>
@@ -322,18 +405,14 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> next_chapter</td>
-<td>the slug of the next-chapter, as stored in the USDocBloc</td>
-</tr>
+<tr><td class="pr"><i>string</i> next_chapter</td></tr>
+<tr><td class="ch2">the slug of the next-chapter, as stored in the USDocBloc</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the slug of the next chapter from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the slug of the next chapter from</td></tr>
 </table>
 <br>
 </div>
@@ -344,7 +423,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Params</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> parmcount, <i>table</i> Params, <i>string</i> markuptype, <i>string</i> markupversion, <i>string</i> prog_lang, <i>string</i> spok_lang, <i>string</i> indent = <em>ultraschall.Docs_GetUSDocBloc_Params</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
+<div class="l">Lua: <code> <i>integer</i> parmcount, <i>table</i> Params, <i>string</i> markuptype, <i>string</i> markupversion, <i>string</i> prog_lang, <i>string</i> spok_lang, <i>string</i> indent = <em>ultraschall.Docs_GetUSDocBloc_Params</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
 returns the parameters of an US_DocBloc-entry<br/>
@@ -354,73 +433,53 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> parmcount</td>
-<td>the number of parameters found</td>
-</tr>
+<tr><td class="pr"><i>integer</i> parmcount</td></tr>
+<tr><td class="ch2">the number of parameters found</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>table</i> Params</td>
-<td>all parameters found, as an array<br/>
+<tr><td class="pr"><i>table</i> Params</td></tr>
+<tr><td class="ch2">all parameters found, as an array<br/>
 &nbsp;&nbsp;Params[index][1] - parametername<br/>
-&nbsp;&nbsp;Params[index][2] - parameterdescription</td>
-</tr>
+&nbsp;&nbsp;Params[index][2] - parameterdescription</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> markuptype</td>
-<td>the markuptype found; if no markuptype is given, it returns "plaintext"</td>
-</tr>
+<tr><td class="pr"><i>string</i> markuptype</td></tr>
+<tr><td class="ch2">the markuptype found; if no markuptype is given, it returns "plaintext"</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> markupversion</td>
-<td>the version of the markuptype found; "", if not given</td>
-</tr>
+<tr><td class="pr"><i>string</i> markupversion</td></tr>
+<tr><td class="ch2">the version of the markuptype found; "", if not given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> prog_lang</td>
-<td>the programming-language used in these parameters; "", if not given</td>
-</tr>
+<tr><td class="pr"><i>string</i> prog_lang</td></tr>
+<tr><td class="ch2">the programming-language used in these parameters; "", if not given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> spok_lang</td>
-<td>the spoken-language used in these parameters; "", if not given</td>
-</tr>
+<tr><td class="pr"><i>string</i> spok_lang</td></tr>
+<tr><td class="ch2">the spoken-language used in these parameters; "", if not given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> indent</td>
-<td>the type of indentation you want to remove<br/>
+<tr><td class="pr"><i>string</i> indent</td></tr>
+<tr><td class="ch2">the type of indentation you want to remove<br/>
 &nbsp;&nbsp;as_typed - keeps the text, as it is<br/>
 &nbsp;&nbsp;minus_starts_line - will throw away everything from start of the line until(and including) the first - in it<br/>
 &nbsp;&nbsp;preceding_spaces - will remove all spaces/tabs in the beginning of each line<br/>
 &nbsp;&nbsp;default - will take the indentation of the first line and apply it to each of the following lines<br/>
-That means, indentation relative to the first line is kept.</td>
-</tr>
+That means, indentation relative to the first line is kept.</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the parameter-entry from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the parameter-entry from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> unindent_description</td>
-<td>true, will remove indentation as given in the parameter-tag; false, return the text as it is</td>
-</tr>
+<tr><td class="pr"><i>boolean</i> unindent_description</td></tr>
+<tr><td class="ch2">true, will remove indentation as given in the parameter-tag; false, return the text as it is</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> index</td>
-<td>the index of the parameter-entries, starting with 1 for the first</td>
-</tr>
+<tr><td class="pr"><i>integer</i> index</td></tr>
+<tr><td class="ch2">the index of the parameter-entries, starting with 1 for the first</td></tr>
 </table>
 <br>
 </div>
@@ -431,7 +490,7 @@ That means, indentation relative to the first line is kept.</td>
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_PreviousChapter</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> previous_chapter = <em>ultraschall.Docs_GetUSDocBloc_PreviousChapter</em>(<i>string</i> String)</code></div>
+<div class="l">Lua: <code> <i>string</i> previous_chapter = <em>ultraschall.Docs_GetUSDocBloc_PreviousChapter</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
 returns the slug of the previous chapter of an US_DocBloc-element<br/>
@@ -440,18 +499,14 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> previous_chapter</td>
-<td>the slug of the previous-chapter, as stored in the USDocBloc</td>
-</tr>
+<tr><td class="pr"><i>string</i> previous_chapter</td></tr>
+<tr><td class="ch2">the slug of the previous-chapter, as stored in the USDocBloc</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the slug of the previous chapter from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the slug of the previous chapter from</td></tr>
 </table>
 <br>
 </div>
@@ -462,7 +517,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Requires</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> count, <i>array</i> requires, <i>array</i> requires_alt = <em>ultraschall.Docs_GetUSDocBloc_Requires</em>(<i>string</i> String)</code></div>
+<div class="l">Lua: <code> <i>integer</i> count, <i>array</i> requires, <i>array</i> requires_alt = <em>ultraschall.Docs_GetUSDocBloc_Requires</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
 returns the requires-entries from an US_DocBloc-element<br/>
@@ -471,30 +526,22 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> count</td>
-<td>the number of required elements found in the require-tag</td>
-</tr>
+<tr><td class="pr"><i>integer</i> count</td></tr>
+<tr><td class="ch2">the number of required elements found in the require-tag</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>array</i> requires</td>
-<td>the requires found; of the format element=versionnumber, e.g. "Reaper=5.978"</td>
-</tr>
+<tr><td class="pr"><i>array</i> requires</td></tr>
+<tr><td class="ch2">the requires found; of the format element=versionnumber, e.g. "Reaper=5.978"</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>array</i> requires_alt</td>
-<td>like requires, but the index is the required element, while the value is the versionnumber, e.g requires_alt["Reaper"]="5.978"</td>
-</tr>
+<tr><td class="pr"><i>array</i> requires_alt</td></tr>
+<tr><td class="ch2">like requires, but the index is the required element, while the value is the versionnumber, e.g requires_alt["Reaper"]="5.978"</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the requires-entry from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the requires-entry from</td></tr>
 </table>
 <br>
 </div>
@@ -505,7 +552,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Retvals</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> retvalscount, <i>table</i> retvals, <i>string</i> markuptype, <i>string</i> markupversion, <i>string</i> prog_lang, <i>string</i> spok_lang, <i>string</i> indent = <em>ultraschall.Docs_GetUSDocBloc_Retvals</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
+<div class="l">Lua: <code> <i>integer</i> retvalscount, <i>table</i> retvals, <i>string</i> markuptype, <i>string</i> markupversion, <i>string</i> prog_lang, <i>string</i> spok_lang, <i>string</i> indent = <em>ultraschall.Docs_GetUSDocBloc_Retvals</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
 returns the retvals of an US_DocBloc-entry<br/>
@@ -515,73 +562,53 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> retvalscount</td>
-<td>the number of retvals found</td>
-</tr>
+<tr><td class="pr"><i>integer</i> retvalscount</td></tr>
+<tr><td class="ch2">the number of retvals found</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>array</i> retvals</td>
-<td>all retvals found, as an array<br/>
+<tr><td class="pr"><i>array</i> retvals</td></tr>
+<tr><td class="ch2">all retvals found, as an array<br/>
 &nbsp;&nbsp;retvals[index][1] - retvalsname<br/>
-&nbsp;&nbsp;retvals[index][2] - retvalsdescription</td>
-</tr>
+&nbsp;&nbsp;retvals[index][2] - retvalsdescription</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> markuptype</td>
-<td>the markuptype found; if no markuptype is given, it returns "plaintext"</td>
-</tr>
+<tr><td class="pr"><i>string</i> markuptype</td></tr>
+<tr><td class="ch2">the markuptype found; if no markuptype is given, it returns "plaintext"</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> markupversion</td>
-<td>the version of the markuptype found; "", if not given</td>
-</tr>
+<tr><td class="pr"><i>string</i> markupversion</td></tr>
+<tr><td class="ch2">the version of the markuptype found; "", if not given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> prog_lang</td>
-<td>the programming-language used in these retvals; "", if not given</td>
-</tr>
+<tr><td class="pr"><i>string</i> prog_lang</td></tr>
+<tr><td class="ch2">the programming-language used in these retvals; "", if not given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> spok_lang</td>
-<td>the spoken-language used in these retvals; "", if not given</td>
-</tr>
+<tr><td class="pr"><i>string</i> spok_lang</td></tr>
+<tr><td class="ch2">the spoken-language used in these retvals; "", if not given</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> indent</td>
-<td>the type of indentation you want to remove<br/>
+<tr><td class="pr"><i>string</i> indent</td></tr>
+<tr><td class="ch2">the type of indentation you want to remove<br/>
 &nbsp;&nbsp;as_typed - keeps the text, as it is<br/>
 &nbsp;&nbsp;minus_starts_line - will throw away everything from start of the line until(and including) the first - in it<br/>
 &nbsp;&nbsp;preceding_spaces - will remove all spaces/tabs in the beginning of each line<br/>
 &nbsp;&nbsp;default - will take the indentation of the first line and apply it to each of the following lines<br/>
-That means, indentation relative to the first line is kept.</td>
-</tr>
+That means, indentation relative to the first line is kept.</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the retvals-entry from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the retvals-entry from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>boolean</i> unindent_description</td>
-<td>true, will remove indentation as given in the retvals-tag; false, return the text as it is</td>
-</tr>
+<tr><td class="pr"><i>boolean</i> unindent_description</td></tr>
+<tr><td class="ch2">true, will remove indentation as given in the retvals-tag; false, return the text as it is</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> index</td>
-<td>the index of the retvals-entries, starting with 1 for the first</td>
-</tr>
+<tr><td class="pr"><i>integer</i> index</td></tr>
+<tr><td class="ch2">the index of the retvals-entries, starting with 1 for the first</td></tr>
 </table>
 <br>
 </div>
@@ -592,7 +619,7 @@ That means, indentation relative to the first line is kept.</td>
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Slug</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> slug = <em>ultraschall.Docs_GetUSDocBloc_Slug</em>(<i>string</i> String)</code></div>
+<div class="l">Lua: <code> <i>string</i> slug = <em>ultraschall.Docs_GetUSDocBloc_Slug</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
 returns the slug from an US_DocBloc-element<br/>
@@ -601,18 +628,14 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> slug</td>
-<td>the slug, as stored in the USDocBloc</td>
-</tr>
+<tr><td class="pr"><i>string</i> slug</td></tr>
+<tr><td class="ch2">the slug, as stored in the USDocBloc</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the slug from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the slug from</td></tr>
 </table>
 <br>
 </div>
@@ -623,7 +646,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_SourceDocument</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> source_document = <em>ultraschall.Docs_GetUSDocBloc_SourceDocument</em>(<i>string</i> String)</code></div>
+<div class="l">Lua: <code> <i>string</i> source_document = <em>ultraschall.Docs_GetUSDocBloc_SourceDocument</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
 returns the source-document from an US_DocBloc-element.<br/>
@@ -633,18 +656,14 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> source_document</td>
-<td>the source-document, into which the converted US_DocBloc shall be stored into</td>
-</tr>
+<tr><td class="pr"><i>string</i> source_document</td></tr>
+<tr><td class="ch2">the source-document, into which the converted US_DocBloc shall be stored into</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the source-document-entry from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the source-document-entry from</td></tr>
 </table>
 <br>
 </div>
@@ -655,7 +674,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Tags</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>integer</i> count, <i>array</i> tags, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_Tags</em>(<i>string</i> String, <i>integer</i> index)</code></div>
+<div class="l">Lua: <code> <i>integer</i> count, <i>array</i> tags, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_Tags</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
 returns the tags of an US_DocBloc-entry<br/>
@@ -665,36 +684,26 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> count</td>
-<td>the number of tags found</td>
-</tr>
+<tr><td class="pr"><i>integer</i> count</td></tr>
+<tr><td class="ch2">the number of tags found</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>array</i> tags</td>
-<td>the tags as an array</td>
-</tr>
+<tr><td class="pr"><i>array</i> tags</td></tr>
+<tr><td class="ch2">the tags as an array</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> spok_lang</td>
-<td>the language of the tags; "" if no language is given</td>
-</tr>
+<tr><td class="pr"><i>string</i> spok_lang</td></tr>
+<tr><td class="ch2">the language of the tags; "" if no language is given</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the tags-entry from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the tags-entry from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> index</td>
-<td>the index of the tags-entries, starting with 1 for the first</td>
-</tr>
+<tr><td class="pr"><i>integer</i> index</td></tr>
+<tr><td class="ch2">the index of the tags-entries, starting with 1 for the first</td></tr>
 </table>
 <br>
 </div>
@@ -705,7 +714,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_TargetDocument</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> target_document = <em>ultraschall.Docs_GetUSDocBloc_TargetDocument</em>(<i>string</i> String)</code></div>
+<div class="l">Lua: <code> <i>string</i> target_document = <em>ultraschall.Docs_GetUSDocBloc_TargetDocument</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
 returns the target-document from an US_DocBloc-element.<br/>
@@ -715,18 +724,14 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> target_document</td>
-<td>the target-document, into which the converted US_DocBloc shall be stored into</td>
-</tr>
+<tr><td class="pr"><i>string</i> target_document</td></tr>
+<tr><td class="ch2">the target-document, into which the converted US_DocBloc shall be stored into</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the target-document-entry from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the target-document-entry from</td></tr>
 </table>
 <br>
 </div>
@@ -737,7 +742,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Title</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> title, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_Title</em>(<i>string</i> String, <i>integer</i> index)</code></div>
+<div class="l">Lua: <code> <i>string</i> title, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_Title</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
 returns the title from an US_DocBloc-element.<br/>
@@ -747,30 +752,22 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> title</td>
-<td>the title, as stored in the USDocBloc</td>
-</tr>
+<tr><td class="pr"><i>string</i> title</td></tr>
+<tr><td class="ch2">the title, as stored in the USDocBloc</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> spok_lang</td>
-<td>the language, in which the title is stored</td>
-</tr>
+<tr><td class="pr"><i>string</i> spok_lang</td></tr>
+<tr><td class="ch2">the language, in which the title is stored</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>a string which hold a US_DocBloc to retrieve the title from</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">a string which hold a US_DocBloc to retrieve the title from</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>integer</i> index</td>
-<td>the index of the title to get, starting with 1 for the first title</td>
-</tr>
+<tr><td class="pr"><i>integer</i> index</td></tr>
+<tr><td class="ch2">the index of the title to get, starting with 1 for the first title</td></tr>
 </table>
 <br>
 </div>
@@ -781,7 +778,7 @@ returns nil in case of an error
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
 <img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_RemoveIndent</b></u><br>			<p>
 <div class="cc">
-<div class="l"><span class='all_view'>Lua: </span><code> <i>string</i> unindented_text = <em>ultraschall.Docs_RemoveIndent</em>(<i>string</i> String, <i>string</i> indenttype)</code></div>
+<div class="l">Lua: <code> <i>string</i> unindented_text = <em>ultraschall.Docs_RemoveIndent</em>(<i>string</i> String, <i>string</i> indenttype)</code></div>
 </div><p>
 <div class="ch">
 unindents an indented text from a US_DocBloc.<br/>
@@ -797,36 +794,30 @@ returns nil in case of an error
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> unindented_text</td>
-<td>the string, from which the indentation was removed</td>
-</tr>
+<tr><td class="pr"><i>string</i> unindented_text</td></tr>
+<tr><td class="ch2">the string, from which the indentation was removed</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> <i>String</i></td>
-<td>the string, which shall be unindented</td>
-</tr>
+<tr><td class="pr"><i>string</i> <i>String</i></td></tr>
+<tr><td class="ch2">the string, which shall be unindented</td></tr>
 </table>
 <table class="ch">
-<tr>
-<td class="pr"><i>string</i> indenttype</td>
-<td>the type of indentation you want to remove<br/>
+<tr><td class="pr"><i>string</i> indenttype</td></tr>
+<tr><td class="ch2">the type of indentation you want to remove<br/>
 &nbsp;&nbsp;as_typed - keeps the text, as it is<br/>
 &nbsp;&nbsp;minus_starts_line - will throw away everything from start of the line until(and including) the first - in it<br/>
 &nbsp;&nbsp;preceding_spaces - will remove all spaces/tabs in the beginning of each line<br/>
 &nbsp;&nbsp;default - will take the indentation of the first line and apply it to each of the following lines<br/>
-That means, indentation relative to the first line is kept.</td>
-</tr>
+That means, indentation relative to the first line is kept.</td></tr>
 </table>
 <br>
 </div>
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 005 - 16 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 006 - 19 elements available <br></td></table>
         <hr>
       </div>
       <br>

@@ -680,14 +680,14 @@ function ultraschall.EnumerateNormalMarkers(number)
   -- find the right normal-marker
   for i=0, a-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color= reaper.EnumProjectMarkers3(0,i)
-	
+    
     if isrgn==false then
       if name:sub(1,10)~="_Shownote:" and 
-		 name:sub(1,5)~="_Edit" and 
-		 color~=ultraschall.planned_marker_color 
-		 then 
-			count=count+1 
-	  end
+         name:sub(1,5)~="_Edit" and 
+         color~=ultraschall.planned_marker_color 
+         then 
+            count=count+1 
+      end
     end
     if number>=0 and wentfine==0 and count==number then
         retnumber=retval 
@@ -4840,19 +4840,19 @@ function ultraschall.IsTimeSigmarkerAtPosition(position, position_mode)
   <functioncall>boolean retval = ultraschall.IsTimeSigmarkerAtPosition(number position, optional integer position_mode)</functioncall>
   <description>
     returns, if at position is a time-signature marker
-	
-	returns false in case of an error
+    
+    returns false in case of an error
   </description>
   <retvals>
     boolean retval - true, marker found; false, marker not found
   </retvals>
   <parameters>
     number position - the position to check, whether there's a timesignature marker
-	optional integer position_mode - nil or 0, use position in seconds; 1, use position in measures
-  </parameters>			
+    optional integer position_mode - nil or 0, use position in seconds; 1, use position in measures
+  </parameters>            
   <chapter_context>
     Markers
-	Time Signature Markers
+    Time Signature Markers
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>

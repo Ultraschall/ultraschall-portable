@@ -1,83 +1,87 @@
-.l code:hover, .e code:hover, .p code:hover, .c code:hover, .j code:hover, .l_func code:hover, .ch code:hover{
-    cursor: copy;
-    background-color: black;
-}
+/*Anchors in the docs*/
 
-.l_func{
-    margin-bottom: 4;
-    color:#FFFFFF;
-}
-
-.c{
-    margin-bottom: 4;
-    color:#FFFFFF;
-} 
-.p {
-    margin-bottom: 4;
-    color:#FFFFFF;
-}
-.e {
-    margin-bottom: 4;
-    color:#FFFFFF;
-}
-.l{
-    margin-bottom: 4;
-    color:#FFFFFF;
-}
-.j{
-    margin-bottom: 4;
-    color:#FFFFFF;
-}
 .anch{
   width:90.5%;  
   padding-top: 14%;
 }
 
-i{
-  color:#00aaff;
+
+/*Functioncall-definitions*/
+
+.cc{ /*padding of function definitions*/
+  padding-left:4.4%;
+  width:90.5%;
 }
+
+.l code:hover, .e code:hover, .p code:hover, .c code:hover, .j code:hover, .l_func code:hover, .ch code:hover{
+    /*used mouse-cursor when clicking function-calls*/
+    cursor: copy;
+    background-color: black;
+}
+
+.c, .p, .e, .l, .j{ /*general style of functioncalls*/
+    margin-bottom: 4;
+    color:#FFFFFF;
+} 
+
+
+/*parameter/retval-names*/
 
 .pr{
     color:#FFFFFF;
     width: 35%;
 }
 
-.ch{
+
+/*  padding of elements
+*/
+    /*  padding of chapters/index/elements/descriptions/retvals/parameters in general
+    changing this should keep the padding of all general elements relative to each other
+    */
+.ch{ 
   padding-left:4.4%;
   width:90.5%;
 }
-.cc{
-  padding-left:4.4%;
+
+.ch2{ /*padding of parameter/retval-descriptions*/
+  padding-left:6.4%;
   width:90.5%;
 }
-.tdsm{
+
+
+
+/*Index related*/
+
+.tdsm{ /*fontsize of index-entries*/
     width:25%;
     font-size:x-small;
 }
 
-.indexpad{
+.indexpad{ /*padding of the index*/
   padding-left:4.5;
-  width:90.5%;
+  width:100%;
 }
 
-.desc{
-    border-collapse: 
-    separate;
-    border-spacing: 0px 0px;
+.inds{/*size of empty index-cells*/
+  width:25%;
 }
+
+.inpad{ /*padding of index-entrylinks-*/
+    margin-left:-14;
+}
+
+/*style of the View-selector in the ReaScript-API-docs
+properly no need to edit this one*/
+
 .td2{
     width:49%;
 }
 .td3{
     padding-right:0;
 }
-.inpad{
-    margin-left:-14;
-}
-.infnt{
-    font-size:small
-}
 
+
+/*tags in general*/
 a {
   color:#66aaff;
 }
@@ -91,7 +95,9 @@ body{
 em{
     color:55EE55;
 }
-
+i{
+  color:#00aaff;
+}
 table{
     margin-top: -0.3%;
 }

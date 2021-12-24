@@ -30,13 +30,13 @@
 --          dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- 4. have fun using the API. Test it with ultraschall.ApiTest()
 
--- requires at least Reaper 6.02, SWS 2.10.0.1 and JS-extension 1.215
+-- requires at least Reaper 6.20, SWS 2.10.0.1 and JS-extension 1.215
 
 
 local ReaperVersion=reaper.GetAppVersion()
 ReaperVersion=tonumber(ReaperVersion:match("(%d%.%d*)"))
 
-if ReaperVersion<6.05 then reaper.MB("Sorry, Reaper 6.05 or higher must be installed to use the API. \nGo to reaper.fm to get it.","Reaper version too old",0) return end
+if ReaperVersion<6.20 then reaper.MB("Sorry, Reaper 6.20 or higher must be installed to use the API. \nGo to reaper.fm to get it.","Reaper version too old",0) return end
 if reaper.CF_LocateInExplorer==nil then reaper.MB("Sorry, SWS 2.10.0.1 or higher must be installed to use the API. \nGo to sws-extension.org to get it.","SWS missing",0) return end
 if reaper.JS_ReaScriptAPI_Version==nil or reaper.JS_ReaScriptAPI_Version()<1.215 then reaper.MB("Sorry, JS-extension-plugin 1.215 or higher must be installed to use the API. \nGo to https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/ to get it.","JS-Extension plugin missing",0) return end
 
@@ -47,12 +47,17 @@ ultraschall={}
 ultraschall.temp, ultraschall.Script_Context=reaper.get_action_context()
 
 
+--[[
 -- Beta-Functions On
 if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/beta.txt")==true then
     ultraschall.US_BetaFunctions=true
 else
     ultraschall.US_BetaFunctions=false
 end
+--]]
+
+ultraschall.US_BetaFunctions=false
+
 
 ultraschall.temp1,ultraschall.temp=reaper.get_action_context()
 ultraschall.temp=string.gsub(ultraschall.temp,"\\","/")
@@ -79,8 +84,8 @@ local info = debug.getinfo(1,'S');
 local script_path = reaper.GetResourcePath().."/UserPlugins/ultraschall_api"..ultraschall.Separator
 ultraschall.Api_Path=script_path
 ultraschall.Api_Path=string.gsub(ultraschall.Api_Path,"\\","/")
-ultraschall.Api_InstallPath=reaper.GetResourcePath().."/UserPlugins/"
-ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
+ultraschall.Api_InstallPath=string.gsub(reaper.GetResourcePath().."/UserPlugins/", "\\", "/")
+ultraschall.API_TempPath=string.gsub(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/", "\\", "/")
 
 ultraschall.Api_ScriptPath=ultraschall.Api_Path.."/Scripts"
 
@@ -172,9 +177,9 @@ function ultraschall.ApiTest()
     ultraschall.ApiBetaDocTest()
     ultraschall.ApiBetaTagTest()
     
-ultraschall.network_works="off"    
+    ultraschall.network_works="off"    
     
-    reaper.MB("Functions-Engine="..ultraschall.functions_works.."\nData-Engine="..ultraschall.data_works.."\nGui-Engine="..ultraschall.gui_works.."\nSound-Engine="..ultraschall.sound_works.."\nVideo-Engine="..ultraschall.video_works.."\nDoc-Engine="..ultraschall.doc_works.."\nTag-Engine="..ultraschall.tag_works.."\nNetwork-Engine="..ultraschall.network_works.."\n\nBeta-Functions:\nFunctions-Beta-Engine="..ultraschall.functions_beta_works.."\nData-Beta-Engine="..ultraschall.data_beta_works.."\nGui-Beta-Engine="..ultraschall.gui_beta_works.."\nSound-Beta-Engine="..ultraschall.sound_beta_works.."\nVideo-Beta-Engine="..ultraschall.video_beta_works.."\nDoc-Beta-Engine="..ultraschall.doc_beta_works.."\nTag-Beta-Engine="..ultraschall.tag_beta_works.."\nNetwork-Beta-Engine="..ultraschall.network_beta_works,"Ultraschall API-TEST",0)
+    reaper.MB("Ultraschall-API works successfully","Ultraschall API-TEST",0)
 end
 
 

@@ -3,7 +3,6 @@
 
     -- later releases
         - Hilfsfunktionen für Lokasenna's GuiLib v2, wie automatisches übertragen der Höhe/Breite/Position-Werte in die entsprechenden Gui-Vals
-        - BatchConvertFiles - maybe finishing it up?
         - Set Metadata from Project - still missing
         - IsTakeEnvelopeVisible(könnt knifflig werden)
         - Download files via Curl -> darf ich Curl mit ausliefern oder beisst sich das mit Lizenz? Auf Windows kann ich auch certutil nutzen.
@@ -195,7 +194,6 @@ Have fun!"
                                                                                     funfact - -1:U entry is pan_law, go into a routing-setting and rightclick the pan-slider of a receive to get this dialog
                                                                          AUXRECV_WITHOUT_PANLAW_BOOST - if existing after a AUXRECV, pan_law has the Gain compensation (boost pans)-checkbox set
                                                                                                         go into a routing-setting and rightclick the pan-slider of a receive to get this dialog
-      TODO!! Rewrite Doccreation from scratch with proper css.
       TODO!! Lua-eigene Funktionen in die ultraschall-Table übernehmen, wie type, tostring, tonumber, etc. Dies könnten vom user überschrieben werden und dann
              produziert die API Fehler.
 
@@ -235,19 +233,6 @@ TODO:
         A="Test[LULU[H[ULU](T\n\nudel)Kallo[Tudelu](Huch)"
         B=A:match(".*(%[.-%]%(.-%))") -- URL-parsen!!!
        to parse URLs
-    
-    -- clear cache before 6.20
-    use an existing path and use as fileindex/subdir-index 1
-    This clears the cache. Use two different one, to avoid potentially using the same folder, that was used before
-    my clear-caching mechanism.
-    So:
-    
-    reaper.EnumerateFiles(reaper.GetResourcePath(), 1) -- clear cache
-    reaper.EnumerateFiles(reaper.GetResourcePath().."/Scripts", 1) -- clear cache 
-                                                                   -- safety measure, if the resource-path was the 
-                                                                   -- last one used in a script not done by 
-                                                                   -- Ultraschall-API
-    reaper.EnumerateFiles(path, 1) -- get the file with index 1 in path
     
     - CreateRenderCFG-functions - support getting default format-settings(only ffia, evaw, etc as from GetProjectSettings_String?)
     - Button to install developer-tools in settings-window
@@ -402,11 +387,120 @@ Doesn't work on Windows 7???
 
 
   - Rendering: CalculateLoudness - calculates loundness of tracks/items and returns its stats  
-
+ 
+  - Normalization in BatchConverter?
+ 
 </TODO>
 
 
 ## Ultraschall Framework - Changelog
+
+### 4.2.006 - "The Beatles - The continuing story of Bungalow Bill" - 24th of December 2021
+
+Has now 1423 functions, with 17 new ones
+
+**new in this release:**  
+
+  - **Brickwall Limiting Support**  
+  The rendering-functions support now brickwall-rendering and the render-preset-functions the new possibility to
+  store the rendering-path as well(as of Reaper 6.43)
+  
+  - **CAF-support**  
+  CAF is now supported as well with rendering.
+  
+  - **GFX_GetChar**  
+  Gives you a more powerful version of gfx.getchar, which returns the characters and optionally a readable version of
+  non-printable characters.  
+  It also allows you managing the clipboard directly inside of it, so you don't need to code cmd+x/c yourself.  
+  
+  - **New MetaData-functions added**  
+  For ASWG, AXML, CAFINFO, FLACPIC, IFF and WAVEEXT.  I also updated the docs for other metadata-functions to include
+  newly added tags.
+  
+  - **Deprecated Checker for scripters**  
+  A new devtool allows you to check lua-scripts inside a folder, if they use deprecated functions. It also warns you,
+  if one of them still uses a function that got actually removed.
+  
+  - **Bugfixes**  
+  And cleanup, cleanup, cleanup
+  
+#### New features in 4.2.006  
+  - DeveloperTools: Check scripts in folder for deprecated functions - checks, whether a folder contains Lua-scripts that ue deprecated or removed API-functions
+  - Docs: function changelogs - include now changelogs for each function beginning from Reaper 6.42+, SWS 2.12.1.3+, ReaBlink 0.4.0, JS 1.22+, ReaImGui 0.5.8+
+  - Docs: deprecated-states - include now deprecated-states for each depreacted function which includes since when and a possible alternative
+  - Doc-Engine: Docs\_GetUSDocBloc\_Changelog - returns the changelogs from each US-DocML-entry
+  - Doc-Engine: Docs\_GetUSDocBloc\_Deprecated - returns the attributes of the deprecated-tag of an US-DocBloc
+  - Doc-Engine: Docs\_GetUSDocBloc\_LinkedTo - returns the entries of the linked_to-tags insie an USDocML-entry
+  - GFX-Management: GFX\_GetChar - a more powerful version of gfx.getchar, with additional clipboard management and conversion of non-printable characters to readable ones
+  - Helper Functions: ReturnReaperExeFile\_With\_Path - returns the name of the reaper-executable including its path
+  - MetaData: Metadata\_ASWG\_GetSet - gets/sets ASWG-metadata
+  - MetaData: Metadata\_AXML\_GetSet - gets/sets AXML-metadata
+  - MetaData: Metadata\_CAFINFO\_GetSet - gets/sets metadata for CAF-files
+  - MetaData: Metadata\_FLACPIC\_GetSet - gets/set metadata to embed pictures into flac-files
+  - MetaData: Metadata\_IFF\_GetSet - gets/set metadata for iff  
+  - MetaData: Metadata\_WAVEXT\_GetSet gets/set metadata for wavext
+  - ParmAlias: GetParmAlias\_by\_FXParam\_FXStateChunk - gets the parmalias_id by fx-parameter, that you can use as parameter id for Set/Get/Delete-ParmAlias-functions
+  - ParmLearn: GetParmLearnID\_by\_FXParam\_FXStateChunk - gets the parmlearn_id by fx-parameter, that you can use as parmlearn_id for Set/Get/Delete-ParmLearn-functions(requested by TonE)
+  - ParmLFOLearn: GetParmLFOLearn\_by\_FXParam\_FXStateChunk - gets the parm_lfolearn_id by fx-parameter, that you can use as parameter id for Set/Get/Delete-ParmLFOLearn-functions  
+  - Render Management: GetRenderTargetFiles - returns the render-target and filenames of all render-files, if they would be rendered right now
+  - Render Management: GetRenderCFG\_Settings\_CAF - gets settings of a render-string of the caf-format
+  - Render Management: CreateRenderCFG\_CAF - creates a render-string for the CAF-format
+  
+  
+#### Changes from 4.2.005 to 4.2.006  
+  - API: bugs - newly added functions from last release weren't working, due oversight -> fixed
+  - API: deprecated - replaced most of the deprecated functions US-API used
+  - API: minimum Reaper version - raised minimum Reaper-version to Reaper 6.20
+  - API: Settings - Beta-functions-feature removed, as it was pointless and slowed down initializing US-API
+  - Developer: EditReaScript - allows now setting docking state and watchlist-size; didn't add scripts, when the file already existed, contrary to what the docs suggested; didn't reset old values in reaper.ini  -> fixed
+  - DeveloperTools: ultraschall\_developertool\_CheckForNewConfigVars - tries now to read possible config-vars from reaper.exe directly(windows only atm)
+  - DeveloperTools: ultraschall\_developertool\_Display-Altered-Config-Vars - shows now the diffs to old values as well
+  - DeveloperTools: ultraschall\_developertool\_Display-Altered-ConfigFile-Entries - shows diffs to old values when entries are numerical; added missing ini-files
+  - DocEngine: Docs\_GetUSDocBloc\_Description - had problems with description-tags without any line in it -> fixed
+  - DocEngine: Docs\_RemoveIndent - had inner variable exposed -> fixed
+  - Docs: All docs - you can create now a custom.css file in the Documentation-folder to customize the style of the docs
+  - Docs: MediaItemStateChunk-docs - added new behavior of Reaper 6.33 to just enclose source-files with " that have a space in filename or path  
+  - Docs: Reaper Internals - updated to Reaper 6.43 and ReaImGui 0.5.8
+  - Docs: Reaper-API-docs - All-View jumped to the top of the document instead of just unhiding functioncalls -> fixed
+  - Docs: RenderPreset-Configfile.txt - updated to Reaper 6.43
+  - EventManager: general - didn't start on Linux distributions due case-typo in ultraschall\_EventManager.lua-filename -> fixed (thanks to dronenb)
+  - FileManagement: GetAllDirectoriesInPath - has now an optional filter-parameter, to just get directories of a certain pattern
+  - FileManagement: GetAllFilenamesInPath - has now an optional filter-parameter, to just get filenames of a certain pattern; returned pure path as well -> fixed
+  - FileManagement: GetAllRecursiveFilesAndSubdirectories - has now optional filter-parameters for folders and files
+  - FXManagement: InputFX\_GetEQBandEnabled - new bandtypes added, as added by Reaper 6.43
+  - FXManagement: InputFX\_GetEQParam - new bandtypes added, as added by Reaper 6.43
+  - FXManagement: InputFX\_SetEQBandEnabled - new bandtypes added, as added by Reaper 6.43
+  - FXManagement: InputFX\_SetEQParam - new bandtypes added, as added by Reaper 6.43
+  - MediaItem Management: InsertMediaItemFromFile - didn't place editcursor correctly at the end of item, when length==-1 -> fixed
+  - Mute: ToggleMute - didn't unmute under certain conditions; sometimes created additional envelope-points when unneccessary -> fixed
+  - ParmLearn: AddParmLearn\_FXStateChunk2 - parameter midi_channel falsely expected to be 0-15 not 1-16 as documented -> fixed(thanks to TonE)
+  - ParmLearn: GetParmLearn\_FXStateChunk2 - didn't check for non existing ParmLearns and threw nil error -> fixed(thanks to TonE)
+  - ParmLearn: SetParmLearn\_FXStateChunk2 - had massive errors in the docs -> fixed(thanks to TonE)
+  - ProjectManagement: GetProject\_Render\_Normalize - supports now brickwall-settings
+  - ProjectManagement: SetProject\_Render\_Normalize - supports now brickwall-settings
+  - Rendering: AddRenderPreset - supports now brickwall-limiting and output-directory
+  - Rendering: ApplyRenderTable\_Project - supports now brickwall-limiting
+  - Rendering: ApplyRenderTable\_ProjectFile - supports now brickwall-limiting
+  - Rendering: CreateNewRenderTable - supports now brickwall-limiting
+  - Rendering: CreateRenderCFG\_WAV - supports now 32 Bit PCM(7) and 8 Bit u-Law(8) as BitDepth
+  - Rendering: GetOutputFormat\_RenderCfg - supports now CAF as well; returned the decoded render-string only, not the base64-decoded one; the latter is now retval #3
+  - Rendering: GetRenderCFG\_Settings\_AIFF - when passing nil, it returns now the default-project-render-settings for aiff
+  - Rendering: GetRenderCFG\_Settings\_FLAC - when passing nil, it returns now the default-project-render-settings for flac  
+  - Rendering: GetRenderCFG\_Settings\_OGG - when passing nil, it returns now the default-project-render-settings for ogg
+  - Rendering: GetRenderCFG\_Settings\_OPUS - when passing nil, it returns now the default-project-render-settings for opus
+  - Rendering: GetRenderCFG\_WAV - when passing nil, it returns now the default-project-render-settings for wav; supports now 32 Bit PCM(7) and 8 Bit u-Law(8) as BitDepth; returned wrong value as BitDepth -> fixed  
+  - Rendering: GetRenderCFG\_WAVPACK - when passing nil, it returns now the default-project-render-settings for wavpack
+  - Rendering: GetRenderCFG\_Settings\_XXX - all those functions could produce error, when sending in non-Base-64-strings -> fixed      
+  - Rendering: GetRenderPreset\_RenderTable - supports now brickwall-limiting and the output-diretory, if stored; did not return secondary render-string, when having a presetname with spaces in it -> fixed
+  - Rendering: GetRenderTable\_Project - supports now brickwall-limiting
+  - Rendering: GetRenderTable\_ProjectFile - supports now brickwall-limiting  
+  - Rendering: IsValidRenderTable - supports now brickwall-limiting
+  - Rendering: RenderProject\_RenderTable - didn't return filenames due changes in statechunks in Reaper 6.33 -> fixed(thnx to aurelien)  
+  - Rendering: SetRenderPreset - supports now brickwall-limiting; didn't set some settings, when normalize-target had + in its value -> fixed
+  - Rendering: various - many render-cfg-functions who work with floats didn't work properly -> fixed
+  - User Interface: Windows\_Find - had inner variable exposed -> fixed
+  
+---
 
 ### 4.2.005 - "Anne Clark - Our Darkness" - 21st of July 2021
 
@@ -465,7 +559,7 @@ Has now 1406 functions, with 6 new ones
   - GuiLib: Lokasenna\_LoadGuiLib\_v2 - didn't load due stupid typo -> fixed
   - Helper functions: StateChunkLayouter - did add unnecessary newline at the end, which faulted IsValidTrackStateChunk -> fixed
   - Markers: MoveMarkersBy - didn't work on markers with 0 in their index number -> fixed(thanks to GNetzer)    
-  - MediaItem-Management: InsertMediaItemFromFile - didn't insert media into the right track due Reaper API-limitations -> fixed(thanks to ??)
+  - MediaItem-Management: InsertMediaItemFromFile - didn't insert media into the right track due Reaper API-limitations -> fixed(thanks to Fergler)
   - Parameter/Learn/Mapping: SetParmLearn\_FXStateChunk - added error-message, when no such parm-alias exists
   - RenderManagement: AddRenderPreset - supports now render-normalization
   - RenderManagement: ApplyRenderTable\_Project - supports now render-normalization

@@ -27,7 +27,6 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 ultraschall.BringReaScriptConsoleToFront()
 
-
 FileA={}
 FileA[#FileA+1]="Ultraschall_Doc_Func_Converter_v2.lua"
 FileA[#FileA+1]="Ultraschall_Doc_VID_Converter_v2.lua"
@@ -43,6 +42,7 @@ FileA[#FileA+1]="Ultraschall_ConceptsDocConverter_v2.lua"
 FileA[#FileA+1]="Reaper_VideoProcessorDocConverter_v2.lua"
 FileA[#FileA+1]="Reaper_ReaScriptConverter_v2.lua"
 --FileA[#FileA+1]="Reaper_FileTypeDocConverter_v2.lua"
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/ultraschall_ModulerLoader_Generator.lua")
 
 Starterkit=reaper.time_precise()
 
@@ -55,6 +55,7 @@ if retval==true then
   A=reaper.SetExtState("ultraschall_api", "ReaperVerNr", String:match("(.-)\n"), true)
   B=reaper.SetExtState("ultraschall_api", "Tagline", String:match("\n(.*)"), true)
 else
+  ultraschall.CloseReaScriptConsole()
   return
 end
 
@@ -81,3 +82,5 @@ COUNTERRRR=0
 
 
 print2(reaper.format_timestr(reaper.time_precise()-Starterkit, ""))
+ultraschall.CloseReaScriptConsole()
+

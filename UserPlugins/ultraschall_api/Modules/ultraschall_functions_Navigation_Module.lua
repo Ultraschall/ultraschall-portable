@@ -1062,8 +1062,8 @@ function ultraschall.CenterViewToCursor(cursortype, position)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CenterViewToCursor</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.52
+    Ultraschall=4.2
+    Reaper=6.20
     SWS=2.9.7
     Lua=5.3
   </requires>
@@ -1102,7 +1102,7 @@ function ultraschall.CenterViewToCursor(cursortype, position)
     if cursortype==4 then if position~=nil then cursor_time=position else ultraschall.AddErrorMessage("CenterViewToCursor","position", "only numbers allowed", -3) return end end
     start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
     length=((end_time-start_time)/2)+(1/reaper.GetHZoomLevel())
-    reaper.BR_SetArrangeView(0, (cursor_time-length), (cursor_time+length))
+    reaper.GetSet_ArrangeView2(0, true, 0, 0, (cursor_time-length), (cursor_time+length))
 end
 
 function ultraschall.GetLastCursorPosition()

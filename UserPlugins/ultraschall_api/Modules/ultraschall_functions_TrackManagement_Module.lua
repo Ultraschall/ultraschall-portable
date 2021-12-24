@@ -1854,7 +1854,7 @@ function ultraschall.SetTrack_LastTouched(tracknumber)
   </parameters>
   <chapter_context>
     Track Management
-	Set Track States
+    Set Track States
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
@@ -1882,27 +1882,27 @@ function ultraschall.GetTrackByTrackName(trackname, case_sensitive, escaped_stri
   <functioncall>integer number_of_found_tracks, table found_tracks, table found_tracknames = ultraschall.GetTrackByTrackName(string trackname, boolean case_sensitive, integer escaped_strict)</functioncall>
   <description>
     returns all tracks with a certain name.
-	
-	You can set case-sensitivity, whether pattern-matchin is possible and whether the name shall be used strictly.
-	For instance, if you want to look for a track named exactly "JaM.-Enlightened" you set case_sensitive=false and escaped_strict=2. That way, tracks names "JaM.*Enlightened" will be ignored.
-	
-	returns -1 in case of an error
+    
+    You can set case-sensitivity, whether pattern-matchin is possible and whether the name shall be used strictly.
+    For instance, if you want to look for a track named exactly "JaM.-Enlightened" you set case_sensitive=false and escaped_strict=2. That way, tracks names "JaM.*Enlightened" will be ignored.
+    
+    returns -1 in case of an error
   </description>
   <retvals>
     integer number_of_found_tracks - the number of found tracks
-	table found_tracks - the found tracks as table
-	table found_tracknames - the found tracknames
+    table found_tracks - the found tracks as table
+    table found_tracknames - the found tracknames
   </retvals>
   <parameters>
     string trackname - the trackname to look for
-	boolean case_sensitive - true, take care of case-sensitivity; false, don't take case-sensitivity into account
-	integer escaped_strict - 0, use trackname as matching-pattern, will find all tracknames following the pattern(Ja.-m -> Jam, Jam123Police, JaABBAm)
-						   - 1, escape trackname off all magic characters, will find all tracknames with the escaped pattern in it (Ja.-m -> Ja.-m, Jam.-boree)
-						   - 2, strict, will only find tracks with the exact trackname-string in their name(Jam -> Jam)
-  </parameters>			
+    boolean case_sensitive - true, take care of case-sensitivity; false, don't take case-sensitivity into account
+    integer escaped_strict - 0, use trackname as matching-pattern, will find all tracknames following the pattern(Ja.-m -> Jam, Jam123Police, JaABBAm)
+                           - 1, escape trackname off all magic characters, will find all tracknames with the escaped pattern in it (Ja.-m -> Ja.-m, Jam.-boree)
+                           - 2, strict, will only find tracks with the exact trackname-string in their name(Jam -> Jam)
+  </parameters>            
   <chapter_context>
     Track Management
-	Set Track States
+    Set Track States
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
@@ -1967,7 +1967,7 @@ function ultraschall.CollapseTrackHeight(tracknumber)
   </parameters>
   <chapter_context>
     Track Management
-	Set Track States
+    Set Track States
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
@@ -2011,11 +2011,11 @@ function ultraschall.SetTrack_Trackheight_Force(tracknumber, trackheight)
   </retvals>
   <parameters>
     integer track - the track, which you want to set the height of
-	integer trackheigt - the trackheight in pixels, 0 and higher
+    integer trackheigt - the trackheight in pixels, 0 and higher
   </parameters>
   <chapter_context>
     Track Management
-	Set Track States
+    Set Track States
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>

@@ -130,7 +130,13 @@ Meo Mespotine mespotine.de - 1st of november 2018"]]
 reaper.MB(text, "Item-StateChunk Diff-monitor-tool 1.0", 0)
 
 selected=reaper.MB("Use Currently Selected Envelope Only? \n\nSelect No to monitor another selected Envelope during scriptrun.", "", 4)
-if selected==6 then Item=reaper.GetSelectedEnvelope(0) if Item==nil then reaper.MB("No MediaItem selected. Quitting now.", "Ooops...", 0) return end end
+if selected==6 then 
+  Envelope=reaper.GetSelectedEnvelope(0) 
+  if Envelope==nil then 
+    reaper.MB("No MediaItem selected. Quitting now.", "Ooops...", 0) 
+    return 
+  end 
+end
 
 A=reaper.MB("Put Difs to Clipboard?", "", 4)
 

@@ -527,11 +527,7 @@ function GUI.Textbox:fromclipboard()
 
     if self:SWS_clipboard() then
 
-        -- reaper.SNM_CreateFastString( str )
-        -- reaper.CF_GetClipboardBig( output )
-        local fast_str = reaper.SNM_CreateFastString("")
-        local str = reaper.CF_GetClipboardBig(fast_str)
-        reaper.SNM_DeleteFastString(fast_str)
+        local str = reaper.CF_GetClipboard()
 
         self:insertstring(str, true)
 
