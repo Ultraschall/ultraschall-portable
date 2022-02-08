@@ -33,7 +33,7 @@ slider3:70<0,100,0.1>L/Lat Bias
 slider4:70<0,100,0.1>R/Vert Bias
 slider5:0<-30,30,0.1>L/Lat Makeup Gain
 slider6:0<-30,30,0.1>R/Vert Makeup Gain
-slider7:0<0,1,1{Left/Right,Lat/Vert}>AGC
+slider7:2<0,3,1{Left/Right (Blown Capacitor),Lat/Vert (Blown Capacitor),Left/Right,Lat/Vert}>AGC
 slider8:1<1,6,1>L/Lat Time Constant
 slider9:1<1,6,1>R/Vert Time Constant
 slider10:100<1,10000,1>L/Lat RMS Window
@@ -80,7 +80,8 @@ out_pin:right output
   latvert = 1;
 
 @slider
-  agc = slider7;
+  agc = slider7&1;
+  capsc = (slider7&2) ? log2db : log2db*2.08136898;
 
   agc == leftright ? (
     lthresh = slider1;
@@ -216,7 +217,7 @@ out_pin:right output
     lrunave = lmaxspl + lrmscoef * (lrunave - lmaxspl);
     ldet = sqrt(max(0,lrunave));
 
-    loverdb = 2.08136898 * log(ldet/lthreshv) * log2db;
+    loverdb = capsc * log(ldet/lthreshv);
     loverdb = max(0,loverdb);
 
     loverdb > lrundb ? (
@@ -248,7 +249,7 @@ out_pin:right output
     lrunave = lmaxspl + lrmscoef * (lrunave - lmaxspl);
     ldet = sqrt(max(0,lrunave));
 
-    loverdb = 2.08136898 * log(ldet/lthreshv) * log2db;
+    loverdb = capsc * log(ldet/lthreshv);
     loverdb = max(0,loverdb);
 
     loverdb > lrundb ? (
@@ -270,7 +271,7 @@ out_pin:right output
     rrunave = rmaxspl + rrmscoef * (rrunave - rmaxspl);
     rdet = sqrt(max(0,rrunave));
 
-    roverdb = 2.08136898 * log(rdet/rthreshv) * log2db;
+    roverdb = capsc * log(rdet/rthreshv);
     roverdb = max(0,roverdb);
 
     roverdb > rrundb ? (

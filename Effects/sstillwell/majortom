@@ -32,7 +32,7 @@ desc:Major Tom Compressor [Stillwell]
 slider1:0<-60,0,0.1>Threshold (dB)
 slider2:1<1,20,0.1>Ratio
 slider3:0<-20,20,0.1>Gain
-slider4:0<0,1,1{Hard,Soft}>Knee
+slider4:2<0,3,1{Hard (Blown Capacitor),Soft (Blown Capacitor),Hard,Soft}>Knee
 slider5:0<0,1,1{Normal,Sidechain}>Detector Input
 slider6:0<0,1,1{No,Yes}>Automatic Make-Up
 slider7:0<0,1,1{Peak,RMS}>Detection
@@ -73,7 +73,8 @@ out_pin:right output
   thresh = slider1;
   threshv = exp(thresh * db2log);
   ratio = slider2;
-  softknee = slider4;
+  softknee = slider4&1;
+  capsc = (slider4&2) ? log2db : log2db * 2.08136898;
   cthresh = (softknee ? (thresh -3) : thresh);
   cthreshv = exp(cthresh * db2log);
   sidechain = slider5;
@@ -107,9 +108,6 @@ out_pin:right output
       );
       ospl = sqrt(max(0,runospl));
 
-//      ospl = 2.08136898 * log(ospl)*log2db;
-//      ospl = ospl - 6;            // reduce feedback to -6 dB
-//      ospl = exp(ospl * db2log);
       ospl *= 0.5;
 
       aspl0 = abs(ospl);
@@ -130,7 +128,7 @@ out_pin:right output
     runave = maxspl + rmscoef * (runave - maxspl);
     det = sqrt(max(0,runave));
   );
-  overdb = 2.08136898 * log(det/cthreshv) * log2db;
+  overdb = log(det/cthreshv) * capsc;
   overdb > maxover ? (
     maxover = overdb;
     attime = attimes[max(0,floor(abs(overdb)))];   // attack time per formula

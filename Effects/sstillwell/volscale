@@ -54,7 +54,7 @@ out_pin:right output
         ((msg1 & 15) == chan) || chan==-1 ? (
           velocity = (msg2 & 65280)/256;
           note = msg2 & 255;
-          newvel = min(127,max(0,floor(velocity * scale) + offset));
+          newvel = velocity > 0 ? min(127,max(1,floor(velocity * scale) + offset));
           midisend(mpos, msg1, (newvel*256) | note);
         );
       ) : (

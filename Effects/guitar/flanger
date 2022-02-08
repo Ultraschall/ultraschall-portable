@@ -27,18 +27,19 @@ odelay != delaylen ? freembuf(delaylen*2);
 wetmix = 2 ^ (slider2/6);
 wetmix2 = 2 ^ (slider3/6);
 drymix2 = 2 ^ (slider4/6);
-dppossc = 2*$pi*slider5 / srate;
+dppossc = slider5 / srate;
 dpbacksc = delaylen*0.5 - 1;
 
 
 @sample
 
 dppos = dppos+dppossc;
-dpback = (sin(dppos)+1)*dpbacksc;
+dppos -= dppos|0;
+dpback = (sin(2*$pi*dppos)+1)*dpbacksc;
 dpint = delaypos-dpback-1;
 dpint < 0 ? dpint += delaylen;
 
-dpint *= 2;
+dpint = (dpint|0) * 2;
 
 os1=dpint[0];
 os2=dpint[1];

@@ -28,10 +28,10 @@ desc:1175 FAST Attack Compressor with Program-Dependent Release [Stillwell]
 //author: Stillwell
 
 slider1:0<-60,0,0.1>Threshold (dB)
-slider2:1<0,3,1{4,8,12,20,All}>Ratio
+slider2:5<0,9,1{Blown Capacitor 4 (Deprecated),Blown Capacitor 8 (Deprecated),Blown Capacitor 12 (Deprecated),Blown Capacitor 20 (Deprecated),Blown Capacitor All (Deprecated),4,8,12,20,All}>Ratio
 slider3:0<-20,20,0.1>Gain (dB)
-slider4:20<20,2000,10>Attack (és)
-slider5:250<20,1000,1>Release (ms)
+slider4:20<20,2000,10>Attack (uS)
+slider5:250<20,1000,1>Release (mS)
 slider6:100<0,100,0.1>Mix (%)
 
 in_pin:left input
@@ -59,8 +59,11 @@ out_pin:right output
 @slider
   thresh = slider1;
   threshv = exp(thresh * db2log);
-  ratio = (slider2==0 ? 4 : (slider2==1 ? 8 : (slider2 == 2 ? 12 : (slider2 == 3 ? 20 : 20 ))));
-  slider2 == 4 ? (allin=1; cratio=20;) : (allin=0; cratio = ratio;);
+
+  capsc = log2db;
+  (rpos = slider2) > 4 ? ( rpos -= 5; ) : ( capsc *= 2.08136898; /* broken capacitor */ );
+  ratio = (rpos==0 ? 4 : (rpos==1 ? 8 : (rpos == 2 ? 12 : (rpos == 3 ? 20 : 20 ))));
+  rpos == 4 ? (allin=1; cratio=20;) : (allin=0; cratio = ratio;);
   cthresh = (softknee ? (thresh -3) : thresh);
   cthreshv = exp(cthresh * db2log);
   makeup = slider3;
@@ -81,8 +84,7 @@ out_pin:right output
   runave = maxspl + rmscoef * (runave - maxspl);
   det = sqrt(max(0,runave));
 
-  overdb = 2.08136898 * log(det/cthreshv) * log2db;
-  overdb = max(0,overdb);
+  overdb = max(0, capsc * log(det/cthreshv));
 
   overdb - rundb > 5 ? (averatio = 4;);
 

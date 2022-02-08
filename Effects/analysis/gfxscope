@@ -6,7 +6,7 @@ Copyright (C) 2007 Cockos Incorporated
 License: LGPL - http://www.gnu.org/licenses/lgpl.html
 */
 
-slider1:view_msec=100<1,2000,1>-view size (ms)
+slider1:view_msec=100<1,5000,1>-view size (ms)
 slider2:view_maxdb=0<-450,36,.1>-vzoom
 slider3:view_retrig=0<0,3,1{instant,any,ascending,descending}>-retrig
 
@@ -19,13 +19,13 @@ gfx_ext_retina == 0 ? gfx_ext_retina = 1;
 ext_nodenorm=1;
 recpos=0;
 gfx_clear=-1;
-g_maxlen_ms=2000;
+g_maxlen_ms=5000;
 histsize=((srate*2.0*g_maxlen_ms/1000)|0)*2;
 g_hold=-1;
 need_view_update=1;
 
 @block 
-g_hold<0?need_view_update=1;
+g_last_wr = time_precise();
 
 @sample
 g_hold<0 ? (
@@ -225,9 +225,29 @@ mouse_wheel ? (
   need_view_update=1;
 );
 
+is_hold = (g_hold_needadj ? (g_hold>0) : (g_hold>=0)) && g_hold < histsize*0.5;
+rdoffs = view_retrig >= 1.0 || is_hold ? 0 : max(0,max(srate*1/20, samplesblock*2) - (time_precise() - g_last_wr)*srate)|0;
+recpos_u = recpos - rdoffs*2;
+recpos_u < 0 ? recpos_u += histsize;
+
+view_msec_rounded = view_msec;
+viewsize_spls = (view_msec*srate*0.001)|0;
+viewadv = gfx_w/viewsize_spls;
+
+// when zoomed out, adjust interval so that each peak represents a discrete number of samples
+viewadvn = floor(1/viewadv + 0.5);
+viewadvn > 8 ? (
+  viewsize_spls = viewadvn * gfx_w;
+  viewadv = 1/viewadvn;
+  view_msec_rounded = viewsize_spls*1000/srate;
+  recpos_u = floor(recpos_u/(viewadvn*2))*viewadvn*2;
+) : viewadvn=0;
+
 // only update if new fft data is there or if the size changed
-need_view_update || view_maxdb != view_maxdb_last || old_w != gfx_w || old_h!=gfx_h? (
+need_view_update || view_maxdb != view_maxdb_last ||
+  old_w != gfx_w || old_h!=gfx_h || recpos_u != recpos_u_last ? (
   view_maxdb_last = view_maxdb;
+  recpos_u_last = recpos_u;
   need_view_update=0;
   old_w=gfx_w; old_h=gfx_h;
 
@@ -276,7 +296,7 @@ need_view_update || view_maxdb != view_maxdb_last || old_w != gfx_w || old_h!=gf
   small_mode || while(
     gfx_a=0.25;
     gfx_line(v,gfx_texth+8,v,gfx_h);
-    a = view_msec - view_msec * v / gfx_w;
+    a = view_msec_rounded - view_msec_rounded * v / gfx_w;
     
     gfx_a=0.5;
     gfx_x = v + 2; gfx_y = gfx_texth+12;
@@ -305,13 +325,10 @@ need_view_update || view_maxdb != view_maxdb_last || old_w != gfx_w || old_h!=gf
     v > 24*gfx_ext_retina;
   );
 
-viewsize_spls = (view_msec*srate*0.001)|0;
-viewadv = gfx_w/viewsize_spls;
-
-rdptr = recpos - viewsize_spls*2 - 2;
+rdptr = recpos_u - viewsize_spls*2 - 2;
 rdptr < 0 ? rdptr += histsize;
-(g_hold_needadj ? (g_hold>0) : (g_hold>=0)) && g_hold < histsize*0.5 ? (
-  rdptr -= (g_hold|0)*2;
+is_hold ? (
+  rdptr -= (viewadvn > 0 ? floor((g_hold|0)/viewadvn)*viewadvn : (g_hold|0))*2;
   rdptr < 0 ? rdptr += histsize;
 ) : view_retrig >= 1.0 ? (
   rdptr2 = recpos - 2;

@@ -31,7 +31,7 @@ slider1:-120<-120,0,0.1>Threshold (dB)
 slider2:1<1,20,0.1>Ratio
 slider3:0<-20,20,0.1>Gain
 slider4:0<0,1,1{Normal,Sidechain}>Detector Input
-slider5:0<0,1,1{Peak,RMS}>Detection
+slider5:2<0,3,1{Peak (Blown Capacitor),RMS (Blown Capacitor),Peak,RMS}>Detection
 slider6:30<0,200,1>Attack (ms)
 slider7:2<0,100,1>Release (ms)
 
@@ -67,7 +67,8 @@ out_pin:right output
   sidechain = slider4;
   makeup = slider3;
   makeupv = exp((makeup) * db2log);
-  RMSdet = slider5;
+  RMSdet = slider5&1;
+  capsc = (slider5&2) ? log2db : log2db * 2.08136898;
   RMSdet ? (
     rmscoef=exp(-1000/(10 * srate));       // 10 ms RMS window
   ) : (
@@ -97,7 +98,7 @@ out_pin:right output
     runave = maxspl + rmscoef * (runave - maxspl);
     det = sqrt(max(0,runave));
   );
-  overdb = 2.08136898 * log(det/threshv) * log2db;
+  overdb = log(det/threshv) * capsc;
   overdb = min(0,overdb);
 
   overdb > rundb ? (

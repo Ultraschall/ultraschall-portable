@@ -34,7 +34,7 @@ slider1:0<-20,20>Width Boost (dB)
 slider2:0<-20,20>Center Boost (dB)
 slider3:0<-20,20>Gain (dB)
 slider4:0<-100,100>Width Balance (%)
-slider5:0<-90,90>Width Rotation (°)
+slider5:0<-90,90>Width Rotation (deg)
 
 in_pin:left input
 in_pin:right input

@@ -30,7 +30,7 @@ desc:Auto Expander [Stillwell]
 slider1:-120<-120,0,0.1>Threshold (dB)
 slider2:1<1,20,0.1>Ratio
 slider3:0<-20,20,0.1>Gain (dB)
-slider4:0<0,1,1{Hard,Soft}>Knee
+slider4:2<0,3,1{Hard (Blown Capacitor),Soft (Blown Capacitor),Hard,Soft}>Knee
 slider5:0<0,1,1{Normal,Sidechain}>Detector Input
 slider7:0<0,1,1{Peak,RMS}>Detection
 
@@ -69,7 +69,8 @@ out_pin:right output
   thresh = slider1;
   threshv = exp(thresh * db2log);
   ratio = slider2;
-  softknee = slider4;
+  softknee = slider4&1;
+  capsc = (slider4&2) ? log2db : log2db * 2.08136898;
   cthresh = (softknee ? (thresh + 3) : thresh);
   cthreshv = exp(cthresh * db2log);
   sidechain = slider5;
@@ -102,10 +103,10 @@ out_pin:right output
     runave = maxspl + rmscoef * (runave - maxspl);
     det = sqrt(max(0,runave));
   );
-  overdb = 2.08136898 * log(det/cthreshv) * log2db;
+  overdb = log(det/cthreshv) * capsc;
   overdb > maxover ? (
     maxover = overdb;
-    attime = attimes[max(0,floor(abs(overdb)))];   // attack time per formula
+    attime = attimes[min(119,max(0,floor(abs(overdb))))];   // attack time per formula
     atcoef = exp(-1/(attime * srate));
     reltime = overdb / 125;                        // release at constant 125 dB/sec.
     relcoef = exp(-1/(reltime * srate));
@@ -117,9 +118,13 @@ out_pin:right output
   ) : (
     rundb = overdb + relcoef * (rundb - overdb);
   );
-  overdb = rundb;
+  overdb = min(0, rundb);
 
-  cratio = (softknee ? (1 + (ratio-1) * min(overdb, 6) / 6) : ratio);
+  softknee ? (
+   cratio = 1 + (ratio-1) * max(1,(min(overdb, 6) / 6));
+  ) : (
+   cratio = ratio;
+  );
   
   gr = overdb * (cratio-1)/cratio;
   grv = exp(gr * db2log);

@@ -199,9 +199,9 @@ cap_mode && cap_timer < 12 ? cap_timer += 1;
     
  ret = gfx_showmenu(#menustr);
   ret > 0 ? (
-    (ret-=1) < 12 ? (slider1 = ret; ):
-    (ret-=12) < 4 ? (slider4 = ret; ):
-    (ret-=4) == 0 ? (slider3 = !slider3; old_w=0;);
+    (ret-=1) < 12 ? (slider1 = ret; slider_automate(slider1); ):
+    (ret-=12) < 4 ? (slider4 = ret; slider_automate(slider4); ):
+    (ret-=4) == 0 ? (slider3 = !slider3; old_w=0; slider_automate(slider3); );
     
   );
   update=1;

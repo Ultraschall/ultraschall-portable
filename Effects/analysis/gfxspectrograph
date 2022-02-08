@@ -54,6 +54,7 @@ minvol=10^(slider3/20*2); // squared
 islogmode = slider4>0.0;
 g_logscale=pow(10.0,(slider4<1 ? slider4: slider4*4.0-3.0));
 pixels_per_frame = slider6;
+need_button_refs=1;
 
 @block
 
@@ -215,10 +216,10 @@ globals(cap_mode, cap_last_x, cap_last_y)
 
   ret = gfx_showmenu(#menustr);
   ret > 0 ? (
-    ret == 1 ? (slider5=!slider5) :
-    (ret-=2) < 12 ? (slider1 = ret; ):
-    (ret-=12) < 4 ? (slider2 = ret; ):
-    (ret-=4) < 8 ? (pixels_per_frame = slider6 = ret+1; );
+    ret == 1 ? (slider5=!slider5; slider_automate(slider5); ) :
+    (ret-=2) < 12 ? (slider1 = ret; slider_automate(slider1); ):
+    (ret-=12) < 4 ? (slider2 = ret; slider_automate(slider2); ):
+    (ret-=4) < 8 ? (pixels_per_frame = slider6 = ret+1; slider_automate(slider6); );
   );
   need_button_refs=1;
 );

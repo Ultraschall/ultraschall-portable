@@ -16,16 +16,16 @@ out_pin:right output
 @slider
   adj1=2 ^ (slider1/6); 
   adj2=2 ^ (slider2/6);
-  doseek=1;
+  doseek < 0 ? doseek = 1;
 
 @block
-doseek ? (
+doseek > 0 ? (
   dadj=(adj1-adj1_s)/samplesblock;
-  doseek=0;
 ):(
   dadj=0;
   adj1_s=adj1;
 );
+doseek = -1;
 
 @sample
 spl0=min(max(spl0*adj1_s,-adj2),adj2);

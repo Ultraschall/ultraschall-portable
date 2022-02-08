@@ -30,7 +30,7 @@ desc:Fairly Childish Compressor/Limiter similar to F670 [Stillwell]
 slider1:0<-60,0,0.1>Threshold (dB)
 slider2:70<0.1,100,0.1>Bias
 slider3:0<-30,30,0.1>Makeup Gain
-slider4:0<0,1,1{Left/Right,Lat/Vert}>AGC
+slider4:2<0,3,1{Left/Right (Blown Capacitor),Lat/Vert (Blown Capacitor),Left/Right,Lat/Vert}>AGC
 slider5:1<1,6,1>Time Constant
 slider6:100<1,10000,1>Level Detector RMS Window
 slider7:1<1,50,0.1>Current Compression Ratio
@@ -69,7 +69,8 @@ out_pin:right output
   cthreshv = exp(cthresh * db2log);
   makeup = slider3;
   makeupv = exp(makeup * db2log);
-  agc = slider4;
+  agc = slider4&1;
+  capsc = (slider4&2) ? log2db : log2db*2.08136898;
   timeconstant = slider5;
   timeconstant == 1 ? (
     attime = 0.0002;
@@ -116,7 +117,7 @@ out_pin:right output
   runave = maxspl + rmscoef * (runave - maxspl);
   det = sqrt(max(0,runave));
 
-  overdb = 2.08136898 * log(det/threshv) * log2db;
+  overdb = capsc * log(det/threshv);
   overdb = max(0,overdb);
 
   overdb > rundb ? (

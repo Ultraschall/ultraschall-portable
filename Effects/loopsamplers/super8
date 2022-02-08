@@ -71,7 +71,10 @@ out_pin:output 8
 out_pin:monitor output
 out_pin:click output
 
-options: maxmem=33000000 no_meter
+options: maxmem=33000000 no_meter gfx_idle
+
+slider1:g_slider_sync=0<0,2,1{off,project,playback}>-Sync
+slider4:g_slider_click_cnt=0<0,64,1>-Click count/length
 
 @init
 
@@ -80,9 +83,6 @@ g_nchan = 8;
 g_max_alloc = __memtop(); // JSFX memory available
 g_latchq_len = 1024; // 1024 midi events queueable for latch mode
 g_maxlen = ((g_max_alloc-4096 - g_latchq_len*3)/(g_nchan+1))|0; // use nearly all of available memory
-g_fadespeed = exp(-1/(srate * 0.002));  // fade speed for playback/monitoring
-g_slope_recin = 1/(srate * 0.001); // fade length for starting rec
-g_slope_recout = 1/(srate * 0.030); // fade length for ending rec
 g_infthreshdb = -120;
 g_infthresh = 10^(g_infthreshdb/20);
 g_latchmode=0;
@@ -102,8 +102,16 @@ st_lastd = 8; // UI flags for mode + monitor + dirty
 st_lastpkupd = 9; // time of last peak drawin
 st_peak_in = 10;
 st_rdc = 11; // msec, chX.rdc is samples
-st_num = 12;
+st_div = 12; // subdiv, 1=normal, chX.div is 1/this
+st_num = 13;
 
+function recalc_fades() (
+  g_fadespeed = exp(-1/(srate * 0.002));  // fade speed for playback/monitoring
+  g_slope_recin = 1/(srate * 0.001); // fade length for starting rec
+  g_slope_recout = 1/(srate * 0.030); // fade length for ending rec
+);
+
+recalc_fades();
 
 function get_section(s) local(r) ( s?(r=s):r; );
 
@@ -117,6 +125,7 @@ function updatefromrec() instance(rec)
   this.note4 = rec[st_note4];
   this.monmode = rec[st_monmode];
   this.rdc =(rec[st_rdc]*.001*srate+.5)|0;
+  this.div = 1 / rec[st_div];
 );
 
 function init(x, n1,n2,n3) 
@@ -139,6 +148,7 @@ function init(x, n1,n2,n3)
   rec[st_buf] = buf;
   rec[st_peak_in] = 0;
   rec[st_rdc] = 0;
+  rec[st_div] = 1;
   
   this.updatefromrec();
 );
@@ -183,7 +193,7 @@ function setstate(st) instance(fpos_slope, sk_fpos2, rec) local(dt)
 
           cfgp_sync[] == 0 ? (
             g_pos = g_offs = g_length = 0; 
-            g_firstrec = 1;
+            g_firstrec = 1+this.idx;
           );
         );        
       );
@@ -238,8 +248,8 @@ function play_or_stop_all() local(want_state rec)
 );
 
 function process(s)
-  instance(fpos, fpos2, monvol, monmode, rec, peak_in)
-  local(r,wrpos,buf)
+  instance(fpos, fpos2, monvol, monmode, rec, peak_in, div)
+  local(r,wrpos,buf, l_length, l_pos, l_offs)
 (
   g_prevent_processing==0 ? (
     fpos = min(max(0,fpos+this.fpos_slope),1);
@@ -249,29 +259,39 @@ function process(s)
   );
   peak_in = max(abs(s),peak_in);
 
-  wrpos = g_pos;
-  buf = this.buf + g_offs;
+  l_length = g_length;
+  l_pos = g_pos;
+  l_offs = g_offs;
+  div < 1 ? (
+    l_length = max((l_length*div+0.5)|0,1);
+    g_firstrec == 0 ? (
+      l_pos %= l_length;
+      l_offs %= l_length;
+    );
+  );
+  wrpos = l_pos;
+  buf = this.buf + l_offs;
   g_firstrec == 0 ? (
     this.extra_recording > 0 ? (
-      buf[g_length + g_pos] = s; // write past the end of the loop (in case we want to trim later)
-      this.dirty_top = max(this.dirty_top,g_length + g_pos + g_offs);
+      buf[l_length + l_pos] = s; // write past the end of the loop (in case we want to trim later)
+      this.dirty_top = max(this.dirty_top,l_length + l_pos + l_offs);
       this.extra_recording -= 1;
     );
 
-    this.rdc < g_length ? (
+    this.rdc < l_length ? (
       wrpos -= this.rdc;
-      wrpos < 0 ? wrpos += g_length;
+      wrpos < 0 ? wrpos += l_length;
     );
   );
   monmode == 0 ? (
     // no monitoring
     fpos > 0.0001 ? (
-      this.dirty_top = max(this.dirty_top,wrpos + g_offs);
-      r=buf[g_pos]*fpos2;
+      this.dirty_top = max(this.dirty_top,wrpos + l_offs);
+      r=buf[l_pos]*fpos2;
       buf[wrpos] += s*fpos;
       r;
     ) : fpos2 > 0.0001 ? (
-      buf[g_pos]*fpos2;
+      buf[l_pos]*fpos2;
     ) : 0;
     
   ) : ( 
@@ -282,34 +302,35 @@ function process(s)
     );
     
     fpos > 0.0001 ? (
-      this.dirty_top = max(this.dirty_top,wrpos + g_offs);
-      wrpos == g_pos ? (
-        (buf[g_pos] += s*fpos) * fpos2 + s * max(0, monvol - fpos*fpos2);
+      this.dirty_top = max(this.dirty_top,wrpos + l_offs);
+      wrpos == l_pos ? (
+        (buf[l_pos] += s*fpos) * fpos2 + s * max(0, monvol - fpos*fpos2);
       ) : (
         buf[wrpos] += s*fpos;
-        buf[g_pos] * fpos2 + s * monvol;
+        buf[l_pos] * fpos2 + s * monvol;
       );
     ) : fpos2 > 0.0001 ? (
-      buf[g_pos]*fpos2 + s*monvol;
+      buf[l_pos]*fpos2 + s*monvol;
     ) : (
       s*monvol;
     );
   );
 );
 
-function reverse(want_defer) instance(rec) local(i,x,tmp)
+function reverse(want_defer) instance(rec) local(i,x,tmp,l)
 (
   // reverse
-  i=this.buf + g_offs;
-  x=i + g_length-1;
-  loop(g_length/2,
+  l = (g_length * this.div)|0;
+  i=this.buf + g_offs%l;
+  x=i + l-1;
+  loop(l/2,
     tmp=i[0];
     i[0]=x[0];
     x[0]=tmp;
     x-=1;
     i+=1;
   );
-  rec[st_dirty] = this.dirty_top = max(rec[st_dirty],max(this.dirty_top,g_offs+g_length));     
+  rec[st_dirty] = this.dirty_top = max(rec[st_dirty],max(this.dirty_top,(g_offs%l)+l));
   rec[st_lastd] = -1;
 );
 
@@ -317,7 +338,7 @@ function onmsg(m1,m2,m3) instance(rec,note,note2,note3,note4)
   local(newstate)
 (
    newstate = -1;
-   m2 == note || m2 == 1024+rec+st_note1 ? (
+   (m2 == note && (m2 != note2 || rec[st_state]==0)) || m2 == 1024+rec+st_note1 ? (
      newstate = (rec[st_state] == 2 && g_firstrec==0) ? 1 : 2;
    ) : m2 == note2  || m2 == 1024+rec+st_note2 ? (
      newstate = rec[st_state] == 2 || (rec[st_state]==0 && g_length) ? 1 : 0
@@ -369,7 +390,7 @@ function xfadebuf(buf, osz, nsz) local(fsz,s,ds)
  
 );
 
-function adjustsizes(scale, repup) local(nlen,olen, lp)
+function adjustsizes(scale, repup) local(nlen,olen, lp, l, offs, nlen2)
 (
   olen = g_length;
   nlen = (olen*scale)|0;
@@ -377,11 +398,14 @@ function adjustsizes(scale, repup) local(nlen,olen, lp)
     lp=mem_stlist;
     loop(g_nchan,
       lp[st_dirty] ? (
-        nlen > olen ? (
-          repup ? repeatbuf(lp[st_buf] + g_offs,olen,nlen);
-          nlen+g_offs > lp[st_dirty] ? lp[st_dirty] = nlen+g_offs;
+        l = max(floor(olen / lp[st_div] + 0.5),1);
+        nlen2 = max(floor(nlen / lp[st_div] + 0.5),1);
+        offs = g_offs%l;
+        nlen2 > l ? (
+          repup ? repeatbuf(lp[st_buf] + offs,l,nlen2);
+          nlen2+offs > lp[st_dirty] ? lp[st_dirty] = nlen2+offs;
         ) : (
-          xfadebuf(lp[st_buf] + g_offs,olen,nlen);
+          xfadebuf(lp[st_buf] + offs,l,nlen2);
         );
       );
       lp += st_num;
@@ -390,7 +414,7 @@ function adjustsizes(scale, repup) local(nlen,olen, lp)
     g_pos %= nlen;
 
     cfgp_sync[] ? (
-      g_click_int = cfgp_clickcnt[]=((((cfgp_clickcnt[]|0) > 0 ? cfgp_clickcnt[] : ts_num) |0)*scale)|0;
+      g_slider_click_cnt = g_click_int = cfgp_clickcnt[] = ((((cfgp_clickcnt[]|0) > 0 ? cfgp_clickcnt[] : ts_num) |0)*scale)|0;
     );
 
     redraw_channels();
@@ -538,8 +562,17 @@ ext_noinit == 0 ? (
   ch8.init(7, 53,54, 128);
 );
 
+@slider
+cfgp_sync[] != floor(g_slider_sync+0.5) ? (
+  cfgp_sync[] = floor(g_slider_sync+0.5);
+  g_offs = 0;
+);
 
+(cfgp_clickcnt[]|0) != (g_slider_click_cnt|0) ? (
+  cfgp_clickcnt[] = g_slider_click_cnt|0;
+);
 
+recalc_fades();
 
 @serialize
 function doconf() local(i,s) (
@@ -581,10 +614,20 @@ function doconf() local(i,s) (
       i+=st_num;
     );
   );
+  
+  file_avail(0) != 0 ? (
+    i = mem_stlist;
+    loop(g_nchan,
+      file_var(0,i[st_div]);
+      i+=st_num;
+    );
+  );  
 
   file_avail(0)>=0 ? ( // is reading config
     updatechfromrec();
+    g_slider_sync = cfgp_sync[];
     g_latchmode = cfgp_latch[];
+    g_slider_click_cnt = cfgp_clickcnt[]|0;
     last_w=0;
   );
 );
@@ -605,10 +648,10 @@ g_prevent_processing &= 0xd;
   g_length = (srate * (g_click_int>0?g_click_int:ts_num) * 240.0 / (tempo * ts_denom))|0;
   (play_state&1) ? (
     g_inactive_blockcnt=0;
-    g_pos = (play_position*srate)%g_length;
+    g_pos = (play_position*srate + 0.5)%g_length;
   ) : (
     g_syncmode==2 ? (
-      g_pos = (play_position*srate)%g_length;
+      g_pos = (play_position*srate + 0.5)%g_length;
       g_prevent_processing |= 2;
     ) : (
       g_pos %= g_length;
@@ -783,17 +826,17 @@ g_prevent_processing==0 ? (
     spl9 = generate_click();
   );
 
-  (g_pos += 1) >= g_length ? (
-    g_firstrec ? (
-       g_pos >= g_maxlen ? (
-         g_firstrec=0;
-         g_pos=0;
-       ) : (
-         g_length = g_pos+1;
-       );
-    ) : (
-      g_pos=0;
-    );
+  g_firstrec ? (
+     (g_pos+=1) >= g_maxlen ? (
+       g_firstrec=0;
+       g_pos=0;
+     ) : (
+       g_length = g_pos *
+            ((g_firstrec > 0 && g_firstrec < 1 + g_nchan) ?
+              mem_stlist[(g_firstrec-1)*st_num + st_div] : 1);
+     );
+  ) : (
+    (g_pos += 1) >= g_length ? g_pos=0;
   );
 );
 
@@ -806,8 +849,6 @@ g_chan_selected >= 0 ? (
 @gfx 420 480
 
 get_section('gfx');
-
-gfx_clear=-1;
 
 function format_note(str, note) //1=CC,2=PC
 (
@@ -871,6 +912,17 @@ function draw_value_tweaker(xpos,ypos,midimem,draw, lbl)
         );
         updatechfromrec();
         draw=1;
+      );
+    ) : lbl == "div" ? (
+      (tw=(t|0)) ? (
+        cap_last_y = mouse_y - (t - tw)*4;
+        t = min(max(midimem[0] - tw,1),64);
+        midimem[0] != t ? (
+          midimem[0] = t;
+          updatechfromrec();
+          draw=1;
+          lastchanlink |= (1<<20); // trigger redraw
+        );
       );
     ) : (
       (tw=(t|0)) ? (
@@ -1009,9 +1061,58 @@ function hit_topbar_button(xp,yp,cm)
   );
 );
 
-function draw(xpos, ypos) local(i i2 w h gap rec mode force_redraw rowsize
-  mx my mw t nrows lx ly wantr ty tw th rec2
-  now lasthalve lastlen lastoffs)
+function load_file(filename, channel) local(fh nch sr len rec rec2 buf buf2 v i)
+(
+  rec = mem_stlist + st_num * channel;
+  buf = rec[st_buf];
+
+  rec2 = (channel & 1) == 0 ? get_linked_rec(channel) : -1;
+  buf2 = rec2 >= 0 ? rec2[st_buf] : -1;
+
+  (fh = file_open(filename)) >= 0 ? (
+    // REAPER 6.29+ will take nch='rqsr' sr>0 as a hint for desired samplerate
+    file_riff(fh, nch='rqsr', sr=srate) > 0 ? (
+      len = min((file_avail(fh) / nch)|0,g_maxlen);
+      len > 0 ? (
+        cfgp_sync[] != 0 && len > g_length ? len = g_length;
+
+        // load samples, if channel is even and linked, load to second channel too
+        i=0;
+        loop(len,
+          file_var(fh,v);
+          buf[i]=v;
+          nch>1 ? ( 
+            file_var(fh,v);
+            nch>2 ? loop(nch-2,file_var(fh,0));
+          );
+          buf2 >= 0 ? buf2[i]=v;
+          i+=1;
+        );
+        cfgp_sync[] == 0 ? (
+          !(g_active_mask & (-1 - (1<<channel) - (rec2>=0 ? 1<<(channel+1) : 0))) ? (
+            g_length > 0 ? adjustsizes(len / g_length, 1) : g_length = len;
+          );
+        );
+        len > 0 ? while (len < g_length) ? (
+          memcpy(buf+len, buf, i=min(g_length-len, len));
+          buf2 >= 0 ? memcpy(buf2+len, buf2, i);
+          len += i;
+        );
+        rec[st_dirty] = max(rec[st_dirty],len);
+        rec[st_state]==0 ? setstate_for_rec(rec, 1);
+        rec2 >= 0 ? (
+          rec2[st_dirty] = max(rec2[st_dirty],len);
+          rec2[st_state]==0 ? setstate_for_rec(rec2, 1);
+        );
+      );
+    );
+    file_close(fh);
+  );
+);
+
+function draw(ixpos, ypos) local(i i2 w h gap rec mode force_redraw rowsize
+  mx my mw t nrows lx ly wantr ty tw th rec2 wl
+  now lasthalve lastlen lastoffs col xpos dropfile)
 (
   force_redraw = gfx_w != last_w || gfx_h != last_h ||
     lasthalve != cfgp_fade[] || lastlen != g_length ||
@@ -1022,26 +1123,30 @@ function draw(xpos, ypos) local(i i2 w h gap rec mode force_redraw rowsize
   lastchanlink = cfgp_link[];
 
   gap = 4;
-  rowsize=4;
-  nrows = 4;
-  w=0|min(
-    ((gfx_w - 2 - gap*(rowsize-1))/rowsize),
-    ((gfx_h - ypos - 8 - gap*(nrows-1))/nrows));
-  
-  h=w;
+  xpos = (ixpos += 2);
+  col = (gfx_h-ypos-8) / (gfx_w - ixpos);
+  rowsize = col <= .115 ? 16 : col <= .5 ? 8 : col <= 2 ? 4 : col <= 8 ? 2 : 1;
+  w=(gfx_w - 2 - gap*(rowsize-1))/rowsize;
+  (nrows = 16/rowsize) != 2 ? w=min(w, ((gfx_h - ypos - 8 - gap*(nrows-1))/nrows));
+
+  h=(w|=0);
   mw = (w*.2)|0;
-  i=0;
+  col=i=0;
   rec = mem_stlist;
   now=time_precise();
-  xpos += 2;
-  loop(g_nchan,
-    i>0 && (i%rowsize) == 0 ? (
-      xpos=2;
-      ypos += h + gap;
-    );
 
+  gfx_getdropfile(0, dropfile=#) ? (
+    gfx_getdropfile(-1);
+    force_redraw = 1;
+  ) : (
+    dropfile = 0;
+  );
+
+  loop(g_nchan,
     mx = xpos + w - mw - gap;
     my = ypos+gap;
+
+    dropfile && mouse_in(xpos,ypos,w,h) ? load_file(dropfile, i);
 
     !cap_mode && (mouse_cap&1) && !(last_mouse_cap&1) ? (
       w > 80 &&
@@ -1075,7 +1180,8 @@ function draw(xpos, ypos) local(i i2 w h gap rec mode force_redraw rowsize
       gfx_printf("%d",i+1);    
 
       gfx_set(0.5);
-      g_length && rec[st_dirty] && w > 80 ? draw_waveform(xpos+gap,ypos+h*.5,w-2*gap,h*.25,rec[st_buf]+g_offs,g_length);
+      w > 80 && rec[st_dirty] && (wl = floor(g_length/rec[st_div] + 0.5)) > 0 ?
+        draw_waveform(xpos+gap,ypos+h*.5,floor(w/rec[st_div]+.5)-2*gap,h*.25, rec[st_buf]+(g_offs % wl),wl);
 
       rec[st_monmode]==0 ? (
         gfx_set(0.2)
@@ -1115,7 +1221,9 @@ function draw(xpos, ypos) local(i i2 w h gap rec mode force_redraw rowsize
     lx -= draw_value_tweaker(-lx,ly,t + st_note2,wantr, rec[st_state] == 1 ? "stp" : "ply") + gap;
     lx -= draw_value_tweaker(-lx,ly,t + st_note1,wantr, rec[st_state] == 2 && !g_firstrec ? "ply" : "rec") + gap;
     
-    draw_value_tweaker(-mx+gap,my,t + st_rdc, wantr, "RDC"); 
+    lx = -mx+gap;
+    lx += draw_value_tweaker(lx,my,t + st_rdc, wantr, "RDC") + gap;
+    w > 90 ? draw_value_tweaker(lx,my,t + st_div, wantr, "div");
 
     w > 120 ? (
       lx = xpos+gap;
@@ -1155,22 +1263,20 @@ function draw(xpos, ypos) local(i i2 w h gap rec mode force_redraw rowsize
       );
     );
 
-    xpos += w + gap;
     i+=1;
     rec += st_num;
+    xpos += w + gap;
+    (col+=1)>=rowsize ? (
+      xpos = ixpos;
+      ypos += h + gap;
+      col=0;
+    );
   );
 
-  xpos = 2;
-  ypos += h+gap;
 
-  t=-1;
-  while ((i=mem_gen_order[t+=1])>=0)
+  t=0;
+  ypos < gfx_h - 24 ? while ((i=mem_gen_order[t])>=0)
   (
-    xpos >= gfx_w-4 || t==4 ? (
-      xpos=2;
-      ypos += h + gap;
-    );
-
     force_redraw ? (
       i == 1  ? gfx_set(0.0, 0.5, 0.6) :
       i == 2  ? gfx_set(0.0, 0.6, 0.5) :
@@ -1185,21 +1291,29 @@ function draw(xpos, ypos) local(i i2 w h gap rec mode force_redraw rowsize
       gfx_set(1);
       gfx_measurestr(mem_gen_names[i],tw,th);
       gfx_x=xpos+(w-tw)*.5;
-      gfx_y=ypos+(h-th)*.5;
+      gfx_y=min(ypos+(h-th)*.5,gfx_h-24);
       gfx_drawstr(mem_gen_names[i]);
 
       i == 11 ? fadesz_button.draw_topbar_button(xpos+4,ypos+4,
                sprintf(#,"%s%.0f mS",w<98 ? "" : w<160 ? "fade " : "halve fade: ",lasthalve)
                );
     );
-    draw_value_tweaker(-(xpos+w-gap),ypos+h-24-gap,mem_gen_cfg + i, force_redraw, 0);
+    draw_value_tweaker(-(xpos+w-gap),
+      min(ypos+h-24-gap,gfx_h-24), 
+      mem_gen_cfg + i, force_redraw, 0);
 
     !(last_mouse_cap&1) && (mouse_cap&1) && mouse_in(xpos,ypos,w,h) ? (
       gen_action(mem_gen_cfg + i);
     );
 
-    xpos += w+gap;
-  );  
+    t+=1;
+    xpos += w + gap;
+    (col+=1)>=rowsize ? (
+      xpos = ixpos;
+      ypos += h + gap;
+      col=0;
+    );
+  );
 );
 
 function draw_position(ypos) local(last_pos,last_len)
@@ -1218,7 +1332,6 @@ function draw_position(ypos) local(last_pos,last_len)
       cfgp_sync[] ? tempo : estbpm(last_len));
   );
 );
-
 
 function draw_topbar(need_ref) local(s,i,t, lastlen, lastgate, lastlatch, lastclickcount, lastvclickoffs, lastoffs, lastsync)
 (
@@ -1272,6 +1385,7 @@ function draw_topbar(need_ref) local(s,i,t, lastlen, lastgate, lastlatch, lastcl
     
       projsync_button.hit_topbar_button(mouse_x,mouse_y,-1) ? (
         cfgp_sync[] = (cfgp_sync[]+1)%3;
+        g_slider_sync = cfgp_sync[];
         g_offs = 0;
       ) : latch_button.hit_topbar_button(mouse_x,mouse_y,-1) ? (
         // toggle
@@ -1298,7 +1412,7 @@ function draw_topbar(need_ref) local(s,i,t, lastlen, lastgate, lastlatch, lastcl
           g_edgetrim_drawstate=1;
         );
       ) : cap_mode == cfgp_clickcnt ? (
-        cap_mode[0] = min(max(cap_mode[0]-dy*0.05,0),64);
+        g_slider_click_cnt = (cap_mode[0] = min(max(cap_mode[0]-dy*0.05,0),64))|0;
       ) : cap_mode == cfgp_vclick ? (
         cap_mode[0] = min(max(cap_mode[0]-dy*0.05,0),100);
       ) : cap_mode == cfgp_offs ? (
@@ -1329,11 +1443,11 @@ function draw_topbar(need_ref) local(s,i,t, lastlen, lastgate, lastlatch, lastcl
   );
 );
 
-function get_vclick_pos(latms) local(tmp clickcnt)
+function get_vclick_pos(latms) local(tmp)
 (
   tmp=cfgp_sync[];
-  (clickcnt = cfgp_clickcnt[]|0)<1 && tmp ? clickcnt=ts_num;
-  clickcnt >= 1 && (
+  (vclick_len = cfgp_clickcnt[]|0)<1 && tmp ? vclick_len=ts_num;
+  vclick_len >= 1 && (
     tmp ? (
       (tmp!=2 && g_active_mask) || (play_state&1);
     ) : (
@@ -1343,79 +1457,37 @@ function get_vclick_pos(latms) local(tmp clickcnt)
     tmp = g_pos - latms*srate*0.001;
     tmp < 0 ? tmp += g_length;
     (tmp >= 0) ? (
-      floor(g_pos * clickcnt / g_length)
+      floor(g_pos * vclick_len / g_length)
     ) : -1;
   ) : -1;
 );
 
-vclick_pos = cfgp_vclick[]>0 ? get_vclick_pos(cfgp_vclick[]) : -1;
-
-last_vclick_pos != vclick_pos ? (
-  last_w=0;
-  last_vclick_pos=vclick_pos;
-);
-
-last_w != gfx_w || last_h != gfx_h ? (
- gfx_set(0.125);
- gfx_rect(0,0,gfx_w,gfx_h);
-);
-
-draw_topbar(last_w != gfx_w || last_h != gfx_h);
-draw_position(15);
-draw(0, 40);
-
-gfx_x=0;
-gfx_y=gfx_h-8;
-gfx_set(0);
-gfx_rect(gfx_x,gfx_y,6*8,8);
-gfx_set(.3);
-g_peakvol < g_infthresh ? (
-  gfx_printf("-inf");
-) : (
-  gfx_printf("%.0fdB",log10(g_peakvol)*20);
-  g_peakvol *= 0.93;
-);
-
-g_lastmsg>=0 && g_lastmsg_draw!=g_lastmsg ? (
-  g_lastmsg_t = format_note(#str,g_lastmsg);
-  gfx_x=gfx_w-g_lastmsg_w;
-  g_lastmsg_w = (strlen(#str) + (g_lastmsg_t?3:0)) * 8;
-  gfx_x = min(gfx_x, gfx_w-g_lastmsg_w);
-  gfx_y=gfx_h-8;
-  gfx_set(0);
-  gfx_rect(gfx_x,gfx_y,gfx_w-gfx_x,8);
-  gfx_set(.3);
-  gfx_x = gfx_w-g_lastmsg_w;
-  gfx_printf("%s%s",g_lastmsg_t==1?"CC ":g_lastmsg_t?"PC ":"",#str);
-  g_lastmsg_draw=g_lastmsg;
-);
-
-last_w = gfx_w;
-last_h = gfx_h;
-last_mouse_cap = mouse_cap;
-0 == (mouse_cap & 3) ? (
-  cap_mode > 0 ? (
-    sliderchange(-1);
-  );
-  cap_mode = 0;
-);
-
-function draw_vclick(pos) 
+function draw_vclick(pos,clen) 
   global(gfx_w,gfx_h,gfx_x,gfx_y)
   local(sw,sh,str)
 (
-  gfx_setfont(2,"Arial",min(gfx_h,gfx_w)*.5);
   str=sprintf(#,"%d",1 + pos);
-  gfx_measurestr(str,sw,sh);
 
-  gfx_x=gfx_w*.5 + ((pos&1)?sw*.3:-sw*1.3);
-  gfx_y=gfx_h*.5 + ((pos&2)?0:-sh);
+  gfx_w > gfx_h * 2 ? (
+    gfx_setfont(2,"Arial",gfx_h);
+    gfx_measurestr(str,sw,sh);
+    gfx_x = (gfx_w-sw*.8) * pos / clen;
+    gfx_y = 0;
+  ) : gfx_w < gfx_h * .5 ? (
+    gfx_setfont(2,"Arial",gfx_w*.7);
+    gfx_measurestr(str,sw,sh);
+    gfx_y = (gfx_h-sh*.5) * pos / clen;
+    gfx_x = gfx_w*.5 - sw*.5;
+  ) : (
+    gfx_setfont(2,"Arial",min(gfx_h,gfx_w)*.5);
+    gfx_measurestr(str,sw,sh);
+    gfx_x=gfx_w*.5 + ((pos&1)?sw*.3:-sw*1.3);
+    gfx_y=gfx_h*.5 + ((pos&2)?0:-sh);
+  );
   gfx_set(1);
   gfx_drawstr(str);
   gfx_setfont(0);
 );
-
-vclick_pos >= 0 ? draw_vclick(vclick_pos);
 
 function draw_trim_waveform(xpos, ypos, w, h, chan, isend)
   global(g_length mem_stlist st_num st_dirty st_buf g_offs srate) 
@@ -1454,32 +1526,97 @@ function draw_trim_waveform(xpos, ypos, w, h, chan, isend)
   gfx_line(xpos,ypos,xpos,ypos+h);
 );
 
-cap_mode == cfgp_offs || cap_mode == cfgp_length ? (
-  g_edgetrim_drawstate>=0 ? (
-    draw_trim_waveform(0,40,gfx_w,gfx_h-40, max(g_chan_selected,0), cap_mode == cfgp_length);
-    g_edgetrim_drawstate=1;
+!(gfx_ext_flags&2) ? (
+  gfx_clear=-1;
+  
+  vclick_pos = cfgp_vclick[]>0 ? get_vclick_pos(cfgp_vclick[]) : -1;
+  
+  last_vclick_pos != vclick_pos ? (
+    last_w=0;
+    last_vclick_pos=vclick_pos;
   );
-) : (
-  g_edgetrim_drawstate>0 ? (
-    last_w=-1;
-    g_edgetrim_drawstate=0;
-  );  
-);
+  
+  last_w != gfx_w || last_h != gfx_h ? (
+    gfx_set(0.125);
+    gfx_rect(0,0,gfx_w,gfx_h);
+  );
+  
+  draw_topbar(last_w != gfx_w || last_h != gfx_h);
+  draw_position(15);
+  draw(0, 40);
+  
+  gfx_x=0;
+  gfx_y=gfx_h-8;
+  gfx_set(0);
+  gfx_rect(gfx_x,gfx_y,6*8,8);
+  gfx_set(.3);
+  g_peakvol < g_infthresh ? (
+    gfx_printf("-inf");
+  ) : (
+    gfx_printf("%.0fdB",log10(g_peakvol)*20);
+    g_peakvol *= 0.93;
+  );
+  
+  g_lastmsg>=0 && g_lastmsg_draw!=g_lastmsg ? (
+    g_lastmsg_t = format_note(#str,g_lastmsg);
+    gfx_x=gfx_w-g_lastmsg_w;
+    g_lastmsg_w = (strlen(#str) + (g_lastmsg_t?3:0)) * 8;
+    gfx_x = min(gfx_x, gfx_w-g_lastmsg_w);
+    gfx_y=gfx_h-8;
+    gfx_set(0);
+    gfx_rect(gfx_x,gfx_y,gfx_w-gfx_x,8);
+    gfx_set(.3);
+    gfx_x = gfx_w-g_lastmsg_w;
+    gfx_printf("%s%s",g_lastmsg_t==1?"CC ":g_lastmsg_t?"PC ":"",#str);
+    g_lastmsg_draw=g_lastmsg;
+  );
+  
+  last_w = gfx_w;
+  last_h = gfx_h;
+  last_mouse_cap = mouse_cap;
+  0 == (mouse_cap & 3) ? (
+    cap_mode > 0 ? (
+      sliderchange(-1);
+    );
+    cap_mode = 0;
+  );
+  
+  vclick_pos >= 0 ? draw_vclick(vclick_pos,vclick_len);
+  
+  cap_mode == cfgp_offs || cap_mode == cfgp_length ? (
+    g_edgetrim_drawstate>=0 ? (
+      draw_trim_waveform(0,40,gfx_w,gfx_h-40, max(g_chan_selected,0), cap_mode == cfgp_length);
+      g_edgetrim_drawstate=1;
+    );
+  ) : (
+    g_edgetrim_drawstate>0 ? (
+      last_w=-1;
+      g_edgetrim_drawstate=0;
+    );  
+  );
+); // !(gfx_ext_flags&2)
 
 // export must happen from UI thread
-function export()  local(rec, flag)
+function export()  local(rec, flag, tidx, idx, ster, l)
 (
-  // export, yay reaper 5.05 undocumented function!
   rec = mem_stlist;
   flag=1<<16; // go to end of project
   flag|=2<<16; // use tempo from next parameter
+  tidx = idx = 0;
   g_length > 0 ? loop(g_nchan,
-    rec[st_state] ? (
-      export_buffer_to_project(rec[st_buf]+g_offs,g_length,1,srate,(rec-mem_stlist)/st_num, flag, 
-        flag?(cfgp_sync[] ? tempo : estbpm(g_length))
+    !(idx&1) || get_linked_rec(idx)<0 ? (
+      ster = get_linked_rec(idx);
+      rec[st_state] ? (
+        l = (g_length / rec[st_div])|0;
+        export_buffer_to_project(rec[st_buf]+g_offs%l,l, ster>=0 ? 2 : 1,srate,tidx, flag,
+          flag?(cfgp_sync[] ? tempo : estbpm(g_length)),
+          ster>=0 ? ster[st_buf] - rec[st_buf] : 0
+        );
+        flag=0; // only go to end/set tempo for first item
       );
-      flag=0; // only go to end/set tempo for first item
+      tidx += 1;
     );
+    idx += 1;
     rec+=st_num;
   );
 );

@@ -982,15 +982,23 @@ function getDock()
 end
 
 function getDpi()
-  if gfx.ext_retina ~= dpi then
-    dpi = gfx.ext_retina
-    if dpi>1.49 then drawScale = 2 else drawScale = 1 end
-    if reaper.GetOS() ~= "OSX64" and reaper.GetOS() ~= "OSX32" then
-      drawScale_nonmac = drawScale
-      drawScale_inv_nonmac = 1/drawScale
-    else
-      drawScale_inv_mac = 1/drawScale
-    end
+  local newScale, os = 1, reaper.GetOS()
+  if gfx.ext_retina>1.49 then newScale = 2 end
+
+  if os ~= "OSX64" and os ~= "OSX32" and os ~= "macOS-arm64" then
+    -- disable (non-macOS) hidpi if window is constrained in height or width
+    local minw, minh = 500, 660
+    if _dockedRoot.visible ~= false then  minw, minh = 400, 24 end
+
+    if gfx.h < minh*newScale or gfx.w < minw*newScale then newScale = 1 end
+    drawScale_nonmac = newScale
+    drawScale_inv_nonmac = 1/newScale
+  else
+    drawScale_inv_mac = 1/newScale
+  end
+
+  if newScale ~= drawScale then
+    drawScale = newScale
     resize = 1
   end
 end
@@ -1202,13 +1210,18 @@ function Element:position(parentX,parentY,parentW,parentH,prevElX, prevElY, prev
 
   if self.positionX ~= nil then
     if self.positionX == 'center' then
-      parentW, parentH = parentW * drawScale_inv_nonmac, parentH * drawScale_inv_nonmac
-      self.drawx, self.drawy = (parentW - self.drawW)/2, (parentH - self.drawH)/2
+      parentW = parentW * drawScale_inv_nonmac
+      self.drawx = (parentW - self.drawW)/2
     elseif self.positionX == 'right' then
       self.drawx = parentW - self.w
     end
   end
-
+  if self.positionY ~= nil then
+    if self.positionY == 'center' then
+      parentH = parentH * drawScale_inv_nonmac
+      self.drawy = math.max((parentH - self.drawH)/2,0)
+    end
+  end
   if self.flow ~= nil and self.flow ~= false then
     if prevElX == nil or prevElW == 0 then                                                  -- you're the first child
       self.drawx, self.drawy = parentX + self.x + bx, parentY + self.y + by
@@ -1325,7 +1338,6 @@ end
   --------- MOUSE ---------
   
 function Element:mouseOver()
-  doHelp(self)
   if self.moColor ~= nil then 
     self.moColorOff, self.color = self.col, self.moColor
     redraw = 1
@@ -1363,7 +1375,6 @@ function Button:mouseOver()
       redraw = 1
     end
   end
-  doHelp(self)
 end
 
 function Fader:mouseOver()
@@ -1447,18 +1458,21 @@ function Readout:doubleClick()
   end
 end
 
-function doHelp(self)
-  if _undockedRoot.visible ~= false and lastHelpElem ~= self then
-    lastHelpElem = self
-    if self.helpL ~= nil then
-      _helpL.y = (self.drawy or self.y) - 36
-      _helpL.text.str = self.helpL
+function doHelp()
+  if _undockedRoot.visible ~= false then
+    local help_hit = root:hitTestHelp(gfx.mouse_x,gfx.mouse_y);
+    if lastHelpElem ~= help_hit then
+      if help_hit ~= nil and help_hit.helpL ~= nil then
+        _helpL.y = math.max((help_hit.drawy or help_hit.y) - 36,30)
+        _helpL.text.str = help_hit.helpL
+      end
+      if help_hit ~= nil and help_hit.helpR ~= nil then
+        _helpR.y = math.max(help_hit.drawy - 36,30)
+        _helpR.text.str = help_hit.helpR
+      end
+      resize = 1
+      lastHelpElem = help_hit
     end
-    if self.helpR ~= nil then
-      _helpR.y = self.drawy - 36
-      _helpR.text.str = self.helpR
-    end
-    resize = 1
   end
 end
 
@@ -1477,7 +1491,6 @@ end
 function SwatchHitbox:mouseOver()
   self.parent.children[12].color = {180,180,180}
   self.parent.children[13].text.col = {180,180,180}
-  doHelp(self)
 end
 
 function SwatchHitbox:mouseUp()
@@ -1502,6 +1515,24 @@ function Element:hitTest(x,y)
       end
     end
     if inrect and (self.interactive ~= false or self.helpL ~= nil or self.helpR ~= nil) then
+      return self
+    end
+  end
+  return nil
+end
+
+function Element:hitTestHelp(x,y)
+  local thisX, thisY, thisW, thisH = self.drawx or self.x, self.drawy or self.y, self.drawW or self.w or 0, self.drawH or self.h
+  local xS,yS = x / drawScale, y / drawScale
+  if self.visible ~= false then
+    local inrect = xS >= thisX and yS >= thisY and xS < thisX + thisW and yS < thisY + thisH
+    if self.children ~= nil and (inrect == true or self.has_children_outside == 1) then
+      for i,v in pairs(self.children) do
+        local s = v:hitTestHelp(x,y)
+        if s ~= nil then return s end
+      end
+    end
+    if inrect and (self.helpL ~= nil or self.helpR ~= nil) then
       return self
     end
   end
@@ -1570,6 +1601,10 @@ helpR_borders = 'Adds visual separation to your mixer with borders. '
               ..'AROUND FOLDERS draws borders at the start and end of every folder.'
 help_pref = 'These buttons set REAPER preferences. Their settings are automatically '
           ..'saved to your REAPER install.'
+
+help_proj_extmix="These settings are part of your REAPER project, and will be saved "
+               .."when it is saved (except for 'Scroll to selected track', which is "
+               .."a REAPER preference)"
 
 helpR_recolProject = 'Assigns random colors from the palette. Tracks which share '
                    ..'a color will be given the same new color.'
@@ -1821,7 +1856,7 @@ mcpTableVals = {img = 'cell_tick',
 _mixerTable = ParamTable:new(_mixerTop, {x=29,y=84,w=453,h=130,valsTable=mcpTableVals})
 
 _mLower = Element:new(_pageMixer_und, {x=0,y=427,w=513,h=212,color={129,137,137}}) -- stroke
-_extMixerf = Element:new(_mLower, {x=1,y=1,w=255,h=210,color={38,38,38},helpL=help_pref}) -- fill
+_extMixerf = Element:new(_mLower, {x=1,y=1,w=255,h=210,color={38,38,38},helpL=help_proj_extmix }) -- fill
 Element:new(_extMixerf, {x=29,y=24,w=173,h=30,text={str='EXTENDED MIXER CONTROLS#when size permits',style=2,align=4,col={129,137,137}}})
 Button:new(_extMixerf, {x=29,y=65,w=30,img='show_fx',imgType=3,action=actionToggle,param=40549})
 Element:new(_extMixerf, {x=68,y=65,w=172,h=30,text={str='Show FX Inserts',style=2,align=4,col={129,137,137}}})
@@ -1830,7 +1865,7 @@ Element:new(_extMixerf, {x=68,y=108,w=172,h=30,text={str='Show FX Parameters',st
 Button:new(_extMixerf, {x=29,y=151,w=30,img='show_send',imgType=3,action=actionToggle,param=40557})
 Element:new(_extMixerf, {x=68,y=151,w=172,h=30,text={str='Show Sends',style=2,align=4,col={129,137,137}}})
 
-_parmMixer = Element:new(_mLower, {x=256,y=1,w=256,h=210,color={51,51,51},helpL=help_pref}) -- fill
+_parmMixer = Element:new(_mLower, {x=256,y=1,w=256,h=210,color={51,51,51},helpL=help_proj_extmix}) -- fill
 Button:new(_parmMixer, {x=29,y=65,w=30,img='multi_row',imgType=3,action=actionToggle,param=40371})
 Element:new(_parmMixer, {x=68,y=65,w=172,h=30,text={str='Show Multiple-row Mixer#when size permits',style=2,align=4,col={129,137,137}}})
 Button:new(_parmMixer, {x=29,y=108,w=30,img='scroll_sel',imgType=3,action=actionToggle,param=40221})
@@ -1942,7 +1977,6 @@ activeMouseElement = nil
 _helpL.y, _helpR.y = 10000,10000
 editPage = tonumber(reaper.GetExtState(sTitle,'editPage')) or 1
 editPage2 = tonumber(reaper.GetExtState(sTitle,'editPage2')) or 1 -- for non-def themes
-dpi = 1
 drawScale = 1
 
 indexParams()
@@ -1956,7 +1990,7 @@ function runloop()
 
   themeCheck()
   getDock()
-  if gfx.ext_retina ~= dpi then getDpi() end
+  getDpi()
 
   chgidx = reaper.GetProjectStateChangeCount(0)
   if chgidx ~= lastchgidx then
@@ -2017,6 +2051,7 @@ function runloop()
         activeMouseElement:mouseAway()
       end
       activeMouseElement = hit 
+      doHelp()
     end
 
     if activeMouseElement ~= nil then

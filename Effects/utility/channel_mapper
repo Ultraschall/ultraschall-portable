@@ -1,0 +1,605 @@
+// This effect Copyright (C) 2021 and later Cockos Incorporated
+// License: LGPL - http://www.gnu.org/licenses/lgpl.html
+
+desc: Channel Mapper-Downmixer (Cockos)
+//tags: utility channel mapper downmix
+//author: Cockos
+
+slider1:1<0,1>-Volume 1
+slider2:1<0,1>-Volume 2
+slider3:1<0,1>-Volume 3
+slider4:1<0,1>-Volume 4
+slider5:1<0,1>-Volume 5
+slider6:1<0,1>-Volume 6
+slider7:1<0,1>-Volume 7
+slider8:1<0,1>-Volume 8
+slider9:1<0,1>-Volume 9
+slider10:1<0,1>-Volume 10
+slider11:1<0,1>-Volume 11
+slider12:1<0,1>-Volume 12
+slider13:1<0,1>-Volume 13
+slider14:1<0,1>-Volume 14
+slider15:1<0,1>-Volume 15
+slider16:1<0,1>-Volume 16
+slider17:1<0,1>-Volume 17
+slider18:1<0,1>-Volume 18
+slider19:1<0,1>-Volume 19
+slider20:1<0,1>-Volume 20
+slider21:1<0,1>-Volume 21
+slider22:1<0,1>-Volume 22
+slider23:1<0,1>-Volume 23
+slider24:1<0,1>-Volume 24
+slider25:1<0,1>-Volume 25
+slider26:1<0,1>-Volume 26
+slider27:1<0,1>-Volume 27
+slider28:1<0,1>-Volume 28
+slider29:1<0,1>-Volume 29
+slider30:1<0,1>-Volume 30
+slider31:1<0,1>-Volume 31
+slider32:1<0,1>-Volume 32
+slider33:1<0,1>-Volume 33
+slider34:1<0,1>-Volume 34
+slider35:1<0,1>-Volume 35
+slider36:1<0,1>-Volume 36
+slider37:1<0,1>-Volume 37
+slider38:1<0,1>-Volume 38
+slider39:1<0,1>-Volume 39
+slider40:1<0,1>-Volume 40
+slider41:1<0,1>-Volume 41
+slider42:1<0,1>-Volume 42
+slider43:1<0,1>-Volume 43
+slider44:1<0,1>-Volume 44
+slider45:1<0,1>-Volume 45
+slider46:1<0,1>-Volume 46
+slider47:1<0,1>-Volume 47
+slider48:1<0,1>-Volume 48
+slider49:1<0,1>-Volume 49
+slider50:1<0,1>-Volume 50
+slider51:1<0,1>-Volume 51
+slider52:1<0,1>-Volume 52
+slider53:1<0,1>-Volume 53
+slider54:1<0,1>-Volume 54
+slider55:1<0,1>-Volume 55
+slider56:1<0,1>-Volume 56
+slider57:1<0,1>-Volume 57
+slider58:1<0,1>-Volume 58
+slider59:1<0,1>-Volume 59
+slider60:1<0,1>-Volume 60
+slider61:1<0,1>-Volume 61
+slider62:1<0,1>-Volume 62
+slider63:1<0,1>-Volume 63
+slider64:1<0,1>-Volume 64
+
+options:no_meter
+
+
+@init
+
+gfx_ext_retina == 0 ? gfx_ext_retina=1;
+ui_open=0;
+act=0; // activity monitor
+ext_noinit=1;
+links=0;
+
+// using _var for audio thread state
+// unrolling for efficiency
+_v0=slider1; _v1=slider2; _v2=slider3; _v3=slider4;
+_v4=slider5; _v5=slider6; _v6=slider7; _v7=slider8;
+_v8=slider9; _v9=slider10; _v10=slider11; _v11=slider12;
+_v12=slider13; _v13=slider14; _v14=slider15; _v15=slider16;
+_v16=slider17; _v17=slider18; _v18=slider19; _v19=slider20;
+_v20=slider21; _v21=slider22; _v22=slider23; _v23=slider24;
+_v24=slider25; _v25=slider26; _v26=slider27; _v27=slider28;
+_v28=slider29; _v29=slider30; _v30=slider31; _v31=slider32;
+_v32=slider33; _v33=slider34; _v34=slider35; _v35=slider36;
+_v36=slider37; _v37=slider38; _v38=slider39; _v39=slider40;
+_v40=slider41; _v41=slider42; _v42=slider43; _v43=slider44;
+_v44=slider45; _v45=slider46; _v46=slider47; _v47=slider48;
+_v48=slider49; _v49=slider50; _v50=slider51; _v51=slider52;
+_v52=slider53; _v53=slider54; _v54=slider55; _v55=slider56;
+_v56=slider57; _v57=slider58; _v58=slider59; _v59=slider60;
+_v60=slider61; _v61=slider62; _v62=slider63; _v63=slider64;
+
+
+@block
+
+_s=samplesblock;
+_flags=get_pinmapper_flags();
+_umix = (_flags&14) == 8;
+_umix ? (
+_dv0=(slider1-_v0)/samplesblock; _v0=slider1; _dv1=(slider2-_v1)/samplesblock; _v1=slider2; _dv2=(slider3-_v2)/samplesblock; _v2=slider3; _dv3=(slider4-_v3)/samplesblock; _v3=slider4;
+num_ch > 4 ? ( _dv4=(slider5-_v4)/samplesblock; _v4=slider5; _dv5=(slider6-_v5)/samplesblock; _v5=slider6; _dv6=(slider7-_v6)/samplesblock; _v6=slider7; _dv7=(slider8-_v7)/samplesblock; _v7=slider8;
+num_ch > 8 ? ( _dv8=(slider9-_v8)/samplesblock; _v8=slider9; _dv9=(slider10-_v9)/samplesblock; _v9=slider10; _dv10=(slider11-_v10)/samplesblock; _v10=slider11; _dv11=(slider12-_v11)/samplesblock; _v11=slider12;
+num_ch > 12 ? ( _dv12=(slider13-_v12)/samplesblock; _v12=slider13; _dv13=(slider14-_v13)/samplesblock; _v13=slider14; _dv14=(slider15-_v14)/samplesblock; _v14=slider15; _dv15=(slider16-_v15)/samplesblock; _v15=slider16;
+num_ch > 16 ? ( _dv16=(slider17-_v16)/samplesblock; _v16=slider17; _dv17=(slider18-_v17)/samplesblock; _v17=slider18; _dv18=(slider19-_v18)/samplesblock; _v18=slider19; _dv19=(slider20-_v19)/samplesblock; _v19=slider20;
+num_ch > 20 ? ( _dv20=(slider21-_v20)/samplesblock; _v20=slider21; _dv21=(slider22-_v21)/samplesblock; _v21=slider22; _dv22=(slider23-_v22)/samplesblock; _v22=slider23; _dv23=(slider24-_v23)/samplesblock; _v23=slider24;
+num_ch > 24 ? ( _dv24=(slider25-_v24)/samplesblock; _v24=slider25; _dv25=(slider26-_v25)/samplesblock; _v25=slider26; _dv26=(slider27-_v26)/samplesblock; _v26=slider27; _dv27=(slider28-_v27)/samplesblock; _v27=slider28;
+num_ch > 28 ? ( _dv28=(slider29-_v28)/samplesblock; _v28=slider29; _dv29=(slider30-_v29)/samplesblock; _v29=slider30; _dv30=(slider31-_v30)/samplesblock; _v30=slider31; _dv31=(slider32-_v31)/samplesblock; _v31=slider32;
+num_ch > 32 ? ( _dv32=(slider33-_v32)/samplesblock; _v32=slider33; _dv33=(slider34-_v33)/samplesblock; _v33=slider34; _dv34=(slider35-_v34)/samplesblock; _v34=slider35; _dv35=(slider36-_v35)/samplesblock; _v35=slider36;
+num_ch > 36 ? ( _dv36=(slider37-_v36)/samplesblock; _v36=slider37; _dv37=(slider38-_v37)/samplesblock; _v37=slider38; _dv38=(slider39-_v38)/samplesblock; _v38=slider39; _dv39=(slider40-_v39)/samplesblock; _v39=slider40;
+num_ch > 40 ? ( _dv40=(slider41-_v40)/samplesblock; _v40=slider41; _dv41=(slider42-_v41)/samplesblock; _v41=slider42; _dv42=(slider43-_v42)/samplesblock; _v42=slider43; _dv43=(slider44-_v43)/samplesblock; _v43=slider44;
+num_ch > 44 ? ( _dv44=(slider45-_v44)/samplesblock; _v44=slider45; _dv45=(slider46-_v45)/samplesblock; _v45=slider46; _dv46=(slider47-_v46)/samplesblock; _v46=slider47; _dv47=(slider48-_v47)/samplesblock; _v47=slider48;
+num_ch > 48 ? ( _dv48=(slider49-_v48)/samplesblock; _v48=slider49; _dv49=(slider50-_v49)/samplesblock; _v49=slider50; _dv50=(slider51-_v50)/samplesblock; _v50=slider51; _dv51=(slider52-_v51)/samplesblock; _v51=slider52;
+num_ch > 52 ? ( _dv52=(slider53-_v52)/samplesblock; _v52=slider53; _dv53=(slider54-_v53)/samplesblock; _v53=slider54; _dv54=(slider55-_v54)/samplesblock; _v54=slider55; _dv55=(slider56-_v55)/samplesblock; _v55=slider56;
+num_ch > 56 ? ( _dv56=(slider57-_v56)/samplesblock; _v56=slider57; _dv57=(slider58-_v57)/samplesblock; _v57=slider58; _dv58=(slider59-_v58)/samplesblock; _v58=slider59; _dv59=(slider60-_v59)/samplesblock; _v59=slider60;
+num_ch > 60 ? ( _dv60=(slider61-_v60)/samplesblock; _v60=slider61; _dv61=(slider62-_v61)/samplesblock; _v61=slider62; _dv62=(slider63-_v62)/samplesblock; _v62=slider63; _dv63=(slider64-_v63)/samplesblock; _v63=slider64;
+);););););););););););););););
+);
+
+
+@sample
+
+_umix ? (
+_s -= 1;
+spl0 *= _v0-_dv0*_s; spl1 *= _v1-_dv1*_s; spl2 *= _v2-_dv2*_s; spl3 *= _v3-_dv3*_s;
+num_ch > 4 ? ( spl4 *= _v4-_dv4*_s; spl5 *= _v5-_dv5*_s; spl6 *= _v6-_dv6*_s; spl7 *= _v7-_dv7*_s;
+num_ch > 8 ? ( spl8 *= _v8-_dv8*_s; spl9 *= _v9-_dv9*_s; spl10 *= _v10-_dv10*_s; spl11 *= _v11-_dv11*_s;
+num_ch > 12 ? ( spl12 *= _v12-_dv12*_s; spl13 *= _v13-_dv13*_s; spl14 *= _v14-_dv14*_s; spl15 *= _v15-_dv15*_s;
+num_ch > 16 ? ( spl16 *= _v16-_dv16*_s; spl17 *= _v17-_dv17*_s; spl18 *= _v18-_dv18*_s; spl19 *= _v19-_dv19*_s;
+num_ch > 20 ? ( spl20 *= _v20-_dv20*_s; spl21 *= _v21-_dv21*_s; spl22 *= _v22-_dv22*_s; spl23 *= _v23-_dv23*_s;
+num_ch > 24 ? ( spl24 *= _v24-_dv24*_s; spl25 *= _v25-_dv25*_s; spl26 *= _v26-_dv26*_s; spl27 *= _v27-_dv27*_s;
+num_ch > 28 ? ( spl28 *= _v28-_dv28*_s; spl29 *= _v29-_dv29*_s; spl30 *= _v30-_dv30*_s; spl31 *= _v31-_dv31*_s;
+num_ch > 32 ? ( spl32 *= _v32-_dv32*_s; spl33 *= _v33-_dv33*_s; spl34 *= _v34-_dv34*_s; spl35 *= _v35-_dv35*_s;
+num_ch > 36 ? ( spl36 *= _v36-_dv36*_s; spl37 *= _v37-_dv37*_s; spl38 *= _v38-_dv38*_s; spl39 *= _v39-_dv39*_s;
+num_ch > 40 ? ( spl40 *= _v40-_dv40*_s; spl41 *= _v41-_dv41*_s; spl42 *= _v42-_dv42*_s; spl43 *= _v43-_dv43*_s;
+num_ch > 44 ? ( spl44 *= _v44-_dv44*_s; spl45 *= _v45-_dv45*_s; spl46 *= _v46-_dv46*_s; spl47 *= _v47-_dv47*_s;
+num_ch > 48 ? ( spl48 *= _v48-_dv48*_s; spl49 *= _v49-_dv49*_s; spl50 *= _v50-_dv50*_s; spl51 *= _v51-_dv51*_s;
+num_ch > 52 ? ( spl52 *= _v52-_dv52*_s; spl53 *= _v53-_dv53*_s; spl54 *= _v54-_dv54*_s; spl55 *= _v55-_dv55*_s;
+num_ch > 56 ? ( spl56 *= _v56-_dv56*_s; spl57 *= _v57-_dv57*_s; spl58 *= _v58-_dv58*_s; spl59 *= _v59-_dv59*_s;
+num_ch > 60 ? ( spl60 *= _v60-_dv60*_s; spl61 *= _v61-_dv61*_s; spl62 *= _v62-_dv62*_s; spl63 *= _v63-_dv63*_s;
+)))))))))))))));
+) : (
+spl0=spl0; spl1=spl1; spl2=spl2; spl3=spl3;
+num_ch > 4 ? ( spl4=spl4; spl5=spl5; spl6=spl6; spl7=spl7;
+num_ch > 8 ? ( spl8=spl8; spl9=spl9; spl10=spl10; spl11=spl11;
+num_ch > 12 ? ( spl12=spl12; spl13=spl13; spl14=spl14; spl15=spl15;
+num_ch > 16 ? ( spl16=spl16; spl17=spl17; spl18=spl18; spl19=spl19;
+num_ch > 20 ? ( spl20=spl20; spl21=spl21; spl22=spl22; spl23=spl23;
+num_ch > 24 ? ( spl24=spl24; spl25=spl25; spl26=spl26; spl27=spl27;
+num_ch > 28 ? ( spl28=spl28; spl29=spl29; spl30=spl30; spl31=spl31;
+num_ch > 32 ? ( spl32=spl32; spl33=spl33; spl34=spl34; spl35=spl35;
+num_ch > 36 ? ( spl36=spl36; spl37=spl37; spl38=spl38; spl39=spl39;
+num_ch > 40 ? ( spl40=spl40; spl41=spl41; spl42=spl42; spl43=spl43;
+num_ch > 44 ? ( spl44=spl44; spl45=spl45; spl46=spl46; spl47=spl47;
+num_ch > 48 ? ( spl48=spl48; spl49=spl49; spl50=spl50; spl51=spl51;
+num_ch > 52 ? ( spl52=spl52; spl53=spl53; spl54=spl54; spl55=spl55;
+num_ch > 56 ? ( spl56=spl56; spl57=spl57; spl58=spl58; spl59=spl59;
+num_ch > 60 ? ( spl60=spl60; spl61=spl61; spl62=spl62; spl63=spl63;
+)))))))))))))));
+);
+
+ui_open ? (
+abs(spl0) > 0.001 ? act[0]=1; abs(spl1) > 0.001 ? act[1]=1; abs(spl2) > 0.001 ? act[2]=1; abs(spl3) > 0.001 ? act[3]=1;
+num_ch > 4 ? ( abs(spl4) > 0.001 ? act[4]=1; abs(spl5) > 0.001 ? act[5]=1; abs(spl6) > 0.001 ? act[6]=1; abs(spl7) > 0.001 ? act[7]=1;
+num_ch > 8 ? ( abs(spl8) > 0.001 ? act[8]=1; abs(spl9) > 0.001 ? act[9]=1; abs(spl10) > 0.001 ? act[10]=1; abs(spl11) > 0.001 ? act[11]=1;
+num_ch > 12 ? ( abs(spl12) > 0.001 ? act[12]=1; abs(spl13) > 0.001 ? act[13]=1; abs(spl14) > 0.001 ? act[14]=1; abs(spl15) > 0.001 ? act[15]=1;
+num_ch > 16 ? ( abs(spl16) > 0.001 ? act[16]=1; abs(spl17) > 0.001 ? act[17]=1; abs(spl18) > 0.001 ? act[18]=1; abs(spl19) > 0.001 ? act[19]=1;
+num_ch > 20 ? ( abs(spl20) > 0.001 ? act[20]=1; abs(spl21) > 0.001 ? act[21]=1; abs(spl22) > 0.001 ? act[22]=1; abs(spl23) > 0.001 ? act[23]=1;
+num_ch > 24 ? ( abs(spl24) > 0.001 ? act[24]=1; abs(spl25) > 0.001 ? act[25]=1; abs(spl26) > 0.001 ? act[26]=1; abs(spl27) > 0.001 ? act[27]=1;
+num_ch > 28 ? ( abs(spl28) > 0.001 ? act[28]=1; abs(spl29) > 0.001 ? act[29]=1; abs(spl30) > 0.001 ? act[30]=1; abs(spl31) > 0.001 ? act[31]=1;
+num_ch > 32 ? ( abs(spl32) > 0.001 ? act[32]=1; abs(spl33) > 0.001 ? act[33]=1; abs(spl34) > 0.001 ? act[34]=1; abs(spl35) > 0.001 ? act[35]=1;
+num_ch > 36 ? ( abs(spl36) > 0.001 ? act[36]=1; abs(spl37) > 0.001 ? act[37]=1; abs(spl38) > 0.001 ? act[38]=1; abs(spl39) > 0.001 ? act[39]=1;
+num_ch > 40 ? ( abs(spl40) > 0.001 ? act[40]=1; abs(spl41) > 0.001 ? act[41]=1; abs(spl42) > 0.001 ? act[42]=1; abs(spl43) > 0.001 ? act[43]=1;
+num_ch > 44 ? ( abs(spl44) > 0.001 ? act[44]=1; abs(spl45) > 0.001 ? act[45]=1; abs(spl46) > 0.001 ? act[46]=1; abs(spl47) > 0.001 ? act[47]=1;
+num_ch > 48 ? ( abs(spl48) > 0.001 ? act[48]=1; abs(spl49) > 0.001 ? act[49]=1; abs(spl50) > 0.001 ? act[50]=1; abs(spl51) > 0.001 ? act[51]=1;
+num_ch > 52 ? ( abs(spl52) > 0.001 ? act[52]=1; abs(spl53) > 0.001 ? act[53]=1; abs(spl54) > 0.001 ? act[54]=1; abs(spl55) > 0.001 ? act[55]=1;
+num_ch > 56 ? ( abs(spl56) > 0.001 ? act[56]=1; abs(spl57) > 0.001 ? act[57]=1; abs(spl58) > 0.001 ? act[58]=1; abs(spl59) > 0.001 ? act[59]=1;
+num_ch > 60 ? ( abs(spl60) > 0.001 ? act[60]=1; abs(spl61) > 0.001 ? act[61]=1; abs(spl62) > 0.001 ? act[62]=1; abs(spl63) > 0.001 ? act[63]=1;
+)))))))))))))));
+);
+
+
+@serialize
+
+file_var(0, links);
+
+
+@gfx 240 240
+
+ui_open=1;
+
+sc=gfx_ext_retina;
+bg=gfx_getsyscol();
+bgr=bg&0xff; bgg=(bg>>8)&0xff; bgb=(bg>>16)&0xff;
+fg = bgr*130+bgg*256+bgb*50 < 60000;
+hg=((bgr+bgg+bgb)/(256*3)+fg)/2;
+
+gfx_clear=bg;
+gfx_set(fg,fg,fg);
+fsz = sc == 1 ? 16 : 24;
+gfx_setfont(1,"Arial",fsz);
+gfx_setfont(2,"Arial",fsz,'Y');
+gfx_setfont(3,"Arial",fsz,'Z');
+gfx_setfont(4,"Arial",fsz+4);
+gfx_setfont(5,"Arial",fsz+4,'Z');
+gfx_setfont(6,"Arial",fsz-2,'Y');
+str_setchar(#arr,0,0x9e9ee2,'iu');
+
+function draw_str(tx ty ts tf tfl)
+(
+  gfx_x=tx;
+  gfx_y=ty;
+  gfx_setfont(tf);
+  gfx_drawstr(ts,tfl,tx,ty);
+);
+
+flags=get_pinmapper_flags();
+umix = (flags&14) == 8;
+
+nch=get_host_numchan();
+sz=16*sc;
+ox=2*sz;
+oy = umix ? 11.5*sz : (flags&6) ? 5*sz : 4.5*sz;
+
+ni=max(floor((gfx_w-ox)/sz-13),2);
+nj=max(floor((gfx_h-oy)/sz-2),2);
+xscr = ni < nch || (ni == nch && nj < nch) ? 1 : 0;
+yscr = nj < nch || (nj == nch && ni < nch) ? 1 : 0;
+ni > nch ? ni=nch : ni == nch && yscr ? ni -= 1;
+nj > nch ? nj=nch : nj == nch && xscr ? nj -= 1;
+si < 0 ? si=0 : si > 0 && si+ni > nch ? si=nch-ni;
+sj < 0 ? sj=0 : sj > 0 && sj+nj > nch ? sj=nch-nj;
+yscr ? ox += sz;
+
+!(flags&14) ? draw_str(ox,sz,"Ins",1,260);
+draw_str(ox+(ni+3)*sz,oy,"Outs",3,256);
+
+i=si;
+loop(ni+1,
+  i-si < ni ? (
+    sprintf(#num, "%d", i+1);
+    draw_str(ox+(i-si+0.5)*sz,oy-1.75*sz,#num,2,265);
+    draw_str(ox+(i-si+0.5)*sz,oy-0.5*sz,#arr,5,265);
+  );
+  sy=oy;
+  ey=oy+nj*sz;
+  sj > 0 ? sy -= sz/4;
+  sj+nj < nch ? ey += sz/4;
+  gfx_x=ox+(i-si)*sz;
+  gfx_y=sy;
+  gfx_lineto(gfx_x, ey);
+  (i == 0 && si == 0) || (i == nch && si+ni == nch) ? (
+    gfx_x += i == 0 ? -1 : 1;
+    gfx_y=sy;
+    gfx_lineto(gfx_x, ey);
+  );
+  i += 1;
+);
+j=sj;
+loop(nj+1,
+  j-sj < nj ? (
+    sprintf(#num, "%d", j+1);
+    draw_str(ox+(ni+1.75)*sz,oy+(j-sj+0.5)*sz,#num,1,260);
+    draw_str(ox+(ni+0.5)*sz,oy+(j-sj+0.5)*sz,#arr,4,260);
+  );
+  sx=ox;
+  ex=sx+ni*sz;
+  si > 0 ? sx -= sz/4;
+  si+ni < nch ? ex += sz/4;
+  gfx_x=sx;
+  gfx_y=oy+(j-sj)*sz;
+  gfx_lineto(ex, gfx_y);
+  (j == 0 && sj == 0) || (j == nch && sj+nj == nch) ? (
+    gfx_x=sx;
+    gfx_y += j == 0 ? -1 : 1;
+    gfx_lineto(ex, gfx_y);
+  );
+  j += 1;
+);
+
+mask=(1<<min(nch,32))-1;
+mask2 = nch > 32 ? (1<<min(nch-32,32))-1 : 0;
+i=si;
+loop(ni,
+  map=get_pin_mapping(1,i,0,mask);
+  map2 = nch > 32 ? get_pin_mapping(1,i,32,mask2) : 0;
+  x=ox+(i-si)*sz;
+  j=sj;
+  loop(nj,
+    m = j < 32 ? map : map2;
+    m&(1<<(j&31)) ? (
+      y=oy+(j-sj)*sz;
+      gfx_rect(x+sc+1,y+sc+1,sz-(2*sc+1),sz-(2*sc+1));
+      act[i] > 0 ? (
+        gfx_set(0,1,0,act[i]);
+        gfx_a=act[i];
+        gfx_circle(x+sz/2,y+sz/2,sz/8,1,1);
+        gfx_set(fg,fg,fg,1);
+      );
+    );
+    act[i] > 0 ? (
+      act[i] *= 0.95;
+      act[i] < 0.001 ? act[i]=0;
+    );
+    j += 1;
+  );
+  (flags&6) ? (
+    map&(map-1) || map2&(map2-1) || (map && map2) ? (
+      #str = (flags&6) == 2 ? "-3.0" : "-6.0";
+      draw_str(x+0.5*sz,0.5*sz,#str,6,257);
+    );
+  );
+  i += 1;
+);
+
+scyx=oy+(nj+0.75)*sz;
+xscr ? (
+  w=ni*sz;
+  gfx_x=ox;
+  gfx_y=scyx;
+  gfx_set(hg,hg,hg);
+  gfx_rectto(ox+si/nch*w,gfx_y+0.5*sz);
+  gfx_y -= 0.5*sz;
+  gfx_set(fg,fg,fg);
+  gfx_rectto(ox+(si+ni)/nch*w,gfx_y+0.5*sz);
+  gfx_y -= 0.5*sz;
+  gfx_set(hg,hg,hg);
+  gfx_rectto(ox+w,gfx_y+0.5*sz);
+);
+yscr ? (
+  h=nj*sz;
+  gfx_x=ox-1.25*sz;
+  gfx_y=oy;
+  gfx_set(hg,hg,hg);
+  gfx_rectto(gfx_x+0.5*sz,oy+sj/nch*h);
+  gfx_x -= 0.5*sz;
+  gfx_set(fg,fg,fg);
+  gfx_rectto(gfx_x+0.5*sz,oy+(sj+nj)/nch*h);
+  gfx_x -= 0.5*sz;
+  gfx_set(hg,hg,hg);
+  gfx_rectto(gfx_x+0.5*sz,oy+h);
+);
+
+gfx_set(fg,fg,fg);
+
+sy=2.5*sz;
+sh=4.5*sz;
+
+function draw_radio(tx ty te ts)
+(
+  gfx_circle(tx,ty,bsz/2,0,1);
+  te ? gfx_circle(tx,ty,bsz/4,1,1);
+  draw_str(tx+1.5*bsz,ty,ts,1,260);
+);
+
+function draw_slider(ti)
+(
+  tti=si+ti;
+  x=ox+(ti+0.5)*sz;
+  v=slider(tti+1);
+  v < 0 ? v=0 : v > 1 ? v=1;
+  vy=sh*(exp(v)-1)/(exp(1)-1);
+
+  gfx_rect(x-sc,sy,2*sc,sh);
+  gfx_rect(x-0.3125*sz,sy+sh-vy-0.25*sz,0.625*sz,0.25*sz);
+
+  has_link=(links&(1<<(tti/2)));
+  has_link ? (
+    (tti&1) && ti == 0 ? (
+      gfx_rect(x-0.625*sz,sy+sh-vy-0.25*sz,0.375*sz,0.25*sz);
+    ) :
+    !(tti&1) ? (
+      gfx_rect(x+0.3125*sz,sy+sh-vy-0.25*sz,0.375*sz,0.25*sz);
+    );
+  );
+
+  ti > 0 && (tti&1) ? (
+    draw_radio(x-0.5*sz-sc,sy+sh+0.5*sz,has_link,0);
+  );
+
+  v <= 0.0 ? #str="-inf" : (
+    db=20.0*log(v)/log(10);
+    sprintf(#str,"%s%.1f",v >= 1.0 ? "+" : "",db);
+  );
+  draw_str(x,sy-2*sz,#str,6,257);
+);
+
+umix ?
+(
+  draw_str(ox+(ni+1.75)*sz,sy+sh+0.5*sz,"Link",1,260);
+  draw_str(ox+(ni+0.5)*sz,sy+sh+0.5*sz,#arr,4,260);
+  i=0;
+  loop(ni,
+    draw_slider(i);
+    i += 1;
+  );
+);
+
+function draw_box(tx ty ti)
+(
+  gfx_x=tx-0.5*bsz;
+  gfx_y=ty-0.5*bsz;
+  gfx_lineto(gfx_x+bsz, gfx_y);
+  gfx_lineto(gfx_x, gfx_y+bsz);
+  gfx_lineto(gfx_x-bsz, gfx_y);
+  gfx_lineto(gfx_x, gfx_y-bsz);
+  gfx_x += 0.25*bsz;
+  gfx_y += 0.5*bsz;
+  gfx_lineto(gfx_x+0.5*bsz,gfx_y);
+  ti ? (
+    gfx_x -= 0.25*bsz;
+    gfx_y -= 0.25*bsz;
+    gfx_lineto(gfx_x,gfx_y+0.5*bsz);
+  );
+);
+
+bsz=0.5*sz;
+bx=2*bsz;
+b1y=oy-1.5*bsz;
+b2y=oy+nj*sz+1.5*bsz;
+nch > 2 ? draw_box(bx,b1y,0);
+nch < 64 ? draw_box(bx,b2y,1);
+
+iox=ox+(ni+6)*sz;
+ioy=1.5*sz;
+draw_str(iox-bsz,ioy,"Unmapped outs:",1,260);
+draw_radio(iox,ioy+sz,(flags&1)==0,"Pass through");
+draw_radio(iox,ioy+2*sz,(flags&1)==1,"Zero out");
+draw_str(iox-bsz,ioy+4*sz,"Downmix:",1,260);
+draw_radio(iox,ioy+5*sz,(flags&14)==0,"None");
+draw_radio(iox,ioy+6*sz,(flags&14)==2,"Shared ins -3dB ");
+draw_radio(iox,ioy+7*sz,(flags&14)==4,"Shared ins -6dB");
+draw_radio(iox,ioy+8*sz,(flags&14)==8,"User mix");
+
+gfx_measurestr("XXXXX",btw,bth);
+btw += 4*sc;
+bth += 4*sc;
+function draw_button(tx,ty,ts)
+(
+  draw_str(tx,ty,ts,1,261);
+  gfx_x=tx-btw/2;
+  gfx_y=ty-bth/2;
+  gfx_lineto(gfx_x+btw,gfx_y);
+  gfx_lineto(gfx_x,gfx_y+bth);
+  gfx_lineto(gfx_x-btw,gfx_y);
+  gfx_lineto(gfx_x,gfx_y-bth);
+);
+
+rx=iox-bsz+btw/2;
+ry=ioy+10.5*sz;
+draw_button(rx,ry,"Reset");
+zx=rx+btw+0.5*sz;
+zy=ry;
+draw_button(zx,zy,"Clear");
+
+function hit_button(tx ty tw th)
+(
+  abs(mouse_x-tx) < tw/2 && abs(mouse_y-ty) < th/2;
+);
+function hit_box(tx ty)
+(
+  hit_button(tx,ty,1.5*bsz,1.5*bsz);
+);
+
+(mouse_cap&1) != (cap&1) ? (
+  cap=(mouse_cap&1);
+  cap ? (
+    mouse_x >= ox && mouse_x < ox+ni*sz ? (
+      mouse_y >= oy && mouse_y < oy+nj*sz ? (
+        i=floor((mouse_x-ox)/sz);
+        j=floor((mouse_y-oy)/sz);
+        j32 = sj+j < 32 ? 0 : 32;
+        m=get_pin_mapping(1,si+i,j32,-1);
+        b=1<<(sj+j-j32);
+        mouse_cap&4 ? m=b : m ~= b;
+        set_pin_mapping(1,si+i,j32,-1,m);
+      ) :
+      xscr && mouse_y > scyx-0.25*sz ? (
+        cap |= 2;
+        ci=si;
+        cx=mouse_x;
+      ) :
+      umix && mouse_y >= sy-0.25*sz && mouse_y < sy+sh+0.25*sz ? (
+        i=floor((mouse_x-ox)/sz);
+        cap |= (i+1)<<8;
+        cv=slider(si+i+1);
+        cy=mouse_y;
+      ) :
+      umix && abs(mouse_y-(sy+sh+0.5*sz)) < bsz ? (
+        i=si+(mouse_x-ox)/sz-0.75;
+        i < floor(i)+0.5 ? (
+          i |= 0;
+          i >= si && i < si+ni-1 && !(i&1) ? (
+            i /= 2;
+            links=links~(1<<i);
+            (links&(1<<i)) ? (
+              slider(2*i+2)=slider(2*i+1);
+              sliderchange(2^(2*i+1));
+            );
+          );
+        );
+      );
+    ) :
+    mouse_x < ox-0.25*sz ? (
+      nch > 2 && hit_box(bx,b1y) ? (
+        set_host_numchan(get_host_numchan()-2);
+      ) :
+      nch < 64 && hit_box(bx,b2y) ? (
+        set_host_numchan(get_host_numchan()+2);
+      ) :
+      yscr && mouse_y >= oy && mouse_y < oy+nj*sz ? (
+        cap |= 4;
+        cj=sj;
+        cy=mouse_y;
+      );
+    ) :
+    hit_button(rx,ry,btw,bth) ? (
+      i=0;
+      loop(64,
+        c = i < 32 ? 0 : 32;
+        set_pin_mapping(1,i,c,-1,1<<(i&31));
+        slider(i+1)=1;
+        i += 1;
+      );
+    ) :
+    hit_button(zx,zy,btw,bth) ? (
+      mask=1<<min(nch,32)-1;
+      mask2 = nch >= 32 ? 1<<(nch-32)-1 : 0;
+      i=0;
+      loop(64,
+        i < nch ? (
+          set_pin_mapping(1,i,0,mask,0);
+          mask2 ? set_pin_mapping(1,i,32,mask2,0);
+        );
+        slider(i+1)=1;
+        i += 1;
+      );
+    ) :
+    abs(mouse_x-iox) < 0.75*bsz ? (
+      f=flags;
+      hit_box(iox,ioy+sz) ? f&=(-1~1) :
+      hit_box(iox,ioy+2*sz) ? f|=1 :
+      hit_box(iox,ioy+5*sz) ? f&=(-1~14) :
+      hit_box(iox,ioy+6*sz) ? f=(f&(-1~14))|2 :
+      hit_box(iox,ioy+7*sz) ? f=(f&(-1~14))|4 :
+      hit_box(iox,ioy+8*sz) ? f=(f&(-1~14))|8;
+      f != flags ? set_pinmapper_flags(f);
+    );
+  );
+);
+
+(cap&2) ? (
+  si=ci+floor((mouse_x-cx)/sz*nch/ni);
+) :
+(cap&4) ? (
+  sj=cj+floor((mouse_y-cy)/sz*nch/nj);
+) :
+(cap&0xff00) ? (
+  i=si+(cap>>8)-1;
+  v=(exp(cv)-1)/(exp(1)-1)-(mouse_y-cy)/sh;
+  v < 0 ? v=0 : v > 1 ? v=1 : v=log((exp(1)-1)*v+1);
+  abs(v-1/sqrt(2)) < 1.5/sh ? v=1/sqrt(2) :
+  abs(v-0.5) < 1.5/sh ? v=0.5;
+  slider(i+1)=v;
+  sliderchange(2^i);
+  (links&(1<<(i/2))) ? (
+    j = !(i&1) ? i+1 : i-1;
+    slider(j+1)=v;
+    sliderchange(2^j);
+  );
+) :
+mouse_wheel ? (
+  yscr && mouse_x < ox-0.5*sz ? (
+    sj -= floor(mouse_wheel/120);
+  ) :
+  xscr && mouse_y > scyx-0.25*sz ? (
+    si += floor(mouse_wheel/120);
+  ) :
+  umix && mouse_y >= sy && mouse_y < sy+sh ? (
+    i=floor((mouse_x-ox)/sz);
+    i >= 0 && i < ni ? (
+      i += si;
+      v=slider(i+1)+floor(mouse_wheel)/120*2/sh;
+      v < 0 ? v=0 : v > 1 ? v=1;
+      slider(i+1)=v;
+      sliderchange(2^i);
+      (links&(1<<(i/2))) ? (
+        j = !(i&1) ? i+1 : i-1;
+        slider(j+1)=v;
+        sliderchange(2^j);
+      );
+    );
+  );
+  mouse_wheel=0;
+);
+
