@@ -1,0 +1,111 @@
+/*Anchors in the docs*/
+
+.anch{
+  width:90.5%;  
+  padding-top: 14%;
+}
+
+
+/*Functioncall-definitions*/
+
+.cc{ /*padding of function definitions*/
+  padding-left:4.4%;
+  width:90.5%;
+}
+
+.l code:hover, .e code:hover, .p code:hover, .c code:hover, .j code:hover, .l_func code:hover, .ch code:hover{
+    /*used mouse-cursor when clicking function-calls*/
+    cursor: copy;
+    background-color: black;
+}
+
+.c, .p, .e, .l, .j{ /*general style of functioncalls*/
+    margin-bottom: 4;
+    color:#FFFFFF;
+} 
+
+
+/*parameter/retval-names*/
+
+.pr{
+    color:#FFFFFF;
+    width: 35%;
+}
+
+
+/*  padding of elements
+*/
+    /*  padding of chapters/index/elements/descriptions/retvals/parameters in general
+    changing this should keep the padding of all general elements relative to each other
+    */
+.ch{ 
+  padding-left:4.4%;
+  width:90.5%;
+}
+
+.ch2{ /*padding of parameter/retval-descriptions*/
+  padding-left:6.4%;
+  width:90.5%;
+}
+
+
+
+/*Index related*/
+
+.tdsm{ /*fontsize of index-entries*/
+    width:25%;
+    font-size:x-small;
+}
+
+.indexpad{ /*padding of the index*/
+  padding-left:4.5;
+  width:100%;
+}
+
+.inds{/*size of empty index-cells*/
+  width:25%;
+}
+
+.inpad{ /*padding of index-entrylinks-*/
+    margin-left:-14;
+}
+
+/*style of the View-selector in the ReaScript-API-docs
+properly no need to edit this one*/
+
+.td2{
+    width:49%;
+}
+.td3{
+    padding-right:0;
+}
+
+
+/*tags in general*/
+a {
+  color:#66aaff;
+}
+
+body{
+    color:#BBBBBB;
+    sssbackground-color:#090909;
+    background-color:#000000;
+}
+
+em{
+    color:55EE55;
+}
+i{
+  color:#00aaff;
+}
+table{
+    margin-top: -0.3%;
+}
+
+td{
+    vertical-align:top;
+}
+
+u{
+  color:#FFFFFF;
+}

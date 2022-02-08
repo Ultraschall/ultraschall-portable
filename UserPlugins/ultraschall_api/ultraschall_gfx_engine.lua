@@ -624,7 +624,7 @@ function ultraschall.GFX_GetWindowHWND()
     it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."
   </description>
   <retvals>
-     HWND hwnd - the window-handler of the opened gfx-window; will contain a helpermessage, if you didn't use [ultraschall.GFX_Init()](#GFX_Init) for window creation.
+     HWND hwnd - the window-handler of the opened gfx-window; will contain a helpermessage, if you didn't use ultraschall.GFX_Init() for window creation.
   </retvals>
   <chapter_context>
     Window Handling
@@ -961,22 +961,22 @@ function ultraschall.GFX_GetDropFile()
   </requires>
   <functioncall>boolean changed, integer num_dropped_files, array dropped_files, integer drop_mouseposition_x, integer drop_mouseposition_y = ultraschall.GFX_GetDropFile()</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-	returns the files drag'n'dropped into a gfx-window, including the mouseposition within the gfx-window, where the files have been dropped.
-	
-	if changed==true, then the filelist is updated, otherwise this function returns the last dropped files again.
-	Note: when the same files will be dropped, changed==true will also be dropped with only the mouse-position updated.
-	That way, dropping the same files in differen places is recognised by this function.
-	
-	Call repeatedly in every defer-cycle to get the latest files and coordinates.
-	
-	Important: Don't use Reaper's own gfx.dropfile while using this, as this could intefere with this function.
+    returns the files drag'n'dropped into a gfx-window, including the mouseposition within the gfx-window, where the files have been dropped.
+    
+    if changed==true, then the filelist is updated, otherwise this function returns the last dropped files again.
+    Note: when the same files will be dropped, changed==true will also be dropped with only the mouse-position updated.
+    That way, dropping the same files in differen places is recognised by this function.
+    
+    Call repeatedly in every defer-cycle to get the latest files and coordinates.
+    
+    Important: Don't use Reaper's own gfx.dropfile while using this, as this could intefere with this function.
   </description>
   <retvals>
-	boolean changed - true, new files have been dropped since last time calling this function; false, no new files have been dropped
-	integer num_dropped_files - the number of dropped files; -1, if no files have beend dropped at all
-	array dropped_files - an array with all filenames+path of the dropped files
-	integer drop_mouseposition_x - the x-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet
-	integer drop_mouseposition_y - the y-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet
+    boolean changed - true, new files have been dropped since last time calling this function; false, no new files have been dropped
+    integer num_dropped_files - the number of dropped files; -1, if no files have beend dropped at all
+    array dropped_files - an array with all filenames+path of the dropped files
+    integer drop_mouseposition_x - the x-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet
+    integer drop_mouseposition_y - the y-mouseposition within the gfx-window, where the files have been dropped; -10000, if no files have been dropped yet
   </retvals>
   <chapter_context>
     Window Handling
@@ -1051,7 +1051,7 @@ function ultraschall.Lokasenna_LoadGuiLib_v2()
   
   local filename=""
   local i=0
-  reaper.EnumerateFiles(path, -1) -- flush cache
+  reaper.EnumerateFiles("", -1) -- flush cache
   while filename~=nil do
     filename=reaper.EnumerateFiles(ultraschall.Api_Path.."/3rd_party_modules/Lokasenna_GUI v2/Library/Classes/", i)
     if filename==nil then break end
@@ -1145,4 +1145,149 @@ function ultraschall.GFX_DrawEmbossedSquare(x, y, w, h, rbg, gbg, bbg, r, g, b)
   gfx.line(x  , y+h, x  , y  )
   return true
 end 
+
+function ultraschall.GFX_GetChar(character, manage_clipboard, to_clipboard, readable_characters)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_GetChar</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.42
+    Lua=5.3
+  </requires>
+  <functioncall>integer first_typed_character, integer num_characters, table character_queue = ultraschall.GFX_GetChar(optional integer character, optional boolean manage_clipboard, optional string to_clipboard, optional boolean readable_characters)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    gets all characters from the keyboard-queue of gfx.getchar as a handy table.
+    
+    the returned table character_queue is of the following format:
+    
+        character_queue[index]["Code"] - the character-code
+        character_queue[index]["Ansi"] - the character-code converted into Ansi
+        character_queue[index]["UTF8"] - the character-code converted into UTF8
+      
+    When readable_characters=true, the entries of the character_queue for Ansi and UTF8 will hold readable strings for non-printable characters, like:
+      "ins ", "del ", "home", "F1  "-"F12 ", "tab ", "esc ", "pgup", "pgdn", "up  ", "down", "left", "rght", "bspc", "ente"
+      
+    You can optionally let this function manage clipboard. So hitting Ctrl+V will get put the content of the clipboard into the character_queue of Ansi/UTF8 in the specific position of the character-queue,
+    while hitting Ctrl+C will put the contents of the parameter to_clipboard into the clipboard in this case.
+    
+    Retval first_typed_character behaves basically like the returned character of Reaper's native function gfx.getchar()
+    
+    returns -2 in case of an error
+  </description>
+  <parameters>
+    optional integer character - a specific character-code to check for(will ignore all other keys)
+                               - 65536 queries special flags, like: &amp;1 (supported in this script), &amp;2=window has focus, &amp;4=window is visible  
+    optional boolean manage_clipboard - true, when user hits ctrl+v/cmd+v the character-queue will hold clipboard-contents in this position
+                                      - false, treat ctrl+v/cmd+v as regular typed character
+    optional string to_clipboard - if get_paste_from_clipboard=true and user hits ctrl+c/cmd+c, the contents of this variable will be put into the clipboard
+    optional boolean readable_characters - true, make non-printable characters readable; false, keep them in original state
+  </parameters>
+  <retvals>
+    integer first_typed_character - the character-code of the first character found
+    integer num_characters - the number of characters in the queue
+    table character_queue - the characters in the queue, within a table(see description for more details)
+  </retvals>
+  <chapter_context>
+    Key-Management
+  </chapter_context>
+  <target_document>US_Api_GFX</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, functions, gfx, getchar, character, clipboard</tags>
+</US_DocBloc>
+]]
+  if character~=nil and math.type(character)~="integer" then ultraschall.AddErrorMessage("GFX_GetChar", "character", "must be an integer", -1) return -2 end
+  if manage_clipboard~=nil and type(manage_clipboard)~="boolean" then ultraschall.AddErrorMessage("GFX_GetChar", "manage_clipboard", "must be either nil or boolean", -2) return -2 end
+  if readable_characters~=nil and type(readable_characters)~="boolean" then ultraschall.AddErrorMessage("GFX_GetChar", "readable_characters", "must be either nil or boolean", -3) return -2 end
+  to_clipboard=tostring(to_clipboard)
+  
+  local A=1
+  local CharacterTable={}
+  local CharacterCount=0
+  local first=-2
+  while A>0 do
+    A=gfx.getchar(character)
+    if first==-2 then first=math.tointeger(A) end
+    if A>0 then
+      CharacterCount=CharacterCount+1
+      CharacterTable[CharacterCount]={}
+      CharacterTable[CharacterCount]["Code"]=A
+      if manage_clipboard==true and A==3 then
+        ToClip(to_clipboard)
+      elseif manage_clipboard==true and A==22 and gfx.mouse_cap&4==4 then
+        CharacterTable[CharacterCount]["Ansi"]=FromClip()
+      else
+        if A>-1 and A<255 then
+          CharacterTable[CharacterCount]["Ansi"]=string.char(A)
+        else
+          CharacterTable[CharacterCount]["Ansi"]=""
+        end
+        if A>-1 and A<1114112 then
+          CharacterTable[CharacterCount]["UTF8"]=utf8.char(A)
+        else
+          CharacterTable[CharacterCount]["UTF8"]=""
+        end
+        if readable_characters==false then
+          if A>1114112 then
+            CharacterTable[CharacterCount]["UTF8"] = ultraschall.ConvertIntegerIntoString2(4, math.tointeger(A)):reverse()
+            CharacterTable[CharacterCount]["Ansi"] = CharacterTable[CharacterCount]["UTF8"]
+          end
+    
+          if A==6647396.0 then -- end-key
+            CharacterTable[CharacterCount]["Ansi"] = "end " 
+            CharacterTable[CharacterCount]["UTF8"] = "end "
+          end
+          if A==6909555.0 then -- insert key
+            CharacterTable[CharacterCount]["Ansi"] = "ins " 
+            CharacterTable[CharacterCount]["UTF8"] = "ins "
+          end
+          if A==6579564.0 then -- del key
+            CharacterTable[CharacterCount]["Ansi"] = "del " 
+            CharacterTable[CharacterCount]["UTF8"] = "del "
+          end
+          if A>26160.0 and A<26170.0 then -- F1 through F9
+            CharacterTable[CharacterCount]["Ansi"] = "F"..(math.tointeger(A)-26160).."  "
+            CharacterTable[CharacterCount]["UTF8"] = "F"..(math.tointeger(A)-26160).."  "
+          end
+          if A>=6697264.0 and A<=6697266.0 then -- F10 and higher
+            CharacterTable[CharacterCount]["Ansi"] = "F"..(math.tointeger(A)-6697254).." "
+            CharacterTable[CharacterCount]["UTF8"] = "F"..(math.tointeger(A)-6697254).." "
+          end
+          if A==8 then -- backspace
+            CharacterTable[CharacterCount]["Ansi"] = "bspc"
+            CharacterTable[CharacterCount]["UTF8"] = "bspc"
+          end
+          if A==9 then -- backspace
+            CharacterTable[CharacterCount]["Ansi"] = "tab "
+            CharacterTable[CharacterCount]["UTF8"] = "tab "
+          end
+          if A==13 then -- enter
+            CharacterTable[CharacterCount]["Ansi"] = "ente"
+            CharacterTable[CharacterCount]["UTF8"] = "ente"
+          end
+          if A==27 then -- escape
+            CharacterTable[CharacterCount]["Ansi"] = "esc "
+            CharacterTable[CharacterCount]["UTF8"] = "esc "
+          end
+          if A==30064.0 then -- upkey, others are treated with A>1114112
+            CharacterTable[CharacterCount]["Ansi"] = "up  "
+            CharacterTable[CharacterCount]["UTF8"] = "up  "
+          end
+
+        end
+      end    
+    else
+      break
+    end
+  end
+
+  --  local B=""
+  --  local C=""
+  --  for i=1, CharacterCount do
+  --    B=B..CharacterTable[i]["UTF"]
+  --    C=C..CharacterTable[i]["Ansi"]
+  --  end
+  return first, CharacterCount, CharacterTable--, B, C
+end
+
 

@@ -58,14 +58,14 @@ function ultraschall.IsValidFXStateChunk(StateChunk)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>IsValidFXStateChunk</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.975
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.IsValidFXStateChunk(string StateChunk)</functioncall>
   <description>
     Returns, if a StateChunk is a valid FXStateChunk.
-    An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
+    An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem or inputFX.
     
     Returns false in case of an error
   </description>
@@ -168,7 +168,7 @@ end
 --  print_alt(A)
 --end
 
-function ultraschall.GetParmLearn_FXStateChunk(FXStateChunk, fxid, id)
+function ultraschall.GetParmLearn_FXStateChunk(FXStateChunk, fxid, parmlearn_id)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetParmLearn_FXStateChunk</slug>
@@ -177,18 +177,22 @@ function ultraschall.GetParmLearn_FXStateChunk(FXStateChunk, fxid, id)
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>integer parm_idx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description>
+  <functioncall>integer parm_idx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLearn_FXStateChunk(string FXStateChunk, integer fxid, integer parmlearn_id)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns a parameter-learn-setting from an FXStateChunk
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
     
     It is the PARMLEARN-entry
     
+    See [GetParmLearnID\_by\_FXParam\_FXStateChunk](#GetParmLearnID_by_FXParam_FXStateChunk) to get the parmlearn_id by fx-parameter-index instead of parm_id.
+    
     Returns nil in case of an error
   </description>
   <retvals>
     integer parm_idx - the idx of the parameter; order is exactly like the order in the contextmenu of Parameter List -> Learn
-    string parmname - the name of the parameter, though usually only wet or bypass
+    string parmname - the name of the parameter, though usually only "wet" or "byp" or ""
+                    - to get the actual displayed parametername, you need to 
+                    - use the reaper.TrackFX_GetParamName-function
     integer midi_note - the midinote, that is assigned to this; this is a multibyte value, with the first byte
                       -   being the MIDI-mode, and the second byte the MIDI/CC-note
                       -       0,   OSC is used
@@ -224,7 +228,7 @@ function ultraschall.GetParmLearn_FXStateChunk(FXStateChunk, fxid, id)
   <parameters>
     string FXStateChunk - the FXStateChunk, from which you want to retrieve the ParmLearn-settings
     integer fxid - the fx, of which you want to get the parameter-learn-settings
-    integer id - the id of the ParmLearn-settings you want to have, starting with 1 for the first
+    integer parmlearn_id - the id of the ParmLearn-settings you want to have, starting with 1 for the first
   </parameters>
   <chapter_context>
     FX-Management
@@ -236,7 +240,7 @@ function ultraschall.GetParmLearn_FXStateChunk(FXStateChunk, fxid, id)
 </US_DocBloc>
 ]]
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk", "StateChunk", "Not a valid FXStateChunk", -1) return nil end
-  if math.type(id)~="integer" then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk", "id", "must be an integer", -2) return nil end
+  if math.type(parmlearn_id)~="integer" then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk", "parmlearn_id", "must be an integer", -2) return nil end
   if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk", "fxid", "must be an integer", -3) return nil end
   if string.find(FXStateChunk, "\n  ")==nil then
     FXStateChunk=ultraschall.StateChunkLayouter(FXStateChunk)
@@ -248,7 +252,7 @@ function ultraschall.GetParmLearn_FXStateChunk(FXStateChunk, fxid, id)
   local idx, midi_note, checkboxes
   for w in string.gmatch(FXStateChunk, "PARMLEARN.-\n") do
     count=count+1    
-    if count==id then 
+    if count==parmlearn_id then 
       w=w:sub(1,-2).." " 
       idx, midi_note, checkboxes, osc_message = w:match(" (.-) (.-) (.-) (.*) ") 
       if tonumber(idx)==nil then 
@@ -426,7 +430,6 @@ end
 --A1,B,C,D,E,F,G=ultraschall.GetParmLearn_MediaTrack(reaper.GetTrack(0,0), 1, 2)
 
 
--- mespotine
 
 function ultraschall.GetParmAlias_FXStateChunk(FXStateChunk, fxid, id)
 --[[
@@ -438,13 +441,15 @@ function ultraschall.GetParmAlias_FXStateChunk(FXStateChunk, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parm_aliasname = ultraschall.GetParmAlias_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns a parameter-alias-setting from an FXStateChunk
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
     
     Parameter-aliases are only stored for MediaTracks.
     
     It is the PARMALIAS-entry
+    
+    See [GetParmAliasID\_by\_FXParam\_FXStateChunk](#GetParmAliasID_by_FXParam_FXStateChunk) to get the parameter id by fx-parameter-index instead.
     
     Returns nil in case of an error
   </description>
@@ -617,11 +622,13 @@ function ultraschall.GetParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>integer parm_idx, string parmname, integer midi_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLFOLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns a parameter-lfo-learn-setting from an FXStateChunk
     An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
     
     It is the LFOLEARN-entry
+    
+    See [GetParmLFOLearnID\_by\_FXParam\_FXStateChunk](#GetParmLFOLearnID_by_FXParam_FXStateChunk) to get the parameter id by fx-parameter-index instead.
     
     Returns nil in case of an error
   </description>
@@ -1055,7 +1062,7 @@ end
 --ultraschall.ScanDXPlugins()
 
 
-function ultraschall.DeleteParmLearn_FXStateChunk(FXStateChunk, fxid, id)
+function ultraschall.DeleteParmLearn_FXStateChunk(FXStateChunk, fxid, parmlearn_id)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>DeleteParmLearn_FXStateChunk</slug>
@@ -1064,11 +1071,13 @@ function ultraschall.DeleteParmLearn_FXStateChunk(FXStateChunk, fxid, id)
     Reaper=5.979
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string alteredFXStateChunk = ultraschall.DeleteParmLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
+  <functioncall>boolean retval, string alteredFXStateChunk = ultraschall.DeleteParmLearn_FXStateChunk(string FXStateChunk, integer fxid, integer parmlearn_id)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Deletes a ParmLearn-entry from an FXStateChunk.
   
     Unlike [DeleteParmLearn2\_FXStateChunk](#DeleteParmLearn2_FXStateChunk), this indexes by the already existing parmlearns and not by parameters.
+    
+    See [GetParmLearnID\_by\_FXParam\_FXStateChunk](#GetParmLearnID_by_FXParam_FXStateChunk) to get the parmlearn_id by fx-parameter-index instead of parm_id.
     
     returns false in case of an error
   </description>
@@ -1079,7 +1088,7 @@ function ultraschall.DeleteParmLearn_FXStateChunk(FXStateChunk, fxid, id)
   <parameters>
     string FXStateChunk - the FXStateChunk, which you want to delete a ParmLearn from
     integer fxid - the id of the fx, which holds the to-delete-ParmLearn-entry; beginning with 1
-    integer id - the id of the ParmLearn-entry to delete; beginning with 1
+    integer parmlearn_id - the id of the ParmLearn-entry to delete; beginning with 1
   </parameters>
   <chapter_context>
     FX-Management
@@ -1092,7 +1101,7 @@ function ultraschall.DeleteParmLearn_FXStateChunk(FXStateChunk, fxid, id)
 ]]
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("DeleteParmLearn_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return false end
   if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("DeleteParmLearn_FXStateChunk", "fxid", "must be an integer", -2) return false end
-  if math.type(id)~="integer" then ultraschall.AddErrorMessage("DeleteParmLearn_FXStateChunk", "id", "must be an integer", -3) return false end
+  if math.type(parmlearn_id)~="integer" then ultraschall.AddErrorMessage("DeleteParmLearn_FXStateChunk", "parmlearn_id", "must be an integer", -3) return false end
     
   local count=0
   local FX, UseFX2, start, stop  
@@ -1101,7 +1110,7 @@ function ultraschall.DeleteParmLearn_FXStateChunk(FXStateChunk, fxid, id)
   if UseFX~=nil then
     for k in string.gmatch(UseFX, "    PARMLEARN.-\n") do
       count=count+1
-      if count==id then UseFX2=string.gsub(UseFX, k, "") break end
+      if count==parmlearn_id then UseFX2=string.gsub(UseFX, k, "") break end
     end
   end
 
@@ -1124,10 +1133,12 @@ function ultraschall.DeleteParmAlias_FXStateChunk(FXStateChunk, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string alteredFXStateChunk = ultraschall.DeleteParmAlias_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Deletes a ParmAlias-entry from an FXStateChunk.
     
     It's the PARMALIAS-entry
+    
+    See [GetParmAliasID\_by\_FXParam\_FXStateChunk](#GetParmAliasID_by_FXParam_FXStateChunk) to get the parameter id by fx-parameter-index instead.
     
     returns false in case of an error
   </description>
@@ -1191,10 +1202,12 @@ function ultraschall.DeleteParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string alteredFXStateChunk = ultraschall.DeleteParmLFOLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Deletes a ParmLFO-Learn-entry from an FXStateChunk.
     
     It's the LFOLEARN-entry
+    
+    See [GetParmLFOLearnID\_by\_FXParam\_FXStateChunk](#GetParmLFOLearnID_by_FXParam_FXStateChunk) to get the parameter id by fx-parameter-index instead.
     
     returns false in case of an error
   </description>
@@ -1247,7 +1260,7 @@ function ultraschall.DeleteParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id)
   end
 end
 
---ultraschall.DeleteParmAlias_FXStateChunk(FXStateChunk, 1, 1)
+
 
 function ultraschall.SetParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note, checkboxflags, osc_message)
 --[[
@@ -1259,10 +1272,12 @@ function ultraschall.SetParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id, midi_n
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmLFOLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id, integer midi_note, integer checkboxflags, optional string osc_message)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets an already existing ParmLFO-Learn-entry of an FX-plugin from an FXStateChunk.
     
     It's the LFOLEARN-entry
+    
+    See [GetParmLFOLearnID\_by\_FXParam\_FXStateChunk](#GetParmLFOLearnID_by_FXParam_FXStateChunk) to get the parameter id by fx-parameter-index instead.
     
     returns false in case of an error
   </description>
@@ -1357,7 +1372,7 @@ function ultraschall.SetParmLFOLearn_FXStateChunk(FXStateChunk, fxid, id, midi_n
   --]]
 end
 
-function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note, checkboxflags, osc_message)
+function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, parmlearn_id, midi_note, checkboxflags, osc_message)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetParmLearn_FXStateChunk</slug>
@@ -1366,11 +1381,13 @@ function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note
     Reaper=5.979
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmLearn_FXStateChunk(string FXStateChunk, integer fxid, integer id, integer midi_note, integer checkboxflags, optional string osc_message)</functioncall>
-  <description>
+  <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmLearn_FXStateChunk(string FXStateChunk, integer fxid, integer parmlearn_id, integer midi_note, integer checkboxflags, optional string osc_message)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets an already existing Parm-Learn-entry of an FX-plugin from an FXStateChunk.
     
     It's the PARMLEARN-entry
+    
+    See [GetParmLearnID\_by\_FXParam\_FXStateChunk](#GetParmLearnID_by_FXParam_FXStateChunk) to get the parmlearn_id by fx-parameter-index instead of parm_id.
     
     returns false in case of an error
   </description>
@@ -1381,7 +1398,7 @@ function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note
   <parameters>
     string FXStateChunk - the FXStateChunk, in which you want to set a Parm-Learn-entry
     integer fxid - the id of the fx, which holds the to-set-Parm-Learn-entry; beginning with 1
-    integer id - the id of the Parm-Learn-entry to set; beginning with 1
+    integer parmlearn_id - the id of the Parm-Learn-entry to set; beginning with 1
     integer midi_note - the midinote, that is assigned to this; this is a multibyte value, with the first byte
                       -   being the MIDI-mode, and the second byte the MIDI/CC-note
                       -       0,   OSC is used
@@ -1425,13 +1442,14 @@ function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note
 ]]
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return false end
   if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "fxid", "must be an integer", -2) return false end
-  if math.type(id)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "id", "must be an integer", -3) return false end    
+  if math.type(parmlearn_id)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "parmlearn_id", "must be an integer", -3) return false end    
 
   if osc_message~=nil and type(osc_message)~="string" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "osc_message", "must be either nil or a string", -4) return false end
   if math.type(midi_note)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "midi_note", "must be an integer", -5) return false end
   if math.type(checkboxflags)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "checkboxflags", "must be an integer", -6) return false end
   
   if osc_message~=nil and midi_note~=0 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "midi_note", "must be set to 0, when using parameter osc_message", -7) return false end
+  if osc_message==nil and input_mode==0 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "osc_message", "osc-message missing, when setting midi_note=0", -9) return false end
   if osc_message==nil then osc_message="" end
   
   if checkboxflags&8==8 then checkboxflags=checkboxflags-8 end
@@ -1447,7 +1465,7 @@ function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note
   if UseFX~=nil then
     for k in string.gmatch(UseFX, "    PARMLEARN.-\n") do
       count=count+1
-      if count==id then 
+      if count==parmlearn_id then 
         start,stop=string.find(UseFX, k, 0, true)
         UseFX2=UseFX:sub(1,start-2).."\n"..k:match("    PARMLEARN%s.-%s")..midi_note.." "..checkboxflags.." "..osc_message..""..UseFX:sub(stop,-1)
         break 
@@ -1460,6 +1478,7 @@ function ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, id, midi_note
     start,stop=string.find(FXStateChunk, UseFX, 0, true)  
     return true, FXStateChunk:sub(1, start)..UseFX2:sub(2,-2)..FXStateChunk:sub(stop, -1)
   else
+    ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "parmlearn_id", "no such parmlearn existing", -8)
     return false
   end
 end
@@ -1507,7 +1526,7 @@ function ultraschall.SetParmAlias_FXStateChunk(FXStateChunk, fxid, id, parmalias
   if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("SetParmAlias_FXStateChunk", "fxid", "must be an integer", -2) return false end
   if math.type(id)~="integer" then ultraschall.AddErrorMessage("SetParmAlias_FXStateChunk", "id", "must be an integer", -3) return false end    
 
-  if type(parmalias)~="string" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk", "parmalias", "must be a string", -4) return false end
+  if type(parmalias)~="string" then ultraschall.AddErrorMessage("SetParmAlias_FXStateChunk", "parmalias", "must be a string", -4) return false end
   
   if parmalias:match("%s")~=nil then parmalias="\""..parmalias.."\"" end
   
@@ -1538,7 +1557,7 @@ function ultraschall.SetParmAlias_FXStateChunk(FXStateChunk, fxid, id, parmalias
   end
 end
 
-function ultraschall.SetParmAlias2_FXStateChunk(FXStateChunk, fxid, parmidx, parmalias)
+function ultraschall.SetParmAlias2_FXStateChunk(FXStateChunk, fxid, id, parmalias)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetParmAlias2_FXStateChunk</slug>
@@ -1547,15 +1566,13 @@ function ultraschall.SetParmAlias2_FXStateChunk(FXStateChunk, fxid, parmidx, par
     Reaper=5.979
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmAlias2_FXStateChunk(string FXStateChunk, integer fxid, integer parmidx, string parmalias)</functioncall>
+  <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmAlias2_FXStateChunk(string FXStateChunk, integer fxid, integer id, string parmalias)</functioncall>
   <description>
     Sets an already existing Parm-Learn-entry of an FX-plugin from an FXStateChunk.
     
-    Unlike SetParmAlias_FXStateChunk, the parameter parmidx counts by parameter-order, not existing aliasnames. If a parameter has no aliasname yet, it will return false.
+    Unlike SetParmAlias_FXStateChunk, the parameter id counts by parameter-order, not existing aliasnames. If a parameter has no aliasname yet, it will return false.
     
     It's the PARMALIAS-entry
-    
-    
     
     returns false in case of an error
   </description>
@@ -1566,7 +1583,7 @@ function ultraschall.SetParmAlias2_FXStateChunk(FXStateChunk, fxid, parmidx, par
   <parameters>
     string FXStateChunk - the FXStateChunk, in which you want to set a Parm-Alias-entry
     integer fxid - the id of the fx, which holds the to-set-Parm-Alias-entry; beginning with 1
-    integer parmidx - the index of the parameter, whose Parm-Alias-entry you want to to set; beginning with 1
+    integer id - the index of the parameter, whose Parm-Alias-entry you want to to set; beginning with 1
     string parmalias - the new aliasname of the parameter
   </parameters>
   <chapter_context>
@@ -1580,7 +1597,7 @@ function ultraschall.SetParmAlias2_FXStateChunk(FXStateChunk, fxid, parmidx, par
 ]]
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetParmAlias2_FXStateChunk", "FXStateChunk", "no valid FXStateChunk", -1) return false end
   if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("SetParmAlias2_FXStateChunk", "fxid", "must be an integer", -2) return false end
-  if math.type(parmidx)~="integer" then ultraschall.AddErrorMessage("SetParmAlias2_FXStateChunk", "parmidx", "must be an integer", -3) return false end    
+  if math.type(id)~="integer" then ultraschall.AddErrorMessage("SetParmAlias2_FXStateChunk", "id", "must be an integer", -3) return false end    
 
   if type(parmalias)~="string" then ultraschall.AddErrorMessage("SetParmLearn2_FXStateChunk", "parmalias", "must be a string", -4) return false end
   
@@ -1595,7 +1612,7 @@ function ultraschall.SetParmAlias2_FXStateChunk(FXStateChunk, fxid, parmidx, par
   
   count=0
   if UseFX~=nil then
-    UseFX2=string.gsub(UseFX, "\n%s-PARMALIAS "..(parmidx-1).." .-\n", "\n    PARMALIAS "..(parmidx-1).." "..parmalias.."\n")
+    UseFX2=string.gsub(UseFX, "\n%s-PARMALIAS "..(id-1).." .-\n", "\n    PARMALIAS "..(id-1).." "..parmalias.."\n")
     if UseFX2==UseFX then UseFX2=nil end
   end  
   
@@ -1892,7 +1909,7 @@ function ultraschall.AddParmLearn_FXStateChunk(FXStateChunk, fxid, parmidx, parm
   <parameters>
     string FXStateChunk - the FXStateChunk, in which you want to set a Parm-Learn-entry
     integer fxid - the id of the fx, which holds the to-set-Parm-Learn-entry; beginning with 1
-    integer parmidx - the parameter, whose alias you want to add
+    integer parmidx - the parameter, whose Parameter Learn you want to add
     string parmname - the name of the parameter, usually \"\" or \"byp\" for bypass or \"wet\" for wet; when using wet or bypass, these are essential to give, otherwise just pass ""
     integer midi_note -   an integer representation of the MIDI-note, which is set as command; 0, in case of an OSC-message
                       -    examples:
@@ -3021,120 +3038,124 @@ function ultraschall.GetParmModTable_FXStateChunk(FXStateChunk, fxindex, parmodi
     Lua=5.3
   </requires>
   <functioncall>table ParmModulationTable = ultraschall.GetParmModTable_FXStateChunk(string FXStateChunk, integer fxindex, integer parmodindex)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default"> 
     Returns a table with all values of a specific Parameter-Modulation from an FXStateChunk.
   
-    The table's format is as follows:
-    <pre><code>
-                ParmModTable["PARAM_NR"]               - the parameter that you want to modulate; 1 for the first, 2 for the second, etc
-                ParmModTable["PARAM_TYPE"]             - the type of the parameter, usually "", "wet" or "bypass"
+    The table's format is as follows: 
+    
+        ParmModTable["PARAM_NR"]                - the parameter that you want to modulate; 1 for the first, 2 for the second, etc
+        ParmModTable["PARAM_TYPE"]              - the type of the parameter, usually "", "wet" or "bypass"
 
-                ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"] 
-                                                        - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
-                                                          true, checked; false, unchecked
-                ParmModTable["PARAMOD_BASELINE"]       - Enable parameter modulation, baseline value(envelope overrides)-slider; 
-                                                            0.000 to 1.000
+        ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"] 
+                                                - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
+                                                  true, checked; false, unchecked
+        ParmModTable["PARAMOD_BASELINE"]        - Enable parameter modulation, baseline value(envelope overrides)-slider; 
+                                                    0.000 to 1.000
 
-                ParmModTable["AUDIOCONTROL"]           - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
-                                                            Note: if true, this needs all AUDIOCONTROL_-entries to be set
-                ParmModTable["AUDIOCONTROL_CHAN"]      - the Track audio channel-dropdownlist; When stereo, the first stereo-channel; 
-                                                          nil, if not available
-                ParmModTable["AUDIOCONTROL_STEREO"]    - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
-                                                            AUDIOCONTROL_CHAN+1; nil, if not available
-                ParmModTable["AUDIOCONTROL_ATTACK"]    - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
-                ParmModTable["AUDIOCONTROL_RELEASE"]   - the Release-slider; 0-1000ms; nil, if not available
-                ParmModTable["AUDIOCONTROL_MINVOLUME"] - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
-                                                          nil, if not available
-                ParmModTable["AUDIOCONTROL_MAXVOLUME"] - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
-                                                          nil, if not available
-                ParmModTable["AUDIOCONTROL_STRENGTH"]  - the Strength-slider; 0(0%) to 1000(100%)
-                ParmModTable["AUDIOCONTROL_DIRECTION"] - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
-                ParmModTable["X2"]=0.5                 - the audiocontrol signal shaping-x-coordinate
-                ParmModTable["Y2"]=0.5                 - the audiocontrol signal shaping-y-coordinate    
-                
-                ParmModTable["LFO"]                    - if the LFO-checkbox checked; true, checked; false, unchecked
-                                                            Note: if true, this needs all LFO_-entries to be set
-                ParmModTable["LFO_SHAPE"]              - the LFO Shape-dropdownlist; 
-                                                            0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
-                                                            nil, if not available
-                ParmModTable["LFO_SHAPEOLD"]           - use the old-style of the LFO_SHAPE; 
-                                                            0, use current style of LFO_SHAPE; 
-                                                            1, use old style of LFO_SHAPE; 
-                                                            nil, if not available
-                ParmModTable["LFO_TEMPOSYNC"]          - the Tempo sync-checkbox; true, checked; false, unchecked
-                ParmModTable["LFO_SPEED"]              - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
-                ParmModTable["LFO_STRENGTH"]           - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
-                ParmModTable["LFO_PHASE"]              - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
-                ParmModTable["LFO_DIRECTION"]          - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
-                ParmModTable["LFO_PHASERESET"]         - the LFO Phase reset-dropdownlist; 
-                                                            0, On seek/loop(deterministic output)
-                                                            1, Free-running(non-deterministic output)
-                                                            nil, if not available
+        ParmModTable["AUDIOCONTROL"]            - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
+                                                    Note: if true, this needs all AUDIOCONTROL_-entries to be set
+        ParmModTable["AUDIOCONTROL_CHAN"]       - the Track audio channel-dropdownlist; When stereo, the first stereo-channel;
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_STEREO"]     - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
+                                                    AUDIOCONTROL_CHAN+1; nil, if not available
+        ParmModTable["AUDIOCONTROL_ATTACK"]     - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
+        ParmModTable["AUDIOCONTROL_RELEASE"]    - the Release-slider; 0-1000ms; nil, if not available
+        ParmModTable["AUDIOCONTROL_MINVOLUME"]  - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_MAXVOLUME"]  - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_STRENGTH"]   - the Strength-slider; 0(0%) to 1000(100%)
+        ParmModTable["AUDIOCONTROL_DIRECTION"]  - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
+        ParmModTable["X2"]=0.5                  - the audiocontrol signal shaping-x-coordinate
+        ParmModTable["Y2"]=0.5                  - the audiocontrol signal shaping-y-coordinate    
+        
+        ParmModTable["LFO"]                     - if the LFO-checkbox checked; true, checked; false, unchecked
+                                                    Note: if true, this needs all LFO_-entries to be set
+        ParmModTable["LFO_SHAPE"]               - the LFO Shape-dropdownlist; 
+                                                    0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
+                                                    nil, if not available
+        ParmModTable["LFO_SHAPEOLD"]            - use the old-style of the LFO_SHAPE; 
+                                                    0, use current style of LFO_SHAPE; 
+                                                    1, use old style of LFO_SHAPE; 
+                                                    nil, if not available
+        ParmModTable["LFO_TEMPOSYNC"]           - the Tempo sync-checkbox; true, checked; false, unchecked
+        ParmModTable["LFO_SPEED"]               - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
+        ParmModTable["LFO_STRENGTH"]            - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
+        ParmModTable["LFO_PHASE"]               - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
+        ParmModTable["LFO_DIRECTION"]           - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
+        ParmModTable["LFO_PHASERESET"]          - the LFO Phase reset-dropdownlist; 
+                                                    0, On seek/loop(deterministic output)
+                                                    1, Free-running(non-deterministic output)
+                                                    nil, if not available
+        
+        ParmModTable["MIDIPLINK"]               - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                    Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+        ParmModTable["PARMLINK"]                - the Link from MIDI or FX parameter-checkbox
+                                                  true, checked; false, unchecked
+        ParmModTable["PARMLINK_LINKEDPLUGIN"]   - the selected plugin; nil, if not available
+                                                - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
+                                                    -1, nothing selected yet
+                                                    -100, MIDI-parameter-settings
+                                                    1 - the first fx-plugin
+                                                    2 - the second fx-plugin
+                                                    3 - the third fx-plugin, etc
+        ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
+                                                       - 0, use parameter of the current fx-plugin
+                                                       - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                       - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                       - nil, use only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
+        ParmModTable["PARMLINK_LINKEDPARMIDX"]  - the id of the linked parameter; -1, if none is linked yet; nil, if not available
+                                                    When MIDI, this is irrelevant.
+                                                    When FX-parameter:
+                                                      0 to n; 0 for the first; 1, for the second, etc
 
-                ParmModTable["PARMLINK"]               - the Link from MIDI or FX parameter-checkbox
-                                                          true, checked; false, unchecked
-                ParmModTable["PARMLINK_LINKEDPLUGIN"]  - the selected plugin; nil, if not available
-                                                            -1, nothing selected yet
-                                                            -100, MIDI-parameter-settings
-                                                            1 - the first fx-plugin
-                                                            2 - the second fx-plugin
-                                                            3 - the third fx-plugin, etc
-                ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available; 
-                                                       - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
-                                                            When MIDI, this is irrelevant.
-                                                            When FX-parameter:
-                                                              0 to n; 0 for the first; 1, for the second, etc
-                ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
-                                                               - 0, use parameter of the current fx-plugin
-                                                               - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
-                                                               - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
-                                                               - nil, uses only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
-                ParmModTable["PARMLINK_OFFSET"]        - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
-                ParmModTable["PARMLINK_SCALE"]         - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+        ParmModTable["PARMLINK_OFFSET"]         - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+        ParmModTable["PARMLINK_SCALE"]          - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
 
-                ParmModTable["MIDIPLINK"]              - true, if any parameter-linking with MIDI-stuff; false, if not
-                                                            Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
-                ParmModTable["MIDIPLINK_BUS"]          - the MIDI-bus selected in the button-menu; 
-                                                            0 to 15 for bus 1 to 16; 
-                                                            nil, if not available
-                ParmModTable["MIDIPLINK_CHANNEL"]      - the MIDI-channel selected in the button-menu; 
-                                                            0, omni; 1 to 16 for channel 1 to 16; 
-                                                            nil, if not available
-                ParmModTable["MIDIPLINK_MIDICATEGORY"] - the MIDI_Category selected in the button-menu; nil, if not available
-                                                            144, MIDI note
-                                                            160, Aftertouch
-                                                            176, CC 14Bit and CC
-                                                            192, Program Change
-                                                            208, Channel Pressure
-                                                            224, Pitch
-                ParmModTable["MIDIPLINK_MIDINOTE"]     - the MIDI-note selected in the button-menu; nil, if not available
-                                                          When MIDI note:
-                                                               0(C-2) to 127(G8)
-                                                          When Aftertouch:
-                                                               0(C-2) to 127(G8)
-                                                          When CC14 Bit:
-                                                               128 to 159; see dropdownlist for the commands(the order of the list 
-                                                               is the same as this numbering)
-                                                          When CC:
-                                                               0 to 119; see dropdownlist for the commands(the order of the list 
-                                                               is the same as this numbering)
-                                                          When Program Change:
-                                                               0
-                                                          When Channel Pressure:
-                                                               0
-                                                          When Pitch:
-                                                               0
-                ParmModTable["WINDOW_ALTERED"]         - false, if the windowposition hasn't been altered yet; true, if the window has been altered
-                                                            Note: if true, this needs all WINDOW_-entries to be set
-                ParmModTable["WINDOW_ALTEREDOPEN"]     - if the position of the ParmMod-window is altered and currently open; 
-                                                            nil, unchanged; 0, unopened; 1, open
-                ParmModTable["WINDOW_XPOS"]            - the x-position of the altered ParmMod-window in pixels; nil, default position
-                ParmModTable["WINDOW_YPOS"]            - the y-position of the altered ParmMod-window in pixels; nil, default position
-                ParmModTable["WINDOW_RIGHT"]           - the right-position of the altered ParmMod-window in pixels; 
-                                                            nil, default position; only readable
-                ParmModTable["WINDOW_BOTTOM"]          - the bottom-position of the altered ParmMod-window in pixels; 
-                                                            nil, default position; only readable
-    </code></pre>
+        ParmModTable["MIDIPLINK"]               - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                    Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+        ParmModTable["MIDIPLINK_BUS"]           - the MIDI-bus selected in the button-menu; 
+                                                    0 to 15 for bus 1 to 16; 
+                                                    nil, if not available
+        ParmModTable["MIDIPLINK_CHANNEL"]       - the MIDI-channel selected in the button-menu; 
+                                                    0, omni; 1 to 16 for channel 1 to 16; 
+                                                    nil, if not available
+        ParmModTable["MIDIPLINK_MIDICATEGORY"]  - the MIDI_Category selected in the button-menu; nil, if not available
+                                                    144, MIDI note
+                                                    160, Aftertouch
+                                                    176, CC 14Bit and CC
+                                                    192, Program Change
+                                                    208, Channel Pressure
+                                                    224, Pitch
+        ParmModTable["MIDIPLINK_MIDINOTE"]      - the MIDI-note selected in the button-menu; nil, if not available
+                                                  When MIDI note:
+                                                       0(C-2) to 127(G8)
+                                                  When Aftertouch:
+                                                       0(C-2) to 127(G8)
+                                                  When CC14 Bit:
+                                                       128 to 159; see dropdownlist for the commands(the order of the list 
+                                                       is the same as this numbering)
+                                                  When CC:
+                                                       0 to 119; see dropdownlist for the commands(the order of the list 
+                                                       is the same as this numbering)
+                                                  When Program Change:
+                                                       0
+                                                  When Channel Pressure:
+                                                       0
+                                                  When Pitch:
+                                                       0
+        ParmModTable["WINDOW_ALTERED"]          - false, if the windowposition hasn't been altered yet; true, if the window has been altered
+                                                    Note: if true, this needs all WINDOW_-entries to be set
+        ParmModTable["WINDOW_ALTEREDOPEN"]      - if the position of the ParmMod-window is altered and currently open; 
+                                                    nil, unchanged; 0, unopened; 1, open
+        ParmModTable["WINDOW_XPOS"]             - the x-position of the altered ParmMod-window in pixels; nil, default position
+        ParmModTable["WINDOW_YPOS"]             - the y-position of the altered ParmMod-window in pixels; nil, default position
+        ParmModTable["WINDOW_RIGHT"]            - the right-position of the altered ParmMod-window in pixels; 
+                                                    nil, default position; only readable
+        ParmModTable["WINDOW_BOTTOM"]           - the bottom-position of the altered ParmMod-window in pixels; 
+                                                    nil, default position; only readable
+    
+    
     returns nil in case of an error
   </description>
   <parameters>
@@ -3318,7 +3339,7 @@ function ultraschall.CreateDefaultParmModTable()
       Lua=5.3
     </requires>
     <functioncall>table ParmModTable = ultraschall.CreateDefaultParmModTable()</functioncall>
-    <description>
+    <description markup_type="markdown" markup_version="1.0.1" indent="default"> 
       returns a parameter-modulation-table with default settings set.
       You can alter these settings to your needs before committing it to an FXStateChunk.
       
@@ -3331,119 +3352,118 @@ function ultraschall.CreateDefaultParmModTable()
               ParmModTable["PARAM_NR"] - the index of the fx-parameter for which the parameter-modulation-table is intended
        
       The table's format and its default-values is as follows:
-          <pre><code>
-                      ParmModTable["PARAM_NR"]=1              - the parameter that you want to modulate; 1 for the first, 2 for the second, etc
-                      ParmModTable["PARAM_TYPE"]=""           - the type of the parameter, usually "", "wet" or "bypass"
       
-                      ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"]=true
-                                                              - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
-                                                                true, checked; false, unchecked
-                      ParmModTable["PARAMOD_BASELINE"]=0     - Enable parameter modulation, baseline value(envelope overrides)-slider; 
-                                                                  0.000 to 1.000
-      
-                      ParmModTable["AUDIOCONTROL"]=false           - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
-                                                                        Note: if true, this needs all AUDIOCONTROL_-entries to be set                      
-                      ParmModTable["AUDIOCONTROL_CHAN"]=1          - the Track audio channel-dropdownlist; When stereo, the first stereo-channel; 
-                                                                      nil, if not available
-                      ParmModTable["AUDIOCONTROL_STEREO"]=0        - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
-                                                                        AUDIOCONTROL_CHAN+1; nil, if not available
-                      ParmModTable["AUDIOCONTROL_ATTACK"]=300      - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
-                      ParmModTable["AUDIOCONTROL_RELEASE"]=300     - the Release-slider; 0-1000ms; nil, if not available
-                      ParmModTable["AUDIOCONTROL_MINVOLUME"]=-24   - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
-                                                                        nil, if not available
-                      ParmModTable["AUDIOCONTROL_MAXVOLUME"]=0     - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
-                                                                        nil, if not available
-                      ParmModTable["AUDIOCONTROL_STRENGTH"]=1      - the Strength-slider; 0(0%) to 1000(100%)
-                      ParmModTable["AUDIOCONTROL_DIRECTION"]=1     - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
-                      ParmModTable["X2"]=0.5                        - the audiocontrol signal shaping-x-coordinate
-                      ParmModTable["Y2"]=0.5                        - the audiocontrol signal shaping-y-coordinate
-      
-                      ParmModTable["LFO"]=false                    - if the LFO-checkbox checked; true, checked; false, unchecked
-                                                                       Note: if true, this needs all LFO_-entries to be set
-                      ParmModTable["LFO_SHAPE"]=0                  - the LFO Shape-dropdownlist; 
-                                                                       0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
-                                                                       nil, if not available
-                      ParmModTable["LFO_SHAPEOLD"]=0              - use the old-style of the LFO_SHAPE; 
-                                                                      0, use current style of LFO_SHAPE; 
-                                                                      1, use old style of LFO_SHAPE; 
-                                                                      nil, if not available
-                      ParmModTable["LFO_TEMPOSYNC"]=false         - the Tempo sync-checkbox; true, checked; false, unchecked
-                      ParmModTable["LFO_SPEED"]=0.124573          - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
-                      ParmModTable["LFO_STRENGTH"]=1              - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
-                      ParmModTable["LFO_PHASE"]=0                 - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
-                      ParmModTable["LFO_DIRECTION"]=1             - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
-                      ParmModTable["LFO_PHASERESET"]=0            - the LFO Phase reset-dropdownlist; 
-                                                                      0, On seek/loop(deterministic output)
-                                                                      1, Free-running(non-deterministic output)
-                                                                      nil, if not available
-      
-                      ParmModTable["PARMLINK"]=false              - the Link from MIDI or FX parameter-checkbox
-                                                                      true, checked; false, unchecked
-                      ParmModTable["PARMLINK_LINKEDPLUGIN"]=-1    - the selected plugin; nil, if not available
-                                                                  - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
-                                                                      -1, nothing selected yet
-                                                                      -100, MIDI-parameter-settings
-                                                                      1 - the first fx-plugin
-                                                                      2 - the second fx-plugin
-                                                                      3 - the third fx-plugin, etc
-                      ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"]=nil - the linked plugin relative to the current one in the FXChain
-                                                                         - 0, use parameter of the current fx-plugin
-                                                                         - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
-                                                                         - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
-                                                                         - nil, uses only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)                                                                      
-                      
-                      ParmModTable["PARMLINK_LINKEDPARMIDX"]=-1   - the id of the linked parameter; -1, if none is linked yet; nil, if not available
-                                                                      When MIDI, this is irrelevant.
-                                                                      When FX-parameter:
-                                                                        0 to n; 0 for the first; 1, for the second, etc                      
-                      ParmModTable["PARMLINK_OFFSET"]=0           - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
-                      ParmModTable["PARMLINK_SCALE"]=1            - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
-      
-      
-                      ParmModTable["MIDIPLINK"]=false             - true, if any parameter-linking with MIDI-stuff; false, if not
-                                                                     Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
-                      ParmModTable["MIDIPLINK_BUS"]=nil           - the MIDI-bus selected in the button-menu; 
-                                                                      0 to 15 for bus 1 to 16; 
-                                                                      nil, if not available
-                      ParmModTable["MIDIPLINK_CHANNEL"]=nil       - the MIDI-channel selected in the button-menu; 
-                                                                      0, omni; 1 to 16 for channel 1 to 16; 
-                                                                      nil, if not available
-                                                                     
-                      ParmModTable["MIDIPLINK_MIDICATEGORY"]=nil  - the MIDI_Category selected in the button-menu; nil, if not available
-                                                                      144, MIDI note
-                                                                      160, Aftertouch
-                                                                      176, CC 14Bit and CC
-                                                                      192, Program Change
-                                                                      208, Channel Pressure
-                                                                      224, Pitch
-                      ParmModTable["MIDIPLINK_MIDINOTE"]=nil      - the MIDI-note selected in the button-menu; nil, if not available
-                                                                      When MIDI note:
-                                                                         0(C-2) to 127(G8)
-                                                                      When Aftertouch:
-                                                                         0(C-2) to 127(G8)
-                                                                      When CC14 Bit:
-                                                                         128 to 159; see dropdownlist for the commands(the order of the list 
-                                                                         is the same as this numbering)
-                                                                      When CC:
-                                                                         0 to 119; see dropdownlist for the commands(the order of the list 
-                                                                         is the same as this numbering)
-                                                                      When Program Change:
-                                                                         0
-                                                                      When Channel Pressure:
-                                                                         0
-                                                                      When Pitch:
-                                                                         0
-                      ParmModTable["WINDOW_ALTERED"]=false         - false, if the windowposition hasn't been altered yet; true, if the window has been altered
-                                                                        Note: if true, this needs all WINDOW_-entries to be set
-                      ParmModTable["WINDOW_ALTEREDOPEN"]=true      - if the position of the ParmMod-window is altered and currently open; 
-                                                                       nil, unchanged; 0, unopened; 1, open
-                      ParmModTable["WINDOW_XPOS"]=0                - the x-position of the altered ParmMod-window in pixels; nil, default position
-                      ParmModTable["WINDOW_YPOS"]=40               - the y-position of the altered ParmMod-window in pixels; nil, default position
-                      ParmModTable["WINDOW_RIGHT"]=594             - the right-position of the altered ParmMod-window in pixels; 
-                                                                       nil, default position; only readable
-                      ParmModTable["WINDOW_BOTTOM"]=729            - the bottom-position of the altered ParmMod-window in pixels; 
-                                                                       nil, default position; only readable
-          </code></pre>
+        ParmModTable["PARAM_NR"]                - the parameter that you want to modulate; 1 for the first, 2 for the second, etc
+        ParmModTable["PARAM_TYPE"]              - the type of the parameter, usually "", "wet" or "bypass"
+
+        ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"] 
+                                                - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
+                                                  true, checked; false, unchecked
+        ParmModTable["PARAMOD_BASELINE"]        - Enable parameter modulation, baseline value(envelope overrides)-slider; 
+                                                    0.000 to 1.000
+
+        ParmModTable["AUDIOCONTROL"]            - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
+                                                    Note: if true, this needs all AUDIOCONTROL_-entries to be set
+        ParmModTable["AUDIOCONTROL_CHAN"]       - the Track audio channel-dropdownlist; When stereo, the first stereo-channel;
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_STEREO"]     - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
+                                                    AUDIOCONTROL_CHAN+1; nil, if not available
+        ParmModTable["AUDIOCONTROL_ATTACK"]     - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
+        ParmModTable["AUDIOCONTROL_RELEASE"]    - the Release-slider; 0-1000ms; nil, if not available
+        ParmModTable["AUDIOCONTROL_MINVOLUME"]  - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_MAXVOLUME"]  - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_STRENGTH"]   - the Strength-slider; 0(0%) to 1000(100%)
+        ParmModTable["AUDIOCONTROL_DIRECTION"]  - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
+        ParmModTable["X2"]=0.5                  - the audiocontrol signal shaping-x-coordinate
+        ParmModTable["Y2"]=0.5                  - the audiocontrol signal shaping-y-coordinate    
+        
+        ParmModTable["LFO"]                     - if the LFO-checkbox checked; true, checked; false, unchecked
+                                                    Note: if true, this needs all LFO_-entries to be set
+        ParmModTable["LFO_SHAPE"]               - the LFO Shape-dropdownlist; 
+                                                    0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
+                                                    nil, if not available
+        ParmModTable["LFO_SHAPEOLD"]            - use the old-style of the LFO_SHAPE; 
+                                                    0, use current style of LFO_SHAPE; 
+                                                    1, use old style of LFO_SHAPE; 
+                                                    nil, if not available
+        ParmModTable["LFO_TEMPOSYNC"]           - the Tempo sync-checkbox; true, checked; false, unchecked
+        ParmModTable["LFO_SPEED"]               - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
+        ParmModTable["LFO_STRENGTH"]            - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
+        ParmModTable["LFO_PHASE"]               - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
+        ParmModTable["LFO_DIRECTION"]           - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
+        ParmModTable["LFO_PHASERESET"]          - the LFO Phase reset-dropdownlist; 
+                                                    0, On seek/loop(deterministic output)
+                                                    1, Free-running(non-deterministic output)
+                                                    nil, if not available
+        
+        ParmModTable["MIDIPLINK"]               - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                    Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+        ParmModTable["PARMLINK"]                - the Link from MIDI or FX parameter-checkbox
+                                                  true, checked; false, unchecked
+        ParmModTable["PARMLINK_LINKEDPLUGIN"]   - the selected plugin; nil, if not available
+                                                - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
+                                                    -1, nothing selected yet
+                                                    -100, MIDI-parameter-settings
+                                                    1 - the first fx-plugin
+                                                    2 - the second fx-plugin
+                                                    3 - the third fx-plugin, etc
+        ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
+                                                       - 0, use parameter of the current fx-plugin
+                                                       - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                       - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                       - nil, use only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
+        ParmModTable["PARMLINK_LINKEDPARMIDX"]  - the id of the linked parameter; -1, if none is linked yet; nil, if not available
+                                                    When MIDI, this is irrelevant.
+                                                    When FX-parameter:
+                                                      0 to n; 0 for the first; 1, for the second, etc
+
+        ParmModTable["PARMLINK_OFFSET"]         - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+        ParmModTable["PARMLINK_SCALE"]          - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+
+        ParmModTable["MIDIPLINK"]               - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                    Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+        ParmModTable["MIDIPLINK_BUS"]           - the MIDI-bus selected in the button-menu; 
+                                                    0 to 15 for bus 1 to 16; 
+                                                    nil, if not available
+        ParmModTable["MIDIPLINK_CHANNEL"]       - the MIDI-channel selected in the button-menu; 
+                                                    0, omni; 1 to 16 for channel 1 to 16; 
+                                                    nil, if not available
+        ParmModTable["MIDIPLINK_MIDICATEGORY"]  - the MIDI_Category selected in the button-menu; nil, if not available
+                                                    144, MIDI note
+                                                    160, Aftertouch
+                                                    176, CC 14Bit and CC
+                                                    192, Program Change
+                                                    208, Channel Pressure
+                                                    224, Pitch
+        ParmModTable["MIDIPLINK_MIDINOTE"]      - the MIDI-note selected in the button-menu; nil, if not available
+                                                  When MIDI note:
+                                                       0(C-2) to 127(G8)
+                                                  When Aftertouch:
+                                                       0(C-2) to 127(G8)
+                                                  When CC14 Bit:
+                                                       128 to 159; see dropdownlist for the commands(the order of the list 
+                                                       is the same as this numbering)
+                                                  When CC:
+                                                       0 to 119; see dropdownlist for the commands(the order of the list 
+                                                       is the same as this numbering)
+                                                  When Program Change:
+                                                       0
+                                                  When Channel Pressure:
+                                                       0
+                                                  When Pitch:
+                                                       0
+        ParmModTable["WINDOW_ALTERED"]          - false, if the windowposition hasn't been altered yet; true, if the window has been altered
+                                                    Note: if true, this needs all WINDOW_-entries to be set
+        ParmModTable["WINDOW_ALTEREDOPEN"]      - if the position of the ParmMod-window is altered and currently open; 
+                                                    nil, unchanged; 0, unopened; 1, open
+        ParmModTable["WINDOW_XPOS"]             - the x-position of the altered ParmMod-window in pixels; nil, default position
+        ParmModTable["WINDOW_YPOS"]             - the y-position of the altered ParmMod-window in pixels; nil, default position
+        ParmModTable["WINDOW_RIGHT"]            - the right-position of the altered ParmMod-window in pixels; 
+                                                    nil, default position; only readable
+        ParmModTable["WINDOW_BOTTOM"]           - the bottom-position of the altered ParmMod-window in pixels; 
+                                                    nil, default position; only readable
     </description>
     <retvals>
       table ParmModTable - a ParmModTable with all settings set to Reaper's defaults 
@@ -3668,123 +3688,122 @@ function ultraschall.AddParmMod_ParmModTable(FXStateChunk, fxindex, ParmModTable
     Lua=5.3
   </requires>
   <functioncall>string FXStateChunk = ultraschall.AddParmMod_ParmModTable(string FXStateChunk, integer fxindex, table ParmModTable)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default"> 
     Takes a ParmModTable and adds with its values a new Parameter Modulation of a specific fx within an FXStateChunk.
   
     The expected table's format is as follows:
-    <pre><code>
-                ParmModTable["PARAM_NR"]               - the parameter that you want to modulate; 1 for the first, 2 for the second, etc
-                ParmModTable["PARAM_TYPE"]             - the type of the parameter, usually "", "wet" or "bypass"
 
-                ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"] 
-                                                        - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
-                                                          true, checked; false, unchecked
-                ParmModTable["PARAMOD_BASELINE"]       - Enable parameter modulation, baseline value(envelope overrides)-slider; 
-                                                            0.000 to 1.000
+        ParmModTable["PARAM_NR"]               - the parameter that you want to modulate; 1 for the first, 2 for the second, etc
+        ParmModTable["PARAM_TYPE"]             - the type of the parameter, usually "", "wet" or "bypass"
 
-                ParmModTable["AUDIOCONTROL"]           - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
-                                                            Note: if true, this needs all AUDIOCONTROL_-entries to be set                
-                ParmModTable["AUDIOCONTROL_CHAN"]      - the Track audio channel-dropdownlist; When stereo, the first stereo-channel; 
-                                                          nil, if not available
-                ParmModTable["AUDIOCONTROL_STEREO"]    - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
-                                                            AUDIOCONTROL_CHAN+1; nil, if not available
-                ParmModTable["AUDIOCONTROL_ATTACK"]    - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
-                ParmModTable["AUDIOCONTROL_RELEASE"]   - the Release-slider; 0-1000ms; nil, if not available
-                ParmModTable["AUDIOCONTROL_MINVOLUME"] - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
-                                                          nil, if not available
-                ParmModTable["AUDIOCONTROL_MAXVOLUME"] - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
-                                                          nil, if not available
-                ParmModTable["AUDIOCONTROL_STRENGTH"]  - the Strength-slider; 0(0%) to 1000(100%)
-                ParmModTable["AUDIOCONTROL_DIRECTION"] - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
-                ParmModTable["X2"]=0.5                 - the audiocontrol signal shaping-x-coordinate
-                ParmModTable["Y2"]=0.5                 - the audiocontrol signal shaping-y-coordinate    
-                
-                ParmModTable["LFO"]                    - if the LFO-checkbox checked; true, checked; false, unchecked
-                                                            Note: if true, this needs all LFO_-entries to be set
-                ParmModTable["LFO_SHAPE"]              - the LFO Shape-dropdownlist; 
-                                                            0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
-                                                            nil, if not available
-                ParmModTable["LFO_SHAPEOLD"]           - use the old-style of the LFO_SHAPE; 
-                                                            0, use current style of LFO_SHAPE; 
-                                                            1, use old style of LFO_SHAPE; 
-                                                            nil, if not available
-                ParmModTable["LFO_TEMPOSYNC"]          - the Tempo sync-checkbox; true, checked; false, unchecked
-                ParmModTable["LFO_SPEED"]              - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
-                ParmModTable["LFO_STRENGTH"]           - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
-                ParmModTable["LFO_PHASE"]              - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
-                ParmModTable["LFO_DIRECTION"]          - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
-                ParmModTable["LFO_PHASERESET"]         - the LFO Phase reset-dropdownlist; 
-                                                            0, On seek/loop(deterministic output)
-                                                            1, Free-running(non-deterministic output)
-                                                            nil, if not available
-                
-                ParmModTable["MIDIPLINK"]              - true, if any parameter-linking with MIDI-stuff; false, if not
-                                                            Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
-                ParmModTable["PARMLINK"]               - the Link from MIDI or FX parameter-checkbox
-                                                          true, checked; false, unchecked
-                ParmModTable["PARMLINK_LINKEDPLUGIN"]  - the selected plugin; nil, if not available
-                                                       - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
-                                                            -1, nothing selected yet
-                                                            -100, MIDI-parameter-settings
-                                                            1 - the first fx-plugin
-                                                            2 - the second fx-plugin
-                                                            3 - the third fx-plugin, etc                                                            
-                ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
-                                                               - 0, use parameter of the current fx-plugin
-                                                               - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
-                                                               - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
-                                                               - nil, use only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
-                ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available
-                                                            When MIDI, this is irrelevant.
-                                                            When FX-parameter:
-                                                              0 to n; 0 for the first; 1, for the second, etc
+        ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"] 
+                                               - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
+                                                  true, checked; false, unchecked
+        ParmModTable["PARAMOD_BASELINE"]       - Enable parameter modulation, baseline value(envelope overrides)-slider; 
+                                                    0.000 to 1.000
 
-                ParmModTable["PARMLINK_OFFSET"]        - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
-                ParmModTable["PARMLINK_SCALE"]         - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+        ParmModTable["AUDIOCONTROL"]           - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
+                                                    Note: if true, this needs all AUDIOCONTROL_-entries to be set
+        ParmModTable["AUDIOCONTROL_CHAN"]      - the Track audio channel-dropdownlist; When stereo, the first stereo-channel;
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_STEREO"]    - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
+                                                    AUDIOCONTROL_CHAN+1; nil, if not available
+        ParmModTable["AUDIOCONTROL_ATTACK"]    - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
+        ParmModTable["AUDIOCONTROL_RELEASE"]   - the Release-slider; 0-1000ms; nil, if not available
+        ParmModTable["AUDIOCONTROL_MINVOLUME"] - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_MAXVOLUME"] - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_STRENGTH"]  - the Strength-slider; 0(0%) to 1000(100%)
+        ParmModTable["AUDIOCONTROL_DIRECTION"] - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
+        ParmModTable["X2"]=0.5                 - the audiocontrol signal shaping-x-coordinate
+        ParmModTable["Y2"]=0.5                 - the audiocontrol signal shaping-y-coordinate    
+        
+        ParmModTable["LFO"]                    - if the LFO-checkbox checked; true, checked; false, unchecked
+                                                    Note: if true, this needs all LFO_-entries to be set
+        ParmModTable["LFO_SHAPE"]              - the LFO Shape-dropdownlist; 
+                                                    0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
+                                                    nil, if not available
+        ParmModTable["LFO_SHAPEOLD"]           - use the old-style of the LFO_SHAPE; 
+                                                    0, use current style of LFO_SHAPE; 
+                                                    1, use old style of LFO_SHAPE; 
+                                                    nil, if not available
+        ParmModTable["LFO_TEMPOSYNC"]          - the Tempo sync-checkbox; true, checked; false, unchecked
+        ParmModTable["LFO_SPEED"]              - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
+        ParmModTable["LFO_STRENGTH"]           - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
+        ParmModTable["LFO_PHASE"]              - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
+        ParmModTable["LFO_DIRECTION"]          - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
+        ParmModTable["LFO_PHASERESET"]         - the LFO Phase reset-dropdownlist; 
+                                                    0, On seek/loop(deterministic output)
+                                                    1, Free-running(non-deterministic output)
+                                                    nil, if not available
+        
+        ParmModTable["MIDIPLINK"]              - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                    Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+        ParmModTable["PARMLINK"]               - the Link from MIDI or FX parameter-checkbox
+                                                  true, checked; false, unchecked
+        ParmModTable["PARMLINK_LINKEDPLUGIN"]  - the selected plugin; nil, if not available
+                                               - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
+                                                    -1, nothing selected yet
+                                                    -100, MIDI-parameter-settings
+                                                    1 - the first fx-plugin
+                                                    2 - the second fx-plugin
+                                                    3 - the third fx-plugin, etc
+        ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
+                                                       - 0, use parameter of the current fx-plugin
+                                                       - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                       - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                       - nil, use only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
+        ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available
+                                                    When MIDI, this is irrelevant.
+                                                    When FX-parameter:
+                                                      0 to n; 0 for the first; 1, for the second, etc
 
-                ParmModTable["MIDIPLINK"]              - true, if any parameter-linking with MIDI-stuff; false, if not
-                                                            Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
-                ParmModTable["MIDIPLINK_BUS"]          - the MIDI-bus selected in the button-menu; 
-                                                            0 to 15 for bus 1 to 16; 
-                                                            nil, if not available
-                ParmModTable["MIDIPLINK_CHANNEL"]      - the MIDI-channel selected in the button-menu; 
-                                                            0, omni; 1 to 16 for channel 1 to 16; 
-                                                            nil, if not available
-                ParmModTable["MIDIPLINK_MIDICATEGORY"] - the MIDI_Category selected in the button-menu; nil, if not available
-                                                            144, MIDI note
-                                                            160, Aftertouch
-                                                            176, CC 14Bit and CC
-                                                            192, Program Change
-                                                            208, Channel Pressure
-                                                            224, Pitch
-                ParmModTable["MIDIPLINK_MIDINOTE"]     - the MIDI-note selected in the button-menu; nil, if not available
-                                                          When MIDI note:
-                                                               0(C-2) to 127(G8)
-                                                          When Aftertouch:
-                                                               0(C-2) to 127(G8)
-                                                          When CC14 Bit:
-                                                               128 to 159; see dropdownlist for the commands(the order of the list 
-                                                               is the same as this numbering)
-                                                          When CC:
-                                                               0 to 119; see dropdownlist for the commands(the order of the list 
-                                                               is the same as this numbering)
-                                                          When Program Change:
-                                                               0
-                                                          When Channel Pressure:
-                                                               0
-                                                          When Pitch:
-                                                               0
-                ParmModTable["WINDOW_ALTERED"]         - false, if the windowposition hasn't been altered yet; true, if the window has been altered
-                                                            Note: if true, this needs all WINDOW_-entries to be set
-                ParmModTable["WINDOW_ALTEREDOPEN"]     - if the position of the ParmMod-window is altered and currently open; 
+        ParmModTable["PARMLINK_OFFSET"]        - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+        ParmModTable["PARMLINK_SCALE"]         - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+
+        ParmModTable["MIDIPLINK"]              - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                    Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+        ParmModTable["MIDIPLINK_BUS"]          - the MIDI-bus selected in the button-menu; 
+                                                    0 to 15 for bus 1 to 16; 
+                                                    nil, if not available
+        ParmModTable["MIDIPLINK_CHANNEL"]      - the MIDI-channel selected in the button-menu; 
+                                                    0, omni; 1 to 16 for channel 1 to 16; 
+                                                    nil, if not available
+        ParmModTable["MIDIPLINK_MIDICATEGORY"] - the MIDI_Category selected in the button-menu; nil, if not available
+                                                    144, MIDI note
+                                                    160, Aftertouch
+                                                    176, CC 14Bit and CC
+                                                    192, Program Change
+                                                    208, Channel Pressure
+                                                    224, Pitch
+        ParmModTable["MIDIPLINK_MIDINOTE"]     - the MIDI-note selected in the button-menu; nil, if not available
+                                                  When MIDI note:
+                                                       0(C-2) to 127(G8)
+                                                  When Aftertouch:
+                                                       0(C-2) to 127(G8)
+                                                  When CC14 Bit:
+                                                       128 to 159; see dropdownlist for the commands(the order of the list 
+                                                       is the same as this numbering)
+                                                  When CC:
+                                                       0 to 119; see dropdownlist for the commands(the order of the list 
+                                                       is the same as this numbering)
+                                                  When Program Change:
+                                                       0
+                                                  When Channel Pressure:
+                                                       0
+                                                  When Pitch:
+                                                       0
+        ParmModTable["WINDOW_ALTERED"]         - false, if the windowposition hasn't been altered yet; true, if the window has been altered
+                                                    Note: if true, this needs all WINDOW_-entries to be set
+        ParmModTable["WINDOW_ALTEREDOPEN"]     - if the position of the ParmMod-window is altered and currently open; 
                                                             nil, unchanged; 0, unopened; 1, open
-                ParmModTable["WINDOW_XPOS"]            - the x-position of the altered ParmMod-window in pixels; nil, default position
-                ParmModTable["WINDOW_YPOS"]            - the y-position of the altered ParmMod-window in pixels; nil, default position
-                ParmModTable["WINDOW_RIGHT"]           - the right-position of the altered ParmMod-window in pixels; 
-                                                            nil, default position; only readable
-                ParmModTable["WINDOW_BOTTOM"]          - the bottom-position of the altered ParmMod-window in pixels; 
-                                                            nil, default position; only readable
-    </code></pre>
+        ParmModTable["WINDOW_XPOS"]            - the x-position of the altered ParmMod-window in pixels; nil, default position
+        ParmModTable["WINDOW_YPOS"]            - the y-position of the altered ParmMod-window in pixels; nil, default position
+        ParmModTable["WINDOW_RIGHT"]           - the right-position of the altered ParmMod-window in pixels; 
+                                                    nil, default position; only readable
+        ParmModTable["WINDOW_BOTTOM"]          - the bottom-position of the altered ParmMod-window in pixels; 
+                                                    nil, default position; only readable
     
     This function does not check, if the values are within valid value-ranges, only if the datatypes are valid.
     
@@ -3915,117 +3934,118 @@ function ultraschall.SetParmMod_ParmModTable(FXStateChunk, fxindex, ParmModTable
     Takes a ParmModTable and sets its values into a Parameter Modulation of a specific fx within an FXStateChunk.
   
     The expected table's format is as follows:
-    <pre><code>
-                ParmModTable["PARAM_NR"]               - the parameter that you want to modulate; 1 for the first, 2 for the second, etc
-                ParmModTable["PARAM_TYPE"]             - the type of the parameter, usually "", "wet" or "bypass"
+    
+        ParmModTable["PARAM_NR"]                - the parameter that you want to modulate; 1 for the first, 2 for the second, etc
+        ParmModTable["PARAM_TYPE"]              - the type of the parameter, usually "", "wet" or "bypass"
 
-                ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"] 
-                                                        - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
-                                                          true, checked; false, unchecked
-                ParmModTable["PARAMOD_BASELINE"]       - Enable parameter modulation, baseline value(envelope overrides)-slider; 
-                                                            0.000 to 1.000
+        ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"] 
+                                                - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
+                                                  true, checked; false, unchecked
+        ParmModTable["PARAMOD_BASELINE"]        - Enable parameter modulation, baseline value(envelope overrides)-slider; 
+                                                    0.000 to 1.000
 
-                ParmModTable["AUDIOCONTROL"]           - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
-                                                            Note: if true, this needs all AUDIOCONTROL_-entries to be set
-                ParmModTable["AUDIOCONTROL_CHAN"]      - the Track audio channel-dropdownlist; When stereo, the first stereo-channel; 
-                                                          nil, if not available
-                ParmModTable["AUDIOCONTROL_STEREO"]    - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
-                                                            AUDIOCONTROL_CHAN+1; nil, if not available
-                ParmModTable["AUDIOCONTROL_ATTACK"]    - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
-                ParmModTable["AUDIOCONTROL_RELEASE"]   - the Release-slider; 0-1000ms; nil, if not available
-                ParmModTable["AUDIOCONTROL_MINVOLUME"] - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
-                                                          nil, if not available
-                ParmModTable["AUDIOCONTROL_MAXVOLUME"] - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
-                                                          nil, if not available
-                ParmModTable["AUDIOCONTROL_STRENGTH"]  - the Strength-slider; 0(0%) to 1000(100%)
-                ParmModTable["AUDIOCONTROL_DIRECTION"] - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
-                ParmModTable["X2"]=0.5                 - the audiocontrol signal shaping-x-coordinate
-                ParmModTable["Y2"]=0.5                 - the audiocontrol signal shaping-y-coordinate    
-                
-                ParmModTable["LFO"]                    - if the LFO-checkbox checked; true, checked; false, unchecked
-                                                            Note: if true, this needs all LFO_-entries to be set
-                ParmModTable["LFO_SHAPE"]              - the LFO Shape-dropdownlist; 
-                                                            0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
-                                                            nil, if not available
-                ParmModTable["LFO_SHAPEOLD"]           - use the old-style of the LFO_SHAPE; 
-                                                            0, use current style of LFO_SHAPE; 
-                                                            1, use old style of LFO_SHAPE; 
-                                                            nil, if not available
-                ParmModTable["LFO_TEMPOSYNC"]          - the Tempo sync-checkbox; true, checked; false, unchecked
-                ParmModTable["LFO_SPEED"]              - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
-                ParmModTable["LFO_STRENGTH"]           - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
-                ParmModTable["LFO_PHASE"]              - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
-                ParmModTable["LFO_DIRECTION"]          - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
-                ParmModTable["LFO_PHASERESET"]         - the LFO Phase reset-dropdownlist; 
-                                                            0, On seek/loop(deterministic output)
-                                                            1, Free-running(non-deterministic output)
-                                                            nil, if not available
+        ParmModTable["AUDIOCONTROL"]            - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
+                                                    Note: if true, this needs all AUDIOCONTROL_-entries to be set
+        ParmModTable["AUDIOCONTROL_CHAN"]       - the Track audio channel-dropdownlist; When stereo, the first stereo-channel;
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_STEREO"]     - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
+                                                    AUDIOCONTROL_CHAN+1; nil, if not available
+        ParmModTable["AUDIOCONTROL_ATTACK"]     - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
+        ParmModTable["AUDIOCONTROL_RELEASE"]    - the Release-slider; 0-1000ms; nil, if not available
+        ParmModTable["AUDIOCONTROL_MINVOLUME"]  - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_MAXVOLUME"]  - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
+                                                  nil, if not available
+        ParmModTable["AUDIOCONTROL_STRENGTH"]   - the Strength-slider; 0(0%) to 1000(100%)
+        ParmModTable["AUDIOCONTROL_DIRECTION"]  - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
+        ParmModTable["X2"]=0.5                  - the audiocontrol signal shaping-x-coordinate
+        ParmModTable["Y2"]=0.5                  - the audiocontrol signal shaping-y-coordinate    
+        
+        ParmModTable["LFO"]                     - if the LFO-checkbox checked; true, checked; false, unchecked
+                                                    Note: if true, this needs all LFO_-entries to be set
+        ParmModTable["LFO_SHAPE"]               - the LFO Shape-dropdownlist; 
+                                                    0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
+                                                    nil, if not available
+        ParmModTable["LFO_SHAPEOLD"]            - use the old-style of the LFO_SHAPE; 
+                                                    0, use current style of LFO_SHAPE; 
+                                                    1, use old style of LFO_SHAPE; 
+                                                    nil, if not available
+        ParmModTable["LFO_TEMPOSYNC"]           - the Tempo sync-checkbox; true, checked; false, unchecked
+        ParmModTable["LFO_SPEED"]               - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
+        ParmModTable["LFO_STRENGTH"]            - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
+        ParmModTable["LFO_PHASE"]               - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
+        ParmModTable["LFO_DIRECTION"]           - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
+        ParmModTable["LFO_PHASERESET"]          - the LFO Phase reset-dropdownlist; 
+                                                    0, On seek/loop(deterministic output)
+                                                    1, Free-running(non-deterministic output)
+                                                    nil, if not available
+        
+        ParmModTable["MIDIPLINK"]               - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                    Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+        ParmModTable["PARMLINK"]                - the Link from MIDI or FX parameter-checkbox
+                                                  true, checked; false, unchecked
+        ParmModTable["PARMLINK_LINKEDPLUGIN"]   - the selected plugin; nil, if not available
+                                                - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
+                                                    -1, nothing selected yet
+                                                    -100, MIDI-parameter-settings
+                                                    1 - the first fx-plugin
+                                                    2 - the second fx-plugin
+                                                    3 - the third fx-plugin, etc
+        ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
+                                                       - 0, use parameter of the current fx-plugin
+                                                       - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                       - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                       - nil, use only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
+        ParmModTable["PARMLINK_LINKEDPARMIDX"]  - the id of the linked parameter; -1, if none is linked yet; nil, if not available
+                                                    When MIDI, this is irrelevant.
+                                                    When FX-parameter:
+                                                      0 to n; 0 for the first; 1, for the second, etc
 
-                ParmModTable["PARMLINK"]               - the Link from MIDI or FX parameter-checkbox
-                                                          true, checked; false, unchecked
-                ParmModTable["PARMLINK_LINKEDPLUGIN"]  - the selected plugin; nil, if not available
-                                                         Will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set.
-                                                            -1, nothing selected yet
-                                                            -100, MIDI-parameter-settings
-                                                            1 - the first fx-plugin
-                                                            2 - the second fx-plugin
-                                                            3 - the third fx-plugin, etc
-                ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
-                                                               - 0, use parameter of the current fx-plugin
-                                                               - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
-                                                               - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
-                                                               - nil, uses only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
-                ParmModTable["PARMLINK_LINKEDPARMIDX"] - the id of the linked parameter; -1, if none is linked yet; nil, if not available
-                                                            When MIDI, this is irrelevant.
-                                                            When FX-parameter:
-                                                              0 to n; 0 for the first; 1, for the second, etc
+        ParmModTable["PARMLINK_OFFSET"]         - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+        ParmModTable["PARMLINK_SCALE"]          - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
 
-                ParmModTable["PARMLINK_OFFSET"]        - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
-                ParmModTable["PARMLINK_SCALE"]         - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
-
-                ParmModTable["MIDIPLINK"]              - true, if any parameter-linking with MIDI-stuff; false, if not
-                                                            Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
-                ParmModTable["MIDIPLINK_BUS"]          - the MIDI-bus selected in the button-menu; 
-                                                            0 to 15 for bus 1 to 16; 
-                                                            nil, if not available
-                ParmModTable["MIDIPLINK_CHANNEL"]      - the MIDI-channel selected in the button-menu; 
-                                                            0, omni; 1 to 16 for channel 1 to 16; 
-                                                            nil, if not available
-                ParmModTable["MIDIPLINK_MIDICATEGORY"] - the MIDI_Category selected in the button-menu; nil, if not available
-                                                            144, MIDI note
-                                                            160, Aftertouch
-                                                            176, CC 14Bit and CC
-                                                            192, Program Change
-                                                            208, Channel Pressure
-                                                            224, Pitch
-                ParmModTable["MIDIPLINK_MIDINOTE"]     - the MIDI-note selected in the button-menu; nil, if not available
-                                                          When MIDI note:
-                                                               0(C-2) to 127(G8)
-                                                          When Aftertouch:
-                                                               0(C-2) to 127(G8)
-                                                          When CC14 Bit:
-                                                               128 to 159; see dropdownlist for the commands(the order of the list 
-                                                               is the same as this numbering)
-                                                          When CC:
-                                                               0 to 119; see dropdownlist for the commands(the order of the list 
-                                                               is the same as this numbering)
-                                                          When Program Change:
-                                                               0
-                                                          When Channel Pressure:
-                                                               0
-                                                          When Pitch:
-                                                               0
-                ParmModTable["WINDOW_ALTERED"]         - false, if the windowposition hasn't been altered yet; true, if the window has been altered
-                                                            Note: if true, this needs all WINDOW_-entries to be set
-                ParmModTable["WINDOW_ALTEREDOPEN"]     - if the position of the ParmMod-window is altered and currently open; 
+        ParmModTable["MIDIPLINK"]               - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                    Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+        ParmModTable["MIDIPLINK_BUS"]           - the MIDI-bus selected in the button-menu; 
+                                                    0 to 15 for bus 1 to 16; 
+                                                    nil, if not available
+        ParmModTable["MIDIPLINK_CHANNEL"]       - the MIDI-channel selected in the button-menu; 
+                                                    0, omni; 1 to 16 for channel 1 to 16; 
+                                                    nil, if not available
+        ParmModTable["MIDIPLINK_MIDICATEGORY"]  - the MIDI_Category selected in the button-menu; nil, if not available
+                                                    144, MIDI note
+                                                    160, Aftertouch
+                                                    176, CC 14Bit and CC
+                                                    192, Program Change
+                                                    208, Channel Pressure
+                                                    224, Pitch
+        ParmModTable["MIDIPLINK_MIDINOTE"]      - the MIDI-note selected in the button-menu; nil, if not available
+                                                  When MIDI note:
+                                                       0(C-2) to 127(G8)
+                                                  When Aftertouch:
+                                                       0(C-2) to 127(G8)
+                                                  When CC14 Bit:
+                                                       128 to 159; see dropdownlist for the commands(the order of the list 
+                                                       is the same as this numbering)
+                                                  When CC:
+                                                       0 to 119; see dropdownlist for the commands(the order of the list 
+                                                       is the same as this numbering)
+                                                  When Program Change:
+                                                       0
+                                                  When Channel Pressure:
+                                                       0
+                                                  When Pitch:
+                                                       0
+        ParmModTable["WINDOW_ALTERED"]          - false, if the windowposition hasn't been altered yet; true, if the window has been altered
+                                                    Note: if true, this needs all WINDOW_-entries to be set
+        ParmModTable["WINDOW_ALTEREDOPEN"]      - if the position of the ParmMod-window is altered and currently open; 
                                                             nil, unchanged; 0, unopened; 1, open
-                ParmModTable["WINDOW_XPOS"]            - the x-position of the altered ParmMod-window in pixels; nil, default position
-                ParmModTable["WINDOW_YPOS"]            - the y-position of the altered ParmMod-window in pixels; nil, default position
-                ParmModTable["WINDOW_RIGHT"]           - the right-position of the altered ParmMod-window in pixels; 
-                                                            nil, default position; only readable
-                ParmModTable["WINDOW_BOTTOM"]          - the bottom-position of the altered ParmMod-window in pixels; 
-                                                            nil, default position; only readable
-    </code></pre>
+        ParmModTable["WINDOW_XPOS"]             - the x-position of the altered ParmMod-window in pixels; nil, default position
+        ParmModTable["WINDOW_YPOS"]             - the y-position of the altered ParmMod-window in pixels; nil, default position
+        ParmModTable["WINDOW_RIGHT"]            - the right-position of the altered ParmMod-window in pixels; 
+                                                    nil, default position; only readable
+        ParmModTable["WINDOW_BOTTOM"]           - the bottom-position of the altered ParmMod-window in pixels; 
+                                                    nil, default position; only readable
     
     This function does not check, if the values are within valid value-ranges, only if the datatypes are valid.
     
@@ -4209,7 +4229,7 @@ function ultraschall.CountParmModFromFXStateChunk(FXStateChunk, fxindex)
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>CountParmModFromFXStateChunk</slug>
     <requires>
-      Ultraschall=4.1
+      Ultraschall=4.2
       Reaper=6.10
       Lua=5.3
     </requires>
@@ -4236,12 +4256,12 @@ function ultraschall.CountParmModFromFXStateChunk(FXStateChunk, fxindex)
   </US_DocBloc>
   --]] 
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("CountParmModFromFXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return -1 end
-  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("CountParmModFromFXStateChunk", "fxindex", "must be an integer", -2) return end
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("CountParmModFromFXStateChunk", "fxindex", "must be an integer", -2) return -1 end
   
   local index=0
 
   local FX,StartOFS,EndOFS=ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxindex)
-  if FX==nil then ultraschall.AddErrorMessage("CountParmModFromFXStateChunk", "fxindex", "no such fx", -3) return end
+  if FX==nil then ultraschall.AddErrorMessage("CountParmModFromFXStateChunk", "fxindex", "no such fx", -3) return -1 end
   for k,v in string.gmatch(FX, "()  <PROGRAMENV.-\n%s->()\n") do
     index=index+1
   end
@@ -4264,7 +4284,7 @@ function ultraschall.GetAllParmAliasNames_FXStateChunk(FXStateChunk, fxindex)
   <description>
     Returns all aliasnames of a specific fx within an FXStateChunk
     
-    returns false in case of an error
+    returns -1 in case of an error
   </description>
   <retvals>
     integer count_aliasnames - the number of parameter-aliases found for this fx
@@ -4419,16 +4439,16 @@ function ultraschall.GetParmAlias2_FXStateChunk(FXStateChunk, fxid, parmidx)
 end
 
 
-function ultraschall.InputFX_AddByName(fxname, always_new_instance)
+function ultraschall.InputFX_AddByName(fxname, always_new_instance, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_AddByName</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer retval = ultraschall.InputFX_AddByName(string fxname, boolean always_new_instance)</functioncall>
+  <functioncall>integer retval = ultraschall.InputFX_AddByName(string fxname, boolean always_new_instance, optional integer tracknumber)</functioncall>
   <description>
     Adds an FX as monitoring FX.
     
@@ -4440,6 +4460,7 @@ function ultraschall.InputFX_AddByName(fxname, always_new_instance)
   <parameters>
     string fxname - the name of the fx to be inserted
     boolean always_new_instance - true, always add a new instance of the fx; false, only add if there's none yet
+    optional integer tracknumber - the tracknumber, to whose inputFX the fx shall be added; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -4452,26 +4473,27 @@ function ultraschall.InputFX_AddByName(fxname, always_new_instance)
 ]]
   if type(fxname)~="string" then ultraschall.AddErrorMessage("InputFX_AddByName", "fxname", "must be a string", -1) return -1 end
   if type(always_new_instance)~="boolean" then ultraschall.AddErrorMessage("InputFX_AddByName", "always_new_instance", "must be a boolean", -2) return -1 end
-  if indexposition==nil then indexposition=0 end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_AddByName", "tracknumber", "no such track; must be an integer", -3) return -1 end
+  if tracknumber==nil or tracknumber==0 then tracknumber=reaper.GetMasterTrack() else tracknumber=reaper.GetTrack(0,tracknumber-1) end
   if always_new_instance==true then instantiate=-1 else instantiate=1 end
   
-  local retval = reaper.TrackFX_AddByName(reaper.GetMasterTrack(), fxname, true, instantiate)+1
+  local retval = reaper.TrackFX_AddByName(tracknumber, fxname, true, instantiate)+1
   if retval==0 then return -1 else return retval end
 end
 
 
 --A=ultraschall.InputFX_AddByName("ReaCast", false)
 
-function ultraschall.InputFX_QueryFirstFXIndex(fxname)
+function ultraschall.InputFX_QueryFirstFXIndex(fxname, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_QueryFirstFXIndex</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer fxindex = ultraschall.InputFX_QueryFirstFXIndex(string fxname)</functioncall>
+  <functioncall>integer fxindex = ultraschall.InputFX_QueryFirstFXIndex(string fxname, optional integer tracknumber)</functioncall>
   <description>
     Queries the fx-index of the first inputfx with fxname
     
@@ -4482,6 +4504,7 @@ function ultraschall.InputFX_QueryFirstFXIndex(fxname)
   </retvals>
   <parameters>
     string fxname - the name of the fx to be queried
+    optional integer tracknumber - the tracknumber, to whose inputFX the fx shall be added; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -4493,22 +4516,25 @@ function ultraschall.InputFX_QueryFirstFXIndex(fxname)
 </US_DocBloc>
 ]]
   if type(fxname)~="string" then ultraschall.AddErrorMessage("InputFX_QueryFirstFXIndex", "fxname", "must be a string", -1) return -1 end
-  local retval=reaper.TrackFX_AddByName(reaper.GetMasterTrack(), fxname, true, 0)+1
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_QueryFirstFXIndex", "tracknumber", "no such track; must be an integer", -3) return -1 end
+  if tracknumber==nil or tracknumber==0 then tracknumber=reaper.GetMasterTrack() else tracknumber=reaper.GetTrack(0,tracknumber-1) end
+
+  local retval=reaper.TrackFX_AddByName(tracknumber, fxname, true, 0)+1
   if retval==0 then return -1 else return retval end
 end
 
 --A1=ultraschall.InputFX_QueryFirstFXIndex("ReaCast")
 
-function ultraschall.InputFX_MoveFX(old_fxindex, new_fxindex)
+function ultraschall.InputFX_MoveFX(old_fxindex, new_fxindex, tracknumber_source, tracknumber_target)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_MoveFX</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_MoveFX(integer old_fxindex, integer new_fxindex)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_MoveFX(integer old_fxindex, integer new_fxindex, optional integer tracknumber_source, optional integer tracknumber_target)</functioncall>
   <description>
     Moves a monitoring-fx from an old to a new position
     
@@ -4520,6 +4546,8 @@ function ultraschall.InputFX_MoveFX(old_fxindex, new_fxindex)
   <parameters>
     integer old_fxindex - the index of the input-fx to be moved; 1-based
     integer new_fxindex - the new position of the input-fx; 1-based
+    optional integer tracknumber_source - the tracknumber of the track, from whose inputFX you want to move the fx; 1-based; nil, master-track
+    optional integer tracknumber_target - the tracknumber of the track, to which you want to move the inputFX; 1-based; nil, master-track    
   </parameters>
   <chapter_context>
     FX-Management
@@ -4532,26 +4560,31 @@ function ultraschall.InputFX_MoveFX(old_fxindex, new_fxindex)
 ]]
   if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFX", "old_fxindex", "must be an integer", -1) return false end
   if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFX", "new_fxindex", "must be an integer", -2) return false end
-  if old_fxindex<1 or old_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_MoveFX", "old_fxindex", "no such inputFX", -3) return false end
-  if new_fxindex<1 or new_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_MoveFX", "new_fxindex", "no such inputFX", -4) return false end
+  
+  if tracknumber_source~=nil and (math.type(tracknumber_source)~="integer" or (tracknumber_source<0 or tracknumber_source>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_MoveFX", "tracknumber_source", "no such track; must be an integer", -5) return false end
+  if tracknumber_source==nil or tracknumber_source==0 then tracknumber_source=reaper.GetMasterTrack() else tracknumber_source=reaper.GetTrack(0,tracknumber_source-1) end
+  if tracknumber_target~=nil and (math.type(tracknumber_target)~="integer" or (tracknumber_target<0 or tracknumber_target>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_MoveFX", "tracknumber_target", "no such track; must be an integer", -6) return false end
+  if tracknumber_target==nil or tracknumber_target==0 then tracknumber_target=reaper.GetMasterTrack() else tracknumber_target=reaper.GetTrack(0,tracknumber_target-1) end
+  if old_fxindex<1 or old_fxindex>ultraschall.InputFX_GetCount(tracknumber) then ultraschall.AddErrorMessage("InputFX_MoveFX", "old_fxindex", "no such inputFX", -3) return false end
+  if new_fxindex<1 or new_fxindex>ultraschall.InputFX_GetCount(tracknumber) then ultraschall.AddErrorMessage("InputFX_MoveFX", "new_fxindex", "no such inputFX", -4) return false end
   old_fxindex=old_fxindex-1
   new_fxindex=new_fxindex-1
-  reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, reaper.GetMasterTrack(0), new_fxindex+0x1000000, true)
+  reaper.TrackFX_CopyToTrack(tracknumber_source, old_fxindex+0x1000000, tracknumber_target, new_fxindex+0x1000000, true)
   return true
 end
 
 --ultraschall.InputFX_MoveFX(2, 1)
 
-function ultraschall.InputFX_CopyFX(old_fxindex, new_fxindex)
+function ultraschall.InputFX_CopyFX(old_fxindex, new_fxindex, tracknumber_source, tracknumber_target)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_CopyFX</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_CopyFX(integer old_fxindex, integer new_fxindex)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_CopyFX(integer old_fxindex, integer new_fxindex, optional integer tracknumber_source, optional integer tracknumber_target)</functioncall>
   <description>
     Copies a monitoring-fx and inserts it at a new position
     
@@ -4563,6 +4596,8 @@ function ultraschall.InputFX_CopyFX(old_fxindex, new_fxindex)
   <parameters>
     integer old_fxindex - the index of the input-fx to be copied; 1-based
     integer new_fxindex - the position of the newly inserted input-fx; 1-based
+    optional integer tracknumber_source - the tracknumber of the track, from whose inputFX you want to move the fx; 1-based; nil, master-track
+    optional integer tracknumber_target - the tracknumber of the track, to which you want to move the inputFX; 1-based; nil, master-track    
   </parameters>
   <chapter_context>
     FX-Management
@@ -4573,30 +4608,33 @@ function ultraschall.InputFX_CopyFX(old_fxindex, new_fxindex)
   <tags>fxmanagement, copy, inputfx</tags>
 </US_DocBloc>
 ]]
-  if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFX", "old_fxindex", "must be an integer", -1) return -1 end
-  if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFX", "new_fxindex", "must be an integer", -2) return -1 end
-  if old_fxindex<1 or old_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_CopyFX", "old_fxindex", "no such inputFX", -3) return -1 end
-  if new_fxindex<1 then ultraschall.AddErrorMessage("InputFX_CopyFX", "new_fxindex", "no such inputFX", -4) return -1 end
+  if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFX", "old_fxindex", "must be an integer", -1) return false end
+  if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFX", "new_fxindex", "must be an integer", -2) return false end
+  
+  if tracknumber_source~=nil and (math.type(tracknumber_source)~="integer" or (tracknumber_source<0 or tracknumber_source>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_CopyFX", "tracknumber_source", "no such track; must be an integer", -5) return false end
+  if tracknumber_source==nil or tracknumber_source==0 then tracknumber_source=reaper.GetMasterTrack() else tracknumber_source=reaper.GetTrack(0,tracknumber_source-1) end
+  if tracknumber_target~=nil and (math.type(tracknumber_target)~="integer" or (tracknumber_target<0 or tracknumber_target>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_CopyFX", "tracknumber_target", "no such track; must be an integer", -6) return false end
+  if tracknumber_target==nil or tracknumber_target==0 then tracknumber_target=reaper.GetMasterTrack() else tracknumber_target=reaper.GetTrack(0,tracknumber_target-1) end
+  if old_fxindex<1 or old_fxindex>ultraschall.InputFX_GetCount(tracknumber) then ultraschall.AddErrorMessage("InputFX_CopyFX", "old_fxindex", "no such inputFX", -3) return false end
+  if new_fxindex<1 then ultraschall.AddErrorMessage("InputFX_CopyFX", "new_fxindex", "no such inputFX", -4) return false end
   old_fxindex=old_fxindex-1
-  local newfx
-  if old_fxindex<new_fxindex then newfx=new_fxindex new_fxindex=new_fxindex-2 else new_fxindex=new_fxindex-1 end
-  new_fxindex=new_fxindex
-  reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, reaper.GetMasterTrack(0), new_fxindex+0x1000000, false)
-  if new_fxindex>ultraschall.InputFX_GetCount()-1 then return ultraschall.InputFX_GetCount() else return newfx end
+  new_fxindex=new_fxindex-1
+  reaper.TrackFX_CopyToTrack(tracknumber_source, old_fxindex+0x1000000, tracknumber_target, new_fxindex+0x1000000, false)
+  return true
 end
 
 --A=ultraschall.InputFX_CopyFX(9, 1)
 
-function ultraschall.InputFX_CopyFXFromTrackFX(track, old_fxindex, new_fxindex)
+function ultraschall.InputFX_CopyFXFromTrackFX(track, old_fxindex, new_fxindex, tracknumberInputFX)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_CopyFXFromTrackFX</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer retval = ultraschall.InputFX_CopyFXFromTrackFX(MediaTrack track, integer old_fxindex, integer new_fxindex)</functioncall>
+  <functioncall>integer retval = ultraschall.InputFX_CopyFXFromTrackFX(MediaTrack track, integer old_fxindex, integer new_fxindex, optional integer tracknumberInputFX)</functioncall>
   <description>
     Copies a trackfx and inserts it as monitoring-fx at a certain position
     
@@ -4609,6 +4647,7 @@ function ultraschall.InputFX_CopyFXFromTrackFX(track, old_fxindex, new_fxindex)
     MediaTrack track - the track from which you want to copy a trackfx
     integer old_fxindex - the index of the track-fx to be copied; 1-based
     integer new_fxindex - the position of the newly inserted input-fx; 1-based
+    optional integer tracknumberInputFX - the tracknumber, to whose inputFX the fx shall be copied; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -4622,25 +4661,30 @@ function ultraschall.InputFX_CopyFXFromTrackFX(track, old_fxindex, new_fxindex)
   if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTrackFX", "track", "must be a mediatrack", -1) return -1 end
   if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTrackFX", "old_fxindex", "must be an integer", -2) return -1 end
   if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTrackFX", "new_fxindex", "must be an integer", -3) return -1 end
+  
+  local trackfx
+  if tracknumberInputFX~=nil and (math.type(tracknumberInputFX)~="integer" or (tracknumberInputFX<0 or tracknumberInputFX>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_CopyFXFromTrackFX", "tracknumberInputFX", "no such track; must be an integer", -4) return -1 end
+  if tracknumberInputFX==nil or tracknumberInputFX==0 then trackfx=reaper.GetMasterTrack() else trackfx=reaper.GetTrack(0,tracknumberInputFX-1) end
+  
   local newfx=new_fxindex
   old_fxindex=old_fxindex-1
   new_fxindex=new_fxindex-1 
-  reaper.TrackFX_CopyToTrack(track, old_fxindex, reaper.GetMasterTrack(0), new_fxindex+0x1000000, false)
-  if new_fxindex>ultraschall.InputFX_GetCount()-1 then return ultraschall.InputFX_GetCount() else return newfx end
+  reaper.TrackFX_CopyToTrack(track, old_fxindex, trackfx, new_fxindex+0x1000000, false)
+  if new_fxindex>ultraschall.InputFX_GetCount(tracknumberInputFX)-1 then return ultraschall.InputFX_GetCount() else return newfx end
 end
 
 --A=ultraschall.InputFX_CopyFXFromTrackFX(reaper.GetMasterTrack(), 1, 10)
 
-function ultraschall.InputFX_CopyFXToTrackFX(old_fxindex, track, new_fxindex)
+function ultraschall.InputFX_CopyFXToTrackFX(old_fxindex, track, new_fxindex, tracknumberInputFX)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_CopyFXToTrackFX</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer retval = ultraschall.InputFX_CopyFXToTrackFX(integer old_fxindex, MediaTrack track, integer new_fxindex)</functioncall>
+  <functioncall>integer retval = ultraschall.InputFX_CopyFXToTrackFX(integer old_fxindex, MediaTrack track, integer new_fxindex, optional integer tracknumberInputFX)</functioncall>
   <description>
     Copies a monitoring-fx and inserts it as trackfx at a certain position
     
@@ -4653,6 +4697,7 @@ function ultraschall.InputFX_CopyFXToTrackFX(old_fxindex, track, new_fxindex)
     integer old_fxindex - the index of the monitoring-fx to be copied; 1-based
     MediaTrack track - the track into which you want to insert the trackFX
     integer new_fxindex - the position of the newly inserted track-fx; 1-based
+    optional integer tracknumberInputFX - the tracknumber, from whose inputFX the fx shall be copied from; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -4666,26 +4711,30 @@ function ultraschall.InputFX_CopyFXToTrackFX(old_fxindex, track, new_fxindex)
   if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("InputFX_CopyFXToTrackFX", "track", "must be a mediatrack", -1) return -1 end
   if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXToTrackFX", "old_fxindex", "must be an integer", -2) return -1 end
   if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXToTrackFX", "new_fxindex", "must be an integer", -3) return -1 end
-  if old_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_CopyFXToTrackFX", "old_fxindex", "no such monitoring-fx", -4) return -1 end
+  
+  local trackfx
+  if tracknumberInputFX~=nil and (math.type(tracknumberInputFX)~="integer" or (tracknumberInputFX<0 or tracknumberInputFX>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_CopyFXToTrackFX", "tracknumberInputFX", "no such track; must be an integer", -4) return -1 end
+  if tracknumberInputFX==nil or tracknumberInputFX==0 then trackfx=reaper.GetMasterTrack() else trackfx=reaper.GetTrack(0,tracknumberInputFX-1) end
+  
   local newfx=new_fxindex
   old_fxindex=old_fxindex-1
-  new_fxindex=new_fxindex-1 
-  reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, track, new_fxindex, false)
+  new_fxindex=new_fxindex-1   
+  reaper.TrackFX_CopyToTrack(trackfx, old_fxindex+0x1000000, track, new_fxindex, false)  
   if new_fxindex>reaper.TrackFX_GetCount(track)-1 then return reaper.TrackFX_GetCount(track) else return newfx end
 end
 
 --A=ultraschall.InputFX_CopyFXToTrackFX(1, reaper.GetMasterTrack(), 1)
 
-function ultraschall.InputFX_MoveFXFromTrackFX(track, old_fxindex, new_fxindex)
+function ultraschall.InputFX_MoveFXFromTrackFX(track, old_fxindex, new_fxindex, tracknumberInputFX)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_MoveFXFromTrackFX</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer retval = ultraschall.InputFX_MoveFXFromTrackFX(MediaTrack track, integer old_fxindex, integer new_fxindex)</functioncall>
+  <functioncall>integer retval = ultraschall.InputFX_MoveFXFromTrackFX(MediaTrack track, integer old_fxindex, integer new_fxindex, optional integer tracknumberInputFX)</functioncall>
   <description>
     Moves a trackfx to monitoring-fx at a certain position
     
@@ -4698,6 +4747,7 @@ function ultraschall.InputFX_MoveFXFromTrackFX(track, old_fxindex, new_fxindex)
     MediaTrack track - the track from which you want to copy a trackfx to monitoring-fx
     integer old_fxindex - the index of the monitoring-fx to be moved; 1-based
     integer new_fxindex - the position of the newly inserted input-fx; 1-based
+    optional integer tracknumberInputFX - the tracknumber, to whose inputFX the fx shall be moved to; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -4711,21 +4761,26 @@ function ultraschall.InputFX_MoveFXFromTrackFX(track, old_fxindex, new_fxindex)
   if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTrackFX", "track", "must be a mediatrack", -1) return -1 end
   if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTrackFX", "old_fxindex", "must be an integer", -2) return -1 end
   if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTrackFX", "new_fxindex", "must be an integer", -3) return -1 end
+  
+  local trackfx
+  if tracknumberInputFX~=nil and (math.type(tracknumberInputFX)~="integer" or (tracknumberInputFX<0 or tracknumberInputFX>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_MoveFXFromTrackFX", "tracknumberInputFX", "no such track; must be an integer", -4) return -1 end
+  if tracknumberInputFX==nil or tracknumberInputFX==0 then trackfx=reaper.GetMasterTrack() else trackfx=reaper.GetTrack(0,tracknumberInputFX-1) end
+  
   local newfx=new_fxindex
   old_fxindex=old_fxindex-1
   new_fxindex=new_fxindex-1 
-  reaper.TrackFX_CopyToTrack(track, old_fxindex, reaper.GetMasterTrack(0), new_fxindex+0x1000000, true)
-  if new_fxindex>ultraschall.InputFX_GetCount()-1 then return ultraschall.InputFX_GetCount() else return newfx end
+  reaper.TrackFX_CopyToTrack(track, old_fxindex, trackfx, new_fxindex+0x1000000, true)
+  if new_fxindex>ultraschall.InputFX_GetCount(tracknumberInputFX)-1 then return ultraschall.InputFX_GetCount() else return newfx end
 end
 
 --A=ultraschall.InputFX_CopyFXFromTrackFX(reaper.GetMasterTrack(), 1, 10)
 
-function ultraschall.InputFX_MoveFXToTrackFX(old_fxindex, track, new_fxindex)
+function ultraschall.InputFX_MoveFXToTrackFX(old_fxindex, track, new_fxindex, tracknumberInputFX)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_MoveFXToTrackFX</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
@@ -4755,11 +4810,15 @@ function ultraschall.InputFX_MoveFXToTrackFX(old_fxindex, track, new_fxindex)
   if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("InputFX_MoveFXToTrackFX", "track", "must be a mediatrack", -1) return -1 end
   if math.type(old_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXToTrackFX", "old_fxindex", "must be an integer", -2) return -1 end
   if math.type(new_fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXToTrackFX", "new_fxindex", "must be an integer", -3) return -1 end
-  if old_fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_MoveFXToTrackFX", "old_fxindex", "no such monitoring-fx", -4) return -1 end
+  
+  --local trackfx
+  if tracknumberInputFX~=nil and (math.type(tracknumberInputFX)~="integer" or (tracknumberInputFX<0 or tracknumberInputFX>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_MoveFXToTrackFX", "tracknumberInputFX", "no such track; must be an integer", -4) return -1 end
+  if tracknumberInputFX==nil or tracknumberInputFX==0 then trackfx=reaper.GetMasterTrack() else trackfx=reaper.GetTrack(0,tracknumberInputFX-1) end
+  
   local newfx=new_fxindex
   old_fxindex=old_fxindex-1
-  new_fxindex=new_fxindex-1 
-  reaper.TrackFX_CopyToTrack(reaper.GetMasterTrack(0), old_fxindex+0x1000000, track, new_fxindex, true)
+  new_fxindex=new_fxindex-1   
+  reaper.TrackFX_CopyToTrack(trackfx, old_fxindex+0x1000000, track, new_fxindex, true)  
   if new_fxindex>reaper.TrackFX_GetCount(track)-1 then return reaper.TrackFX_GetCount(track) else return newfx end
 end
 
@@ -4769,16 +4828,16 @@ end
 
 --ultraschall.InputFX_MoveFXFromTakeFX(reaper.GetMediaItemTake(reaper.GetMediaItem(0,0),0), 1, 1)
 
-function ultraschall.InputFX_Delete(fxindex)
+function ultraschall.InputFX_Delete(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_Delete</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_Delete(integer fxindex)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_Delete(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     removes a certain monitoring-fx
     
@@ -4789,6 +4848,7 @@ function ultraschall.InputFX_Delete(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx to be deleted; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX shall be deleted; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -4801,22 +4861,24 @@ function ultraschall.InputFX_Delete(fxindex)
 ]]
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_Delete", "fxindex", "must be an integer", -1) return false end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_Delete", "fxindex", "must 1 or higher", -2) return false end
-  return reaper.TrackFX_Delete(reaper.GetMasterTrack(), 0x1000000+fxindex-1)
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_Delete", "tracknumber", "no such track; must be an integer", -3) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber=reaper.GetMasterTrack() else tracknumber=reaper.GetTrack(0,tracknumber-1) end
+  return reaper.TrackFX_Delete(tracknumber, 0x1000000+fxindex-1)
 end
 
 
 --ultraschall.InputFX_Delete(6)
 
-function ultraschall.InputFX_EndParamEdit(fxindex, paramindex)
+function ultraschall.InputFX_EndParamEdit(fxindex, paramindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_EndParamEdit</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_EndParamEdit(integer fxindex, integer paramindex)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_EndParamEdit(integer fxindex, integer paramindex, optional integer tracknumber)</functioncall>
   <description>
     This ends the capture of a parameter(e.g when finished writing automation)
     
@@ -4828,6 +4890,7 @@ function ultraschall.InputFX_EndParamEdit(fxindex, paramindex)
   <parameters>
     integer fxindex - the index of the monitoring-fx
     integer paramindex - the index of the parameter of the monitoring-fx
+    optional integer tracknumber - the tracknumber, whose inputFX-parameter shall be ended in editing; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -4838,31 +4901,38 @@ function ultraschall.InputFX_EndParamEdit(fxindex, paramindex)
   <tags>fxmanagement, end, param edit, parameters, inputfx</tags>
 </US_DocBloc>
 ]]
-  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_EndParamEdit", "fxindex", "must be an integer", -2) return -1 end
-  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_EndParamEdit", "paramindex", "must be an integer", -3) return -1 end
-  return reaper.TrackFX_EndParamEdit(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_EndParamEdit", "fxindex", "must be an integer", -2) return false end
+  if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_EndParamEdit", "paramindex", "must be an integer", -3) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_EndParamEdit", "tracknumber", "no such track; must be an integer", -4) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber=reaper.GetMasterTrack() else tracknumber=reaper.GetTrack(0,tracknumber-1) end
+  return reaper.TrackFX_EndParamEdit(tracknumber, 0x1000000+fxindex-1, paramindex-1)
 end
 
 --A=ultraschall.InputFX_EndParamEdit(14, 1)
 
 
 
-function ultraschall.InputFX_GetCount()
+function ultraschall.InputFX_GetCount(tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetCount</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer monitoring_fx_count = ultraschall.InputFX_GetCount()</functioncall>
+  <functioncall>integer monitoring_fx_count = ultraschall.InputFX_GetCount(optional integer tracknumber)</functioncall>
   <description>
     counts the available monitoring-fx
+    
+    returns -1 in case of an error
   </description>
   <retvals>
-    integer monitoring_fx_count - the number of available monitoring-fx
+    integer monitoring_fx_count - the number of available monitoring-fx    
   </retvals>
+  <parameters>
+    optional integer tracknumber - the tracknumber, whose inputFX you want to count; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
+  </parameters>
   <chapter_context>
     FX-Management
     InputFX
@@ -4872,28 +4942,35 @@ function ultraschall.InputFX_GetCount()
   <tags>fxmanagement, count, inputfx</tags>
 </US_DocBloc>
 ]]
-  return reaper.TrackFX_GetRecCount(reaper.GetMasterTrack(0))
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetCount", "tracknumber", "no such track; must be an integer or nil for global monitoring fx", -1) return -1 end
+  if tracknumber==nil or tracknumber==0 then tracknumber=reaper.GetMasterTrack() else tracknumber=reaper.GetTrack(0,tracknumber-1) end
+  return reaper.TrackFX_GetRecCount(tracknumber)
 end
 
 --A=ultraschall.InputFX_GetCount()
 
-function ultraschall.InputFX_GetChainVisible()
+function ultraschall.InputFX_GetChainVisible(tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetChainVisible</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean inputfx_chain_visible, integer visible_inputfx = ultraschall.InputFX_GetChainVisible()</functioncall>
+  <functioncall>boolean inputfx_chain_visible, integer visible_inputfx = ultraschall.InputFX_GetChainVisible(optional integer tracknumber)</functioncall>
   <description>
     returns if the monitoring-fx-chain is visible and index of the currently visible monitoring-fx
+    
+    returns nil in case of an error
   </description>
   <retvals>
     boolean inputfx_chain_visible - true, fxchain is visible; false, fxchain is not visible
-    integer visible_inputfx - the index of the currently visible monitoring-fx; -1, if nothing is visible; 1-based
+    integer visible_inputfx - the index of the currently visible monitoring-fx; -1, if nothing is visible; 1-based    
   </retvals>
+  <parameters>
+    optional integer tracknumber - the tracknumber, whose inputFX-chain-visibility you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
+  </parameters>
   <chapter_context>
     FX-Management
     InputFX
@@ -4906,7 +4983,10 @@ function ultraschall.InputFX_GetChainVisible()
   -- returns:
   -- is inputfx-chain opened?
   -- which fx is currently visible?
-  local A,B=reaper.TrackFX_GetRecChainVisible(reaper.GetMasterTrack(0))~=-1, reaper.TrackFX_GetRecChainVisible(reaper.GetMasterTrack(0))+1
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetChainVisible", "tracknumber", "no such track; must be an integer", -1) return nil end
+  if tracknumber==nil or tracknumber==0 then tracknumber=reaper.GetMasterTrack() else tracknumber=reaper.GetTrack(0,tracknumber-1) end
+  
+  local A,B=reaper.TrackFX_GetRecChainVisible(tracknumber)~=-1, reaper.TrackFX_GetRecChainVisible(reaper.GetMasterTrack(0))+1
   if B==0 then B=-1 end
   return A,B
 end
@@ -4914,16 +4994,16 @@ end
 --A, B=ultraschall.InputFX_GetChainVisible()
 
 
-function ultraschall.InputFX_GetEnabled(fxindex)
+function ultraschall.InputFX_GetEnabled(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetEnabled</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean inputfx_enabled = ultraschall.InputFX_GetEnabled(integer fxindex)</functioncall>
+  <functioncall>boolean inputfx_enabled = ultraschall.InputFX_GetEnabled(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     returns if a certain monitoring-fx is enabled
     
@@ -4934,6 +5014,7 @@ function ultraschall.InputFX_GetEnabled(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose enabled state you want to query; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-enabledness you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -4944,23 +5025,27 @@ function ultraschall.InputFX_GetEnabled(fxindex)
   <tags>fxmanagement, is enabled, inputfx</tags>
 </US_DocBloc>
 ]]
-  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEnabled", "fxindex", "must be an integer", -1) return nil end
-  if fxindex<1 or fxindex>ultraschall.InputFX_GetCount() then ultraschall.AddErrorMessage("InputFX_GetEnabled", "fxindex", "no such input fx", -2) return nil end
-  return reaper.TrackFX_GetEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+  local tracknumber2
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEnabled", "fxindex", "must be an integer", -1) return nil end  
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetEnabled", "tracknumber", "no such track; must be an integer", -3) return nil end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
+  if fxindex<1 or fxindex>ultraschall.InputFX_GetCount(tracknumber) then ultraschall.AddErrorMessage("InputFX_GetEnabled", "fxindex", "no such input fx", -2) return nil end
+
+  return reaper.TrackFX_GetEnabled(tracknumber2, 0x1000000+fxindex-1)
 end
 
 --A=ultraschall.InputFX_GetEnabled(1)
 
-function ultraschall.InputFX_GetFloatingWindow(fxindex)
+function ultraschall.InputFX_GetFloatingWindow(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetFloatingWindow</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>HWND inputfx_floating_hwnd = ultraschall.InputFX_GetFloatingWindow(integer fxindex)</functioncall>
+  <functioncall>HWND inputfx_floating_hwnd = ultraschall.InputFX_GetFloatingWindow(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     returns the hwnd of a floating monitoring-fx-window
     
@@ -4971,6 +5056,7 @@ function ultraschall.InputFX_GetFloatingWindow(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose floating-monitoring-fx-hwnd you want to get; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-floating-window-hwnd you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -4981,9 +5067,13 @@ function ultraschall.InputFX_GetFloatingWindow(fxindex)
   <tags>fxmanagement, get, hwnd, floating, inputfx</tags>
 </US_DocBloc>
 ]]
-  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFloatingWindow", "fxindex", "must be an integer", -1) return nil end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetFloatingWindow", "fxindex", "no such fx", -2) return nil end
-  return reaper.TrackFX_GetFloatingWindow(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+  local tracknumber2
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFloatingWindow", "fxindex", "must be an integer", -1) return nil end  
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetFloatingWindow", "tracknumber", "no such track; must be an integer", -3) return nil end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_GetFloatingWindow", "fxindex", "no such fx", -2) return nil end
+  
+  return reaper.TrackFX_GetFloatingWindow(tracknumber2, 0x1000000+fxindex-1)
 end
 
 --A,B,C,D,E=ultraschall.InputFX_GetFloatingWindow(1)
@@ -4991,16 +5081,16 @@ end
 --A=reaper.TrackFX_GetFloatingWindow(reaper.GetMasterTrack(0), 0)
 
 
-function ultraschall.InputFX_GetFXGUID(fxindex)
+function ultraschall.InputFX_GetFXGUID(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetFXGUID</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>string fxguid = ultraschall.InputFX_GetFXGUID(integer fxindex)</functioncall>
+  <functioncall>string fxguid = ultraschall.InputFX_GetFXGUID(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     returns the guid of a monitoring-fx
     
@@ -5011,6 +5101,7 @@ function ultraschall.InputFX_GetFXGUID(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose guid you want to query; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-fx-guid you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5021,24 +5112,28 @@ function ultraschall.InputFX_GetFXGUID(fxindex)
   <tags>fxmanagement, get, guid, inputfx</tags>
 </US_DocBloc>
 ]]
-  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFXGUID", "fxindex", "must be an integer", -1) return nil end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetFXGUID", "fxindex", "no such fx", -2) return nil end
-  return reaper.TrackFX_GetFXGUID(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+  local tracknumber2
+  if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFXGUID", "fxindex", "must be an integer", -1) return nil end  
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetFXGUID", "tracknumber", "no such track; must be an integer", -3) return end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_GetFXGUID", "fxindex", "no such fx", -2) return nil end
+  
+  return reaper.TrackFX_GetFXGUID(tracknumber2, 0x1000000+fxindex-1)
 end
 
 --A=ultraschall.InputFX_GetFXGUID(2)
 
 
-function ultraschall.InputFX_GetFXName(fxindex)
+function ultraschall.InputFX_GetFXName(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetFXName</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string fxname = ultraschall.InputFX_GetFXName(integer fxindex)</functioncall>
+  <functioncall>boolean retval, string fxname = ultraschall.InputFX_GetFXName(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     returns the name of a monitoring-fx
     
@@ -5050,6 +5145,7 @@ function ultraschall.InputFX_GetFXName(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose name you want to query; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-fxname you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5060,23 +5156,26 @@ function ultraschall.InputFX_GetFXName(fxindex)
   <tags>fxmanagement, get, name, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFXName", "fxindex", "must be an integer", -1) return false, "" end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetFXName", "fxindex", "no such fx", -2) return false, "" end
-  return reaper.TrackFX_GetFXName(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, "")
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetFXName", "tracknumber", "no such track; must be an integer", -3) return false, "" end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_GetFXName", "fxindex", "no such fx", -2) return false, "" end
+  return reaper.TrackFX_GetFXName(tracknumber2, 0x1000000+fxindex-1, "")
 end
 
 --A,B,C=ultraschall.InputFX_GetFXName(1)
 
-function ultraschall.InputFX_GetNumParams(fxindex)
+function ultraschall.InputFX_GetNumParams(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetNumParams</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer count_params = ultraschall.InputFX_GetNumParams(integer fxindex)</functioncall>
+  <functioncall>integer count_params = ultraschall.InputFX_GetNumParams(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     returns the number of parameters of a monitoring-fx
     
@@ -5087,6 +5186,7 @@ function ultraschall.InputFX_GetNumParams(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose number of parameters you want to query; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-fxname you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5097,19 +5197,22 @@ function ultraschall.InputFX_GetNumParams(fxindex)
   <tags>fxmanagement, count, parameters, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetNumParams", "fxindex", "must be an integer", -1) return -1 end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetNumParams", "fxindex", "no such fx", -2) return false end
-  return reaper.TrackFX_GetNumParams(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetNumParams", "tracknumber", "no such track; must be an integer", -3) return -1 end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end  
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_GetNumParams", "fxindex", "no such fx", -2) return -1 end
+  return reaper.TrackFX_GetNumParams(tracknumber2, 0x1000000+fxindex-1)
 end
 
 --A=ultraschall.InputFX_GetNumParams(1)
 
-function ultraschall.InputFX_GetOffline(fxindex)
+function ultraschall.InputFX_GetOffline(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetOffline</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
@@ -5124,6 +5227,7 @@ function ultraschall.InputFX_GetOffline(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose offline-state you want to query; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-offline-state you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5134,24 +5238,27 @@ function ultraschall.InputFX_GetOffline(fxindex)
   <tags>fxmanagement, get, offline, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetOffline", "fxindex", "must be an integer", -1) return false end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetOffline", "fxindex", "no such fx", -2) return false end
-  return reaper.TrackFX_GetOffline(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetOffline", "tracknumber", "no such track; must be an integer", -3) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end  
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_GetOffline", "fxindex", "no such fx", -2) return false end
+  return reaper.TrackFX_GetOffline(tracknumber2, 0x1000000+fxindex-1)
 end
 
 --A=ultraschall.InputFX_GetOffline(1)
 
 
-function ultraschall.InputFX_GetOpen(fxindex)
+function ultraschall.InputFX_GetOpen(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetOpen</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean is_open = ultraschall.InputFX_GetOpen(integer fxindex)</functioncall>
+  <functioncall>boolean is_open = ultraschall.InputFX_GetOpen(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     returns if a monitoring-fx is open(currently visible)
     
@@ -5162,6 +5269,7 @@ function ultraschall.InputFX_GetOpen(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose visibility-state you want to query; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-visibility-state you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5172,24 +5280,27 @@ function ultraschall.InputFX_GetOpen(fxindex)
   <tags>fxmanagement, get, visible, open, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetOpen", "fxindex", "must be an integer", -1) return false end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetOpen", "fxindex", "no such fx", -2) return false end
-  return reaper.TrackFX_GetOpen(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetOpen", "tracknumber", "no such track; must be an integer", -3) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end  
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_GetOpen", "fxindex", "no such fx", -2) return false end
+  return reaper.TrackFX_GetOpen(tracknumber2, 0x1000000+fxindex-1)
 end
 
---A=ultraschall.InputFX_GetOpen(2)
+--A=ultraschall.InputFX_GetOpen(2) 
 
 
-function ultraschall.InputFX_GetPreset(fxindex)
+function ultraschall.InputFX_GetPreset(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetPreset</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string preset = ultraschall.InputFX_GetPreset(integer fxindex)</functioncall>
+  <functioncall>boolean retval, string preset = ultraschall.InputFX_GetPreset(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     returns the currently selected preset of a monitoring-fx
     
@@ -5201,6 +5312,7 @@ function ultraschall.InputFX_GetPreset(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose currently selected presetname-state you want to query; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-preset you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5211,23 +5323,26 @@ function ultraschall.InputFX_GetPreset(fxindex)
   <tags>fxmanagement, get, presetname, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetPreset", "fxindex", "must be an integer", -1) return false end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetPreset", "fxindex", "no such fx", -2) return false end
-  return reaper.TrackFX_GetPreset(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, "")
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetPreset", "tracknumber", "no such track; must be an integer", -3) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end    
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_GetPreset", "fxindex", "no such fx", -2) return false end
+  return reaper.TrackFX_GetPreset(tracknumber2, 0x1000000+fxindex-1, "")
 end
 
 --A={ultraschall.InputFX_GetPreset(1)}
 
-function ultraschall.InputFX_GetPresetIndex(fxindex)
+function ultraschall.InputFX_GetPresetIndex(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetPresetIndex</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer selected_preset, integer number_of_presets = ultraschall.InputFX_GetPresetIndex(integer fxindex)</functioncall>
+  <functioncall>integer selected_preset, integer number_of_presets = ultraschall.InputFX_GetPresetIndex(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     returns the index of the currently selected preset of a monitoring-fx as well as the number of available presets
     
@@ -5235,10 +5350,11 @@ function ultraschall.InputFX_GetPresetIndex(fxindex)
   </description>
   <retvals>
     integer selected_preset - the index of the currently selected preset; 0, if no preset is selected
-    integer number_of_presets - the number of presets available
+    integer number_of_presets - the number of presets available    
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose currently selected preset-index you want to query; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-preset you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5249,9 +5365,12 @@ function ultraschall.InputFX_GetPresetIndex(fxindex)
   <tags>fxmanagement, get, presetname, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetPresetIndex", "fxindex", "must be an integer", -1) return -1 end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetPresetIndex", "fxindex", "no such fx", -2) return -1 end
-  local presetindex, countpresets = reaper.TrackFX_GetPresetIndex(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetPresetIndex", "tracknumber", "no such track; must be an integer", -3) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end    
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_GetPresetIndex", "fxindex", "no such fx", -2) return -1 end
+  local presetindex, countpresets = reaper.TrackFX_GetPresetIndex(tracknumber2, 0x1000000+fxindex-1)
   if presetindex==countpresets then presetindex=-1 end
   return presetindex+1, countpresets
 end
@@ -5259,16 +5378,16 @@ end
 --A1={ultraschall.InputFX_GetPresetIndex(1)}
 
 
-function ultraschall.InputFX_GetUserPresetFilename(fxindex)
+function ultraschall.InputFX_GetUserPresetFilename(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetUserPresetFilename</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>string preset_filename = ultraschall.InputFX_GetUserPresetFilename(integer fxindex)</functioncall>
+  <functioncall>string preset_filename = ultraschall.InputFX_GetUserPresetFilename(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     returns the filename of the presetfile, into which the preset's-settings are stored
     
@@ -5279,6 +5398,7 @@ function ultraschall.InputFX_GetUserPresetFilename(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose preset's-filename you want to query; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-preset-filename you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5289,24 +5409,27 @@ function ultraschall.InputFX_GetUserPresetFilename(fxindex)
   <tags>fxmanagement, get, preset filename, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetUserPresetFilename", "fxindex", "must be an integer", -1) return nil end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_GetUserPresetFilename", "fxindex", "no such fx", -2) return nil end
-  return reaper.TrackFX_GetUserPresetFilename(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, "")
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetUserPresetFilename", "tracknumber", "no such track; must be an integer", -3) return nil end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end    
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_GetUserPresetFilename", "fxindex", "no such fx", -2) return nil end
+  return reaper.TrackFX_GetUserPresetFilename(tracknumber2, 0x1000000+fxindex-1, "")
 end  
 
 --A=ultraschall.InputFX_GetUserPresetFilename(1)
 
 
-function ultraschall.InputFX_NavigatePresets(fxindex, presetmove)
+function ultraschall.InputFX_NavigatePresets(fxindex, presetmove, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_NavigatePresets</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_NavigatePresets(integer fxindex, integer presetmove)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_NavigatePresets(integer fxindex, integer presetmove, optional integer tracknumber)</functioncall>
   <description>
     switches the preset of a monitoring-fx through, relative from its current preset-index.
     You can move by multiple presets, so 1 moves one further, 2 moves 2 further, -3 moves 3 backwards.
@@ -5321,6 +5444,7 @@ function ultraschall.InputFX_NavigatePresets(fxindex, presetmove)
   <parameters>
     integer fxindex - the index of the monitoring-fx, whose preset you want to switch through; 1-based
     integer presetmove - positive, move forward by value of presetmove; negative, move backwards by value of presetmove
+    optional integer tracknumber - the tracknumber, whose inputFX-preset you want to navigate; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5331,26 +5455,30 @@ function ultraschall.InputFX_NavigatePresets(fxindex, presetmove)
   <tags>fxmanagement, navigate, switch, preset, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_NavigatePresets", "fxindex", "must be an integer", -1) return false end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_NavigatePresets", "fxindex", "no such fx", -2) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_NavigatePresets", "tracknumber", "no such track; must be an integer", -4) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
+  
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_NavigatePresets", "fxindex", "no such fx", -2) return false end
   if math.type(presetmove)~="integer" then ultraschall.AddErrorMessage("InputFX_NavigatePresets", "presetmove", "must be an integer", -3) return false end
-  return reaper.TrackFX_NavigatePresets(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, presetmove)
+  return reaper.TrackFX_NavigatePresets(tracknumber2, 0x1000000+fxindex-1, presetmove)
 end
 
 
 --A,B=ultraschall.InputFX_NavigatePresets(1, 2)
 --A1={ultraschall.InputFX_GetPresetIndex(1)}
 
-function ultraschall.InputFX_SetEnabled(fxindex, enabled)
+function ultraschall.InputFX_SetEnabled(fxindex, enabled, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetEnabled</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_SetEnabled(integer fxindex, boolean presetmove)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_SetEnabled(integer fxindex, boolean enabled, optional integer tracknumber)</functioncall>
   <description>
     Sets a monitoring-fx to enabled.
     
@@ -5362,6 +5490,7 @@ function ultraschall.InputFX_SetEnabled(fxindex, enabled)
   <parameters>
     integer fxindex - the index of the monitoring-fx which you want to disable/enable; 1-based
     boolean enabled - true, enable the monitoring-fx; false, disable the monitoring-fx
+    optional integer tracknumber - the tracknumber, whose inputFX-enabled-state you want to set; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5372,10 +5501,13 @@ function ultraschall.InputFX_SetEnabled(fxindex, enabled)
   <tags>fxmanagement, set, enabled, disabled, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEnabled", "fxindex", "must be an integer", -1) return false end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_SetEnabled", "fxindex", "no such fx", -2) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetEnabled", "tracknumber", "no such track; must be an integer", -4) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end  
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_SetEnabled", "fxindex", "no such fx", -2) return false end
   if type(enabled)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetEnabled", "enabled", "must be a boolean", -3) return false end
-  reaper.TrackFX_SetEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, enabled)
+  reaper.TrackFX_SetEnabled(tracknumber2, 0x1000000+fxindex-1, enabled)
   return true
 end
 
@@ -5383,16 +5515,16 @@ end
 
 
 
-function ultraschall.InputFX_SetOffline(fxindex, offline)
+function ultraschall.InputFX_SetOffline(fxindex, offline, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetOffline</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_SetOffline(integer fxindex, boolean offline)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_SetOffline(integer fxindex, boolean offline, optional integer tracknumber)</functioncall>
   <description>
     Sets a monitoring-fx to online/offline.
     
@@ -5404,6 +5536,7 @@ function ultraschall.InputFX_SetOffline(fxindex, offline)
   <parameters>
     integer fxindex - the index of the monitoring-fx which you want to set offline/online; 1-based
     boolean offline - true, set the monitoring-fx offline; false, set the monitoring-fx online
+    optional integer tracknumber - the tracknumber, whose inputFX-offline-state you want to set; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5414,25 +5547,30 @@ function ultraschall.InputFX_SetOffline(fxindex, offline)
   <tags>fxmanagement, set, online, offline, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetOffline", "fxindex", "must be an integer", -1) return false end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_SetOffline", "fxindex", "no such fx", -2) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetOffline", "tracknumber", "no such track; must be an integer", -4) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end    
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_SetOffline", "fxindex", "no such fx", -2) return false end
   if type(offline)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetOffline", "offline", "must be a boolean", -3) return false end
-  reaper.TrackFX_SetOffline(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, offline)
+  reaper.TrackFX_SetOffline(tracknumber2, 0x1000000+fxindex-1, offline)
   return true
 end
 
 --A=ultraschall.InputFX_SetOffline(1, false)
 
-function ultraschall.InputFX_SetOpen(fxindex, open)
+
+
+function ultraschall.InputFX_SetOpen(fxindex, open, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetOpen</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_SetOpen(integer fxindex, boolean open)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_SetOpen(integer fxindex, boolean open, optional integer tracknumber)</functioncall>
   <description>
     Sets a monitoring-fx visible of invisible
     
@@ -5448,6 +5586,7 @@ function ultraschall.InputFX_SetOpen(fxindex, open)
   <parameters>
     integer fxindex - the index of the monitoring-fx which you want to visible/invisible; 1-based
     boolean open - true, set the monitoring-fx visible; false, set the monitoring-fx invisible
+    optional integer tracknumber - the tracknumber, whose inputFX-visibility-state you want to set; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5458,22 +5597,25 @@ function ultraschall.InputFX_SetOpen(fxindex, open)
   <tags>fxmanagement, set, visible, invisible, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetOpen", "fxindex", "must be an integer", -1) return false end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_SetOpen", "fxindex", "no such fx", -2) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetOpen", "tracknumber", "no such track; must be an integer", -4) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_SetOpen", "fxindex", "no such fx", -2) return false end
   if type(open)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetOpen", "open", "must be a boolean", -3) return false end
-  reaper.TrackFX_SetOpen(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, open)
+  reaper.TrackFX_SetOpen(tracknumber2, 0x1000000+fxindex-1, open)
   return true
 end
 
 --ultraschall.InputFX_SetOpen(1, true)
 
 
-function ultraschall.InputFX_SetPreset(fxindex, presetname)
+function ultraschall.InputFX_SetPreset(fxindex, presetname, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetPreset</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
@@ -5489,6 +5631,7 @@ function ultraschall.InputFX_SetPreset(fxindex, presetname)
   <parameters>
     integer fxindex - the index of the monitoring-fx of which you want to set the preset; 1-based
     string presetname - the name of the preset, that you want to select
+    optional integer tracknumber - the tracknumber, whose inputFX-preset you want to set; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5499,25 +5642,28 @@ function ultraschall.InputFX_SetPreset(fxindex, presetname)
   <tags>fxmanagement, set, preset, by name, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPreset", "fxindex", "must be an integer", -1) return false end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_SetPreset", "fxindex", "no such fx", -2) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetPreset", "tracknumber", "no such track; must be an integer", -4) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_SetPreset", "fxindex", "no such fx", -2) return false end
   if type(presetname)~="string" then ultraschall.AddErrorMessage("InputFX_SetPreset", "presetname", "must be a string", -3) return false end
-  return reaper.TrackFX_SetPreset(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, presetname)
+  return reaper.TrackFX_SetPreset(tracknumber2, 0x1000000+fxindex-1, presetname)
 end
 
 --A=ultraschall.InputFX_SetPreset(2, "Ultraschall3")
 
 
-function ultraschall.InputFX_SetPresetByIndex(fxindex, presetindex)
+function ultraschall.InputFX_SetPresetByIndex(fxindex, presetindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetPresetByIndex</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_SetPresetByIndex(integer fxindex, integer presetindex)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_SetPresetByIndex(integer fxindex, integer presetindex, optional integer tracknumber)</functioncall>
   <description>
     Sets the preset of a monitoring-fx by preset-index.
     
@@ -5529,6 +5675,7 @@ function ultraschall.InputFX_SetPresetByIndex(fxindex, presetindex)
   <parameters>
     integer fxindex - the index of the monitoring-fx which you want to set the preset; 1-based
     integer presetindex - the index of the preset, that you want to select; 0, for default; -1, for no preset; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-preset you want to set; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5539,24 +5686,27 @@ function ultraschall.InputFX_SetPresetByIndex(fxindex, presetindex)
   <tags>fxmanagement, set, preset, by index, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPresetByIndex", "fxindex", "must be an integer", -1) return false end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_SetPresetByIndex", "fxindex", "no such fx", -2) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetPresetByIndex", "tracknumber", "no such track; must be an integer", -4) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_SetPresetByIndex", "fxindex", "no such fx", -2) return false end
   if math.type(presetindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPresetByIndex", "presetindex", "must be an integer", -3) return false end
-  return reaper.TrackFX_SetPresetByIndex(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, presetindex-1)
+  return reaper.TrackFX_SetPresetByIndex(tracknumber2, 0x1000000+fxindex-1, presetindex-1)
 end
 
 --A=ultraschall.InputFX_SetPresetByIndex(2, 1)
 
-function ultraschall.InputFX_Show(fxindex, showflag)
+function ultraschall.InputFX_Show(fxindex, showflag, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_Show</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_Show(integer fxindex, integer showflag)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_Show(integer fxindex, integer showflag, optional integer tracknumber)</functioncall>
   <description>
     Sets visibility and floating-state of a monitoring-fx
     
@@ -5569,8 +5719,9 @@ function ultraschall.InputFX_Show(fxindex, showflag)
     integer fxindex - the index of the monitoring-fx which you want to set the preset; 1-based
     integer showflag - 0, for hidechain 
                      - 1, for show chain(index valid)
-                     - 2, for hide floating window(index valid)
+                     - 2, for hide floating window (index valid)
                      - 3, for show floating window (index valid)
+    optional integer tracknumber - the tracknumber, whose inputFX-shown-state you want to set; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5581,25 +5732,28 @@ function ultraschall.InputFX_Show(fxindex, showflag)
   <tags>fxmanagement, set, visibility, floating, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_Show", "fxindex", "must be an integer", -1) return false end
-  if fxindex<1 or ultraschall.InputFX_GetCount()<fxindex then ultraschall.AddErrorMessage("InputFX_Show", "fxindex", "no such fx", -2) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_Show", "tracknumber", "no such track; must be an integer", -4) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
+  if fxindex<1 or ultraschall.InputFX_GetCount(tracknumber)<fxindex then ultraschall.AddErrorMessage("InputFX_Show", "fxindex", "no such fx", -2) return false end
   if math.type(showflag)~="integer" then ultraschall.AddErrorMessage("InputFX_Show", "showflag", "must be an integer", -3) return false end
-  reaper.TrackFX_Show(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, showflag)
+  reaper.TrackFX_Show(tracknumber2, 0x1000000+fxindex-1, showflag)
   return true
 end
 
 --A=ultraschall.InputFX_Show(1, 3)
 
-function ultraschall.InputFX_CopyFXToTakeFX(src_fx, dest_take, dest_fx)
+function ultraschall.InputFX_CopyFXToTakeFX(src_fx, dest_take, dest_fx, src_tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_CopyFXToTakeFX</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer dest_fx = ultraschall.InputFX_CopyFXToTakeFX(integer src_fx, MediaItem_Take take, integer dest_fx)</functioncall>
+  <functioncall>integer dest_fx = ultraschall.InputFX_CopyFXToTakeFX(integer src_fx, MediaItem_Take take, integer dest_fx, optional integer src_tracknumber)</functioncall>
   <description>
     copies a monitoring-fx to a takeFX
     
@@ -5612,6 +5766,7 @@ function ultraschall.InputFX_CopyFXToTakeFX(src_fx, dest_take, dest_fx)
     integer src_fx - the index inputFX that shall be copied; 1-based
     MediaItem_Take take - the take, into which you want to insert the fx as takeFX
     integer dest_fx - the index, at which you want to insert the fx; 1-based
+    optional integer src_tracknumber - the tracknumber, whose inputFX you want to copy; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5622,31 +5777,34 @@ function ultraschall.InputFX_CopyFXToTakeFX(src_fx, dest_take, dest_fx)
   <tags>fxmanagement, copy, fx, takefx, inputfx</tags>
 </US_DocBloc>
 ]]
-  if math.type(src_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "src_fx", "must be an integer", -1) return -1 end
-  if src_fx<1 or ultraschall.InputFX_GetCount()<src_fx then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "src_fx", "no such fx", -2) return -1 end
+  local src_tracknumber2
+  if math.type(src_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "src_fx", "must be an integer", -1) return -1 end  
   if math.type(dest_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "dest_fx", "must be an integer", -3) return -1 end  
   if ultraschall.type(dest_take)~="MediaItem_Take" then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "dest_take", "must be a MediaItem_Take", -4) return -1 end  
+  if src_tracknumber~=nil and (math.type(src_tracknumber)~="integer" or (src_tracknumber<0 or src_tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "tracknumber", "no such track; must be an integer", -5) return -1 end
+  if src_tracknumber==nil or src_tracknumber==0 then src_tracknumber2=reaper.GetMasterTrack() else src_tracknumber2=reaper.GetTrack(0,src_tracknumber-1) end
+  if src_fx<1 or ultraschall.InputFX_GetCount(src_tracknumber)<src_fx then ultraschall.AddErrorMessage("InputFX_CopyFXToTakeFX", "src_fx", "no such fx", -2) return -1 end
   local FinFX
   if dest_fx>reaper.TakeFX_GetCount(dest_take) then FinFX=reaper.TakeFX_GetCount(dest_take)+1 else FinFX=dest_fx end
   src_fx=src_fx-1
   dest_fx=dest_fx-1 
   
-  reaper.TrackFX_CopyToTake(reaper.GetMasterTrack(0), src_fx+0x1000000, dest_take, dest_fx, false)
+  reaper.TrackFX_CopyToTake(src_tracknumber2, src_fx+0x1000000, dest_take, dest_fx, false)
   return FinFX
 end
 
 --A=ultraschall.InputFX_CopyFXToTrackFX(1, reaper.GetMasterTrack(), 1)
 
-function ultraschall.InputFX_CopyFXFromTakeFX(src_take, src_fx, dest_fx)
+function ultraschall.InputFX_CopyFXFromTakeFX(src_take, src_fx, dest_fx, dest_tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_CopyFXFromTakeFX</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer dest_fx = ultraschall.InputFX_CopyFXFromTakeFX(MediaItem_Take take, integer src_fx, integer dest_fx)</functioncall>
+  <functioncall>integer dest_fx = ultraschall.InputFX_CopyFXFromTakeFX(MediaItem_Take take, integer src_fx, integer dest_fx, optional integer dest_tracknumber)</functioncall>
   <description>
     copies a takeFX to monitoringFX
     
@@ -5659,6 +5817,7 @@ function ultraschall.InputFX_CopyFXFromTakeFX(src_take, src_fx, dest_fx)
     MediaItem_Take take - the take, from which you want to copy the takeFX
     integer src_fx - the index takeFX that shall be copied; 1-based
     integer dest_fx - the index, at which you want to insert the fx into the monitoring FXChain; 1-based
+    optional integer dest_tracknumber - the tracknumber, to which you want to copy a new inputFX; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5669,30 +5828,35 @@ function ultraschall.InputFX_CopyFXFromTakeFX(src_take, src_fx, dest_fx)
   <tags>fxmanagement, copy, fx, takefx, inputfx</tags>
 </US_DocBloc>
 ]]
+  local dest_tracknumber2
   if ultraschall.type(src_take)~="MediaItem_Take" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "src_take", "must be a MediaItem_Take", -4) return -1 end  
   if math.type(src_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "src_fx", "must be an integer", -1) return -1 end
   if src_fx<1 or reaper.TakeFX_GetCount(src_take)<src_fx then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "src_fx", "no such fx", -2) return -1 end
   if math.type(dest_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "dest_fx", "must be an integer", -3) return -1 end  
   if dest_fx<1 then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "dest_fx", "must be bigger or equal 1", -5) return -1 end  
+  
+  if dest_tracknumber~=nil and (math.type(dest_tracknumber)~="integer" or (dest_tracknumber<0 or dest_tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_CopyFXFromTakeFX", "tracknumber", "no such track; must be an integer", -6) return false end
+  if dest_tracknumber==nil or dest_tracknumber==0 then dest_tracknumber2=reaper.GetMasterTrack() else dest_tracknumber2=reaper.GetTrack(0,dest_tracknumber-1) end
+  
   local FinFX
-  if dest_fx>ultraschall.InputFX_GetCount() then FinFX=ultraschall.InputFX_GetCount()+1 else FinFX=dest_fx end
-    
-  reaper.TakeFX_CopyToTrack(src_take, src_fx-1, reaper.GetMasterTrack(0), 0x1000000+dest_fx-1, false)
+  if dest_fx>ultraschall.InputFX_GetCount(dest_tracknumber) then FinFX=ultraschall.InputFX_GetCount(dest_tracknumber)+1 else FinFX=dest_fx end
+  
+  reaper.TakeFX_CopyToTrack(src_take, src_fx-1, dest_tracknumber2, 0x1000000+dest_fx-1, false)
   return FinFX
 end
 
 --ultraschall.InputFX_CopyFXFromTakeFX(reaper.GetMediaItemTake(reaper.GetMediaItem(0,0),0), 1, 1)
 
-function ultraschall.InputFX_MoveFXFromTakeFX(src_take, src_fx, dest_fx)
+function ultraschall.InputFX_MoveFXFromTakeFX(src_take, src_fx, dest_fx, dest_tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_MoveFXFromTakeFX</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>integer dest_fx = ultraschall.InputFX_MoveFXFromTakeFX(MediaItem_Take take, integer src_fx, integer dest_fx)</functioncall>
+  <functioncall>integer dest_fx = ultraschall.InputFX_MoveFXFromTakeFX(MediaItem_Take take, integer src_fx, integer dest_fx, optional integer dest_tracknumber)</functioncall>
   <description>
     moves a takeFX to monitoringFX
     
@@ -5705,6 +5869,7 @@ function ultraschall.InputFX_MoveFXFromTakeFX(src_take, src_fx, dest_fx)
     MediaItem_Take take - the take, from which you want to move the takeFX
     integer src_fx - the index takeFX that shall be movd; 1-based
     integer dest_fx - the index, at which you want to insert the fx into the monitoring FXChain; 1-based
+    optional integer dest_tracknumber - the tracknumber, to which you want to move a new inputFX; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5715,24 +5880,29 @@ function ultraschall.InputFX_MoveFXFromTakeFX(src_take, src_fx, dest_fx)
   <tags>fxmanagement, move, fx, takefx, inputfx</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.type(src_take)~="MediaItem_Take" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "src_take", "must be a MediaItem_Take", -4) return -1 end
+  local dest_tracknumber2
+  if ultraschall.type(src_take)~="MediaItem_Take" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "src_take", "must be a MediaItem_Take", -4) return -1 end  
   if math.type(src_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "src_fx", "must be an integer", -1) return -1 end
   if src_fx<1 or reaper.TakeFX_GetCount(src_take)<src_fx then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "src_fx", "no such fx", -2) return -1 end
   if math.type(dest_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "dest_fx", "must be an integer", -3) return -1 end  
   if dest_fx<1 then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "dest_fx", "must be bigger or equal 1", -5) return -1 end  
+  
+  if dest_tracknumber~=nil and (math.type(dest_tracknumber)~="integer" or (dest_tracknumber<0 or dest_tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_MoveFXFromTakeFX", "tracknumber", "no such track; must be an integer", -6) return false end
+  if dest_tracknumber==nil or dest_tracknumber==0 then dest_tracknumber2=reaper.GetMasterTrack() else dest_tracknumber2=reaper.GetTrack(0,dest_tracknumber-1) end
+  
   local FinFX
-  if dest_fx>ultraschall.InputFX_GetCount() then FinFX=ultraschall.InputFX_GetCount()+1 else FinFX=dest_fx end
-
-  reaper.TakeFX_CopyToTrack(src_take, src_fx-1, reaper.GetMasterTrack(0), 0x1000000+dest_fx-1, true)
+  if dest_fx>ultraschall.InputFX_GetCount(dest_tracknumber) then FinFX=ultraschall.InputFX_GetCount(dest_tracknumber)+1 else FinFX=dest_fx end
+  
+  reaper.TakeFX_CopyToTrack(src_take, src_fx-1, dest_tracknumber2, 0x1000000+dest_fx-1, true)
   return FinFX
 end
 
-function ultraschall.InputFX_MoveFXToTakeFX(src_fx, dest_take, dest_fx)
+function ultraschall.InputFX_MoveFXToTakeFX(src_fx, dest_take, dest_fx, src_tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_MoveFXToTakeFX</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.05
     Lua=5.3
   </requires>
@@ -5749,6 +5919,7 @@ function ultraschall.InputFX_MoveFXToTakeFX(src_fx, dest_take, dest_fx)
     integer src_fx - the index inputFX that shall be moved; 1-based
     MediaItem_Take take - the take, into which you want to insert the fx as takeFX
     integer dest_fx - the index, at which you want to insert the fx; 1-based
+    optional integer src_tracknumber - the tracknumber, whose inputFX you want to move; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5759,37 +5930,48 @@ function ultraschall.InputFX_MoveFXToTakeFX(src_fx, dest_take, dest_fx)
   <tags>fxmanagement, move, fx, takefx, inputfx</tags>
 </US_DocBloc>
 ]]
-  if math.type(src_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "src_fx", "must be an integer", -1) return -1 end
-  if src_fx<1 or ultraschall.InputFX_GetCount()<src_fx then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "src_fx", "no such fx", -2) return -1 end
+  local src_tracknumber2
+  if math.type(src_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "src_fx", "must be an integer", -1) return -1 end  
   if math.type(dest_fx)~="integer" then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "dest_fx", "must be an integer", -3) return -1 end  
   if ultraschall.type(dest_take)~="MediaItem_Take" then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "dest_take", "must be a MediaItem_Take", -4) return -1 end  
+  if src_tracknumber~=nil and (math.type(src_tracknumber)~="integer" or (src_tracknumber<0 or src_tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "tracknumber", "no such track; must be an integer", -5) return -1 end
+  if src_tracknumber==nil or src_tracknumber==0 then src_tracknumber2=reaper.GetMasterTrack() else src_tracknumber2=reaper.GetTrack(0,src_tracknumber-1) end
+  if src_fx<1 or ultraschall.InputFX_GetCount(src_tracknumber)<src_fx then ultraschall.AddErrorMessage("InputFX_MoveFXToTakeFX", "src_fx", "no such fx", -2) return -1 end
   local FinFX
   if dest_fx>reaper.TakeFX_GetCount(dest_take) then FinFX=reaper.TakeFX_GetCount(dest_take)+1 else FinFX=dest_fx end
   src_fx=src_fx-1
   dest_fx=dest_fx-1 
   
-  reaper.TrackFX_CopyToTake(reaper.GetMasterTrack(0), src_fx+0x1000000, dest_take, dest_fx, true)
+  reaper.TrackFX_CopyToTake(src_tracknumber2, src_fx+0x1000000, dest_take, dest_fx, true)
   return FinFX
 end
 
-function ultraschall.InputFX_GetFXChain(trackfx_or_takefx)
+
+
+function ultraschall.InputFX_GetFXChain(fxstatechunk_type, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetFXChain</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>string FXStateChunk = ultraschall.InputFX_GetFXChain(integer trackfx_or_takefx)</functioncall>
+  <functioncall>string FXStateChunk = ultraschall.InputFX_GetFXChain(integer fxstatechunk_type, optional integer tracknumber)</functioncall>
   <description>
     Loads the FXStateChunk from the monitoring-fx-chain.
+    
+    Returns 
   </description>
   <retvals>
     string FXStateChunk - the loaded FXStateChunk; nil, in case of an error
   </retvals>
   <parameters>
-    integer trackfx_or_takefx - 0, return the FXStateChunk as Track-FXStateChunk; 1, return the FXStateChunk as Take-FXStateChunk
+    integer fxstatechunk_type - 0, return the FXStateChunk as Track-FXStateChunk
+                              - 1, return the FXStateChunk as Take-FXStateChunk
+                              - 2, return the FXStateChunk as Track-InputFX-FXStateChunk
+    optional integer tracknumber - the tracknumber of the track, whose fxinput-chain you want to get
+                                 - nil or 0, global monitoring-fx; 1 and higher, the inputFX-chain from track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5800,29 +5982,46 @@ function ultraschall.InputFX_GetFXChain(trackfx_or_takefx)
   <tags>fx management, load, fxstatechunk, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]
-  if math.type(trackfx_or_takefx)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFXChain", "trackfx_or_takefx", "must be an integer", -1) return nil end
-  if trackfx_or_takefx~=0 and trackfx_or_takefx~=1 then ultraschall.AddErrorMessage("InputFX_GetFXChain", "trackfx_or_takefx", "must be an integer", -2) return nil end
-  local FXStateChunk = ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-hwoutfx.ini")
-  FXStateChunk = FXStateChunk:match(".-(BYPASS.*)")
-  FXStateChunk = string.gsub(FXStateChunk, "FLOATPOS .-\n", "")
-  FXStateChunk = string.gsub(FXStateChunk, "FXID .-\n", "")
-  FXStateChunk = string.gsub(FXStateChunk, "(BYPASS %d- %d-) %d-\n", "%1\n")
-  
-  if trackfx_or_takefx==0 then FXChain="<FXCHAIN\n" else FXChain="<TAKEFX\n" end
-  
-  return ultraschall.StateChunkLayouter(FXChain.."  "..string.gsub(FXStateChunk, "\n", "\n  ").."\n>")
+  if math.type(fxstatechunk_type)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFXChain", "fxstatechunk_type", "must be an integer", -1) return nil end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetOpen", "tracknumber", "no such track; must be an integer", -4) return false end
+  if fxstatechunk_type<0 or fxstatechunk_type>2 then ultraschall.AddErrorMessage("InputFX_GetFXChain", "fxstatechunk_type", "must be between 0 and 2", -3) return nil end
+  local FXStateChunk  
+  if tracknumber==nil or tracknumber==0 then
+    -- return master-inputfx, as read from ResourcePath/reaper-hwoutfx.ini
+    FXStateChunk = ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-hwoutfx.ini")
+    FXStateChunk = string.gsub(FXStateChunk, "(BYPASS %d- %d-) %d-\n", "%1\n")
+    
+    local FXChain
+    if fxstatechunk_type==0 then FXChain="<FXCHAIN\n" 
+    elseif fxstatechunk_type==1 then FXChain="<TAKEFX\n" 
+    elseif fxstatechunk_type==2 then FXChain="<FXCHAIN_REC\n"
+    end
+    
+    return ultraschall.StateChunkLayouter(FXChain.."  "..string.gsub(FXStateChunk, "\n", "\n  ").."\n>")
+  else
+    -- return InputFX from a specific track, that is not master-track
+    local retval, TSC=ultraschall.GetTrackStateChunk_Tracknumber(tracknumber)
+    TSC = ultraschall.StateChunkLayouter(TSC)
+    FXStateChunk=TSC:match("\n  (<FXCHAIN_REC.-\n  >)")
+    if FXStateChunk==nil then ultraschall.AddErrorMessage("InputFX_GetFXChain", "tracknumber", "track has no inputFX", -4) return nil end
+    FXStateChunk=string.gsub(FXStateChunk, "\n  ", "\n")
+    if fxstatechunk_type==0 then FXStateChunk=string.gsub(FXStateChunk, "<FXCHAIN_REC", "<FXCHAIN")
+    elseif fxstatechunk_type==1 then FXStateChunk=string.gsub(FXStateChunk, "<FXCHAIN_REC", "<TAKEFX")
+    end
+    return FXStateChunk
+  end
 end
 
-function ultraschall.InputFX_SetFXChain(FXStateChunk, replacefx)
+function ultraschall.InputFX_SetFXChain(FXStateChunk, replacefx, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetFXChain</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_SetFXChain(string FXStateChunk, boolean replacefx)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_SetFXChain(string FXStateChunk, boolean replacefx, optional integer tracknumber)</functioncall>
   <description>
     Inserts an FXStateChunk into the monitoring-fx-chain. Allows replacing it as well.
     
@@ -5835,7 +6034,8 @@ function ultraschall.InputFX_SetFXChain(FXStateChunk, replacefx)
   </retvals>
   <parameters>
     string FXStateChunk - the FXStateChunk that shall be set as monitoring fx-chain
-    boolean replacefx - true, replace the current monitoring-fx-chain with the new one; false, only insert the new fx
+    boolean replacefx - true, replace the current monitoring-fx-chain with the new one; false, only insert the new fx at the end of the FXChain
+    optional integer tracknumber - the track, whose inputFX-chain you want to set; 0 or nil, global monitoring fx
   </parameters>
   <chapter_context>
     FX-Management
@@ -5848,9 +6048,13 @@ function ultraschall.InputFX_SetFXChain(FXStateChunk, replacefx)
 ]]
   if type(replacefx)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetFXChain", "replacefx", "must be a boolean", -1) return false end
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("InputFX_SetFXChain", "FXStateChunk", "not a valid FXStateChunk", -2) return false end
-  reaper.PreventUIRefresh(1)
-  FXStateChunk=string.gsub(FXStateChunk, "<TAKEFX", "<FXCHAIN")
-  local TSC=
+  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("InputFX_SetFXChain", "tracknumber", "must be an integer", -3) return false end
+  if tracknumber<0 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("InputFX_SetFXChain", "tracknumber", "no such track", -4) return false end
+  
+  if tracknumber==0 or tracknumber==nil then
+    reaper.PreventUIRefresh(1)
+    FXStateChunk=string.gsub(FXStateChunk, "<TAKEFX", "<FXCHAIN")
+    local TSC=
 [[<TRACK
   NAME ""
   PEAKCOL 33530462
@@ -5876,36 +6080,66 @@ function ultraschall.InputFX_SetFXChain(FXStateChunk, replacefx)
 "\n  "..string.gsub(FXStateChunk, "\n", "\n  ").."\n"
 ..[[>
 ]]
-  reaper.Undo_BeginBlock()
-  local retval, MediaTrack = ultraschall.InsertTrack_TrackStateChunk(TSC)
-  local count=ultraschall.InputFX_GetCount()
-  if replacefx==true then
-    count=0
-    for i=1, ultraschall.InputFX_GetCount() do
-      ultraschall.InputFX_Delete(1)
+    reaper.Undo_BeginBlock()
+    local retval, MediaTrack = ultraschall.InsertTrack_TrackStateChunk(TSC)
+    local count=ultraschall.InputFX_GetCount()
+    if replacefx==true then
+      count=0
+      for i=1, ultraschall.InputFX_GetCount() do
+        ultraschall.InputFX_Delete(1)
+      end
     end
-  end
   
-  for i=1, reaper.TrackFX_GetCount(MediaTrack) do
-    --print2(i)
-    ultraschall.InputFX_MoveFXFromTrackFX(MediaTrack, 1, i)
+    for i=1, reaper.TrackFX_GetCount(MediaTrack) do
+      --print2(i)
+      ultraschall.InputFX_MoveFXFromTrackFX(MediaTrack, 1, i)
+    end
+    reaper.DeleteTrack(MediaTrack)
+    reaper.PreventUIRefresh(-1)
+    reaper.Undo_EndBlock("Changed InputFX", -1)
+    return true
+  else
+    
+    FXStateChunk=string.gsub(FXStateChunk, "<TAKEFX\n", "<FXCHAIN_REC\n")
+    FXStateChunk=string.gsub(FXStateChunk, "<FXCHAIN\n", "<FXCHAIN_REC\n")
+    
+    local retval, TSC = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber)    
+    TSC = ultraschall.StateChunkLayouter(TSC)
+    
+    -- get currently existing FXChain(if existing)
+    local offset1, FXStateChunk_old, offset2=TSC:match("\n  ()(<FXCHAIN_REC.-\n  >)()")    
+    if FXStateChunk_old==nil then 
+      FXStateChunk_old="" 
+      offset1, offset2 = TSC:match("MAINSEND.-\n()()")
+    end
+    
+    if replacefx==false then
+      -- if fx shall be replaced, prepare FXStateChunks for this
+      FXStateChunk_old=string.gsub(FXStateChunk_old, "\n    ", "\n  ")
+      FXStateChunk_old=FXStateChunk_old:sub(1,-2)
+      FXStateChunk=FXStateChunk:match("(BYPASS.*)")     
+    else
+      -- if fx shall be replaced, make old FXStateChunk="" and layout the new statechunk
+      FXStateChunk_old="    "      
+      FXStateChunk="  "..ultraschall.StateChunkLayouter(FXStateChunk):sub(1,-3).."  >"
+    end
+    
+    
+    TSC=TSC:sub(1, offset1-1)..FXStateChunk_old.."\n"..FXStateChunk.."\n"..TSC:sub(offset2, -1)
+    ultraschall.SetTrackStateChunk_Tracknumber(tracknumber, TSC)
   end
-  reaper.DeleteTrack(MediaTrack)
-  reaper.PreventUIRefresh(-1)
-  reaper.Undo_EndBlock("Changed InputFX", -1)
-  return true
 end
 
-function ultraschall.InputFX_FormatParamValue(fxindex, paramindex, value)
+function ultraschall.InputFX_FormatParamValue(fxindex, paramindex, value, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_FormatParamValue</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_FormatParamValue(integer fxindex, integer paramindex, number value)</functioncall>
+  <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_FormatParamValue(integer fxindex, integer paramindex, number value, optional integer tracknumber)</functioncall>
   <description>
     You can take a value and format it in the style of the used format of a specific parameter, like the frequency(to Hz), gain(to dB) with ReaEQ or bypass(normal, bypasses), wet with ReaTune, etc.
     
@@ -5921,6 +6155,7 @@ function ultraschall.InputFX_FormatParamValue(fxindex, paramindex, value)
     integer fxindex - the index of the fx; 1-based
     integer paramindex - the parameter, whose formatting-style you want to applied to value; 1-based
     number value - the value you want to have formatted in the style of the parameter
+    optional integer tracknumber - the tracknumber, whose inputFX-parameter you want to format; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5931,27 +6166,31 @@ function ultraschall.InputFX_FormatParamValue(fxindex, paramindex, value)
   <tags>fx management, format, value, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "fxindex", "must be an integer", -1) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "tracknumber", "no such track; must be an integer", -6) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
+  
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "fxindex", "must 1 or higher", -2) return false end  
   if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "paramindex", "must be an integer", -3) return false end
   if paramindex<1 then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "paramindex", "must 1 or higher", -4) return false end  
   if type(value)~="number" then ultraschall.AddErrorMessage("InputFX_FormatParamValue", "value", "must be a number", -5) return false end 
 
-  return reaper.TrackFX_FormatParamValue(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, value, "")
+  return reaper.TrackFX_FormatParamValue(tracknumber2, 0x1000000+fxindex-1, paramindex-1, value, "")
 end
 
 --A,B,C=ultraschall.InputFX_FormatParamValue(2, 1, 0)
 
-function ultraschall.InputFX_FormatParamValueNormalized(fxindex, paramindex, value)
+function ultraschall.InputFX_FormatParamValueNormalized(fxindex, paramindex, value, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_FormatParamValueNormalized</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_FormatParamValueNormalized(integer fxindex, integer paramindex, number value)</functioncall>
+  <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_FormatParamValueNormalized(integer fxindex, integer paramindex, number value, optional integer tracknumber)</functioncall>
   <description>
     You can take a value and format it in the style of the used format of a specific parameter, like the frequency(to Hz), gain(to dB) with ReaEQ or bypass(normal, bypasses), wet with ReaTune, etc.
     The value will be normalized.
@@ -5968,6 +6207,7 @@ function ultraschall.InputFX_FormatParamValueNormalized(fxindex, paramindex, val
     integer fxindex - the index of the fx; 1-based
     integer paramindex - the parameter, whose formatting-style you want to applied to value; 1-based
     number value - the value you want to have formatted in the style of the parameter
+    optional integer tracknumber - the tracknumber, whose inputFX-parameter you want to get formatted and normalized; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -5978,28 +6218,31 @@ function ultraschall.InputFX_FormatParamValueNormalized(fxindex, paramindex, val
   <tags>fx management, format, value, normalized, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "fxindex", "must be an integer", -1) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "tracknumber", "no such track; must be an integer", -6) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "fxindex", "must 1 or higher", -2) return false end  
   if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "paramindex", "must be an integer", -3) return false end
   if paramindex<1 then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "paramindex", "must 1 or higher", -4) return false end  
   if type(value)~="number" then ultraschall.AddErrorMessage("InputFX_FormatParamValueNormalized", "value", "must be a number", -5) return false end
 
-  return reaper.TrackFX_FormatParamValueNormalized(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, value, "")
+  return reaper.TrackFX_FormatParamValueNormalized(tracknumber2, 0x1000000+fxindex-1, paramindex-1, value, "")
 end
 
 --A,B,C=ultraschall.InputFX_FormatParamValueNormalized(1, 2, -1)
 
 
-function ultraschall.InputFX_GetEQ(instantiate)
+function ultraschall.InputFX_GetEQ(instantiate, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetEQ</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer index = ultraschall.InputFX_GetEQ(boolean instantiate)</functioncall>
+  <functioncall>integer index = ultraschall.InputFX_GetEQ(boolean instantiate, optional integer tracknumber)</functioncall>
   <description>
     Get the index of the first ReaEQ-instance in the monitoringFX, if available.
     
@@ -6012,6 +6255,7 @@ function ultraschall.InputFX_GetEQ(instantiate)
   </retvals>
   <parameters>
     boolean instantiate - true, add ReaEQ into monitoring-fx if not existing yet; false, don't add a ReaEQ-instance if not existing in monitoring-FXChain yet
+    optional integer tracknumber - the tracknumber, whose inputFX-eq-position you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6022,25 +6266,28 @@ function ultraschall.InputFX_GetEQ(instantiate)
   <tags>fx management, get, eq instance, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if type(instantiate)~="boolean" then ultraschall.AddErrorMessage("InputFX_GetEQ", "instantiate", "must be a boolean", -1) return -1 end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetEQ", "tracknumber", "no such track; must be an integer", -2) return -1 end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   if instantiate==true then instantiate=1 else instantiate=0 end
-  return reaper.TrackFX_AddByName(reaper.GetMasterTrack(), "ReaEQ", true, instantiate)+1
+  return reaper.TrackFX_AddByName(tracknumber2, "ReaEQ", true, instantiate)+1
 end
 
 --A1,B1=ultraschall.InputFX_GetEQ(true)
 
 
 
-function ultraschall.InputFX_GetFormattedParamValue(fxindex, paramindex)
+function ultraschall.InputFX_GetFormattedParamValue(fxindex, paramindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetFormattedParamValue</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_GetFormattedParamValue(integer fxindex, integer paramindex)</functioncall>
+  <functioncall>boolean retval, string formatted_value = ultraschall.InputFX_GetFormattedParamValue(integer fxindex, integer paramindex, optional integer tracknumber)</functioncall>
   <description>
     Returns the current value of the monitoring-fx's parameter in its formatted style.
     
@@ -6053,6 +6300,7 @@ function ultraschall.InputFX_GetFormattedParamValue(fxindex, paramindex)
   <parameters>
     integer fxindex - the index of the fx; 1-based
     integer paramindex - the parameter, whose formatted value you want to get; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-parameter-value you want to get as formatted; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6063,26 +6311,29 @@ function ultraschall.InputFX_GetFormattedParamValue(fxindex, paramindex)
   <tags>fx management, get, format, value, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFormattedParamValue", "fxindex", "must be an integer", -1) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetFormattedParamValue", "tracknumber", "no such track; must be an integer", -5) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetFormattedParamValue", "fxindex", "must 1 or higher", -2) return false end  
   if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetFormattedParamValue", "paramindex", "must be an integer", -3) return false end
   if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetFormattedParamValue", "paramindex", "must 1 or higher", -4) return false end  
   
-  return reaper.TrackFX_GetFormattedParamValue(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, "")
+  return reaper.TrackFX_GetFormattedParamValue(tracknumber2, 0x1000000+fxindex-1, paramindex-1, "")
 end
 
 --A={ultraschall.InputFX_GetFormattedParamValue(2, 1)}
 
-function ultraschall.InputFX_GetIOSize(fxindex)
+function ultraschall.InputFX_GetIOSize(fxindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetIOSize</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer retval, optional number inputPins, optional number outputPins = ultraschall.InputFX_GetIOSize(integer fxindex)</functioncall>
+  <functioncall>integer retval, optional number inputPins, optional number outputPins = ultraschall.InputFX_GetIOSize(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     Returns the plugin-type and the input/output-pins available for an inputFX
     
@@ -6101,6 +6352,7 @@ function ultraschall.InputFX_GetIOSize(fxindex)
   </retvals>
   <parameters>
     integer fxindex - the index of the fx; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-plugintype/in-out-pins you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6111,23 +6363,26 @@ function ultraschall.InputFX_GetIOSize(fxindex)
   <tags>fx management, get, plugin type, input pins, output pins, pins, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetIOSize", "fxindex", "must be an integer", -1) return -1 end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetIOSize", "tracknumber", "no such track; must be an integer", -2) return -1 end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetIOSize", "fxindex", "must 1 or higher", -2) return -1 end  
-  return reaper.TrackFX_GetIOSize(reaper.GetMasterTrack(0), 0x1000000+fxindex-1)
+  return reaper.TrackFX_GetIOSize(tracknumber2, 0x1000000+fxindex-1)
 end
 
 --A={ultraschall.InputFX_GetIOSize(1)}
 
-function ultraschall.InputFX_GetNamedConfigParm(fxindex, parmname)
+function ultraschall.InputFX_GetNamedConfigParm(fxindex, parmname, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetNamedConfigParm</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.02
+    Ultraschall=4.2
+    Reaper=6.43
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string config_parm_name = ultraschall.InputFX_GetNamedConfigParm(integer fxindex, string parmname)</functioncall>
+  <functioncall>boolean retval, string config_parm_name = ultraschall.InputFX_GetNamedConfigParm(integer fxindex, string parmname, optional integer tracknumber)</functioncall>
   <description>
     gets plug-in specific named configuration value (returns true on success) of a monitoring-fx. 
     
@@ -6135,6 +6390,7 @@ function ultraschall.InputFX_GetNamedConfigParm(fxindex, parmname)
     'pdc' returns PDC latency. 
     'in_pin_0' returns name of first input pin (if available), 
     'out_pin_0' returns name of first output pin (if available), etc.
+    'fx_ident' returns pluginname with path
     
     returns false in case of an error
   </description>
@@ -6145,6 +6401,7 @@ function ultraschall.InputFX_GetNamedConfigParm(fxindex, parmname)
   <parameters>
     integer fxindex - the index of the fx; 1-based
     string parmname - the value of the named config parm you want to get
+    optional integer tracknumber - the tracknumber, whose inputFX-named-config-parameter-state you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6155,26 +6412,29 @@ function ultraschall.InputFX_GetNamedConfigParm(fxindex, parmname)
   <tags>fx management, get, named configuration value, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetNamedConfigParm", "fxindex", "must be an integer", -1) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetNamedConfigParm", "tracknumber", "no such track; must be an integer", -4) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetNamedConfigParm", "fxindex", "must 1 or higher", -2) return false end  
   if type(parmname)~="string" then ultraschall.AddErrorMessage("InputFX_GetNamedConfigParm", "parmname", "must be a string", -3) return false end
 
-  return reaper.TrackFX_GetNamedConfigParm(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, parmname)
+  return reaper.TrackFX_GetNamedConfigParm(tracknumber2, 0x1000000+fxindex-1, parmname)
 end
 
 --A3={ultraschall.InputFX_GetNamedConfigParm(2, "")}
 
-function ultraschall.InputFX_GetParam(fxindex, paramindex)
+function ultraschall.InputFX_GetParam(fxindex, paramindex, tracknumber)
   -- returns nil in case of an error
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetParam</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>number curval, number minval, number maxval = ultraschall.InputFX_GetParam(integer fxindex, integer paramindex)</functioncall>
+  <functioncall>number curval, number minval, number maxval = ultraschall.InputFX_GetParam(integer fxindex, integer paramindex, optional integer tracknumber)</functioncall>
   <description>
     returns the current, maximum and minimum value of a parameter of a monitoring-fx.
     
@@ -6188,6 +6448,7 @@ function ultraschall.InputFX_GetParam(fxindex, paramindex)
   <parameters>
     integer fxindex - the index of the monitoring-fx; 1-based
     integer paramindex - the parameter, whose value you want to retrieve; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-parameter-states you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6198,31 +6459,36 @@ function ultraschall.InputFX_GetParam(fxindex, paramindex)
   <tags>fx management, get, value, parameter, minimum, maximum, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]  
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParam", "fxindex", "must be an integer", -1) return end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetOpen", "tracknumber", "no such track; must be an integer", -5) return end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetParam", "fxindex", "must 1 or higher", -2) return end  
   if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParam", "paramindex", "must be an integer", -3) return end
   if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetParam", "paramindex", "must 1 or higher", -4) return end  
   
-  return reaper.TrackFX_GetParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+  return reaper.TrackFX_GetParam(tracknumber2, 0x1000000+fxindex-1, paramindex-1)
 end
 
 --A={ultraschall.InputFX_GetParam(1, 4)}
 
 
-function ultraschall.InputFX_GetParameterStepSizes(fxindex, paramindex)
+function ultraschall.InputFX_GetParameterStepSizes(fxindex, paramindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetParameterStepSizes</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, number step, number smallstep, number largestep, boolean istoggle = ultraschall.InputFX_GetParameterStepSizes(integer fxindex, integer paramindex)</functioncall>
+  <functioncall>boolean retval, number step, number smallstep, number largestep, boolean istoggle = ultraschall.InputFX_GetParameterStepSizes(integer fxindex, integer paramindex, optional integer tracknumber)</functioncall>
   <description>
     returns the stepsizes of a parameter of a monitoring-fx.
     
-    returns nil in case of an error
+    Commonly used for JSFX and VideoProcessor.
+    
+    returns false in case of an error
   </description>
   <retvals>
     boolean retval - true, stepsize is available; false; stepsize is not available; nil, in case of an error
@@ -6234,6 +6500,7 @@ function ultraschall.InputFX_GetParameterStepSizes(fxindex, paramindex)
   <parameters>
     integer fxindex - the index of the monitoring-fx; 1-based
     integer paramindex - the parameter, whose values you want to retrieve; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-parameter-stepsizes you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6244,27 +6511,30 @@ function ultraschall.InputFX_GetParameterStepSizes(fxindex, paramindex)
   <tags>fx management, get, stepsize, parameter, monitoring fx, inputfx</tags>
 </US_DocBloc>
 ]]  
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParameterStepSizes", "fxindex", "must be an integer", -1) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetParameterStepSizes", "tracknumber", "no such track; must be an integer", -5) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetParameterStepSizes", "fxindex", "must 1 or higher", -2) return false end  
   if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParameterStepSizes", "paramindex", "must be an integer", -3) return false end
   if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetParameterStepSizes", "paramindex", "must 1 or higher", -4) return false end  
 
-  return reaper.TrackFX_GetParameterStepSizes(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+  return reaper.TrackFX_GetParameterStepSizes(tracknumber2, 0x1000000+fxindex-1, paramindex-1)
 end
 
 --A={ultraschall.InputFX_GetParameterStepSizes(4, 2)}
 
-function ultraschall.InputFX_GetParamEx(fxindex, paramindex)
+function ultraschall.InputFX_GetParamEx(fxindex, paramindex, tracknumber)
   -- returns nil in case of an error
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetParamEx</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>number curval, number minval, number maxval, number midval = ultraschall.InputFX_GetParamEx(integer fxindex, integer paramindex)</functioncall>
+  <functioncall>number curval, number minval, number maxval, number midval = ultraschall.InputFX_GetParamEx(integer fxindex, integer paramindex, optional integer tracknumber)</functioncall>
   <description>
     returns the current, maximum, minimum and mid-value of a parameter of a monitoring-fx.
     
@@ -6279,6 +6549,7 @@ function ultraschall.InputFX_GetParamEx(fxindex, paramindex)
   <parameters>
     integer fxindex - the index of the monitoring-fx; 1-based
     integer paramindex - the parameter, whose value you want to retrieve; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-param-states you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6289,26 +6560,31 @@ function ultraschall.InputFX_GetParamEx(fxindex, paramindex)
   <tags>fx management, get, value, parameter, minimum, maximum, midvalue, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]  
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamEx", "fxindex", "must be an integer", -1) return end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetOpen", "tracknumber", "no such track; must be an integer", -6) return end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamEx", "fxindex", "must 1 or higher", -2) return end  
   if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamEx", "paramindex", "must be an integer", -3) return end
   if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamEx", "paramindex", "must 1 or higher", -4) return end  
   
-  return reaper.TrackFX_GetParamEx(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+  return reaper.TrackFX_GetParamEx(tracknumber2, 0x1000000+fxindex-1, paramindex-1)
 end
 
 --A={ultraschall.InputFX_GetParamEx(1, 3)}
 
-function ultraschall.InputFX_GetParamName(fxindex, paramindex)
+--mespotine
+
+function ultraschall.InputFX_GetParamName(fxindex, paramindex, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetParamName</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string paramname = ultraschall.InputFX_GetParamName(integer fxindex, integer paramindex)</functioncall>
+  <functioncall>boolean retval, string paramname = ultraschall.InputFX_GetParamName(integer fxindex, integer paramindex, optional integer tracknumber)</functioncall>
   <description>
     returns the name of a parameter of a monitoring-fx.
     
@@ -6321,6 +6597,7 @@ function ultraschall.InputFX_GetParamName(fxindex, paramindex)
   <parameters>
     integer fxindex - the index of the monitoring-fx; 1-based
     integer paramindex - the parameter, whose name you want to retrieve; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-parameter-name you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6330,29 +6607,31 @@ function ultraschall.InputFX_GetParamName(fxindex, paramindex)
   <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
   <tags>fx management, get, name, monitoringfx, inputfx</tags>
 </US_DocBloc>
-]]  
+]]local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamName", "fxindex", "must be an integer", -1) return false end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamName", "fxindex", "must 1 or higher", -2) return false end  
   if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamName", "paramindex", "must be an integer", -3) return false end
   if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamName", "paramindex", "must 1 or higher", -4) return false end  
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetParamName", "tracknumber", "no such track; must be an integer", -5) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
 
-  return reaper.TrackFX_GetParamName(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1, "")
+  return reaper.TrackFX_GetParamName(tracknumber2, 0x1000000+fxindex-1, paramindex-1, "")
 end
 
 --A={ultraschall.InputFX_GetParamName(4, 2)}
 
 
-function ultraschall.InputFX_GetParamNormalized(fxindex, paramindex)
+function ultraschall.InputFX_GetParamNormalized(fxindex, paramindex, tracknumber)
   -- returns nil in case of an error
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetParamNormalized</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer normalized_value = ultraschall.InputFX_GetParamNormalized(integer fxindex, integer paramindex)</functioncall>
+  <functioncall>integer normalized_value = ultraschall.InputFX_GetParamNormalized(integer fxindex, integer paramindex, optional integer tracknumber)</functioncall>
   <description>
     returns the value of a parameter of a monitoring-fx in a normalized state.
     
@@ -6364,6 +6643,7 @@ function ultraschall.InputFX_GetParamNormalized(fxindex, paramindex)
   <parameters>
     integer fxindex - the index of the monitoring-fx; 1-based
     integer paramindex - the parameter, whose normalized value you want to retrieve; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-param-normalized-state you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6374,27 +6654,30 @@ function ultraschall.InputFX_GetParamNormalized(fxindex, paramindex)
   <tags>fx management, get, value, normalized, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]    
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamNormalized", "fxindex", "must be an integer", -1) return end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamNormalized", "fxindex", "must 1 or higher", -2) return end  
   if math.type(paramindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetParamNormalized", "paramindex", "must be an integer", -3) return end
   if paramindex<1 then ultraschall.AddErrorMessage("InputFX_GetParamNormalized", "paramindex", "must 1 or higher", -4) return end  
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetParamNormalized", "tracknumber", "no such track; must be an integer", -5) return end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   
-  return reaper.TrackFX_GetParamNormalized(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramindex-1)
+  return reaper.TrackFX_GetParamNormalized(tracknumber2, 0x1000000+fxindex-1, paramindex-1)
 end
 
 --A={ultraschall.InputFX_GetParamNormalized(1, 3)}
 
-function ultraschall.InputFX_GetPinMappings(fxindex, isoutput, pin)
+function ultraschall.InputFX_GetPinMappings(fxindex, isoutput, pin, tracknumber)
   -- returns nil in case of an error
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetPinMappings</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer pinmappings_Lo32Bit, integer pinmappings_Hi32Bit = ultraschall.InputFX_GetPinMappings(integer fxindex, integer isoutput, integer pin)</functioncall>
+  <functioncall>integer pinmappings_Lo32Bit, integer pinmappings_Hi32Bit = ultraschall.InputFX_GetPinMappings(integer fxindex, integer isoutput, integer pin, optional integer tracknumber)</functioncall>
   <description>
     returns the pinmappings as bitfield of a parameter of a monitoring-fx.
     
@@ -6408,6 +6691,7 @@ function ultraschall.InputFX_GetPinMappings(fxindex, isoutput, pin)
     integer fxindex - the index of the monitoring-fx; 1-based
     integer isoutput - 0, for querying input pins; 1, for querying output pins
     integer pin - the pin requested, like 0(left), 1(right), etc.
+    optional integer tracknumber - the tracknumber, whose inputFX-pinmappings you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6418,26 +6702,29 @@ function ultraschall.InputFX_GetPinMappings(fxindex, isoutput, pin)
   <tags>fx management, get, pin mapping, inpin, outpin, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetPinMappings", "fxindex", "must be an integer", -1) return end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetPinMappings", "fxindex", "must 1 or higher", -2) return end  
   if math.type(isoutput)~="integer" then ultraschall.AddErrorMessage("InputFX_GetPinMappings", "isoutput", "must be an integer", -3) return end  
   if math.type(pin)~="integer" then ultraschall.AddErrorMessage("InputFX_GetPinMappings", "pin", "must be an integer", -4) return end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetPinMappings", "tracknumber", "no such track; must be an integer", -5) return end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   
-  return reaper.TrackFX_GetPinMappings(reaper.GetMasterTrack(0), fxindex-1, isoutput, pin)--)0x1000000+fxindex-1, isoutput-1, pin-1)
+  return reaper.TrackFX_GetPinMappings(tracknumber2, 0x1000000+fxindex-1, isoutput, pin)--)0x1000000+fxindex-1, isoutput-1, pin-1)
 end
 
 --A={ultraschall.InputFX_GetPinMappings(1, 2, 1)}
 
-function ultraschall.InputFX_SetEQBandEnabled(fxindex, bandtype, bandidx, enable)
+function ultraschall.InputFX_SetEQBandEnabled(fxindex, bandtype, bandidx, enable, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetEQBandEnabled</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_SetEQBandEnabled(integer fxindex, integer bandtype, integer bandidx, boolean enable)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_SetEQBandEnabled(integer fxindex, integer bandtype, integer bandidx, boolean enable, optional integer tracknumber)</functioncall>
   <description>
     Enable or disable a ReaEQ band of a monitoring-fx.
     
@@ -6449,14 +6736,17 @@ function ultraschall.InputFX_SetEQBandEnabled(fxindex, bandtype, bandidx, enable
   <parameters>
     integer fxindex - the index of the monitoring-fx; 1-based
     integer bandtype - the bandtype of the band to change;
-                     - 0, lhipass
+                     - -1, master gain
+                     - 0, hipass
                      - 1, loshelf
                      - 2, band
                      - 3, notch
                      - 4, hishelf
                      - 5, lopass
+                     - 6, bandpass
     integer bandidx - 0, first band matching bandtype; 1, 2nd band matching bandtype, etc.
     boolean enable - true, enable band; false, disable band
+    optional integer tracknumber - the tracknumber, whose inputFX-eq-band-enabled-state you want to set; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6467,6 +6757,7 @@ function ultraschall.InputFX_SetEQBandEnabled(fxindex, bandtype, bandidx, enable
   <tags>fx management, set, reaeq, band, bandtype, enable, disable, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]    
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "fxindex", "must be an integer", -1) return false end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "fxindex", "must 1 or higher", -2) return false end
   if math.type(bandtype)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "bandtype", "must be an integer", -3) return false end
@@ -6474,20 +6765,22 @@ function ultraschall.InputFX_SetEQBandEnabled(fxindex, bandtype, bandidx, enable
   if math.type(bandidx)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "bandidx", "must be an integer", -4) return false end
   if bandidx<0 then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "bandidx", "must 0 or higher", -5) return false end  
   if type(enable)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "enable", "must be a boolean", -6) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetEQBandEnabled", "tracknumber", "no such track; must be an integer", -7) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   
-  return reaper.TrackFX_SetEQBandEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, bandtype, bandidx, enable)
+  return reaper.TrackFX_SetEQBandEnabled(tracknumber2, 0x1000000+fxindex-1, bandtype, bandidx, enable)
 end
 
 --A=ultraschall.InputFX_SetEQBandEnabled(1, 2, 1, true)
 
 
-function ultraschall.InputFX_SetEQParam(fxindex, bandtype, bandidx, paramtype, val, isnorm)
+function ultraschall.InputFX_SetEQParam(fxindex, bandtype, bandidx, paramtype, val, isnorm, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetEQParam</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.02
+    Ultraschall=4.2
+    Reaper=6.43
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.InputFX_SetEQParam(integer fxindex, integer bandtype, integer bandidx, integer paramtype, number val, boolean isnorm)</functioncall>
@@ -6502,16 +6795,19 @@ function ultraschall.InputFX_SetEQParam(fxindex, bandtype, bandidx, paramtype, v
   <parameters>
     integer fxindex - the index of the monitoring-fx; 1-based
     integer bandtype - the bandtype of the band to change;
-                     - 0, lhipass
+                     - -1, master gain
+                     - 0, hipass
                      - 1, loshelf
                      - 2, band
                      - 3, notch
                      - 4, hishelf
                      - 5, lopass
-    integer bandidx - 0, first band matching bandtype; 1, 2nd band matching bandtype, etc.
+                     - 6, bandpass
+    integer bandidx - (ignored for master gain): 0, target first band matching bandtype; 1, target 2nd band matching bandtype, etc.
     integer paramtype - 0, freq; 1, gain; 2, Q
     number val - the new value for the paramtype of a bandidx
     boolean isnorm - true, value is normalized; false, value is not normalized
+    optional integer tracknumber - the tracknumber, whose inputFX-eq-param-state you want to set; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6522,6 +6818,7 @@ function ultraschall.InputFX_SetEQParam(fxindex, bandtype, bandidx, paramtype, v
   <tags>fx management, set, reaeq, band, bandtype, gain, frequency, normalize, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]    
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQParam", "fxindex", "must be an integer", -1) return false end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_SetEQParam", "fxindex", "must 1 or higher", -2) return false end
   if math.type(bandtype)~="integer" then ultraschall.AddErrorMessage("InputFX_SetEQParam", "bandtype", "must be an integer", -3) return false end
@@ -6532,22 +6829,26 @@ function ultraschall.InputFX_SetEQParam(fxindex, bandtype, bandidx, paramtype, v
   if paramtype<0 then ultraschall.AddErrorMessage("InputFX_SetEQParam", "paramtype", "must 0 or higher", -8) return false end  
   if type(val)~="number" then ultraschall.AddErrorMessage("InputFX_SetEQParam", "val", "must be a number", -9) return false end  
   if type(isnorm)~="boolean" then ultraschall.AddErrorMessage("InputFX_SetEQParam", "isnorm", "must be a boolean", -10) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetEQParam", "tracknumber", "no such track; must be an integer", -11) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   
-  return reaper.TrackFX_SetEQParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, bandtype, bandidx, paramtype, val, isnorm)
+  return reaper.TrackFX_SetEQParam(tracknumber2, 0x1000000+fxindex-1, bandtype, bandidx, paramtype, val, isnorm)
 end
 
 --ultraschall.InputFX_SetEQParam(1, -1, 1, 1, -1, true)
 
-function ultraschall.InputFX_SetParam(fxindex, parameterindex, val)
+--mespotine
+
+function ultraschall.InputFX_SetParam(fxindex, parameterindex, val, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetParam</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_SetParam(integer fxindex, index parameterindex, number val)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_SetParam(integer fxindex, index parameterindex, number val, optional integer tracknumber)</functioncall>
   <description>
     Sets a new value of a parameter of a monitoring-fx
     
@@ -6560,6 +6861,7 @@ function ultraschall.InputFX_SetParam(fxindex, parameterindex, val)
     integer fxindex - the index of the monitoring-fx; 1-based
     index parameterindex - the index of the parameter to be set; 1-based
     number val - the new value to set
+    optional integer tracknumber - the tracknumber, whose inputFX-param-state you want to set; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6570,28 +6872,31 @@ function ultraschall.InputFX_SetParam(fxindex, parameterindex, val)
   <tags>fx management, set, parameter, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]    
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetParam", "fxindex", "must be an integer", -1) return false end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_SetParam", "fxindex", "must 1 or higher", -2) return false end
   if math.type(parameterindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetParam", "parameterindex", "must be an integer", -3) return false end
   if parameterindex<1 then ultraschall.AddErrorMessage("InputFX_SetParam", "parameterindex", "must 1 or higher", -4) return false end  
   if type(val)~="number" then ultraschall.AddErrorMessage("InputFX_SetParam", "val", "must be a number", -5) return false end  
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetParam", "tracknumber", "no such track; must be an integer", -6) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   
-  return reaper.TrackFX_SetParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, parameterindex-1, val)
+  return reaper.TrackFX_SetParam(tracknumber2, 0x1000000+fxindex-1, parameterindex-1, val)
 end
 
 --A=ultraschall.InputFX_SetParam(1, 1, 1)
 
 
-function ultraschall.InputFX_SetParamNormalized(fxindex, parameterindex, val)
+function ultraschall.InputFX_SetParamNormalized(fxindex, parameterindex, val, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetParamNormalized</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_SetParamNormalized(integer fxindex, index parameterindex, number val)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_SetParamNormalized(integer fxindex, index parameterindex, number val, optional integer tracknumber)</functioncall>
   <description>
     Sets a new value as normalized of a parameter of a monitoring-fx
     
@@ -6604,6 +6909,7 @@ function ultraschall.InputFX_SetParamNormalized(fxindex, parameterindex, val)
     integer fxindex - the index of the monitoring-fx; 1-based
     index parameterindex - the index of the parameter to be set; 1-based
     number val - the new value to set
+    optional integer tracknumber - the tracknumber, whose inputFX-parameter you want to set normalized; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6614,29 +6920,32 @@ function ultraschall.InputFX_SetParamNormalized(fxindex, parameterindex, val)
   <tags>fx management, set, parameter, normalized, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]    
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "fxindex", "must be an integer", -1) return false end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "fxindex", "must 1 or higher", -2) return false end
   if math.type(parameterindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "parameterindex", "must be an integer", -3) return false end
   if parameterindex<1 then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "parameterindex", "must 1 or higher", -4) return false end  
   if type(val)~="number" then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "val", "must be a number", -5) return false end  
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetParamNormalized", "tracknumber", "no such track; must be an integer", -4) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   
-  return reaper.TrackFX_SetParamNormalized(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, parameterindex-1, val)
+  return reaper.TrackFX_SetParamNormalized(tracknumber2, 0x1000000+fxindex-1, parameterindex-1, val)
 end
 
 --A=ultraschall.InputFX_SetParamNormalized(1, 2, 0)
 
 
 
-function ultraschall.InputFX_SetPinMappings(fxindex, isoutput, pin, low32bits, hi32bits)
+function ultraschall.InputFX_SetPinMappings(fxindex, isoutput, pin, low32bits, hi32bits, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_SetPinMappings</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.2
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.InputFX_SetPinMappings(integer fxindex, integer isoutput, integer pin, integer low32bits, integer hi32bits)</functioncall>
+  <functioncall>boolean retval = ultraschall.InputFX_SetPinMappings(integer fxindex, integer isoutput, integer pin, integer low32bits, integer hi32bits, optional integer tracknumber)</functioncall>
   <description>
     sets the pinmappings as bitfield of a parameter of a monitoring-fx.
     
@@ -6651,6 +6960,7 @@ function ultraschall.InputFX_SetPinMappings(fxindex, isoutput, pin, low32bits, h
     integer pin - the pin requested, like 0(left), 1(right), etc.
     integer pinmappings_Lo32Bit - a bitmask for the first 32 connectors, where each bit represents, if this pin is connected(1) or not(0)
     integer pinmappings_Hi32Bit - a bitmask for the second 32 connectors, where each bit represents, if this pin is connected(1) or not(0)
+    optional integer tracknumber - the tracknumber, whose inputFX-pinmappings you want to set; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6661,15 +6971,17 @@ function ultraschall.InputFX_SetPinMappings(fxindex, isoutput, pin, low32bits, h
   <tags>fx management, set, pin mapping, inpin, outpin, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "fxindex", "must be an integer", -1) return false end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "fxindex", "must 1 or higher", -2) return false end
   if math.type(isoutput)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "isoutput", "must be an integer", -3) return false end
   if math.type(pin)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "pin", "must be an integer", -4) return false end
   if math.type(low32bits)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "low32bits", "must be an integer", -4) return false end
   if math.type(hi32bits)~="integer" then ultraschall.AddErrorMessage("InputFX_SetPinMappings", "hi32bits", "must be an integer", -4) return false end
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_SetOpen", "tracknumber", "no such track; must be an integer", -5) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   
-  
-  return reaper.TrackFX_SetPinMappings(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, isoutput, pin, low32bits, hi32bits)
+  return reaper.TrackFX_SetPinMappings(tracknumber2, 0x1000000+fxindex-1, isoutput, pin, low32bits, hi32bits)
 end
 
 --A={ultraschall.InputFX_GetPinMappings(2, 1, 1)}
@@ -6677,16 +6989,16 @@ end
 
 
 
-function ultraschall.InputFX_GetEQBandEnabled(fxindex, bandtype, bandidx)
+function ultraschall.InputFX_GetEQBandEnabled(fxindex, bandtype, bandidx, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetEQBandEnabled</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.02
+    Ultraschall=4.2
+    Reaper=6.42
     Lua=5.3
   </requires>
-  <functioncall>boolean enabled = ultraschall.InputFX_GetEQBandEnabled(integer fxindex, integer bandtype, integer bandidx)</functioncall>
+  <functioncall>boolean enabled = ultraschall.InputFX_GetEQBandEnabled(integer fxindex, integer bandtype, integer bandidx, optional integer tracknumber)</functioncall>
   <description>
     Gets the enable or disable-state of a ReaEQ band of a monitoring-fx.
     
@@ -6698,13 +7010,16 @@ function ultraschall.InputFX_GetEQBandEnabled(fxindex, bandtype, bandidx)
   <parameters>
     integer fxindex - the index of the monitoring-fx; 1-based
     integer bandtype - the bandtype of the band to change;
-                     - 0, lhipass
+                     - -1, master gain
+                     - 0, hipass
                      - 1, loshelf
                      - 2, band
                      - 3, notch
                      - 4, hishelf
                      - 5, lopass
+                     - 6, bandpass
     integer bandidx - 0, first band matching bandtype; 1, 2nd band matching bandtype, etc.
+    optional integer tracknumber - the tracknumber, whose inputFX-EQ-Band-enabled-state you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6715,28 +7030,31 @@ function ultraschall.InputFX_GetEQBandEnabled(fxindex, bandtype, bandidx)
   <tags>fx management, get, reaeq, band, bandtype, enable, disable, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]    
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "fxindex", "must be an integer", -1) return false end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "fxindex", "must 1 or higher", -2) return false end  
   if math.type(bandtype)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "bandtype", "must be an integer", -3) return false end
   if bandtype<0 then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "bandtype", "must 0 or higher", -4) return false end  
-  if type(bandidx)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "bandidx", "must be an integer", -5) return false end
+  if math.type(bandidx)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "bandidx", "must be an integer", -5) return false end
   if bandidx<0 then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "bandidx", "must 0 or higher", -6) return false end  
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetEQBandEnabled", "tracknumber", "no such track; must be an integer", -6) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   
-  return reaper.TrackFX_GetEQBandEnabled(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, bandtype, bandidx)
+  return reaper.TrackFX_GetEQBandEnabled(tracknumber2, 0x1000000+fxindex-1, bandtype, bandidx)
 end
 
 --A,B,C,D,E=ultraschall.InputFX_GetEQBandEnabled(14, 2, 0)
 
-function ultraschall.InputFX_GetEQParam(fxindex, paramidx)
+function ultraschall.InputFX_GetEQParam(fxindex, paramidx, tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InputFX_GetEQParam</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.02
+    Ultraschall=4.2
+    Reaper=6.43
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, number bandtype, number bandidx, number paramtype, number normval = ultraschall.InputFX_GetEQParam(integer fxindex, integer paramidx)</functioncall>
+  <functioncall>boolean retval, number bandtype, number bandidx, number paramtype, number normval = ultraschall.InputFX_GetEQParam(integer fxindex, integer paramidx, optional integer tracknumber)</functioncall>
   <description>
     Gets the states and values of an EQ-parameter of a ReaEQ-instance in monitoring-fx
     
@@ -6746,12 +7064,13 @@ function ultraschall.InputFX_GetEQParam(fxindex, paramidx)
     boolean retval - true, if it's a ReaEQ-instance; false, is not a ReaEQ-instance or in case of an error
     integer bandtype - the bandtype of the band to change;
                      - -1, master gain
-                     - 0, lhipass
+                     - 0, hipass
                      - 1, loshelf
                      - 2, band
                      - 3, notch
                      - 4, hishelf
                      - 5, lopass
+                     - 6, bandpass
     integer bandidx - 0, first band matching bandtype; 1, 2nd band matching bandtype, etc.
     number paramtype -  0, freq; 1, gain; 2, Q
     number normval - the normalized value
@@ -6759,6 +7078,7 @@ function ultraschall.InputFX_GetEQParam(fxindex, paramidx)
   <parameters>
     integer fxindex - the index of the monitoring-fx; 1-based
     integer paramidx - the parameter whose eq-states you want to retrieve; 1-based
+    optional integer tracknumber - the tracknumber, whose inputFX-eq-param you want to get; 0 or nil, global monitoring fx; 1 and higher, track 1 and higher
   </parameters>
   <chapter_context>
     FX-Management
@@ -6769,12 +7089,15 @@ function ultraschall.InputFX_GetEQParam(fxindex, paramidx)
   <tags>fx management, get, reaeq, band, bandtype, gain, frequency, normalize, monitoringfx, inputfx</tags>
 </US_DocBloc>
 ]]    
+  local tracknumber2
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQParam", "fxindex", "must be an integer", -1) return false end
   if fxindex<1 then ultraschall.AddErrorMessage("InputFX_GetEQParam", "fxindex", "must 1 or higher", -2) return false end  
   if math.type(paramidx)~="integer" then ultraschall.AddErrorMessage("InputFX_GetEQParam", "paramidx", "must be an integer", -3) return false end
   if paramidx<1 then ultraschall.AddErrorMessage("InputFX_GetEQParam", "paramidx", "must 1 or higher", -4) return false end  
+  if tracknumber~=nil and (math.type(tracknumber)~="integer" or (tracknumber<0 or tracknumber>reaper.CountTracks())) then ultraschall.AddErrorMessage("InputFX_GetEQParam", "tracknumber", "no such track; must be an integer", -5) return false end
+  if tracknumber==nil or tracknumber==0 then tracknumber2=reaper.GetMasterTrack() else tracknumber2=reaper.GetTrack(0,tracknumber-1) end
   
-  return reaper.TrackFX_GetEQParam(reaper.GetMasterTrack(0), 0x1000000+fxindex-1, paramidx-1)
+  return reaper.TrackFX_GetEQParam(tracknumber2, 0x1000000+fxindex-1, paramidx-1)
 end
 
 --A={ultraschall.InputFX_GetEQParam(14, 1)}
@@ -6785,7 +7108,7 @@ function ultraschall.GetFocusedFX()
   <slug>GetFocusedFX</slug>
   <requires>
     Ultraschall=4.1
-    Reaper=6.02
+    Reaper=6.20
     Lua=5.3
   </requires>
   <functioncall>integer retval, integer tracknumber, integer fxidx, integer itemnumber, integer takeidx, MediaTrack track, optional MediaItem item, optional MediaItemTake take = ultraschall.GetFocusedFX()</functioncall>
@@ -6796,6 +7119,7 @@ function ultraschall.GetFocusedFX()
     integer retval -   0, if no FX window has focus
                    -   1, if a track FX window has focus or was the last focused and still open
                    -   2, if an item FX window has focus or was the last focused and still open
+                   -   &4, if fx is not focused anymore but is still opened
     integer tracknumber - tracknumber; 0, master track; 1, track 1; etc.
     integer fxidx - the index of the FX; 1-based
     integer itemnumber - -1, if it's a track-fx; 1 and higher, the mediaitem-number
@@ -6813,7 +7137,7 @@ function ultraschall.GetFocusedFX()
   <tags>fx management, get, focused, fx</tags>
 </US_DocBloc>
 ]]    
-  local retval, tracknumber, itemnumber, fxnumber = reaper.GetFocusedFX()
+  local retval, tracknumber, itemnumber, fxnumber = reaper.GetFocusedFX2()
   if retval==0 then return 0 end
   local FXID, TakeID, item, take, track
   FXID=fxnumber+1
@@ -7291,7 +7615,7 @@ function ultraschall.GetFXWak_FXStateChunk(FXStateChunk, fx_id)
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer keyboard_input_2_plugin, integer unknown = ultraschall.GetFXWak_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <functioncall>integer keyboard_input_2_plugin, integer fx_embed_state = ultraschall.GetFXWak_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
   <description>
     returns the WAK-entryvalues of a specific fx from an FXStateChunk, as set by the +-button->Send all keyboard input to plugin-menuentry in the FX-window of the visible plugin.
     
@@ -7299,7 +7623,7 @@ function ultraschall.GetFXWak_FXStateChunk(FXStateChunk, fx_id)
   </description>
   <retvals>
     integer keyboard_input_2_plugin - 0, don't send all the keyboard-input to plugin; 1, send all keyboard-input to plugin
-    integer unknown - unknown, usually 0
+    integer fx_embed_state - set embedding of the fx; &amp;1=TCP, &amp;2=MCP
   </retvals>
   <parameters>
     string FXStateChunk - the FXStateChunk, from whose fx you want to return the WAK-entry
@@ -8092,3 +8416,510 @@ function ultraschall.SetFXFloatPos_FXStateChunk(FXStateChunk, fx_id, floating, x
   FXStateChunk=FXStateChunk:sub(1, startoffset-1)..fx_lines..FXStateChunk:sub(endoffset, -1)
   return FXStateChunk
 end
+
+
+function ultraschall.AddParmLearn_FXStateChunk2(FXStateChunk, fxid, parmidx, parmname, input_mode, channel, cc_note, cc_mode, checkboxflags, osc_message)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AddParmLearn_FXStateChunk2</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.32
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.AddParmLearn_FXStateChunk2(string FXStateChunk, integer fxid, integer parmidx, string parmname, integer input_mode, integer channel, integer cc_note, integer cc_mode, integer checkboxflags, optional string osc_message)</functioncall>
+  <description>
+    Adds a new Parm-Learn-entry to an FX-plugin from an FXStateChunk.
+    Allows setting some values more detailed, unlike AddParmLearn_FXStateChunk.
+    
+    It's the PARMLEARN-entry
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, if setting new values was successful; false, if setting was unsuccessful(e.g. no such ParmLearn)
+    optional string alteredFXStateChunk - the altered FXStateChunk
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, in which you want to set a Parm-Learn-entry
+    integer fxid - the id of the fx, which holds the to-set-Parm-Learn-entry; beginning with 1
+    integer parmidx - the parameter, whose Parameter Learn you want to add; 0-based
+    string parmname - the name of the parameter, usually \"\" or \"byp\" for bypass or \"wet\" for wet; when using wet or bypass, these are essential to give, otherwise just pass ""
+    integer input_mode - the input mode of this ParmLearn-entry
+                       - 0, OSC
+                       - 1, MIDI Note
+                       - 2, MIDI CC
+                       - 3, MIDI PC
+                       - 4, MIDI Pitch
+    integer channel - the midi-channel used; 1-16
+    integer cc_note - the midi/cc-note used; 0-127
+    integer cc_mode - the cc-mode-dropdownlist
+                    - 0, Absolute
+                    - 1, Relative 1(127=-1, 1=+1)
+                    - 2, Relative 2(63=-1, 65=+1)
+                    - 3, Relative 3(65=-1, 1=+1)
+                    - 4, Toggle (>0=toggle)
+    integer checkboxflags - the checkboxes checked in the MIDI/OSC-learn dialog
+                          -    0, no checkboxes
+                          -    1, enable only when track or item is selected
+                          -    2, Soft takeover (absolute mode only)
+                          -    3, Soft takeover (absolute mode only)+enable only when track or item is selected
+                          -    4, enable only when effect configuration is focused
+                          -    20, enable only when effect configuration is visible 
+    optional string osc_message - the osc-message, that triggers the ParmLearn, only when midi_note is set to 0!
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Learn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, add, parm, learn, midi, osc, binding</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "FXStateChunk", "no valid FXStateChunk", -1) return false end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "fxid", "must be an integer", -2) return false end
+
+  if osc_message~=nil and type(osc_message)~="string" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "osc_message", "must be either nil or a string", -3) return false end
+  if math.type(checkboxflags)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "checkboxflags", "must be an integer", -4) return false end
+  if math.type(parmidx)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "parmidx", "must be an integer", -5) return false end
+  if type(parmname)~="string" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "parmname", "must be a string, either \"\" or byp or wet", -6) return false 
+  elseif parmname~="" then parmname=":"..parmname
+  end
+  if math.type(input_mode)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "input_mode", "must be an integer", -7) return false end  
+  if math.type(channel)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "channel", "must be an integer", -8) return false end  
+  if math.type(cc_note)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_note", "must be an integer", -9) return false end  
+  if math.type(cc_mode)~="integer" then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_mode", "must be an integer", -10) return false end  
+  if input_mode<0 or input_mode>4 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "input_mode", "must be between 0 and 4", -11) return false end  
+  if channel<1 or channel>16 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "channel", "must be between 1 and 16", -12) return false end  
+  if cc_note<0 or cc_note>127 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_note", "must be between 0 and 127", -13) return false end  
+  if cc_mode<0 or cc_mode>4 then ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", "cc_mode", "must be between 1 and 4", -14) return false end  
+  channel=channel-1
+  if input_mode==0 then -- osc
+    channel=0 
+    cc_note=0 
+  elseif input_mode==1 then 
+    input_mode=144 -- midi note
+  elseif input_mode==2 then
+    input_mode=176 -- midi cc
+  elseif input_mode==3 then
+    input_mode=192 -- midi pc
+  elseif input_mode==4 then
+    input_mode=224 -- midi pitch
+  else
+  end
+  if cc_mode==1 then cc_mode=65536
+  elseif cc_mode==2 then cc_mode=131072
+  elseif cc_mode==3 then cc_mode=65536+131072
+  elseif cc_mode==4 then cc_mode=262144
+  end
+  input_mode=input_mode+channel
+  input_mode=ultraschall.CombineBytesToInteger(0, input_mode, cc_note)
+  input_mode=input_mode+cc_mode  
+  local errorcounter_old = ultraschall.CountErrorMessages()  
+  local A={ultraschall.AddParmLearn_FXStateChunk(FXStateChunk, fxid, parmidx, parmname, input_mode, checkboxflags, osc_message)}
+  if errorcounter_old ~= ultraschall.CountErrorMessages() then
+    local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage()
+    ultraschall.AddErrorMessage("AddParmLearn_FXStateChunk2", parmname, errormessage, errcode-100)
+    return false
+  end
+    
+  return table.unpack(A)
+end
+
+function ultraschall.SetParmLearn_FXStateChunk2(FXStateChunk, fxid, parmidx, parmname, input_mode, channel, cc_note, cc_mode, checkboxflags, osc_message)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetParmLearn_FXStateChunk2</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.32
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, optional string alteredFXStateChunk = ultraschall.SetParmLearn_FXStateChunk2(string FXStateChunk, integer fxid, integer parmidx, string parmname, integer input_mode, integer channel, integer cc_note, integer cc_mode, integer checkboxflags, optional string osc_message)</functioncall>
+  <description>
+    Sets an already existing Parm-Learn-entry of an FX-plugin from an FXStateChunk.
+    Allows setting some values more detailed, unlike SetParmLearn_FXStateChunk.
+    
+    It's the PARMLEARN-entry
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, if setting new values was successful; false, if setting was unsuccessful(e.g. no such ParmLearn)
+    optional string alteredFXStateChunk - the altered FXStateChunk
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, in which you want to set a Parm-Learn-entry
+    integer fxid - the id of the fx, which holds the to-set-Parm-Learn-entry; beginning with 1    
+    integer parmidx - the parameter, whose Parameter Learn you want to add; 0-based
+    string parmname - the name of the parameter, usually \"\" or \"byp\" for bypass or \"wet\" for wet; when using wet or bypass, these are essential to give, otherwise just pass ""
+    integer input_mode - the input mode of this ParmLearn-entry
+                       - 0, OSC
+                       - 1, MIDI Note
+                       - 2, MIDI CC
+                       - 3, MIDI PC
+                       - 4, MIDI Pitch
+    integer channel - the midi-channel used; 1-16
+    integer cc_note - the midi/cc-note used; 0-127
+    integer cc_mode - the cc-mode-dropdownlist
+                    - 0, Absolute
+                    - 1, Relative 1(127=-1, 1=+1)
+                    - 2, Relative 2(63=-1, 65=+1)
+                    - 3, Relative 3(65=-1, 1=+1)
+                    - 4, Toggle (>0=toggle)
+    integer checkboxflags - the checkboxes checked in the MIDI/OSC-learn dialog
+                          -    0, no checkboxes
+                          -    1, enable only when track or item is selected
+                          -    2, Soft takeover (absolute mode only)
+                          -    3, Soft takeover (absolute mode only)+enable only when track or item is selected
+                          -    4, enable only when effect configuration is focused
+                          -    20, enable only when effect configuration is visible 
+    optional string osc_message - the osc-message, that triggers the ParmLearn, only when midi_note is set to 0!
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Learn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, parm, learn, midi, osc, binding</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "FXStateChunk", "no valid FXStateChunk", -1) return false end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "fxid", "must be an integer", -2) return false end
+
+  if osc_message~=nil and type(osc_message)~="string" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "osc_message", "must be either nil or a string", -3) return false end
+  if math.type(checkboxflags)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "checkboxflags", "must be an integer", -4) return false end
+  if math.type(parmidx)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "parmidx", "must be an integer", -5) return false end
+  if type(parmname)~="string" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "parmname", "must be a string, either \"\" or byp or wet", -6) return false 
+  elseif parmname~="" then parmname=":"..parmname
+  end
+  if math.type(input_mode)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "input_mode", "must be an integer", -7) return false end  
+  if math.type(channel)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "channel", "must be an integer", -8) return false end  
+  if math.type(cc_note)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "cc_note", "must be an integer", -9) return false end  
+  if math.type(cc_mode)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "cc_mode", "must be an integer", -10) return false end  
+  if input_mode<0 or input_mode>4 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "input_mode", "must be between 0 and 4", -11) return false end  
+  if channel<1 or channel>16 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "channel", "must be between 1 and 16", -12) return false end  
+  if cc_note<0 or cc_note>127 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "cc_note", "must be between 0 and 127", -13) return false end  
+  if cc_mode<0 or cc_mode>4 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "cc_mode", "must be between 1 and 4", -14) return false end  
+  if osc_message~=nil and input_mode~=0 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "input_mode", "must be set to 0, when using parameter osc_message", -15) return false end
+  if osc_message==nil and input_mode==0 then ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", "osc_message", "osc-message missing", -16) return false end
+  channel=channel-1
+  if input_mode==0 then -- osc
+    channel=0 
+    cc_note=0 
+  elseif input_mode==1 then 
+    input_mode=144 -- midi note
+  elseif input_mode==2 then
+    input_mode=176 -- midi cc
+  elseif input_mode==3 then
+    input_mode=192 -- midi pc
+  elseif input_mode==4 then
+    input_mode=224 -- midi pitch
+  else
+
+  end
+  if cc_mode==1 then cc_mode=65536
+  elseif cc_mode==2 then cc_mode=131072
+  elseif cc_mode==3 then cc_mode=65536+131072
+  elseif cc_mode==4 then cc_mode=262144
+  end
+  input_mode=input_mode+channel
+  input_mode=ultraschall.CombineBytesToInteger(0, input_mode, cc_note)
+  input_mode=input_mode+cc_mode  
+  local errorcounter_old = ultraschall.CountErrorMessages()
+  local A={ultraschall.SetParmLearn_FXStateChunk(FXStateChunk, fxid, parmidx, input_mode, checkboxflags, osc_message )}
+  if errorcounter_old ~= ultraschall.CountErrorMessages() then
+    local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage()
+    ultraschall.AddErrorMessage("SetParmLearn_FXStateChunk2", parmname, errormessage, errcode-100)
+    return false
+  end
+    
+  return table.unpack(A)
+end
+
+function ultraschall.GetParmLearn_FXStateChunk2(FXStateChunk, fxid, id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetParmLearn_FXStateChunk2</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.32
+    Lua=5.3
+  </requires>
+  <functioncall>integer parm_idx, string parmname, integer input_mode, integer channel, integer cc_note, integer checkboxflags, optional string osc_message = ultraschall.GetParmLearn_FXStateChunk2(string FXStateChunk, integer fxid, integer id)</functioncall>
+  <description>
+    Returns a parameter-learn-setting from an FXStateChunk
+    An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem.
+    
+    Returns some values more detailed, unlike GetParmLearn_FXStateChunk.
+    
+    It is the PARMLEARN-entry
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    integer parm_idx - the idx of the parameter; order is exactly like the order in the contextmenu of Parameter List -> Learn
+    string parmname - the name of the parameter, though usually only "wet" or "byp" or ""
+                    - to get the actual displayed parametername, you need to 
+                    - use the reaper.TrackFX_GetParamName-function
+    integer input_mode - the input mode of this ParmLearn-entry
+                       - 0, OSC
+                       - 1, MIDI Note
+                       - 2, MIDI CC
+                       - 3, MIDI PC
+                       - 4, MIDI Pitch
+    integer channel - the midi-channel used; 1-16
+    integer cc_note - the midi/cc-note used; 0-127
+    integer cc_mode - the cc-mode-dropdownlist
+                    - 0, Absolute
+                    - 1, Relative 1(127=-1, 1=+1)
+                    - 2, Relative 2(63=-1, 65=+1)
+                    - 3, Relative 3(65=-1, 1=+1)
+                    - 4, Toggle (>0=toggle)
+    integer checkboxflags - the checkboxes checked in the MIDI/OSC-learn dialog
+                          - 0, no checkboxes
+                          - 1, enable only when track or item is selected
+                          - 2, Soft takeover (absolute mode only)
+                          - 3, Soft takeover (absolute mode only)+enable only when track or item is selected
+                          - 4, enable only when effect configuration is focused
+                          - 20, enable only when effect configuration is visible
+    optional string osc_message - the osc-message, that triggers the ParmLearn
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from which you want to retrieve the ParmLearn-settings
+    integer fxid - the fx, of which you want to get the parameter-learn-settings
+    integer id - the id of the ParmLearn-settings you want to have, starting with 1 for the first
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Learn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, parameter, learn, fxstatechunk, osc, midi</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk2", "StateChunk", "Not a valid FXStateChunk", -1) return nil end
+  if math.type(id)~="integer" then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk2", "id", "must be an integer", -2) return nil end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk2", "fxid", "must be an integer", -3) return nil end
+    
+  local channel, input_mode
+  local parm_idx, parmname, midi_note, checkboxflags, osc_message = ultraschall.GetParmLearn_FXStateChunk(FXStateChunk, fxid, id)
+  if parm_idx==nil then ultraschall.AddErrorMessage("GetParmLearn_FXStateChunk2", "id", "no such ParmLearn available", -4) return nil end
+  local Byte1, cc_note = ultraschall.SplitIntegerIntoBytes(midi_note)
+  if Byte1>=224 then input_mode=4 channel=Byte1-224     -- MIDI Pitch
+  elseif Byte1>=192 then input_mode=3 channel=Byte1-192 -- MIDI PC
+  elseif Byte1>=176 then input_mode=2 channel=Byte1-176 -- MIDI CC
+  elseif Byte1>=144 then input_mode=1 channel=Byte1-144 -- MIDI Note 
+  else 
+    input_mode=0 
+    channel=-1
+  end
+  
+  -- cc_mode
+  local cc_mode
+  channel=channel+1
+  if     midi_note&65536==0     and midi_note&131072==0      and midi_note&262144==0 then -- Absolute
+    cc_mode=0
+  elseif midi_note&65536==65536 and midi_note&131072==0      and midi_note&262144==0 then -- Relative 1(127=-1, 1=+1)
+    cc_mode=1
+  elseif midi_note&65536==0     and midi_note&131072==131072 and midi_note&262144==0 then -- Relative 2(63=-1, 65=+1)
+    cc_mode=2
+  elseif midi_note&65536==65536 and midi_note&131072==131072 and midi_note&262144==0 then -- Relative 3(65=-1, 1=+1)
+    cc_mode=3
+  elseif midi_note&65536==0     and midi_note&131072==0      and midi_note&262144==262144 then -- Toggle (>0=toggle) 
+    cc_mode=4
+  end
+  return parm_idx, parmname, input_mode, channel, cc_note, cc_mode, checkboxflags, osc_message
+end
+
+function ultraschall.GetParmLearnID_by_FXParam_FXStateChunk(FXStateChunk, fxid, param_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetParmLearnID_by_FXParam_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>integer parmlearn_id, = ultraschall.GetParmLearnID_by_FXParam_FXStateChunk(string FXStateChunk, integer fxid, integer param_id)</functioncall>
+  <description>
+    Returns the parmlearn_id by parameter.
+
+    This can be used as parameter parm_learn_id for Get/Set/DeleteParmLearn-functions
+    
+    Returns -1, if the parameter has no ParmLearn associated.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    integer parmlearn_id - the idx of the parmlearn, that you can use for Add/Get/Set/DeleteParmLearn-functions; -1, if parameter has no ParmLearn associated
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from which you want to retrieve the parmlearn
+    integer fxid - the fx, of which you want to get the parmlearn_id
+    integer param_id - the parameter, whose parmlearn_id you want to get
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Learn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, parameter, learn, fxstatechunk, osc, midi</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetParmLearnID_by_FXParam_FXStateChunk", "StateChunk", "Not a valid FXStateChunk", -1) return nil end
+  if math.type(param_id)~="integer" then ultraschall.AddErrorMessage("GetParmLearnID_by_FXParam_FXStateChunk", "param_id", "must be an integer", -2) return nil end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("GetParmLearnID_by_FXParam_FXStateChunk", "fxid", "must be an integer", -3) return nil end
+  if string.find(FXStateChunk, "\n  ")==nil then
+    FXStateChunk=ultraschall.StateChunkLayouter(FXStateChunk)
+  end
+  FXStateChunk=ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxid)
+  if FXStateChunk==nil then ultraschall.AddErrorMessage("GetParmLearnID_by_FXParam_FXStateChunk", "fxid", "no such fx", -4) return nil end
+  local count=0
+  local name=""
+  local idx, midi_note, checkboxes
+  for w in string.gmatch(FXStateChunk, "PARMLEARN.-\n") do
+    w=w:sub(1,-2).." " 
+    idx = w:match(" (.-) ") 
+    if tonumber(idx)==nil then 
+      idx, name = w:match(" (.-):(.-) ")
+    end
+    
+    if tonumber(idx)==param_id then 
+      return count
+    end
+    count=count+1
+  end
+  return -1
+end
+
+
+function ultraschall.GetParmAliasID_by_FXParam_FXStateChunk(FXStateChunk, fxid, param_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetParmAliasID_by_FXParam_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>integer parmalias_id, = ultraschall.GetParmAliasID_by_FXParam_FXStateChunk(string FXStateChunk, integer fxid, integer param_id)</functioncall>
+  <description>
+    Returns the parmalias_id by parameter.
+
+    This can be used as parameter parm_alias_id for Get/Set/DeleteParmAlias-functions
+    
+    Returns -1, if the parameter has no ParmAlias associated.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    integer parmalias_id - the idx of the parmalias, that you can use for Add/Get/Set/DeleteParmAlias-functions; -1, if parameter has no ParmAlias associated
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from which you want to retrieve the parmalias_id
+    integer fxid - the fx, of which you want to get the parmalias_id
+    integer param_id - the parameter, whose parmalias_id you want to get
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Alias
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, parameter, alias, fxstatechunk, osc, midi</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetParmAliasID_by_FXParam_FXStateChunk", "StateChunk", "Not a valid FXStateChunk", -1) return nil end
+  if math.type(param_id)~="integer" then ultraschall.AddErrorMessage("GetParmAliasID_by_FXParam_FXStateChunk", "param_id", "must be an integer", -2) return nil end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("GetParmAliasID_by_FXParam_FXStateChunk", "fxid", "must be an integer", -3) return nil end
+  if string.find(FXStateChunk, "\n  ")==nil then
+    FXStateChunk=ultraschall.StateChunkLayouter(FXStateChunk)
+  end
+  FXStateChunk=ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxid)
+  if FXStateChunk==nil then ultraschall.AddErrorMessage("GetParmAliasID_by_FXParam_FXStateChunk", "fxid", "no such fx", -4) return nil end
+  local count=0
+  local name=""
+  local idx, midi_note, checkboxes
+  for w in string.gmatch(FXStateChunk, "PARMALIAS.-\n") do
+    w=w:sub(1,-2).." " 
+    idx = w:match(" (.-) ") 
+    if tonumber(idx)==nil then 
+      idx, name = w:match(" (.-):(.-) ")
+    end
+    
+    if tonumber(idx)==param_id then 
+      return count
+    end
+    count=count+1
+  end
+  return -1
+end
+
+
+function ultraschall.GetParmLFOLearnID_by_FXParam_FXStateChunk(FXStateChunk, fxid, param_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetParmLFOLearnID_by_FXParam_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>integer parm_lfolearn_id, = ultraschall.GetParmLFOLearnID_by_FXParam_FXStateChunk(string FXStateChunk, integer fxid, integer param_id)</functioncall>
+  <description>
+    Returns the parmlfolearn_id by parameter.
+
+    This can be used as parameter parm_lfolearn_id for Get/Set/DeleteLFOLearn-functions
+    
+    Returns -1, if the parameter has no ParmLFOLearn associated.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    integer parm_lfolearn_id - the idx of the parm_lfolearn, that you can use for Add/Get/Set/DeleteParmLFOLearn-functions; -1, if parameter has no ParmLFOLearn associated
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from which you want to retrieve the parm_lfolearn_id
+    integer fxid - the fx, of which you want to get the parameter-lfo_learn-settings
+    integer param_id - the parameter, whose parm_lfolearn_id you want to get
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping LFOLearn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, parameter, lfolearn, fxstatechunk, osc, midi</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetParmLFOLearnID_by_FXParam_FXStateChunk", "StateChunk", "Not a valid FXStateChunk", -1) return nil end
+  if math.type(param_id)~="integer" then ultraschall.AddErrorMessage("GetParmLFOLearnID_by_FXParam_FXStateChunk", "param_id", "must be an integer", -2) return nil end
+  if math.type(fxid)~="integer" then ultraschall.AddErrorMessage("GetParmLFOLearnID_by_FXParam_FXStateChunk", "fxid", "must be an integer", -3) return nil end
+  if string.find(FXStateChunk, "\n  ")==nil then
+    FXStateChunk=ultraschall.StateChunkLayouter(FXStateChunk)
+  end
+  FXStateChunk=ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxid)
+  if FXStateChunk==nil then ultraschall.AddErrorMessage("GetParmLFOLearnID_by_FXParam_FXStateChunk", "fxid", "no such fx", -4) return nil end
+  local count=0
+  local name=""
+  local idx, midi_note, checkboxes
+  for w in string.gmatch(FXStateChunk, "LFOLEARN.-\n") do
+    w=w:sub(1,-2).." " 
+    idx = w:match(" (.-) ") 
+    if tonumber(idx)==nil then 
+      idx, name = w:match(" (.-):(.-) ")
+    end
+    
+    if tonumber(idx)==param_id then 
+      return count
+    end
+    count=count+1
+  end
+  return -1
+end
+

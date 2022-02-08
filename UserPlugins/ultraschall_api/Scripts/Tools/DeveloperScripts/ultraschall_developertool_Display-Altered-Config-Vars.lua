@@ -1,7 +1,7 @@
   --[[
   ################################################################################
   # 
-  # Copyright (c) 2014-2019 Ultraschall (http://ultraschall.fm)
+  # Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
   # 
   # Permission is hereby granted, free of charge, to any person obtaining a copy
   # of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,11 @@
   ################################################################################
   --]]
 
--- written by Meo Mespotine mespotine.de 26th of November 2019
+-- written by Meo-Ada Mespotine mespotine.de 20th of November 2021
 -- for the ultraschall.fm-project
 
--- requires Reaper 5.982 and SWS 2.9.10.1, JS-extension 0.986 and Ultraschall-API 4.00 beta 2.761 installed
-
 -- This script shows altered integer and double-float-settings for all config-variables available in Reaper, that can be used by
--- the SWS-functions SNM_GetIntConfigVar(), SNM_SetIntConfigVar(), SNM_GetDoubleConfigVar() and SNM_SetDoubleConfigVar()
+-- the SWS-functions SNM_GetIntConfigVar(), SNM_SetIntConfigVar(), SNM_GetDoubleConfigVar() and SNM_SetDoubleConfigVar() and get_config_var_string
 -- where you pass the variable-name as parameter "varname".
 -- This script also shows bitwise-representation of the variable's-value, so you can work easily with bitfields.
 
@@ -74,10 +72,14 @@ ShowString=""
 OldShowString=""
 Filtermode=true
 
+
+ConfigVarsInt={}
+ConfigVarsDouble={}
+
 reaper.ClearConsole() 
-reaper.ShowConsoleMsg("Reaper-Config-Variable-Inspector by Meo Mespotine(mespotine.de) 20th of August 2019 for Ultraschall.fm\n\n  This shows all altered Config-Variables and their bitwise-representation as well as the value in the reaper.ini,\n  that can be accessed at runtime through LUA using the SWS-functions: \n     SNM_GetIntConfigVar(), SNM_SetIntConfigVar(), SNM_GetDoubleConfigVar(), SNM_SetDoubleConfigVar() \n     and Reaper's get_config_var_string(). \n\n  These variables cover the preferences window, project-settings, render-dialog, settings in the context-menu of \n  transportarea and numerous other things.\n\n  Just change some settings in the preferences and click apply to see, which variable is changed to which value, \n  shown in this Reascript-Console.\n\n  Keep in mind: certain variables use bit-wise-values, which means, that one variable may contain the settings for \n  numerous checkboxes; stored using a bitmask, which will be shown in here as well.\n\n") 
-reaper.ShowConsoleMsg("  Mismatch between int/double-values the currently set reaper.ini-value(as well as only int/double changing) is a hint\n  that the value is not stored into reaper.ini(e.g. only stored, when you set the current project's settings \n  as default settings).\n\n")
-reaper.ShowConsoleMsg("  Keep in mind, that some values can't be set, unless they were set in the dialogs first, lika afxcfg. So if they don't \n  appear after setting them through script, this isn't necessarily a bug!\n")
+reaper.ShowConsoleMsg("Reaper-Config-Variable-Inspector by Meo Mespotine(mespotine.de) 20th of November 2021 for Ultraschall.fm\n\n  This shows all altered Config-Variables and their bitwise-representation as well as the value in the reaper.ini,\n  that can be accessed at runtime through LUA using the SWS-functions: \n     SNM_GetIntConfigVar(), SNM_SetIntConfigVar(), SNM_GetDoubleConfigVar(), SNM_SetDoubleConfigVar() \n     and Reaper's get_config_var_string(). \n\n  These variables cover the preferences window, project-settings, render-dialog, settings in the context-menu of \n  transportarea and numerous other things.\n\n  Just change some settings in the preferences and click apply to see, which variable is changed to which value, \n  shown in this Reascript-Console.\n\n  Keep in mind: certain variables use bit-wise-values, which means, that one variable may contain the settings for \n  numerous checkboxes; stored using a bitmask, which will be shown in here as well.\n\n") 
+reaper.ShowConsoleMsg("  Mismatch between int/double-values the currently set reaper.ini-value(as well as only int/double changing) is\n  a hint that the value is not stored into reaper.ini(e.g. only stored, when you set the current project's settings \n  as default settings).\n\n")
+reaper.ShowConsoleMsg("  Keep in mind, that some values can't be set, unless they were set in the dialogs first, lika afxcfg. So if they \n  don't appear after setting them through script, this isn't necessarily a bug!\n")
 --gfx.init("Show Config Vars",900,187)
 gfx.setfont(1, "Arial", 15, 0)
 gfx.setfont(2, "Arial", 15, 16981)
@@ -86,17 +88,30 @@ gfx.dest=2
 start=0
 stop=MaxEntries
 
+Pudel=""
+
+-- get currently documented Config-Vars and put them into datastructures to
+-- get the difs from them
+-- also get their current int, double and string values
 for w in string.gmatch(A, "<slug>(.-)</slug>") do
-  if reaper.SNM_GetIntConfigVar(w, -9987)~=-9987 or
-     reaper.SNM_GetIntConfigVar(w, -9988)~=-9988 then
+  
+  if (reaper.SNM_GetIntConfigVar(w, -9987)~=-9987 or
+     reaper.SNM_GetIntConfigVar(w, -9988)~=-9988) ==true
+     or 
+     (reaper.SNM_GetDoubleConfigVar(w, -9987)~=-9987 or
+     reaper.SNM_GetDoubleConfigVar(w, -9988)~=-9988)==true
+     then
     ConfigVars[ConfigVars_Counter]={}
     ConfigVars[ConfigVars_Counter]["configvar"]=w
     ConfigVars[ConfigVars_Counter]["int"]=reaper.SNM_GetIntConfigVar(w, -9987)
     ConfigVars[ConfigVars_Counter]["double"]=tostring(reaper.SNM_GetDoubleConfigVar(w, -9987))
+    ConfigVarsInt[ConfigVars_Counter]=reaper.SNM_GetIntConfigVar(w, -9987)
+    ConfigVarsDouble[ConfigVars_Counter]=tostring(reaper.SNM_GetDoubleConfigVar(w, -9987))
     retval, ConfigVars[ConfigVars_Counter]["string"]=reaper.get_config_var_string(w)
     ConfigVars_Counter=ConfigVars_Counter+1
   end
 end
+
 
 function Update_ConfigVars()
   ShowString=""
@@ -105,17 +120,36 @@ function Update_ConfigVars()
     local A=reaper.SNM_GetIntConfigVar(ConfigVars[i]["configvar"], -9987)
     local B=tostring(reaper.SNM_GetDoubleConfigVar(ConfigVars[i]["configvar"], -9987))
     local retval, C=reaper.get_config_var_string(ConfigVars[i]["configvar"])
+    if ConfigVarsInt[i]==nil then ConfigVarsInt[i]=0 end
+    if ConfigVarsDouble[i]==nil then ConfigVarsDouble[i]=0 end
     if A~=ConfigVars[i]["int"] or
        B~=ConfigVars[i]["double"] or
        C~=ConfigVars[i]["string"] then
       update=true
        if ConsoleToggle==true then
+         A1=A-ConfigVarsInt[i]
+         B1=B-ConfigVarsDouble[i]
+         local INT="       int    \t: "..A..""
+         -- layout dif-value correctly
+         if INT:len()<20 then INT=INT.."\t\t\tDifference to old value: "..A1.."" 
+         else INT=INT.."\t\t\tDifference to old value: "..A1.."" end
+
+         -- layout dif-value correctly         
+         local DOUBLE="       double\t: "..B
+         if DOUBLE:len()<20 then DOUBLE=DOUBLE.."\t\t\tDifference to old value: "..B1.."" 
+         elseif DOUBLE:len()<26 then DOUBLE=DOUBLE.."\t\tDifference to old value: "..B1.."" 
+         else DOUBLE=DOUBLE.."\tDifference to old value: "..B1.."" end
+         
          print(" ")
          print(ConfigVars[i]["configvar"])
-         print("       int       : "..A)
-         print("       double: "..B)
-         print("       strings : "..C)
+         print(INT)
+         print(DOUBLE)
+--         print("       int    \t: "..A.."\t\t(Difference to old value: "..A1..")")
+--         print("       double\t: "..B.."\t\t(Difference to old value: "..B1..")")
+         print("       strings\t: \""..C.."\"")
        end
+       ConfigVarsInt[i]=A
+       ConfigVarsDouble[i]=B
        Retval, String = reaper.BR_Win32_GetPrivateProfileString("REAPER", ConfigVars[i]["configvar"], "unset", reaper.get_ini_file())
        bitvals_csv, bitvalues = ultraschall.ConvertIntegerToBits(A,4)
        bitfield=""
@@ -145,7 +179,7 @@ function Update_ConfigVars()
   if ShowString~=OldShowString and ShowString~="" then OldShowString=ShowString end
 end
 
-
+--[[
 function ShowConfigVars(filter)
   gfx.set(0,0,0,1,0,2)
   gfx.rect(0,0,2048,2048,1)
@@ -207,8 +241,9 @@ function ToggleFilterMode()
 end
 
 Filter=""
-
+--]]
 function main()
+--[[
   Key=gfx.getchar()
 --  if Key~=0 then print3(Key) end
   if Key==1685026670.0 then 
@@ -244,13 +279,16 @@ function main()
   if Key==26161.0 and ConsoleToggle==true then ConsoleToggle=false
   elseif Key==26161.0 and ConsoleToggle==false then ConsoleToggle=true 
   end
+  --]]
   Update_ConfigVars()
+  --[[
   ShowConfigVars(Filter)
   gfx.dest=-1
   gfx.x=1
   gfx.y=1
   gfx.blit(2,1,0)
   gfx.dest=2
+  --]]
   reaper.defer(main)
 end
 

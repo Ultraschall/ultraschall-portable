@@ -1,0 +1,168 @@
+/* Clipboard-js */
+function dump(obj) {
+    var out = '';
+    for (var i in obj) {
+        out += i + ": " + obj[i] + "\n";
+    }
+
+    alert(out);
+
+    // or, if you wanted to avoid alerts...
+
+    var pre = document.createElement('pre');
+    pre.innerHTML = out;
+    document.body.appendChild(pre)
+}
+
+
+
+/* Clipbaord-js */
+var clipboard = new Clipboard('.cc div', { 
+	text: function(trigger) {
+		var string = trigger.innerHTML
+        string = string.replace('Lua: ', ''); // delete Lua: 
+        string = string.replace('EEL2: ', ''); // delete EEL2: 
+        string = string.replace('Python: ', ''); // delete Python: 
+        string = string.replace('C: ', ''); // delete C: 
+        string = string.replace('Javascript: ', ''); // delete Javascript: 
+		//string = string.replace(/<em>.*?<\/em>/gm, ''); // delete <i> content
+		string = string.replace(/<(?:.|\n)*?>/gm, ''); // delete HTML tags
+		string = string.replace(/\)/gm, ' \)'); // add space before last parenthese
+		string = string.replace(/  /gm, ' '); // add space before last parenthese
+		string = string.replace(/\( \)/gm, '()'); // delete spaces if only parentheses
+		return string;
+	}
+});
+
+/* List-js */
+var monkeyList = new List('sidebar-wrapper', {
+  valueNames: ['name']
+});
+
+/* HightLight.js */
+monkeyList.on("updated", function() {
+  
+  $(".sidebar-nav").unhighlight();
+  
+  var search = $(".fuzzy-search").val();
+  var words = search.split(" ");
+  var words_filtered = words.filter(function(v){return v!==''});
+  
+  $(".sidebar-nav").highlight(words_filtered);
+
+}); // trigger
+
+/* StatCounter */
+var sc_project = 9802855;
+var sc_invisible = 1;
+var sc_security = "5165ddac";
+
+
+/* HIDE LANGUAGE FUNCTIONS */
+function ShowOnly( language ) {
+
+	var cplus = '.c_doc, .c_func, .c_funcs, .cplus';
+	var lua = '.l_doc, .l_func, .l_funcs, .lua';
+	var python =  '.p_doc, .p_func, .p_funcs, .pyth';
+	var eel = '.e_doc, .e_func, .e_funcs, .eel';
+
+	if ( language === 'eel' || language === 'all' ) {
+		$(eel).show();
+		$('#displayEEL').addClass('active-language');
+	} else {
+		$('#displayEEL').removeClass('active-language');
+		$(eel).hide();
+	}
+
+	if ( language === 'c++' || language === 'all' ) {
+		$(cplus).show();
+		$('#displayC').addClass('active-language');
+	} else {
+		$('#displayC').removeClass('active-language');
+		$(cplus).hide();
+	}
+
+	if ( language === 'lua' || language === 'all' ) {
+		$(lua).show();
+		$('#displayLua').addClass('active-language');
+	} else {
+		$('#displayLua').removeClass('active-language');
+		$(lua).hide();
+	}
+
+	if ( language === 'python' || language === 'all' ) {
+		$(python).show();
+		$('#displayPython').addClass('active-language');
+	} else {
+		$('#displayPython').removeClass('active-language');
+		$(python).hide();
+	}
+}
+
+$('#displayEEL').click(
+	function() {
+		ShowOnly( 'eel' );
+		setCookie("reascript_language", "eel");
+	}
+)
+$('#displayLua').click(
+	function() {
+		ShowOnly( 'lua' )
+		setCookie("reascript_language", "lua");
+	}
+)
+$('#displayC').click(
+	function() {
+		ShowOnly( 'c++' );
+		setCookie("reascript_language", "c++");
+	}
+)
+$('#displayPython').click(
+	function() {
+		ShowOnly( 'python' );
+		setCookie("reascript_language", "python");
+	}
+)
+$('#displayAll').click(
+	function() {
+		ShowOnly( 'all' );
+		setCookie("reascript_language", "all");
+	}
+)
+$('.cc div').click(
+	function() {
+		$(this).addClass('copied');
+	}
+)
+
+/* Cookie */
+function setCookie(cname, cvalue, exdays) {
+	if (exdays == null){ exdays = 15;}
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";
+}
+
+var cookie_language = getCookie("reascript_language");
+if ( cookie_language === "" ) { cookie_language = 'all'; }
+ShowOnly( cookie_language );
+
+$( document ).ready(function() {
+    $(".fuzzy-search").focus()
+})

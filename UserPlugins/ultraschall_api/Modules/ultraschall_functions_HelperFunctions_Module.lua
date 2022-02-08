@@ -191,7 +191,7 @@ function ultraschall.CSV2IndividualLinesAsArray(csv_line,separator)
   <description>
     convert a csv-string to an array of the individual values. If separator cannot be found, it'll return the original string
     
-    returns nil in case or error
+    returns nil in case of error
   </description>
   <retvals>
     integer count - the number of entries
@@ -418,6 +418,7 @@ function ultraschall.IsItemInTrack(tracknumber, itemIDX)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Various Check Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -467,6 +468,7 @@ function ultraschall.CheckActionCommandIDFormat(aid)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -476,8 +478,12 @@ function ultraschall.CheckActionCommandIDFormat(aid)
   -- check parameter
   if math.type(aid)~="integer" and type(aid)~="string" then ultraschall.AddErrorMessage("CheckActionCommandIDFormat", "action_command_id", "must be an integer or a string", -1) return false end
   
-  
-  if math.type(tonumber(aid))=="integer" and tonumber(aid)==math.floor(tonumber(aid)) and tonumber(aid)<=65535 and tonumber(aid)>=0 then return true -- is it a valid number?
+  if math.type(tonumber(aid))=="integer" and 
+     tonumber(aid)==math.floor(tonumber(aid)) and 
+     tonumber(aid)<=65535 and 
+     tonumber(aid)>=0 then 
+     
+     return true -- is it a valid number?
   elseif type(aid)=="string" and aid:sub(1,1)=="_" and aid:len()>1 then return true -- is it a valid string, formatted right=
   else return false -- if neither, return false
   end
@@ -508,6 +514,7 @@ function ultraschall.CheckActionCommandIDFormat2(aid)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -560,6 +567,7 @@ function ultraschall.ToggleStateAction(section, actioncommand_id, state)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -605,6 +613,7 @@ function ultraschall.RefreshToolbar_Action(section, actioncommand_id)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -652,6 +661,7 @@ function ultraschall.ToggleStateButton(section, actioncommand_id, state)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -1033,13 +1043,14 @@ function ultraschall.OpenURL(url)
     returns -1 in case of an error
   </description>
 <retval>
-integer retval - -1 in case of error
+    integer retval - -1 in case of error
 </retval>
   <parameters>
     string url - the url to be opened in the browser; will check for :// in it for validity!
   </parameters>
   <chapter_context>
     API-Helper functions
+    Various
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -1054,8 +1065,8 @@ integer retval - -1 in case of error
   elseif OS=="Other" then
     os.execute("xdg-open "..url)
   else
-	--reaper.BR_Win32_ShellExecute("open", url, "", "", 0)
-	--ACHWAS,ACHWAS2 = reaper.ExecProcess("%WINDIR\\SysWow64\\cmd.exe \"Ultraschall-URL\" /B ".. url, 0)
+    --reaper.BR_Win32_ShellExecute("open", url, "", "", 0)
+    --ACHWAS,ACHWAS2 = reaper.ExecProcess("%WINDIR\\SysWow64\\cmd.exe \"Ultraschall-URL\" /B ".. url, 0)
     os.execute("start \"Ultraschall-URL\" /B ".. url)
   end
   return true
@@ -1184,6 +1195,7 @@ function ultraschall.GetOS()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Various
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -1223,6 +1235,7 @@ function ultraschall.IsOS_Windows()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Various Check Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -1266,6 +1279,7 @@ function ultraschall.IsOS_Mac()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Various Check Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -1277,7 +1291,7 @@ function ultraschall.IsOS_Mac()
   local Os, bits
   
   -- check for os and bits
-  if retval:match("OSX")~=nil or retval:match("macOS")~=nil then Os=true 
+  if retval:match("OSX")~=nil or retval:match("macOS%-arm64")~=nil then Os=true 
   else
     Os=false
   end
@@ -1306,6 +1320,7 @@ function ultraschall.IsOS_Other()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Various Check Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -1349,6 +1364,7 @@ function ultraschall.GetReaperAppVersion()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Various
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -1627,6 +1643,7 @@ function ultraschall.IsValidGuid(guid, strict)
   </retvals>
   <chapter_context>
     API-Helper functions
+    Various Check Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -1675,7 +1692,7 @@ function ultraschall.SetGuidExtState(guid, key, value, savelocation, overwrite, 
   </retvals>
   <chapter_context>
     Metadata Management
-    Extension States(Guid)
+    Extension States Guid
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -1783,6 +1800,7 @@ function ultraschall.PreventCreatingUndoPoint()
   </description>
   <chapter_context>
     API-Helper functions
+    Various
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -1820,6 +1838,7 @@ function ultraschall.SetIntConfigVar_Bitfield(configvar, set_to, ...)
   </retvals>
   <chapter_context>
     API-Helper functions
+    Config Vars
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2025,6 +2044,7 @@ function ultraschall.ReturnsMinusOneInCaseOfError_Arzala()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Various
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2098,6 +2118,7 @@ function ultraschall.ReturnTypeOfReaperObject(object)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Datatype-related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2139,6 +2160,7 @@ function ultraschall.IsObjectValidReaperObject(object)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Various Check Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2286,6 +2308,7 @@ function ultraschall.IsItemInTrack3(MediaItem, trackstring)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Various Check Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2307,7 +2330,7 @@ end
 --L=ultraschall.IsItemInTrack3(reaper.GetMediaItem(0,0), "1,2,3")
 
 
-function ultraschall.AddIntToChar(char, int)
+function ultraschall.AddIntToChar(character, int)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AddIntToChar</slug>
@@ -2339,11 +2362,11 @@ function ultraschall.AddIntToChar(char, int)
   <tags>helper functions, add, character, value</tags>
 </US_DocBloc>
 ]]
-  if type(char)~="string" then ultraschall.AddErrorMessage("AddIntToChar", "char", "must be a string with one character" , -1) return nil end
-  if char:len()~=1 then ultraschall.AddErrorMessage("AddIntToChar", "char", "must be a string with one character" , -2) return nil end
+  if type(character)~="string" then ultraschall.AddErrorMessage("AddIntToChar", "character", "must be a string with one character" , -1) return nil end
+  if character:len()~=1 then ultraschall.AddErrorMessage("AddIntToChar", "character", "must be a string with one character" , -2) return nil end
   if math.type(int)~="integer" then ultraschall.AddErrorMessage("AddIntToChar", "int", "must be an integer" , -3) return nil end
-  if string.byte(char)+int>255 or string.byte(char)+int<0 then ultraschall.AddErrorMessage("AddIntToChar", "char + int", "calculated value is out of range of ASCII" , -4) return nil end
-  local charcode=string.byte(char)
+  if string.byte(character)+int>255 or string.byte(character)+int<0 then ultraschall.AddErrorMessage("AddIntToChar", "char + int", "calculated value is out of range of ASCII" , -4) return nil end
+  local charcode=string.byte(character)
   local newchar=string.char(charcode+int)
   return newchar
 end
@@ -2384,6 +2407,7 @@ function ultraschall.MakeFunctionUndoable(Func, UndoMessage, Flag, ...)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Function Related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2474,6 +2498,7 @@ function ultraschall.type(object)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Datatype-related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2708,6 +2733,7 @@ function ultraschall.GetScriptFilenameFromActionCommandID(action_command_id)
   </retvals>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2865,6 +2891,7 @@ function ultraschall.GetReaperScriptPath()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Reaper Paths
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2897,6 +2924,7 @@ function ultraschall.GetReaperColorThemesPath()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Reaper Paths
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2928,6 +2956,7 @@ function ultraschall.GetReaperJSFXPath()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Reaper Paths
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -2960,6 +2989,7 @@ function ultraschall.GetReaperWebRCPath()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Reaper Paths
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -3102,6 +3132,7 @@ function ultraschall.RunBackgroundHelperFeatures(switch_on)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Various
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -3799,7 +3830,7 @@ function ultraschall.StateChunkLayouter(statechunk)
     ..CHANMODE 0
     ..GUID {79F087CE-49E8-4212-91F5-8487FBCF10B1}
     ..&lt;SOURCE FLAC
-    ....FILE "C:\Users\meo\Desktop\X_Karo_Lynn-Interview.flac"
+    ....FILE "C:\Users\IncredibleSupergirl\Desktop\X_audiofile.flac"
     ..&gt;
     &gt;
     </code></pre>
@@ -3824,18 +3855,18 @@ function ultraschall.StateChunkLayouter(statechunk)
 </US_DocBloc>
 ]]
 
-  if type(statechunk)~="string" then ultraschall.AddErrorMessage("StateChunkLayouter","statechunk", "must be a string", -1) return nil end  
+  if type(statechunk)~="string" then ultraschall.AddErrorMessage("StateChunkLayouter","statechunk", "must be a string", -1) return nil end    
   local num_tabs=0
   local newsc=""
-  for k in string.gmatch(statechunk, "(.-\n)") do
+  for k in string.gmatch(statechunk.."\n", "(.-\n)") do
     if k:sub(1,1)==">" then num_tabs=num_tabs-1 end
     for i=0, num_tabs-1 do
-      newsc=newsc.."  "
+      newsc=newsc.."  "      
     end
     if k:sub(1,1)=="<" then num_tabs=num_tabs+1 end
-    newsc=newsc..k
+    newsc=newsc..k    
   end
-  return newsc
+  return newsc:sub(1,-2)
 end
 
 
@@ -4051,7 +4082,7 @@ function ultraschall.GetSetIntConfigVar(varname, set, ...)
     </retvals>
     <chapter_context>
       API-Helper functions
-      Data Manipulation
+      Config Vars
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -4566,7 +4597,7 @@ function ultraschall.SetScriptIdentifier_Title(title)
       its own script-identifier, so you can be sure, that you communicate with the right instance.
       
       With this function, you can set its title, that is less cryptic than the ScriptIdentifier itself.
-      No \n-newlines, \r-carriag returns or \0-nullbytes are allowed and will be removed
+      No \n-newlines, \r-carriage returns or \0-nullbytes are allowed and will be removed
       
       You can get it using [GetScriptIdentifier_Title](#GetScriptIdentifier_Title).
       
@@ -4649,6 +4680,7 @@ function ultraschall.ResetProgressBar()
     </description>
     <chapter_context>
       API-Helper functions
+      ProgressBar
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -4701,6 +4733,7 @@ function ultraschall.PrintProgressBar(show, length, maximumvalue, currentvalue, 
     </parameters>
     <chapter_context>
       API-Helper functions
+      ProgressBar
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -4820,6 +4853,7 @@ function ultraschall.StoreFunctionInExtState(section, key, functioncall, debug)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Function Related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -4863,6 +4897,7 @@ function ultraschall.LoadFunctionFromExtState(section, key)
   </parameters>
   <chapter_context>
     API-Helper functions
+    LoadFunctionFromExtState
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5031,6 +5066,7 @@ function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x,
   </parameters>
   <chapter_context>
     API-Helper functions
+    Various
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5138,16 +5174,26 @@ function ultraschall.GetAllActions(section)
     The table is of the following format:
 
             actiontable[index]["commandid"]       - the command-id-number of the action  
-            actiontable[index]["actioncommandid"] - the action-command-id-string of the action, if it's a named command(usually scripts or extensions), otherwise empty string  
+            actiontable[index]["actioncommandid"] - the action-command-id-string of the action, if it's a named 
+                                                    command(usually scripts or extensions), otherwise empty string  
             actiontable[index]["name"]            - the name of command  
             actiontable[index]["scriptfilename"]  - the filename+path of a command, that is a ReaScript, otherwise empty string  
             actiontable[index]["termination"]     - the termination-state of the action  
                                                       -1  - not available  
-                                                      4   - Dialogwindow appears(Terminate, New Instance, Abort), if another instance of a given script is started, that's already running  
-                                                      260 - always Terminate All(!) Instances, if you try to run another instance of a script, that's already running. When no instance is running, it simply starts the script.  
+                                                      4   - Dialogwindow appears(Terminate, New Instance, Abort), if another 
+                                                            instance of a given script is started, that's already running  
+                                                      260 - always Terminate All(!) Instances, if you try to run another 
+                                                            instance of a script, that's already running. When no instance is 
+                                                            running, it simply starts the script.  
                                                       516 - always start a New Instance of the script, that's already running  
-            actiontable[index]["consolidate"]     - the consolidate-state of custom actions; 1 consolidate undo points, 2 show in Actions-Menu, 3 consolidate undo points AND show in Actions Menu; -1, if not available  
-            actiontable[index]["actiontype"]      - the type of the action; "native action", "extension action", "custom action", "script"  
+            actiontable[index]["consolidate"]     - the consolidate-state of custom actions; 
+                                                        1 consolidate undo points, 
+                                                        2 show in Actions-Menu, 
+                                                        3 consolidate undo points AND show in Actions Menu
+                                                        -1, if not available  
+            actiontable[index]["actiontype"]      - the type of the action; 
+                                                    "native action", "extension action", 
+                                                    "custom action", "script"  
      
     returns -1 in case of an error.
   </description>
@@ -5167,6 +5213,7 @@ function ultraschall.GetAllActions(section)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5256,7 +5303,7 @@ end
 
 --A,B=ultraschall.GetAllActions(0)
 
-function ultraschall.IsWithinTimeRange(time, start, stop)
+function ultraschall.IsWithinTimeRange(point_in_time, start, stop)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>IsWithinTimeRange</slug>
@@ -5265,14 +5312,14 @@ function ultraschall.IsWithinTimeRange(time, start, stop)
     Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.IsWithinTimeRange(number time, number start, number stop)</functioncall>
+  <functioncall>boolean retval = ultraschall.IsWithinTimeRange(number point_in_time, number start, number stop)</functioncall>
   <description>
     returns if time is between(including) start and stop.
      
     returns false in case of an error
   </description>
   <parameters>
-    number time - the time in seconds, to check for
+    number point_in_time - the time in seconds, to check for
     number start - the starttime in seconds, within to check for
     number stop - the endtime in seconds, within to check for
   </parameters>
@@ -5281,17 +5328,18 @@ function ultraschall.IsWithinTimeRange(time, start, stop)
   </retvals>
   <chapter_context>
     API-Helper functions
+    Various Check Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
   <tags>helper functions, check, is between, start, stop, seconds, time</tags>
 </US_DocBloc>
 --]]
-  time=ultraschall.LimitFractionOfFloat(tonumber(time),5,true)
+  point_in_time=ultraschall.LimitFractionOfFloat(tonumber(point_in_time),5,true)
   start=ultraschall.LimitFractionOfFloat(tonumber(start),5,true)
   stop=ultraschall.LimitFractionOfFloat(tonumber(stop),5,true)
-  if time==nil or start==nil or stop==nil then return false end
-  if time>=start and time<=stop then return true else return false end
+  if point_in_time==nil or start==nil or stop==nil then return false end
+  if point_in_time>=start and point_in_time<=stop then return true else return false end
 end
 
 function ultraschall.MediaExplorer_OnCommand(actioncommandid)
@@ -5457,6 +5505,7 @@ function ultraschall.RunLuaSourceCode(code)
   </retvals>
   <chapter_context>
     API-Helper functions
+    Function Related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5605,6 +5654,7 @@ function ultraschall.ConvertFunction_ToBase64String(to_convert_function, debug)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Function Related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5644,6 +5694,7 @@ function ultraschall.ConvertFunction_FromBase64String(BASE64_functionstring)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Function Related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5688,6 +5739,7 @@ function ultraschall.ConvertFunction_ToHexString(to_convert_function, debug)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Function Related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5730,6 +5782,7 @@ function ultraschall.ConvertFunction_FromHexString(HEX_functionstring)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Function Related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5759,21 +5812,22 @@ function ultraschall.Benchmark_GetStartTime(slot)
   </requires>
   <functioncall>number starttime = ultraschall.Benchmark_GetStartTime(optional integer slot)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-	This function is for benchmarking parts of your code.
-	It returns the starttime of the last benchmark-start.
-	
-	returns nil, if no benchmark has been made yet.
-	
-	Use [Benchmark_MeasureTime](#Benchmark_MeasureTime) to start/reset a new benchmark-measureing.
+    This function is for benchmarking parts of your code.
+    It returns the starttime of the last benchmark-start.
+    
+    returns nil, if no benchmark has been made yet.
+    
+    Use [Benchmark_MeasureTime](#Benchmark_MeasureTime) to start/reset a new benchmark-measureing.
   </description>
   <retvals>
     number starttime - the starttime of the currently running benchmark
   </retvals>
   <parameters>
-	optional integer slot - the slot, whose starttime you want to get
+    optional integer slot - the slot, whose starttime you want to get
   </parameters>
   <chapter_context>
     API-Helper functions
+    Benchmark
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5787,33 +5841,34 @@ function ultraschall.Benchmark_GetStartTime(slot)
 end
 
 function ultraschall.Benchmark_GetAllStartTimesAndSlots()
-	--[[
-	<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-	  <slug>Benchmark_GetAllStartTimesAndSlots</slug>
-	  <requires>
-		Ultraschall=4.1
-		Reaper=5.975
-		Lua=5.3
-	  </requires>
-	  <functioncall>number starttime = ultraschall.Benchmark_GetStartTime()</functioncall>
-	  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-		This function is for benchmarking parts of your code.
-		It returns a table with all starttimes of all current benchmark-measurings. The index of the table reflects the slots.
-		
-		Use [Benchmark_MeasureTime](#Benchmark_MeasureTime) to start/reset a new benchmark-measureing.
-	  </description>
-	  <retvals>
-		table starttime_slots - a table with all starttimes of all current benchmark-measurings, where the index reflects the slots
-	  </retvals>
-	  <chapter_context>
-		API-Helper functions
-	  </chapter_context>
-	  <target_document>US_Api_Functions</target_document>
-	  <source_document>ultraschall_functions_HelperFunctions_Module.lua</source_document>
-	  <tags>helper functions, get, all, slots, start, benchmark, time</tags>
-	</US_DocBloc>
-	--]]
-	return ultraschall.Benchmark_StartTime_Time
+    --[[
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+      <slug>Benchmark_GetAllStartTimesAndSlots</slug>
+      <requires>
+        Ultraschall=4.1
+        Reaper=5.975
+        Lua=5.3
+      </requires>
+      <functioncall>number starttime = ultraschall.Benchmark_GetStartTime()</functioncall>
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">
+        This function is for benchmarking parts of your code.
+        It returns a table with all starttimes of all current benchmark-measurings. The index of the table reflects the slots.
+        
+        Use [Benchmark_MeasureTime](#Benchmark_MeasureTime) to start/reset a new benchmark-measureing.
+      </description>
+      <retvals>
+        table starttime_slots - a table with all starttimes of all current benchmark-measurings, where the index reflects the slots
+      </retvals>
+      <chapter_context>
+        API-Helper functions
+        Benchmark
+      </chapter_context>
+      <target_document>US_Api_Functions</target_document>
+      <source_document>ultraschall_functions_HelperFunctions_Module.lua</source_document>
+      <tags>helper functions, get, all, slots, start, benchmark, time</tags>
+    </US_DocBloc>
+    --]]
+    return ultraschall.Benchmark_StartTime_Time
 end
 
 function ultraschall.Benchmark_MeasureTime(timeformat, reset, slot)
@@ -5827,36 +5882,39 @@ function ultraschall.Benchmark_MeasureTime(timeformat, reset, slot)
   </requires>
   <functioncall>number elapsed_time, string elapsed_time_string, string measure_evaluation = ultraschall.Benchmark_MeasureTime(optional integer time_mode, optional boolean reset, optional integer slot)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
-	This function is for benchmarking parts of your code.
-	It returns the passed time, since last time calling this function.
-	
-	Use [Benchmark_GetStartTime](#Benchmark_GetStartTime) to start the benchmark.
+    This function is for benchmarking parts of your code.
+    It returns the passed time, since last time calling this function.
+    
+    Use [Benchmark_GetStartTime](#Benchmark_GetStartTime) to start the benchmark.
   </description>
   <retvals>
     number elapsed_time - the elapsed time in seconds
-	string elapsed_time_string - the elapsed time, formatted by parameter time_mode
-	string measure_evaluation - an evaluation of time, mostly starting with &lt; or &gt; an a number of +
-							  - 0, no time passed
-							  - >, for elapsed times greater than 1, the following + will show the number of integer digits; example: 12.927 -> ">++"
-							  - <, for elapsed times smaller than 1, the following + will show the number of zeros+1 in the fraction, until the first non-zero-digit appears; example: 0.0063 -> "<+++"
+    string elapsed_time_string - the elapsed time, formatted by parameter time_mode
+    string measure_evaluation - an evaluation of time, mostly starting with &lt; or &gt; an a number of +
+                              - 0, no time passed
+                              - >, for elapsed times greater than 1, the following + will show the number of integer digits; example: 12.927 -> ">++"
+                              - <, for elapsed times smaller than 1, the following + will show the number of zeros+1 in the fraction, until the first non-zero-digit appears; example: 0.0063 -> "<+++"
   </retvals>
   <parameters>
-	optional integer time_mode - the formatting of elapsed_time_string
-							   - 0=time
-							   - 1=measures.beats + time
-							   - 2=measures.beats
-							   - 3=seconds
-							   - 4=samples
-							   - 5=h:m:s:f
-	optional boolean reset - true, resets the starttime(for new measuring); false, keeps current measure-starttime(for continuing measuring)
-	optional integer slot - if you want to have multiple benchmark-measures at the same time, you can store them in different slots.
-						  - means, you can measure in slot 1 and slot 2, where you can occasionally reset slot 1 while having continuous measuring in slot 2.
-						  - this allows you to measure the execution time of the whole script(slot 2) and certain parts of the script on individual basis(slot 1).
-						  - you can use as many slots, as you want.
-	                      - nil, default slot is 0
+    optional integer time_mode - the formatting of elapsed_time_string
+                               - 0=time
+                               - 1=measures.beats + time
+                               - 2=measures.beats
+                               - 3=seconds
+                               - 4=samples
+                               - 5=h:m:s:f
+    optional boolean reset - true, resets the starttime(for new measuring); false, keeps current measure-starttime(for continuing measuring)
+    optional integer slot - if you want to have multiple benchmark-measures at the same time, you can store them in different slots.
+                          - means, you can measure in slot 1 and slot 2, where you can occasionally reset slot 1 while 
+                          - having continuous measuring in slot 2.
+                          - this allows you to measure the execution time of the whole script(slot 2) and certain parts of the script 
+                          - on individual basis(slot 1).
+                          - you can use as many slots, as you want.
+                          - nil, default slot is 0
   </parameters>
   <chapter_context>
     API-Helper functions
+    Benchmark
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5889,7 +5947,7 @@ function ultraschall.Benchmark_MeasureTime(timeformat, reset, slot)
     valid="<"..string.gsub(valid, "0", "+").."+"
   end
   if timeformat==0 or timeformat==nil then
-	passed_time_string=tostring(passed_time) 
+    passed_time_string=tostring(passed_time) 
   else
     passed_time_string=reaper.format_timestr_len(passed_time, "", 0, timeformat-1)
   end
@@ -5922,6 +5980,7 @@ function ultraschall.TimeToMeasures(project, Time)
     </parameters>
     <chapter_context>
       API-Helper functions
+      Various
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -5979,6 +6038,7 @@ function ultraschall.Create2DTable(maxx, maxy, defval)
     </parameters>
     <chapter_context>
       API-Helper functions
+      Various
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -6039,6 +6099,7 @@ function ultraschall.Create3DTable(maxx, maxy, maxz, defval)
     </parameters>
     <chapter_context>
       API-Helper functions
+      Various
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -6110,6 +6171,7 @@ function ultraschall.CreateMultiDimTable(defval, ...)
     </parameters>
     <chapter_context>
       API-Helper functions
+      Various
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
@@ -6209,3 +6271,188 @@ end
 --max=1
 
 --A=ultraschall.CreateMultiDimTable(33, max, max, max, max, max, max, max, max, max, max)
+
+function ultraschall.GMem_Read_ValueRange(startindex, number_of_indices, use_gmem_indices_for_table, gmemname)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GMem_Read_ValueRange</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>table gmem_values = ultraschall.GMem_Read_ValueRange(integer startindex, integer number_of_indices, optional boolean use_gmem_indices_for_table, optional string gmem_attachname)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Returns a table with all values of a gmem between startindex and startindex+number_of_indices.
+    You can optionally set a specific gmem-attachname or leave it blank to get the values from the currently attached gmem.
+    
+    Set use_gmem_indices_for_table=true, so have the index of the table reflect the index of the gmems.
+    
+    Note: Keep in mind, that requesting tons of gmem-values will use up a lot of resources, so to to just get, what you need to avoid hanging gui.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    table gmem_values - the requested values.
+  </retvals>
+  <parameters>
+    integer startindex - the first index you want to request; must be 0 or higher
+    integer number_of_indices - the number of values to request, from startindex onwards
+    optional boolean use_gmem_indices_for_table - true, index the table according to gmem-index; false or nil, just index from 1 onwards
+    optional string gmem_attachname - the attached gmem, from which you want to get the values; nil, use the currently attached gmem
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+    Gmem/Shared Memory
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>helper functions, get, gmem, values</tags>
+</US_DocBloc>
+]]
+  if math.type(startindex)~="integer" then ultraschall.AddErrorMessage("GMem_Read_ValueRange", "startindex", "must be an integer", -1) return nil end
+  if math.type(number_of_indices)~="integer" then ultraschall.AddErrorMessage("GMem_Read_ValueRange", "number_of_indices", "must be an integer", -2) return nil end
+  if use_gmem_indices_for_table~=nil and type(use_gmem_indices_for_table)~="boolean" then ultraschall.AddErrorMessage("GMem_Read_ValueRange", "use_gmem_indices_for_table", "must be a boolean or nil(for false)", -3) return nil end  
+  if gmem_attachname~=nil and type(gmem_attachname)~="string" then ultraschall.AddErrorMessage("GMem_Read_ValueRange", "gmem_attachname", "must be a string or nil(for currently attached gmem)", -3) return nil end  
+  
+  local oldgmemname=ultraschall.Gmem_GetCurrentAttachedName()
+  if gmemname~=nil then
+    reaper.gmem_attach(gmemname)
+  end
+  local Values={}
+  local a=0
+  local index
+  for i=startindex, startindex+number_of_indices do
+    a=a+1
+    if use_gmem_indices_for_table==true then index=i else index=a end
+    Values[index]=reaper.gmem_read(i)
+  end
+  if oldgmemname==nil then oldgmemname="" end
+  if gmemname~=nil then
+    reaper.gmem_attach(oldgmemname)
+  end
+  return Values
+end
+
+function ultraschall.GMem_GetValues_VideoSamplePeeker(samplesize)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GMem_GetValues_VideoSamplePeeker</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.10
+    Lua=5.3
+  </requires>
+  <functioncall>number play_pos, integer samplerate, integer num_channels, integer requested_samplebuffer_length, table samplebuffer = ultraschall.GMem_GetValues_VideoSamplePeeker(optional integer samplesize)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    For usage together with the JSFX-fx- "Video Sample Peeker", which sends samples to a gmem, that can be used(for instance by video processor's presets "Synthesis: Decorative Oscilloscope with Blitter" and "Synthesis: Decorative Spectrum Analyzer").
+    
+    Ths returns all important values and the samples-values.
+
+    You need to use the samples according to samplerate and number of channels to be able to do something with it.
+    
+    The overall maximum sample-buffer provided by the JSFX is 2 seconds.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    number play_pos - the playposition, when the sample has been re
+    integer samplerate - the samplerate of the sampledata
+    integer num_channels - the number of channels within the sampledata
+    integer requested_samplebuffer_length - the length of the requested buffer; maximum is the number of values for about 2 seconds
+    table samplebuffer - the values themselves
+  </retvals>
+  <parameters>
+    optional integer samplesize - the samplesize you want to get; nil, return the whole 2-seconds-samplebuffer(takes a lot of resources)
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+    Gmem/Shared Memory
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>helper functions, get, gmem, values, video sample peeker, samples, sample buffer</tags>
+</US_DocBloc>
+]]
+  if samplesize~=nil and math.type(samplesize)~="integer" then ultraschall.AddErrorMessage("GMem_GetValues_VideoSamplePeeker", "samplesize", "must be an integer or nil to get full 2-seconds-sample-buffer", -1) return nil end
+  local Values=ultraschall.GMem_Read_ValueRange(0, 16, true, "jsfx_to_video")
+  --                       GMem_Read_ValueRange(startindex, number_of_indices, use_gmem_indices_for_table, gmemname)
+  --if Values==nil then ultraschall.AddErrorMessage("GMem_GetValues_VideoSamplePeeker", "", "video sample peeker not yet loaded", -2) return nil end
+  if samplesize==nil then samplesize=Values[5] end
+  local samplesize2
+  
+  if samplesize>Values[5]-Values[2] then
+    samplesize2=Values[2]-Values[5]+samplesize
+    samplesize=Values[5]
+  else
+    samplesize2=0
+    samplesize=samplesize+Values[2]
+  end
+  
+  local Buf={}
+  local OldAttachname=ultraschall.Gmem_GetCurrentAttachedName()
+
+  reaper.gmem_attach("jsfx_to_video")
+  local a=0
+--  for i=Values[2], Values[5] do
+  for i=Values[2], samplesize do
+    a=a+1
+    Buf[a]=reaper.gmem_read(i)
+  end
+
+--  for i=16, Values[2] do
+  for i=16, samplesize2 do
+    P=i
+    a=a+1
+    Buf[a]=reaper.gmem_read(i)
+  end
+--]]
+  reaper.gmem_attach(OldAttachname)
+  
+  return Values[1], -- buf play pos
+         math.tointeger(Values[3]), -- buf samplerate
+         math.tointeger(Values[6]), -- number of channels
+         #Buf,  -- number of values of the sample-buffer
+         Buf   -- the values themselves of the sample-buffer
+end
+
+function ultraschall.ReturnReaperExeFile_With_Path()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ReturnReaperExeFile_With_Path</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.33
+    Lua=5.3
+  </requires>
+  <functioncall>string exefile_with_path = ultraschall.ReturnReaperExeFile_With_Path()</functioncall>
+  <description>
+    returns the reaper-exe-file with file-path
+  </description>
+  <retvals>
+    string exefile_with_path - the filename and path of the reaper-executable
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Various
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>helper functions, get, exe, filename, path</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.IsOS_Windows()==true then
+    -- On Windows
+    ExeFile=reaper.GetExePath().."\\reaper.exe"
+  elseif ultraschall.IsOS_Mac()==true then
+    -- On Mac
+    ExeFile=reaper.GetExePath().."/Reaper64.app/Contents/MacOS/reaper"
+    if reaper.file_exists(ExeFile)==false then
+      ExeFile=reaper.GetExePath().."/Reaper.app/Contents/MacOS/reaper"
+    end
+  else
+    -- On Linux
+    ExeFile=reaper.GetExePath().."/reaper"
+  end
+  return ExeFile
+end

@@ -335,13 +335,21 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
       
   -- if Projectlength=0 or CountofTracks==0, set render-settings for empty projects(workaround for that edgecase)
   -- old settings will be restored later
-  if reaper.CountTracks()==0 or reaper.GetProjectLength()==0 then
+  local oldsource2   = reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", 1, false)  
+  local oldsource
+  if reaper.CountTracks()==0 or reaper.GetProjectLength()==0 or oldsource2&4096~=0 then
+  --  print2("Tudel")
     -- get old settings
     oldbounds   =reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", 0, false)
     oldstartpos =reaper.GetSetProjectInfo(0, "RENDER_STARTPOS", 0, false)
     oldendpos   =reaper.GetSetProjectInfo(0, "RENDER_ENDPOS", 1, false)  
+    oldsource   =reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", 1, false)  
        
     -- set useful defaults that'll make adding the project to the render-queue possible always
+    if oldsource&4096~=0 then
+      
+      reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", 0, true)
+    end
     reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", 0, true)
     reaper.GetSetProjectInfo(0, "RENDER_STARTPOS", 0, true)
     reaper.GetSetProjectInfo(0, "RENDER_ENDPOS", 1, true)
@@ -355,17 +363,17 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
   reaper.EnumerateFiles(reaper.GetResourcePath().."/ColorThemes", 1)
   filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/QueuedRenders")
   filecount2, files2 = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/QueuedRenders")
-  
+
   -- add current project to render-queue
   reaper.Main_OnCommand(41823,0)    
-  
   -- reset old hwnd-focus-state 
   reaper.JS_Window_SetFocus(oldfocushwnd)
   
   -- wait, until 
   local timer=reaper.time_precise()  
   while filecount2==filecount do
-    if timer+20000<reaper.time_precise() then ultraschall.AddErrorMessage("GetProjectStateChunk", "", "timeout: Getting the ProjectStateChunk didn't work within 20 seconds for some reasons, please report this as bug to me and include the projectfile with which this happened!", -2) return end --end
+    --print(os.date())
+    if timer+2<reaper.time_precise() then ultraschall.AddErrorMessage("GetProjectStateChunk", "", "timeout: Getting the ProjectStateChunk didn't work within 20 seconds for some reasons, please report this as bug to me and include the projectfile with which this happened!", -2) return end --end
     reaper.EnumerateFiles(reaper.GetResourcePath().."/QueuedRenders", -1)
     filecount2, files2 = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/QueuedRenders")
   end
@@ -383,7 +391,10 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
     reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", oldbounds, true)
     reaper.GetSetProjectInfo(0, "RENDER_STARTPOS", oldstartpos, true)
     reaper.GetSetProjectInfo(0, "RENDER_ENDPOS", oldendpos, true)
-    retval, ProjectStateChunk = ultraschall.SetProject_RenderRange(nil, math.floor(oldbounds), math.floor(oldstartpos), math.floor(oldendpos), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILFLAG", 0, false)), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILMS", 0, false)), ProjectStateChunk)    
+    reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", oldsource, true)  
+    retval, ProjectStateChunk = ultraschall.SetProject_RenderRange(nil, math.floor(oldbounds), math.floor(oldstartpos), math.floor(oldendpos), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILFLAG", 0, false)), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILMS", 0, false)), ProjectStateChunk)
+    retval, ProjectStateChunk = ultraschall.SetProject_RenderStems(nil, math.floor(oldsource), ProjectStateChunk)
+    SLEM()
   end
      
   -- remove QUEUED_RENDER_ORIGINAL_FILENAME and QUEUED_RENDER_OUTFILE-entries, if keepqrender==true
@@ -461,8 +472,8 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers, i
     You can optimise the speed of the function, by setting the appropriate parameters to false.
     So if you don't need the last itemedge, setting return\_last\_itemedge=false speeds up execution massively.
     
-	If you want to have the full projectlength during recording, means, including items currently recorded, set include_rec=true
-	
+    If you want to have the full projectlength during recording, means, including items currently recorded, set include_rec=true
+    
     To do the same for projectfiles, use: [GetProject\_Length](#GetProject_Length)
   </description>
   <retvals>
@@ -476,7 +487,7 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers, i
     optional boolean return_last_itemedge - true or nil, return the last itemedge; false, don't return it
     optional boolean return_last_markerpos - true or nil, return the last marker/regionend-position; false, don't return it 
     optional boolean return_lat_timesigmarkerpos - true or nil, return the last timesignature-marker-position; false, don't return it
-	optional boolean include_rec - true, takes into account the projectlength during recording; nil or false, only the projectlength exluding currently recorded MediaItems
+    optional boolean include_rec - true, takes into account the projectlength during recording; nil or false, only the projectlength exluding currently recorded MediaItems
   </parameters>
   <chapter_context>
     Project-Management
@@ -517,7 +528,7 @@ function ultraschall.GetProjectLength(items, markers_regions, timesig_markers, i
     end
   end
   if include_rec==true and reaper.GetPlayState()&4~=0 and ultraschall.AnyTrackRecarmed()==true and reaper.GetPlayPosition()>reaper.GetProjectLength() then 
-	return reaper.GetPlayPosition(), Longest, Regionend, Markerend, TimeSigEnd
+    return reaper.GetPlayPosition(), Longest, Regionend, Markerend, TimeSigEnd
   end
   return reaper.GetProjectLength(), Longest, Regionend, Markerend, TimeSigEnd
 end
@@ -652,15 +663,15 @@ function ultraschall.IsTimeSelectionActive()
   </description>
   <retvals>
     boolean retval - true, there is a time-selection; false, there isn't a time-selection
-	optional number start_of_timeselection - start of the time-selection
-	optional number end_of_timeselection - end of the time-selection
+    optional number start_of_timeselection - start of the time-selection
+    optional number end_of_timeselection - end of the time-selection
   </retvals>
   <parameters>
     optional ReaProject Project - the project, whose time-selection-state you want to know; 0 or nil, the current project
   </parameters>
   <chapter_context>
     Project-Management
-	Helper functions
+    Helper functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>

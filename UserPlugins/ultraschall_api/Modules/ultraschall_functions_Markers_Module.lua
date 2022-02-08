@@ -680,14 +680,14 @@ function ultraschall.EnumerateNormalMarkers(number)
   -- find the right normal-marker
   for i=0, a-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color= reaper.EnumProjectMarkers3(0,i)
-	
+    
     if isrgn==false then
       if name:sub(1,10)~="_Shownote:" and 
-		 name:sub(1,5)~="_Edit" and 
-		 color~=ultraschall.planned_marker_color 
-		 then 
-			count=count+1 
-	  end
+         name:sub(1,5)~="_Edit" and 
+         color~=ultraschall.planned_marker_color 
+         then 
+            count=count+1 
+      end
     end
     if number>=0 and wentfine==0 and count==number then
         retnumber=retval 
@@ -3410,8 +3410,8 @@ function ultraschall.MoveMarkersBy(startposition, endposition, moveby, cut_at_bo
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>MoveMarkersBy</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.40
+    Ultraschall=4.2
+    Reaper=6.20
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.MoveMarkersBy(number startposition, number endposition, number moveby, boolean cut_at_borders)</functioncall>
@@ -3446,7 +3446,7 @@ function ultraschall.MoveMarkersBy(startposition, endposition, moveby, cut_at_bo
   if type(moveby)~="number" then ultraschall.AddErrorMessage("MoveMarkersBy","moveby", "must be a number", -4) return -1 end
   if type(cut_at_borders)~="boolean" then ultraschall.AddErrorMessage("MoveMarkersBy","cut_at_borders", "must be a boolean", -5) return -1 end
 
-  if moveby==0 then return -1 end
+    if moveby==0 then return -1 end
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
   
   local start, stop, step, boolean
@@ -3465,11 +3465,20 @@ function ultraschall.MoveMarkersBy(startposition, endposition, moveby, cut_at_bo
     end
   end
 
+  local MarkerGuids={}
+  local MarkerGuids_count=0
   for i=start, stop, step do
     local sretval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
-    if pos>=startposition and pos<=endposition then
-        boolean=reaper.SetProjectMarker(markrgnindexnumber, isrgn, pos+moveby, rgnend, name)
+
+    if pos>=startposition and pos<=endposition and isrgn==false then
+        MarkerGuids_count=MarkerGuids_count+1
+        MarkerGuids[MarkerGuids_count]=ultraschall.GetGuidFromMarkerID(sretval)
     end
+  end
+  for i=1, MarkerGuids_count do
+    local sretval=ultraschall.GetMarkerIDFromGuid(MarkerGuids[i])
+    local sretval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, sretval-1)
+    reaper.SetProjectMarkerByIndex(0, sretval-1, isrgn, pos+moveby, rgnend, markrgnindexnumber, name, color)
   end
   
   return 1
@@ -3721,12 +3730,12 @@ function ultraschall.GetAllCustomMarkers(custom_marker_name)
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -3802,12 +3811,12 @@ function ultraschall.GetAllCustomRegions(custom_region_name)
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -3884,12 +3893,12 @@ function ultraschall.CountAllCustomMarkers(custom_marker_name)
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -3948,12 +3957,12 @@ function ultraschall.CountAllCustomRegions(custom_region_name)
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -4012,12 +4021,12 @@ function ultraschall.EnumerateCustomMarkers(custom_marker_name, idx)
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -4087,12 +4096,12 @@ function ultraschall.EnumerateCustomRegions(custom_region_name, idx)
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -4161,12 +4170,12 @@ function ultraschall.DeleteCustomMarkers(custom_marker_name, idx)
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -4237,12 +4246,12 @@ function ultraschall.DeleteCustomRegions(custom_region_name, idx)
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -4313,12 +4322,12 @@ function ultraschall.AddCustomMarker(custom_marker_name, pos, name, shown_number
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -4387,12 +4396,12 @@ function ultraschall.AddCustomRegion(custom_region_name, pos, regionend, name, s
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -4469,12 +4478,12 @@ function ultraschall.SetCustomMarker(custom_marker_name, idx, pos, name, shown_n
     
     A custom-marker has the naming-scheme 
         
-        \_customname: text for this marker
+        _customname: text for this marker
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-marker has the name
       
-       \_\_customname:: test for this marker
+       __customname:: test for this marker
         
     Example:
     
@@ -4540,12 +4549,12 @@ function ultraschall.SetCustomRegion(custom_region_name, idx, pos, regionend, na
     
     A custom-region has the naming-scheme 
         
-        \_customname: text for this region
+        _customname: text for this region
         
     You just need to pass customname to this function, leaving out the preceding \_ and the trailing :
     Exception: if the custom-region has the name
       
-        \_\_customname:: test for this region
+        __customname:: test for this region
         
     Example:
     
@@ -4831,19 +4840,19 @@ function ultraschall.IsTimeSigmarkerAtPosition(position, position_mode)
   <functioncall>boolean retval = ultraschall.IsTimeSigmarkerAtPosition(number position, optional integer position_mode)</functioncall>
   <description>
     returns, if at position is a time-signature marker
-	
-	returns false in case of an error
+    
+    returns false in case of an error
   </description>
   <retvals>
     boolean retval - true, marker found; false, marker not found
   </retvals>
   <parameters>
     number position - the position to check, whether there's a timesignature marker
-	optional integer position_mode - nil or 0, use position in seconds; 1, use position in measures
-  </parameters>			
+    optional integer position_mode - nil or 0, use position in seconds; 1, use position in measures
+  </parameters>            
   <chapter_context>
     Markers
-	Time Signature Markers
+    Time Signature Markers
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>

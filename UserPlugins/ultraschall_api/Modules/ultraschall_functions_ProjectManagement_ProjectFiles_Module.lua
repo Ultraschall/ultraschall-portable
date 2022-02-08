@@ -1360,6 +1360,83 @@ function ultraschall.GetProject_RenderPattern(projectfilename_with_path, Project
     Returns the render-pattern, that tells Reaper, how to automatically name the render-file, from an RPP-Projectfile or a ProjectStateChunk. If it contains nothing, you should check the Render_Pattern using <a href="#GetProject_RenderFilename">GetProject_RenderFilename</a>, as a render-pattern influences the rendering-filename as well.
     
     It's the entry RENDER_PATTERN
+        
+        Capitalizing the first character of the wildcard will capitalize the first letter of the substitution. 
+        Capitalizing the first two characters of the wildcard will capitalize all letters.
+        
+        Directories will be created if necessary. For example if the render target 
+        is "$project/track", the directory "$project" will be created.
+        
+        Immediately following a wildcard, character replacement statements may be specified:
+          <X>  -- single character which is to be removed from the substitution. 
+                      For example: $track< > removes all spaces from the track name, 
+                                   $track</><\> removes all slashes.
+                                   
+          <abcdeX> -- multiple characters, abcde are all replaced with X. 
+                      
+                      For example: <_.> replaces all underscores with periods, 
+                                   </\_> replaces all slashes with underscores. 
+                      
+                      If > is specified as a source character, it must be listed first in the list.
+        
+        $item    media item take name, if the input is a media item
+        $itemnumber  1 for the first media item on a track, 2 for the second...
+        $track    track name
+        $tracknumber  1 for the first track, 2 for the second...
+        $parenttrack  parent track name
+        $region    region name
+        $regionnumber  1 for the first region, 2 for the second...
+        $project    project name
+        $tempo    project tempo at the start of the render region
+        $timesignature  project time signature at the start of the render region, formatted as 4-4
+        $filenumber  blank (optionally 1) for the first file rendered, 1 (optionally 2) for the second...
+        $filenumber[N]  N for the first file rendered, N+1 for the second...
+        $note    C0 for the first file rendered,C#0 for the second...
+        $note[X]    X (example: B2) for the first file rendered, X+1 (example: C3) for the second...
+        $natural    C0 for the first file rendered, D0 for the second...
+        $natural[X]  X (example: F2) for the first file rendered, X+1 (example: G2) for the second...
+        $namecount  1 for the first item or region of the same name, 2 for the second...
+        $timelineorder  1 for the first item or region on the timeline, 2 for the second...
+        
+        Position/Length:
+        $start    start time of the media item, render region, or time selection, in M-SS.TTT
+        $end    end time of the media item, render region, or time selection, in M-SS.TTT
+        $length    length of the media item, render region, or time selection, in M-SS.TTT
+        $startbeats  start time in measures.beats of the media item, render region, or time selection
+        $endbeats  end time in measures.beats of the media item, render region, or time selection
+        $lengthbeats    length in measures.beats of the media item, render region, or time selection
+        $starttimecode  start time in H-MM-SS-FF format of the media item, render region, or time selection
+        $endtimecode  end time in H-MM-SS-FF format of the media item, render region, or time selection
+        $startframes  start time in absolute frames of the media item, render region, or time selection
+        $endframes  end time in absolute frames of the media item, render region, or time selection
+        $lengthframes  length in absolute frames of the media item, render region, or time selection
+        $startseconds  start time in whole seconds of the media item, render region, or time selection
+        $endseconds  end time in whole seconds of the media item, render region, or time selection
+        $lengthseconds  length in whole seconds of the media item, render region, or time selection
+        
+        Output Format:
+        $format    render format (example: wav)
+        $samplerate  sample rate (example: 44100)
+        $sampleratek  sample rate (example: 44.1)
+        $bitdepth  bit depth, if available (example: 24 or 32FP)
+        
+        Current Date/Time:
+        $year    year, currently 2019
+        $year2    last 2 digits of the year,currently 19
+        $month    month number,currently 04
+        $monthname  month name,currently apr
+        $day    day of the month, currently 28
+        $hour    hour of the day in 24-hour format,currently 23
+        $hour12    hour of the day in 12-hour format,currently 11
+        $ampm    am if before noon,pm if after noon,currently pm
+        $minute    minute of the hour,currently 30
+        $second    second of the minute,currently 27
+        
+        Computer Information:
+        $user    user name
+        $computer  computer name
+        
+        (this description has been taken from the Render Wildcard Help within the Render-Dialog of Reaper)
     
     Returns nil in case of error.
   </description>
@@ -1368,72 +1445,7 @@ function ultraschall.GetProject_RenderPattern(projectfilename_with_path, Project
     optional string ProjectStateChunk - a ProjectStateChunk to use instead if a filename; only used, when projectfilename_with_path is nil
   </parameters>
   <retvals>
-    string render_pattern - the pattern, with which the rendering-filename will be automatically created. Check also <a href="#GetProject_RenderFilename">GetProject_RenderFilename</a>
-  - Capitalizing the first character of the wildcard will capitalize the first letter of the substitution. Capitalizing the first two characters of the wildcard will capitalize all letters.
-  - 
-  - Directories will be created if necessary. For example if the render target is "$project/track", the directory "$project" will be created.
-  - 
-  - Immediately following a wildcard, character replacement statements may be specified:
-  -   <X>  -- single character which is to be removed from the substituion. For example: $track< > removes all spaces from the track name, $track</><\> removes all slashes.
-  -   <abcdeX> -- multiple characters, abcde are all replaced with X. For example: <_.> replaces all underscores with periods, </\_> replaces all slashes with underscores. If > is specified as a source character, it must be listed first in the list.
-  - 
-  - $item    media item take name, if the input is a media item
-  - $itemnumber  1 for the first media item on a track, 2 for the second...
-  - $track    track name
-  - $tracknumber  1 for the first track, 2 for the second...
-  - $parenttrack  parent track name
-  - $region    region name
-  - $regionnumber  1 for the first region, 2 for the second...
-  - $project    project name
-  - $tempo    project tempo at the start of the render region
-  - $timesignature  project time signature at the start of the render region, formatted as 4-4
-  - $filenumber  blank (optionally 1) for the first file rendered, 1 (optionally 2) for the second...
-  - $filenumber[N]  N for the first file rendered, N+1 for the second...
-  - $note    C0 for the first file rendered,C#0 for the second...
-  - $note[X]    X (example: B2) for the first file rendered, X+1 (example: C3) for the second...
-  - $natural    C0 for the first file rendered, D0 for the second...
-  - $natural[X]  X (example: F2) for the first file rendered, X+1 (example: G2) for the second...
-  - $namecount  1 for the first item or region of the same name, 2 for the second...
-  - $timelineorder  1 for the first item or region on the timeline, 2 for the second...
-  - 
-  - Position/Length:
-  - $start    start time of the media item, render region, or time selection, in M-SS.TTT
-  - $end    end time of the media item, render region, or time selection, in M-SS.TTT
-  - $length    length of the media item, render region, or time selection, in M-SS.TTT
-  - $startbeats  start time in measures.beats of the media item, render region, or time selection
-  - $endbeats  end time in measures.beats of the media item, render region, or time selection
-  - $lengthbeats    length in measures.beats of the media item, render region, or time selection
-  - $starttimecode  start time in H-MM-SS-FF format of the media item, render region, or time selection
-  - $endtimecode  end time in H-MM-SS-FF format of the media item, render region, or time selection
-  - $startframes  start time in absolute frames of the media item, render region, or time selection
-  - $endframes  end time in absolute frames of the media item, render region, or time selection
-  - $lengthframes  length in absolute frames of the media item, render region, or time selection
-  - $startseconds  start time in whole seconds of the media item, render region, or time selection
-  - $endseconds  end time in whole seconds of the media item, render region, or time selection
-  - $lengthseconds  length in whole seconds of the media item, render region, or time selection
-  - 
-  - Output Format:
-  - $format    render format (example: wav)
-  - $samplerate  sample rate (example: 44100)
-  - $sampleratek  sample rate (example: 44.1)
-  - $bitdepth  bit depth, if available (example: 24 or 32FP)
-  - 
-  - Current Date/Time:
-  - $year    year, currently 2019
-  - $year2    last 2 digits of the year,currently 19
-  - $month    month number,currently 04
-  - $monthname  month name,currently apr
-  - $day    day of the month, currently 28
-  - $hour    hour of the day in 24-hour format,currently 23
-  - $hour12    hour of the day in 12-hour format,currently 11
-  - $ampm    am if before noon,pm if after noon,currently pm
-  - $minute    minute of the hour,currently 30
-  - $second    second of the minute,currently 27
-  - 
-  - Computer Information:
-  - $user    user name
-  - $computer  computer name
-    -(this description has been taken from the Render Wildcard Help within the Render-Dialog of Reaper)
+    string render_pattern - the pattern, with which the rendering-filename will be automatically created. Check also <a href="#GetProject_RenderFilename">GetProject_RenderFilename</a>  
   </retvals>
   <chapter_context>
     Project-Management
@@ -1669,9 +1681,9 @@ function ultraschall.GetProject_AddMediaToProjectAfterRender(projectfilename_wit
   <functioncall>integer state = ultraschall.GetProject_AddMediaToProjectAfterRender(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
   <description>
     Returns, if rendered media shall be added to the project afterwards as well as if likely silent files shall be rendered-state, from an RPP-Projectfile or a ProjectStateChunk.
-	
-	It's the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to file-dialog.
-	
+   
+    It's the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to file-dialog.
+   
     It's the entry RENDER_ADDTOPROJ
     
     Returns nil in case of error.
@@ -1682,8 +1694,8 @@ function ultraschall.GetProject_AddMediaToProjectAfterRender(projectfilename_wit
   </parameters>
   <retvals>
     integer state - the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox 
-				  - &1, rendered media shall be added to the project afterwards; 0, don't add
-				  - &2, don't render likely silent files; 0, render anyway
+                  - &1, rendered media shall be added to the project afterwards; 0, don't add
+                  - &2, don't render likely silent files; 0, render anyway
   </retvals>
   <chapter_context>
     Project-Management
@@ -1732,7 +1744,7 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
     - 64,  Selected media items via master
     - 128, Selected tracks via master
     - &256, Embed stretch markers/transient guides-checkbox
-	- &1024, Embed Take markers
+    - &1024, Embed Take markers
     - &2048, enable second pass rendering
   </retvals>
   <chapter_context>
@@ -1930,6 +1942,1644 @@ function ultraschall.GetProject_DefPitchMode(projectfilename_with_path, ProjectS
     
     It's the entry DEFPITCHMODE
     
+    def_pitch_mode_state can be 
+        
+        SoundTouch:
+            0 - Default settings
+            1 - High Quality
+            2 - Fast
+
+        Simple windowed (fast):
+            131072 - 50ms window, 25ms fade
+            131073 - 50ms window, 16ms fade
+            131074 - 50ms window, 10ms fade
+            131075 - 50ms window, 7ms fade
+            131076 - 75ms window, 37ms fade
+            131077 - 75ms window, 25ms fade
+            131078 - 75ms window, 15ms fade
+            131079 - 75ms window, 10ms fade
+            131080 - 100ms window, 50ms fade
+            131081 - 100ms window, 33ms fade
+            131082 - 100ms window, 20ms fade
+            131083 - 100ms window, 14ms fade
+            131084 - 150ms window, 75ms fade
+            131085 - 150ms window, 50ms fade
+            131086 - 150ms window, 30ms fade
+            131087 - 150ms window, 21ms fade
+            131088 - 225ms window, 112ms fade
+            131089 - 225ms window, 75ms fade
+            131090 - 225ms window, 45ms fade
+            131091 - 225ms window, 32ms fade
+            131092 - 300ms window, 150ms fade
+            131093 - 300ms window, 100ms fade
+            131094 - 300ms window, 60ms fade
+            131095 - 300ms window, 42ms fade
+            131096 - 40ms window, 20ms fade
+            131097 - 40ms window, 13ms fade
+            131098 - 40ms window, 8ms fade
+            131099 - 40ms window, 5ms fade
+            131100 - 30ms window, 15ms fade
+            131101 - 30ms window, 10ms fade
+            131102 - 30ms window, 6ms fade
+            131103 - 30ms window, 4ms fade
+            131104 - 20ms window, 10ms fade
+            131105 - 20ms window, 6ms fade
+            131106 - 20ms window, 4ms fade
+            131107 - 20ms window, 2ms fade
+            131108 - 10ms window, 5ms fade
+            131109 - 10ms window, 3ms fade
+            131110 - 10ms window, 2ms fade
+            131111 - 10ms window, 1ms fade
+            131112 - 5ms window, 2ms fade
+            131113 - 5ms window, 1ms fade
+            131114 - 5ms window, 1ms fade
+            131115 - 5ms window, 1ms fade
+            131116 - 3ms window, 1ms fade
+            131117 - 3ms window, 1ms fade
+            131118 - 3ms window, 1ms fade
+            131119 - 3ms window, 1ms fade
+
+        Ã©lastique 2.2.8 Pro:
+            393216 - Normal
+            393217 - Preserve Formants (Lowest Pitches)
+            393218 - Preserve Formants (Lower Pitches)
+            393219 - Preserve Formants (Low Pitches)
+            393220 - Preserve Formants (Most Pitches)
+            393221 - Preserve Formants (High Pitches)
+            393222 - Preserve Formants (Higher Pitches)
+            393223 - Preserve Formants (Highest Pitches)
+            393224 - Mid/Side
+            393225 - Mid/Side, Preserve Formants (Lowest Pitches)
+            393226 - Mid/Side, Preserve Formants (Lower Pitches)
+            393227 - Mid/Side, Preserve Formants (Low Pitches)
+            393228 - Mid/Side, Preserve Formants (Most Pitches)
+            393229 - Mid/Side, Preserve Formants (High Pitches)
+            393230 - Mid/Side, Preserve Formants (Higher Pitches)
+            393231 - Mid/Side, Preserve Formants (Highest Pitches)
+            393232 - Synchronized: Normal
+            393233 - Synchronized: Preserve Formants (Lowest Pitches)
+            393234 - Synchronized: Preserve Formants (Lower Pitches)
+            393235 - Synchronized: Preserve Formants (Low Pitches)
+            393236 - Synchronized: Preserve Formants (Most Pitches)
+            393237 - Synchronized: Preserve Formants (High Pitches)
+            393238 - Synchronized: Preserve Formants (Higher Pitches)
+            393239 - Synchronized: Preserve Formants (Highest Pitches)
+            393240 - Synchronized:  Mid/Side
+            393241 - Synchronized:  Mid/Side, Preserve Formants (Lowest Pitches)
+            393242 - Synchronized:  Mid/Side, Preserve Formants (Lower Pitches)
+            393243 - Synchronized:  Mid/Side, Preserve Formants (Low Pitches)
+            393244 - Synchronized:  Mid/Side, Preserve Formants (Most Pitches)
+            393245 - Synchronized:  Mid/Side, Preserve Formants (High Pitches)
+            393246 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
+            393247 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
+
+        Ã©lastique 2.2.8 Efficient:
+            458752 - Normal
+            458753 - Mid/Side
+            458754 - Synchronized: Normal
+            458755 - Synchronized: Mid/Side
+
+        Ã©lastique 2.2.8 Soloist:
+            524288 - Monophonic
+            524289 - Monophonic [Mid/Side]
+            524290 - Speech
+            524291 - Speech [Mid/Side]
+
+        Ã©lastique 3.3.0 Pro:
+            589824 - Normal
+            589825 - Preserve Formants (Lowest Pitches)
+            589826 - Preserve Formants (Lower Pitches)
+            589827 - Preserve Formants (Low Pitches)
+            589828 - Preserve Formants (Most Pitches)
+            589829 - Preserve Formants (High Pitches)
+            589830 - Preserve Formants (Higher Pitches)
+            589831 - Preserve Formants (Highest Pitches)
+            589832 - Mid/Side
+            589833 - Mid/Side, Preserve Formants (Lowest Pitches)
+            589834 - Mid/Side, Preserve Formants (Lower Pitches)
+            589835 - Mid/Side, Preserve Formants (Low Pitches)
+            589836 - Mid/Side, Preserve Formants (Most Pitches)
+            589837 - Mid/Side, Preserve Formants (High Pitches)
+            589838 - Mid/Side, Preserve Formants (Higher Pitches)
+            589839 - Mid/Side, Preserve Formants (Highest Pitches)
+            589840 - Synchronized: Normal
+            589841 - Synchronized: Preserve Formants (Lowest Pitches)
+            589842 - Synchronized: Preserve Formants (Lower Pitches)
+            589843 - Synchronized: Preserve Formants (Low Pitches)
+            589844 - Synchronized: Preserve Formants (Most Pitches)
+            589845 - Synchronized: Preserve Formants (High Pitches)
+            589846 - Synchronized: Preserve Formants (Higher Pitches)
+            589847 - Synchronized: Preserve Formants (Highest Pitches)
+            589848 - Synchronized:  Mid/Side
+            589849 - Synchronized:  Mid/Side, Preserve Formants (Lowest Pitches)
+            589850 - Synchronized:  Mid/Side, Preserve Formants (Lower Pitches)
+            589851 - Synchronized:  Mid/Side, Preserve Formants (Low Pitches)
+            589852 - Synchronized:  Mid/Side, Preserve Formants (Most Pitches)
+            589853 - Synchronized:  Mid/Side, Preserve Formants (High Pitches)
+            589854 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
+            589855 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
+
+        Ã©lastique 3.3.0 Efficient:
+            655360 - Normal
+            655361 - Mid/Side
+            655362 - Synchronized: Normal
+            655363 - Synchronized: Mid/Side
+
+        Ã©lastique 3.3.0 Soloist:
+            720896 - Monophonic
+            720897 - Monophonic [Mid/Side]
+            720898 - Speech
+            720899 - Speech [Mid/Side]
+
+
+        Rubber Band Library - Default
+            851968 - nothing
+
+        Rubber Band Library - Preserve Formants
+            851969 - Preserve Formants
+
+        Rubber Band Library - Mid/Side
+            851970 - Mid/Side
+
+        Rubber Band Library - Preserve Formants, Mid/Side
+            851971 - Preserve Formants, Mid/Side
+
+        Rubber Band Library - Independent Phase
+            851972 - Independent Phase
+
+        Rubber Band Library - Preserve Formants, Independent Phase
+            851973 - Preserve Formants, Independent Phase
+
+        Rubber Band Library - Mid/Side, Independent Phase
+            851974 - Mid/Side, Independent Phase
+
+        Rubber Band Library - Preserve Formants, Mid/Side, Independent Phase
+            851975 - Preserve Formants, Mid/Side, Independent Phase
+
+        Rubber Band Library - Time Domain Smoothing
+            851976 - Time Domain Smoothing
+
+        Rubber Band Library - Preserve Formants, Time Domain Smoothing
+            851977 - Preserve Formants, Time Domain Smoothing
+
+        Rubber Band Library - Mid/Side, Time Domain Smoothing
+            851978 - Mid/Side, Time Domain Smoothing
+
+        Rubber Band Library - Preserve Formants, Mid/Side, Time Domain Smoothing
+            851979 - Preserve Formants, Mid/Side, Time Domain Smoothing
+
+        Rubber Band Library - Independent Phase, Time Domain Smoothing
+            851980 - Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Preserve Formants, Independent Phase, Time Domain Smoothing
+            851981 - Preserve Formants, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Mid/Side, Independent Phase, Time Domain Smoothing
+            851982 - Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+            851983 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed
+            851984 - nothing
+            851985 - Preserve Formants
+            851986 - Mid/Side
+            851987 - Preserve Formants, Mid/Side
+            851988 - Independent Phase
+            851989 - Preserve Formants, Independent Phase
+            851990 - Mid/Side, Independent Phase
+            851991 - Preserve Formants, Mid/Side, Independent Phase
+            851992 - Time Domain Smoothing
+            851993 - Preserve Formants, Time Domain Smoothing
+            851994 - Mid/Side, Time Domain Smoothing
+            851995 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            851996 - Independent Phase, Time Domain Smoothing
+            851997 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            851998 - Mid/Side, Independent Phase, Time Domain Smoothing
+            851999 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth
+            852000 - nothing
+            852001 - Preserve Formants
+            852002 - Mid/Side
+            852003 - Preserve Formants, Mid/Side
+            852004 - Independent Phase
+            852005 - Preserve Formants, Independent Phase
+            852006 - Mid/Side, Independent Phase
+            852007 - Preserve Formants, Mid/Side, Independent Phase
+            852008 - Time Domain Smoothing
+            852009 - Preserve Formants, Time Domain Smoothing
+            852010 - Mid/Side, Time Domain Smoothing
+            852011 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852012 - Independent Phase, Time Domain Smoothing
+            852013 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852014 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852015 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive
+            852016 - nothing
+            852017 - Preserve Formants
+            852018 - Mid/Side
+            852019 - Preserve Formants, Mid/Side
+            852020 - Independent Phase
+            852021 - Preserve Formants, Independent Phase
+            852022 - Mid/Side, Independent Phase
+            852023 - Preserve Formants, Mid/Side, Independent Phase
+            852024 - Time Domain Smoothing
+            852025 - Preserve Formants, Time Domain Smoothing
+            852026 - Mid/Side, Time Domain Smoothing
+            852027 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852028 - Independent Phase, Time Domain Smoothing
+            852029 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852030 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852031 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive
+            852032 - nothing
+            852033 - Preserve Formants
+            852034 - Mid/Side
+            852035 - Preserve Formants, Mid/Side
+            852036 - Independent Phase
+            852037 - Preserve Formants, Independent Phase
+            852038 - Mid/Side, Independent Phase
+            852039 - Preserve Formants, Mid/Side, Independent Phase
+            852040 - Time Domain Smoothing
+            852041 - Preserve Formants, Time Domain Smoothing
+            852042 - Mid/Side, Time Domain Smoothing
+            852043 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852044 - Independent Phase, Time Domain Smoothing
+            852045 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852046 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852047 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive
+            852048 - nothing
+            852049 - Preserve Formants
+            852050 - Mid/Side
+            852051 - Preserve Formants, Mid/Side
+            852052 - Independent Phase
+            852053 - Preserve Formants, Independent Phase
+            852054 - Mid/Side, Independent Phase
+            852055 - Preserve Formants, Mid/Side, Independent Phase
+            852056 - Time Domain Smoothing
+            852057 - Preserve Formants, Time Domain Smoothing
+            852058 - Mid/Side, Time Domain Smoothing
+            852059 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852060 - Independent Phase, Time Domain Smoothing
+            852061 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852062 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852063 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft
+            852064 - nothing
+            852065 - Preserve Formants
+            852066 - Mid/Side
+            852067 - Preserve Formants, Mid/Side
+            852068 - Independent Phase
+            852069 - Preserve Formants, Independent Phase
+            852070 - Mid/Side, Independent Phase
+            852071 - Preserve Formants, Mid/Side, Independent Phase
+            852072 - Time Domain Smoothing
+            852073 - Preserve Formants, Time Domain Smoothing
+            852074 - Mid/Side, Time Domain Smoothing
+            852075 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852076 - Independent Phase, Time Domain Smoothing
+            852077 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852078 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852079 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft
+            852080 - nothing
+            852081 - Preserve Formants
+            852082 - Mid/Side
+            852083 - Preserve Formants, Mid/Side
+            852084 - Independent Phase
+            852085 - Preserve Formants, Independent Phase
+            852086 - Mid/Side, Independent Phase
+            852087 - Preserve Formants, Mid/Side, Independent Phase
+            852088 - Time Domain Smoothing
+            852089 - Preserve Formants, Time Domain Smoothing
+            852090 - Mid/Side, Time Domain Smoothing
+            852091 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852092 - Independent Phase, Time Domain Smoothing
+            852093 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852094 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852095 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft
+            852096 - nothing
+            852097 - Preserve Formants
+            852098 - Mid/Side
+            852099 - Preserve Formants, Mid/Side
+            852100 - Independent Phase
+            852101 - Preserve Formants, Independent Phase
+            852102 - Mid/Side, Independent Phase
+            852103 - Preserve Formants, Mid/Side, Independent Phase
+            852104 - Time Domain Smoothing
+            852105 - Preserve Formants, Time Domain Smoothing
+            852106 - Mid/Side, Time Domain Smoothing
+            852107 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852108 - Independent Phase, Time Domain Smoothing
+            852109 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852110 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852111 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: HighQ
+            852112 - nothing
+            852113 - Preserve Formants
+            852114 - Mid/Side
+            852115 - Preserve Formants, Mid/Side
+            852116 - Independent Phase
+            852117 - Preserve Formants, Independent Phase
+            852118 - Mid/Side, Independent Phase
+            852119 - Preserve Formants, Mid/Side, Independent Phase
+            852120 - Time Domain Smoothing
+            852121 - Preserve Formants, Time Domain Smoothing
+            852122 - Mid/Side, Time Domain Smoothing
+            852123 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852124 - Independent Phase, Time Domain Smoothing
+            852125 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852126 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852127 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ
+            852128 - nothing
+            852129 - Preserve Formants
+            852130 - Mid/Side
+            852131 - Preserve Formants, Mid/Side
+            852132 - Independent Phase
+            852133 - Preserve Formants, Independent Phase
+            852134 - Mid/Side, Independent Phase
+            852135 - Preserve Formants, Mid/Side, Independent Phase
+            852136 - Time Domain Smoothing
+            852137 - Preserve Formants, Time Domain Smoothing
+            852138 - Mid/Side, Time Domain Smoothing
+            852139 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852140 - Independent Phase, Time Domain Smoothing
+            852141 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852142 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852143 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ
+            852144 - nothing
+            852145 - Preserve Formants
+            852146 - Mid/Side
+            852147 - Preserve Formants, Mid/Side
+            852148 - Independent Phase
+            852149 - Preserve Formants, Independent Phase
+            852150 - Mid/Side, Independent Phase
+            852151 - Preserve Formants, Mid/Side, Independent Phase
+            852152 - Time Domain Smoothing
+            852153 - Preserve Formants, Time Domain Smoothing
+            852154 - Mid/Side, Time Domain Smoothing
+            852155 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852156 - Independent Phase, Time Domain Smoothing
+            852157 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852158 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852159 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ
+            852160 - nothing
+            852161 - Preserve Formants
+            852162 - Mid/Side
+            852163 - Preserve Formants, Mid/Side
+            852164 - Independent Phase
+            852165 - Preserve Formants, Independent Phase
+            852166 - Mid/Side, Independent Phase
+            852167 - Preserve Formants, Mid/Side, Independent Phase
+            852168 - Time Domain Smoothing
+            852169 - Preserve Formants, Time Domain Smoothing
+            852170 - Mid/Side, Time Domain Smoothing
+            852171 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852172 - Independent Phase, Time Domain Smoothing
+            852173 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852174 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852175 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ
+            852176 - nothing
+            852177 - Preserve Formants
+            852178 - Mid/Side
+            852179 - Preserve Formants, Mid/Side
+            852180 - Independent Phase
+            852181 - Preserve Formants, Independent Phase
+            852182 - Mid/Side, Independent Phase
+            852183 - Preserve Formants, Mid/Side, Independent Phase
+            852184 - Time Domain Smoothing
+            852185 - Preserve Formants, Time Domain Smoothing
+            852186 - Mid/Side, Time Domain Smoothing
+            852187 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852188 - Independent Phase, Time Domain Smoothing
+            852189 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852190 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852191 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ
+            852192 - nothing
+            852193 - Preserve Formants
+            852194 - Mid/Side
+            852195 - Preserve Formants, Mid/Side
+            852196 - Independent Phase
+            852197 - Preserve Formants, Independent Phase
+            852198 - Mid/Side, Independent Phase
+            852199 - Preserve Formants, Mid/Side, Independent Phase
+            852200 - Time Domain Smoothing
+            852201 - Preserve Formants, Time Domain Smoothing
+            852202 - Mid/Side, Time Domain Smoothing
+            852203 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852204 - Independent Phase, Time Domain Smoothing
+            852205 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852206 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852207 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: HighQ
+            852208 - nothing
+            852209 - Preserve Formants
+            852210 - Mid/Side
+            852211 - Preserve Formants, Mid/Side
+            852212 - Independent Phase
+            852213 - Preserve Formants, Independent Phase
+            852214 - Mid/Side, Independent Phase
+            852215 - Preserve Formants, Mid/Side, Independent Phase
+            852216 - Time Domain Smoothing
+            852217 - Preserve Formants, Time Domain Smoothing
+            852218 - Mid/Side, Time Domain Smoothing
+            852219 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852220 - Independent Phase, Time Domain Smoothing
+            852221 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852222 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852223 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ
+            852224 - nothing
+            852225 - Preserve Formants
+            852226 - Mid/Side
+            852227 - Preserve Formants, Mid/Side
+            852228 - Independent Phase
+            852229 - Preserve Formants, Independent Phase
+            852230 - Mid/Side, Independent Phase
+            852231 - Preserve Formants, Mid/Side, Independent Phase
+            852232 - Time Domain Smoothing
+            852233 - Preserve Formants, Time Domain Smoothing
+            852234 - Mid/Side, Time Domain Smoothing
+            852235 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852236 - Independent Phase, Time Domain Smoothing
+            852237 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852238 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852239 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ
+            852240 - nothing
+            852241 - Preserve Formants
+            852242 - Mid/Side
+            852243 - Preserve Formants, Mid/Side
+            852244 - Independent Phase
+            852245 - Preserve Formants, Independent Phase
+            852246 - Mid/Side, Independent Phase
+            852247 - Preserve Formants, Mid/Side, Independent Phase
+            852248 - Time Domain Smoothing
+            852249 - Preserve Formants, Time Domain Smoothing
+            852250 - Mid/Side, Time Domain Smoothing
+            852251 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852252 - Independent Phase, Time Domain Smoothing
+            852253 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852254 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852255 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: Consistent
+            852256 - nothing
+            852257 - Preserve Formants
+            852258 - Mid/Side
+            852259 - Preserve Formants, Mid/Side
+            852260 - Independent Phase
+            852261 - Preserve Formants, Independent Phase
+            852262 - Mid/Side, Independent Phase
+            852263 - Preserve Formants, Mid/Side, Independent Phase
+            852264 - Time Domain Smoothing
+            852265 - Preserve Formants, Time Domain Smoothing
+            852266 - Mid/Side, Time Domain Smoothing
+            852267 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852268 - Independent Phase, Time Domain Smoothing
+            852269 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852270 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852271 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent
+            852272 - nothing
+            852273 - Preserve Formants
+            852274 - Mid/Side
+            852275 - Preserve Formants, Mid/Side
+            852276 - Independent Phase
+            852277 - Preserve Formants, Independent Phase
+            852278 - Mid/Side, Independent Phase
+            852279 - Preserve Formants, Mid/Side, Independent Phase
+            852280 - Time Domain Smoothing
+            852281 - Preserve Formants, Time Domain Smoothing
+            852282 - Mid/Side, Time Domain Smoothing
+            852283 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852284 - Independent Phase, Time Domain Smoothing
+            852285 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852286 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852287 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent
+            852288 - nothing
+            852289 - Preserve Formants
+            852290 - Mid/Side
+            852291 - Preserve Formants, Mid/Side
+            852292 - Independent Phase
+            852293 - Preserve Formants, Independent Phase
+            852294 - Mid/Side, Independent Phase
+            852295 - Preserve Formants, Mid/Side, Independent Phase
+            852296 - Time Domain Smoothing
+            852297 - Preserve Formants, Time Domain Smoothing
+            852298 - Mid/Side, Time Domain Smoothing
+            852299 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852300 - Independent Phase, Time Domain Smoothing
+            852301 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852302 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852303 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent
+            852304 - nothing
+            852305 - Preserve Formants
+            852306 - Mid/Side
+            852307 - Preserve Formants, Mid/Side
+            852308 - Independent Phase
+            852309 - Preserve Formants, Independent Phase
+            852310 - Mid/Side, Independent Phase
+            852311 - Preserve Formants, Mid/Side, Independent Phase
+            852312 - Time Domain Smoothing
+            852313 - Preserve Formants, Time Domain Smoothing
+            852314 - Mid/Side, Time Domain Smoothing
+            852315 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852316 - Independent Phase, Time Domain Smoothing
+            852317 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852318 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852319 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent
+            852320 - nothing
+            852321 - Preserve Formants
+            852322 - Mid/Side
+            852323 - Preserve Formants, Mid/Side
+            852324 - Independent Phase
+            852325 - Preserve Formants, Independent Phase
+            852326 - Mid/Side, Independent Phase
+            852327 - Preserve Formants, Mid/Side, Independent Phase
+            852328 - Time Domain Smoothing
+            852329 - Preserve Formants, Time Domain Smoothing
+            852330 - Mid/Side, Time Domain Smoothing
+            852331 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852332 - Independent Phase, Time Domain Smoothing
+            852333 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852334 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852335 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent
+            852336 - nothing
+            852337 - Preserve Formants
+            852338 - Mid/Side
+            852339 - Preserve Formants, Mid/Side
+            852340 - Independent Phase
+            852341 - Preserve Formants, Independent Phase
+            852342 - Mid/Side, Independent Phase
+            852343 - Preserve Formants, Mid/Side, Independent Phase
+            852344 - Time Domain Smoothing
+            852345 - Preserve Formants, Time Domain Smoothing
+            852346 - Mid/Side, Time Domain Smoothing
+            852347 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852348 - Independent Phase, Time Domain Smoothing
+            852349 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852350 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852351 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: Consistent
+            852352 - nothing
+            852353 - Preserve Formants
+            852354 - Mid/Side
+            852355 - Preserve Formants, Mid/Side
+            852356 - Independent Phase
+            852357 - Preserve Formants, Independent Phase
+            852358 - Mid/Side, Independent Phase
+            852359 - Preserve Formants, Mid/Side, Independent Phase
+            852360 - Time Domain Smoothing
+            852361 - Preserve Formants, Time Domain Smoothing
+            852362 - Mid/Side, Time Domain Smoothing
+            852363 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852364 - Independent Phase, Time Domain Smoothing
+            852365 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852366 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852367 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent
+            852368 - nothing
+            852369 - Preserve Formants
+            852370 - Mid/Side
+            852371 - Preserve Formants, Mid/Side
+            852372 - Independent Phase
+            852373 - Preserve Formants, Independent Phase
+            852374 - Mid/Side, Independent Phase
+            852375 - Preserve Formants, Mid/Side, Independent Phase
+            852376 - Time Domain Smoothing
+            852377 - Preserve Formants, Time Domain Smoothing
+            852378 - Mid/Side, Time Domain Smoothing
+            852379 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852380 - Independent Phase, Time Domain Smoothing
+            852381 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852382 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852383 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent
+            852384 - nothing
+            852385 - Preserve Formants
+            852386 - Mid/Side
+            852387 - Preserve Formants, Mid/Side
+            852388 - Independent Phase
+            852389 - Preserve Formants, Independent Phase
+            852390 - Mid/Side, Independent Phase
+            852391 - Preserve Formants, Mid/Side, Independent Phase
+            852392 - Time Domain Smoothing
+            852393 - Preserve Formants, Time Domain Smoothing
+            852394 - Mid/Side, Time Domain Smoothing
+            852395 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852396 - Independent Phase, Time Domain Smoothing
+            852397 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852398 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852399 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Window: Short
+            852400 - nothing
+            852401 - Preserve Formants
+            852402 - Mid/Side
+            852403 - Preserve Formants, Mid/Side
+            852404 - Independent Phase
+            852405 - Preserve Formants, Independent Phase
+            852406 - Mid/Side, Independent Phase
+            852407 - Preserve Formants, Mid/Side, Independent Phase
+            852408 - Time Domain Smoothing
+            852409 - Preserve Formants, Time Domain Smoothing
+            852410 - Mid/Side, Time Domain Smoothing
+            852411 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852412 - Independent Phase, Time Domain Smoothing
+            852413 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852414 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852415 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Window: Short
+            852416 - nothing
+            852417 - Preserve Formants
+            852418 - Mid/Side
+            852419 - Preserve Formants, Mid/Side
+            852420 - Independent Phase
+            852421 - Preserve Formants, Independent Phase
+            852422 - Mid/Side, Independent Phase
+            852423 - Preserve Formants, Mid/Side, Independent Phase
+            852424 - Time Domain Smoothing
+            852425 - Preserve Formants, Time Domain Smoothing
+            852426 - Mid/Side, Time Domain Smoothing
+            852427 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852428 - Independent Phase, Time Domain Smoothing
+            852429 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852430 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852431 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Window: Short
+            852432 - nothing
+            852433 - Preserve Formants
+            852434 - Mid/Side
+            852435 - Preserve Formants, Mid/Side
+            852436 - Independent Phase
+            852437 - Preserve Formants, Independent Phase
+            852438 - Mid/Side, Independent Phase
+            852439 - Preserve Formants, Mid/Side, Independent Phase
+            852440 - Time Domain Smoothing
+            852441 - Preserve Formants, Time Domain Smoothing
+            852442 - Mid/Side, Time Domain Smoothing
+            852443 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852444 - Independent Phase, Time Domain Smoothing
+            852445 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852446 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852447 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Window: Short
+            852448 - nothing
+            852449 - Preserve Formants
+            852450 - Mid/Side
+            852451 - Preserve Formants, Mid/Side
+            852452 - Independent Phase
+            852453 - Preserve Formants, Independent Phase
+            852454 - Mid/Side, Independent Phase
+            852455 - Preserve Formants, Mid/Side, Independent Phase
+            852456 - Time Domain Smoothing
+            852457 - Preserve Formants, Time Domain Smoothing
+            852458 - Mid/Side, Time Domain Smoothing
+            852459 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852460 - Independent Phase, Time Domain Smoothing
+            852461 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852462 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852463 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Window: Short
+            852464 - nothing
+            852465 - Preserve Formants
+            852466 - Mid/Side
+            852467 - Preserve Formants, Mid/Side
+            852468 - Independent Phase
+            852469 - Preserve Formants, Independent Phase
+            852470 - Mid/Side, Independent Phase
+            852471 - Preserve Formants, Mid/Side, Independent Phase
+            852472 - Time Domain Smoothing
+            852473 - Preserve Formants, Time Domain Smoothing
+            852474 - Mid/Side, Time Domain Smoothing
+            852475 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852476 - Independent Phase, Time Domain Smoothing
+            852477 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852478 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852479 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Window: Short
+            852480 - nothing
+            852481 - Preserve Formants
+            852482 - Mid/Side
+            852483 - Preserve Formants, Mid/Side
+            852484 - Independent Phase
+            852485 - Preserve Formants, Independent Phase
+            852486 - Mid/Side, Independent Phase
+            852487 - Preserve Formants, Mid/Side, Independent Phase
+            852488 - Time Domain Smoothing
+            852489 - Preserve Formants, Time Domain Smoothing
+            852490 - Mid/Side, Time Domain Smoothing
+            852491 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852492 - Independent Phase, Time Domain Smoothing
+            852493 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852494 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852495 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Window: Short
+            852496 - nothing
+            852497 - Preserve Formants
+            852498 - Mid/Side
+            852499 - Preserve Formants, Mid/Side
+            852500 - Independent Phase
+            852501 - Preserve Formants, Independent Phase
+            852502 - Mid/Side, Independent Phase
+            852503 - Preserve Formants, Mid/Side, Independent Phase
+            852504 - Time Domain Smoothing
+            852505 - Preserve Formants, Time Domain Smoothing
+            852506 - Mid/Side, Time Domain Smoothing
+            852507 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852508 - Independent Phase, Time Domain Smoothing
+            852509 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852510 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852511 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Window: Short
+            852512 - nothing
+            852513 - Preserve Formants
+            852514 - Mid/Side
+            852515 - Preserve Formants, Mid/Side
+            852516 - Independent Phase
+            852517 - Preserve Formants, Independent Phase
+            852518 - Mid/Side, Independent Phase
+            852519 - Preserve Formants, Mid/Side, Independent Phase
+            852520 - Time Domain Smoothing
+            852521 - Preserve Formants, Time Domain Smoothing
+            852522 - Mid/Side, Time Domain Smoothing
+            852523 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852524 - Independent Phase, Time Domain Smoothing
+            852525 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852526 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852527 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Window: Short
+            852528 - nothing
+            852529 - Preserve Formants
+            852530 - Mid/Side
+            852531 - Preserve Formants, Mid/Side
+            852532 - Independent Phase
+            852533 - Preserve Formants, Independent Phase
+            852534 - Mid/Side, Independent Phase
+            852535 - Preserve Formants, Mid/Side, Independent Phase
+            852536 - Time Domain Smoothing
+            852537 - Preserve Formants, Time Domain Smoothing
+            852538 - Mid/Side, Time Domain Smoothing
+            852539 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852540 - Independent Phase, Time Domain Smoothing
+            852541 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852542 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852543 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: HighQ, Window: Short
+            852544 - nothing
+            852545 - Preserve Formants
+            852546 - Mid/Side
+            852547 - Preserve Formants, Mid/Side
+            852548 - Independent Phase
+            852549 - Preserve Formants, Independent Phase
+            852550 - Mid/Side, Independent Phase
+            852551 - Preserve Formants, Mid/Side, Independent Phase
+            852552 - Time Domain Smoothing
+            852553 - Preserve Formants, Time Domain Smoothing
+            852554 - Mid/Side, Time Domain Smoothing
+            852555 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852556 - Independent Phase, Time Domain Smoothing
+            852557 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852558 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852559 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ, Window: Short
+            852560 - nothing
+            852561 - Preserve Formants
+            852562 - Mid/Side
+            852563 - Preserve Formants, Mid/Side
+            852564 - Independent Phase
+            852565 - Preserve Formants, Independent Phase
+            852566 - Mid/Side, Independent Phase
+            852567 - Preserve Formants, Mid/Side, Independent Phase
+            852568 - Time Domain Smoothing
+            852569 - Preserve Formants, Time Domain Smoothing
+            852570 - Mid/Side, Time Domain Smoothing
+            852571 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852572 - Independent Phase, Time Domain Smoothing
+            852573 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852574 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852575 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ, Window: Short
+            852576 - nothing
+            852577 - Preserve Formants
+            852578 - Mid/Side
+            852579 - Preserve Formants, Mid/Side
+            852580 - Independent Phase
+            852581 - Preserve Formants, Independent Phase
+            852582 - Mid/Side, Independent Phase
+            852583 - Preserve Formants, Mid/Side, Independent Phase
+            852584 - Time Domain Smoothing
+            852585 - Preserve Formants, Time Domain Smoothing
+            852586 - Mid/Side, Time Domain Smoothing
+            852587 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852588 - Independent Phase, Time Domain Smoothing
+            852589 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852590 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852591 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ, Window: Short
+            852592 - nothing
+            852593 - Preserve Formants
+            852594 - Mid/Side
+            852595 - Preserve Formants, Mid/Side
+            852596 - Independent Phase
+            852597 - Preserve Formants, Independent Phase
+            852598 - Mid/Side, Independent Phase
+            852599 - Preserve Formants, Mid/Side, Independent Phase
+            852600 - Time Domain Smoothing
+            852601 - Preserve Formants, Time Domain Smoothing
+            852602 - Mid/Side, Time Domain Smoothing
+            852603 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852604 - Independent Phase, Time Domain Smoothing
+            852605 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852606 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852607 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Short
+            852608 - nothing
+            852609 - Preserve Formants
+            852610 - Mid/Side
+            852611 - Preserve Formants, Mid/Side
+            852612 - Independent Phase
+            852613 - Preserve Formants, Independent Phase
+            852614 - Mid/Side, Independent Phase
+            852615 - Preserve Formants, Mid/Side, Independent Phase
+            852616 - Time Domain Smoothing
+            852617 - Preserve Formants, Time Domain Smoothing
+            852618 - Mid/Side, Time Domain Smoothing
+            852619 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852620 - Independent Phase, Time Domain Smoothing
+            852621 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852622 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852623 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Short
+            852624 - nothing
+            852625 - Preserve Formants
+            852626 - Mid/Side
+            852627 - Preserve Formants, Mid/Side
+            852628 - Independent Phase
+            852629 - Preserve Formants, Independent Phase
+            852630 - Mid/Side, Independent Phase
+            852631 - Preserve Formants, Mid/Side, Independent Phase
+            852632 - Time Domain Smoothing
+            852633 - Preserve Formants, Time Domain Smoothing
+            852634 - Mid/Side, Time Domain Smoothing
+            852635 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852636 - Independent Phase, Time Domain Smoothing
+            852637 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852638 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852639 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: HighQ, Window: Short
+            852640 - nothing
+            852641 - Preserve Formants
+            852642 - Mid/Side
+            852643 - Preserve Formants, Mid/Side
+            852644 - Independent Phase
+            852645 - Preserve Formants, Independent Phase
+            852646 - Mid/Side, Independent Phase
+            852647 - Preserve Formants, Mid/Side, Independent Phase
+            852648 - Time Domain Smoothing
+            852649 - Preserve Formants, Time Domain Smoothing
+            852650 - Mid/Side, Time Domain Smoothing
+            852651 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852652 - Independent Phase, Time Domain Smoothing
+            852653 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852654 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852655 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Short
+            852656 - nothing
+            852657 - Preserve Formants
+            852658 - Mid/Side
+            852659 - Preserve Formants, Mid/Side
+            852660 - Independent Phase
+            852661 - Preserve Formants, Independent Phase
+            852662 - Mid/Side, Independent Phase
+            852663 - Preserve Formants, Mid/Side, Independent Phase
+            852664 - Time Domain Smoothing
+            852665 - Preserve Formants, Time Domain Smoothing
+            852666 - Mid/Side, Time Domain Smoothing
+            852667 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852668 - Independent Phase, Time Domain Smoothing
+            852669 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852670 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852671 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Short
+            852672 - nothing
+            852673 - Preserve Formants
+            852674 - Mid/Side
+            852675 - Preserve Formants, Mid/Side
+            852676 - Independent Phase
+            852677 - Preserve Formants, Independent Phase
+            852678 - Mid/Side, Independent Phase
+            852679 - Preserve Formants, Mid/Side, Independent Phase
+            852680 - Time Domain Smoothing
+            852681 - Preserve Formants, Time Domain Smoothing
+            852682 - Mid/Side, Time Domain Smoothing
+            852683 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852684 - Independent Phase, Time Domain Smoothing
+            852685 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852686 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852687 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: Consistent, Window: Short
+            852688 - nothing
+            852689 - Preserve Formants
+            852690 - Mid/Side
+            852691 - Preserve Formants, Mid/Side
+            852692 - Independent Phase
+            852693 - Preserve Formants, Independent Phase
+            852694 - Mid/Side, Independent Phase
+            852695 - Preserve Formants, Mid/Side, Independent Phase
+            852696 - Time Domain Smoothing
+            852697 - Preserve Formants, Time Domain Smoothing
+            852698 - Mid/Side, Time Domain Smoothing
+            852699 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852700 - Independent Phase, Time Domain Smoothing
+            852701 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852702 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852703 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent, Window: Short
+            852704 - nothing
+            852705 - Preserve Formants
+            852706 - Mid/Side
+            852707 - Preserve Formants, Mid/Side
+            852708 - Independent Phase
+            852709 - Preserve Formants, Independent Phase
+            852710 - Mid/Side, Independent Phase
+            852711 - Preserve Formants, Mid/Side, Independent Phase
+            852712 - Time Domain Smoothing
+            852713 - Preserve Formants, Time Domain Smoothing
+            852714 - Mid/Side, Time Domain Smoothing
+            852715 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852716 - Independent Phase, Time Domain Smoothing
+            852717 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852718 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852719 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent, Window: Short
+            852720 - nothing
+            852721 - Preserve Formants
+            852722 - Mid/Side
+            852723 - Preserve Formants, Mid/Side
+            852724 - Independent Phase
+            852725 - Preserve Formants, Independent Phase
+            852726 - Mid/Side, Independent Phase
+            852727 - Preserve Formants, Mid/Side, Independent Phase
+            852728 - Time Domain Smoothing
+            852729 - Preserve Formants, Time Domain Smoothing
+            852730 - Mid/Side, Time Domain Smoothing
+            852731 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852732 - Independent Phase, Time Domain Smoothing
+            852733 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852734 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852735 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent, Window: Short
+            852736 - nothing
+            852737 - Preserve Formants
+            852738 - Mid/Side
+            852739 - Preserve Formants, Mid/Side
+            852740 - Independent Phase
+            852741 - Preserve Formants, Independent Phase
+            852742 - Mid/Side, Independent Phase
+            852743 - Preserve Formants, Mid/Side, Independent Phase
+            852744 - Time Domain Smoothing
+            852745 - Preserve Formants, Time Domain Smoothing
+            852746 - Mid/Side, Time Domain Smoothing
+            852747 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852748 - Independent Phase, Time Domain Smoothing
+            852749 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852750 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852751 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Short
+            852752 - nothing
+            852753 - Preserve Formants
+            852754 - Mid/Side
+            852755 - Preserve Formants, Mid/Side
+            852756 - Independent Phase
+            852757 - Preserve Formants, Independent Phase
+            852758 - Mid/Side, Independent Phase
+            852759 - Preserve Formants, Mid/Side, Independent Phase
+            852760 - Time Domain Smoothing
+            852761 - Preserve Formants, Time Domain Smoothing
+            852762 - Mid/Side, Time Domain Smoothing
+            852763 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852764 - Independent Phase, Time Domain Smoothing
+            852765 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852766 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852767 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Short
+            852768 - nothing
+            852769 - Preserve Formants
+            852770 - Mid/Side
+            852771 - Preserve Formants, Mid/Side
+            852772 - Independent Phase
+            852773 - Preserve Formants, Independent Phase
+            852774 - Mid/Side, Independent Phase
+            852775 - Preserve Formants, Mid/Side, Independent Phase
+            852776 - Time Domain Smoothing
+            852777 - Preserve Formants, Time Domain Smoothing
+            852778 - Mid/Side, Time Domain Smoothing
+            852779 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852780 - Independent Phase, Time Domain Smoothing
+            852781 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852782 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852783 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: Consistent, Window: Short
+            852784 - nothing
+            852785 - Preserve Formants
+            852786 - Mid/Side
+            852787 - Preserve Formants, Mid/Side
+            852788 - Independent Phase
+            852789 - Preserve Formants, Independent Phase
+            852790 - Mid/Side, Independent Phase
+            852791 - Preserve Formants, Mid/Side, Independent Phase
+            852792 - Time Domain Smoothing
+            852793 - Preserve Formants, Time Domain Smoothing
+            852794 - Mid/Side, Time Domain Smoothing
+            852795 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852796 - Independent Phase, Time Domain Smoothing
+            852797 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852798 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852799 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Short
+            852800 - nothing
+            852801 - Preserve Formants
+            852802 - Mid/Side
+            852803 - Preserve Formants, Mid/Side
+            852804 - Independent Phase
+            852805 - Preserve Formants, Independent Phase
+            852806 - Mid/Side, Independent Phase
+            852807 - Preserve Formants, Mid/Side, Independent Phase
+            852808 - Time Domain Smoothing
+            852809 - Preserve Formants, Time Domain Smoothing
+            852810 - Mid/Side, Time Domain Smoothing
+            852811 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852812 - Independent Phase, Time Domain Smoothing
+            852813 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852814 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852815 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Short
+            852816 - nothing
+            852817 - Preserve Formants
+            852818 - Mid/Side
+            852819 - Preserve Formants, Mid/Side
+            852820 - Independent Phase
+            852821 - Preserve Formants, Independent Phase
+            852822 - Mid/Side, Independent Phase
+            852823 - Preserve Formants, Mid/Side, Independent Phase
+            852824 - Time Domain Smoothing
+            852825 - Preserve Formants, Time Domain Smoothing
+            852826 - Mid/Side, Time Domain Smoothing
+            852827 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852828 - Independent Phase, Time Domain Smoothing
+            852829 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852830 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852831 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Window: Long
+            852832 - nothing
+            852833 - Preserve Formants
+            852834 - Mid/Side
+            852835 - Preserve Formants, Mid/Side
+            852836 - Independent Phase
+            852837 - Preserve Formants, Independent Phase
+            852838 - Mid/Side, Independent Phase
+            852839 - Preserve Formants, Mid/Side, Independent Phase
+            852840 - Time Domain Smoothing
+            852841 - Preserve Formants, Time Domain Smoothing
+            852842 - Mid/Side, Time Domain Smoothing
+            852843 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852844 - Independent Phase, Time Domain Smoothing
+            852845 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852846 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852847 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Window: Long
+            852848 - nothing
+            852849 - Preserve Formants
+            852850 - Mid/Side
+            852851 - Preserve Formants, Mid/Side
+            852852 - Independent Phase
+            852853 - Preserve Formants, Independent Phase
+            852854 - Mid/Side, Independent Phase
+            852855 - Preserve Formants, Mid/Side, Independent Phase
+            852856 - Time Domain Smoothing
+            852857 - Preserve Formants, Time Domain Smoothing
+            852858 - Mid/Side, Time Domain Smoothing
+            852859 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852860 - Independent Phase, Time Domain Smoothing
+            852861 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852862 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852863 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Window: Long
+            852864 - nothing
+            852865 - Preserve Formants
+            852866 - Mid/Side
+            852867 - Preserve Formants, Mid/Side
+            852868 - Independent Phase
+            852869 - Preserve Formants, Independent Phase
+            852870 - Mid/Side, Independent Phase
+            852871 - Preserve Formants, Mid/Side, Independent Phase
+            852872 - Time Domain Smoothing
+            852873 - Preserve Formants, Time Domain Smoothing
+            852874 - Mid/Side, Time Domain Smoothing
+            852875 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852876 - Independent Phase, Time Domain Smoothing
+            852877 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852878 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852879 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Window: Long
+            852880 - nothing
+            852881 - Preserve Formants
+            852882 - Mid/Side
+            852883 - Preserve Formants, Mid/Side
+            852884 - Independent Phase
+            852885 - Preserve Formants, Independent Phase
+            852886 - Mid/Side, Independent Phase
+            852887 - Preserve Formants, Mid/Side, Independent Phase
+            852888 - Time Domain Smoothing
+            852889 - Preserve Formants, Time Domain Smoothing
+            852890 - Mid/Side, Time Domain Smoothing
+            852891 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852892 - Independent Phase, Time Domain Smoothing
+            852893 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852894 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852895 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Window: Long
+            852896 - nothing
+            852897 - Preserve Formants
+            852898 - Mid/Side
+            852899 - Preserve Formants, Mid/Side
+            852900 - Independent Phase
+            852901 - Preserve Formants, Independent Phase
+            852902 - Mid/Side, Independent Phase
+            852903 - Preserve Formants, Mid/Side, Independent Phase
+            852904 - Time Domain Smoothing
+            852905 - Preserve Formants, Time Domain Smoothing
+            852906 - Mid/Side, Time Domain Smoothing
+            852907 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852908 - Independent Phase, Time Domain Smoothing
+            852909 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852910 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852911 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Window: Long
+            852912 - nothing
+            852913 - Preserve Formants
+            852914 - Mid/Side
+            852915 - Preserve Formants, Mid/Side
+            852916 - Independent Phase
+            852917 - Preserve Formants, Independent Phase
+            852918 - Mid/Side, Independent Phase
+            852919 - Preserve Formants, Mid/Side, Independent Phase
+            852920 - Time Domain Smoothing
+            852921 - Preserve Formants, Time Domain Smoothing
+            852922 - Mid/Side, Time Domain Smoothing
+            852923 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852924 - Independent Phase, Time Domain Smoothing
+            852925 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852926 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852927 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Window: Long
+            852928 - nothing
+            852929 - Preserve Formants
+            852930 - Mid/Side
+            852931 - Preserve Formants, Mid/Side
+            852932 - Independent Phase
+            852933 - Preserve Formants, Independent Phase
+            852934 - Mid/Side, Independent Phase
+            852935 - Preserve Formants, Mid/Side, Independent Phase
+            852936 - Time Domain Smoothing
+            852937 - Preserve Formants, Time Domain Smoothing
+            852938 - Mid/Side, Time Domain Smoothing
+            852939 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852940 - Independent Phase, Time Domain Smoothing
+            852941 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852942 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852943 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Window: Long
+            852944 - nothing
+            852945 - Preserve Formants
+            852946 - Mid/Side
+            852947 - Preserve Formants, Mid/Side
+            852948 - Independent Phase
+            852949 - Preserve Formants, Independent Phase
+            852950 - Mid/Side, Independent Phase
+            852951 - Preserve Formants, Mid/Side, Independent Phase
+            852952 - Time Domain Smoothing
+            852953 - Preserve Formants, Time Domain Smoothing
+            852954 - Mid/Side, Time Domain Smoothing
+            852955 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852956 - Independent Phase, Time Domain Smoothing
+            852957 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852958 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852959 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Window: Long
+            852960 - nothing
+            852961 - Preserve Formants
+            852962 - Mid/Side
+            852963 - Preserve Formants, Mid/Side
+            852964 - Independent Phase
+            852965 - Preserve Formants, Independent Phase
+            852966 - Mid/Side, Independent Phase
+            852967 - Preserve Formants, Mid/Side, Independent Phase
+            852968 - Time Domain Smoothing
+            852969 - Preserve Formants, Time Domain Smoothing
+            852970 - Mid/Side, Time Domain Smoothing
+            852971 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852972 - Independent Phase, Time Domain Smoothing
+            852973 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852974 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852975 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: HighQ, Window: Long
+            852976 - nothing
+            852977 - Preserve Formants
+            852978 - Mid/Side
+            852979 - Preserve Formants, Mid/Side
+            852980 - Independent Phase
+            852981 - Preserve Formants, Independent Phase
+            852982 - Mid/Side, Independent Phase
+            852983 - Preserve Formants, Mid/Side, Independent Phase
+            852984 - Time Domain Smoothing
+            852985 - Preserve Formants, Time Domain Smoothing
+            852986 - Mid/Side, Time Domain Smoothing
+            852987 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852988 - Independent Phase, Time Domain Smoothing
+            852989 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852990 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852991 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ, Window: Long
+            852992 - nothing
+            852993 - Preserve Formants
+            852994 - Mid/Side
+            852995 - Preserve Formants, Mid/Side
+            852996 - Independent Phase
+            852997 - Preserve Formants, Independent Phase
+            852998 - Mid/Side, Independent Phase
+            852999 - Preserve Formants, Mid/Side, Independent Phase
+            853000 - Time Domain Smoothing
+            853001 - Preserve Formants, Time Domain Smoothing
+            853002 - Mid/Side, Time Domain Smoothing
+            853003 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853004 - Independent Phase, Time Domain Smoothing
+            853005 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853006 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853007 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ, Window: Long
+            853008 - nothing
+            853009 - Preserve Formants
+            853010 - Mid/Side
+            853011 - Preserve Formants, Mid/Side
+            853012 - Independent Phase
+            853013 - Preserve Formants, Independent Phase
+            853014 - Mid/Side, Independent Phase
+            853015 - Preserve Formants, Mid/Side, Independent Phase
+            853016 - Time Domain Smoothing
+            853017 - Preserve Formants, Time Domain Smoothing
+            853018 - Mid/Side, Time Domain Smoothing
+            853019 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853020 - Independent Phase, Time Domain Smoothing
+            853021 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853022 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853023 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ, Window: Long
+            853024 - nothing
+            853025 - Preserve Formants
+            853026 - Mid/Side
+            853027 - Preserve Formants, Mid/Side
+            853028 - Independent Phase
+            853029 - Preserve Formants, Independent Phase
+            853030 - Mid/Side, Independent Phase
+            853031 - Preserve Formants, Mid/Side, Independent Phase
+            853032 - Time Domain Smoothing
+            853033 - Preserve Formants, Time Domain Smoothing
+            853034 - Mid/Side, Time Domain Smoothing
+            853035 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853036 - Independent Phase, Time Domain Smoothing
+            853037 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853038 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853039 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Long
+            853040 - nothing
+            853041 - Preserve Formants
+            853042 - Mid/Side
+            853043 - Preserve Formants, Mid/Side
+            853044 - Independent Phase
+            853045 - Preserve Formants, Independent Phase
+            853046 - Mid/Side, Independent Phase
+            853047 - Preserve Formants, Mid/Side, Independent Phase
+            853048 - Time Domain Smoothing
+            853049 - Preserve Formants, Time Domain Smoothing
+            853050 - Mid/Side, Time Domain Smoothing
+            853051 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853052 - Independent Phase, Time Domain Smoothing
+            853053 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853054 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853055 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Long
+            853056 - nothing
+            853057 - Preserve Formants
+            853058 - Mid/Side
+            853059 - Preserve Formants, Mid/Side
+            853060 - Independent Phase
+            853061 - Preserve Formants, Independent Phase
+            853062 - Mid/Side, Independent Phase
+            853063 - Preserve Formants, Mid/Side, Independent Phase
+            853064 - Time Domain Smoothing
+            853065 - Preserve Formants, Time Domain Smoothing
+            853066 - Mid/Side, Time Domain Smoothing
+            853067 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853068 - Independent Phase, Time Domain Smoothing
+            853069 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853070 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853071 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: HighQ, Window: Long
+            853072 - nothing
+            853073 - Preserve Formants
+            853074 - Mid/Side
+            853075 - Preserve Formants, Mid/Side
+            853076 - Independent Phase
+            853077 - Preserve Formants, Independent Phase
+            853078 - Mid/Side, Independent Phase
+            853079 - Preserve Formants, Mid/Side, Independent Phase
+            853080 - Time Domain Smoothing
+            853081 - Preserve Formants, Time Domain Smoothing
+            853082 - Mid/Side, Time Domain Smoothing
+            853083 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853084 - Independent Phase, Time Domain Smoothing
+            853085 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853086 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853087 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Long
+            853088 - nothing
+            853089 - Preserve Formants
+            853090 - Mid/Side
+            853091 - Preserve Formants, Mid/Side
+            853092 - Independent Phase
+            853093 - Preserve Formants, Independent Phase
+            853094 - Mid/Side, Independent Phase
+            853095 - Preserve Formants, Mid/Side, Independent Phase
+            853096 - Time Domain Smoothing
+            853097 - Preserve Formants, Time Domain Smoothing
+            853098 - Mid/Side, Time Domain Smoothing
+            853099 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853100 - Independent Phase, Time Domain Smoothing
+            853101 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853102 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853103 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Long
+            853104 - nothing
+            853105 - Preserve Formants
+            853106 - Mid/Side
+            853107 - Preserve Formants, Mid/Side
+            853108 - Independent Phase
+            853109 - Preserve Formants, Independent Phase
+            853110 - Mid/Side, Independent Phase
+            853111 - Preserve Formants, Mid/Side, Independent Phase
+            853112 - Time Domain Smoothing
+            853113 - Preserve Formants, Time Domain Smoothing
+            853114 - Mid/Side, Time Domain Smoothing
+            853115 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853116 - Independent Phase, Time Domain Smoothing
+            853117 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853118 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853119 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: Consistent, Window: Long
+            853120 - nothing
+            853121 - Preserve Formants
+            853122 - Mid/Side
+            853123 - Preserve Formants, Mid/Side
+            853124 - Independent Phase
+            853125 - Preserve Formants, Independent Phase
+            853126 - Mid/Side, Independent Phase
+            853127 - Preserve Formants, Mid/Side, Independent Phase
+            853128 - Time Domain Smoothing
+            853129 - Preserve Formants, Time Domain Smoothing
+            853130 - Mid/Side, Time Domain Smoothing
+            853131 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853132 - Independent Phase, Time Domain Smoothing
+            853133 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853134 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853135 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent, Window: Long
+            853136 - nothing
+            853137 - Preserve Formants
+            853138 - Mid/Side
+            853139 - Preserve Formants, Mid/Side
+            853140 - Independent Phase
+            853141 - Preserve Formants, Independent Phase
+            853142 - Mid/Side, Independent Phase
+            853143 - Preserve Formants, Mid/Side, Independent Phase
+            853144 - Time Domain Smoothing
+            853145 - Preserve Formants, Time Domain Smoothing
+            853146 - Mid/Side, Time Domain Smoothing
+            853147 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853148 - Independent Phase, Time Domain Smoothing
+            853149 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853150 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853151 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent, Window: Long
+            853152 - nothing
+            853153 - Preserve Formants
+            853154 - Mid/Side
+            853155 - Preserve Formants, Mid/Side
+            853156 - Independent Phase
+            853157 - Preserve Formants, Independent Phase
+            853158 - Mid/Side, Independent Phase
+            853159 - Preserve Formants, Mid/Side, Independent Phase
+            853160 - Time Domain Smoothing
+            853161 - Preserve Formants, Time Domain Smoothing
+            853162 - Mid/Side, Time Domain Smoothing
+            853163 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853164 - Independent Phase, Time Domain Smoothing
+            853165 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853166 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853167 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent, Window: Long
+            853168 - nothing
+            853169 - Preserve Formants
+            853170 - Mid/Side
+            853171 - Preserve Formants, Mid/Side
+            853172 - Independent Phase
+            853173 - Preserve Formants, Independent Phase
+            853174 - Mid/Side, Independent Phase
+            853175 - Preserve Formants, Mid/Side, Independent Phase
+            853176 - Time Domain Smoothing
+            853177 - Preserve Formants, Time Domain Smoothing
+            853178 - Mid/Side, Time Domain Smoothing
+            853179 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853180 - Independent Phase, Time Domain Smoothing
+            853181 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853182 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853183 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Long
+            853184 - nothing
+            853185 - Preserve Formants
+            853186 - Mid/Side
+            853187 - Preserve Formants, Mid/Side
+            853188 - Independent Phase
+            853189 - Preserve Formants, Independent Phase
+            853190 - Mid/Side, Independent Phase
+            853191 - Preserve Formants, Mid/Side, Independent Phase
+            853192 - Time Domain Smoothing
+            853193 - Preserve Formants, Time Domain Smoothing
+            853194 - Mid/Side, Time Domain Smoothing
+            853195 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853196 - Independent Phase, Time Domain Smoothing
+            853197 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853198 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853199 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Long
+            853200 - nothing
+            853201 - Preserve Formants
+            853202 - Mid/Side
+            853203 - Preserve Formants, Mid/Side
+            853204 - Independent Phase
+            853205 - Preserve Formants, Independent Phase
+            853206 - Mid/Side, Independent Phase
+            853207 - Preserve Formants, Mid/Side, Independent Phase
+            853208 - Time Domain Smoothing
+            853209 - Preserve Formants, Time Domain Smoothing
+            853210 - Mid/Side, Time Domain Smoothing
+            853211 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853212 - Independent Phase, Time Domain Smoothing
+            853213 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853214 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853215 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: Consistent, Window: Long
+            853216 - nothing
+            853217 - Preserve Formants
+            853218 - Mid/Side
+            853219 - Preserve Formants, Mid/Side
+            853220 - Independent Phase
+            853221 - Preserve Formants, Independent Phase
+            853222 - Mid/Side, Independent Phase
+            853223 - Preserve Formants, Mid/Side, Independent Phase
+            853224 - Time Domain Smoothing
+            853225 - Preserve Formants, Time Domain Smoothing
+            853226 - Mid/Side, Time Domain Smoothing
+            853227 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853228 - Independent Phase, Time Domain Smoothing
+            853229 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853230 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853231 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Long
+            853232 - nothing
+            853233 - Preserve Formants
+            853234 - Mid/Side
+            853235 - Preserve Formants, Mid/Side
+            853236 - Independent Phase
+            853237 - Preserve Formants, Independent Phase
+            853238 - Mid/Side, Independent Phase
+            853239 - Preserve Formants, Mid/Side, Independent Phase
+            853240 - Time Domain Smoothing
+            853241 - Preserve Formants, Time Domain Smoothing
+            853242 - Mid/Side, Time Domain Smoothing
+            853243 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853244 - Independent Phase, Time Domain Smoothing
+            853245 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853246 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853247 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Long
+            853248 - nothing
+            853249 - Preserve Formants
+            853250 - Mid/Side
+            853251 - Preserve Formants, Mid/Side
+            853252 - Independent Phase
+            853253 - Preserve Formants, Independent Phase
+            853254 - Mid/Side, Independent Phase
+            853255 - Preserve Formants, Mid/Side, Independent Phase
+            853256 - Time Domain Smoothing
+            853257 - Preserve Formants, Time Domain Smoothing
+            853258 - Mid/Side, Time Domain Smoothing
+            853259 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853260 - Independent Phase, Time Domain Smoothing
+            853261 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853262 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853263 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+    
     Returns nil in case of error.
   </description>
   <parameters>
@@ -1937,1642 +3587,7 @@ function ultraschall.GetProject_DefPitchMode(projectfilename_with_path, ProjectS
     optional string ProjectStateChunk - a ProjectStateChunk to use instead if a filename; only used, when projectfilename_with_path is nil
   </parameters>
   <retvals>
-    integer def_pitch_mode_state - the default pitch mode
-    -      SoundTouch:
-    -          0 - Default settings
-    -          1 - High Quality
-    -          2 - Fast
-    -      
-    -      Simple windowed (fast):
-    -          131072 - 50ms window, 25ms fade
-    -          131073 - 50ms window, 16ms fade
-    -          131074 - 50ms window, 10ms fade
-    -          131075 - 50ms window, 7ms fade
-    -          131076 - 75ms window, 37ms fade
-    -          131077 - 75ms window, 25ms fade
-    -          131078 - 75ms window, 15ms fade
-    -          131079 - 75ms window, 10ms fade
-    -          131080 - 100ms window, 50ms fade
-    -          131081 - 100ms window, 33ms fade
-    -          131082 - 100ms window, 20ms fade
-    -          131083 - 100ms window, 14ms fade
-    -          131084 - 150ms window, 75ms fade
-    -          131085 - 150ms window, 50ms fade
-    -          131086 - 150ms window, 30ms fade
-    -          131087 - 150ms window, 21ms fade
-    -          131088 - 225ms window, 112ms fade
-    -          131089 - 225ms window, 75ms fade
-    -          131090 - 225ms window, 45ms fade
-    -          131091 - 225ms window, 32ms fade
-    -          131092 - 300ms window, 150ms fade
-    -          131093 - 300ms window, 100ms fade
-    -          131094 - 300ms window, 60ms fade
-    -          131095 - 300ms window, 42ms fade
-    -          131096 - 40ms window, 20ms fade
-    -          131097 - 40ms window, 13ms fade
-    -          131098 - 40ms window, 8ms fade
-    -          131099 - 40ms window, 5ms fade
-    -          131100 - 30ms window, 15ms fade
-    -          131101 - 30ms window, 10ms fade
-    -          131102 - 30ms window, 6ms fade
-    -          131103 - 30ms window, 4ms fade
-    -          131104 - 20ms window, 10ms fade
-    -          131105 - 20ms window, 6ms fade
-    -          131106 - 20ms window, 4ms fade
-    -          131107 - 20ms window, 2ms fade
-    -          131108 - 10ms window, 5ms fade
-    -          131109 - 10ms window, 3ms fade
-    -          131110 - 10ms window, 2ms fade
-    -          131111 - 10ms window, 1ms fade
-    -          131112 - 5ms window, 2ms fade
-    -          131113 - 5ms window, 1ms fade
-    -          131114 - 5ms window, 1ms fade
-    -          131115 - 5ms window, 1ms fade
-    -          131116 - 3ms window, 1ms fade
-    -          131117 - 3ms window, 1ms fade
-    -          131118 - 3ms window, 1ms fade
-    -          131119 - 3ms window, 1ms fade
-    -      
-    -      Ã©lastique 2.2.8 Pro:
-    -          393216 - Normal
-    -          393217 - Preserve Formants (Lowest Pitches)
-    -          393218 - Preserve Formants (Lower Pitches)
-    -          393219 - Preserve Formants (Low Pitches)
-    -          393220 - Preserve Formants (Most Pitches)
-    -          393221 - Preserve Formants (High Pitches)
-    -          393222 - Preserve Formants (Higher Pitches)
-    -          393223 - Preserve Formants (Highest Pitches)
-    -          393224 - Mid/Side
-    -          393225 - Mid/Side, Preserve Formants (Lowest Pitches)
-    -          393226 - Mid/Side, Preserve Formants (Lower Pitches)
-    -          393227 - Mid/Side, Preserve Formants (Low Pitches)
-    -          393228 - Mid/Side, Preserve Formants (Most Pitches)
-    -          393229 - Mid/Side, Preserve Formants (High Pitches)
-    -          393230 - Mid/Side, Preserve Formants (Higher Pitches)
-    -          393231 - Mid/Side, Preserve Formants (Highest Pitches)
-    -          393232 - Synchronized: Normal
-    -          393233 - Synchronized: Preserve Formants (Lowest Pitches)
-    -          393234 - Synchronized: Preserve Formants (Lower Pitches)
-    -          393235 - Synchronized: Preserve Formants (Low Pitches)
-    -          393236 - Synchronized: Preserve Formants (Most Pitches)
-    -          393237 - Synchronized: Preserve Formants (High Pitches)
-    -          393238 - Synchronized: Preserve Formants (Higher Pitches)
-    -          393239 - Synchronized: Preserve Formants (Highest Pitches)
-    -          393240 - Synchronized:  Mid/Side
-    -          393241 - Synchronized:  Mid/Side, Preserve Formants (Lowest Pitches)
-    -          393242 - Synchronized:  Mid/Side, Preserve Formants (Lower Pitches)
-    -          393243 - Synchronized:  Mid/Side, Preserve Formants (Low Pitches)
-    -          393244 - Synchronized:  Mid/Side, Preserve Formants (Most Pitches)
-    -          393245 - Synchronized:  Mid/Side, Preserve Formants (High Pitches)
-    -          393246 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
-    -          393247 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
-    -      
-    -      Ã©lastique 2.2.8 Efficient:
-    -          458752 - Normal
-    -          458753 - Mid/Side
-    -          458754 - Synchronized: Normal
-    -          458755 - Synchronized: Mid/Side
-    -      
-    -      Ã©lastique 2.2.8 Soloist:
-    -          524288 - Monophonic
-    -          524289 - Monophonic [Mid/Side]
-    -          524290 - Speech
-    -          524291 - Speech [Mid/Side]
-    -      
-    -      Ã©lastique 3.3.0 Pro:
-    -          589824 - Normal
-    -          589825 - Preserve Formants (Lowest Pitches)
-    -          589826 - Preserve Formants (Lower Pitches)
-    -          589827 - Preserve Formants (Low Pitches)
-    -          589828 - Preserve Formants (Most Pitches)
-    -          589829 - Preserve Formants (High Pitches)
-    -          589830 - Preserve Formants (Higher Pitches)
-    -          589831 - Preserve Formants (Highest Pitches)
-    -          589832 - Mid/Side
-    -          589833 - Mid/Side, Preserve Formants (Lowest Pitches)
-    -          589834 - Mid/Side, Preserve Formants (Lower Pitches)
-    -          589835 - Mid/Side, Preserve Formants (Low Pitches)
-    -          589836 - Mid/Side, Preserve Formants (Most Pitches)
-    -          589837 - Mid/Side, Preserve Formants (High Pitches)
-    -          589838 - Mid/Side, Preserve Formants (Higher Pitches)
-    -          589839 - Mid/Side, Preserve Formants (Highest Pitches)
-    -          589840 - Synchronized: Normal
-    -          589841 - Synchronized: Preserve Formants (Lowest Pitches)
-    -          589842 - Synchronized: Preserve Formants (Lower Pitches)
-    -          589843 - Synchronized: Preserve Formants (Low Pitches)
-    -          589844 - Synchronized: Preserve Formants (Most Pitches)
-    -          589845 - Synchronized: Preserve Formants (High Pitches)
-    -          589846 - Synchronized: Preserve Formants (Higher Pitches)
-    -          589847 - Synchronized: Preserve Formants (Highest Pitches)
-    -          589848 - Synchronized:  Mid/Side
-    -          589849 - Synchronized:  Mid/Side, Preserve Formants (Lowest Pitches)
-    -          589850 - Synchronized:  Mid/Side, Preserve Formants (Lower Pitches)
-    -          589851 - Synchronized:  Mid/Side, Preserve Formants (Low Pitches)
-    -          589852 - Synchronized:  Mid/Side, Preserve Formants (Most Pitches)
-    -          589853 - Synchronized:  Mid/Side, Preserve Formants (High Pitches)
-    -          589854 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
-    -          589855 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
-    -      
-    -      Ã©lastique 3.3.0 Efficient:
-    -          655360 - Normal
-    -          655361 - Mid/Side
-    -          655362 - Synchronized: Normal
-    -          655363 - Synchronized: Mid/Side
-    -      
-    -      Ã©lastique 3.3.0 Soloist:
-    -          720896 - Monophonic
-    -          720897 - Monophonic [Mid/Side]
-    -          720898 - Speech
-    -          720899 - Speech [Mid/Side]
-    -      
-    -      
-    -      Rubber Band Library - Default
-    -          851968 - nothing
-    -      
-    -      Rubber Band Library - Preserve Formants
-    -          851969 - Preserve Formants
-    -      
-    -      Rubber Band Library - Mid/Side
-    -          851970 - Mid/Side
-    -      
-    -      Rubber Band Library - Preserve Formants, Mid/Side
-    -          851971 - Preserve Formants, Mid/Side
-    -      
-    -      Rubber Band Library - Independent Phase
-    -          851972 - Independent Phase
-    -      
-    -      Rubber Band Library - Preserve Formants, Independent Phase
-    -          851973 - Preserve Formants, Independent Phase
-    -      
-    -      Rubber Band Library - Mid/Side, Independent Phase
-    -          851974 - Mid/Side, Independent Phase
-    -      
-    -      Rubber Band Library - Preserve Formants, Mid/Side, Independent Phase
-    -          851975 - Preserve Formants, Mid/Side, Independent Phase
-    -      
-    -      Rubber Band Library - Time Domain Smoothing
-    -          851976 - Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Preserve Formants, Time Domain Smoothing
-    -          851977 - Preserve Formants, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Mid/Side, Time Domain Smoothing
-    -          851978 - Mid/Side, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          851979 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Independent Phase, Time Domain Smoothing
-    -          851980 - Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          851981 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          851982 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -          851983 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed
-    -          851984 - nothing
-    -          851985 - Preserve Formants
-    -          851986 - Mid/Side
-    -          851987 - Preserve Formants, Mid/Side
-    -          851988 - Independent Phase
-    -          851989 - Preserve Formants, Independent Phase
-    -          851990 - Mid/Side, Independent Phase
-    -          851991 - Preserve Formants, Mid/Side, Independent Phase
-    -          851992 - Time Domain Smoothing
-    -          851993 - Preserve Formants, Time Domain Smoothing
-    -          851994 - Mid/Side, Time Domain Smoothing
-    -          851995 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          851996 - Independent Phase, Time Domain Smoothing
-    -          851997 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          851998 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          851999 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth
-    -          852000 - nothing
-    -          852001 - Preserve Formants
-    -          852002 - Mid/Side
-    -          852003 - Preserve Formants, Mid/Side
-    -          852004 - Independent Phase
-    -          852005 - Preserve Formants, Independent Phase
-    -          852006 - Mid/Side, Independent Phase
-    -          852007 - Preserve Formants, Mid/Side, Independent Phase
-    -          852008 - Time Domain Smoothing
-    -          852009 - Preserve Formants, Time Domain Smoothing
-    -          852010 - Mid/Side, Time Domain Smoothing
-    -          852011 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852012 - Independent Phase, Time Domain Smoothing
-    -          852013 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852014 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852015 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive
-    -          852016 - nothing
-    -          852017 - Preserve Formants
-    -          852018 - Mid/Side
-    -          852019 - Preserve Formants, Mid/Side
-    -          852020 - Independent Phase
-    -          852021 - Preserve Formants, Independent Phase
-    -          852022 - Mid/Side, Independent Phase
-    -          852023 - Preserve Formants, Mid/Side, Independent Phase
-    -          852024 - Time Domain Smoothing
-    -          852025 - Preserve Formants, Time Domain Smoothing
-    -          852026 - Mid/Side, Time Domain Smoothing
-    -          852027 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852028 - Independent Phase, Time Domain Smoothing
-    -          852029 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852030 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852031 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive
-    -          852032 - nothing
-    -          852033 - Preserve Formants
-    -          852034 - Mid/Side
-    -          852035 - Preserve Formants, Mid/Side
-    -          852036 - Independent Phase
-    -          852037 - Preserve Formants, Independent Phase
-    -          852038 - Mid/Side, Independent Phase
-    -          852039 - Preserve Formants, Mid/Side, Independent Phase
-    -          852040 - Time Domain Smoothing
-    -          852041 - Preserve Formants, Time Domain Smoothing
-    -          852042 - Mid/Side, Time Domain Smoothing
-    -          852043 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852044 - Independent Phase, Time Domain Smoothing
-    -          852045 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852046 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852047 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive
-    -          852048 - nothing
-    -          852049 - Preserve Formants
-    -          852050 - Mid/Side
-    -          852051 - Preserve Formants, Mid/Side
-    -          852052 - Independent Phase
-    -          852053 - Preserve Formants, Independent Phase
-    -          852054 - Mid/Side, Independent Phase
-    -          852055 - Preserve Formants, Mid/Side, Independent Phase
-    -          852056 - Time Domain Smoothing
-    -          852057 - Preserve Formants, Time Domain Smoothing
-    -          852058 - Mid/Side, Time Domain Smoothing
-    -          852059 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852060 - Independent Phase, Time Domain Smoothing
-    -          852061 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852062 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852063 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft
-    -          852064 - nothing
-    -          852065 - Preserve Formants
-    -          852066 - Mid/Side
-    -          852067 - Preserve Formants, Mid/Side
-    -          852068 - Independent Phase
-    -          852069 - Preserve Formants, Independent Phase
-    -          852070 - Mid/Side, Independent Phase
-    -          852071 - Preserve Formants, Mid/Side, Independent Phase
-    -          852072 - Time Domain Smoothing
-    -          852073 - Preserve Formants, Time Domain Smoothing
-    -          852074 - Mid/Side, Time Domain Smoothing
-    -          852075 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852076 - Independent Phase, Time Domain Smoothing
-    -          852077 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852078 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852079 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft
-    -          852080 - nothing
-    -          852081 - Preserve Formants
-    -          852082 - Mid/Side
-    -          852083 - Preserve Formants, Mid/Side
-    -          852084 - Independent Phase
-    -          852085 - Preserve Formants, Independent Phase
-    -          852086 - Mid/Side, Independent Phase
-    -          852087 - Preserve Formants, Mid/Side, Independent Phase
-    -          852088 - Time Domain Smoothing
-    -          852089 - Preserve Formants, Time Domain Smoothing
-    -          852090 - Mid/Side, Time Domain Smoothing
-    -          852091 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852092 - Independent Phase, Time Domain Smoothing
-    -          852093 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852094 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852095 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft
-    -          852096 - nothing
-    -          852097 - Preserve Formants
-    -          852098 - Mid/Side
-    -          852099 - Preserve Formants, Mid/Side
-    -          852100 - Independent Phase
-    -          852101 - Preserve Formants, Independent Phase
-    -          852102 - Mid/Side, Independent Phase
-    -          852103 - Preserve Formants, Mid/Side, Independent Phase
-    -          852104 - Time Domain Smoothing
-    -          852105 - Preserve Formants, Time Domain Smoothing
-    -          852106 - Mid/Side, Time Domain Smoothing
-    -          852107 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852108 - Independent Phase, Time Domain Smoothing
-    -          852109 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852110 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852111 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: HighQ
-    -          852112 - nothing
-    -          852113 - Preserve Formants
-    -          852114 - Mid/Side
-    -          852115 - Preserve Formants, Mid/Side
-    -          852116 - Independent Phase
-    -          852117 - Preserve Formants, Independent Phase
-    -          852118 - Mid/Side, Independent Phase
-    -          852119 - Preserve Formants, Mid/Side, Independent Phase
-    -          852120 - Time Domain Smoothing
-    -          852121 - Preserve Formants, Time Domain Smoothing
-    -          852122 - Mid/Side, Time Domain Smoothing
-    -          852123 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852124 - Independent Phase, Time Domain Smoothing
-    -          852125 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852126 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852127 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ
-    -          852128 - nothing
-    -          852129 - Preserve Formants
-    -          852130 - Mid/Side
-    -          852131 - Preserve Formants, Mid/Side
-    -          852132 - Independent Phase
-    -          852133 - Preserve Formants, Independent Phase
-    -          852134 - Mid/Side, Independent Phase
-    -          852135 - Preserve Formants, Mid/Side, Independent Phase
-    -          852136 - Time Domain Smoothing
-    -          852137 - Preserve Formants, Time Domain Smoothing
-    -          852138 - Mid/Side, Time Domain Smoothing
-    -          852139 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852140 - Independent Phase, Time Domain Smoothing
-    -          852141 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852142 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852143 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ
-    -          852144 - nothing
-    -          852145 - Preserve Formants
-    -          852146 - Mid/Side
-    -          852147 - Preserve Formants, Mid/Side
-    -          852148 - Independent Phase
-    -          852149 - Preserve Formants, Independent Phase
-    -          852150 - Mid/Side, Independent Phase
-    -          852151 - Preserve Formants, Mid/Side, Independent Phase
-    -          852152 - Time Domain Smoothing
-    -          852153 - Preserve Formants, Time Domain Smoothing
-    -          852154 - Mid/Side, Time Domain Smoothing
-    -          852155 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852156 - Independent Phase, Time Domain Smoothing
-    -          852157 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852158 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852159 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ
-    -          852160 - nothing
-    -          852161 - Preserve Formants
-    -          852162 - Mid/Side
-    -          852163 - Preserve Formants, Mid/Side
-    -          852164 - Independent Phase
-    -          852165 - Preserve Formants, Independent Phase
-    -          852166 - Mid/Side, Independent Phase
-    -          852167 - Preserve Formants, Mid/Side, Independent Phase
-    -          852168 - Time Domain Smoothing
-    -          852169 - Preserve Formants, Time Domain Smoothing
-    -          852170 - Mid/Side, Time Domain Smoothing
-    -          852171 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852172 - Independent Phase, Time Domain Smoothing
-    -          852173 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852174 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852175 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ
-    -          852176 - nothing
-    -          852177 - Preserve Formants
-    -          852178 - Mid/Side
-    -          852179 - Preserve Formants, Mid/Side
-    -          852180 - Independent Phase
-    -          852181 - Preserve Formants, Independent Phase
-    -          852182 - Mid/Side, Independent Phase
-    -          852183 - Preserve Formants, Mid/Side, Independent Phase
-    -          852184 - Time Domain Smoothing
-    -          852185 - Preserve Formants, Time Domain Smoothing
-    -          852186 - Mid/Side, Time Domain Smoothing
-    -          852187 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852188 - Independent Phase, Time Domain Smoothing
-    -          852189 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852190 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852191 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ
-    -          852192 - nothing
-    -          852193 - Preserve Formants
-    -          852194 - Mid/Side
-    -          852195 - Preserve Formants, Mid/Side
-    -          852196 - Independent Phase
-    -          852197 - Preserve Formants, Independent Phase
-    -          852198 - Mid/Side, Independent Phase
-    -          852199 - Preserve Formants, Mid/Side, Independent Phase
-    -          852200 - Time Domain Smoothing
-    -          852201 - Preserve Formants, Time Domain Smoothing
-    -          852202 - Mid/Side, Time Domain Smoothing
-    -          852203 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852204 - Independent Phase, Time Domain Smoothing
-    -          852205 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852206 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852207 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: HighQ
-    -          852208 - nothing
-    -          852209 - Preserve Formants
-    -          852210 - Mid/Side
-    -          852211 - Preserve Formants, Mid/Side
-    -          852212 - Independent Phase
-    -          852213 - Preserve Formants, Independent Phase
-    -          852214 - Mid/Side, Independent Phase
-    -          852215 - Preserve Formants, Mid/Side, Independent Phase
-    -          852216 - Time Domain Smoothing
-    -          852217 - Preserve Formants, Time Domain Smoothing
-    -          852218 - Mid/Side, Time Domain Smoothing
-    -          852219 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852220 - Independent Phase, Time Domain Smoothing
-    -          852221 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852222 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852223 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ
-    -          852224 - nothing
-    -          852225 - Preserve Formants
-    -          852226 - Mid/Side
-    -          852227 - Preserve Formants, Mid/Side
-    -          852228 - Independent Phase
-    -          852229 - Preserve Formants, Independent Phase
-    -          852230 - Mid/Side, Independent Phase
-    -          852231 - Preserve Formants, Mid/Side, Independent Phase
-    -          852232 - Time Domain Smoothing
-    -          852233 - Preserve Formants, Time Domain Smoothing
-    -          852234 - Mid/Side, Time Domain Smoothing
-    -          852235 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852236 - Independent Phase, Time Domain Smoothing
-    -          852237 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852238 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852239 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ
-    -          852240 - nothing
-    -          852241 - Preserve Formants
-    -          852242 - Mid/Side
-    -          852243 - Preserve Formants, Mid/Side
-    -          852244 - Independent Phase
-    -          852245 - Preserve Formants, Independent Phase
-    -          852246 - Mid/Side, Independent Phase
-    -          852247 - Preserve Formants, Mid/Side, Independent Phase
-    -          852248 - Time Domain Smoothing
-    -          852249 - Preserve Formants, Time Domain Smoothing
-    -          852250 - Mid/Side, Time Domain Smoothing
-    -          852251 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852252 - Independent Phase, Time Domain Smoothing
-    -          852253 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852254 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852255 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: Consistent
-    -          852256 - nothing
-    -          852257 - Preserve Formants
-    -          852258 - Mid/Side
-    -          852259 - Preserve Formants, Mid/Side
-    -          852260 - Independent Phase
-    -          852261 - Preserve Formants, Independent Phase
-    -          852262 - Mid/Side, Independent Phase
-    -          852263 - Preserve Formants, Mid/Side, Independent Phase
-    -          852264 - Time Domain Smoothing
-    -          852265 - Preserve Formants, Time Domain Smoothing
-    -          852266 - Mid/Side, Time Domain Smoothing
-    -          852267 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852268 - Independent Phase, Time Domain Smoothing
-    -          852269 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852270 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852271 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent
-    -          852272 - nothing
-    -          852273 - Preserve Formants
-    -          852274 - Mid/Side
-    -          852275 - Preserve Formants, Mid/Side
-    -          852276 - Independent Phase
-    -          852277 - Preserve Formants, Independent Phase
-    -          852278 - Mid/Side, Independent Phase
-    -          852279 - Preserve Formants, Mid/Side, Independent Phase
-    -          852280 - Time Domain Smoothing
-    -          852281 - Preserve Formants, Time Domain Smoothing
-    -          852282 - Mid/Side, Time Domain Smoothing
-    -          852283 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852284 - Independent Phase, Time Domain Smoothing
-    -          852285 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852286 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852287 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent
-    -          852288 - nothing
-    -          852289 - Preserve Formants
-    -          852290 - Mid/Side
-    -          852291 - Preserve Formants, Mid/Side
-    -          852292 - Independent Phase
-    -          852293 - Preserve Formants, Independent Phase
-    -          852294 - Mid/Side, Independent Phase
-    -          852295 - Preserve Formants, Mid/Side, Independent Phase
-    -          852296 - Time Domain Smoothing
-    -          852297 - Preserve Formants, Time Domain Smoothing
-    -          852298 - Mid/Side, Time Domain Smoothing
-    -          852299 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852300 - Independent Phase, Time Domain Smoothing
-    -          852301 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852302 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852303 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent
-    -          852304 - nothing
-    -          852305 - Preserve Formants
-    -          852306 - Mid/Side
-    -          852307 - Preserve Formants, Mid/Side
-    -          852308 - Independent Phase
-    -          852309 - Preserve Formants, Independent Phase
-    -          852310 - Mid/Side, Independent Phase
-    -          852311 - Preserve Formants, Mid/Side, Independent Phase
-    -          852312 - Time Domain Smoothing
-    -          852313 - Preserve Formants, Time Domain Smoothing
-    -          852314 - Mid/Side, Time Domain Smoothing
-    -          852315 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852316 - Independent Phase, Time Domain Smoothing
-    -          852317 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852318 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852319 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent
-    -          852320 - nothing
-    -          852321 - Preserve Formants
-    -          852322 - Mid/Side
-    -          852323 - Preserve Formants, Mid/Side
-    -          852324 - Independent Phase
-    -          852325 - Preserve Formants, Independent Phase
-    -          852326 - Mid/Side, Independent Phase
-    -          852327 - Preserve Formants, Mid/Side, Independent Phase
-    -          852328 - Time Domain Smoothing
-    -          852329 - Preserve Formants, Time Domain Smoothing
-    -          852330 - Mid/Side, Time Domain Smoothing
-    -          852331 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852332 - Independent Phase, Time Domain Smoothing
-    -          852333 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852334 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852335 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent
-    -          852336 - nothing
-    -          852337 - Preserve Formants
-    -          852338 - Mid/Side
-    -          852339 - Preserve Formants, Mid/Side
-    -          852340 - Independent Phase
-    -          852341 - Preserve Formants, Independent Phase
-    -          852342 - Mid/Side, Independent Phase
-    -          852343 - Preserve Formants, Mid/Side, Independent Phase
-    -          852344 - Time Domain Smoothing
-    -          852345 - Preserve Formants, Time Domain Smoothing
-    -          852346 - Mid/Side, Time Domain Smoothing
-    -          852347 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852348 - Independent Phase, Time Domain Smoothing
-    -          852349 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852350 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852351 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: Consistent
-    -          852352 - nothing
-    -          852353 - Preserve Formants
-    -          852354 - Mid/Side
-    -          852355 - Preserve Formants, Mid/Side
-    -          852356 - Independent Phase
-    -          852357 - Preserve Formants, Independent Phase
-    -          852358 - Mid/Side, Independent Phase
-    -          852359 - Preserve Formants, Mid/Side, Independent Phase
-    -          852360 - Time Domain Smoothing
-    -          852361 - Preserve Formants, Time Domain Smoothing
-    -          852362 - Mid/Side, Time Domain Smoothing
-    -          852363 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852364 - Independent Phase, Time Domain Smoothing
-    -          852365 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852366 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852367 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent
-    -          852368 - nothing
-    -          852369 - Preserve Formants
-    -          852370 - Mid/Side
-    -          852371 - Preserve Formants, Mid/Side
-    -          852372 - Independent Phase
-    -          852373 - Preserve Formants, Independent Phase
-    -          852374 - Mid/Side, Independent Phase
-    -          852375 - Preserve Formants, Mid/Side, Independent Phase
-    -          852376 - Time Domain Smoothing
-    -          852377 - Preserve Formants, Time Domain Smoothing
-    -          852378 - Mid/Side, Time Domain Smoothing
-    -          852379 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852380 - Independent Phase, Time Domain Smoothing
-    -          852381 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852382 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852383 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent
-    -          852384 - nothing
-    -          852385 - Preserve Formants
-    -          852386 - Mid/Side
-    -          852387 - Preserve Formants, Mid/Side
-    -          852388 - Independent Phase
-    -          852389 - Preserve Formants, Independent Phase
-    -          852390 - Mid/Side, Independent Phase
-    -          852391 - Preserve Formants, Mid/Side, Independent Phase
-    -          852392 - Time Domain Smoothing
-    -          852393 - Preserve Formants, Time Domain Smoothing
-    -          852394 - Mid/Side, Time Domain Smoothing
-    -          852395 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852396 - Independent Phase, Time Domain Smoothing
-    -          852397 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852398 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852399 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Window: Short
-    -          852400 - nothing
-    -          852401 - Preserve Formants
-    -          852402 - Mid/Side
-    -          852403 - Preserve Formants, Mid/Side
-    -          852404 - Independent Phase
-    -          852405 - Preserve Formants, Independent Phase
-    -          852406 - Mid/Side, Independent Phase
-    -          852407 - Preserve Formants, Mid/Side, Independent Phase
-    -          852408 - Time Domain Smoothing
-    -          852409 - Preserve Formants, Time Domain Smoothing
-    -          852410 - Mid/Side, Time Domain Smoothing
-    -          852411 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852412 - Independent Phase, Time Domain Smoothing
-    -          852413 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852414 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852415 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Window: Short
-    -          852416 - nothing
-    -          852417 - Preserve Formants
-    -          852418 - Mid/Side
-    -          852419 - Preserve Formants, Mid/Side
-    -          852420 - Independent Phase
-    -          852421 - Preserve Formants, Independent Phase
-    -          852422 - Mid/Side, Independent Phase
-    -          852423 - Preserve Formants, Mid/Side, Independent Phase
-    -          852424 - Time Domain Smoothing
-    -          852425 - Preserve Formants, Time Domain Smoothing
-    -          852426 - Mid/Side, Time Domain Smoothing
-    -          852427 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852428 - Independent Phase, Time Domain Smoothing
-    -          852429 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852430 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852431 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Window: Short
-    -          852432 - nothing
-    -          852433 - Preserve Formants
-    -          852434 - Mid/Side
-    -          852435 - Preserve Formants, Mid/Side
-    -          852436 - Independent Phase
-    -          852437 - Preserve Formants, Independent Phase
-    -          852438 - Mid/Side, Independent Phase
-    -          852439 - Preserve Formants, Mid/Side, Independent Phase
-    -          852440 - Time Domain Smoothing
-    -          852441 - Preserve Formants, Time Domain Smoothing
-    -          852442 - Mid/Side, Time Domain Smoothing
-    -          852443 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852444 - Independent Phase, Time Domain Smoothing
-    -          852445 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852446 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852447 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Window: Short
-    -          852448 - nothing
-    -          852449 - Preserve Formants
-    -          852450 - Mid/Side
-    -          852451 - Preserve Formants, Mid/Side
-    -          852452 - Independent Phase
-    -          852453 - Preserve Formants, Independent Phase
-    -          852454 - Mid/Side, Independent Phase
-    -          852455 - Preserve Formants, Mid/Side, Independent Phase
-    -          852456 - Time Domain Smoothing
-    -          852457 - Preserve Formants, Time Domain Smoothing
-    -          852458 - Mid/Side, Time Domain Smoothing
-    -          852459 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852460 - Independent Phase, Time Domain Smoothing
-    -          852461 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852462 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852463 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Window: Short
-    -          852464 - nothing
-    -          852465 - Preserve Formants
-    -          852466 - Mid/Side
-    -          852467 - Preserve Formants, Mid/Side
-    -          852468 - Independent Phase
-    -          852469 - Preserve Formants, Independent Phase
-    -          852470 - Mid/Side, Independent Phase
-    -          852471 - Preserve Formants, Mid/Side, Independent Phase
-    -          852472 - Time Domain Smoothing
-    -          852473 - Preserve Formants, Time Domain Smoothing
-    -          852474 - Mid/Side, Time Domain Smoothing
-    -          852475 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852476 - Independent Phase, Time Domain Smoothing
-    -          852477 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852478 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852479 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Window: Short
-    -          852480 - nothing
-    -          852481 - Preserve Formants
-    -          852482 - Mid/Side
-    -          852483 - Preserve Formants, Mid/Side
-    -          852484 - Independent Phase
-    -          852485 - Preserve Formants, Independent Phase
-    -          852486 - Mid/Side, Independent Phase
-    -          852487 - Preserve Formants, Mid/Side, Independent Phase
-    -          852488 - Time Domain Smoothing
-    -          852489 - Preserve Formants, Time Domain Smoothing
-    -          852490 - Mid/Side, Time Domain Smoothing
-    -          852491 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852492 - Independent Phase, Time Domain Smoothing
-    -          852493 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852494 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852495 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Window: Short
-    -          852496 - nothing
-    -          852497 - Preserve Formants
-    -          852498 - Mid/Side
-    -          852499 - Preserve Formants, Mid/Side
-    -          852500 - Independent Phase
-    -          852501 - Preserve Formants, Independent Phase
-    -          852502 - Mid/Side, Independent Phase
-    -          852503 - Preserve Formants, Mid/Side, Independent Phase
-    -          852504 - Time Domain Smoothing
-    -          852505 - Preserve Formants, Time Domain Smoothing
-    -          852506 - Mid/Side, Time Domain Smoothing
-    -          852507 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852508 - Independent Phase, Time Domain Smoothing
-    -          852509 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852510 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852511 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Window: Short
-    -          852512 - nothing
-    -          852513 - Preserve Formants
-    -          852514 - Mid/Side
-    -          852515 - Preserve Formants, Mid/Side
-    -          852516 - Independent Phase
-    -          852517 - Preserve Formants, Independent Phase
-    -          852518 - Mid/Side, Independent Phase
-    -          852519 - Preserve Formants, Mid/Side, Independent Phase
-    -          852520 - Time Domain Smoothing
-    -          852521 - Preserve Formants, Time Domain Smoothing
-    -          852522 - Mid/Side, Time Domain Smoothing
-    -          852523 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852524 - Independent Phase, Time Domain Smoothing
-    -          852525 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852526 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852527 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Window: Short
-    -          852528 - nothing
-    -          852529 - Preserve Formants
-    -          852530 - Mid/Side
-    -          852531 - Preserve Formants, Mid/Side
-    -          852532 - Independent Phase
-    -          852533 - Preserve Formants, Independent Phase
-    -          852534 - Mid/Side, Independent Phase
-    -          852535 - Preserve Formants, Mid/Side, Independent Phase
-    -          852536 - Time Domain Smoothing
-    -          852537 - Preserve Formants, Time Domain Smoothing
-    -          852538 - Mid/Side, Time Domain Smoothing
-    -          852539 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852540 - Independent Phase, Time Domain Smoothing
-    -          852541 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852542 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852543 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: HighQ, Window: Short
-    -          852544 - nothing
-    -          852545 - Preserve Formants
-    -          852546 - Mid/Side
-    -          852547 - Preserve Formants, Mid/Side
-    -          852548 - Independent Phase
-    -          852549 - Preserve Formants, Independent Phase
-    -          852550 - Mid/Side, Independent Phase
-    -          852551 - Preserve Formants, Mid/Side, Independent Phase
-    -          852552 - Time Domain Smoothing
-    -          852553 - Preserve Formants, Time Domain Smoothing
-    -          852554 - Mid/Side, Time Domain Smoothing
-    -          852555 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852556 - Independent Phase, Time Domain Smoothing
-    -          852557 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852558 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852559 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ, Window: Short
-    -          852560 - nothing
-    -          852561 - Preserve Formants
-    -          852562 - Mid/Side
-    -          852563 - Preserve Formants, Mid/Side
-    -          852564 - Independent Phase
-    -          852565 - Preserve Formants, Independent Phase
-    -          852566 - Mid/Side, Independent Phase
-    -          852567 - Preserve Formants, Mid/Side, Independent Phase
-    -          852568 - Time Domain Smoothing
-    -          852569 - Preserve Formants, Time Domain Smoothing
-    -          852570 - Mid/Side, Time Domain Smoothing
-    -          852571 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852572 - Independent Phase, Time Domain Smoothing
-    -          852573 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852574 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852575 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ, Window: Short
-    -          852576 - nothing
-    -          852577 - Preserve Formants
-    -          852578 - Mid/Side
-    -          852579 - Preserve Formants, Mid/Side
-    -          852580 - Independent Phase
-    -          852581 - Preserve Formants, Independent Phase
-    -          852582 - Mid/Side, Independent Phase
-    -          852583 - Preserve Formants, Mid/Side, Independent Phase
-    -          852584 - Time Domain Smoothing
-    -          852585 - Preserve Formants, Time Domain Smoothing
-    -          852586 - Mid/Side, Time Domain Smoothing
-    -          852587 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852588 - Independent Phase, Time Domain Smoothing
-    -          852589 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852590 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852591 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ, Window: Short
-    -          852592 - nothing
-    -          852593 - Preserve Formants
-    -          852594 - Mid/Side
-    -          852595 - Preserve Formants, Mid/Side
-    -          852596 - Independent Phase
-    -          852597 - Preserve Formants, Independent Phase
-    -          852598 - Mid/Side, Independent Phase
-    -          852599 - Preserve Formants, Mid/Side, Independent Phase
-    -          852600 - Time Domain Smoothing
-    -          852601 - Preserve Formants, Time Domain Smoothing
-    -          852602 - Mid/Side, Time Domain Smoothing
-    -          852603 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852604 - Independent Phase, Time Domain Smoothing
-    -          852605 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852606 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852607 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Short
-    -          852608 - nothing
-    -          852609 - Preserve Formants
-    -          852610 - Mid/Side
-    -          852611 - Preserve Formants, Mid/Side
-    -          852612 - Independent Phase
-    -          852613 - Preserve Formants, Independent Phase
-    -          852614 - Mid/Side, Independent Phase
-    -          852615 - Preserve Formants, Mid/Side, Independent Phase
-    -          852616 - Time Domain Smoothing
-    -          852617 - Preserve Formants, Time Domain Smoothing
-    -          852618 - Mid/Side, Time Domain Smoothing
-    -          852619 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852620 - Independent Phase, Time Domain Smoothing
-    -          852621 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852622 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852623 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Short
-    -          852624 - nothing
-    -          852625 - Preserve Formants
-    -          852626 - Mid/Side
-    -          852627 - Preserve Formants, Mid/Side
-    -          852628 - Independent Phase
-    -          852629 - Preserve Formants, Independent Phase
-    -          852630 - Mid/Side, Independent Phase
-    -          852631 - Preserve Formants, Mid/Side, Independent Phase
-    -          852632 - Time Domain Smoothing
-    -          852633 - Preserve Formants, Time Domain Smoothing
-    -          852634 - Mid/Side, Time Domain Smoothing
-    -          852635 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852636 - Independent Phase, Time Domain Smoothing
-    -          852637 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852638 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852639 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: HighQ, Window: Short
-    -          852640 - nothing
-    -          852641 - Preserve Formants
-    -          852642 - Mid/Side
-    -          852643 - Preserve Formants, Mid/Side
-    -          852644 - Independent Phase
-    -          852645 - Preserve Formants, Independent Phase
-    -          852646 - Mid/Side, Independent Phase
-    -          852647 - Preserve Formants, Mid/Side, Independent Phase
-    -          852648 - Time Domain Smoothing
-    -          852649 - Preserve Formants, Time Domain Smoothing
-    -          852650 - Mid/Side, Time Domain Smoothing
-    -          852651 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852652 - Independent Phase, Time Domain Smoothing
-    -          852653 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852654 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852655 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Short
-    -          852656 - nothing
-    -          852657 - Preserve Formants
-    -          852658 - Mid/Side
-    -          852659 - Preserve Formants, Mid/Side
-    -          852660 - Independent Phase
-    -          852661 - Preserve Formants, Independent Phase
-    -          852662 - Mid/Side, Independent Phase
-    -          852663 - Preserve Formants, Mid/Side, Independent Phase
-    -          852664 - Time Domain Smoothing
-    -          852665 - Preserve Formants, Time Domain Smoothing
-    -          852666 - Mid/Side, Time Domain Smoothing
-    -          852667 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852668 - Independent Phase, Time Domain Smoothing
-    -          852669 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852670 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852671 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Short
-    -          852672 - nothing
-    -          852673 - Preserve Formants
-    -          852674 - Mid/Side
-    -          852675 - Preserve Formants, Mid/Side
-    -          852676 - Independent Phase
-    -          852677 - Preserve Formants, Independent Phase
-    -          852678 - Mid/Side, Independent Phase
-    -          852679 - Preserve Formants, Mid/Side, Independent Phase
-    -          852680 - Time Domain Smoothing
-    -          852681 - Preserve Formants, Time Domain Smoothing
-    -          852682 - Mid/Side, Time Domain Smoothing
-    -          852683 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852684 - Independent Phase, Time Domain Smoothing
-    -          852685 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852686 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852687 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: Consistent, Window: Short
-    -          852688 - nothing
-    -          852689 - Preserve Formants
-    -          852690 - Mid/Side
-    -          852691 - Preserve Formants, Mid/Side
-    -          852692 - Independent Phase
-    -          852693 - Preserve Formants, Independent Phase
-    -          852694 - Mid/Side, Independent Phase
-    -          852695 - Preserve Formants, Mid/Side, Independent Phase
-    -          852696 - Time Domain Smoothing
-    -          852697 - Preserve Formants, Time Domain Smoothing
-    -          852698 - Mid/Side, Time Domain Smoothing
-    -          852699 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852700 - Independent Phase, Time Domain Smoothing
-    -          852701 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852702 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852703 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent, Window: Short
-    -          852704 - nothing
-    -          852705 - Preserve Formants
-    -          852706 - Mid/Side
-    -          852707 - Preserve Formants, Mid/Side
-    -          852708 - Independent Phase
-    -          852709 - Preserve Formants, Independent Phase
-    -          852710 - Mid/Side, Independent Phase
-    -          852711 - Preserve Formants, Mid/Side, Independent Phase
-    -          852712 - Time Domain Smoothing
-    -          852713 - Preserve Formants, Time Domain Smoothing
-    -          852714 - Mid/Side, Time Domain Smoothing
-    -          852715 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852716 - Independent Phase, Time Domain Smoothing
-    -          852717 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852718 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852719 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent, Window: Short
-    -          852720 - nothing
-    -          852721 - Preserve Formants
-    -          852722 - Mid/Side
-    -          852723 - Preserve Formants, Mid/Side
-    -          852724 - Independent Phase
-    -          852725 - Preserve Formants, Independent Phase
-    -          852726 - Mid/Side, Independent Phase
-    -          852727 - Preserve Formants, Mid/Side, Independent Phase
-    -          852728 - Time Domain Smoothing
-    -          852729 - Preserve Formants, Time Domain Smoothing
-    -          852730 - Mid/Side, Time Domain Smoothing
-    -          852731 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852732 - Independent Phase, Time Domain Smoothing
-    -          852733 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852734 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852735 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent, Window: Short
-    -          852736 - nothing
-    -          852737 - Preserve Formants
-    -          852738 - Mid/Side
-    -          852739 - Preserve Formants, Mid/Side
-    -          852740 - Independent Phase
-    -          852741 - Preserve Formants, Independent Phase
-    -          852742 - Mid/Side, Independent Phase
-    -          852743 - Preserve Formants, Mid/Side, Independent Phase
-    -          852744 - Time Domain Smoothing
-    -          852745 - Preserve Formants, Time Domain Smoothing
-    -          852746 - Mid/Side, Time Domain Smoothing
-    -          852747 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852748 - Independent Phase, Time Domain Smoothing
-    -          852749 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852750 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852751 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Short
-    -          852752 - nothing
-    -          852753 - Preserve Formants
-    -          852754 - Mid/Side
-    -          852755 - Preserve Formants, Mid/Side
-    -          852756 - Independent Phase
-    -          852757 - Preserve Formants, Independent Phase
-    -          852758 - Mid/Side, Independent Phase
-    -          852759 - Preserve Formants, Mid/Side, Independent Phase
-    -          852760 - Time Domain Smoothing
-    -          852761 - Preserve Formants, Time Domain Smoothing
-    -          852762 - Mid/Side, Time Domain Smoothing
-    -          852763 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852764 - Independent Phase, Time Domain Smoothing
-    -          852765 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852766 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852767 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Short
-    -          852768 - nothing
-    -          852769 - Preserve Formants
-    -          852770 - Mid/Side
-    -          852771 - Preserve Formants, Mid/Side
-    -          852772 - Independent Phase
-    -          852773 - Preserve Formants, Independent Phase
-    -          852774 - Mid/Side, Independent Phase
-    -          852775 - Preserve Formants, Mid/Side, Independent Phase
-    -          852776 - Time Domain Smoothing
-    -          852777 - Preserve Formants, Time Domain Smoothing
-    -          852778 - Mid/Side, Time Domain Smoothing
-    -          852779 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852780 - Independent Phase, Time Domain Smoothing
-    -          852781 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852782 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852783 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: Consistent, Window: Short
-    -          852784 - nothing
-    -          852785 - Preserve Formants
-    -          852786 - Mid/Side
-    -          852787 - Preserve Formants, Mid/Side
-    -          852788 - Independent Phase
-    -          852789 - Preserve Formants, Independent Phase
-    -          852790 - Mid/Side, Independent Phase
-    -          852791 - Preserve Formants, Mid/Side, Independent Phase
-    -          852792 - Time Domain Smoothing
-    -          852793 - Preserve Formants, Time Domain Smoothing
-    -          852794 - Mid/Side, Time Domain Smoothing
-    -          852795 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852796 - Independent Phase, Time Domain Smoothing
-    -          852797 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852798 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852799 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Short
-    -          852800 - nothing
-    -          852801 - Preserve Formants
-    -          852802 - Mid/Side
-    -          852803 - Preserve Formants, Mid/Side
-    -          852804 - Independent Phase
-    -          852805 - Preserve Formants, Independent Phase
-    -          852806 - Mid/Side, Independent Phase
-    -          852807 - Preserve Formants, Mid/Side, Independent Phase
-    -          852808 - Time Domain Smoothing
-    -          852809 - Preserve Formants, Time Domain Smoothing
-    -          852810 - Mid/Side, Time Domain Smoothing
-    -          852811 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852812 - Independent Phase, Time Domain Smoothing
-    -          852813 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852814 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852815 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Short
-    -          852816 - nothing
-    -          852817 - Preserve Formants
-    -          852818 - Mid/Side
-    -          852819 - Preserve Formants, Mid/Side
-    -          852820 - Independent Phase
-    -          852821 - Preserve Formants, Independent Phase
-    -          852822 - Mid/Side, Independent Phase
-    -          852823 - Preserve Formants, Mid/Side, Independent Phase
-    -          852824 - Time Domain Smoothing
-    -          852825 - Preserve Formants, Time Domain Smoothing
-    -          852826 - Mid/Side, Time Domain Smoothing
-    -          852827 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852828 - Independent Phase, Time Domain Smoothing
-    -          852829 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852830 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852831 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Window: Long
-    -          852832 - nothing
-    -          852833 - Preserve Formants
-    -          852834 - Mid/Side
-    -          852835 - Preserve Formants, Mid/Side
-    -          852836 - Independent Phase
-    -          852837 - Preserve Formants, Independent Phase
-    -          852838 - Mid/Side, Independent Phase
-    -          852839 - Preserve Formants, Mid/Side, Independent Phase
-    -          852840 - Time Domain Smoothing
-    -          852841 - Preserve Formants, Time Domain Smoothing
-    -          852842 - Mid/Side, Time Domain Smoothing
-    -          852843 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852844 - Independent Phase, Time Domain Smoothing
-    -          852845 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852846 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852847 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Window: Long
-    -          852848 - nothing
-    -          852849 - Preserve Formants
-    -          852850 - Mid/Side
-    -          852851 - Preserve Formants, Mid/Side
-    -          852852 - Independent Phase
-    -          852853 - Preserve Formants, Independent Phase
-    -          852854 - Mid/Side, Independent Phase
-    -          852855 - Preserve Formants, Mid/Side, Independent Phase
-    -          852856 - Time Domain Smoothing
-    -          852857 - Preserve Formants, Time Domain Smoothing
-    -          852858 - Mid/Side, Time Domain Smoothing
-    -          852859 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852860 - Independent Phase, Time Domain Smoothing
-    -          852861 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852862 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852863 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Window: Long
-    -          852864 - nothing
-    -          852865 - Preserve Formants
-    -          852866 - Mid/Side
-    -          852867 - Preserve Formants, Mid/Side
-    -          852868 - Independent Phase
-    -          852869 - Preserve Formants, Independent Phase
-    -          852870 - Mid/Side, Independent Phase
-    -          852871 - Preserve Formants, Mid/Side, Independent Phase
-    -          852872 - Time Domain Smoothing
-    -          852873 - Preserve Formants, Time Domain Smoothing
-    -          852874 - Mid/Side, Time Domain Smoothing
-    -          852875 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852876 - Independent Phase, Time Domain Smoothing
-    -          852877 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852878 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852879 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Window: Long
-    -          852880 - nothing
-    -          852881 - Preserve Formants
-    -          852882 - Mid/Side
-    -          852883 - Preserve Formants, Mid/Side
-    -          852884 - Independent Phase
-    -          852885 - Preserve Formants, Independent Phase
-    -          852886 - Mid/Side, Independent Phase
-    -          852887 - Preserve Formants, Mid/Side, Independent Phase
-    -          852888 - Time Domain Smoothing
-    -          852889 - Preserve Formants, Time Domain Smoothing
-    -          852890 - Mid/Side, Time Domain Smoothing
-    -          852891 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852892 - Independent Phase, Time Domain Smoothing
-    -          852893 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852894 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852895 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Window: Long
-    -          852896 - nothing
-    -          852897 - Preserve Formants
-    -          852898 - Mid/Side
-    -          852899 - Preserve Formants, Mid/Side
-    -          852900 - Independent Phase
-    -          852901 - Preserve Formants, Independent Phase
-    -          852902 - Mid/Side, Independent Phase
-    -          852903 - Preserve Formants, Mid/Side, Independent Phase
-    -          852904 - Time Domain Smoothing
-    -          852905 - Preserve Formants, Time Domain Smoothing
-    -          852906 - Mid/Side, Time Domain Smoothing
-    -          852907 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852908 - Independent Phase, Time Domain Smoothing
-    -          852909 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852910 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852911 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Window: Long
-    -          852912 - nothing
-    -          852913 - Preserve Formants
-    -          852914 - Mid/Side
-    -          852915 - Preserve Formants, Mid/Side
-    -          852916 - Independent Phase
-    -          852917 - Preserve Formants, Independent Phase
-    -          852918 - Mid/Side, Independent Phase
-    -          852919 - Preserve Formants, Mid/Side, Independent Phase
-    -          852920 - Time Domain Smoothing
-    -          852921 - Preserve Formants, Time Domain Smoothing
-    -          852922 - Mid/Side, Time Domain Smoothing
-    -          852923 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852924 - Independent Phase, Time Domain Smoothing
-    -          852925 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852926 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852927 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Window: Long
-    -          852928 - nothing
-    -          852929 - Preserve Formants
-    -          852930 - Mid/Side
-    -          852931 - Preserve Formants, Mid/Side
-    -          852932 - Independent Phase
-    -          852933 - Preserve Formants, Independent Phase
-    -          852934 - Mid/Side, Independent Phase
-    -          852935 - Preserve Formants, Mid/Side, Independent Phase
-    -          852936 - Time Domain Smoothing
-    -          852937 - Preserve Formants, Time Domain Smoothing
-    -          852938 - Mid/Side, Time Domain Smoothing
-    -          852939 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852940 - Independent Phase, Time Domain Smoothing
-    -          852941 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852942 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852943 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Window: Long
-    -          852944 - nothing
-    -          852945 - Preserve Formants
-    -          852946 - Mid/Side
-    -          852947 - Preserve Formants, Mid/Side
-    -          852948 - Independent Phase
-    -          852949 - Preserve Formants, Independent Phase
-    -          852950 - Mid/Side, Independent Phase
-    -          852951 - Preserve Formants, Mid/Side, Independent Phase
-    -          852952 - Time Domain Smoothing
-    -          852953 - Preserve Formants, Time Domain Smoothing
-    -          852954 - Mid/Side, Time Domain Smoothing
-    -          852955 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852956 - Independent Phase, Time Domain Smoothing
-    -          852957 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852958 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852959 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Window: Long
-    -          852960 - nothing
-    -          852961 - Preserve Formants
-    -          852962 - Mid/Side
-    -          852963 - Preserve Formants, Mid/Side
-    -          852964 - Independent Phase
-    -          852965 - Preserve Formants, Independent Phase
-    -          852966 - Mid/Side, Independent Phase
-    -          852967 - Preserve Formants, Mid/Side, Independent Phase
-    -          852968 - Time Domain Smoothing
-    -          852969 - Preserve Formants, Time Domain Smoothing
-    -          852970 - Mid/Side, Time Domain Smoothing
-    -          852971 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852972 - Independent Phase, Time Domain Smoothing
-    -          852973 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852974 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852975 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: HighQ, Window: Long
-    -          852976 - nothing
-    -          852977 - Preserve Formants
-    -          852978 - Mid/Side
-    -          852979 - Preserve Formants, Mid/Side
-    -          852980 - Independent Phase
-    -          852981 - Preserve Formants, Independent Phase
-    -          852982 - Mid/Side, Independent Phase
-    -          852983 - Preserve Formants, Mid/Side, Independent Phase
-    -          852984 - Time Domain Smoothing
-    -          852985 - Preserve Formants, Time Domain Smoothing
-    -          852986 - Mid/Side, Time Domain Smoothing
-    -          852987 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852988 - Independent Phase, Time Domain Smoothing
-    -          852989 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852990 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852991 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ, Window: Long
-    -          852992 - nothing
-    -          852993 - Preserve Formants
-    -          852994 - Mid/Side
-    -          852995 - Preserve Formants, Mid/Side
-    -          852996 - Independent Phase
-    -          852997 - Preserve Formants, Independent Phase
-    -          852998 - Mid/Side, Independent Phase
-    -          852999 - Preserve Formants, Mid/Side, Independent Phase
-    -          853000 - Time Domain Smoothing
-    -          853001 - Preserve Formants, Time Domain Smoothing
-    -          853002 - Mid/Side, Time Domain Smoothing
-    -          853003 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853004 - Independent Phase, Time Domain Smoothing
-    -          853005 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853006 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853007 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ, Window: Long
-    -          853008 - nothing
-    -          853009 - Preserve Formants
-    -          853010 - Mid/Side
-    -          853011 - Preserve Formants, Mid/Side
-    -          853012 - Independent Phase
-    -          853013 - Preserve Formants, Independent Phase
-    -          853014 - Mid/Side, Independent Phase
-    -          853015 - Preserve Formants, Mid/Side, Independent Phase
-    -          853016 - Time Domain Smoothing
-    -          853017 - Preserve Formants, Time Domain Smoothing
-    -          853018 - Mid/Side, Time Domain Smoothing
-    -          853019 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853020 - Independent Phase, Time Domain Smoothing
-    -          853021 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853022 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853023 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ, Window: Long
-    -          853024 - nothing
-    -          853025 - Preserve Formants
-    -          853026 - Mid/Side
-    -          853027 - Preserve Formants, Mid/Side
-    -          853028 - Independent Phase
-    -          853029 - Preserve Formants, Independent Phase
-    -          853030 - Mid/Side, Independent Phase
-    -          853031 - Preserve Formants, Mid/Side, Independent Phase
-    -          853032 - Time Domain Smoothing
-    -          853033 - Preserve Formants, Time Domain Smoothing
-    -          853034 - Mid/Side, Time Domain Smoothing
-    -          853035 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853036 - Independent Phase, Time Domain Smoothing
-    -          853037 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853038 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853039 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Long
-    -          853040 - nothing
-    -          853041 - Preserve Formants
-    -          853042 - Mid/Side
-    -          853043 - Preserve Formants, Mid/Side
-    -          853044 - Independent Phase
-    -          853045 - Preserve Formants, Independent Phase
-    -          853046 - Mid/Side, Independent Phase
-    -          853047 - Preserve Formants, Mid/Side, Independent Phase
-    -          853048 - Time Domain Smoothing
-    -          853049 - Preserve Formants, Time Domain Smoothing
-    -          853050 - Mid/Side, Time Domain Smoothing
-    -          853051 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853052 - Independent Phase, Time Domain Smoothing
-    -          853053 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853054 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853055 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Long
-    -          853056 - nothing
-    -          853057 - Preserve Formants
-    -          853058 - Mid/Side
-    -          853059 - Preserve Formants, Mid/Side
-    -          853060 - Independent Phase
-    -          853061 - Preserve Formants, Independent Phase
-    -          853062 - Mid/Side, Independent Phase
-    -          853063 - Preserve Formants, Mid/Side, Independent Phase
-    -          853064 - Time Domain Smoothing
-    -          853065 - Preserve Formants, Time Domain Smoothing
-    -          853066 - Mid/Side, Time Domain Smoothing
-    -          853067 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853068 - Independent Phase, Time Domain Smoothing
-    -          853069 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853070 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853071 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: HighQ, Window: Long
-    -          853072 - nothing
-    -          853073 - Preserve Formants
-    -          853074 - Mid/Side
-    -          853075 - Preserve Formants, Mid/Side
-    -          853076 - Independent Phase
-    -          853077 - Preserve Formants, Independent Phase
-    -          853078 - Mid/Side, Independent Phase
-    -          853079 - Preserve Formants, Mid/Side, Independent Phase
-    -          853080 - Time Domain Smoothing
-    -          853081 - Preserve Formants, Time Domain Smoothing
-    -          853082 - Mid/Side, Time Domain Smoothing
-    -          853083 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853084 - Independent Phase, Time Domain Smoothing
-    -          853085 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853086 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853087 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Long
-    -          853088 - nothing
-    -          853089 - Preserve Formants
-    -          853090 - Mid/Side
-    -          853091 - Preserve Formants, Mid/Side
-    -          853092 - Independent Phase
-    -          853093 - Preserve Formants, Independent Phase
-    -          853094 - Mid/Side, Independent Phase
-    -          853095 - Preserve Formants, Mid/Side, Independent Phase
-    -          853096 - Time Domain Smoothing
-    -          853097 - Preserve Formants, Time Domain Smoothing
-    -          853098 - Mid/Side, Time Domain Smoothing
-    -          853099 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853100 - Independent Phase, Time Domain Smoothing
-    -          853101 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853102 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853103 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Long
-    -          853104 - nothing
-    -          853105 - Preserve Formants
-    -          853106 - Mid/Side
-    -          853107 - Preserve Formants, Mid/Side
-    -          853108 - Independent Phase
-    -          853109 - Preserve Formants, Independent Phase
-    -          853110 - Mid/Side, Independent Phase
-    -          853111 - Preserve Formants, Mid/Side, Independent Phase
-    -          853112 - Time Domain Smoothing
-    -          853113 - Preserve Formants, Time Domain Smoothing
-    -          853114 - Mid/Side, Time Domain Smoothing
-    -          853115 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853116 - Independent Phase, Time Domain Smoothing
-    -          853117 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853118 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853119 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: Consistent, Window: Long
-    -          853120 - nothing
-    -          853121 - Preserve Formants
-    -          853122 - Mid/Side
-    -          853123 - Preserve Formants, Mid/Side
-    -          853124 - Independent Phase
-    -          853125 - Preserve Formants, Independent Phase
-    -          853126 - Mid/Side, Independent Phase
-    -          853127 - Preserve Formants, Mid/Side, Independent Phase
-    -          853128 - Time Domain Smoothing
-    -          853129 - Preserve Formants, Time Domain Smoothing
-    -          853130 - Mid/Side, Time Domain Smoothing
-    -          853131 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853132 - Independent Phase, Time Domain Smoothing
-    -          853133 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853134 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853135 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent, Window: Long
-    -          853136 - nothing
-    -          853137 - Preserve Formants
-    -          853138 - Mid/Side
-    -          853139 - Preserve Formants, Mid/Side
-    -          853140 - Independent Phase
-    -          853141 - Preserve Formants, Independent Phase
-    -          853142 - Mid/Side, Independent Phase
-    -          853143 - Preserve Formants, Mid/Side, Independent Phase
-    -          853144 - Time Domain Smoothing
-    -          853145 - Preserve Formants, Time Domain Smoothing
-    -          853146 - Mid/Side, Time Domain Smoothing
-    -          853147 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853148 - Independent Phase, Time Domain Smoothing
-    -          853149 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853150 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853151 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent, Window: Long
-    -          853152 - nothing
-    -          853153 - Preserve Formants
-    -          853154 - Mid/Side
-    -          853155 - Preserve Formants, Mid/Side
-    -          853156 - Independent Phase
-    -          853157 - Preserve Formants, Independent Phase
-    -          853158 - Mid/Side, Independent Phase
-    -          853159 - Preserve Formants, Mid/Side, Independent Phase
-    -          853160 - Time Domain Smoothing
-    -          853161 - Preserve Formants, Time Domain Smoothing
-    -          853162 - Mid/Side, Time Domain Smoothing
-    -          853163 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853164 - Independent Phase, Time Domain Smoothing
-    -          853165 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853166 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853167 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent, Window: Long
-    -          853168 - nothing
-    -          853169 - Preserve Formants
-    -          853170 - Mid/Side
-    -          853171 - Preserve Formants, Mid/Side
-    -          853172 - Independent Phase
-    -          853173 - Preserve Formants, Independent Phase
-    -          853174 - Mid/Side, Independent Phase
-    -          853175 - Preserve Formants, Mid/Side, Independent Phase
-    -          853176 - Time Domain Smoothing
-    -          853177 - Preserve Formants, Time Domain Smoothing
-    -          853178 - Mid/Side, Time Domain Smoothing
-    -          853179 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853180 - Independent Phase, Time Domain Smoothing
-    -          853181 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853182 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853183 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Long
-    -          853184 - nothing
-    -          853185 - Preserve Formants
-    -          853186 - Mid/Side
-    -          853187 - Preserve Formants, Mid/Side
-    -          853188 - Independent Phase
-    -          853189 - Preserve Formants, Independent Phase
-    -          853190 - Mid/Side, Independent Phase
-    -          853191 - Preserve Formants, Mid/Side, Independent Phase
-    -          853192 - Time Domain Smoothing
-    -          853193 - Preserve Formants, Time Domain Smoothing
-    -          853194 - Mid/Side, Time Domain Smoothing
-    -          853195 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853196 - Independent Phase, Time Domain Smoothing
-    -          853197 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853198 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853199 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Long
-    -          853200 - nothing
-    -          853201 - Preserve Formants
-    -          853202 - Mid/Side
-    -          853203 - Preserve Formants, Mid/Side
-    -          853204 - Independent Phase
-    -          853205 - Preserve Formants, Independent Phase
-    -          853206 - Mid/Side, Independent Phase
-    -          853207 - Preserve Formants, Mid/Side, Independent Phase
-    -          853208 - Time Domain Smoothing
-    -          853209 - Preserve Formants, Time Domain Smoothing
-    -          853210 - Mid/Side, Time Domain Smoothing
-    -          853211 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853212 - Independent Phase, Time Domain Smoothing
-    -          853213 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853214 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853215 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: Consistent, Window: Long
-    -          853216 - nothing
-    -          853217 - Preserve Formants
-    -          853218 - Mid/Side
-    -          853219 - Preserve Formants, Mid/Side
-    -          853220 - Independent Phase
-    -          853221 - Preserve Formants, Independent Phase
-    -          853222 - Mid/Side, Independent Phase
-    -          853223 - Preserve Formants, Mid/Side, Independent Phase
-    -          853224 - Time Domain Smoothing
-    -          853225 - Preserve Formants, Time Domain Smoothing
-    -          853226 - Mid/Side, Time Domain Smoothing
-    -          853227 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853228 - Independent Phase, Time Domain Smoothing
-    -          853229 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853230 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853231 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Long
-    -          853232 - nothing
-    -          853233 - Preserve Formants
-    -          853234 - Mid/Side
-    -          853235 - Preserve Formants, Mid/Side
-    -          853236 - Independent Phase
-    -          853237 - Preserve Formants, Independent Phase
-    -          853238 - Mid/Side, Independent Phase
-    -          853239 - Preserve Formants, Mid/Side, Independent Phase
-    -          853240 - Time Domain Smoothing
-    -          853241 - Preserve Formants, Time Domain Smoothing
-    -          853242 - Mid/Side, Time Domain Smoothing
-    -          853243 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853244 - Independent Phase, Time Domain Smoothing
-    -          853245 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853246 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853247 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Long
-    -          853248 - nothing
-    -          853249 - Preserve Formants
-    -          853250 - Mid/Side
-    -          853251 - Preserve Formants, Mid/Side
-    -          853252 - Independent Phase
-    -          853253 - Preserve Formants, Independent Phase
-    -          853254 - Mid/Side, Independent Phase
-    -          853255 - Preserve Formants, Mid/Side, Independent Phase
-    -          853256 - Time Domain Smoothing
-    -          853257 - Preserve Formants, Time Domain Smoothing
-    -          853258 - Mid/Side, Time Domain Smoothing
-    -          853259 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853260 - Independent Phase, Time Domain Smoothing
-    -          853261 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853262 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853263 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+    integer def_pitch_mode_state - the default pitch mode    
     integer stretch_marker_mode - the stretch marker mode
                                 - 0, Balanced
                                 - 1, Tonal-optimized
@@ -5959,9 +5974,9 @@ function ultraschall.SetProject_AddMediaToProjectAfterRender(projectfilename_wit
   <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_AddMediaToProjectAfterRender(string projectfilename_with_path, integer state, optional string ProjectStateChunk)</functioncall>
   <description>
     Sets, if rendered media shall be added to the project afterwards as well as if likely silent files shall be rendered-state, from an RPP-Projectfile or a ProjectStateChunk.
-	
-	It's the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to file-dialog.
-	
+    
+    It's the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox, as set in the Render to file-dialog.
+    
     It's the entry RENDER_ADDTOPROJ
     
     Returns -1 in case of error.
@@ -5969,8 +5984,8 @@ function ultraschall.SetProject_AddMediaToProjectAfterRender(projectfilename_wit
   <parameters>
     string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
     integer state - the state of the "Add rendered items to new tracks in project"- checkbox and "Do not render files that are likely silent"-checkbox 
-				  - &1, rendered media shall be added to the project afterwards; 0, don't add
-				  - &2, don't render likely silent files; 0, render anyway
+                  - &1, rendered media shall be added to the project afterwards; 0, don't add
+                  - &2, don't render likely silent files; 0, render anyway
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>
@@ -6032,7 +6047,7 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
     - 64, Selected media items via master
     - 128, Selected tracks via master
     - &256, Embed stretch markers/transient guides-checkbox 
-	- &1024, Embed Take markers
+    - &1024, Embed Take markers
     - &2048, enable second pass rendering
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
@@ -6293,1646 +6308,1650 @@ function ultraschall.SetProject_DefPitchMode(projectfilename_with_path, def_pitc
   <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_DefPitchMode(string projectfilename_with_path, integer def_pitch_mode_state, integer stretch_marker_mode, optional string ProjectStateChunk)</functioncall>
   <description>
     Sets the default-pitch-mode, as set in the project-settings, from an rpp-project-file or a ProjectStateChunk.
+    
+    def_pitch_mode_state can be 
+    
+        SoundTouch:
+            0 - Default settings
+            1 - High Quality
+            2 - Fast
+
+        Simple windowed (fast):
+            131072 - 50ms window, 25ms fade
+            131073 - 50ms window, 16ms fade
+            131074 - 50ms window, 10ms fade
+            131075 - 50ms window, 7ms fade
+            131076 - 75ms window, 37ms fade
+            131077 - 75ms window, 25ms fade
+            131078 - 75ms window, 15ms fade
+            131079 - 75ms window, 10ms fade
+            131080 - 100ms window, 50ms fade
+            131081 - 100ms window, 33ms fade
+            131082 - 100ms window, 20ms fade
+            131083 - 100ms window, 14ms fade
+            131084 - 150ms window, 75ms fade
+            131085 - 150ms window, 50ms fade
+            131086 - 150ms window, 30ms fade
+            131087 - 150ms window, 21ms fade
+            131088 - 225ms window, 112ms fade
+            131089 - 225ms window, 75ms fade
+            131090 - 225ms window, 45ms fade
+            131091 - 225ms window, 32ms fade
+            131092 - 300ms window, 150ms fade
+            131093 - 300ms window, 100ms fade
+            131094 - 300ms window, 60ms fade
+            131095 - 300ms window, 42ms fade
+            131096 - 40ms window, 20ms fade
+            131097 - 40ms window, 13ms fade
+            131098 - 40ms window, 8ms fade
+            131099 - 40ms window, 5ms fade
+            131100 - 30ms window, 15ms fade
+            131101 - 30ms window, 10ms fade
+            131102 - 30ms window, 6ms fade
+            131103 - 30ms window, 4ms fade
+            131104 - 20ms window, 10ms fade
+            131105 - 20ms window, 6ms fade
+            131106 - 20ms window, 4ms fade
+            131107 - 20ms window, 2ms fade
+            131108 - 10ms window, 5ms fade
+            131109 - 10ms window, 3ms fade
+            131110 - 10ms window, 2ms fade
+            131111 - 10ms window, 1ms fade
+            131112 - 5ms window, 2ms fade
+            131113 - 5ms window, 1ms fade
+            131114 - 5ms window, 1ms fade
+            131115 - 5ms window, 1ms fade
+            131116 - 3ms window, 1ms fade
+            131117 - 3ms window, 1ms fade
+            131118 - 3ms window, 1ms fade
+            131119 - 3ms window, 1ms fade
+
+        Ã©lastique 2.2.8 Pro:
+            393216 - Normal
+            393217 - Preserve Formants (Lowest Pitches)
+            393218 - Preserve Formants (Lower Pitches)
+            393219 - Preserve Formants (Low Pitches)
+            393220 - Preserve Formants (Most Pitches)
+            393221 - Preserve Formants (High Pitches)
+            393222 - Preserve Formants (Higher Pitches)
+            393223 - Preserve Formants (Highest Pitches)
+            393224 - Mid/Side
+            393225 - Mid/Side, Preserve Formants (Lowest Pitches)
+            393226 - Mid/Side, Preserve Formants (Lower Pitches)
+            393227 - Mid/Side, Preserve Formants (Low Pitches)
+            393228 - Mid/Side, Preserve Formants (Most Pitches)
+            393229 - Mid/Side, Preserve Formants (High Pitches)
+            393230 - Mid/Side, Preserve Formants (Higher Pitches)
+            393231 - Mid/Side, Preserve Formants (Highest Pitches)
+            393232 - Synchronized: Normal
+            393233 - Synchronized: Preserve Formants (Lowest Pitches)
+            393234 - Synchronized: Preserve Formants (Lower Pitches)
+            393235 - Synchronized: Preserve Formants (Low Pitches)
+            393236 - Synchronized: Preserve Formants (Most Pitches)
+            393237 - Synchronized: Preserve Formants (High Pitches)
+            393238 - Synchronized: Preserve Formants (Higher Pitches)
+            393239 - Synchronized: Preserve Formants (Highest Pitches)
+            393240 - Synchronized:  Mid/Side
+            393241 - Synchronized:  Mid/Side, Preserve Formants (Lowest Pitches)
+            393242 - Synchronized:  Mid/Side, Preserve Formants (Lower Pitches)
+            393243 - Synchronized:  Mid/Side, Preserve Formants (Low Pitches)
+            393244 - Synchronized:  Mid/Side, Preserve Formants (Most Pitches)
+            393245 - Synchronized:  Mid/Side, Preserve Formants (High Pitches)
+            393246 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
+            393247 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
+
+        Ã©lastique 2.2.8 Efficient:
+            458752 - Normal
+            458753 - Mid/Side
+            458754 - Synchronized: Normal
+            458755 - Synchronized: Mid/Side
+
+        Ã©lastique 2.2.8 Soloist:
+            524288 - Monophonic
+            524289 - Monophonic [Mid/Side]
+            524290 - Speech
+            524291 - Speech [Mid/Side]
+
+        Ã©lastique 3.3.0 Pro:
+            589824 - Normal
+            589825 - Preserve Formants (Lowest Pitches)
+            589826 - Preserve Formants (Lower Pitches)
+            589827 - Preserve Formants (Low Pitches)
+            589828 - Preserve Formants (Most Pitches)
+            589829 - Preserve Formants (High Pitches)
+            589830 - Preserve Formants (Higher Pitches)
+            589831 - Preserve Formants (Highest Pitches)
+            589832 - Mid/Side
+            589833 - Mid/Side, Preserve Formants (Lowest Pitches)
+            589834 - Mid/Side, Preserve Formants (Lower Pitches)
+            589835 - Mid/Side, Preserve Formants (Low Pitches)
+            589836 - Mid/Side, Preserve Formants (Most Pitches)
+            589837 - Mid/Side, Preserve Formants (High Pitches)
+            589838 - Mid/Side, Preserve Formants (Higher Pitches)
+            589839 - Mid/Side, Preserve Formants (Highest Pitches)
+            589840 - Synchronized: Normal
+            589841 - Synchronized: Preserve Formants (Lowest Pitches)
+            589842 - Synchronized: Preserve Formants (Lower Pitches)
+            589843 - Synchronized: Preserve Formants (Low Pitches)
+            589844 - Synchronized: Preserve Formants (Most Pitches)
+            589845 - Synchronized: Preserve Formants (High Pitches)
+            589846 - Synchronized: Preserve Formants (Higher Pitches)
+            589847 - Synchronized: Preserve Formants (Highest Pitches)
+            589848 - Synchronized:  Mid/Side
+            589849 - Synchronized:  Mid/Side, Preserve Formants (Lowest Pitches)
+            589850 - Synchronized:  Mid/Side, Preserve Formants (Lower Pitches)
+            589851 - Synchronized:  Mid/Side, Preserve Formants (Low Pitches)
+            589852 - Synchronized:  Mid/Side, Preserve Formants (Most Pitches)
+            589853 - Synchronized:  Mid/Side, Preserve Formants (High Pitches)
+            589854 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
+            589855 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
+
+        Ã©lastique 3.3.0 Efficient:
+            655360 - Normal
+            655361 - Mid/Side
+            655362 - Synchronized: Normal
+            655363 - Synchronized: Mid/Side
+
+        Ã©lastique 3.3.0 Soloist:
+            720896 - Monophonic
+            720897 - Monophonic [Mid/Side]
+            720898 - Speech
+            720899 - Speech [Mid/Side]
+
+
+        Rubber Band Library - Default
+            851968 - nothing
+
+        Rubber Band Library - Preserve Formants
+            851969 - Preserve Formants
+
+        Rubber Band Library - Mid/Side
+            851970 - Mid/Side
+
+        Rubber Band Library - Preserve Formants, Mid/Side
+            851971 - Preserve Formants, Mid/Side
+
+        Rubber Band Library - Independent Phase
+            851972 - Independent Phase
+
+        Rubber Band Library - Preserve Formants, Independent Phase
+            851973 - Preserve Formants, Independent Phase
+
+        Rubber Band Library - Mid/Side, Independent Phase
+            851974 - Mid/Side, Independent Phase
+
+        Rubber Band Library - Preserve Formants, Mid/Side, Independent Phase
+            851975 - Preserve Formants, Mid/Side, Independent Phase
+
+        Rubber Band Library - Time Domain Smoothing
+            851976 - Time Domain Smoothing
+
+        Rubber Band Library - Preserve Formants, Time Domain Smoothing
+            851977 - Preserve Formants, Time Domain Smoothing
+
+        Rubber Band Library - Mid/Side, Time Domain Smoothing
+            851978 - Mid/Side, Time Domain Smoothing
+
+        Rubber Band Library - Preserve Formants, Mid/Side, Time Domain Smoothing
+            851979 - Preserve Formants, Mid/Side, Time Domain Smoothing
+
+        Rubber Band Library - Independent Phase, Time Domain Smoothing
+            851980 - Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Preserve Formants, Independent Phase, Time Domain Smoothing
+            851981 - Preserve Formants, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Mid/Side, Independent Phase, Time Domain Smoothing
+            851982 - Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+            851983 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed
+            851984 - nothing
+            851985 - Preserve Formants
+            851986 - Mid/Side
+            851987 - Preserve Formants, Mid/Side
+            851988 - Independent Phase
+            851989 - Preserve Formants, Independent Phase
+            851990 - Mid/Side, Independent Phase
+            851991 - Preserve Formants, Mid/Side, Independent Phase
+            851992 - Time Domain Smoothing
+            851993 - Preserve Formants, Time Domain Smoothing
+            851994 - Mid/Side, Time Domain Smoothing
+            851995 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            851996 - Independent Phase, Time Domain Smoothing
+            851997 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            851998 - Mid/Side, Independent Phase, Time Domain Smoothing
+            851999 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth
+            852000 - nothing
+            852001 - Preserve Formants
+            852002 - Mid/Side
+            852003 - Preserve Formants, Mid/Side
+            852004 - Independent Phase
+            852005 - Preserve Formants, Independent Phase
+            852006 - Mid/Side, Independent Phase
+            852007 - Preserve Formants, Mid/Side, Independent Phase
+            852008 - Time Domain Smoothing
+            852009 - Preserve Formants, Time Domain Smoothing
+            852010 - Mid/Side, Time Domain Smoothing
+            852011 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852012 - Independent Phase, Time Domain Smoothing
+            852013 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852014 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852015 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive
+            852016 - nothing
+            852017 - Preserve Formants
+            852018 - Mid/Side
+            852019 - Preserve Formants, Mid/Side
+            852020 - Independent Phase
+            852021 - Preserve Formants, Independent Phase
+            852022 - Mid/Side, Independent Phase
+            852023 - Preserve Formants, Mid/Side, Independent Phase
+            852024 - Time Domain Smoothing
+            852025 - Preserve Formants, Time Domain Smoothing
+            852026 - Mid/Side, Time Domain Smoothing
+            852027 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852028 - Independent Phase, Time Domain Smoothing
+            852029 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852030 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852031 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive
+            852032 - nothing
+            852033 - Preserve Formants
+            852034 - Mid/Side
+            852035 - Preserve Formants, Mid/Side
+            852036 - Independent Phase
+            852037 - Preserve Formants, Independent Phase
+            852038 - Mid/Side, Independent Phase
+            852039 - Preserve Formants, Mid/Side, Independent Phase
+            852040 - Time Domain Smoothing
+            852041 - Preserve Formants, Time Domain Smoothing
+            852042 - Mid/Side, Time Domain Smoothing
+            852043 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852044 - Independent Phase, Time Domain Smoothing
+            852045 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852046 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852047 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive
+            852048 - nothing
+            852049 - Preserve Formants
+            852050 - Mid/Side
+            852051 - Preserve Formants, Mid/Side
+            852052 - Independent Phase
+            852053 - Preserve Formants, Independent Phase
+            852054 - Mid/Side, Independent Phase
+            852055 - Preserve Formants, Mid/Side, Independent Phase
+            852056 - Time Domain Smoothing
+            852057 - Preserve Formants, Time Domain Smoothing
+            852058 - Mid/Side, Time Domain Smoothing
+            852059 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852060 - Independent Phase, Time Domain Smoothing
+            852061 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852062 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852063 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft
+            852064 - nothing
+            852065 - Preserve Formants
+            852066 - Mid/Side
+            852067 - Preserve Formants, Mid/Side
+            852068 - Independent Phase
+            852069 - Preserve Formants, Independent Phase
+            852070 - Mid/Side, Independent Phase
+            852071 - Preserve Formants, Mid/Side, Independent Phase
+            852072 - Time Domain Smoothing
+            852073 - Preserve Formants, Time Domain Smoothing
+            852074 - Mid/Side, Time Domain Smoothing
+            852075 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852076 - Independent Phase, Time Domain Smoothing
+            852077 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852078 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852079 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft
+            852080 - nothing
+            852081 - Preserve Formants
+            852082 - Mid/Side
+            852083 - Preserve Formants, Mid/Side
+            852084 - Independent Phase
+            852085 - Preserve Formants, Independent Phase
+            852086 - Mid/Side, Independent Phase
+            852087 - Preserve Formants, Mid/Side, Independent Phase
+            852088 - Time Domain Smoothing
+            852089 - Preserve Formants, Time Domain Smoothing
+            852090 - Mid/Side, Time Domain Smoothing
+            852091 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852092 - Independent Phase, Time Domain Smoothing
+            852093 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852094 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852095 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft
+            852096 - nothing
+            852097 - Preserve Formants
+            852098 - Mid/Side
+            852099 - Preserve Formants, Mid/Side
+            852100 - Independent Phase
+            852101 - Preserve Formants, Independent Phase
+            852102 - Mid/Side, Independent Phase
+            852103 - Preserve Formants, Mid/Side, Independent Phase
+            852104 - Time Domain Smoothing
+            852105 - Preserve Formants, Time Domain Smoothing
+            852106 - Mid/Side, Time Domain Smoothing
+            852107 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852108 - Independent Phase, Time Domain Smoothing
+            852109 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852110 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852111 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: HighQ
+            852112 - nothing
+            852113 - Preserve Formants
+            852114 - Mid/Side
+            852115 - Preserve Formants, Mid/Side
+            852116 - Independent Phase
+            852117 - Preserve Formants, Independent Phase
+            852118 - Mid/Side, Independent Phase
+            852119 - Preserve Formants, Mid/Side, Independent Phase
+            852120 - Time Domain Smoothing
+            852121 - Preserve Formants, Time Domain Smoothing
+            852122 - Mid/Side, Time Domain Smoothing
+            852123 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852124 - Independent Phase, Time Domain Smoothing
+            852125 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852126 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852127 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ
+            852128 - nothing
+            852129 - Preserve Formants
+            852130 - Mid/Side
+            852131 - Preserve Formants, Mid/Side
+            852132 - Independent Phase
+            852133 - Preserve Formants, Independent Phase
+            852134 - Mid/Side, Independent Phase
+            852135 - Preserve Formants, Mid/Side, Independent Phase
+            852136 - Time Domain Smoothing
+            852137 - Preserve Formants, Time Domain Smoothing
+            852138 - Mid/Side, Time Domain Smoothing
+            852139 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852140 - Independent Phase, Time Domain Smoothing
+            852141 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852142 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852143 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ
+            852144 - nothing
+            852145 - Preserve Formants
+            852146 - Mid/Side
+            852147 - Preserve Formants, Mid/Side
+            852148 - Independent Phase
+            852149 - Preserve Formants, Independent Phase
+            852150 - Mid/Side, Independent Phase
+            852151 - Preserve Formants, Mid/Side, Independent Phase
+            852152 - Time Domain Smoothing
+            852153 - Preserve Formants, Time Domain Smoothing
+            852154 - Mid/Side, Time Domain Smoothing
+            852155 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852156 - Independent Phase, Time Domain Smoothing
+            852157 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852158 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852159 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ
+            852160 - nothing
+            852161 - Preserve Formants
+            852162 - Mid/Side
+            852163 - Preserve Formants, Mid/Side
+            852164 - Independent Phase
+            852165 - Preserve Formants, Independent Phase
+            852166 - Mid/Side, Independent Phase
+            852167 - Preserve Formants, Mid/Side, Independent Phase
+            852168 - Time Domain Smoothing
+            852169 - Preserve Formants, Time Domain Smoothing
+            852170 - Mid/Side, Time Domain Smoothing
+            852171 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852172 - Independent Phase, Time Domain Smoothing
+            852173 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852174 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852175 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ
+            852176 - nothing
+            852177 - Preserve Formants
+            852178 - Mid/Side
+            852179 - Preserve Formants, Mid/Side
+            852180 - Independent Phase
+            852181 - Preserve Formants, Independent Phase
+            852182 - Mid/Side, Independent Phase
+            852183 - Preserve Formants, Mid/Side, Independent Phase
+            852184 - Time Domain Smoothing
+            852185 - Preserve Formants, Time Domain Smoothing
+            852186 - Mid/Side, Time Domain Smoothing
+            852187 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852188 - Independent Phase, Time Domain Smoothing
+            852189 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852190 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852191 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ
+            852192 - nothing
+            852193 - Preserve Formants
+            852194 - Mid/Side
+            852195 - Preserve Formants, Mid/Side
+            852196 - Independent Phase
+            852197 - Preserve Formants, Independent Phase
+            852198 - Mid/Side, Independent Phase
+            852199 - Preserve Formants, Mid/Side, Independent Phase
+            852200 - Time Domain Smoothing
+            852201 - Preserve Formants, Time Domain Smoothing
+            852202 - Mid/Side, Time Domain Smoothing
+            852203 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852204 - Independent Phase, Time Domain Smoothing
+            852205 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852206 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852207 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: HighQ
+            852208 - nothing
+            852209 - Preserve Formants
+            852210 - Mid/Side
+            852211 - Preserve Formants, Mid/Side
+            852212 - Independent Phase
+            852213 - Preserve Formants, Independent Phase
+            852214 - Mid/Side, Independent Phase
+            852215 - Preserve Formants, Mid/Side, Independent Phase
+            852216 - Time Domain Smoothing
+            852217 - Preserve Formants, Time Domain Smoothing
+            852218 - Mid/Side, Time Domain Smoothing
+            852219 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852220 - Independent Phase, Time Domain Smoothing
+            852221 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852222 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852223 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ
+            852224 - nothing
+            852225 - Preserve Formants
+            852226 - Mid/Side
+            852227 - Preserve Formants, Mid/Side
+            852228 - Independent Phase
+            852229 - Preserve Formants, Independent Phase
+            852230 - Mid/Side, Independent Phase
+            852231 - Preserve Formants, Mid/Side, Independent Phase
+            852232 - Time Domain Smoothing
+            852233 - Preserve Formants, Time Domain Smoothing
+            852234 - Mid/Side, Time Domain Smoothing
+            852235 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852236 - Independent Phase, Time Domain Smoothing
+            852237 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852238 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852239 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ
+            852240 - nothing
+            852241 - Preserve Formants
+            852242 - Mid/Side
+            852243 - Preserve Formants, Mid/Side
+            852244 - Independent Phase
+            852245 - Preserve Formants, Independent Phase
+            852246 - Mid/Side, Independent Phase
+            852247 - Preserve Formants, Mid/Side, Independent Phase
+            852248 - Time Domain Smoothing
+            852249 - Preserve Formants, Time Domain Smoothing
+            852250 - Mid/Side, Time Domain Smoothing
+            852251 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852252 - Independent Phase, Time Domain Smoothing
+            852253 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852254 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852255 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: Consistent
+            852256 - nothing
+            852257 - Preserve Formants
+            852258 - Mid/Side
+            852259 - Preserve Formants, Mid/Side
+            852260 - Independent Phase
+            852261 - Preserve Formants, Independent Phase
+            852262 - Mid/Side, Independent Phase
+            852263 - Preserve Formants, Mid/Side, Independent Phase
+            852264 - Time Domain Smoothing
+            852265 - Preserve Formants, Time Domain Smoothing
+            852266 - Mid/Side, Time Domain Smoothing
+            852267 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852268 - Independent Phase, Time Domain Smoothing
+            852269 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852270 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852271 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent
+            852272 - nothing
+            852273 - Preserve Formants
+            852274 - Mid/Side
+            852275 - Preserve Formants, Mid/Side
+            852276 - Independent Phase
+            852277 - Preserve Formants, Independent Phase
+            852278 - Mid/Side, Independent Phase
+            852279 - Preserve Formants, Mid/Side, Independent Phase
+            852280 - Time Domain Smoothing
+            852281 - Preserve Formants, Time Domain Smoothing
+            852282 - Mid/Side, Time Domain Smoothing
+            852283 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852284 - Independent Phase, Time Domain Smoothing
+            852285 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852286 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852287 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent
+            852288 - nothing
+            852289 - Preserve Formants
+            852290 - Mid/Side
+            852291 - Preserve Formants, Mid/Side
+            852292 - Independent Phase
+            852293 - Preserve Formants, Independent Phase
+            852294 - Mid/Side, Independent Phase
+            852295 - Preserve Formants, Mid/Side, Independent Phase
+            852296 - Time Domain Smoothing
+            852297 - Preserve Formants, Time Domain Smoothing
+            852298 - Mid/Side, Time Domain Smoothing
+            852299 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852300 - Independent Phase, Time Domain Smoothing
+            852301 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852302 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852303 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent
+            852304 - nothing
+            852305 - Preserve Formants
+            852306 - Mid/Side
+            852307 - Preserve Formants, Mid/Side
+            852308 - Independent Phase
+            852309 - Preserve Formants, Independent Phase
+            852310 - Mid/Side, Independent Phase
+            852311 - Preserve Formants, Mid/Side, Independent Phase
+            852312 - Time Domain Smoothing
+            852313 - Preserve Formants, Time Domain Smoothing
+            852314 - Mid/Side, Time Domain Smoothing
+            852315 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852316 - Independent Phase, Time Domain Smoothing
+            852317 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852318 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852319 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent
+            852320 - nothing
+            852321 - Preserve Formants
+            852322 - Mid/Side
+            852323 - Preserve Formants, Mid/Side
+            852324 - Independent Phase
+            852325 - Preserve Formants, Independent Phase
+            852326 - Mid/Side, Independent Phase
+            852327 - Preserve Formants, Mid/Side, Independent Phase
+            852328 - Time Domain Smoothing
+            852329 - Preserve Formants, Time Domain Smoothing
+            852330 - Mid/Side, Time Domain Smoothing
+            852331 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852332 - Independent Phase, Time Domain Smoothing
+            852333 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852334 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852335 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent
+            852336 - nothing
+            852337 - Preserve Formants
+            852338 - Mid/Side
+            852339 - Preserve Formants, Mid/Side
+            852340 - Independent Phase
+            852341 - Preserve Formants, Independent Phase
+            852342 - Mid/Side, Independent Phase
+            852343 - Preserve Formants, Mid/Side, Independent Phase
+            852344 - Time Domain Smoothing
+            852345 - Preserve Formants, Time Domain Smoothing
+            852346 - Mid/Side, Time Domain Smoothing
+            852347 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852348 - Independent Phase, Time Domain Smoothing
+            852349 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852350 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852351 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: Consistent
+            852352 - nothing
+            852353 - Preserve Formants
+            852354 - Mid/Side
+            852355 - Preserve Formants, Mid/Side
+            852356 - Independent Phase
+            852357 - Preserve Formants, Independent Phase
+            852358 - Mid/Side, Independent Phase
+            852359 - Preserve Formants, Mid/Side, Independent Phase
+            852360 - Time Domain Smoothing
+            852361 - Preserve Formants, Time Domain Smoothing
+            852362 - Mid/Side, Time Domain Smoothing
+            852363 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852364 - Independent Phase, Time Domain Smoothing
+            852365 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852366 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852367 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent
+            852368 - nothing
+            852369 - Preserve Formants
+            852370 - Mid/Side
+            852371 - Preserve Formants, Mid/Side
+            852372 - Independent Phase
+            852373 - Preserve Formants, Independent Phase
+            852374 - Mid/Side, Independent Phase
+            852375 - Preserve Formants, Mid/Side, Independent Phase
+            852376 - Time Domain Smoothing
+            852377 - Preserve Formants, Time Domain Smoothing
+            852378 - Mid/Side, Time Domain Smoothing
+            852379 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852380 - Independent Phase, Time Domain Smoothing
+            852381 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852382 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852383 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent
+            852384 - nothing
+            852385 - Preserve Formants
+            852386 - Mid/Side
+            852387 - Preserve Formants, Mid/Side
+            852388 - Independent Phase
+            852389 - Preserve Formants, Independent Phase
+            852390 - Mid/Side, Independent Phase
+            852391 - Preserve Formants, Mid/Side, Independent Phase
+            852392 - Time Domain Smoothing
+            852393 - Preserve Formants, Time Domain Smoothing
+            852394 - Mid/Side, Time Domain Smoothing
+            852395 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852396 - Independent Phase, Time Domain Smoothing
+            852397 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852398 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852399 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Window: Short
+            852400 - nothing
+            852401 - Preserve Formants
+            852402 - Mid/Side
+            852403 - Preserve Formants, Mid/Side
+            852404 - Independent Phase
+            852405 - Preserve Formants, Independent Phase
+            852406 - Mid/Side, Independent Phase
+            852407 - Preserve Formants, Mid/Side, Independent Phase
+            852408 - Time Domain Smoothing
+            852409 - Preserve Formants, Time Domain Smoothing
+            852410 - Mid/Side, Time Domain Smoothing
+            852411 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852412 - Independent Phase, Time Domain Smoothing
+            852413 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852414 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852415 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Window: Short
+            852416 - nothing
+            852417 - Preserve Formants
+            852418 - Mid/Side
+            852419 - Preserve Formants, Mid/Side
+            852420 - Independent Phase
+            852421 - Preserve Formants, Independent Phase
+            852422 - Mid/Side, Independent Phase
+            852423 - Preserve Formants, Mid/Side, Independent Phase
+            852424 - Time Domain Smoothing
+            852425 - Preserve Formants, Time Domain Smoothing
+            852426 - Mid/Side, Time Domain Smoothing
+            852427 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852428 - Independent Phase, Time Domain Smoothing
+            852429 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852430 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852431 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Window: Short
+            852432 - nothing
+            852433 - Preserve Formants
+            852434 - Mid/Side
+            852435 - Preserve Formants, Mid/Side
+            852436 - Independent Phase
+            852437 - Preserve Formants, Independent Phase
+            852438 - Mid/Side, Independent Phase
+            852439 - Preserve Formants, Mid/Side, Independent Phase
+            852440 - Time Domain Smoothing
+            852441 - Preserve Formants, Time Domain Smoothing
+            852442 - Mid/Side, Time Domain Smoothing
+            852443 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852444 - Independent Phase, Time Domain Smoothing
+            852445 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852446 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852447 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Window: Short
+            852448 - nothing
+            852449 - Preserve Formants
+            852450 - Mid/Side
+            852451 - Preserve Formants, Mid/Side
+            852452 - Independent Phase
+            852453 - Preserve Formants, Independent Phase
+            852454 - Mid/Side, Independent Phase
+            852455 - Preserve Formants, Mid/Side, Independent Phase
+            852456 - Time Domain Smoothing
+            852457 - Preserve Formants, Time Domain Smoothing
+            852458 - Mid/Side, Time Domain Smoothing
+            852459 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852460 - Independent Phase, Time Domain Smoothing
+            852461 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852462 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852463 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Window: Short
+            852464 - nothing
+            852465 - Preserve Formants
+            852466 - Mid/Side
+            852467 - Preserve Formants, Mid/Side
+            852468 - Independent Phase
+            852469 - Preserve Formants, Independent Phase
+            852470 - Mid/Side, Independent Phase
+            852471 - Preserve Formants, Mid/Side, Independent Phase
+            852472 - Time Domain Smoothing
+            852473 - Preserve Formants, Time Domain Smoothing
+            852474 - Mid/Side, Time Domain Smoothing
+            852475 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852476 - Independent Phase, Time Domain Smoothing
+            852477 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852478 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852479 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Window: Short
+            852480 - nothing
+            852481 - Preserve Formants
+            852482 - Mid/Side
+            852483 - Preserve Formants, Mid/Side
+            852484 - Independent Phase
+            852485 - Preserve Formants, Independent Phase
+            852486 - Mid/Side, Independent Phase
+            852487 - Preserve Formants, Mid/Side, Independent Phase
+            852488 - Time Domain Smoothing
+            852489 - Preserve Formants, Time Domain Smoothing
+            852490 - Mid/Side, Time Domain Smoothing
+            852491 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852492 - Independent Phase, Time Domain Smoothing
+            852493 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852494 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852495 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Window: Short
+            852496 - nothing
+            852497 - Preserve Formants
+            852498 - Mid/Side
+            852499 - Preserve Formants, Mid/Side
+            852500 - Independent Phase
+            852501 - Preserve Formants, Independent Phase
+            852502 - Mid/Side, Independent Phase
+            852503 - Preserve Formants, Mid/Side, Independent Phase
+            852504 - Time Domain Smoothing
+            852505 - Preserve Formants, Time Domain Smoothing
+            852506 - Mid/Side, Time Domain Smoothing
+            852507 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852508 - Independent Phase, Time Domain Smoothing
+            852509 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852510 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852511 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Window: Short
+            852512 - nothing
+            852513 - Preserve Formants
+            852514 - Mid/Side
+            852515 - Preserve Formants, Mid/Side
+            852516 - Independent Phase
+            852517 - Preserve Formants, Independent Phase
+            852518 - Mid/Side, Independent Phase
+            852519 - Preserve Formants, Mid/Side, Independent Phase
+            852520 - Time Domain Smoothing
+            852521 - Preserve Formants, Time Domain Smoothing
+            852522 - Mid/Side, Time Domain Smoothing
+            852523 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852524 - Independent Phase, Time Domain Smoothing
+            852525 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852526 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852527 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Window: Short
+            852528 - nothing
+            852529 - Preserve Formants
+            852530 - Mid/Side
+            852531 - Preserve Formants, Mid/Side
+            852532 - Independent Phase
+            852533 - Preserve Formants, Independent Phase
+            852534 - Mid/Side, Independent Phase
+            852535 - Preserve Formants, Mid/Side, Independent Phase
+            852536 - Time Domain Smoothing
+            852537 - Preserve Formants, Time Domain Smoothing
+            852538 - Mid/Side, Time Domain Smoothing
+            852539 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852540 - Independent Phase, Time Domain Smoothing
+            852541 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852542 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852543 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: HighQ, Window: Short
+            852544 - nothing
+            852545 - Preserve Formants
+            852546 - Mid/Side
+            852547 - Preserve Formants, Mid/Side
+            852548 - Independent Phase
+            852549 - Preserve Formants, Independent Phase
+            852550 - Mid/Side, Independent Phase
+            852551 - Preserve Formants, Mid/Side, Independent Phase
+            852552 - Time Domain Smoothing
+            852553 - Preserve Formants, Time Domain Smoothing
+            852554 - Mid/Side, Time Domain Smoothing
+            852555 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852556 - Independent Phase, Time Domain Smoothing
+            852557 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852558 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852559 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ, Window: Short
+            852560 - nothing
+            852561 - Preserve Formants
+            852562 - Mid/Side
+            852563 - Preserve Formants, Mid/Side
+            852564 - Independent Phase
+            852565 - Preserve Formants, Independent Phase
+            852566 - Mid/Side, Independent Phase
+            852567 - Preserve Formants, Mid/Side, Independent Phase
+            852568 - Time Domain Smoothing
+            852569 - Preserve Formants, Time Domain Smoothing
+            852570 - Mid/Side, Time Domain Smoothing
+            852571 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852572 - Independent Phase, Time Domain Smoothing
+            852573 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852574 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852575 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ, Window: Short
+            852576 - nothing
+            852577 - Preserve Formants
+            852578 - Mid/Side
+            852579 - Preserve Formants, Mid/Side
+            852580 - Independent Phase
+            852581 - Preserve Formants, Independent Phase
+            852582 - Mid/Side, Independent Phase
+            852583 - Preserve Formants, Mid/Side, Independent Phase
+            852584 - Time Domain Smoothing
+            852585 - Preserve Formants, Time Domain Smoothing
+            852586 - Mid/Side, Time Domain Smoothing
+            852587 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852588 - Independent Phase, Time Domain Smoothing
+            852589 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852590 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852591 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ, Window: Short
+            852592 - nothing
+            852593 - Preserve Formants
+            852594 - Mid/Side
+            852595 - Preserve Formants, Mid/Side
+            852596 - Independent Phase
+            852597 - Preserve Formants, Independent Phase
+            852598 - Mid/Side, Independent Phase
+            852599 - Preserve Formants, Mid/Side, Independent Phase
+            852600 - Time Domain Smoothing
+            852601 - Preserve Formants, Time Domain Smoothing
+            852602 - Mid/Side, Time Domain Smoothing
+            852603 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852604 - Independent Phase, Time Domain Smoothing
+            852605 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852606 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852607 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Short
+            852608 - nothing
+            852609 - Preserve Formants
+            852610 - Mid/Side
+            852611 - Preserve Formants, Mid/Side
+            852612 - Independent Phase
+            852613 - Preserve Formants, Independent Phase
+            852614 - Mid/Side, Independent Phase
+            852615 - Preserve Formants, Mid/Side, Independent Phase
+            852616 - Time Domain Smoothing
+            852617 - Preserve Formants, Time Domain Smoothing
+            852618 - Mid/Side, Time Domain Smoothing
+            852619 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852620 - Independent Phase, Time Domain Smoothing
+            852621 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852622 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852623 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Short
+            852624 - nothing
+            852625 - Preserve Formants
+            852626 - Mid/Side
+            852627 - Preserve Formants, Mid/Side
+            852628 - Independent Phase
+            852629 - Preserve Formants, Independent Phase
+            852630 - Mid/Side, Independent Phase
+            852631 - Preserve Formants, Mid/Side, Independent Phase
+            852632 - Time Domain Smoothing
+            852633 - Preserve Formants, Time Domain Smoothing
+            852634 - Mid/Side, Time Domain Smoothing
+            852635 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852636 - Independent Phase, Time Domain Smoothing
+            852637 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852638 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852639 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: HighQ, Window: Short
+            852640 - nothing
+            852641 - Preserve Formants
+            852642 - Mid/Side
+            852643 - Preserve Formants, Mid/Side
+            852644 - Independent Phase
+            852645 - Preserve Formants, Independent Phase
+            852646 - Mid/Side, Independent Phase
+            852647 - Preserve Formants, Mid/Side, Independent Phase
+            852648 - Time Domain Smoothing
+            852649 - Preserve Formants, Time Domain Smoothing
+            852650 - Mid/Side, Time Domain Smoothing
+            852651 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852652 - Independent Phase, Time Domain Smoothing
+            852653 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852654 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852655 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Short
+            852656 - nothing
+            852657 - Preserve Formants
+            852658 - Mid/Side
+            852659 - Preserve Formants, Mid/Side
+            852660 - Independent Phase
+            852661 - Preserve Formants, Independent Phase
+            852662 - Mid/Side, Independent Phase
+            852663 - Preserve Formants, Mid/Side, Independent Phase
+            852664 - Time Domain Smoothing
+            852665 - Preserve Formants, Time Domain Smoothing
+            852666 - Mid/Side, Time Domain Smoothing
+            852667 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852668 - Independent Phase, Time Domain Smoothing
+            852669 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852670 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852671 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Short
+            852672 - nothing
+            852673 - Preserve Formants
+            852674 - Mid/Side
+            852675 - Preserve Formants, Mid/Side
+            852676 - Independent Phase
+            852677 - Preserve Formants, Independent Phase
+            852678 - Mid/Side, Independent Phase
+            852679 - Preserve Formants, Mid/Side, Independent Phase
+            852680 - Time Domain Smoothing
+            852681 - Preserve Formants, Time Domain Smoothing
+            852682 - Mid/Side, Time Domain Smoothing
+            852683 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852684 - Independent Phase, Time Domain Smoothing
+            852685 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852686 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852687 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: Consistent, Window: Short
+            852688 - nothing
+            852689 - Preserve Formants
+            852690 - Mid/Side
+            852691 - Preserve Formants, Mid/Side
+            852692 - Independent Phase
+            852693 - Preserve Formants, Independent Phase
+            852694 - Mid/Side, Independent Phase
+            852695 - Preserve Formants, Mid/Side, Independent Phase
+            852696 - Time Domain Smoothing
+            852697 - Preserve Formants, Time Domain Smoothing
+            852698 - Mid/Side, Time Domain Smoothing
+            852699 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852700 - Independent Phase, Time Domain Smoothing
+            852701 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852702 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852703 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent, Window: Short
+            852704 - nothing
+            852705 - Preserve Formants
+            852706 - Mid/Side
+            852707 - Preserve Formants, Mid/Side
+            852708 - Independent Phase
+            852709 - Preserve Formants, Independent Phase
+            852710 - Mid/Side, Independent Phase
+            852711 - Preserve Formants, Mid/Side, Independent Phase
+            852712 - Time Domain Smoothing
+            852713 - Preserve Formants, Time Domain Smoothing
+            852714 - Mid/Side, Time Domain Smoothing
+            852715 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852716 - Independent Phase, Time Domain Smoothing
+            852717 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852718 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852719 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent, Window: Short
+            852720 - nothing
+            852721 - Preserve Formants
+            852722 - Mid/Side
+            852723 - Preserve Formants, Mid/Side
+            852724 - Independent Phase
+            852725 - Preserve Formants, Independent Phase
+            852726 - Mid/Side, Independent Phase
+            852727 - Preserve Formants, Mid/Side, Independent Phase
+            852728 - Time Domain Smoothing
+            852729 - Preserve Formants, Time Domain Smoothing
+            852730 - Mid/Side, Time Domain Smoothing
+            852731 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852732 - Independent Phase, Time Domain Smoothing
+            852733 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852734 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852735 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent, Window: Short
+            852736 - nothing
+            852737 - Preserve Formants
+            852738 - Mid/Side
+            852739 - Preserve Formants, Mid/Side
+            852740 - Independent Phase
+            852741 - Preserve Formants, Independent Phase
+            852742 - Mid/Side, Independent Phase
+            852743 - Preserve Formants, Mid/Side, Independent Phase
+            852744 - Time Domain Smoothing
+            852745 - Preserve Formants, Time Domain Smoothing
+            852746 - Mid/Side, Time Domain Smoothing
+            852747 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852748 - Independent Phase, Time Domain Smoothing
+            852749 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852750 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852751 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Short
+            852752 - nothing
+            852753 - Preserve Formants
+            852754 - Mid/Side
+            852755 - Preserve Formants, Mid/Side
+            852756 - Independent Phase
+            852757 - Preserve Formants, Independent Phase
+            852758 - Mid/Side, Independent Phase
+            852759 - Preserve Formants, Mid/Side, Independent Phase
+            852760 - Time Domain Smoothing
+            852761 - Preserve Formants, Time Domain Smoothing
+            852762 - Mid/Side, Time Domain Smoothing
+            852763 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852764 - Independent Phase, Time Domain Smoothing
+            852765 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852766 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852767 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Short
+            852768 - nothing
+            852769 - Preserve Formants
+            852770 - Mid/Side
+            852771 - Preserve Formants, Mid/Side
+            852772 - Independent Phase
+            852773 - Preserve Formants, Independent Phase
+            852774 - Mid/Side, Independent Phase
+            852775 - Preserve Formants, Mid/Side, Independent Phase
+            852776 - Time Domain Smoothing
+            852777 - Preserve Formants, Time Domain Smoothing
+            852778 - Mid/Side, Time Domain Smoothing
+            852779 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852780 - Independent Phase, Time Domain Smoothing
+            852781 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852782 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852783 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: Consistent, Window: Short
+            852784 - nothing
+            852785 - Preserve Formants
+            852786 - Mid/Side
+            852787 - Preserve Formants, Mid/Side
+            852788 - Independent Phase
+            852789 - Preserve Formants, Independent Phase
+            852790 - Mid/Side, Independent Phase
+            852791 - Preserve Formants, Mid/Side, Independent Phase
+            852792 - Time Domain Smoothing
+            852793 - Preserve Formants, Time Domain Smoothing
+            852794 - Mid/Side, Time Domain Smoothing
+            852795 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852796 - Independent Phase, Time Domain Smoothing
+            852797 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852798 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852799 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Short
+            852800 - nothing
+            852801 - Preserve Formants
+            852802 - Mid/Side
+            852803 - Preserve Formants, Mid/Side
+            852804 - Independent Phase
+            852805 - Preserve Formants, Independent Phase
+            852806 - Mid/Side, Independent Phase
+            852807 - Preserve Formants, Mid/Side, Independent Phase
+            852808 - Time Domain Smoothing
+            852809 - Preserve Formants, Time Domain Smoothing
+            852810 - Mid/Side, Time Domain Smoothing
+            852811 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852812 - Independent Phase, Time Domain Smoothing
+            852813 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852814 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852815 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Short
+            852816 - nothing
+            852817 - Preserve Formants
+            852818 - Mid/Side
+            852819 - Preserve Formants, Mid/Side
+            852820 - Independent Phase
+            852821 - Preserve Formants, Independent Phase
+            852822 - Mid/Side, Independent Phase
+            852823 - Preserve Formants, Mid/Side, Independent Phase
+            852824 - Time Domain Smoothing
+            852825 - Preserve Formants, Time Domain Smoothing
+            852826 - Mid/Side, Time Domain Smoothing
+            852827 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852828 - Independent Phase, Time Domain Smoothing
+            852829 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852830 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852831 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Window: Long
+            852832 - nothing
+            852833 - Preserve Formants
+            852834 - Mid/Side
+            852835 - Preserve Formants, Mid/Side
+            852836 - Independent Phase
+            852837 - Preserve Formants, Independent Phase
+            852838 - Mid/Side, Independent Phase
+            852839 - Preserve Formants, Mid/Side, Independent Phase
+            852840 - Time Domain Smoothing
+            852841 - Preserve Formants, Time Domain Smoothing
+            852842 - Mid/Side, Time Domain Smoothing
+            852843 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852844 - Independent Phase, Time Domain Smoothing
+            852845 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852846 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852847 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Window: Long
+            852848 - nothing
+            852849 - Preserve Formants
+            852850 - Mid/Side
+            852851 - Preserve Formants, Mid/Side
+            852852 - Independent Phase
+            852853 - Preserve Formants, Independent Phase
+            852854 - Mid/Side, Independent Phase
+            852855 - Preserve Formants, Mid/Side, Independent Phase
+            852856 - Time Domain Smoothing
+            852857 - Preserve Formants, Time Domain Smoothing
+            852858 - Mid/Side, Time Domain Smoothing
+            852859 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852860 - Independent Phase, Time Domain Smoothing
+            852861 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852862 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852863 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Window: Long
+            852864 - nothing
+            852865 - Preserve Formants
+            852866 - Mid/Side
+            852867 - Preserve Formants, Mid/Side
+            852868 - Independent Phase
+            852869 - Preserve Formants, Independent Phase
+            852870 - Mid/Side, Independent Phase
+            852871 - Preserve Formants, Mid/Side, Independent Phase
+            852872 - Time Domain Smoothing
+            852873 - Preserve Formants, Time Domain Smoothing
+            852874 - Mid/Side, Time Domain Smoothing
+            852875 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852876 - Independent Phase, Time Domain Smoothing
+            852877 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852878 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852879 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Window: Long
+            852880 - nothing
+            852881 - Preserve Formants
+            852882 - Mid/Side
+            852883 - Preserve Formants, Mid/Side
+            852884 - Independent Phase
+            852885 - Preserve Formants, Independent Phase
+            852886 - Mid/Side, Independent Phase
+            852887 - Preserve Formants, Mid/Side, Independent Phase
+            852888 - Time Domain Smoothing
+            852889 - Preserve Formants, Time Domain Smoothing
+            852890 - Mid/Side, Time Domain Smoothing
+            852891 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852892 - Independent Phase, Time Domain Smoothing
+            852893 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852894 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852895 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Window: Long
+            852896 - nothing
+            852897 - Preserve Formants
+            852898 - Mid/Side
+            852899 - Preserve Formants, Mid/Side
+            852900 - Independent Phase
+            852901 - Preserve Formants, Independent Phase
+            852902 - Mid/Side, Independent Phase
+            852903 - Preserve Formants, Mid/Side, Independent Phase
+            852904 - Time Domain Smoothing
+            852905 - Preserve Formants, Time Domain Smoothing
+            852906 - Mid/Side, Time Domain Smoothing
+            852907 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852908 - Independent Phase, Time Domain Smoothing
+            852909 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852910 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852911 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Window: Long
+            852912 - nothing
+            852913 - Preserve Formants
+            852914 - Mid/Side
+            852915 - Preserve Formants, Mid/Side
+            852916 - Independent Phase
+            852917 - Preserve Formants, Independent Phase
+            852918 - Mid/Side, Independent Phase
+            852919 - Preserve Formants, Mid/Side, Independent Phase
+            852920 - Time Domain Smoothing
+            852921 - Preserve Formants, Time Domain Smoothing
+            852922 - Mid/Side, Time Domain Smoothing
+            852923 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852924 - Independent Phase, Time Domain Smoothing
+            852925 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852926 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852927 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Window: Long
+            852928 - nothing
+            852929 - Preserve Formants
+            852930 - Mid/Side
+            852931 - Preserve Formants, Mid/Side
+            852932 - Independent Phase
+            852933 - Preserve Formants, Independent Phase
+            852934 - Mid/Side, Independent Phase
+            852935 - Preserve Formants, Mid/Side, Independent Phase
+            852936 - Time Domain Smoothing
+            852937 - Preserve Formants, Time Domain Smoothing
+            852938 - Mid/Side, Time Domain Smoothing
+            852939 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852940 - Independent Phase, Time Domain Smoothing
+            852941 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852942 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852943 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Window: Long
+            852944 - nothing
+            852945 - Preserve Formants
+            852946 - Mid/Side
+            852947 - Preserve Formants, Mid/Side
+            852948 - Independent Phase
+            852949 - Preserve Formants, Independent Phase
+            852950 - Mid/Side, Independent Phase
+            852951 - Preserve Formants, Mid/Side, Independent Phase
+            852952 - Time Domain Smoothing
+            852953 - Preserve Formants, Time Domain Smoothing
+            852954 - Mid/Side, Time Domain Smoothing
+            852955 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852956 - Independent Phase, Time Domain Smoothing
+            852957 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852958 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852959 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Window: Long
+            852960 - nothing
+            852961 - Preserve Formants
+            852962 - Mid/Side
+            852963 - Preserve Formants, Mid/Side
+            852964 - Independent Phase
+            852965 - Preserve Formants, Independent Phase
+            852966 - Mid/Side, Independent Phase
+            852967 - Preserve Formants, Mid/Side, Independent Phase
+            852968 - Time Domain Smoothing
+            852969 - Preserve Formants, Time Domain Smoothing
+            852970 - Mid/Side, Time Domain Smoothing
+            852971 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852972 - Independent Phase, Time Domain Smoothing
+            852973 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852974 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852975 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: HighQ, Window: Long
+            852976 - nothing
+            852977 - Preserve Formants
+            852978 - Mid/Side
+            852979 - Preserve Formants, Mid/Side
+            852980 - Independent Phase
+            852981 - Preserve Formants, Independent Phase
+            852982 - Mid/Side, Independent Phase
+            852983 - Preserve Formants, Mid/Side, Independent Phase
+            852984 - Time Domain Smoothing
+            852985 - Preserve Formants, Time Domain Smoothing
+            852986 - Mid/Side, Time Domain Smoothing
+            852987 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            852988 - Independent Phase, Time Domain Smoothing
+            852989 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            852990 - Mid/Side, Independent Phase, Time Domain Smoothing
+            852991 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ, Window: Long
+            852992 - nothing
+            852993 - Preserve Formants
+            852994 - Mid/Side
+            852995 - Preserve Formants, Mid/Side
+            852996 - Independent Phase
+            852997 - Preserve Formants, Independent Phase
+            852998 - Mid/Side, Independent Phase
+            852999 - Preserve Formants, Mid/Side, Independent Phase
+            853000 - Time Domain Smoothing
+            853001 - Preserve Formants, Time Domain Smoothing
+            853002 - Mid/Side, Time Domain Smoothing
+            853003 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853004 - Independent Phase, Time Domain Smoothing
+            853005 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853006 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853007 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ, Window: Long
+            853008 - nothing
+            853009 - Preserve Formants
+            853010 - Mid/Side
+            853011 - Preserve Formants, Mid/Side
+            853012 - Independent Phase
+            853013 - Preserve Formants, Independent Phase
+            853014 - Mid/Side, Independent Phase
+            853015 - Preserve Formants, Mid/Side, Independent Phase
+            853016 - Time Domain Smoothing
+            853017 - Preserve Formants, Time Domain Smoothing
+            853018 - Mid/Side, Time Domain Smoothing
+            853019 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853020 - Independent Phase, Time Domain Smoothing
+            853021 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853022 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853023 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ, Window: Long
+            853024 - nothing
+            853025 - Preserve Formants
+            853026 - Mid/Side
+            853027 - Preserve Formants, Mid/Side
+            853028 - Independent Phase
+            853029 - Preserve Formants, Independent Phase
+            853030 - Mid/Side, Independent Phase
+            853031 - Preserve Formants, Mid/Side, Independent Phase
+            853032 - Time Domain Smoothing
+            853033 - Preserve Formants, Time Domain Smoothing
+            853034 - Mid/Side, Time Domain Smoothing
+            853035 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853036 - Independent Phase, Time Domain Smoothing
+            853037 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853038 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853039 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Long
+            853040 - nothing
+            853041 - Preserve Formants
+            853042 - Mid/Side
+            853043 - Preserve Formants, Mid/Side
+            853044 - Independent Phase
+            853045 - Preserve Formants, Independent Phase
+            853046 - Mid/Side, Independent Phase
+            853047 - Preserve Formants, Mid/Side, Independent Phase
+            853048 - Time Domain Smoothing
+            853049 - Preserve Formants, Time Domain Smoothing
+            853050 - Mid/Side, Time Domain Smoothing
+            853051 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853052 - Independent Phase, Time Domain Smoothing
+            853053 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853054 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853055 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Long
+            853056 - nothing
+            853057 - Preserve Formants
+            853058 - Mid/Side
+            853059 - Preserve Formants, Mid/Side
+            853060 - Independent Phase
+            853061 - Preserve Formants, Independent Phase
+            853062 - Mid/Side, Independent Phase
+            853063 - Preserve Formants, Mid/Side, Independent Phase
+            853064 - Time Domain Smoothing
+            853065 - Preserve Formants, Time Domain Smoothing
+            853066 - Mid/Side, Time Domain Smoothing
+            853067 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853068 - Independent Phase, Time Domain Smoothing
+            853069 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853070 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853071 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: HighQ, Window: Long
+            853072 - nothing
+            853073 - Preserve Formants
+            853074 - Mid/Side
+            853075 - Preserve Formants, Mid/Side
+            853076 - Independent Phase
+            853077 - Preserve Formants, Independent Phase
+            853078 - Mid/Side, Independent Phase
+            853079 - Preserve Formants, Mid/Side, Independent Phase
+            853080 - Time Domain Smoothing
+            853081 - Preserve Formants, Time Domain Smoothing
+            853082 - Mid/Side, Time Domain Smoothing
+            853083 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853084 - Independent Phase, Time Domain Smoothing
+            853085 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853086 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853087 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Long
+            853088 - nothing
+            853089 - Preserve Formants
+            853090 - Mid/Side
+            853091 - Preserve Formants, Mid/Side
+            853092 - Independent Phase
+            853093 - Preserve Formants, Independent Phase
+            853094 - Mid/Side, Independent Phase
+            853095 - Preserve Formants, Mid/Side, Independent Phase
+            853096 - Time Domain Smoothing
+            853097 - Preserve Formants, Time Domain Smoothing
+            853098 - Mid/Side, Time Domain Smoothing
+            853099 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853100 - Independent Phase, Time Domain Smoothing
+            853101 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853102 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853103 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Long
+            853104 - nothing
+            853105 - Preserve Formants
+            853106 - Mid/Side
+            853107 - Preserve Formants, Mid/Side
+            853108 - Independent Phase
+            853109 - Preserve Formants, Independent Phase
+            853110 - Mid/Side, Independent Phase
+            853111 - Preserve Formants, Mid/Side, Independent Phase
+            853112 - Time Domain Smoothing
+            853113 - Preserve Formants, Time Domain Smoothing
+            853114 - Mid/Side, Time Domain Smoothing
+            853115 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853116 - Independent Phase, Time Domain Smoothing
+            853117 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853118 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853119 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Pitch Mode: Consistent, Window: Long
+            853120 - nothing
+            853121 - Preserve Formants
+            853122 - Mid/Side
+            853123 - Preserve Formants, Mid/Side
+            853124 - Independent Phase
+            853125 - Preserve Formants, Independent Phase
+            853126 - Mid/Side, Independent Phase
+            853127 - Preserve Formants, Mid/Side, Independent Phase
+            853128 - Time Domain Smoothing
+            853129 - Preserve Formants, Time Domain Smoothing
+            853130 - Mid/Side, Time Domain Smoothing
+            853131 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853132 - Independent Phase, Time Domain Smoothing
+            853133 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853134 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853135 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent, Window: Long
+            853136 - nothing
+            853137 - Preserve Formants
+            853138 - Mid/Side
+            853139 - Preserve Formants, Mid/Side
+            853140 - Independent Phase
+            853141 - Preserve Formants, Independent Phase
+            853142 - Mid/Side, Independent Phase
+            853143 - Preserve Formants, Mid/Side, Independent Phase
+            853144 - Time Domain Smoothing
+            853145 - Preserve Formants, Time Domain Smoothing
+            853146 - Mid/Side, Time Domain Smoothing
+            853147 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853148 - Independent Phase, Time Domain Smoothing
+            853149 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853150 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853151 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent, Window: Long
+            853152 - nothing
+            853153 - Preserve Formants
+            853154 - Mid/Side
+            853155 - Preserve Formants, Mid/Side
+            853156 - Independent Phase
+            853157 - Preserve Formants, Independent Phase
+            853158 - Mid/Side, Independent Phase
+            853159 - Preserve Formants, Mid/Side, Independent Phase
+            853160 - Time Domain Smoothing
+            853161 - Preserve Formants, Time Domain Smoothing
+            853162 - Mid/Side, Time Domain Smoothing
+            853163 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853164 - Independent Phase, Time Domain Smoothing
+            853165 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853166 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853167 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent, Window: Long
+            853168 - nothing
+            853169 - Preserve Formants
+            853170 - Mid/Side
+            853171 - Preserve Formants, Mid/Side
+            853172 - Independent Phase
+            853173 - Preserve Formants, Independent Phase
+            853174 - Mid/Side, Independent Phase
+            853175 - Preserve Formants, Mid/Side, Independent Phase
+            853176 - Time Domain Smoothing
+            853177 - Preserve Formants, Time Domain Smoothing
+            853178 - Mid/Side, Time Domain Smoothing
+            853179 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853180 - Independent Phase, Time Domain Smoothing
+            853181 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853182 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853183 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Long
+            853184 - nothing
+            853185 - Preserve Formants
+            853186 - Mid/Side
+            853187 - Preserve Formants, Mid/Side
+            853188 - Independent Phase
+            853189 - Preserve Formants, Independent Phase
+            853190 - Mid/Side, Independent Phase
+            853191 - Preserve Formants, Mid/Side, Independent Phase
+            853192 - Time Domain Smoothing
+            853193 - Preserve Formants, Time Domain Smoothing
+            853194 - Mid/Side, Time Domain Smoothing
+            853195 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853196 - Independent Phase, Time Domain Smoothing
+            853197 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853198 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853199 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Long
+            853200 - nothing
+            853201 - Preserve Formants
+            853202 - Mid/Side
+            853203 - Preserve Formants, Mid/Side
+            853204 - Independent Phase
+            853205 - Preserve Formants, Independent Phase
+            853206 - Mid/Side, Independent Phase
+            853207 - Preserve Formants, Mid/Side, Independent Phase
+            853208 - Time Domain Smoothing
+            853209 - Preserve Formants, Time Domain Smoothing
+            853210 - Mid/Side, Time Domain Smoothing
+            853211 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853212 - Independent Phase, Time Domain Smoothing
+            853213 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853214 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853215 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Detector: Soft, Pitch Mode: Consistent, Window: Long
+            853216 - nothing
+            853217 - Preserve Formants
+            853218 - Mid/Side
+            853219 - Preserve Formants, Mid/Side
+            853220 - Independent Phase
+            853221 - Preserve Formants, Independent Phase
+            853222 - Mid/Side, Independent Phase
+            853223 - Preserve Formants, Mid/Side, Independent Phase
+            853224 - Time Domain Smoothing
+            853225 - Preserve Formants, Time Domain Smoothing
+            853226 - Mid/Side, Time Domain Smoothing
+            853227 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853228 - Independent Phase, Time Domain Smoothing
+            853229 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853230 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853231 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Long
+            853232 - nothing
+            853233 - Preserve Formants
+            853234 - Mid/Side
+            853235 - Preserve Formants, Mid/Side
+            853236 - Independent Phase
+            853237 - Preserve Formants, Independent Phase
+            853238 - Mid/Side, Independent Phase
+            853239 - Preserve Formants, Mid/Side, Independent Phase
+            853240 - Time Domain Smoothing
+            853241 - Preserve Formants, Time Domain Smoothing
+            853242 - Mid/Side, Time Domain Smoothing
+            853243 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853244 - Independent Phase, Time Domain Smoothing
+            853245 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853246 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853247 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+
+        Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Long
+            853248 - nothing
+            853249 - Preserve Formants
+            853250 - Mid/Side
+            853251 - Preserve Formants, Mid/Side
+            853252 - Independent Phase
+            853253 - Preserve Formants, Independent Phase
+            853254 - Mid/Side, Independent Phase
+            853255 - Preserve Formants, Mid/Side, Independent Phase
+            853256 - Time Domain Smoothing
+            853257 - Preserve Formants, Time Domain Smoothing
+            853258 - Mid/Side, Time Domain Smoothing
+            853259 - Preserve Formants, Mid/Side, Time Domain Smoothing
+            853260 - Independent Phase, Time Domain Smoothing
+            853261 - Preserve Formants, Independent Phase, Time Domain Smoothing
+            853262 - Mid/Side, Independent Phase, Time Domain Smoothing
+            853263 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
+    
     Returns -1 in case of error.
   </description>
   <parameters>
     string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
     integer def_pitch_mode_state - the default pitch mode
-    -      SoundTouch:
-    -          0 - Default settings
-    -          1 - High Quality
-    -          2 - Fast
-    -      
-    -      Simple windowed (fast):
-    -          131072 - 50ms window, 25ms fade
-    -          131073 - 50ms window, 16ms fade
-    -          131074 - 50ms window, 10ms fade
-    -          131075 - 50ms window, 7ms fade
-    -          131076 - 75ms window, 37ms fade
-    -          131077 - 75ms window, 25ms fade
-    -          131078 - 75ms window, 15ms fade
-    -          131079 - 75ms window, 10ms fade
-    -          131080 - 100ms window, 50ms fade
-    -          131081 - 100ms window, 33ms fade
-    -          131082 - 100ms window, 20ms fade
-    -          131083 - 100ms window, 14ms fade
-    -          131084 - 150ms window, 75ms fade
-    -          131085 - 150ms window, 50ms fade
-    -          131086 - 150ms window, 30ms fade
-    -          131087 - 150ms window, 21ms fade
-    -          131088 - 225ms window, 112ms fade
-    -          131089 - 225ms window, 75ms fade
-    -          131090 - 225ms window, 45ms fade
-    -          131091 - 225ms window, 32ms fade
-    -          131092 - 300ms window, 150ms fade
-    -          131093 - 300ms window, 100ms fade
-    -          131094 - 300ms window, 60ms fade
-    -          131095 - 300ms window, 42ms fade
-    -          131096 - 40ms window, 20ms fade
-    -          131097 - 40ms window, 13ms fade
-    -          131098 - 40ms window, 8ms fade
-    -          131099 - 40ms window, 5ms fade
-    -          131100 - 30ms window, 15ms fade
-    -          131101 - 30ms window, 10ms fade
-    -          131102 - 30ms window, 6ms fade
-    -          131103 - 30ms window, 4ms fade
-    -          131104 - 20ms window, 10ms fade
-    -          131105 - 20ms window, 6ms fade
-    -          131106 - 20ms window, 4ms fade
-    -          131107 - 20ms window, 2ms fade
-    -          131108 - 10ms window, 5ms fade
-    -          131109 - 10ms window, 3ms fade
-    -          131110 - 10ms window, 2ms fade
-    -          131111 - 10ms window, 1ms fade
-    -          131112 - 5ms window, 2ms fade
-    -          131113 - 5ms window, 1ms fade
-    -          131114 - 5ms window, 1ms fade
-    -          131115 - 5ms window, 1ms fade
-    -          131116 - 3ms window, 1ms fade
-    -          131117 - 3ms window, 1ms fade
-    -          131118 - 3ms window, 1ms fade
-    -          131119 - 3ms window, 1ms fade
-    -      
-    -      Ã©lastique 2.2.8 Pro:
-    -          393216 - Normal
-    -          393217 - Preserve Formants (Lowest Pitches)
-    -          393218 - Preserve Formants (Lower Pitches)
-    -          393219 - Preserve Formants (Low Pitches)
-    -          393220 - Preserve Formants (Most Pitches)
-    -          393221 - Preserve Formants (High Pitches)
-    -          393222 - Preserve Formants (Higher Pitches)
-    -          393223 - Preserve Formants (Highest Pitches)
-    -          393224 - Mid/Side
-    -          393225 - Mid/Side, Preserve Formants (Lowest Pitches)
-    -          393226 - Mid/Side, Preserve Formants (Lower Pitches)
-    -          393227 - Mid/Side, Preserve Formants (Low Pitches)
-    -          393228 - Mid/Side, Preserve Formants (Most Pitches)
-    -          393229 - Mid/Side, Preserve Formants (High Pitches)
-    -          393230 - Mid/Side, Preserve Formants (Higher Pitches)
-    -          393231 - Mid/Side, Preserve Formants (Highest Pitches)
-    -          393232 - Synchronized: Normal
-    -          393233 - Synchronized: Preserve Formants (Lowest Pitches)
-    -          393234 - Synchronized: Preserve Formants (Lower Pitches)
-    -          393235 - Synchronized: Preserve Formants (Low Pitches)
-    -          393236 - Synchronized: Preserve Formants (Most Pitches)
-    -          393237 - Synchronized: Preserve Formants (High Pitches)
-    -          393238 - Synchronized: Preserve Formants (Higher Pitches)
-    -          393239 - Synchronized: Preserve Formants (Highest Pitches)
-    -          393240 - Synchronized:  Mid/Side
-    -          393241 - Synchronized:  Mid/Side, Preserve Formants (Lowest Pitches)
-    -          393242 - Synchronized:  Mid/Side, Preserve Formants (Lower Pitches)
-    -          393243 - Synchronized:  Mid/Side, Preserve Formants (Low Pitches)
-    -          393244 - Synchronized:  Mid/Side, Preserve Formants (Most Pitches)
-    -          393245 - Synchronized:  Mid/Side, Preserve Formants (High Pitches)
-    -          393246 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
-    -          393247 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
-    -      
-    -      Ã©lastique 2.2.8 Efficient:
-    -          458752 - Normal
-    -          458753 - Mid/Side
-    -          458754 - Synchronized: Normal
-    -          458755 - Synchronized: Mid/Side
-    -      
-    -      Ã©lastique 2.2.8 Soloist:
-    -          524288 - Monophonic
-    -          524289 - Monophonic [Mid/Side]
-    -          524290 - Speech
-    -          524291 - Speech [Mid/Side]
-    -      
-    -      Ã©lastique 3.3.0 Pro:
-    -          589824 - Normal
-    -          589825 - Preserve Formants (Lowest Pitches)
-    -          589826 - Preserve Formants (Lower Pitches)
-    -          589827 - Preserve Formants (Low Pitches)
-    -          589828 - Preserve Formants (Most Pitches)
-    -          589829 - Preserve Formants (High Pitches)
-    -          589830 - Preserve Formants (Higher Pitches)
-    -          589831 - Preserve Formants (Highest Pitches)
-    -          589832 - Mid/Side
-    -          589833 - Mid/Side, Preserve Formants (Lowest Pitches)
-    -          589834 - Mid/Side, Preserve Formants (Lower Pitches)
-    -          589835 - Mid/Side, Preserve Formants (Low Pitches)
-    -          589836 - Mid/Side, Preserve Formants (Most Pitches)
-    -          589837 - Mid/Side, Preserve Formants (High Pitches)
-    -          589838 - Mid/Side, Preserve Formants (Higher Pitches)
-    -          589839 - Mid/Side, Preserve Formants (Highest Pitches)
-    -          589840 - Synchronized: Normal
-    -          589841 - Synchronized: Preserve Formants (Lowest Pitches)
-    -          589842 - Synchronized: Preserve Formants (Lower Pitches)
-    -          589843 - Synchronized: Preserve Formants (Low Pitches)
-    -          589844 - Synchronized: Preserve Formants (Most Pitches)
-    -          589845 - Synchronized: Preserve Formants (High Pitches)
-    -          589846 - Synchronized: Preserve Formants (Higher Pitches)
-    -          589847 - Synchronized: Preserve Formants (Highest Pitches)
-    -          589848 - Synchronized:  Mid/Side
-    -          589849 - Synchronized:  Mid/Side, Preserve Formants (Lowest Pitches)
-    -          589850 - Synchronized:  Mid/Side, Preserve Formants (Lower Pitches)
-    -          589851 - Synchronized:  Mid/Side, Preserve Formants (Low Pitches)
-    -          589852 - Synchronized:  Mid/Side, Preserve Formants (Most Pitches)
-    -          589853 - Synchronized:  Mid/Side, Preserve Formants (High Pitches)
-    -          589854 - Synchronized:  Mid/Side, Preserve Formants (Higher Pitches)
-    -          589855 - Synchronized:  Mid/Side, Preserve Formants (Highest Pitches)
-    -      
-    -      Ã©lastique 3.3.0 Efficient:
-    -          655360 - Normal
-    -          655361 - Mid/Side
-    -          655362 - Synchronized: Normal
-    -          655363 - Synchronized: Mid/Side
-    -      
-    -      Ã©lastique 3.3.0 Soloist:
-    -          720896 - Monophonic
-    -          720897 - Monophonic [Mid/Side]
-    -          720898 - Speech
-    -          720899 - Speech [Mid/Side]
-    -      
-    -      
-    -      Rubber Band Library - Default
-    -          851968 - nothing
-    -      
-    -      Rubber Band Library - Preserve Formants
-    -          851969 - Preserve Formants
-    -      
-    -      Rubber Band Library - Mid/Side
-    -          851970 - Mid/Side
-    -      
-    -      Rubber Band Library - Preserve Formants, Mid/Side
-    -          851971 - Preserve Formants, Mid/Side
-    -      
-    -      Rubber Band Library - Independent Phase
-    -          851972 - Independent Phase
-    -      
-    -      Rubber Band Library - Preserve Formants, Independent Phase
-    -          851973 - Preserve Formants, Independent Phase
-    -      
-    -      Rubber Band Library - Mid/Side, Independent Phase
-    -          851974 - Mid/Side, Independent Phase
-    -      
-    -      Rubber Band Library - Preserve Formants, Mid/Side, Independent Phase
-    -          851975 - Preserve Formants, Mid/Side, Independent Phase
-    -      
-    -      Rubber Band Library - Time Domain Smoothing
-    -          851976 - Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Preserve Formants, Time Domain Smoothing
-    -          851977 - Preserve Formants, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Mid/Side, Time Domain Smoothing
-    -          851978 - Mid/Side, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          851979 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Independent Phase, Time Domain Smoothing
-    -          851980 - Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          851981 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          851982 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -          851983 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed
-    -          851984 - nothing
-    -          851985 - Preserve Formants
-    -          851986 - Mid/Side
-    -          851987 - Preserve Formants, Mid/Side
-    -          851988 - Independent Phase
-    -          851989 - Preserve Formants, Independent Phase
-    -          851990 - Mid/Side, Independent Phase
-    -          851991 - Preserve Formants, Mid/Side, Independent Phase
-    -          851992 - Time Domain Smoothing
-    -          851993 - Preserve Formants, Time Domain Smoothing
-    -          851994 - Mid/Side, Time Domain Smoothing
-    -          851995 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          851996 - Independent Phase, Time Domain Smoothing
-    -          851997 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          851998 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          851999 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth
-    -          852000 - nothing
-    -          852001 - Preserve Formants
-    -          852002 - Mid/Side
-    -          852003 - Preserve Formants, Mid/Side
-    -          852004 - Independent Phase
-    -          852005 - Preserve Formants, Independent Phase
-    -          852006 - Mid/Side, Independent Phase
-    -          852007 - Preserve Formants, Mid/Side, Independent Phase
-    -          852008 - Time Domain Smoothing
-    -          852009 - Preserve Formants, Time Domain Smoothing
-    -          852010 - Mid/Side, Time Domain Smoothing
-    -          852011 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852012 - Independent Phase, Time Domain Smoothing
-    -          852013 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852014 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852015 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive
-    -          852016 - nothing
-    -          852017 - Preserve Formants
-    -          852018 - Mid/Side
-    -          852019 - Preserve Formants, Mid/Side
-    -          852020 - Independent Phase
-    -          852021 - Preserve Formants, Independent Phase
-    -          852022 - Mid/Side, Independent Phase
-    -          852023 - Preserve Formants, Mid/Side, Independent Phase
-    -          852024 - Time Domain Smoothing
-    -          852025 - Preserve Formants, Time Domain Smoothing
-    -          852026 - Mid/Side, Time Domain Smoothing
-    -          852027 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852028 - Independent Phase, Time Domain Smoothing
-    -          852029 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852030 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852031 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive
-    -          852032 - nothing
-    -          852033 - Preserve Formants
-    -          852034 - Mid/Side
-    -          852035 - Preserve Formants, Mid/Side
-    -          852036 - Independent Phase
-    -          852037 - Preserve Formants, Independent Phase
-    -          852038 - Mid/Side, Independent Phase
-    -          852039 - Preserve Formants, Mid/Side, Independent Phase
-    -          852040 - Time Domain Smoothing
-    -          852041 - Preserve Formants, Time Domain Smoothing
-    -          852042 - Mid/Side, Time Domain Smoothing
-    -          852043 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852044 - Independent Phase, Time Domain Smoothing
-    -          852045 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852046 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852047 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive
-    -          852048 - nothing
-    -          852049 - Preserve Formants
-    -          852050 - Mid/Side
-    -          852051 - Preserve Formants, Mid/Side
-    -          852052 - Independent Phase
-    -          852053 - Preserve Formants, Independent Phase
-    -          852054 - Mid/Side, Independent Phase
-    -          852055 - Preserve Formants, Mid/Side, Independent Phase
-    -          852056 - Time Domain Smoothing
-    -          852057 - Preserve Formants, Time Domain Smoothing
-    -          852058 - Mid/Side, Time Domain Smoothing
-    -          852059 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852060 - Independent Phase, Time Domain Smoothing
-    -          852061 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852062 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852063 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft
-    -          852064 - nothing
-    -          852065 - Preserve Formants
-    -          852066 - Mid/Side
-    -          852067 - Preserve Formants, Mid/Side
-    -          852068 - Independent Phase
-    -          852069 - Preserve Formants, Independent Phase
-    -          852070 - Mid/Side, Independent Phase
-    -          852071 - Preserve Formants, Mid/Side, Independent Phase
-    -          852072 - Time Domain Smoothing
-    -          852073 - Preserve Formants, Time Domain Smoothing
-    -          852074 - Mid/Side, Time Domain Smoothing
-    -          852075 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852076 - Independent Phase, Time Domain Smoothing
-    -          852077 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852078 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852079 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft
-    -          852080 - nothing
-    -          852081 - Preserve Formants
-    -          852082 - Mid/Side
-    -          852083 - Preserve Formants, Mid/Side
-    -          852084 - Independent Phase
-    -          852085 - Preserve Formants, Independent Phase
-    -          852086 - Mid/Side, Independent Phase
-    -          852087 - Preserve Formants, Mid/Side, Independent Phase
-    -          852088 - Time Domain Smoothing
-    -          852089 - Preserve Formants, Time Domain Smoothing
-    -          852090 - Mid/Side, Time Domain Smoothing
-    -          852091 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852092 - Independent Phase, Time Domain Smoothing
-    -          852093 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852094 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852095 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft
-    -          852096 - nothing
-    -          852097 - Preserve Formants
-    -          852098 - Mid/Side
-    -          852099 - Preserve Formants, Mid/Side
-    -          852100 - Independent Phase
-    -          852101 - Preserve Formants, Independent Phase
-    -          852102 - Mid/Side, Independent Phase
-    -          852103 - Preserve Formants, Mid/Side, Independent Phase
-    -          852104 - Time Domain Smoothing
-    -          852105 - Preserve Formants, Time Domain Smoothing
-    -          852106 - Mid/Side, Time Domain Smoothing
-    -          852107 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852108 - Independent Phase, Time Domain Smoothing
-    -          852109 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852110 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852111 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: HighQ
-    -          852112 - nothing
-    -          852113 - Preserve Formants
-    -          852114 - Mid/Side
-    -          852115 - Preserve Formants, Mid/Side
-    -          852116 - Independent Phase
-    -          852117 - Preserve Formants, Independent Phase
-    -          852118 - Mid/Side, Independent Phase
-    -          852119 - Preserve Formants, Mid/Side, Independent Phase
-    -          852120 - Time Domain Smoothing
-    -          852121 - Preserve Formants, Time Domain Smoothing
-    -          852122 - Mid/Side, Time Domain Smoothing
-    -          852123 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852124 - Independent Phase, Time Domain Smoothing
-    -          852125 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852126 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852127 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ
-    -          852128 - nothing
-    -          852129 - Preserve Formants
-    -          852130 - Mid/Side
-    -          852131 - Preserve Formants, Mid/Side
-    -          852132 - Independent Phase
-    -          852133 - Preserve Formants, Independent Phase
-    -          852134 - Mid/Side, Independent Phase
-    -          852135 - Preserve Formants, Mid/Side, Independent Phase
-    -          852136 - Time Domain Smoothing
-    -          852137 - Preserve Formants, Time Domain Smoothing
-    -          852138 - Mid/Side, Time Domain Smoothing
-    -          852139 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852140 - Independent Phase, Time Domain Smoothing
-    -          852141 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852142 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852143 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ
-    -          852144 - nothing
-    -          852145 - Preserve Formants
-    -          852146 - Mid/Side
-    -          852147 - Preserve Formants, Mid/Side
-    -          852148 - Independent Phase
-    -          852149 - Preserve Formants, Independent Phase
-    -          852150 - Mid/Side, Independent Phase
-    -          852151 - Preserve Formants, Mid/Side, Independent Phase
-    -          852152 - Time Domain Smoothing
-    -          852153 - Preserve Formants, Time Domain Smoothing
-    -          852154 - Mid/Side, Time Domain Smoothing
-    -          852155 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852156 - Independent Phase, Time Domain Smoothing
-    -          852157 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852158 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852159 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ
-    -          852160 - nothing
-    -          852161 - Preserve Formants
-    -          852162 - Mid/Side
-    -          852163 - Preserve Formants, Mid/Side
-    -          852164 - Independent Phase
-    -          852165 - Preserve Formants, Independent Phase
-    -          852166 - Mid/Side, Independent Phase
-    -          852167 - Preserve Formants, Mid/Side, Independent Phase
-    -          852168 - Time Domain Smoothing
-    -          852169 - Preserve Formants, Time Domain Smoothing
-    -          852170 - Mid/Side, Time Domain Smoothing
-    -          852171 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852172 - Independent Phase, Time Domain Smoothing
-    -          852173 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852174 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852175 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ
-    -          852176 - nothing
-    -          852177 - Preserve Formants
-    -          852178 - Mid/Side
-    -          852179 - Preserve Formants, Mid/Side
-    -          852180 - Independent Phase
-    -          852181 - Preserve Formants, Independent Phase
-    -          852182 - Mid/Side, Independent Phase
-    -          852183 - Preserve Formants, Mid/Side, Independent Phase
-    -          852184 - Time Domain Smoothing
-    -          852185 - Preserve Formants, Time Domain Smoothing
-    -          852186 - Mid/Side, Time Domain Smoothing
-    -          852187 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852188 - Independent Phase, Time Domain Smoothing
-    -          852189 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852190 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852191 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ
-    -          852192 - nothing
-    -          852193 - Preserve Formants
-    -          852194 - Mid/Side
-    -          852195 - Preserve Formants, Mid/Side
-    -          852196 - Independent Phase
-    -          852197 - Preserve Formants, Independent Phase
-    -          852198 - Mid/Side, Independent Phase
-    -          852199 - Preserve Formants, Mid/Side, Independent Phase
-    -          852200 - Time Domain Smoothing
-    -          852201 - Preserve Formants, Time Domain Smoothing
-    -          852202 - Mid/Side, Time Domain Smoothing
-    -          852203 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852204 - Independent Phase, Time Domain Smoothing
-    -          852205 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852206 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852207 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: HighQ
-    -          852208 - nothing
-    -          852209 - Preserve Formants
-    -          852210 - Mid/Side
-    -          852211 - Preserve Formants, Mid/Side
-    -          852212 - Independent Phase
-    -          852213 - Preserve Formants, Independent Phase
-    -          852214 - Mid/Side, Independent Phase
-    -          852215 - Preserve Formants, Mid/Side, Independent Phase
-    -          852216 - Time Domain Smoothing
-    -          852217 - Preserve Formants, Time Domain Smoothing
-    -          852218 - Mid/Side, Time Domain Smoothing
-    -          852219 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852220 - Independent Phase, Time Domain Smoothing
-    -          852221 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852222 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852223 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ
-    -          852224 - nothing
-    -          852225 - Preserve Formants
-    -          852226 - Mid/Side
-    -          852227 - Preserve Formants, Mid/Side
-    -          852228 - Independent Phase
-    -          852229 - Preserve Formants, Independent Phase
-    -          852230 - Mid/Side, Independent Phase
-    -          852231 - Preserve Formants, Mid/Side, Independent Phase
-    -          852232 - Time Domain Smoothing
-    -          852233 - Preserve Formants, Time Domain Smoothing
-    -          852234 - Mid/Side, Time Domain Smoothing
-    -          852235 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852236 - Independent Phase, Time Domain Smoothing
-    -          852237 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852238 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852239 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ
-    -          852240 - nothing
-    -          852241 - Preserve Formants
-    -          852242 - Mid/Side
-    -          852243 - Preserve Formants, Mid/Side
-    -          852244 - Independent Phase
-    -          852245 - Preserve Formants, Independent Phase
-    -          852246 - Mid/Side, Independent Phase
-    -          852247 - Preserve Formants, Mid/Side, Independent Phase
-    -          852248 - Time Domain Smoothing
-    -          852249 - Preserve Formants, Time Domain Smoothing
-    -          852250 - Mid/Side, Time Domain Smoothing
-    -          852251 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852252 - Independent Phase, Time Domain Smoothing
-    -          852253 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852254 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852255 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: Consistent
-    -          852256 - nothing
-    -          852257 - Preserve Formants
-    -          852258 - Mid/Side
-    -          852259 - Preserve Formants, Mid/Side
-    -          852260 - Independent Phase
-    -          852261 - Preserve Formants, Independent Phase
-    -          852262 - Mid/Side, Independent Phase
-    -          852263 - Preserve Formants, Mid/Side, Independent Phase
-    -          852264 - Time Domain Smoothing
-    -          852265 - Preserve Formants, Time Domain Smoothing
-    -          852266 - Mid/Side, Time Domain Smoothing
-    -          852267 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852268 - Independent Phase, Time Domain Smoothing
-    -          852269 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852270 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852271 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent
-    -          852272 - nothing
-    -          852273 - Preserve Formants
-    -          852274 - Mid/Side
-    -          852275 - Preserve Formants, Mid/Side
-    -          852276 - Independent Phase
-    -          852277 - Preserve Formants, Independent Phase
-    -          852278 - Mid/Side, Independent Phase
-    -          852279 - Preserve Formants, Mid/Side, Independent Phase
-    -          852280 - Time Domain Smoothing
-    -          852281 - Preserve Formants, Time Domain Smoothing
-    -          852282 - Mid/Side, Time Domain Smoothing
-    -          852283 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852284 - Independent Phase, Time Domain Smoothing
-    -          852285 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852286 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852287 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent
-    -          852288 - nothing
-    -          852289 - Preserve Formants
-    -          852290 - Mid/Side
-    -          852291 - Preserve Formants, Mid/Side
-    -          852292 - Independent Phase
-    -          852293 - Preserve Formants, Independent Phase
-    -          852294 - Mid/Side, Independent Phase
-    -          852295 - Preserve Formants, Mid/Side, Independent Phase
-    -          852296 - Time Domain Smoothing
-    -          852297 - Preserve Formants, Time Domain Smoothing
-    -          852298 - Mid/Side, Time Domain Smoothing
-    -          852299 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852300 - Independent Phase, Time Domain Smoothing
-    -          852301 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852302 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852303 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent
-    -          852304 - nothing
-    -          852305 - Preserve Formants
-    -          852306 - Mid/Side
-    -          852307 - Preserve Formants, Mid/Side
-    -          852308 - Independent Phase
-    -          852309 - Preserve Formants, Independent Phase
-    -          852310 - Mid/Side, Independent Phase
-    -          852311 - Preserve Formants, Mid/Side, Independent Phase
-    -          852312 - Time Domain Smoothing
-    -          852313 - Preserve Formants, Time Domain Smoothing
-    -          852314 - Mid/Side, Time Domain Smoothing
-    -          852315 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852316 - Independent Phase, Time Domain Smoothing
-    -          852317 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852318 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852319 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent
-    -          852320 - nothing
-    -          852321 - Preserve Formants
-    -          852322 - Mid/Side
-    -          852323 - Preserve Formants, Mid/Side
-    -          852324 - Independent Phase
-    -          852325 - Preserve Formants, Independent Phase
-    -          852326 - Mid/Side, Independent Phase
-    -          852327 - Preserve Formants, Mid/Side, Independent Phase
-    -          852328 - Time Domain Smoothing
-    -          852329 - Preserve Formants, Time Domain Smoothing
-    -          852330 - Mid/Side, Time Domain Smoothing
-    -          852331 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852332 - Independent Phase, Time Domain Smoothing
-    -          852333 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852334 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852335 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent
-    -          852336 - nothing
-    -          852337 - Preserve Formants
-    -          852338 - Mid/Side
-    -          852339 - Preserve Formants, Mid/Side
-    -          852340 - Independent Phase
-    -          852341 - Preserve Formants, Independent Phase
-    -          852342 - Mid/Side, Independent Phase
-    -          852343 - Preserve Formants, Mid/Side, Independent Phase
-    -          852344 - Time Domain Smoothing
-    -          852345 - Preserve Formants, Time Domain Smoothing
-    -          852346 - Mid/Side, Time Domain Smoothing
-    -          852347 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852348 - Independent Phase, Time Domain Smoothing
-    -          852349 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852350 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852351 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: Consistent
-    -          852352 - nothing
-    -          852353 - Preserve Formants
-    -          852354 - Mid/Side
-    -          852355 - Preserve Formants, Mid/Side
-    -          852356 - Independent Phase
-    -          852357 - Preserve Formants, Independent Phase
-    -          852358 - Mid/Side, Independent Phase
-    -          852359 - Preserve Formants, Mid/Side, Independent Phase
-    -          852360 - Time Domain Smoothing
-    -          852361 - Preserve Formants, Time Domain Smoothing
-    -          852362 - Mid/Side, Time Domain Smoothing
-    -          852363 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852364 - Independent Phase, Time Domain Smoothing
-    -          852365 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852366 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852367 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent
-    -          852368 - nothing
-    -          852369 - Preserve Formants
-    -          852370 - Mid/Side
-    -          852371 - Preserve Formants, Mid/Side
-    -          852372 - Independent Phase
-    -          852373 - Preserve Formants, Independent Phase
-    -          852374 - Mid/Side, Independent Phase
-    -          852375 - Preserve Formants, Mid/Side, Independent Phase
-    -          852376 - Time Domain Smoothing
-    -          852377 - Preserve Formants, Time Domain Smoothing
-    -          852378 - Mid/Side, Time Domain Smoothing
-    -          852379 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852380 - Independent Phase, Time Domain Smoothing
-    -          852381 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852382 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852383 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent
-    -          852384 - nothing
-    -          852385 - Preserve Formants
-    -          852386 - Mid/Side
-    -          852387 - Preserve Formants, Mid/Side
-    -          852388 - Independent Phase
-    -          852389 - Preserve Formants, Independent Phase
-    -          852390 - Mid/Side, Independent Phase
-    -          852391 - Preserve Formants, Mid/Side, Independent Phase
-    -          852392 - Time Domain Smoothing
-    -          852393 - Preserve Formants, Time Domain Smoothing
-    -          852394 - Mid/Side, Time Domain Smoothing
-    -          852395 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852396 - Independent Phase, Time Domain Smoothing
-    -          852397 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852398 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852399 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Window: Short
-    -          852400 - nothing
-    -          852401 - Preserve Formants
-    -          852402 - Mid/Side
-    -          852403 - Preserve Formants, Mid/Side
-    -          852404 - Independent Phase
-    -          852405 - Preserve Formants, Independent Phase
-    -          852406 - Mid/Side, Independent Phase
-    -          852407 - Preserve Formants, Mid/Side, Independent Phase
-    -          852408 - Time Domain Smoothing
-    -          852409 - Preserve Formants, Time Domain Smoothing
-    -          852410 - Mid/Side, Time Domain Smoothing
-    -          852411 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852412 - Independent Phase, Time Domain Smoothing
-    -          852413 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852414 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852415 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Window: Short
-    -          852416 - nothing
-    -          852417 - Preserve Formants
-    -          852418 - Mid/Side
-    -          852419 - Preserve Formants, Mid/Side
-    -          852420 - Independent Phase
-    -          852421 - Preserve Formants, Independent Phase
-    -          852422 - Mid/Side, Independent Phase
-    -          852423 - Preserve Formants, Mid/Side, Independent Phase
-    -          852424 - Time Domain Smoothing
-    -          852425 - Preserve Formants, Time Domain Smoothing
-    -          852426 - Mid/Side, Time Domain Smoothing
-    -          852427 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852428 - Independent Phase, Time Domain Smoothing
-    -          852429 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852430 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852431 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Window: Short
-    -          852432 - nothing
-    -          852433 - Preserve Formants
-    -          852434 - Mid/Side
-    -          852435 - Preserve Formants, Mid/Side
-    -          852436 - Independent Phase
-    -          852437 - Preserve Formants, Independent Phase
-    -          852438 - Mid/Side, Independent Phase
-    -          852439 - Preserve Formants, Mid/Side, Independent Phase
-    -          852440 - Time Domain Smoothing
-    -          852441 - Preserve Formants, Time Domain Smoothing
-    -          852442 - Mid/Side, Time Domain Smoothing
-    -          852443 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852444 - Independent Phase, Time Domain Smoothing
-    -          852445 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852446 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852447 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Window: Short
-    -          852448 - nothing
-    -          852449 - Preserve Formants
-    -          852450 - Mid/Side
-    -          852451 - Preserve Formants, Mid/Side
-    -          852452 - Independent Phase
-    -          852453 - Preserve Formants, Independent Phase
-    -          852454 - Mid/Side, Independent Phase
-    -          852455 - Preserve Formants, Mid/Side, Independent Phase
-    -          852456 - Time Domain Smoothing
-    -          852457 - Preserve Formants, Time Domain Smoothing
-    -          852458 - Mid/Side, Time Domain Smoothing
-    -          852459 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852460 - Independent Phase, Time Domain Smoothing
-    -          852461 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852462 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852463 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Window: Short
-    -          852464 - nothing
-    -          852465 - Preserve Formants
-    -          852466 - Mid/Side
-    -          852467 - Preserve Formants, Mid/Side
-    -          852468 - Independent Phase
-    -          852469 - Preserve Formants, Independent Phase
-    -          852470 - Mid/Side, Independent Phase
-    -          852471 - Preserve Formants, Mid/Side, Independent Phase
-    -          852472 - Time Domain Smoothing
-    -          852473 - Preserve Formants, Time Domain Smoothing
-    -          852474 - Mid/Side, Time Domain Smoothing
-    -          852475 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852476 - Independent Phase, Time Domain Smoothing
-    -          852477 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852478 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852479 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Window: Short
-    -          852480 - nothing
-    -          852481 - Preserve Formants
-    -          852482 - Mid/Side
-    -          852483 - Preserve Formants, Mid/Side
-    -          852484 - Independent Phase
-    -          852485 - Preserve Formants, Independent Phase
-    -          852486 - Mid/Side, Independent Phase
-    -          852487 - Preserve Formants, Mid/Side, Independent Phase
-    -          852488 - Time Domain Smoothing
-    -          852489 - Preserve Formants, Time Domain Smoothing
-    -          852490 - Mid/Side, Time Domain Smoothing
-    -          852491 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852492 - Independent Phase, Time Domain Smoothing
-    -          852493 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852494 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852495 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Window: Short
-    -          852496 - nothing
-    -          852497 - Preserve Formants
-    -          852498 - Mid/Side
-    -          852499 - Preserve Formants, Mid/Side
-    -          852500 - Independent Phase
-    -          852501 - Preserve Formants, Independent Phase
-    -          852502 - Mid/Side, Independent Phase
-    -          852503 - Preserve Formants, Mid/Side, Independent Phase
-    -          852504 - Time Domain Smoothing
-    -          852505 - Preserve Formants, Time Domain Smoothing
-    -          852506 - Mid/Side, Time Domain Smoothing
-    -          852507 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852508 - Independent Phase, Time Domain Smoothing
-    -          852509 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852510 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852511 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Window: Short
-    -          852512 - nothing
-    -          852513 - Preserve Formants
-    -          852514 - Mid/Side
-    -          852515 - Preserve Formants, Mid/Side
-    -          852516 - Independent Phase
-    -          852517 - Preserve Formants, Independent Phase
-    -          852518 - Mid/Side, Independent Phase
-    -          852519 - Preserve Formants, Mid/Side, Independent Phase
-    -          852520 - Time Domain Smoothing
-    -          852521 - Preserve Formants, Time Domain Smoothing
-    -          852522 - Mid/Side, Time Domain Smoothing
-    -          852523 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852524 - Independent Phase, Time Domain Smoothing
-    -          852525 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852526 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852527 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Window: Short
-    -          852528 - nothing
-    -          852529 - Preserve Formants
-    -          852530 - Mid/Side
-    -          852531 - Preserve Formants, Mid/Side
-    -          852532 - Independent Phase
-    -          852533 - Preserve Formants, Independent Phase
-    -          852534 - Mid/Side, Independent Phase
-    -          852535 - Preserve Formants, Mid/Side, Independent Phase
-    -          852536 - Time Domain Smoothing
-    -          852537 - Preserve Formants, Time Domain Smoothing
-    -          852538 - Mid/Side, Time Domain Smoothing
-    -          852539 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852540 - Independent Phase, Time Domain Smoothing
-    -          852541 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852542 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852543 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: HighQ, Window: Short
-    -          852544 - nothing
-    -          852545 - Preserve Formants
-    -          852546 - Mid/Side
-    -          852547 - Preserve Formants, Mid/Side
-    -          852548 - Independent Phase
-    -          852549 - Preserve Formants, Independent Phase
-    -          852550 - Mid/Side, Independent Phase
-    -          852551 - Preserve Formants, Mid/Side, Independent Phase
-    -          852552 - Time Domain Smoothing
-    -          852553 - Preserve Formants, Time Domain Smoothing
-    -          852554 - Mid/Side, Time Domain Smoothing
-    -          852555 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852556 - Independent Phase, Time Domain Smoothing
-    -          852557 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852558 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852559 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ, Window: Short
-    -          852560 - nothing
-    -          852561 - Preserve Formants
-    -          852562 - Mid/Side
-    -          852563 - Preserve Formants, Mid/Side
-    -          852564 - Independent Phase
-    -          852565 - Preserve Formants, Independent Phase
-    -          852566 - Mid/Side, Independent Phase
-    -          852567 - Preserve Formants, Mid/Side, Independent Phase
-    -          852568 - Time Domain Smoothing
-    -          852569 - Preserve Formants, Time Domain Smoothing
-    -          852570 - Mid/Side, Time Domain Smoothing
-    -          852571 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852572 - Independent Phase, Time Domain Smoothing
-    -          852573 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852574 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852575 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ, Window: Short
-    -          852576 - nothing
-    -          852577 - Preserve Formants
-    -          852578 - Mid/Side
-    -          852579 - Preserve Formants, Mid/Side
-    -          852580 - Independent Phase
-    -          852581 - Preserve Formants, Independent Phase
-    -          852582 - Mid/Side, Independent Phase
-    -          852583 - Preserve Formants, Mid/Side, Independent Phase
-    -          852584 - Time Domain Smoothing
-    -          852585 - Preserve Formants, Time Domain Smoothing
-    -          852586 - Mid/Side, Time Domain Smoothing
-    -          852587 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852588 - Independent Phase, Time Domain Smoothing
-    -          852589 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852590 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852591 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ, Window: Short
-    -          852592 - nothing
-    -          852593 - Preserve Formants
-    -          852594 - Mid/Side
-    -          852595 - Preserve Formants, Mid/Side
-    -          852596 - Independent Phase
-    -          852597 - Preserve Formants, Independent Phase
-    -          852598 - Mid/Side, Independent Phase
-    -          852599 - Preserve Formants, Mid/Side, Independent Phase
-    -          852600 - Time Domain Smoothing
-    -          852601 - Preserve Formants, Time Domain Smoothing
-    -          852602 - Mid/Side, Time Domain Smoothing
-    -          852603 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852604 - Independent Phase, Time Domain Smoothing
-    -          852605 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852606 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852607 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Short
-    -          852608 - nothing
-    -          852609 - Preserve Formants
-    -          852610 - Mid/Side
-    -          852611 - Preserve Formants, Mid/Side
-    -          852612 - Independent Phase
-    -          852613 - Preserve Formants, Independent Phase
-    -          852614 - Mid/Side, Independent Phase
-    -          852615 - Preserve Formants, Mid/Side, Independent Phase
-    -          852616 - Time Domain Smoothing
-    -          852617 - Preserve Formants, Time Domain Smoothing
-    -          852618 - Mid/Side, Time Domain Smoothing
-    -          852619 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852620 - Independent Phase, Time Domain Smoothing
-    -          852621 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852622 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852623 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Short
-    -          852624 - nothing
-    -          852625 - Preserve Formants
-    -          852626 - Mid/Side
-    -          852627 - Preserve Formants, Mid/Side
-    -          852628 - Independent Phase
-    -          852629 - Preserve Formants, Independent Phase
-    -          852630 - Mid/Side, Independent Phase
-    -          852631 - Preserve Formants, Mid/Side, Independent Phase
-    -          852632 - Time Domain Smoothing
-    -          852633 - Preserve Formants, Time Domain Smoothing
-    -          852634 - Mid/Side, Time Domain Smoothing
-    -          852635 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852636 - Independent Phase, Time Domain Smoothing
-    -          852637 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852638 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852639 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: HighQ, Window: Short
-    -          852640 - nothing
-    -          852641 - Preserve Formants
-    -          852642 - Mid/Side
-    -          852643 - Preserve Formants, Mid/Side
-    -          852644 - Independent Phase
-    -          852645 - Preserve Formants, Independent Phase
-    -          852646 - Mid/Side, Independent Phase
-    -          852647 - Preserve Formants, Mid/Side, Independent Phase
-    -          852648 - Time Domain Smoothing
-    -          852649 - Preserve Formants, Time Domain Smoothing
-    -          852650 - Mid/Side, Time Domain Smoothing
-    -          852651 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852652 - Independent Phase, Time Domain Smoothing
-    -          852653 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852654 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852655 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Short
-    -          852656 - nothing
-    -          852657 - Preserve Formants
-    -          852658 - Mid/Side
-    -          852659 - Preserve Formants, Mid/Side
-    -          852660 - Independent Phase
-    -          852661 - Preserve Formants, Independent Phase
-    -          852662 - Mid/Side, Independent Phase
-    -          852663 - Preserve Formants, Mid/Side, Independent Phase
-    -          852664 - Time Domain Smoothing
-    -          852665 - Preserve Formants, Time Domain Smoothing
-    -          852666 - Mid/Side, Time Domain Smoothing
-    -          852667 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852668 - Independent Phase, Time Domain Smoothing
-    -          852669 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852670 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852671 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Short
-    -          852672 - nothing
-    -          852673 - Preserve Formants
-    -          852674 - Mid/Side
-    -          852675 - Preserve Formants, Mid/Side
-    -          852676 - Independent Phase
-    -          852677 - Preserve Formants, Independent Phase
-    -          852678 - Mid/Side, Independent Phase
-    -          852679 - Preserve Formants, Mid/Side, Independent Phase
-    -          852680 - Time Domain Smoothing
-    -          852681 - Preserve Formants, Time Domain Smoothing
-    -          852682 - Mid/Side, Time Domain Smoothing
-    -          852683 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852684 - Independent Phase, Time Domain Smoothing
-    -          852685 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852686 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852687 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: Consistent, Window: Short
-    -          852688 - nothing
-    -          852689 - Preserve Formants
-    -          852690 - Mid/Side
-    -          852691 - Preserve Formants, Mid/Side
-    -          852692 - Independent Phase
-    -          852693 - Preserve Formants, Independent Phase
-    -          852694 - Mid/Side, Independent Phase
-    -          852695 - Preserve Formants, Mid/Side, Independent Phase
-    -          852696 - Time Domain Smoothing
-    -          852697 - Preserve Formants, Time Domain Smoothing
-    -          852698 - Mid/Side, Time Domain Smoothing
-    -          852699 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852700 - Independent Phase, Time Domain Smoothing
-    -          852701 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852702 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852703 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent, Window: Short
-    -          852704 - nothing
-    -          852705 - Preserve Formants
-    -          852706 - Mid/Side
-    -          852707 - Preserve Formants, Mid/Side
-    -          852708 - Independent Phase
-    -          852709 - Preserve Formants, Independent Phase
-    -          852710 - Mid/Side, Independent Phase
-    -          852711 - Preserve Formants, Mid/Side, Independent Phase
-    -          852712 - Time Domain Smoothing
-    -          852713 - Preserve Formants, Time Domain Smoothing
-    -          852714 - Mid/Side, Time Domain Smoothing
-    -          852715 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852716 - Independent Phase, Time Domain Smoothing
-    -          852717 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852718 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852719 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent, Window: Short
-    -          852720 - nothing
-    -          852721 - Preserve Formants
-    -          852722 - Mid/Side
-    -          852723 - Preserve Formants, Mid/Side
-    -          852724 - Independent Phase
-    -          852725 - Preserve Formants, Independent Phase
-    -          852726 - Mid/Side, Independent Phase
-    -          852727 - Preserve Formants, Mid/Side, Independent Phase
-    -          852728 - Time Domain Smoothing
-    -          852729 - Preserve Formants, Time Domain Smoothing
-    -          852730 - Mid/Side, Time Domain Smoothing
-    -          852731 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852732 - Independent Phase, Time Domain Smoothing
-    -          852733 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852734 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852735 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent, Window: Short
-    -          852736 - nothing
-    -          852737 - Preserve Formants
-    -          852738 - Mid/Side
-    -          852739 - Preserve Formants, Mid/Side
-    -          852740 - Independent Phase
-    -          852741 - Preserve Formants, Independent Phase
-    -          852742 - Mid/Side, Independent Phase
-    -          852743 - Preserve Formants, Mid/Side, Independent Phase
-    -          852744 - Time Domain Smoothing
-    -          852745 - Preserve Formants, Time Domain Smoothing
-    -          852746 - Mid/Side, Time Domain Smoothing
-    -          852747 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852748 - Independent Phase, Time Domain Smoothing
-    -          852749 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852750 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852751 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Short
-    -          852752 - nothing
-    -          852753 - Preserve Formants
-    -          852754 - Mid/Side
-    -          852755 - Preserve Formants, Mid/Side
-    -          852756 - Independent Phase
-    -          852757 - Preserve Formants, Independent Phase
-    -          852758 - Mid/Side, Independent Phase
-    -          852759 - Preserve Formants, Mid/Side, Independent Phase
-    -          852760 - Time Domain Smoothing
-    -          852761 - Preserve Formants, Time Domain Smoothing
-    -          852762 - Mid/Side, Time Domain Smoothing
-    -          852763 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852764 - Independent Phase, Time Domain Smoothing
-    -          852765 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852766 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852767 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Short
-    -          852768 - nothing
-    -          852769 - Preserve Formants
-    -          852770 - Mid/Side
-    -          852771 - Preserve Formants, Mid/Side
-    -          852772 - Independent Phase
-    -          852773 - Preserve Formants, Independent Phase
-    -          852774 - Mid/Side, Independent Phase
-    -          852775 - Preserve Formants, Mid/Side, Independent Phase
-    -          852776 - Time Domain Smoothing
-    -          852777 - Preserve Formants, Time Domain Smoothing
-    -          852778 - Mid/Side, Time Domain Smoothing
-    -          852779 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852780 - Independent Phase, Time Domain Smoothing
-    -          852781 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852782 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852783 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: Consistent, Window: Short
-    -          852784 - nothing
-    -          852785 - Preserve Formants
-    -          852786 - Mid/Side
-    -          852787 - Preserve Formants, Mid/Side
-    -          852788 - Independent Phase
-    -          852789 - Preserve Formants, Independent Phase
-    -          852790 - Mid/Side, Independent Phase
-    -          852791 - Preserve Formants, Mid/Side, Independent Phase
-    -          852792 - Time Domain Smoothing
-    -          852793 - Preserve Formants, Time Domain Smoothing
-    -          852794 - Mid/Side, Time Domain Smoothing
-    -          852795 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852796 - Independent Phase, Time Domain Smoothing
-    -          852797 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852798 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852799 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Short
-    -          852800 - nothing
-    -          852801 - Preserve Formants
-    -          852802 - Mid/Side
-    -          852803 - Preserve Formants, Mid/Side
-    -          852804 - Independent Phase
-    -          852805 - Preserve Formants, Independent Phase
-    -          852806 - Mid/Side, Independent Phase
-    -          852807 - Preserve Formants, Mid/Side, Independent Phase
-    -          852808 - Time Domain Smoothing
-    -          852809 - Preserve Formants, Time Domain Smoothing
-    -          852810 - Mid/Side, Time Domain Smoothing
-    -          852811 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852812 - Independent Phase, Time Domain Smoothing
-    -          852813 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852814 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852815 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Short
-    -          852816 - nothing
-    -          852817 - Preserve Formants
-    -          852818 - Mid/Side
-    -          852819 - Preserve Formants, Mid/Side
-    -          852820 - Independent Phase
-    -          852821 - Preserve Formants, Independent Phase
-    -          852822 - Mid/Side, Independent Phase
-    -          852823 - Preserve Formants, Mid/Side, Independent Phase
-    -          852824 - Time Domain Smoothing
-    -          852825 - Preserve Formants, Time Domain Smoothing
-    -          852826 - Mid/Side, Time Domain Smoothing
-    -          852827 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852828 - Independent Phase, Time Domain Smoothing
-    -          852829 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852830 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852831 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Window: Long
-    -          852832 - nothing
-    -          852833 - Preserve Formants
-    -          852834 - Mid/Side
-    -          852835 - Preserve Formants, Mid/Side
-    -          852836 - Independent Phase
-    -          852837 - Preserve Formants, Independent Phase
-    -          852838 - Mid/Side, Independent Phase
-    -          852839 - Preserve Formants, Mid/Side, Independent Phase
-    -          852840 - Time Domain Smoothing
-    -          852841 - Preserve Formants, Time Domain Smoothing
-    -          852842 - Mid/Side, Time Domain Smoothing
-    -          852843 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852844 - Independent Phase, Time Domain Smoothing
-    -          852845 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852846 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852847 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Window: Long
-    -          852848 - nothing
-    -          852849 - Preserve Formants
-    -          852850 - Mid/Side
-    -          852851 - Preserve Formants, Mid/Side
-    -          852852 - Independent Phase
-    -          852853 - Preserve Formants, Independent Phase
-    -          852854 - Mid/Side, Independent Phase
-    -          852855 - Preserve Formants, Mid/Side, Independent Phase
-    -          852856 - Time Domain Smoothing
-    -          852857 - Preserve Formants, Time Domain Smoothing
-    -          852858 - Mid/Side, Time Domain Smoothing
-    -          852859 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852860 - Independent Phase, Time Domain Smoothing
-    -          852861 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852862 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852863 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Window: Long
-    -          852864 - nothing
-    -          852865 - Preserve Formants
-    -          852866 - Mid/Side
-    -          852867 - Preserve Formants, Mid/Side
-    -          852868 - Independent Phase
-    -          852869 - Preserve Formants, Independent Phase
-    -          852870 - Mid/Side, Independent Phase
-    -          852871 - Preserve Formants, Mid/Side, Independent Phase
-    -          852872 - Time Domain Smoothing
-    -          852873 - Preserve Formants, Time Domain Smoothing
-    -          852874 - Mid/Side, Time Domain Smoothing
-    -          852875 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852876 - Independent Phase, Time Domain Smoothing
-    -          852877 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852878 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852879 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Window: Long
-    -          852880 - nothing
-    -          852881 - Preserve Formants
-    -          852882 - Mid/Side
-    -          852883 - Preserve Formants, Mid/Side
-    -          852884 - Independent Phase
-    -          852885 - Preserve Formants, Independent Phase
-    -          852886 - Mid/Side, Independent Phase
-    -          852887 - Preserve Formants, Mid/Side, Independent Phase
-    -          852888 - Time Domain Smoothing
-    -          852889 - Preserve Formants, Time Domain Smoothing
-    -          852890 - Mid/Side, Time Domain Smoothing
-    -          852891 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852892 - Independent Phase, Time Domain Smoothing
-    -          852893 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852894 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852895 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Window: Long
-    -          852896 - nothing
-    -          852897 - Preserve Formants
-    -          852898 - Mid/Side
-    -          852899 - Preserve Formants, Mid/Side
-    -          852900 - Independent Phase
-    -          852901 - Preserve Formants, Independent Phase
-    -          852902 - Mid/Side, Independent Phase
-    -          852903 - Preserve Formants, Mid/Side, Independent Phase
-    -          852904 - Time Domain Smoothing
-    -          852905 - Preserve Formants, Time Domain Smoothing
-    -          852906 - Mid/Side, Time Domain Smoothing
-    -          852907 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852908 - Independent Phase, Time Domain Smoothing
-    -          852909 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852910 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852911 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Window: Long
-    -          852912 - nothing
-    -          852913 - Preserve Formants
-    -          852914 - Mid/Side
-    -          852915 - Preserve Formants, Mid/Side
-    -          852916 - Independent Phase
-    -          852917 - Preserve Formants, Independent Phase
-    -          852918 - Mid/Side, Independent Phase
-    -          852919 - Preserve Formants, Mid/Side, Independent Phase
-    -          852920 - Time Domain Smoothing
-    -          852921 - Preserve Formants, Time Domain Smoothing
-    -          852922 - Mid/Side, Time Domain Smoothing
-    -          852923 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852924 - Independent Phase, Time Domain Smoothing
-    -          852925 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852926 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852927 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Window: Long
-    -          852928 - nothing
-    -          852929 - Preserve Formants
-    -          852930 - Mid/Side
-    -          852931 - Preserve Formants, Mid/Side
-    -          852932 - Independent Phase
-    -          852933 - Preserve Formants, Independent Phase
-    -          852934 - Mid/Side, Independent Phase
-    -          852935 - Preserve Formants, Mid/Side, Independent Phase
-    -          852936 - Time Domain Smoothing
-    -          852937 - Preserve Formants, Time Domain Smoothing
-    -          852938 - Mid/Side, Time Domain Smoothing
-    -          852939 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852940 - Independent Phase, Time Domain Smoothing
-    -          852941 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852942 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852943 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Window: Long
-    -          852944 - nothing
-    -          852945 - Preserve Formants
-    -          852946 - Mid/Side
-    -          852947 - Preserve Formants, Mid/Side
-    -          852948 - Independent Phase
-    -          852949 - Preserve Formants, Independent Phase
-    -          852950 - Mid/Side, Independent Phase
-    -          852951 - Preserve Formants, Mid/Side, Independent Phase
-    -          852952 - Time Domain Smoothing
-    -          852953 - Preserve Formants, Time Domain Smoothing
-    -          852954 - Mid/Side, Time Domain Smoothing
-    -          852955 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852956 - Independent Phase, Time Domain Smoothing
-    -          852957 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852958 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852959 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Window: Long
-    -          852960 - nothing
-    -          852961 - Preserve Formants
-    -          852962 - Mid/Side
-    -          852963 - Preserve Formants, Mid/Side
-    -          852964 - Independent Phase
-    -          852965 - Preserve Formants, Independent Phase
-    -          852966 - Mid/Side, Independent Phase
-    -          852967 - Preserve Formants, Mid/Side, Independent Phase
-    -          852968 - Time Domain Smoothing
-    -          852969 - Preserve Formants, Time Domain Smoothing
-    -          852970 - Mid/Side, Time Domain Smoothing
-    -          852971 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852972 - Independent Phase, Time Domain Smoothing
-    -          852973 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852974 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852975 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: HighQ, Window: Long
-    -          852976 - nothing
-    -          852977 - Preserve Formants
-    -          852978 - Mid/Side
-    -          852979 - Preserve Formants, Mid/Side
-    -          852980 - Independent Phase
-    -          852981 - Preserve Formants, Independent Phase
-    -          852982 - Mid/Side, Independent Phase
-    -          852983 - Preserve Formants, Mid/Side, Independent Phase
-    -          852984 - Time Domain Smoothing
-    -          852985 - Preserve Formants, Time Domain Smoothing
-    -          852986 - Mid/Side, Time Domain Smoothing
-    -          852987 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          852988 - Independent Phase, Time Domain Smoothing
-    -          852989 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          852990 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          852991 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: HighQ, Window: Long
-    -          852992 - nothing
-    -          852993 - Preserve Formants
-    -          852994 - Mid/Side
-    -          852995 - Preserve Formants, Mid/Side
-    -          852996 - Independent Phase
-    -          852997 - Preserve Formants, Independent Phase
-    -          852998 - Mid/Side, Independent Phase
-    -          852999 - Preserve Formants, Mid/Side, Independent Phase
-    -          853000 - Time Domain Smoothing
-    -          853001 - Preserve Formants, Time Domain Smoothing
-    -          853002 - Mid/Side, Time Domain Smoothing
-    -          853003 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853004 - Independent Phase, Time Domain Smoothing
-    -          853005 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853006 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853007 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: HighQ, Window: Long
-    -          853008 - nothing
-    -          853009 - Preserve Formants
-    -          853010 - Mid/Side
-    -          853011 - Preserve Formants, Mid/Side
-    -          853012 - Independent Phase
-    -          853013 - Preserve Formants, Independent Phase
-    -          853014 - Mid/Side, Independent Phase
-    -          853015 - Preserve Formants, Mid/Side, Independent Phase
-    -          853016 - Time Domain Smoothing
-    -          853017 - Preserve Formants, Time Domain Smoothing
-    -          853018 - Mid/Side, Time Domain Smoothing
-    -          853019 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853020 - Independent Phase, Time Domain Smoothing
-    -          853021 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853022 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853023 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: HighQ, Window: Long
-    -          853024 - nothing
-    -          853025 - Preserve Formants
-    -          853026 - Mid/Side
-    -          853027 - Preserve Formants, Mid/Side
-    -          853028 - Independent Phase
-    -          853029 - Preserve Formants, Independent Phase
-    -          853030 - Mid/Side, Independent Phase
-    -          853031 - Preserve Formants, Mid/Side, Independent Phase
-    -          853032 - Time Domain Smoothing
-    -          853033 - Preserve Formants, Time Domain Smoothing
-    -          853034 - Mid/Side, Time Domain Smoothing
-    -          853035 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853036 - Independent Phase, Time Domain Smoothing
-    -          853037 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853038 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853039 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: HighQ, Window: Long
-    -          853040 - nothing
-    -          853041 - Preserve Formants
-    -          853042 - Mid/Side
-    -          853043 - Preserve Formants, Mid/Side
-    -          853044 - Independent Phase
-    -          853045 - Preserve Formants, Independent Phase
-    -          853046 - Mid/Side, Independent Phase
-    -          853047 - Preserve Formants, Mid/Side, Independent Phase
-    -          853048 - Time Domain Smoothing
-    -          853049 - Preserve Formants, Time Domain Smoothing
-    -          853050 - Mid/Side, Time Domain Smoothing
-    -          853051 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853052 - Independent Phase, Time Domain Smoothing
-    -          853053 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853054 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853055 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: HighQ, Window: Long
-    -          853056 - nothing
-    -          853057 - Preserve Formants
-    -          853058 - Mid/Side
-    -          853059 - Preserve Formants, Mid/Side
-    -          853060 - Independent Phase
-    -          853061 - Preserve Formants, Independent Phase
-    -          853062 - Mid/Side, Independent Phase
-    -          853063 - Preserve Formants, Mid/Side, Independent Phase
-    -          853064 - Time Domain Smoothing
-    -          853065 - Preserve Formants, Time Domain Smoothing
-    -          853066 - Mid/Side, Time Domain Smoothing
-    -          853067 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853068 - Independent Phase, Time Domain Smoothing
-    -          853069 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853070 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853071 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: HighQ, Window: Long
-    -          853072 - nothing
-    -          853073 - Preserve Formants
-    -          853074 - Mid/Side
-    -          853075 - Preserve Formants, Mid/Side
-    -          853076 - Independent Phase
-    -          853077 - Preserve Formants, Independent Phase
-    -          853078 - Mid/Side, Independent Phase
-    -          853079 - Preserve Formants, Mid/Side, Independent Phase
-    -          853080 - Time Domain Smoothing
-    -          853081 - Preserve Formants, Time Domain Smoothing
-    -          853082 - Mid/Side, Time Domain Smoothing
-    -          853083 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853084 - Independent Phase, Time Domain Smoothing
-    -          853085 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853086 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853087 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: HighQ, Window: Long
-    -          853088 - nothing
-    -          853089 - Preserve Formants
-    -          853090 - Mid/Side
-    -          853091 - Preserve Formants, Mid/Side
-    -          853092 - Independent Phase
-    -          853093 - Preserve Formants, Independent Phase
-    -          853094 - Mid/Side, Independent Phase
-    -          853095 - Preserve Formants, Mid/Side, Independent Phase
-    -          853096 - Time Domain Smoothing
-    -          853097 - Preserve Formants, Time Domain Smoothing
-    -          853098 - Mid/Side, Time Domain Smoothing
-    -          853099 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853100 - Independent Phase, Time Domain Smoothing
-    -          853101 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853102 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853103 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: HighQ, Window: Long
-    -          853104 - nothing
-    -          853105 - Preserve Formants
-    -          853106 - Mid/Side
-    -          853107 - Preserve Formants, Mid/Side
-    -          853108 - Independent Phase
-    -          853109 - Preserve Formants, Independent Phase
-    -          853110 - Mid/Side, Independent Phase
-    -          853111 - Preserve Formants, Mid/Side, Independent Phase
-    -          853112 - Time Domain Smoothing
-    -          853113 - Preserve Formants, Time Domain Smoothing
-    -          853114 - Mid/Side, Time Domain Smoothing
-    -          853115 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853116 - Independent Phase, Time Domain Smoothing
-    -          853117 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853118 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853119 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Pitch Mode: Consistent, Window: Long
-    -          853120 - nothing
-    -          853121 - Preserve Formants
-    -          853122 - Mid/Side
-    -          853123 - Preserve Formants, Mid/Side
-    -          853124 - Independent Phase
-    -          853125 - Preserve Formants, Independent Phase
-    -          853126 - Mid/Side, Independent Phase
-    -          853127 - Preserve Formants, Mid/Side, Independent Phase
-    -          853128 - Time Domain Smoothing
-    -          853129 - Preserve Formants, Time Domain Smoothing
-    -          853130 - Mid/Side, Time Domain Smoothing
-    -          853131 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853132 - Independent Phase, Time Domain Smoothing
-    -          853133 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853134 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853135 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Pitch Mode: Consistent, Window: Long
-    -          853136 - nothing
-    -          853137 - Preserve Formants
-    -          853138 - Mid/Side
-    -          853139 - Preserve Formants, Mid/Side
-    -          853140 - Independent Phase
-    -          853141 - Preserve Formants, Independent Phase
-    -          853142 - Mid/Side, Independent Phase
-    -          853143 - Preserve Formants, Mid/Side, Independent Phase
-    -          853144 - Time Domain Smoothing
-    -          853145 - Preserve Formants, Time Domain Smoothing
-    -          853146 - Mid/Side, Time Domain Smoothing
-    -          853147 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853148 - Independent Phase, Time Domain Smoothing
-    -          853149 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853150 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853151 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Pitch Mode: Consistent, Window: Long
-    -          853152 - nothing
-    -          853153 - Preserve Formants
-    -          853154 - Mid/Side
-    -          853155 - Preserve Formants, Mid/Side
-    -          853156 - Independent Phase
-    -          853157 - Preserve Formants, Independent Phase
-    -          853158 - Mid/Side, Independent Phase
-    -          853159 - Preserve Formants, Mid/Side, Independent Phase
-    -          853160 - Time Domain Smoothing
-    -          853161 - Preserve Formants, Time Domain Smoothing
-    -          853162 - Mid/Side, Time Domain Smoothing
-    -          853163 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853164 - Independent Phase, Time Domain Smoothing
-    -          853165 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853166 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853167 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Percussive, Pitch Mode: Consistent, Window: Long
-    -          853168 - nothing
-    -          853169 - Preserve Formants
-    -          853170 - Mid/Side
-    -          853171 - Preserve Formants, Mid/Side
-    -          853172 - Independent Phase
-    -          853173 - Preserve Formants, Independent Phase
-    -          853174 - Mid/Side, Independent Phase
-    -          853175 - Preserve Formants, Mid/Side, Independent Phase
-    -          853176 - Time Domain Smoothing
-    -          853177 - Preserve Formants, Time Domain Smoothing
-    -          853178 - Mid/Side, Time Domain Smoothing
-    -          853179 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853180 - Independent Phase, Time Domain Smoothing
-    -          853181 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853182 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853183 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Percussive, Pitch Mode: Consistent, Window: Long
-    -          853184 - nothing
-    -          853185 - Preserve Formants
-    -          853186 - Mid/Side
-    -          853187 - Preserve Formants, Mid/Side
-    -          853188 - Independent Phase
-    -          853189 - Preserve Formants, Independent Phase
-    -          853190 - Mid/Side, Independent Phase
-    -          853191 - Preserve Formants, Mid/Side, Independent Phase
-    -          853192 - Time Domain Smoothing
-    -          853193 - Preserve Formants, Time Domain Smoothing
-    -          853194 - Mid/Side, Time Domain Smoothing
-    -          853195 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853196 - Independent Phase, Time Domain Smoothing
-    -          853197 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853198 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853199 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Percussive, Pitch Mode: Consistent, Window: Long
-    -          853200 - nothing
-    -          853201 - Preserve Formants
-    -          853202 - Mid/Side
-    -          853203 - Preserve Formants, Mid/Side
-    -          853204 - Independent Phase
-    -          853205 - Preserve Formants, Independent Phase
-    -          853206 - Mid/Side, Independent Phase
-    -          853207 - Preserve Formants, Mid/Side, Independent Phase
-    -          853208 - Time Domain Smoothing
-    -          853209 - Preserve Formants, Time Domain Smoothing
-    -          853210 - Mid/Side, Time Domain Smoothing
-    -          853211 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853212 - Independent Phase, Time Domain Smoothing
-    -          853213 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853214 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853215 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Detector: Soft, Pitch Mode: Consistent, Window: Long
-    -          853216 - nothing
-    -          853217 - Preserve Formants
-    -          853218 - Mid/Side
-    -          853219 - Preserve Formants, Mid/Side
-    -          853220 - Independent Phase
-    -          853221 - Preserve Formants, Independent Phase
-    -          853222 - Mid/Side, Independent Phase
-    -          853223 - Preserve Formants, Mid/Side, Independent Phase
-    -          853224 - Time Domain Smoothing
-    -          853225 - Preserve Formants, Time Domain Smoothing
-    -          853226 - Mid/Side, Time Domain Smoothing
-    -          853227 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853228 - Independent Phase, Time Domain Smoothing
-    -          853229 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853230 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853231 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Mixed, Detector: Soft, Pitch Mode: Consistent, Window: Long
-    -          853232 - nothing
-    -          853233 - Preserve Formants
-    -          853234 - Mid/Side
-    -          853235 - Preserve Formants, Mid/Side
-    -          853236 - Independent Phase
-    -          853237 - Preserve Formants, Independent Phase
-    -          853238 - Mid/Side, Independent Phase
-    -          853239 - Preserve Formants, Mid/Side, Independent Phase
-    -          853240 - Time Domain Smoothing
-    -          853241 - Preserve Formants, Time Domain Smoothing
-    -          853242 - Mid/Side, Time Domain Smoothing
-    -          853243 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853244 - Independent Phase, Time Domain Smoothing
-    -          853245 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853246 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853247 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
-    -      
-    -      Rubber Band Library - Transients: Smooth, Detector: Soft, Pitch Mode: Consistent, Window: Long
-    -          853248 - nothing
-    -          853249 - Preserve Formants
-    -          853250 - Mid/Side
-    -          853251 - Preserve Formants, Mid/Side
-    -          853252 - Independent Phase
-    -          853253 - Preserve Formants, Independent Phase
-    -          853254 - Mid/Side, Independent Phase
-    -          853255 - Preserve Formants, Mid/Side, Independent Phase
-    -          853256 - Time Domain Smoothing
-    -          853257 - Preserve Formants, Time Domain Smoothing
-    -          853258 - Mid/Side, Time Domain Smoothing
-    -          853259 - Preserve Formants, Mid/Side, Time Domain Smoothing
-    -          853260 - Independent Phase, Time Domain Smoothing
-    -          853261 - Preserve Formants, Independent Phase, Time Domain Smoothing
-    -          853262 - Mid/Side, Independent Phase, Time Domain Smoothing
-    -          853263 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing
     integer stretch_marker_mode - the stretch marker mode
                                 - 0, Balanced
                                 - 1, Tonal-optimized
@@ -8374,13 +8393,13 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
                       - markertable[id][5] = integer markrgnindexnumber - the shown number of the region/marker
                       - markertable[id][6] = integer color - the color-value of the marker
                       - markertable[id][7] = string guid - the guid of the marker
-					  - markertable[id][8] = if a region: true, region is selected; false, region is not selected
-					  - markertable[id][9] = if a region: true, region-render-matrix Master mix is selected; false, region-render-matrix Master mix is unselected
-					  - markertable[id][10]= if a region: true, region-render-matrix All tracks is selected; false, region-render-matrix All tracks is unselected
+                      - markertable[id][8] = if a region: true, region is selected; false, region is not selected
+                      - markertable[id][9] = if a region: true, region-render-matrix Master mix is selected; false, region-render-matrix Master mix is unselected
+                      - markertable[id][10]= if a region: true, region-render-matrix All tracks is selected; false, region-render-matrix All tracks is unselected
 
-					  MarkerArray[MarkerCount][8]=tonumber(isrgn)&8==8  -- is region selected?
-	MarkerArray[MarkerCount][9]=tonumber(isrgn)&4==4  -- is region-matrix-mastermix selected?
-MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks selected?
+                      MarkerArray[MarkerCount][8]=tonumber(isrgn)&8==8  -- is region selected?
+                      MarkerArray[MarkerCount][9]=tonumber(isrgn)&4==4  -- is region-matrix-mastermix selected?
+                      MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks selected?
   </retvals>
   <chapter_context>
     Project-Management
@@ -8441,9 +8460,9 @@ MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks
     MarkerArray[MarkerCount][5]=tonumber(shownnumber)
     MarkerArray[MarkerCount][6]=tonumber(color)
     MarkerArray[MarkerCount][7]=guid
-	MarkerArray[MarkerCount][8]=tonumber(isrgn)&8==8  -- is region selected?
-	MarkerArray[MarkerCount][9]=tonumber(isrgn)&4==4  -- is region-matrix-mastermix selected?
-	MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks selected?
+    MarkerArray[MarkerCount][8]=tonumber(isrgn)&8==8  -- is region selected?
+    MarkerArray[MarkerCount][9]=tonumber(isrgn)&4==4  -- is region-matrix-mastermix selected?
+    MarkerArray[MarkerCount][10]=tonumber(isrgn)&2==2 -- is region-matrix-All tracks selected?
   end
   return MarkerCount, NumMarker, NumRegions, MarkerArray
 end
@@ -9390,11 +9409,11 @@ function ultraschall.GetProject_MasterTrackView(projectfilename_with_path, Proje
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_MasterTrackView</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.95
+    Ultraschall=4.2
+    Reaper=6.32
     Lua=5.3
   </requires>
-  <functioncall>integer tcp_visibility, number state2, number state3, number state4, integer state5, integer state6, integer state7, integer state8, integer state9, integer state10 = ultraschall.GetProject_MasterTrackView(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
+  <functioncall>integer tcp_visibility, number state2, number state3, number state4, integer state5, integer state6, integer state7, integer state8, integer state9, integer state10, integer state11, integer state12, number state13 = ultraschall.GetProject_MasterTrackView(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
   <description>
     returns the master-view-state of the master-track of the project or a ProjectStateChunk.
     
@@ -9417,6 +9436,9 @@ function ultraschall.GetProject_MasterTrackView(projectfilename_with_path, Proje
     integer state8 - unknown
     integer state9 - unknown
     integer state10 - unknown
+    integer state11 - unknown
+    integer state12 - unknown
+    integer state13 - unknown
   </retvals>
   <chapter_context>
     Project-Management
@@ -10611,6 +10633,8 @@ function ultraschall.GetProject_Length(projectfilename_with_path, ProjectStateCh
     
     It's returning the position of the overall length, as well as the position of the last itemedge/regionedge/marker/time-signature-marker of the project.
     
+    It will not take the effect of stretch-markers and time-signature-markers and change of playrate into account!
+    
     To do the same for currently opened projects, use: [GetProjectLength](#GetProjectLength)
     
     Returns -1 in case of an error
@@ -10886,76 +10910,88 @@ function ultraschall.SetProject_RenderPattern(projectfilename_with_path, render_
   <description>
     Sets the render-filename in an rpp-projectfile or a ProjectStateChunk. Set it to "", if you want to set the render-filename with <a href="#SetProject_RenderFilename">SetProject_RenderFilename</a>.
     
+    Capitalizing the first character of the wildcard will capitalize the first letter of the substitution. 
+        Capitalizing the first two characters of the wildcard will capitalize all letters.
+        
+        Directories will be created if necessary. For example if the render target 
+        is "$project/track", the directory "$project" will be created.
+        
+        Immediately following a wildcard, character replacement statements may be specified:
+          <X>  -- single character which is to be removed from the substitution. 
+                      For example: $track< > removes all spaces from the track name, 
+                                   $track</><\> removes all slashes.
+                                   
+          <abcdeX> -- multiple characters, abcde are all replaced with X. 
+                      
+                      For example: <_.> replaces all underscores with periods, 
+                                   </\_> replaces all slashes with underscores. 
+                      
+                      If > is specified as a source character, it must be listed first in the list.
+        
+        $item    media item take name, if the input is a media item
+        $itemnumber  1 for the first media item on a track, 2 for the second...
+        $track    track name
+        $tracknumber  1 for the first track, 2 for the second...
+        $parenttrack  parent track name
+        $region    region name
+        $regionnumber  1 for the first region, 2 for the second...
+        $project    project name
+        $tempo    project tempo at the start of the render region
+        $timesignature  project time signature at the start of the render region, formatted as 4-4
+        $filenumber  blank (optionally 1) for the first file rendered, 1 (optionally 2) for the second...
+        $filenumber[N]  N for the first file rendered, N+1 for the second...
+        $note    C0 for the first file rendered,C#0 for the second...
+        $note[X]    X (example: B2) for the first file rendered, X+1 (example: C3) for the second...
+        $natural    C0 for the first file rendered, D0 for the second...
+        $natural[X]  X (example: F2) for the first file rendered, X+1 (example: G2) for the second...
+        $namecount  1 for the first item or region of the same name, 2 for the second...
+        $timelineorder  1 for the first item or region on the timeline, 2 for the second...
+        
+        Position/Length:
+        $start    start time of the media item, render region, or time selection, in M-SS.TTT
+        $end    end time of the media item, render region, or time selection, in M-SS.TTT
+        $length    length of the media item, render region, or time selection, in M-SS.TTT
+        $startbeats  start time in measures.beats of the media item, render region, or time selection
+        $endbeats  end time in measures.beats of the media item, render region, or time selection
+        $lengthbeats    length in measures.beats of the media item, render region, or time selection
+        $starttimecode  start time in H-MM-SS-FF format of the media item, render region, or time selection
+        $endtimecode  end time in H-MM-SS-FF format of the media item, render region, or time selection
+        $startframes  start time in absolute frames of the media item, render region, or time selection
+        $endframes  end time in absolute frames of the media item, render region, or time selection
+        $lengthframes  length in absolute frames of the media item, render region, or time selection
+        $startseconds  start time in whole seconds of the media item, render region, or time selection
+        $endseconds  end time in whole seconds of the media item, render region, or time selection
+        $lengthseconds  length in whole seconds of the media item, render region, or time selection
+        
+        Output Format:
+        $format    render format (example: wav)
+        $samplerate  sample rate (example: 44100)
+        $sampleratek  sample rate (example: 44.1)
+        $bitdepth  bit depth, if available (example: 24 or 32FP)
+        
+        Current Date/Time:
+        $year    year, currently 2019
+        $year2    last 2 digits of the year,currently 19
+        $month    month number,currently 04
+        $monthname  month name,currently apr
+        $day    day of the month, currently 28
+        $hour    hour of the day in 24-hour format,currently 23
+        $hour12    hour of the day in 12-hour format,currently 11
+        $ampm    am if before noon,pm if after noon,currently pm
+        $minute    minute of the hour,currently 30
+        $second    second of the minute,currently 27
+        
+        Computer Information:
+        $user    user name
+        $computer  computer name
+        
+        (this description has been taken from the Render Wildcard Help within the Render-Dialog of Reaper)
+    
     Returns -1 in case of error.
   </description>
   <parameters>
     string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
     string render_pattern - the pattern, with which the rendering-filename will be automatically created. Check also <a href="#GetProject_RenderFilename">GetProject_RenderFilename</a>
-  - Capitalizing the first character of the wildcard will capitalize the first letter of the substitution. Capitalizing the first two characters of the wildcard will capitalize all letters.
-  - 
-  - Directories will be created if necessary. For example if the render target is "$project/track", the directory "$project" will be created.
-  - 
-  - Immediately following a wildcard, character replacement statements may be specified:
-  -   <X>  -- single character which is to be removed from the substituion. For example: $track< > removes all spaces from the track name, $track</><\> removes all slashes.
-  -   <abcdeX> -- multiple characters, abcde are all replaced with X. For example: <_.> replaces all underscores with periods, </\_> replaces all slashes with underscores. If > is specified as a source character, it must be listed first in the list.
-  - 
-  - $item    media item take name, if the input is a media item
-  - $itemnumber  1 for the first media item on a track, 2 for the second...
-  - $track    track name
-  - $tracknumber  1 for the first track, 2 for the second...
-  - $parenttrack  parent track name
-  - $region    region name
-  - $regionnumber  1 for the first region, 2 for the second...
-  - $project    project name
-  - $tempo    project tempo at the start of the render region
-  - $timesignature  project time signature at the start of the render region, formatted as 4-4
-  - $filenumber  blank (optionally 1) for the first file rendered, 1 (optionally 2) for the second...
-  - $filenumber[N]  N for the first file rendered, N+1 for the second...
-  - $note    C0 for the first file rendered,C#0 for the second...
-  - $note[X]    X (example: B2) for the first file rendered, X+1 (example: C3) for the second...
-  - $natural    C0 for the first file rendered, D0 for the second...
-  - $natural[X]  X (example: F2) for the first file rendered, X+1 (example: G2) for the second...
-  - $namecount  1 for the first item or region of the same name, 2 for the second...
-  - $timelineorder  1 for the first item or region on the timeline, 2 for the second...
-  - 
-  - Position/Length:
-  - $start    start time of the media item, render region, or time selection, in M-SS.TTT
-  - $end    end time of the media item, render region, or time selection, in M-SS.TTT
-  - $length    length of the media item, render region, or time selection, in M-SS.TTT
-  - $startbeats  start time in measures.beats of the media item, render region, or time selection
-  - $endbeats  end time in measures.beats of the media item, render region, or time selection
-  - $lengthbeats    length in measures.beats of the media item, render region, or time selection
-  - $starttimecode  start time in H-MM-SS-FF format of the media item, render region, or time selection
-  - $endtimecode  end time in H-MM-SS-FF format of the media item, render region, or time selection
-  - $startframes  start time in absolute frames of the media item, render region, or time selection
-  - $endframes  end time in absolute frames of the media item, render region, or time selection
-  - $lengthframes  length in absolute frames of the media item, render region, or time selection
-  - $startseconds  start time in whole seconds of the media item, render region, or time selection
-  - $endseconds  end time in whole seconds of the media item, render region, or time selection
-  - $lengthseconds  length in whole seconds of the media item, render region, or time selection
-  - 
-  - Output Format:
-  - $format    render format (example: wav)
-  - $samplerate  sample rate (example: 44100)
-  - $sampleratek  sample rate (example: 44.1)
-  - $bitdepth  bit depth, if available (example: 24 or 32FP)
-  - 
-  - Current Date/Time:
-  - $year    year, currently 2019
-  - $year2    last 2 digits of the year,currently 19
-  - $month    month number,currently 04
-  - $monthname  month name,currently apr
-  - $day    day of the month, currently 28
-  - $hour    hour of the day in 24-hour format,currently 23
-  - $hour12    hour of the day in 12-hour format,currently 11
-  - $ampm    am if before noon,pm if after noon,currently pm
-  - $minute    minute of the hour,currently 30
-  - $second    second of the minute,currently 27
-  - 
-  - Computer Information:
-  - $user    user name
-  - $computer  computer name
-    -(this description has been taken from the Render Wildcard Help within the Render-Dialog of Reaper)
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>
@@ -11689,7 +11725,7 @@ function ultraschall.SetProject_MasterTrackColor(projectfilename_with_path, colo
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>integer retval = ultraschall.SetProject_MasterTrackColor(string projectfilename_with_path, integer color, integer peak_metering, optional string ProjectStateChunk)</functioncall>
+  <functioncall>integer retval = ultraschall.SetProject_MasterTrackColor(string projectfilename_with_path, integer color, optional string ProjectStateChunk)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets the color for the master-track of an rpp-projectfile or a ProjectStateChunk.
     
@@ -11744,7 +11780,7 @@ function ultraschall.SetProject_MasterPanMode(projectfilename_with_path, panmode
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>integer retval = ultraschall.SetProject_MasterPanMode(string projectfilename_with_path, integer panmode, integer peak_metering, optional string ProjectStateChunk)</functioncall>
+  <functioncall>integer retval = ultraschall.SetProject_MasterPanMode(string projectfilename_with_path, integer panmode, optional string ProjectStateChunk)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Sets the panmode for the master-track of an rpp-projectfile or a ProjectStateChunk.
     
@@ -11799,16 +11835,16 @@ function ultraschall.SetProject_MasterPanMode(projectfilename_with_path, panmode
 end
 
 
-function ultraschall.SetProject_MasterTrackView(projectfilename_with_path, tcp_visibility, state2, state3, state4, state5, state6, state7, ProjectStateChunk)
+function ultraschall.SetProject_MasterTrackView(projectfilename_with_path, tcp_visibility, state2, state3, state4, state5, state6, state7, state8, state9, state10, state11, state12, state13, ProjectStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetProject_MasterTrackView</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=6.02
+    Ultraschall=4.2
+    Reaper=6.32
     Lua=5.3
   </requires>
-  <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_MasterTrackView(string projectfilename_with_path, integer tcp_visibility, number state2, number state3, number state4, integer state5, integer state6, integer state7, optional string ProjectStatechunk)</functioncall>
+  <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_MasterTrackView(string projectfilename_with_path, integer tcp_visibility, number state2, number state3, number state4, integer state5, integer state6, integer state7, integer state8, integer state9, integer state10, integer state11, integer state12, number state13, optional string ProjectStatechunk)</functioncall>
   <description>
     Sets the master-view-state of the master-track of the project or a ProjectStateChunk.
     
@@ -11828,6 +11864,9 @@ function ultraschall.SetProject_MasterTrackView(projectfilename_with_path, tcp_v
     integer state8 - unknown
     integer state9 - unknown
     integer state10 - unknown
+    integer state11 - unknown
+    integer state12 - unknown
+    number state13 - unknown    
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>
@@ -11843,22 +11882,173 @@ function ultraschall.SetProject_MasterTrackView(projectfilename_with_path, tcp_v
   <tags>projectfiles, rpp, state, set, ripple, all, one</tags>
 </US_DocBloc>
 ]]
-  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_RippleState", "ProjectStateChunk", "Must be a valid ProjectStateChunk", -1) return -1 end
-  if projectfilename_with_path~=nil and reaper.file_exists(projectfilename_with_path)==false then ultraschall.AddErrorMessage("SetProject_RippleState", "projectfilename_with_path", "File does not exist", -2) return -1 end
+  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "ProjectStateChunk", "Must be a valid ProjectStateChunk", -1) return -1 end
+  if projectfilename_with_path~=nil and reaper.file_exists(projectfilename_with_path)==false then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "projectfilename_with_path", "File does not exist", -2) return -1 end
   if projectfilename_with_path~=nil then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path) end
-  if projectfilename_with_path~=nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_RippleState", "projectfilename_with_path", "File is no valid RPP-Projectfile", -3) return -1 end
+  if projectfilename_with_path~=nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "projectfilename_with_path", "File is no valid RPP-Projectfile", -3) return -1 end
   
-  if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_RippleState", "projectfilename_with_path", "No valid RPP-Projectfile!", -5) return -1 end
+  if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "projectfilename_with_path", "No valid RPP-Projectfile!", -5) return -1 end
 --tcp_visibility, state2, state3, state4, state5, state6, state7
-  if math.type(tcp_visibility)~="integer" then ultraschall.AddErrorMessage("SetProject_RippleState", "tcp_visibility", "Must be an integer", -4) return -1 end
+  if math.type(tcp_visibility)~="integer" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "tcp_visibility", "Must be an integer", -4) return -1 end
+  if type(state2)~="number" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state2", "Must be a number", -5) return -1 end
+  if type(state3)~="number" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state3", "Must be a number", -6) return -1 end
+  if type(state4)~="number" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state4", "Must be a number", -7) return -1 end
+  if math.type(state5)~="integer" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state5", "Must be an integer", -8) return -1 end
+  if math.type(state6)~="integer" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state6", "Must be an integer", -9) return -1 end
+  if math.type(state7)~="integer" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state7", "Must be an integer", -10) return -1 end
+  if math.type(state8)~="integer" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state8", "Must be an integer", -11) return -1 end
+  if math.type(state9)~="integer" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state9", "Must be an integer", -12) return -1 end
+  if math.type(state10)~="integer" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state10", "Must be an integer", -13) return -1 end
+  if math.type(state11)~="integer" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state11", "Must be an integer", -14) return -1 end
+  if math.type(state12)~="integer" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state12", "Must be an integer", -15) return -1 end
+  if type(state13)~="number" then ultraschall.AddErrorMessage("SetProject_MasterTrackView", "state13", "Must be a number", -16) return -1 end
   
+  local FileStart=ProjectStateChunk:match("(<REAPER_PROJECT.-MASTERTRACKVIEW%s).-%c")
+  local FileEnd=ProjectStateChunk:match("<REAPER_PROJECT.-MASTERTRACKVIEW%s.-%c(.*)")
   
-  local FileStart=ProjectStateChunk:match("(<REAPER_PROJECT.-RIPPLE%s).-%c.-<RECORD_CFG.*")
-  local FileEnd=ProjectStateChunk:match("<REAPER_PROJECT.-RIPPLE%s.-%c(.-<RECORD_CFG.*)")
-  
-  ProjectStateChunk=FileStart..ripple_state.."\n"..FileEnd
+  ProjectStateChunk=FileStart..tcp_visibility.." "..state2.." "..state3.." "..state4.." "..state5.." "
+                    ..state6.." "..state7.." "..state8.." "..state9.." "
+                    ..state10.." "..state11.." "
+                    ..state12.." "
+                    ..state13.."\n"
+                    ..FileEnd  
   if projectfilename_with_path~=nil then return ultraschall.WriteValueToFile(projectfilename_with_path, ProjectStateChunk), ProjectStateChunk
   else return 1, ProjectStateChunk
   end
 end
 
+function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, ProjectStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetProject_Render_Normalize</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.42
+    Lua=5.3
+  </requires>
+  <functioncall>integer render_normalize_mode, number normalize_target = ultraschall.GetProject_Render_Normalize(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
+  <description>
+    returns the master-view-state of the master-track of the project or a ProjectStateChunk.
+    
+    It's the entry RENDER_NORMALIZE
+    
+    returns nil in case of an error
+  </description>
+  <parameters>
+    string projectfilename_with_path - the projectfile+path, from which to get the trackview-states; nil to use ProjectStateChunk
+    optional string ProjectStateChunk - a statechunk of a project, usually the contents of a rpp-project-file
+  </parameters>
+  <retvals>
+    integer render_normalize_method - the normalize-method
+                                    - &1, Enable normalizing
+                                    -     0, unchecked(off)
+                                    -     1, checked(on)
+                                    - 0, LUFS-I
+                                    - 2 , RMS-I
+                                    - 4, Peak
+                                    - 6, True Peak
+                                    - 8, LUFS-M max
+                                    - 10, LUFS-S max
+                                    - &32, Normalize stems to master target-checkbox
+                                    -     0, unchecked(off)
+                                    -     1, checked(on)
+                                    - &64, Brickwall-enabled-checkbox
+                                    -     0, unchecked(off)
+                                    -     1, checked(on)
+                                    - &128, Brickwall-mode
+                                    -     0, Peak
+                                    -     1, True Peak
+    number normalize_target - the normalize-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.
+    number brickwall_target - the normalize-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.
+  </retvals>
+  <chapter_context>
+    Project-Management
+    RPP-Files Get
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua</source_document>
+  <tags>projectmanagement, get, view, projectstatechunk</tags>
+</US_DocBloc>
+]]
+  return ultraschall.GetProjectState_NumbersOnly(projectfilename_with_path, "RENDER_NORMALIZE", ProjectStateChunk, "GetProject_Render_Normalize")
+end
+
+function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, render_normalize_method, normalize_target, ProjectStateChunk, brickwall_target)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetProject_Render_Normalize</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.43
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.SetProject_Render_Normalize(string projectfilename_with_path, integer render_normalize_method, number normalize_target, optional string ProjectStateChunk, optional number brickwall_target)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Sets the panmode for the master-track of an rpp-projectfile or a ProjectStateChunk.
+    
+    It's the entry RENDER_NORMALIZE
+    
+    Returns -1 in case of error.
+  </description>
+  <parameters>
+    string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
+    integer render_normalize_method - the normalize-method
+                                    - &1, Enable normalizing
+                                    -     0, unchecked(off)
+                                    -     1, checked(on)
+                                    - 0, LUFS-I
+                                    - 2 , RMS-I
+                                    - 4, Peak
+                                    - 6, True Peak
+                                    - 8, LUFS-M max
+                                    - 10, LUFS-S max
+                                    - &32, Normalize stems to master target-checkbox
+                                    -     0, unchecked(off)
+                                    -     1, checked(on)
+                                    - &64, Brickwall-enabled-checkbox
+                                    -     0, unchecked(off)
+                                    -     1, checked(on)
+                                    - &128, Brickwall-mode
+                                    -     0, Peak
+                                    -     1, True Peak
+    number normalize_target - the normalize-target as amp-volume. Use ultraschall.DB2MKVOL to convert it from dB.
+    optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
+    optional number brickwall_target - the brickwall-normalizatin-target as amp-volume. Use ultraschall.DB2MKVOL to convert it from dB.
+  </parameters>
+  <retvals>
+    integer retval - -1 in case of error, 1 in case of success
+  </retvals>
+  <chapter_context>
+    Project-Management
+    RPP-Files Set
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua</source_document>
+  <tags>projectfiles, rpp, state, set, render, normalize, brickwall</tags>
+</US_DocBloc>
+]]  
+  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "ProjectStateChunk", "Must be a valid ProjectStateChunk", -1) return -1 end
+  if projectfilename_with_path~=nil and reaper.file_exists(projectfilename_with_path)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "projectfilename_with_path", "File does not exist", -2) return -1 end
+  if projectfilename_with_path~=nil then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path) end
+  if projectfilename_with_path~=nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "projectfilename_with_path", "File is no valid RPP-Projectfile", -3) return -1 end
+
+  if math.type(render_normalize_method)~="integer" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "render_normalize_method", "Must be an integer", -4) return -1 end
+  if type(normalize_target)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "normalize_target", "Must be a number", -5) return -1 end
+  if brickwall_target~=nil and type(brickwall_target)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "brickwall_target", "Must be a number", -7) return -1 end
+
+  if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "projectfilename_with_path", "No valid RPP-Projectfile!", -6) return -1 end
+  if brickwall_target==nil then brickwall_target="" else brickwall_target=" "..brickwall_target end
+  local ProjectEntry=""
+  
+  ProjectEntry="  RENDER_NORMALIZE "..render_normalize_method.." "..normalize_target..brickwall_target.."\n" 
+  
+  if ProjectStateChunk:match("RENDER_NORMALIZE")~=nil then
+    ProjectStateChunk=string.gsub(ProjectStateChunk, "\n  RENDER_NORMALIZE .-%c", "\n"..ProjectEntry)
+  else
+    ProjectStateChunk=ProjectStateChunk:match("(.*)  TIMELOCKMODE")..ProjectEntry..ProjectStateChunk:match("(  TIMELOCKMODE.*)")
+  end
+
+  if projectfilename_with_path~=nil then return ultraschall.WriteValueToFile(projectfilename_with_path, ProjectStateChunk), ProjectStateChunk
+  else return 1, ProjectStateChunk
+  end  
+end

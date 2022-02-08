@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 ################################################################################
 ]]
 
--- Ultraschall State-Inspector 2.3.0 [Ultraschall-Developer Tools] 1.12.2020
+-- Ultraschall State-Inspector 2.3.1 [Ultraschall-Developer Tools] 1.05.2021
 --
 -- This Inspector monitors toggle-command-states or external-states of your choice.
 -- It's good for checking, if some toggling of states or changing of external-states
@@ -40,7 +40,7 @@ Aa,Ab,Ac,Ad,Ae=reaper.get_action_context()
 Path=Ab:match("(.*\\)")
 if Path==nil then Path=Ab:match("(.*/)") end
 
-version="2.3.0 - 1. 12. 2020"
+version="2.3.1 - 1. 5. 2021"
 
 gfx.init("Ultraschall State Inspector "..version, 560, 520)
 
@@ -143,15 +143,8 @@ function ultraschall.GetUSExternalState(section, key)
 end  
 
 function ultraschall.GetStringFromClipboard_SWS()
--- gets a big string from clipboard, using the 
--- CF_GetClipboardBig-function from SWS
--- and deals with all aspects necessary, that
--- surround using it.
-  local buf = reaper.CF_GetClipboard(buf)
-  local WDL_FastString=reaper.SNM_CreateFastString("HudelDudel")
-  local clipboardstring=reaper.CF_GetClipboardBig(WDL_FastString)
-  reaper.SNM_DeleteFastString(WDL_FastString)
-  return clipboardstring
+  -- returns contents of clipboard
+  return reaper.CF_GetClipboard(buf)
 end
 
 font_height=gfx.measurechar(65)+3
@@ -635,7 +628,7 @@ function ShowStates()
         gfx.set(1,1,1)
         if gfx.x>row3 then row3=gfx.x+50 end
         gfx.x=row3
-        retval, tracknumber, itemnumber, fxnumber = reaper.GetFocusedFX()
+        retval, tracknumber, itemnumber, fxnumber = reaper.GetFocusedFX2()
         if retval==1 then retval="track fx window: focused" end
         if retval==2 then retval="item fx window: focused" end
         if retval==0 then retval="no fx window focused" end
@@ -1435,6 +1428,10 @@ function ShowSelectedEnvelopeState()
     gfx.set(0.01,0.01,0.01,1,0,10)
     gfx.setimgdim(10,2048,2048)
     gfx.rect(0,0,2048,2048,true)
+    gfx.set(0, 0.7, 1)
+    gfx.x=10
+    gfx.y=10
+    gfx.drawstr("Shortcuts: Ctrl/Cmd+C: copy Statechunk to clipboard - Crlt/Cmd+V: paste statechunk from clipboard")
     gfx.set(1,1,1,1,0,10)
     gfx.x=10
     gfx.y=30
@@ -1442,6 +1439,8 @@ function ShowSelectedEnvelopeState()
     gfx.drawstr(str)
     oldstatechange=statechange
 --  end  
+  if A==3 then print3(str) end
+  if A==22 then reaper.SetEnvelopeStateChunk(Env, FromClip(), false) end
   gfx.x=0
   gfx.y=20
   gfx.set(1,1,1,1,0,-1)
@@ -1460,6 +1459,10 @@ function ShowSelectedItemState()
     gfx.set(0.01,0.01,0.01,1,0,10)
     gfx.setimgdim(10,2048,2048)
     gfx.rect(0,0,2048,2048,true)
+    gfx.set(0, 0.7, 1)
+    gfx.x=10
+    gfx.y=10
+    gfx.drawstr("Shortcuts: Ctrl/Cmd+C: copy Statechunk to clipboard - Crlt/Cmd+V: paste statechunk from clipboard")
     gfx.set(1,1,1,1,0,10)
     gfx.x=10
     gfx.y=30
@@ -1469,6 +1472,8 @@ function ShowSelectedItemState()
     --gfx.set(0.1,0.1,0.1,1,0,-1)
     --gfx.rect(0,20,gfx.w,gfx.h,true)
 --  end  
+  if A==3 then print3(str) end
+  if A==22 then reaper.SetItemStateChunk(MediaItem, FromClip(), false) end
   gfx.x=0
   gfx.y=20
   gfx.set(1,1,1,1,0,-1)
@@ -1487,6 +1492,10 @@ function ShowSelectedTrackState()
     gfx.set(0.01,0.01,0.01,1,0,10)
     gfx.setimgdim(10,2048,2048)
     gfx.rect(0,0,2048,2048,true)
+    gfx.set(0, 0.7, 1)
+    gfx.x=10
+    gfx.y=10
+    gfx.drawstr("Shortcuts: Ctrl/Cmd+C: copy Statechunk to clipboard - Crlt/Cmd+V: paste statechunk from clipboard")
     gfx.set(1,1,1,1,0,10)
     gfx.x=10
     gfx.y=30
@@ -1496,6 +1505,8 @@ function ShowSelectedTrackState()
     --gfx.set(0.1,0.1,0.1,1,0,-1)
     --gfx.rect(0,20,gfx.w,gfx.h,true)
 --  end  
+  if A==3 then print3(str) end
+  if A==22 then reaper.SetTrackStateChunk(MediaTrack, FromClip(), false) end
   gfx.x=0
   gfx.y=20
   gfx.set(1,1,1,1,0,-1)
@@ -1960,6 +1971,9 @@ function main()
   A=gfx.getchar()
   if gfx.getchar()~=-1 then
     if shortcuts=="on" then 
+    
+      -- NOTE: show state-chunk-functions occupy getchar=3(ctrl+C) for copying them into clipboard
+      -- all other are used in here
       if A==116.0 then AddToggleCommand() end
       if A==103.0 then AddGMEMState() end
       if A==6 then SearchWindow() end

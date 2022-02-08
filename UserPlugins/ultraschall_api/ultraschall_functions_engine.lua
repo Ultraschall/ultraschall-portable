@@ -30,12 +30,12 @@
 
 if type(ultraschall)~="table" then 
   -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+  local retval, String = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
   local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
+  if String=="" then string=10000 
   else 
-    string=tonumber(string) 
-    string=string+1
+    String=tonumber(String) 
+    String=String+1
   end
   if string2=="" then string2=10000 
   else 
@@ -88,11 +88,11 @@ ultraschall.snowoldgfx=gfx.update
 
 -- lets initialize some API-Variables
 ultraschall.StartTime=os.clock()
-ultraschall.Script_Path = reaper.GetResourcePath().."/Scripts/"
+--ultraschall.Script_Path = reaper.GetResourcePath().."/Scripts/"
 local script_path = reaper.GetResourcePath().."/UserPlugins/ultraschall_api"..ultraschall.Separator
-ultraschall.Api_Path=script_path
-ultraschall.Api_Path=string.gsub(ultraschall.Api_Path,"\\","/")
-ultraschall.Api_InstallPath=reaper.GetResourcePath().."/UserPlugins/"
+--ultraschall.Api_Path="HH"..script_path
+--ultraschall.Api_Path=string.gsub(ultraschall.Api_Path,"\\","/")
+--ultraschall.Api_InstallPath=reaper.GetResourcePath().."/UserPlugins/"
 
 function ultraschall.CountProjectTabs()
 --[[
@@ -204,6 +204,7 @@ function ultraschall.GetApiVersion()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Various
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -211,7 +212,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  return 420.003, "4.2","15th of January 2021", "003",  "\"Georg Friedrich Händel - Sarabande\"", ultraschall.hotfixdate, BuildNumber
+  return 420.006, "4.2","24th of December 2021", "006",  "\"The Beatles - The continuing story of Bungalow Bill\"", "xx of xxxx xxxx", BuildNumber..".00"
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -238,8 +239,8 @@ function ultraschall.IntToDouble(integer, selector)
     local A=string.char(integer:sub(1,2)+1)..string.char(integer:sub(3,4)+1)..string.char(integer:sub(5,6)+1)..string.char(integer:sub(7,8)+1)
     
     -- read ini-file
-      --local B=ultraschall.ReadFullFile(ultraschall.Api_Path.."/IniFiles/double_to_int_2.ini", true)
- B=UseMe -- debug
+    local B=ultraschall.ReadFullFile(ultraschall.Api_Path.."/IniFiles/double_to_int_2.ini", true)
+ --B=UseMe -- debug
     -- look for the byte-sequence in the ini-file. The (offset/4)/100 is the double-float-value
     local i=-1
     for k in string.gmatch(B, "....") do
@@ -1117,10 +1118,6 @@ function progresscounter(state)
   local A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_functions_engine.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_doc_engine.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gui_engine.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gui_engine_server.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_network_engine.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_sound_engine.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_video_engine.lua")
   
   local filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Modules/")
@@ -1131,9 +1128,6 @@ function progresscounter(state)
 if ultraschall.US_BetaFunctions==true then
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_functions_engine_beta.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine_beta.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gui_engine_beta.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_network_engine_beta.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_sound_engine_beta.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_video_engine_beta.lua")
 end
   A=A.."function ultraschall."
@@ -1344,10 +1338,11 @@ end
 
 -- HoHoHo
 function ultraschall.OperationHoHoHo()  
-  if ultraschall.tempfilename:match("ultraschall_startscreen.lua")~=nil and 
-      (ultraschall.snowtodaysdate=="24.12" or 
-       ultraschall.snowtodaysdate=="25.12" or 
-       ultraschall.snowtodaysdate=="26.12") then
+--[[
+    if ultraschall.tempfilename:match("")==nil and 
+      (ultraschall.snowtodaysdate~="24.12" or 
+       ultraschall.snowtodaysdate~="25.12" or 
+       ultraschall.snowtodaysdate~="26.12") then
     if ultraschall.snowheight==nil then ultraschall.SnowInit() end
     ultraschall.snowoldgfx=gfx.update
     function gfx.update()
@@ -1355,11 +1350,12 @@ function ultraschall.OperationHoHoHo()
       ultraschall.snowoldgfx()
     end      
   end
+  --]]
 end
 --if GUI==nil then GUI={} end
 
 function ultraschall.SnowInit()
-  --gfx.init()
+  gfx.init()
   
   -- initial values
   ultraschall.snowspeed=1.3       -- the falling speed of the snowflakes
@@ -1524,6 +1520,7 @@ function ultraschall.WinterlySnowflakes(toggle, falling_speed, number_snowflakes
   else
     gfx.update=ultraschall.snowoldgfx
   end
+ 
   return 1
 end
 
@@ -1565,6 +1562,7 @@ function PingMe(message, outputtarget)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Debug
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -1622,6 +1620,7 @@ function print2(...)
   </parameters>
   <chapter_context>
     API-Helper functions
+    String Output
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -1663,6 +1662,7 @@ function print_alt(...)
   </parameters>
   <chapter_context>
     API-Helper functions
+    String Output
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -1707,6 +1707,7 @@ function print(...)
   </parameters>
   <chapter_context>
     API-Helper functions
+    String Output
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -1757,6 +1758,7 @@ function toboolean(value)
   </retvals>
   <chapter_context>
     API-Helper functions
+    Datatype-related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -1800,6 +1802,7 @@ function print3(...)
   </parameters>
   <chapter_context>
     API-Helper functions
+    String Output
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -1842,6 +1845,7 @@ function print_update(...)
   </parameters>
   <chapter_context>
     API-Helper functions
+    String Output
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -1870,7 +1874,7 @@ function ultraschall.CheckActionCommandIDFormat(aid)
     
     Does not check, whether this action_command_id is a useable one, only if it's "syntax" is correct!
     
-    returns falsein case of an error
+    returns false in case of an error
   </description>
   <retvals>
     boolean retval  - true, valid action_command_id; false, not a valid action_command_id
@@ -1880,6 +1884,7 @@ function ultraschall.CheckActionCommandIDFormat(aid)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -1919,6 +1924,7 @@ function ultraschall.RunCommand(actioncommand_id)
   </parameters>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -2069,6 +2075,7 @@ function ultraschall.deprecated(functionname)
     </parameter>
     <chapter_context>
       API-Helper functions
+      Debug
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>ultraschall_functions_engine.lua</source_document>
@@ -2116,6 +2123,7 @@ function ultraschall.FloatCompare(a,b,precision)
   </retvals>
   <chapter_context>
     API-Helper functions
+    Datatype-related
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -2148,7 +2156,7 @@ function ToClip(toclipstring)
     string toclipstring - the string, which you want to put into the clipboard
   </parameters>
   <chapter_context>
-    API-Helper functions
+    Clipboard Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -2176,7 +2184,7 @@ function FromClip()
     string clipboard_string - the string-content from the clipboard
   </retvals>
   <chapter_context>
-    API-Helper functions
+    Clipboard Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -2263,6 +2271,7 @@ function ultraschall.ActionsList_GetSelectedActions()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -2347,6 +2356,7 @@ function ultraschall.Gmem_GetCurrentAttachedName()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Gmem/Shared Memory
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
@@ -2388,6 +2398,7 @@ function ultraschall.ActionsList_GetAllActions()
   </retvals>
   <chapter_context>
     API-Helper functions
+    Action Related Functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -2461,6 +2472,7 @@ function ultraschall.BringReaScriptConsoleToFront()
   </description>
   <chapter_context>
     API-Helper functions
+    ReaScript Console
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
@@ -2474,7 +2486,7 @@ function ultraschall.BringReaScriptConsoleToFront()
   end
 end
 
-function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionlist_section, x_pos, y_pos, width, height)
+function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionlist_section, x_pos, y_pos, width, height, showstate, watchlist_size, watchlist_size_row1, watchlist_size_row2)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>EditReaScript</slug>
@@ -2483,7 +2495,7 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
     Reaper=6.10
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, optional command_id = ultraschall.EditReaScript(optional string filename, optional boolean add_ultraschall_api, optional integer add_to_actionlist_section, optional integer x_pos, optional integer y_pos, optional integer width, optional integer height)</functioncall>
+  <functioncall>boolean retval, optional command_id = ultraschall.EditReaScript(optional string filename, optional boolean add_ultraschall_api, optional integer add_to_actionlist_section, optional integer x_pos, optional integer y_pos, optional integer width, optional integer height, optional integer showstate, optional integer watchlist_size, optional integer watchlist_size_row1, optional integer watchlist_size_row2)</functioncall>
   <description>
     Opens a script in Reaper's ReaScript-IDE.
     
@@ -2509,6 +2521,12 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
     optional integer y_pos - y-position of the ide-window in pixels; nil, use the last one used
     optional integer width - width of the ide-window in pixels; nil, use the last one used
     optional integer height - height of the ide-window in pixels; nil, use the last one used
+    optional boolean showstate - nil, use last used settings
+                               - 0, show regularly
+                               - 1, dock the window
+    optional integer watchlist_size - sets the size of the watchlist, from 80 to screenwidth-80
+    optional integer watchlist_size_row1 - sets the size of the Name-row in the watchlist
+    optional integer watchlist_size_row2 - sets the size of the Value-row in the watchlist
   </parameters>
   <retvals>
     boolean retval - true, opening was successful; false, opening was unsuccessful
@@ -2528,6 +2546,10 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
   if y_pos~=nil and math.type(y_pos)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "y_pos", "must be nil or an integer", -3) return false end
   if width~=nil and math.type(width)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "width", "must be nil or an integer", -4) return false end
   if height~=nil and math.type(height)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "height", "must be nil or an integer", -5) return false end
+  if showstate~=nil and math.type(showstate)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "showstate", "must be nil or an integer", -6) return false end
+  if watchlist_size~=nil and math.type(watchlist_size)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size", "must be nil or an integer", -7) return false end
+  if watchlist_size_row1~=nil and math.type(watchlist_size_row1)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size_row1", "must be nil or an integer", -8) return false end  
+  if watchlist_size_row2~=nil and math.type(watchlist_size_row2)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size_row2", "must be nil or an integer", -9) return false end
   
   if filename==nil then 
     -- when user has not set a filename, use the last edited on(with this function) or 
@@ -2555,47 +2577,83 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
     end
   
     ultraschall.WriteValueToFile(filename, content)
-    if add_to_actionlist_section~=nil then
-      if add_to_actionlist_section~=0 and
-         add_to_actionlist_section~=100 and
-         add_to_actionlist_section~=32060 and
-         add_to_actionlist_section~=32061 and
-         add_to_actionlist_section~=32062 and
-         add_to_actionlist_section~=32063 then
-         add_to_actionlist_section=0
-      end
-
-      command_id = reaper.AddRemoveReaScript(true, add_to_actionlist_section, filename, true)
-    end
   end
   
+  if add_to_actionlist_section~=nil then
+  if add_to_actionlist_section~=0 and
+     add_to_actionlist_section~=100 and
+     add_to_actionlist_section~=32060 and
+     add_to_actionlist_section~=32061 and
+     add_to_actionlist_section~=32062 and
+     add_to_actionlist_section~=32063 then
+     add_to_actionlist_section=0
+  end
+
+  command_id = reaper.AddRemoveReaScript(true, add_to_actionlist_section, filename, true)
+end
+  
   -- set script that shall be opened and run the action to Edit last edited script
-  local A, B, C
+  local A, B, C, oldX, oldY, oldWidth, oldHeight, olddocked, retval, oldfullscreen, oldwatchdiv, oldwatch_c1, oldwatch_c2
+  
   A=ultraschall.GetUSExternalState("REAPER", "lastscript", "reaper.ini")
   B=ultraschall.SetUSExternalState("REAPER", "lastscript", filename, "reaper.ini")
   
   -- set IDE-window position within reaper.ini
   if x_pos~=nil then
-    local retval, oldX = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_lx", "", reaper.get_ini_file())
+    retval, oldX = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_lx", "", reaper.get_ini_file())
     reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lx", x_pos, reaper.get_ini_file())
   end
   
   if y_pos~=nil then
-    local retval, oldY = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_ly", "", reaper.get_ini_file())
+    retval, oldY = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_ly", "", reaper.get_ini_file())
     reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_ly", y_pos, reaper.get_ini_file())
   end
 
   if width~=nil then
-    local retval, oldWidth = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_lw", "", reaper.get_ini_file())
+    retval, oldWidth = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_lw", "", reaper.get_ini_file())
     reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lw", width, reaper.get_ini_file())
   end
 
   if height~=nil then
-    local retval, oldHeight = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_lh", "", reaper.get_ini_file())
+    retval, oldHeight = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_lh", "", reaper.get_ini_file())
     reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lh", height, reaper.get_ini_file())
   end
   
+  -- set window behavior
+  if showstate~=nil then
+    retval, olddocked = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_docked", "", reaper.get_ini_file())
+    retval, oldfullscreen = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_lmax", "", reaper.get_ini_file())
+    if showstate==0 then
+      -- normal
+      reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_docked", 0, reaper.get_ini_file())
+      reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lmax",   0, reaper.get_ini_file())
+    elseif showstate==1 then
+      -- docked
+      reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_docked", 1, reaper.get_ini_file())
+      reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lmax",   0, reaper.get_ini_file())
+    elseif showstate==2 then
+      -- fullscreen, not yet working
+      -- reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_docked", 0, reaper.get_ini_file())
+      -- reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lmax",   1, reaper.get_ini_file())
+    end
+  end
   
+  -- set watchlist behavior
+  if watchlist_size~=nil then
+    retval, oldwatchdiv = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_divpos", "", reaper.get_ini_file())
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_divpos",   watchlist_size, reaper.get_ini_file())
+  end
+  
+  if watchlist_size_row1~=nil then
+    retval, oldwatch_c1 = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_c1", "", reaper.get_ini_file())
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_c1",   watchlist_size_row1, reaper.get_ini_file())
+  end
+  
+  if watchlist_size_row2~=nil then
+    retval, oldwatch_c2 = reaper.BR_Win32_GetPrivateProfileString("reascriptedit", "watch_c2", "", reaper.get_ini_file())
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_c2",   watchlist_size_row2, reaper.get_ini_file())
+  end
+        
   reaper.Main_OnCommand(41931,0)
 
   -- reset old edited script in reaper.ini
@@ -2615,18 +2673,37 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
     reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lh", oldHeight, reaper.get_ini_file())
   end  
   
+  -- reset showstate of window
+  if showstate~=nil then
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_docked", olddocked, reaper.get_ini_file())
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_lmax",   oldfullscreen, reaper.get_ini_file())
+  end
+  
+  -- reset old watchlist-behavior
+  if watchlist_size~=nil then
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_divpos", oldwatchdiv, reaper.get_ini_file())
+  end
+  
+  if watchlist_size_row1~=nil then
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_c1", oldwatch_c1, reaper.get_ini_file())
+  end
+  
+  if watchlist_size_row2~=nil then
+    reaper.BR_Win32_WritePrivateProfileString("reascriptedit", "watch_c2", oldwatch_c2, reaper.get_ini_file())
+  end
+  
   -- store last created/edited file using this function, so it can be opened with filename=nil
   reaper.SetExtState("ultraschall_api", "last_edited_script", filename, true)
 
   return true, command_id
 end
 
-function SFEM()
+function SFEM(dunk, target, message_type)
   --[[
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>SFEM</slug>
     <requires>
-      Ultraschall=4.1
+      Ultraschall=4.2
       Reaper=5.40
       Lua=5.3
     </requires>

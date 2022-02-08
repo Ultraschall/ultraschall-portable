@@ -1002,7 +1002,7 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTrackGroupFlagsState</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -1081,7 +1081,6 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
     -2^20 - VCA Master
     -2^21 - VCA Follow
     -2^22 - VCA pre-FX Follow
-    
      array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
     -e.g. If Volume Master is set only in Group 1, entry 1 in the array will be set to 1. If Volume Master is set on Group 2 and Group 4, the first entry in the array will be set to 10.
     -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F Follow, array[16] is Do not master when slaving, etc
@@ -1132,6 +1131,7 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
 
   for i=1,23 do
     Tracktable[i]=tonumber(Tracktable[i])
+    if Tracktable[i]==nil then Tracktable[i]=0 end
     if Tracktable[i]~=nil and Tracktable[i]>=1 then retval=retval+2^(i-1) end
   end
   
@@ -1143,7 +1143,7 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTrackGroupFlags_HighState</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.941
     Lua=5.3
   </requires>
@@ -1222,7 +1222,6 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
     -2^20 - VCA Master
     -2^21 - VCA Follow
     -2^22 - VCA pre-FX Follow
-    
      array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
     -e.g. If Volume Master is set only in Group 33, entry 1 in the array will be set to 1. If Volume Master is set on Group 34 and Group 36, the first entry in the array will be set to 10.
     -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F Follow, array[16] is Do not master when slaving, etc
@@ -1273,6 +1272,7 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
 
   for i=1,23 do
     Tracktable[i]=tonumber(Tracktable[i])
+    if Tracktable[i]==nil then Tracktable[i]=0 end
     if Tracktable[i]~=nil and Tracktable[i]>=1 then retval=retval+2^(i-1) end
   end
   

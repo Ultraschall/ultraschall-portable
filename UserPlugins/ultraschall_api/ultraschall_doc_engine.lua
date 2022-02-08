@@ -162,13 +162,14 @@ function ultraschall.Docs_RemoveIndent(String, indenttype, i)
   <tags>doc engine, indent, unindent, text, usdocbloc</tags>
 </US_DocBloc>
 ]]
-  if type(String)~="string" then ultraschall.AddErrorMessage("Docs_RemoveIndent", "String", "must be a string"..i, -1) return nil end
+  --if type(String)~="string" and i==nil then print2(String) end
+  if type(String)~="string" then ultraschall.AddErrorMessage("Docs_RemoveIndent", "String", "must be a string", -1) return nil end
   if type(indenttype)~="string" then ultraschall.AddErrorMessage("Docs_RemoveIndent", "indenttype", "must be a string", -2) return nil end
   if indenttype=="as_typed" then return String end
   if indenttype=="minus_starts_line" then return string.gsub("\n"..String, "\n.-%-", "\n"):sub(2,-1) end
   if indenttype=="preceding_spaces" then  return string.gsub("\n"..String, "\n%s*", "\n"):sub(2,-1) end
   if indenttype=="default" then 
-    Length=String:match("(%s*)")
+    local Length=String:match("(%s*)")
     if Length==nil then Length="" end
     return string.gsub("\n"..String, "\n"..Length, "\n"):sub(2,-1)
   end
@@ -353,7 +354,11 @@ function ultraschall.Docs_GetUSDocBloc_Description(String, unindent_description,
   
   if found~=true then return end
   
-  local Description=String:match("<description.->.-\n(.-)\n%s*</description>")
+  --local Description=String:match("<description.->.-\n(.-)\n%s*</description>") -- old line, remove, if no problem arised
+  local Description=String:match("<description.->.-\n(.-)</description>")
+  if Description:match("\n") then Description=Description:match("(.*)\n") end
+  
+  if Description==nil then Description="" end
   local markup_type=String:match("markup_type=\"(.-)\"")
   local markup_version=String:match("markup_version=\"(.-)\"")
   local indent=String:match("indent=\"(.-)\"")
@@ -365,7 +370,6 @@ function ultraschall.Docs_GetUSDocBloc_Description(String, unindent_description,
   if markup_type==nil then markup_type="plaintext" end
   if markup_version==nil then markup_version="" end
   if unindent_description~=false then 
-    --if i=="GetSetTrackSendInfo_String" then print2(Description) end
     Description=ultraschall.Docs_RemoveIndent(Description, indent, i)
   end
   return Description, markup_type, markup_version, indent, language, prog_language
@@ -444,7 +448,7 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Docs_GetUSDocBloc_ChapterContext</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.2
     Reaper=5.978
     Lua=5.3
   </requires>
@@ -457,7 +461,7 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
   </description>
   <retvals>
     integer count - the number of chapters found
-    array chapters - the chapternams as an array
+    array chapters - the chapternames as an array
     string spok_lang - the language of the chapters; "", if no language is given
   </retvals>
   <parameters>
@@ -479,6 +483,7 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
   local counter=0
   local title, spok_lang, found
   for k in string.gmatch(String, "(<chapter_context.->.-</chapter_context>)") do
+  
     counter=counter+1
     if counter==index then String=k found=true end
   end
@@ -488,10 +493,10 @@ function ultraschall.Docs_GetUSDocBloc_ChapterContext(String, index)
   local language=String:match("spok_lang=\"(.-)\"")
   if language==nil then language="" end
   
-  local Chapters=String:match("<chapter_context.->.-\n(.-)\n.-</chapter_context>")
+  local Chapters=String:match("<chapter_context.->.-\n(.*)\n.-</chapter_context>")
   local count, split_string = ultraschall.SplitStringAtLineFeedToArray(Chapters)
   for i=1, count do
-    split_string[i]=split_string[i]:match("%s*(.*)")
+    split_string[i]=split_string[i]:match("%s*(.*)")    
   end
   return count, split_string, language
 end
@@ -927,3 +932,226 @@ end
 --AAA=ultraschall.Docs_RemoveIndent(ultraschall.GetStringFromClipboard_SWS(""), "preceding_spaces")
 --print2(AAA)
 
+function ultraschall.Docs_GetUSDocBloc_Changelog(String, unindent_description, index)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Docs_GetUSDocBloc_Changelog</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=5.978
+    Lua=5.3
+  </requires>
+  <functioncall>integer changelogscount, table changelogs = ultraschall.Docs_GetUSDocBloc_Changelog(string String, boolean unindent_description, integer index)</functioncall>
+  <description>
+    returns the changelog-entries of an US_DocBloc-entry
+    
+    this returns the version-number of the software and the changes introduced in that version inside a table.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer changelogscount - the number of changelog-entries found
+    array changelogs - all changelogs found, as an array
+                     -   changelogs[index][1] - software-version of the introduction of the change, like "Reaper 6.23" or "US_API 4.2.006"
+                     -   changelogs[index][2] - a description of the change
+  </retvals>
+  <parameters>
+    string String - a string which hold a US_DocBloc to retrieve the changelog-entry from
+    boolean unindent_description - true, will remove indentation as given in the changelog-tag; false, return the text as it is
+    integer index - the index of the changelog-entries, starting with 1 for the first
+  </parameters>
+  <chapter_context>
+    Ultraschall DocML
+  </chapter_context>
+  <target_document>US_Api_DOC</target_document>
+  <source_document>ultraschall_doc_engine.lua</source_document>
+  <tags>doc engine, get, changelog, usdocbloc</tags>
+</US_DocBloc>
+]]
+  if type(String)~="string" then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_Changelog", "String", "must be a string", -1) return nil end
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_Changelog", "index", "must be an integer", -2) return nil end
+  if index<1 then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_Changelog", "index", "must be >0", -3) return nil end
+  if type(unindent_description)~="boolean" then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_Changelog", "unindent_description", "must be a boolean", -4) return nil end
+  
+  local counter=0
+  local title, spok_lang, found
+  for k in string.gmatch(String, "(<changelog.->.-</changelog>)") do
+    counter=counter+1
+    if counter==index then String=k found=true end
+  end  
+  
+  if found~=true then return 0 end
+  
+  local parms=String:match("(<changelog.->.-)</changelog>")
+  local count, split_string = ultraschall.SplitStringAtLineFeedToArray(parms)
+  local Parmcount=0
+  local Params={}
+  
+  for i=1, count do
+    split_string[i]=split_string[i]:match("%s*(.*)")
+  end
+
+  for i=2, count do
+    if split_string[i]:match("%-")==nil then
+    elseif split_string[i]:sub(1,1)~="-" then
+      Parmcount=Parmcount+1
+      Params[Parmcount]={}
+      Params[Parmcount][1], Params[Parmcount][2]=split_string[i]:match("(.-)%-(.*)")
+      Params[Parmcount][1]=Params[Parmcount][1].."\0"
+      Params[Parmcount][1]=Params[Parmcount][1]:match("(.*) %s*\0")
+    else
+      Params[Parmcount][2]=Params[Parmcount][2].."\n"..split_string[i]:sub(2,-1)
+    end
+  end
+  
+  if indent==nil then indent="default" end
+  
+  if unindent_description~=false then 
+    for i=1, Parmcount do
+      Params[i][2]=ultraschall.Docs_RemoveIndent(Params[i][2], indent)
+    end
+  end
+  
+  return Parmcount, Params
+end
+
+function ultraschall.Docs_GetUSDocBloc_LinkedTo(String, unindent_description, index)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Docs_GetUSDocBloc_LinkedTo</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=5.978
+    Lua=5.3
+  </requires>
+  <functioncall>integer linked_to_count, table links, string description = ultraschall.Docs_GetUSDocBloc_LinkedTo(string String, boolean unindent_description, integer index)</functioncall>
+  <description>
+    returns the linked_to-tags of an US_DocBloc-entry
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer linked_to_count - the number of linked_to-entries found
+    array links - all links found, as an array
+                 -   links[index]["location"] - the location of the link, either inline(for slugs inside the same document) or url(for links/urls/uris outside of it)
+                 -   links[index]["link"] - the slug to the element inside the document/the url or uri linking outside of the document
+                 -   links[index]["description"] - a description for this link
+    string description - a description for this linked_to-tag
+  </retvals>
+  <parameters>
+    string String - a string which hold a US_DocBloc to retrieve the linked_to-entry from
+    boolean unindent_description - true, will remove indentation as given in the changelog-tag; false, return the text as it is
+    integer index - the index of the linked_to-entries, starting with 1 for the first
+  </parameters>
+  <chapter_context>
+    Ultraschall DocML
+  </chapter_context>
+  <target_document>US_Api_DOC</target_document>
+  <source_document>ultraschall_doc_engine.lua</source_document>
+  <tags>doc engine, get, linked_to, usdocbloc</tags>
+</US_DocBloc>
+]]
+
+--[[
+    linked_to tags work as follows:
+    <linked_to desc="a description for the links in this linked_to-tag">
+        inline: slug
+              description
+              optional second line of description
+              optional third line of description
+              etc
+        url: actual-url.com
+              description
+              optional second line of description
+              optional third line of description
+              etc
+    </linked_to>
+    
+    There can be multiple link-tags inside a usdocml-tag!
+--]]
+  if type(String)~="string" then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_LinkedTo", "String", "must be a string", -1) return nil end
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_LinkedTo", "index", "must be an integer", -2) return nil end
+  if index<1 then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_LinkedTo", "index", "must be >0", -3) return nil end
+  if type(unindent_description)~="boolean" then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_LinkedTo", "unindent_description", "must be a boolean", -4) return nil end
+  
+  local counter=0
+  local title, spok_lang, found
+  for k in string.gmatch(String, "(<linked_to.->.-</linked_to>)") do
+    counter=counter+1
+    if counter==index then String=k found=true end
+  end  
+  
+  if found~=true then return 0 end
+  
+  local parms=String:match("(<linked_to.->.-)</linked_to>")
+  local desc=parms:match("<linked_to.-desc=\"(.-)\">")
+  if desc==nil then desc="" end
+  local count, split_string = ultraschall.SplitStringAtLineFeedToArray(parms)
+  local Linkedcount=0
+  local LinkedTo={}
+  
+  for i=1, count do
+    split_string[i]=split_string[i]:match("%s*(.*)")
+  end
+
+  for i=2, count-1 do
+    if split_string[i]:match(":") then 
+      Linkedcount=Linkedcount+1
+      LinkedTo[Linkedcount]={}
+      LinkedTo[Linkedcount]["location"], LinkedTo[Linkedcount]["link"] = split_string[i]:match("(.-):(.*)")
+    else
+      if LinkedTo[Linkedcount]["description"]==nil then LinkedTo[Linkedcount]["description"]="" end
+      LinkedTo[Linkedcount]["description"]=LinkedTo[Linkedcount]["description"]..split_string[i].."\n"
+    end
+  end
+  
+  if unindent_description~=false then 
+    for i=1, Linkedcount do
+      LinkedTo[i]["description"]=ultraschall.Docs_RemoveIndent(LinkedTo[i]["description"]:sub(1,-2), "default")
+    end
+  end
+  
+  return Linkedcount, LinkedTo, desc
+end
+
+function ultraschall.Docs_GetUSDocBloc_Deprecated(US_DocBloc)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Docs_GetUSDocBloc_Deprecated</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=5.978
+    Lua=5.3
+  </requires>
+  <functioncall>string what, string when, string alternative = ultraschall.Docs_GetUSDocBloc_Deprecated(string US_DocBloc)</functioncall>
+  <description>
+    returns the deprecated-tag of an US-DocBloc, which holds the information about, is a function is deprecated and what to use alternatively.
+    
+    returns nil in case of an error or if no such deprecated-tag exists for this US_DocBloc
+  </description>
+  <retvals>
+    string what - which software deprecated the function "Reaper" or "SWS" or "JS", etc
+    string when - since which version is this function deprecated
+    string alternative - what is a possible alternative to this function, if existing
+    string removed - function got removed
+  </retvals>
+  <parameters>
+    string US_DocBloc - a string which hold a US_DocBloc to retrieve the deprecated-tag-attributes from
+  </parameters>
+  <chapter_context>
+    Ultraschall DocML
+  </chapter_context>
+  <target_document>US_Api_DOC</target_document>
+  <source_document>ultraschall_doc_engine.lua</source_document>
+  <tags>doc engine, get, deprecated, usdocbloc</tags>
+</US_DocBloc>
+]]  
+  if type(US_DocBloc)~="string" then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_Deprecated", "US_DocBloc", "must be a string", -1) return end
+  local Deprecated=US_DocBloc:match("<deprecated .*/>")
+  if Deprecated == nil then return end
+  local DepreWhat, Depr_SinceWhen=Deprecated:match("since_when=\"(.-) (.-)\"")
+  local Depr_Alternative=Deprecated:match("alternative=\"(.-)\"")
+  local Depr_Removed=Deprecated:match("removed=\"(.-)\"")
+  --print2(Depr_Removed)
+  return DepreWhat, Depr_SinceWhen, Depr_Alternative, Depr_Removed~=nil
+end

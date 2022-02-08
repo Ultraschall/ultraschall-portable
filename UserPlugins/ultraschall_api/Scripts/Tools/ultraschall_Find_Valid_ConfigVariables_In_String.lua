@@ -56,11 +56,7 @@ function ultraschall.GetStringFromClipboard_SWS()
   -- CF_GetClipboardBig-function from SWS
   -- and deals with all aspects necessary, that
   -- surround using it.
-  local buf = reaper.CF_GetClipboard(buf)
-  local WDL_FastString=reaper.SNM_CreateFastString("HudelDudel")
-  local clipboardstring=reaper.CF_GetClipboardBig(WDL_FastString)
-  reaper.SNM_DeleteFastString(WDL_FastString)
-  return clipboardstring
+  return bug
 end
 
 

@@ -39,30 +39,41 @@ beta=string.gsub(beta," ","")
 
 String=[[
 <html><head><title>
-Ultraschall API Impressum
+Ultraschall API Downloads
 </title>
 
-</head><body>
-    <div style=" position: absolute; padding-left:4%; ">
-        <div style="background-color:#282828;width:95%; font-family:tahoma; font-size:16;">
+  <link href="style.css" rel="stylesheet">
+  <link href="custom.css" rel="stylesheet">
 
-
-           <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_Un.png" alt="Ultraschall Internals Documentation"></a>
-           <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
-         <img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
-         <img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
-           <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads.png" alt="Downloads"></a>
-           <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
-           <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
-           <div style="padding-top:2.5%">
+  </head>
+    <body>    
+        <a class="anch" id="This-is-the-TopOfTheWorld"></a>
+        <div style="position: sticky; top:0; padding-left:4%; z-index:100;">
+            <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
+                <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_un.png" alt="Ultraschall Internals Documentation"></a>  
+                <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
+                <img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
+                <img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
+                <img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
+                <img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
+                <img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
+                <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
+                <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
+                <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
+                <div style="padding-top:2.5%">
+                    <table border="0" style="color:#aaaaaa; width:101%;">
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </table><hr color="#444444">
+                    <div style="position:absolute; right:6%; top:60%;"><a style="color:#CCCCCC;" href="#This-is-the-TopOfTheWorld">Jump to Top</a></div>
+                </div>
+            </div>
+        </div>
+      
+          <div class="chapterpad"><p></p>    
            <table border="0" style="color:#aaaaaa; width:31%;">
                 <tr>
-                    <td style="width:30%;">
-                        <a href="http://www.ultraschall.fm"><img style="width:118%;" src="gfx/US-header.png" alt="Ultraschall-logo"></a>
-                    </td>
                     <td width="4%;">  </td>
                 </tr>
                 <tr>
@@ -82,10 +93,6 @@ Ultraschall API Impressum
     <h3>Download Ultraschall Package</h3>
     <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.2_]]..beta..[[.zip">ultraschall_api4.2_]]..beta..[[.zip</a> - the downloadpackage of the ultraschall-api<p>
     <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api_index.xml">ReaPack-installable</a>-index-file. See <a href="https://reapack.com/">ReaPack-Website</a> for more details on the ReaPack-package-manager.
-    <h3>Download Reaper-Internals and Ultraschall-API-docs</h3>
-    <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/Reaper-Internals-Ultraschall-Api-Docs.zip">Reaper-Internals-Ultraschall-Api-Docs.zip</a> - Docs: Reaper-Internals ]]..majorversion.."."..subversion..[[, SWS ]]..SWS..[[, JS-extension ]]..JS..[[, ReaPack and Ultraschall-Api 4.00-]]..beta..[[<p>
-    <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/Reaper-Developer-Tools_by_Mespotine.zip">Reaper-Developer-Tools_by_Mespotine.zip</a> - My Developer-Tools for Reaper<p>
-    
     </div>
 </html>
 ]]

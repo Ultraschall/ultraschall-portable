@@ -724,23 +724,27 @@ end
 
 --L,LL=ultraschall.CountPathAndFilesInDirectory("c:\\")
 
-function ultraschall.GetAllFilenamesInPath(path)
+function ultraschall.GetAllFilenamesInPath(path, filter)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetAllFilenamesInPath</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.77
+    Ultraschall=4.2
+    Reaper=6.20
     Lua=5.3
   </requires>
-  <functioncall>integer filecount, array files = ultraschall.GetAllFilenamesInPath(string path)</functioncall>
+  <functioncall>integer filecount, array files = ultraschall.GetAllFilenamesInPath(string path, optional string filter)</functioncall>
   <description>
     returns the number of files and the filenames in path
+    
+    optionally allows you to filter for certain filenames
     
     returns -1, in case of error
   </description>
   <parameters>
     string path - the path to get the filenames from
+    optional string filter - a filter, that allows you to just get filenames of a certain pattern
+                           - follows Lua's pattern-matching pattern!
   </parameters>
   <retvals>
     integer filecount - the number of files found in path
@@ -752,12 +756,13 @@ function ultraschall.GetAllFilenamesInPath(path)
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
-  <tags>filemanagement, get, filenames, file, path</tags>
+  <tags>filemanagement, get, filenames, file, path, filter</tags>
 </US_DocBloc>
 --]]
 
   -- check parameters
   if type(path)~="string" then ultraschall.AddErrorMessage("GetAllFilenamesInPath", "path", "must be a string", -1) return -1 end
+  if filter~=nil and type(filter)~="string" then ultraschall.AddErrorMessage("GetAllFilenamesInPath", "filter", "must be nil or a string", -2) return -1 end
 
   -- prepare variables
   local Files={}
@@ -768,29 +773,47 @@ function ultraschall.GetAllFilenamesInPath(path)
   
   -- get all filenames in path
   reaper.EnumerateFiles(path, -1) -- flush cache
+  local filename=""
   while String~=nil do
     String=reaper.EnumerateFiles(path, count-1)
-    if String~=nil then Files[count]=path..String end
-    if Files[count]~=nil then
-        Files[count]=string.gsub(Files[count], "//", "/")
-        Files[count]=string.gsub(Files[count], "\\", "/")
-     end
-     count=count+1
+    if String~=nil and filter~=nil then
+      if String:match(filter) then
+        filename=String
+      end
+    else
+      filename=String
+    end
+
+    if filename~=nil then Files[#Files+1]=path..filename end
+    
+    filename=nil
+    count=count+1
   end
+  
+  for i=1, #Files do
+    Files[i]=string.gsub(Files[i], "\\", "/")
+    Files[i]=string.gsub(Files[i], "//", "/")
+  end
+    
+  if Files[1]==string.gsub(path, "\\", "/") then
+    table.remove(Files, 1)
+  end
+  
   -- return results
-  return count-2, Files
+  return #Files,  Files, filter
 end
 
-function ultraschall.GetAllDirectoriesInPath(path)
+
+function ultraschall.GetAllDirectoriesInPath(path, filter)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetAllDirectoriesInPath</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.77
+    Ultraschall=4.2
+    Reaper=6.20
     Lua=5.3
   </requires>
-  <functioncall>integer filecount, array directories = ultraschall.GetAllDirectoriesInPath(string path)</functioncall>
+  <functioncall>integer filecount, array directories = ultraschall.GetAllDirectoriesInPath(string path, optional string filter)</functioncall>
   <description>
     returns the number of directories and the directorynames in path
     
@@ -798,6 +821,8 @@ function ultraschall.GetAllDirectoriesInPath(path)
   </description>
   <parameters>
     string path - the path to get the directories from
+    optional string filter - a filter, that allows you to just get directory-names of a certain pattern
+                           - follows Lua's pattern-matching pattern!
   </parameters>
   <retvals>
     integer filecount - the number of directories found in path
@@ -815,7 +840,7 @@ function ultraschall.GetAllDirectoriesInPath(path)
 
   -- check parameters
   if type(path)~="string" then ultraschall.AddErrorMessage("GetAllDirectoriesInPath", "path", "must be a string", -1) return -1 end
-  
+  if filter~=nil and type(filter)~="string" then ultraschall.AddErrorMessage("GetAllDirectoriesInPath", "filter", "must be nil or a string", -2) return -1 end
   -- check variables
   local Dirs={}
   local count=1
@@ -825,15 +850,33 @@ function ultraschall.GetAllDirectoriesInPath(path)
   if path:sub(-1,-1)~="\\" and path:sub(-1,-1)~="/" then sep=ultraschall.Separator end
   -- get directorynames
   reaper.EnumerateSubdirectories(path, -1) -- flush cache
+  local dirname=""
+  
   while String~=nil do
     String=reaper.EnumerateSubdirectories(path, count-1)
-    if String~=nil then Dirs[count]=path..sep..String end
+    if String~=nil and filter~=nil then
+      if String:match(filter) then
+        dirname=String
+      end
+    else
+      dirname=String
+    end
+  
+    if dirname~=nil then 
+      Dirs[#Dirs+1]=path..sep..dirname
+    end
+    dirname=nil
     count=count+1
   end
   
+  if filter==nil then
+    table.insert(Dirs, 1, path..sep)
+  end
+  
   -- return results
-  return count-2, Dirs
+  return #Dirs, Dirs
 end
+
 
 --L,LL=ultraschall.GetAllDirectoriesInPath("C:\\")
 
@@ -1519,26 +1562,33 @@ end
 
 
 
-function ultraschall.GetAllRecursiveFilesAndSubdirectories(path)
+function ultraschall.GetAllRecursiveFilesAndSubdirectories(path, dir_filter, dir_case_sensitive, file_filter, file_case_sensitive)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetAllRecursiveFilesAndSubdirectories</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.965
+    Ultraschall=4.2
+    Reaper=6.20
     Lua=5.3
   </requires>
-  <functioncall>integer found_dirs, array dirs_array, integer found_files, array files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(string path)</functioncall>
+  <functioncall>integer found_dirs, array dirs_array, integer found_files, array files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(string path, optional string dir_filter, optional string dir_case_sensitive, optional string file_filter, optional string file_case_sensitive)</functioncall>
   <description>
     Returns all subdirectories and files within a given path.
     
     Might take some time with many folders/files.
     
+    Optionally, you can filter for specific keywords(follows Lua's pattern-matching)
     
     Returns -1 in case of an error.
   </description>
   <parameters>
     string path - the path from where to retrieve the files and subdirectories
+    optional string dir_filter - a matching-string, that omits all folders, that don't match this string; default is ""
+                               - follows Lua's pattern-matching!
+    optional string dir_case_sensitive - true, filter-pattern for dir is case-sensitive(default); false, filter-pattern for dir isn't case-sensitive
+    optional string file_filter - a matching-string, that omits all files, that don't match this string; default is "" 
+                                - follows Lua's pattern-matching!
+    optional string file_case_sensitive - true, filter-pattern for file is case-sensitive(default); false, filter-pattern for file isn't case-sensitive 
   </parameters>
   <retvals>
     integer found_dirs - the number of directories found; -1, in case of an error
@@ -1552,16 +1602,28 @@ function ultraschall.GetAllRecursiveFilesAndSubdirectories(path)
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
-  <tags>file management, get, all, files, directories, folder, subfolder, subdirectories, path, recursive</tags>
+  <tags>file management, get, all, files, directories, folder, subfolder, subdirectories, path, recursive, filter</tags>
 </US_DocBloc>
 ]]
   if type(path)~="string" then ultraschall.AddErrorMessage("GetAllRecursiveFilesAndSubdirectories", "path", "must be a string", -1) return -1 end
   if ultraschall.DirectoryExists2(path)==false then ultraschall.AddErrorMessage("GetAllRecursiveFilesAndSubdirectories", "path", "path is not a valid path", -2) return -1 end
+  if dir_filter~=nil and type(dir_filter)~="string" then ultraschall.AddErrorMessage("GetAllRecursiveFilesAndSubdirectories", "dir_filter", "must be nil or a string", -3) return -1 end
+  if dir_filter==nil then dir_filter="" end
+  if dir_case_sensitive~=nil and type(dir_case_sensitive)~="boolean" then ultraschall.AddErrorMessage("GetAllRecursiveFilesAndSubdirectories", "dir_case_sensitive", "must be nil or a boolean", -4) return -1 end  
+  if dir_case_sensitive==false then dir_filter=dir_filter:lower() end
+
+  if file_filter~=nil and type(file_filter)~="string" then ultraschall.AddErrorMessage("GetAllRecursiveFilesAndSubdirectories", "file_filter", "must be nil or a string", -5) return -1 end
+  if file_filter==nil then file_filter="" end
+
+  if file_case_sensitive~=nil and type(file_case_sensitive)~="boolean" then ultraschall.AddErrorMessage("GetAllRecursiveFilesAndSubdirectories", "file_case_sensitive", "must be nil or a boolean", -6) return -1 end  
+  if file_case_sensitive==false then file_filter=file_filter:lower() end
+
+  
   local Dirs={}
   local dirscount=1
   local dirsmaxcount=2
   
-  Dirs[1]=path
+  Dirs[1]=string.gsub(path, "\\", "/")
   
   local Files={}
   local filescount=0
@@ -1570,11 +1632,14 @@ function ultraschall.GetAllRecursiveFilesAndSubdirectories(path)
     local path=Dirs[dirscount]
     local temp=""
     local subdir=0
+    
+    -- get all subdirectories
     reaper.EnumerateSubdirectories("", -1) -- flush cache    
     while temp~=nil do
       temp=reaper.EnumerateSubdirectories(Dirs[dirscount],subdir)
+      --temp=nil
       if temp~=nil then
-        Dirs[dirsmaxcount]=path.."/"..temp
+        Dirs[dirsmaxcount]=string.gsub(path.."/"..temp, "\\", "/")
         dirsmaxcount=dirsmaxcount+1
       end
       subdir=subdir+1
@@ -1582,6 +1647,24 @@ function ultraschall.GetAllRecursiveFilesAndSubdirectories(path)
     dirscount=dirscount+1
   end
   
+  local Dirs2={}
+  -- filter for wanted folders
+  for i=dirsmaxcount-1, 1, -1 do
+    -- get current foldername to check for
+    local temp=Dirs[i]:match(".*/(.*)")
+
+    -- case sensitivity management
+    if temp~=nil and dir_case_sensitive==false then temp=temp:lower() end 
+
+    -- remove all folders, not matching the filter-string
+    if temp~=nil and temp:match(dir_filter)==nil then
+    else
+      Dirs2[#Dirs2+1]=Dirs[i]
+    end
+  end
+  table.sort(Dirs)
+  
+  -- get all files within the filtered dirs
   reaper.EnumerateFiles("", -1) -- flush cache
   local dircounter=1
   for i=1, dirsmaxcount do
@@ -1593,8 +1676,27 @@ function ultraschall.GetAllRecursiveFilesAndSubdirectories(path)
     end
     dircounter=dircounter+1
   end
+
+  -- filter for wanted files
+  for i=filescount, 1, -1 do
+    -- get current file to check for
+    local temp=Files[i]:match(".*/(.*)")
   
-  return dirsmaxcount-1, Dirs, filescount, Files
+    -- case sensitivity management
+    if temp~=nil and file_case_sensitive==false then temp=temp:lower() end 
+  
+    -- remove all files, not matching the filter-string
+    if temp~=nil and temp:match(file_filter)==nil then
+      table.remove(Files, i)
+      filescount=filescount-1
+    end
+  end
+  table.sort(Files)
+  
+  return #Dirs2, 
+         Dirs2,
+         #Files, 
+         Files
 end
 
 --A,B,C,D=ultraschall.GetAllRecursiveFilesAndSubdirectories("L:\\")
@@ -2338,4 +2440,136 @@ function ultraschall.CopyFile_GetRemainingFilesToCopy()
 </US_DocBloc>
 ]]
   return ultraschall.CopyFile_NumberOfFiles
+end
+
+function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTable, BWFStart, PadStart, PadEnd, FXStateChunk, MetaDataStateChunk, UseRCMetaData)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>BatchConvertFiles</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.32
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.BatchConvertFiles(table inputfilelist, table outputfilelist, table RenderTable, optional boolean BWFStart, optional integer PadStart, optional integer PadEnd, optional string FXStateChunk, optional boolean UseRCMetaData)</functioncall>
+  <description>
+    Converts files using Reaper's own BatchConverter.
+    
+    This function will open another instance of Reaper that runs the batchconverter, so it will still open the batch-converter-list for the time of conversion.
+    Though as it is another instance, you can safely go back to the old instance of Reaper.
+    
+    This function will probably NOT finish before the batch-converter is finished with conversion, keep this in mind.
+    
+    Will take away the focus from the currently focused window, as Reaper puts keyboard-focus to the newly started Reaper-instance that does the batch-conversion.    
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    table inputfilelist - a table of filenames+path, that shall be converted
+    table outputfilelist - a table of the target filenames+path, where the first filename is the target for the first inputfilename, etc
+    table RenderTable - the settings for the conversion; just use the render-table-functions to create one
+    optional boolean BWFStart - true, include BWF-start; false or nil, don't include BWF-start
+    optional integer PadStart - the start of the padding in seconds; nil, to omit it
+    optional integer PadEnd - the end of the padding in seconds; nil, to omit it
+    optional string FXStateChunk - an FXChain as FXStateChunk; with that you can add fx on top of the to-convert-files.
+    optional boolean UseRCMetaData - true, tries to retain the metadata from the sourcefile; false, doesn't try to retain metadata
+  </retvals>
+  <parameters>
+    boolean retval - true, conversion was successfully started; false, conversion didn't start
+  </parameters>
+  <chapter_context>
+    File Management
+    Misc
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
+  <tags>file management, convert, files, rendertable, fxchain</tags>
+</US_DocBloc>
+--]]
+  if type(inputfilelist)~="table" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "must be a table of string", -1) return false end
+  
+  if #inputfilelist~=#outputfilelist then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist and outputfilelist", "both filelist-tables must have the same number of entries", -2) return false end
+  for i=1, #inputfilelist do
+    if type(inputfilelist[i])~="string" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be strings", -3) return false end
+    if reaper.file_exists(inputfilelist[i])==false then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be valid filenames", -4) return false end
+  end
+
+  if type(outputfilelist)~="table" then ultraschall.AddErrorMessage("BatchConvertFiles", "outputfilelist", "must be a table of string", -5) return false end
+  for i=1, #inputfilelist do
+    if type(inputfilelist[i])~="string" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be strings", -6) return false end
+  end
+  
+  if ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("BatchConvertFiles", "RenderTable", "must be a valid RenderTable", -7) return false end
+  
+  -- temporary solution:
+  if type(MetaDataStateChunk)~="string" then MetaDataStateChunk="" end  
+
+
+  local BatchConvertData=""
+  local ExeFile, filename, path
+  if FXStateChunk~=nil and FXStateChunk~="" and ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("BatchConvertFiles", "FXStateChunk", "must be a valid FXStateChunk", -7) return false end
+  if FXStateChunk==nil then FXStateChunk="" end
+  if MetaDataStateChunk==nil then MetaDataStateChunk="" end
+  if BWFStart==true then BWFStart="    USERCSTART 1\n" else BWFStart="" end
+  if PadStart~=nil  then PadStart="    PAD_START "..PadStart.."\n" else PadStart="" end
+  if PadEnd~=nil  then PadEnd="    PAD_END "..PadEnd.."\n" else PadEnd="" end
+  if UseRCMetaData==true then UseRCMetaData="    USERCMETADATA 1\n" else UseRCMetaData="" end
+  local i=1
+  local outputfile
+  while inputfilelist[i]~=nil do
+    if ultraschall.type(inputfilelist[i])=="string" then
+      if outputfilelist[i]==nil then outputfile="" else outputfile=outputfilelist[i] end
+      BatchConvertData=BatchConvertData..inputfilelist[i].."\t"..outputfile.."\n"
+    end
+    i=i+1
+  end
+    
+  BatchConvertData=BatchConvertData..[[
+<CONFIG
+    SRATE ]]..RenderTable["SampleRate"]..[[
+    
+    NCH ]]..RenderTable["Channels"]..[[
+    
+    RSMODE ]]..RenderTable["RenderResample"]..[[
+    
+    DITHER ]]..RenderTable["Dither"]..[[
+    
+]]..BWFStart..[[
+]]..UseRCMetaData..[[
+]]..PadStart..[[
+]]..PadEnd..[[
+    OUTPATH ]]..RenderTable["RenderFile"]..[[
+    
+    OUTPATTERN ']]..[['
+  <OUTFMT 
+    ]]      ..RenderTable["RenderString"]..[[
+
+  >
+  ]]..FXStateChunk..[[
+  ]]..string.gsub(MetaDataStateChunk, "<RENDER_METADATA", "<METADATA")..[[
+
+>
+]]
+
+  ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/filelist.txt", BatchConvertData)
+
+  local ExeFile, AAAA, AAAAAA
+  if ultraschall.IsOS_Windows()==true then
+    -- Batchconvert On Windows
+    ExeFile=reaper.GetExePath().."\\reaper.exe"
+    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "/", "\\").."\\filelist.txt\"", -1)
+  elseif ultraschall.IsOS_Mac()==true then
+    -- Batchconvert On Mac
+    ExeFile=reaper.GetExePath().."/Reaper64.app/Contents/MacOS/reaper"
+    if reaper.file_exists(ExeFile)==false then
+      ExeFile=reaper.GetExePath().."/Reaper.app/Contents/MacOS/reaper"
+    end
+    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt\"", -1)
+  else
+    -- Batchconvert On Linux
+    ExeFile=reaper.GetExePath().."/reaper"
+    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt\"", -1)
+  end
+  
+  return true
 end

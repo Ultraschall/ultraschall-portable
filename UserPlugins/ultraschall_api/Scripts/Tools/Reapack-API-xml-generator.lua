@@ -29,7 +29,7 @@ ultraschall.ShowErrorMessagesInReascriptConsole(true)
 
 NumFuncs=progresscounter()
 
-os.remove(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_ModulatorLoad3000.lua-")
+--os.remove(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_ModulatorLoad3000.lua-")
 os.remove(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Documentation/Reaper_StateChunk_Docs.html")
 
 -- set this to the folder, that you want to create a reapack of
@@ -126,7 +126,7 @@ compiled by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
 
 Documentation for Reaper-Internals ]]..majorversion.."."..subversion..[[ and Ultraschall Api 4.2]]..beta..[[, SWS ]]..SWS..[[, JS-extension-plugin ]]..JS..[[ and ReaPack
 
-Written and compiled by Meo Mespotine (mespotine.de) for the Ultraschall.FM-project.
+Written and compiled by Meo-Ada Mespotine (mespotine.de) for the Ultraschall.FM-project.
 licensed under creative-commons by-sa-nc-license
 
 Some docs are enhanced versions of the original docs and the Reaper-logo is by the Cockos Inc.
@@ -163,6 +163,9 @@ Markdown2RTF="c:\\Program Files\\Pandoc\\pandoc -f markdown -w plain -s -o c:\\t
 
 ChangeLog=ultraschall.ReadFullFile(SourceDir.."/ultraschall_api/Changelog-Api.txt")
 ChangeLog=string.gsub(ChangeLog, "<TODO>.-</TODO>", "")
+ChangeLog=ChangeLog:match("(.-)\n%-%-%-")
+--print2(ChangeLog)
+--if LOL==nil then return end
 
 --reaper.CF_SetClipboard(ChangeLog)
 ultraschall.WriteValueToFile("c:\\temp\\tempfile", ChangeLog)
@@ -545,4 +548,4 @@ ultraschall.ShowLastErrorMessage()
 
 --os.execute("c:\\Ultraschall-Hackversion_3.2_alpha_Februar2019\\UserPlugins\\ultraschall_api\\Scripts\\Tools\\batter.bat")
 os.execute(SourceDir.."/ultraschall_api/Scripts/Tools/batter.bat")
-reaper.MB("Done\n\n\nDeleted two files, statechunk-docs and modulator as well!!!", "", 0)
+reaper.MB("Done\n\n\nDeleted two files, statechunk-docs!!!", "", 0)

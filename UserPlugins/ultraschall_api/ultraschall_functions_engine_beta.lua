@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -1130,136 +1130,6 @@ end
 
 --A,B,C,D,E=ultraschall.ReadSubtitles_VTT("c:\\test.vtt")
 
-function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTable, BWFStart, PadStart, PadEnd, FXStateChunk, MetaDataStateChunk)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>BatchConvertFiles</slug>
-  <requires>
-    Ultraschall=4.2
-    Reaper=6.12
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval = ultraschall.BatchConvertFiles(table inputfilelist, table outputfilelist, table RenderTable, optional boolean BWFStart, optional integer PadStart, optional integer PadEnd, optional string FXStateChunk)</functioncall>
-  <description>
-    Converts files using Reaper's own BatchConverter.
-    
-    This function will open another instance of Reaper that runs the batchconverter, so it will still open the batch-converter-list for the time of conversion.
-    Though as it is another instance, you can safely go back to the old instance of Reaper.
-    
-    This function will probably NOT finish before the batch-converter is finished with conversion, keep this in mind.
-    
-    Will take away the focus from the currently focused window, as Reaper puts keyboard-focus to the newly started Reaper-instance that does the batch-conversion.    
-    
-    returns nil in case of an error
-  </description>
-  <retvals>
-    table inputfilelist - a table of filenames+path, that shall be converted
-    table outputfilelist - a table of the target filenames+path, where the first filename is the target for the first inputfilename, etc
-    table RenderTable - the settings for the conversion; just use the render-table-functions to create one
-    optional boolean BWFStart - true, include BWF-start; false or nil, don't include BWF-start
-    optional integer PadStart - the start of the padding in seconds; nil, to omit it
-    optional integer PadEnd - the end of the padding in seconds; nil, to omit it
-    optional string FXStateChunk - an FXChain as FXStateChunk; with that you can add fx on top of the to-convert-files.
-  </retvals>
-  <parameters>
-    boolean retval - true, conversion was successfully started; false, conversion didn't start
-  </parameters>
-  <chapter_context>
-    File Management
-    Misc
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>file management, convert, files, rendertable, fxchain</tags>
-</US_DocBloc>
---]]
-  if type(inputfilelist)~="table" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "must be a table of string", -1) return false end
-  
-  if #inputfilelist~=#outputfilelist then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist and outputfilelist", "both filelist-tables must have the same number of entries", -2) return false end
-  for i=1, #inputfilelist do
-    if type(inputfilelist[i])~="string" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be strings", -3) return false end
-    if reaper.file_exists(inputfilelist[i])==false then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be valid filenames", -4) return false end
-  end
-
-  if type(outputfilelist)~="table" then ultraschall.AddErrorMessage("BatchConvertFiles", "outputfilelist", "must be a table of string", -5) return false end
-  for i=1, #inputfilelist do
-    if type(inputfilelist[i])~="string" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be strings", -6) return false end
-  end
-  
-  if ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("BatchConvertFiles", "RenderTable", "must be a valid RenderTable", -7) return false end
-  
-  -- temporary solution:
-  if type(MetaDataStateChunk)~="string" then MetaDataStateChunk="" end  
-
--- Todo:
-
-  local BatchConvertData=""
-  local ExeFile, filename, path
-  if FXStateChunk~=nil and FXStateChunk~="" and ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("BatchConvertFiles", "FXStateChunk", "must be a valid FXStateChunk", -7) return false end
-  if FXStateChunk==nil then FXStateChunk="" end
-  if MetaDataStateChunk==nil then MetaDataStateChunk="" end
-  if BWFStart==true then BWFStart="    USERCSTART 1\n" else BWFStart="" end
-  if PadStart~=nil  then PadStart="    PAD_START "..PadStart.."\n" else PadStart="" end
-  if PadEnd~=nil  then PadEnd="    PAD_END "..PadEnd.."\n" else PadEnd="" end
-  local i=1
-  local outputfile
-  while inputfilelist[i]~=nil do
-    if ultraschall.type(inputfilelist[i])=="string" then
-      if outputfilelist[i]==nil then outputfile="" else outputfile=outputfilelist[i] end
-      BatchConvertData=BatchConvertData..inputfilelist[i].."\t"..outputfile.."\n"
-    end
-    i=i+1
-  end
-    
-  BatchConvertData=BatchConvertData..[[
-<CONFIG
-    SRATE ]]..RenderTable["SampleRate"]..[[
-    
-    NCH ]]..RenderTable["Channels"]..[[
-    
-    RSMODE ]]..RenderTable["RenderResample"]..[[
-    
-    DITHER ]]..RenderTable["Dither"]..[[
-    
-]]..BWFStart..[[
-]]..PadStart..[[
-]]..PadEnd..[[
-    OUTPATH ]]..RenderTable["RenderFile"]..[[
-    
-    OUTPATTERN ']]..[['
-  <OUTFMT 
-    ]]      ..RenderTable["RenderString"]..[[
-
-  >
-  ]]..FXStateChunk..[[
-  ]]..string.gsub(MetaDataStateChunk, "<RENDER_METADATA", "<METADATA")..[[
-
->
-]]
-
-  ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/filelist.txt", BatchConvertData)
-
-  local ExeFile, AAAA, AAAAAA
-  if ultraschall.IsOS_Windows()==true then
-    -- Batchconvert On Windows
-    ExeFile=reaper.GetExePath().."\\reaper.exe"
-    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "/", "\\").."\\filelist.txt\"", -1)
-  elseif ultraschall.IsOS_Mac()==true then
-    -- Batchconvert On Mac
-    ExeFile=reaper.GetExePath().."/Reaper64.app/Contents/MacOS/reaper"
-    if reaper.file_exists(ExeFile)==false then
-      ExeFile=reaper.GetExePath().."/Reaper.app/Contents/MacOS/reaper"
-    end
-    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt\"", -1)
-  else
-    -- Batchconvert On Linux
-    ExeFile=reaper.GetExePath().."/reaper"
-    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt\"", -1)
-  end
-  
-  return true
-end
-
 
 function ultraschall.GetTakeEnvelopeUnderMouseCursor()
   --[[
@@ -1480,4 +1350,292 @@ end
 
 
 
-ultraschall.ShowLastErrorMessage()
+
+function ultraschall.CalculateLoudness(mode, timeselection, trackstring)
+-- TODO!!
+-- multiple tracks, items can be returned by GetSetProjectInfo_String, when items/tracks are selected
+-- function currently only supports one, the first one. Please boost it up a little....
+--
+-- Check trackstring-management.
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CalculateLoudness</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.30
+    Lua=5.3
+  </requires>
+  <functioncall>string filename, string peak, string clip, string rms, string lrange, string lufs_i = ultraschall.CalculateLoudness(integer mode, boolean timeselection)</functioncall>
+  <description>
+    Calculates the loudness of items and tracks or returns the loudness of last render/dry-render.
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string filename - the filename, that would be rendered
+    string peak - the peak of the rendered element
+    string clip - the clipping of the rendered element
+    string rms - the rms of the rendered element
+    string lrange - the lrange of the rendered element
+    string lufs_i - the lufs-i of the rendered element
+  </retvals>
+  <parameters>
+    integer mode - -1, return loudness-stats of the last render/dry render
+                 - 0, calculate loudness-stats of selected media items
+                 - 1, calculate loudness-stats of master track
+                 - 2, calculate loudness-stats of selected tracks
+    boolean timeselection - shall loudness calculation only be within time-selection?
+                          - only with mode 1 and 2; if no time-selection is given, use entire track
+                          - false, calculate loudness within the entire tracks;
+                          - true, calculate loudness-stats within time-selection
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Loudness Calculation
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>projectfiles, compare, rendertable</tags>
+</US_DocBloc>
+]]
+  -- FILE-management can be improved for dry-rendering, probably...
+  if math.type(mode)~="integer" then ultraschall.AddErrorMessage("CalculateLoudness", "mode", "must be an integer", -1) return end
+  if type(timeselection)~="boolean" then ultraschall.AddErrorMessage("CalculateLoudness", "timeselection", "must be a boolean", -2) return end
+  
+  if     mode==-1 then mode=""
+  elseif mode==0 then mode=42437
+  elseif mode==1 and timeselection==false then mode=42440
+  elseif mode==1 and timeselection==true  then mode=42441
+  elseif mode==2 and timeselection==false then mode=42438
+  elseif mode==2 and timeselection==true  then mode=42439
+  end  
+  
+  local oldtrackstring  
+  if mode==2 then
+    oldtrackstring = ultraschall.CreateTrackString_SelectedTracks()
+    ultraschall.SetTracksSelected(trackstring, true)
+  end
+  local retval, RenderStats=reaper.GetSetProjectInfo_String(0, "RENDER_STATS", mode, false)
+  RenderStats=RenderStats..";"
+
+  local FILE, PEAK, CLIP, RMSI, LRA, LUFSI
+  FILE=RenderStats:match("FILE:(.-);")
+  PEAK=RenderStats:match("PEAK:(.-);")
+  if PEAK==nil then PEAK="-inf" end
+  CLIP=RenderStats:match("CLIP:(.-);")
+  if CLIP==nil then CLIP="0" end
+  RMSI=RenderStats:match("RMSI:(.-);")
+  if RMSI==nil then RMSI="-inf" end
+  LRA=RenderStats:match("LRA:(.-);")
+  if LRA==nil then LRA="-inf" end
+  LUFSI=RenderStats:match("LUFSI:(.-);")
+  if LUFSI==nil then LUFSI="-inf" end
+
+  if mode==2 then
+    ultraschall.SetTracksSelected(oldtrackstring, true)
+  end
+
+  return FILE, PEAK, CLIP, RMSI, LRA, LUFSI
+end
+
+
+--A={ultraschall.CalculateLoudness(0, true)}
+
+function ultraschall.BubbleSortDocBlocTable_Slug(Table)
+  local count=1
+  while Table[count]~=nil and Table[count+1]~=nil do
+    if Table[count][1]>Table[count+1][1] then
+      temp=Table[count]
+      Table[count]=Table[count+1]
+      Table[count+1]=temp
+    end
+    count=count+1
+  end
+end
+
+-- Need to be documented, but are finished
+
+function ultraschall.GetRenderTargetFiles()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetRenderTargetFiles</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.33
+    Lua=5.3
+  </requires>
+  <functioncall>string path, integer file_count, array filenames_with_path = ultraschall.GetRenderTargetFiles()</functioncall>
+  <description>
+    Will return the render output-path and all filenames with path that would be rendered, if rendering would run right now
+    
+    returns nil in case of error
+  </description>
+  <retvals>
+    string path - the output-path for the rendered files
+    integer file_count - the number of files that would be rendered
+    array filenames_with_path - the filenames with path of the files that would be rendered
+  </retvals>
+  <chapter_context>
+    Rendering Projects
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render, get, output filenames, target path</tags>
+</US_DocBloc>
+--]]
+  retval, Targets = reaper.GetSetProjectInfo_String(0, "RENDER_TARGETS", "", false)
+  if retval==false then return end
+  local Temp=Targets:sub(1,2)
+  local Count, Files = ultraschall.CSV2IndividualLinesAsArray(Targets, ";"..Temp)
+  for i=2, Count do
+    Files[i]=Temp..Files[i]
+  end
+  
+  local Path=Files[1]:match("(.*[\\/])")
+  
+  return Path, Count, Files
+end
+
+function ultraschall.Docs_GetReaperApiFunction_Description(functionname)
+  if type(functionname)~="string" then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Description", "functionname", "must be a string", -1) return nil end
+  if ultraschall.Docs_ReaperApiDocBlocs==nil then
+    ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/DocsSourceFiles/reaper-apidocs.USDocML")
+    ultraschall.Docs_ReaperApiDocBlocs_Count, ultraschall.Docs_ReaperApiDocBlocs = ultraschall.Docs_GetAllUSDocBlocsFromString(ultraschall.Docs_ReaperApiDocBlocs)
+    ultraschall.Docs_ReaperApiDocBlocs_Titles={}
+    for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do 
+      ultraschall.Docs_ReaperApiDocBlocs_Titles[i]= ultraschall.Docs_GetUSDocBloc_Title(ultraschall.Docs_ReaperApiDocBlocs[i], 1)
+    end
+  end
+
+  local found=-1
+  for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do
+    if ultraschall.Docs_ReaperApiDocBlocs_Titles[i]:lower()==functionname:lower() then
+      found=i
+    end
+  end
+  if found==-1 then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Description", "functionname", "function not found", -2) return end
+
+  local Description, markup_type, markup_version
+
+  Description, markup_type, markup_version  = ultraschall.Docs_GetUSDocBloc_Description(ultraschall.Docs_ReaperApiDocBlocs[found], true, 1)
+  if Description==nil then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Description", "functionname", "no description existing", -3) return end
+
+  Description = string.gsub(Description, "&lt;", "<")
+  Description = string.gsub(Description, "&gt;", ">")
+  Description = string.gsub(Description, "&amp;", "&")
+  return Description, markup_type, markup_version
+end
+
+
+
+function ultraschall.Docs_GetReaperApiFunction_Call(functionname, proglang)
+  if type(functionname)~="string" then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "functionname", "must be a string", -1) return nil end
+  if math.type(proglang)~="integer" then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "proglang", "must be an integer", -2) return nil end
+  if proglang<1 or proglang>4 then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "proglang", "no such programming language available", -3) return nil end
+  if ultraschall.Docs_ReaperApiDocBlocs==nil then
+    ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/DocsSourceFiles/reaper-apidocs.USDocML")
+    ultraschall.Docs_ReaperApiDocBlocs_Count, ultraschall.Docs_ReaperApiDocBlocs = ultraschall.Docs_GetAllUSDocBlocsFromString(ultraschall.Docs_ReaperApiDocBlocs)
+    ultraschall.Docs_ReaperApiDocBlocs_Titles={}
+    for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do 
+      ultraschall.Docs_ReaperApiDocBlocs_Titles[i]= ultraschall.Docs_GetUSDocBloc_Title(ultraschall.Docs_ReaperApiDocBlocs[i], 1)
+    end
+  end
+
+  local found=-1
+  for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do
+    if ultraschall.Docs_ReaperApiDocBlocs_Titles[i]:lower()==functionname:lower() then
+      found=i
+    end
+  end
+  if found==-1 then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "functionname", "function not found", -4) return end
+
+  local Call, prog_lang
+  Call, prog_lang  = ultraschall.Docs_GetUSDocBloc_Functioncall(ultraschall.Docs_ReaperApiDocBlocs[found], proglang)
+  if Call==nil then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "functionname", "no such programming language available", -5) return end
+  Call = string.gsub(Call, "&lt;", "<")
+  Call = string.gsub(Call, "&gt;", ">")
+  Call = string.gsub(Call, "&amp;", "&")
+  return Call, prog_lang
+end
+
+function ultraschall.Docs_LoadReaperApiDocBlocs()
+  ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/DocsSourceFiles/reaper-apidocs.USDocML")
+  ultraschall.Docs_ReaperApiDocBlocs_Count, ultraschall.Docs_ReaperApiDocBlocs = ultraschall.Docs_GetAllUSDocBlocsFromString(ultraschall.Docs_ReaperApiDocBlocs)
+  ultraschall.Docs_ReaperApiDocBlocs_Titles={}
+  for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do 
+    ultraschall.Docs_ReaperApiDocBlocs_Titles[i]= ultraschall.Docs_GetUSDocBloc_Title(ultraschall.Docs_ReaperApiDocBlocs[i], 1)
+  end
+end
+
+function ultraschall.Docs_FindReaperApiFunction_Pattern(pattern, case_sensitive, include_descriptions, include_retvalnames, include_paramnames, include_tags)
+  -- unfinished:
+  -- include_retvalnames, include_paramnames not yet implemented
+  -- probably needs RetVal/Param-function that returns datatypes and name independently from each other
+  -- which also means: all functions must return values with a proper, descriptive name(or at least retval)
+  --                   or this breaks -> Doc-CleanUp-Work...Yeah!!! (looking forward to it, actually)
+  if desc_startoffset==nil then desc_startoffset=-10 end
+  if desc_endoffset==nil then desc_endoffset=-10 end
+  if case_sensitive==false then pattern=pattern:lower() end
+  local Found_count=0
+  local Found={}
+  local FoundInformation={}
+  if include_descriptions==false then FoundInformation=nil end
+  local found_this_time=false
+  for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do
+    -- search for titles
+    local Title=ultraschall.Docs_ReaperApiDocBlocs_Titles[i]
+    if case_sensitive==false then Title=Title:lower() end
+    if Title:match(pattern) then
+      found_this_time=true
+    end
+    
+    -- search within tags
+    if found_this_time==false and include_tags==true then
+      local count, tags = ultraschall.Docs_GetUSDocBloc_Tags(ultraschall.Docs_ReaperApiDocBlocs[i], 1)
+      for i=1, count do
+        if case_sensitive==false then tags[i]=tags[i]:lower() end
+        if tags[i]:match(pattern) then found_this_time=true break end
+      end
+    end
+    
+    -- search within descriptions
+    local _temp, Offset1, Offset2
+    if found_this_time==false and include_descriptions==true then
+      local Description, markup_type = ultraschall.Docs_GetUSDocBloc_Description(ultraschall.Docs_ReaperApiDocBlocs[i], true, 1)
+      Description = string.gsub(Description, "&lt;", "<")
+      Description = string.gsub(Description, "&gt;", ">")
+      Description = string.gsub(Description, "&amp;", "&")
+      if case_sensitive==false then Description=Description:lower() end
+      if Description:match(pattern) then
+        found_this_time=true
+      end
+      Offset1, _temp, Offset2=Description:match("()("..pattern..")()")
+      if Offset1~=nil then
+        if Offset1-desc_startoffset<0 then Offset1=0 else Offset1=Offset1-desc_startoffset end
+        FoundInformation[Found_count+1]={}
+        FoundInformation[Found_count+1][1]=Description:sub(Offset1, Offset2+desc_endoffset-1)
+        FoundInformation[Found_count+1][2]=Offset1 -- startoffset of found pattern, so this part can be highlighted
+                                                   -- when displaying somewhere later
+      end
+    end
+    
+    if found_this_time==true then
+      Found_count=Found_count+1
+      Found[Found_count]=ultraschall.Docs_ReaperApiDocBlocs_Titles[i]
+    end
+    
+    found_this_time=false
+  end
+  return Found_count, Found, FoundInformation
+end
+
+--A,B,C=ultraschall.Docs_FindReaperApiFunction_Pattern("tudel", false, false, 10, 14, nil, nil, true)
+
+
+
+
+
+
+
+

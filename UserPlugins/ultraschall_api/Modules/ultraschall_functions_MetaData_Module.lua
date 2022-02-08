@@ -211,7 +211,7 @@ function ultraschall.GetGuidExtState(guid, key, savelocation)
   </retvals>
   <chapter_context>
     Metadata Management
-    Extension States(Guid)
+    Extension States Guid
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
@@ -412,7 +412,7 @@ function ultraschall.Metadata_ID3_GetSet(Tag, Value)
   <slug>Metadata_ID3_GetSet</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=6.16
+    Reaper=6.34
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_ID3_GetSet(string Tag, optional string Value)</functioncall>
@@ -435,6 +435,7 @@ function ultraschall.Metadata_ID3_GetSet(Tag, Value)
       COMM - Comment
       TXXX - User defined(description=value)
       TXXX:REAPER - Media Explorer Tags
+      TXXX:TIME_REFERENCE - Start Offset
       TCOM - Composer
       TIPL - Involved People
       TEXT - Lyricist/Text Writer
@@ -442,6 +443,7 @@ function ultraschall.Metadata_ID3_GetSet(Tag, Value)
       TALB - Album
       TRCK - Track
       TIT1 - Content Group
+      TPOS - Part Number
       TRCK - Track number
       TSRC - International Standard Recording Code
       TCOP - Copyright Message
@@ -1030,28 +1032,51 @@ function ultraschall.Metadata_APE_GetSet(Tag, Value)
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
     
     Supported tags are:
-     Title - title
-     Subtitle - description
-     Artist - artist
-     Genre - genre
-     Key - key
-     BPM - tempo
-     Year - the date; following format: yyyy-mm-dd
-     Record Date - the recording date; following format: yyyy-mm-dd
-     Comment - comment
-     User Defined - user defined metadata
-     REAPER - Media Explorer Metadata
-     Composer - the composer
-     Conductor - the conductor
-     Publisher - the publisher
-     Album - the album
-     Track - the tracknumber
-     Catalog - the catalog
-     ISRC - the isrc
-     Copyright - the copyright holder
-     Language - the language, a three character code like "eng"
-     Record Location - the recording location
+    
+    General:
+    Title - Title
+    Subtitle - Description
+    Comment - Comment
 
+    Artist:
+    Artist - Artist
+
+    Date:
+    Record Date - Date
+    Year - Date
+
+    Musical:
+    Genre - Genre
+    Key - Key
+    BPM - Tempo
+
+    Personnel:
+    Composer - Composer
+    Conductor - Conductor
+    Publisher - Publisher
+
+    Project:
+    Album - Album
+
+    Parts:
+    Track - Track Number
+
+    Reaper:
+    REAPER - Media Explorer Tags
+
+    User:
+    User Defined - User Defined
+
+    Code:
+    ISRC - ISRC
+    Catalog - Catalog
+
+    License:
+    Copyright - Copyright Holder
+
+    Technical:
+    Language - Language
+    Record Location - Recording Location
 
     Returns nil in case of an error
   </description>
@@ -1078,3 +1103,733 @@ function ultraschall.Metadata_APE_GetSet(Tag, Value)
   local a,b=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "APE:"..Tag..Value, set)
   return b
 end
+
+function ultraschall.Metadata_ASWG_GetSet(Tag, Value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_ASWG_GetSet</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.43
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Metadata_ASWG_GetSet(string Tag, optional string Value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets/Sets a stored ASWG-metadata-tag into the current project.
+    
+    To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
+    
+    Supported tags are:
+    
+    General:
+    project - Title
+    session - Description
+    notes - Comment
+
+    Artist:
+    artist - Artist
+
+    Musical:
+    genre - Genre
+    instrument - Instrument
+    intensity - Intensity
+    inKey - Key
+    isLoop - Loop
+    subGenre - Sub-Genre
+    tempo - Tempo
+    timeSig - Time Signature
+
+    Performance:
+    text - Transcript
+    actorGender - Actor Gender
+    actorName - Actor Name
+    characterAge - Character Age
+    characterGender - Character Gender
+    characterName - Character Name
+    characterRole - Character Role
+    efforts - Dialogue Contains Efforts
+    effortType - Dialogue Effort Type
+    emotion - Dialogue Emotion
+    accent - Dialogue Regional Accent
+    timingRestriction - Dialogue Timing Restriction
+    director - Director
+    direction - Director's Notes
+
+    Personnel:
+    composer - Composer
+    creatorId - Creator
+    editor - Editor
+    recEngineer - Engineer
+    mixer - Mixer
+    musicSup - Music Supervisor
+    producer - Producer
+    musicPublisher - Publisher
+    isCinematic - Cinematic
+    contentType - Content Type
+    isFinal - Final
+    isOst - Original
+    originator - Originator
+    originatorStudio - Originator Studio
+    recStudio - Recording Studio
+    songTitle - Song Title
+    isSource - Source
+    musicVersion - Version
+
+    Part:
+    orderRef - Part Number
+
+    Code:
+    isrcId - ISRC
+    billingCode - Billing Code
+
+    Licensed:
+    isLicensed - License
+    rightsOwner - Rights Owner
+    isUnion - Union Contract
+    usageRights - Usage Rights
+
+    Technical:
+    ambisonicChnOrder - Ambisonic Channel Order
+    ambisonicFormat - Ambisonic Format
+    ambisonicNorm - Ambisonic Normalization Method
+    zeroCrossRate - Average Zero Cross Rate
+    channelConfig - Channel Layout Text
+    isDesigned - Designed Or Raw
+    isDiegetic - Diegetic
+    state - File State
+    category - FX Category
+    catId - FX Category ID
+    fxChainName - FX Chain Name
+    fxName - FX Name
+    subCategory - FX Sub-Category
+    fxUsed - FX Used
+    language - Language
+    loudnessRange - LRA Loudness Range
+    loudness - LUFS-I Integrated Loudness
+    maxPeak - Maximum Peak Value dBFS
+    micConfig - Microphone Configuration
+    micDistance - Microphone Distance
+    micType - Microphone Type
+    papr - Peak To Average Power Ratio
+    impulseLocation - Recording Location
+    recordingLoc - Recording Location
+    rmsPower - RMS Power
+    library - Sound Effects Library
+    sourceId - Source ID
+    specDensity - Spectral Density
+    userCategory - User Category
+    userData - User Data
+    vendorCategory - Vendor Category
+
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string value - the value of the specific tag
+  </retvals>
+  <parameters>
+    string Tag - the tag, whose value you want to get/set; see description for a list of supported ASWG-Tags
+    optional string Value - nil, only get the current value; any other value, set the value
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Tags
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, set, aswg, metadata, tags, tag</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Tag)~="string" then ultraschall.AddErrorMessage("Metadata_ASWG_GetSet", "Tag", "must be a string", -1) return end
+  if Value~=nil and ultraschall.type(Value)~="string" then ultraschall.AddErrorMessage("Metadata_ASWG_GetSet", "Value", "must be a string", -2) return end
+  if Value==nil then Value="" set=false else Value="|"..Value set=true end
+  
+  local a,b=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ASWG:"..Tag..Value, set)
+  return b
+end
+
+function ultraschall.Metadata_AXML_GetSet(Tag, Value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_AXML_GetSet</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.19
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Metadata_AXML_GetSet(string Tag, optional string Value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets/Sets a stored ASWG-metadata-tag into the current project.
+    
+    To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
+    
+    Supported tags are:
+    
+    Code:
+    ISRC - the ISRC-code
+
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string value - the value of the specific tag
+  </retvals>
+  <parameters>
+    string Tag - the tag, whose value you want to get/set; see description for a list of supported AXML-Tags
+    optional string Value - nil, only get the current value; any other value, set the value
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Tags
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, set, axml, metadata, tags, tag</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Tag)~="string" then ultraschall.AddErrorMessage("Metadata_AXML_GetSet", "Tag", "must be a string", -1) return end
+  if Value~=nil and ultraschall.type(Value)~="string" then ultraschall.AddErrorMessage("Metadata_AXML_GetSet", "Value", "must be a string", -2) return end
+  if Value==nil then Value="" set=false else Value="|"..Value set=true end
+  
+  local a,b=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "AXML:"..Tag..Value, set)
+  return b
+end
+
+function ultraschall.Metadata_CAFINFO_GetSet(Tag, Value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_CAFINFO_GetSet</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.43
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Metadata_CAFINFO_GetSet(string Tag, optional string Value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets/Sets a stored CAFINFO-metadata-tag into the current project.
+    
+    To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
+    
+    Supported tags are:
+    
+    General:
+    title - Title
+    comments - Comment
+
+    Artist:
+    artist - Artist
+
+    Date:
+    year - Date
+    recorded date - Recording Time
+
+    Musical:
+    genre - Genre
+    key signature - Key
+    tempo - Tempo
+    time signature - Time Signature
+
+    Personnel:
+    composer - Composer
+    lyricist - Lyricist
+
+    Project:
+    album - Album
+
+    Parts:
+    track number - Track Number
+
+    License:
+    copyright - Copyright Message
+
+    Technical:
+    nominal bit rate - Bit Rate
+    channel configuration - Channel Configuration
+    channel layout - Channel Layout Text
+    encoding application - Encoded By
+    source encoder - Encoding Settings
+
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string value - the value of the specific tag
+  </retvals>
+  <parameters>
+    string Tag - the tag, whose value you want to get/set; see description for a list of supported CAFINFO-Tags
+    optional string Value - nil, only get the current value; any other value, set the value
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Tags
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, set, cafinfo, metadata, tags, tag</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Tag)~="string" then ultraschall.AddErrorMessage("Metadata_CAFINFO_GetSet", "Tag", "must be a string", -1) return end
+  if Value~=nil and ultraschall.type(Value)~="string" then ultraschall.AddErrorMessage("Metadata_CAFINFO_GetSet", "Value", "must be a string", -2) return end
+  if Value==nil then Value="" set=false else Value="|"..Value set=true end
+  
+  local a,b=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "CAFINFO:"..Tag..Value, set)
+  return b
+end
+
+function ultraschall.Metadata_FLACPIC_GetSet(Tag, Value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_FLACPIC_GetSet</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.26
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Metadata_FLACPIC_GetSet(string Tag, optional string Value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets/Sets a stored FLACPIC-metadata-tag into the current project.
+    
+    To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
+    
+    Supported tags are:
+    
+    Binary:
+    APIC\_TYPE - Image Type
+    APIC\_DESC - Image Description
+    APIC\_FILE - Image File
+
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string value - the value of the specific tag
+  </retvals>
+  <parameters>
+    string Tag - the tag, whose value you want to get/set; see description for a list of supported FLACPIC-Tags
+    optional string Value - nil, only get the current value; any other value, set the value
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Tags
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, set, flacpic, metadata, tags, tag</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Tag)~="string" then ultraschall.AddErrorMessage("Metadata_FLACPIC_GetSet", "Tag", "must be a string", -1) return end
+  if Value~=nil and ultraschall.type(Value)~="string" then ultraschall.AddErrorMessage("Metadata_FLACPIC_GetSet", "Value", "must be a string", -2) return end
+  if Value==nil then Value="" set=false else Value="|"..Value set=true end
+  
+  local a,b=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "FLACPIC:"..Tag..Value, set)
+  return b
+end
+
+function ultraschall.Metadata_IFF_GetSet(Tag, Value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_IFF_GetSet</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.16
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Metadata_IFF_GetSet(string Tag, optional string Value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets/Sets a stored IFF-metadata-tag into the current project.
+    
+    To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
+    
+    Supported tags are:
+    
+    General:
+    NAME - Title
+    ANNO - Description
+
+    Artist:
+    AUTH - Artist
+
+    License:
+    COPY - Copyright Message
+
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string value - the value of the specific tag
+  </retvals>
+  <parameters>
+    string Tag - the tag, whose value you want to get/set; see description for a list of supported IFF-Tags
+    optional string Value - nil, only get the current value; any other value, set the value
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Tags
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, set, iff, metadata, tags, tag</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Tag)~="string" then ultraschall.AddErrorMessage("Metadata_IFF_GetSet", "Tag", "must be a string", -1) return end
+  if Value~=nil and ultraschall.type(Value)~="string" then ultraschall.AddErrorMessage("Metadata_IFF_GetSet", "Value", "must be a string", -2) return end
+  if Value==nil then Value="" set=false else Value="|"..Value set=true end
+  
+  local a,b=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "IFF:"..Tag..Value, set)
+  return b
+end
+
+function ultraschall.Metadata_WAVEXT_GetSet(Tag, Value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_WAVEXT_GetSet</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.43
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Metadata_WAVEXT_GetSet(string Tag, optional string Value)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Gets/Sets a stored WAVEXT-metadata-tag into the current project.
+    
+    To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
+    
+    Supported tags are:
+    
+    Technical:
+    channel configuration - Channel Configuration
+
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string value - the value of the specific tag
+  </retvals>
+  <parameters>
+    string Tag - the tag, whose value you want to get/set; see description for a list of supported WAVEXT-Tags
+    optional string Value - nil, only get the current value; any other value, set the value
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Tags
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, set, wavext, metadata, tags, tag</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(Tag)~="string" then ultraschall.AddErrorMessage("Metadata_WAVEXT_GetSet", "Tag", "must be a string", -1) return end
+  if Value~=nil and ultraschall.type(Value)~="string" then ultraschall.AddErrorMessage("Metadata_WAVEXT_GetSet", "Value", "must be a string", -2) return end
+  if Value==nil then Value="" set=false else Value="|"..Value set=true end
+  
+  local a,b=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "WAVEXT:"..Tag..Value, set)
+  return b
+end
+
+function ultraschall.Metadata_GetMetaDataTable_Presets(name)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_GetMetaDataTable_Presets</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>table MetaDataTable = ultraschall.Metadata_GetMetaDataTable_Presets(string PresetName)</functioncall>
+  <description>
+    returns a table with all metadata from a metadata-preset.
+    
+    Metadata that is not set in the preset, will be set to "" in the table
+    
+    returns nil in case of an error of if reaper-metadata.ini isn't found in resource-folder
+  </description>
+  <parameters>
+    string PresetName - the name of the preset, whose metadata you want
+  </parameters>
+  <retvals>
+    table MetaDataTable - a table with all metadata-entries from a preset. Unset entries in the preset will be set to ""
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Reaper Metadata Management
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, metadata preset, metadata</tags>
+</US_DocBloc>
+]]
+  if type(name)~="string" then ultraschall.AddErrorMessage("Metadata_GetMetaDataTable_Presets", "name", "must be a string", -1) return end
+  local File=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-metadata.ini")
+  if File==nil then ultraschall.AddErrorMessage("Metadata_GetAllPresetNames", "", "Could not retrieve metadata-presets: reaper-metadata.ini is missing in resourcefolder", -2) return end
+  local Tags=""
+  local MetaDataTable={}
+  local count
+  for name_found, k in string.gmatch(File, "<METADATA (.-)\n(.-)\n>") do
+    if name==string.gsub(name_found, "\"", "") then Tags=k.."\n" end
+  end
+
+  --APE
+  MetaDataTable["APE:Album"]=Tags:match("TAG APE:Album (.-)\n") or ""
+  MetaDataTable["APE:Artist"]=Tags:match("TAG APE:Artist (.-)\n") or ""
+  MetaDataTable["APE:Catalog"]=Tags:match("TAG APE:BPM (.-)\n") or ""
+  MetaDataTable["APE:BPM"]=Tags:match("TAG APE:Catalog (.-)\n") or ""
+  MetaDataTable["APE:Comment"]=Tags:match("TAG APE:Comment (.-)\n") or ""
+  MetaDataTable["APE:Composer"]=Tags:match("TAG APE:Composer (.-)\n") or ""
+  MetaDataTable["APE:Conductor"]=Tags:match("TAG APE:Conductor (.-)\n") or ""
+  MetaDataTable["APE:Copyright"]=Tags:match("TAG APE:Copyright (.-)\n") or ""
+  MetaDataTable["APE:Genre"]=Tags:match("TAG APE:Genre (.-)\n") or ""
+  MetaDataTable["APE:ISRC"]=Tags:match("TAG APE:ISRC (.-)\n") or ""
+  MetaDataTable["APE:Key"]=Tags:match("TAG APE:Key (.-)\n") or ""
+  MetaDataTable["APE:Language"]=Tags:match("TAG APE:Language (.-)\n") or ""
+  MetaDataTable["APE:Publisher"]=Tags:match("TAG APE:Publisher (.-)\n") or ""
+  MetaDataTable["APE:REAPER"]=Tags:match("TAG APE:REAPER (.-)\n") or ""
+  MetaDataTable["APE:Record Date"]=Tags:match("TAG \"APE:Record Date\" (.-)\n") or ""
+  MetaDataTable["APE:Record Location"]=Tags:match("TAG \"APE:Record Location\" (.-)\n") or ""
+  MetaDataTable["APE:Subtitle"]=Tags:match("TAG APE:Subtitle (.-)\n") or ""
+  MetaDataTable["APE:Title"]=Tags:match("TAG APE:Title (.-)\n") or ""
+  MetaDataTable["APE:Track"]=Tags:match("TAG APE:Track (.-)\n") or ""
+  MetaDataTable["APE:Year"]=Tags:match("TAG APE:Year (.-)\n") or ""
+  count=0
+  for k, v in string.gmatch(Tags, "  TAG \"APE:User Defined:(.-)\" (.-)\n") do
+    count=count+1
+    if k:sub(1,1)=="\"" then k=k:sub(2,-2) end
+    if v:sub(1,1)=="\"" then v=v:sub(2,-2) end
+    MetaDataTable["APE:User Defined:"..count]={}
+    MetaDataTable["APE:User Defined:"..count]["key"]=k
+    MetaDataTable["APE:User Defined:"..count]["value"]=v
+  end
+
+  -- AXML
+  MetaDataTable["AXML:ISRC"]=Tags:match("TAG AXML:ISRC (.-)\n") or ""
+  
+  -- BWF
+  MetaDataTable["BWF:Description"]=Tags:match("TAG BWF:Description (.-)\n") or ""  
+  MetaDataTable["BWF:OriginationDate"]=Tags:match("TAG BWF:OriginationDate (.-)\n") or ""  
+  MetaDataTable["BWF:OriginationTime"]=Tags:match("TAG BWF:OriginationTime (.-)\n") or ""  
+  MetaDataTable["BWF:Originator"]=Tags:match("TAG BWF:Originator (.-)\n") or ""  
+  MetaDataTable["BWF:OriginatorReference"]=Tags:match("TAG BWF:OriginatorReference (.-)\n") or ""  
+  
+  -- CART
+  MetaDataTable["CART:Artist"]=Tags:match("TAG CART:Artist (.-)\n") or ""  
+  MetaDataTable["CART:Category"]=Tags:match("TAG CART:Category (.-)\n") or ""  
+  MetaDataTable["CART:ClientID"]=Tags:match("TAG CART:ClientID (.-)\n") or ""  
+  MetaDataTable["CART:CutID"]=Tags:match("TAG CART:CutID (.-)\n") or ""  
+  MetaDataTable["CART:EndDate"]=Tags:match("TAG CART:EndDate (.-)\n") or ""  
+  MetaDataTable["CART:StartDate"]=Tags:match("TAG CART:StartDate (.-)\n") or ""  
+  MetaDataTable["CART:TagText"]=Tags:match("TAG CART:TagText (.-)\n") or ""  
+  MetaDataTable["CART:Title"]=Tags:match("TAG CART:Title (.-)\n") or ""  
+  MetaDataTable["CART:URL"]=Tags:match("TAG CART:URL (.-)\n") or ""  
+
+  -- Cue
+  MetaDataTable["CUE:DISC_CATALOG"]=Tags:match("TAG CUE:DISC_CATALOG (.-)\n") or ""  
+  MetaDataTable["CUE:DISC_PERFORMER"]=Tags:match("TAG CUE:DISC_PERFORMER (.-)\n") or ""  
+  MetaDataTable["CUE:DISC_REM"]=Tags:match("TAG CUE:DISC_REM (.-)\n") or ""  
+  MetaDataTable["CUE:DISC_SONGWRITER"]=Tags:match("TAG CUE:DISC_SONGWRITER (.-)\n") or ""  
+  MetaDataTable["CUE:DISC_TITLE"]=Tags:match("TAG CUE:DISC_TITLE (.-)\n") or ""  
+  MetaDataTable["CUE:INDEX"]=Tags:match("TAG CUE:INDEX (.-)\n") or ""  
+  
+  -- FlacPic
+  MetaDataTable["FLACPIC:APIC_DESC"]=Tags:match("TAG FLACPIC:APIC_DESC (.-)\n") or ""  
+  MetaDataTable["FLACPIC:APIC_FILE"]=Tags:match("TAG FLACPIC:APIC_FILE (.-)\n") or ""  
+  MetaDataTable["FLACPIC:APIC_TYPE"]=Tags:match("TAG FLACPIC:APIC_TYPE (.-)\n") or ""  
+  
+  -- ID3-MP3
+  MetaDataTable["ID3:APIC_DESC"]=Tags:match("TAG ID3:APIC_DESC (.-)\n") or ""
+  MetaDataTable["ID3:APIC_FILE"]=Tags:match("TAG ID3:APIC_FILE (.-)\n") or ""    
+  MetaDataTable["ID3:APIC_TYPE"]=Tags:match("TAG ID3:APIC_TYPE (.-)\n") or ""    
+  MetaDataTable["ID3:COMM"]=Tags:match("TAG ID3:COMM (.-)\n") or ""    
+  MetaDataTable["ID3:COMM_LANG"]=Tags:match("TAG ID3:COMM_LANG (.-)\n") or ""    
+  MetaDataTable["ID3:TALB"]=Tags:match("TAG ID3:TALB (.-)\n") or ""    
+  MetaDataTable["ID3:TBPM"]=Tags:match("TAG ID3:TBPM (.-)\n") or ""    
+  MetaDataTable["ID3:TCOM"]=Tags:match("TAG ID3:TCOM (.-)\n") or ""    
+  MetaDataTable["ID3:TCON"]=Tags:match("TAG ID3:TCON (.-)\n") or ""    
+  MetaDataTable["ID3:TCOP"]=Tags:match("TAG ID3:TCOP (.-)\n") or ""    
+  MetaDataTable["ID3:TDRC"]=Tags:match("TAG ID3:TDRC (.-)\n") or ""    
+  MetaDataTable["ID3:TEXT"]=Tags:match("TAG ID3:TEXT (.-)\n") or ""    
+  MetaDataTable["ID3:TIME"]=Tags:match("TAG ID3:TIME (.-)\n") or ""    
+  MetaDataTable["ID3:TIPL"]=Tags:match("TAG ID3:TIPL (.-)\n") or ""    
+  MetaDataTable["ID3:TIT1"]=Tags:match("TAG ID3:TIT1 (.-)\n") or ""    
+  MetaDataTable["ID3:TIT2"]=Tags:match("TAG ID3:TIT2 (.-)\n") or ""    
+  MetaDataTable["ID3:TIT3"]=Tags:match("TAG ID3:TIT3 (.-)\n") or ""    
+  MetaDataTable["ID3:TKEY"]=Tags:match("TAG ID3:TKEY (.-)\n") or ""    
+  MetaDataTable["ID3:TMCL"]=Tags:match("TAG ID3:TMCL (.-)\n") or ""    
+  MetaDataTable["ID3:TPE1"]=Tags:match("TAG ID3:TPE1 (.-)\n") or ""    
+  MetaDataTable["ID3:TPE2"]=Tags:match("TAG ID3:TPE2 (.-)\n") or ""    
+  MetaDataTable["ID3:TRCK"]=Tags:match("TAG ID3:TRCK (.-)\n") or ""    
+  MetaDataTable["ID3:TSRC"]=Tags:match("TAG ID3:TSRC (.-)\n") or ""    
+  MetaDataTable["ID3:TYER"]=Tags:match("TAG ID3:TYER (.-)\n") or ""    
+  
+  count=0
+  for val in string.gmatch(Tags, "TAG ([\"]-ID3:TXXX:.-)\n") do
+    if val:sub(1,1)=="\"" then
+      k,offset=val:match("\"(.-)\" ()")
+      v=val:sub(offset, -1)
+    else
+      k,v=val:match("ID3:TXXX:(.-) (.*)")
+    end  
+    count=count+1
+    if k:sub(1,1)=="\"" then k=k:sub(2,-2) end
+    if v:sub(1,1)=="\"" then v=v:sub(2,-2) end
+    MetaDataTable["ID3:TXXX:"..count]={}
+    MetaDataTable["ID3:TXXX:"..count]["key"]=k
+    MetaDataTable["ID3:TXXX:"..count]["value"]=v
+  end
+
+  -- INFO
+  MetaDataTable["INFO:IART"]=Tags:match("TAG INFO:IART (.-)\n") or ""    
+  MetaDataTable["INFO:ICMT"]=Tags:match("TAG INFO:ICMT (.-)\n") or ""    
+  MetaDataTable["INFO:ICOP"]=Tags:match("TAG INFO:ICOP (.-)\n") or ""    
+  MetaDataTable["INFO:ICRD"]=Tags:match("TAG INFO:ICRD (.-)\n") or ""    
+  MetaDataTable["INFO:IENG"]=Tags:match("TAG INFO:IENG (.-)\n") or ""    
+  MetaDataTable["INFO:IGNR"]=Tags:match("TAG INFO:IGNR (.-)\n") or ""    
+  MetaDataTable["INFO:IKEY"]=Tags:match("TAG INFO:IKEY (.-)\n") or ""    
+  MetaDataTable["INFO:INAM"]=Tags:match("TAG INFO:INAM (.-)\n") or ""    
+  MetaDataTable["INFO:IPRD"]=Tags:match("TAG INFO:IPRD (.-)\n") or ""    
+  MetaDataTable["INFO:ISBJ"]=Tags:match("TAG INFO:ISBJ (.-)\n") or ""    
+  MetaDataTable["INFO:ISRC"]=Tags:match("TAG INFO:ISRC (.-)\n") or ""    
+  MetaDataTable["INFO:TRCK"]=Tags:match("TAG INFO:TRCK (.-)\n") or ""    
+  
+  -- IXML
+  MetaDataTable["IXML:CIRCLED"]=Tags:match("TAG IXML:CIRCLED (.-)\n") or ""      
+  MetaDataTable["IXML:FILE_UID"]=Tags:match("TAG IXML:FILE_UID (.-)\n") or ""      
+  MetaDataTable["IXML:NOTE"]=Tags:match("TAG IXML:NOTE (.-)\n") or ""      
+  MetaDataTable["IXML:PROJECT"]=Tags:match("TAG IXML:PROJECT (.-)\n") or ""      
+  MetaDataTable["IXML:SCENE"]=Tags:match("TAG IXML:SCENE (.-)\n") or ""      
+  MetaDataTable["IXML:TAKE"]=Tags:match("TAG IXML:TAKE (.-)\n") or ""      
+  MetaDataTable["IXML:TAPE"]=Tags:match("TAG IXML:TAPE (.-)\n") or ""      
+
+  count=0
+  for val in string.gmatch(Tags, "TAG ([\"]-IXML:USER:.-)\n") do
+    if val:sub(1,1)=="\"" then
+      k,offset=val:match("\"(.-)\" ()")
+      v=val:sub(offset, -1)
+    else
+      k,v=val:match("IXML:USER:(.-) (.*)")
+    end  
+    count=count+1
+    if k:sub(1,1)=="\"" then k=k:sub(2,-2) end
+    if v:sub(1,1)=="\"" then v=v:sub(2,-2) end
+    MetaDataTable["IXML:USER:"..count]={}
+    MetaDataTable["IXML:USER:"..count]["key"]=k
+    MetaDataTable["IXML:USER:"..count]["value"]=v
+  end
+  
+  -- VORBIS
+  MetaDataTable["VORBIS:ALBUM"]=Tags:match("TAG VORBIS:ALBUM (.-)\n") or ""  
+  MetaDataTable["VORBIS:ALBUMARTIST"]=Tags:match("TAG VORBIS:ALBUMARTIST (.-)\n") or ""  
+  MetaDataTable["VORBIS:ARRANGER"]=Tags:match("TAG VORBIS:ARRANGER (.-)\n") or ""  
+  MetaDataTable["VORBIS:ARTIST"]=Tags:match("TAG VORBIS:ARTIST (.-)\n") or ""  
+  MetaDataTable["VORBIS:AUTHOR"]=Tags:match("TAG VORBIS:AUTHOR (.-)\n") or ""  
+  MetaDataTable["VORBIS:BPM"]=Tags:match("TAG VORBIS:BPM (.-)\n") or ""  
+  MetaDataTable["VORBIS:COMMENT"]=Tags:match("TAG VORBIS:COMMENT (.-)\n") or ""  
+  MetaDataTable["VORBIS:COMPOSER"]=Tags:match("TAG VORBIS:COMPOSER (.-)\n") or ""  
+  MetaDataTable["VORBIS:CONDUCTOR"]=Tags:match("TAG VORBIS:CONDUCTOR (.-)\n") or ""  
+  MetaDataTable["VORBIS:COPYRIGHT"]=Tags:match("TAG VORBIS:COPYRIGHT (.-)\n") or ""  
+  MetaDataTable["VORBIS:DATE"]=Tags:match("TAG VORBIS:DATE (.-)\n") or ""  
+  MetaDataTable["VORBIS:DESCRIPTION"]=Tags:match("TAG VORBIS:DESCRIPTION (.-)\n") or ""  
+  MetaDataTable["VORBIS:DISCNUMBER"]=Tags:match("TAG VORBIS:DISCNUMBER (.-)\n") or ""  
+  MetaDataTable["VORBIS:EAN/UPN"]=Tags:match("TAG VORBIS:EAN/UPN (.-)\n") or ""  
+  MetaDataTable["VORBIS:ENCODED-BY"]=Tags:match("TAG VORBIS:ENCODED%-BY (.-)\n") or ""  
+  MetaDataTable["VORBIS:ENCODING"]=Tags:match("TAG VORBIS:ENCODING (.-)\n") or ""  
+  MetaDataTable["VORBIS:ENSEMBLE"]=Tags:match("TAG VORBIS:ENSEMBLE (.-)\n") or ""  
+  MetaDataTable["VORBIS:GENRE"]=Tags:match("TAG VORBIS:GENRE (.-)\n") or ""  
+  MetaDataTable["VORBIS:ISRC"]=Tags:match("TAG VORBIS:ISRC (.-)\n") or ""  
+  MetaDataTable["VORBIS:KEY"]=Tags:match("TAG VORBIS:KEY (.-)\n") or ""  
+  MetaDataTable["VORBIS:LABEL"]=Tags:match("TAG VORBIS:LABEL (.-)\n") or ""  
+  MetaDataTable["VORBIS:LABELNO"]=Tags:match("TAG VORBIS:LABELNO (.-)\n") or ""  
+  MetaDataTable["VORBIS:LANGUAGE"]=Tags:match("TAG VORBIS:LANGUAGE (.-)\n") or ""  
+  MetaDataTable["VORBIS:LICENSE"]=Tags:match("TAG VORBIS:LICENSE (.-)\n") or ""  
+  MetaDataTable["VORBIS:LOCATION"]=Tags:match("TAG VORBIS:LOCATION (.-)\n") or ""  
+  MetaDataTable["VORBIS:LYRICIST"]=Tags:match("TAG VORBIS:LYRICIST (.-)\n") or ""  
+  MetaDataTable["VORBIS:OPUS"]=Tags:match("TAG VORBIS:OPUS (.-)\n") or ""  
+  MetaDataTable["VORBIS:PART"]=Tags:match("TAG VORBIS:PART (.-)\n") or ""  
+  MetaDataTable["VORBIS:PARTNUMBER"]=Tags:match("TAG VORBIS:PARTNUMBER (.-)\n") or ""  
+  MetaDataTable["VORBIS:PERFORMER"]=Tags:match("TAG VORBIS:PERFORMER (.-)\n") or ""  
+  MetaDataTable["VORBIS:PRODUCER"]=Tags:match("TAG VORBIS:PRODUCER (.-)\n") or ""  
+  MetaDataTable["VORBIS:PUBLISHER"]=Tags:match("TAG VORBIS:PUBLISHER (.-)\n") or ""  
+  MetaDataTable["VORBIS:REAPER"]=Tags:match("TAG VORBIS:REAPER (.-)\n") or ""  
+  MetaDataTable["VORBIS:SOURCEMEDIA"]=Tags:match("TAG VORBIS:SOURCEMEDIA (.-)\n") or ""  
+  MetaDataTable["VORBIS:TITLE"]=Tags:match("TAG VORBIS:TITLE (.-)\n") or ""  
+  MetaDataTable["VORBIS:TRACKNUMBER"]=Tags:match("TAG VORBIS:TRACKNUMBER (.-)\n") or ""  
+  MetaDataTable["VORBIS:VERSION"]=Tags:match("TAG VORBIS:VERSION (.-)\n") or ""  
+
+  count=0
+  for val in string.gmatch(Tags, "TAG ([\"]-VORBIS:USER:.-)\n") do
+    if val:sub(1,1)=="\"" then
+      k,offset=val:match("\"(.-)\" ()")
+      v=val:sub(offset, -1)
+    else
+      k,v=val:match("VORBIS:USER:(.-) (.*)")
+    end  
+    count=count+1
+    if k:sub(1,1)=="\"" then k=k:sub(2,-2) end
+    if v:sub(1,1)=="\"" then v=v:sub(2,-2) end
+    MetaDataTable["VORBIS:USER:"..count]={}
+    MetaDataTable["VORBIS:USER:"..count]["key"]=k
+    MetaDataTable["VORBIS:USER:"..count]["value"]=v
+  end
+  
+  -- XMP
+  MetaDataTable["XMP:dc/creator"]=Tags:match("TAG XMP:dc/creator (.-)\n") or ""    
+  MetaDataTable["XMP:dc/date"]=Tags:match("TAG XMP:dc/date (.-)\n") or ""  
+  MetaDataTable["XMP:dc/description"]=Tags:match("TAG XMP:dc/description (.-)\n") or ""  
+  MetaDataTable["XMP:dc/language"]=Tags:match("TAG XMP:dc/language (.-)\n") or ""  
+  MetaDataTable["XMP:dc/title"]=Tags:match("TAG XMP:dc/title (.-)\n") or ""  
+  MetaDataTable["XMP:dm/album"]=Tags:match("TAG XMP:dm/album (.-)\n") or ""  
+  MetaDataTable["XMP:dm/artist"]=Tags:match("TAG XMP:dm/artist (.-)\n") or ""  
+  MetaDataTable["XMP:dm/composer"]=Tags:match("TAG XMP:dm/composer (.-)\n") or ""  
+  MetaDataTable["XMP:dm/copyright"]=Tags:match("TAG XMP:dm/copyright (.-)\n") or ""  
+  MetaDataTable["XMP:dm/engineer"]=Tags:match("TAG XMP:dm/engineer (.-)\n") or ""  
+  MetaDataTable["XMP:dm/genre"]=Tags:match("TAG XMP:dm/genre (.-)\n") or ""  
+  MetaDataTable["XMP:dm/key"]=Tags:match("TAG XMP:dm/key (.-)\n") or ""  
+  MetaDataTable["XMP:dm/logComment"]=Tags:match("TAG XMP:dm/logComment (.-)\n") or ""  
+  MetaDataTable["XMP:dm/scene"]=Tags:match("TAG XMP:dm/scene (.-)\n") or ""  
+  MetaDataTable["XMP:dm/tempo"]=Tags:match("TAG XMP:dm/tempo (.-)\n") or ""  
+  MetaDataTable["XMP:dm/timeSignature"]=Tags:match("TAG XMP:dm/timeSignature (.-)\n") or ""  
+  MetaDataTable["XMP:dm/trackNumber"]=Tags:match("TAG XMP:dm/trackNumber (.-)\n") or ""  
+  
+  
+  for i, v in pairs(MetaDataTable) do
+    if type(i)~="table" and type(v)~="table" then
+      if v:sub(1,1)=="\"" then MetaDataTable[i]=v:sub(2,-2) end
+    end
+  end
+  return MetaDataTable
+end
+
+--A,B=ultraschall.Metadata_GetMetaDataTable_Presets("All Metadata1")
+
+function ultraschall.Metadata_GetAllPresetNames()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_GetAllPresetNames</slug>
+  <requires>
+    Ultraschall=4.2
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>integer count_of_presets, table presetnames = ultraschall.Metadata_GetAllPresetNames(string PresetName)</functioncall>
+  <description>
+    returns a table with all names of the metadata-presets
+    
+    returns nil in case of an error of if reaper-metadata.ini isn't found in resource-folder
+  </description>
+  <retvals>
+    integer count_of_presets - the number of found metadata-presetnames
+    table presetnames - all metadata-presetnames found
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Reaper Metadata Management
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MetaData_Module.lua</source_document>
+  <tags>metadata management, get, metadata preset, name, metadata</tags>
+</US_DocBloc>
+]]
+  local File=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-metadata.ini")
+  if File==nil then ultraschall.AddErrorMessage("Metadata_GetAllPresetNames", "", "Could not retrieve metadata-presets: reaper-metadata.ini is missing in resourcefolder", -1) return end
+  local PresetNames={}
+  local PresetCount=0
+  for name_found in string.gmatch(File, "<METADATA (.-)\n") do
+    PresetCount=PresetCount+1
+    PresetNames[PresetCount]=name_found
+  end  
+  return PresetCount, PresetNames
+end
+
+--A,B=ultraschall.Metadata_GetAllPresetNames()

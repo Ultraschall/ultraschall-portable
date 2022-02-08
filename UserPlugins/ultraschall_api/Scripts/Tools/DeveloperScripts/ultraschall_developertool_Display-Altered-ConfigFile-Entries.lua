@@ -25,50 +25,58 @@
   --]]
 
 files={}
-files[1]=reaper.GetResourcePath().."//Xenakios_Commands.ini"
-files[2]=reaper.GetResourcePath().."//BR.ini"
-files[3]=reaper.GetResourcePath().."//reaninjam.ini"
-files[4]=reaper.GetResourcePath().."//reapack.ini"
-files[5]=reaper.GetResourcePath().."//reaper.ini"
-files[6]=reaper.GetResourcePath().."//reaper-auplugins64.ini"
-files[7]=reaper.GetResourcePath().."//reaper-auplugins64-bc.ini"
-files[8]=reaper.GetResourcePath().."//reaper-defpresets.ini"
-files[9]=reaper.GetResourcePath().."//reaper-dxplugins64.ini"
-files[10]=reaper.GetResourcePath().."//reaper-dynsplit.ini"
-files[11]=reaper.GetResourcePath().."//reaper-extstate.ini"
-files[12]=reaper.GetResourcePath().."//reaper-fxfolders.ini"
-files[13]=reaper.GetResourcePath().."//reaper-fxlearn.ini"
-files[14]=reaper.GetResourcePath().."//reaper-fxtags.ini"
-files[15]=reaper.GetResourcePath().."//reaper-hwoutfx.ini"
-files[16]=reaper.GetResourcePath().."//reaper-install.ini"
-files[17]=reaper.GetResourcePath().."//reaper-joystick.ini"
-files[18]=reaper.GetResourcePath().."//reaper-jsfx.ini"
-files[19]=reaper.GetResourcePath().."//reaper-menu.ini"
-files[20]=reaper.GetResourcePath().."//reaper-midihw.ini"
-files[21]=reaper.GetResourcePath().."//reaper-mouse.ini"
-files[22]=reaper.GetResourcePath().."//reaper-pinstates.ini"
-files[23]=reaper.GetResourcePath().."//reaper-recentfx.ini"
-files[24]=reaper.GetResourcePath().."//reaper-reginfo2.ini"
-files[25]=reaper.GetResourcePath().."//reaper-render.ini"
-files[26]=reaper.GetResourcePath().."//reaper-themeconfig.ini"
-files[27]=reaper.GetResourcePath().."//reaper-vstplugins64.ini"
-files[28]=reaper.GetResourcePath().."//reaper-wndpos.ini"
-files[29]=reaper.GetResourcePath().."//S&M.ini"
-files[30]=reaper.GetResourcePath().."//S&M_Cyclactions.ini"
-files[31]=reaper.GetResourcePath().."//sws-autocoloricon.ini"
-files[32]=reaper.GetResourcePath().."//sws-autocoloricon_MAC.ini"
-files[33]=reaper.GetResourcePath().."//sws-autocoloricon_WIN.ini"
-files[34]=reaper.GetResourcePath().."//ultraschall.ini"
-files[35]=reaper.GetResourcePath().."//Ultraschall_ShortCutsList.ini"
-files[36]=reaper.GetResourcePath().."//Ultraschall-Inspector.ini"
-files[37]=reaper.GetResourcePath().."//ultraschall-settings.ini"
+files[#files+1]=reaper.GetResourcePath().."//BR.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaninjam.ini"
+files[#files+1]=reaper.GetResourcePath().."//reapack.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-auplugins64.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-auplugins64-bc.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-defpresets.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-dxplugins64.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-dynsplit.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-extstate.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-fxfolders.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-fxlearn.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-fxoptions.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-fxtags.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-hwoutfx.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-install.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-joystick.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-jsfx.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-menu.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-midihw.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-mouse.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-pinstates.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-recentfx.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-reginfo2.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-screensets.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-themeconfig.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-vstfxppath.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-vstplugins64.ini"
+files[#files+1]=reaper.GetResourcePath().."//reaper-wndpos.ini"
+files[#files+1]=reaper.GetResourcePath().."//S&M.ini"
+files[#files+1]=reaper.GetResourcePath().."//S&M_Cyclactions.ini"
+files[#files+1]=reaper.GetResourcePath().."//sws-autocoloricon.ini"
+files[#files+1]=reaper.GetResourcePath().."//ultraschall.ini"
+files[#files+1]=reaper.GetResourcePath().."//Ultraschall_ShortCutsList.ini"
+files[#files+1]=reaper.GetResourcePath().."//Ultraschall-Inspector.ini"
+files[#files+1]=reaper.GetResourcePath().."//ultraschall-settings.ini"
+files[#files+1]=reaper.GetResourcePath().."//Xenakios_Commands.ini"
 
 --]]
 
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+fxfilecount, fxfiles = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/presets/")
+for i=1, fxfilecount do
+--  files[#files+1]=reaper.GetResourcePath().."/presets/"..fxfiles[i]:match(".*/(.*)")
+end
+
+filecount=#files
+
 maximumpowercounter=30
 
-ultraschall={}
-
+--ultraschall={}
+--[[
 function ultraschall.ReadFullFile(filename_with_path, binary)
   -- Returns the whole file filename_with_path or nil in case of error
 
@@ -96,6 +104,7 @@ function ultraschall.ReadFullFile(filename_with_path, binary)
   -- return read file, length and linenumbers
   return filecontent, filecontent:len(), linenumber
 end
+--]]
 
 vartable={}
 --vartable
@@ -143,16 +152,24 @@ function main()
         Value=line:match("=(.*)")
   
         if vartable[FILE..SECTION..Key]~=line:match(".-=(.*)") then 
-          reaper.ShowConsoleMsg(FILE.."->["..SECTION.."] -> "..Key..": \n\tOld: "..tostring(vartable[FILE..SECTION..Key]).."   -   ")
+          reaper.ShowConsoleMsg(FILE.."->["..SECTION.."] -> "..Key.."\n\tOld: "..tostring(vartable[FILE..SECTION..Key]).."   -   ")
           T=true
+          local A1=tonumber(vartable[FILE..SECTION..Key])
           vartable[FILE..SECTION..Key]=Value
-          reaper.ShowConsoleMsg("New: "..tostring(vartable[FILE..SECTION..Key]).."\n")
+          reaper.ShowConsoleMsg("New: "..tostring(vartable[FILE..SECTION..Key]))
+          local A2=tonumber(vartable[FILE..SECTION..Key])
+          if A1~=nil and A2~=nil then
+            reaper.ShowConsoleMsg("   -   Dif to old value: "..(A1-A2).." \n")
+          else
+            reaper.ShowConsoleMsg("\n")
+          end
         end
       end
     end
   end
   if T==true then T=false reaper.ShowConsoleMsg("\n") end
   savepowercounter=savepowercounter+1
+  O=reaper.time_precise()
   reaper.defer(main)
 end
 
