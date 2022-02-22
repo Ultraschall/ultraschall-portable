@@ -8923,3 +8923,130 @@ function ultraschall.GetParmLFOLearnID_by_FXParam_FXStateChunk(FXStateChunk, fxi
   return -1
 end
 
+function ultraschall.GetParmLearn_Default()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetParmLearn_Default</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.43
+    Lua=5.3
+  </requires>
+  <functioncall>integer enable_state, boolean softtakeover, integer ccmode = ultraschall.GetParmLearn_Default()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    allows getting the current default-settings for the parmlearn-dialog
+  </description>
+  <retvals>
+    integer enable_state - the radiobuttons in the parmlearn-dialog
+                         - 0, no option selected 
+                         - 1, enable only when track or item is selected
+                         - 2, enable only when effect configuration is focused
+                         - 3, enable only when effect configuration is visible
+    boolean softtakeover - true, set softtakeover checkbox checked; false, set softtakeover checkbox unchecked
+    integer ccmode - the ccmode-dropdownlist
+                   - 0, Absolute
+                   - 1, Relative 1 (127=-1, 1=+1)
+                   - 2, Relative 2 (63=-1, 65=+1)
+                   - 3, Relative 3 (65=-1, 1=+1)
+                   - 4, Toggle (>0=Toggle)
+  </retvals>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Learn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, parameter, learn, default</tags>
+</US_DocBloc>
+]]
+  local retval, checkbox=reaper.BR_Win32_GetPrivateProfileString("REAPER", "deflearnselonly", "0", reaper.get_ini_file())
+  local retval, ccmode=reaper.BR_Win32_GetPrivateProfileString("REAPER", "deflearnccmode", "0", reaper.get_ini_file())
+  local ccmode=tonumber(ccmode)
+  local checkbox=tonumber(checkbox)
+  local enable_state, softtakeover
+  if checkbox&1==0 and checkbox&4==0 and checkbox&16==0 then
+    enable_state=0
+  elseif checkbox&1==1 and checkbox&4==0 and checkbox&16==0 then
+    enable_state=1
+  elseif checkbox&1==0 and checkbox&4==4 and checkbox&16==0 then
+    enable_state=2
+  elseif checkbox&1==0 and checkbox&4==4 and checkbox&16==16 then
+    enable_state=3
+  end
+  
+  softtakeover=checkbox&2==2
+  
+  return enable_state, softtakeover, ccmode
+end
+
+function ultraschall.SetParmLearn_Default(enable_state, softtakeover, ccmode)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetParmLearn_Default</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.43
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetParmLearn_Default(integer enable_state, boolean softtakeover, integer ccmode)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    allows setting the current default-settings for the parmlearn-dialog
+    
+    set to 0, false, 0 for the factory defaults
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer enable_state - the radiobuttons in the parmlearn-dialog
+                         - 0, no option selected 
+                         - 1, enable only when track or item is selected
+                         - 2, enable only when effect configuration is focused
+                         - 3, enable only when effect configuration is visible
+    boolean softtakeover - true, set softtakeover checkbox checked; false, set softtakeover checkbox unchecked
+    integer ccmode - the ccmode-dropdownlist
+                   - 0, Absolute
+                   - 1, Relative 1 (127=-1, 1=+1)
+                   - 2, Relative 2 (63=-1, 65=+1)
+                   - 3, Relative 3 (65=-1, 1=+1)
+                   - 4, Toggle (>0=Toggle)
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Parameter Mapping Learn
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, set, parameter, learn, default</tags>
+</US_DocBloc>
+]]
+  if math.type(enable_state)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_Default", "enable_state", "Must be an integer", -1) return false end
+  if type(softtakeover)~="boolean" then ultraschall.AddErrorMessage("SetParmLearn_Default", "softtakeover", "Must be a boolean", -2) return false end
+  if math.type(ccmode)~="integer" then ultraschall.AddErrorMessage("SetParmLearn_Default", "ccmode", "Must be an integer", -3) return false end
+  
+  if enable_state<0 or enable_state>3 then ultraschall.AddErrorMessage("SetParmLearn_Default", "enable_state", "must be between 0 and 3", -4) return false end
+  if ccmode<0 or ccmode>4 then ultraschall.AddErrorMessage("SetParmLearn_Default", "ccmode", "must be between 0 and 4", -5) return false end
+  
+  local checkbox=0
+  if enable_state==1 then
+    checkbox=checkbox+1
+  elseif enable_state==2 then
+    checkbox=checkbox+4
+  elseif enable_state==3 then
+    checkbox=checkbox+4+16
+  end
+  
+  if softtakeover==true then
+    checkbox=checkbox+2
+  end
+  
+  local retval = reaper.BR_Win32_WritePrivateProfileString("REAPER", "deflearnselonly", checkbox, reaper.get_ini_file())
+  local retval2 = reaper.BR_Win32_WritePrivateProfileString("REAPER", "deflearnccmode", ccmode, reaper.get_ini_file())  
+  if retval==false then ultraschall.AddErrorMessage("SetParmLearn_Default", "", "could not set ini-file, is reaper.ini accessible?", -6) return false end
+  if retval2==false then ultraschall.AddErrorMessage("SetParmLearn_Default", "", "could not set ini-file, is reaper.ini accessible?", -7) return false end
+  return retval
+end
+
+

@@ -2559,3 +2559,93 @@ function ultraschall.Theme_Defaultv6_GetMCPSizeAndLayout(tracknumber)
   
   return TCPLayout:sub(-1,-1), size
 end
+
+function ultraschall.GetTrack_ThemeElementPositions(track)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrack_ThemeElementPositions</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.43
+    Lua=5.3
+  </requires>
+  <functioncall>table ThemeElements = ultraschall.GetTrack_ThemeElementPositions(MediaTrack track)</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns a list of all theme-elements for a track
+    
+    the table ThemeElements is of the following format:
+    
+      ThemeLayoutNames[index]["element"] - the name of the theme-element 
+      ThemeLayoutNames[index]["x"] - the x-position of the theme-element
+      ThemeLayoutNames[index]["y"] - the y-position of the theme-element
+      ThemeLayoutNames[index]["w"] - the width of the theme-element
+      ThemeLayoutNames[index]["h"] - the height of the theme-element
+      ThemeLayoutNames[index]["visible"] - true, the theme element is visible; false, the theme-element is invisible(width and heigh=0)
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    table ThemeElements - a table with all walter-theme elements, their positions and their visibility-state
+  </retvals>
+  <parameters>
+    MediaTrack track - the track, whose Walter-theme-element-positions you want to query
+  </parameters>
+  <chapter_context>
+    Themeing
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Themeing_Module.lua</source_document>
+  <tags>theme management, get, all, track element positions, visibility</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("GetTrack_ThemeElementPositions", "track", "must be a MediaTrack", -1) return end
+  local WalterElements={}
+  for i=1, #ultraschall.WalterElements do
+    local Aretval, AstringNeedBig = reaper.GetSetMediaTrackInfo_String(track, "P_UI_RECT:"..ultraschall.WalterElements[i], "", false)
+    if Aretval==true then
+      WalterElements[#WalterElements+1]={}
+      WalterElements[#WalterElements]["element"]=ultraschall.WalterElements[i]
+      WalterElements[#WalterElements]["x"], WalterElements[#WalterElements]["y"], WalterElements[#WalterElements]["w"], WalterElements[#WalterElements]["h"]=AstringNeedBig:match("(.-) (.-) (.-) (.*)")
+      WalterElements[#WalterElements]["x"]=tonumber(WalterElements[#WalterElements]["x"])
+      WalterElements[#WalterElements]["y"]=tonumber(WalterElements[#WalterElements]["y"])
+      WalterElements[#WalterElements]["w"]=tonumber(WalterElements[#WalterElements]["w"])
+      WalterElements[#WalterElements]["h"]=tonumber(WalterElements[#WalterElements]["h"])
+      WalterElements[#WalterElements]["visible"]=(WalterElements[#WalterElements]["h"]~=0 or WalterElements[#WalterElements]["w"]~=0)
+    end
+  end
+  return WalterElements
+end
+
+function ultraschall.GetAllThemeElements()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllThemeElements</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.43
+    Lua=5.3
+  </requires>
+  <functioncall>table ThemeElements = ultraschall.GetAllThemeElements()</functioncall>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    returns a list of all theme-element-names available
+
+    returns nil in case of an error
+  </description>
+  <retvals>
+    table ThemeElements - a table with all walter-theme elements-names available
+  </retvals>
+  <chapter_context>
+    Themeing
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Themeing_Module.lua</source_document>
+  <tags>theme management, get, all, theme element, names</tags>
+</US_DocBloc>
+]]
+  local WalterElements={}
+  for i=1, #ultraschall.WalterElements do
+    WalterElements[i]=ultraschall.WalterElements[i]
+  end
+  return WalterElements
+end
+

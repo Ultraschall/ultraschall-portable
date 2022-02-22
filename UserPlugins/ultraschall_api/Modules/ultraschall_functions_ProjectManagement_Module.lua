@@ -337,7 +337,7 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
   -- old settings will be restored later
   local oldsource2   = reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", 1, false)  
   local oldsource
-  if reaper.CountTracks()==0 or reaper.GetProjectLength()==0 or oldsource2&4096~=0 then
+  if reaper.CountTracks()==0 or reaper.GetProjectLength()==0 or oldsource2&4096~=0 or oldsource2==1 then
   --  print2("Tudel")
     -- get old settings
     oldbounds   =reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", 0, false)

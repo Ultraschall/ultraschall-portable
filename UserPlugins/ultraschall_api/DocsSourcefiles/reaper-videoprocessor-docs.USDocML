@@ -4,7 +4,7 @@
         <slug>Introduction</slug>
         <title>Introduction</title>
         <requires>
-            Reaper=6.13
+            Reaper=6.47
         </requires>
         <description prog_lang="*">
             Since Reaper 5, Reaper has proper video-editing support. In addition to that, Reaper has a plugin, called "Video Processor Plugin", that is focused on video-effect handling.
@@ -111,7 +111,25 @@
         </chapter_context>
         <tags>video processor, eel2, special variables, project, time, seconds</tags>
     </US_DocBloc>
-    
+  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>project_timeoffs</slug>
+        <title>project_timeoffs</title>
+        <functioncall prog_lang="eel">project_timeoffs</functioncall>
+        <requires>
+            Reaper=6.47
+        </requires>
+        <description prog_lang="*">
+            project setting time offset in seconds
+        </description>
+        <target_document>ReaperVideoProcessorApiReference</target_document>
+        <source_document></source_document>
+        <chapter_context>
+            2. Special Variables
+        </chapter_context>
+        <tags>video processor, eel2, special variables, project, time, seconds</tags>
+    </US_DocBloc>
+  
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>project_tempo</slug>
         <title>project_tempo</title>

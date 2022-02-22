@@ -159,7 +159,7 @@ function main()
           reaper.ShowConsoleMsg("New: "..tostring(vartable[FILE..SECTION..Key]))
           local A2=tonumber(vartable[FILE..SECTION..Key])
           if A1~=nil and A2~=nil then
-            reaper.ShowConsoleMsg("   -   Dif to old value: "..(A1-A2).." \n")
+            reaper.ShowConsoleMsg("   -   Dif to old value: "..(A2-A1).." \n")
           else
             reaper.ShowConsoleMsg("\n")
           end

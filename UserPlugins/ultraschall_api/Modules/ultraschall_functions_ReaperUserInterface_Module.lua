@@ -2977,25 +2977,8 @@ function ultraschall.GetMediaExplorerHWND()
   <tags>user interface, window, media explorer, hwnd, get</tags>
 </US_DocBloc>
 --]]
-
-  local translation=reaper.JS_Localize("Media Explorer", "common")
-  local auto_play=reaper.JS_Localize("Auto play", "explorer_DLG_101")
-  local vol=reaper.JS_Localize("vol", "explorer_DLG_101")
-  local navigate_backwards=reaper.JS_Localize("Navigate backwards", "access")
-
-  
-  --count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find("Render to File", false)
-  local count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find(translation, true)
-  if count_hwnds==0 then return nil
-  else
-    for i=count_hwnds, 1, -1 do
-      if ultraschall.HasHWNDChildWindowNames(hwnd_array[i], 
-                                            auto_play.."\0"..
-                                            vol.."\0"..
-                                            navigate_backwards)==true then return hwnd_array[i] end
-    end
-  end
-  return nil
+  local A=reaper.GetToggleCommandState(50124)
+  if A~=0 then return reaper.OpenMediaExplorer("", false) else return end
 end 
 
 --A=ultraschall.GetMediaExplorerHWND()

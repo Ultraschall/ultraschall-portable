@@ -35,6 +35,123 @@
       
           <div class="ch"><p></p>
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.3 - "Eskobar - Someone New" - 22nd of February 2022</h3>
+<p>Has now 1457 functions, with 34 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>ParmLearn-dialog defaults</strong><br />
+You can now get/set the default settings for the Parm-Learn-dialog. So you can now reset it to your preferred settings before learning a new parameter.</p></li>
+<li><p><strong>Media Explorer features</strong><br />
+You can now get/set volume, rate, pitch and even output-channels of the media explorer and various checkboxes.</p></li>
+<li><p><strong>SetItem-functions</strong><br />
+There were set item-function missing, though their get counterpart was there. So, I added more set functions.</p></li>
+<li><p><strong>Rendering - Only Normalize Files That Are Too Loud</strong><br />
+You can now choose, whether to normalize only files that are too loud</p></li>
+<li><p><strong>Rendering FFMPEG-only</strong><br />
+With FFMPEG-dll installed, you have access to more render-output-functions. You can now create render-strings for these formats as well.</p></li>
+<li><p><strong>Developer Tools now automatically installed</strong><br />
+To simplify working with devtools, they are now automatically installed with ReaPack-update.<br />
+If you happen to have some of them duplicated, run the action "ultraschall_Remove_Developertools_From_Reaper.lua"</p></li>
+<li><p><strong>Dev Tool: Log SetProjExtState/SetExtState access</strong><br />
+You can log now, if (proj)extstates are set in the ReaScript-console. That way you can monitor, if setting them runs smoothly.<br />
+Just run the accompanying developer-tool for it.</p></li>
+<li><p><strong>Docs updates for Reaper Internals</strong></p></li>
+<li><p><strong>Bugfixes</strong><br />
+as usual...</p></li>
+</ul>
+<h4>New features in 4.3</h4>
+<ul>
+<li>DeveloperTools: Toggle_Logging_SetExtState_SetProjExtState_access - logs set access to (proj)extstates while using US-API to the ReaScript console</li>
+<li>ErrorMessagingSystem: DAEM - like ultraschall.DeleteAllErrorMessages(), just shorter</li>
+<li>GFX-Management: GFX_GetTextLayout - returns the flag-value you can use for gfx.setfont, allowing different text-layouts</li>
+<li>Markers: GetGuidFromNormalMarkerID - gets the guid of a normal marker by its index<br />
+</li>
+<li>Markers: GetNormalMarkerIDFromGuid - gets the index of a normal marker by its guid<br />
+</li>
+<li>MediaExplorer: MediaExplorer_SetAutoplay - sets the autoplay-checkbox</li>
+<li>MediaExplorer: MediaExplorer_SetDeviceOutput - sets device-output of the Media Explorer<br />
+</li>
+<li>MediaExplorer: MediaExplorer_SetPitch - sets the pitch of the Media Explorer<br />
+</li>
+<li>MediaExplorer: MediaExplorer_SetRate - sets the rate of the Media Explorer<br />
+</li>
+<li>MediaExplorer: MediaExplorer_SetStartOnBar - sets the Start on bar-checkbox of the Media Explorer</li>
+<li>MediaExplorer: MediaExplorer_SetVolume - sets the volume of the Media Explorer<br />
+</li>
+<li>MediaItems: SetItemAllTakes - sets the all-takes-setting of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemChanMode - sets the channel mode of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemFadeIn - sets fadein of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemFadeOut - sets fadeout of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemGUID - sets the GUID of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemIGUID - sets the IGUID of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemIID - sets the IID of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemLoop - sets the loop-source-state of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemMute - sets mutestate of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemName - sets name of the first take in an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemPlayRate - sets the playrate-settings in an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemSampleOffset - sets the sample offset-state of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemSelected - sets the selected-state of an item or a mediaitem-statechunk</li>
+<li>MediaItems: SetItemVolPan - sets the volume and pan-values of an item or a mediaitem-statechunk<br />
+</li>
+<li>ParameterLearn: GetParmLearn_Default - gets default-settings for the parameter-learn-dialog(requested by akademie)</li>
+<li>ParameterLearn: SetParmLearn_Default - sets default-settings for the parameter-learn-dialog(requested by akademie)</li>
+<li>Rendering: CreateRenderCFG_FLV_Video - creates a render-string for flv export(with FFMPEG installed only)</li>
+<li>Rendering: CreateRenderCFG_MPEG1_Video - creates a render-string for MPEG-1 export(with FFMPEG installed only)</li>
+<li>Rendering: CreateRenderCFG_MPEG2_Video - creates a render-string for MPEG-2 export(with FFMPEG installed only)</li>
+<li>Rendering: GetRenderCFG_Settings_MPEG1_Video - returns settings of render-string for MPEG-1, when FFMPEG is installed</li>
+<li>Rendering: GetRenderCFG_Settings_MPEG2_Video - returns settings of render-string for MPEG-2, when FFMPEG is installed</li>
+<li>TrackManagement: ConvertTrackstringToArray - converts all tracknumbers of a trackstring and returns them as an array</li>
+<li>Themeing: GetAllThemeElements - returns a table with all Walter-theme-element-names available</li>
+<li>Themeing: GetTrack_ThemeElementPositions - returns a table with all Walter-theme-elements of a track with names, position and visibility-states</li>
+</ul>
+<h4>Changes from 4.2.006 to 4.3</h4>
+<ul>
+<li>DeveloperTools: findConfigVarsToggledByActions - fixed dozens of bugs; supports now all config-vars; improved the layout of the output file; has now "do you really want to run me?"-question, as this script could ruin your Reaper installation</li>
+<li>Docs: Reaper Internals - updated to Reaper 6.47, JS-extension 1.301, ReaImGui 0.5.10, ReaBlink 0.4.4, SWS 2.13.0.0</li>
+<li>MarkerManagement: AddCustomMarker - returns now the custom-marker-index, within all custom markers only, as well; allows now creating markers with the same name on the same position(workaround for Reaper-limitation)</li>
+<li>MarkerManagement: AddCustomRegion - returns now the custom-region-index, within all custom regions only, as well; allows now creating regions with the same name on the same position(workaround for Reaper-limitation)</li>
+<li>MarkerManagement: AddEditMarker - returns now the edit-marker-index, within all edit markers; allows now creating markers with the same name on the same position(workaround for Reaper-limitation)</li>
+<li>MarkerManagement: AddEditRegion - returns now the edit-region-index, within all edit regions; allows now creating regions with the same name on the same position(workaround for Reaper-limitation)</li>
+<li>MarkerManagement: AddNormalMarker - returns now the normal-marker-index, within all normal markers; improved automatic numbering; allows now creating markers with the same name on the same position(workaround for Reaper-limitation) -&gt; fixed</li>
+<li>MarkerManagement: CountNormalMarkers - did count custom-markers as well -&gt; fixed</li>
+<li>MarkerManagement: CountNormalMarkers_NumGap - didn't count normal markers only, but rather all -&gt; fixed</li>
+<li>MarkerManagement: EnumerateNormalMarkers - did include custom-markers as well -&gt; fixed</li>
+<li>MarkerManagement: SetNormalMarker - did set custom-markers as well -&gt; fixed</li>
+<li>MediaItemManagement: GetAllMediaItemsFromTrack - had problems, when a track had no item -&gt; fixed(thnx to Distressor)</li>
+<li>MediaItemManagement: SetItemPosition - did return -1 in case of an error, whereas it should return nil instead -&gt; fixed</li>
+<li>MediaItemManagement: SetItemLength - did return -1 in case of an error, whereas it should return nil instead -&gt; fixed</li>
+<li>MediaItemManagement: SetItemImage - did return -1 in case of an error, whereas it should return nil instead -&gt; fixed</li>
+<li>ProjectManagement: GetProjectStateChunk - fixed edgecase, that prevented getting a ProjectStateChunk</li>
+<li>ProjectManagement: GetProject_Render_Normalize - allows now normalize only files that are too loud-option</li>
+<li>ProjectManagement: SetProject_Render_Normalize - allows now normalize only files that are too loud-option</li>
+<li>Rendering: AddRenderPreset - allows now normalize only files that are too loud-option</li>
+<li>Rendering: ApplyRenderTable_Project - allows now normalize only files that are too loud-option</li>
+<li>Rendering: ApplyRenderTable_ProjectFile - allows now normalize only files that are too loud-option</li>
+<li>Rendering: CreateRenderCFG_AVI_Video - added formats that need FFMPEG installed</li>
+<li>Rendering: CreateRenderCFG_DDP - returned string was wrong due typo -&gt; fixed(thnx to loTrT)</li>
+<li>Rendering: CreateRenderCFG_MKV_Video - added formats that need FFMPEG installed</li>
+<li>Rendering: CreateRenderCFG_MOVMAC_Video - removed unused \0-byte at end of render-string -&gt; fixed</li>
+<li>Rendering: CreateRenderCFG_WebMVideo - added formats that need FFMPEG installed<br />
+</li>
+<li>Rendering: GetRenderCFG_Settings_AVI_Video - added formats, that need FFMPEG installed<br />
+</li>
+<li>Rendering: GetRenderCFG_Settings_MKV_Video - added formats, that need FFMPEG installed<br />
+</li>
+<li>Rendering: GetRenderCFG_Settings_MOVMac_Video - didn't work; was missing the format-dropdownlist-settings -&gt; fixed</li>
+<li>Rendering: GetRenderCFG_Settings_QTMOVMP4_Video - added video-format-retval; added formats, that need FFMPEG installed</li>
+<li>Rendering: GetRenderCFG_Settings_WebMVideo - added formats, that need FFMPEG installed<br />
+</li>
+<li>Rendering: GetRenderPreset_RenderTable - allows now normalize only files that are too loud-option</li>
+<li>Rendering: GetRenderTable_Project - allows now normalize only files that are too loud-option</li>
+<li>Rendering: GetRenderTable_ProjectFile - allows now normalize only files that are too loud-option</li>
+<li>Rendering: IsValidRenderTable - allows now normalize only files that are too loud-option</li>
+<li>Rendering: RenderProject_RenderTable - allows now normalize only files that are too loud-option</li>
+<li>Rendering: SetRenderPreset - allows now normalize only files that are too loud-option</li>
+<li>TrackManagement: GetTrackLockState - didn't return lock-state reliably -&gt; fixed(thanx to Distressor)</li>
+<li>UserInterface: GetMediaExplorerHWND - didn't work under certain circumstances -&gt; fixed</li>
+<li>WebRC: WebInterface_GetInstalledInterfaces - could break, if html-pages had no title-tag in them -&gt; fixed</li>
+</ul>
+<hr />
 <h3>4.2.006 - "The Beatles - The continuing story of Bungalow Bill" - 24th of December 2021</h3>
 <p>Has now 1423 functions, with 17 new ones</p>
 <p><strong>new in this release:</strong></p>
@@ -43,7 +160,7 @@
 The rendering-functions support now brickwall-rendering and the render-preset-functions the new possibility to store the rendering-path as well(as of Reaper 6.43)</p></li>
 <li><p><strong>CAF-support</strong><br />
 CAF is now supported as well with rendering.</p></li>
-<li><p>**GFX_GetChar**<br />
+<li><p><strong>GFX_GetChar</strong><br />
 Gives you a more powerful version of gfx.getchar, which returns the characters and optionally a readable version of non-printable characters.<br />
 It also allows you managing the clipboard directly inside of it, so you don't need to code cmd+x/c yourself.</p></li>
 <li><p><strong>New MetaData-functions added</strong><br />
@@ -71,8 +188,8 @@ And cleanup, cleanup, cleanup</p></li>
 </li>
 <li>MetaData: Metadata_WAVEXT_GetSet gets/set metadata for wavext</li>
 <li>ParmAlias: GetParmAlias_by_FXParam_FXStateChunk - gets the parmalias_id by fx-parameter, that you can use as parameter id for Set/Get/Delete-ParmAlias-functions</li>
-<li>ParmLearn: GetParmLearnID_by_FXParam_FXStateChunk - gets the parmlearn<em>id by fx-parameter, that you can use as parmlearn</em>id for Set/Get/Delete-ParmLearn-functions(requested by TonE)</li>
-<li>ParmLFOLearn: GetParmLFOLearn_by_FXParam_FXStateChunk - gets the parm<em>lfolearn</em>id by fx-parameter, that you can use as parameter id for Set/Get/Delete-ParmLFOLearn-functions<br />
+<li>ParmLearn: GetParmLearnID_by_FXParam_FXStateChunk - gets the parmlearn_id by fx-parameter, that you can use as parmlearn_id for Set/Get/Delete-ParmLearn-functions(requested by TonE)</li>
+<li>ParmLFOLearn: GetParmLFOLearn_by_FXParam_FXStateChunk - gets the parm_lfolearn_id by fx-parameter, that you can use as parameter id for Set/Get/Delete-ParmLFOLearn-functions<br />
 </li>
 <li>Render Management: GetRenderTargetFiles - returns the render-target and filenames of all render-files, if they would be rendered right now</li>
 <li>Render Management: GetRenderCFG_Settings_CAF - gets settings of a render-string of the caf-format</li>
