@@ -1308,6 +1308,14 @@ else
     ultraschall.LM(11)
     return ultraschall.GetParmLFOLearnID_by_FXParam_FXStateChunk(table.unpack({...}))
   end
+  function ultraschall.GetParmLearn_Default(...)
+    ultraschall.LM(11)
+    return ultraschall.GetParmLearn_Default(table.unpack({...}))
+  end
+  function ultraschall.SetParmLearn_Default(...)
+    ultraschall.LM(11)
+    return ultraschall.SetParmLearn_Default(table.unpack({...}))
+  end
   function ultraschall.ReadFullFile(...)
     ultraschall.LM(12)
     return ultraschall.ReadFullFile(table.unpack({...}))
@@ -1960,6 +1968,30 @@ else
     ultraschall.LM(13)
     return ultraschall.ReturnReaperExeFile_With_Path(table.unpack({...}))
   end
+  function ultraschall.MediaExplorer_SetDeviceOutput(...)
+    ultraschall.LM(13)
+    return ultraschall.MediaExplorer_SetDeviceOutput(table.unpack({...}))
+  end
+  function ultraschall.MediaExplorer_SetAutoplay(...)
+    ultraschall.LM(13)
+    return ultraschall.MediaExplorer_SetAutoplay(table.unpack({...}))
+  end
+  function ultraschall.MediaExplorer_SetRate(...)
+    ultraschall.LM(13)
+    return ultraschall.MediaExplorer_SetRate(table.unpack({...}))
+  end
+  function ultraschall.MediaExplorer_SetStartOnBar(...)
+    ultraschall.LM(13)
+    return ultraschall.MediaExplorer_SetStartOnBar(table.unpack({...}))
+  end
+  function ultraschall.MediaExplorer_SetPitch(...)
+    ultraschall.LM(13)
+    return ultraschall.MediaExplorer_SetPitch(table.unpack({...}))
+  end
+  function ultraschall.MediaExplorer_SetVolume(...)
+    ultraschall.LM(13)
+    return ultraschall.MediaExplorer_SetVolume(table.unpack({...}))
+  end
   function ultraschall.ResizePNG(...)
     ultraschall.LM(14)
     return ultraschall.ResizePNG(table.unpack({...}))
@@ -2172,10 +2204,6 @@ else
     ultraschall.LM(17)
     return ultraschall.IsRegionPodrange(table.unpack({...}))
   end
-  function ultraschall.IsRegionEditRegion(...)
-    ultraschall.LM(17)
-    return ultraschall.IsRegionEditRegion(table.unpack({...}))
-  end
   function ultraschall.AddEditRegion(...)
     ultraschall.LM(17)
     return ultraschall.AddEditRegion(table.unpack({...}))
@@ -2348,6 +2376,14 @@ else
     ultraschall.LM(17)
     return ultraschall.GetAllCustomRegionNames(table.unpack({...}))
   end
+  function ultraschall.GetGuidFromNormalMarkerID(...)
+    ultraschall.LM(17)
+    return ultraschall.GetGuidFromNormalMarkerID(table.unpack({...}))
+  end
+  function ultraschall.GetNormalMarkerIDFromGuid(...)
+    ultraschall.LM(17)
+    return ultraschall.GetNormalMarkerIDFromGuid(table.unpack({...}))
+  end
   function ultraschall.GetItemPosition(...)
     ultraschall.LM(18)
     return ultraschall.GetItemPosition(table.unpack({...}))
@@ -2475,6 +2511,62 @@ else
   function ultraschall.SetItemImage(...)
     ultraschall.LM(18)
     return ultraschall.SetItemImage(table.unpack({...}))
+  end
+  function ultraschall.SetItemAllTakes(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemAllTakes(table.unpack({...}))
+  end
+  function ultraschall.SetItemChanMode(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemChanMode(table.unpack({...}))
+  end
+  function ultraschall.SetItemLoop(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemLoop(table.unpack({...}))
+  end
+  function ultraschall.SetItemName(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemName(table.unpack({...}))
+  end
+  function ultraschall.SetItemSelected(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemSelected(table.unpack({...}))
+  end
+  function ultraschall.SetItemGUID(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemGUID(table.unpack({...}))
+  end
+  function ultraschall.SetItemGUID(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemGUID(table.unpack({...}))
+  end
+  function ultraschall.SetItemIID(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemIID(table.unpack({...}))
+  end
+  function ultraschall.SetItemMute(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemMute(table.unpack({...}))
+  end
+  function ultraschall.SetItemSampleOffset(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemSampleOffset(table.unpack({...}))
+  end
+  function ultraschall.SetItemVolPan(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemVolPan(table.unpack({...}))
+  end
+  function ultraschall.SetItemFadeIn(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemFadeIn(table.unpack({...}))
+  end
+  function ultraschall.SetItemFadeOut(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemFadeOut(table.unpack({...}))
+  end
+  function ultraschall.SetItemPlayRate(...)
+    ultraschall.LM(18)
+    return ultraschall.SetItemPlayRate(table.unpack({...}))
   end
   function ultraschall.IsValidMediaItemStateChunk(...)
     ultraschall.LM(19)
@@ -4528,6 +4620,34 @@ else
     ultraschall.LM(28)
     return ultraschall.CreateRenderCFG_CAF(table.unpack({...}))
   end
+  function ultraschall.GetRenderTargetFiles(...)
+    ultraschall.LM(28)
+    return ultraschall.GetRenderTargetFiles(table.unpack({...}))
+  end
+  function ultraschall.GetRenderCFG_Settings_MPEG1_Video(...)
+    ultraschall.LM(28)
+    return ultraschall.GetRenderCFG_Settings_MPEG1_Video(table.unpack({...}))
+  end
+  function ultraschall.GetRenderCFG_Settings_MPEG2_Video(...)
+    ultraschall.LM(28)
+    return ultraschall.GetRenderCFG_Settings_MPEG2_Video(table.unpack({...}))
+  end
+  function ultraschall.GetRenderCFG_Settings_FLV_Video(...)
+    ultraschall.LM(28)
+    return ultraschall.GetRenderCFG_Settings_FLV_Video(table.unpack({...}))
+  end
+  function ultraschall.CreateRenderCFG_MPEG1_Video(...)
+    ultraschall.LM(28)
+    return ultraschall.CreateRenderCFG_MPEG1_Video(table.unpack({...}))
+  end
+  function ultraschall.CreateRenderCFG_MPEG2_Video(...)
+    ultraschall.LM(28)
+    return ultraschall.CreateRenderCFG_MPEG2_Video(table.unpack({...}))
+  end
+  function ultraschall.CreateRenderCFG_FLV_Video(...)
+    ultraschall.LM(28)
+    return ultraschall.CreateRenderCFG_FLV_Video(table.unpack({...}))
+  end
   function ultraschall.GetAllThemeLayoutNames(...)
     ultraschall.LM(29)
     return ultraschall.GetAllThemeLayoutNames(table.unpack({...}))
@@ -4723,6 +4843,14 @@ else
   function ultraschall.Theme_Defaultv6_GetMCPSizeAndLayout(...)
     ultraschall.LM(29)
     return ultraschall.Theme_Defaultv6_GetMCPSizeAndLayout(table.unpack({...}))
+  end
+  function ultraschall.GetTrack_ThemeElementPositions(...)
+    ultraschall.LM(29)
+    return ultraschall.GetTrack_ThemeElementPositions(table.unpack({...}))
+  end
+  function ultraschall.GetAllThemeElements(...)
+    ultraschall.LM(29)
+    return ultraschall.GetAllThemeElements(table.unpack({...}))
   end
   function ultraschall.IsValidTrackString(...)
     ultraschall.LM(30)
@@ -5319,6 +5447,10 @@ else
   function ultraschall.SetTrackGroupFlags_HighState(...)
     ultraschall.LM(32)
     return ultraschall.SetTrackGroupFlags_HighState(table.unpack({...}))
+  end
+  function ultraschall.ConvertTrackstringToArray(...)
+    ultraschall.LM(32)
+    return ultraschall.ConvertTrackstringToArray(table.unpack({...}))
   end
   function ultraschall.TrackManager_ClearFilter(...)
     ultraschall.LM(33)

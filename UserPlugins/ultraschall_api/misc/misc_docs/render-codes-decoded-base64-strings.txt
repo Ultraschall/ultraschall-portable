@@ -447,7 +447,7 @@ Video(ffmpeg/libav encoder)
     05: Format:
                 0, AVI
                 1, MPEG1(Windows; only with FFMPEG 4.1.3 installed)
-                1, MPEG2(Windows; only with FFMPEG 4.1.3 installed)
+                2, MPEG2(Windows; only with FFMPEG 4.1.3 installed)
                 3, QT/MOV/MP4
                 4, MKV
                 5, FLV(Windows; only with FFMPEG 4.1.3 installed)
@@ -487,10 +487,10 @@ Video(ffmpeg/libav encoder)
     10: unused - value 0
     11: unused - value 0
     12: unused - value 0
-    13: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647) - lowest byte
-    14: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647)
-    15: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647)
-    16: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647) - highest byte
+    13: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-1/MPEG-2/XviD kbps(0 to 2147483647) - lowest byte
+    14: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-1/MPEG-2/XviD kbps(0 to 2147483647)
+    15: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-1/MPEG-2/XviD kbps(0 to 2147483647)
+    16: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-1/MPEG-2/XviD kbps(0 to 2147483647) - highest byte
     17: Audio Codec:
             with AVI:
                 0, MP3(Windows; only with FFMPEG 4.1.3 installed)

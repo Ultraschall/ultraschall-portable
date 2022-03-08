@@ -3,7 +3,7 @@
       <slug>Introduction</slug>
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.41 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.48 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -4589,7 +4589,7 @@
       <slug>help</slug>  
       <title>help</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Stores the settings for the help-information-display under the TCP, as set in it's accompanying context-menu.  
+          Stores the settings for the help-information-display under the TCP, as set in it's accompanying context-menu, as well the performance meter window-context menu.
           It is an integer/integer-bitfield.  
           
            >Only one of the following can be set:  
@@ -4602,6 +4602,10 @@
            >This one can be set all the times:  
              &65536=0, Show mouse editing-help(on), checked  
              &65536=1, Show mouse editing-help(off), unchecked  
+           
+           > Context-menu in performane meter display:
+             &131072=0, Display CPU utilization as 100% = all cores fully utilized 
+             &131072=1, Display CPU utilization as 1.0c = 1 core fully utilized
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
@@ -5077,6 +5081,29 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+ 
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>itemnotes</slug>  
+      <title>itemnotes</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Settings in the Item-Notes-dialog
+          It is an integer  
+            
+          >&8=0, Word wrap-checkbox(updated only, when itemnotes window gets closed) - unchecked
+          >&8=1, Word wrap-checkbox(updated only, when itemnotes window gets closed) - checked
+          
+          >256=0, Enter to close, Shift+Enter for new line-checkbox - unchecked
+          >256=1, Enter to close, Shift+Enter for new line-checkbox - checked
+          
+          Stored in reaper.ini under the same name in the section REAPER.
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>    
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>itemprops</slug>  
@@ -7238,11 +7265,14 @@
       <slug>opennotes</slug>  
       <title>opennotes</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          "Show notes on project load"-checkbox, as set in the Project Settings -> Notes  
+          Some settings, as set in the Project Settings -> Notes  
           It is an integer  
           
-           >0, checkbox unchecked (don't show notes on project load)  
-           >1, checkbox checked (show notes on project load)  
+           >&1=0, show notes on project load-checkbox - unchecked
+           >&1=1, show notes on project load-checkbox - checked
+           
+           >&2=0, word wrap-checkbox - unchecked
+           >&2=1, word wrap-checkbox - checked
            
           Stored in reaper.ini under the same name in the section REAPER only, when Save as default project settings is clicked.  
            
@@ -8699,6 +8729,9 @@
            
            >&128=0, Brickwall-Limit-dropdownlist - Peak
            >&128=1, Brickwall-Limit-dropdownlist - True Peak
+           
+           >&256=0, Only normalize that are too loud - unchecked 
+           >&256=1, Only normalize that are too loud - checked
            
           See also [projrenderbrickwall](#projrenderbrickwall)
            
@@ -10305,7 +10338,10 @@
            
            >&1024=0, LRA, LUFS-S (loudness range, short-term loudness) -> Calculate statistics when rendering-button - checked
            >&1024=1, LRA, LUFS-S (loudness range, short-term loudness) -> Calculate statistics when rendering-button - unchecked
-                      
+
+           >&2048=0, Calculate and embed peak/loudness value-checkbox - unchecked
+           >&2048=0, Calculate and embed peak/loudness value-checkbox - checked
+           
            >seems not to be available anymore as of Reaper 5.977:  
            >&65537=0, Save copy of project to outfile.wav.RPP - unchecked  
            >&65537=1, Save copy of project to outfile.wav.RPP - checked  

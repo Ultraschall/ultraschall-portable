@@ -291,12 +291,12 @@ function ultraschall.SetMarkerExtState(index, key, value)
     returns -1 in case of an error
   </description>
   <retvals>
-    integer retval - -1, in case of an error; 1, in case of success
+    integer retval - -1, in case of an error; >=1 number of stored extension states(means successful), -1, unsuccessful
   </retvals>
   <parameters>
     integer index - the marker/region-index, for which to store an extstate; starting with 1 for first marker/region, 2 for second marker/region
-    string key - the key, into which the marker-extstate shall be stored
-    string value - the value, which you want to store into the marker-extstate
+    string key - the key, into which the marker-extstate shall be stored; "", deletes all keys+values stored with this marker
+    string value - the value, which you want to store into the marker-extstate; "", deletes the value for this key
   </parameters>
   <chapter_context>
     Metadata Management
@@ -310,7 +310,7 @@ function ultraschall.SetMarkerExtState(index, key, value)
   if math.type(index)~="integer" then ultraschall.AddErrorMessage("SetMarkerExtState", "index", "must be an integer", -1) return -1 end
   if index<1 or index>reaper.CountProjectMarkers(0) then ultraschall.AddErrorMessage("SetMarkerExtState", "index", "must be between 1 and "..reaper.CountProjectMarkers(0), -2) return -1 end
   if type(key)~="string" then ultraschall.AddErrorMessage("SetMarkerExtState", "key", "must be a string", -3) return -1 end
-  if type(value)~="string" then ultraschall.AddErrorMessage("SetMarkerExtState", "value", "must be an integer", -4) return -1 end
+  if type(value)~="string" then ultraschall.AddErrorMessage("SetMarkerExtState", "value", "must be a stirng", -4) return -1 end
   local A,B=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..(index-1), 1, false)
   return ultraschall.SetGuidExtState("MarkerExtState_"..B, key, value, 0, true, true)
 end

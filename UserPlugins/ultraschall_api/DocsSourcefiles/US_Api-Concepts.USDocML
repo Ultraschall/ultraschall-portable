@@ -107,7 +107,7 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall_api4.2\_003.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.2_003.zip).  
+            1. Just download the zip-file of the current version from [ultraschall_api4.4.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.4.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.
@@ -630,6 +630,9 @@
                                                              3, True Peak
                                                              4, LUFS-M max
                                                              5, LUFS-S max
+                    RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
+                                                                 - true, checkbox checked
+                                                                 - false, checkbox unchecked
                     RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
                                                               false, normalize each file individually
                     RenderTable["Normalize_Target"]       - the normalize-target as dB-value	
@@ -649,17 +652,18 @@
                     RenderTable["RenderPattern"]    - the render pattern as input into the File name-inputbox of the Render to File-dialog
                     RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
                     RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay
-                    RenderTable["RenderResample"]   - Resample mode-dropdownlist; 
-                                                          0, Medium (64pt Sinc); 
-                                                          1, Low (Linear Interpolation); 
-                                                          2, Lowest (Point Sampling); 
-                                                          3, Good (192pt Sinc); 
-                                                          4, Better (348 pt Sinc); 
-                                                          5, Fast (IIR + Linear Interpolation); 
-                                                          6, Fast (IIRx2 + Linear Interpolation); 
-                                                          7, Fast (16pt Sinc); 
-                                                          8, HQ (512 pt); 
-                                                          9, Extreme HQ(768pt HQ Sinc)
+                    RenderTable["RenderResample"] - Resample mode-dropdownlist; 
+                                                0, Point Sampling (lowest quality, retro)
+                                                1, Linear Interpolation (low quality)
+                                                2, Linear Interpolation + IIR
+                                                3, Linear Interpolation + IIRx2
+                                                4, Sinc Interpolation: 16pt
+                                                5, Sinc Interpolation: 64pt (medium quality)
+                                                6, Sinc Interpolation: 192pt
+                                                7, Sinc Interpolation: 384pt
+                                                8, Sinc Interpolation: 512pt (slow)
+                                                9, Sinc Interpolation: 768pt (very slow)
+                                                10, r8brain free (highest quality, fast)
                     RenderTable["RenderString"]     - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
                     RenderTable["RenderString2"]    - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
                     RenderTable["RenderTable"]=true - signals, this is a valid render-table
@@ -819,7 +823,9 @@
                    [CreateRenderCFG\_MP3ABR](usdocml://CreateRenderCFG_MP3ABR),[CreateRenderCFG\_MP3CBR](usdocml://CreateRenderCFG_MP3CBR), [CreateRenderCFG\_MP3MaxQuality](usdocml://CreateRenderCFG_MP3MaxQuality), [CreateRenderCFG\_MP3VBR](usdocml://CreateRenderCFG_MP3VBR), 
                    [CreateRenderCFG\_OGG](usdocml://CreateRenderCFG_OGG), [CreateRenderCFG\_Opus](usdocml://CreateRenderCFG_Opus), [CreateRenderCFG\_WAV](usdocml://CreateRenderCFG_WAV), [CreateRenderCFG\_WAVPACK](usdocml://CreateRenderCFG_WAVPACK)
                    [CreateRenderCFG\_AVI_Video](usdocml://CreateRenderCFG_AVI_Video), [CreateRenderCFG\_GIF](usdocml://CreateRenderCFG_GIF), [CreateRenderCFG\_LCF](usdocml://CreateRenderCFG_LCF), [CreateRenderCFG\_MKV_Video](usdocml://CreateRenderCFG_MKV_Video), [CreateRenderCFG\_MOVMAC_Video](usdocml://CreateRenderCFG_MOVMAC_Video), [CreateRenderCFG\_MP4MAC_Video](usdocml://CreateRenderCFG_MP4MAC_Video), 
-                   [CreateRenderCFG\_QTMOVMP4_Video](usdocml://CreateRenderCFG_QTMOVMP4_Video), [CreateRenderCFG\_WebMVideo](usdocml://CreateRenderCFG_WebMVideo)
+                   [CreateRenderCFG\_QTMOVMP4_Video](usdocml://CreateRenderCFG_QTMOVMP4_Video), [CreateRenderCFG\_WebMVideo](usdocml://CreateRenderCFG_WebMVideo),
+                   [CreateRenderCFG\_CAF](usdocml://CreateRenderCFG_CAF), [CreateRenderCFG\_FLV\_Video(usdocml://CreateRenderCFG_FLV_Video)], 
+                   [CreateRenderCFG\_MPEG1\_Video](usdocml://CreateRenderCFG_MPEG1_Video), [CreateRenderCFG\_MPEG2\_Video](usdocml://CreateRenderCFG_MPEG2_Video)
                     
                2. passing the render-string to one of the Render-functions  
                    [RenderProject](usdocml://RenderProject), [RenderProject\_Regions](usdocml://RenderProject_Regions)
@@ -844,7 +850,9 @@
                    [CreateRenderCFG\_MP3ABR](usdocml://CreateRenderCFG_MP3ABR),[CreateRenderCFG\_MP3CBR](usdocml://CreateRenderCFG_MP3CBR), [CreateRenderCFG\_MP3MaxQuality](usdocml://CreateRenderCFG_MP3MaxQuality), [CreateRenderCFG\_MP3VBR](usdocml://CreateRenderCFG_MP3VBR), 
                    [CreateRenderCFG\_OGG](usdocml://CreateRenderCFG_OGG), [CreateRenderCFG\_Opus](usdocml://CreateRenderCFG_Opus), [CreateRenderCFG\_WAV](usdocml://CreateRenderCFG_WAV), [CreateRenderCFG\_WAVPACK](usdocml://CreateRenderCFG_WAVPACK)
                    [CreateRenderCFG\_AVI_Video](usdocml://CreateRenderCFG_AVI_Video), [CreateRenderCFG\_GIF](usdocml://CreateRenderCFG_GIF), [CreateRenderCFG\_LCF](usdocml://CreateRenderCFG_LCF), [CreateRenderCFG\_MKV_Video](usdocml://CreateRenderCFG_MKV_Video), [CreateRenderCFG\_MOVMAC_Video](usdocml://CreateRenderCFG_MOVMAC_Video), [CreateRenderCFG\_MP4MAC_Video](usdocml://CreateRenderCFG_MP4MAC_Video), 
-                   [CreateRenderCFG\_QTMOVMP4_Video](usdocml://CreateRenderCFG_QTMOVMP4_Video), [CreateRenderCFG\_WebMVideo](usdocml://CreateRenderCFG_WebMVideo)
+                   [CreateRenderCFG\_QTMOVMP4_Video](usdocml://CreateRenderCFG_QTMOVMP4_Video), [CreateRenderCFG\_WebMVideo](usdocml://CreateRenderCFG_WebMVideo), 
+                   [CreateRenderCFG\_CAF](usdocml://CreateRenderCFG_CAF), [CreateRenderCFG\_FLV\_Video(usdocml://CreateRenderCFG_FLV_Video)], 
+                   [CreateRenderCFG\_MPEG1\_Video](usdocml://CreateRenderCFG_MPEG1_Video), [CreateRenderCFG\_MPEG2\_Video](usdocml://CreateRenderCFG_MPEG2_Video)
 
                3. Render the project, using the function:  
                    [RenderProject\_RenderTable](usdocml://RenderProject_RenderTable)  
@@ -907,7 +915,9 @@
             >[CreateRenderCFG\_OGG](usdocml://CreateRenderCFG_OGG), [CreateRenderCFG\_Opus](usdocml://CreateRenderCFG_Opus), [CreateRenderCFG\_WAV](usdocml://CreateRenderCFG_WAV), [CreateRenderCFG\_WAVPACK](usdocml://CreateRenderCFG_WAVPACK),
             >[CreateRenderCFG\_AVI_Video](usdocml://CreateRenderCFG_AVI_Video), [CreateRenderCFG\_GIF](usdocml://CreateRenderCFG_GIF), [CreateRenderCFG\_LCF](usdocml://CreateRenderCFG_LCF), [CreateRenderCFG\_MKV_Video](usdocml://CreateRenderCFG_MKV_Video), [CreateRenderCFG\_MOVMAC_Video](usdocml://CreateRenderCFG_MOVMAC_Video), [CreateRenderCFG\_MP4MAC_Video](usdocml://CreateRenderCFG_MP4MAC_Video), 
             >[CreateRenderCFG\_QTMOVMP4_Video](usdocml://CreateRenderCFG_QTMOVMP4_Video), [CreateRenderCFG\_WebMVideo](usdocml://CreateRenderCFG_WebMVideo)
-                 
+            >[CreateRenderCFG\_CAF](usdocml://CreateRenderCFG_CAF), [CreateRenderCFG\_FLV\_Video(usdocml://CreateRenderCFG_FLV_Video)], 
+            >[CreateRenderCFG\_MPEG1\_Video](usdocml://CreateRenderCFG_MPEG1_Video), [CreateRenderCFG\_MPEG2\_Video](usdocml://CreateRenderCFG_MPEG2_Video)
+                   
             If you have already a Base64-encoded-renderstring but would love to know, which settings it holds, you can analyze them as well.
             First, you need to determine, which format is stored in this render-string, using:
             
@@ -933,6 +943,8 @@
             >[GetRenderCFG\_Settings\_OGG](usdocml://GetRenderCFG_Settings_OGG), [GetRenderCFG\_Settings\_OPUS](usdocml://GetRenderCFG_Settings_OPUS), [GetRenderCFG\_Settings\_WAV](usdocml://GetRenderCFG_Settings_WAV), [GetRenderCFG\_Settings\_WAVPACK](usdocml://GetRenderCFG_Settings_WAVPACK),
             >[GetRenderCFG\_Settings\_AVI\_Video](usdocml://GetRenderCFG_Settings_AVI_Video), [GetRenderCFG\_Settings\_GIF](usdocml://GetRenderCFG_Settings_GIF), [GetRenderCFG\_Settings\_LCF](usdocml://GetRenderCFG_Settings_LCF), [GetRenderCFG\_Settings\_MKV\_Video](usdocml://GetRenderCFG_Settings_MKV_Video), [GetRenderCFG\_Settings\_MOVMac\_Video](usdocml://GetRenderCFG_Settings_MOVMac_Video),
             >[GetRenderCFG\_Settings\_MP4Mac\_Video](usdocml://GetRenderCFG_Settings_MP4Mac_Video), [GetRenderCFG\_Settings\_QTMOVMP4\_Video](usdocml://GetRenderCFG_Settings_QTMOVMP4_Video), [GetRenderCFG\_Settings\_WebMVideo](usdocml://GetRenderCFG_Settings_WebMVideo)
+            >[GetRenderCFG\_CAF](usdocml://GetRenderCFG_CAF), [GetRenderCFG\_FLV\_Video(usdocml://GetRenderCFG_FLV_Video)], 
+            >[GetRenderCFG\_MPEG1\_Video](usdocml://GetRenderCFG_MPEG1_Video), [GetRenderCFG\_MPEG2\_Video](usdocml://GetRenderCFG_MPEG2_Video)
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>
         <source_document>US_Api-Concepts.USDocML</source_document>

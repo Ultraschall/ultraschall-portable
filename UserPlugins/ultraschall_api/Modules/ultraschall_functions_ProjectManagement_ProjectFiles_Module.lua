@@ -11923,7 +11923,7 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
   <slug>GetProject_Render_Normalize</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=6.42
+    Reaper=6.48
     Lua=5.3
   </requires>
   <functioncall>integer render_normalize_mode, number normalize_target = ultraschall.GetProject_Render_Normalize(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -11958,6 +11958,9 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
                                     - &128, Brickwall-mode
                                     -     0, Peak
                                     -     1, True Peak
+                                    - &256, only normalize files that are too loud
+                                    -     0, disabled
+                                    -     1, enabled
     number normalize_target - the normalize-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.
     number brickwall_target - the normalize-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.
   </retvals>
@@ -11979,7 +11982,7 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
   <slug>SetProject_Render_Normalize</slug>
   <requires>
     Ultraschall=4.2
-    Reaper=6.43
+    Reaper=6.48
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.SetProject_Render_Normalize(string projectfilename_with_path, integer render_normalize_method, number normalize_target, optional string ProjectStateChunk, optional number brickwall_target)</functioncall>
@@ -12011,6 +12014,9 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
                                     - &128, Brickwall-mode
                                     -     0, Peak
                                     -     1, True Peak
+                                    - &256, only normalize files that are too loud
+                                    -     0, disabled
+                                    -     1, enabled
     number normalize_target - the normalize-target as amp-volume. Use ultraschall.DB2MKVOL to convert it from dB.
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
     optional number brickwall_target - the brickwall-normalizatin-target as amp-volume. Use ultraschall.DB2MKVOL to convert it from dB.

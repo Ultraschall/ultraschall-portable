@@ -1,6 +1,6 @@
-Render-Presets-docs as of Reaper 6.43
+Render-Presets-docs as of Reaper 6.48
 
-compiled by Meo Mespotine, 20th of December 2021
+compiled by Meo Mespotine, 19th of February 2022
 licensed under creative-commons cc-by-license
 
 The render-presets are stored into reaper-render.ini in the resources-folder of Reaper.
@@ -42,12 +42,13 @@ normalize_mode - the normalize method set with the "Normalize"-button
                     &128, Brickwall Limiting mode
                         0, Peak
                         1, True Peak
+                    &256, Only normalize files that are too loud
+                        0, disabled
+                        1, enabled
                         
-                    
-                        
-normalize_target - the target as MKVOL-value. User ultraschall.MKVOL2DB to convert it to dB.
+normalize_target - the target as MKVOL-value. Use ultraschall.MKVOL2DB to convert it to dB.
 
-brickwall_target - the target as MKVOL-value. User ultraschall.MKVOL2DB to convert it to dB.
+brickwall_target - the target as MKVOL-value. Use ultraschall.MKVOL2DB to convert it to dB.
                  
 
 various_checkboxes - keeps various checkboxes in <RENDERPRESET

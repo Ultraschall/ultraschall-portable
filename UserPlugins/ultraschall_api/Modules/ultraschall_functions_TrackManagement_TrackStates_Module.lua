@@ -1314,8 +1314,8 @@ function ultraschall.GetTrackLockState(tracknumber, str)
 </US_DocBloc>
 --]]
   local retval
-  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
-  str=str:match("(.-)<ITEM")
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end  
+  --str=str:match("(.-)<ITEM")..">"
   return ultraschall.GetTrackState_NumbersOnly("LOCK", str, "GetTrackLockState", true)
 end
 
@@ -5136,3 +5136,40 @@ function ultraschall.SetTrackGroupFlags_HighState(tracknumber, groups_bitfield_t
   return B, B1.."\n"..str.."\n"..B3
 end
 
+
+function ultraschall.ConvertTrackstringToArray(trackstring)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertTrackstringToArray</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer count, array individual_tracknumbers = ultraschall.ConvertTrackstringToArray(string trackstring)</functioncall>
+  <description>
+    returns all tracknumbers from trackstring, that can be used as tracknumbers, as an array.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    integer count - number of tracks in trackstring
+    array individual_tracknumbers - an array that contains all tracknumbers in trackstring
+  </retvals>
+  <parameters>
+    string trackstring - the trackstring to check, if it's a valid one
+  </parameters>
+  <chapter_context>
+    Track Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_Module.lua</source_document>
+  <tags>trackmanagement, trackstring, get, count, tracks</tags>
+</US_DocBloc>
+]]
+  local retval, count, individual_tracknumbers = ultraschall.IsValidTrackString(trackstring )
+  if retval==false then ultraschall.AddErrorMessage("ConvertTrackstringToArray", "trackstring", "not a valid trackstring", -1) return end
+
+  return count, individual_tracknumbers
+end

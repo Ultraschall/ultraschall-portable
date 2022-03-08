@@ -56,7 +56,46 @@ else
 end
 --]]
 
-ultraschall.US_BetaFunctions=false
+-- allow debugging of functions
+    
+if reaper.GetExtState("ultraschall_api", "debug_extstate")=="true" then
+    ultraschall.temp_GetProjExtState=reaper.GetProjExtState
+    ultraschall.temp_SetProjExtState=reaper.SetProjExtState
+
+    ultraschall.temp_GetExtState=reaper.GetExtState
+    ultraschall.temp_SetExtState=reaper.SetExtState
+
+    --[[
+    function reaper.GetExtState(extname, key)
+      if ultraschall.temp_GetExtState("ultraschall_api", "debug_extstate")=="true" then 
+        print("ExtState -> Get: \""..extname.."\" \""..key.."\"")
+      end
+      return ultraschall.temp_GetExtState(extname, key)
+    end
+    --]]
+    function reaper.SetExtState(extname, key, value, persist)
+      if ultraschall.temp_GetExtState("ultraschall_api", "debug_extstate")=="true" then 
+        print(ultraschall.Script_Context.."\n\tExtState -> Set: \""..tostring(extname).."\" \""..tostring(key).."\" \""..tostring(value).."\" "..tostring(persist))
+      end
+      return ultraschall.temp_SetExtState(extname, key, value, persist)
+    end
+    --[[
+    function reaper.GetProjExtState(proj, extname, key)
+      if ultraschall.temp_GetExtState("ultraschall_api", "debug_extstate")=="true" then 
+        print("ProjExtState -> Get: \""..extname.."\" \""..key.."\"")
+      end
+      return ultraschall.temp_GetProjExtState(proj, extname, key)
+    end
+    --]]
+    function reaper.SetProjExtState(proj, extname, key, value)
+      if ultraschall.temp_GetExtState("ultraschall_api", "debug_extstate")=="true" then 
+        print(ultraschall.Script_Context.."\n\tProjExtState -> Set: \""..tostring(extname).."\" \""..tostring(key).."\" \""..tostring(value).."\"")
+      end
+      return ultraschall.temp_SetProjExtState(proj, extname, key, value)
+    end
+    --]]
+end
+ultraschall.US_BetaFunctions=true
 
 
 ultraschall.temp1,ultraschall.temp=reaper.get_action_context()

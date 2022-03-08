@@ -1291,3 +1291,66 @@ function ultraschall.GFX_GetChar(character, manage_clipboard, to_clipboard, read
 end
 
 
+
+function ultraschall.GFX_GetTextLayout(bold, italic, underline, outline, nonaliased, inverse, rotate, rotate2)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_GetTextLayout</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=5.95
+    Lua=5.3
+  </requires>
+  <functioncall>integer font_layout = ultraschall.GFX_GetTextLayout(optional boolean bold, optional boolean italic, optional boolean underline, optional boolean outline, optional boolean nonaliased, optional boolean inverse, optional boolean rotate, optional boolean rotate2)</functioncall>
+  <description>
+    Returns a font_layout-value that can be used for the parameter flags for the function gfx.drawstr.
+    
+    Note: as per limitation of Reaper, you can only have up to 4 font_layout-parameters at the same time.
+    
+    Some combinations do not work together, so you need to experiment.
+  </description>
+  <parameters>
+    optional boolean bold - true, sets the font_layout to bold; false, no boldness
+    optional boolean italic - true, sets the font_layout to italic; false, no italic
+    optional boolean underline - true, sets the font_layout to underline; false, no underlining
+    optional boolean outline - true, sets the font_layout to outline; false, no outline
+    optional boolean nonaliased - true, sets the font_layout to aliased; false, keep it antialiased
+    optional boolean inverse - true, sets the font_layout to inverse; false, not inversed
+    optional boolean rotate - true, sets the font_layout to rotate the font clockwise; false, don't rotate
+    optional boolean rotate2 - true, sets the font_layout to rotate the font counterclockwise; false, don't rotate
+  </parameters>
+  <retvals>
+    integer font_layout - the returned value you can use for gfx.drawstr for its flags-parameter
+  </retvals>
+  <chapter_context>
+    Blitting
+  </chapter_context>
+  <target_document>US_Api_GFX</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, functions, get, text layout</tags>
+</US_DocBloc>
+]]
+  local Bold=66
+  local Italic=73
+  local Underline=85
+  local Outline=79
+  local NonAliased=77
+  local Inverse=86
+  local Rotated=89
+  local Rotated2=90
+  
+
+  local Layout=0
+  if bold==true then Layout=Bold Layout=Layout<<8 end
+  if italic==true then Layout=Layout+Italic Layout=Layout<<8 end
+  if underline==true then Layout=Layout+Underline Layout=Layout<<8 end
+  if outline==true then Layout=Layout+Outline Layout=Layout<<8 end
+  if nonaliased==true then Layout=Layout+NonAliased Layout=Layout<<8 end
+  if inverse==true then Layout=Layout+Inverse Layout=Layout<<8 end
+  
+  if rotate==true then Layout=Layout+Rotated Layout=Layout<<8 end
+  if rotate2==true then Layout=Layout+Rotated2 Layout=Layout<<8 end
+  
+  return Layout
+end
+

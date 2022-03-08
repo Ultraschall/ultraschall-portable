@@ -1681,14 +1681,14 @@ function ultraschall.SetGuidExtState(guid, key, value, savelocation, overwrite, 
   </description>
   <parameters>
     string guid - the guid of the object, for whom you want to store a key/value-pair; can have additional characters before and after the guid, but must contain a valid guid!
-    string key - the key for this guid
-    string value - the value to store into the key/value-store
+    string key - the key for this guid; "", deletes all keys+values stored with this marker
+    string value - the value to store into the key/value-store; "", deletes the value for this key
     integer savelocation - 0, store as project extension state(into the currently opened project); 1, store as global extension state(when persist=true, into reaper-extstate.ini in the resourcesfolder)
     boolean overwrite - true, overwrite a previous given value; false, don't overwrite, if a value exists already
     boolean persists - true, make extension state persistent(available after Reaper-restart); false, don't make it persistent; Only with global extension states
   </parameters>
   <retvals>
-    integer retval - the idx of the extstate(if a project extension state); 1, successful(with extension states), -1, unsuccessful
+    integer retval - the idx of the extstate(if a project extension state); >=1 number of stored extension states(means successful), -1, unsuccessful
   </retvals>
   <chapter_context>
     Metadata Management
@@ -6455,4 +6455,339 @@ function ultraschall.ReturnReaperExeFile_With_Path()
     ExeFile=reaper.GetExePath().."/reaper"
   end
   return ExeFile
+end
+
+
+function ultraschall.MediaExplorer_SetDeviceOutput(channel, mono)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MediaExplorer_SetDeviceOutput</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.MediaExplorer_SetDeviceOutput(integer channel, boolean mono)</functioncall>
+  <description>
+    Sets the output-channel(s) of the Media Explorer
+    
+    When Media Explorer is opened, playback will be stopped and the Media Explorer will flicker for a short time. This is due limitations in Reaper.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting the value was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    integer channel - the channel to set the media-explorer-output to
+                    - when mono: 1-512
+                    - when stereo: 1-511
+                    - -1, Play through first track named "Media Explorer Preview" or first selected track
+    boolean mono - true, use the mono-channel; false, use stereo-channels
+  </parameters>
+  <chapter_context>
+    Media Explorer
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>media explorer, set, device output, mono, stereo</tags>
+</US_DocBloc>
+--]]
+  if math.type(channel)~="integer" then ultraschall.AddErrorMessage("MediaExplorer_SetDeviceOutput", "channel", "must be an integer", -1) return false end
+  if type(mono)~="boolean" then ultraschall.AddErrorMessage("MediaExplorer_SetDeviceOutput", "mono", "must be a boolean", -2) return false end
+  if channel==0 or channel>512 then ultraschall.AddErrorMessage("MediaExplorer_SetDeviceOutput", "channel", "no such channel", -3) return false end
+  if mono==false and channel==512 then ultraschall.AddErrorMessage("MediaExplorer_SetDeviceOutput", "channel", "no such channel", -4) return false end
+  if channel>-1 then
+    channel=channel-1
+    if mono==true then channel=channel+1024 end
+  end
+  local A=reaper.GetToggleCommandState(50124)
+  if A==1 then reaper.Main_OnCommand(50124, 0) end
+  reaper.BR_Win32_WritePrivateProfileString("reaper_explorer", "outputidx", channel, reaper.get_ini_file())
+  if A==1 then reaper.Main_OnCommand(50124, 0) end
+  return true
+end
+
+function ultraschall.MediaExplorer_SetAutoplay(state)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MediaExplorer_SetAutoplay</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.02
+    SWS=2.10.0.1
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.MediaExplorer_SetAutoplay(boolean state)</functioncall>
+  <description>
+    Sets the autoplay-state of the Media Explorer
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting the value was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    boolean state - true, activate autoplay; false, deactivate autoplay
+  </parameters>
+  <chapter_context>
+    Media Explorer
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>media explorer, set, autoplay</tags>
+</US_DocBloc>
+--]]
+  if type(state)~="boolean" then ultraschall.AddErrorMessage("MediaExplorer_SetAutoplay", "state", "must be a boolean", -1) return false end
+  if state==true then state=1 else state=0 end
+  local A=reaper.GetToggleCommandState(50124)
+  if A==0 then 
+    local retval, state2=reaper.BR_Win32_GetPrivateProfileString("reaper_explorer", "autoplay", -1, reaper.get_ini_file())
+    state2=tonumber(state2)
+    if state2~=state then
+      reaper.BR_Win32_WritePrivateProfileString("reaper_explorer", "autoplay", state, reaper.get_ini_file())
+    end
+  else
+    local retval, state2=reaper.BR_Win32_GetPrivateProfileString("reaper_explorer", "autoplay", -1, reaper.get_ini_file())
+    state2=tonumber(state2)
+    if state2~=state then
+
+      local HWND=reaper.OpenMediaExplorer("", false)
+      local Button=reaper.JS_Window_FindChildByID(HWND, 1011)
+      reaper.JS_WindowMessage_Send(Button, "WM_LBUTTONDOWN", 1, 1, 1, 1)
+      reaper.JS_WindowMessage_Send(Button, "WM_LBUTTONUP", 1, 1, 1, 1)
+      reaper.JS_WindowMessage_Post(Button, "WM_LBUTTONDOWN", 1, 1, 1, 1)
+      reaper.JS_WindowMessage_Post(Button, "WM_LBUTTONUP", 1, 1, 1, 1)
+    end
+  end
+
+  return true
+end
+
+
+function ultraschall.MediaExplorer_SetRate(rate)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MediaExplorer_SetRate</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.02
+    SWS=2.10.0.1
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.MediaExplorer_SetRate(number rate)</functioncall>
+  <description>
+    Sets the rate of the Media Explorer; works only with Media Explorer opened!
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting the value was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    number rate - the value to set the rate to
+  </parameters>
+  <chapter_context>
+    Media Explorer
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>media explorer, set, rate</tags>
+</US_DocBloc>
+--]]
+  if type(rate)~="number" then ultraschall.AddErrorMessage("MediaExplorer_SetRate", "rate", "must be a boolean", -1) return false end
+  local A=reaper.GetToggleCommandState(50124)
+  if A~=0 then 
+    local HWND=reaper.OpenMediaExplorer("", false)
+    local Button=reaper.JS_Window_FindChildByID(HWND, 1454)
+    reaper.JS_Window_SetTitle(Button, tostring(rate))
+    return true
+  else 
+    ultraschall.AddErrorMessage("MediaExplorer_SetRate", "", "Media Explorer isn't open", -2) 
+    return false 
+  end
+end
+
+function ultraschall.MediaExplorer_SetStartOnBar(state)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MediaExplorer_SetStartOnBar</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.02
+    SWS=2.10.0.1
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.MediaExplorer_SetStartOnBar(boolean state)</functioncall>
+  <description>
+    Sets the start on bar-state of the Media Explorer
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting the value was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    boolean state - true, activate start on bar; false, deactivate start on bar
+  </parameters>
+  <chapter_context>
+    Media Explorer
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>media explorer, set, start on bar</tags>
+</US_DocBloc>
+--]]
+  if type(state)~="boolean" then ultraschall.AddErrorMessage("MediaExplorer_SetStartOnBar", "state", "must be a boolean", -1) return false end
+  if state==true then state=1 else state=0 end
+  local A=reaper.GetToggleCommandState(50124)
+  if A==0 then 
+    local retval, state2=reaper.BR_Win32_GetPrivateProfileString("reaper_explorer", "beatsync", -1, reaper.get_ini_file())
+    state2=tonumber(state2)
+    if state2~=state then
+      reaper.BR_Win32_WritePrivateProfileString("reaper_explorer", "beatsync", state, reaper.get_ini_file())
+    end
+  else
+    local retval, state2=reaper.BR_Win32_GetPrivateProfileString("reaper_explorer", "beatsync", -1, reaper.get_ini_file())
+    state2=tonumber(state2)
+    if state2~=state then
+      local HWND=reaper.OpenMediaExplorer("", false)
+      local Button=reaper.JS_Window_FindChildByID(HWND, 1012)
+      reaper.JS_WindowMessage_Send(Button, "WM_LBUTTONDOWN", 1, 1, 1, 1)
+      reaper.JS_WindowMessage_Send(Button, "WM_LBUTTONUP", 1, 1, 1, 1)
+      reaper.JS_WindowMessage_Post(Button, "WM_LBUTTONDOWN", 1, 1, 1, 1)
+      reaper.JS_WindowMessage_Post(Button, "WM_LBUTTONUP", 1, 1, 1, 1)
+    end
+  end
+
+  return true
+end
+
+function ultraschall.MediaExplorer_SetPitch(pitch)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MediaExplorer_SetPitch</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.02
+    SWS=2.10.0.1
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.MediaExplorer_SetPitch(number pitch)</functioncall>
+  <description>
+    Sets the pitch of the Media Explorer; works only with Media Explorer opened!
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting the value was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    number rate - the value to set the pitch to
+  </parameters>
+  <chapter_context>
+    Media Explorer
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>media explorer, set, pitch</tags>
+</US_DocBloc>
+--]]
+  if type(pitch)~="number" then ultraschall.AddErrorMessage("MediaExplorer_SetPitch", "pitch", "must be a number", -1) return false end
+  local A=reaper.GetToggleCommandState(50124)
+  if A~=0 then 
+    local HWND=reaper.OpenMediaExplorer("", false)
+    local Button=reaper.JS_Window_FindChildByID(HWND, 1021)
+    reaper.JS_Window_SetTitle(Button, tostring(pitch))
+    return true
+  else 
+    ultraschall.AddErrorMessage("MediaExplorer_SetPitch", "", "Media Explorer isn't open", -2) 
+    return false 
+  end
+end
+
+
+function ultraschall.MediaExplorer_SetVolume(value)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MediaExplorer_SetVolume</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.02
+    SWS=2.10.0.1
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.MediaExplorer_SetVolume(number value)</functioncall>
+  <description>
+    Sets the volume of the Media Explorer; works only with Media Explorer opened!
+    
+    The volume is close, but not necessarily exactly the requested value.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting the value was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    number value - the value to set the volume to; -127 to +12
+  </parameters>
+  <chapter_context>
+    Media Explorer
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>media explorer, set, volume</tags>
+</US_DocBloc>
+--]]
+  if type(value)~="number" then ultraschall.AddErrorMessage("MediaExplorer_SetVolume", "value", "must be a number", -1) return false end
+  if value<-127 then value=-127 end
+  if value>12 then value=12 end
+  local A=reaper.GetToggleCommandState(50124)
+  if A~=0 then 
+    local dir=0
+    local HWND=reaper.OpenMediaExplorer("", false)
+    local Text=reaper.JS_Window_FindChildByID(HWND, 1047)
+    local Fader=reaper.JS_Window_FindChildByID(HWND, 1045)
+    if value==0 then reaper.JS_WindowMessage_Send(Fader, "WM_LBUTTONDBLCLK", 0, 0, 0, 0) return true end
+
+    local Val=tonumber(reaper.JS_Window_GetTitle(Text):sub(1,-3))
+    if tonumber(Val)==nil then Val=-140 end
+    if value<Val then dir=-1 elseif value>Val then dir=1 end
+    local oldmousewheelmode = reaper.SNM_GetIntConfigVar("mousewheelmode", -667)
+    reaper.SNM_SetIntConfigVar("mousewheelmode", 0)
+    for i=0, 3000 do
+       -- apply mousewheel in the desired direction, until the shown volume is closest 
+       -- to the desired value
+       Val=tonumber(reaper.JS_Window_GetTitle(Text):sub(1,-3))
+       if tonumber(Val)==nil then Val=-140 end
+       if dir==-1 then
+         --BBB=Val
+         if Val<=value then 
+           break 
+         else
+           reaper.JS_WindowMessage_Send(Fader, "WM_MOUSEWHEEL", 0, dir, 0, 0)
+         end
+       end
+       if dir==1 then
+         if Val>=value then 
+           break 
+         else
+           reaper.JS_WindowMessage_Send(Fader, "WM_MOUSEWHEEL", 0, dir, 0, 0)
+         end
+       end
+       -- AAA=i
+    end
+    reaper.SNM_SetIntConfigVar("mousewheelmode", oldmousewheelmode)
+   
+    return true
+  else 
+    ultraschall.AddErrorMessage("MediaExplorer_SetVolume", "", "Media Explorer isn't open", -2) 
+    return false 
+  end
 end
